@@ -63,6 +63,42 @@ export default function Home() {
   const [sections, setSections] = useState<Section[]>([]);
   const [removedColumns, setRemovedColumns] = useState<Set<string>>(new Set());
   const [historyManager] = useState(() => new HistoryManager(10));
+  const [totalVisits, setTotalVisits] = useState<number>(0);
+  const [activeUsers, setActiveUsers] = useState<number>(0);
+
+  // Track visits and active users
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // Get or initialize total visits from localStorage
+      const storedVisits = localStorage.getItem('unblockdevs_total_visits');
+      const visitCount = storedVisits ? parseInt(storedVisits, 10) + 1 : 1;
+      localStorage.setItem('unblockdevs_total_visits', visitCount.toString());
+      setTotalVisits(visitCount);
+
+      // Track active users (simulated - in production, use a real-time service)
+      // For now, we'll use a simple counter that increments
+      const sessionKey = `unblockdevs_session_${Date.now()}`;
+      const activeSessions = JSON.parse(localStorage.getItem('unblockdevs_active_sessions') || '[]');
+      
+      // Clean old sessions (older than 5 minutes)
+      const now = Date.now();
+      const validSessions = activeSessions.filter((s: { key: string; time: number }) => now - s.time < 300000);
+      
+      // Add current session
+      validSessions.push({ key: sessionKey, time: now });
+      localStorage.setItem('unblockdevs_active_sessions', JSON.stringify(validSessions));
+      setActiveUsers(validSessions.length);
+
+      // Update active users periodically
+      const interval = setInterval(() => {
+        const currentSessions = JSON.parse(localStorage.getItem('unblockdevs_active_sessions') || '[]');
+        const currentValid = currentSessions.filter((s: { key: string; time: number }) => Date.now() - s.time < 300000);
+        setActiveUsers(currentValid.length);
+      }, 30000); // Update every 30 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, []);
 
   const saveToHistory = useCallback(() => {
     historyManager.push({
