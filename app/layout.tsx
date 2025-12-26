@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Script from 'next/script'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
 
@@ -164,6 +163,20 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         
+        {/* Buy Me a Coffee Widget */}
+        <script
+          data-name="BMC-Widget"
+          data-cfasync="false"
+          src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
+          data-id="WKbStURip"
+          data-description="Support me on Buy me a coffee!"
+          data-message="You have a wonderful day!!!"
+          data-color="#5F7FFF"
+          data-position="Right"
+          data-x_margin="18"
+          data-y_margin="18"
+        />
+        
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -195,30 +208,6 @@ export default function RootLayout({
                 secondary: '#fff',
               },
             },
-          }}
-        />
-        
-        {/* Buy Me a Coffee Widget */}
-        <Script
-          id="bmc-widget-script"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                var widgetScript = document.createElement('script');
-                widgetScript.setAttribute('data-name', 'BMC-Widget');
-                widgetScript.setAttribute('data-cfasync', 'false');
-                widgetScript.setAttribute('src', 'https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js');
-                widgetScript.setAttribute('data-id', 'WKbStURip');
-                widgetScript.setAttribute('data-description', 'Support me on Buy me a coffee!');
-                widgetScript.setAttribute('data-message', 'You have a wonderful day!!!');
-                widgetScript.setAttribute('data-color', '#5F7FFF');
-                widgetScript.setAttribute('data-position', 'Right');
-                widgetScript.setAttribute('data-x_margin', '18');
-                widgetScript.setAttribute('data-y_margin', '18');
-                document.head.appendChild(widgetScript);
-              })();
-            `,
           }}
         />
       </body>
