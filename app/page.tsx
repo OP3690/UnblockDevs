@@ -209,7 +209,11 @@ export default function Home() {
   };
 
   const handleRemoveColumn = (columnId: string) => {
-    setRemovedColumns((prev) => new Set([...prev, columnId]));
+    setRemovedColumns((prev) => {
+      const newSet = new Set(prev);
+      newSet.add(columnId);
+      return newSet;
+    });
     saveToHistory();
     toast.success('Column removed from table and export');
   };

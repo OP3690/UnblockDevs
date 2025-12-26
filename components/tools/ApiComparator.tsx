@@ -73,7 +73,9 @@ export default function ApiComparator() {
       const flat1 = flattenObject(obj1);
       const flat2 = flattenObject(obj2);
 
-      const allKeys = new Set([...flat1.keys(), ...flat2.keys()]);
+      const allKeys = new Set<string>();
+      flat1.keys().forEach(key => allKeys.add(key));
+      flat2.keys().forEach(key => allKeys.add(key));
       const results: DiffResult[] = [];
       const breaking: string[] = [];
 
