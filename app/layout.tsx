@@ -142,6 +142,20 @@ export default function RootLayout({
       <head>
         <link rel="icon" type="image/png" href="/support.png" />
         <link rel="apple-touch-icon" href="/support.png" />
+        
+        {/* Google Analytics */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-N6DF8NPHY8"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-N6DF8NPHY8');
+            `,
+          }}
+        />
+        
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
