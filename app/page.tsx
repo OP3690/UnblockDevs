@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings } from 'lucide-react';
 import toast from 'react-hot-toast';
 import JsonInput from '@/components/JsonInput';
@@ -770,7 +770,22 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="mt-16 py-8 border-t-2 border-gray-200/50 bg-white/80 backdrop-blur-lg">
-        <div className="max-w-7xl mx-auto container-padding text-center">
+        <div className="max-w-7xl mx-auto container-padding">
+          {/* Stats Section */}
+          <div className="flex flex-wrap items-center justify-center gap-6 mb-6 pb-6 border-b border-gray-200">
+            <div className="flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-lg">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-sm font-semibold text-gray-700">Active Users:</span>
+              <span className="text-lg font-bold text-blue-600">{activeUsers}</span>
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 bg-purple-50 rounded-lg">
+              <span className="text-sm font-semibold text-gray-700">Total Visits:</span>
+              <span className="text-lg font-bold text-purple-600">{totalVisits.toLocaleString()}</span>
+            </div>
+          </div>
+
+          {/* Main Footer Content */}
+          <div className="text-center space-y-3">
             <div className="space-y-2">
               <p className="text-gray-600">
                 <strong className="text-gray-900">UnblockDevs</strong> • Free Online Developer Tools Suite
@@ -789,6 +804,14 @@ export default function Home() {
                 <span>✓ Mock API Generator</span>
               </div>
             </div>
+            
+            {/* Built with Love */}
+            <div className="pt-4 border-t border-gray-200">
+              <p className="text-sm text-gray-600">
+                Built by <span className="font-semibold text-gray-900">Developer</span> with <span className="text-red-500">❤️</span> to fellow <span className="font-semibold text-gray-900">Developers</span>
+              </p>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
