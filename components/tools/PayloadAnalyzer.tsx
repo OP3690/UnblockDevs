@@ -125,7 +125,7 @@ export default function PayloadAnalyzer() {
                 <div className="text-2xl font-bold text-green-600">{fieldSizes.length}</div>
               </div>
               <div className="bg-purple-50 p-4 rounded-lg">
-                <div className="text-sm text-gray-600">Heavy Fields (>10%)</div>
+                <div className="text-sm text-gray-600">Heavy Fields (&gt;10%)</div>
                 <div className="text-2xl font-bold text-purple-600">{heavyFields.length}</div>
               </div>
             </div>
