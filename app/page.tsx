@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings } from 'lucide-react';
 import toast from 'react-hot-toast';
+import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget';
 import JsonInput from '@/components/JsonInput';
 import DataTable from '@/components/DataTable';
 import SectionManager from '@/components/SectionManager';
