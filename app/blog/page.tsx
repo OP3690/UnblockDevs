@@ -19,6 +19,51 @@ export const metadata: Metadata = {
 
 const blogPosts = [
   {
+    slug: 'css-explained-guide',
+    title: 'CSS Explained: Must-Do Practices, Hidden Facts & Pro Tips',
+    excerpt: 'Master CSS with this comprehensive guide. Learn CSS fundamentals, best practices, lesser-known features, and pro tips to write cleaner, smarter CSS code. Interactive CSS simulator included.',
+    date: '2024-01-28',
+    readTime: '13 min read',
+    category: 'Web Development',
+    keywords: ['CSS guide', 'CSS tutorial', 'CSS best practices', 'CSS tips', 'Flexbox', 'CSS Grid', 'CSS variables']
+  },
+  {
+    slug: 'html-interview-questions',
+    title: 'HTML Interview Questions: Top 50 Questions & Answers',
+    excerpt: 'Prepare for HTML interviews with 50+ commonly asked HTML interview questions and detailed answers. Covering HTML5, semantic HTML, forms, accessibility, and more.',
+    date: '2024-01-26',
+    readTime: '18 min read',
+    category: 'Interview Prep',
+    keywords: ['HTML interview questions', 'HTML5 interview', 'HTML questions', 'web development interview', 'HTML interview prep']
+  },
+  {
+    slug: 'seo-optimized-html-markup',
+    title: 'SEO-Optimized HTML Markup: Complete Guide for Better Rankings',
+    excerpt: 'Master SEO-optimized HTML markup. Learn semantic HTML, meta tags, structured data, and best practices to improve your website\'s search engine rankings.',
+    date: '2024-01-24',
+    readTime: '14 min read',
+    category: 'SEO & Web Development',
+    keywords: ['SEO HTML', 'SEO markup', 'semantic HTML', 'meta tags', 'structured data', 'HTML SEO']
+  },
+  {
+    slug: 'advanced-html5-apis-guide',
+    title: 'Advanced HTML5 APIs: Complete Guide with Examples',
+    excerpt: 'Master advanced HTML5 APIs including Geolocation, Web Storage, Canvas, Web Workers, and more. Learn with interactive examples and real-world use cases.',
+    date: '2024-01-22',
+    readTime: '15 min read',
+    category: 'Web Development',
+    keywords: ['HTML5 APIs', 'HTML5 Geolocation', 'Web Storage API', 'Canvas API', 'Web Workers', 'HTML5 features']
+  },
+  {
+    slug: 'html-tags-explained-guide',
+    title: 'HTML Tags Explained: Must‑Do Practices, Hidden Facts & Pro Tips',
+    excerpt: 'Master HTML tags with this comprehensive guide. Learn essential HTML tags, best practices, lesser-known facts, and pro tips to write cleaner, smarter HTML code.',
+    date: '2024-01-20',
+    readTime: '12 min read',
+    category: 'Web Development',
+    keywords: ['HTML tags', 'HTML guide', 'HTML best practices', 'HTML tutorial', 'HTML5', 'web development', 'HTML tips']
+  },
+  {
     slug: 'complete-guide-json-viewer-parser-beautifier',
     title: 'Complete Guide to JSON Viewer, Parser, and Beautifier Tools',
     excerpt: 'Learn everything about JSON Viewer, JSON Parser, and JSON Beautifier tools. Discover how to visualize, parse, and format JSON data effectively for better development workflow.',

@@ -412,9 +412,9 @@ function HomeClient() {
                 </p>
               </div>
             </div>
-            {/* Ad Container - Right Side */}
             <div className="flex items-center gap-3 flex-shrink-0">
-              <div className="hidden lg:flex items-center justify-center min-w-[300px] min-h-[100px] bg-gray-50/50 rounded-lg border border-gray-200/50">
+              {/* Google AdSense Ad Container - Hidden from UI but in DOM for ad injection */}
+              <div className="hidden">
                 <ins
                   className="adsbygoogle"
                   style={{ display: 'block', minWidth: '300px', minHeight: '100px' }}
@@ -423,6 +423,10 @@ function HomeClient() {
                   data-ad-format="auto"
                   data-full-width-responsive="false"
                 ></ins>
+              </div>
+              {/* Ezoic Ad Container - Hidden from UI but in DOM for ad injection */}
+              <div className="hidden">
+                <div id="ezoic-pub-ad-placeholder-100"></div>
               </div>
               <Link
                 href="/blog"
@@ -596,9 +600,9 @@ function HomeClient() {
         </div>
       </header>
 
-      {/* Ezoic Ad Placement - Top of Content */}
+      {/* Ezoic Ad Placement - Top of Content (Hidden from UI) */}
       {/* Replace 101 with your actual Ezoic placement ID */}
-      <div className="max-w-7xl mx-auto container-padding py-4">
+      <div className="hidden">
         <div id="ezoic-pub-ad-placeholder-101"></div>
       </div>
 
@@ -904,9 +908,9 @@ function HomeClient() {
             </button>
           </div>
           
-          {/* Ezoic Ad Placement - Middle of Content */}
+          {/* Ezoic Ad Placement - Middle of Content (Hidden from UI) */}
           {/* Replace 102 with your actual Ezoic placement ID */}
-          <div className="my-12">
+          <div className="hidden">
             <div id="ezoic-pub-ad-placeholder-102"></div>
           </div>
 
@@ -930,9 +934,9 @@ function HomeClient() {
         </section>
       )}
 
-      {/* Ezoic Ad Placement - Before Footer */}
+      {/* Ezoic Ad Placement - Before Footer (Hidden from UI) */}
       {/* Replace 103 with your actual Ezoic placement ID */}
-      <div className="max-w-7xl mx-auto container-padding py-8">
+      <div className="hidden">
         <div id="ezoic-pub-ad-placeholder-103"></div>
       </div>
 
