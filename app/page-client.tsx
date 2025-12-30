@@ -468,6 +468,19 @@ function HomeClient() {
                 <span className="text-sm">SQL Formatter</span>
               </div>
             </button>
+            <button
+              onClick={() => handleTabChange('builder')}
+              className={`px-5 py-3 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-lg ${
+                activeTab === 'builder'
+                  ? 'tab-active bg-blue-50'
+                  : 'tab-inactive'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <FileSpreadsheet className="w-4 h-4" />
+                <span className="text-sm">JSON Builder</span>
+              </div>
+            </button>
           </div>
         </div>
       </header>
@@ -529,6 +542,7 @@ function HomeClient() {
         {activeTab === 'testdata' && <TestDataGenerator />}
         {activeTab === 'config' && <ConfigComparator />}
         {activeTab === 'sql' && <SqlFormatter />}
+        {activeTab === 'builder' && <JsonBuilder />}
       </main>
 
       {/* Services Section */}
