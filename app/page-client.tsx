@@ -424,10 +424,8 @@ function HomeClient() {
                   data-full-width-responsive="false"
                 ></ins>
               </div>
-              {/* Ezoic Ad Container - Hidden from UI but in DOM for ad injection */}
-              <div className="hidden">
-                <div id="ezoic-pub-ad-placeholder-100"></div>
-              </div>
+            {/* Ezoic Ad Container - Header (Placement ID: 100) */}
+            <div id="ezoic-pub-ad-placeholder-100"></div>
               <Link
                 href="/blog"
                 className="px-4 py-2.5 text-sm font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-all duration-200 flex items-center gap-2 border border-gray-200/50 hover:border-gray-300 hover:shadow-sm flex-shrink-0"
@@ -600,11 +598,8 @@ function HomeClient() {
         </div>
       </header>
 
-      {/* Ezoic Ad Placement - Top of Content (Hidden from UI) */}
-      {/* Replace 101 with your actual Ezoic placement ID */}
-      <div className="hidden">
-        <div id="ezoic-pub-ad-placeholder-101"></div>
-      </div>
+      {/* Ezoic Ad Placement - Top of Content (Placement ID: 101) */}
+      <div id="ezoic-pub-ad-placeholder-101"></div>
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto container-padding py-10 animate-fade-in">
@@ -908,11 +903,8 @@ function HomeClient() {
             </button>
           </div>
           
-          {/* Ezoic Ad Placement - Middle of Content (Hidden from UI) */}
-          {/* Replace 102 with your actual Ezoic placement ID */}
-          <div className="hidden">
-            <div id="ezoic-pub-ad-placeholder-102"></div>
-          </div>
+          {/* Ezoic Ad Placement - Middle of Content (Placement ID: 102) */}
+          <div id="ezoic-pub-ad-placeholder-102"></div>
 
           <div className="mt-12 text-center">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">Why Choose UnblockDevs?</h3>
@@ -934,11 +926,8 @@ function HomeClient() {
         </section>
       )}
 
-      {/* Ezoic Ad Placement - Before Footer (Hidden from UI) */}
-      {/* Replace 103 with your actual Ezoic placement ID */}
-      <div className="hidden">
-        <div id="ezoic-pub-ad-placeholder-103"></div>
-      </div>
+      {/* Ezoic Ad Placement - Before Footer (Placement ID: 103) */}
+      <div id="ezoic-pub-ad-placeholder-103"></div>
 
       {/* Footer */}
       <footer className="mt-16 py-8 border-t-2 border-gray-200/50 bg-white/80 backdrop-blur-lg">
