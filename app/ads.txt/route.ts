@@ -35,9 +35,8 @@ ezoic.ai, 8a94bfd532909f493759d3919f3b2b52, DIRECT
       return new NextResponse(fallbackContent, {
         status: 200,
         headers: {
-          'Content-Type': 'text/plain; charset=utf-8',
+          'Content-Type': 'text/plain',
           'Cache-Control': 'public, max-age=300, must-revalidate',
-          'X-Content-Type-Options': 'nosniff',
         },
       });
     }
@@ -50,13 +49,12 @@ ezoic.ai, 8a94bfd532909f493759d3919f3b2b52, DIRECT
     }
 
     // Return the ads.txt content directly with proper headers
+    // Ezoic requires exactly 'text/plain' Content-Type header
     return new NextResponse(adsTxtContent, {
       status: 200,
       headers: {
-        'Content-Type': 'text/plain; charset=utf-8',
-        'Cache-Control': 'public, max-age=3600, must-revalidate', // Cache for 1 hour, but allow revalidation
-        'X-Content-Type-Options': 'nosniff',
-        'Access-Control-Allow-Origin': '*', // Allow CORS for ads.txt validation
+        'Content-Type': 'text/plain',
+        'Cache-Control': 'public, max-age=3600, must-revalidate',
       },
     });
   } catch (error) {
@@ -75,9 +73,8 @@ ezoic.ai, 8a94bfd532909f493759d3919f3b2b52, DIRECT
     return new NextResponse(fallbackContent, {
       status: 200,
       headers: {
-        'Content-Type': 'text/plain; charset=utf-8',
-        'Cache-Control': 'public, max-age=300, must-revalidate', // Cache for 5 minutes on error
-        'X-Content-Type-Options': 'nosniff',
+        'Content-Type': 'text/plain',
+        'Cache-Control': 'public, max-age=300, must-revalidate',
       },
     });
   }
