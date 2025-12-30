@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { Plus, Trash2, Edit2, Copy, Download, RefreshCw, ChevronRight, ChevronDown, FileJson, Folder, List, Key } from 'lucide-react';
+import { Plus, Trash2, Edit2, Copy, Download, RefreshCw, ChevronRight, ChevronDown, FileJson, Folder, List, Key, Sparkles, Zap } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 interface JsonNode {
@@ -112,6 +112,227 @@ export default function JsonBuilder() {
     setRootNode(newRoot);
     setSelectedNodeId(newRoot.id);
     toast.success('Root object created!');
+  };
+
+  const loadExample = (exampleName: string) => {
+    const examples: { [key: string]: JsonNode } = {
+      userProfile: {
+        id: generateId(),
+        key: 'root',
+        type: 'object',
+        children: [
+          {
+            id: generateId(),
+            key: 'name',
+            type: 'value',
+            valueType: 'string',
+            value: 'John Doe',
+            children: [],
+          },
+          {
+            id: generateId(),
+            key: 'email',
+            type: 'value',
+            valueType: 'string',
+            value: 'john@example.com',
+            children: [],
+          },
+          {
+            id: generateId(),
+            key: 'age',
+            type: 'value',
+            valueType: 'number',
+            value: '30',
+            children: [],
+          },
+          {
+            id: generateId(),
+            key: 'address',
+            type: 'object',
+            children: [
+              {
+                id: generateId(),
+                key: 'street',
+                type: 'value',
+                valueType: 'string',
+                value: '123 Main St',
+                children: [],
+              },
+              {
+                id: generateId(),
+                key: 'city',
+                type: 'value',
+                valueType: 'string',
+                value: 'New York',
+                children: [],
+              },
+              {
+                id: generateId(),
+                key: 'zipCode',
+                type: 'value',
+                valueType: 'string',
+                value: '10001',
+                children: [],
+              },
+            ],
+            expanded: true,
+          },
+          {
+            id: generateId(),
+            key: 'hobbies',
+            type: 'array',
+            children: [
+              {
+                id: generateId(),
+                key: 'item_1',
+                type: 'value',
+                valueType: 'string',
+                value: 'Reading',
+                children: [],
+              },
+              {
+                id: generateId(),
+                key: 'item_2',
+                type: 'value',
+                valueType: 'string',
+                value: 'Coding',
+                children: [],
+              },
+            ],
+            expanded: true,
+          },
+        ],
+        expanded: true,
+      },
+      apiResponse: {
+        id: generateId(),
+        key: 'root',
+        type: 'object',
+        children: [
+          {
+            id: generateId(),
+            key: 'status',
+            type: 'value',
+            valueType: 'string',
+            value: 'success',
+            children: [],
+          },
+          {
+            id: generateId(),
+            key: 'code',
+            type: 'value',
+            valueType: 'number',
+            value: '200',
+            children: [],
+          },
+          {
+            id: generateId(),
+            key: 'data',
+            type: 'object',
+            children: [
+              {
+                id: generateId(),
+                key: 'users',
+                type: 'array',
+                children: [
+                  {
+                    id: generateId(),
+                    key: 'item_1',
+                    type: 'object',
+                    children: [
+                      {
+                        id: generateId(),
+                        key: 'id',
+                        type: 'value',
+                        valueType: 'number',
+                        value: '1',
+                        children: [],
+                      },
+                      {
+                        id: generateId(),
+                        key: 'name',
+                        type: 'value',
+                        valueType: 'string',
+                        value: 'Alice',
+                        children: [],
+                      },
+                    ],
+                    expanded: true,
+                  },
+                ],
+                expanded: true,
+              },
+            ],
+            expanded: true,
+          },
+        ],
+        expanded: true,
+      },
+      config: {
+        id: generateId(),
+        key: 'root',
+        type: 'object',
+        children: [
+          {
+            id: generateId(),
+            key: 'appName',
+            type: 'value',
+            valueType: 'string',
+            value: 'MyApp',
+            children: [],
+          },
+          {
+            id: generateId(),
+            key: 'version',
+            type: 'value',
+            valueType: 'string',
+            value: '1.0.0',
+            children: [],
+          },
+          {
+            id: generateId(),
+            key: 'debug',
+            type: 'value',
+            valueType: 'boolean',
+            value: 'true',
+            children: [],
+          },
+          {
+            id: generateId(),
+            key: 'settings',
+            type: 'object',
+            children: [
+              {
+                id: generateId(),
+                key: 'theme',
+                type: 'value',
+                valueType: 'string',
+                value: 'dark',
+                children: [],
+              },
+              {
+                id: generateId(),
+                key: 'language',
+                type: 'value',
+                valueType: 'string',
+                value: 'en',
+                children: [],
+              },
+            ],
+            expanded: true,
+          },
+        ],
+        expanded: true,
+      },
+    };
+
+    if (examples[exampleName]) {
+      setRootNode(examples[exampleName]);
+      setSelectedNodeId(null);
+      resetEditor();
+      setShowExamples(false);
+      toast.success('Example loaded successfully!');
+    }
   };
 
   const findNode = (node: JsonNode, id: string): JsonNode | null => {
@@ -388,19 +609,21 @@ export default function JsonBuilder() {
       <div className="bg-white rounded-lg shadow-lg p-6">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-2 flex items-center gap-2">
-              <FileJson className="w-6 h-6 text-blue-600" />
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2 flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg shadow-md">
+                <FileJson className="w-6 h-6 text-white" />
+              </div>
               JSON Builder
             </h2>
-            <p className="text-sm text-gray-600">
-              Build nested JSON structures visually. Create objects, arrays, and key-value pairs step by step.
+            <p className="text-sm text-gray-600 mt-2">
+              Build nested JSON structures visually. Create objects, arrays, and key-value pairs step by step with real-time preview.
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={handleCopy}
               disabled={!jsonOutput || jsonOutput === '{}'}
-              className="btn-secondary flex items-center gap-2"
+              className="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-2"
             >
               <Copy className="w-4 h-4" />
               Copy JSON
@@ -408,7 +631,7 @@ export default function JsonBuilder() {
             <button
               onClick={() => handleDownload('json')}
               disabled={!jsonOutput || jsonOutput === '{}'}
-              className="btn-secondary flex items-center gap-2"
+              className="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-2"
             >
               <Download className="w-4 h-4" />
               Download .json
@@ -416,14 +639,14 @@ export default function JsonBuilder() {
             <button
               onClick={() => handleDownload('txt')}
               disabled={!jsonOutput || jsonOutput === '{}'}
-              className="btn-secondary flex items-center gap-2"
+              className="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-2"
             >
               <Download className="w-4 h-4" />
               Download .txt
             </button>
             <button
               onClick={handleReset}
-              className="btn-secondary flex items-center gap-2 text-red-600 hover:bg-red-50"
+              className="px-4 py-2 bg-white border-2 border-red-300 text-red-600 font-semibold rounded-lg hover:bg-red-50 hover:border-red-400 transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-2"
             >
               <RefreshCw className="w-4 h-4" />
               Reset
@@ -449,20 +672,27 @@ export default function JsonBuilder() {
         {rootNode && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Structure Panel */}
-            <div className="lg:col-span-1 bg-gray-50 rounded-lg p-4 border border-gray-200">
-              <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                <Folder className="w-4 h-4" />
-                Structure Tree
-              </h3>
-              <div className="max-h-[600px] overflow-y-auto">
+            <div className="lg:col-span-1 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-4 border-2 border-gray-200 shadow-sm">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-bold text-gray-800 flex items-center gap-2">
+                  <Folder className="w-5 h-5 text-blue-600" />
+                  Structure Tree
+                </h3>
+                {rootNode && rootNode.children.length > 0 && (
+                  <span className="text-xs text-gray-500 bg-white px-2 py-1 rounded-full">
+                    {rootNode.children.length} item{rootNode.children.length !== 1 ? 's' : ''}
+                  </span>
+                )}
+              </div>
+              <div className="max-h-[600px] overflow-y-auto custom-scrollbar">
                 {renderTree(rootNode)}
               </div>
             </div>
 
             {/* Editor Panel */}
-            <div className="lg:col-span-1 bg-white rounded-lg p-4 border border-gray-200">
-              <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                <Edit2 className="w-4 h-4" />
+            <div className="lg:col-span-1 bg-white rounded-lg p-4 border-2 border-gray-200 shadow-sm">
+              <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <Edit2 className="w-5 h-5 text-indigo-600" />
                 Add Element
               </h3>
               <div className="space-y-4">
@@ -565,19 +795,29 @@ export default function JsonBuilder() {
                 <button
                   onClick={addNode}
                   disabled={!canAddToSelected() || (editorType !== 'value' && !editorKey.trim()) || (editorType === 'value' && !editorKey.trim())}
-                  className="w-full btn-primary flex items-center justify-center gap-2"
+                  className="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2 transform hover:scale-[1.02] disabled:hover:scale-100"
                 >
                   <Plus className="w-5 h-5" />
                   Add {editorType === 'object' ? 'Object' : editorType === 'array' ? 'Array' : 'Value'}
                 </button>
 
                 {selectedNodeId && (
-                  <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                    <p className="text-xs text-blue-700">
-                      <strong>Selected:</strong> {findNode(rootNode, selectedNodeId)?.key || 'None'}
+                  <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border-2 border-blue-200 shadow-sm">
+                    <p className="text-sm font-semibold text-blue-800 mb-1">
+                      ✓ Selected: <span className="text-blue-600">{findNode(rootNode, selectedNodeId)?.key || 'None'}</span>
                     </p>
-                    <p className="text-xs text-blue-600 mt-1">
-                      New element will be added to the selected node
+                    <p className="text-xs text-blue-600">
+                      New element will be added as a child of this node
+                    </p>
+                  </div>
+                )}
+                {!selectedNodeId && rootNode && (
+                  <div className="mt-4 p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border-2 border-gray-200">
+                    <p className="text-sm font-semibold text-gray-700 mb-1">
+                      💡 Tip: Select a node in the tree to add children to it
+                    </p>
+                    <p className="text-xs text-gray-600">
+                      Click on any node in the Structure Tree to select it
                     </p>
                   </div>
                 )}
@@ -585,13 +825,18 @@ export default function JsonBuilder() {
             </div>
 
             {/* JSON Preview Panel */}
-            <div className="lg:col-span-1 bg-gray-900 rounded-lg p-4 border border-gray-700">
-              <h3 className="font-semibold text-gray-200 mb-3 flex items-center gap-2">
-                <FileJson className="w-4 h-4" />
-                JSON Preview
-              </h3>
-              <pre className="text-sm text-gray-100 overflow-auto max-h-[600px] font-mono bg-transparent">
-                <code>{jsonOutput}</code>
+            <div className="lg:col-span-1 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-lg p-4 border-2 border-gray-700 shadow-lg">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-bold text-gray-100 flex items-center gap-2">
+                  <FileJson className="w-5 h-5 text-blue-400" />
+                  JSON Preview
+                </h3>
+                <span className="text-xs text-gray-400 bg-gray-700 px-2 py-1 rounded-full">
+                  {jsonOutput.length} chars
+                </span>
+              </div>
+              <pre className="text-sm text-gray-100 overflow-auto max-h-[600px] font-mono bg-transparent custom-scrollbar-dark">
+                <code className="text-gray-100">{jsonOutput}</code>
               </pre>
             </div>
           </div>
