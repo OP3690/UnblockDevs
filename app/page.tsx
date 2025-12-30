@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings } from 'lucide-react';
+import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText } from 'lucide-react';
+import Link from 'next/link';
 import toast from 'react-hot-toast';
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget';
 import JsonInput from '@/components/JsonInput';
@@ -352,30 +353,39 @@ export default function Home() {
                 <p className="text-sm text-gray-600 font-medium">
                   Free Developer Tools Suite - Unblock Your Development Workflow
                   <br />
-                  JSON Converter, API Testing, Data Analysis & More
+                  JSON Viewer, JSON Parser, JSON Beautifier, JSON Converter, API Testing, Data Analysis & More
                 </p>
               </div>
             </div>
-            {activeTab === 'converter' && (
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={handleUndo}
-                  disabled={!historyManager.canUndo()}
-                  className="p-2.5 text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-110"
-                  title="Undo"
-                >
-                  <Undo2 className="w-5 h-5" />
-                </button>
-                <button
-                  onClick={handleRedo}
-                  disabled={!historyManager.canRedo()}
-                  className="p-2.5 text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-110"
-                  title="Redo"
-                >
-                  <Redo2 className="w-5 h-5" />
-                </button>
-              </div>
-            )}
+            <div className="flex items-center gap-3">
+              {activeTab === 'converter' && (
+                <>
+                  <button
+                    onClick={handleUndo}
+                    disabled={!historyManager.canUndo()}
+                    className="p-2.5 text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-110"
+                    title="Undo"
+                  >
+                    <Undo2 className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={handleRedo}
+                    disabled={!historyManager.canRedo()}
+                    className="p-2.5 text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-110"
+                    title="Redo"
+                  >
+                    <Redo2 className="w-5 h-5" />
+                  </button>
+                </>
+              )}
+              <Link
+                href="/blog"
+                className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors flex items-center gap-2"
+              >
+                <FileText className="w-4 h-4" />
+                Blog
+              </Link>
+            </div>
           </div>
           
           {/* Tabs */}
@@ -839,17 +849,28 @@ export default function Home() {
                 <strong className="text-gray-900">UnblockDevs</strong> • Free Online Developer Tools Suite
               </p>
               <p className="text-xs text-gray-500">
-                Professional developer tools: JSON to Excel converter, API testing, data analysis, schema generation, SQL formatting, log analysis, and more. All tools are free and work entirely in your browser.
+                Professional developer tools: JSON Viewer, JSON Parser, JSON Beautifier, JSON to Excel converter, API testing, data analysis, schema generation, SQL formatting, log analysis, and more. All tools are free and work entirely in your browser.
               </p>
               <div className="flex flex-wrap justify-center gap-4 mt-3 text-xs text-gray-600">
+                <span>✓ JSON Viewer</span>
+                <span>✓ JSON Parser</span>
+                <span>✓ JSON Beautifier</span>
                 <span>✓ JSON to Excel Converter</span>
                 <span>✓ API Response Comparator</span>
-                <span>✓ JSON Beautifier</span>
                 <span>✓ Schema Generator</span>
                 <span>✓ SQL Formatter</span>
                 <span>✓ Log Analyzer</span>
                 <span>✓ Payload Analyzer</span>
                 <span>✓ Mock API Generator</span>
+              </div>
+              <div className="mt-4">
+                <Link
+                  href="/blog"
+                  className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+                >
+                  <FileText className="w-4 h-4" />
+                  Read Developer Blog
+                </Link>
               </div>
             </div>
             
