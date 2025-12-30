@@ -1,14 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 export default function BuyMeACoffeeWidget() {
-  const [mounted, setMounted] = useState(false);
-
   useEffect(() => {
-    // Mark as mounted to avoid hydration issues
-    setMounted(true);
-    
     // Ensure the widget script loads even if it wasn't loaded in head
     if (typeof window !== 'undefined' && typeof document !== 'undefined') {
       // Check if widget is already loaded
@@ -47,12 +42,8 @@ export default function BuyMeACoffeeWidget() {
     }
   }, []);
 
-  // Return null during SSR to avoid hydration mismatch
-  if (!mounted) {
-    return null;
-  }
-
-  return null; // This component doesn't render anything
+  // Always return null - this component doesn't render anything
+  return null;
 }
 
 
