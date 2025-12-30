@@ -4,53 +4,81 @@ import { NextResponse } from 'next/server';
 // This ensures Ezoic can properly detect the seller entries
 const EZOIC_ADS_TXT_URL = 'https://srv.adstxtmanager.com/19390/unblockdevs.com';
 
-export async function GET() {
+// Force dynamic rendering to avoid caching issues
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+export async function GET(request: Request) {
   try {
     // Fetch the ads.txt content from Ezoic's manager
     const response = await fetch(EZOIC_ADS_TXT_URL, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (compatible; ads.txt-fetcher)',
+        'Accept': 'text/plain',
       },
-      next: { revalidate: 3600 }, // Revalidate every hour
+      cache: 'no-store', // Don't cache the fetch
     });
 
     if (!response.ok) {
-      // If fetch fails, return a basic ads.txt with Ezoic entry
-      return new NextResponse(
-        `# Ezoic ads.txt\n# If you see this, the Ezoic manager is not accessible\n# Please check: ${EZOIC_ADS_TXT_URL}\n`,
-        {
-          status: 200,
-          headers: {
-            'Content-Type': 'text/plain; charset=utf-8',
-            'Cache-Control': 'public, max-age=3600',
-          },
-        }
-      );
+      console.error(`Failed to fetch ads.txt: ${response.status} ${response.statusText}`);
+      // Return a minimal ads.txt with Ezoic entry if fetch fails
+      const fallbackContent = `#Ads.txt unblockdevs.com
+#Ads.txt managed by AdsTxtManager.com
+ownerdomain=unblockdevs.com
+contact=directsales@ezoic.com
+managerdomain=ezoic.ai
+
+ezoic.ai, 8a94bfd532909f493759d3919f3b2b52, DIRECT
+`;
+      
+      return new NextResponse(fallbackContent, {
+        status: 200,
+        headers: {
+          'Content-Type': 'text/plain; charset=utf-8',
+          'Cache-Control': 'public, max-age=300, must-revalidate',
+          'X-Content-Type-Options': 'nosniff',
+        },
+      });
     }
 
     const adsTxtContent = await response.text();
 
-    // Return the ads.txt content directly
+    // Validate that the content contains Ezoic entries
+    if (!adsTxtContent.includes('ezoic.ai') || !adsTxtContent.includes('8a94bfd532909f493759d3919f3b2b52')) {
+      console.warn('ads.txt content does not contain expected Ezoic entries');
+    }
+
+    // Return the ads.txt content directly with proper headers
     return new NextResponse(adsTxtContent, {
       status: 200,
       headers: {
         'Content-Type': 'text/plain; charset=utf-8',
-        'Cache-Control': 'public, max-age=3600', // Cache for 1 hour
+        'Cache-Control': 'public, max-age=3600, must-revalidate', // Cache for 1 hour, but allow revalidation
+        'X-Content-Type-Options': 'nosniff',
+        'Access-Control-Allow-Origin': '*', // Allow CORS for ads.txt validation
       },
     });
   } catch (error) {
     // Fallback: Return a basic ads.txt with Ezoic entry
     console.error('Error fetching ads.txt:', error);
-    return new NextResponse(
-      `# Ezoic ads.txt\n# Error fetching from manager\n# Please verify: ${EZOIC_ADS_TXT_URL}\n`,
-      {
-        status: 200,
-        headers: {
-          'Content-Type': 'text/plain; charset=utf-8',
-          'Cache-Control': 'public, max-age=300', // Cache for 5 minutes on error
-        },
-      }
-    );
+    const fallbackContent = `#Ads.txt unblockdevs.com
+#Ads.txt managed by AdsTxtManager.com
+#Error fetching from manager - using fallback
+ownerdomain=unblockdevs.com
+contact=directsales@ezoic.com
+managerdomain=ezoic.ai
+
+ezoic.ai, 8a94bfd532909f493759d3919f3b2b52, DIRECT
+`;
+    
+    return new NextResponse(fallbackContent, {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Cache-Control': 'public, max-age=300, must-revalidate', // Cache for 5 minutes on error
+        'X-Content-Type-Options': 'nosniff',
+      },
+    });
   }
 }
 
