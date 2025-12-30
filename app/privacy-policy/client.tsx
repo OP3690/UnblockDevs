@@ -10,21 +10,48 @@ export default function PrivacyPolicyClient() {
     if (typeof window !== 'undefined') {
       const loadEzoicPrivacy = async () => {
         try {
-          const response = await fetch('http://g.ezoic.net/privacy/unblockdevs.com');
+          // Fetch Ezoic privacy policy content
+          const response = await fetch('http://g.ezoic.net/privacy/unblockdevs.com', {
+            mode: 'cors',
+          });
           if (response.ok) {
             const html = await response.text();
             const embedElement = document.getElementById('ezoic-privacy-policy-embed');
             if (embedElement) {
-              embedElement.innerHTML = html;
+              // Extract the body content from the HTML
+              const parser = new DOMParser();
+              const doc = parser.parseFromString(html, 'text/html');
+              const bodyContent = doc.body.innerHTML;
+              embedElement.innerHTML = bodyContent;
             }
           }
         } catch (error) {
           console.debug('Could not load Ezoic privacy policy:', error);
-          // Fallback content is already in the HTML
+          // Show fallback message
+          const embedElement = document.getElementById('ezoic-privacy-policy-embed');
+          if (embedElement && !embedElement.innerHTML.trim()) {
+            embedElement.innerHTML = `
+              <div class="text-gray-700">
+                <p class="mb-3 text-sm">
+                  <strong>Ezoic Services</strong>
+                </p>
+                <p class="mb-3 text-sm">
+                  This website uses the services of Ezoic Inc. ("Ezoic"), including to manage third-party interest-based advertising. 
+                  Ezoic may employ a variety of technologies on this website, including tools to serve content, display advertisements 
+                  and enable advertising to visitors of this website, which may utilize first and third-party cookies.
+                </p>
+                <p class="mb-3 text-sm">
+                  For complete privacy disclosures, cookie information, and partner details, please visit the 
+                  <a href="http://g.ezoic.net/privacy/unblockdevs.com" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">Ezoic Privacy Policy for unblockdevs.com</a>.
+                </p>
+              </div>
+            `;
+          }
         }
       };
       
-      loadEzoicPrivacy();
+      // Load after a short delay to ensure DOM is ready
+      setTimeout(loadEzoicPrivacy, 500);
     }
   }, []);
 
