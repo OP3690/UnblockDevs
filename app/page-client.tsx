@@ -39,25 +39,19 @@ type ToolTab = 'converter' | 'beautifier' | 'comparator' | 'schema' | 'logs' | '
 function HomeClient() {
   const [activeTab, setActiveTab] = useState<ToolTab>('converter');
 
-  // Function to trigger Buy Me a Coffee widget
-  const triggerBuyMeACoffee = () => {
-    if (typeof window === 'undefined') return;
-    
-    setTimeout(() => {
-      if (typeof document !== 'undefined') {
-        const bmcButton = document.querySelector('#bmc-wbtn') as HTMLElement;
-        if (bmcButton) {
-          bmcButton.click();
-        }
-      }
-    }, 500);
+  // Function to show Buy Me a Coffee message
+  const showBuyMeACoffeeMessage = () => {
+    toast.success('You have a wonderful day!!!', {
+      duration: 3000,
+      icon: '☕',
+    });
   };
 
-  // Handle tab change with widget trigger
+  // Handle tab change with message
   const handleTabChange = (tab: ToolTab) => {
     if (tab !== activeTab) {
       setActiveTab(tab);
-      triggerBuyMeACoffee();
+      showBuyMeACoffeeMessage();
     } else {
       setActiveTab(tab);
     }
@@ -567,7 +561,7 @@ function HomeClient() {
                 if (typeof window !== 'undefined') {
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
-                triggerBuyMeACoffee();
+                showBuyMeACoffeeMessage();
               }}
               className="card card-hover text-left cursor-pointer group"
             >
@@ -588,7 +582,7 @@ function HomeClient() {
                 if (typeof window !== 'undefined') {
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
-                triggerBuyMeACoffee();
+                showBuyMeACoffeeMessage();
               }}
               className="card card-hover text-left cursor-pointer group"
             >
@@ -609,7 +603,7 @@ function HomeClient() {
                 if (typeof window !== 'undefined') {
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
-                triggerBuyMeACoffee();
+                showBuyMeACoffeeMessage();
               }}
               className="card card-hover text-left cursor-pointer group"
             >
@@ -630,7 +624,7 @@ function HomeClient() {
                 if (typeof window !== 'undefined') {
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
-                triggerBuyMeACoffee();
+                showBuyMeACoffeeMessage();
               }}
               className="card card-hover text-left cursor-pointer group"
             >
@@ -651,7 +645,7 @@ function HomeClient() {
                 if (typeof window !== 'undefined') {
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
-                triggerBuyMeACoffee();
+                showBuyMeACoffeeMessage();
               }}
               className="card card-hover text-left cursor-pointer group"
             >
@@ -672,7 +666,7 @@ function HomeClient() {
                 if (typeof window !== 'undefined') {
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
-                triggerBuyMeACoffee();
+                showBuyMeACoffeeMessage();
               }}
               className="card card-hover text-left cursor-pointer group"
             >
@@ -693,7 +687,7 @@ function HomeClient() {
                 if (typeof window !== 'undefined') {
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
-                triggerBuyMeACoffee();
+                showBuyMeACoffeeMessage();
               }}
               className="card card-hover text-left cursor-pointer group"
             >
@@ -714,7 +708,7 @@ function HomeClient() {
                 if (typeof window !== 'undefined') {
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
-                triggerBuyMeACoffee();
+                showBuyMeACoffeeMessage();
               }}
               className="card card-hover text-left cursor-pointer group"
             >
@@ -735,7 +729,7 @@ function HomeClient() {
                 if (typeof window !== 'undefined') {
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
-                triggerBuyMeACoffee();
+                showBuyMeACoffeeMessage();
               }}
               className="card card-hover text-left cursor-pointer group"
             >
@@ -756,7 +750,7 @@ function HomeClient() {
                 if (typeof window !== 'undefined') {
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
-                triggerBuyMeACoffee();
+                showBuyMeACoffeeMessage();
               }}
               className="card card-hover text-left cursor-pointer group"
             >
