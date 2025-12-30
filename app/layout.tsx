@@ -205,15 +205,16 @@ export default function RootLayout({
           {children}
         </div>
         <Toaster 
-          position="top-right"
+          position="bottom-right"
           toastOptions={{
             duration: 3000,
             style: {
               background: '#363636',
               color: '#fff',
+              marginBottom: '80px', // Space above Buy Me a Coffee widget
             },
             success: {
-              duration: 2000,
+              duration: 3000,
               iconTheme: {
                 primary: '#10b981',
                 secondary: '#fff',
