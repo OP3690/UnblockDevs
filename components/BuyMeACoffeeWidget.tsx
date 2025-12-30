@@ -4,13 +4,15 @@ import { useEffect } from 'react';
 
 export default function BuyMeACoffeeWidget() {
   useEffect(() => {
-    // Ensure the widget script loads even if it wasn't loaded in head
-    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-      // Check if widget is already loaded
+    // Wait for DOM to be ready
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
+    
+    const loadWidget = () => {
+      // Check if widget script already exists
       const existingScript = document.querySelector('script[data-name="BMC-Widget"]');
       
       if (!existingScript) {
-        // Create and append the script if it doesn't exist
+        // Create and append the script
         const script = document.createElement('script');
         script.setAttribute('data-name', 'BMC-Widget');
         script.setAttribute('data-cfasync', 'false');
@@ -23,26 +25,24 @@ export default function BuyMeACoffeeWidget() {
         script.setAttribute('data-x_margin', '18');
         script.setAttribute('data-y_margin', '18');
         script.async = true;
+        script.defer = true;
         
-        document.head.appendChild(script);
+        // Append to body instead of head for better compatibility
+        document.body.appendChild(script);
       }
-      
-      // Also check if the widget button exists, if not, try to trigger it
-      const checkWidget = setInterval(() => {
-        const bmcButton = document.querySelector('#bmc-wbtn');
-        if (bmcButton) {
-          clearInterval(checkWidget);
-        }
-      }, 1000);
-      
-      // Clear interval after 10 seconds
-      setTimeout(() => {
-        clearInterval(checkWidget);
-      }, 10000);
-    }
+    };
+
+    // Try loading immediately
+    loadWidget();
+    
+    // Also try after a short delay to ensure DOM is ready
+    const timeout = setTimeout(loadWidget, 100);
+    
+    return () => {
+      clearTimeout(timeout);
+    };
   }, []);
 
-  // Always return null - this component doesn't render anything
   return null;
 }
 
