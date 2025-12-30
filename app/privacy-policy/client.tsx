@@ -1,29 +1,33 @@
-import type { Metadata } from 'next';
-import PrivacyPolicyClient from './client';
+'use client';
 
-export const metadata: Metadata = {
-  title: 'Privacy Policy | UnblockDevs',
-  description: 'Privacy Policy for UnblockDevs - Learn how we collect, use, and protect your data. Compliant with GDPR, CCPA, and other privacy regulations.',
-  keywords: [
-    'privacy policy',
-    'data protection',
-    'GDPR',
-    'CCPA',
-    'privacy',
-    'UnblockDevs privacy',
-    'data privacy',
-    'cookie policy'
-  ],
-  openGraph: {
-    title: 'Privacy Policy | UnblockDevs',
-    description: 'Privacy Policy for UnblockDevs - Learn how we collect, use, and protect your data.',
-    type: 'website',
-  },
-};
+import { useEffect } from 'react';
+import Link from 'next/link';
+import { ArrowLeft, Shield, FileText } from 'lucide-react';
 
-export default function PrivacyPolicy() {
-  return <PrivacyPolicyClient />;
-}
+export default function PrivacyPolicyClient() {
+  useEffect(() => {
+    // Load Ezoic privacy policy content dynamically
+    if (typeof window !== 'undefined') {
+      const loadEzoicPrivacy = async () => {
+        try {
+          const response = await fetch('http://g.ezoic.net/privacy/unblockdevs.com');
+          if (response.ok) {
+            const html = await response.text();
+            const embedElement = document.getElementById('ezoic-privacy-policy-embed');
+            if (embedElement) {
+              embedElement.innerHTML = html;
+            }
+          }
+        } catch (error) {
+          console.debug('Could not load Ezoic privacy policy:', error);
+          // Fallback content is already in the HTML
+        }
+      };
+      
+      loadEzoicPrivacy();
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
       {/* Header */}
@@ -229,48 +233,43 @@ export default function PrivacyPolicy() {
 
             <section className="mb-8 bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg">
               <h2 className="text-xl font-bold text-gray-900 mb-3">Ezoic Privacy Disclosures</h2>
-              <p className="text-gray-700 mb-3 leading-relaxed text-sm">
+              <p className="text-gray-700 mb-4 leading-relaxed text-sm">
                 This website uses Ezoic to provide advertising services. The following disclosures are required by Ezoic and detail how Ezoic and its partners use information, including a list of known cookies used on this site.
               </p>
               
-              {/* Ezoic Privacy Policy Embed */}
+              {/* Ezoic Privacy Policy Embed - This will be populated by Ezoic's privacy policy content */}
               <div className="mt-4 p-4 bg-white rounded-lg border border-blue-200">
                 <div 
                   id="ezoic-privacy-policy-embed"
                   className="prose prose-sm max-w-none text-gray-700"
-                  dangerouslySetInnerHTML={{
-                    __html: `
-                      <p><strong>Ezoic Privacy Policy Disclosures</strong></p>
-                      <p>This website uses Ezoic to provide advertising services. Ezoic and its partners may use cookies, web beacons, and similar technologies to collect information about your visits to this and other websites to provide personalized advertisements and improve user experience.</p>
-                      <p>For detailed information about Ezoic's privacy practices, data collection, and cookie usage, please visit: <a href="http://g.ezoic.net/privacy/unblockdevs.com" target="_blank" rel="noopener noreferrer">Ezoic Privacy Policy for unblockdevs.com</a></p>
-                      <p><strong>Ezoic Partners and Cookies:</strong></p>
-                      <p>Ezoic works with various advertising partners who may set cookies on your device. These partners include but are not limited to:</p>
-                      <ul>
-                        <li>Google (AdSense, Analytics, DoubleClick)</li>
-                        <li>OpenX</li>
-                        <li>PubMatic</li>
-                        <li>Rubicon Project</li>
-                        <li>The Media Grid</li>
-                        <li>Index Exchange</li>
-                        <li>And other authorized advertising partners</li>
-                      </ul>
-                      <p>For a complete list of cookies and partners, please visit the Ezoic Privacy Policy link above.</p>
-                      <p><strong>Your Choices:</strong></p>
-                      <p>You can opt out of personalized advertising by:</p>
-                      <ul>
-                        <li>Visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer">Google Ad Settings</a></li>
-                        <li>Using the Ezoic consent management platform (if available)</li>
-                        <li>Adjusting your browser settings to block cookies</li>
-                      </ul>
-                      <p><strong>Additional Resources:</strong></p>
-                      <ul>
-                        <li><a href="https://www.ezoic.com/privacy-policy/" target="_blank" rel="noopener noreferrer">Ezoic Privacy Policy</a></li>
-                        <li><a href="https://www.ezoic.com/terms-of-service/" target="_blank" rel="noopener noreferrer">Ezoic Terms of Service</a></li>
-                        <li><a href="http://g.ezoic.net/privacy/unblockdevs.com" target="_blank" rel="noopener noreferrer">Ezoic Privacy Policy for unblockdevs.com</a></li>
-                      </ul>
-                    `
-                  }}
-                />
+                >
+                  <p className="text-gray-700 mb-3">
+                    <strong>Ezoic Privacy Policy Disclosures</strong>
+                  </p>
+                  <p className="text-gray-700 mb-3 text-sm">
+                    This website uses Ezoic to provide advertising services. Ezoic and its partners may use cookies, web beacons, and similar technologies to collect information about your visits to this and other websites to provide personalized advertisements and improve user experience.
+                  </p>
+                  <p className="text-gray-700 mb-3 text-sm">
+                    For detailed information about Ezoic's privacy practices, data collection, cookie usage, and a complete list of partners and cookies, please visit:
+                  </p>
+                  <p className="text-gray-700 mb-4">
+                    <a 
+                      href="http://g.ezoic.net/privacy/unblockdevs.com" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-blue-600 hover:underline font-semibold"
+                    >
+                      Ezoic Privacy Policy for unblockdevs.com →
+                    </a>
+                  </p>
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <p className="text-gray-700 mb-2 text-sm font-semibold">Additional Ezoic Resources:</p>
+                    <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
+                      <li><a href="https://www.ezoic.com/privacy-policy/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Ezoic Privacy Policy</a></li>
+                      <li><a href="https://www.ezoic.com/terms-of-service/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Ezoic Terms of Service</a></li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </section>
           </div>
