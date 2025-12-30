@@ -237,38 +237,17 @@ export default function PrivacyPolicyClient() {
                 This website uses Ezoic to provide advertising services. The following disclosures are required by Ezoic and detail how Ezoic and its partners use information, including a list of known cookies used on this site.
               </p>
               
-              {/* Ezoic Privacy Policy Embed - This will be populated by Ezoic's privacy policy content */}
+              {/* Ezoic Privacy Policy Embed - Required by Ezoic */}
               <div className="mt-4 p-4 bg-white rounded-lg border border-blue-200">
-                <div 
-                  id="ezoic-privacy-policy-embed"
-                  className="prose prose-sm max-w-none text-gray-700"
-                >
-                  <p className="text-gray-700 mb-3">
-                    <strong>Ezoic Privacy Policy Disclosures</strong>
-                  </p>
-                  <p className="text-gray-700 mb-3 text-sm">
-                    This website uses Ezoic to provide advertising services. Ezoic and its partners may use cookies, web beacons, and similar technologies to collect information about your visits to this and other websites to provide personalized advertisements and improve user experience.
-                  </p>
-                  <p className="text-gray-700 mb-3 text-sm">
-                    For detailed information about Ezoic's privacy practices, data collection, cookie usage, and a complete list of partners and cookies, please visit:
-                  </p>
-                  <p className="text-gray-700 mb-4">
-                    <a 
-                      href="http://g.ezoic.net/privacy/unblockdevs.com" 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="text-blue-600 hover:underline font-semibold"
-                    >
-                      Ezoic Privacy Policy for unblockdevs.com →
-                    </a>
-                  </p>
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <p className="text-gray-700 mb-2 text-sm font-semibold">Additional Ezoic Resources:</p>
-                    <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
-                      <li><a href="https://www.ezoic.com/privacy-policy/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Ezoic Privacy Policy</a></li>
-                      <li><a href="https://www.ezoic.com/terms-of-service/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Ezoic Terms of Service</a></li>
-                    </ul>
-                  </div>
+                <span id="ezoic-privacy-policy-embed"></span>
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  <p className="text-gray-700 mb-2 text-sm font-semibold">For complete Ezoic privacy information:</p>
+                  <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
+                    <li><a href="http://g.ezoic.net/privacy/unblockdevs.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Ezoic Privacy Policy for unblockdevs.com</a></li>
+                    <li><a href="https://www.ezoic.com/privacy-policy/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Ezoic Privacy Policy</a></li>
+                    <li><a href="https://www.ezoic.com/terms-of-service/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Ezoic Terms of Service</a></li>
+                    <li><a href="https://www.ezoic.com/privacy-policy/advertising-partners/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Ezoic Advertising Partners</a></li>
+                  </ul>
                 </div>
               </div>
             </section>
