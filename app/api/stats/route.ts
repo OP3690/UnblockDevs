@@ -1,33 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
+import connectDB from '@/lib/mongodb';
+import Visit from '@/models/Visit';
 
-// In-memory store (in production, use a database like Redis or PostgreSQL)
-interface Visit {
-  ip: string;
-  timestamp: number;
-  userAgent: string;
-}
-
+// In-memory store for active sessions
 interface ActiveSession {
   sessionId: string;
   timestamp: number;
   ip: string;
 }
 
-// Store visits and sessions in memory
-// In production, use Redis or a database
-let visits: Visit[] = [];
+// Store active sessions in memory
 let activeSessions: Map<string, ActiveSession> = new Map();
 
-// Clean up old data every 5 minutes
+// Clean up old sessions every 5 minutes
 const CLEANUP_INTERVAL = 5 * 60 * 1000; // 5 minutes
 const SESSION_TIMEOUT = 5 * 60 * 1000; // 5 minutes
+const BASE_VISITS = 10000; // Base constant for total visits
 
 setInterval(() => {
   const now = Date.now();
-  
-  // Clean old visits (keep last 24 hours)
-  visits = visits.filter(v => now - v.timestamp < 24 * 60 * 60 * 1000);
-  
   // Clean old sessions
   for (const [sessionId, session] of activeSessions.entries()) {
     if (now - session.timestamp > SESSION_TIMEOUT) {
@@ -36,6 +27,60 @@ setInterval(() => {
   }
 }, CLEANUP_INTERVAL);
 
+// Get today's date in YYYY-MM-DD format
+function getTodayDate(): string {
+  const now = new Date();
+  return now.toISOString().split('T')[0];
+}
+
+// Get or create today's visit record and increment
+async function incrementDailyVisit(): Promise<number> {
+  try {
+    await connectDB();
+    const today = getTodayDate();
+    
+    const visitRecord = await Visit.findOneAndUpdate(
+      { date: today },
+      { 
+        $inc: { dailyVisits: 1 },
+        lastUpdated: new Date(),
+      },
+      { 
+        upsert: true, 
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    );
+
+    return visitRecord.dailyVisits;
+  } catch (error) {
+    console.error('Error incrementing daily visit:', error);
+    return 0;
+  }
+}
+
+// Get total visits (base + sum of all daily visits)
+async function getTotalVisits(): Promise<number> {
+  try {
+    await connectDB();
+    
+    const result = await Visit.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalDailyVisits: { $sum: '$dailyVisits' },
+        },
+      },
+    ]);
+
+    const totalDailyVisits = result.length > 0 ? result[0].totalDailyVisits : 0;
+    return BASE_VISITS + totalDailyVisits;
+  } catch (error) {
+    console.error('Error getting total visits:', error);
+    return BASE_VISITS;
+  }
+}
+
 export async function GET(request: NextRequest) {
   const now = Date.now();
   
@@ -43,16 +88,6 @@ export async function GET(request: NextRequest) {
   const ip = request.headers.get('x-forwarded-for') || 
              request.headers.get('x-real-ip') || 
              'unknown';
-  
-  // Get user agent
-  const userAgent = request.headers.get('user-agent') || 'unknown';
-  
-  // Track visit
-  visits.push({
-    ip,
-    timestamp: now,
-    userAgent,
-  });
   
   // Get or create session
   const sessionId = request.cookies.get('unblockdevs_session')?.value || 
@@ -72,21 +107,18 @@ export async function GET(request: NextRequest) {
     }
   }
   
-  // Get unique visits (by IP) in last 24 hours
-  const last24Hours = now - 24 * 60 * 60 * 1000;
-  const recentVisits = visits.filter(v => v.timestamp > last24Hours);
-  const uniqueIPs = new Set(recentVisits.map(v => v.ip));
-  
   // Count active users (sessions active in last 5 minutes)
   const activeUsers = activeSessions.size;
   
-  // Total unique visits (all time unique IPs)
-  const totalUniqueVisits = new Set(visits.map(v => v.ip)).size;
+  // Increment daily visit in MongoDB
+  await incrementDailyVisit();
+  
+  // Get total visits (base + daily visits)
+  const totalVisits = await getTotalVisits();
   
   const response = NextResponse.json({
-    activeUsers,
-    totalVisits: totalUniqueVisits,
-    visitsLast24h: uniqueIPs.size,
+    activeUsers: activeUsers * 10, // Multiply by 10 as requested
+    totalVisits,
   });
   
   // Set session cookie
@@ -112,5 +144,3 @@ export async function POST(request: NextRequest) {
   
   return NextResponse.json({ success: true });
 }
-
-
