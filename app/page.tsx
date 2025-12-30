@@ -74,10 +74,14 @@ export default function Home() {
   const [activeUsers, setActiveUsers] = useState<number>(0);
   const [mounted, setMounted] = useState<boolean>(false);
 
+  // Mark as mounted immediately on client side
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Track visits and active users using API
   useEffect(() => {
-    // Mark as mounted to avoid hydration issues
-    setMounted(true);
+    if (!mounted) return;
     
     const fetchStats = async () => {
       try {
@@ -119,7 +123,7 @@ export default function Home() {
       clearInterval(heartbeatInterval);
       clearInterval(statsInterval);
     };
-  }, []);
+  }, [mounted]);
 
   const saveToHistory = useCallback(() => {
     historyManager.push({
