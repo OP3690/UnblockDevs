@@ -80,7 +80,6 @@ export default function Home() {
     setMounted(true);
     
     const fetchStats = async () => {
-    const fetchStats = async () => {
       try {
         const response = await fetch('/api/stats', {
           method: 'GET',
@@ -620,7 +619,9 @@ export default function Home() {
             <button
               onClick={() => {
                 handleTabChange('converter');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (typeof window !== 'undefined') {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
               }}
               className="card card-hover text-left cursor-pointer group"
             >
@@ -638,7 +639,9 @@ export default function Home() {
             <button
               onClick={() => {
                 handleTabChange('beautifier');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (typeof window !== 'undefined') {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
               }}
               className="card card-hover text-left cursor-pointer group"
             >
@@ -656,7 +659,9 @@ export default function Home() {
             <button
               onClick={() => {
                 handleTabChange('comparator');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (typeof window !== 'undefined') {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
               }}
               className="card card-hover text-left cursor-pointer group"
             >
@@ -674,7 +679,9 @@ export default function Home() {
             <button
               onClick={() => {
                 handleTabChange('schema');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (typeof window !== 'undefined') {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
               }}
               className="card card-hover text-left cursor-pointer group"
             >
@@ -692,7 +699,9 @@ export default function Home() {
             <button
               onClick={() => {
                 handleTabChange('logs');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (typeof window !== 'undefined') {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
               }}
               className="card card-hover text-left cursor-pointer group"
             >
@@ -710,7 +719,9 @@ export default function Home() {
             <button
               onClick={() => {
                 handleTabChange('payload');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (typeof window !== 'undefined') {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
               }}
               className="card card-hover text-left cursor-pointer group"
             >
@@ -728,7 +739,9 @@ export default function Home() {
             <button
               onClick={() => {
                 handleTabChange('curl');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (typeof window !== 'undefined') {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
               }}
               className="card card-hover text-left cursor-pointer group"
             >
@@ -746,7 +759,9 @@ export default function Home() {
             <button
               onClick={() => {
                 handleTabChange('mock');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (typeof window !== 'undefined') {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
               }}
               className="card card-hover text-left cursor-pointer group"
             >
@@ -764,7 +779,9 @@ export default function Home() {
             <button
               onClick={() => {
                 handleTabChange('testdata');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (typeof window !== 'undefined') {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
               }}
               className="card card-hover text-left cursor-pointer group"
             >
@@ -782,7 +799,9 @@ export default function Home() {
             <button
               onClick={() => {
                 handleTabChange('config');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (typeof window !== 'undefined') {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
               }}
               className="card card-hover text-left cursor-pointer group"
             >
@@ -800,7 +819,9 @@ export default function Home() {
             <button
               onClick={() => {
                 handleTabChange('sql');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (typeof window !== 'undefined') {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
               }}
               className="card card-hover text-left cursor-pointer group"
             >
@@ -840,19 +861,19 @@ export default function Home() {
       <footer className="mt-16 py-8 border-t-2 border-gray-200/50 bg-white/80 backdrop-blur-lg">
         <div className="max-w-7xl mx-auto container-padding">
           {/* Stats Section */}
-          <div className="flex flex-wrap items-center justify-center gap-6 mb-6 pb-6 border-b border-gray-200">
-            <div className="flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-lg">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-sm font-semibold text-gray-700">Active Users:</span>
-              <span className="text-lg font-bold text-blue-600">{activeUsers}</span>
+          {mounted && (
+            <div className="flex flex-wrap items-center justify-center gap-6 mb-6 pb-6 border-b border-gray-200">
+              <div className="flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-lg">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-sm font-semibold text-gray-700">Active Users:</span>
+                <span className="text-lg font-bold text-blue-600">{activeUsers}</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 bg-purple-50 rounded-lg">
+                <span className="text-sm font-semibold text-gray-700">Total Visits:</span>
+                <span className="text-lg font-bold text-purple-600">{totalVisits.toLocaleString()}</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-purple-50 rounded-lg">
-              <span className="text-sm font-semibold text-gray-700">Total Visits:</span>
-              <span className="text-lg font-bold text-purple-600">
-                {typeof window !== 'undefined' ? totalVisits.toLocaleString() : String(totalVisits)}
-              </span>
-            </div>
-          </div>
+          )}
 
           {/* Main Footer Content */}
           <div className="text-center space-y-3">
