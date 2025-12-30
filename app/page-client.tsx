@@ -18,6 +18,7 @@ import MockApiGenerator from '@/components/tools/MockApiGenerator';
 import TestDataGenerator from '@/components/tools/TestDataGenerator';
 import ConfigComparator from '@/components/tools/ConfigComparator';
 import SqlFormatter from '@/components/tools/SqlFormatter';
+import JsonBuilder from '@/components/tools/JsonBuilder';
 import {
   jsonToRows,
   extractColumns,
@@ -34,7 +35,7 @@ interface Section {
   columnIds: string[];
 }
 
-type ToolTab = 'converter' | 'beautifier' | 'comparator' | 'schema' | 'logs' | 'payload' | 'curl' | 'mock' | 'testdata' | 'config' | 'sql';
+type ToolTab = 'converter' | 'beautifier' | 'comparator' | 'schema' | 'logs' | 'payload' | 'curl' | 'mock' | 'testdata' | 'config' | 'sql' | 'builder';
 
 function HomeClient() {
   const [activeTab, setActiveTab] = useState<ToolTab>('converter');
