@@ -7,6 +7,7 @@ const EZOIC_ADS_TXT_URL = 'https://srv.adstxtmanager.com/19390/unblockdevs.com';
 // Force dynamic rendering to avoid caching issues
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+export const runtime = 'nodejs';
 
 export async function GET(request: Request) {
   try {
