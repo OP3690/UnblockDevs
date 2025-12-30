@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText } from 'lucide-react';
+import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget';
@@ -72,11 +72,99 @@ function HomeClient() {
   const [totalVisits, setTotalVisits] = useState<number>(0);
   const [activeUsers, setActiveUsers] = useState<number>(0);
   const [mounted, setMounted] = useState<boolean>(false);
+  const [showBookmarkPrompt, setShowBookmarkPrompt] = useState<boolean>(false);
 
   // Mark as mounted immediately on client side
   useEffect(() => {
-    setMounted(true);
+    // Ensure we're on client side
+    if (typeof window !== 'undefined') {
+      setMounted(true);
+      // Check if bookmark prompt was dismissed
+      const dismissed = localStorage.getItem('bookmarkPromptDismissed');
+      if (!dismissed) {
+        // Show after a short delay for better UX
+        const timer = setTimeout(() => {
+          setShowBookmarkPrompt(true);
+        }, 1500);
+        return () => clearTimeout(timer);
+      }
+    }
   }, []);
+
+  const handleDismissBookmarkPrompt = () => {
+    setShowBookmarkPrompt(false);
+    localStorage.setItem('bookmarkPromptDismissed', 'true');
+  };
+
+  // Initialize Google AdSense for header ad
+  useEffect(() => {
+    if (mounted && typeof window !== 'undefined') {
+      // Wait for AdSense script to load
+      const initAdSense = () => {
+        try {
+          if ((window as any).adsbygoogle && (window as any).adsbygoogle.loaded !== true) {
+            ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+          }
+        } catch (e) {
+          // Silently fail - AdSense may not be configured yet
+          console.debug('AdSense not ready:', e);
+        }
+      };
+      
+      // Try immediately
+      initAdSense();
+      
+      // Also try after a delay in case script is still loading
+      const timer = setTimeout(initAdSense, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [mounted]);
+
+  // Initialize Ezoic ads
+  useEffect(() => {
+    if (mounted && typeof window !== 'undefined') {
+      const initEzoicAds = () => {
+        try {
+          if ((window as any).ezstandalone && (window as any).ezstandalone.cmd) {
+            // Show all ads on the page
+            // Option 1: Show all placeholders (recommended for initial load)
+            (window as any).ezstandalone.cmd.push(function() {
+              (window as any).ezstandalone.showAds();
+            });
+            
+            // Option 2: If you have specific placement IDs, use this instead:
+            // Replace 101, 102, 103 with your actual Ezoic placement IDs from dashboard
+            // (window as any).ezstandalone.cmd.push(function() {
+            //   (window as any).ezstandalone.showAds(101, 102, 103);
+            // });
+          }
+        } catch (e) {
+          console.debug('Ezoic ads not ready:', e);
+        }
+      };
+      
+      // Try immediately
+      initEzoicAds();
+      
+      // Also try after a delay in case script is still loading
+      const timer = setTimeout(initEzoicAds, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [mounted]);
+
+  // Refresh Ezoic ads when tab changes (for dynamic content)
+  useEffect(() => {
+    if (mounted && typeof window !== 'undefined' && (window as any).ezstandalone) {
+      try {
+        // Refresh ads when content changes (tab switch)
+        (window as any).ezstandalone.cmd.push(function() {
+          (window as any).ezstandalone.showAds();
+        });
+      } catch (e) {
+        console.debug('Ezoic ads refresh error:', e);
+      }
+    }
+  }, [activeTab, mounted]);
 
   // Track visits and active users using API
   useEffect(() => {
@@ -273,64 +361,87 @@ function HomeClient() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <BuyMeACoffeeWidget />
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-lg shadow-lg border-b border-gray-200/50 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto container-padding py-6">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
-                <FileSpreadsheet className="w-8 h-8 text-white" />
+      
+      {/* Bookmark Prompt Banner */}
+      {showBookmarkPrompt && (
+        <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-lg border-b border-blue-500/30 animate-slide-down">
+          <div className="max-w-7xl mx-auto container-padding py-4">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3 flex-1">
+                <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                  <Bookmark className="w-5 h-5" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-semibold text-sm sm:text-base">
+                    📌 Bookmark this page for quick access to all developer tools!
+                  </p>
+                  <p className="text-xs sm:text-sm text-blue-100 mt-0.5">
+                    Press <kbd className="px-1.5 py-0.5 bg-white/20 rounded text-xs font-mono">Ctrl+D</kbd> (Windows/Linux) or <kbd className="px-1.5 py-0.5 bg-white/20 rounded text-xs font-mono">Cmd+D</kbd> (Mac) to bookmark
+                  </p>
+                </div>
               </div>
-              <div>
-                <h1 className="text-3xl font-bold gradient-text mb-1">
+              <button
+                onClick={handleDismissBookmarkPrompt}
+                className="p-2 hover:bg-white/20 rounded-lg transition-all duration-200 hover:scale-110 flex-shrink-0"
+                aria-label="Dismiss bookmark prompt"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Header */}
+      <header className={`bg-white/98 backdrop-blur-lg shadow-lg border-b border-gray-200/70 ${showBookmarkPrompt ? 'sticky top-[73px]' : 'sticky top-0'} z-40 transition-all duration-300`}>
+        <div className="max-w-7xl mx-auto container-padding">
+          {/* Top Bar - Ad Friendly */}
+          <div className="flex items-center justify-between py-5 border-b border-gray-100 gap-4">
+            <div className="flex items-center gap-5 flex-1 min-w-0">
+              <div className="p-3.5 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 rounded-2xl shadow-lg transform hover:scale-105 transition-transform duration-300 flex-shrink-0">
+                <FileSpreadsheet className="w-9 h-9 text-white" />
+              </div>
+              <div className="flex flex-col flex-1 min-w-0">
+                <h1 className="text-3xl font-extrabold gradient-text mb-1.5 leading-tight">
                   UnblockDevs
                 </h1>
-                <p className="text-sm text-gray-600 font-medium">
-                  Free Developer Tools Suite - Unblock Your Development Workflow
-                  <br />
-                  JSON Viewer, JSON Parser, JSON Beautifier, JSON Converter, API Testing, Data Analysis & More
+                <p className="text-xs text-gray-600 font-medium leading-relaxed">
+                  <span className="block">Free Developer Tools Suite - Unblock Your Development Workflow</span>
+                  <span className="block">JSON Viewer, JSON Parser, JSON Beautifier, JSON Converter</span>
+                  <span className="block">API Testing, Data Analysis & More</span>
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              {activeTab === 'converter' && (
-                <>
-                  <button
-                    onClick={handleUndo}
-                    disabled={!historyManager.canUndo()}
-                    className="p-2.5 text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-110"
-                    title="Undo"
-                  >
-                    <Undo2 className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={handleRedo}
-                    disabled={!historyManager.canRedo()}
-                    className="p-2.5 text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-110"
-                    title="Redo"
-                  >
-                    <Redo2 className="w-5 h-5" />
-                  </button>
-                </>
-              )}
+            {/* Ad Container - Right Side */}
+            <div className="flex items-center gap-3 flex-shrink-0">
+              <div className="hidden lg:flex items-center justify-center min-w-[300px] min-h-[100px] bg-gray-50/50 rounded-lg border border-gray-200/50">
+                <ins
+                  className="adsbygoogle"
+                  style={{ display: 'block', minWidth: '300px', minHeight: '100px' }}
+                  data-ad-client="ca-pub-6349841658473646"
+                  data-ad-slot="HEADER_AD_SLOT"
+                  data-ad-format="auto"
+                  data-full-width-responsive="false"
+                ></ins>
+              </div>
               <Link
                 href="/blog"
-                className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors flex items-center gap-2"
+                className="px-4 py-2.5 text-sm font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-all duration-200 flex items-center gap-2 border border-gray-200/50 hover:border-gray-300 hover:shadow-sm flex-shrink-0"
               >
                 <FileText className="w-4 h-4" />
-                Blog
+                <span className="hidden sm:inline">Blog</span>
               </Link>
             </div>
           </div>
           
           {/* Tabs */}
-          <div className="flex flex-wrap gap-2 border-b-2 border-gray-200/50 pb-0">
+          <div className="flex flex-wrap items-center gap-2 pt-2 -mb-px">
             <button
               onClick={() => handleTabChange('converter')}
-              className={`px-5 py-3 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-lg ${
+              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'converter'
-                  ? 'tab-active bg-blue-50'
-                  : 'tab-inactive'
+                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
+                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
               }`}
             >
               <div className="flex items-center gap-2">
@@ -340,10 +451,10 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('beautifier')}
-              className={`px-5 py-3 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-lg ${
+              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'beautifier'
-                  ? 'tab-active bg-blue-50'
-                  : 'tab-inactive'
+                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
+                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
               }`}
             >
               <div className="flex items-center gap-2">
@@ -353,10 +464,10 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('builder')}
-              className={`px-5 py-3 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-lg ${
+              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'builder'
-                  ? 'tab-active bg-blue-50'
-                  : 'tab-inactive'
+                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
+                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
               }`}
             >
               <div className="flex items-center gap-2">
@@ -366,10 +477,10 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('comparator')}
-              className={`px-5 py-3 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-lg ${
+              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'comparator'
-                  ? 'tab-active bg-blue-50'
-                  : 'tab-inactive'
+                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
+                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
               }`}
             >
               <div className="flex items-center gap-2">
@@ -379,10 +490,10 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('schema')}
-              className={`px-5 py-3 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-lg ${
+              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'schema'
-                  ? 'tab-active bg-blue-50'
-                  : 'tab-inactive'
+                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
+                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
               }`}
             >
               <div className="flex items-center gap-2">
@@ -392,10 +503,10 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('logs')}
-              className={`px-5 py-3 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-lg ${
+              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'logs'
-                  ? 'tab-active bg-blue-50'
-                  : 'tab-inactive'
+                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
+                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
               }`}
             >
               <div className="flex items-center gap-2">
@@ -405,10 +516,10 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('payload')}
-              className={`px-5 py-3 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-lg ${
+              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'payload'
-                  ? 'tab-active bg-blue-50'
-                  : 'tab-inactive'
+                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
+                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
               }`}
             >
               <div className="flex items-center gap-2">
@@ -418,10 +529,10 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('curl')}
-              className={`px-5 py-3 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-lg ${
+              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'curl'
-                  ? 'tab-active bg-blue-50'
-                  : 'tab-inactive'
+                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
+                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
               }`}
             >
               <div className="flex items-center gap-2">
@@ -431,10 +542,10 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('mock')}
-              className={`px-5 py-3 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-lg ${
+              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'mock'
-                  ? 'tab-active bg-blue-50'
-                  : 'tab-inactive'
+                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
+                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
               }`}
             >
               <div className="flex items-center gap-2">
@@ -444,10 +555,10 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('testdata')}
-              className={`px-5 py-3 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-lg ${
+              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'testdata'
-                  ? 'tab-active bg-blue-50'
-                  : 'tab-inactive'
+                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
+                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
               }`}
             >
               <div className="flex items-center gap-2">
@@ -457,10 +568,10 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('config')}
-              className={`px-5 py-3 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-lg ${
+              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'config'
-                  ? 'tab-active bg-blue-50'
-                  : 'tab-inactive'
+                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
+                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
               }`}
             >
               <div className="flex items-center gap-2">
@@ -470,10 +581,10 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('sql')}
-              className={`px-5 py-3 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-lg ${
+              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'sql'
-                  ? 'tab-active bg-blue-50'
-                  : 'tab-inactive'
+                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
+                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
               }`}
             >
               <div className="flex items-center gap-2">
@@ -481,25 +592,18 @@ function HomeClient() {
                 <span className="text-sm">SQL Formatter</span>
               </div>
             </button>
-            <button
-              onClick={() => handleTabChange('builder')}
-              className={`px-5 py-3 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-lg ${
-                activeTab === 'builder'
-                  ? 'tab-active bg-blue-50'
-                  : 'tab-inactive'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <FileSpreadsheet className="w-4 h-4" />
-                <span className="text-sm">JSON Builder</span>
-              </div>
-            </button>
           </div>
         </div>
       </header>
 
+      {/* Ezoic Ad Placement - Top of Content */}
+      {/* Replace 101 with your actual Ezoic placement ID */}
+      <div className="max-w-7xl mx-auto container-padding py-4">
+        <div id="ezoic-pub-ad-placeholder-101"></div>
+      </div>
+
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto container-padding py-8 animate-fade-in">
+      <main className="max-w-7xl mx-auto container-padding py-10 animate-fade-in">
         {activeTab === 'converter' && (
           rows.length === 0 ? (
             <JsonInput onJsonSubmit={handleJsonSubmit} />
@@ -800,6 +904,12 @@ function HomeClient() {
             </button>
           </div>
           
+          {/* Ezoic Ad Placement - Middle of Content */}
+          {/* Replace 102 with your actual Ezoic placement ID */}
+          <div className="my-12">
+            <div id="ezoic-pub-ad-placeholder-102"></div>
+          </div>
+
           <div className="mt-12 text-center">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">Why Choose UnblockDevs?</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
@@ -819,6 +929,12 @@ function HomeClient() {
           </div>
         </section>
       )}
+
+      {/* Ezoic Ad Placement - Before Footer */}
+      {/* Replace 103 with your actual Ezoic placement ID */}
+      <div className="max-w-7xl mx-auto container-padding py-8">
+        <div id="ezoic-pub-ad-placeholder-103"></div>
+      </div>
 
       {/* Footer */}
       <footer className="mt-16 py-8 border-t-2 border-gray-200/50 bg-white/80 backdrop-blur-lg">
