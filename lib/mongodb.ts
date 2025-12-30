@@ -6,6 +6,9 @@ if (!MONGODB_URI) {
   throw new Error('Please define the MONGODB_URI environment variable in your environment variables or .env.local file');
 }
 
+// Type assertion: we've already checked MONGODB_URI is defined above
+const mongoUri: string = MONGODB_URI;
+
 interface MongooseCache {
   conn: typeof mongoose | null;
   promise: Promise<typeof mongoose> | null;
@@ -32,7 +35,7 @@ async function connectDB() {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+    cached.promise = mongoose.connect(mongoUri, opts).then((mongoose) => {
       return mongoose;
     });
   }
