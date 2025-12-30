@@ -39,12 +39,18 @@ type ToolTab = 'converter' | 'beautifier' | 'comparator' | 'schema' | 'logs' | '
 function HomeClient() {
   const [activeTab, setActiveTab] = useState<ToolTab>('converter');
 
-  // Function to show Buy Me a Coffee message
+  // Function to show Buy Me a Coffee message (dismisses previous toast first)
   const showBuyMeACoffeeMessage = () => {
-    toast.success('You have a wonderful day!!!', {
-      duration: 3000,
-      icon: '☕',
-    });
+    // Dismiss any existing toast first
+    toast.dismiss();
+    // Show new toast after a small delay to ensure previous one is dismissed
+    setTimeout(() => {
+      toast.success('You have a wonderful day!!!', {
+        duration: 3000,
+        icon: '☕',
+        id: 'buy-me-coffee-message', // Use same ID so it replaces previous toast
+      });
+    }, 50);
   };
 
   // Handle tab change with message
