@@ -41,11 +41,16 @@ export default function Home() {
 
   // Function to trigger Buy Me a Coffee widget
   const triggerBuyMeACoffee = () => {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     // Wait for widget to load, then trigger it
     setTimeout(() => {
-      const bmcButton = document.querySelector('#bmc-wbtn') as HTMLElement;
-      if (bmcButton) {
-        bmcButton.click();
+      if (typeof document !== 'undefined') {
+        const bmcButton = document.querySelector('#bmc-wbtn') as HTMLElement;
+        if (bmcButton) {
+          bmcButton.click();
+        }
       }
     }, 500);
   };
@@ -838,7 +843,9 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-2 px-4 py-2 bg-purple-50 rounded-lg">
               <span className="text-sm font-semibold text-gray-700">Total Visits:</span>
-              <span className="text-lg font-bold text-purple-600">{totalVisits.toLocaleString()}</span>
+              <span className="text-lg font-bold text-purple-600">
+                {typeof window !== 'undefined' ? totalVisits.toLocaleString() : String(totalVisits)}
+              </span>
             </div>
           </div>
 
