@@ -858,22 +858,22 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="mt-16 py-8 border-t-2 border-gray-200/50 bg-white/80 backdrop-blur-lg">
+      <footer className="mt-16 py-8 border-t-2 border-gray-200/50 bg-white/80 backdrop-blur-lg" suppressHydrationWarning>
         <div className="max-w-7xl mx-auto container-padding">
           {/* Stats Section */}
-          {mounted && (
-            <div className="flex flex-wrap items-center justify-center gap-6 mb-6 pb-6 border-b border-gray-200">
-              <div className="flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-lg">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-sm font-semibold text-gray-700">Active Users:</span>
-                <span className="text-lg font-bold text-blue-600">{activeUsers}</span>
-              </div>
-              <div className="flex items-center gap-2 px-4 py-2 bg-purple-50 rounded-lg">
-                <span className="text-sm font-semibold text-gray-700">Total Visits:</span>
-                <span className="text-lg font-bold text-purple-600">{totalVisits.toLocaleString()}</span>
-              </div>
+          <div className="flex flex-wrap items-center justify-center gap-6 mb-6 pb-6 border-b border-gray-200" suppressHydrationWarning>
+            <div className="flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-lg">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-sm font-semibold text-gray-700">Active Users:</span>
+              <span className="text-lg font-bold text-blue-600" suppressHydrationWarning>{activeUsers}</span>
             </div>
-          )}
+            <div className="flex items-center gap-2 px-4 py-2 bg-purple-50 rounded-lg">
+              <span className="text-sm font-semibold text-gray-700">Total Visits:</span>
+              <span className="text-lg font-bold text-purple-600" suppressHydrationWarning>
+                {mounted ? totalVisits.toLocaleString() : '0'}
+              </span>
+            </div>
+          </div>
 
           {/* Main Footer Content */}
           <div className="text-center space-y-3">
