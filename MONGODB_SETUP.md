@@ -7,19 +7,36 @@ The application now uses MongoDB to store daily visit statistics. The stats syst
 
 ## Environment Variable
 
+**⚠️ IMPORTANT: Never commit MongoDB credentials to version control!**
+
 For production (Vercel), add the following environment variable:
 
 **Variable Name:** `MONGODB_URI`  
-**Value:** `mongodb+srv://global5665:test123@cluster0.wigbba7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
+**Value:** Your MongoDB Atlas connection string (format: `mongodb+srv://username:password@cluster.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`)
+
+### How to Get Your MongoDB Connection String:
+1. Go to [MongoDB Atlas](https://cloud.mongodb.com/)
+2. Navigate to your cluster
+3. Click **Connect** → **Connect your application**
+4. Copy the connection string
+5. Replace `<password>` with your actual database password
 
 ### How to Add in Vercel:
 1. Go to your Vercel project dashboard
 2. Navigate to **Settings** → **Environment Variables**
 3. Add a new variable:
    - **Key:** `MONGODB_URI`
-   - **Value:** `mongodb+srv://global5665:test123@cluster0.wigbba7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
+   - **Value:** Your MongoDB connection string (keep this secret!)
    - **Environment:** Production, Preview, Development (select all)
 4. Save and redeploy
+
+### For Local Development:
+Create a `.env.local` file in the root directory:
+```
+MONGODB_URI=your_mongodb_connection_string_here
+```
+
+**Note:** The `.env.local` file is already in `.gitignore` and will not be committed to version control.
 
 ## Database Structure
 
