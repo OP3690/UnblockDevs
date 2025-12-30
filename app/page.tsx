@@ -72,9 +72,14 @@ export default function Home() {
   const [historyManager] = useState(() => new HistoryManager(10));
   const [totalVisits, setTotalVisits] = useState<number>(0);
   const [activeUsers, setActiveUsers] = useState<number>(0);
+  const [mounted, setMounted] = useState<boolean>(false);
 
   // Track visits and active users using API
   useEffect(() => {
+    // Mark as mounted to avoid hydration issues
+    setMounted(true);
+    
+    const fetchStats = async () => {
     const fetchStats = async () => {
       try {
         const response = await fetch('/api/stats', {
@@ -295,7 +300,7 @@ export default function Home() {
     }
 
     // Confirm before removing
-    if (window.confirm(`Are you sure you want to remove ${safeToRemove.length} unassigned column(s) from the table and export?`)) {
+    if (typeof window !== 'undefined' && window.confirm(`Are you sure you want to remove ${safeToRemove.length} unassigned column(s) from the table and export?`)) {
       setRemovedColumns((prev) => {
         const newSet = new Set(prev);
         safeToRemove.forEach((id) => newSet.add(id));
