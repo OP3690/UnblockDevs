@@ -24,6 +24,7 @@ export default function JsonBuilder() {
   const [editorType, setEditorType] = useState<'object' | 'array' | 'value'>('value');
   const [editorValueType, setEditorValueType] = useState<ValueType>('string');
   const [jsonOutput, setJsonOutput] = useState('{}');
+  const [showExamples, setShowExamples] = useState(false);
 
   // Load from localStorage on mount
   useEffect(() => {
