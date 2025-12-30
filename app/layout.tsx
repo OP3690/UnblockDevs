@@ -200,7 +200,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         {children}
         <Toaster 
           position="top-right"
