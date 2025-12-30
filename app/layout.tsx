@@ -201,7 +201,9 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning>
-        {children}
+        <div suppressHydrationWarning>
+          {children}
+        </div>
         <Toaster 
           position="top-right"
           toastOptions={{
