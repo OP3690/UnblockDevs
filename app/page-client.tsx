@@ -823,6 +823,29 @@ function HomeClient() {
                 <span>✓ Payload Analyzer</span>
                 <span>✓ Mock API Generator</span>
               </div>
+              <div className="mt-4 pt-4 border-t border-gray-200">
+                <p className="text-xs text-gray-500 mb-2 text-center">Learn more about JSON:</p>
+                <div className="flex flex-wrap justify-center gap-4 text-xs">
+                  <a
+                    href="https://www.json.org/json-en.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-700 hover:underline flex items-center gap-1 transition-colors"
+                  >
+                    <span>📘</span>
+                    <span>JSON.org</span>
+                  </a>
+                  <a
+                    href="https://en.wikipedia.org/wiki/JSON"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-700 hover:underline flex items-center gap-1 transition-colors"
+                  >
+                    <span>📚</span>
+                    <span>JSON on Wikipedia</span>
+                  </a>
+                </div>
+              </div>
               <div className="mt-4">
                 <Link
                   href="/blog"
