@@ -1000,8 +1000,23 @@ function HomeClient() {
               </div>
             </div>
             
-            {/* Built with Love */}
+            {/* Footer Links */}
             <div className="pt-4 border-t border-gray-200">
+              <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-600 mb-3">
+                <Link
+                  href="/privacy-policy"
+                  className="hover:text-blue-600 hover:underline transition-colors"
+                >
+                  Privacy Policy
+                </Link>
+                <span className="text-gray-300">•</span>
+                <Link
+                  href="/blog"
+                  className="hover:text-blue-600 hover:underline transition-colors"
+                >
+                  Blog
+                </Link>
+              </div>
               <p className="text-sm text-gray-600">
                 Built by <span className="font-semibold text-gray-900">Developer</span> with <span className="text-red-500">❤️</span> to fellow <span className="font-semibold text-gray-900">Developers</span>
               </p>
