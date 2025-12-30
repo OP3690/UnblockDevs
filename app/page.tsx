@@ -37,7 +37,13 @@ interface Section {
 type ToolTab = 'converter' | 'beautifier' | 'comparator' | 'schema' | 'logs' | 'payload' | 'curl' | 'mock' | 'testdata' | 'config' | 'sql';
 
 export default function Home() {
+  // Use client-side only state to prevent hydration mismatch
+  const [isClient, setIsClient] = useState(false);
   const [activeTab, setActiveTab] = useState<ToolTab>('converter');
+  
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Function to trigger Buy Me a Coffee widget
   const triggerBuyMeACoffee = () => {
