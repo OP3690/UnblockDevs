@@ -89,11 +89,13 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/support.png', sizes: 'any', type: 'image/png' },
+      { url: '/icon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon.png', sizes: '16x16', type: 'image/png' },
     ],
     apple: [
-      { url: '/support.png', sizes: '180x180', type: 'image/png' },
+      { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
     ],
+    shortcut: '/favicon.ico',
   },
   category: 'Developer Tools',
   classification: 'Web Application',
@@ -175,8 +177,12 @@ export default function RootLayout({
         <meta httpEquiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
         <meta httpEquiv="Pragma" content="no-cache" />
         <meta httpEquiv="Expires" content="0" />
-        <link rel="icon" type="image/png" href="/support.png" />
-        <link rel="apple-touch-icon" href="/support.png" />
+        {/* Favicon for Google Search Results - Next.js 14 automatically serves favicon.ico from app/ directory */}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/icon.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/icon.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon.png" />
+        <link rel="shortcut icon" href="/favicon.ico" />
         
         {/* Google Analytics */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-N6DF8NPHY8"></script>
