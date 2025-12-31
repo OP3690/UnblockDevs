@@ -20,6 +20,7 @@ import ConfigComparator from '@/components/tools/ConfigComparator';
 import SqlFormatter from '@/components/tools/SqlFormatter';
 import JsonBuilder from '@/components/tools/JsonBuilder';
 import JsonFixer from '@/components/tools/JsonFixer';
+import DataInsights from '@/components/tools/DataInsights';
 import {
   jsonToRows,
   extractColumns,
@@ -36,7 +37,7 @@ interface Section {
   columnIds: string[];
 }
 
-type ToolTab = 'converter' | 'beautifier' | 'fixer' | 'comparator' | 'schema' | 'logs' | 'payload' | 'curl' | 'mock' | 'testdata' | 'config' | 'sql' | 'builder';
+type ToolTab = 'converter' | 'beautifier' | 'fixer' | 'comparator' | 'schema' | 'logs' | 'payload' | 'curl' | 'mock' | 'testdata' | 'config' | 'sql' | 'builder' | 'insights';
 
 function HomeClient() {
   const [activeTab, setActiveTab] = useState<ToolTab>('converter');
@@ -686,6 +687,7 @@ function HomeClient() {
         {activeTab === 'config' && <ConfigComparator />}
         {activeTab === 'sql' && <SqlFormatter />}
         {activeTab === 'builder' && <JsonBuilder />}
+        {activeTab === 'insights' && <DataInsights />}
       </main>
 
       {/* Services Section */}
