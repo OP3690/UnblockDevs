@@ -764,22 +764,31 @@ export default function JsonBuilder() {
   };
 
   const selectNode = (nodeId: string) => {
-    setSelectedNodeId(nodeId);
-    // Don't change editorType - let user choose what to add
-    // Only update editorKey and editorValue for reference
     if (!rootNode) return;
     const node = findNode(rootNode, nodeId);
+    
+    // If clicking on a value node, automatically select its parent instead
+    // (since value nodes can't have children)
     if (node && node.type === 'value') {
-      // Only pre-fill if it's a value node (for editing reference)
-      setEditorKey(node.key);
-      setEditorValueType(node.valueType || 'string');
-      setEditorValue(node.value || '');
-      // Keep editorType as user selected (don't change to 'value')
-    } else {
-      // For objects/arrays, just show the key name for reference
-      if (node) {
+      const parent = findParent(rootNode, nodeId);
+      if (parent) {
+        // Select the parent instead
+        setSelectedNodeId(parent.id);
         setEditorKey(''); // Clear key so user can enter new one
+        toast.info(`Selected parent "${parent.key}" - value nodes cannot have children`);
+        return;
+      } else {
+        // If no parent (shouldn't happen for value nodes), select root
+        setSelectedNodeId(rootNode.id);
+        setEditorKey('');
+        return;
       }
+    }
+    
+    // For objects/arrays, select normally
+    setSelectedNodeId(nodeId);
+    if (node) {
+      setEditorKey(''); // Clear key so user can enter new one
     }
   };
 
@@ -1287,17 +1296,44 @@ export default function JsonBuilder() {
 
                 {selectedNodeId && (
                   <div className="mt-5 p-5 bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-50 rounded-xl border-2 border-blue-400 shadow-lg">
-                    <div className="flex items-start gap-3 mb-3">
-                      <div className="w-3 h-3 bg-blue-600 rounded-full animate-pulse mt-1"></div>
-                      <div className="flex-1">
-                        <p className="text-sm font-bold text-blue-900 mb-1">
-                          ✓ Selected Node: <span className="text-blue-700">{findNode(rootNode, selectedNodeId)?.key || 'None'}</span>
-                        </p>
-                        <p className="text-xs text-blue-700 leading-relaxed">
-                          New element will be added as a child of this node
-                        </p>
-                      </div>
-                    </div>
+                    {selectedNodeId && (() => {
+                      const selectedNode = findNode(rootNode, selectedNodeId);
+                      const isValueNode = selectedNode?.type === 'value';
+                      const canAdd = canAddToSelected();
+                      
+                      if (isValueNode) {
+                        // Find parent node
+                        const parent = findParent(rootNode, selectedNodeId);
+                        return (
+                          <div className="flex items-start gap-3 mb-3">
+                            <div className="w-3 h-3 bg-yellow-500 rounded-full animate-pulse mt-1"></div>
+                            <div className="flex-1">
+                              <p className="text-sm font-bold text-yellow-900 mb-1 flex items-center gap-2">
+                                <AlertTriangle className="w-4 h-4" />
+                                Selected: <span className="text-yellow-700">{selectedNode?.key || 'None'}</span> (Value Node)
+                              </p>
+                              <p className="text-xs text-yellow-700 leading-relaxed">
+                                Value nodes cannot have children. {parent ? `Select "${parent.key}" or another object/array to add elements.` : 'Select the root or an object/array to add elements.'}
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      }
+                      
+                      return (
+                        <div className="flex items-start gap-3 mb-3">
+                          <div className="w-3 h-3 bg-blue-600 rounded-full animate-pulse mt-1"></div>
+                          <div className="flex-1">
+                            <p className="text-sm font-bold text-blue-900 mb-1">
+                              ✓ Selected Node: <span className="text-blue-700">{selectedNode?.key || 'None'}</span>
+                            </p>
+                            <p className="text-xs text-blue-700 leading-relaxed">
+                              {canAdd ? 'New element will be added as a child of this node' : 'Cannot add children to this node type'}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })()}
                     {findNode(rootNode, selectedNodeId)?.type === 'object' && (
                       <div className="mt-3 p-3 bg-blue-100 border border-blue-300 rounded-lg">
                         <p className="text-xs text-blue-900 font-semibold">
