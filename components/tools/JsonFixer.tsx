@@ -22,30 +22,45 @@ export default function JsonFixer() {
   const attemptFix = (text: string): string => {
     let fixed = text;
 
-    // Fix 1: Trailing commas
-    fixed = fixed.replace(/,(\s*[}\]])/g, '$1');
-
-    // Fix 2: Single quotes to double quotes (but be careful with already quoted strings)
-    fixed = fixed.replace(/'([^']*)'/g, '"$1"');
-
-    // Fix 3: Unquoted keys
-    fixed = fixed.replace(/([{,]\s*)([a-zA-Z_$][a-zA-Z0-9_$]*)\s*:/g, '$1"$2":');
-
-    // Fix 4: Comments (remove single-line and multi-line comments)
+    // Fix 1: Remove comments first (before other fixes)
     fixed = fixed.replace(/\/\/.*$/gm, ''); // Single-line comments
     fixed = fixed.replace(/\/\*[\s\S]*?\*\//g, ''); // Multi-line comments
 
-    // Fix 5: Trailing commas in arrays
-    fixed = fixed.replace(/,(\s*\])/g, '$1');
+    // Fix 2: Trailing commas (more precise - only before closing brackets/braces)
+    fixed = fixed.replace(/,(\s*[}\]])/g, '$1');
 
-    // Fix 6: Replace undefined with null
+    // Fix 3: Single quotes to double quotes (but be careful with already quoted strings)
+    // Only replace single quotes that are not escaped and are used for string values
+    fixed = fixed.replace(/(:\s*)'([^']*)'/g, '$1"$2"');
+    fixed = fixed.replace(/(\[\s*)'([^']*)'/g, '$1"$2"');
+
+    // Fix 4: Unquoted keys
+    fixed = fixed.replace(/([{,]\s*)([a-zA-Z_$][a-zA-Z0-9_$]*)\s*:/g, '$1"$2":');
+
+    // Fix 5: Replace undefined with null
     fixed = fixed.replace(/\bundefined\b/g, 'null');
 
-    // Fix 7: Remove BOM
+    // Fix 6: Remove BOM
     fixed = fixed.replace(/^\uFEFF/, '');
 
-    // Fix 8: Fix escaped quotes
+    // Fix 7: Fix escaped quotes
     fixed = fixed.replace(/\\'/g, "'");
+
+    // Fix 8: Add missing opening brace after key with colon (if next line starts with a key)
+    const lines = fixed.split('\n');
+    const fixedLines: string[] = [];
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const nextLine = i < lines.length - 1 ? lines[i + 1] : '';
+      
+      // Check if this line ends with a key: and next line starts with a key (missing {)
+      if (line.match(/"([^"]+)":\s*$/) && nextLine.trim().match(/^"[^"]+":/)) {
+        fixedLines.push(line + ' {');
+      } else {
+        fixedLines.push(line);
+      }
+    }
+    fixed = fixedLines.join('\n');
 
     return fixed;
   };
