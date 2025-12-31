@@ -50,56 +50,98 @@ export default function JsonFixer() {
     return fixed;
   };
 
-  // Detect common JSON errors
-  const detectCommonErrors = (text: string, errors: JsonError[]): void => {
+  // Detect common JSON errors - returns true if any errors were found
+  const detectCommonErrors = (text: string, errors: JsonError[]): boolean => {
     const lines = text.split('\n');
+    let foundErrors = false;
 
     lines.forEach((line, index) => {
       const lineNum = index + 1;
+      const trimmedLine = line.trim();
 
-      // Check for trailing commas
-      if (line.match(/,\s*[}\]],?\s*$/)) {
+      // Check for trailing commas in arrays/objects (more precise)
+      // Match: comma followed by whitespace and closing bracket/brace
+      if (trimmedLine.match(/,\s*[}\]],?\s*$/) || trimmedLine.match(/,\s*$/) && (index < lines.length - 1 && lines[index + 1].trim().match(/^[}\]]/))) {
         errors.push({
           line: lineNum,
-          column: line.length,
+          column: line.length - line.trimStart().length + trimmedLine.lastIndexOf(',') + 1,
           message: 'Trailing comma before closing bracket/brace',
           type: 'syntax',
         });
+        foundErrors = true;
       }
 
-      // Check for single quotes (simple check)
-      const singleQuoteIndex = line.indexOf("'");
-      if (singleQuoteIndex > -1 && !line.match(/['].*[']/)) {
-        errors.push({
-          line: lineNum,
-          column: singleQuoteIndex + 1,
-          message: 'Single quotes used instead of double quotes',
-          type: 'syntax',
-        });
+      // Check for single quotes in string values (more precise)
+      // Only flag if it's a value (after colon) and not already inside double quotes
+      const colonIndex = line.indexOf(':');
+      if (colonIndex > -1) {
+        const valuePart = line.substring(colonIndex + 1).trim();
+        const singleQuoteIndex = valuePart.indexOf("'");
+        if (singleQuoteIndex > -1 && !valuePart.match(/^["'].*["']$/)) {
+          // Check if it's not a comment
+          const commentIndex = valuePart.indexOf('//');
+          if (commentIndex === -1 || singleQuoteIndex < commentIndex) {
+            errors.push({
+              line: lineNum,
+              column: colonIndex + 1 + singleQuoteIndex + 1,
+              message: 'Single quotes used instead of double quotes',
+              type: 'syntax',
+            });
+            foundErrors = true;
+          }
+        }
       }
 
-      // Check for unquoted keys
-      if (line.match(/[{,]\s*[a-zA-Z_$][a-zA-Z0-9_$]*\s*:/) && !line.match(/["'][a-zA-Z_$][a-zA-Z0-9_$]*["']\s*:/)) {
+      // Check for unquoted keys (more precise - must be after { or ,)
+      const unquotedKeyMatch = line.match(/([{,]\s*)([a-zA-Z_$][a-zA-Z0-9_$]*)\s*:/);
+      if (unquotedKeyMatch && !line.match(/["'][a-zA-Z_$][a-zA-Z0-9_$]*["']\s*:/)) {
         errors.push({
           line: lineNum,
-          column: 1,
+          column: unquotedKeyMatch.index! + unquotedKeyMatch[1].length + 1,
           message: 'Unquoted object key',
           type: 'syntax',
         });
+        foundErrors = true;
       }
 
-      // Check for comments
-      const commentIndex = line.indexOf('//');
-      const multiCommentIndex = line.indexOf('/*');
+      // Check for comments (only if not inside a string)
+      const commentIndex = trimmedLine.indexOf('//');
+      const multiCommentIndex = trimmedLine.indexOf('/*');
       if (commentIndex > -1 || multiCommentIndex > -1) {
-        errors.push({
-          line: lineNum,
-          column: (commentIndex > -1 ? commentIndex : multiCommentIndex) + 1,
-          message: 'Comments are not allowed in JSON',
-          type: 'syntax',
-        });
+        // Basic check: if // appears before any quote, it's likely a comment
+        const firstQuote = Math.min(
+          trimmedLine.indexOf('"') === -1 ? Infinity : trimmedLine.indexOf('"'),
+          trimmedLine.indexOf("'") === -1 ? Infinity : trimmedLine.indexOf("'")
+        );
+        if ((commentIndex > -1 && commentIndex < firstQuote) || (multiCommentIndex > -1 && multiCommentIndex < firstQuote)) {
+          errors.push({
+            line: lineNum,
+            column: (commentIndex > -1 ? commentIndex : multiCommentIndex) + 1,
+            message: 'Comments are not allowed in JSON',
+            type: 'syntax',
+          });
+          foundErrors = true;
+        }
+      }
+
+      // Check for missing opening brace after key (like "projects": { missing)
+      const keyColonMatch = line.match(/"([^"]+)":\s*$/);
+      if (keyColonMatch && index < lines.length - 1) {
+        const nextLine = lines[index + 1].trim();
+        // If next line starts with a key (not { or [), we're missing an opening brace
+        if (nextLine.match(/^"[^"]+":/) && !nextLine.match(/^[{[]/)) {
+          errors.push({
+            line: lineNum,
+            column: line.length,
+            message: 'Missing opening brace { for object',
+            type: 'syntax',
+          });
+          foundErrors = true;
+        }
       }
     });
+
+    return foundErrors;
   };
 
   // Detect and analyze JSON errors
@@ -119,7 +161,7 @@ export default function JsonFixer() {
       JSON.parse(jsonText);
       // If successful, no errors
       setErrors([]);
-      setFixedJson(jsonText);
+      setFixedJson(JSON.stringify(JSON.parse(jsonText), null, 2));
       return;
     } catch (e: any) {
       const errorMessage = e.message || '';
@@ -143,19 +185,21 @@ export default function JsonFixer() {
         currentPos += lineLength;
       }
 
-      detectedErrors.push({
-        line: errorLine,
-        column: errorColumn,
-        message: errorMessage.replace(/JSON\.parse: /g, '').replace(/position \d+.*/, '').trim() || 'Invalid JSON syntax',
-        type: 'syntax',
-      });
+      // Only add parse error if we can't determine a better error from common patterns
+      const hasCommonErrors = detectCommonErrors(jsonText, detectedErrors);
+      
+      if (!hasCommonErrors) {
+        detectedErrors.push({
+          line: errorLine,
+          column: errorColumn,
+          message: errorMessage.replace(/JSON\.parse: /g, '').replace(/position \d+.*/, '').trim() || 'Invalid JSON syntax',
+          type: 'syntax',
+        });
+      }
 
       // Attempt to fix common JSON errors
       fixed = attemptFix(jsonText);
     }
-
-    // Additional error detection
-    detectCommonErrors(jsonText, detectedErrors);
 
     setErrors(detectedErrors);
     
@@ -163,8 +207,13 @@ export default function JsonFixer() {
     try {
       const parsed = JSON.parse(fixed);
       setFixedJson(JSON.stringify(parsed, null, 2));
-    } catch {
-      setFixedJson('');
+    } catch (parseError: any) {
+      // If still can't parse, show the fixed version anyway (might be partially fixed)
+      if (fixed !== jsonText) {
+        setFixedJson(fixed);
+      } else {
+        setFixedJson('');
+      }
     }
   }, [jsonText]);
 
