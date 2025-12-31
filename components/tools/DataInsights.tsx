@@ -320,12 +320,29 @@ export default function DataInsights() {
     }
   }, [rawData, parseCSV, parseJSON, parseSQLPaste]);
 
+  // Get unique values
+  const getUniqueValues = useCallback((rows: DataRow[], column: string): any[] => {
+    const values = rows.map(r => r[column]).filter(v => v !== null && v !== undefined && v !== '');
+    return Array.from(new Set(values));
+  }, []);
+
+  // Get duplicate count
+  const getDuplicateCount = useCallback((rows: DataRow[], column: string): number => {
+    const values = rows.map(r => r[column]).filter(v => v !== null && v !== undefined && v !== '');
+    const valueCounts: { [key: string]: number } = {};
+    values.forEach(v => {
+      const key = String(v);
+      valueCounts[key] = (valueCounts[key] || 0) + 1;
+    });
+    return Object.values(valueCounts).filter(count => count > 1).reduce((sum, count) => sum + count - 1, 0);
+  }, []);
+
   // Calculate aggregations
   const calculateAggregation = useCallback((
     rows: DataRow[],
     column: string,
     func: Insight['metrics'][0]['function']
-  ): number => {
+  ): number | any[] => {
     const values = rows.map(r => r[column]).filter(v => v !== null && v !== undefined && v !== '');
     const numericValues = values.map(v => Number(v)).filter(v => !isNaN(v));
 
