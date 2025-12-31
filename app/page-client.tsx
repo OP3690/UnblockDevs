@@ -81,14 +81,6 @@ function HomeClient() {
     // Ensure we're on client side
     if (typeof window !== 'undefined') {
       setMounted(true);
-      
-      // Track page view with Google Analytics
-      if ((window as any).gtag) {
-        (window as any).gtag('config', process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || '', {
-          page_path: window.location.pathname,
-        });
-      }
-      
       // Check if bookmark prompt was dismissed
       const dismissed = localStorage.getItem('bookmarkPromptDismissed');
       if (!dismissed) {
@@ -410,9 +402,9 @@ function HomeClient() {
                 <FileSpreadsheet className="w-9 h-9 text-white" />
               </div>
               <div className="flex flex-col flex-1 min-w-0">
-                <div className="text-3xl font-extrabold gradient-text mb-1.5 leading-tight">
+                <h1 className="text-3xl font-extrabold gradient-text mb-1.5 leading-tight">
                   UnblockDevs
-                </div>
+                </h1>
                 <p className="text-xs text-gray-600 font-medium leading-relaxed">
                   <span className="block">Free Online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier</span>
                   <span className="block">JSON to Excel Converter, JSON to CSV Converter, JSON to Table Converter</span>
@@ -651,7 +643,6 @@ function HomeClient() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto container-padding py-10 animate-fade-in">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6 text-center">Free JSON Tools - JSON Converter & API Testing</h1>
         {activeTab === 'converter' && (
           rows.length === 0 ? (
             <JsonInput onJsonSubmit={handleJsonSubmit} />
@@ -717,15 +708,12 @@ function HomeClient() {
         <section className="max-w-7xl mx-auto container-padding py-12">
           {/* Keyword-Rich Hero Section */}
           <div className="text-center mb-12 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-2xl p-8 border border-blue-100">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
               Free Online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier & JSON Fixer
-            </h2>
+            </h1>
             <p className="text-lg md:text-xl text-gray-700 max-w-4xl mx-auto mb-6">
-              Use our <strong>free</strong> online <strong>JSON tools</strong> to <strong>view JSON</strong>, <strong>format JSON</strong>, <strong>parse JSON</strong>, <strong>beautify JSON</strong>, and <strong>fix malformed JSON</strong> instantly. 
-              <strong>Convert</strong> JSON to Excel, JSON to CSV, or JSON to Table format. Our <strong>free JSON tools</strong> include <strong>API testing</strong> capabilities, allowing you to test and compare API responses. Edit, analyze, validate, repair syntax errors, and transform JSON data - all in your browser, no installation required. 
-              <Link href="/blog/html-tags-explained-guide" className="text-blue-600 hover:text-blue-800 underline ml-1">
-                Learn more about web development
-              </Link>.
+              Use our free online JSON tools to <strong>view JSON</strong>, <strong>format JSON</strong>, <strong>parse JSON</strong>, <strong>beautify JSON</strong>, and <strong>fix malformed JSON</strong> instantly. 
+              Convert JSON to Excel, JSON to CSV, or JSON to Table format. Edit, analyze, validate, repair syntax errors, and transform JSON data - all in your browser, no installation required.
             </p>
             <div className="flex flex-wrap justify-center gap-3 text-sm text-gray-600">
               <span className="px-4 py-2 bg-white rounded-lg shadow-sm">✓ JSON Viewer Online</span>
@@ -742,8 +730,7 @@ function HomeClient() {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Developer Tools</h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              UnblockDevs provides a comprehensive suite of free online developer tools to streamline your development workflow. All tools work entirely in your browser - no installation required. 
-              Check out our <Link href="/blog/html-tags-explained-guide" className="text-blue-600 hover:text-blue-800 underline">HTML tags guide</Link> and explore more <Link href="/blog" className="text-blue-600 hover:text-blue-800 underline">developer resources</Link>.
+              UnblockDevs provides a comprehensive suite of free online developer tools to streamline your development workflow. All tools work entirely in your browser - no installation required.
             </p>
           </div>
           
@@ -761,8 +748,7 @@ function HomeClient() {
                 JSON to Excel Converter | JSON to CSV Converter | JSON to Table Converter
               </h3>
               <p className="text-gray-600 text-sm">
-                Convert nested JSON data to structured Excel spreadsheets, CSV files, or HTML tables. Supports complex nested objects, arrays, and custom column organization. Export to Excel, CSV, or Table format with section management. 
-                <Link href="/blog/html-tags-explained-guide" className="text-blue-600 hover:text-blue-800 underline ml-1">Learn web development</Link>.
+                Convert nested JSON data to structured Excel spreadsheets, CSV files, or HTML tables. Supports complex nested objects, arrays, and custom column organization. Export to Excel, CSV, or Table format with section management.
               </p>
               <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
                 Try JSON to Excel Converter →

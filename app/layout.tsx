@@ -3,19 +3,81 @@ import './globals.css'
 import { Toaster } from 'react-hot-toast'
 
 export const metadata: Metadata = {
-  title: 'Free JSON Tools | Converter, API Testing & More',
-  description: 'Free online JSON tools: JSON to Excel converter, beautifier, API comparator, schema generator, SQL formatter & more. Professional developer tools.',
+  title: 'JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier, JSON Fixer Online - Free Tools | UnblockDevs',
+  description: 'Free online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier, JSON Fixer & Repair Tool, JSON to Excel converter, JSON to CSV converter, and JSON to Table converter. Edit, view, analyze, format, validate, fix malformed JSON, and convert JSON data instantly. No installation required. Professional JSON tools for developers.',
   keywords: [
-    'UnblockDevs',
-    'developer tools',
+    // Primary keywords (from top search results)
+    'json viewer',
+    'json viewer online',
+    'online json viewer',
+    'json formatter',
+    'json formatter online',
+    'online json formatter',
+    'json parser',
+    'json parser online',
+    'online json parser',
+    'json beautifier',
+    'json beautifier online',
+    'online json beautifier',
+    'json fixer',
+    'json fixer online',
+    'online json fixer',
+    'json repair tool',
+    'fix malformed json',
+    'repair json syntax errors',
+    'json error fixer',
+    'json validator and fixer',
+    'json to csv converter',
+    'json to csv',
+    'convert json to csv',
+    'json to excel converter',
+    'json to excel',
+    'convert json to excel',
+    'json to table converter',
+    'json to table',
+    'convert json to table',
+    // Secondary keywords
+    'JSON Viewer',
+    'JSON Parser',
+    'JSON Beautifier',
+    'JSON Formatter',
     'JSON to Excel',
+    'JSON to CSV',
+    'JSON to Table',
     'JSON converter',
-    'JSON beautifier',
-    'JSON formatter',
+    'JSON validator',
+    'JSON minifier',
+    'JSON prettifier',
+    'JSON structure viewer',
+    'JSON tree viewer',
+    'JSON editor',
+    'JSON validator online',
+    'JSON formatter online',
+    'JSON parser online',
+    'JSON beautifier online',
+    'free json tools',
+    'online json tools',
+    'json tools online',
+    'json editor online',
+    'json viewer and formatter',
+    'json formatter and validator',
+    'json parser online free',
+    'json beautifier tool',
+    'json to excel online',
+    'json to csv online',
+    'json to table online',
     'API comparator',
     'API testing',
     'JSON schema generator',
     'SQL formatter',
+    'comma separated id list mysql',
+    'mysql in clause formatter',
+    'comma separated values mysql',
+    'convert ids to comma separated list',
+    'mysql where in clause',
+    'sql in clause generator',
+    'comma separated list for mysql',
+    'mysql in query formatter',
     'log analyzer',
     'payload analyzer',
     'curl converter',
@@ -23,14 +85,14 @@ export const metadata: Metadata = {
     'test data generator',
     'config comparator',
     'free developer tools',
-    'online JSON tools',
     'data converter',
-    'JSON parser',
     'Excel converter',
     'API testing tools',
-    'JSON validator',
     'web development tools',
-    'programming utilities'
+    'programming utilities',
+    'JSON visualization',
+    'JSON diff tool',
+    'JSON compare'
   ],
   authors: [{ name: 'UnblockDevs' }],
   creator: 'UnblockDevs',
@@ -50,8 +112,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://unblockdevs.com',
-    title: 'Free JSON Tools | Converter, API Testing & More',
-    description: 'Free online JSON tools: JSON to Excel converter, beautifier, API comparator, schema generator, SQL formatter & more. Professional developer tools.',
+    title: 'JSON Viewer, JSON Formatter, JSON Parser Online - Free Tools | UnblockDevs',
+    description: 'Free online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier, JSON Fixer & Repair Tool, JSON to Excel, JSON to CSV, and JSON to Table converter. Edit, view, analyze, format, validate, fix malformed JSON, and convert JSON data instantly. No installation required.',
     siteName: 'UnblockDevs',
       images: [
         {
@@ -64,8 +126,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Free JSON Tools | Converter, API Testing & More',
-    description: 'Free online JSON tools: JSON to Excel converter, beautifier, API comparator, schema generator, SQL formatter & more. Professional developer tools.',
+    title: 'JSON Viewer, JSON Formatter, JSON Parser Online - Free Tools',
+    description: 'Free online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier, JSON Fixer & Repair Tool, JSON to Excel, JSON to CSV converter. Edit, view, analyze, format, fix malformed JSON data instantly.',
     images: ['/og-image.png'],
   },
   alternates: {
@@ -73,11 +135,13 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/support.png', sizes: 'any', type: 'image/png' },
+      { url: '/icon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon.png', sizes: '16x16', type: 'image/png' },
     ],
     apple: [
-      { url: '/support.png', sizes: '180x180', type: 'image/png' },
+      { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
     ],
+    shortcut: '/favicon.ico',
   },
   category: 'Developer Tools',
   classification: 'Web Application',
@@ -110,7 +174,7 @@ export default function RootLayout({
       price: '0',
       priceCurrency: 'USD',
     },
-    description: 'UnblockDevs provides 11+ free developer tools including JSON to Excel converter, JSON beautifier, API response comparator, schema generator, SQL formatter, log analyzer, payload analyzer, curl converter, mock API generator, test data generator, and config comparator.',
+    description: 'Free online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier, JSON to Excel converter, JSON to CSV converter, and JSON to Table converter. Edit, view, analyze, format, validate, and convert JSON data instantly. Professional JSON tools for developers.',
     url: 'https://unblockdevs.com',
     aggregateRating: {
       '@type': 'AggregateRating',
@@ -118,7 +182,14 @@ export default function RootLayout({
       ratingCount: '2500',
     },
     featureList: [
+      'JSON Viewer Online',
+      'JSON Formatter Online',
+      'JSON Parser Online',
+      'JSON Beautifier Online',
+      'JSON Fixer & Repair Tool',
       'JSON to Excel Converter',
+      'JSON to CSV Converter',
+      'JSON to Table Converter',
       'JSON Beautifier & Minifier',
       'API Response Comparator',
       'JSON Schema Generator',
@@ -140,36 +211,62 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" type="image/png" href="/support.png" />
-        <link rel="apple-touch-icon" href="/support.png" />
+        {/* Ezoic Privacy Scripts - Must be loaded first */}
+        <script data-cfasync="false" src="https://cmp.gatekeeperconsent.com/min.js"></script>
+        <script data-cfasync="false" src="https://the.gatekeeperconsent.com/cmp.min.js"></script>
+        
+        {/* Ezoic Header Script */}
+        <script async src="//www.ezojs.com/ezoic/sa.min.js"></script>
         <script
-          type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredData),
+            __html: `
+              window.ezstandalone = window.ezstandalone || {};
+              ezstandalone.cmd = ezstandalone.cmd || [];
+              // Handle Ezoic errors gracefully
+              if (typeof window !== 'undefined') {
+                window.addEventListener('error', function(e) {
+                  if (e.message && (e.message.includes('Ezoic') || e.message.includes('_ezaq'))) {
+                    e.preventDefault();
+                    console.debug('Ezoic error handled:', e.message);
+                  }
+                }, true);
+              }
+            `,
           }}
         />
-        {/* Google Analytics 4 (GA4) */}
-        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
-          <>
-            <script
-              async
-              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
-            />
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
-                  gtag('js', new Date());
-                  gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}', {
-                    page_path: window.location.pathname,
-                  });
-                `,
-              }}
-            />
-          </>
-        )}
-        {/* Buy Me a Coffee Widget - Minimum amount (₹499) must be set in Buy Me a Coffee account settings */}
+        
+        {/* Force CSS to load by adding cache-busting */}
+        <meta httpEquiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta httpEquiv="Pragma" content="no-cache" />
+        <meta httpEquiv="Expires" content="0" />
+        {/* Favicon for Google Search Results - Next.js 14 automatically serves favicon.ico from app/ directory */}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/icon.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/icon.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon.png" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        
+        {/* Google Analytics */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-N6DF8NPHY8"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-N6DF8NPHY8');
+            `,
+          }}
+        />
+        
+        {/* Google AdSense */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6349841658473646"
+          crossOrigin="anonymous"
+        />
+        
+        {/* Buy Me a Coffee Widget */}
         <script
           data-name="BMC-Widget"
           data-cfasync="false"
@@ -182,19 +279,29 @@ export default function RootLayout({
           data-x_margin="18"
           data-y_margin="18"
         />
+        
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData),
+          }}
+        />
       </head>
-      <body>
-        {children}
+      <body suppressHydrationWarning>
+        <div suppressHydrationWarning>
+          {children}
+        </div>
         <Toaster 
-          position="top-right"
+          position="bottom-right"
           toastOptions={{
             duration: 3000,
             style: {
               background: '#363636',
               color: '#fff',
+              marginBottom: '80px', // Space above Buy Me a Coffee widget
             },
             success: {
-              duration: 2000,
+              duration: 3000,
               iconTheme: {
                 primary: '#10b981',
                 secondary: '#fff',

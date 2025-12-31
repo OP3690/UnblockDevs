@@ -56,21 +56,6 @@ export default function JsonBuilder() {
   const generateJson = useCallback((node: JsonNode | null): any => {
     if (!node) return {};
 
-    // For root node, return its children structure directly (don't include 'root' key)
-    if (node.key === 'root') {
-      if (node.type === 'array') {
-        return node.children.map(child => generateJson(child));
-      }
-      if (node.type === 'object') {
-        const obj: any = {};
-        node.children.forEach(child => {
-          obj[child.key] = generateJson(child);
-        });
-        return obj;
-      }
-      return {};
-    }
-
     if (node.type === 'value') {
       if (node.valueType === 'number') {
         return node.value === '' ? null : Number(node.value);
@@ -686,8 +671,9 @@ export default function JsonBuilder() {
     }
 
     if (editorType === 'value' && parent.type === 'array') {
-      // For arrays, we can add values directly - key is auto-generated for tree structure only
-      const key = `item_${parent.children.length + 1}`;
+      // For arrays, we can add values directly
+      const key = editorKey.trim() || `item_${parent.children.length + 1}`;
+      if (!validateKey(parent, key)) return;
 
       const newNode: JsonNode = {
         id: generateId(),
