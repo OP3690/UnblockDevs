@@ -775,7 +775,7 @@ export default function JsonBuilder() {
         // Select the parent instead
         setSelectedNodeId(parent.id);
         setEditorKey(''); // Clear key so user can enter new one
-        toast.info(`Selected parent "${parent.key}" - value nodes cannot have children`);
+        toast(`Selected parent "${parent.key}" - value nodes cannot have children`, { icon: 'ℹ️' });
         return;
       } else {
         // If no parent (shouldn't happen for value nodes), select root
