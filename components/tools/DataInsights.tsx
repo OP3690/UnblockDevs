@@ -5,6 +5,25 @@ import { Upload, FileText, Database, Calculator, BarChart3, Download, X, CheckCi
 import toast from 'react-hot-toast';
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 interface Column {
   name: string;
@@ -37,6 +56,190 @@ interface CalculatedColumn {
   formula: string;
 }
 
+// Droppable Formula Input
+function DroppableFormulaInput({ 
+  value, 
+  onChange, 
+  placeholder,
+  onDrop,
+  className = ''
+}: { 
+  value: string; 
+  onChange: (value: string) => void;
+  placeholder?: string;
+  onDrop: (colName: string) => void;
+  className?: string;
+}) {
+  const [isOver, setIsOver] = useState(false);
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsOver(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsOver(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsOver(false);
+    const colName = e.dataTransfer.getData('text/plain');
+    if (colName) {
+      onDrop(colName);
+    }
+  };
+
+  return (
+    <input
+      type="text"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+      placeholder={placeholder}
+      className={`${className} border-2 rounded-lg font-mono text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+        isOver ? 'border-primary-500 bg-primary-50' : 'border-gray-300'
+      }`}
+    />
+  );
+}
+
+// Draggable Column Component
+function DraggableColumn({ col, onDragEnd, idPrefix = 'column' }: { col: Column; onDragEnd: (colName: string) => void; idPrefix?: string }) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useSortable({
+    id: `${idPrefix}-${col.name}`,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <button
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      onClick={() => onDragEnd(col.name)}
+      draggable
+      onDragStart={(e) => {
+        e.dataTransfer.setData('text/plain', col.name);
+      }}
+      className="px-3 py-1 rounded-lg text-sm transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300 flex items-center gap-1 cursor-grab active:cursor-grabbing"
+    >
+      <GripVertical className="w-3 h-3" />
+      {col.type === 'number' && <Hash className="w-3 h-3" />}
+      {col.type === 'date' && <CalendarIcon className="w-3 h-3" />}
+      {col.name}
+    </button>
+  );
+}
+
+// Sortable Group Item
+function SortableGroupItem({ id, colName, onRemove }: { id: string; colName: string; onRemove: () => void }) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className="flex items-center gap-2 px-3 py-2 bg-primary-600 text-white rounded-lg text-sm cursor-move"
+    >
+      <GripVertical className="w-4 h-4" />
+      <span>{colName}</span>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onRemove();
+        }}
+        className="hover:text-red-200"
+      >
+        <X className="w-3 h-3" />
+      </button>
+    </div>
+  );
+}
+
+// Sortable Metric Item
+function SortableMetricItem({ 
+  id, 
+  metric, 
+  columns, 
+  onUpdate, 
+  onRemove 
+}: { 
+  id: string; 
+  metric: Insight['metrics'][0]; 
+  columns: Column[];
+  onUpdate: (updates: Partial<Insight['metrics'][0]>) => void;
+  onRemove: () => void;
+}) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className="flex items-center gap-2 bg-white p-2 rounded-lg border border-gray-200 cursor-move"
+    >
+      <GripVertical className="w-4 h-4 text-gray-400" />
+      <select
+        value={metric.function}
+        onChange={(e) => onUpdate({ function: e.target.value as any })}
+        onClick={(e) => e.stopPropagation()}
+        className="px-3 py-1 border border-gray-300 rounded-lg text-sm"
+      >
+        <option value="sum">SUM</option>
+        <option value="avg">AVG</option>
+        <option value="median">MEDIAN</option>
+        <option value="mode">MODE</option>
+        <option value="min">MIN</option>
+        <option value="max">MAX</option>
+        <option value="count">COUNT</option>
+        <option value="count_distinct">COUNT DISTINCT</option>
+        <option value="unique_values">UNIQUE VALUES</option>
+        <option value="duplicate_count">DUPLICATE COUNT</option>
+      </select>
+      <select
+        value={metric.column}
+        onChange={(e) => onUpdate({ column: e.target.value })}
+        onClick={(e) => e.stopPropagation()}
+        className="px-3 py-1 border border-gray-300 rounded-lg text-sm flex-1"
+      >
+        {columns.map(col => (
+          <option key={col.name} value={col.name}>{col.name} ({col.type})</option>
+        ))}
+      </select>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onRemove();
+        }}
+        className="text-red-600 hover:text-red-700"
+      >
+        <X className="w-4 h-4" />
+      </button>
+    </div>
+  );
+}
+
 export default function DataInsights() {
   const [data, setData] = useState<DataRow[]>([]);
   const [columns, setColumns] = useState<Column[]>([]);
@@ -45,6 +248,15 @@ export default function DataInsights() {
   const [insights, setInsights] = useState<Insight[]>([]);
   const [calculatedColumns, setCalculatedColumns] = useState<CalculatedColumn[]>([]);
   const [activeStep, setActiveStep] = useState<'upload' | 'preview' | 'calculate' | 'insights'>('upload');
+  const [activeDragId, setActiveDragId] = useState<string | null>(null);
+  const [draggedColumn, setDraggedColumn] = useState<Column | null>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   // Parse CSV
   const parseCSV = useCallback((text: string): { columns: Column[]; rows: DataRow[] } => {
@@ -723,40 +935,76 @@ export default function DataInsights() {
                   </div>
 
                   <div className="mb-3">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Formula</label>
-                    <input
-                      type="text"
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Formula <span className="text-xs text-gray-500">(Drag columns here or type)</span>
+                    </label>
+                    <DroppableFormulaInput
                       value={calc.formula}
-                      onChange={(e) => {
+                      onChange={(value) => {
                         const updated = [...calculatedColumns];
-                        updated[idx].formula = e.target.value;
+                        updated[idx].formula = value;
                         setCalculatedColumns(updated);
                       }}
                       placeholder="e.g., price * quantity + tax"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg font-mono text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      onDrop={(colName) => {
+                        const updated = [...calculatedColumns];
+                        updated[idx].formula = (updated[idx].formula + ' ' + colName).trim();
+                        setCalculatedColumns(updated);
+                      }}
                     />
                     <p className="text-xs text-gray-500 mt-1">
-                      Supported operations: +, -, *, /, %. Use column names directly (e.g., price, quantity)
+                      Supported operations: +, -, *, /, %. Drag columns or type column names directly
                     </p>
                   </div>
 
                   <div className="mb-3">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Available Columns</label>
-                    <div className="flex flex-wrap gap-2">
-                      {columns.filter(c => c.type === 'number').map(col => (
-                        <button
-                          key={col.name}
-                          onClick={() => {
-                            const updated = [...calculatedColumns];
-                            updated[idx].formula = (updated[idx].formula + ' ' + col.name).trim();
-                            setCalculatedColumns(updated);
-                          }}
-                          className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200 transition-colors"
-                        >
-                          {col.name}
-                        </button>
-                      ))}
-                    </div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Available Columns <span className="text-xs text-gray-500">(Drag to formula or click to add)</span>
+                    </label>
+                    <DndContext
+                      sensors={sensors}
+                      collisionDetection={closestCenter}
+                      onDragStart={(event: DragStartEvent) => {
+                        const colName = event.active.id.toString().replace('column-', '');
+                        const col = columns.find(c => c.name === colName);
+                        setDraggedColumn(col || null);
+                        setActiveDragId(event.active.id.toString());
+                      }}
+                      onDragEnd={(event: DragEndEvent) => {
+                        setActiveDragId(null);
+                        setDraggedColumn(null);
+                        const { active, over } = event;
+                        if (over && active.id !== over.id) {
+                          const colName = active.id.toString().replace('column-', '');
+                          const updated = [...calculatedColumns];
+                          updated[idx].formula = (updated[idx].formula + ' ' + colName).trim();
+                          setCalculatedColumns(updated);
+                        }
+                      }}
+                    >
+                      <div className="flex flex-wrap gap-2">
+                        {columns.map(col => (
+                          <DraggableColumn
+                            key={col.name}
+                            col={col}
+                            onDragEnd={(colName) => {
+                              const updated = [...calculatedColumns];
+                              updated[idx].formula = (updated[idx].formula + ' ' + colName).trim();
+                              setCalculatedColumns(updated);
+                            }}
+                          />
+                        ))}
+                      </div>
+                      <DragOverlay>
+                        {draggedColumn ? (
+                          <div className="px-3 py-1 rounded-lg text-sm bg-primary-600 text-white flex items-center gap-1 shadow-lg">
+                            {draggedColumn.type === 'number' && <Hash className="w-3 h-3" />}
+                            {draggedColumn.type === 'date' && <CalendarIcon className="w-3 h-3" />}
+                            {draggedColumn.name}
+                          </div>
+                        ) : null}
+                      </DragOverlay>
+                    </DndContext>
                   </div>
 
                   <div className="flex gap-2">
