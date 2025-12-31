@@ -105,7 +105,7 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://unblockdevs.com',
     title: 'JSON Viewer, JSON Formatter, JSON Parser Online - Free Tools | UnblockDevs',
-    description: 'Free online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier, JSON to Excel, JSON to CSV, and JSON to Table converter. Edit, view, analyze, format, and convert JSON data instantly. No installation required.',
+    description: 'Free online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier, JSON Fixer & Repair Tool, JSON to Excel, JSON to CSV, and JSON to Table converter. Edit, view, analyze, format, validate, fix malformed JSON, and convert JSON data instantly. No installation required.',
     siteName: 'UnblockDevs',
       images: [
         {
@@ -119,7 +119,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'JSON Viewer, JSON Formatter, JSON Parser Online - Free Tools',
-    description: 'Free online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier, JSON to Excel, JSON to CSV converter. Edit, view, analyze, format JSON data instantly.',
+    description: 'Free online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier, JSON Fixer & Repair Tool, JSON to Excel, JSON to CSV converter. Edit, view, analyze, format, fix malformed JSON data instantly.',
     images: ['/og-image.png'],
   },
   alternates: {
