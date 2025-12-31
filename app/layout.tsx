@@ -208,12 +208,22 @@ export default function RootLayout({
         <script data-cfasync="false" src="https://the.gatekeeperconsent.com/cmp.min.js"></script>
         
         {/* Ezoic Header Script */}
-        <script async src="//www.ezojs.com/ezoic/sa.min.js"></script>
+        <script async src="//www.ezojs.com/ezoic/sa.min.js" onError={(e) => {
+          // Silently handle Ezoic script loading errors
+          console.debug('Ezoic script load error (site may not be approved yet)');
+        }}></script>
         <script
           dangerouslySetInnerHTML={{
             __html: `
               window.ezstandalone = window.ezstandalone || {};
               ezstandalone.cmd = ezstandalone.cmd || [];
+              // Handle Ezoic errors gracefully
+              window.addEventListener('error', function(e) {
+                if (e.message && e.message.includes('Ezoic')) {
+                  e.preventDefault();
+                  console.debug('Ezoic error handled:', e.message);
+                }
+              }, true);
             `,
           }}
         />

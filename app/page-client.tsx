@@ -121,34 +121,32 @@ function HomeClient() {
     }
   }, [mounted]);
 
-  // Initialize Ezoic ads
+  // Initialize Ezoic ads with error handling
   useEffect(() => {
     if (mounted && typeof window !== 'undefined') {
       const initEzoicAds = () => {
         try {
+          // Check if Ezoic is available and site is approved
           if ((window as any).ezstandalone && (window as any).ezstandalone.cmd) {
-            // Show all ads on the page
-            // Option 1: Show all placeholders (recommended for initial load)
             (window as any).ezstandalone.cmd.push(function() {
-              (window as any).ezstandalone.showAds();
+              try {
+                if (typeof (window as any).ezstandalone.showAds === 'function') {
+                  (window as any).ezstandalone.showAds();
+                }
+              } catch (e) {
+                // Silently handle Ezoic errors (site may not be approved yet)
+                console.debug('Ezoic ads initialization skipped:', e);
+              }
             });
-            
-            // Option 2: If you have specific placement IDs, use this instead:
-            // Replace 101, 102, 103 with your actual Ezoic placement IDs from dashboard
-            // (window as any).ezstandalone.cmd.push(function() {
-            //   (window as any).ezstandalone.showAds(101, 102, 103);
-            // });
           }
         } catch (e) {
-          console.debug('Ezoic ads not ready:', e);
+          // Silently handle Ezoic errors
+          console.debug('Ezoic ads not available:', e);
         }
       };
       
-      // Try immediately
-      initEzoicAds();
-      
-      // Also try after a delay in case script is still loading
-      const timer = setTimeout(initEzoicAds, 1000);
+      // Try after a delay to ensure script is loaded
+      const timer = setTimeout(initEzoicAds, 2000);
       return () => clearTimeout(timer);
     }
   }, [mounted]);
