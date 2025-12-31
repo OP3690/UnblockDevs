@@ -573,7 +573,7 @@ export default function JsonFixer() {
         JSON.parse(retryFixed);
         return { fixed: retryFixed, errors: [...errors, ...retryResult.errors] };
       } catch {
-        return { fixed: '', errors: [...errors, { line: 1, column: 1, message: 'Could not fully fix JSON', type: 'non-fixable', severity: 'non-fixable' }] };
+        return { fixed: '', errors: [...errors, { line: 1, column: 1, message: 'Could not fully fix JSON', type: 'structure', severity: 'non-fixable' }] };
       }
     }
   };
