@@ -21,11 +21,13 @@ interface Insight {
   groupBy: string[];
   metrics: Array<{
     column: string;
-    function: 'sum' | 'avg' | 'median' | 'mode' | 'min' | 'max' | 'count' | 'count_distinct';
+    function: 'sum' | 'avg' | 'median' | 'mode' | 'min' | 'max' | 'count' | 'count_distinct' | 'unique_values' | 'duplicate_count';
   }>;
   filters?: {
     dateRange?: [string, string];
+    dateFilter?: 'same_date' | 'any_date' | 'range';
     valueFilters?: Array<{ column: string; operator: string; value: any }>;
+    frequencyFilter?: { column: string; minCount: number };
   };
 }
 
@@ -349,10 +351,14 @@ export default function DataInsights() {
         return values.length;
       case 'count_distinct':
         return new Set(values).size;
+      case 'unique_values':
+        return getUniqueValues(rows, column);
+      case 'duplicate_count':
+        return getDuplicateCount(rows, column);
       default:
         return 0;
     }
-  }, []);
+  }, [getUniqueValues, getDuplicateCount]);
 
   // Generate insight results
   const generateInsightResults = useCallback((insight: Insight): DataRow[] => {
@@ -890,104 +896,287 @@ export default function DataInsights() {
                     </div>
                   </div>
 
-                  {/* Metrics */}
+                  {/* Metrics - Drag and Drop Area */}
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Metrics</label>
-                    <div className="space-y-2">
-                      {insight.metrics.map((metric, metricIdx) => (
-                        <div key={metricIdx} className="flex items-center gap-2">
-                          <select
-                            value={metric.function}
-                            onChange={(e) => {
-                              const updated = [...insights];
-                              updated[idx].metrics[metricIdx].function = e.target.value as any;
-                              setInsights(updated);
-                            }}
-                            className="px-3 py-1 border border-gray-300 rounded-lg text-sm"
-                          >
-                            <option value="sum">SUM</option>
-                            <option value="avg">AVG</option>
-                            <option value="median">MEDIAN</option>
-                            <option value="mode">MODE</option>
-                            <option value="min">MIN</option>
-                            <option value="max">MAX</option>
-                            <option value="count">COUNT</option>
-                            <option value="count_distinct">COUNT DISTINCT</option>
-                          </select>
-                          <select
-                            value={metric.column}
-                            onChange={(e) => {
-                              const updated = [...insights];
-                              updated[idx].metrics[metricIdx].column = e.target.value;
-                              setInsights(updated);
-                            }}
-                            className="px-3 py-1 border border-gray-300 rounded-lg text-sm flex-1"
-                          >
-                            {columns.filter(c => c.type === 'number').map(col => (
-                              <option key={col.name} value={col.name}>{col.name}</option>
-                            ))}
-                          </select>
-                          <button
-                            onClick={() => {
-                              const updated = [...insights];
-                              updated[idx].metrics.splice(metricIdx, 1);
-                              setInsights(updated);
-                            }}
-                            className="text-red-600 hover:text-red-700"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
+                    <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                      <Calculator className="w-4 h-4" />
+                      Metrics (Drag columns here or click to add)
+                    </label>
+                    <div className="min-h-[60px] border-2 border-dashed border-gray-300 rounded-lg p-3 mb-3 bg-gray-50">
+                      {insight.metrics.length === 0 ? (
+                        <p className="text-gray-400 text-sm text-center py-2">No metrics selected</p>
+                      ) : (
+                        <div className="space-y-2">
+                          {insight.metrics.map((metric, metricIdx) => {
+                            const col = columns.find(c => c.name === metric.column);
+                            return (
+                              <div key={metricIdx} className="flex items-center gap-2 bg-white p-2 rounded-lg border border-gray-200">
+                                <GripVertical className="w-4 h-4 cursor-move text-gray-400" />
+                                <select
+                                  value={metric.function}
+                                  onChange={(e) => {
+                                    const updated = [...insights];
+                                    updated[idx].metrics[metricIdx].function = e.target.value as any;
+                                    setInsights(updated);
+                                  }}
+                                  className="px-3 py-1 border border-gray-300 rounded-lg text-sm"
+                                >
+                                  <option value="sum">SUM</option>
+                                  <option value="avg">AVG</option>
+                                  <option value="median">MEDIAN</option>
+                                  <option value="mode">MODE</option>
+                                  <option value="min">MIN</option>
+                                  <option value="max">MAX</option>
+                                  <option value="count">COUNT</option>
+                                  <option value="count_distinct">COUNT DISTINCT</option>
+                                  <option value="unique_values">UNIQUE VALUES</option>
+                                  <option value="duplicate_count">DUPLICATE COUNT</option>
+                                </select>
+                                <select
+                                  value={metric.column}
+                                  onChange={(e) => {
+                                    const updated = [...insights];
+                                    updated[idx].metrics[metricIdx].column = e.target.value;
+                                    setInsights(updated);
+                                  }}
+                                  className="px-3 py-1 border border-gray-300 rounded-lg text-sm flex-1"
+                                >
+                                  {columns.map(col => (
+                                    <option key={col.name} value={col.name}>{col.name} ({col.type})</option>
+                                  ))}
+                                </select>
+                                <button
+                                  onClick={() => {
+                                    const updated = [...insights];
+                                    updated[idx].metrics.splice(metricIdx, 1);
+                                    setInsights(updated);
+                                  }}
+                                  className="text-red-600 hover:text-red-700"
+                                >
+                                  <X className="w-4 h-4" />
+                                </button>
+                              </div>
+                            );
+                          })}
                         </div>
-                      ))}
-                      <button
-                        onClick={() => {
-                          const updated = [...insights];
-                          const numericColumns = columns.filter(c => c.type === 'number');
-                          if (numericColumns.length > 0) {
+                      )}
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {columns.map(col => (
+                        <button
+                          key={col.name}
+                          onClick={() => {
+                            const updated = [...insights];
                             updated[idx].metrics.push({
-                              column: numericColumns[0].name,
-                              function: 'sum'
+                              column: col.name,
+                              function: col.type === 'number' ? 'sum' : 'count'
                             });
                             setInsights(updated);
-                          }
-                        }}
-                        className="px-3 py-1 text-sm text-primary-600 hover:text-primary-700 flex items-center gap-1"
-                      >
-                        <Plus className="w-4 h-4" />
-                        Add Metric
-                      </button>
+                          }}
+                          className="px-3 py-1 rounded-lg text-sm transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300 flex items-center gap-1"
+                        >
+                          {col.type === 'number' && <Hash className="w-3 h-3" />}
+                          {col.type === 'date' && <CalendarIcon className="w-3 h-3" />}
+                          {col.name}
+                        </button>
+                      ))}
                     </div>
                   </div>
 
                   {/* Filters */}
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Date Range Filter</label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="date"
-                        value={insight.filters?.dateRange?.[0] || ''}
-                        onChange={(e) => {
-                          const updated = [...insights];
-                          if (!updated[idx].filters) updated[idx].filters = {};
-                          if (!updated[idx].filters.dateRange) updated[idx].filters.dateRange = ['', ''];
-                          updated[idx].filters.dateRange![0] = e.target.value;
-                          setInsights(updated);
-                        }}
-                        className="px-3 py-1 border border-gray-300 rounded-lg text-sm"
-                      />
-                      <span className="text-gray-500">to</span>
-                      <input
-                        type="date"
-                        value={insight.filters?.dateRange?.[1] || ''}
-                        onChange={(e) => {
-                          const updated = [...insights];
-                          if (!updated[idx].filters) updated[idx].filters = {};
-                          if (!updated[idx].filters.dateRange) updated[idx].filters.dateRange = ['', ''];
-                          updated[idx].filters.dateRange![1] = e.target.value;
-                          setInsights(updated);
-                        }}
-                        className="px-3 py-1 border border-gray-300 rounded-lg text-sm"
-                      />
+                  <div className="mb-4 space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                        <Filter className="w-4 h-4" />
+                        Filters
+                      </label>
+                      
+                      {/* Date Filter Type */}
+                      <div className="mb-3">
+                        <label className="block text-xs text-gray-600 mb-1">Date Filter Type</label>
+                        <select
+                          value={insight.filters?.dateFilter || 'range'}
+                          onChange={(e) => {
+                            const updated = [...insights];
+                            if (!updated[idx].filters) updated[idx].filters = {};
+                            updated[idx].filters.dateFilter = e.target.value as any;
+                            setInsights(updated);
+                          }}
+                          className="px-3 py-1 border border-gray-300 rounded-lg text-sm w-full"
+                        >
+                          <option value="range">Date Range</option>
+                          <option value="same_date">Same Date (Most Common)</option>
+                          <option value="any_date">Any Date</option>
+                        </select>
+                      </div>
+
+                      {/* Date Range */}
+                      {(insight.filters?.dateFilter === 'range' || !insight.filters?.dateFilter) && (
+                        <div className="mb-3">
+                          <label className="block text-xs text-gray-600 mb-1">Date Range</label>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="date"
+                              value={insight.filters?.dateRange?.[0] || ''}
+                              onChange={(e) => {
+                                const updated = [...insights];
+                                if (!updated[idx].filters) updated[idx].filters = {};
+                                if (!updated[idx].filters.dateRange) updated[idx].filters.dateRange = ['', ''];
+                                updated[idx].filters.dateRange![0] = e.target.value;
+                                setInsights(updated);
+                              }}
+                              className="px-3 py-1 border border-gray-300 rounded-lg text-sm flex-1"
+                            />
+                            <span className="text-gray-500">to</span>
+                            <input
+                              type="date"
+                              value={insight.filters?.dateRange?.[1] || ''}
+                              onChange={(e) => {
+                                const updated = [...insights];
+                                if (!updated[idx].filters) updated[idx].filters = {};
+                                if (!updated[idx].filters.dateRange) updated[idx].filters.dateRange = ['', ''];
+                                updated[idx].filters.dateRange![1] = e.target.value;
+                                setInsights(updated);
+                              }}
+                              className="px-3 py-1 border border-gray-300 rounded-lg text-sm flex-1"
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Value Filters */}
+                      <div className="mb-3">
+                        <label className="block text-xs text-gray-600 mb-1">Value Filters</label>
+                        <div className="space-y-2">
+                          {(insight.filters?.valueFilters || []).map((filter, filterIdx) => (
+                            <div key={filterIdx} className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg">
+                              <select
+                                value={filter.column}
+                                onChange={(e) => {
+                                  const updated = [...insights];
+                                  if (!updated[idx].filters) updated[idx].filters = {};
+                                  if (!updated[idx].filters.valueFilters) updated[idx].filters.valueFilters = [];
+                                  updated[idx].filters.valueFilters![filterIdx].column = e.target.value;
+                                  setInsights(updated);
+                                }}
+                                className="px-2 py-1 border border-gray-300 rounded text-xs flex-1"
+                              >
+                                {columns.map(col => (
+                                  <option key={col.name} value={col.name}>{col.name}</option>
+                                ))}
+                              </select>
+                              <select
+                                value={filter.operator}
+                                onChange={(e) => {
+                                  const updated = [...insights];
+                                  if (!updated[idx].filters) updated[idx].filters = {};
+                                  if (!updated[idx].filters.valueFilters) updated[idx].filters.valueFilters = [];
+                                  updated[idx].filters.valueFilters![filterIdx].operator = e.target.value;
+                                  setInsights(updated);
+                                }}
+                                className="px-2 py-1 border border-gray-300 rounded text-xs"
+                              >
+                                <option value="equals">Equals</option>
+                                <option value="not_equals">Not Equals</option>
+                                <option value="greater_than">Greater Than</option>
+                                <option value="less_than">Less Than</option>
+                                <option value="contains">Contains</option>
+                                <option value="starts_with">Starts With</option>
+                                <option value="ends_with">Ends With</option>
+                              </select>
+                              <input
+                                type="text"
+                                value={filter.value}
+                                onChange={(e) => {
+                                  const updated = [...insights];
+                                  if (!updated[idx].filters) updated[idx].filters = {};
+                                  if (!updated[idx].filters.valueFilters) updated[idx].filters.valueFilters = [];
+                                  updated[idx].filters.valueFilters![filterIdx].value = e.target.value;
+                                  setInsights(updated);
+                                }}
+                                placeholder="Value"
+                                className="px-2 py-1 border border-gray-300 rounded text-xs flex-1"
+                              />
+                              <button
+                                onClick={() => {
+                                  const updated = [...insights];
+                                  if (!updated[idx].filters) updated[idx].filters = {};
+                                  if (!updated[idx].filters.valueFilters) updated[idx].filters.valueFilters = [];
+                                  updated[idx].filters.valueFilters!.splice(filterIdx, 1);
+                                  setInsights(updated);
+                                }}
+                                className="text-red-600 hover:text-red-700"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
+                            </div>
+                          ))}
+                          <button
+                            onClick={() => {
+                              const updated = [...insights];
+                              if (!updated[idx].filters) updated[idx].filters = {};
+                              if (!updated[idx].filters.valueFilters) updated[idx].filters.valueFilters = [];
+                              updated[idx].filters.valueFilters!.push({
+                                column: columns[0]?.name || '',
+                                operator: 'equals',
+                                value: ''
+                              });
+                              setInsights(updated);
+                            }}
+                            className="px-2 py-1 text-xs text-primary-600 hover:text-primary-700 flex items-center gap-1"
+                          >
+                            <Plus className="w-3 h-3" />
+                            Add Value Filter
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Frequency Filter */}
+                      <div className="mb-3">
+                        <label className="block text-xs text-gray-600 mb-1">Frequency Filter (Rows appearing more than X times)</label>
+                        <div className="flex items-center gap-2">
+                          <select
+                            value={insight.filters?.frequencyFilter?.column || ''}
+                            onChange={(e) => {
+                              const updated = [...insights];
+                              if (!updated[idx].filters) updated[idx].filters = {};
+                              if (!updated[idx].filters.frequencyFilter) {
+                                updated[idx].filters.frequencyFilter = { column: e.target.value, minCount: 1 };
+                              } else {
+                                updated[idx].filters.frequencyFilter.column = e.target.value;
+                              }
+                              setInsights(updated);
+                            }}
+                            className="px-3 py-1 border border-gray-300 rounded-lg text-sm flex-1"
+                          >
+                            <option value="">Select column...</option>
+                            {columns.map(col => (
+                              <option key={col.name} value={col.name}>{col.name}</option>
+                            ))}
+                          </select>
+                          <span className="text-gray-500 text-sm">appearing more than</span>
+                          <input
+                            type="number"
+                            min="1"
+                            value={insight.filters?.frequencyFilter?.minCount || 1}
+                            onChange={(e) => {
+                              const updated = [...insights];
+                              if (!updated[idx].filters) updated[idx].filters = {};
+                              if (!updated[idx].filters.frequencyFilter) {
+                                updated[idx].filters.frequencyFilter = { 
+                                  column: columns[0]?.name || '', 
+                                  minCount: parseInt(e.target.value) || 1 
+                                };
+                              } else {
+                                updated[idx].filters.frequencyFilter.minCount = parseInt(e.target.value) || 1;
+                              }
+                              setInsights(updated);
+                            }}
+                            className="px-3 py-1 border border-gray-300 rounded-lg text-sm w-20"
+                          />
+                          <span className="text-gray-500 text-sm">times</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
