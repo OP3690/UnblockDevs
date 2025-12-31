@@ -141,24 +141,27 @@ export default function DataInsights() {
 
     // Detect separator (|, tab, or multiple spaces)
     const firstLine = lines[0];
-    let separator = '|';
-    if (firstLine.includes('\t')) separator = '\t';
-    else if (firstLine.match(/\s{2,}/)) separator = /\s{2,}/;
+    let separator: string | RegExp = '|';
+    if (firstLine.includes('\t')) {
+      separator = '\t';
+    } else if (firstLine.match(/\s{2,}/)) {
+      separator = /\s{2,}/;
+    }
 
     // Parse header
     const headerLine = lines[0];
-    const headers = headerLine.split(separator).map(h => h.trim()).filter(h => h);
+    const headers = headerLine.split(separator as string | RegExp).map(h => h.trim()).filter(h => h);
 
     // Skip separator line if present (e.g., "---|----|----")
     let dataStartIndex = 1;
-    if (lines[1].match(/^[-|:\s]+$/)) {
+    if (lines[1] && lines[1].match(/^[-|:\s]+$/)) {
       dataStartIndex = 2;
     }
 
     // Parse data rows
     const rows: DataRow[] = [];
     for (let i = dataStartIndex; i < lines.length; i++) {
-      const values = lines[i].split(separator).map(v => v.trim());
+      const values = lines[i].split(separator as string | RegExp).map(v => v.trim());
       if (values.length === headers.length) {
         const row: DataRow = {};
         headers.forEach((header, idx) => {
