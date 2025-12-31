@@ -19,14 +19,14 @@ export default function JsonFixer() {
   const [showErrors, setShowErrors] = useState(true);
 
   // Attempt to fix common JSON errors
-  const attemptFix = (text: string, errors: JsonError[]): string => {
+  const attemptFix = (text: string): string => {
     let fixed = text;
 
     // Fix 1: Trailing commas
     fixed = fixed.replace(/,(\s*[}\]])/g, '$1');
 
-    // Fix 2: Single quotes to double quotes
-    fixed = fixed.replace(/'/g, '"');
+    // Fix 2: Single quotes to double quotes (but be careful with already quoted strings)
+    fixed = fixed.replace(/'([^']*)'/g, '"$1"');
 
     // Fix 3: Unquoted keys
     fixed = fixed.replace(/([{,]\s*)([a-zA-Z_$][a-zA-Z0-9_$]*)\s*:/g, '$1"$2":');
@@ -38,16 +38,13 @@ export default function JsonFixer() {
     // Fix 5: Trailing commas in arrays
     fixed = fixed.replace(/,(\s*\])/g, '$1');
 
-    // Fix 6: Missing quotes around string values (basic)
-    // This is more complex, so we'll be conservative
-
-    // Fix 7: Replace undefined/null with null
+    // Fix 6: Replace undefined with null
     fixed = fixed.replace(/\bundefined\b/g, 'null');
 
-    // Fix 8: Remove BOM
+    // Fix 7: Remove BOM
     fixed = fixed.replace(/^\uFEFF/, '');
 
-    // Fix 9: Fix escaped quotes
+    // Fix 8: Fix escaped quotes
     fixed = fixed.replace(/\\'/g, "'");
 
     return fixed;
@@ -70,11 +67,12 @@ export default function JsonFixer() {
         });
       }
 
-      // Check for single quotes
-      if (line.match(/[']/) && !line.match(/['].*[']/)) {
+      // Check for single quotes (simple check)
+      const singleQuoteIndex = line.indexOf("'");
+      if (singleQuoteIndex > -1 && !line.match(/['].*[']/)) {
         errors.push({
           line: lineNum,
-          column: line.indexOf("'") + 1,
+          column: singleQuoteIndex + 1,
           message: 'Single quotes used instead of double quotes',
           type: 'syntax',
         });
@@ -91,16 +89,84 @@ export default function JsonFixer() {
       }
 
       // Check for comments
-      if (line.match(/\/\//) || line.match(/\/\*/)) {
+      const commentIndex = line.indexOf('//');
+      const multiCommentIndex = line.indexOf('/*');
+      if (commentIndex > -1 || multiCommentIndex > -1) {
         errors.push({
           line: lineNum,
-          column: line.indexOf('//') > -1 ? line.indexOf('//') + 1 : line.indexOf('/*') + 1,
+          column: (commentIndex > -1 ? commentIndex : multiCommentIndex) + 1,
           message: 'Comments are not allowed in JSON',
           type: 'syntax',
         });
       }
     });
   };
+
+  // Detect and analyze JSON errors
+  useEffect(() => {
+    if (!jsonText.trim()) {
+      setErrors([]);
+      setFixedJson('');
+      return;
+    }
+
+    const detectedErrors: JsonError[] = [];
+    let fixed = jsonText;
+    const lines = jsonText.split('\n');
+
+    try {
+      // Try to parse JSON
+      JSON.parse(jsonText);
+      // If successful, no errors
+      setErrors([]);
+      setFixedJson(jsonText);
+      return;
+    } catch (e: any) {
+      const errorMessage = e.message || '';
+      
+      // Extract line number from error message
+      const lineMatch = errorMessage.match(/position (\d+)/);
+      let errorPosition = lineMatch ? parseInt(lineMatch[1]) : 0;
+      
+      // Calculate line and column
+      let currentPos = 0;
+      let errorLine = 1;
+      let errorColumn = 1;
+      
+      for (let i = 0; i < lines.length; i++) {
+        const lineLength = lines[i].length + 1; // +1 for newline
+        if (currentPos + lineLength > errorPosition) {
+          errorLine = i + 1;
+          errorColumn = errorPosition - currentPos + 1;
+          break;
+        }
+        currentPos += lineLength;
+      }
+
+      detectedErrors.push({
+        line: errorLine,
+        column: errorColumn,
+        message: errorMessage.replace(/JSON\.parse: /g, '').replace(/position \d+.*/, '').trim() || 'Invalid JSON syntax',
+        type: 'syntax',
+      });
+
+      // Attempt to fix common JSON errors
+      fixed = attemptFix(jsonText);
+    }
+
+    // Additional error detection
+    detectCommonErrors(jsonText, detectedErrors);
+
+    setErrors(detectedErrors);
+    
+    // Try to parse fixed JSON
+    try {
+      const parsed = JSON.parse(fixed);
+      setFixedJson(JSON.stringify(parsed, null, 2));
+    } catch {
+      setFixedJson('');
+    }
+  }, [jsonText]);
 
   const handleCopy = () => {
     if (fixedJson) {
@@ -137,14 +203,6 @@ export default function JsonFixer() {
       };
       reader.readAsText(file);
     }
-  };
-
-  const getLineClass = (lineNum: number): string => {
-    const lineErrors = errors.filter(e => e.line === lineNum);
-    if (lineErrors.length > 0) {
-      return 'bg-red-50 border-l-4 border-red-500';
-    }
-    return '';
   };
 
   const getLineErrors = (lineNum: number): JsonError[] => {
@@ -439,4 +497,3 @@ export default function JsonFixer() {
     </div>
   );
 }
-
