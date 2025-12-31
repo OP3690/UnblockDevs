@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useMemo } from 'react';
-import { Upload, FileText, Database, Calculator, BarChart3, Download, X, CheckCircle, AlertTriangle, Plus, Trash2, Filter, Calendar } from 'lucide-react';
+import { Upload, FileText, Database, Calculator, BarChart3, Download, X, CheckCircle, AlertTriangle, Plus, Trash2, Filter, Calendar, GripVertical, Hash, Calendar as CalendarIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
@@ -383,6 +383,7 @@ export default function DataInsights() {
 
     // Apply filters
     if (insight.filters) {
+      // Date range filter
       if (insight.filters.dateRange) {
         const [start, end] = insight.filters.dateRange;
         filteredData = filteredData.filter(row => {
@@ -394,18 +395,61 @@ export default function DataInsights() {
         });
       }
 
+      // Date filter (same date, any date)
+      if (insight.filters.dateFilter) {
+        const dateColumns = columns.filter(c => c.type === 'date').map(c => c.name);
+        if (dateColumns.length > 0) {
+          if (insight.filters.dateFilter === 'same_date') {
+            // Filter to rows with the same date (most common date)
+            const dateCounts: { [key: string]: number } = {};
+            filteredData.forEach(row => {
+              dateColumns.forEach(col => {
+                const date = row[col];
+                if (date) {
+                  dateCounts[date] = (dateCounts[date] || 0) + 1;
+                }
+              });
+            });
+            const mostCommonDate = Object.keys(dateCounts).reduce((a, b) => 
+              dateCounts[a] > dateCounts[b] ? a : b, Object.keys(dateCounts)[0] || '');
+            filteredData = filteredData.filter(row => 
+              dateColumns.some(col => row[col] === mostCommonDate)
+            );
+          }
+          // 'any_date' means no additional filtering
+        }
+      }
+
+      // Value filters
       if (insight.filters.valueFilters) {
         insight.filters.valueFilters.forEach(filter => {
           filteredData = filteredData.filter(row => {
             const value = row[filter.column];
             switch (filter.operator) {
-              case 'equals': return value === filter.value;
-              case 'not_equals': return value !== filter.value;
+              case 'equals': return String(value) === String(filter.value);
+              case 'not_equals': return String(value) !== String(filter.value);
               case 'greater_than': return Number(value) > Number(filter.value);
               case 'less_than': return Number(value) < Number(filter.value);
+              case 'contains': return String(value).toLowerCase().includes(String(filter.value).toLowerCase());
+              case 'starts_with': return String(value).toLowerCase().startsWith(String(filter.value).toLowerCase());
+              case 'ends_with': return String(value).toLowerCase().endsWith(String(filter.value).toLowerCase());
               default: return true;
             }
           });
+        });
+      }
+
+      // Frequency filter (rows appearing more than X times)
+      if (insight.filters.frequencyFilter) {
+        const { column, minCount } = insight.filters.frequencyFilter;
+        const valueCounts: { [key: string]: number } = {};
+        filteredData.forEach(row => {
+          const key = String(row[column] || '');
+          valueCounts[key] = (valueCounts[key] || 0) + 1;
+        });
+        filteredData = filteredData.filter(row => {
+          const key = String(row[column] || '');
+          return valueCounts[key] >= minCount;
         });
       }
     }
@@ -431,7 +475,11 @@ export default function DataInsights() {
         });
         insight.metrics.forEach(metric => {
           const value = calculateAggregation(groupRows, metric.column, metric.function);
-          result[`${metric.function}_${metric.column}`] = value;
+          if (metric.function === 'unique_values') {
+            result[`${metric.function}_${metric.column}`] = Array.isArray(value) ? value.join(', ') : value;
+          } else {
+            result[`${metric.function}_${metric.column}`] = value;
+          }
         });
         results.push(result);
       });
@@ -442,7 +490,11 @@ export default function DataInsights() {
       const result: DataRow = {};
       insight.metrics.forEach(metric => {
         const value = calculateAggregation(filteredData, metric.column, metric.function);
-        result[`${metric.function}_${metric.column}`] = value;
+        if (metric.function === 'unique_values') {
+          result[`${metric.function}_${metric.column}`] = Array.isArray(value) ? value.join(', ') : value;
+        } else {
+          result[`${metric.function}_${metric.column}`] = value;
+        }
       });
       return [result];
     }
@@ -1146,7 +1198,7 @@ export default function DataInsights() {
                             Add Value Filter
                           </button>
                         </div>
-                      )}
+                      </div>
 
                       {/* Frequency Filter */}
                       <div className="mb-3">
