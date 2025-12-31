@@ -608,6 +608,10 @@ function HomeClient() {
               <div className="flex items-center gap-2">
                 <Database className="w-4 h-4" />
                 <span className="text-sm">SQL Formatter</span>
+                <span className="px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded-full text-xs font-semibold flex items-center gap-1">
+                  <Star className="w-3 h-3 fill-yellow-500 text-yellow-700" />
+                  Favourite
+                </span>
               </div>
             </button>
           </div>
