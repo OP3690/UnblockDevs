@@ -29,12 +29,19 @@ interface Insight {
   };
 }
 
+interface CalculatedColumn {
+  id: string;
+  name: string;
+  formula: string;
+}
+
 export default function DataInsights() {
   const [data, setData] = useState<DataRow[]>([]);
   const [columns, setColumns] = useState<Column[]>([]);
   const [rawData, setRawData] = useState<string>('');
   const [inputType, setInputType] = useState<'file' | 'paste'>('file');
   const [insights, setInsights] = useState<Insight[]>([]);
+  const [calculatedColumns, setCalculatedColumns] = useState<CalculatedColumn[]>([]);
   const [activeStep, setActiveStep] = useState<'upload' | 'preview' | 'calculate' | 'insights'>('upload');
 
   // Parse CSV
@@ -209,6 +216,33 @@ export default function DataInsights() {
     }
     
     return 'string';
+  }
+
+  // Evaluate formula
+  function evaluateFormula(formula: string, row: DataRow, cols: Column[]): number {
+    try {
+      // Replace column names with their values
+      let expression = formula;
+      cols.forEach(col => {
+        const value = row[col.name];
+        const numValue = typeof value === 'number' ? value : Number(value) || 0;
+        // Replace column name (word boundary to avoid partial matches)
+        const regex = new RegExp(`\\b${col.name}\\b`, 'g');
+        expression = expression.replace(regex, String(numValue));
+      });
+
+      // Remove any remaining non-numeric, non-operator characters for safety
+      // Only allow numbers, operators, parentheses, spaces, and decimal points
+      expression = expression.replace(/[^0-9+\-*/().%\s]/g, '');
+
+      // Evaluate the expression safely
+      // Using Function constructor is safer than eval for basic math
+      const result = Function(`"use strict"; return (${expression})`)();
+      return typeof result === 'number' && !isNaN(result) ? result : 0;
+    } catch (error) {
+      console.error('Formula evaluation error:', error);
+      return 0;
+    }
   }
 
   // Normalize value
@@ -557,17 +591,221 @@ export default function DataInsights() {
         </div>
       )}
 
-      {/* Calculate Step - Placeholder for now */}
+      {/* Calculate Step */}
       {activeStep === 'calculate' && (
         <div className="bg-white rounded-lg shadow-lg p-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">Calculations</h3>
-          <p className="text-gray-600 mb-4">Calculation features coming soon...</p>
-          <button
-            onClick={() => setActiveStep('insights')}
-            className="px-6 py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition-colors"
-          >
-            Continue to Insights
-          </button>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-gray-800">Calculated Columns</h3>
+            <button
+              onClick={() => {
+                const newCalc: CalculatedColumn = {
+                  id: Date.now().toString(),
+                  name: `calculated_${calculatedColumns.length + 1}`,
+                  formula: ''
+                };
+                setCalculatedColumns([...calculatedColumns, newCalc]);
+              }}
+              className="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-semibold hover:bg-primary-700 transition-colors flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Add Calculation
+            </button>
+          </div>
+
+          <p className="text-gray-600 mb-6 text-sm">
+            Create new columns by performing calculations on existing columns. Use column names in formulas with basic math operations.
+          </p>
+
+          {calculatedColumns.length === 0 ? (
+            <div className="text-center py-8 text-gray-500">
+              <Calculator className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <p>No calculated columns yet. Click "Add Calculation" to create one.</p>
+            </div>
+          ) : (
+            <div className="space-y-4 mb-6">
+              {calculatedColumns.map((calc, idx) => (
+                <div key={calc.id} className="border border-gray-200 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <input
+                      type="text"
+                      value={calc.name}
+                      onChange={(e) => {
+                        const updated = [...calculatedColumns];
+                        updated[idx].name = e.target.value;
+                        setCalculatedColumns(updated);
+                      }}
+                      placeholder="Column name"
+                      className="text-lg font-semibold text-gray-800 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    />
+                    <button
+                      onClick={() => {
+                        setCalculatedColumns(calculatedColumns.filter((_, i) => i !== idx));
+                      }}
+                      className="text-red-600 hover:text-red-700"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Formula</label>
+                    <input
+                      type="text"
+                      value={calc.formula}
+                      onChange={(e) => {
+                        const updated = [...calculatedColumns];
+                        updated[idx].formula = e.target.value;
+                        setCalculatedColumns(updated);
+                      }}
+                      placeholder="e.g., price * quantity + tax"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg font-mono text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Supported operations: +, -, *, /, %. Use column names directly (e.g., price, quantity)
+                    </p>
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Available Columns</label>
+                    <div className="flex flex-wrap gap-2">
+                      {columns.filter(c => c.type === 'number').map(col => (
+                        <button
+                          key={col.name}
+                          onClick={() => {
+                            const updated = [...calculatedColumns];
+                            updated[idx].formula = (updated[idx].formula + ' ' + col.name).trim();
+                            setCalculatedColumns(updated);
+                          }}
+                          className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200 transition-colors"
+                        >
+                          {col.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        const updated = [...calculatedColumns];
+                        updated[idx].formula = (updated[idx].formula + ' + ').trim();
+                        setCalculatedColumns(updated);
+                      }}
+                      className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200 transition-colors"
+                    >
+                      +
+                    </button>
+                    <button
+                      onClick={() => {
+                        const updated = [...calculatedColumns];
+                        updated[idx].formula = (updated[idx].formula + ' - ').trim();
+                        setCalculatedColumns(updated);
+                      }}
+                      className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200 transition-colors"
+                    >
+                      -
+                    </button>
+                    <button
+                      onClick={() => {
+                        const updated = [...calculatedColumns];
+                        updated[idx].formula = (updated[idx].formula + ' * ').trim();
+                        setCalculatedColumns(updated);
+                      }}
+                      className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200 transition-colors"
+                    >
+                      ×
+                    </button>
+                    <button
+                      onClick={() => {
+                        const updated = [...calculatedColumns];
+                        updated[idx].formula = (updated[idx].formula + ' / ').trim();
+                        setCalculatedColumns(updated);
+                      }}
+                      className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200 transition-colors"
+                    >
+                      ÷
+                    </button>
+                    <button
+                      onClick={() => {
+                        const updated = [...calculatedColumns];
+                        updated[idx].formula = (updated[idx].formula + ' % ').trim();
+                        setCalculatedColumns(updated);
+                      }}
+                      className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200 transition-colors"
+                    >
+                      %
+                    </button>
+                    <button
+                      onClick={() => {
+                        const updated = [...calculatedColumns];
+                        updated[idx].formula = (updated[idx].formula + ' ( ').trim();
+                        setCalculatedColumns(updated);
+                      }}
+                      className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200 transition-colors"
+                    >
+                      (
+                    </button>
+                    <button
+                      onClick={() => {
+                        const updated = [...calculatedColumns];
+                        updated[idx].formula = (updated[idx].formula + ' ) ').trim();
+                        setCalculatedColumns(updated);
+                      }}
+                      className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200 transition-colors"
+                    >
+                      )
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+            <button
+              onClick={() => {
+                // Apply calculations to data
+                if (calculatedColumns.length > 0) {
+                  const updatedData = data.map(row => {
+                    const newRow = { ...row };
+                    calculatedColumns.forEach(calc => {
+                      if (calc.formula) {
+                        try {
+                          const result = evaluateFormula(calc.formula, row, columns);
+                          newRow[calc.name] = result;
+                        } catch (error) {
+                          newRow[calc.name] = null;
+                        }
+                      }
+                    });
+                    return newRow;
+                  });
+
+                  // Add calculated columns to columns list
+                  const newColumns = [...columns];
+                  calculatedColumns.forEach(calc => {
+                    if (calc.formula && !newColumns.find(c => c.name === calc.name)) {
+                      newColumns.push({ name: calc.name, type: 'number' });
+                    }
+                  });
+
+                  setData(updatedData);
+                  setColumns(newColumns);
+                  toast.success(`Applied ${calculatedColumns.length} calculated column(s)`);
+                }
+              }}
+              disabled={calculatedColumns.length === 0 || calculatedColumns.some(c => !c.formula)}
+              className="px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+            >
+              Apply Calculations
+            </button>
+            <button
+              onClick={() => setActiveStep('insights')}
+              className="px-6 py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition-colors"
+            >
+              Continue to Insights
+            </button>
+          </div>
         </div>
       )}
 
