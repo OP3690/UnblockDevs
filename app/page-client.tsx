@@ -1063,6 +1063,13 @@ function HomeClient() {
                 </Link>
                 <span className="text-gray-300">•</span>
                 <Link
+                  href="/about"
+                  className="hover:text-blue-600 hover:underline transition-colors"
+                >
+                  About Us
+                </Link>
+                <span className="text-gray-300">•</span>
+                <Link
                   href="/blog"
                   className="hover:text-blue-600 hover:underline transition-colors"
                 >
