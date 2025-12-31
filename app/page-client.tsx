@@ -621,6 +621,19 @@ function HomeClient() {
                 </span>
               </div>
             </button>
+            <button
+              onClick={() => handleTabChange('insights')}
+              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+                activeTab === 'insights'
+                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
+                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <BarChart3 className="w-4 h-4" />
+                <span className="text-sm">Data Insights</span>
+              </div>
+            </button>
           </div>
         </div>
       </header>
