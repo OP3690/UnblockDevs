@@ -28,6 +28,24 @@ export const metadata: Metadata = {
       keywords: ['JSON format', 'JSON standards', 'RFC 8259', 'JSON syntax rules', 'JSON validation', 'JSON fixing', 'JSON parser', 'JSON best practices', 'JSON structure', 'JSON syntax errors']
     },
     {
+      slug: 'json-best-practices-production-guide',
+      title: 'JSON Best Practices: Production-Ready Guide for Developers',
+      excerpt: 'Master JSON best practices for production environments. Learn how to structure JSON data, handle errors, optimize performance, ensure security, and follow industry standards. Complete guide with real-world examples and code snippets.',
+      date: '2025-01-31',
+      readTime: '18 min read',
+      category: 'Web Development',
+      keywords: ['JSON best practices', 'JSON production guide', 'JSON performance', 'JSON security', 'JSON structure', 'JSON optimization', 'JSON error handling', 'JSON standards', 'JSON development']
+    },
+    {
+      slug: 'json-api-design-patterns',
+      title: 'JSON API Design Patterns: RESTful Best Practices & Examples',
+      excerpt: 'Master JSON API design patterns with this comprehensive guide. Learn RESTful API design, response structures, error handling, pagination, filtering, and industry-standard patterns used by top tech companies like GitHub and Stripe.',
+      date: '2025-01-31',
+      readTime: '20 min read',
+      category: 'API Design',
+      keywords: ['JSON API design', 'RESTful API', 'API design patterns', 'JSON API structure', 'API best practices', 'REST API design', 'JSON response format', 'API pagination', 'API filtering']
+    },
+    {
       slug: 'css-explained-guide',
     title: 'CSS Explained: Must-Do Practices, Hidden Facts & Pro Tips',
     excerpt: 'Master CSS with this comprehensive guide. Learn CSS fundamentals, best practices, lesser-known features, and pro tips to write cleaner, smarter CSS code. Interactive CSS simulator included.',
