@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useCallback, useMemo } from 'react';
-import { Upload, FileText, Database, Calculator, BarChart3, Download, X, CheckCircle, AlertTriangle, Plus, Trash2, Filter, Calendar, GripVertical, Hash, Calendar as CalendarIcon } from 'lucide-react';
+import { Upload, FileText, Database, Calculator, BarChart3, Download, X, CheckCircle, AlertTriangle, Plus, Trash2, Filter, Calendar, GripVertical, Hash, Calendar as CalendarIcon, Code, Eye, ChevronRight } from 'lucide-react';
 import toast from 'react-hot-toast';
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
+import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import {
   DndContext,
   closestCenter,
@@ -37,10 +38,11 @@ interface DataRow {
 interface Insight {
   id: string;
   name: string;
-  groupBy: string[];
+  groupBy: string[]; // Rows
+  pivotColumns?: string[]; // Columns (optional secondary grouping)
   metrics: Array<{
     column: string;
-    function: 'sum' | 'avg' | 'median' | 'mode' | 'min' | 'max' | 'count' | 'count_distinct' | 'unique_values' | 'duplicate_count';
+    function: 'sum' | 'avg' | 'median' | 'mode' | 'min' | 'max' | 'count' | 'count_distinct' | 'unique_values' | 'duplicate_count' | 'distribution';
   }>;
   filters?: {
     dateRange?: [string, string];
@@ -54,6 +56,13 @@ interface CalculatedColumn {
   id: string;
   name: string;
   formula: string;
+}
+
+interface ColumnOperation {
+  id: string;
+  column: string;
+  operation: 'unique_values' | 'count_unique' | 'distribution' | 'duplicate_count' | 'null_count' | 'not_null_count';
+  resultColumnName: string;
 }
 
 // Droppable Formula Input
@@ -247,9 +256,15 @@ export default function DataInsights() {
   const [inputType, setInputType] = useState<'file' | 'paste'>('file');
   const [insights, setInsights] = useState<Insight[]>([]);
   const [calculatedColumns, setCalculatedColumns] = useState<CalculatedColumn[]>([]);
-  const [activeStep, setActiveStep] = useState<'upload' | 'preview' | 'calculate' | 'insights'>('upload');
+  const [columnOperations, setColumnOperations] = useState<ColumnOperation[]>([]);
+  const [activeStep, setActiveStep] = useState<'landing' | 'upload' | 'preview' | 'calculate' | 'insights' | 'dashboard' | 'export'>('landing');
   const [activeDragId, setActiveDragId] = useState<string | null>(null);
   const [draggedColumn, setDraggedColumn] = useState<Column | null>(null);
+  const [datasetName, setDatasetName] = useState<string>('My Dataset');
+  const [excludedColumns, setExcludedColumns] = useState<Set<string>>(new Set());
+  const [savedInsights, setSavedInsights] = useState<Insight[]>([]);
+  const [selectedInsight, setSelectedInsight] = useState<Insight | null>(null);
+  const [chartTypes, setChartTypes] = useState<{ [insightId: string]: 'bar' | 'line' | 'pie' }>({});
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -554,7 +569,7 @@ export default function DataInsights() {
     rows: DataRow[],
     column: string,
     func: Insight['metrics'][0]['function']
-  ): number | any[] => {
+  ): number | any[] | { [key: string]: number } => {
     const values = rows.map(r => r[column]).filter(v => v !== null && v !== undefined && v !== '');
     const numericValues = values.map(v => Number(v)).filter(v => !isNaN(v));
 
@@ -584,6 +599,14 @@ export default function DataInsights() {
         return getUniqueValues(rows, column);
       case 'duplicate_count':
         return getDuplicateCount(rows, column);
+      case 'distribution':
+        // Return distribution as object with value: count
+        const dist: { [key: string]: number } = {};
+        values.forEach(v => {
+          const key = String(v || 'null');
+          dist[key] = (dist[key] || 0) + 1;
+        });
+        return dist;
       default:
         return 0;
     }
@@ -666,37 +689,115 @@ export default function DataInsights() {
       }
     }
 
-    // Group by
+    // Pivot table logic: Group by rows, optionally by columns
     if (insight.groupBy.length > 0) {
-      const grouped = new Map<string, DataRow[]>();
-      
-      filteredData.forEach(row => {
-        const key = insight.groupBy.map(g => String(row[g] || '')).join('|');
-        if (!grouped.has(key)) {
-          grouped.set(key, []);
-        }
-        grouped.get(key)!.push(row);
-      });
-
-      // Calculate metrics for each group
-      const results: DataRow[] = [];
-      grouped.forEach((groupRows, key) => {
-        const result: DataRow = {};
-        insight.groupBy.forEach(g => {
-          result[g] = groupRows[0][g];
+      // If pivot columns exist, create cross-tabulation structure
+      if (insight.pivotColumns && insight.pivotColumns.length > 0) {
+        // Get all unique values for pivot columns
+        const pivotValues = new Map<string, Set<string>>();
+        insight.pivotColumns.forEach(pivotCol => {
+          const uniqueVals = new Set<string>();
+          filteredData.forEach(row => {
+            const val = String(row[pivotCol] || '');
+            if (val) uniqueVals.add(val);
+          });
+          pivotValues.set(pivotCol, uniqueVals);
         });
-        insight.metrics.forEach(metric => {
-          const value = calculateAggregation(groupRows, metric.column, metric.function);
-          if (metric.function === 'unique_values') {
-            result[`${metric.function}_${metric.column}`] = Array.isArray(value) ? value.join(', ') : value;
-          } else {
-            result[`${metric.function}_${metric.column}`] = value;
+
+        // Group by row grouping only
+        const rowGroups = new Map<string, DataRow[]>();
+        filteredData.forEach(row => {
+          const rowKey = insight.groupBy.map(g => String(row[g] || '')).join('|');
+          if (!rowGroups.has(rowKey)) {
+            rowGroups.set(rowKey, []);
           }
+          rowGroups.get(rowKey)!.push(row);
         });
-        results.push(result);
-      });
 
-      return results;
+        // Create pivot table structure
+        const results: DataRow[] = [];
+        rowGroups.forEach((groupRows, rowKey) => {
+          const result: DataRow = {};
+          
+          // Add row grouping values
+          const rowValues = rowKey.split('|');
+          insight.groupBy.forEach((g, idx) => {
+            result[g] = rowValues[idx] || '';
+          });
+
+          // For each pivot column, create columns for each unique value
+          insight.pivotColumns!.forEach(pivotCol => {
+            const uniqueVals = Array.from(pivotValues.get(pivotCol) || []);
+            uniqueVals.forEach(pivotVal => {
+              // Filter rows that match this pivot value
+              const matchingRows = groupRows.filter(r => String(r[pivotCol] || '') === pivotVal);
+              
+              // Calculate metric for this (row group, pivot value) combination
+              insight.metrics.forEach(metric => {
+                const value = calculateAggregation(matchingRows, metric.column, metric.function);
+                const colName = `${pivotCol}_${pivotVal}_${metric.function}_${metric.column}`;
+                
+                if (metric.function === 'unique_values') {
+                  result[colName] = Array.isArray(value) ? value.join(', ') : value;
+                } else if (metric.function === 'distribution') {
+                  const dist = value as { [key: string]: number };
+                  result[colName] = Object.entries(dist)
+                    .map(([k, v]) => `${k}: ${v}`)
+                    .join(', ');
+                } else {
+                  result[colName] = value;
+                }
+              });
+            });
+          });
+
+          results.push(result);
+        });
+
+        return results;
+      } else {
+        // No pivot columns - simple grouping
+        const grouped = new Map<string, DataRow[]>();
+        
+        filteredData.forEach(row => {
+          const rowKey = insight.groupBy.map(g => String(row[g] || '')).join('|');
+          if (!grouped.has(rowKey)) {
+            grouped.set(rowKey, []);
+          }
+          grouped.get(rowKey)!.push(row);
+        });
+
+        // Calculate metrics for each group
+        const results: DataRow[] = [];
+        grouped.forEach((groupRows, rowKey) => {
+          const result: DataRow = {};
+          
+          // Add row grouping values
+          const rowValues = rowKey.split('|');
+          insight.groupBy.forEach((g, idx) => {
+            result[g] = rowValues[idx] || '';
+          });
+          
+          // Calculate metrics
+          insight.metrics.forEach(metric => {
+            const value = calculateAggregation(groupRows, metric.column, metric.function);
+            if (metric.function === 'unique_values') {
+              result[`${metric.function}_${metric.column}`] = Array.isArray(value) ? value.join(', ') : value;
+            } else if (metric.function === 'distribution') {
+              // Format distribution as readable string
+              const dist = value as { [key: string]: number };
+              result[`${metric.function}_${metric.column}`] = Object.entries(dist)
+                .map(([k, v]) => `${k}: ${v}`)
+                .join(', ');
+            } else {
+              result[`${metric.function}_${metric.column}`] = value;
+            }
+          });
+          results.push(result);
+        });
+
+        return results;
+      }
     } else {
       // No grouping, just calculate overall metrics
       const result: DataRow = {};
@@ -764,37 +865,57 @@ export default function DataInsights() {
         </div>
       </div>
 
-      {/* Upload Step */}
+      {/* 2. Upload / Paste Data Screen */}
       {activeStep === 'upload' && (
         <div className="bg-white rounded-lg shadow-lg p-6">
-          <div className="mb-4">
-            <div className="flex gap-2 mb-4">
-              <button
-                onClick={() => setInputType('file')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  inputType === 'file'
-                    ? 'bg-primary-600 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                }`}
-              >
-                Upload File
-              </button>
-              <button
-                onClick={() => setInputType('paste')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  inputType === 'paste'
-                    ? 'bg-primary-600 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                }`}
-              >
-                Paste Data
-              </button>
-            </div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">Upload / Paste Data</h2>
+          
+          {/* Tabs */}
+          <div className="flex gap-2 mb-6 border-b border-gray-200">
+            <button
+              onClick={() => setInputType('file')}
+              className={`px-6 py-3 font-medium transition-colors border-b-2 ${
+                inputType === 'file'
+                  ? 'border-primary-600 text-primary-600'
+                  : 'border-transparent text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              File Upload
+            </button>
+            <button
+              onClick={() => setInputType('paste')}
+              className={`px-6 py-3 font-medium transition-colors border-b-2 ${
+                inputType === 'paste'
+                  ? 'border-primary-600 text-primary-600'
+                  : 'border-transparent text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Paste SQL / Data
+            </button>
+          </div>
 
-            {inputType === 'file' ? (
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600 mb-4">Upload CSV, Excel (.xlsx, .xls), or JSON file</p>
+          {/* File Upload Tab */}
+          {inputType === 'file' && (
+            <div>
+              <div 
+                className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center hover:border-primary-500 transition-colors cursor-pointer"
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  e.currentTarget.classList.add('border-primary-500', 'bg-primary-50');
+                }}
+                onDragLeave={(e) => {
+                  e.currentTarget.classList.remove('border-primary-500', 'bg-primary-50');
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  e.currentTarget.classList.remove('border-primary-500', 'bg-primary-50');
+                  const file = e.dataTransfer.files[0];
+                  if (file) handleFileUpload(file);
+                }}
+              >
+                <Upload className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <p className="text-lg text-gray-700 mb-2">Drag & Drop Zone</p>
+                <p className="text-sm text-gray-500 mb-4">or</p>
                 <input
                   type="file"
                   accept=".csv,.xlsx,.xls,.json"
@@ -809,27 +930,35 @@ export default function DataInsights() {
                   htmlFor="file-upload"
                   className="inline-block px-6 py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 cursor-pointer transition-colors"
                 >
-                  Choose File
+                  Browse Files
                 </label>
+                <p className="text-sm text-gray-500 mt-4">
+                  Accepted: CSV, XLS, XLSX, JSON
+                </p>
               </div>
-            ) : (
-              <div>
-                <textarea
-                  value={rawData}
-                  onChange={(e) => setRawData(e.target.value)}
-                  placeholder="Paste your data here (SQL/MySQL format, JSON, or CSV)..."
-                  className="w-full h-64 p-4 border-2 border-gray-300 rounded-lg font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary-500"
-                />
+            </div>
+          )}
+
+          {/* Paste Tab */}
+          {inputType === 'paste' && (
+            <div>
+              <textarea
+                value={rawData}
+                onChange={(e) => setRawData(e.target.value)}
+                placeholder="Paste SQL result or tabular data..."
+                className="w-full h-96 p-4 border-2 border-gray-300 rounded-lg font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+              <div className="mt-4 flex justify-end">
                 <button
                   onClick={handlePaste}
                   disabled={!rawData.trim()}
-                  className="mt-4 px-6 py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                  className="px-6 py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
                 >
-                  Parse Data
+                  Continue
                 </button>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -878,265 +1007,415 @@ export default function DataInsights() {
         </div>
       )}
 
-      {/* Calculate Step */}
+      {/* 4. Calculations Builder - Table-based Column Selection */}
       {activeStep === 'calculate' && (
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-bold text-gray-800">Calculated Columns</h3>
-            <button
-              onClick={() => {
-                const newCalc: CalculatedColumn = {
-                  id: Date.now().toString(),
-                  name: `calculated_${calculatedColumns.length + 1}`,
-                  formula: ''
-                };
-                setCalculatedColumns([...calculatedColumns, newCalc]);
-              }}
-              className="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-semibold hover:bg-primary-700 transition-colors flex items-center gap-2"
-            >
-              <Plus className="w-4 h-4" />
-              Add Calculation
-            </button>
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+          {/* Header */}
+          <div className="bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 p-6 text-white">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+                  <Calculator className="w-8 h-8" />
+                </div>
+                <div>
+                  <h2 className="text-3xl font-bold mb-1">Column Operations</h2>
+                  <p className="text-blue-100 text-sm">Select columns and choose operations to perform</p>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <p className="text-gray-600 mb-6 text-sm">
-            Create new columns by performing calculations on existing columns. Use column names in formulas with basic math operations.
-          </p>
-
-          {calculatedColumns.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              <Calculator className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p>No calculated columns yet. Click "Add Calculation" to create one.</p>
-            </div>
-          ) : (
-            <div className="space-y-4 mb-6">
-              {calculatedColumns.map((calc, idx) => (
-                <div key={calc.id} className="border border-gray-200 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <input
-                      type="text"
-                      value={calc.name}
-                      onChange={(e) => {
-                        const updated = [...calculatedColumns];
-                        updated[idx].name = e.target.value;
-                        setCalculatedColumns(updated);
-                      }}
-                      placeholder="Column name"
-                      className="text-lg font-semibold text-gray-800 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    />
-                    <button
-                      onClick={() => {
-                        setCalculatedColumns(calculatedColumns.filter((_, i) => i !== idx));
-                      }}
-                      className="text-red-600 hover:text-red-700"
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </button>
-                  </div>
-
-                  <div className="mb-3">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Formula <span className="text-xs text-gray-500">(Drag columns here or type)</span>
-                    </label>
-                    <DroppableFormulaInput
-                      value={calc.formula}
-                      onChange={(value) => {
-                        const updated = [...calculatedColumns];
-                        updated[idx].formula = value;
-                        setCalculatedColumns(updated);
-                      }}
-                      placeholder="e.g., price * quantity + tax"
-                      onDrop={(colName) => {
-                        const updated = [...calculatedColumns];
-                        updated[idx].formula = (updated[idx].formula + ' ' + colName).trim();
-                        setCalculatedColumns(updated);
-                      }}
-                    />
-                    <p className="text-xs text-gray-500 mt-1">
-                      Supported operations: +, -, *, /, %. Drag columns or type column names directly
-                    </p>
-                  </div>
-
-                  <div className="mb-3">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Available Columns <span className="text-xs text-gray-500">(Drag to formula or click to add)</span>
-                    </label>
-                    <DndContext
-                      sensors={sensors}
-                      collisionDetection={closestCenter}
-                      onDragStart={(event: DragStartEvent) => {
-                        const colName = event.active.id.toString().replace('column-', '');
-                        const col = columns.find(c => c.name === colName);
-                        setDraggedColumn(col || null);
-                        setActiveDragId(event.active.id.toString());
-                      }}
-                      onDragEnd={(event: DragEndEvent) => {
-                        setActiveDragId(null);
-                        setDraggedColumn(null);
-                        const { active, over } = event;
-                        if (over && active.id !== over.id) {
-                          const colName = active.id.toString().replace('column-', '');
-                          const updated = [...calculatedColumns];
-                          updated[idx].formula = (updated[idx].formula + ' ' + colName).trim();
-                          setCalculatedColumns(updated);
-                        }
-                      }}
-                    >
-                      <div className="flex flex-wrap gap-2">
-                        {columns.map(col => (
-                          <DraggableColumn
-                            key={col.name}
-                            col={col}
-                            onDragEnd={(colName) => {
-                              const updated = [...calculatedColumns];
-                              updated[idx].formula = (updated[idx].formula + ' ' + colName).trim();
-                              setCalculatedColumns(updated);
-                            }}
-                          />
-                        ))}
-                      </div>
-                      <DragOverlay>
-                        {draggedColumn ? (
-                          <div className="px-3 py-1 rounded-lg text-sm bg-primary-600 text-white flex items-center gap-1 shadow-lg">
-                            {draggedColumn.type === 'number' && <Hash className="w-3 h-3" />}
-                            {draggedColumn.type === 'date' && <CalendarIcon className="w-3 h-3" />}
-                            {draggedColumn.name}
-                          </div>
-                        ) : null}
-                      </DragOverlay>
-                    </DndContext>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => {
-                        const updated = [...calculatedColumns];
-                        updated[idx].formula = (updated[idx].formula + ' + ').trim();
-                        setCalculatedColumns(updated);
-                      }}
-                      className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200 transition-colors"
-                    >
-                      +
-                    </button>
-                    <button
-                      onClick={() => {
-                        const updated = [...calculatedColumns];
-                        updated[idx].formula = (updated[idx].formula + ' - ').trim();
-                        setCalculatedColumns(updated);
-                      }}
-                      className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200 transition-colors"
-                    >
-                      -
-                    </button>
-                    <button
-                      onClick={() => {
-                        const updated = [...calculatedColumns];
-                        updated[idx].formula = (updated[idx].formula + ' * ').trim();
-                        setCalculatedColumns(updated);
-                      }}
-                      className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200 transition-colors"
-                    >
-                      ×
-                    </button>
-                    <button
-                      onClick={() => {
-                        const updated = [...calculatedColumns];
-                        updated[idx].formula = (updated[idx].formula + ' / ').trim();
-                        setCalculatedColumns(updated);
-                      }}
-                      className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200 transition-colors"
-                    >
-                      ÷
-                    </button>
-                    <button
-                      onClick={() => {
-                        const updated = [...calculatedColumns];
-                        updated[idx].formula = (updated[idx].formula + ' % ').trim();
-                        setCalculatedColumns(updated);
-                      }}
-                      className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200 transition-colors"
-                    >
-                      %
-                    </button>
-                    <button
-                      onClick={() => {
-                        const updated = [...calculatedColumns];
-                        updated[idx].formula = (updated[idx].formula + ' ( ').trim();
-                        setCalculatedColumns(updated);
-                      }}
-                      className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200 transition-colors"
-                    >
-                      (
-                    </button>
-                    <button
-                      onClick={() => {
-                        const updated = [...calculatedColumns];
-                        updated[idx].formula = (updated[idx].formula + ' ) ').trim();
-                        setCalculatedColumns(updated);
-                      }}
-                      className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200 transition-colors"
-                    >
-                      )
-                    </button>
-                  </div>
+          <div className="p-6">
+            {/* Column Selection Table */}
+            <div className="mb-6">
+              <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <FileText className="w-5 h-5 text-blue-600" />
+                Select Columns
+              </h3>
+              <div className="bg-gray-50 rounded-lg p-4 border-2 border-gray-200">
+                <div className="flex items-center gap-4 mb-4">
+                  <button
+                    onClick={() => {
+                      const allSelected = columns.filter(c => !excludedColumns.has(c.name)).every(c => 
+                        columnOperations.some(op => op.column === c.name)
+                      );
+                      if (allSelected) {
+                        setColumnOperations([]);
+                      } else {
+                        const newOps: ColumnOperation[] = [];
+                        columns.filter(c => !excludedColumns.has(c.name)).forEach(col => {
+                          if (!columnOperations.some(op => op.column === col.name)) {
+                            newOps.push({
+                              id: `${col.name}_${Date.now()}`,
+                              column: col.name,
+                              operation: 'count_unique',
+                              resultColumnName: `${col.name}_count_unique`
+                            });
+                          }
+                        });
+                        setColumnOperations([...columnOperations, ...newOps]);
+                      }
+                    }}
+                    className="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+                  >
+                    {columns.filter(c => !excludedColumns.has(c.name)).every(c => 
+                      columnOperations.some(op => op.column === c.name)
+                    ) ? 'Deselect All' : 'Select All'}
+                  </button>
+                  <span className="text-sm text-gray-600">
+                    {columnOperations.length} column(s) selected
+                  </span>
                 </div>
-              ))}
+                <div className="overflow-x-auto max-h-96 border border-gray-300 rounded-lg bg-white">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-100 sticky top-0">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase w-12">
+                          <input
+                            type="checkbox"
+                            checked={columns.filter(c => !excludedColumns.has(c.name)).length > 0 && 
+                                     columns.filter(c => !excludedColumns.has(c.name)).every(c => 
+                                       columnOperations.some(op => op.column === c.name)
+                                     )}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                const newOps: ColumnOperation[] = [];
+                                columns.filter(c => !excludedColumns.has(c.name)).forEach(col => {
+                                  if (!columnOperations.some(op => op.column === col.name)) {
+                                    newOps.push({
+                                      id: `${col.name}_${Date.now()}`,
+                                      column: col.name,
+                                      operation: 'count_unique',
+                                      resultColumnName: `${col.name}_count_unique`
+                                    });
+                                  }
+                                });
+                                setColumnOperations([...columnOperations, ...newOps]);
+                              } else {
+                                setColumnOperations([]);
+                              }
+                            }}
+                            className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                          />
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Column Name</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Type</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Sample Data</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Operation</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {columns.filter(c => !excludedColumns.has(c.name)).map(col => {
+                        const existingOp = columnOperations.find(op => op.column === col.name);
+                        const sampleValue = data.length > 0 ? String(data[0][col.name] ?? '') : '';
+                        return (
+                          <tr key={col.name} className={`hover:bg-blue-50 transition-colors ${existingOp ? 'bg-blue-50' : ''}`}>
+                            <td className="px-4 py-3">
+                              <input
+                                type="checkbox"
+                                checked={!!existingOp}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    const newOp: ColumnOperation = {
+                                      id: `${col.name}_${Date.now()}`,
+                                      column: col.name,
+                                      operation: 'count_unique',
+                                      resultColumnName: `${col.name}_count_unique`
+                                    };
+                                    setColumnOperations([...columnOperations, newOp]);
+                                  } else {
+                                    setColumnOperations(columnOperations.filter(op => op.column !== col.name));
+                                  }
+                                }}
+                                className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                              />
+                            </td>
+                            <td className="px-4 py-3">
+                              <div className="flex items-center gap-2">
+                                <div className={`p-1.5 rounded ${
+                                  col.type === 'number' ? 'bg-green-100 text-green-700' :
+                                  col.type === 'date' ? 'bg-purple-100 text-purple-700' :
+                                  'bg-blue-100 text-blue-700'
+                                }`}>
+                                  {col.type === 'number' ? <Hash className="w-4 h-4" /> :
+                                   col.type === 'date' ? <CalendarIcon className="w-4 h-4" /> :
+                                   <FileText className="w-4 h-4" />}
+                                </div>
+                                <span className="font-medium text-gray-800">{col.name}</span>
+                              </div>
+                            </td>
+                            <td className="px-4 py-3">
+                              <span className="px-2 py-1 text-xs font-medium bg-gray-200 text-gray-700 rounded capitalize">
+                                {col.type}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3">
+                              <span className="text-sm text-gray-600 font-mono truncate max-w-xs block">
+                                {sampleValue || '(empty)'}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3">
+                              {existingOp ? (
+                                <select
+                                  value={existingOp.operation}
+                                  onChange={(e) => {
+                                    const updated = [...columnOperations];
+                                    const idx = updated.findIndex(op => op.id === existingOp.id);
+                                    if (idx >= 0) {
+                                      updated[idx].operation = e.target.value as any;
+                                      updated[idx].resultColumnName = `${col.name}_${e.target.value}`;
+                                      setColumnOperations(updated);
+                                    }
+                                  }}
+                                  className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                  <option value="unique_values">Get Unique Values</option>
+                                  <option value="count_unique">Count Unique Values</option>
+                                  <option value="distribution">% Distribution</option>
+                                  <option value="duplicate_count">Duplicate Count</option>
+                                  <option value="null_count">Null Count</option>
+                                  <option value="not_null_count">Not Null Count</option>
+                                </select>
+                              ) : (
+                                <span className="text-sm text-gray-400">Select to choose operation</span>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
-          )}
 
-          <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-            <button
-              onClick={() => {
-                // Apply calculations to data
-                if (calculatedColumns.length > 0) {
-                  const updatedData = data.map(row => {
-                    const newRow = { ...row };
-                    calculatedColumns.forEach(calc => {
-                      if (calc.formula) {
+            {/* Selected Operations Summary */}
+            {columnOperations.length > 0 && (
+              <div className="mb-6">
+                <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5 text-green-600" />
+                  Selected Operations ({columnOperations.length})
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {columnOperations.map(op => {
+                    const col = columns.find(c => c.name === op.column);
+                    return (
+                      <div key={op.id} className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border-2 border-blue-200">
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <div className={`p-1.5 rounded ${
+                                col?.type === 'number' ? 'bg-green-100 text-green-700' :
+                                col?.type === 'date' ? 'bg-purple-100 text-purple-700' :
+                                'bg-blue-100 text-blue-700'
+                              }`}>
+                                {col?.type === 'number' ? <Hash className="w-3 h-3" /> :
+                                 col?.type === 'date' ? <CalendarIcon className="w-3 h-3" /> :
+                                 <FileText className="w-3 h-3" />}
+                              </div>
+                              <span className="font-bold text-gray-800">{op.column}</span>
+                            </div>
+                            <div className="text-sm text-gray-600">
+                              {op.operation === 'unique_values' && 'Get Unique Values'}
+                              {op.operation === 'count_unique' && 'Count Unique Values'}
+                              {op.operation === 'distribution' && '% Distribution'}
+                              {op.operation === 'duplicate_count' && 'Duplicate Count'}
+                              {op.operation === 'null_count' && 'Null Count'}
+                              {op.operation === 'not_null_count' && 'Not Null Count'}
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => {
+                              setColumnOperations(columnOperations.filter(o => o.id !== op.id));
+                            }}
+                            className="p-1 text-red-600 hover:bg-red-50 rounded transition-colors"
+                            title="Remove"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                        {/* Preview */}
+                        <div className="mt-2 bg-white rounded p-3 border border-blue-200">
+                          <div className="text-xs font-semibold text-gray-700 mb-2">Preview:</div>
+                          <div className="text-xs text-gray-700">
+                            {(() => {
+                              try {
+                                if (op.operation === 'unique_values') {
+                                  const unique = getUniqueValues(data, op.column);
+                                  if (unique.length === 0) {
+                                    return <span className="text-gray-400">No unique values found</span>;
+                                  }
+                                  return (
+                                    <div>
+                                      <div className="font-semibold text-blue-600 mb-2">
+                                        {unique.length} unique value{unique.length !== 1 ? 's' : ''}:
+                                      </div>
+                                      <div className="overflow-x-auto max-h-48 border border-gray-300 rounded">
+                                        <table className="min-w-full divide-y divide-gray-200 text-xs">
+                                          <thead className="bg-gray-100">
+                                            <tr>
+                                              <th className="px-3 py-2 text-left font-semibold text-gray-700">#</th>
+                                              <th className="px-3 py-2 text-left font-semibold text-gray-700">Value</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody className="bg-white divide-y divide-gray-200">
+                                            {unique.map((val, idx) => (
+                                              <tr key={idx} className="hover:bg-blue-50">
+                                                <td className="px-3 py-2 text-gray-600 font-mono">{idx + 1}</td>
+                                                <td className="px-3 py-2 text-gray-800 font-mono">{String(val)}</td>
+                                              </tr>
+                                            ))}
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    </div>
+                                  );
+                                } else if (op.operation === 'count_unique') {
+                                  return (
+                                    <div>
+                                      <span className="font-semibold text-green-600">Count: </span>
+                                      <span className="font-mono">{getUniqueValues(data, op.column).length}</span>
+                                    </div>
+                                  );
+                                } else if (op.operation === 'distribution') {
+                                  const dist = calculateAggregation(data, op.column, 'distribution') as { [key: string]: number };
+                                  const total = data.length;
+                                  const entries = Object.entries(dist).slice(0, 5);
+                                  return (
+                                    <div>
+                                      <div className="font-semibold text-purple-600 mb-1">
+                                        {Object.keys(dist).length} distinct value{Object.keys(dist).length !== 1 ? 's' : ''}:
+                                      </div>
+                                      <div className="space-y-0.5">
+                                        {entries.map(([key, count]) => (
+                                          <div key={key} className="flex items-center justify-between text-xs">
+                                            <span className="font-mono text-gray-700">{key}:</span>
+                                            <span className="font-semibold text-purple-600 ml-2">
+                                              {((count / total) * 100).toFixed(1)}%
+                                            </span>
+                                          </div>
+                                        ))}
+                                        {Object.keys(dist).length > 5 && (
+                                          <div className="text-gray-500 text-xs mt-1">
+                                            +{Object.keys(dist).length - 5} more
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
+                                  );
+                                } else if (op.operation === 'duplicate_count') {
+                                  return (
+                                    <div>
+                                      <span className="font-semibold text-orange-600">Duplicates: </span>
+                                      <span className="font-mono">{getDuplicateCount(data, op.column)}</span>
+                                    </div>
+                                  );
+                                } else if (op.operation === 'null_count') {
+                                  const nullCount = data.filter(r => r[op.column] === null || r[op.column] === undefined || r[op.column] === '').length;
+                                  return (
+                                    <div>
+                                      <span className="font-semibold text-red-600">Null values: </span>
+                                      <span className="font-mono">{nullCount}</span>
+                                    </div>
+                                  );
+                                } else if (op.operation === 'not_null_count') {
+                                  const notNullCount = data.filter(r => r[op.column] !== null && r[op.column] !== undefined && r[op.column] !== '').length;
+                                  return (
+                                    <div>
+                                      <span className="font-semibold text-emerald-600">Non-null values: </span>
+                                      <span className="font-mono">{notNullCount}</span>
+                                    </div>
+                                  );
+                                }
+                                return <span className="text-gray-400">N/A</span>;
+                              } catch (error) {
+                                return <span className="text-red-500">Error calculating preview</span>;
+                              }
+                            })()}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex items-center justify-between pt-6 border-t border-gray-200">
+              <button
+                onClick={() => setActiveStep('preview')}
+                className="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-all shadow-md hover:shadow-lg flex items-center gap-2"
+              >
+                <X className="w-4 h-4" />
+                Back
+              </button>
+              <button
+                onClick={() => {
+                  if (columnOperations.length > 0) {
+                    // Apply operations
+                    const updatedData = data.map(row => {
+                      const newRow = { ...row };
+                      columnOperations.forEach(op => {
                         try {
-                          const result = evaluateFormula(calc.formula, row, columns);
-                          newRow[calc.name] = result;
+                          if (op.operation === 'unique_values') {
+                            const unique = getUniqueValues(data, op.column);
+                            newRow[op.resultColumnName] = unique.join(', ');
+                          } else if (op.operation === 'count_unique') {
+                            newRow[op.resultColumnName] = getUniqueValues(data, op.column).length;
+                          } else if (op.operation === 'distribution') {
+                            const dist = calculateAggregation(data, op.column, 'distribution') as { [key: string]: number };
+                            const total = data.length;
+                            const distStr = Object.entries(dist).map(([k, v]) => `${k}: ${((v/total)*100).toFixed(1)}%`).join(', ');
+                            newRow[op.resultColumnName] = distStr;
+                          } else if (op.operation === 'duplicate_count') {
+                            newRow[op.resultColumnName] = getDuplicateCount(data, op.column);
+                          } else if (op.operation === 'null_count') {
+                            newRow[op.resultColumnName] = data.filter(r => r[op.column] === null || r[op.column] === undefined || r[op.column] === '').length;
+                          } else if (op.operation === 'not_null_count') {
+                            newRow[op.resultColumnName] = data.filter(r => r[op.column] !== null && r[op.column] !== undefined && r[op.column] !== '').length;
+                          }
                         } catch (error) {
-                          newRow[calc.name] = null;
+                          newRow[op.resultColumnName] = null;
                         }
+                      });
+                      return newRow;
+                    });
+
+                    const newColumns = [...columns];
+                    columnOperations.forEach(op => {
+                      if (!newColumns.find(c => c.name === op.resultColumnName)) {
+                        newColumns.push({ name: op.resultColumnName, type: op.operation === 'unique_values' || op.operation === 'distribution' ? 'string' : 'number' });
                       }
                     });
-                    return newRow;
-                  });
 
-                  // Add calculated columns to columns list
-                  const newColumns = [...columns];
-                  calculatedColumns.forEach(calc => {
-                    if (calc.formula && !newColumns.find(c => c.name === calc.name)) {
-                      newColumns.push({ name: calc.name, type: 'number' });
-                    }
-                  });
-
-                  setData(updatedData);
-                  setColumns(newColumns);
-                  toast.success(`Applied ${calculatedColumns.length} calculated column(s)`);
-                }
-              }}
-              disabled={calculatedColumns.length === 0 || calculatedColumns.some(c => !c.formula)}
-              className="px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-            >
-              Apply Calculations
-            </button>
-            <button
-              onClick={() => setActiveStep('insights')}
-              className="px-6 py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition-colors"
-            >
-              Continue to Insights
-            </button>
+                    setData(updatedData);
+                    setColumns(newColumns);
+                    toast.success(`Applied ${columnOperations.length} column operation(s)`);
+                  }
+                  setActiveStep('insights');
+                }}
+                disabled={columnOperations.length === 0}
+                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl flex items-center gap-2 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              >
+                Continue to Insights
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Insights Step */}
+      {/* 5. Insight / Group By Builder - Tableau-like Interface */}
       {activeStep === 'insights' && (
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-bold text-gray-800">Insights</h3>
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+          <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+            <h3 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
+              <div className="p-2 bg-blue-600 rounded-lg">
+                <BarChart3 className="w-6 h-6 text-white" />
+              </div>
+              Pivot Table Builder
+            </h3>
             <button
               onClick={() => {
                 const newInsight: Insight = {
@@ -1147,384 +1426,918 @@ export default function DataInsights() {
                 };
                 setInsights([...insights, newInsight]);
               }}
-              className="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-semibold hover:bg-primary-700 transition-colors flex items-center gap-2"
+              className="px-5 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-all shadow-md hover:shadow-lg flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
-              Add Insight
+              New Insight
             </button>
           </div>
 
           {insights.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              <BarChart3 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p>No insights yet. Click "Add Insight" to create one.</p>
+            <div className="text-center py-16 text-gray-500">
+              <div className="p-4 bg-blue-100 rounded-full w-24 h-24 mx-auto mb-4 flex items-center justify-center">
+                <BarChart3 className="w-12 h-12 text-blue-600" />
+              </div>
+              <p className="text-lg font-medium mb-2">No insights yet</p>
+              <p className="text-sm">Click "New Insight" to create a pivot table</p>
+            </div>
+          ) : (
+            <div className="flex h-[calc(100vh-300px)] min-h-[600px]">
+              {/* Left Sidebar - Fields Panel (Tableau-style) */}
+              <div className="w-64 bg-gray-50 border-r border-gray-200 overflow-y-auto">
+                <div className="p-4 bg-white border-b border-gray-200 sticky top-0 z-10">
+                  <h4 className="text-sm font-bold text-gray-700 uppercase tracking-wide mb-3">Data Fields</h4>
+                  <div className="text-xs text-gray-500 mb-2">Drag fields to build your pivot table</div>
+                </div>
+                
+                {/* Dimensions (Non-numeric) */}
+                <div className="p-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-3 h-3 rounded bg-blue-500"></div>
+                    <span className="text-xs font-semibold text-gray-700 uppercase">Dimensions</span>
+                  </div>
+                  <div className="space-y-1">
+                    {columns.filter(c => c.type !== 'number').map(col => (
+                      <div
+                        key={col.name}
+                        draggable
+                        onDragStart={(e) => {
+                          e.dataTransfer.setData('text/plain', col.name);
+                          e.dataTransfer.setData('source-section', 'sidebar');
+                          e.dataTransfer.effectAllowed = 'move';
+                          setDraggedColumn(col);
+                          setActiveDragId(`field-${col.name}`);
+                        }}
+                        onDragEnd={() => {
+                          setDraggedColumn(null);
+                          setActiveDragId(null);
+                        }}
+                        className="flex items-center gap-2 p-2 bg-white rounded border border-gray-200 hover:border-blue-400 hover:shadow-sm cursor-move transition-all group"
+                      >
+                        <GripVertical className="w-3 h-3 text-gray-400 group-hover:text-blue-600" />
+                        <div className="w-3 h-3 rounded bg-blue-500 flex-shrink-0"></div>
+                        <span className="text-sm text-gray-700 font-medium flex-1">{col.name}</span>
+                        {col.type === 'date' && <CalendarIcon className="w-3 h-3 text-gray-400" />}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Measures (Numeric) */}
+                <div className="p-3 border-t border-gray-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-3 h-3 rounded bg-green-500"></div>
+                    <span className="text-xs font-semibold text-gray-700 uppercase">Measures</span>
+                  </div>
+                  <div className="space-y-1">
+                    {columns.filter(c => c.type === 'number').map(col => (
+                      <div
+                        key={col.name}
+                        draggable
+                        onDragStart={(e) => {
+                          e.dataTransfer.setData('text/plain', col.name);
+                          e.dataTransfer.setData('source-section', 'sidebar');
+                          e.dataTransfer.effectAllowed = 'move';
+                          setDraggedColumn(col);
+                          setActiveDragId(`field-${col.name}`);
+                        }}
+                        onDragEnd={() => {
+                          setDraggedColumn(null);
+                          setActiveDragId(null);
+                        }}
+                        className="flex items-center gap-2 p-2 bg-white rounded border border-gray-200 hover:border-green-400 hover:shadow-sm cursor-move transition-all group"
+                      >
+                        <GripVertical className="w-3 h-3 text-gray-400 group-hover:text-green-600" />
+                        <div className="w-3 h-3 rounded bg-green-500 flex-shrink-0"></div>
+                        <span className="text-sm text-gray-700 font-medium flex-1">{col.name}</span>
+                        <Hash className="w-3 h-3 text-gray-400" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              
+              {/* Main Content Area - Insights Builder */}
+              <div className="flex-1 overflow-y-auto">
+                <div className="space-y-4 p-6">
+                  {insights.map((insight, idx) => (
+                    <div key={insight.id} className="bg-white border-2 border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                      {/* Insight Header */}
+                      <div className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-white border-b border-gray-200">
+                        <input
+                          type="text"
+                          value={insight.name}
+                          onChange={(e) => {
+                            const updated = [...insights];
+                            updated[idx].name = e.target.value;
+                            setInsights(updated);
+                          }}
+                          className="text-lg font-bold text-gray-800 border-none bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 rounded px-2 flex-1"
+                          placeholder="Enter insight name..."
+                        />
+                        <button
+                          onClick={() => {
+                            setInsights(insights.filter((_, i) => i !== idx));
+                          }}
+                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          title="Delete insight"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </button>
+                      </div>
+
+                      {/* Insight Builder */}
+                      <div className="p-6">
+                        {/* ROWS Section */}
+                        <div className="mb-6">
+                          <label className="block text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wide">ROWS</label>
+                          <div
+                            onDragOver={(e) => {
+                              e.preventDefault();
+                              e.currentTarget.classList.add('border-blue-500', 'bg-blue-50');
+                            }}
+                            onDragLeave={(e) => {
+                              e.currentTarget.classList.remove('border-blue-500', 'bg-blue-50');
+                            }}
+                            onDrop={(e) => {
+                              e.preventDefault();
+                              e.currentTarget.classList.remove('border-blue-500', 'bg-blue-50');
+                              const colName = e.dataTransfer.getData('text/plain');
+                              const sourceSection = e.dataTransfer.getData('source-section');
+                              
+                              if (colName) {
+                                const updated = [...insights];
+                                
+                                // Remove from other sections if moving (not from sidebar)
+                                if (sourceSection === 'columns') {
+                                  updated[idx].pivotColumns = updated[idx].pivotColumns?.filter(c => c !== colName) || [];
+                                } else if (sourceSection === 'values') {
+                                  updated[idx].metrics = updated[idx].metrics.filter(m => m.column !== colName);
+                                } else if (sourceSection === 'rows') {
+                                  updated[idx].groupBy = updated[idx].groupBy.filter(c => c !== colName);
+                                } else if (sourceSection === 'sidebar') {
+                                  // Remove from all sections if coming from sidebar
+                                  updated[idx].groupBy = updated[idx].groupBy.filter(c => c !== colName);
+                                  updated[idx].pivotColumns = updated[idx].pivotColumns?.filter(c => c !== colName) || [];
+                                  updated[idx].metrics = updated[idx].metrics.filter(m => m.column !== colName);
+                                }
+                                
+                                // Add to ROWS if not already there
+                                if (!updated[idx].groupBy.includes(colName)) {
+                                  updated[idx].groupBy = [...updated[idx].groupBy, colName];
+                                }
+                                
+                                setInsights(updated);
+                              }
+                            }}
+                            className="min-h-[80px] border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50 flex flex-wrap gap-2"
+                          >
+                            {insight.groupBy.length === 0 ? (
+                              <div className="flex items-center justify-center w-full text-gray-400">
+                                <BarChart3 className="w-6 h-6 mr-2" />
+                                <span className="text-sm">Drag dimensions here</span>
+                              </div>
+                            ) : (
+                              insight.groupBy.map(colName => (
+                                <div 
+                                  key={colName} 
+                                  draggable
+                                  onDragStart={(e) => {
+                                    e.dataTransfer.setData('text/plain', colName);
+                                    e.dataTransfer.setData('source-section', 'rows');
+                                    e.dataTransfer.effectAllowed = 'move';
+                                  }}
+                                  className="flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium cursor-move hover:bg-blue-700 transition-colors"
+                                >
+                                  <GripVertical className="w-3 h-3 opacity-75" />
+                                  <span>{colName}</span>
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      const updated = [...insights];
+                                      updated[idx].groupBy = updated[idx].groupBy.filter(c => c !== colName);
+                                      setInsights(updated);
+                                    }}
+                                    className="hover:text-red-200 ml-1"
+                                  >
+                                    <X className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              ))
+                            )}
+                          </div>
+                        </div>
+
+                        {/* COLUMNS Section */}
+                        <div className="mb-6">
+                          <label className="block text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wide">COLUMNS (Optional)</label>
+                          <div
+                            onDragOver={(e) => {
+                              e.preventDefault();
+                              e.currentTarget.classList.add('border-purple-500', 'bg-purple-50');
+                            }}
+                            onDragLeave={(e) => {
+                              e.currentTarget.classList.remove('border-purple-500', 'bg-purple-50');
+                            }}
+                            onDrop={(e) => {
+                              e.preventDefault();
+                              e.currentTarget.classList.remove('border-purple-500', 'bg-purple-50');
+                              const colName = e.dataTransfer.getData('text/plain');
+                              const sourceSection = e.dataTransfer.getData('source-section');
+                              
+                              if (colName) {
+                                const updated = [...insights];
+                                if (!updated[idx].pivotColumns) updated[idx].pivotColumns = [];
+                                
+                                // Remove from other sections if moving (not from sidebar)
+                                if (sourceSection === 'rows') {
+                                  updated[idx].groupBy = updated[idx].groupBy.filter(c => c !== colName);
+                                } else if (sourceSection === 'values') {
+                                  updated[idx].metrics = updated[idx].metrics.filter(m => m.column !== colName);
+                                } else if (sourceSection === 'columns') {
+                                  updated[idx].pivotColumns = updated[idx].pivotColumns.filter(c => c !== colName);
+                                } else if (sourceSection === 'sidebar') {
+                                  // Remove from all sections if coming from sidebar
+                                  updated[idx].groupBy = updated[idx].groupBy.filter(c => c !== colName);
+                                  updated[idx].pivotColumns = updated[idx].pivotColumns.filter(c => c !== colName);
+                                  updated[idx].metrics = updated[idx].metrics.filter(m => m.column !== colName);
+                                }
+                                
+                                // Add to COLUMNS if not already there
+                                if (!updated[idx].pivotColumns.includes(colName)) {
+                                  updated[idx].pivotColumns = [...updated[idx].pivotColumns, colName];
+                                }
+                                
+                                setInsights(updated);
+                              }
+                            }}
+                            className="min-h-[80px] border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50 flex flex-wrap gap-2"
+                          >
+                            {(!insight.pivotColumns || insight.pivotColumns.length === 0) ? (
+                              <div className="flex items-center justify-center w-full text-gray-400">
+                                <BarChart3 className="w-6 h-6 mr-2" />
+                                <span className="text-sm">Drag dimensions here (optional)</span>
+                              </div>
+                            ) : (
+                              insight.pivotColumns.map(colName => (
+                                <div 
+                                  key={colName} 
+                                  draggable
+                                  onDragStart={(e) => {
+                                    e.dataTransfer.setData('text/plain', colName);
+                                    e.dataTransfer.setData('source-section', 'columns');
+                                    e.dataTransfer.effectAllowed = 'move';
+                                  }}
+                                  className="flex items-center gap-2 px-3 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium cursor-move hover:bg-purple-700 transition-colors"
+                                >
+                                  <GripVertical className="w-3 h-3 opacity-75" />
+                                  <span>{colName}</span>
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      const updated = [...insights];
+                                      updated[idx].pivotColumns = updated[idx].pivotColumns?.filter(c => c !== colName);
+                                      setInsights(updated);
+                                    }}
+                                    className="hover:text-red-200 ml-1"
+                                  >
+                                    <X className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              ))
+                            )}
+                          </div>
+                        </div>
+
+                        {/* VALUES Section */}
+                        <div className="mb-6">
+                          <label className="block text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wide">VALUES</label>
+                          <div
+                            onDragOver={(e) => {
+                              e.preventDefault();
+                              e.currentTarget.classList.add('border-green-500', 'bg-green-50');
+                            }}
+                            onDragLeave={(e) => {
+                              e.currentTarget.classList.remove('border-green-500', 'bg-green-50');
+                            }}
+                            onDrop={(e) => {
+                              e.preventDefault();
+                              e.currentTarget.classList.remove('border-green-500', 'bg-green-50');
+                              const colName = e.dataTransfer.getData('text/plain');
+                              const sourceSection = e.dataTransfer.getData('source-section');
+                              
+                              if (colName) {
+                                const updated = [...insights];
+                                
+                                // Remove from other sections if moving (not from sidebar)
+                                if (sourceSection === 'rows') {
+                                  updated[idx].groupBy = updated[idx].groupBy.filter(c => c !== colName);
+                                } else if (sourceSection === 'columns') {
+                                  updated[idx].pivotColumns = updated[idx].pivotColumns?.filter(c => c !== colName) || [];
+                                } else if (sourceSection === 'values') {
+                                  updated[idx].metrics = updated[idx].metrics.filter(m => m.column !== colName);
+                                } else if (sourceSection === 'sidebar') {
+                                  // Remove from all sections if coming from sidebar
+                                  updated[idx].groupBy = updated[idx].groupBy.filter(c => c !== colName);
+                                  updated[idx].pivotColumns = updated[idx].pivotColumns?.filter(c => c !== colName) || [];
+                                  updated[idx].metrics = updated[idx].metrics.filter(m => m.column !== colName);
+                                }
+                                
+                                // Add to VALUES if not already there
+                                const existingMetric = updated[idx].metrics.find(m => m.column === colName);
+                                if (!existingMetric) {
+                                  const col = columns.find(c => c.name === colName);
+                                  const func: 'sum' | 'count' = col?.type === 'number' ? 'sum' : 'count';
+                                  updated[idx].metrics = [...updated[idx].metrics, { 
+                                    column: colName, 
+                                    function: func
+                                  }];
+                                }
+                                
+                                setInsights(updated);
+                              }
+                            }}
+                            className="min-h-[80px] border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50 space-y-2"
+                          >
+                            {insight.metrics.length === 0 ? (
+                              <div className="flex items-center justify-center h-full text-gray-400">
+                                <Calculator className="w-6 h-6 mr-2" />
+                                <span className="text-sm">Drag measures here</span>
+                              </div>
+                            ) : (
+                              insight.metrics.map((metric, metricIdx) => (
+                                <div 
+                                  key={metricIdx} 
+                                  draggable
+                                  onDragStart={(e) => {
+                                    e.dataTransfer.setData('text/plain', metric.column);
+                                    e.dataTransfer.setData('source-section', 'values');
+                                    e.dataTransfer.effectAllowed = 'move';
+                                  }}
+                                  className="flex items-center gap-2 p-2 bg-green-100 rounded-lg cursor-move hover:bg-green-200 transition-colors"
+                                >
+                                  <GripVertical className="w-3 h-3 text-gray-500" />
+                                  <select
+                                    value={metric.function}
+                                    onChange={(e) => {
+                                      const updated = [...insights];
+                                      updated[idx].metrics[metricIdx].function = e.target.value as any;
+                                      setInsights(updated);
+                                    }}
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="px-2 py-1 border border-gray-300 rounded text-sm"
+                                  >
+                                    <option value="sum">SUM</option>
+                                    <option value="avg">AVG</option>
+                                    <option value="count">COUNT</option>
+                                    <option value="min">MIN</option>
+                                    <option value="max">MAX</option>
+                                  </select>
+                                  <span className="text-sm font-medium text-gray-700">({metric.column})</span>
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      const updated = [...insights];
+                                      updated[idx].metrics = updated[idx].metrics.filter((_, i) => i !== metricIdx);
+                                      setInsights(updated);
+                                    }}
+                                    className="ml-auto p-1 text-red-600 hover:bg-red-100 rounded"
+                                  >
+                                    <X className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              ))
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Preview Results Button */}
+                        <div className="flex justify-end">
+                          <button
+                            onClick={() => {
+                              const results = generateInsightResults(insight);
+                              if (results.length === 0) {
+                                toast.error('No results to preview. Please add rows and values.');
+                              } else {
+                                toast.success(`Generated ${results.length} rows`);
+                              }
+                            }}
+                            className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all shadow-md hover:shadow-lg flex items-center gap-2"
+                          >
+                            <Eye className="w-5 h-5" />
+                            Preview Results
+                          </button>
+                        </div>
+
+                        {/* Results Preview */}
+                        {generateInsightResults(insight).length > 0 && (
+                          <div className="mt-6 border-t border-gray-200 pt-6">
+                            <h4 className="text-lg font-bold text-gray-800 mb-4">Preview Results</h4>
+                            <div className="overflow-x-auto max-h-96 border border-gray-200 rounded-lg bg-white">
+                              <table className="min-w-full divide-y divide-gray-200 text-sm">
+                                <thead className="bg-gray-100 sticky top-0">
+                                  <tr>
+                                    {insight.groupBy.map(g => (
+                                      <th key={g} className="px-4 py-3 text-left font-bold text-gray-700 border-r border-gray-200">
+                                        {g}
+                                      </th>
+                                    ))}
+                                    {insight.pivotColumns && insight.pivotColumns.length > 0 && insight.metrics.length > 0 && (() => {
+                                      // Get all results to extract unique pivot combinations
+                                      const results = generateInsightResults(insight);
+                                      if (results.length === 0) return null;
+                                      
+                                      // Extract all unique pivot column headers
+                                      const pivotHeaders: Array<{ pivotCol: string; pivotVal: string; metric: string }> = [];
+                                      const seen = new Set<string>();
+                                      
+                                      results.forEach(result => {
+                                        insight.pivotColumns!.forEach(pivotCol => {
+                                          insight.metrics.forEach(metric => {
+                                            Object.keys(result).forEach(key => {
+                                              // Key format: "pivotCol_pivotVal_metricFunction_metricColumn"
+                                              const prefix = `${pivotCol}_`;
+                                              const suffix = `_${metric.function}_${metric.column}`;
+                                              if (key.startsWith(prefix) && key.endsWith(suffix)) {
+                                                // Extract pivot value (everything between prefix and suffix)
+                                                const pivotVal = key.slice(prefix.length, -suffix.length);
+                                                const headerKey = `${pivotCol}::${pivotVal}::${metric.function}_${metric.column}`;
+                                                if (!seen.has(headerKey)) {
+                                                  seen.add(headerKey);
+                                                  pivotHeaders.push({ pivotCol, pivotVal, metric: `${metric.function}_${metric.column}` });
+                                                }
+                                              }
+                                            });
+                                          });
+                                        });
+                                      });
+                                      
+                                      // Sort headers for consistent display
+                                      pivotHeaders.sort((a, b) => {
+                                        if (a.pivotCol !== b.pivotCol) return a.pivotCol.localeCompare(b.pivotCol);
+                                        return a.pivotVal.localeCompare(b.pivotVal);
+                                      });
+                                      
+                                      return pivotHeaders.map(({ pivotCol, pivotVal, metric }, idx) => (
+                                        <th key={`${pivotCol}_${pivotVal}_${metric}_${idx}`} className="px-4 py-3 text-left font-bold text-gray-700 border-r border-gray-200">
+                                          {pivotCol}: {pivotVal}
+                                        </th>
+                                      ));
+                                    })()}
+                                    {(!insight.pivotColumns || insight.pivotColumns.length === 0) && insight.metrics.map(metric => (
+                                      <th key={`${metric.function}_${metric.column}`} className="px-4 py-3 text-left font-bold text-gray-700">
+                                        {metric.function.toUpperCase()}({metric.column})
+                                      </th>
+                                    ))}
+                                  </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-200">
+                                  {generateInsightResults(insight).slice(0, 50).map((row, rowIdx) => (
+                                    <tr key={rowIdx} className="hover:bg-blue-50 transition-colors">
+                                      {insight.groupBy.map(g => (
+                                        <td key={g} className="px-4 py-2.5 text-gray-700 border-r border-gray-200 font-medium">
+                                          {String(row[g] ?? '')}
+                                        </td>
+                                      ))}
+                                      {insight.pivotColumns && insight.pivotColumns.length > 0 && insight.metrics.length > 0 && (() => {
+                                        // Get all pivot headers (same logic as header)
+                                        const results = generateInsightResults(insight);
+                                        const pivotHeaders: Array<{ pivotCol: string; pivotVal: string; metric: string; key: string }> = [];
+                                        const seen = new Set<string>();
+                                        
+                                        results.forEach(result => {
+                                          insight.pivotColumns!.forEach(pivotCol => {
+                                            insight.metrics.forEach(metric => {
+                                              Object.keys(result).forEach(key => {
+                                                const prefix = `${pivotCol}_`;
+                                                const suffix = `_${metric.function}_${metric.column}`;
+                                                if (key.startsWith(prefix) && key.endsWith(suffix)) {
+                                                  const pivotVal = key.slice(prefix.length, -suffix.length);
+                                                  const headerKey = `${pivotCol}::${pivotVal}::${metric.function}_${metric.column}`;
+                                                  if (!seen.has(headerKey)) {
+                                                    seen.add(headerKey);
+                                                    pivotHeaders.push({ pivotCol, pivotVal, metric: `${metric.function}_${metric.column}`, key });
+                                                  }
+                                                }
+                                              });
+                                            });
+                                          });
+                                        });
+                                        
+                                        pivotHeaders.sort((a, b) => {
+                                          if (a.pivotCol !== b.pivotCol) return a.pivotCol.localeCompare(b.pivotCol);
+                                          return a.pivotVal.localeCompare(b.pivotVal);
+                                        });
+                                        
+                                        return pivotHeaders.map(({ pivotCol, pivotVal, metric, key: headerKey }, idx) => {
+                                          // Find the actual key in the row
+                                          const actualKey = Object.keys(row).find(k => 
+                                            k.startsWith(`${pivotCol}_`) && 
+                                            k.endsWith(`_${metric}`) &&
+                                            k.slice(`${pivotCol}_`.length, -`_${metric}`.length) === pivotVal
+                                          );
+                                          return (
+                                            <td key={`${pivotCol}_${pivotVal}_${metric}_${idx}`} className="px-4 py-2.5 text-gray-800 font-mono font-semibold text-right border-r border-gray-200">
+                                              {actualKey ? String(row[actualKey] ?? '') : ''}
+                                            </td>
+                                          );
+                                        });
+                                      })()}
+                                      {(!insight.pivotColumns || insight.pivotColumns.length === 0) && insight.metrics.map(metric => (
+                                        <td key={`${metric.function}_${metric.column}`} className="px-4 py-2.5 text-gray-800 font-mono font-semibold text-right">
+                                          {String(row[`${metric.function}_${metric.column}`] ?? '')}
+                                        </td>
+                                      ))}
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                              {generateInsightResults(insight).length > 50 && (
+                                <div className="p-3 text-center text-xs text-gray-500 bg-gray-50 border-t border-gray-200">
+                                  Showing first 50 of {generateInsightResults(insight).length} rows
+                                </div>
+                              )}
+                            </div>
+                            
+                            {/* Charts Visualization */}
+                            <div className="mt-6 border-t border-gray-200 pt-6">
+                              <div className="flex items-center justify-between mb-4">
+                                <h4 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+                                  <BarChart3 className="w-5 h-5 text-blue-600" />
+                                  Charts Visualization
+                                </h4>
+                                <select
+                                  value={chartTypes[insight.id] || 'bar'}
+                                  onChange={(e) => {
+                                    setChartTypes({ ...chartTypes, [insight.id]: e.target.value as 'bar' | 'line' | 'pie' });
+                                  }}
+                                  className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                  <option value="bar">Bar Chart</option>
+                                  <option value="line">Line Chart</option>
+                                  <option value="pie">Pie Chart</option>
+                                </select>
+                              </div>
+                              <div className="bg-white rounded-lg border border-gray-200 p-4">
+                                {(() => {
+                                  const results = generateInsightResults(insight);
+                                  if (results.length === 0) return null;
+                                  
+                                  // Prepare chart data
+                                  let chartData: any[] = [];
+                                  const chartType = chartTypes[insight.id] || 'bar';
+                                  
+                                  if (insight.groupBy.length > 0 && insight.metrics.length > 0) {
+                                    // Simple case: groupBy + metrics (no pivot columns)
+                                    if (!insight.pivotColumns || insight.pivotColumns.length === 0) {
+                                      chartData = results.map(row => {
+                                        const dataPoint: any = {};
+                                        insight.groupBy.forEach(g => {
+                                          dataPoint[g] = String(row[g] ?? '');
+                                        });
+                                        insight.metrics.forEach(metric => {
+                                          const value = row[`${metric.function}_${metric.column}`];
+                                          dataPoint[`${metric.function}_${metric.column}`] = typeof value === 'number' ? value : parseFloat(String(value)) || 0;
+                                        });
+                                        return dataPoint;
+                                      });
+                                    } else {
+                                      // Pivot table case: create series for each pivot value
+                                      const pivotHeaders: Array<{ pivotCol: string; pivotVal: string; metric: string; key: string }> = [];
+                                      const seen = new Set<string>();
+                                      
+                                      results.forEach(result => {
+                                        insight.pivotColumns!.forEach(pivotCol => {
+                                          insight.metrics.forEach(metric => {
+                                            Object.keys(result).forEach(key => {
+                                              const prefix = `${pivotCol}_`;
+                                              const suffix = `_${metric.function}_${metric.column}`;
+                                              if (key.startsWith(prefix) && key.endsWith(suffix)) {
+                                                const pivotVal = key.slice(prefix.length, -suffix.length);
+                                                const headerKey = `${pivotCol}::${pivotVal}::${metric.function}_${metric.column}`;
+                                                if (!seen.has(headerKey)) {
+                                                  seen.add(headerKey);
+                                                  pivotHeaders.push({ pivotCol, pivotVal, metric: `${metric.function}_${metric.column}`, key });
+                                                }
+                                              }
+                                            });
+                                          });
+                                        });
+                                      });
+                                      
+                                      chartData = results.map(row => {
+                                        const dataPoint: any = {};
+                                        insight.groupBy.forEach(g => {
+                                          dataPoint[g] = String(row[g] ?? '');
+                                        });
+                                        pivotHeaders.forEach(({ pivotVal, key }) => {
+                                          const value = row[key];
+                                          dataPoint[pivotVal] = typeof value === 'number' ? value : parseFloat(String(value)) || 0;
+                                        });
+                                        return dataPoint;
+                                      });
+                                    }
+                                    
+                                    if (chartData.length === 0) return <div className="text-gray-500 text-center py-8">No data available for chart</div>;
+                                    
+                                    const firstGroupBy = insight.groupBy[0];
+                                    const metricKeys = chartData.length > 0 ? Object.keys(chartData[0]).filter(k => k !== firstGroupBy) : [];
+                                    const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4'];
+                                    
+                                    if (chartType === 'pie' && metricKeys.length > 0) {
+                                      // Pie chart - use first metric
+                                      const pieData = chartData.map((d, idx) => ({
+                                        name: String(d[firstGroupBy] || `Item ${idx + 1}`),
+                                        value: d[metricKeys[0]] || 0
+                                      }));
+                                      
+                                      return (
+                                        <ResponsiveContainer width="100%" height={400}>
+                                          <PieChart>
+                                            <Pie
+                                              data={pieData}
+                                              cx="50%"
+                                              cy="50%"
+                                              labelLine={false}
+                                              label={({ name, percent }) => `${name}: ${percent ? (percent * 100).toFixed(0) : 0}%`}
+                                              outerRadius={120}
+                                              fill="#8884d8"
+                                              dataKey="value"
+                                            >
+                                              {pieData.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                                              ))}
+                                            </Pie>
+                                            <Tooltip />
+                                            <Legend />
+                                          </PieChart>
+                                        </ResponsiveContainer>
+                                      );
+                                    } else if (chartType === 'line') {
+                                      return (
+                                        <ResponsiveContainer width="100%" height={400}>
+                                          <LineChart data={chartData}>
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey={firstGroupBy} />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Legend />
+                                            {metricKeys.map((key, idx) => (
+                                              <Line key={key} type="monotone" dataKey={key} stroke={colors[idx % colors.length]} name={key} />
+                                            ))}
+                                          </LineChart>
+                                        </ResponsiveContainer>
+                                      );
+                                    } else {
+                                      // Bar chart (default)
+                                      return (
+                                        <ResponsiveContainer width="100%" height={400}>
+                                          <BarChart data={chartData}>
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey={firstGroupBy} />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Legend />
+                                            {metricKeys.map((key, idx) => (
+                                              <Bar key={key} dataKey={key} fill={colors[idx % colors.length]} name={key} />
+                                            ))}
+                                          </BarChart>
+                                        </ResponsiveContainer>
+                                      );
+                                    }
+                                  }
+                                  
+                                  return <div className="text-gray-500 text-center py-8">Add rows and values to generate charts</div>;
+                                })()}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {insights.length > 0 && (
+            <div className="p-6 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+              <button
+                onClick={() => setActiveStep('preview')}
+                className="px-5 py-2.5 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors flex items-center gap-2"
+              >
+                ← Back
+              </button>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setActiveStep('dashboard')}
+                  className="px-6 py-3 bg-white border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors flex items-center gap-2 shadow-sm"
+                >
+                  <BarChart3 className="w-5 h-5" />
+                  Dashboard
+                </button>
+                <button
+                  onClick={() => setActiveStep('export')}
+                  className="px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all shadow-md hover:shadow-lg flex items-center gap-2"
+                >
+                  <Download className="w-5 h-5" />
+                  Export Excel
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* 6. Insights Dashboard */}
+      {activeStep === 'dashboard' && (
+        <div className="bg-white rounded-lg shadow-lg p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-800">Insights Dashboard</h2>
+            <button
+              onClick={() => setActiveStep('insights')}
+              className="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-semibold hover:bg-primary-700 transition-colors flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              New Insight
+            </button>
+          </div>
+
+          {savedInsights.length === 0 && insights.length === 0 ? (
+            <div className="text-center py-12 text-gray-500">
+              <BarChart3 className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <p className="text-lg mb-2">No insights yet</p>
+              <p className="text-sm">Create insights to see them here</p>
             </div>
           ) : (
             <div className="space-y-4">
-              {insights.map((insight, idx) => (
-                <div key={insight.id} className="border border-gray-200 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <input
-                      type="text"
-                      value={insight.name}
-                      onChange={(e) => {
-                        const updated = [...insights];
-                        updated[idx].name = e.target.value;
-                        setInsights(updated);
-                      }}
-                      className="text-lg font-semibold text-gray-800 border-none bg-transparent focus:outline-none focus:ring-2 focus:ring-primary-500 rounded px-2"
-                    />
-                    <button
-                      onClick={() => {
-                        setInsights(insights.filter((_, i) => i !== idx));
-                      }}
-                      className="text-red-600 hover:text-red-700"
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </button>
+              {(savedInsights.length > 0 ? savedInsights : insights).map((insight) => (
+                <div key={insight.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-lg font-semibold text-gray-800">{insight.name}</h3>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => {
+                          setSelectedInsight(insight);
+                          setActiveStep('insights');
+                        }}
+                        className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (savedInsights.find(i => i.id === insight.id)) {
+                            setSavedInsights(savedInsights.filter(i => i.id !== insight.id));
+                            toast.success('Insight deleted');
+                          } else {
+                            setInsights(insights.filter(i => i.id !== insight.id));
+                            toast.success('Insight deleted');
+                          }
+                        }}
+                        className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition-colors"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
                   
-                  {/* Group By */}
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Group By</label>
-                    <div className="flex flex-wrap gap-2">
-                      {columns.map(col => (
-                        <button
-                          key={col.name}
-                          onClick={() => {
-                            const updated = [...insights];
-                            const groupIndex = updated[idx].groupBy.indexOf(col.name);
-                            if (groupIndex >= 0) {
-                              updated[idx].groupBy.splice(groupIndex, 1);
-                            } else {
-                              updated[idx].groupBy.push(col.name);
-                            }
-                            setInsights(updated);
-                          }}
-                          className={`px-3 py-1 rounded-lg text-sm transition-colors ${
-                            insight.groupBy.includes(col.name)
-                              ? 'bg-primary-600 text-white'
-                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                          }`}
-                        >
-                          {col.name}
-                        </button>
-                      ))}
-                    </div>
+                  <div className="mb-3 text-sm text-gray-600">
+                    <p><span className="font-medium">Rows:</span> {insight.groupBy.join(', ') || 'None'}</p>
+                    {insight.pivotColumns && insight.pivotColumns.length > 0 && (
+                      <p><span className="font-medium">Columns:</span> {insight.pivotColumns.join(', ')}</p>
+                    )}
+                    <p><span className="font-medium">Metrics:</span> {insight.metrics.map(m => `${m.function}(${m.column})`).join(', ')}</p>
                   </div>
 
-                  {/* Metrics - Drag and Drop Area */}
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-                      <Calculator className="w-4 h-4" />
-                      Metrics (Drag columns here or click to add)
-                    </label>
-                    <div className="min-h-[60px] border-2 border-dashed border-gray-300 rounded-lg p-3 mb-3 bg-gray-50">
-                      {insight.metrics.length === 0 ? (
-                        <p className="text-gray-400 text-sm text-center py-2">No metrics selected</p>
-                      ) : (
-                        <div className="space-y-2">
-                          {insight.metrics.map((metric, metricIdx) => {
-                            const col = columns.find(c => c.name === metric.column);
-                            return (
-                              <div key={metricIdx} className="flex items-center gap-2 bg-white p-2 rounded-lg border border-gray-200">
-                                <GripVertical className="w-4 h-4 cursor-move text-gray-400" />
-                                <select
-                                  value={metric.function}
-                                  onChange={(e) => {
-                                    const updated = [...insights];
-                                    updated[idx].metrics[metricIdx].function = e.target.value as any;
-                                    setInsights(updated);
-                                  }}
-                                  className="px-3 py-1 border border-gray-300 rounded-lg text-sm"
-                                >
-                                  <option value="sum">SUM</option>
-                                  <option value="avg">AVG</option>
-                                  <option value="median">MEDIAN</option>
-                                  <option value="mode">MODE</option>
-                                  <option value="min">MIN</option>
-                                  <option value="max">MAX</option>
-                                  <option value="count">COUNT</option>
-                                  <option value="count_distinct">COUNT DISTINCT</option>
-                                  <option value="unique_values">UNIQUE VALUES</option>
-                                  <option value="duplicate_count">DUPLICATE COUNT</option>
-                                </select>
-                                <select
-                                  value={metric.column}
-                                  onChange={(e) => {
-                                    const updated = [...insights];
-                                    updated[idx].metrics[metricIdx].column = e.target.value;
-                                    setInsights(updated);
-                                  }}
-                                  className="px-3 py-1 border border-gray-300 rounded-lg text-sm flex-1"
-                                >
-                                  {columns.map(col => (
-                                    <option key={col.name} value={col.name}>{col.name} ({col.type})</option>
-                                  ))}
-                                </select>
-                                <button
-                                  onClick={() => {
-                                    const updated = [...insights];
-                                    updated[idx].metrics.splice(metricIdx, 1);
-                                    setInsights(updated);
-                                  }}
-                                  className="text-red-600 hover:text-red-700"
-                                >
-                                  <X className="w-4 h-4" />
-                                </button>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {columns.map(col => (
-                        <button
-                          key={col.name}
-                          onClick={() => {
-                            const updated = [...insights];
-                            updated[idx].metrics.push({
-                              column: col.name,
-                              function: col.type === 'number' ? 'sum' : 'count'
-                            });
-                            setInsights(updated);
-                          }}
-                          className="px-3 py-1 rounded-lg text-sm transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300 flex items-center gap-1"
-                        >
-                          {col.type === 'number' && <Hash className="w-3 h-3" />}
-                          {col.type === 'date' && <CalendarIcon className="w-3 h-3" />}
-                          {col.name}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Filters */}
-                  <div className="mb-4 space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-                        <Filter className="w-4 h-4" />
-                        Filters
-                      </label>
-                      
-                      {/* Date Filter Type */}
-                      <div className="mb-3">
-                        <label className="block text-xs text-gray-600 mb-1">Date Filter Type</label>
-                        <select
-                          value={insight.filters?.dateFilter || 'range'}
-                          onChange={(e) => {
-                            const updated = [...insights];
-                            if (!updated[idx].filters) updated[idx].filters = {};
-                            updated[idx].filters.dateFilter = e.target.value as any;
-                            setInsights(updated);
-                          }}
-                          className="px-3 py-1 border border-gray-300 rounded-lg text-sm w-full"
-                        >
-                          <option value="range">Date Range</option>
-                          <option value="same_date">Same Date (Most Common)</option>
-                          <option value="any_date">Any Date</option>
-                        </select>
-                      </div>
-
-                      {/* Date Range */}
-                      {(insight.filters?.dateFilter === 'range' || !insight.filters?.dateFilter) && (
-                        <div className="mb-3">
-                          <label className="block text-xs text-gray-600 mb-1">Date Range</label>
-                          <div className="flex items-center gap-2">
-                            <input
-                              type="date"
-                              value={insight.filters?.dateRange?.[0] || ''}
-                              onChange={(e) => {
-                                const updated = [...insights];
-                                if (!updated[idx].filters) updated[idx].filters = {};
-                                if (!updated[idx].filters.dateRange) updated[idx].filters.dateRange = ['', ''];
-                                updated[idx].filters.dateRange![0] = e.target.value;
-                                setInsights(updated);
-                              }}
-                              className="px-3 py-1 border border-gray-300 rounded-lg text-sm flex-1"
-                            />
-                            <span className="text-gray-500">to</span>
-                            <input
-                              type="date"
-                              value={insight.filters?.dateRange?.[1] || ''}
-                              onChange={(e) => {
-                                const updated = [...insights];
-                                if (!updated[idx].filters) updated[idx].filters = {};
-                                if (!updated[idx].filters.dateRange) updated[idx].filters.dateRange = ['', ''];
-                                updated[idx].filters.dateRange![1] = e.target.value;
-                                setInsights(updated);
-                              }}
-                              className="px-3 py-1 border border-gray-300 rounded-lg text-sm flex-1"
-                            />
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Value Filters */}
-                      <div className="mb-3">
-                        <label className="block text-xs text-gray-600 mb-1">Value Filters</label>
-                        <div className="space-y-2">
-                          {(insight.filters?.valueFilters || []).map((filter, filterIdx) => (
-                            <div key={filterIdx} className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg">
-                              <select
-                                value={filter.column}
-                                onChange={(e) => {
-                                  const updated = [...insights];
-                                  if (!updated[idx].filters) updated[idx].filters = {};
-                                  if (!updated[idx].filters.valueFilters) updated[idx].filters.valueFilters = [];
-                                  updated[idx].filters.valueFilters![filterIdx].column = e.target.value;
-                                  setInsights(updated);
-                                }}
-                                className="px-2 py-1 border border-gray-300 rounded text-xs flex-1"
-                              >
-                                {columns.map(col => (
-                                  <option key={col.name} value={col.name}>{col.name}</option>
-                                ))}
-                              </select>
-                              <select
-                                value={filter.operator}
-                                onChange={(e) => {
-                                  const updated = [...insights];
-                                  if (!updated[idx].filters) updated[idx].filters = {};
-                                  if (!updated[idx].filters.valueFilters) updated[idx].filters.valueFilters = [];
-                                  updated[idx].filters.valueFilters![filterIdx].operator = e.target.value;
-                                  setInsights(updated);
-                                }}
-                                className="px-2 py-1 border border-gray-300 rounded text-xs"
-                              >
-                                <option value="equals">Equals</option>
-                                <option value="not_equals">Not Equals</option>
-                                <option value="greater_than">Greater Than</option>
-                                <option value="less_than">Less Than</option>
-                                <option value="contains">Contains</option>
-                                <option value="starts_with">Starts With</option>
-                                <option value="ends_with">Ends With</option>
-                              </select>
-                              <input
-                                type="text"
-                                value={filter.value}
-                                onChange={(e) => {
-                                  const updated = [...insights];
-                                  if (!updated[idx].filters) updated[idx].filters = {};
-                                  if (!updated[idx].filters.valueFilters) updated[idx].filters.valueFilters = [];
-                                  updated[idx].filters.valueFilters![filterIdx].value = e.target.value;
-                                  setInsights(updated);
-                                }}
-                                placeholder="Value"
-                                className="px-2 py-1 border border-gray-300 rounded text-xs flex-1"
-                              />
-                              <button
-                                onClick={() => {
-                                  const updated = [...insights];
-                                  if (!updated[idx].filters) updated[idx].filters = {};
-                                  if (!updated[idx].filters.valueFilters) updated[idx].filters.valueFilters = [];
-                                  updated[idx].filters.valueFilters!.splice(filterIdx, 1);
-                                  setInsights(updated);
-                                }}
-                                className="text-red-600 hover:text-red-700"
-                              >
-                                <X className="w-3 h-3" />
-                              </button>
-                            </div>
+                  {/* Insight Preview Table */}
+                  <div className="overflow-x-auto max-h-64 border border-gray-200 rounded-lg bg-white">
+                    <table className="min-w-full divide-y divide-gray-200 text-xs">
+                      <thead className="bg-gray-100">
+                        <tr>
+                          {insight.groupBy.map(g => (
+                            <th key={g} className="px-2 py-1 text-left font-semibold text-gray-700">
+                              {g}
+                            </th>
                           ))}
-                          <button
-                            onClick={() => {
-                              const updated = [...insights];
-                              if (!updated[idx].filters) updated[idx].filters = {};
-                              if (!updated[idx].filters.valueFilters) updated[idx].filters.valueFilters = [];
-                              updated[idx].filters.valueFilters!.push({
-                                column: columns[0]?.name || '',
-                                operator: 'equals',
-                                value: ''
-                              });
-                              setInsights(updated);
-                            }}
-                            className="px-2 py-1 text-xs text-primary-600 hover:text-primary-700 flex items-center gap-1"
-                          >
-                            <Plus className="w-3 h-3" />
-                            Add Value Filter
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Frequency Filter */}
-                      <div className="mb-3">
-                        <label className="block text-xs text-gray-600 mb-1">Frequency Filter (Rows appearing more than X times)</label>
-                        <div className="flex items-center gap-2">
-                          <select
-                            value={insight.filters?.frequencyFilter?.column || ''}
-                            onChange={(e) => {
-                              const updated = [...insights];
-                              if (!updated[idx].filters) updated[idx].filters = {};
-                              if (!updated[idx].filters.frequencyFilter) {
-                                updated[idx].filters.frequencyFilter = { column: e.target.value, minCount: 1 };
-                              } else {
-                                updated[idx].filters.frequencyFilter.column = e.target.value;
-                              }
-                              setInsights(updated);
-                            }}
-                            className="px-3 py-1 border border-gray-300 rounded-lg text-sm flex-1"
-                          >
-                            <option value="">Select column...</option>
-                            {columns.map(col => (
-                              <option key={col.name} value={col.name}>{col.name}</option>
+                          {insight.pivotColumns && insight.pivotColumns.map(c => (
+                            <th key={c} className="px-2 py-1 text-left font-semibold text-gray-700">
+                              {c}
+                            </th>
+                          ))}
+                          {insight.metrics.map(metric => (
+                            <th key={`${metric.function}_${metric.column}`} className="px-2 py-1 text-left font-semibold text-gray-700">
+                              {metric.function}({metric.column})
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200">
+                        {generateInsightResults(insight).slice(0, 10).map((row, rowIdx) => (
+                          <tr key={rowIdx} className="hover:bg-gray-50">
+                            {insight.groupBy.map(g => (
+                              <td key={g} className="px-2 py-1 text-gray-700">
+                                {String(row[g] ?? '')}
+                              </td>
                             ))}
-                          </select>
-                          <span className="text-gray-500 text-sm">appearing more than</span>
-                          <input
-                            type="number"
-                            min="1"
-                            value={insight.filters?.frequencyFilter?.minCount || 1}
-                            onChange={(e) => {
-                              const updated = [...insights];
-                              if (!updated[idx].filters) updated[idx].filters = {};
-                              if (!updated[idx].filters.frequencyFilter) {
-                                updated[idx].filters.frequencyFilter = { 
-                                  column: columns[0]?.name || '', 
-                                  minCount: parseInt(e.target.value) || 1 
-                                };
-                              } else {
-                                updated[idx].filters.frequencyFilter.minCount = parseInt(e.target.value) || 1;
-                              }
-                              setInsights(updated);
-                            }}
-                            className="px-3 py-1 border border-gray-300 rounded-lg text-sm w-20"
-                          />
-                          <span className="text-gray-500 text-sm">times</span>
-                        </div>
+                            {insight.pivotColumns && insight.pivotColumns.map(c => (
+                              <td key={c} className="px-2 py-1 text-gray-700">
+                                {String(row[`pivot_${c}`] ?? '')}
+                              </td>
+                            ))}
+                            {insight.metrics.map(metric => (
+                              <td key={`${metric.function}_${metric.column}`} className="px-2 py-1 text-gray-800 font-mono">
+                                {String(row[`${metric.function}_${metric.column}`] ?? '')}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    {generateInsightResults(insight).length > 10 && (
+                      <div className="p-2 text-center text-xs text-gray-500 bg-gray-50">
+                        Showing first 10 of {generateInsightResults(insight).length} rows
                       </div>
-                    </div>
-                  </div>
-
-                  {/* Preview Results */}
-                  <div className="mt-4">
-                    <button
-                      onClick={() => {
-                        const results = generateInsightResults(insight);
-                        // Show preview in a modal or expandable section
-                        console.log('Insight Results:', results);
-                        toast.success(`Generated ${results.length} result rows`);
-                      }}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors"
-                    >
-                      Preview Results
-                    </button>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
           )}
+        </div>
+      )}
 
-          {insights.length > 0 && (
-            <button
-              onClick={handleExport}
-              className="mt-6 px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors flex items-center gap-2"
+      {/* 7. Export & Download */}
+      {activeStep === 'export' && (
+        <div className="bg-white rounded-lg shadow-lg p-6">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">Export & Download</h2>
+          
+          <div className="space-y-4 mb-6">
+            <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <input
+                type="checkbox"
+                id="export-raw"
+                defaultChecked
+                className="w-5 h-5 text-primary-600 rounded focus:ring-primary-500"
+              />
+              <label htmlFor="export-raw" className="text-sm font-medium text-gray-700 cursor-pointer">
+                Raw Data
+              </label>
+            </div>
+            <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <input
+                type="checkbox"
+                id="export-cleaned"
+                defaultChecked
+                className="w-5 h-5 text-primary-600 rounded focus:ring-primary-500"
+              />
+              <label htmlFor="export-cleaned" className="text-sm font-medium text-gray-700 cursor-pointer">
+                Cleaned Data
+              </label>
+            </div>
+            <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <input
+                type="checkbox"
+                id="export-insights"
+                defaultChecked
+                className="w-5 h-5 text-primary-600 rounded focus:ring-primary-500"
+              />
+              <label htmlFor="export-insights" className="text-sm font-medium text-gray-700 cursor-pointer">
+                All Insights
+              </label>
+            </div>
+            <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <input
+                type="checkbox"
+                id="export-charts"
+                defaultChecked={false}
+                className="w-5 h-5 text-primary-600 rounded focus:ring-primary-500"
+              />
+              <label htmlFor="export-charts" className="text-sm font-medium text-gray-700 cursor-pointer">
+                Include Charts in Export
+              </label>
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">File Format</label>
+            <select
+              defaultValue="xlsx"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
-              <Download className="w-5 h-5" />
-              Export to Excel
-            </button>
-          )}
+              <option value="xlsx">Excel (.xlsx)</option>
+              <option value="csv" disabled>CSV (Coming Soon)</option>
+            </select>
+          </div>
+
+          <button
+            onClick={handleExport}
+            className="w-full px-6 py-4 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+          >
+            <Download className="w-5 h-5" />
+            Generate & Download
+          </button>
         </div>
       )}
     </div>
