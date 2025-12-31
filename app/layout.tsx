@@ -3,7 +3,7 @@ import './globals.css'
 import { Toaster } from 'react-hot-toast'
 
 export const metadata: Metadata = {
-  title: 'Free JSON Tools | JSON Converter, API Testing & Developer Tools',
+  title: 'Free JSON Tools | Converter, API Testing & More',
   description: 'Free online JSON tools: JSON to Excel converter, beautifier, API comparator, schema generator, SQL formatter & more. Professional developer tools.',
   keywords: [
     'UnblockDevs',
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://unblockdevs.com',
-    title: 'Free JSON Tools | JSON Converter, API Testing & Developer Tools',
+    title: 'Free JSON Tools | Converter, API Testing & More',
     description: 'Free online JSON tools: JSON to Excel converter, beautifier, API comparator, schema generator, SQL formatter & more. Professional developer tools.',
     siteName: 'UnblockDevs',
       images: [
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Free JSON Tools | JSON Converter, API Testing & Developer Tools',
+    title: 'Free JSON Tools | Converter, API Testing & More',
     description: 'Free online JSON tools: JSON to Excel converter, beautifier, API comparator, schema generator, SQL formatter & more. Professional developer tools.',
     images: ['/og-image.png'],
   },
