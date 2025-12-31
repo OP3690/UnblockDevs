@@ -466,6 +466,19 @@ function HomeClient() {
               </div>
             </button>
             <button
+              onClick={() => handleTabChange('fixer')}
+              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+                activeTab === 'fixer'
+                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
+                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <Wrench className="w-4 h-4" />
+                <span className="text-sm">JSON Fixer</span>
+              </div>
+            </button>
+            <button
               onClick={() => handleTabChange('builder')}
               className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'builder'
