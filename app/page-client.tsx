@@ -940,10 +940,11 @@ function HomeClient() {
               className="card card-hover text-left cursor-pointer group"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                SQL Formatter
+                SQL Formatter - Comma Separated ID List for MySQL
               </h3>
               <p className="text-gray-600 text-sm">
-                Format SQL IN clauses and queries. Convert lists of IDs or values into SQL-friendly format with proper quoting and comma separation.
+                Create comma separated ID lists for MySQL IN clause. Convert multiple IDs, arrays, or values into properly formatted MySQL IN query format. 
+                Generate comma separated values from lists, convert arrays to comma separated strings, and format IDs for MySQL WHERE IN clause queries.
               </p>
               <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
                 Try it now →
