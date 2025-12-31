@@ -19,6 +19,15 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'mysql-comma-separated-id-list-guide',
+      title: 'How to Create Comma Separated ID List for MySQL IN Clause - Complete Guide',
+      excerpt: 'Learn how to create comma separated ID lists for MySQL IN clause. Convert multiple IDs, arrays, and values into MySQL-friendly format. Complete guide with examples, best practices, security tips, and free SQL formatter tool.',
+      date: '2025-01-31',
+      readTime: '22 min read',
+      category: 'Database & SQL',
+      keywords: ['comma separated ID list MySQL', 'MySQL IN clause', 'comma separated values MySQL', 'convert IDs to comma separated list', 'MySQL IN query', 'SQL formatter', 'comma separated IDs MySQL', 'MySQL WHERE IN clause']
+    },
+    {
       slug: 'json-format-standards-complete-guide',
       title: 'JSON Format & Standards: Complete Guide to RFC 8259, Syntax Rules & Best Practices',
       excerpt: 'Master JSON format and standards with this comprehensive guide. Learn RFC 8259 rules, syntax violations, fixing strategies, error classification, and production-grade JSON validation. Perfect for developers, API designers, and data engineers.',
