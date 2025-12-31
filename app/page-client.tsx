@@ -643,7 +643,7 @@ function HomeClient() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto container-padding py-10 animate-fade-in">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6 text-center">Free JSON Tools & Developer Utilities</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-6 text-center">Free JSON Tools - JSON Converter & API Testing</h1>
         {activeTab === 'converter' && (
           rows.length === 0 ? (
             <JsonInput onJsonSubmit={handleJsonSubmit} />
@@ -713,8 +713,8 @@ function HomeClient() {
               Free Online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier & JSON Fixer
             </h2>
             <p className="text-lg md:text-xl text-gray-700 max-w-4xl mx-auto mb-6">
-              Use our free online JSON tools to <strong>view JSON</strong>, <strong>format JSON</strong>, <strong>parse JSON</strong>, <strong>beautify JSON</strong>, and <strong>fix malformed JSON</strong> instantly. 
-              Convert JSON to Excel, JSON to CSV, or JSON to Table format. Edit, analyze, validate, repair syntax errors, and transform JSON data - all in your browser, no installation required. 
+              Use our <strong>free</strong> online <strong>JSON tools</strong> to <strong>view JSON</strong>, <strong>format JSON</strong>, <strong>parse JSON</strong>, <strong>beautify JSON</strong>, and <strong>fix malformed JSON</strong> instantly. 
+              <strong>Convert</strong> JSON to Excel, JSON to CSV, or JSON to Table format. Our <strong>free JSON tools</strong> include <strong>API testing</strong> capabilities, allowing you to test and compare API responses. Edit, analyze, validate, repair syntax errors, and transform JSON data - all in your browser, no installation required. 
               <Link href="/blog/html-tags-explained-guide" className="text-blue-600 hover:text-blue-800 underline ml-1">
                 Learn more about web development
               </Link>.
