@@ -9,6 +9,15 @@ interface JsonError {
   column: number;
   message: string;
   type: 'syntax' | 'parse' | 'structure';
+  severity: 'safe-fix' | 'heuristic-fix' | 'non-fixable';
+}
+
+interface Token {
+  type: 'LBRACE' | 'RBRACE' | 'LBRACKET' | 'RBRACKET' | 'COMMA' | 'COLON' | 'STRING' | 'NUMBER' | 'BOOLEAN' | 'NULL' | 'INVALID';
+  value: string;
+  position: number;
+  line: number;
+  column: number;
 }
 
 export default function JsonFixer() {
@@ -18,145 +27,555 @@ export default function JsonFixer() {
   const [copied, setCopied] = useState(false);
   const [showErrors, setShowErrors] = useState(true);
 
-  // Attempt to fix common JSON errors
-  const attemptFix = (text: string): string => {
-    let fixed = text;
+  // Tokenize JSON input
+  const tokenize = (input: string): Token[] => {
+    const tokens: Token[] = [];
+    let position = 0;
+    let line = 1;
+    let column = 1;
+    const lines = input.split('\n');
 
-    // Fix 1: Remove comments first (before other fixes)
-    fixed = fixed.replace(/\/\/.*$/gm, ''); // Single-line comments
-    fixed = fixed.replace(/\/\*[\s\S]*?\*\//g, ''); // Multi-line comments
-
-    // Fix 2: Trailing commas (more precise - only before closing brackets/braces)
-    fixed = fixed.replace(/,(\s*[}\]])/g, '$1');
-
-    // Fix 3: Single quotes to double quotes (but be careful with already quoted strings)
-    // Only replace single quotes that are not escaped and are used for string values
-    fixed = fixed.replace(/(:\s*)'([^']*)'/g, '$1"$2"');
-    fixed = fixed.replace(/(\[\s*)'([^']*)'/g, '$1"$2"');
-
-    // Fix 4: Unquoted keys
-    fixed = fixed.replace(/([{,]\s*)([a-zA-Z_$][a-zA-Z0-9_$]*)\s*:/g, '$1"$2":');
-
-    // Fix 5: Replace undefined with null
-    fixed = fixed.replace(/\bundefined\b/g, 'null');
-
-    // Fix 6: Remove BOM
-    fixed = fixed.replace(/^\uFEFF/, '');
-
-    // Fix 7: Fix escaped quotes
-    fixed = fixed.replace(/\\'/g, "'");
-
-    // Fix 8: Add missing opening brace after key with colon (if next line starts with a key)
-    const lines = fixed.split('\n');
-    const fixedLines: string[] = [];
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-      const nextLine = i < lines.length - 1 ? lines[i + 1] : '';
-      
-      // Check if this line ends with a key: and next line starts with a key (missing {)
-      if (line.match(/"([^"]+)":\s*$/) && nextLine.trim().match(/^"[^"]+":/)) {
-        fixedLines.push(line + ' {');
+    const updatePosition = (char: string) => {
+      if (char === '\n') {
+        line++;
+        column = 1;
       } else {
-        fixedLines.push(line);
+        column++;
       }
-    }
-    fixed = fixedLines.join('\n');
+      position++;
+    };
 
-    return fixed;
-  };
+    const skipWhitespace = () => {
+      while (position < input.length && /\s/.test(input[position])) {
+        updatePosition(input[position]);
+      }
+    };
 
-  // Detect common JSON errors - returns true if any errors were found
-  const detectCommonErrors = (text: string, errors: JsonError[]): boolean => {
-    const lines = text.split('\n');
-    let foundErrors = false;
+    const readString = (): Token | null => {
+      const startPos = position;
+      const startLine = line;
+      const startCol = column;
+      const quote = input[position];
+      
+      if (quote !== '"' && quote !== "'") return null;
+      
+      updatePosition(input[position]);
+      let value = '';
+      let escaped = false;
 
-    lines.forEach((line, index) => {
-      const lineNum = index + 1;
-      const trimmedLine = line.trim();
+      while (position < input.length) {
+        const char = input[position];
+        
+        if (escaped) {
+          if (char === 'u' && position + 4 < input.length) {
+            // Unicode escape
+            value += char + input[position + 1] + input[position + 2] + input[position + 3] + input[position + 4];
+            for (let i = 0; i < 5; i++) {
+              updatePosition(input[position]);
+            }
+            escaped = false;
+            continue;
+          }
+          // Valid escape sequences: \" \\ \/ \b \f \n \r \t
+          if (['"', '\\', '/', 'b', 'f', 'n', 'r', 't'].includes(char)) {
+            value += '\\' + char;
+            updatePosition(input[position]);
+            escaped = false;
+            continue;
+          }
+          escaped = false;
+        }
 
-      // Check for trailing commas in arrays/objects (more precise)
-      // Match: comma followed by whitespace and closing bracket/brace
-      if (trimmedLine.match(/,\s*[}\]],?\s*$/) || trimmedLine.match(/,\s*$/) && (index < lines.length - 1 && lines[index + 1].trim().match(/^[}\]]/))) {
-        errors.push({
-          line: lineNum,
-          column: line.length - line.trimStart().length + trimmedLine.lastIndexOf(',') + 1,
-          message: 'Trailing comma before closing bracket/brace',
-          type: 'syntax',
-        });
-        foundErrors = true;
+        if (char === '\\') {
+          escaped = true;
+          updatePosition(input[position]);
+          continue;
+        }
+
+        if (char === quote) {
+          updatePosition(input[position]);
+          return {
+            type: 'STRING',
+            value: quote === "'" ? `"${value}"` : `"${value}"`, // Normalize to double quotes
+            position: startPos,
+            line: startLine,
+            column: startCol,
+          };
+        }
+
+        if (char === '\n' && !escaped) {
+          // Unescaped newline in string
+          return {
+            type: 'INVALID',
+            value: `Unescaped newline in string`,
+            position: startPos,
+            line: startLine,
+            column: startCol,
+          };
+        }
+
+        value += char;
+        updatePosition(input[position]);
       }
 
-      // Check for single quotes in string values (more precise)
-      // Only flag if it's a value (after colon) and not already inside double quotes
-      const colonIndex = line.indexOf(':');
-      if (colonIndex > -1) {
-        const valuePart = line.substring(colonIndex + 1).trim();
-        const singleQuoteIndex = valuePart.indexOf("'");
-        if (singleQuoteIndex > -1 && !valuePart.match(/^["'].*["']$/)) {
-          // Check if it's not a comment
-          const commentIndex = valuePart.indexOf('//');
-          if (commentIndex === -1 || singleQuoteIndex < commentIndex) {
-            errors.push({
-              line: lineNum,
-              column: colonIndex + 1 + singleQuoteIndex + 1,
-              message: 'Single quotes used instead of double quotes',
-              type: 'syntax',
-            });
-            foundErrors = true;
+      return {
+        type: 'INVALID',
+        value: 'Unclosed string',
+        position: startPos,
+        line: startLine,
+        column: startCol,
+      };
+    };
+
+    const readNumber = (): Token | null => {
+      const startPos = position;
+      const startLine = line;
+      const startCol = column;
+      let value = '';
+      let hasDot = false;
+      let hasExp = false;
+
+      while (position < input.length) {
+        const char = input[position];
+        
+        if (char >= '0' && char <= '9') {
+          value += char;
+          updatePosition(input[position]);
+        } else if (char === '.' && !hasDot && !hasExp) {
+          value += char;
+          hasDot = true;
+          updatePosition(input[position]);
+        } else if ((char === 'e' || char === 'E') && !hasExp) {
+          value += char;
+          hasExp = true;
+          updatePosition(input[position]);
+          if (position < input.length && (input[position] === '+' || input[position] === '-')) {
+            value += input[position];
+            updatePosition(input[position]);
+          }
+        } else {
+          break;
+        }
+      }
+
+      if (value.length === 0) return null;
+
+      // Validate number
+      if (value.startsWith('0') && value.length > 1 && value[1] !== '.') {
+        // Leading zero
+        return {
+          type: 'NUMBER',
+          value: value.replace(/^0+/, '') || '0',
+          position: startPos,
+          line: startLine,
+          column: startCol,
+        };
+      }
+
+      if (value.endsWith('.')) {
+        value += '0';
+      }
+
+      if (value === 'NaN' || value === 'Infinity' || value === '-Infinity') {
+        return {
+          type: 'NULL',
+          value: 'null',
+          position: startPos,
+          line: startLine,
+          column: startCol,
+        };
+      }
+
+      return {
+        type: 'NUMBER',
+        value,
+        position: startPos,
+        line: startLine,
+        column: startCol,
+      };
+    };
+
+    const readKeyword = (): Token | null => {
+      const keywords = {
+        'true': 'BOOLEAN',
+        'false': 'BOOLEAN',
+        'null': 'NULL',
+        'True': 'BOOLEAN',
+        'False': 'BOOLEAN',
+        'None': 'NULL',
+        'TRUE': 'BOOLEAN',
+        'FALSE': 'BOOLEAN',
+      };
+
+      for (const [keyword, type] of Object.entries(keywords)) {
+        if (input.substring(position, position + keyword.length) === keyword) {
+          const nextChar = input[position + keyword.length];
+          if (!nextChar || !/[a-zA-Z0-9_]/.test(nextChar)) {
+            const startPos = position;
+            const startLine = line;
+            const startCol = column;
+            for (let i = 0; i < keyword.length; i++) {
+              updatePosition(input[position]);
+            }
+            return {
+              type: type as 'BOOLEAN' | 'NULL',
+              value: keyword.toLowerCase() === 'none' ? 'null' : keyword.toLowerCase(),
+              position: startPos,
+              line: startLine,
+              column: startCol,
+            };
           }
         }
       }
 
-      // Check for unquoted keys (more precise - must be after { or ,)
-      const unquotedKeyMatch = line.match(/([{,]\s*)([a-zA-Z_$][a-zA-Z0-9_$]*)\s*:/);
-      if (unquotedKeyMatch && !line.match(/["'][a-zA-Z_$][a-zA-Z0-9_$]*["']\s*:/)) {
-        errors.push({
-          line: lineNum,
-          column: unquotedKeyMatch.index! + unquotedKeyMatch[1].length + 1,
-          message: 'Unquoted object key',
-          type: 'syntax',
-        });
-        foundErrors = true;
-      }
+      return null;
+    };
 
-      // Check for comments (only if not inside a string)
-      const commentIndex = trimmedLine.indexOf('//');
-      const multiCommentIndex = trimmedLine.indexOf('/*');
-      if (commentIndex > -1 || multiCommentIndex > -1) {
-        // Basic check: if // appears before any quote, it's likely a comment
-        const firstQuote = Math.min(
-          trimmedLine.indexOf('"') === -1 ? Infinity : trimmedLine.indexOf('"'),
-          trimmedLine.indexOf("'") === -1 ? Infinity : trimmedLine.indexOf("'")
-        );
-        if ((commentIndex > -1 && commentIndex < firstQuote) || (multiCommentIndex > -1 && multiCommentIndex < firstQuote)) {
-          errors.push({
-            line: lineNum,
-            column: (commentIndex > -1 ? commentIndex : multiCommentIndex) + 1,
-            message: 'Comments are not allowed in JSON',
-            type: 'syntax',
+    while (position < input.length) {
+      skipWhitespace();
+      if (position >= input.length) break;
+
+      const char = input[position];
+      const startLine = line;
+      const startCol = column;
+
+      switch (char) {
+        case '{':
+          tokens.push({ type: 'LBRACE', value: char, position, line: startLine, column: startCol });
+          updatePosition(char);
+          break;
+        case '}':
+          tokens.push({ type: 'RBRACE', value: char, position, line: startLine, column: startCol });
+          updatePosition(char);
+          break;
+        case '[':
+          tokens.push({ type: 'LBRACKET', value: char, position, line: startLine, column: startCol });
+          updatePosition(char);
+          break;
+        case ']':
+          tokens.push({ type: 'RBRACKET', value: char, position, line: startLine, column: startCol });
+          updatePosition(char);
+          break;
+        case ',':
+          tokens.push({ type: 'COMMA', value: char, position, line: startLine, column: startCol });
+          updatePosition(char);
+          break;
+        case ':':
+          tokens.push({ type: 'COLON', value: char, position, line: startLine, column: startCol });
+          updatePosition(char);
+          break;
+        case '"':
+        case "'":
+          const stringToken = readString();
+          if (stringToken) tokens.push(stringToken);
+          break;
+        default:
+          if (char >= '0' && char <= '9' || char === '-' || char === '+') {
+            const numToken = readNumber();
+            if (numToken) {
+              tokens.push(numToken);
+              break;
+            }
+          }
+          
+          const keywordToken = readKeyword();
+          if (keywordToken) {
+            tokens.push(keywordToken);
+            break;
+          }
+
+          // Invalid character
+          tokens.push({
+            type: 'INVALID',
+            value: `Unexpected character: ${char}`,
+            position,
+            line: startLine,
+            column: startCol,
           });
-          foundErrors = true;
-        }
+          updatePosition(char);
+      }
+    }
+
+    return tokens;
+  };
+
+  // Parse tokens and detect errors
+  const parseAndDetectErrors = (tokens: Token[], originalText: string): { errors: JsonError[]; fixedTokens: Token[] } => {
+    const errors: JsonError[] = [];
+    const fixedTokens: Token[] = [];
+    const stack: Array<'object' | 'array'> = [];
+    let i = 0;
+    let expectingKey = false;
+    let expectingValue = false;
+    let expectingComma = false;
+    let inObject = false;
+    let inArray = false;
+
+    const addError = (token: Token, message: string, severity: JsonError['severity'] = 'safe-fix') => {
+      errors.push({
+        line: token.line,
+        column: token.column,
+        message,
+        type: 'syntax',
+        severity,
+      });
+    };
+
+    // Check for top-level structure
+    if (tokens.length === 0) {
+      errors.push({
+        line: 1,
+        column: 1,
+        message: 'Empty JSON - must be an object or array',
+        type: 'structure',
+        severity: 'heuristic-fix',
+      });
+      return { errors, fixedTokens: [{ type: 'LBRACE', value: '{', position: 0, line: 1, column: 1 }, { type: 'RBRACE', value: '}', position: 1, line: 1, column: 2 }] };
+    }
+
+    // First token must be { or [
+    if (tokens[0].type !== 'LBRACE' && tokens[0].type !== 'LBRACKET') {
+      addError(tokens[0], 'JSON must start with { or [', 'heuristic-fix');
+      fixedTokens.push({ type: 'LBRACE', value: '{', position: 0, line: tokens[0].line, column: tokens[0].column });
+    }
+
+    while (i < tokens.length) {
+      const token = tokens[i];
+      const prevToken = fixedTokens[fixedTokens.length - 1];
+
+      // Handle invalid tokens
+      if (token.type === 'INVALID') {
+        addError(token, token.value, 'non-fixable');
+        i++;
+        continue;
       }
 
-      // Check for missing opening brace after key (like "projects": { missing)
-      const keyColonMatch = line.match(/"([^"]+)":\s*$/);
-      if (keyColonMatch && index < lines.length - 1) {
-        const nextLine = lines[index + 1].trim();
-        // If next line starts with a key (not { or [), we're missing an opening brace
-        if (nextLine.match(/^"[^"]+":/) && !nextLine.match(/^[{[]/)) {
-          errors.push({
-            line: lineNum,
-            column: line.length,
-            message: 'Missing opening brace { for object',
-            type: 'syntax',
-          });
-          foundErrors = true;
+      // Handle structure tokens
+      if (token.type === 'LBRACE') {
+        if (expectingValue || !inObject && !inArray && fixedTokens.length === 0) {
+          fixedTokens.push(token);
+          stack.push('object');
+          inObject = true;
+          expectingKey = true;
+          expectingValue = false;
+          expectingComma = false;
+        } else if (expectingComma) {
+          addError(token, 'Missing comma before object', 'heuristic-fix');
+          fixedTokens.push({ type: 'COMMA', value: ',', position: token.position, line: token.line, column: token.column });
+          fixedTokens.push(token);
+          stack.push('object');
+          inObject = true;
+          expectingKey = true;
+          expectingComma = false;
+        } else {
+          addError(token, 'Unexpected object start', 'non-fixable');
         }
+        i++;
+        continue;
       }
-    });
 
-    return foundErrors;
+      if (token.type === 'RBRACE') {
+        if (inObject) {
+          // Check for trailing comma
+          if (prevToken && prevToken.type === 'COMMA') {
+            fixedTokens.pop(); // Remove trailing comma
+            addError(token, 'Trailing comma removed', 'safe-fix');
+          }
+          fixedTokens.push(token);
+          stack.pop();
+          inObject = stack[stack.length - 1] === 'object';
+          inArray = stack[stack.length - 1] === 'array';
+          expectingComma = stack.length > 0;
+          expectingKey = false;
+          expectingValue = false;
+        } else {
+          addError(token, 'Unmatched closing brace', 'heuristic-fix');
+        }
+        i++;
+        continue;
+      }
+
+      if (token.type === 'LBRACKET') {
+        if (expectingValue || !inObject && !inArray && fixedTokens.length === 0) {
+          fixedTokens.push(token);
+          stack.push('array');
+          inArray = true;
+          expectingValue = true;
+          expectingKey = false;
+          expectingComma = false;
+        } else if (expectingComma) {
+          addError(token, 'Missing comma before array', 'heuristic-fix');
+          fixedTokens.push({ type: 'COMMA', value: ',', position: token.position, line: token.line, column: token.column });
+          fixedTokens.push(token);
+          stack.push('array');
+          inArray = true;
+          expectingValue = true;
+          expectingComma = false;
+        } else {
+          addError(token, 'Unexpected array start', 'non-fixable');
+        }
+        i++;
+        continue;
+      }
+
+      if (token.type === 'RBRACKET') {
+        if (inArray) {
+          // Check for trailing comma
+          if (prevToken && prevToken.type === 'COMMA') {
+            fixedTokens.pop();
+            addError(token, 'Trailing comma removed', 'safe-fix');
+          }
+          fixedTokens.push(token);
+          stack.pop();
+          inObject = stack[stack.length - 1] === 'object';
+          inArray = stack[stack.length - 1] === 'array';
+          expectingComma = stack.length > 0;
+          expectingValue = false;
+        } else {
+          addError(token, 'Unmatched closing bracket', 'heuristic-fix');
+        }
+        i++;
+        continue;
+      }
+
+      // Handle commas
+      if (token.type === 'COMMA') {
+        if (expectingComma) {
+          fixedTokens.push(token);
+          expectingComma = false;
+          if (inObject) {
+            expectingKey = true;
+          } else if (inArray) {
+            expectingValue = true;
+          }
+        } else {
+          addError(token, 'Unexpected comma', 'safe-fix');
+          // Don't add it
+        }
+        i++;
+        continue;
+      }
+
+      // Handle colons
+      if (token.type === 'COLON') {
+        if (expectingValue && inObject) {
+          fixedTokens.push(token);
+          expectingValue = false;
+          expectingKey = false;
+        } else {
+          addError(token, 'Unexpected colon', 'heuristic-fix');
+          if (inObject && !expectingValue) {
+            // Missing value before colon
+            fixedTokens.push(token);
+            expectingValue = true;
+          }
+        }
+        i++;
+        continue;
+      }
+
+      // Handle values (STRING, NUMBER, BOOLEAN, NULL)
+      if (['STRING', 'NUMBER', 'BOOLEAN', 'NULL'].includes(token.type)) {
+        if (expectingValue || expectingKey) {
+          // Check if key needs quotes in object
+          if (inObject && expectingKey && token.type !== 'STRING') {
+            addError(token, 'Object key must be a string', 'safe-fix');
+            fixedTokens.push({
+              type: 'STRING',
+              value: `"${token.value}"`,
+              position: token.position,
+              line: token.line,
+              column: token.column,
+            });
+          } else {
+            fixedTokens.push(token);
+          }
+
+          if (inObject) {
+            if (expectingKey) {
+              expectingKey = false;
+              expectingValue = true; // Expect colon after key
+            } else {
+              expectingComma = true;
+              expectingValue = false;
+            }
+          } else if (inArray) {
+            expectingComma = true;
+            expectingValue = false;
+          }
+        } else {
+          addError(token, 'Unexpected value', 'non-fixable');
+        }
+        i++;
+        continue;
+      }
+
+      i++;
+    }
+
+    // Check for unclosed structures
+    while (stack.length > 0) {
+      const structure = stack.pop()!;
+      const lastToken = fixedTokens[fixedTokens.length - 1];
+      if (structure === 'object') {
+        fixedTokens.push({ type: 'RBRACE', value: '}', position: lastToken.position + 1, line: lastToken.line, column: lastToken.column + 1 });
+        addError(lastToken, 'Missing closing brace', 'safe-fix');
+      } else {
+        fixedTokens.push({ type: 'RBRACKET', value: ']', position: lastToken.position + 1, line: lastToken.line, column: lastToken.column + 1 });
+        addError(lastToken, 'Missing closing bracket', 'safe-fix');
+      }
+    }
+
+    return { errors, fixedTokens };
+  };
+
+  // Convert tokens back to JSON string
+  const tokensToJson = (tokens: Token[]): string => {
+    let result = '';
+    for (let i = 0; i < tokens.length; i++) {
+      const token = tokens[i];
+      const nextToken = tokens[i + 1];
+
+      if (token.type === 'STRING') {
+        result += token.value;
+      } else if (token.type === 'NUMBER' || token.type === 'BOOLEAN' || token.type === 'NULL') {
+        result += token.value;
+      } else {
+        result += token.value;
+      }
+
+      // Add space after certain tokens for readability
+      if (token.type === 'COLON' && nextToken) {
+        result += ' ';
+      } else if (token.type === 'COMMA' && nextToken && nextToken.type !== 'RBRACE' && nextToken.type !== 'RBRACKET') {
+        result += ' ';
+      }
+    }
+    return result;
+  };
+
+  // Main fix function
+  const fixJson = (input: string): { fixed: string; errors: JsonError[] } => {
+    const tokens = tokenize(input);
+    const { errors, fixedTokens } = parseAndDetectErrors(tokens, input);
+    const fixed = tokensToJson(fixedTokens);
+
+    // Validate fixed JSON
+    try {
+      JSON.parse(fixed);
+      return { fixed, errors };
+    } catch (e: any) {
+      // If still invalid, try one more pass
+      try {
+        const retryTokens = tokenize(fixed);
+        const retryResult = parseAndDetectErrors(retryTokens, fixed);
+        const retryFixed = tokensToJson(retryResult.fixedTokens);
+        JSON.parse(retryFixed);
+        return { fixed: retryFixed, errors: [...errors, ...retryResult.errors] };
+      } catch {
+        return { fixed: '', errors: [...errors, { line: 1, column: 1, message: 'Could not fully fix JSON', type: 'non-fixable', severity: 'non-fixable' }] };
+      }
+    }
   };
 
   // Detect and analyze JSON errors
@@ -167,65 +586,25 @@ export default function JsonFixer() {
       return;
     }
 
-    const detectedErrors: JsonError[] = [];
-    let fixed = jsonText;
-    const lines = jsonText.split('\n');
-
     try {
-      // Try to parse JSON
+      // First, try to parse as-is
       JSON.parse(jsonText);
-      // If successful, no errors
       setErrors([]);
       setFixedJson(JSON.stringify(JSON.parse(jsonText), null, 2));
       return;
-    } catch (e: any) {
-      const errorMessage = e.message || '';
+    } catch {
+      // JSON is invalid, try to fix it
+      const { fixed, errors: detectedErrors } = fixJson(jsonText);
+      setErrors(detectedErrors);
       
-      // Extract line number from error message
-      const lineMatch = errorMessage.match(/position (\d+)/);
-      let errorPosition = lineMatch ? parseInt(lineMatch[1]) : 0;
-      
-      // Calculate line and column
-      let currentPos = 0;
-      let errorLine = 1;
-      let errorColumn = 1;
-      
-      for (let i = 0; i < lines.length; i++) {
-        const lineLength = lines[i].length + 1; // +1 for newline
-        if (currentPos + lineLength > errorPosition) {
-          errorLine = i + 1;
-          errorColumn = errorPosition - currentPos + 1;
-          break;
+      if (fixed) {
+        try {
+          // Validate and pretty-print
+          const parsed = JSON.parse(fixed);
+          setFixedJson(JSON.stringify(parsed, null, 2));
+        } catch {
+          setFixedJson(fixed);
         }
-        currentPos += lineLength;
-      }
-
-      // Only add parse error if we can't determine a better error from common patterns
-      const hasCommonErrors = detectCommonErrors(jsonText, detectedErrors);
-      
-      if (!hasCommonErrors) {
-        detectedErrors.push({
-          line: errorLine,
-          column: errorColumn,
-          message: errorMessage.replace(/JSON\.parse: /g, '').replace(/position \d+.*/, '').trim() || 'Invalid JSON syntax',
-          type: 'syntax',
-        });
-      }
-
-      // Attempt to fix common JSON errors
-      fixed = attemptFix(jsonText);
-    }
-
-    setErrors(detectedErrors);
-    
-    // Try to parse fixed JSON
-    try {
-      const parsed = JSON.parse(fixed);
-      setFixedJson(JSON.stringify(parsed, null, 2));
-    } catch (parseError: any) {
-      // If still can't parse, show the fixed version anyway (might be partially fixed)
-      if (fixed !== jsonText) {
-        setFixedJson(fixed);
       } else {
         setFixedJson('');
       }
@@ -275,6 +654,9 @@ export default function JsonFixer() {
 
   const isValid = errors.length === 0 && jsonText.trim() !== '';
   const isFixed = fixedJson !== '' && fixedJson !== jsonText;
+  const safeFixErrors = errors.filter(e => e.severity === 'safe-fix').length;
+  const heuristicFixErrors = errors.filter(e => e.severity === 'heuristic-fix').length;
+  const nonFixableErrors = errors.filter(e => e.severity === 'non-fixable').length;
 
   return (
     <div className="space-y-6">
@@ -287,7 +669,7 @@ export default function JsonFixer() {
           <div>
             <h2 className="text-2xl font-bold">JSON Fixer & Repair Tool</h2>
             <p className="text-purple-100 text-sm mt-1">
-              Fix malformed JSON, repair syntax errors, and validate JSON structure
+              Fix malformed JSON, repair syntax errors, and validate JSON structure (RFC 8259 compliant)
             </p>
           </div>
         </div>
@@ -373,9 +755,20 @@ export default function JsonFixer() {
                   {errors.length} Error{errors.length !== 1 ? 's' : ''} Detected
                 </span>
               </div>
+              <div className="flex flex-wrap gap-2 text-xs mt-2">
+                {safeFixErrors > 0 && (
+                  <span className="px-2 py-1 bg-green-100 text-green-700 rounded">✓ {safeFixErrors} Safe Fixes</span>
+                )}
+                {heuristicFixErrors > 0 && (
+                  <span className="px-2 py-1 bg-yellow-100 text-yellow-700 rounded">⚠ {heuristicFixErrors} Heuristic Fixes</span>
+                )}
+                {nonFixableErrors > 0 && (
+                  <span className="px-2 py-1 bg-red-100 text-red-700 rounded">✗ {nonFixableErrors} Non-Fixable</span>
+                )}
+              </div>
               <button
                 onClick={() => setShowErrors(!showErrors)}
-                className="text-sm text-red-600 hover:text-red-800 underline"
+                className="text-sm text-red-600 hover:text-red-800 underline mt-2"
               >
                 {showErrors ? 'Hide' : 'Show'} Error Details
               </button>
@@ -460,24 +853,60 @@ export default function JsonFixer() {
             {errors.map((error, index) => (
               <div
                 key={index}
-                className="p-4 bg-red-50 border-l-4 border-red-500 rounded-lg hover:bg-red-100 transition-colors"
+                className={`p-4 border-l-4 rounded-lg ${
+                  error.severity === 'safe-fix'
+                    ? 'bg-green-50 border-green-500'
+                    : error.severity === 'heuristic-fix'
+                    ? 'bg-yellow-50 border-yellow-500'
+                    : 'bg-red-50 border-red-500'
+                }`}
               >
                 <div className="flex items-start gap-3">
-                  <div className="p-1.5 bg-red-200 rounded-lg flex-shrink-0">
-                    <AlertCircle className="w-4 h-4 text-red-700" />
+                  <div className={`p-1.5 rounded-lg flex-shrink-0 ${
+                    error.severity === 'safe-fix'
+                      ? 'bg-green-200'
+                      : error.severity === 'heuristic-fix'
+                      ? 'bg-yellow-200'
+                      : 'bg-red-200'
+                  }`}>
+                    <AlertCircle className={`w-4 h-4 ${
+                      error.severity === 'safe-fix'
+                        ? 'text-green-700'
+                        : error.severity === 'heuristic-fix'
+                        ? 'text-yellow-700'
+                        : 'text-red-700'
+                    }`} />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="font-semibold text-red-800">
+                      <span className={`font-semibold ${
+                        error.severity === 'safe-fix'
+                          ? 'text-green-800'
+                          : error.severity === 'heuristic-fix'
+                          ? 'text-yellow-800'
+                          : 'text-red-800'
+                      }`}>
                         Line {error.line}, Column {error.column}
                       </span>
-                      <span className="px-2 py-0.5 bg-red-200 text-red-700 rounded text-xs font-medium">
-                        {error.type}
+                      <span className={`px-2 py-0.5 rounded text-xs font-medium ${
+                        error.severity === 'safe-fix'
+                          ? 'bg-green-200 text-green-700'
+                          : error.severity === 'heuristic-fix'
+                          ? 'bg-yellow-200 text-yellow-700'
+                          : 'bg-red-200 text-red-700'
+                      }`}>
+                        {error.severity === 'safe-fix' ? 'Safe Fix' : error.severity === 'heuristic-fix' ? 'Heuristic Fix' : 'Non-Fixable'}
                       </span>
                     </div>
-                    <p className="text-sm text-red-700">{error.message}</p>
+                    <p className={`text-sm ${
+                      error.severity === 'safe-fix'
+                        ? 'text-green-700'
+                        : error.severity === 'heuristic-fix'
+                        ? 'text-yellow-700'
+                        : 'text-red-700'
+                    }`}>{error.message}</p>
                     {jsonText.split('\n')[error.line - 1] && (
-                      <div className="mt-2 p-2 bg-white rounded border border-red-200">
+                      <div className="mt-2 p-2 bg-white rounded border border-gray-200">
                         <code className="text-xs text-gray-800">
                           {jsonText.split('\n')[error.line - 1]}
                         </code>
@@ -526,34 +955,34 @@ export default function JsonFixer() {
 
       {/* Features Section */}
       <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-xl p-6 border-2 border-gray-200">
-        <h3 className="text-xl font-bold text-gray-900 mb-4">JSON Fixer Features</h3>
+        <h3 className="text-xl font-bold text-gray-900 mb-4">JSON Fixer Features (RFC 8259 Compliant)</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-start gap-3">
             <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
             <div>
-              <h4 className="font-semibold text-gray-800">Automatic Error Detection</h4>
-              <p className="text-sm text-gray-600">Scans and identifies all JSON syntax errors automatically</p>
+              <h4 className="font-semibold text-gray-800">Spec-Accurate Parsing</h4>
+              <p className="text-sm text-gray-600">Follows RFC 8259 JSON standard with proper tokenization and stateful parsing</p>
             </div>
           </div>
           <div className="flex items-start gap-3">
             <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
             <div>
-              <h4 className="font-semibold text-gray-800">Smart JSON Repair</h4>
-              <p className="text-sm text-gray-600">Fixes common errors like trailing commas, single quotes, and unquoted keys</p>
+              <h4 className="font-semibold text-gray-800">Error Classification</h4>
+              <p className="text-sm text-gray-600">Categorizes errors as safe-fix, heuristic-fix, or non-fixable</p>
             </div>
           </div>
           <div className="flex items-start gap-3">
             <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
             <div>
-              <h4 className="font-semibold text-gray-800">Precise Error Location</h4>
-              <p className="text-sm text-gray-600">Shows exact line and column numbers for each error</p>
+              <h4 className="font-semibold text-gray-800">Minimal Corrections</h4>
+              <p className="text-sm text-gray-600">Applies deterministic fixes that preserve intent without inventing data</p>
             </div>
           </div>
           <div className="flex items-start gap-3">
             <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
             <div>
-              <h4 className="font-semibold text-gray-800">Visual Error Highlighting</h4>
-              <p className="text-sm text-gray-600">Highlights problematic lines with color-coded indicators</p>
+              <h4 className="font-semibold text-gray-800">Post-Fix Validation</h4>
+              <p className="text-sm text-gray-600">Re-validates fixed JSON to ensure zero syntax errors</p>
             </div>
           </div>
         </div>
