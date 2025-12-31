@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings } from 'lucide-react';
+import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, Wrench, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
 import JsonInput from '@/components/JsonInput';
 import DataTable from '@/components/DataTable';
@@ -16,6 +16,9 @@ import MockApiGenerator from '@/components/tools/MockApiGenerator';
 import TestDataGenerator from '@/components/tools/TestDataGenerator';
 import ConfigComparator from '@/components/tools/ConfigComparator';
 import SqlFormatter from '@/components/tools/SqlFormatter';
+import DataInsights from '@/components/tools/DataInsights';
+import JsonBuilder from '@/components/tools/JsonBuilder';
+import JsonFixer from '@/components/tools/JsonFixer';
 import {
   jsonToRows,
   extractColumns,
@@ -32,7 +35,7 @@ interface Section {
   columnIds: string[];
 }
 
-type ToolTab = 'converter' | 'beautifier' | 'comparator' | 'schema' | 'logs' | 'payload' | 'curl' | 'mock' | 'testdata' | 'config' | 'sql';
+type ToolTab = 'converter' | 'beautifier' | 'comparator' | 'schema' | 'logs' | 'payload' | 'curl' | 'mock' | 'testdata' | 'config' | 'sql' | 'insights' | 'builder' | 'fixer';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<ToolTab>('converter');
@@ -475,6 +478,45 @@ export default function Home() {
                 <span className="text-sm">SQL Formatter</span>
               </div>
             </button>
+            <button
+              onClick={() => handleTabChange('insights')}
+              className={`px-5 py-3 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-lg ${
+                activeTab === 'insights'
+                  ? 'tab-active bg-blue-50'
+                  : 'tab-inactive'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <BarChart3 className="w-4 h-4" />
+                <span className="text-sm">Data Insights</span>
+              </div>
+            </button>
+            <button
+              onClick={() => handleTabChange('builder')}
+              className={`px-5 py-3 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-lg ${
+                activeTab === 'builder'
+                  ? 'tab-active bg-blue-50'
+                  : 'tab-inactive'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4" />
+                <span className="text-sm">JSON Builder</span>
+              </div>
+            </button>
+            <button
+              onClick={() => handleTabChange('fixer')}
+              className={`px-5 py-3 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-lg ${
+                activeTab === 'fixer'
+                  ? 'tab-active bg-blue-50'
+                  : 'tab-inactive'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <Wrench className="w-4 h-4" />
+                <span className="text-sm">JSON Fixer</span>
+              </div>
+            </button>
           </div>
         </div>
       </header>
@@ -537,6 +579,9 @@ export default function Home() {
         {activeTab === 'testdata' && <TestDataGenerator />}
         {activeTab === 'config' && <ConfigComparator />}
         {activeTab === 'sql' && <SqlFormatter />}
+        {activeTab === 'insights' && <DataInsights />}
+        {activeTab === 'builder' && <JsonBuilder />}
+        {activeTab === 'fixer' && <JsonFixer />}
       </main>
 
       {/* Services Section for SEO */}
