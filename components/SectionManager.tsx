@@ -439,10 +439,9 @@ export default function SectionManager({
 
     if (!sourceSection || !targetSection) return;
 
-    const mergedSet = new Set<string>();
-    targetSection.columnIds.forEach(id => mergedSet.add(id));
-    sourceSection.columnIds.forEach(id => mergedSet.add(id));
-    const mergedColumnIds = Array.from(mergedSet);
+    const mergedColumnIds = [
+      ...new Set([...targetSection.columnIds, ...sourceSection.columnIds]),
+    ];
 
     onSectionsChange(
       sections

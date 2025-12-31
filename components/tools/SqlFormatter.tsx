@@ -84,18 +84,11 @@ export default function SqlFormatter() {
       <div className="bg-white rounded-lg shadow-lg p-6">
         <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
           <Database className="w-6 h-6 text-primary-600" />
-          SQL Formatter - Comma Separated ID List for MySQL IN Clause
+          SQL Formatter
         </h2>
         <p className="text-gray-600 mb-4">
-          Create comma separated ID lists for MySQL IN clause instantly. Convert multiple IDs, arrays, or values into properly formatted MySQL IN query format. 
-          Perfect for converting lists of IDs into SQL-friendly comma separated values with proper quoting.
+          Convert a list of IDs or values into SQL-friendly format with commas and double quotes.
         </p>
-        <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mb-4">
-          <p className="text-sm text-blue-800">
-            <strong>Quick Guide:</strong> Paste your IDs (one per line, comma-separated, or space-separated) and get instant formatted output ready for MySQL WHERE IN clause. 
-            Supports both numeric and string IDs with automatic proper quoting.
-          </p>
-        </div>
 
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">Format Type</label>
@@ -136,19 +129,11 @@ ID-55556666"
             className="w-full h-48 p-4 border-2 border-gray-300 rounded-lg font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
           <div className="mt-2 text-xs text-gray-500">
-            <p className="font-semibold mb-1">Supported Input Formats:</p>
-            <ul className="list-disc list-inside ml-2 space-y-1">
+            <p>Examples:</p>
+            <ul className="list-disc list-inside ml-2">
               <li>Space-separated: <code className="bg-gray-100 px-1 rounded">ID-123456 ID-11112223</code></li>
               <li>Comma-separated: <code className="bg-gray-100 px-1 rounded">ID-123456, ID-11112223</code></li>
               <li>Newline-separated: <code className="bg-gray-100 px-1 rounded">ID-123456\nID-11112223</code></li>
-              <li>Semicolon-separated: <code className="bg-gray-100 px-1 rounded">ID-123456; ID-11112223</code></li>
-            </ul>
-            <p className="font-semibold mt-2 mb-1">Use Cases:</p>
-            <ul className="list-disc list-inside ml-2 space-y-1">
-              <li>Convert array to comma separated list for MySQL</li>
-              <li>Format multiple IDs for MySQL IN clause</li>
-              <li>Generate comma separated values from table data</li>
-              <li>Prepare ID list for MySQL WHERE IN query</li>
             </ul>
           </div>
         </div>
