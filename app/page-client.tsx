@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X } from 'lucide-react';
+import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget';
@@ -19,6 +19,7 @@ import TestDataGenerator from '@/components/tools/TestDataGenerator';
 import ConfigComparator from '@/components/tools/ConfigComparator';
 import SqlFormatter from '@/components/tools/SqlFormatter';
 import JsonBuilder from '@/components/tools/JsonBuilder';
+import JsonFixer from '@/components/tools/JsonFixer';
 import {
   jsonToRows,
   extractColumns,
@@ -35,7 +36,7 @@ interface Section {
   columnIds: string[];
 }
 
-type ToolTab = 'converter' | 'beautifier' | 'comparator' | 'schema' | 'logs' | 'payload' | 'curl' | 'mock' | 'testdata' | 'config' | 'sql' | 'builder';
+type ToolTab = 'converter' | 'beautifier' | 'fixer' | 'comparator' | 'schema' | 'logs' | 'payload' | 'curl' | 'mock' | 'testdata' | 'config' | 'sql' | 'builder';
 
 function HomeClient() {
   const [activeTab, setActiveTab] = useState<ToolTab>('converter');
@@ -649,6 +650,7 @@ function HomeClient() {
           )
         )}
         {activeTab === 'beautifier' && <JsonBeautifier />}
+        {activeTab === 'fixer' && <JsonFixer />}
         {activeTab === 'comparator' && <ApiComparator />}
         {activeTab === 'schema' && <SchemaGenerator />}
         {activeTab === 'logs' && <LogExplorer />}
@@ -667,17 +669,18 @@ function HomeClient() {
           {/* Keyword-Rich Hero Section */}
           <div className="text-center mb-12 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-2xl p-8 border border-blue-100">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Free Online JSON Viewer, JSON Formatter, JSON Parser & JSON Beautifier
+              Free Online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier & JSON Fixer
             </h1>
             <p className="text-lg md:text-xl text-gray-700 max-w-4xl mx-auto mb-6">
-              Use our free online JSON tools to <strong>view JSON</strong>, <strong>format JSON</strong>, <strong>parse JSON</strong>, and <strong>beautify JSON</strong> instantly. 
-              Convert JSON to Excel, JSON to CSV, or JSON to Table format. Edit, analyze, validate, and transform JSON data - all in your browser, no installation required.
+              Use our free online JSON tools to <strong>view JSON</strong>, <strong>format JSON</strong>, <strong>parse JSON</strong>, <strong>beautify JSON</strong>, and <strong>fix malformed JSON</strong> instantly. 
+              Convert JSON to Excel, JSON to CSV, or JSON to Table format. Edit, analyze, validate, repair syntax errors, and transform JSON data - all in your browser, no installation required.
             </p>
             <div className="flex flex-wrap justify-center gap-3 text-sm text-gray-600">
               <span className="px-4 py-2 bg-white rounded-lg shadow-sm">✓ JSON Viewer Online</span>
               <span className="px-4 py-2 bg-white rounded-lg shadow-sm">✓ JSON Formatter Online</span>
               <span className="px-4 py-2 bg-white rounded-lg shadow-sm">✓ JSON Parser Online</span>
               <span className="px-4 py-2 bg-white rounded-lg shadow-sm">✓ JSON Beautifier Online</span>
+              <span className="px-4 py-2 bg-white rounded-lg shadow-sm">✓ JSON Fixer & Repair Tool</span>
               <span className="px-4 py-2 bg-white rounded-lg shadow-sm">✓ JSON to Excel Converter</span>
               <span className="px-4 py-2 bg-white rounded-lg shadow-sm">✓ JSON to CSV Converter</span>
               <span className="px-4 py-2 bg-white rounded-lg shadow-sm">✓ JSON to Table Converter</span>
@@ -972,13 +975,14 @@ function HomeClient() {
                 <strong className="text-gray-900">UnblockDevs</strong> • Free Online Developer Tools Suite
               </p>
               <p className="text-xs text-gray-500">
-                Free online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier, JSON to Excel converter, JSON to CSV converter, JSON to Table converter, API testing, data analysis, schema generation, SQL formatting, log analysis, and more. All tools are free and work entirely in your browser.
+                Free online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier, JSON Fixer & Repair Tool, JSON to Excel converter, JSON to CSV converter, JSON to Table converter, API testing, data analysis, schema generation, SQL formatting, log analysis, and more. All tools are free and work entirely in your browser.
               </p>
               <div className="flex flex-wrap justify-center gap-4 mt-3 text-xs text-gray-600">
                 <span>✓ JSON Viewer Online</span>
                 <span>✓ JSON Formatter Online</span>
                 <span>✓ JSON Parser Online</span>
                 <span>✓ JSON Beautifier Online</span>
+                <span>✓ JSON Fixer Online</span>
                 <span>✓ JSON to Excel Converter</span>
                 <span>✓ JSON to CSV Converter</span>
                 <span>✓ JSON to Table Converter</span>

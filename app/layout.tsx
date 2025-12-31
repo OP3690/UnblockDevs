@@ -3,8 +3,8 @@ import './globals.css'
 import { Toaster } from 'react-hot-toast'
 
 export const metadata: Metadata = {
-  title: 'JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier Online - Free Tools | UnblockDevs',
-  description: 'Free online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier, JSON to Excel converter, JSON to CSV converter, and JSON to Table converter. Edit, view, analyze, format, validate, and convert JSON data instantly. No installation required. Professional JSON tools for developers.',
+  title: 'JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier, JSON Fixer Online - Free Tools | UnblockDevs',
+  description: 'Free online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier, JSON Fixer & Repair Tool, JSON to Excel converter, JSON to CSV converter, and JSON to Table converter. Edit, view, analyze, format, validate, fix malformed JSON, and convert JSON data instantly. No installation required. Professional JSON tools for developers.',
   keywords: [
     // Primary keywords (from top search results)
     'json viewer',
@@ -19,6 +19,14 @@ export const metadata: Metadata = {
     'json beautifier',
     'json beautifier online',
     'online json beautifier',
+    'json fixer',
+    'json fixer online',
+    'online json fixer',
+    'json repair tool',
+    'fix malformed json',
+    'repair json syntax errors',
+    'json error fixer',
+    'json validator and fixer',
     'json to csv converter',
     'json to csv',
     'convert json to csv',
@@ -170,6 +178,7 @@ export default function RootLayout({
       'JSON Formatter Online',
       'JSON Parser Online',
       'JSON Beautifier Online',
+      'JSON Fixer & Repair Tool',
       'JSON to Excel Converter',
       'JSON to CSV Converter',
       'JSON to Table Converter',

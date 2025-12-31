@@ -2,12 +2,13 @@ import mongoose from 'mongoose';
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
-if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable in your environment variables or .env.local file');
+// Don't throw error at build time, only at runtime
+function getMongoUri(): string {
+  if (!MONGODB_URI) {
+    throw new Error('Please define the MONGODB_URI environment variable in your environment variables or .env.local file');
+  }
+  return MONGODB_URI;
 }
-
-// Type assertion: we've already checked MONGODB_URI is defined above
-const mongoUri: string = MONGODB_URI;
 
 interface MongooseCache {
   conn: typeof mongoose | null;
@@ -35,7 +36,7 @@ async function connectDB() {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(mongoUri, opts).then((mongoose) => {
+    cached.promise = mongoose.connect(getMongoUri(), opts).then((mongoose) => {
       return mongoose;
     });
   }
