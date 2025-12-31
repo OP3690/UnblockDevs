@@ -17,9 +17,18 @@ export const metadata: Metadata = {
   ],
 };
 
-const blogPosts = [
-  {
-    slug: 'css-explained-guide',
+  const blogPosts = [
+    {
+      slug: 'json-format-standards-complete-guide',
+      title: 'JSON Format & Standards: Complete Guide to RFC 8259, Syntax Rules & Best Practices',
+      excerpt: 'Master JSON format and standards with this comprehensive guide. Learn RFC 8259 rules, syntax violations, fixing strategies, error classification, and production-grade JSON validation. Perfect for developers, API designers, and data engineers.',
+      date: '2025-01-31',
+      readTime: '25 min read',
+      category: 'Web Development',
+      keywords: ['JSON format', 'JSON standards', 'RFC 8259', 'JSON syntax rules', 'JSON validation', 'JSON fixing', 'JSON parser', 'JSON best practices', 'JSON structure', 'JSON syntax errors']
+    },
+    {
+      slug: 'css-explained-guide',
     title: 'CSS Explained: Must-Do Practices, Hidden Facts & Pro Tips',
     excerpt: 'Master CSS with this comprehensive guide. Learn CSS fundamentals, best practices, lesser-known features, and pro tips to write cleaner, smarter CSS code. Interactive CSS simulator included.',
     date: '2024-01-28',
