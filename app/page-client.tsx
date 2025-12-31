@@ -406,9 +406,9 @@ function HomeClient() {
                   UnblockDevs
                 </h1>
                 <p className="text-xs text-gray-600 font-medium leading-relaxed">
-                  <span className="block">Free Developer Tools Suite - Unblock Your Development Workflow</span>
-                  <span className="block">JSON Viewer, JSON Parser, JSON Beautifier, JSON Converter</span>
-                  <span className="block">API Testing, Data Analysis & More</span>
+                  <span className="block">Free Online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier</span>
+                  <span className="block">JSON to Excel Converter, JSON to CSV Converter, JSON to Table Converter</span>
+                  <span className="block">Edit, View, Analyze, Format, Validate & Convert JSON Data Instantly</span>
                 </p>
               </div>
             </div>
@@ -682,13 +682,13 @@ function HomeClient() {
               className="card card-hover text-left cursor-pointer group"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                JSON to Excel Converter
+                JSON to Excel Converter | JSON to CSV Converter | JSON to Table Converter
               </h3>
               <p className="text-gray-600 text-sm">
-                Convert nested JSON data to structured Excel spreadsheets. Supports complex nested objects, arrays, and custom column organization. Export to CSV or Excel format with section management.
+                Convert nested JSON data to structured Excel spreadsheets, CSV files, or HTML tables. Supports complex nested objects, arrays, and custom column organization. Export to Excel, CSV, or Table format with section management.
               </p>
               <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
-                Try it now →
+                Try JSON to Excel Converter →
               </span>
             </button>
             
@@ -703,13 +703,13 @@ function HomeClient() {
               className="card card-hover text-left cursor-pointer group"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                JSON Beautifier & Minifier
+                JSON Viewer | JSON Formatter | JSON Parser | JSON Beautifier
               </h3>
               <p className="text-gray-600 text-sm">
-                Format and minify JSON data with customizable indentation. Visualize JSON structure, analyze data types, and get detailed statistics about your JSON files.
+                Free online JSON Viewer, JSON Formatter, JSON Parser, and JSON Beautifier. View, format, parse, and beautify JSON data with customizable indentation. Visualize JSON structure, analyze data types, and get detailed statistics about your JSON files.
               </p>
               <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
-                Try it now →
+                Try JSON Viewer & Formatter →
               </span>
             </button>
             
