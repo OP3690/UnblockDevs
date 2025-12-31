@@ -664,6 +664,26 @@ function HomeClient() {
       {/* Services Section */}
       {activeTab === 'converter' && rows.length === 0 && (
         <section className="max-w-7xl mx-auto container-padding py-12">
+          {/* Keyword-Rich Hero Section */}
+          <div className="text-center mb-12 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-2xl p-8 border border-blue-100">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Free Online JSON Viewer, JSON Formatter, JSON Parser & JSON Beautifier
+            </h1>
+            <p className="text-lg md:text-xl text-gray-700 max-w-4xl mx-auto mb-6">
+              Use our free online JSON tools to <strong>view JSON</strong>, <strong>format JSON</strong>, <strong>parse JSON</strong>, and <strong>beautify JSON</strong> instantly. 
+              Convert JSON to Excel, JSON to CSV, or JSON to Table format. Edit, analyze, validate, and transform JSON data - all in your browser, no installation required.
+            </p>
+            <div className="flex flex-wrap justify-center gap-3 text-sm text-gray-600">
+              <span className="px-4 py-2 bg-white rounded-lg shadow-sm">✓ JSON Viewer Online</span>
+              <span className="px-4 py-2 bg-white rounded-lg shadow-sm">✓ JSON Formatter Online</span>
+              <span className="px-4 py-2 bg-white rounded-lg shadow-sm">✓ JSON Parser Online</span>
+              <span className="px-4 py-2 bg-white rounded-lg shadow-sm">✓ JSON Beautifier Online</span>
+              <span className="px-4 py-2 bg-white rounded-lg shadow-sm">✓ JSON to Excel Converter</span>
+              <span className="px-4 py-2 bg-white rounded-lg shadow-sm">✓ JSON to CSV Converter</span>
+              <span className="px-4 py-2 bg-white rounded-lg shadow-sm">✓ JSON to Table Converter</span>
+            </div>
+          </div>
+          
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Developer Tools</h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
@@ -952,13 +972,16 @@ function HomeClient() {
                 <strong className="text-gray-900">UnblockDevs</strong> • Free Online Developer Tools Suite
               </p>
               <p className="text-xs text-gray-500">
-                Professional developer tools: JSON Viewer, JSON Parser, JSON Beautifier, JSON to Excel converter, API testing, data analysis, schema generation, SQL formatting, log analysis, and more. All tools are free and work entirely in your browser.
+                Free online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier, JSON to Excel converter, JSON to CSV converter, JSON to Table converter, API testing, data analysis, schema generation, SQL formatting, log analysis, and more. All tools are free and work entirely in your browser.
               </p>
               <div className="flex flex-wrap justify-center gap-4 mt-3 text-xs text-gray-600">
-                <span>✓ JSON Viewer</span>
-                <span>✓ JSON Parser</span>
-                <span>✓ JSON Beautifier</span>
+                <span>✓ JSON Viewer Online</span>
+                <span>✓ JSON Formatter Online</span>
+                <span>✓ JSON Parser Online</span>
+                <span>✓ JSON Beautifier Online</span>
                 <span>✓ JSON to Excel Converter</span>
+                <span>✓ JSON to CSV Converter</span>
+                <span>✓ JSON to Table Converter</span>
                 <span>✓ API Response Comparator</span>
                 <span>✓ Schema Generator</span>
                 <span>✓ SQL Formatter</span>
