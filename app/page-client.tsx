@@ -81,6 +81,14 @@ function HomeClient() {
     // Ensure we're on client side
     if (typeof window !== 'undefined') {
       setMounted(true);
+      
+      // Track page view with Google Analytics
+      if ((window as any).gtag) {
+        (window as any).gtag('config', process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || '', {
+          page_path: window.location.pathname,
+        });
+      }
+      
       // Check if bookmark prompt was dismissed
       const dismissed = localStorage.getItem('bookmarkPromptDismissed');
       if (!dismissed) {
