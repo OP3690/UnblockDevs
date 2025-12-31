@@ -643,6 +643,7 @@ function HomeClient() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto container-padding py-10 animate-fade-in">
+        <h1 className="text-3xl font-bold text-gray-900 mb-6 text-center">Free JSON Tools & Developer Utilities</h1>
         {activeTab === 'converter' && (
           rows.length === 0 ? (
             <JsonInput onJsonSubmit={handleJsonSubmit} />
