@@ -402,9 +402,9 @@ function HomeClient() {
                 <FileSpreadsheet className="w-9 h-9 text-white" />
               </div>
               <div className="flex flex-col flex-1 min-w-0">
-                <h1 className="text-3xl font-extrabold gradient-text mb-1.5 leading-tight">
-                  Free JSON Tools & Developer Utilities
-                </h1>
+                <div className="text-3xl font-extrabold gradient-text mb-1.5 leading-tight">
+                  UnblockDevs
+                </div>
                 <p className="text-xs text-gray-600 font-medium leading-relaxed">
                   <span className="block">Free Online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier</span>
                   <span className="block">JSON to Excel Converter, JSON to CSV Converter, JSON to Table Converter</span>
