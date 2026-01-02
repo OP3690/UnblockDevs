@@ -40,12 +40,24 @@ export default function JsonFixer() {
       const openBrackets = (text.match(/\[/g) || []).length;
       const closeBrackets = (text.match(/\]/g) || []).length;
 
+      // Find the last non-empty line (where the error should be reported)
+      let lastContentLine = lines.length;
+      for (let i = lines.length - 1; i >= 0; i--) {
+        if (lines[i].trim().length > 0) {
+          lastContentLine = i + 1; // Convert to 1-based line number
+          break;
+        }
+      }
+      // Ensure line number is within bounds
+      if (lastContentLine === 0 || lastContentLine > lines.length) {
+        lastContentLine = Math.max(1, lines.length);
+      }
+
       if (closeBraces < openBraces) {
         const missing = openBraces - closeBraces;
-        const lastLine = lines.length;
         errors.push({
-          line: lastLine,
-          column: lines[lastLine - 1]?.length || 0,
+          line: lastContentLine,
+          column: lines[lastContentLine - 1]?.length || 0,
           message: `Missing ${missing} closing brace${missing > 1 ? 's' : ''} (})`,
           type: 'structure',
           severity: 'safe-fix',
@@ -54,10 +66,9 @@ export default function JsonFixer() {
 
       if (closeBrackets < openBrackets) {
         const missing = openBrackets - closeBrackets;
-        const lastLine = lines.length;
         errors.push({
-          line: lastLine,
-          column: lines[lastLine - 1]?.length || 0,
+          line: lastContentLine,
+          column: lines[lastContentLine - 1]?.length || 0,
           message: `Missing ${missing} closing bracket${missing > 1 ? 's' : ''} (])`,
           type: 'structure',
           severity: 'safe-fix',
