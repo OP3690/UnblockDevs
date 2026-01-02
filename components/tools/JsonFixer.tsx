@@ -24,6 +24,47 @@ export default function JsonFixer() {
     const errors: JsonError[] = [];
     const lines = text.split('\n');
 
+    // First, check if JSON is parseable
+    let isParseable = false;
+    try {
+      JSON.parse(text);
+      isParseable = true;
+    } catch {
+      isParseable = false;
+    }
+
+    // Check for missing closing braces/brackets
+    if (!isParseable) {
+      const openBraces = (text.match(/{/g) || []).length;
+      const closeBraces = (text.match(/}/g) || []).length;
+      const openBrackets = (text.match(/\[/g) || []).length;
+      const closeBrackets = (text.match(/\]/g) || []).length;
+
+      if (closeBraces < openBraces) {
+        const missing = openBraces - closeBraces;
+        const lastLine = lines.length;
+        errors.push({
+          line: lastLine,
+          column: lines[lastLine - 1]?.length || 0,
+          message: `Missing ${missing} closing brace${missing > 1 ? 's' : ''} (})`,
+          type: 'structure',
+          severity: 'safe-fix',
+        });
+      }
+
+      if (closeBrackets < openBrackets) {
+        const missing = openBrackets - closeBrackets;
+        const lastLine = lines.length;
+        errors.push({
+          line: lastLine,
+          column: lines[lastLine - 1]?.length || 0,
+          message: `Missing ${missing} closing bracket${missing > 1 ? 's' : ''} (])`,
+          type: 'structure',
+          severity: 'safe-fix',
+        });
+      }
+    }
+
     lines.forEach((line, index) => {
       const lineNum = index + 1;
       const trimmed = line.trim();
@@ -201,18 +242,29 @@ export default function JsonFixer() {
       return;
     }
 
+    // Check if original JSON is valid
+    let originalIsValid = false;
     try {
-      // First, try to parse as-is
-      const parsed = JSON.parse(jsonText);
-      setErrors([]);
-      setFixedJson(JSON.stringify(parsed, null, 2));
-      return;
+      JSON.parse(jsonText);
+      originalIsValid = true;
     } catch {
-      // JSON is invalid, try to fix it
-      const result = fixJson(jsonText);
-      setErrors(result.errors);
-      setFixedJson(result.fixed || '');
+      originalIsValid = false;
     }
+
+    if (originalIsValid) {
+      // JSON is already valid
+      setErrors([]);
+      setFixedJson(JSON.stringify(JSON.parse(jsonText), null, 2));
+      return;
+    }
+
+    // JSON is invalid, detect errors and try to fix it
+    const detectedErrors = detectErrors(jsonText);
+    const result = fixJson(jsonText);
+    
+    // Merge detected errors with any additional errors from fix process
+    setErrors(detectedErrors);
+    setFixedJson(result.fixed || '');
   }, [jsonText]);
 
   const handleCopy = () => {
@@ -256,7 +308,18 @@ export default function JsonFixer() {
     return errors.filter(e => e.line === lineNum);
   };
 
-  const isValid = errors.length === 0 && jsonText.trim() !== '';
+  // Check if original JSON is valid (before any fixes)
+  let originalIsValid = false;
+  try {
+    if (jsonText.trim()) {
+      JSON.parse(jsonText);
+      originalIsValid = true;
+    }
+  } catch {
+    originalIsValid = false;
+  }
+
+  const isValid = originalIsValid && errors.length === 0 && jsonText.trim() !== '';
   const isFixed = fixedJson !== '' && fixedJson !== jsonText;
   const safeFixErrors = errors.filter(e => e.severity === 'safe-fix').length;
   const heuristicFixErrors = errors.filter(e => e.severity === 'heuristic-fix').length;
