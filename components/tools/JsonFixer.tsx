@@ -414,13 +414,35 @@ export default function JsonFixer() {
                   </div>
                 )}
               </div>
-              <textarea
-                value={jsonText}
-                onChange={(e) => setJsonText(e.target.value)}
-                placeholder="Paste your malformed JSON here...&#10;&#10;Example:&#10;{&#10;  name: 'John', // comment&#10;  age: 30,&#10;}"
-                className="flex-1 h-96 p-4 pl-4 font-mono text-sm border-2 border-l-0 border-gray-300 rounded-r-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
-                style={{ lineHeight: '1.5rem' }}
-              />
+              <div className="flex-1 relative">
+                {/* Background highlight for error lines */}
+                <div className="absolute inset-0 pointer-events-none z-0">
+                  {jsonText.split('\n').map((_, index) => {
+                    const lineNum = index + 1;
+                    const lineErrors = getLineErrors(lineNum);
+                    if (lineErrors.length > 0) {
+                      return (
+                        <div
+                          key={index}
+                          className="absolute left-0 right-0 bg-red-100 border-l-4 border-red-500"
+                          style={{
+                            top: `${index * 1.5}rem`,
+                            height: '1.5rem',
+                          }}
+                        />
+                      );
+                    }
+                    return null;
+                  })}
+                </div>
+                <textarea
+                  value={jsonText}
+                  onChange={(e) => setJsonText(e.target.value)}
+                  placeholder="Paste your malformed JSON here...&#10;&#10;Example:&#10;{&#10;  name: 'John', // comment&#10;  age: 30,&#10;}"
+                  className="relative z-10 w-full h-96 p-4 pl-4 font-mono text-sm border-2 border-l-0 border-gray-300 rounded-r-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none bg-transparent"
+                  style={{ lineHeight: '1.5rem' }}
+                />
+              </div>
             </div>
           </div>
 
