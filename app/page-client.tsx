@@ -10,6 +10,7 @@ import DataTable from '@/components/DataTable';
 import SectionManager from '@/components/SectionManager';
 import JsonBeautifier from '@/components/JsonBeautifier';
 import ApiComparator from '@/components/tools/ApiComparator';
+import JsonComparator from '@/components/tools/JsonComparator';
 import SchemaGenerator from '@/components/tools/SchemaGenerator';
 import LogExplorer from '@/components/tools/LogExplorer';
 import PayloadAnalyzer from '@/components/tools/PayloadAnalyzer';
@@ -37,7 +38,7 @@ interface Section {
   columnIds: string[];
 }
 
-type ToolTab = 'converter' | 'beautifier' | 'fixer' | 'comparator' | 'schema' | 'logs' | 'payload' | 'curl' | 'mock' | 'testdata' | 'config' | 'sql' | 'builder' | 'insights';
+type ToolTab = 'converter' | 'beautifier' | 'fixer' | 'comparator' | 'jsoncompare' | 'schema' | 'logs' | 'payload' | 'curl' | 'mock' | 'testdata' | 'config' | 'sql' | 'builder' | 'insights';
 
 function HomeClient() {
   const [activeTab, setActiveTab] = useState<ToolTab>('converter');
@@ -510,6 +511,19 @@ function HomeClient() {
               </div>
             </button>
             <button
+              onClick={() => handleTabChange('jsoncompare')}
+              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+                activeTab === 'jsoncompare'
+                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
+                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <GitCompare className="w-4 h-4" />
+                <span className="text-sm">JSON Compare</span>
+              </div>
+            </button>
+            <button
               onClick={() => handleTabChange('schema')}
               className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'schema'
@@ -691,6 +705,7 @@ function HomeClient() {
         {activeTab === 'beautifier' && <JsonBeautifier />}
         {activeTab === 'fixer' && <JsonFixer />}
         {activeTab === 'comparator' && <ApiComparator />}
+        {activeTab === 'jsoncompare' && <JsonComparator />}
         {activeTab === 'schema' && <SchemaGenerator />}
         {activeTab === 'logs' && <LogExplorer />}
         {activeTab === 'payload' && <PayloadAnalyzer />}
@@ -794,6 +809,27 @@ function HomeClient() {
               </p>
               <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
                 Try it now →
+              </span>
+            </button>
+            
+            <button
+              onClick={() => {
+                handleTabChange('jsoncompare');
+                if (typeof window !== 'undefined') {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+                showBuyMeACoffeeMessage();
+              }}
+              className="card card-hover text-left cursor-pointer group"
+            >
+              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                JSON Comparator & Diff Tool
+              </h3>
+              <p className="text-gray-600 text-sm">
+                Compare two JSON payloads side-by-side with semantic diff. Visualize additions, deletions, and modifications with color-coded highlighting. Perfect for debugging API responses and config files.
+              </p>
+              <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
+                Compare JSON Now →
               </span>
             </button>
             
@@ -1019,20 +1055,21 @@ function HomeClient() {
                 Free online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier, JSON Fixer & Repair Tool, JSON to Excel converter, JSON to CSV converter, JSON to Table converter, API testing, data analysis, schema generation, SQL formatting, log analysis, and more. All tools are free and work entirely in your browser.
               </p>
               <div className="flex flex-wrap justify-center gap-4 mt-3 text-xs text-gray-600">
-                <span>✓ JSON Viewer Online</span>
-                <span>✓ JSON Formatter Online</span>
-                <span>✓ JSON Parser Online</span>
-                <span>✓ JSON Beautifier Online</span>
-                <span>✓ JSON Fixer Online</span>
-                <span>✓ JSON to Excel Converter</span>
-                <span>✓ JSON to CSV Converter</span>
-                <span>✓ JSON to Table Converter</span>
-                <span>✓ API Response Comparator</span>
-                <span>✓ Schema Generator</span>
-                <span>✓ SQL Formatter</span>
-                <span>✓ Log Analyzer</span>
-                <span>✓ Payload Analyzer</span>
-                <span>✓ Mock API Generator</span>
+                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Viewer Online</Link>
+                <Link href="/json-beautifier" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Formatter Online</Link>
+                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Parser Online</Link>
+                <Link href="/json-beautifier" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Beautifier Online</Link>
+                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Fixer Online</Link>
+                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON to Excel Converter</Link>
+                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON to CSV Converter</Link>
+                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON to Table Converter</Link>
+                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Comparator</Link>
+                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ API Response Comparator</Link>
+                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Schema Generator</Link>
+                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ SQL Formatter</Link>
+                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Log Analyzer</Link>
+                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Payload Analyzer</Link>
+                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Mock API Generator</Link>
               </div>
               <div className="mt-4 pt-4 border-t border-gray-200">
                 <p className="text-xs text-gray-500 mb-2 text-center">Learn more about JSON:</p>
