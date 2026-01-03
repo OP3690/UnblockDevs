@@ -254,7 +254,10 @@ export default function RootLayout({
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', 'G-N6DF8NPHY8');
+              gtag('config', 'G-N6DF8NPHY8', {
+                // Preserve UTM parameters across page navigations
+                allow_enhanced_conversions: true
+              });
             `,
           }}
         />
