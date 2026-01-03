@@ -168,7 +168,7 @@ export default function CommonJsonMistakesGuideClient() {
               Missing Closing Braces or Brackets
             </h2>
             <p className="text-gray-700 leading-relaxed mb-4">
-              Every opening brace <code className="bg-gray-100 px-1 rounded">{`{`}</code> or bracket <code className="bg-gray-100 px-1 rounded">[</code> must have a corresponding closing brace <code className="bg-gray-100 px-1 rounded">}</code> or bracket <code className="bg-gray-100 px-1 rounded">]</code>.
+              Every opening brace <code className="bg-gray-100 px-1 rounded">{`{`}</code> or bracket <code className="bg-gray-100 px-1 rounded">[</code> must have a corresponding closing brace <code className="bg-gray-100 px-1 rounded">{'}'}</code> or bracket <code className="bg-gray-100 px-1 rounded">]</code>.
             </p>
             <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-lg mb-4">
               <p className="font-semibold text-red-900 mb-2">❌ Invalid JSON (Missing Closing Brace):</p>
