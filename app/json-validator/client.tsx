@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowLeft, CheckCircle, AlertTriangle, ExternalLink, Shield } from 'lucide-react';
+import FAQSchema from '@/components/FAQSchema';
 
 export default function JsonValidatorClient() {
   return (
