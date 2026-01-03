@@ -19,6 +19,51 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'why-json-breaks-in-real-world-apis',
+      title: 'Why JSON Breaks in Real-World APIs (And How to Fix It)',
+      excerpt: 'Learn why JSON breaks in real-world APIs: trailing commas, unescaped characters, partial responses, backend logging. Real examples and how to fix malformed API JSON instantly.',
+      date: '2025-01-15',
+      readTime: '12 min read',
+      category: 'API Development',
+      keywords: ['why json breaks in apis', 'broken json from api', 'malformed api json', 'fix api json response']
+    },
+    {
+      slug: 'invalid-json-vs-valid-json-examples',
+      title: 'Invalid JSON vs Valid JSON: 15 Real Examples Developers Get Wrong',
+      excerpt: 'Learn the difference between invalid JSON and valid JSON with 15 real examples. Common mistakes: single quotes, trailing commas, comments, NaN, Infinity. Fix JSON instantly.',
+      date: '2025-01-15',
+      readTime: '10 min read',
+      category: 'JSON Basics',
+      keywords: ['invalid json vs valid json', 'invalid json examples', 'valid json examples', 'json mistakes']
+    },
+    {
+      slug: 'how-to-fix-broken-json-without-understanding',
+      title: 'How to Fix Broken JSON Without Understanding JSON (Beginner Guide)',
+      excerpt: 'Fix broken JSON without coding knowledge. Simple step-by-step guide for non-developers, students, and analysts. No JSON understanding required. Free JSON Fixer tool.',
+      date: '2025-01-15',
+      readTime: '8 min read',
+      category: 'Beginner Guides',
+      keywords: ['fix broken json without coding', 'fix json for beginners', 'repair json no coding', 'simple json fixer']
+    },
+    {
+      slug: 'top-10-json-errors-waste-developer-time',
+      title: 'Top 10 JSON Errors That Waste Developer Time (And How to Avoid Them)',
+      excerpt: 'Discover the top 10 JSON errors that waste developer time: unexpected token, unexpected end of JSON input, invalid control character. Quick fixes and prevention tips.',
+      date: '2025-01-15',
+      readTime: '14 min read',
+      category: 'Developer Productivity',
+      keywords: ['json errors waste time', 'common json errors', 'json errors developers', 'fix json errors fast']
+    },
+    {
+      slug: 'how-json-fixers-work-internally',
+      title: 'How JSON Fixers Work Internally (And Why Manual Fixing Fails)',
+      excerpt: 'Learn how JSON fixers work internally: tokenization, parsing, error recovery logic, deterministic vs heuristic fixes. Why online fixers are safer for large JSON.',
+      date: '2025-01-15',
+      readTime: '15 min read',
+      category: 'Technical Deep-Dive',
+      keywords: ['how json fixers work', 'json fixer algorithm', 'json error recovery', 'json parser internals']
+    },
+    {
       slug: 'common-json-mistakes-fix-guide',
       title: '10 Most Common JSON Mistakes Developers Make (And How to Fix Them Instantly)',
       excerpt: 'Learn the 10 most common JSON mistakes developers make including invalid commas, missing quotes, nested errors, trailing commas, and unescaped characters. Fix broken JSON instantly with our free JSON Fixer tool.',

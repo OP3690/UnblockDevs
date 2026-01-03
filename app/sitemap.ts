@@ -6,6 +6,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // All blog posts
   const blogPosts = [
+    'why-json-breaks-in-real-world-apis',
+    'invalid-json-vs-valid-json-examples',
+    'how-to-fix-broken-json-without-understanding',
+    'top-10-json-errors-waste-developer-time',
+    'how-json-fixers-work-internally',
     'common-json-mistakes-fix-guide',
     'curl-to-code-converter-2026',
     'debug-api-changes-compare-responses',
