@@ -4,10 +4,13 @@ import type { NextRequest } from 'next/server'
 export function middleware(request: NextRequest) {
   const hostname = request.headers.get('host') || ''
   
-  // Redirect www to non-www
+  // Redirect www to non-www while preserving all query parameters (including UTM)
   if (hostname.startsWith('www.')) {
     const url = request.nextUrl.clone()
     url.hostname = hostname.replace('www.', '')
+    // Preserve all query parameters (UTM parameters, etc.)
+    // Next.js automatically preserves query params when cloning, but we ensure it explicitly
+    url.search = request.nextUrl.search
     return NextResponse.redirect(url, 301)
   }
   
