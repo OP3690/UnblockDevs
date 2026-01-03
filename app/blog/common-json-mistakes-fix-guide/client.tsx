@@ -70,7 +70,7 @@ export default function CommonJsonMistakesGuideClient() {
   "city": "New York",  ← Trailing comma error
 }`}
               </pre>
-              <p className="text-sm text-red-700 mt-2">Error: <code className="bg-red-100 px-1 rounded">Unexpected token } in JSON at position 45</code></p>
+              <p className="text-sm text-red-700 mt-2">Error: <code className="bg-red-100 px-1 rounded">Unexpected token {'}'} in JSON at position 45</code></p>
             </div>
             <div className="bg-green-50 border-l-4 border-green-500 p-5 rounded-r-lg">
               <p className="font-semibold text-green-900 mb-2">✅ Fixed JSON:</p>
@@ -369,7 +369,7 @@ export default function CommonJsonMistakesGuideClient() {
   ]
 }`}
               </pre>
-              <p className="text-sm text-red-700 mt-2">Error: <code className="bg-red-100 px-1 rounded">Unexpected token } in JSON at position 65</code></p>
+              <p className="text-sm text-red-700 mt-2">Error: <code className="bg-red-100 px-1 rounded">Unexpected token {'}'} in JSON at position 65</code></p>
             </div>
             <div className="bg-green-50 border-l-4 border-green-500 p-5 rounded-r-lg">
               <p className="font-semibold text-green-900 mb-2">✅ Fixed JSON:</p>
