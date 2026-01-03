@@ -19,6 +19,51 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'common-json-mistakes-fix-guide',
+      title: '10 Most Common JSON Mistakes Developers Make (And How to Fix Them Instantly)',
+      excerpt: 'Learn the 10 most common JSON mistakes developers make including invalid commas, missing quotes, nested errors, trailing commas, and unescaped characters. Fix broken JSON instantly with our free JSON Fixer tool.',
+      date: '2025-01-15',
+      readTime: '15 min read',
+      category: 'JSON Tools',
+      keywords: ['fix broken JSON online', 'common JSON errors', 'malformed JSON fixer', 'JSON syntax errors', 'JSON validation', 'JSON repair tool']
+    },
+    {
+      slug: 'curl-to-code-converter-2026',
+      title: 'How to Convert cURL Commands to Code in 2026 (JavaScript, Python, Go, PHP & More)',
+      excerpt: 'Step-by-step guide to convert cURL commands to code in JavaScript (Fetch), Python (Requests), Go, PHP, Java, and more. Real examples with GET, POST, headers, auth, and multipart. Free online cURL to code converter.',
+      date: '2025-01-15',
+      readTime: '12 min read',
+      category: 'API Tools',
+      keywords: ['curl to javascript fetch', 'curl to python requests', 'convert curl to code online', 'curl to code converter', 'curl to javascript', 'curl to python']
+    },
+    {
+      slug: 'debug-api-changes-compare-responses',
+      title: 'Debug API Changes Faster: How to Compare Two API Responses Visually',
+      excerpt: 'Learn how to compare two API responses visually to debug API changes, detect breaking changes, and identify response drift. Step-by-step guide with real-world examples using our free API Response Comparator tool.',
+      date: '2025-01-15',
+      readTime: '10 min read',
+      category: 'API Testing',
+      keywords: ['compare two JSON API responses', 'API payload diff tool', 'debug API changes', 'API response comparator', 'API diff tool', 'compare API responses']
+    },
+    {
+      slug: 'free-mock-api-generator-guide',
+      title: 'Free Mock API in Seconds: Generate Fake Endpoints for Frontend Development (No Backend Needed)',
+      excerpt: 'Learn how to generate free mock APIs instantly for frontend development. Create realistic endpoints with delay, status codes, pagination, and more. No backend needed. Perfect for students and indie developers.',
+      date: '2025-01-15',
+      readTime: '8 min read',
+      category: 'API Tools',
+      keywords: ['free mock API generator', 'mock REST API online', 'fake API for frontend testing', 'mock API generator', 'free mock API', 'mock endpoint generator']
+    },
+    {
+      slug: 'best-free-developer-tools-2026',
+      title: 'Best Free Online Developer Tools in 2026 (Privacy-Focused & No Signup Required)',
+      excerpt: 'Discover the best free online developer tools in 2026. Privacy-focused tools with no signup required. JSON tools, API testing, code converters, and more. All processing happens in your browser.',
+      date: '2025-01-15',
+      readTime: '14 min read',
+      category: 'Developer Tools',
+      keywords: ['best free developer tools 2026', 'privacy focused online dev tools', 'no signup code tools', 'free developer tools', 'online developer tools', 'privacy focused tools']
+    },
+    {
       slug: 'mysql-comma-separated-id-list-guide',
       title: 'How to Create Comma Separated ID List for MySQL IN Clause - Complete Guide',
       excerpt: 'Learn how to create comma separated ID lists for MySQL IN clause. Convert multiple IDs, arrays, and values into MySQL-friendly format. Complete guide with examples, best practices, security tips, and free SQL formatter tool.',

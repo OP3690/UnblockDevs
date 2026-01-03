@@ -6,6 +6,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // All blog posts
   const blogPosts = [
+    'common-json-mistakes-fix-guide',
+    'curl-to-code-converter-2026',
+    'debug-api-changes-compare-responses',
+    'free-mock-api-generator-guide',
+    'best-free-developer-tools-2026',
     'html-tags-explained-guide',
     'advanced-html5-apis-guide',
     'api-payload-size-optimization',
