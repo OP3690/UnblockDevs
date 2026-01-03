@@ -114,12 +114,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
       changefreq: 'weekly' as const,
     },
-    // Examples page
-    {
-      url: '25-broken-json-examples-fix',
-      priority: 0.8,
-      changefreq: 'monthly' as const,
-    },
   ]
 
   // Generate sitemap entries
