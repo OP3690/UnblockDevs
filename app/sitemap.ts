@@ -56,6 +56,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
       changefreq: 'monthly' as const,
     },
+    // SEO landing pages
+    {
+      url: 'fix-unexpected-end-of-json-input',
+      priority: 0.8,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'fix-unexpected-token-in-json',
+      priority: 0.8,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'how-to-fix-broken-json-online',
+      priority: 0.8,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'json-fixer-online',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
   ]
 
   // Generate sitemap entries
