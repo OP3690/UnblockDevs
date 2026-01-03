@@ -6,6 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // All blog posts
   const blogPosts = [
+    '25-broken-json-examples-fix',
     'why-json-breaks-in-real-world-apis',
     'invalid-json-vs-valid-json-examples',
     'how-to-fix-broken-json-without-understanding',
@@ -61,7 +62,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
       changefreq: 'monthly' as const,
     },
-    // SEO landing pages
+    // SEO landing pages - Error fix pages
     {
       url: 'fix-unexpected-end-of-json-input',
       priority: 0.8,
@@ -73,6 +74,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changefreq: 'weekly' as const,
     },
     {
+      url: 'fix-unexpected-token-less-than-json',
+      priority: 0.8,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'fix-expected-comma-or-brace-json',
+      priority: 0.8,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'fix-invalid-control-character-json',
+      priority: 0.8,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'fix-json-parse-error-javascript',
+      priority: 0.8,
+      changefreq: 'weekly' as const,
+    },
+    // Tool landing pages
+    {
       url: 'how-to-fix-broken-json-online',
       priority: 0.8,
       changefreq: 'weekly' as const,
@@ -81,6 +103,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: 'json-fixer-online',
       priority: 0.9,
       changefreq: 'weekly' as const,
+    },
+    {
+      url: 'json-validator',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'json-formatter',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    // Examples page
+    {
+      url: '25-broken-json-examples-fix',
+      priority: 0.8,
+      changefreq: 'monthly' as const,
     },
   ]
 

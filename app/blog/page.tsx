@@ -19,6 +19,15 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: '25-broken-json-examples-fix',
+      title: '25 Broken JSON Examples and How to Fix Them',
+      excerpt: 'Learn from 25 real broken JSON examples and how to fix them. Common JSON mistakes with before/after examples. Fix broken JSON instantly with free JSON Fixer tool.',
+      date: '2025-01-15',
+      readTime: '12 min read',
+      category: 'JSON Examples',
+      keywords: ['broken json examples', 'invalid json examples', 'json mistakes examples', 'broken json fix']
+    },
+    {
       slug: 'why-json-breaks-in-real-world-apis',
       title: 'Why JSON Breaks in Real-World APIs (And How to Fix It)',
       excerpt: 'Learn why JSON breaks in real-world APIs: trailing commas, unescaped characters, partial responses, backend logging. Real examples and how to fix malformed API JSON instantly.',

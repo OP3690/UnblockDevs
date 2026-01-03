@@ -2,25 +2,17 @@ import type { Metadata } from 'next';
 import AboutClient from './client';
 
 export const metadata: Metadata = {
-  title: 'About Us - UnblockDevs | Free JSON Tools for Developers',
-  description: 'Learn about UnblockDevs - a free online platform providing JSON Viewer, JSON Parser, JSON Beautifier, JSON to Excel converter, and other essential developer tools. Built by developers, for developers.',
+  title: 'About UnblockDevs - Free Developer Tools | Privacy-Focused & No Signup Required',
+  description: 'Learn about UnblockDevs - free online developer tools for JSON, API testing, and code conversion. Privacy-focused, no signup required, all processing in your browser.',
   keywords: [
     'about unblockdevs',
-    'JSON tools',
-    'developer tools',
-    'free JSON tools',
-    'JSON viewer',
-    'JSON parser',
-    'JSON beautifier'
+    'free developer tools',
+    'privacy focused tools',
+    'json tools',
+    'developer utilities'
   ],
-  openGraph: {
-    title: 'About Us - UnblockDevs | Free JSON Tools for Developers',
-    description: 'Learn about UnblockDevs - a free online platform providing essential JSON and developer tools.',
-    type: 'website',
-  },
 };
 
-export default function AboutPage() {
+export default function About() {
   return <AboutClient />;
 }
-

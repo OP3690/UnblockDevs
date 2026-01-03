@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowLeft, AlertTriangle, CheckCircle, Wrench, ExternalLink } from 'lucide-react';
+import FAQSchema from '@/components/FAQSchema';
 
 export default function FixUnexpectedEndOfJsonInputClient() {
   return (
@@ -28,6 +29,22 @@ export default function FixUnexpectedEndOfJsonInputClient() {
       </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <FAQSchema
+          faqs={[
+            {
+              question: 'Why do I get "Unexpected end of JSON input"?',
+              answer: 'This error occurs when your JSON is incomplete - usually missing closing braces, brackets, or the JSON string is truncated.',
+            },
+            {
+              question: 'How can I prevent this error?',
+              answer: 'Always validate JSON before parsing, ensure network requests complete, and use our JSON Fixer to check for errors.',
+            },
+            {
+              question: 'Can I fix this error automatically?',
+              answer: 'Yes! Our free JSON Fixer tool automatically detects and fixes missing closing braces and other JSON errors.',
+            },
+          ]}
+        />
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
           <section className="mb-12">
             <p className="text-lg text-gray-700 leading-relaxed mb-4">
