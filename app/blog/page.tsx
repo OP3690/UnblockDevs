@@ -19,6 +19,24 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'how-to-get-curl-from-chrome',
+      title: 'How to Get cURL from Chrome: Copy Request as cURL',
+      excerpt: 'Learn how to copy HTTP requests as cURL commands from Chrome DevTools. Step-by-step guide to export network requests as cURL for testing and debugging.',
+      date: '2025-01-15',
+      readTime: '8 min read',
+      category: 'Developer Tools',
+      keywords: ['how to get curl from chrome', 'copy as curl chrome', 'chrome devtools curl', 'export request as curl']
+    },
+    {
+      slug: 'curl-vs-python-requests-comparison',
+      title: 'cURL vs Python Requests: Complete Comparison Guide',
+      excerpt: 'Compare cURL vs Python Requests: when to use each, pros and cons, conversion guide, and real-world examples. Learn which tool is best for your use case.',
+      date: '2025-01-15',
+      readTime: '12 min read',
+      category: 'API Development',
+      keywords: ['curl vs python requests', 'curl vs requests', 'when to use curl vs requests', 'curl python requests comparison']
+    },
+    {
       slug: 'curl-to-python-requests-complete-guide',
       title: 'How to Convert cURL to Python Requests: Complete Guide with Examples',
       excerpt: 'Learn how to convert cURL commands to Python Requests library. Step-by-step guide with real examples, authentication, headers, JSON data, and error handling. Free converter tool included.',

@@ -126,6 +126,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
       changefreq: 'weekly' as const,
     },
+    {
+      url: 'convert-curl-to-http-request',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'curl-to-python-requests',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
   ]
 
   // Generate sitemap entries

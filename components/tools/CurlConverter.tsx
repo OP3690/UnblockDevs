@@ -420,6 +420,7 @@ ${headerLines}${authLine}${bodyLine}
           >
             <option value="javascript">JavaScript (Fetch API)</option>
             <option value="python">Python (Requests)</option>
+            <option value="nodejs">Node.js (Request/Axios)</option>
             <option value="php">PHP (cURL)</option>
             <option value="ruby">Ruby (Net::HTTP)</option>
             <option value="java">Java (HttpClient)</option>
