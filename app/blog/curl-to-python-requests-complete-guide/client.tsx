@@ -30,9 +30,7 @@ print(response.json())`,
     {
       id: 'post-json',
       title: 'POST with JSON Data',
-      curl: `curl -X POST https://api.example.com/users \\
-  -H "Content-Type: application/json" \\
-  -d '{"name":"John","email":"john@example.com"}'`,
+      curl: 'curl -X POST https://api.example.com/users \\\n  -H "Content-Type: application/json" \\\n  -d \'{"name":"John","email":"john@example.com"}\'',
       python: `import requests
 
 data = {
@@ -64,8 +62,7 @@ print(response.json())`,
     {
       id: 'bearer-token',
       title: 'Bearer Token Authentication',
-      curl: `curl -X GET https://api.example.com/data \\
-  -H "Authorization: Bearer your-token-here"`,
+      curl: 'curl -X GET https://api.example.com/data \\\n  -H "Authorization: Bearer your-token-here"',
       python: `import requests
 
 headers = {
@@ -82,9 +79,7 @@ print(response.json())`,
     {
       id: 'custom-headers',
       title: 'Custom Headers',
-      curl: `curl -X GET https://api.example.com/data \\
-  -H "X-API-Key: abc123" \\
-  -H "User-Agent: MyApp/1.0"`,
+      curl: 'curl -X GET https://api.example.com/data \\\n  -H "X-API-Key: abc123" \\\n  -H "User-Agent: MyApp/1.0"',
       python: `import requests
 
 headers = {
@@ -102,9 +97,7 @@ print(response.json())`,
     {
       id: 'file-upload',
       title: 'File Upload (Multipart)',
-      curl: `curl -X POST https://api.example.com/upload \\
-  -F "file=@/path/to/file.jpg" \\
-  -F "description=Profile picture"`,
+      curl: 'curl -X POST https://api.example.com/upload \\\n  -F "file=@/path/to/file.jpg" \\\n  -F "description=Profile picture"',
       python: `import requests
 
 files = {
