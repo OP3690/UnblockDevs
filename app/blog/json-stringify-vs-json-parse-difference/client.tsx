@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Code, CheckCircle, Copy, ExternalLink, ArrowRight, ArrowLeft as ArrowLeftIcon } from 'lucide-react';
+import { ArrowLeft, Code, CheckCircle, Copy, ExternalLink, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import FAQSchema from '@/components/FAQSchema';
@@ -103,7 +103,7 @@ export default function JsonStringifyVsJsonParseDifferenceClient() {
                       <ArrowRight className="w-4 h-4 inline text-blue-600" /> Object → String
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-700">
-                      <ArrowLeftIcon className="w-4 h-4 inline text-green-600" /> String → Object
+                      <ArrowLeft className="w-4 h-4 inline text-green-600" /> String → Object
                     </td>
                   </tr>
                 </tbody>
