@@ -245,7 +245,7 @@ print(response.json())`,
                         <td className="py-2"><code>headers={'{"Header": "Value"}'}</code></td>
                       </tr>
                       <tr className="border-b">
-                        <td className="py-2"><code>-d '{"key":"value"}'</code></td>
+                        <td className="py-2"><code>-d {'\''}{'{'}"key":"value"{'}'}{'\''}</code></td>
                         <td className="py-2"><code>json={'{"key": "value"}'}</code></td>
                       </tr>
                       <tr>
