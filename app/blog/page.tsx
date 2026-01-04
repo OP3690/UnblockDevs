@@ -19,6 +19,24 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'curl-to-python-requests-complete-guide',
+      title: 'How to Convert cURL to Python Requests: Complete Guide with Examples',
+      excerpt: 'Learn how to convert cURL commands to Python Requests library. Step-by-step guide with real examples, authentication, headers, JSON data, and error handling. Free converter tool included.',
+      date: '2025-01-15',
+      readTime: '15 min read',
+      category: 'API Development',
+      keywords: ['curl to python requests', 'convert curl to python', 'python requests tutorial', 'curl converter']
+    },
+    {
+      slug: 'json-schema-generator-tutorial',
+      title: 'JSON Schema Generator Tutorial: Create Schemas from JSON',
+      excerpt: 'Complete tutorial on generating JSON Schema from sample JSON. Learn how to create schemas, validate JSON, use Draft 7 and OpenAPI formats. Free generator tool with examples.',
+      date: '2025-01-15',
+      readTime: '12 min read',
+      category: 'JSON Tools',
+      keywords: ['json schema generator tutorial', 'how to create json schema', 'generate json schema', 'json schema examples']
+    },
+    {
       slug: '25-broken-json-examples-fix',
       title: '25 Broken JSON Examples and How to Fix Them',
       excerpt: 'Learn from 25 real broken JSON examples and how to fix them. Common JSON mistakes with before/after examples. Fix broken JSON instantly with free JSON Fixer tool.',

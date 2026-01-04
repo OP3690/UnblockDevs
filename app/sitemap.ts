@@ -6,6 +6,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // All blog posts
   const blogPosts = [
+    'curl-to-python-requests-complete-guide',
+    'json-schema-generator-tutorial',
     '25-broken-json-examples-fix',
     'why-json-breaks-in-real-world-apis',
     'invalid-json-vs-valid-json-examples',
