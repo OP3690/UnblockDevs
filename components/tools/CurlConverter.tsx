@@ -95,7 +95,8 @@ export default function CurlConverter() {
           
           let authHeader = '';
           if (auth?.type === 'basic') {
-            const credentials = btoa(`${auth.username}:${auth.password}`);
+            // Base64 encode username:password
+            const credentials = typeof window !== 'undefined' ? btoa(`${auth.username}:${auth.password}`) : Buffer.from(`${auth.username}:${auth.password}`).toString('base64');
             authHeader = `  headers: {\n    ...headers,\n    'Authorization': 'Basic ${credentials}',\n  },`;
           } else if (auth?.type === 'bearer') {
             authHeader = `  headers: {\n    ...headers,\n    'Authorization': 'Bearer ${auth.token}',\n  },`;
@@ -208,7 +209,7 @@ puts JSON.parse(response.body)`;
           
           let authHeader = '';
           if (auth?.type === 'basic') {
-            const credentials = btoa(`${auth.username}:${auth.password}`);
+            const credentials = typeof window !== 'undefined' ? btoa(`${auth.username}:${auth.password}`) : Buffer.from(`${auth.username}:${auth.password}`).toString('base64');
             authHeader = `\n    .header("Authorization", "Basic ${credentials}")`;
           } else if (auth?.type === 'bearer') {
             authHeader = `\n    .header("Authorization", "Bearer ${auth.token}")`;
@@ -240,7 +241,7 @@ System.out.println(response.body());`;
           
           let authHeader = '';
           if (auth?.type === 'basic') {
-            const credentials = btoa(`${auth.username}:${auth.password}`);
+            const credentials = typeof window !== 'undefined' ? btoa(`${auth.username}:${auth.password}`) : Buffer.from(`${auth.username}:${auth.password}`).toString('base64');
             authHeader = `\n    req.Header.Set("Authorization", "Basic ${credentials}")`;
           } else if (auth?.type === 'bearer') {
             authHeader = `\n    req.Header.Set("Authorization", "Bearer ${auth.token}")`;
@@ -277,7 +278,7 @@ ${headerLines}${authHeader}
           
           let authLine = '';
           if (auth?.type === 'basic') {
-            const credentials = btoa(`${auth.username}:${auth.password}`);
+            const credentials = typeof window !== 'undefined' ? btoa(`${auth.username}:${auth.password}`) : Buffer.from(`${auth.username}:${auth.password}`).toString('base64');
             authLine = `    request.Headers.Add("Authorization", "Basic ${credentials}");\n`;
           } else if (auth?.type === 'bearer') {
             authLine = `    request.Headers.Add("Authorization", "Bearer ${auth.token}");\n`;
