@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Code, CheckCircle, XCircle, ExternalLink, Python, Terminal } from 'lucide-react';
+import { ArrowLeft, Code, CheckCircle, XCircle, ExternalLink, Code2, Terminal } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import FAQSchema from '@/components/FAQSchema';
@@ -165,7 +165,7 @@ export default function CurlVsPythonRequestsComparisonClient() {
             <div className="space-y-4">
               <div className="p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
                 <div className="flex items-center gap-2 mb-2">
-                  <Python className="w-5 h-5 text-yellow-600" />
+                  <Code2 className="w-5 h-5 text-yellow-600" />
                   <h3 className="font-semibold text-gray-900">Production Applications</h3>
                 </div>
                 <p className="text-gray-700 text-sm">
@@ -185,7 +185,7 @@ export default function CurlVsPythonRequestsComparisonClient() {
               </div>
               <div className="p-4 bg-orange-50 rounded-lg border-l-4 border-orange-500">
                 <div className="flex items-center gap-2 mb-2">
-                  <Python className="w-5 h-5 text-orange-600" />
+                  <Code2 className="w-5 h-5 text-orange-600" />
                   <h3 className="font-semibold text-gray-900">Automation</h3>
                 </div>
                 <p className="text-gray-700 text-sm">
@@ -194,7 +194,7 @@ export default function CurlVsPythonRequestsComparisonClient() {
               </div>
               <div className="p-4 bg-red-50 rounded-lg border-l-4 border-red-500">
                 <div className="flex items-center gap-2 mb-2">
-                  <Python className="w-5 h-5 text-red-600" />
+                  <Code2 className="w-5 h-5 text-red-600" />
                   <h3 className="font-semibold text-gray-900">Error Handling</h3>
                 </div>
                 <p className="text-gray-700 text-sm">
@@ -243,7 +243,7 @@ export default function CurlVsPythonRequestsComparisonClient() {
 
               <div className="border border-gray-200 rounded-lg p-6">
                 <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <Python className="w-6 h-6 text-yellow-600" />
+                  <Code2 className="w-6 h-6 text-yellow-600" />
                   Python Requests
                 </h3>
                 <div className="space-y-3">

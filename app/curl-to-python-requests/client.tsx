@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Code, CheckCircle, ExternalLink, Python } from 'lucide-react';
+import { ArrowLeft, Code, CheckCircle, ExternalLink, Code2 } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
 
 export default function CurlToPythonRequestsClient() {
@@ -15,7 +15,7 @@ export default function CurlToPythonRequestsClient() {
           </Link>
           <div className="flex items-center gap-3">
             <div className="p-3 bg-yellow-100 rounded-lg">
-              <Python className="w-6 h-6 text-yellow-600" />
+              <Code2 className="w-6 h-6 text-yellow-600" />
             </div>
             <div>
               <h1 className="text-3xl font-bold text-gray-900">cURL to Python Requests Converter</h1>
@@ -148,7 +148,7 @@ print(response.json())`}
 
           <section className="mb-12 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-xl p-8 text-white">
             <div className="flex items-center gap-4 mb-4">
-              <Python className="w-12 h-12" />
+              <Code2 className="w-12 h-12" />
               <div>
                 <h2 className="text-2xl font-bold mb-2">Convert cURL to Python Requests Instantly</h2>
                 <p className="text-yellow-100">
