@@ -82,7 +82,7 @@ export default function BestFreeDeveloperTools2026Client() {
                   <span className="px-2 py-1 bg-white rounded text-xs font-medium">Visual error highlighting</span>
                   <span className="px-2 py-1 bg-white rounded text-xs font-medium">Auto-repair</span>
                 </div>
-                <Link href="/" className="inline-flex items-center gap-2 text-red-600 hover:text-red-700 font-semibold text-sm mt-4">
+                <Link href="/?tab=fixer" className="inline-flex items-center gap-2 text-red-600 hover:text-red-700 font-semibold text-sm mt-4">
                   Try JSON Fixer <ExternalLink className="w-4 h-4" />
                 </Link>
               </div>
@@ -106,7 +106,7 @@ export default function BestFreeDeveloperTools2026Client() {
                   <span className="px-2 py-1 bg-white rounded text-xs font-medium">Syntax highlighting</span>
                   <span className="px-2 py-1 bg-white rounded text-xs font-medium">Statistics</span>
                 </div>
-                <Link href="/" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold text-sm mt-4">
+                <Link href="/?tab=beautifier" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold text-sm mt-4">
                   Try JSON Beautifier <ExternalLink className="w-4 h-4" />
                 </Link>
               </div>
@@ -154,7 +154,7 @@ export default function BestFreeDeveloperTools2026Client() {
                   <span className="px-2 py-1 bg-white rounded text-xs font-medium">Instant conversion</span>
                   <span className="px-2 py-1 bg-white rounded text-xs font-medium">Production ready</span>
                 </div>
-                <Link href="/" className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-semibold text-sm mt-4">
+                <Link href="/?tab=curl" className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-semibold text-sm mt-4">
                   Try cURL Converter <ExternalLink className="w-4 h-4" />
                 </Link>
               </div>
@@ -178,7 +178,7 @@ export default function BestFreeDeveloperTools2026Client() {
                   <span className="px-2 py-1 bg-white rounded text-xs font-medium">Pagination support</span>
                   <span className="px-2 py-1 bg-white rounded text-xs font-medium">Configurable delays</span>
                 </div>
-                <Link href="/" className="inline-flex items-center gap-2 text-teal-600 hover:text-teal-700 font-semibold text-sm mt-4">
+                <Link href="/?tab=mock" className="inline-flex items-center gap-2 text-teal-600 hover:text-teal-700 font-semibold text-sm mt-4">
                   Try Mock API Generator <ExternalLink className="w-4 h-4" />
                 </Link>
               </div>

@@ -398,7 +398,7 @@ print(response.json())`}
               </div>
             </div>
             <Link
-              href="/"
+              href="/?tab=curl"
               className="inline-flex items-center gap-2 bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
             >
               Try cURL Converter Now

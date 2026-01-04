@@ -171,7 +171,7 @@ export default function HowToFixBrokenJsonWithoutUnderstandingClient() {
               </div>
             </div>
             <Link
-              href="/"
+              href="/?tab=fixer"
               className="inline-flex items-center gap-2 bg-white text-green-600 px-6 py-3 rounded-lg font-semibold hover:bg-green-50 transition-colors"
             >
               Fix JSON Now

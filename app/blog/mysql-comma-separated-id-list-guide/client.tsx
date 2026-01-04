@@ -389,7 +389,7 @@ if (empty($ids)) {
                 </ul>
               </div>
               <Link
-                href="/"
+                href="/?tab=sql"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-colors shadow-lg"
               >
                 <Zap className="w-5 h-5" />
@@ -505,7 +505,7 @@ WHERE id IN (
               No sign-up required, works entirely in your browser.
             </p>
             <Link
-              href="/"
+              href="/?tab=sql"
               className="inline-flex items-center gap-2 px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-colors shadow-lg"
             >
               <Zap className="w-5 h-5" />
@@ -527,7 +527,7 @@ WHERE id IN (
             Back to Blog
           </Link>
           <Link
-            href="/"
+            href="/?tab=sql"
             className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
           >
             Try SQL Formatter

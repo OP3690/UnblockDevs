@@ -340,7 +340,7 @@ Response:
               </div>
             </div>
             <Link
-              href="/"
+              href="/?tab=mock"
               className="inline-flex items-center gap-2 bg-white text-green-600 px-6 py-3 rounded-lg font-semibold hover:bg-green-50 transition-colors"
             >
               Try Mock API Generator Now

@@ -82,6 +82,16 @@ function HomeClient() {
     // Ensure we're on client side
     if (typeof window !== 'undefined') {
       setMounted(true);
+      
+      // Check for tab parameter in URL (e.g., ?tab=curl or ?tab=schema)
+      const urlParams = new URLSearchParams(window.location.search);
+      const tabParam = urlParams.get('tab');
+      if (tabParam && ['converter', 'beautifier', 'fixer', 'comparator', 'jsoncompare', 'schema', 'logs', 'payload', 'curl', 'mock', 'testdata', 'config', 'sql', 'builder', 'insights'].includes(tabParam)) {
+        setActiveTab(tabParam as ToolTab);
+        // Scroll to top when tab is set from URL
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      
       // Check if bookmark prompt was dismissed
       const dismissed = localStorage.getItem('bookmarkPromptDismissed');
       if (!dismissed) {

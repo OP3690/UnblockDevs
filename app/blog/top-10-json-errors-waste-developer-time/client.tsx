@@ -187,7 +187,7 @@ export default function Top10JsonErrorsClient() {
               </div>
             </div>
             <Link
-              href="/"
+              href="/?tab=fixer"
               className="inline-flex items-center gap-2 bg-white text-orange-600 px-6 py-3 rounded-lg font-semibold hover:bg-orange-50 transition-colors"
             >
               Fix JSON Errors in Seconds with UnblockDevs
