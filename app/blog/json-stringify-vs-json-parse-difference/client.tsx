@@ -193,7 +193,7 @@ console.log(obj);
                   <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0">2</div>
                   <div>
                     <p className="text-sm text-gray-700">
-                      <strong>Stringify:</strong> <code className="bg-white px-1 rounded">JSON.stringify(obj)</code> → <code className="bg-white px-1 rounded">'{"name":"John"}'</code>
+                      <strong>Stringify:</strong> <code className="bg-white px-1 rounded">JSON.stringify(obj)</code> → <code className="bg-white px-1 rounded">{'\''}{'{'}"name":"John"{'}'}{'\''}</code>
                     </p>
                   </div>
                 </div>
