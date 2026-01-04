@@ -304,6 +304,46 @@ ${headerLines}${authLine}${bodyLine}
 }`;
           break;
         }
+
+        case 'nodejs': {
+          const headerLines = Object.entries(headers).map(([k, v]) => 
+            `    '${k}': '${v}'`
+          ).join(',\n');
+          
+          let authHeader = '';
+          if (auth?.type === 'basic') {
+            const credentials = typeof window !== 'undefined' ? btoa(`${auth.username}:${auth.password}`) : Buffer.from(`${auth.username}:${auth.password}`).toString('base64');
+            authHeader = `,\n    'Authorization': 'Basic ${credentials}'`;
+          } else if (auth?.type === 'bearer') {
+            authHeader = `,\n    'Authorization': 'Bearer ${auth.token}'`;
+          }
+          
+          let bodyLine = '';
+          if (data) {
+            const isJson = data.trim().startsWith('{') || data.trim().startsWith('[');
+            if (isJson) {
+              bodyLine = `,\n  body: JSON.stringify(${data})`;
+            } else {
+              bodyLine = `,\n  body: '${escapeString(data, 'nodejs')}'`;
+            }
+          }
+          
+          code = `const request = require('request');
+
+const options = {
+  method: '${method}',
+  url: '${url}',
+  headers: {
+${headerLines}${authHeader}
+  }${bodyLine}
+};
+
+request(options, function (error, response, body) {
+  if (error) throw new Error(error);
+  console.log(JSON.parse(body));
+});`;
+          break;
+        }
       }
 
       setConvertedCode(code);
@@ -323,6 +363,7 @@ ${headerLines}${authLine}${bodyLine}
   const handleDownload = () => {
     const extension = targetLanguage === 'javascript' ? 'js' : 
                      targetLanguage === 'python' ? 'py' :
+                     targetLanguage === 'nodejs' ? 'js' :
                      targetLanguage === 'php' ? 'php' :
                      targetLanguage === 'ruby' ? 'rb' :
                      targetLanguage === 'java' ? 'java' :
@@ -369,7 +410,7 @@ ${headerLines}${authLine}${bodyLine}
               <Code className="w-6 h-6 text-primary-600" />
               Curl to Code Converter
             </h2>
-            <p className="text-gray-600 text-sm">Convert curl commands to code in 7+ languages. Supports authentication, headers, and all HTTP methods.</p>
+            <p className="text-gray-600 text-sm">Convert curl commands to code in 8+ languages. Supports authentication, headers, and all HTTP methods.</p>
           </div>
           <button
             onClick={() => setShowExamples(!showExamples)}
