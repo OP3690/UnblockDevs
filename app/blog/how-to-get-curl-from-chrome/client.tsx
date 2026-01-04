@@ -103,7 +103,7 @@ export default function HowToGetCurlFromChromeClient() {
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-2">Copy as cURL</h3>
                   <p className="text-gray-700 text-sm mb-2">
-                    Select <strong>"Copy"</strong> > <strong>"Copy as cURL"</strong> from the context menu. The cURL command is now in your clipboard!
+                    Select <strong>"Copy"</strong> {'>'} <strong>"Copy as cURL"</strong> from the context menu. The cURL command is now in your clipboard!
                   </p>
                   <div className="bg-blue-50 p-3 rounded border border-blue-200 mt-2">
                     <p className="text-sm text-blue-800">
