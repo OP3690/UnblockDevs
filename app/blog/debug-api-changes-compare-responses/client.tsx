@@ -305,7 +305,7 @@ jobs:
               </div>
             </div>
             <Link
-              href="/"
+              href="/?tab=comparator"
               className="inline-flex items-center gap-2 bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-purple-50 transition-colors"
             >
               Try API Comparator Now
