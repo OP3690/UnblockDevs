@@ -6,6 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // All blog posts
   const blogPosts = [
+    'json-stringify-complete-guide',
     'how-to-get-curl-from-chrome',
     'curl-vs-python-requests-comparison',
     'curl-to-python-requests-complete-guide',
@@ -135,6 +136,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: 'curl-to-python-requests',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'json-stringify-online',
       priority: 0.9,
       changefreq: 'weekly' as const,
     },

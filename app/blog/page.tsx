@@ -19,6 +19,15 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'json-stringify-complete-guide',
+      title: 'JSON.stringify() Complete Guide: Examples, Syntax & Best Practices',
+      excerpt: 'Complete guide to JSON.stringify() in JavaScript. Learn syntax, examples, replacer function, space parameter, and common use cases. Includes interactive examples and best practices.',
+      date: '2025-01-15',
+      readTime: '12 min read',
+      category: 'JavaScript',
+      keywords: ['json stringify', 'json stringify javascript', 'json stringify examples', 'json stringify tutorial']
+    },
+    {
       slug: 'how-to-get-curl-from-chrome',
       title: 'How to Get cURL from Chrome: Copy Request as cURL',
       excerpt: 'Learn how to copy HTTP requests as cURL commands from Chrome DevTools. Step-by-step guide to export network requests as cURL for testing and debugging.',
