@@ -114,6 +114,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
       changefreq: 'weekly' as const,
     },
+    {
+      url: 'curl-to-requests',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'json-schema-generation',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
   ]
 
   // Generate sitemap entries
