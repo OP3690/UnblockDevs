@@ -130,7 +130,7 @@ export default function BestFreeDeveloperTools2026Client() {
                   <span className="px-2 py-1 bg-white rounded text-xs font-medium">Breaking change detection</span>
                   <span className="px-2 py-1 bg-white rounded text-xs font-medium">Color-coded changes</span>
                 </div>
-                <Link href="/" className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 font-semibold text-sm mt-4">
+                <Link href="/?tab=comparator" className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 font-semibold text-sm mt-4">
                   Try API Comparator <ExternalLink className="w-4 h-4" />
                 </Link>
               </div>
