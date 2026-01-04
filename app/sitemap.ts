@@ -6,6 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // All blog posts
   const blogPosts = [
+    'json-stringify-vs-json-parse-difference',
     'json-stringify-complete-guide',
     'how-to-get-curl-from-chrome',
     'curl-vs-python-requests-comparison',

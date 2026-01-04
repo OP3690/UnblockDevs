@@ -11,7 +11,12 @@ export const metadata: Metadata = {
     'json stringify to json online',
     'stringify json online',
     'json stringify tool',
-    'javascript json stringify'
+    'javascript json stringify',
+    'json stringify online without newlines',
+    'json stringify without newlines',
+    'json stringify js',
+    'json stringify example',
+    'json serialize online'
   ],
 };
 

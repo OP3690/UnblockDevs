@@ -207,6 +207,37 @@ const jsonContent = JSON.stringify(data, null, 2);
           </section>
 
           <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">JSON.stringify() Without Newlines</h2>
+            <div className="bg-gray-50 rounded-lg p-5 border border-gray-200 mb-6">
+              <p className="text-gray-700 mb-3">
+                By default, <code className="bg-white px-1 rounded">JSON.stringify()</code> creates compact JSON without newlines. 
+                To remove newlines from pretty-printed JSON, set the space parameter to 0 or omit it:
+              </p>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-semibold text-gray-900">Compact Output (No Newlines)</h3>
+                <button
+                  onClick={() => copyToClipboard(`const obj = { name: "John", age: 30 };\nconst compact = JSON.stringify(obj);\n// Output: '{"name":"John","age":30}'\n\n// Or explicitly:\nconst noNewlines = JSON.stringify(obj, null, 0);`, 'no-newlines')}
+                  className="text-blue-600 hover:text-blue-700"
+                >
+                  {copiedExample === 'no-newlines' ? <CheckCircle className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
+                </button>
+              </div>
+              <pre className="bg-white p-4 rounded border border-gray-200 text-sm overflow-x-auto">
+                <code>{`const obj = { name: "John", age: 30 };
+const compact = JSON.stringify(obj);
+// Output: '{"name":"John","age":30}'
+
+// Or explicitly:
+const noNewlines = JSON.stringify(obj, null, 0);`}</code>
+              </pre>
+            </div>
+            <p className="text-gray-700 text-sm mb-4">
+              Use our <Link href="/json-stringify-online" className="text-blue-600 hover:underline font-semibold">JSON.stringify() online tool</Link> to test 
+              with different spacing values (0 for no newlines, 2+ for pretty print).
+            </p>
+          </section>
+
+          <section className="mb-12">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Best Practices</h2>
             <div className="space-y-3">
               <div className="flex items-start gap-3 p-4 bg-green-50 rounded-lg border border-green-200">

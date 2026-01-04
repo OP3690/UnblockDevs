@@ -19,6 +19,15 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'json-stringify-vs-json-parse-difference',
+      title: 'JSON.stringify() vs JSON.parse(): Complete Difference Guide',
+      excerpt: 'Learn the difference between JSON.stringify() and JSON.parse(). When to use each, examples, and how they work together. Includes json parse online and json serialize online examples.',
+      date: '2025-01-15',
+      readTime: '10 min read',
+      category: 'JavaScript',
+      keywords: ['json stringify vs json parse', 'json parse online', 'json serialize online', 'json parser online', 'unstringify json']
+    },
+    {
       slug: 'json-stringify-complete-guide',
       title: 'JSON.stringify() Complete Guide: Examples, Syntax & Best Practices',
       excerpt: 'Complete guide to JSON.stringify() in JavaScript. Learn syntax, examples, replacer function, space parameter, and common use cases. Includes interactive examples and best practices.',
