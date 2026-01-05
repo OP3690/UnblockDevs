@@ -6,6 +6,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // All blog posts
   const blogPosts = [
+    'notebooklm-cheat-sheet-tips',
+    'notebooklm-complete-guide',
     'ai-prompt-engineering-guide',
     'cursor-ai-code-editor-guide',
     'ai-tools-developers-guide',

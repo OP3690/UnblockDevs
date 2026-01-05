@@ -19,6 +19,24 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'notebooklm-cheat-sheet-tips',
+      title: 'NotebookLM Cheat Sheet: Tips, Tricks & Quick Reference',
+      excerpt: 'Complete NotebookLM cheat sheet with tips, tricks, shortcuts, and best practices. Quick reference guide for power users of Google\'s AI notebook tool.',
+      date: '2025-01-28',
+      readTime: '14 min read',
+      category: 'AI & Machine Learning',
+      keywords: ['notebooklm cheat sheet', 'notebooklm tips', 'notebooklm tricks', 'notebooklm shortcuts', 'notebooklm quick reference']
+    },
+    {
+      slug: 'notebooklm-complete-guide',
+      title: 'NotebookLM Complete Guide: How to Use Google\'s AI Notebook',
+      excerpt: 'Complete guide to NotebookLM: what it is, how to use it, best practices, tips, and tricks. Learn how to leverage Google\'s AI-powered notebook for research, writing, and knowledge management.',
+      date: '2025-01-28',
+      readTime: '16 min read',
+      category: 'AI & Machine Learning',
+      keywords: ['notebooklm', 'notebooklm guide', 'google notebooklm', 'ai notebook', 'notebooklm tutorial', 'how to use notebooklm']
+    },
+    {
       slug: 'ai-prompt-engineering-guide',
       title: 'AI Prompt Engineering Guide: Best Prompts for Great Results',
       excerpt: 'Complete guide to AI prompt engineering: how to write effective prompts, best practices, techniques, and templates. Learn how to get great results from ChatGPT, Cursor, and other AI tools.',
