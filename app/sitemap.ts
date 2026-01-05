@@ -6,6 +6,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // All blog posts
   const blogPosts = [
+    'ai-prompt-engineering-guide',
+    'cursor-ai-code-editor-guide',
+    'ai-tools-developers-guide',
+    'chatgpt-real-life-usage-guide',
     'apache-kafka-complete-guide',
     'apache-kafka-applications',
     'apache-kafka-cheat-sheet',

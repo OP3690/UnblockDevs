@@ -19,6 +19,42 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'ai-prompt-engineering-guide',
+      title: 'AI Prompt Engineering Guide: Best Prompts for Great Results',
+      excerpt: 'Complete guide to AI prompt engineering: how to write effective prompts, best practices, techniques, and templates. Learn how to get great results from ChatGPT, Cursor, and other AI tools.',
+      date: '2025-01-28',
+      readTime: '18 min read',
+      category: 'AI & Machine Learning',
+      keywords: ['ai prompt engineering', 'how to write ai prompts', 'best ai prompts', 'prompt engineering techniques', 'chatgpt prompts']
+    },
+    {
+      slug: 'cursor-ai-code-editor-guide',
+      title: 'Cursor AI Code Editor: Complete Guide & Best Practices',
+      excerpt: 'Complete guide to Cursor AI code editor: how to use it, what it does, when to use it, and best practices. Learn Cursor shortcuts, features, and prompt techniques for maximum productivity.',
+      date: '2025-01-28',
+      readTime: '16 min read',
+      category: 'Developer Tools',
+      keywords: ['cursor ai', 'cursor code editor', 'cursor ai tutorial', 'how to use cursor', 'cursor vs vs code', 'ai code editor']
+    },
+    {
+      slug: 'ai-tools-developers-guide',
+      title: 'AI Tools for Developers: Complete Guide to Cursor, GitHub Copilot & More',
+      excerpt: 'Complete guide to AI tools for developers: Cursor, GitHub Copilot, ChatGPT, and more. Learn how, what, when to use each tool, and best practices for maximum productivity.',
+      date: '2025-01-28',
+      readTime: '15 min read',
+      category: 'Developer Tools',
+      keywords: ['ai tools for developers', 'cursor ai', 'github copilot', 'ai coding tools', 'developer ai tools', 'ai code editor']
+    },
+    {
+      slug: 'chatgpt-real-life-usage-guide',
+      title: 'ChatGPT Real-Life Usage Guide: How, What, When & Best Prompts',
+      excerpt: 'Complete guide to using ChatGPT in real life: practical use cases, best prompts, when to use it, and how to get great results. Learn prompt engineering techniques for developers, writers, and professionals.',
+      date: '2025-01-28',
+      readTime: '17 min read',
+      category: 'AI & Machine Learning',
+      keywords: ['chatgpt real life usage', 'chatgpt prompts', 'how to use chatgpt', 'chatgpt for developers', 'chatgpt best practices', 'prompt engineering chatgpt']
+    },
+    {
       slug: 'apache-kafka-complete-guide',
       title: 'Apache Kafka: Complete Guide - What, How, Why',
       excerpt: 'Comprehensive guide to Apache Kafka: architecture, how it works, why it matters, real-world applications, and best practices. Learn about event streaming, topics, partitions, and producers/consumers.',
