@@ -39,7 +39,7 @@ FROM users;`,
   JSON_EXTRACT(profile, '$.address.country') AS country,
   profile->>'$.contact.phone' AS phone
 FROM users;`,
-      explanation: 'Extracts nested values using dot notation. profile{'\''}{'->>'}${'\''}{'$.contact.phone'} uses {'->>'} to return text directly without quotes.',
+      explanation: 'Extracts nested values using dot notation. profile->>$.contact.phone uses ->> to return text directly without quotes.',
       useCase: 'Complex nested structures, hierarchical data extraction'
     },
     {
@@ -444,9 +444,9 @@ SELECT JSON_EXTRACT(data, '$."user.email"') AS email;`
                 </p>
               </div>
               <div className="p-4 bg-purple-50 rounded-lg border-l-4 border-purple-500">
-                <h3 className="font-semibold text-gray-900 mb-2">✅ Use {'->>'} for Text Comparisons</h3>
+                <h3 className="font-semibold text-gray-900 mb-2">✅ Use -&gt;&gt; for Text Comparisons</h3>
                 <p className="text-sm text-gray-700">
-                  When comparing JSON values in WHERE clauses, use {'->>'} operator to get text output. This avoids 
+                  When comparing JSON values in WHERE clauses, use -&gt;&gt; operator to get text output. This avoids 
                   issues with JSON type comparisons and improves readability.
                 </p>
               </div>
