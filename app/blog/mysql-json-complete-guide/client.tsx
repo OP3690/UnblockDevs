@@ -26,7 +26,7 @@ export default function MysqlJsonCompleteGuideClient() {
   JSON_EXTRACT(metadata, '$.name') AS name,
   metadata->'$.email' AS email
 FROM users;`,
-      explanation: 'Extracts name and email from metadata JSON column. JSON_EXTRACT() and {'->'} operator are equivalent. The {'->'} operator returns JSON type, while {'->>'} returns text.',
+      explanation: 'Extracts name and email from metadata JSON column. JSON_EXTRACT() and -> operator are equivalent. The -> operator returns JSON type, while ->> returns text.',
       useCase: 'Basic JSON value extraction, simple data retrieval'
     },
     {
