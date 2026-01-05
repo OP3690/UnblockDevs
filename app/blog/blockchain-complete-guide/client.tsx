@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Code, ExternalLink, Link as LinkIcon, Lock, Coins, Network } from 'lucide-react';
+import { ArrowLeft, Code, ExternalLink, Network, Lock, Coins } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
 
 export default function BlockchainCompleteGuideClient() {
@@ -15,7 +15,7 @@ export default function BlockchainCompleteGuideClient() {
           </Link>
           <div className="flex items-center gap-3">
             <div className="p-3 bg-yellow-100 rounded-lg">
-              <LinkIcon className="w-6 h-6 text-yellow-600" />
+              <Network className="w-6 h-6 text-yellow-600" />
             </div>
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Blockchain: Complete Guide</h1>
@@ -60,8 +60,8 @@ export default function BlockchainCompleteGuideClient() {
           </section>
 
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <LinkIcon className="w-6 h-6 text-yellow-600" />
+              <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <Network className="w-6 h-6 text-yellow-600" />
               What is Blockchain?
             </h2>
             <div className="bg-yellow-50 border-l-4 border-yellow-500 p-5 rounded-r-lg mb-4">
@@ -409,7 +409,7 @@ export default function BlockchainCompleteGuideClient() {
 
           <section className="mb-12 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-xl p-8 text-white">
             <div className="flex items-center gap-4 mb-4">
-              <LinkIcon className="w-12 h-12" />
+              <Network className="w-12 h-12" />
               <div>
                 <h2 className="text-2xl font-bold mb-2">Build for Blockchain</h2>
                 <p className="text-yellow-100">
