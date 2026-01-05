@@ -72,12 +72,11 @@ export default function PromptChunker() {
       let finalContent = rawContent;
 
       if (isFirst && rawChunks.length > 1) {
-        // Add instruction for first chunk
-        finalContent = `[IMPORTANT: This prompt is being sent in multiple chunks. Please wait for all chunks before responding. Do not generate output yet. Just acknowledge that you understand and are ready to receive the remaining chunks.]\n\n${rawContent}`;
+        // Add instruction for first chunk - store in memory
+        finalContent = `[IMPORTANT INSTRUCTIONS: This prompt is being sent in multiple chunks. Please store this chunk and all upcoming chunks in your memory. Do NOT generate any output yet. Just acknowledge that you understand and are ready to receive the remaining chunks. Wait for all chunks before responding.]\n\n${rawContent}`;
       } else if (isLast && rawChunks.length > 1) {
-        // Add instruction for final chunk
-        const allChunksContent = rawChunks.join('\n\n---\n\n');
-        finalContent = `${rawContent}\n\n[FINAL CHUNK - This is the last chunk. Now that you have received all chunks, please consolidate them and use the complete prompt provided below to generate the final output:\n\n--- COMPLETE PROMPT ---\n${allChunksContent}\n--- END OF COMPLETE PROMPT ---\n\nPlease process the complete prompt above and generate your response.]`;
+        // Add instruction for final chunk - just instructions, no full text
+        finalContent = `${rawContent}\n\n[FINAL CHUNK - This is the last chunk. You have now received all chunks. Please consolidate all the chunks you have stored in memory and use the complete consolidated prompt to generate your final output. Process all the chunks together as one complete prompt and provide your response.]`;
       }
 
       const words = finalContent.split(/\s+/).filter(w => w.length > 0).length;
