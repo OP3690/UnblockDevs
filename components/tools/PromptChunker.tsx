@@ -19,7 +19,7 @@ export default function PromptChunker() {
   const [chunkSize, setChunkSize] = useState<number>(500);
   const [chunkType, setChunkType] = useState<'words' | 'chars'>('words');
   const [overlap, setOverlap] = useState<number>(50);
-  const [showSettings, setShowSettings] = useState(false);
+  const [showSettings, setShowSettings] = useState(true);
   const [expandedChunks, setExpandedChunks] = useState<Set<number>>(new Set());
   const [copiedChunks, setCopiedChunks] = useState<Set<number>>(new Set());
 
@@ -174,6 +174,17 @@ export default function PromptChunker() {
           >
             <Settings className="w-5 h-5" />
             <span className="font-semibold">Chunking Settings</span>
+          </button>
+          <button
+            onClick={() => {
+              setChunkSize(500);
+              setChunkType('words');
+              setOverlap(50);
+              toast.success('Reset to default settings');
+            }}
+            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition-colors text-sm"
+          >
+            Default
           </button>
         </div>
         
