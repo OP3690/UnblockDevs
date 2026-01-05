@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, Star, TrendingUp, Mail } from 'lucide-react';
+import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, Star, TrendingUp, Mail, Scissors } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget';
@@ -22,6 +22,7 @@ import SqlFormatter from '@/components/tools/SqlFormatter';
 import JsonBuilder from '@/components/tools/JsonBuilder';
 import JsonFixer from '@/components/tools/JsonFixer';
 import DataInsights from '@/components/tools/DataInsights';
+import PromptChunker from '@/components/tools/PromptChunker';
 import {
   jsonToRows,
   extractColumns,
@@ -38,7 +39,7 @@ interface Section {
   columnIds: string[];
 }
 
-type ToolTab = 'converter' | 'beautifier' | 'fixer' | 'comparator' | 'jsoncompare' | 'schema' | 'logs' | 'payload' | 'curl' | 'mock' | 'testdata' | 'config' | 'sql' | 'builder' | 'insights';
+type ToolTab = 'converter' | 'beautifier' | 'fixer' | 'comparator' | 'jsoncompare' | 'schema' | 'logs' | 'payload' | 'curl' | 'mock' | 'testdata' | 'config' | 'sql' | 'builder' | 'insights' | 'promptchunk';
 
 function HomeClient() {
   const [activeTab, setActiveTab] = useState<ToolTab>('converter');
@@ -86,7 +87,7 @@ function HomeClient() {
       // Check for tab parameter in URL (e.g., ?tab=curl or ?tab=schema)
       const urlParams = new URLSearchParams(window.location.search);
       const tabParam = urlParams.get('tab');
-      if (tabParam && ['converter', 'beautifier', 'fixer', 'comparator', 'jsoncompare', 'schema', 'logs', 'payload', 'curl', 'mock', 'testdata', 'config', 'sql', 'builder', 'insights'].includes(tabParam)) {
+      if (tabParam && ['converter', 'beautifier', 'fixer', 'comparator', 'jsoncompare', 'schema', 'logs', 'payload', 'curl', 'mock', 'testdata', 'config', 'sql', 'builder', 'insights', 'promptchunk'].includes(tabParam)) {
         setActiveTab(tabParam as ToolTab);
         // Scroll to top when tab is set from URL
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -658,6 +659,19 @@ function HomeClient() {
                 <span className="text-sm">Data Insights</span>
               </div>
             </button>
+            <button
+              onClick={() => handleTabChange('promptchunk')}
+              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+                activeTab === 'promptchunk'
+                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
+                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <Scissors className="w-4 h-4" />
+                <span className="text-sm">Prompt Chunker</span>
+              </div>
+            </button>
           </div>
         </div>
       </header>
@@ -726,6 +740,7 @@ function HomeClient() {
         {activeTab === 'sql' && <SqlFormatter />}
         {activeTab === 'builder' && <JsonBuilder />}
         {activeTab === 'insights' && <DataInsights />}
+        {activeTab === 'promptchunk' && <PromptChunker />}
       </main>
 
       {/* Services Section */}
