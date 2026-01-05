@@ -19,6 +19,24 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'must-learn-tech-skills-2030',
+      title: 'Must-Learn Tech Skills for 2030: AGI, Quantum Computing & Future Tech',
+      excerpt: 'Discover the must-learn tech skills for 2030: artificial general intelligence (AGI), quantum computing, advanced semiconductor design, neuromorphic chips, and future technologies. Prepare for the next decade.',
+      date: '2025-01-28',
+      readTime: '18 min read',
+      category: 'Career & Skills',
+      keywords: ['tech skills 2030', 'must learn tech skills', 'future tech skills', 'artificial general intelligence 2030', 'quantum computing skills', 'neuromorphic computing']
+    },
+    {
+      slug: 'most-useful-tech-skills-2026',
+      title: 'Most Useful Tech Skills for 2026: AI, GPU Programming & Semiconductors',
+      excerpt: 'Discover the most useful tech skills for 2026: artificial general intelligence (AGI), GPU programming, semiconductor design, AI/ML, cloud computing, and cybersecurity. Learn what skills to prioritize for career growth.',
+      date: '2025-01-28',
+      readTime: '17 min read',
+      category: 'Career & Skills',
+      keywords: ['tech skills 2026', 'most useful tech skills', 'artificial general intelligence', 'gpu programming', 'semiconductor skills', 'ai skills 2026']
+    },
+    {
       slug: 'notebooklm-cheat-sheet-tips',
       title: 'NotebookLM Cheat Sheet: Tips, Tricks & Quick Reference',
       excerpt: 'Complete NotebookLM cheat sheet with tips, tricks, shortcuts, and best practices. Quick reference guide for power users of Google\'s AI notebook tool.',
