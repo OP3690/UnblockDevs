@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useRef, useMemo } from 'react';
-import { Upload, FileText, X, Copy, Check, Download, ChevronRight, ChevronDown, Minus, Search, BarChart3, Code2, Eye } from 'lucide-react';
+import { Upload, FileText, X, Copy, Check, Download, ChevronRight, ChevronDown, Minus, Search, BarChart3, Code2, Eye, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { validateJson } from '@/lib/jsonParser';
+import Link from 'next/link';
 
 interface JsonNode {
   key: string;
@@ -618,6 +619,37 @@ export default function JsonBeautifier() {
           </div>
         </div>
       )}
+
+      {/* Blog Links Section */}
+      <div className="mt-12 bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Learn More About JSON Formatting</h2>
+        <div className="space-y-3">
+          <Link
+            href="/blog/complete-guide-json-viewer-parser-beautifier"
+            className="block p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 hover:border-blue-400 hover:shadow-md transition-all"
+          >
+            <h3 className="font-semibold text-gray-900 mb-1">Complete Guide to JSON Viewer, Parser, and Beautifier Tools</h3>
+            <p className="text-sm text-gray-600 mb-2">Comprehensive guide to JSON viewing, parsing, and beautification tools with examples and best practices.</p>
+            <span className="text-blue-600 text-sm font-medium hover:underline">Read Guide →</span>
+          </Link>
+          <Link
+            href="/blog/json-format-standards-complete-guide"
+            className="block p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200 hover:border-green-400 hover:shadow-md transition-all"
+          >
+            <h3 className="font-semibold text-gray-900 mb-1">JSON Format & Standards: Complete Guide to RFC 8259</h3>
+            <p className="text-sm text-gray-600 mb-2">Learn about JSON format standards, syntax rules, and best practices according to RFC 8259 specification.</p>
+            <span className="text-green-600 text-sm font-medium hover:underline">Read Guide →</span>
+          </Link>
+          <Link
+            href="/blog/json-best-practices-production-guide"
+            className="block p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200 hover:border-purple-400 hover:shadow-md transition-all"
+          >
+            <h3 className="font-semibold text-gray-900 mb-1">JSON Best Practices: Production-Ready Guide for Developers</h3>
+            <p className="text-sm text-gray-600 mb-2">Production-ready guide covering JSON best practices, formatting standards, and optimization techniques.</p>
+            <span className="text-purple-600 text-sm font-medium hover:underline">Read Guide →</span>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

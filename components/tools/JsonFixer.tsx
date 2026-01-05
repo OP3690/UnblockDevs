@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Upload, FileText, X, Copy, Check, Download, AlertCircle, CheckCircle, Wrench, Zap, Eye } from 'lucide-react';
+import { Upload, FileText, X, Copy, Check, Download, AlertCircle, CheckCircle, Wrench, Zap, Eye, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
+import Link from 'next/link';
 
 interface JsonError {
   line: number;
@@ -685,6 +686,45 @@ export default function JsonFixer() {
               <p className="text-sm text-gray-600">Highlights problematic lines with color-coded indicators</p>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Blog Links Section */}
+      <div className="mt-12 bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Learn More About JSON Fixing</h2>
+        <div className="space-y-3">
+          <Link
+            href="/blog/common-json-mistakes-fix-guide"
+            className="block p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200 hover:border-purple-400 hover:shadow-md transition-all"
+          >
+            <h3 className="font-semibold text-gray-900 mb-1">10 Most Common JSON Mistakes Developers Make</h3>
+            <p className="text-sm text-gray-600 mb-2">Learn about the most common JSON mistakes and how to fix them instantly with examples.</p>
+            <span className="text-purple-600 text-sm font-medium hover:underline">Read Guide →</span>
+          </Link>
+          <Link
+            href="/blog/25-broken-json-examples-fix"
+            className="block p-4 bg-gradient-to-r from-red-50 to-orange-50 rounded-lg border border-red-200 hover:border-red-400 hover:shadow-md transition-all"
+          >
+            <h3 className="font-semibold text-gray-900 mb-1">25 Broken JSON Examples and How to Fix Them</h3>
+            <p className="text-sm text-gray-600 mb-2">Real-world broken JSON examples with step-by-step fixes and explanations.</p>
+            <span className="text-red-600 text-sm font-medium hover:underline">Read Guide →</span>
+          </Link>
+          <Link
+            href="/blog/why-json-breaks-in-real-world-apis"
+            className="block p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 hover:border-blue-400 hover:shadow-md transition-all"
+          >
+            <h3 className="font-semibold text-gray-900 mb-1">Why JSON Breaks in Real-World APIs</h3>
+            <p className="text-sm text-gray-600 mb-2">Understand why APIs return broken JSON in production and how to fix it effectively.</p>
+            <span className="text-blue-600 text-sm font-medium hover:underline">Read Guide →</span>
+          </Link>
+          <Link
+            href="/blog/how-json-fixers-work-internally"
+            className="block p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200 hover:border-green-400 hover:shadow-md transition-all"
+          >
+            <h3 className="font-semibold text-gray-900 mb-1">How JSON Fixers Work Internally</h3>
+            <p className="text-sm text-gray-600 mb-2">Learn how JSON fixers work internally and why manual fixing often fails.</p>
+            <span className="text-green-600 text-sm font-medium hover:underline">Read Guide →</span>
+          </Link>
         </div>
       </div>
     </div>

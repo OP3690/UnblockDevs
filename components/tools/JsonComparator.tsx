@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { GitCompare, Copy, Check, AlertCircle, Plus, Minus, Edit } from 'lucide-react';
+import { GitCompare, Copy, Check, AlertCircle, Plus, Minus, Edit, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { validateJson } from '@/lib/jsonParser';
+import Link from 'next/link';
 
 interface DiffResult {
   type: 'added' | 'removed' | 'modified' | 'unchanged';
@@ -473,6 +474,29 @@ export default function JsonComparator() {
             <p className="text-green-800 font-semibold">No differences found! JSONs are identical.</p>
           </div>
         )}
+      </div>
+
+      {/* Blog Links Section */}
+      <div className="mt-12 bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Learn More About JSON Comparison</h2>
+        <div className="space-y-3">
+          <Link
+            href="/blog/debug-api-changes-compare-responses"
+            className="block p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 hover:border-blue-400 hover:shadow-md transition-all"
+          >
+            <h3 className="font-semibold text-gray-900 mb-1">Debug API Changes Faster: How to Compare Two API Responses Visually</h3>
+            <p className="text-sm text-gray-600 mb-2">Learn why response drift happens and how to compare API responses effectively with visual diff tools.</p>
+            <span className="text-blue-600 text-sm font-medium hover:underline">Read Guide →</span>
+          </Link>
+          <Link
+            href="/blog/api-response-comparator-testing-guide"
+            className="block p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200 hover:border-green-400 hover:shadow-md transition-all"
+          >
+            <h3 className="font-semibold text-gray-900 mb-1">API Response Comparator: A Complete Testing Guide</h3>
+            <p className="text-sm text-gray-600 mb-2">Complete guide to using API response comparators for testing and debugging API changes.</p>
+            <span className="text-green-600 text-sm font-medium hover:underline">Read Guide →</span>
+          </Link>
+        </div>
       </div>
     </div>
   );

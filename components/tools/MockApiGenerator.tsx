@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Server, Copy, Check, Download } from 'lucide-react';
+import { Server, Copy, Check, Download, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { validateJson } from '@/lib/jsonParser';
+import Link from 'next/link';
 
 export default function MockApiGenerator() {
   const [jsonText, setJsonText] = useState('');
@@ -161,6 +162,21 @@ app.listen(3001, () => {
           </pre>
         </div>
       )}
+
+      {/* Blog Links Section */}
+      <div className="mt-12 bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Learn More About Mock APIs</h2>
+        <div className="space-y-3">
+          <Link
+            href="/blog/free-mock-api-generator-guide"
+            className="block p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 hover:border-blue-400 hover:shadow-md transition-all"
+          >
+            <h3 className="font-semibold text-gray-900 mb-1">Free Mock API in Seconds: Generate Fake Endpoints for Frontend Development</h3>
+            <p className="text-sm text-gray-600 mb-2">Learn how to use mock API generators to create realistic endpoints with delay, status codes, and pagination. Perfect for frontend development without a backend.</p>
+            <span className="text-blue-600 text-sm font-medium hover:underline">Read Guide →</span>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { FileSearch, Filter, AlertTriangle, Info, XCircle, CheckCircle } from 'lucide-react';
+import { FileSearch, Filter, AlertTriangle, Info, XCircle, CheckCircle, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
+import Link from 'next/link';
 
 interface LogEntry {
   level?: string;
@@ -202,6 +203,21 @@ export default function LogExplorer() {
           </div>
         </>
       )}
+
+      {/* Blog Links Section */}
+      <div className="mt-12 bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Learn More About Log Analysis</h2>
+        <div className="space-y-3">
+          <Link
+            href="/blog/structured-log-analysis-tools"
+            className="block p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 hover:border-blue-400 hover:shadow-md transition-all"
+          >
+            <h3 className="font-semibold text-gray-900 mb-1">Structured Log Analysis: Tools and Techniques</h3>
+            <p className="text-sm text-gray-600 mb-2">Master structured log analysis with modern tools. Learn how to parse, filter, and analyze logs effectively for debugging and monitoring.</p>
+            <span className="text-blue-600 text-sm font-medium hover:underline">Read Guide →</span>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

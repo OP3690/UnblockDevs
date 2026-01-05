@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { BarChart3, AlertCircle, TrendingDown } from 'lucide-react';
+import { BarChart3, AlertCircle, TrendingDown, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { validateJson } from '@/lib/jsonParser';
+import Link from 'next/link';
 
 interface FieldSize {
   path: string;
@@ -170,6 +171,21 @@ export default function PayloadAnalyzer() {
           </div>
         </>
       )}
+
+      {/* Blog Links Section */}
+      <div className="mt-12 bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Learn More About Payload Optimization</h2>
+        <div className="space-y-3">
+          <Link
+            href="/blog/api-payload-size-optimization"
+            className="block p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 hover:border-blue-400 hover:shadow-md transition-all"
+          >
+            <h3 className="font-semibold text-gray-900 mb-1">API Payload Size Optimization: Performance Best Practices</h3>
+            <p className="text-sm text-gray-600 mb-2">Learn how to analyze and optimize API payload sizes. Discover techniques to reduce payload size, improve performance, and enhance mobile API efficiency.</p>
+            <span className="text-blue-600 text-sm font-medium hover:underline">Read Guide →</span>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

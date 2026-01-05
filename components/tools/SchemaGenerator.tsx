@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { FileCode, Copy, Check, Download, Sparkles, CheckCircle, XCircle } from 'lucide-react';
+import { FileCode, Copy, Check, Download, Sparkles, CheckCircle, XCircle, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { validateJson } from '@/lib/jsonParser';
+import Link from 'next/link';
 
 export default function SchemaGenerator() {
   const [jsonText, setJsonText] = useState('');
@@ -383,6 +384,29 @@ export default function SchemaGenerator() {
           </div>
         </>
       )}
+
+      {/* Blog Links Section */}
+      <div className="mt-12 bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Learn More About JSON Schema</h2>
+        <div className="space-y-3">
+          <Link
+            href="/blog/json-schema-generator-tutorial"
+            className="block p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 hover:border-blue-400 hover:shadow-md transition-all"
+          >
+            <h3 className="font-semibold text-gray-900 mb-1">JSON Schema Generator Tutorial: Create Schemas from JSON</h3>
+            <p className="text-sm text-gray-600 mb-2">Complete tutorial on generating JSON Schema from sample JSON. Learn how to create schemas, validate JSON, use Draft 7 and OpenAPI formats.</p>
+            <span className="text-blue-600 text-sm font-medium hover:underline">Read Guide →</span>
+          </Link>
+          <Link
+            href="/blog/json-schema-generator-validation-guide"
+            className="block p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200 hover:border-green-400 hover:shadow-md transition-all"
+          >
+            <h3 className="font-semibold text-gray-900 mb-1">JSON Schema Generator and Validation: Complete Guide</h3>
+            <p className="text-sm text-gray-600 mb-2">Comprehensive guide to JSON Schema generation and validation with examples and best practices.</p>
+            <span className="text-green-600 text-sm font-medium hover:underline">Read Guide →</span>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
