@@ -302,7 +302,8 @@ export default function PromptChunker() {
               const isExpanded = expandedChunks.has(chunk.id);
               const isCopied = copiedChunks.has(chunk.id);
               const previewLength = 200;
-              const showPreview = !isExpanded && chunk.content.length > previewLength;
+              const canExpand = chunk.content.length > previewLength;
+              const showPreview = !isExpanded && canExpand;
               const displayContent = showPreview 
                 ? chunk.content.substring(0, previewLength) + '...' 
                 : chunk.content;
@@ -338,7 +339,7 @@ export default function PromptChunker() {
                       )}
                     </div>
                     <div className="flex items-center gap-2">
-                      {showPreview && (
+                      {canExpand && (
                         <button
                           onClick={() => toggleChunkExpansion(chunk.id)}
                           className="flex items-center gap-1 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
@@ -379,7 +380,7 @@ export default function PromptChunker() {
                     </div>
                   </div>
                   
-                  {isExpanded || !showPreview ? (
+                  {isExpanded ? (
                     <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                       <pre className="whitespace-pre-wrap text-sm text-gray-800 font-mono">
                         {chunk.content}
