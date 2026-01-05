@@ -19,6 +19,33 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'apache-kafka-complete-guide',
+      title: 'Apache Kafka: Complete Guide - What, How, Why',
+      excerpt: 'Comprehensive guide to Apache Kafka: architecture, how it works, why it matters, real-world applications, and best practices. Learn about event streaming, topics, partitions, and producers/consumers.',
+      date: '2025-01-25',
+      readTime: '16 min read',
+      category: 'Data Engineering',
+      keywords: ['apache kafka', 'kafka tutorial', 'kafka architecture', 'event streaming', 'kafka producer consumer']
+    },
+    {
+      slug: 'apache-kafka-applications',
+      title: 'Apache Kafka Applications: Real-World Use Cases & Examples',
+      excerpt: 'Explore real-world Apache Kafka applications: microservices, IoT, real-time analytics, log aggregation, financial systems, and event-driven architectures with practical examples.',
+      date: '2025-01-25',
+      readTime: '14 min read',
+      category: 'Data Engineering',
+      keywords: ['kafka applications', 'kafka use cases', 'kafka real world examples', 'event streaming applications', 'kafka microservices']
+    },
+    {
+      slug: 'apache-kafka-cheat-sheet',
+      title: 'Apache Kafka Cheat Sheet: Commands, Configuration & Best Practices',
+      excerpt: 'Complete Apache Kafka cheat sheet: CLI commands, configuration, producer/consumer examples, troubleshooting, and best practices. Quick reference for Kafka developers.',
+      date: '2025-01-25',
+      readTime: '12 min read',
+      category: 'Developer Tools',
+      keywords: ['kafka cheat sheet', 'kafka commands', 'kafka cli', 'kafka configuration', 'kafka producer consumer']
+    },
+    {
       slug: 'ai-native-platforms-complete-guide',
       title: 'AI-Native Platforms: Complete Guide to Next-Gen Development',
       excerpt: 'Comprehensive guide to AI-Native Platforms: architecture, implementation, real-world use cases, and future trends. Learn how to build AI-first applications with practical examples.',
