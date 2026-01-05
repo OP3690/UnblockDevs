@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Code, ExternalLink, Radio, Zap, Globe, Wifi } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
