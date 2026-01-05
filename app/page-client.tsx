@@ -670,6 +670,9 @@ function HomeClient() {
               <div className="flex items-center gap-2">
                 <Scissors className="w-4 h-4" />
                 <span className="text-sm">Prompt Chunker</span>
+                <span className="px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold">
+                  AI
+                </span>
               </div>
             </button>
           </div>
