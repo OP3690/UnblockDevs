@@ -92,7 +92,13 @@ export const metadata: Metadata = {
     'programming utilities',
     'JSON visualization',
     'JSON diff tool',
-    'JSON compare'
+    'JSON compare',
+    'ai prompt chunker',
+    'prompt chunker',
+    'split ai prompts',
+    'chunk ai prompts',
+    'prompt splitter',
+    'ai prompt tool'
   ],
   authors: [{ name: 'UnblockDevs' }],
   creator: 'UnblockDevs',

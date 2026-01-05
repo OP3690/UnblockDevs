@@ -1127,6 +1127,7 @@ function HomeClient() {
                 <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Log Analyzer</Link>
                 <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Payload Analyzer</Link>
                 <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Mock API Generator</Link>
+                <Link href="/prompt-chunker" className="text-blue-600 hover:text-blue-700 hover:underline">✓ AI Prompt Chunker</Link>
               </div>
               <div className="mt-4 pt-4 border-t border-gray-200">
                 <p className="text-xs text-gray-500 mb-2 text-center">Learn more about JSON:</p>

@@ -163,6 +163,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
       changefreq: 'weekly' as const,
     },
+    {
+      url: 'prompt-chunker',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
   ]
 
   // Generate sitemap entries
