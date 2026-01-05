@@ -253,7 +253,7 @@ export default function PrivacyPolicyClient() {
                   <strong>Website:</strong> <a href="https://unblockdevs.com" className="text-blue-600 hover:underline">unblockdevs.com</a>
                 </p>
                 <p className="text-gray-700">
-                  <strong>Email:</strong> <a href="mailto:privacy@unblockdevs.com" className="text-blue-600 hover:underline">privacy@unblockdevs.com</a>
+                  <strong>Email:</strong> <a href="mailto:support@unblockdevs.com" className="text-blue-600 hover:underline">support@unblockdevs.com</a>
                 </p>
               </div>
             </section>
