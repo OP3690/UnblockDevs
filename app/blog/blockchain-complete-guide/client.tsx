@@ -236,7 +236,7 @@ export default function BlockchainCompleteGuideClient() {
                 </p>
                 <p className="text-gray-700 mb-3">
                   <strong>How:</strong> Smart contracts deployed on blockchain (Ethereum, Solana). Code defines rules 
-                  (e.g., "if collateral > loan, allow borrowing"). Blockchain executes automatically when conditions met. 
+                  (e.g., "if collateral {'>'} loan, allow borrowing"). Blockchain executes automatically when conditions met. 
                   No human intervention needed.
                 </p>
                 <p className="text-gray-700 mb-3">
@@ -305,7 +305,7 @@ export default function BlockchainCompleteGuideClient() {
                 <p className="text-gray-700 mb-3">
                   <strong>How:</strong> Stablecoins (USDC, USDT) pegged to fiat currencies enable fast, low-cost transfers. 
                   Blockchain records transactions. Settlement happens in minutes vs days for traditional systems. Lower fees 
-                  (often < 1% vs 3-5% for banks).
+                  (often {'<'} 1% vs 3-5% for banks).
                 </p>
                 <p className="text-gray-700 mb-3">
                   <strong>Impact:</strong> Remittances cost reduced by 50-80%. Enables financial inclusion for unbanked 
