@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Shield, Zap, CheckCircle, Code, Heart } from 'lucide-react';
+import { Shield, Zap, CheckCircle, Code, Heart, Mail } from 'lucide-react';
 
 export default function AboutClient() {
   return (
@@ -108,6 +108,29 @@ export default function AboutClient() {
             >
               Explore All Tools
             </Link>
+          </section>
+
+          <section className="mb-12 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-8 border border-green-200">
+            <div className="flex items-center gap-4 mb-4">
+              <Mail className="w-10 h-10 text-green-600" />
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Get in Touch</h2>
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  Write us for any additional feature request, issues, query or appreciation.
+                </p>
+                <div className="bg-white p-4 rounded-lg border border-green-200 inline-block">
+                  <p className="text-gray-700">
+                    <strong>Email:</strong>{' '}
+                    <a 
+                      href="mailto:support@unblockdevs.com" 
+                      className="text-green-600 hover:text-green-700 hover:underline font-semibold"
+                    >
+                      support@unblockdevs.com
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
           </section>
         </article>
       </main>
