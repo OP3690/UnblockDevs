@@ -6,6 +6,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // All blog posts
   const blogPosts = [
+    'ai-native-platforms-complete-guide',
+    'agentic-ai-complete-guide',
+    'physical-ai-complete-guide',
+    'confidential-computing-complete-guide',
+    '5g-6g-complete-guide',
+    'blockchain-complete-guide',
+    'digital-twins-complete-guide',
     'json-stringify-vs-json-parse-difference',
     'json-stringify-complete-guide',
     'how-to-get-curl-from-chrome',

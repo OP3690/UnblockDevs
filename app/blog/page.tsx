@@ -19,6 +19,69 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'ai-native-platforms-complete-guide',
+      title: 'AI-Native Platforms: Complete Guide to Next-Gen Development',
+      excerpt: 'Comprehensive guide to AI-Native Platforms: architecture, implementation, real-world use cases, and future trends. Learn how to build AI-first applications with practical examples.',
+      date: '2025-01-25',
+      readTime: '15 min read',
+      category: 'AI & Machine Learning',
+      keywords: ['ai-native platforms', 'ai native development', 'ai-first applications', 'ai platform architecture']
+    },
+    {
+      slug: 'agentic-ai-complete-guide',
+      title: 'Agentic AI: Complete Guide to Autonomous AI Agents',
+      excerpt: 'Comprehensive guide to Agentic AI: autonomous agents, multi-agent systems, real-world applications, and future of AI agents. Learn how AI agents work and their impact.',
+      date: '2025-01-25',
+      readTime: '14 min read',
+      category: 'AI & Machine Learning',
+      keywords: ['agentic ai', 'ai agents', 'autonomous ai agents', 'multi-agent ai', 'intelligent agents']
+    },
+    {
+      slug: 'physical-ai-complete-guide',
+      title: 'Physical AI: Complete Guide to AI in Physical World',
+      excerpt: 'Comprehensive guide to Physical AI: robotics, autonomous systems, IoT integration, and AI-powered physical devices. Learn how AI interacts with the physical world.',
+      date: '2025-01-25',
+      readTime: '13 min read',
+      category: 'AI & Machine Learning',
+      keywords: ['physical ai', 'ai robotics', 'autonomous systems', 'ai in physical world', 'robotic ai']
+    },
+    {
+      slug: 'confidential-computing-complete-guide',
+      title: 'Confidential Computing: Complete Guide to Secure Data Processing',
+      excerpt: 'Comprehensive guide to Confidential Computing: TEE, secure enclaves, data protection, privacy-preserving computation. Learn how confidential computing works and its applications.',
+      date: '2025-01-25',
+      readTime: '14 min read',
+      category: 'Security & Privacy',
+      keywords: ['confidential computing', 'trusted execution environment', 'secure enclaves', 'data encryption', 'privacy computing']
+    },
+    {
+      slug: '5g-6g-complete-guide',
+      title: '5G/6G Networks: Complete Guide to Next-Gen Connectivity',
+      excerpt: 'Comprehensive guide to 5G and 6G networks: architecture, technologies, use cases, and future of wireless connectivity. Learn about network slicing, edge computing, and IoT.',
+      date: '2025-01-25',
+      readTime: '15 min read',
+      category: 'Networking & Connectivity',
+      keywords: ['5g networks', '6g technology', '5g vs 6g', 'network slicing', 'edge computing', 'iot connectivity']
+    },
+    {
+      slug: 'blockchain-complete-guide',
+      title: 'Blockchain Technology: Complete Guide to Distributed Ledgers',
+      excerpt: 'Comprehensive guide to Blockchain: how it works, smart contracts, consensus mechanisms, use cases, and future of distributed ledger technology. Learn about DeFi, NFTs, and Web3.',
+      date: '2025-01-25',
+      readTime: '16 min read',
+      category: 'Blockchain & Web3',
+      keywords: ['blockchain technology', 'distributed ledger', 'smart contracts', 'cryptocurrency', 'defi', 'nft', 'web3']
+    },
+    {
+      slug: 'digital-twins-complete-guide',
+      title: 'Digital Twins: Complete Guide to Virtual Replicas',
+      excerpt: 'Comprehensive guide to Digital Twins: IoT integration, real-time simulation, predictive maintenance, and Industry 4.0. Learn how digital twins work and their applications.',
+      date: '2025-01-25',
+      readTime: '15 min read',
+      category: 'IoT & Industry 4.0',
+      keywords: ['digital twins', 'iot digital twins', 'virtual replicas', 'predictive maintenance', 'industry 4.0', 'smart manufacturing']
+    },
+    {
       slug: 'json-stringify-vs-json-parse-difference',
       title: 'JSON.stringify() vs JSON.parse(): Complete Difference Guide',
       excerpt: 'Learn the difference between JSON.stringify() and JSON.parse(). When to use each, examples, and how they work together. Includes json parse online and json serialize online examples.',
