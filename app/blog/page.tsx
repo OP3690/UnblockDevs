@@ -19,6 +19,15 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'mysql-json-complete-guide',
+      title: 'Working with JSON in MySQL: Complete Guide to Extract & Manipulate Data',
+      excerpt: 'Complete guide to working with JSON in MySQL: JSON data types, structure, extracting data from JSON columns, nested JSON queries, 10 practical examples, and tips & tricks for efficient JSON manipulation.',
+      date: '2025-01-30',
+      readTime: '20 min read',
+      category: 'MySQL & Database',
+      keywords: ['mysql json', 'mysql json extract', 'mysql json functions', 'mysql nested json', 'mysql json query', 'mysql json manipulation']
+    },
+    {
       slug: 'mysql-25-most-used-queries',
       title: 'MySQL 25 Most Used Queries: Complete Guide with Examples',
       excerpt: 'Complete guide to MySQL 25 most used queries: SELECT, INSERT, UPDATE, DELETE, JOIN, WHERE, GROUP BY, ORDER BY, and more. Learn syntax, examples, and best practices for each query type.',

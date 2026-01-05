@@ -215,6 +215,14 @@ ID-55556666"
         <h2 className="text-2xl font-bold text-gray-900 mb-4">Learn More About MySQL</h2>
         <div className="space-y-3">
           <Link
+            href="/blog/mysql-json-complete-guide"
+            className="block p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200 hover:border-purple-400 hover:shadow-md transition-all"
+          >
+            <h3 className="font-semibold text-gray-900 mb-1">Working with JSON in MySQL: Complete Guide</h3>
+            <p className="text-sm text-gray-600 mb-2">Complete guide to working with JSON in MySQL: JSON data types, structure, extracting data from JSON columns, nested JSON queries, 10 practical examples, and tips & tricks.</p>
+            <span className="text-purple-600 text-sm font-medium hover:underline">Read Guide →</span>
+          </Link>
+          <Link
             href="/blog/mysql-10-most-used-functions"
             className="block p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 hover:border-blue-400 hover:shadow-md transition-all"
           >
