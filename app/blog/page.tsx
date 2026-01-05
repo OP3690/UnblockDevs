@@ -19,6 +19,24 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'mysql-25-most-used-queries',
+      title: 'MySQL 25 Most Used Queries: Complete Guide with Examples',
+      excerpt: 'Complete guide to MySQL 25 most used queries: SELECT, INSERT, UPDATE, DELETE, JOIN, WHERE, GROUP BY, ORDER BY, and more. Learn syntax, examples, and best practices for each query type.',
+      date: '2025-01-30',
+      readTime: '18 min read',
+      category: 'MySQL & Database',
+      keywords: ['mysql queries', 'mysql most used queries', 'mysql select query', 'mysql join queries', 'mysql insert update delete', 'mysql query examples']
+    },
+    {
+      slug: 'mysql-10-most-used-functions',
+      title: 'MySQL 10 Most Used Functions: Complete Guide with Examples',
+      excerpt: 'Complete guide to MySQL 10 most used functions: COUNT, SUM, AVG, MAX, MIN, CONCAT, SUBSTRING, DATE_FORMAT, IF, and CASE. Learn syntax, examples, and best practices for each function.',
+      date: '2025-01-30',
+      readTime: '15 min read',
+      category: 'MySQL & Database',
+      keywords: ['mysql functions', 'mysql most used functions', 'mysql count function', 'mysql sum function', 'mysql date functions', 'mysql string functions']
+    },
+    {
       slug: 'must-learn-tech-skills-2030',
       title: 'Must-Learn Tech Skills for 2030: AGI, Quantum Computing & Future Tech',
       excerpt: 'Discover the must-learn tech skills for 2030: artificial general intelligence (AGI), quantum computing, advanced semiconductor design, neuromorphic chips, and future technologies. Prepare for the next decade.',

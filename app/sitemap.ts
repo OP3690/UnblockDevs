@@ -6,6 +6,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // All blog posts
   const blogPosts = [
+    'mysql-25-most-used-queries',
+    'mysql-10-most-used-functions',
     'must-learn-tech-skills-2030',
     'most-useful-tech-skills-2026',
     'notebooklm-cheat-sheet-tips',
