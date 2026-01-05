@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Copy, Scissors, Download, Settings, Info, ChevronDown, ChevronUp, CheckCircle2 } from 'lucide-react';
+import Link from 'next/link';
 import toast from 'react-hot-toast';
 
 interface Chunk {
@@ -429,6 +430,37 @@ export default function PromptChunker() {
           </div>
         </div>
       )}
+
+      {/* Blog Links Section */}
+      <div className="mt-12 bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Learn More About AI & Prompt Engineering</h2>
+        <div className="space-y-3">
+          <Link
+            href="/blog/ai-prompt-engineering-guide"
+            className="block p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200 hover:border-purple-400 hover:shadow-md transition-all"
+          >
+            <h3 className="font-semibold text-gray-900 mb-1">AI Prompt Engineering Guide</h3>
+            <p className="text-sm text-gray-600 mb-2">Complete guide to AI prompt engineering: how to write effective prompts, best practices, techniques, and templates.</p>
+            <span className="text-purple-600 text-sm font-medium hover:underline">Read Guide →</span>
+          </Link>
+          <Link
+            href="/blog/chatgpt-real-life-usage-guide"
+            className="block p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200 hover:border-green-400 hover:shadow-md transition-all"
+          >
+            <h3 className="font-semibold text-gray-900 mb-1">ChatGPT Real-Life Usage Guide</h3>
+            <p className="text-sm text-gray-600 mb-2">Complete guide to using ChatGPT in real life: practical use cases, best prompts, when to use it, and how to get great results.</p>
+            <span className="text-green-600 text-sm font-medium hover:underline">Read Guide →</span>
+          </Link>
+          <Link
+            href="/blog/ai-tools-developers-guide"
+            className="block p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 hover:border-blue-400 hover:shadow-md transition-all"
+          >
+            <h3 className="font-semibold text-gray-900 mb-1">AI Tools for Developers: Complete Guide</h3>
+            <p className="text-sm text-gray-600 mb-2">Complete guide to AI tools for developers: Cursor, GitHub Copilot, ChatGPT, and more. Learn how, what, when to use each tool.</p>
+            <span className="text-blue-600 text-sm font-medium hover:underline">Read Guide →</span>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
