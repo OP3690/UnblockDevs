@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Code, ExternalLink, Cpu, Activity, Wifi, Factory } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';

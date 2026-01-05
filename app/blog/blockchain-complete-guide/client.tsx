@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Code, ExternalLink, Network, Lock, Coins } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
@@ -60,7 +61,7 @@ export default function BlockchainCompleteGuideClient() {
           </section>
 
           <section className="mb-12">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
               <Network className="w-6 h-6 text-yellow-600" />
               What is Blockchain?
             </h2>
