@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Code, CheckCircle, ExternalLink, Cpu, Activity, Wifi, Factory } from 'lucide-react';
+import { ArrowLeft, Code, ExternalLink, Cpu, Activity, Wifi, Factory } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
 
 export default function PhysicalAiCompleteGuideClient() {

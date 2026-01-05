@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Code, CheckCircle, ExternalLink, Radio, Zap, Globe, Wifi } from 'lucide-react';
+import { ArrowLeft, Code, ExternalLink, Radio, Zap, Globe, Wifi } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
 
 export default function FiveGSixGCompleteGuideClient() {
