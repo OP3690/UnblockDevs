@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, Star, TrendingUp } from 'lucide-react';
+import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, Star, TrendingUp, Mail } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget';
@@ -1035,6 +1035,38 @@ function HomeClient() {
           </div>
         </section>
       )}
+
+      {/* Get in Touch Section */}
+      <section className="mt-16 py-12 bg-gradient-to-r from-green-50 via-blue-50 to-indigo-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="bg-white rounded-xl shadow-lg p-8 md:p-12">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <div className="p-3 bg-green-100 rounded-lg">
+                <Mail className="w-8 h-8 text-green-600" />
+              </div>
+              <h2 className="text-3xl font-bold text-gray-900">Get in Touch</h2>
+            </div>
+            <p className="text-lg text-gray-700 leading-relaxed mb-6">
+              We'd love to hear from you! Write us for any additional feature request, issues, query or appreciation.
+            </p>
+            <div className="bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-lg border border-green-200 inline-block">
+              <p className="text-gray-700 mb-2">
+                <strong className="text-gray-900">Email:</strong>
+              </p>
+              <a 
+                href="mailto:support@unblockdevs.com" 
+                className="text-2xl font-bold text-green-600 hover:text-green-700 hover:underline transition-colors inline-flex items-center gap-2"
+              >
+                <Mail className="w-6 h-6" />
+                support@unblockdevs.com
+              </a>
+            </div>
+            <p className="text-sm text-gray-600 mt-6">
+              Your feedback helps us improve and build better tools for the developer community.
+            </p>
+          </div>
+        </div>
+      </section>
 
       {/* Ezoic Ad Placement - Before Footer (Placement ID: 103) */}
       <div id="ezoic-pub-ad-placeholder-103"></div>
