@@ -115,7 +115,7 @@ export default function PhysicalAiCompleteGuideClient() {
                   <h4 className="font-semibold text-gray-800 mb-2">2. Real-Time Inference</h4>
                   <p className="text-sm text-gray-700">
                     AI models run on edge devices (NVIDIA Jetson, Qualcomm Snapdragon, Apple Neural Engine) with 
-                    low latency (< 100ms) for time-critical decisions.
+                    low latency ({'<'} 100ms) for time-critical decisions.
                   </p>
                 </div>
                 <div className="bg-white p-4 rounded border border-gray-200">
@@ -199,7 +199,7 @@ export default function PhysicalAiCompleteGuideClient() {
                 </p>
                 <p className="text-gray-700 mb-3">
                   <strong>How:</strong> Multiple sensors (cameras, LIDAR, radar) feed data to neural networks running 
-                  on specialized AI chips. Models process sensor fusion data in real-time (< 50ms latency). Control 
+                  on specialized AI chips. Models process sensor fusion data in real-time ({'<'} 50ms latency). Control 
                   systems translate AI decisions into physical actions. Continuous learning from millions of miles 
                   of driving data.
                 </p>

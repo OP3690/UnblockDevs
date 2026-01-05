@@ -191,7 +191,7 @@ export default function FiveGSixGCompleteGuideClient() {
               <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">1. Autonomous Vehicles</h3>
                 <p className="text-gray-700 mb-3">
-                  <strong>What:</strong> Self-driving cars require ultra-low latency (< 5ms) for vehicle-to-vehicle 
+                  <strong>What:</strong> Self-driving cars require ultra-low latency ({'<'} 5ms) for vehicle-to-vehicle 
                   (V2V) and vehicle-to-infrastructure (V2I) communication.
                 </p>
                 <p className="text-gray-700 mb-3">
@@ -211,7 +211,7 @@ export default function FiveGSixGCompleteGuideClient() {
                   robotic systems controlled via 5G networks.
                 </p>
                 <p className="text-gray-700 mb-3">
-                  <strong>How:</strong> Ultra-low latency (< 1ms) ensures real-time haptic feedback. High bandwidth 
+                  <strong>How:</strong> Ultra-low latency ({'<'} 1ms) ensures real-time haptic feedback. High bandwidth 
                   streams 4K video. Network slicing guarantees dedicated, reliable connection. Edge computing 
                   processes video and control signals.
                 </p>
@@ -286,7 +286,7 @@ export default function FiveGSixGCompleteGuideClient() {
               </p>
               <ul className="list-disc list-inside space-y-2 text-gray-700">
                 <li><strong>Speed:</strong> Up to 1 Tbps (1,000 Gbps) - 50x faster than 5G</li>
-                <li><strong>Latency:</strong> Sub-millisecond (< 0.1ms) - 10x lower than 5G</li>
+                <li><strong>Latency:</strong> Sub-millisecond ({'<'} 0.1ms) - 10x lower than 5G</li>
                 <li><strong>AI-Native:</strong> Built-in AI for network optimization and management</li>
                 <li><strong>Integrated Sensing:</strong> Networks that can sense environment (radar-like capabilities)</li>
                 <li><strong>Holographic Communications:</strong> 3D holographic video calls and experiences</li>
