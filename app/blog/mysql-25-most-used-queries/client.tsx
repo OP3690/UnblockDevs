@@ -422,7 +422,7 @@ export default function Mysql25MostUsedQueriesClient() {
                 <h3 className="font-semibold text-gray-900 mb-2">✅ Use LIMIT for Large Result Sets</h3>
                 <p className="text-sm text-gray-700">
                   Always use LIMIT when retrieving large datasets. For pagination, use LIMIT offset, count 
-                  or better yet, cursor-based pagination with WHERE id > last_id.
+                  or better yet, cursor-based pagination with WHERE id {'>'} last_id.
                 </p>
               </div>
             </div>
