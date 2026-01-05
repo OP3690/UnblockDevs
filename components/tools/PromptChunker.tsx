@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Copy, Scissors, Download, Settings, Info } from 'lucide-react';
+import { Copy, Scissors, Download, Settings, Info, ChevronDown, ChevronUp, CheckCircle2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 interface Chunk {
@@ -9,6 +9,8 @@ interface Chunk {
   content: string;
   wordCount: number;
   charCount: number;
+  isFirst: boolean;
+  isLast: boolean;
 }
 
 export default function PromptChunker() {
@@ -18,6 +20,8 @@ export default function PromptChunker() {
   const [chunkType, setChunkType] = useState<'words' | 'chars'>('words');
   const [overlap, setOverlap] = useState<number>(50);
   const [showSettings, setShowSettings] = useState(false);
+  const [expandedChunks, setExpandedChunks] = useState<Set<number>>(new Set());
+  const [copiedChunks, setCopiedChunks] = useState<Set<number>>(new Set());
 
   const splitIntoChunks = () => {
     if (!prompt.trim()) {
@@ -26,6 +30,7 @@ export default function PromptChunker() {
     }
 
     const newChunks: Chunk[] = [];
+    const rawChunks: string[] = [];
     
     if (chunkType === 'words') {
       const words = prompt.split(/\s+/);
@@ -37,12 +42,7 @@ export default function PromptChunker() {
         const chunkContent = chunkWords.join(' ');
         
         if (chunkContent.trim()) {
-          newChunks.push({
-            id: newChunks.length + 1,
-            content: chunkContent,
-            wordCount: chunkWords.length,
-            charCount: chunkContent.length,
-          });
+          rawChunks.push(chunkContent);
         }
         
         // Stop if we've reached the end
@@ -57,13 +57,7 @@ export default function PromptChunker() {
         const chunkContent = prompt.slice(i, i + charsPerChunk);
         
         if (chunkContent.trim()) {
-          const words = chunkContent.split(/\s+/).length;
-          newChunks.push({
-            id: newChunks.length + 1,
-            content: chunkContent,
-            wordCount: words,
-            charCount: chunkContent.length,
-          });
+          rawChunks.push(chunkContent);
         }
         
         // Stop if we've reached the end
@@ -71,13 +65,54 @@ export default function PromptChunker() {
       }
     }
 
+    // Add instructions to chunks
+    rawChunks.forEach((rawContent, index) => {
+      const isFirst = index === 0;
+      const isLast = index === rawChunks.length - 1;
+      let finalContent = rawContent;
+
+      if (isFirst && rawChunks.length > 1) {
+        // Add instruction for first chunk
+        finalContent = `[IMPORTANT: This prompt is being sent in multiple chunks. Please wait for all chunks before responding. Do not generate output yet. Just acknowledge that you understand and are ready to receive the remaining chunks.]\n\n${rawContent}`;
+      } else if (isLast && rawChunks.length > 1) {
+        // Add instruction for final chunk
+        const allChunksContent = rawChunks.join('\n\n---\n\n');
+        finalContent = `${rawContent}\n\n[FINAL CHUNK - This is the last chunk. Now that you have received all chunks, please consolidate them and use the complete prompt provided below to generate the final output:\n\n--- COMPLETE PROMPT ---\n${allChunksContent}\n--- END OF COMPLETE PROMPT ---\n\nPlease process the complete prompt above and generate your response.]`;
+      }
+
+      const words = finalContent.split(/\s+/).filter(w => w.length > 0).length;
+      newChunks.push({
+        id: index + 1,
+        content: finalContent,
+        wordCount: words,
+        charCount: finalContent.length,
+        isFirst,
+        isLast,
+      });
+    });
+
     setChunks(newChunks);
+    setExpandedChunks(new Set());
+    setCopiedChunks(new Set());
     toast.success(`Split into ${newChunks.length} chunks`);
   };
 
   const copyChunk = (chunk: Chunk) => {
     navigator.clipboard.writeText(chunk.content);
+    setCopiedChunks(prev => new Set(prev).add(chunk.id));
     toast.success(`Chunk ${chunk.id} copied to clipboard!`);
+  };
+
+  const toggleChunkExpansion = (chunkId: number) => {
+    setExpandedChunks(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(chunkId)) {
+        newSet.delete(chunkId);
+      } else {
+        newSet.add(chunkId);
+      }
+      return newSet;
+    });
   };
 
   const copyAllChunks = () => {
@@ -86,6 +121,7 @@ export default function PromptChunker() {
     ).join('\n');
     
     navigator.clipboard.writeText(allChunks);
+    setCopiedChunks(new Set(chunks.map(c => c.id)));
     toast.success('All chunks copied to clipboard!');
   };
 
@@ -109,6 +145,8 @@ export default function PromptChunker() {
   const clearAll = () => {
     setPrompt('');
     setChunks([]);
+    setExpandedChunks(new Set());
+    setCopiedChunks(new Set());
     toast.success('Cleared');
   };
 
@@ -261,36 +299,103 @@ export default function PromptChunker() {
           </div>
 
           <div className="space-y-4">
-            {chunks.map((chunk) => (
-              <div
-                key={chunk.id}
-                className="bg-white rounded-lg border border-gray-200 p-5 hover:border-purple-300 transition-colors"
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold">
-                      Chunk {chunk.id}
-                    </span>
-                    <span className="text-sm text-gray-600">
-                      {chunk.wordCount} words • {chunk.charCount} chars
-                    </span>
+            {chunks.map((chunk) => {
+              const isExpanded = expandedChunks.has(chunk.id);
+              const isCopied = copiedChunks.has(chunk.id);
+              const previewLength = 200;
+              const showPreview = !isExpanded && chunk.content.length > previewLength;
+              const displayContent = showPreview 
+                ? chunk.content.substring(0, previewLength) + '...' 
+                : chunk.content;
+
+              return (
+                <div
+                  key={chunk.id}
+                  className="bg-white rounded-lg border border-gray-200 p-5 hover:border-purple-300 transition-colors"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                        chunk.isFirst 
+                          ? 'bg-blue-100 text-blue-700' 
+                          : chunk.isLast 
+                          ? 'bg-green-100 text-green-700' 
+                          : 'bg-purple-100 text-purple-700'
+                      }`}>
+                        {chunk.isFirst ? '🚀 Chunk 1 (Start)' : chunk.isLast ? '✅ Final Chunk' : `Chunk ${chunk.id}`}
+                      </span>
+                      <span className="text-sm text-gray-600">
+                        {chunk.wordCount} words • {chunk.charCount} chars
+                      </span>
+                      {chunk.isFirst && chunks.length > 1 && (
+                        <span className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                          Wait instruction included
+                        </span>
+                      )}
+                      {chunk.isLast && chunks.length > 1 && (
+                        <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded">
+                          Final instruction included
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {showPreview && (
+                        <button
+                          onClick={() => toggleChunkExpansion(chunk.id)}
+                          className="flex items-center gap-1 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                        >
+                          {isExpanded ? (
+                            <>
+                              <ChevronUp className="w-4 h-4" />
+                              View Less
+                            </>
+                          ) : (
+                            <>
+                              <ChevronDown className="w-4 h-4" />
+                              View More
+                            </>
+                          )}
+                        </button>
+                      )}
+                      <button
+                        onClick={() => copyChunk(chunk)}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors text-sm font-semibold ${
+                          isCopied
+                            ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        }`}
+                      >
+                        {isCopied ? (
+                          <>
+                            <CheckCircle2 className="w-4 h-4" />
+                            Copied
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-4 h-4" />
+                            Copy
+                          </>
+                        )}
+                      </button>
+                    </div>
                   </div>
-                  <button
-                    onClick={() => copyChunk(chunk)}
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
-                  >
-                    <Copy className="w-4 h-4" />
-                    Copy
-                  </button>
+                  
+                  {isExpanded || !showPreview ? (
+                    <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                      <pre className="whitespace-pre-wrap text-sm text-gray-800 font-mono">
+                        {chunk.content}
+                      </pre>
+                    </div>
+                  ) : (
+                    <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                      <pre className="whitespace-pre-wrap text-sm text-gray-800 font-mono">
+                        {displayContent}
+                      </pre>
+                    </div>
+                  )}
                 </div>
-                
-                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                  <pre className="whitespace-pre-wrap text-sm text-gray-800 font-mono">
-                    {chunk.content}
-                  </pre>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
