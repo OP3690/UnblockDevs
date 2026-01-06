@@ -378,6 +378,37 @@ export default function TokenComparator() {
           </div>
         </div>
       </div>
+
+      {/* Blog Links Section */}
+      <div className="mt-12 bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Learn More About Tokens</h2>
+        <div className="space-y-3">
+          <Link
+            href="/blog/tokens-complete-guide"
+            className="block p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 hover:border-blue-400 hover:shadow-md transition-all"
+          >
+            <h3 className="font-semibold text-gray-900 mb-1">Tokens Complete Guide: What, How, Why & When</h3>
+            <p className="text-sm text-gray-600 mb-2">Complete guide to tokens: what are tokens, how they work, why they're used, and when to use them. Learn about JWT tokens, API keys, and authentication tokens.</p>
+            <span className="text-blue-600 text-sm font-medium hover:underline">Read Guide →</span>
+          </Link>
+          <Link
+            href="/blog/token-technologies-history-evolution"
+            className="block p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200 hover:border-purple-400 hover:shadow-md transition-all"
+          >
+            <h3 className="font-semibold text-gray-900 mb-1">Token Technologies: History & Evolution</h3>
+            <p className="text-sm text-gray-600 mb-2">Complete history and evolution of token technologies: from session cookies to JWT, OAuth, API keys, and modern token standards.</p>
+            <span className="text-purple-600 text-sm font-medium hover:underline">Read Guide →</span>
+          </Link>
+          <Link
+            href="/blog/token-security-privacy-best-practices"
+            className="block p-4 bg-gradient-to-r from-red-50 to-orange-50 rounded-lg border border-red-200 hover:border-red-400 hover:shadow-md transition-all"
+          >
+            <h3 className="font-semibold text-gray-900 mb-1">Token Security & Privacy: Best Practices</h3>
+            <p className="text-sm text-gray-600 mb-2">Complete guide to token security and privacy: best practices, dos and don'ts, common vulnerabilities, secure storage, and privacy considerations.</p>
+            <span className="text-red-600 text-sm font-medium hover:underline">Read Guide →</span>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
