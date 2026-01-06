@@ -439,11 +439,31 @@ export default function TimezoneTranslator() {
   };
 
   useEffect(() => {
-    if (useCurrentTime && mode === 'time') {
+    if (useCurrentTime && mode === 'time' && inputCity) {
+      // Update time display when useCurrentTime is enabled
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-US', { 
+        hour: 'numeric', 
+        minute: '2-digit', 
+        hour12: true 
+      });
+      setInputTime(timeStr);
+      
+      // Convert immediately
       convertTime();
+      
+      // Set up interval to update every minute
       const interval = setInterval(() => {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('en-US', { 
+          hour: 'numeric', 
+          minute: '2-digit', 
+          hour12: true 
+        });
+        setInputTime(timeStr);
         convertTime();
       }, 60000);
+      
       return () => clearInterval(interval);
     }
   }, [useCurrentTime, selectedCities, inputCity, mode]);
@@ -544,10 +564,70 @@ export default function TimezoneTranslator() {
                         type="checkbox"
                         checked={useCurrentTime}
                         onChange={(e) => {
-                          setUseCurrentTime(e.target.checked);
-                          if (e.target.checked) {
-                            setInputTime('');
-                            convertTime();
+                          const checked = e.target.checked;
+                          setUseCurrentTime(checked);
+                          
+                          if (checked) {
+                            // Get current system time
+                            const now = new Date();
+                            const timeStr = now.toLocaleTimeString('en-US', { 
+                              hour: 'numeric', 
+                              minute: '2-digit', 
+                              hour12: true 
+                            });
+                            setInputTime(timeStr);
+                            
+                            // Auto-detect user's timezone and select matching city
+                            try {
+                              const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                              
+                              // First, try to find exact match in popularCities
+                              let matchingCity = popularCities.find(c => c.timezone === userTimezone);
+                              
+                              // If no exact match, find the first city in the same timezone region
+                              if (!matchingCity) {
+                                // Extract continent from timezone (e.g., "America/New_York" -> "America")
+                                const timezonePrefix = userTimezone.split('/')[0];
+                                matchingCity = popularCities.find(c => 
+                                  c.timezone.startsWith(timezonePrefix)
+                                );
+                              }
+                              
+                              // If still no match, try to find by offset similarity
+                              if (!matchingCity) {
+                                const userOffset = now.getTimezoneOffset();
+                                // Find city with similar offset (within 1 hour)
+                                matchingCity = popularCities.find(c => {
+                                  try {
+                                    const cityDate = new Date(now.toLocaleString('en-US', { timeZone: c.timezone }));
+                                    const cityOffset = cityDate.getTimezoneOffset();
+                                    return Math.abs(cityOffset - userOffset) <= 60; // Within 1 hour
+                                  } catch {
+                                    return false;
+                                  }
+                                });
+                              }
+                              
+                              // Set the matching city or default to New York
+                              if (matchingCity) {
+                                setInputCity(matchingCity);
+                              } else {
+                                // Fallback: set to a default city
+                                setInputCity(popularCities.find(c => c.id === 'ny') || popularCities[0]);
+                              }
+                              
+                              // Auto-convert after a short delay to ensure state is updated
+                              setTimeout(() => {
+                                convertTime();
+                              }, 100);
+                            } catch (error) {
+                              console.error('Error detecting timezone:', error);
+                              // Fallback to New York
+                              setInputCity(popularCities.find(c => c.id === 'ny') || popularCities[0]);
+                              setTimeout(() => {
+                                convertTime();
+                              }, 100);
+                            }
                           }
                         }}
                         className="rounded"
