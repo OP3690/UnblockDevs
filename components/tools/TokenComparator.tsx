@@ -92,21 +92,30 @@ export default function TokenComparator() {
   const renderTokenWithDiff = (token: string, isToken1: boolean) => {
     if (!diffResults.length) {
       return (
-        <div className="font-mono text-sm break-all bg-gray-50 p-4 rounded-lg border border-gray-200">
-          {showTokens ? token : '•'.repeat(token.length)}
+        <div className="font-mono text-sm break-all bg-gray-50 p-4 rounded-lg border border-gray-200 whitespace-pre-wrap">
+          {showTokens ? token : token.replace(/./g, '•')}
         </div>
       );
     }
 
     return (
-      <div className="font-mono text-sm break-all bg-gray-50 p-4 rounded-lg border border-gray-200">
+      <div className="font-mono text-sm break-all bg-gray-50 p-4 rounded-lg border border-gray-200 whitespace-pre-wrap">
         {diffResults.map((diff, idx) => {
           const char = isToken1 ? diff.char1 : diff.char2;
-          if (!char) return null;
+          if (!char && idx < diffResults.length - 1) return null;
 
           const bgColor = diff.isMatch
             ? 'bg-green-100 text-green-800'
             : 'bg-red-100 text-red-800 border-2 border-red-300';
+
+          // Handle newline characters - render as actual line break
+          if (char === '\n') {
+            return (
+              <span key={idx} className={bgColor} title={`Position ${diff.position + 1}: ${diff.isMatch ? 'Match (newline)' : 'Mismatch (newline)'}`}>
+                {'\n'}
+              </span>
+            );
+          }
 
           return (
             <span
@@ -115,10 +124,10 @@ export default function TokenComparator() {
               title={
                 diff.isMatch
                   ? `Position ${diff.position + 1}: Match`
-                  : `Position ${diff.position + 1}: Mismatch (${isToken1 ? diff.char1 : diff.char2})`
+                  : `Position ${diff.position + 1}: Mismatch (${isToken1 ? (diff.char1 === '\n' ? '\\n' : diff.char1 === ' ' ? 'space' : diff.char1) : (diff.char2 === '\n' ? '\\n' : diff.char2 === ' ' ? 'space' : diff.char2)})`
               }
             >
-              {showTokens ? char : '•'}
+              {showTokens ? char : (char === ' ' ? ' ' : '•')}
             </span>
           );
         })}
