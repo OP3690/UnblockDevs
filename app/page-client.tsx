@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, Star, TrendingUp, Mail, Scissors } from 'lucide-react';
+import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, Star, TrendingUp, Mail, Scissors, Key } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget';
@@ -23,6 +23,7 @@ import JsonBuilder from '@/components/tools/JsonBuilder';
 import JsonFixer from '@/components/tools/JsonFixer';
 import DataInsights from '@/components/tools/DataInsights';
 import PromptChunker from '@/components/tools/PromptChunker';
+import TokenComparator from '@/components/tools/TokenComparator';
 import {
   jsonToRows,
   extractColumns,
@@ -675,6 +676,19 @@ function HomeClient() {
                 </span>
               </div>
             </button>
+            <button
+              onClick={() => handleTabChange('tokencompare')}
+              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+                activeTab === 'tokencompare'
+                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
+                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <Key className="w-4 h-4" />
+                <span className="text-sm">Token Comparator</span>
+              </div>
+            </button>
           </div>
         </div>
       </header>
@@ -744,6 +758,7 @@ function HomeClient() {
         {activeTab === 'builder' && <JsonBuilder />}
         {activeTab === 'insights' && <DataInsights />}
         {activeTab === 'promptchunk' && <PromptChunker />}
+        {activeTab === 'tokencompare' && <TokenComparator />}
       </main>
 
       {/* Services Section */}
@@ -1029,6 +1044,27 @@ function HomeClient() {
                 Try it now →
               </span>
             </button>
+            
+            <button
+              onClick={() => {
+                handleTabChange('tokencompare');
+                if (typeof window !== 'undefined') {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+                showBuyMeACoffeeMessage();
+              }}
+              className="card card-hover text-left cursor-pointer group"
+            >
+              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                Token Comparator - Compare Tokens Character by Character
+              </h3>
+              <p className="text-gray-600 text-sm">
+                Compare two tokens (JWT, API keys, authentication tokens) character by character with beautiful mismatch highlighting. 100% client-side - your tokens never leave your device.
+              </p>
+              <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
+                Try it now →
+              </span>
+            </button>
           </div>
           
           {/* Ezoic Ad Placement - Middle of Content (Placement ID: 102) */}
@@ -1131,6 +1167,7 @@ function HomeClient() {
                 <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Payload Analyzer</Link>
                 <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Mock API Generator</Link>
                 <Link href="/prompt-chunker" className="text-blue-600 hover:text-blue-700 hover:underline">✓ AI Prompt Chunker</Link>
+                <Link href="/token-comparator" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Token Comparator</Link>
               </div>
               <div className="mt-4 pt-4 border-t border-gray-200">
                 <p className="text-xs text-gray-500 mb-2 text-center">Learn more about JSON:</p>
