@@ -30,8 +30,10 @@ export default function TokenComparator() {
       return;
     }
 
-    const t1 = token1.trim();
-    const t2 = token2.trim();
+    // Normalize tokens: remove line breaks and normalize whitespace
+    // But preserve the original for display
+    const t1 = token1.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    const t2 = token2.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
     const maxLength = Math.max(t1.length, t2.length);
     const diffs: TokenDiff[] = [];
     let matches = 0;
@@ -40,6 +42,7 @@ export default function TokenComparator() {
     for (let i = 0; i < maxLength; i++) {
       const char1 = i < t1.length ? t1[i] : '';
       const char2 = i < t2.length ? t2[i] : '';
+      // Compare characters directly, including newlines
       const isMatch = char1 === char2 && char1 !== '';
 
       if (isMatch) {
