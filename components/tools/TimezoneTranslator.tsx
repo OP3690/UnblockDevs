@@ -199,32 +199,14 @@ export default function TimezoneTranslator() {
   const [isTimezoneDropdownOpen, setIsTimezoneDropdownOpen] = useState(false);
   const timezoneDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Auto-capture current system time on load
+  // Auto-capture current system time on load (but don't auto-select city)
   useEffect(() => {
     const now = new Date();
     const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
     setInputTime(timeStr);
     
-    // Try to detect user's timezone
-    try {
-      const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const matchingCity = popularCities.find(c => c.timezone === userTimezone);
-      if (matchingCity) {
-        setInputCity(matchingCity);
-      } else {
-        // Set to a default city
-        setInputCity(popularCities.find(c => c.id === 'ny') || null);
-      }
-    } catch {
-      setInputCity(popularCities.find(c => c.id === 'ny') || null);
-    }
-    
-    // Auto-convert on load
-    setTimeout(() => {
-      if (inputCity) {
-        convertTime();
-      }
-    }, 500);
+    // Don't auto-select city - let user choose
+    // City will be auto-selected only when "Use current system time" checkbox is checked
   }, []);
 
   const parseTimeInput = (timeStr: string, city: City): Date | null => {
