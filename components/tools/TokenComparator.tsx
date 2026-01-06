@@ -183,6 +183,9 @@ export default function TokenComparator() {
         <p className="text-purple-100 text-sm">
           Compare two tokens character by character. Perfect for verifying JWT tokens, API keys, authentication tokens, and more.
         </p>
+        <p className="text-purple-200 text-xs mt-2">
+          💡 Whitespace (spaces, line breaks) is automatically ignored during comparison to handle formatting differences from PDFs, documents, etc.
+        </p>
       </div>
 
       {/* Privacy Notice */}
