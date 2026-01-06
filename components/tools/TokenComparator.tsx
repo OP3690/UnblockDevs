@@ -104,8 +104,8 @@ export default function TokenComparator() {
       matchPercentage: maxLength > 0 ? Math.round((matches / maxLength) * 100) : 0,
     });
 
-    if (matches === maxLength && t1.length === t2.length) {
-      toast.success('Tokens are identical!');
+    if (matches === maxLength && t1Normalized.length === t2Normalized.length) {
+      toast.success('Tokens are identical! (ignoring whitespace differences)');
     } else {
       toast.success(`Comparison complete: ${mismatches} mismatch${mismatches !== 1 ? 'es' : ''} found`);
     }
