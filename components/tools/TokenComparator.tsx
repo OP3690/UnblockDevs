@@ -30,19 +30,32 @@ export default function TokenComparator() {
       return;
     }
 
-    // Normalize line endings but preserve newlines as actual characters
-    // Convert all line ending variations to \n for consistent comparison
-    const t1 = token1.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-    const t2 = token2.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-    const maxLength = Math.max(t1.length, t2.length);
+    // Normalize tokens: remove all whitespace (spaces, tabs, newlines) for comparison
+    // This handles cases where one token has line breaks (from PDF) and the other doesn't
+    // We compare the actual content, ignoring formatting differences
+    const normalizeToken = (token: string) => {
+      return token.replace(/\s+/g, ''); // Remove all whitespace (spaces, tabs, newlines)
+    };
+
+    const t1Normalized = normalizeToken(token1);
+    const t2Normalized = normalizeToken(token2);
+    
+    // Also keep original versions for display
+    const t1Original = token1.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    const t2Original = token2.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    
+    const maxLength = Math.max(t1Normalized.length, t2Normalized.length);
     const diffs: TokenDiff[] = [];
     let matches = 0;
     let mismatches = 0;
 
+    // Create mapping from normalized position to original position for display
+    let t1OrigIdx = 0;
+    let t2OrigIdx = 0;
+
     for (let i = 0; i < maxLength; i++) {
-      const char1 = i < t1.length ? t1[i] : '';
-      const char2 = i < t2.length ? t2[i] : '';
-      // Compare characters directly, including newlines
+      const char1 = i < t1Normalized.length ? t1Normalized[i] : '';
+      const char2 = i < t2Normalized.length ? t2Normalized[i] : '';
       const isMatch = char1 === char2 && char1 !== '';
 
       if (isMatch) {
@@ -51,10 +64,34 @@ export default function TokenComparator() {
         mismatches++;
       }
 
+      // Find corresponding characters in original tokens (skipping whitespace)
+      let origChar1 = '';
+      let origChar2 = '';
+      
+      if (char1) {
+        while (t1OrigIdx < t1Original.length && /\s/.test(t1Original[t1OrigIdx])) {
+          t1OrigIdx++;
+        }
+        if (t1OrigIdx < t1Original.length) {
+          origChar1 = t1Original[t1OrigIdx];
+          t1OrigIdx++;
+        }
+      }
+      
+      if (char2) {
+        while (t2OrigIdx < t2Original.length && /\s/.test(t2Original[t2OrigIdx])) {
+          t2OrigIdx++;
+        }
+        if (t2OrigIdx < t2Original.length) {
+          origChar2 = t2Original[t2OrigIdx];
+          t2OrigIdx++;
+        }
+      }
+
       diffs.push({
         position: i,
-        char1,
-        char2,
+        char1: origChar1 || char1,
+        char2: origChar2 || char2,
         isMatch,
       });
     }
