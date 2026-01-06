@@ -30,8 +30,8 @@ export default function TokenComparator() {
       return;
     }
 
-    // Normalize tokens: remove line breaks and normalize whitespace
-    // But preserve the original for display
+    // Normalize line endings but preserve newlines as actual characters
+    // Convert all line ending variations to \n for consistent comparison
     const t1 = token1.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
     const t2 = token2.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
     const maxLength = Math.max(t1.length, t2.length);
