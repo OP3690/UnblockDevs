@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, Star, TrendingUp, Mail, Scissors, Key } from 'lucide-react';
+import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, Star, TrendingUp, Mail, Scissors, Key, Link as LinkIcon, Clock } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget';
@@ -24,6 +24,8 @@ import JsonFixer from '@/components/tools/JsonFixer';
 import DataInsights from '@/components/tools/DataInsights';
 import PromptChunker from '@/components/tools/PromptChunker';
 import TokenComparator from '@/components/tools/TokenComparator';
+import LinkUnshortener from '@/components/tools/LinkUnshortener';
+import TimezoneTranslator from '@/components/tools/TimezoneTranslator';
 import {
   jsonToRows,
   extractColumns,
@@ -40,7 +42,7 @@ interface Section {
   columnIds: string[];
 }
 
-type ToolTab = 'converter' | 'beautifier' | 'fixer' | 'comparator' | 'jsoncompare' | 'schema' | 'logs' | 'payload' | 'curl' | 'mock' | 'testdata' | 'config' | 'sql' | 'builder' | 'insights' | 'promptchunk' | 'tokencompare';
+type ToolTab = 'converter' | 'beautifier' | 'fixer' | 'comparator' | 'jsoncompare' | 'schema' | 'logs' | 'payload' | 'curl' | 'mock' | 'testdata' | 'config' | 'sql' | 'builder' | 'insights' | 'promptchunk' | 'tokencompare' | 'linkunshort' | 'timezone';
 
 function HomeClient() {
   const [activeTab, setActiveTab] = useState<ToolTab>('converter');
@@ -689,6 +691,32 @@ function HomeClient() {
                 <span className="text-sm">Token Comparator</span>
               </div>
             </button>
+            <button
+              onClick={() => handleTabChange('linkunshort')}
+              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+                activeTab === 'linkunshort'
+                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
+                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <LinkIcon className="w-4 h-4" />
+                <span className="text-sm">Link Unshortener</span>
+              </div>
+            </button>
+            <button
+              onClick={() => handleTabChange('timezone')}
+              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+                activeTab === 'timezone'
+                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
+                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4" />
+                <span className="text-sm">Timezone Translator</span>
+              </div>
+            </button>
           </div>
         </div>
       </header>
@@ -759,6 +787,8 @@ function HomeClient() {
         {activeTab === 'insights' && <DataInsights />}
         {activeTab === 'promptchunk' && <PromptChunker />}
         {activeTab === 'tokencompare' && <TokenComparator />}
+        {activeTab === 'linkunshort' && <LinkUnshortener />}
+        {activeTab === 'timezone' && <TimezoneTranslator />}
       </main>
 
       {/* Services Section */}
@@ -1065,6 +1095,48 @@ function HomeClient() {
                 Try it now →
               </span>
             </button>
+            
+            <button
+              onClick={() => {
+                handleTabChange('linkunshort');
+                if (typeof window !== 'undefined') {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+                showBuyMeACoffeeMessage();
+              }}
+              className="card card-hover text-left cursor-pointer group"
+            >
+              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                Link Unshortener + Safety Checker
+              </h3>
+              <p className="text-gray-600 text-sm">
+                Unshorten any URL, check for redirects, detect trackers, and identify suspicious links. Perfect for verifying links from WhatsApp, Twitter, email, and other sources.
+              </p>
+              <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
+                Unshorten Link Now →
+              </span>
+            </button>
+            
+            <button
+              onClick={() => {
+                handleTabChange('timezone');
+                if (typeof window !== 'undefined') {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+                showBuyMeACoffeeMessage();
+              }}
+              className="card card-hover text-left cursor-pointer group"
+            >
+              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                Timezone Translator for Humans
+              </h3>
+              <p className="text-gray-600 text-sm">
+                Convert times across timezones instantly. Enter "3pm New York" and see the time in all your selected cities. Perfect for scheduling meetings across the globe.
+              </p>
+              <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
+                Convert Time Now →
+              </span>
+            </button>
           </div>
           
           {/* Ezoic Ad Placement - Middle of Content (Placement ID: 102) */}
@@ -1168,6 +1240,8 @@ function HomeClient() {
                 <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Mock API Generator</Link>
                 <Link href="/prompt-chunker" className="text-blue-600 hover:text-blue-700 hover:underline">✓ AI Prompt Chunker</Link>
                 <Link href="/token-comparator" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Token Comparator</Link>
+                <Link href="/link-unshortener" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Link Unshortener</Link>
+                <Link href="/timezone-translator" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Timezone Translator</Link>
               </div>
               <div className="mt-4 pt-4 border-t border-gray-200">
                 <p className="text-xs text-gray-500 mb-2 text-center">Learn more about JSON:</p>
