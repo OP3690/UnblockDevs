@@ -16,7 +16,7 @@ export default function TokenComparator() {
   const [token2, setToken2] = useState('');
   const [diffResults, setDiffResults] = useState<TokenDiff[]>([]);
   const [showTokens, setShowTokens] = useState(true);
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState<string | null>(null);
   const [comparisonStats, setComparisonStats] = useState<{
     totalChars: number;
     matches: number;
