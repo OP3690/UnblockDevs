@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Key, Copy, Check, AlertCircle, CheckCircle, Shield, Eye, EyeOff } from 'lucide-react';
+import { Key, Copy, Check, AlertCircle, CheckCircle, Shield, Eye, EyeOff, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
+import Link from 'next/link';
 
 interface TokenDiff {
   position: number;

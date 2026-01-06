@@ -6,6 +6,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // All blog posts
   const blogPosts = [
+    'token-security-privacy-best-practices',
+    'token-technologies-history-evolution',
+    'tokens-complete-guide',
     'mysql-json-complete-guide',
     'mysql-25-most-used-queries',
     'mysql-10-most-used-functions',

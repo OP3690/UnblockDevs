@@ -19,6 +19,33 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'token-security-privacy-best-practices',
+      title: 'Token Security & Privacy: Best Practices, Dos & Don\'ts',
+      excerpt: 'Complete guide to token security and privacy: best practices, dos and don\'ts, common vulnerabilities, secure storage, token rotation, and privacy considerations. Learn how to secure authentication tokens.',
+      date: '2025-01-30',
+      readTime: '18 min read',
+      category: 'Security & Privacy',
+      keywords: ['token security', 'token privacy', 'token best practices', 'jwt security', 'api key security', 'token storage', 'token rotation']
+    },
+    {
+      slug: 'token-technologies-history-evolution',
+      title: 'Token Technologies: History & Evolution of Authentication Tokens',
+      excerpt: 'Complete history and evolution of token technologies: from session cookies to JWT, OAuth, API keys, and modern token standards. Learn about different token technologies and their development over time.',
+      date: '2025-01-30',
+      readTime: '16 min read',
+      category: 'Technology & History',
+      keywords: ['token history', 'token evolution', 'jwt history', 'oauth history', 'authentication token history', 'token technologies', 'token standards']
+    },
+    {
+      slug: 'tokens-complete-guide',
+      title: 'Tokens Complete Guide: What, How, Why & When to Use Tokens',
+      excerpt: 'Complete guide to tokens: what are tokens, how they work, why they\'re used, and when to use them. Learn about JWT tokens, API keys, authentication tokens, and access tokens with examples.',
+      date: '2025-01-30',
+      readTime: '15 min read',
+      category: 'Authentication & Security',
+      keywords: ['what are tokens', 'how tokens work', 'authentication tokens', 'jwt tokens', 'api tokens', 'access tokens', 'token authentication', 'token explained']
+    },
+    {
       slug: 'mysql-json-complete-guide',
       title: 'Working with JSON in MySQL: Complete Guide to Extract & Manipulate Data',
       excerpt: 'Complete guide to working with JSON in MySQL: JSON data types, structure, extracting data from JSON columns, nested JSON queries, 10 practical examples, and tips & tricks for efficient JSON manipulation.',
