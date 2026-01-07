@@ -39,9 +39,11 @@ export default function SqlFormatter() {
         // Format: "ID-123456","ID-11112223" or 'ID-123456','ID-11112223'
         // Vertical: "ID-123456",\n"ID-11112223" or 'ID-123456',\n'ID-11112223'
         const formattedValues = values.map(v => `${quote}${v}${quote}`);
-        output = formattedValues.join(separator);
         if (outputFormat === 'vertical') {
-          output += ','; // Add trailing comma for vertical format
+          // Add comma to all except last item
+          output = formattedValues.map((v, i) => i < formattedValues.length - 1 ? `${v},` : v).join('\n');
+        } else {
+          output = formattedValues.join(separator);
         }
       } else {
         // Format: IN ("ID-123456","ID-11112223") or IN ('ID-123456','ID-11112223')
