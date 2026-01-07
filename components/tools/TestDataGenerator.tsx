@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { Database, Copy, Check, Download, Users, FileText, CreditCard, ShoppingBag, Newspaper, Sparkles } from 'lucide-react';
+import { Database, Copy, Check, Download, Users, FileText, CreditCard, ShoppingBag, Newspaper, Sparkles, Server, Shield, Brain, Activity, AlertTriangle, TrendingUp } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { validateJson } from '@/lib/jsonParser';
 
-type PredefinedDataType = 'user' | 'invoice' | 'banking' | 'accessories' | 'news' | 'custom';
+type PredefinedDataType = 'user' | 'invoice' | 'banking' | 'accessories' | 'news' | 'apiLogs' | 'securityEvents' | 'aiTraining' | 'systemLogs' | 'vulnerabilities' | 'aiMetrics' | 'custom';
 
 const firstNames = [
   'James', 'Mary', 'John', 'Patricia', 'Robert', 'Jennifer', 'Michael', 'Linda',
@@ -39,6 +39,41 @@ const accountTypes = ['checking', 'savings', 'credit', 'investment', 'loan'];
 
 const newsCategories = ['Technology', 'Business', 'Sports', 'Entertainment', 'Health', 'Science', 'Politics', 'World', 'Local', 'Opinion'];
 const newsSources = ['Reuters', 'AP News', 'BBC', 'CNN', 'TechCrunch', 'The Verge', 'Wired', 'Forbes', 'Bloomberg', 'WSJ'];
+
+const httpMethods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD'];
+const httpStatusCodes = [200, 201, 204, 400, 401, 403, 404, 500, 502, 503];
+const apiEndpoints = ['/api/users', '/api/products', '/api/orders', '/api/auth', '/api/payments', '/api/analytics', '/api/reports', '/api/settings'];
+const userAgents = ['Mozilla/5.0', 'Chrome/120.0', 'Safari/17.0', 'Firefox/121.0', 'Postman/10.0', 'curl/7.88', 'Python-requests/2.31'];
+
+const securityEventTypes = ['login_attempt', 'failed_login', 'suspicious_activity', 'data_access', 'permission_change', 'file_upload', 'malware_detected', 'brute_force', 'sql_injection', 'xss_attempt'];
+const threatLevels = ['low', 'medium', 'high', 'critical'];
+const ipAddresses = ['192.168.1.', '10.0.0.', '172.16.0.', '203.0.113.', '198.51.100.'];
+
+const aiModelTypes = ['GPT-4', 'GPT-3.5', 'Claude', 'Llama', 'BERT', 'ResNet', 'Transformer', 'GAN', 'RNN', 'CNN'];
+const trainingStatuses = ['training', 'completed', 'failed', 'paused', 'validating'];
+const datasets = ['ImageNet', 'COCO', 'SQuAD', 'GLUE', 'MNIST', 'CIFAR-10', 'WikiText', 'Common Crawl', 'Books3', 'The Pile'];
+
+const logLevels = ['DEBUG', 'INFO', 'WARN', 'ERROR', 'FATAL'];
+const systemComponents = ['auth-service', 'payment-gateway', 'user-service', 'api-gateway', 'database', 'cache', 'queue', 'storage', 'cdn', 'monitoring'];
+const logMessages = [
+  'Connection established',
+  'Request processed successfully',
+  'Database query executed',
+  'Cache hit',
+  'Rate limit exceeded',
+  'Memory usage high',
+  'Disk space low',
+  'Service started',
+  'Service stopped',
+  'Configuration reloaded'
+];
+
+const vulnerabilityTypes = ['SQL Injection', 'XSS', 'CSRF', 'Authentication Bypass', 'Privilege Escalation', 'Path Traversal', 'Remote Code Execution', 'Information Disclosure', 'DoS', 'Broken Access Control'];
+const severityLevels = ['Low', 'Medium', 'High', 'Critical'];
+const cveIds = ['CVE-2024-', 'CVE-2023-', 'CVE-2022-'];
+const remediationStatuses = ['open', 'in_progress', 'patched', 'mitigated', 'false_positive'];
+
+const aiMetricsTypes = ['accuracy', 'precision', 'recall', 'f1_score', 'loss', 'latency', 'throughput', 'token_count', 'cost', 'inference_time'];
 
 const generateUserData = (count: number) => {
   const users = [];
@@ -212,6 +247,216 @@ const generateNewsData = (count: number) => {
   return news;
 };
 
+const generateApiLogsData = (count: number) => {
+  const logs = [];
+  for (let i = 0; i < count; i++) {
+    const method = httpMethods[Math.floor(Math.random() * httpMethods.length)];
+    const endpoint = apiEndpoints[Math.floor(Math.random() * apiEndpoints.length)];
+    const statusCode = httpStatusCodes[Math.floor(Math.random() * httpStatusCodes.length)];
+    const userAgent = userAgents[Math.floor(Math.random() * userAgents.length)];
+    const ip = `${ipAddresses[Math.floor(Math.random() * ipAddresses.length)]}${Math.floor(Math.random() * 255)}`;
+    const timestamp = new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000);
+    const responseTime = Math.floor(Math.random() * 500) + 10;
+    const requestSize = Math.floor(Math.random() * 5000) + 100;
+    const responseSize = Math.floor(Math.random() * 10000) + 200;
+    
+    logs.push({
+      id: `LOG-${String(i + 1).padStart(8, '0')}`,
+      timestamp: timestamp.toISOString(),
+      method,
+      endpoint,
+      statusCode,
+      statusText: statusCode >= 200 && statusCode < 300 ? 'OK' : statusCode >= 400 ? 'Error' : 'Redirect',
+      responseTime: `${responseTime}ms`,
+      requestSize: `${requestSize}B`,
+      responseSize: `${responseSize}B`,
+      ipAddress: ip,
+      userAgent,
+      userId: Math.random() > 0.3 ? `user-${Math.floor(Math.random() * 1000)}` : null,
+      requestId: `req-${Math.random().toString(36).substr(2, 9)}`,
+      correlationId: `corr-${Math.random().toString(36).substr(2, 9)}`,
+      error: statusCode >= 400 ? `Error ${statusCode}: ${endpoint} failed` : null,
+      success: statusCode < 400
+    });
+  }
+  return logs;
+};
+
+const generateSecurityEventsData = (count: number) => {
+  const events = [];
+  for (let i = 0; i < count; i++) {
+    const eventType = securityEventTypes[Math.floor(Math.random() * securityEventTypes.length)];
+    const threatLevel = threatLevels[Math.floor(Math.random() * threatLevels.length)];
+    const ip = `${ipAddresses[Math.floor(Math.random() * ipAddresses.length)]}${Math.floor(Math.random() * 255)}`;
+    const country = countries[Math.floor(Math.random() * countries.length)];
+    const timestamp = new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000);
+    const user = `${firstNames[Math.floor(Math.random() * firstNames.length)]} ${lastNames[Math.floor(Math.random() * lastNames.length)]}`;
+    
+    events.push({
+      id: `SEC-${String(i + 1).padStart(8, '0')}`,
+      timestamp: timestamp.toISOString(),
+      eventType,
+      threatLevel,
+      severity: threatLevel === 'critical' ? 10 : threatLevel === 'high' ? 8 : threatLevel === 'medium' ? 5 : 2,
+      sourceIp: ip,
+      sourceCountry: country,
+      targetResource: apiEndpoints[Math.floor(Math.random() * apiEndpoints.length)],
+      user: Math.random() > 0.4 ? user : null,
+      action: eventType.includes('login') ? 'authentication' : eventType.includes('access') ? 'data_access' : 'system_event',
+      description: `${eventType.replace(/_/g, ' ')} detected from ${country}`,
+      blocked: threatLevel === 'critical' || threatLevel === 'high',
+      ruleId: `RULE-${Math.floor(Math.random() * 100)}`,
+      signature: `SIG-${Math.random().toString(36).substr(2, 12).toUpperCase()}`,
+      remediation: threatLevel === 'critical' ? 'IP blocked automatically' : threatLevel === 'high' ? 'Alert sent to security team' : 'Logged for review'
+    });
+  }
+  return events;
+};
+
+const generateAiTrainingData = (count: number) => {
+  const trainingData = [];
+  for (let i = 0; i < count; i++) {
+    const modelType = aiModelTypes[Math.floor(Math.random() * aiModelTypes.length)];
+    const dataset = datasets[Math.floor(Math.random() * datasets.length)];
+    const status = trainingStatuses[Math.floor(Math.random() * trainingStatuses.length)];
+    const timestamp = new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000);
+    const epochs = Math.floor(Math.random() * 100) + 10;
+    const accuracy = status === 'completed' ? (Math.random() * 0.2 + 0.8) : (Math.random() * 0.8);
+    
+    trainingData.push({
+      id: `TRAIN-${String(i + 1).padStart(6, '0')}`,
+      modelName: `${modelType}-v${Math.floor(Math.random() * 5) + 1}.${Math.floor(Math.random() * 10)}`,
+      modelType,
+      dataset,
+      status,
+      startTime: timestamp.toISOString(),
+      endTime: status === 'completed' ? new Date(timestamp.getTime() + Math.random() * 48 * 60 * 60 * 1000).toISOString() : null,
+      epochs,
+      currentEpoch: status === 'training' ? Math.floor(epochs * Math.random()) : status === 'completed' ? epochs : 0,
+      accuracy: accuracy.toFixed(4),
+      loss: (1 - accuracy + Math.random() * 0.1).toFixed(4),
+      learningRate: (Math.random() * 0.01 + 0.0001).toFixed(6),
+      batchSize: [16, 32, 64, 128][Math.floor(Math.random() * 4)],
+      gpuHours: (Math.random() * 100 + 10).toFixed(2),
+      parameters: Math.floor(Math.random() * 1000000000) + 1000000,
+      datasetSize: Math.floor(Math.random() * 1000000) + 10000,
+      framework: ['PyTorch', 'TensorFlow', 'JAX', 'HuggingFace'][Math.floor(Math.random() * 4)],
+      version: `v${Math.floor(Math.random() * 5) + 1}.${Math.floor(Math.random() * 10)}.${Math.floor(Math.random() * 10)}`
+    });
+  }
+  return trainingData;
+};
+
+const generateSystemLogsData = (count: number) => {
+  const logs = [];
+  for (let i = 0; i < count; i++) {
+    const level = logLevels[Math.floor(Math.random() * logLevels.length)];
+    const component = systemComponents[Math.floor(Math.random() * systemComponents.length)];
+    const message = logMessages[Math.floor(Math.random() * logMessages.length)];
+    const timestamp = new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000);
+    const traceId = `trace-${Math.random().toString(36).substr(2, 16)}`;
+    const spanId = `span-${Math.random().toString(36).substr(2, 8)}`;
+    
+    logs.push({
+      id: `SYS-${String(i + 1).padStart(8, '0')}`,
+      timestamp: timestamp.toISOString(),
+      level,
+      component,
+      message,
+      traceId,
+      spanId,
+      thread: `thread-${Math.floor(Math.random() * 100)}`,
+      hostname: `server-${Math.floor(Math.random() * 10) + 1}`,
+      environment: ['production', 'staging', 'development'][Math.floor(Math.random() * 3)],
+      stackTrace: level === 'ERROR' || level === 'FATAL' ? `at ${component}.process()\nat ${component}.handle()` : null,
+      metadata: {
+        userId: Math.random() > 0.5 ? `user-${Math.floor(Math.random() * 1000)}` : null,
+        requestId: `req-${Math.random().toString(36).substr(2, 9)}`,
+        duration: level === 'ERROR' ? null : `${Math.floor(Math.random() * 1000)}ms`,
+        memoryUsage: `${(Math.random() * 80 + 10).toFixed(2)}%`,
+        cpuUsage: `${(Math.random() * 70 + 5).toFixed(2)}%`
+      }
+    });
+  }
+  return logs;
+};
+
+const generateVulnerabilitiesData = (count: number) => {
+  const vulnerabilities = [];
+  for (let i = 0; i < count; i++) {
+    const vulnType = vulnerabilityTypes[Math.floor(Math.random() * vulnerabilityTypes.length)];
+    const severity = severityLevels[Math.floor(Math.random() * severityLevels.length)];
+    const cveId = `${cveIds[Math.floor(Math.random() * cveIds.length)]}${Math.floor(Math.random() * 20000) + 1000}`;
+    const status = remediationStatuses[Math.floor(Math.random() * remediationStatuses.length)];
+    const discoveredDate = new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000);
+    const cvssScore = severity === 'Critical' ? (Math.random() * 1 + 9) : severity === 'High' ? (Math.random() * 1 + 7) : severity === 'Medium' ? (Math.random() * 1 + 4) : (Math.random() * 2 + 0);
+    
+    vulnerabilities.push({
+      id: `VULN-${String(i + 1).padStart(6, '0')}`,
+      cveId,
+      title: `${vulnType} Vulnerability`,
+      description: `A ${vulnType.toLowerCase()} vulnerability that could allow unauthorized access or data exposure.`,
+      severity,
+      cvssScore: cvssScore.toFixed(1),
+      affectedComponent: systemComponents[Math.floor(Math.random() * systemComponents.length)],
+      affectedVersion: `v${Math.floor(Math.random() * 5) + 1}.${Math.floor(Math.random() * 10)}.${Math.floor(Math.random() * 10)}`,
+      fixedVersion: status === 'patched' ? `v${Math.floor(Math.random() * 5) + 1}.${Math.floor(Math.random() * 10) + 1}.${Math.floor(Math.random() * 10)}` : null,
+      discoveredDate: discoveredDate.toISOString().split('T')[0],
+      remediationStatus: status,
+      exploitability: severity === 'Critical' ? 'High' : severity === 'High' ? 'Medium' : 'Low',
+      impact: severity === 'Critical' ? 'Data breach, system compromise' : severity === 'High' ? 'Unauthorized access' : 'Limited impact',
+      remediation: status === 'patched' ? 'Applied security patch' : status === 'in_progress' ? 'Patch in development' : 'Pending remediation',
+      references: [`https://cve.mitre.org/cgi-bin/cvename.cgi?name=${cveId}`, `https://nvd.nist.gov/vuln/detail/${cveId}`],
+      tags: [vulnType, severity.toLowerCase(), status]
+    });
+  }
+  return vulnerabilities;
+};
+
+const generateAiMetricsData = (count: number) => {
+  const metrics = [];
+  for (let i = 0; i < count; i++) {
+    const metricType = aiMetricsTypes[Math.floor(Math.random() * aiMetricsTypes.length)];
+    const modelType = aiModelTypes[Math.floor(Math.random() * aiModelTypes.length)];
+    const timestamp = new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000);
+    const value = metricType === 'accuracy' ? (Math.random() * 0.2 + 0.8) : 
+                  metricType === 'precision' ? (Math.random() * 0.15 + 0.85) :
+                  metricType === 'recall' ? (Math.random() * 0.15 + 0.85) :
+                  metricType === 'f1_score' ? (Math.random() * 0.15 + 0.85) :
+                  metricType === 'loss' ? (Math.random() * 0.5) :
+                  metricType === 'latency' ? (Math.random() * 500 + 10) :
+                  metricType === 'throughput' ? (Math.random() * 1000 + 100) :
+                  metricType === 'token_count' ? (Math.random() * 2000 + 100) :
+                  metricType === 'cost' ? (Math.random() * 10 + 0.01) :
+                  (Math.random() * 100 + 1);
+    
+    metrics.push({
+      id: `METRIC-${String(i + 1).padStart(6, '0')}`,
+      timestamp: timestamp.toISOString(),
+      modelName: `${modelType}-production`,
+      modelType,
+      metricType,
+      value: value.toFixed(4),
+      unit: metricType === 'latency' ? 'ms' : 
+            metricType === 'throughput' ? 'req/s' : 
+            metricType === 'token_count' ? 'tokens' : 
+            metricType === 'cost' ? 'USD' : 
+            metricType === 'inference_time' ? 'ms' : 
+            'ratio',
+      dataset: datasets[Math.floor(Math.random() * datasets.length)],
+      environment: ['production', 'staging', 'testing'][Math.floor(Math.random() * 3)],
+      version: `v${Math.floor(Math.random() * 5) + 1}.${Math.floor(Math.random() * 10)}`,
+      baseline: metricType === 'accuracy' ? '0.85' : metricType === 'loss' ? '0.15' : null,
+      improvement: metricType === 'accuracy' ? ((value - 0.85) * 100).toFixed(2) : null,
+      trend: value > (metricType === 'accuracy' ? 0.85 : 0.5) ? 'improving' : 'degrading',
+      notes: metricType === 'accuracy' && value > 0.9 ? 'Model performing above baseline' : 
+             metricType === 'loss' && value < 0.2 ? 'Low loss, good convergence' : 
+             'Within expected range'
+    });
+  }
+  return metrics;
+};
+
 export default function TestDataGenerator() {
   const [schemaText, setSchemaText] = useState('');
   const [count, setCount] = useState(10);
@@ -297,6 +542,24 @@ export default function TestDataGenerator() {
           case 'news':
             data = generateNewsData(count);
             break;
+          case 'apiLogs':
+            data = generateApiLogsData(count);
+            break;
+          case 'securityEvents':
+            data = generateSecurityEventsData(count);
+            break;
+          case 'aiTraining':
+            data = generateAiTrainingData(count);
+            break;
+          case 'systemLogs':
+            data = generateSystemLogsData(count);
+            break;
+          case 'vulnerabilities':
+            data = generateVulnerabilitiesData(count);
+            break;
+          case 'aiMetrics':
+            data = generateAiMetricsData(count);
+            break;
         }
       }
 
@@ -340,6 +603,12 @@ export default function TestDataGenerator() {
     { id: 'banking' as PredefinedDataType, name: 'Banking Data', icon: CreditCard, description: 'Generate banking transactions with accounts, amounts, and transaction types' },
     { id: 'accessories' as PredefinedDataType, name: 'Accessories Data', icon: ShoppingBag, description: 'Generate product data for accessories with prices, stock, and specifications' },
     { id: 'news' as PredefinedDataType, name: 'News Data', icon: Newspaper, description: 'Generate news articles with headlines, categories, sources, and engagement metrics' },
+    { id: 'apiLogs' as PredefinedDataType, name: 'API Logs', icon: Server, description: 'Generate API request/response logs with endpoints, status codes, response times, and metadata' },
+    { id: 'securityEvents' as PredefinedDataType, name: 'Security Events', icon: Shield, description: 'Generate security event logs with threat levels, IP addresses, event types, and remediation actions' },
+    { id: 'aiTraining' as PredefinedDataType, name: 'AI Training Data', icon: Brain, description: 'Generate AI/ML training records with model info, datasets, epochs, accuracy, and training metrics' },
+    { id: 'systemLogs' as PredefinedDataType, name: 'System Logs', icon: Activity, description: 'Generate application/system logs with log levels, components, messages, and system metadata' },
+    { id: 'vulnerabilities' as PredefinedDataType, name: 'Vulnerabilities', icon: AlertTriangle, description: 'Generate security vulnerability records with CVE IDs, severity, CVSS scores, and remediation status' },
+    { id: 'aiMetrics' as PredefinedDataType, name: 'AI Model Metrics', icon: TrendingUp, description: 'Generate AI model performance metrics with accuracy, precision, recall, latency, and cost data' },
   ];
 
   return (
