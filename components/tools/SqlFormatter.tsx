@@ -151,16 +151,19 @@ export default function SqlFormatter() {
       <div className="bg-white rounded-lg shadow-lg p-6">
         <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
           <Database className="w-6 h-6 text-primary-600" />
-          SQL Formatter - Comma Separated ID List for MySQL IN Clause
+          SQL Formatter - Comma Separated ID List for MySQL, PostgreSQL, Oracle, Trino & More
         </h2>
         <p className="text-gray-600 mb-4">
-          Create comma separated ID lists for MySQL IN clause instantly. Convert multiple IDs, arrays, or values into properly formatted MySQL IN query format. 
-          Perfect for converting lists of IDs into SQL-friendly comma separated values with proper quoting.
+          Create comma separated ID lists for SQL IN clause instantly. Convert multiple IDs, arrays, or values into properly formatted SQL IN query format for 
+          <strong> MySQL</strong>, <strong>PostgreSQL</strong>, <strong>Oracle</strong>, <strong>Trino</strong>, <strong>SQL Server</strong>, <strong>SQLite</strong>, and other databases. 
+          Perfect for converting lists of IDs into SQL-friendly comma separated values with proper quoting. Generate comma separated IDs for MySQL IN clause, 
+          PostgreSQL IN clause, Oracle IN clause, Trino IN clause, and more.
         </p>
         <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mb-4">
           <p className="text-sm text-blue-800">
-            <strong>Quick Guide:</strong> Paste your IDs (one per line, comma-separated, or space-separated) and get instant formatted output ready for MySQL WHERE IN clause. 
-            Supports both numeric and string IDs with automatic proper quoting.
+            <strong>Quick Guide:</strong> Paste your IDs (one per line, comma-separated, or space-separated) and get instant formatted output ready for SQL WHERE IN clause. 
+            Works with <strong>MySQL</strong>, <strong>PostgreSQL</strong>, <strong>Oracle</strong>, <strong>Trino</strong>, <strong>SQL Server</strong>, <strong>SQLite</strong>, and other SQL databases. 
+            Supports both numeric and string IDs with automatic proper quoting. Create comma separated IDs for MySQL, PostgreSQL, Oracle, Trino queries instantly.
           </p>
         </div>
 
@@ -320,10 +323,11 @@ ID-55556666"
               <code className="font-mono">{formattedOutput}</code>
             </pre>
             <div className="mt-2 text-xs text-gray-500">
-              <p>Ready to use in your SQL query!</p>
+              <p>Ready to use in your SQL query for MySQL, PostgreSQL, Oracle, Trino, SQL Server, and more!</p>
               {formatType === 'sql' && (
                 <p className="mt-1">
-                  Example: <code className="bg-gray-100 px-1 rounded">WHERE id IN ({formattedOutput})</code>
+                  Example: <code className="bg-gray-100 px-1 rounded">WHERE id IN ({formattedOutput})</code> 
+                  (works with MySQL, PostgreSQL, Oracle, Trino, SQL Server, SQLite)
                 </p>
               )}
             </div>
