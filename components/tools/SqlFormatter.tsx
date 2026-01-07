@@ -10,6 +10,8 @@ export default function SqlFormatter() {
   const [formattedOutput, setFormattedOutput] = useState('');
   const [copied, setCopied] = useState(false);
   const [formatType, setFormatType] = useState<'sql' | 'sqlWithIn'>('sql');
+  const [quoteType, setQuoteType] = useState<'single' | 'double'>('double');
+  const [outputFormat, setOutputFormat] = useState<'horizontal' | 'vertical'>('horizontal');
 
   const formatInput = () => {
     if (!input.trim()) {
@@ -30,13 +32,25 @@ export default function SqlFormatter() {
       }
 
       let output = '';
+      const quote = quoteType === 'single' ? "'" : '"';
+      const separator = outputFormat === 'vertical' ? ',\n' : ',';
       
       if (formatType === 'sql') {
-        // Format: "ID-123456","ID-11112223"
-        output = values.map(v => `"${v}"`).join(',');
+        // Format: "ID-123456","ID-11112223" or 'ID-123456','ID-11112223'
+        // Vertical: "ID-123456",\n"ID-11112223" or 'ID-123456',\n'ID-11112223'
+        const formattedValues = values.map(v => `${quote}${v}${quote}`);
+        output = formattedValues.join(separator);
+        if (outputFormat === 'vertical') {
+          output += ','; // Add trailing comma for vertical format
+        }
       } else {
-        // Format: IN ("ID-123456","ID-11112223")
-        output = `IN (${values.map(v => `"${v}"`).join(',')})`;
+        // Format: IN ("ID-123456","ID-11112223") or IN ('ID-123456','ID-11112223')
+        const formattedValues = values.map(v => `${quote}${v}${quote}`);
+        if (outputFormat === 'vertical') {
+          output = `IN (\n  ${formattedValues.join(separator)}\n)`;
+        } else {
+          output = `IN (${formattedValues.join(separator)})`;
+        }
       }
 
       setFormattedOutput(output);
@@ -51,7 +65,46 @@ export default function SqlFormatter() {
       toast.error('Nothing to copy');
       return;
     }
-    navigator.clipboard.writeText(formattedOutput);
+    
+    // Always copy in vertical format for better usability
+    let copyText = formattedOutput;
+    
+    // If output is horizontal, convert to vertical for copying
+    if (outputFormat === 'horizontal') {
+      // Extract values from formatted output
+      let values: string[] = [];
+      
+      if (formatType === 'sql') {
+        // Extract from: "ID-123","ID-456" or 'ID-123','ID-456'
+        values = formattedOutput
+          .split(',')
+          .map(v => v.trim())
+          .filter(v => v.length > 0);
+      } else {
+        // Extract from: IN ("ID-123","ID-456") or IN ('ID-123','ID-456')
+        const match = formattedOutput.match(/IN\s*\((.+)\)/);
+        if (match) {
+          values = match[1]
+            .split(',')
+            .map(v => v.trim())
+            .filter(v => v.length > 0);
+        }
+      }
+      
+      // Format as vertical with trailing comma
+      if (formatType === 'sql') {
+        copyText = values.join(',\n') + ',';
+      } else {
+        copyText = `IN (\n  ${values.join(',\n')}\n)`;
+      }
+    } else {
+      // Already vertical, but ensure trailing comma for SQL format
+      if (formatType === 'sql' && !formattedOutput.endsWith(',')) {
+        copyText = formattedOutput + ',';
+      }
+    }
+    
+    navigator.clipboard.writeText(copyText);
     setCopied(true);
     toast.success('Copied to clipboard!');
     setTimeout(() => setCopied(false), 2000);
@@ -100,7 +153,7 @@ export default function SqlFormatter() {
 
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">Format Type</label>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <button
               onClick={() => setFormatType('sql')}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
@@ -122,6 +175,61 @@ export default function SqlFormatter() {
               With IN Clause: IN ("ID-123","ID-456")
             </button>
           </div>
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">Quote Type</label>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setQuoteType('single')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                quoteType === 'single'
+                  ? 'bg-primary-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              Single Quotes: 'ID-123','ID-456'
+            </button>
+            <button
+              onClick={() => setQuoteType('double')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                quoteType === 'double'
+                  ? 'bg-primary-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              Double Quotes: "ID-123","ID-456"
+            </button>
+          </div>
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">Output Format</label>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setOutputFormat('horizontal')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                outputFormat === 'horizontal'
+                  ? 'bg-primary-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              Horizontal: 'ID-123','ID-456'
+            </button>
+            <button
+              onClick={() => setOutputFormat('vertical')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                outputFormat === 'vertical'
+                  ? 'bg-primary-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              Vertical: 'ID-123',\n'ID-456'
+            </button>
+          </div>
+          <p className="text-xs text-gray-500 mt-2">
+            Note: When copying, output is always copied in vertical format for better readability.
+          </p>
         </div>
 
         <div className="mb-4">
@@ -195,7 +303,7 @@ ID-55556666"
             </div>
           </div>
           <div className="relative">
-            <pre className="bg-gray-50 p-4 rounded-lg border border-gray-200 overflow-x-auto scrollbar-thin text-sm">
+            <pre className="bg-gray-50 p-4 rounded-lg border border-gray-200 overflow-x-auto scrollbar-thin text-sm whitespace-pre">
               <code className="font-mono">{formattedOutput}</code>
             </pre>
             <div className="mt-2 text-xs text-gray-500">
