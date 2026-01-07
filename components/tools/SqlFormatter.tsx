@@ -10,8 +10,8 @@ export default function SqlFormatter() {
   const [formattedOutput, setFormattedOutput] = useState('');
   const [copied, setCopied] = useState(false);
   const [formatType, setFormatType] = useState<'sql' | 'sqlWithIn'>('sql');
-  const [quoteType, setQuoteType] = useState<'single' | 'double'>('double');
-  const [outputFormat, setOutputFormat] = useState<'horizontal' | 'vertical'>('horizontal');
+  const [quoteType, setQuoteType] = useState<'single' | 'double'>('single');
+  const [outputFormat, setOutputFormat] = useState<'horizontal' | 'vertical'>('vertical');
 
   const formatInput = () => {
     if (!input.trim()) {
