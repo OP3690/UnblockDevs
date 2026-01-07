@@ -332,6 +332,7 @@ export default function JsonBeautifier() {
               onClick={handleClear}
               className="px-3 py-1.5 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-colors"
               title="Clear all"
+              aria-label="Clear all"
             >
               <X className="w-4 h-4" />
             </button>

@@ -386,6 +386,7 @@ export default function JsonFixer() {
             <button
               onClick={() => setJsonText('')}
               className="px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+              aria-label="Clear JSON input"
             >
               Clear
             </button>

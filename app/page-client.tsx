@@ -443,6 +443,7 @@ function HomeClient() {
               <Link
                 href="/blog"
                 className="px-4 py-2.5 text-sm font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-all duration-200 flex items-center gap-2 border border-gray-200/50 hover:border-gray-300 hover:shadow-sm flex-shrink-0"
+                aria-label="Read our developer blog"
               >
                 <FileText className="w-4 h-4" />
                 <span className="hidden sm:inline">Blog</span>
@@ -450,6 +451,7 @@ function HomeClient() {
               <Link
                 href="/about"
                 className="px-4 py-2.5 text-sm font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-all duration-200 flex items-center gap-2 border border-gray-200/50 hover:border-gray-300 hover:shadow-sm flex-shrink-0"
+                aria-label="Learn more about us"
               >
                 <span className="hidden sm:inline">About</span>
               </Link>

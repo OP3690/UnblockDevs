@@ -244,12 +244,14 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/* Preconnect to critical third-party domains for faster loading */}
-        <link rel="preconnect" href="https://cdn.buymeacoffee.com" />
-        <link rel="preconnect" href="https://www.ezojs.com" />
-        <link rel="preconnect" href="https://privacy.gatekeeperconsent.com" />
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://cdnjs.buymeacoffee.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://cdn.buymeacoffee.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://www.ezojs.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://privacy.gatekeeperconsent.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
         <link rel="dns-prefetch" href="https://lb.eu-1-id5-sync.com" />
+        <link rel="dns-prefetch" href="https://cdn.id5-sync.com" />
         
         {/* Favicon for Google Search Results - Multiple formats for better compatibility */}
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
