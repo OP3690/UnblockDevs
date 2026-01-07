@@ -6,6 +6,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // All blog posts
   const blogPosts = [
+    'git-commands-cheat-sheet-tips-tricks',
+    'git-complete-guide-what-why-how-when',
     'ces-2026-fire-tv-stick-4k-max-project-ava',
     'token-security-privacy-best-practices',
     'token-technologies-history-evolution',

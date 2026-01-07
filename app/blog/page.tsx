@@ -19,6 +19,24 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'git-commands-cheat-sheet-tips-tricks',
+      title: 'Git Commands Cheat Sheet: Most Useful Commands, Tips & Tricks',
+      excerpt: 'Complete Git commands cheat sheet with most useful commands, tips, tricks, and shortcuts. Learn essential Git commands for daily development, advanced techniques, and productivity hacks for Git workflows.',
+      date: '2026-02-01',
+      readTime: '20 min read',
+      category: 'Developer Tools & Git',
+      keywords: ['git commands', 'git cheat sheet', 'git tips', 'git tricks', 'git shortcuts', 'git commands reference', 'git productivity']
+    },
+    {
+      slug: 'git-complete-guide-what-why-how-when',
+      title: 'Git Complete Guide: What, Why, How & When with Best Practices',
+      excerpt: 'Complete guide to Git version control: what is Git, why use it, how it works, when to use it, and best practices. Learn Git fundamentals, workflow, branching strategies, and collaboration techniques for developers.',
+      date: '2026-02-01',
+      readTime: '25 min read',
+      category: 'Developer Tools & Git',
+      keywords: ['git guide', 'git tutorial', 'what is git', 'why use git', 'how git works', 'git best practices', 'git workflow']
+    },
+    {
       slug: 'ces-2026-fire-tv-stick-4k-max-project-ava',
       title: 'CES 2026: Amazon Fire TV Stick 4K Max & Project AVA - Complete Guide',
       excerpt: 'Complete guide to CES 2026 highlights: Amazon Fire TV Stick 4K Max features, specs, and Project AVA AI assistant. Learn about the latest streaming technology, AI integration, and smart home innovations.',
