@@ -6,6 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // All blog posts
   const blogPosts = [
+    'ces-2026-fire-tv-stick-4k-max-project-ava',
     'token-security-privacy-best-practices',
     'token-technologies-history-evolution',
     'tokens-complete-guide',

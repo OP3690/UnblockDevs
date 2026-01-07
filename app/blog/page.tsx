@@ -19,6 +19,15 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'ces-2026-fire-tv-stick-4k-max-project-ava',
+      title: 'CES 2026: Amazon Fire TV Stick 4K Max & Project AVA - Complete Guide',
+      excerpt: 'Complete guide to CES 2026 highlights: Amazon Fire TV Stick 4K Max features, specs, and Project AVA AI assistant. Learn about the latest streaming technology, AI integration, and smart home innovations.',
+      date: '2026-01-31',
+      readTime: '20 min read',
+      category: 'Technology & Reviews',
+      keywords: ['CES 2026', 'Amazon Fire TV Stick 4K Max', 'Project AVA', 'Fire TV Stick 2026', 'streaming device', 'AI assistant TV']
+    },
+    {
       slug: 'token-security-privacy-best-practices',
       title: 'Token Security & Privacy: Best Practices, Dos & Don\'ts',
       excerpt: 'Complete guide to token security and privacy: best practices, dos and don\'ts, common vulnerabilities, secure storage, token rotation, and privacy considerations. Learn how to secure authentication tokens.',
