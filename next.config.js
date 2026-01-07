@@ -1,6 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Optimize production builds
+  ...(process.env.NODE_ENV === 'production' && {
+    swcMinify: true,
+    compress: true,
+  }),
   // Disable CSS optimization in development to prevent caching issues
   ...(process.env.NODE_ENV === 'development' && {
     webpack: (config) => {
@@ -9,11 +14,56 @@ const nextConfig = {
       return config;
     },
   }),
+  // Optimize images
+  images: {
+    formats: ['image/avif', 'image/webp'],
+  },
   // Redirects configuration
   async redirects() {
     return [
       // No redirects configured - all redirects should be managed in Vercel Dashboard
       // If you see redirects to /lander, remove them from Vercel Dashboard
+    ]
+  },
+  // Headers for better caching
+  async headers() {
+    return [
+      {
+        source: '/icon.png',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/favicon.ico',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/apple-icon.png',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/manifest.json',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400',
+          },
+        ],
+      },
     ]
   },
 }

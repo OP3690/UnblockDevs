@@ -188,6 +188,7 @@ function SortableSection({
                 onClick={() => setMergeSource(section.id)}
                 className="p-2 text-primary-600 hover:bg-primary-50 rounded transition-colors"
                 title="Merge section"
+                aria-label="Merge section"
               >
                 <Merge className="w-4 h-4" />
               </button>
@@ -195,6 +196,7 @@ function SortableSection({
                 onClick={() => handleDeleteSection(section.id)}
                 className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
                 title="Delete section"
+                aria-label="Delete section"
               >
                 <Trash2 className="w-4 h-4" />
               </button>

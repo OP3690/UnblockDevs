@@ -243,34 +243,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Ezoic Privacy Scripts - Must be loaded first */}
-        <script data-cfasync="false" src="https://cmp.gatekeeperconsent.com/min.js"></script>
-        <script data-cfasync="false" src="https://the.gatekeeperconsent.com/cmp.min.js"></script>
+        {/* Preconnect to critical third-party domains for faster loading */}
+        <link rel="preconnect" href="https://cdn.buymeacoffee.com" />
+        <link rel="preconnect" href="https://www.ezojs.com" />
+        <link rel="preconnect" href="https://privacy.gatekeeperconsent.com" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
+        <link rel="dns-prefetch" href="https://lb.eu-1-id5-sync.com" />
         
-        {/* Ezoic Header Script */}
-        <script async src="//www.ezojs.com/ezoic/sa.min.js"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.ezstandalone = window.ezstandalone || {};
-              ezstandalone.cmd = ezstandalone.cmd || [];
-              // Handle Ezoic errors gracefully
-              if (typeof window !== 'undefined') {
-                window.addEventListener('error', function(e) {
-                  if (e.message && (e.message.includes('Ezoic') || e.message.includes('_ezaq'))) {
-                    e.preventDefault();
-                    console.debug('Ezoic error handled:', e.message);
-                  }
-                }, true);
-              }
-            `,
-          }}
-        />
-        
-        {/* Force CSS to load by adding cache-busting */}
-        <meta httpEquiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-        <meta httpEquiv="Pragma" content="no-cache" />
-        <meta httpEquiv="Expires" content="0" />
         {/* Favicon for Google Search Results - Multiple formats for better compatibility */}
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/icon.png" />
@@ -281,8 +261,11 @@ export default function RootLayout({
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="manifest" href="/manifest.json" />
         
-        {/* Google Analytics */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-N6DF8NPHY8"></script>
+        {/* Google Analytics - Load after page load */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-N6DF8NPHY8"
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -290,32 +273,82 @@ export default function RootLayout({
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
               gtag('config', 'G-N6DF8NPHY8', {
-                // Preserve UTM parameters across page navigations
                 allow_enhanced_conversions: true
               });
             `,
           }}
         />
         
-        {/* Google AdSense */}
+        {/* Google AdSense - Defer loading */}
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6349841658473646"
           crossOrigin="anonymous"
         />
         
-        {/* Buy Me a Coffee Widget */}
+        {/* Ezoic and Buy Me a Coffee - Load after page is interactive */}
         <script
-          data-name="BMC-Widget"
-          data-cfasync="false"
-          src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
-          data-id="WKbStURip"
-          data-description="Support me on Buy me a coffee!"
-          data-message="You have a wonderful day!!!"
-          data-color="#5F7FFF"
-          data-position="Right"
-          data-x_margin="18"
-          data-y_margin="18"
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Defer non-critical scripts until after page load
+              if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', loadDeferredScripts);
+              } else {
+                loadDeferredScripts();
+              }
+              
+              function loadDeferredScripts() {
+                // Ezoic Privacy Scripts
+                const gatekeeper1 = document.createElement('script');
+                gatekeeper1.setAttribute('data-cfasync', 'false');
+                gatekeeper1.src = 'https://cmp.gatekeeperconsent.com/min.js';
+                gatekeeper1.defer = true;
+                document.head.appendChild(gatekeeper1);
+                
+                const gatekeeper2 = document.createElement('script');
+                gatekeeper2.setAttribute('data-cfasync', 'false');
+                gatekeeper2.src = 'https://the.gatekeeperconsent.com/cmp.min.js';
+                gatekeeper2.defer = true;
+                document.head.appendChild(gatekeeper2);
+                
+                // Ezoic Header Script
+                const ezoic = document.createElement('script');
+                ezoic.async = true;
+                ezoic.src = '//www.ezojs.com/ezoic/sa.min.js';
+                ezoic.defer = true;
+                document.head.appendChild(ezoic);
+                
+                // Ezoic error handling
+                window.ezstandalone = window.ezstandalone || {};
+                ezstandalone.cmd = ezstandalone.cmd || [];
+                if (typeof window !== 'undefined') {
+                  window.addEventListener('error', function(e) {
+                    if (e.message && (e.message.includes('Ezoic') || e.message.includes('_ezaq'))) {
+                      e.preventDefault();
+                      console.debug('Ezoic error handled:', e.message);
+                    }
+                  }, true);
+                }
+                
+                // Buy Me a Coffee Widget - Load after a delay
+                setTimeout(function() {
+                  const bmc = document.createElement('script');
+                  bmc.setAttribute('data-name', 'BMC-Widget');
+                  bmc.setAttribute('data-cfasync', 'false');
+                  bmc.src = 'https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js';
+                  bmc.setAttribute('data-id', 'WKbStURip');
+                  bmc.setAttribute('data-description', 'Support me on Buy me a coffee!');
+                  bmc.setAttribute('data-message', 'You have a wonderful day!!!');
+                  bmc.setAttribute('data-color', '#5F7FFF');
+                  bmc.setAttribute('data-position', 'Right');
+                  bmc.setAttribute('data-x_margin', '18');
+                  bmc.setAttribute('data-y_margin', '18');
+                  bmc.defer = true;
+                  document.head.appendChild(bmc);
+                }, 2000);
+              }
+            `,
+          }}
         />
         
         <script
