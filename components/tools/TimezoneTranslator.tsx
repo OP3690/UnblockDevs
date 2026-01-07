@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Clock, Globe, Copy, Check, Share2, Plus, X, MapPin, Calendar, Zap, Hash, Search, ChevronDown } from 'lucide-react';
+import { Clock, Globe, Copy, Check, Share2, Plus, X, MapPin, Calendar, Zap, Hash, Search, ChevronDown, Timer } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
 
@@ -171,7 +171,7 @@ const getAllTimezonesGrouped = (): TimezoneGroup[] => {
     }));
 };
 
-type ConversionMode = 'time' | 'epoch' | 'utc';
+type ConversionMode = 'time' | 'epoch' | 'utc' | 'timestamp';
 
 export default function TimezoneTranslator() {
   const [mode, setMode] = useState<ConversionMode>('time');
@@ -198,6 +198,18 @@ export default function TimezoneTranslator() {
   const [timezoneSearch, setTimezoneSearch] = useState('');
   const [isTimezoneDropdownOpen, setIsTimezoneDropdownOpen] = useState(false);
   const timezoneDropdownRef = useRef<HTMLDivElement>(null);
+  
+  // Timestamp Hell Solver
+  const [timestampInput, setTimestampInput] = useState('');
+  const [timestampResult, setTimestampResult] = useState<{
+    detectedFormat: string;
+    epochSeconds: number;
+    epochMilliseconds: number;
+    iso: string;
+    utc: string;
+    local: string;
+    readable: string;
+  } | null>(null);
 
   // Auto-capture current system time on load (but don't auto-select city)
   useEffect(() => {
@@ -392,6 +404,93 @@ export default function TimezoneTranslator() {
     }
   };
 
+  const convertTimestamp = () => {
+    if (!timestampInput.trim()) {
+      toast.error('Please enter a timestamp');
+      return;
+    }
+
+    const input = timestampInput.trim();
+    let date: Date | null = null;
+    let detectedFormat = '';
+
+    try {
+      // 1. Try epoch seconds (10 digits, typically 1000000000 to 9999999999)
+      if (/^\d{10}$/.test(input)) {
+        const epoch = parseInt(input);
+        date = new Date(epoch * 1000);
+        detectedFormat = 'Epoch Seconds';
+      }
+      // 2. Try epoch milliseconds (13 digits, typically 1000000000000 to 9999999999999)
+      else if (/^\d{13}$/.test(input)) {
+        const epoch = parseInt(input);
+        date = new Date(epoch);
+        detectedFormat = 'Epoch Milliseconds';
+      }
+      // 3. Try ISO format (contains T or Z)
+      else if (input.includes('T') || input.includes('Z') || input.match(/^\d{4}-\d{2}-\d{2}/)) {
+        date = new Date(input);
+        detectedFormat = 'ISO 8601';
+      }
+      // 4. Try UTC string format
+      else if (input.includes('UTC') || input.includes('GMT')) {
+        date = new Date(input);
+        detectedFormat = 'UTC String';
+      }
+      // 5. Try local date string
+      else {
+        date = new Date(input);
+        if (!isNaN(date.getTime())) {
+          detectedFormat = 'Local Date String';
+        }
+      }
+
+      if (!date || isNaN(date.getTime())) {
+        toast.error('Could not detect timestamp format. Try: epoch (seconds/ms), ISO 8601, or date string');
+        setTimestampResult(null);
+        return;
+      }
+
+      const epochSeconds = Math.floor(date.getTime() / 1000);
+      const epochMilliseconds = date.getTime();
+      const iso = date.toISOString();
+      const utc = date.toUTCString();
+      const local = date.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true,
+      });
+      const readable = date.toLocaleString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true,
+      });
+
+      setTimestampResult({
+        detectedFormat,
+        epochSeconds,
+        epochMilliseconds,
+        iso,
+        utc,
+        local,
+        readable,
+      });
+      toast.success(`Detected format: ${detectedFormat}`);
+    } catch (error) {
+      toast.error('Failed to parse timestamp. Please check the format.');
+      setTimestampResult(null);
+    }
+  };
+
   const addCity = (city: City) => {
     if (!selectedCities.find(c => c.id === city.id)) {
       setSelectedCities([...selectedCities, city]);
@@ -516,6 +615,17 @@ export default function TimezoneTranslator() {
           >
             <Globe className="w-4 h-4 inline mr-2" />
             UTC Converter
+          </button>
+          <button
+            onClick={() => setMode('timestamp')}
+            className={`flex-1 px-4 py-2 rounded-lg font-semibold transition-all ${
+              mode === 'timestamp'
+                ? 'bg-green-600 text-white shadow-md'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            <Timer className="w-4 h-4 inline mr-2" />
+            Timestamp Solver
           </button>
         </div>
       </div>
@@ -953,6 +1063,159 @@ export default function TimezoneTranslator() {
                   >
                     {copied === 'utc-result' ? '✓ Copied' : 'Copy Result'}
                   </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Timestamp Hell Solver Mode */}
+      {mode === 'timestamp' && (
+        <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+          <div className="mb-4">
+            <h3 className="text-xl font-bold text-gray-900 mb-2 flex items-center gap-2">
+              <Timer className="w-6 h-6 text-green-600" />
+              Timestamp Hell Solver
+            </h3>
+            <p className="text-gray-600 text-sm">
+              Automatically detects timestamp format and converts between UTC, local, ISO, epoch (seconds/ms). 
+              Paste any timestamp format and get all conversions instantly.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-semibold text-gray-700 mb-2 block">
+                Enter Timestamp (any format)
+              </label>
+              <input
+                type="text"
+                value={timestampInput}
+                onChange={(e) => setTimestampInput(e.target.value)}
+                placeholder="1704067200, 1704067200000, 2024-01-01T00:00:00Z, or any date string"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent font-mono text-sm"
+                onKeyPress={(e) => e.key === 'Enter' && convertTimestamp()}
+              />
+              <p className="text-xs text-gray-500 mt-2">
+                Supports: Epoch (seconds/ms), ISO 8601, UTC strings, local date strings
+              </p>
+            </div>
+
+            <button
+              onClick={convertTimestamp}
+              className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-green-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg"
+            >
+              Convert Timestamp
+            </button>
+
+            {timestampResult && (
+              <div className="mt-4 space-y-4">
+                <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-semibold text-gray-900">Detected Format</h4>
+                    <span className="px-3 py-1 bg-green-600 text-white rounded-full text-xs font-semibold">
+                      {timestampResult.detectedFormat}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  {/* Epoch Seconds */}
+                  <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <label className="text-xs font-semibold text-gray-600 mb-1 block">Epoch (Seconds)</label>
+                    <div className="flex items-center gap-2">
+                      <code className="flex-1 p-2 bg-white rounded border border-gray-200 font-mono text-sm">
+                        {timestampResult.epochSeconds}
+                      </code>
+                      <button
+                        onClick={() => copyToClipboard(String(timestampResult.epochSeconds), 'epoch-sec')}
+                        className="p-2 bg-gray-200 hover:bg-gray-300 rounded transition-colors"
+                      >
+                        {copied === 'epoch-sec' ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Epoch Milliseconds */}
+                  <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <label className="text-xs font-semibold text-gray-600 mb-1 block">Epoch (Milliseconds)</label>
+                    <div className="flex items-center gap-2">
+                      <code className="flex-1 p-2 bg-white rounded border border-gray-200 font-mono text-sm">
+                        {timestampResult.epochMilliseconds}
+                      </code>
+                      <button
+                        onClick={() => copyToClipboard(String(timestampResult.epochMilliseconds), 'epoch-ms')}
+                        className="p-2 bg-gray-200 hover:bg-gray-300 rounded transition-colors"
+                      >
+                        {copied === 'epoch-ms' ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* ISO 8601 */}
+                  <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <label className="text-xs font-semibold text-gray-600 mb-1 block">ISO 8601</label>
+                    <div className="flex items-center gap-2">
+                      <code className="flex-1 p-2 bg-white rounded border border-gray-200 font-mono text-xs break-all">
+                        {timestampResult.iso}
+                      </code>
+                      <button
+                        onClick={() => copyToClipboard(timestampResult.iso, 'iso')}
+                        className="p-2 bg-gray-200 hover:bg-gray-300 rounded transition-colors"
+                      >
+                        {copied === 'iso' ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* UTC */}
+                  <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <label className="text-xs font-semibold text-gray-600 mb-1 block">UTC</label>
+                    <div className="flex items-center gap-2">
+                      <code className="flex-1 p-2 bg-white rounded border border-gray-200 font-mono text-xs break-all">
+                        {timestampResult.utc}
+                      </code>
+                      <button
+                        onClick={() => copyToClipboard(timestampResult.utc, 'utc')}
+                        className="p-2 bg-gray-200 hover:bg-gray-300 rounded transition-colors"
+                      >
+                        {copied === 'utc' ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Local */}
+                  <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <label className="text-xs font-semibold text-gray-600 mb-1 block">Local Time</label>
+                    <div className="flex items-center gap-2">
+                      <code className="flex-1 p-2 bg-white rounded border border-gray-200 text-sm">
+                        {timestampResult.local}
+                      </code>
+                      <button
+                        onClick={() => copyToClipboard(timestampResult.local, 'local')}
+                        className="p-2 bg-gray-200 hover:bg-gray-300 rounded transition-colors"
+                      >
+                        {copied === 'local' ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Readable */}
+                  <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <label className="text-xs font-semibold text-gray-600 mb-1 block">Human Readable</label>
+                    <div className="flex items-center gap-2">
+                      <code className="flex-1 p-2 bg-white rounded border border-gray-200 text-sm">
+                        {timestampResult.readable}
+                      </code>
+                      <button
+                        onClick={() => copyToClipboard(timestampResult.readable, 'readable')}
+                        className="p-2 bg-gray-200 hover:bg-gray-300 rounded transition-colors"
+                      >
+                        {copied === 'readable' ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
