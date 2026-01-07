@@ -243,12 +243,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Preconnect to critical third-party domains for faster loading */}
-        <link rel="preconnect" href="https://cdnjs.buymeacoffee.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://cdn.buymeacoffee.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://www.ezojs.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://privacy.gatekeeperconsent.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
+        {/* Critical preconnect hints - Must be first for mobile performance (1,000ms+ savings) */}
+        <link rel="preconnect" href="https://g.ezoic.net" />
+        <link rel="preconnect" href="https://privacy.gatekeeperconsent.com" />
+        <link rel="preconnect" href="https://cdnjs.buymeacoffee.com" />
+        <link rel="preconnect" href="https://www.ezojs.com" />
         <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
         <link rel="dns-prefetch" href="https://lb.eu-1-id5-sync.com" />
         <link rel="dns-prefetch" href="https://cdn.id5-sync.com" />
@@ -288,51 +287,46 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         
-        {/* Ezoic and Buy Me a Coffee - Load after page is interactive */}
+        {/* Ezoic and Buy Me a Coffee - Load after page is interactive to improve LCP */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              // Defer non-critical scripts until after page load
-              if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', loadDeferredScripts);
-              } else {
-                loadDeferredScripts();
+              // Initialize Ezoic early but defer loading
+              window.ezstandalone = window.ezstandalone || {};
+              ezstandalone.cmd = ezstandalone.cmd || [];
+              
+              // Error handling for Ezoic
+              if (typeof window !== 'undefined') {
+                window.addEventListener('error', function(e) {
+                  if (e.message && (e.message.includes('Ezoic') || e.message.includes('_ezaq'))) {
+                    e.preventDefault();
+                    console.debug('Ezoic error handled:', e.message);
+                  }
+                }, true);
               }
               
+              // Defer non-critical scripts until after page load and LCP
               function loadDeferredScripts() {
-                // Ezoic Privacy Scripts
+                // Ezoic Privacy Scripts - Load after LCP
                 const gatekeeper1 = document.createElement('script');
                 gatekeeper1.setAttribute('data-cfasync', 'false');
                 gatekeeper1.src = 'https://cmp.gatekeeperconsent.com/min.js';
-                gatekeeper1.defer = true;
+                gatekeeper1.async = true;
                 document.head.appendChild(gatekeeper1);
                 
                 const gatekeeper2 = document.createElement('script');
                 gatekeeper2.setAttribute('data-cfasync', 'false');
                 gatekeeper2.src = 'https://the.gatekeeperconsent.com/cmp.min.js';
-                gatekeeper2.defer = true;
+                gatekeeper2.async = true;
                 document.head.appendChild(gatekeeper2);
                 
-                // Ezoic Header Script
+                // Ezoic Header Script - Load after LCP
                 const ezoic = document.createElement('script');
                 ezoic.async = true;
                 ezoic.src = '//www.ezojs.com/ezoic/sa.min.js';
-                ezoic.defer = true;
                 document.head.appendChild(ezoic);
                 
-                // Ezoic error handling
-                window.ezstandalone = window.ezstandalone || {};
-                ezstandalone.cmd = ezstandalone.cmd || [];
-                if (typeof window !== 'undefined') {
-                  window.addEventListener('error', function(e) {
-                    if (e.message && (e.message.includes('Ezoic') || e.message.includes('_ezaq'))) {
-                      e.preventDefault();
-                      console.debug('Ezoic error handled:', e.message);
-                    }
-                  }, true);
-                }
-                
-                // Buy Me a Coffee Widget - Load after a delay
+                // Buy Me a Coffee Widget - Load after LCP with delay
                 setTimeout(function() {
                   const bmc = document.createElement('script');
                   bmc.setAttribute('data-name', 'BMC-Widget');
@@ -345,9 +339,47 @@ export default function RootLayout({
                   bmc.setAttribute('data-position', 'Right');
                   bmc.setAttribute('data-x_margin', '18');
                   bmc.setAttribute('data-y_margin', '18');
-                  bmc.defer = true;
+                  bmc.async = true;
                   document.head.appendChild(bmc);
-                }, 2000);
+                }, 3000);
+              }
+              
+              // Wait for LCP before loading deferred scripts
+              if ('PerformanceObserver' in window) {
+                try {
+                  const observer = new PerformanceObserver((list) => {
+                    const entries = list.getEntries();
+                    const lastEntry = entries[entries.length - 1];
+                    if (lastEntry && lastEntry.renderTime) {
+                      // LCP has occurred, load deferred scripts
+                      loadDeferredScripts();
+                      observer.disconnect();
+                    }
+                  });
+                  observer.observe({ type: 'largest-contentful-paint', buffered: true });
+                  
+                  // Fallback: Load after 2 seconds if LCP doesn't fire
+                  setTimeout(() => {
+                    observer.disconnect();
+                    loadDeferredScripts();
+                  }, 2000);
+                } catch (e) {
+                  // Fallback if PerformanceObserver fails
+                  if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', loadDeferredScripts);
+                  } else {
+                    setTimeout(loadDeferredScripts, 1000);
+                  }
+                }
+              } else {
+                // Fallback for browsers without PerformanceObserver
+                if (document.readyState === 'loading') {
+                  document.addEventListener('DOMContentLoaded', () => {
+                    setTimeout(loadDeferredScripts, 1000);
+                  });
+                } else {
+                  setTimeout(loadDeferredScripts, 1000);
+                }
               }
             `,
           }}
