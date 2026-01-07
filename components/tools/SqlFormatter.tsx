@@ -47,7 +47,9 @@ export default function SqlFormatter() {
         // Format: IN ("ID-123456","ID-11112223") or IN ('ID-123456','ID-11112223')
         const formattedValues = values.map(v => `${quote}${v}${quote}`);
         if (outputFormat === 'vertical') {
-          output = `IN (\n  ${formattedValues.join(separator)}\n)`;
+          // Add comma to all except last item
+          const verticalValues = formattedValues.map((v, i) => i < formattedValues.length - 1 ? `${v},` : v).join('\n  ');
+          output = `IN (\n  ${verticalValues}\n)`;
         } else {
           output = `IN (${formattedValues.join(separator)})`;
         }
@@ -91,16 +93,25 @@ export default function SqlFormatter() {
         }
       }
       
-      // Format as vertical with trailing comma
+      // Format as vertical without trailing comma on last item
       if (formatType === 'sql') {
-        copyText = values.join(',\n') + ',';
+        copyText = values.map((v, i) => i < values.length - 1 ? `${v},` : v).join('\n');
       } else {
-        copyText = `IN (\n  ${values.join(',\n')}\n)`;
+        copyText = `IN (\n  ${values.map((v, i) => i < values.length - 1 ? `${v},` : v).join('\n')}\n)`;
       }
     } else {
-      // Already vertical, but ensure trailing comma for SQL format
-      if (formatType === 'sql' && !formattedOutput.endsWith(',')) {
-        copyText = formattedOutput + ',';
+      // Already vertical, remove trailing comma from last line
+      if (formatType === 'sql') {
+        // Remove trailing comma from the last line
+        const lines = formattedOutput.split('\n');
+        if (lines.length > 0) {
+          const lastLine = lines[lines.length - 1].replace(/,\s*$/, '');
+          lines[lines.length - 1] = lastLine;
+          copyText = lines.join('\n');
+        }
+      } else {
+        // For IN clause format, remove trailing comma from last item inside parentheses
+        copyText = formattedOutput.replace(/,(\s*\n\s*\))/, '$1');
       }
     }
     
