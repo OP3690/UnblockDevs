@@ -8,23 +8,23 @@
  * 
  * Note: This script connects to both databases using the same connection string
  * but accesses different databases by name.
+ * 
+ * Requires: mongoose (already installed as dependency)
  */
 
-const { MongoClient } = require('mongodb');
+const mongoose = require('mongoose');
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://global5665:test123@cluster0.wigbba7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 
 async function migrateVisits() {
-  const client = new MongoClient(MONGODB_URI);
-  
   try {
     console.log('Connecting to MongoDB...');
-    await client.connect();
+    await mongoose.connect(MONGODB_URI);
     console.log('Connected to MongoDB');
 
     // Get source database (test)
-    const sourceDb = client.db('test');
-    const targetDb = client.db('UnblockDevs');
+    const sourceDb = mongoose.connection.useDb('test');
+    const targetDb = mongoose.connection.useDb('UnblockDevs');
 
     // Check if visits collection exists in source
     const sourceCollections = await sourceDb.listCollections().toArray();
@@ -38,7 +38,7 @@ async function migrateVisits() {
     console.log('Found visits collection in test database. Starting migration...');
 
     // Get all documents from source collection
-    const sourceCollection = sourceDb.collection('visits');
+    const sourceCollection = sourceDb.db.collection('visits');
     const documents = await sourceCollection.find({}).toArray();
     
     console.log(`Found ${documents.length} documents to migrate`);
@@ -49,7 +49,7 @@ async function migrateVisits() {
     }
 
     // Create target collection in UnblockDevs database
-    const targetCollection = targetDb.collection('visits');
+    const targetCollection = targetDb.db.collection('visits');
 
     // Insert documents into target collection
     // Use insertMany with ordered: false to handle duplicates gracefully
@@ -85,7 +85,7 @@ async function migrateVisits() {
     console.error('❌ Migration error:', error);
     process.exit(1);
   } finally {
-    await client.close();
+    await mongoose.disconnect();
     console.log('\nDisconnected from MongoDB');
   }
 }
