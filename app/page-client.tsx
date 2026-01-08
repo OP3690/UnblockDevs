@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
-import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, Star, TrendingUp, Mail, Scissors, Key, Clock } from 'lucide-react';
+import { useState, useCallback, useEffect, useMemo, Suspense } from 'react';
+import dynamic from 'next/dynamic';
+import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, TrendingUp, Mail, Scissors, Key, Clock } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { PersonalizationManager, ToolTab } from '@/lib/personalization';
@@ -13,22 +14,54 @@ import JsonInput from '@/components/JsonInput';
 import DataTable from '@/components/DataTable';
 import SectionManager from '@/components/SectionManager';
 import JsonBeautifier from '@/components/JsonBeautifier';
-import ApiComparator from '@/components/tools/ApiComparator';
-import JsonComparator from '@/components/tools/JsonComparator';
-import SchemaGenerator from '@/components/tools/SchemaGenerator';
-import LogExplorer from '@/components/tools/LogExplorer';
-import PayloadAnalyzer from '@/components/tools/PayloadAnalyzer';
-import CurlConverter from '@/components/tools/CurlConverter';
-import MockApiGenerator from '@/components/tools/MockApiGenerator';
-import TestDataGenerator from '@/components/tools/TestDataGenerator';
-import ConfigComparator from '@/components/tools/ConfigComparator';
-import SqlFormatter from '@/components/tools/SqlFormatter';
-import JsonBuilder from '@/components/tools/JsonBuilder';
 import JsonFixer from '@/components/tools/JsonFixer';
-import DataInsights from '@/components/tools/DataInsights';
-import PromptChunker from '@/components/tools/PromptChunker';
-import TokenComparator from '@/components/tools/TokenComparator';
-import TimezoneTranslator from '@/components/tools/TimezoneTranslator';
+
+// Lazy load tool components for better performance
+const ApiComparator = dynamic(() => import('@/components/tools/ApiComparator'), {
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+});
+const JsonComparator = dynamic(() => import('@/components/tools/JsonComparator'), {
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+});
+const SchemaGenerator = dynamic(() => import('@/components/tools/SchemaGenerator'), {
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+});
+const LogExplorer = dynamic(() => import('@/components/tools/LogExplorer'), {
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+});
+const PayloadAnalyzer = dynamic(() => import('@/components/tools/PayloadAnalyzer'), {
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+});
+const CurlConverter = dynamic(() => import('@/components/tools/CurlConverter'), {
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+});
+const MockApiGenerator = dynamic(() => import('@/components/tools/MockApiGenerator'), {
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+});
+const TestDataGenerator = dynamic(() => import('@/components/tools/TestDataGenerator'), {
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+});
+const ConfigComparator = dynamic(() => import('@/components/tools/ConfigComparator'), {
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+});
+const SqlFormatter = dynamic(() => import('@/components/tools/SqlFormatter'), {
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+});
+const JsonBuilder = dynamic(() => import('@/components/tools/JsonBuilder'), {
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+});
+const DataInsights = dynamic(() => import('@/components/tools/DataInsights'), {
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+});
+const PromptChunker = dynamic(() => import('@/components/tools/PromptChunker'), {
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+});
+const TokenComparator = dynamic(() => import('@/components/tools/TokenComparator'), {
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+});
+const TimezoneTranslator = dynamic(() => import('@/components/tools/TimezoneTranslator'), {
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+});
 import {
   jsonToRows,
   extractColumns,
@@ -47,7 +80,6 @@ interface Section {
 
 function HomeClient() {
   const [activeTab, setActiveTab] = useState<ToolTab>('converter');
-  const [favorites, setFavorites] = useState<ToolTab[]>([]);
   const [rows, setRows] = useState<FlattenedRow[]>([]);
   const [columns, setColumns] = useState<Column[]>([]);
   const [sections, setSections] = useState<Section[]>([]);
@@ -59,7 +91,7 @@ function HomeClient() {
   const [showBookmarkPrompt, setShowBookmarkPrompt] = useState<boolean>(false);
 
   // Function to show Buy Me a Coffee message (dismisses previous toast first)
-  const showBuyMeACoffeeMessage = () => {
+  const showBuyMeACoffeeMessage = useCallback(() => {
     // Dismiss any existing toast first
     toast.dismiss();
     // Show new toast after a small delay to ensure previous one is dismissed
@@ -70,32 +102,18 @@ function HomeClient() {
         id: 'buy-me-coffee-message', // Use same ID so it replaces previous toast
       });
     }, 50);
-  };
+  }, []);
 
-  // Handle tab change with message
-  const handleTabChange = (tab: ToolTab) => {
+  // Handle tab change with message - memoized to prevent unnecessary re-renders
+  const handleTabChange = useCallback((tab: ToolTab) => {
     if (tab !== activeTab) {
       setActiveTab(tab);
       showBuyMeACoffeeMessage();
     } else {
       setActiveTab(tab);
     }
-  };
+  }, [activeTab, showBuyMeACoffeeMessage]);
 
-  // Handle favorite toggle
-  const handleToggleFavorite = (toolId: ToolTab, e: React.MouseEvent) => {
-    e.stopPropagation();
-    const isNowFavorite = PersonalizationManager.toggleFavorite(toolId);
-    setFavorites(PersonalizationManager.getFavorites());
-    toast.success(isNowFavorite ? 'Added to favorites!' : 'Removed from favorites');
-  };
-
-  // Load personalization data
-  useEffect(() => {
-    if (mounted) {
-      setFavorites(PersonalizationManager.getFavorites());
-    }
-  }, [mounted]);
 
   // Mark as mounted immediately on client side
   useEffect(() => {
@@ -170,7 +188,7 @@ function HomeClient() {
                 const errorMsg = e?.message || String(e);
                 if (!errorMsg.includes('Monetization not allowed') && 
                     !errorMsg.includes('visit_uuid')) {
-                  console.debug('Ezoic ads initialization skipped:', e);
+                console.debug('Ezoic ads initialization skipped:', e);
                 }
               }
             });
@@ -180,7 +198,7 @@ function HomeClient() {
           const errorMsg = e?.message || String(e);
           if (!errorMsg.includes('Monetization not allowed') && 
               !errorMsg.includes('visit_uuid')) {
-            console.debug('Ezoic ads not available:', e);
+          console.debug('Ezoic ads not available:', e);
           }
         }
       };
@@ -198,7 +216,7 @@ function HomeClient() {
         // Refresh ads when content changes (tab switch)
         (window as any).ezstandalone.cmd.push(function() {
           try {
-            (window as any).ezstandalone.showAds();
+          (window as any).ezstandalone.showAds();
           } catch (e: any) {
             // Silently handle errors (site may not be approved yet)
             const errorMsg = e?.message || String(e);
@@ -213,7 +231,7 @@ function HomeClient() {
         const errorMsg = e?.message || String(e);
         if (!errorMsg.includes('Monetization not allowed') && 
             !errorMsg.includes('visit_uuid')) {
-          console.debug('Ezoic ads refresh error:', e);
+        console.debug('Ezoic ads refresh error:', e);
         }
       }
     }
@@ -269,7 +287,20 @@ function HomeClient() {
     });
   }, [rows, columns, sections, historyManager]);
 
-  const visibleColumns = columns.filter((col) => !removedColumns.has(col.id));
+  // Memoize visible columns to prevent unnecessary recalculations
+  const visibleColumns = useMemo(() => 
+    columns.filter((col) => !removedColumns.has(col.id)),
+    [columns, removedColumns]
+  );
+
+  // Memoize filtered sections to prevent unnecessary recalculations
+  const filteredSections = useMemo(() => 
+    sections.map((section) => ({
+      ...section,
+      columnIds: section.columnIds.filter((id) => !removedColumns.has(id)),
+    })),
+    [sections, removedColumns]
+  );
 
   const handleJsonSubmit = (data: any) => {
     try {
@@ -417,19 +448,19 @@ function HomeClient() {
       
       {/* Bookmark Prompt Banner */}
       {showBookmarkPrompt && (
-        <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-lg border-b border-blue-500/30 animate-slide-down">
-          <div className="max-w-7xl mx-auto container-padding py-4">
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex items-center gap-3 flex-1">
-                <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
-                  <Bookmark className="w-5 h-5" />
+        <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-md border-b border-blue-500/30 animate-slide-down">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
+            <div className="flex items-center justify-between gap-4 sm:gap-6">
+              <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                <div className="p-2.5 bg-white/20 rounded-xl backdrop-blur-sm flex-shrink-0">
+                  <Bookmark className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
-                <div className="flex-1">
-                  <p className="font-semibold text-sm sm:text-base">
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-sm sm:text-base leading-tight">
                     📌 Bookmark this page for quick access to all developer tools!
                   </p>
-                  <p className="text-xs sm:text-sm text-blue-100 mt-0.5">
-                    Press <kbd className="px-1.5 py-0.5 bg-white/20 rounded text-xs font-mono">Ctrl+D</kbd> (Windows/Linux) or <kbd className="px-1.5 py-0.5 bg-white/20 rounded text-xs font-mono">Cmd+D</kbd> (Mac) to bookmark
+                  <p className="text-xs sm:text-sm text-blue-100 mt-1.5 leading-relaxed">
+                    Press <kbd className="px-2 py-1 bg-white/20 rounded-md text-xs font-mono font-semibold">Ctrl+D</kbd> (Windows/Linux) or <kbd className="px-2 py-1 bg-white/20 rounded-md text-xs font-mono font-semibold">Cmd+D</kbd> (Mac) to bookmark
                   </p>
                 </div>
               </div>
@@ -446,19 +477,19 @@ function HomeClient() {
       )}
 
       {/* Header */}
-      <header className={`bg-white/98 backdrop-blur-lg shadow-lg border-b border-gray-200/70 ${showBookmarkPrompt ? 'sticky top-[73px]' : 'sticky top-0'} z-40 transition-all duration-300`}>
-        <div className="max-w-7xl mx-auto container-padding">
+      <header className={`bg-white/98 backdrop-blur-lg shadow-md border-b border-gray-200/70 ${showBookmarkPrompt ? 'sticky top-[73px]' : 'sticky top-0'} z-40 transition-all duration-300`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Top Bar - Ad Friendly */}
-          <div className="flex items-center justify-between py-5 border-b border-gray-100 gap-4">
-            <div className="flex items-center gap-5 flex-1 min-w-0">
-              <div className="p-3.5 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 rounded-2xl shadow-lg transform hover:scale-105 transition-transform duration-300 flex-shrink-0">
-                <FileSpreadsheet className="w-9 h-9 text-white" />
+          <div className="flex items-center justify-between py-6 border-b border-gray-100 gap-6">
+            <div className="flex items-center gap-6 flex-1 min-w-0">
+              <div className="p-4 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 rounded-2xl shadow-lg transform hover:scale-105 transition-transform duration-300 flex-shrink-0">
+                <FileSpreadsheet className="w-10 h-10 text-white" />
               </div>
               <div className="flex flex-col flex-1 min-w-0">
-                <h1 className="text-3xl font-extrabold gradient-text mb-1.5 leading-tight">
+                <h1 className="text-3xl sm:text-4xl font-extrabold gradient-text mb-2 leading-tight">
                   UnblockDevs
                 </h1>
-                <p className="text-xs text-gray-600 font-medium leading-relaxed">
+                <p className="text-xs sm:text-sm text-gray-600 font-medium leading-relaxed">
                   <span className="block">Free Online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier</span>
                   <span className="block">JSON to Excel Converter, JSON to CSV Converter, JSON to Table Converter</span>
                   <span className="block">Edit, View, Analyze, Format, Validate & Convert JSON Data Instantly</span>
@@ -481,7 +512,7 @@ function HomeClient() {
             <div id="ezoic-pub-ad-placeholder-100"></div>
               <Link
                 href="/blog"
-                className="px-4 py-2.5 text-sm font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-all duration-200 flex items-center gap-2 border border-gray-200/50 hover:border-gray-300 hover:shadow-sm flex-shrink-0"
+                className="px-4 sm:px-5 py-2.5 sm:py-3 text-sm font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-all duration-200 flex items-center gap-2 border border-gray-200/50 hover:border-gray-300 hover:shadow-sm flex-shrink-0"
                 aria-label="Read our developer blog"
               >
                 <FileText className="w-4 h-4" />
@@ -489,7 +520,7 @@ function HomeClient() {
               </Link>
               <Link
                 href="/about"
-                className="px-4 py-2.5 text-sm font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-all duration-200 flex items-center gap-2 border border-gray-200/50 hover:border-gray-300 hover:shadow-sm flex-shrink-0"
+                className="px-4 sm:px-5 py-2.5 sm:py-3 text-sm font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-all duration-200 flex items-center gap-2 border border-gray-200/50 hover:border-gray-300 hover:shadow-sm flex-shrink-0"
                 aria-label="Learn more about us"
               >
                 <span className="hidden sm:inline">About</span>
@@ -498,10 +529,10 @@ function HomeClient() {
           </div>
           
           {/* Tabs */}
-          <div className="flex flex-wrap items-center gap-2 pt-2 -mb-px">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-4 pb-0 -mb-px overflow-x-auto scrollbar-hide">
             <button
               onClick={() => handleTabChange('converter')}
-              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'converter'
                   ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
                   : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
@@ -514,7 +545,7 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('beautifier')}
-              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'beautifier'
                   ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
                   : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
@@ -522,12 +553,12 @@ function HomeClient() {
             >
               <div className="flex items-center gap-2">
                 <Code2 className="w-4 h-4" />
-                <span className="text-sm">Beautifier</span>
+                <span className="text-sm">JSON Beautifier</span>
               </div>
             </button>
             <button
               onClick={() => handleTabChange('fixer')}
-              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'fixer'
                   ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
                   : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
@@ -540,7 +571,7 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('builder')}
-              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'builder'
                   ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
                   : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
@@ -553,7 +584,7 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('comparator')}
-              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'comparator'
                   ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
                   : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
@@ -566,7 +597,7 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('jsoncompare')}
-              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'jsoncompare'
                   ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
                   : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
@@ -579,7 +610,7 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('schema')}
-              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'schema'
                   ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
                   : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
@@ -592,7 +623,7 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('logs')}
-              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'logs'
                   ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
                   : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
@@ -609,7 +640,7 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('payload')}
-              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'payload'
                   ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
                   : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
@@ -622,7 +653,7 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('curl')}
-              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'curl'
                   ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
                   : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
@@ -630,12 +661,12 @@ function HomeClient() {
             >
               <div className="flex items-center gap-2">
                 <Code className="w-4 h-4" />
-                <span className="text-sm">Curl</span>
+                <span className="text-sm">Convert Curl</span>
               </div>
             </button>
             <button
               onClick={() => handleTabChange('mock')}
-              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'mock'
                   ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
                   : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
@@ -648,7 +679,7 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('testdata')}
-              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'testdata'
                   ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
                   : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
@@ -661,7 +692,7 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('config')}
-              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'config'
                   ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
                   : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
@@ -674,7 +705,7 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('sql')}
-              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'sql'
                   ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
                   : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
@@ -683,15 +714,11 @@ function HomeClient() {
               <div className="flex items-center gap-2">
                 <Database className="w-4 h-4" />
                 <span className="text-sm">SQL Formatter</span>
-                <span className="px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded-full text-xs font-semibold flex items-center gap-1">
-                  <Star className="w-3 h-3 fill-yellow-500 text-yellow-700" />
-                  Favourite
-                </span>
               </div>
             </button>
             <button
               onClick={() => handleTabChange('insights')}
-              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'insights'
                   ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
                   : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
@@ -704,7 +731,7 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('promptchunk')}
-              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'promptchunk'
                   ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
                   : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
@@ -720,7 +747,7 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('tokencompare')}
-              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'tokencompare'
                   ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
                   : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
@@ -733,7 +760,7 @@ function HomeClient() {
             </button>
             <button
               onClick={() => handleTabChange('timezone')}
-              className={`px-5 py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
                 activeTab === 'timezone'
                   ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
                   : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
@@ -752,13 +779,13 @@ function HomeClient() {
       <div id="ezoic-pub-ad-placeholder-101"></div>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto container-padding py-10 animate-fade-in">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12 animate-fade-in">
         {activeTab === 'converter' && (
           rows.length === 0 ? (
             <JsonInput onJsonSubmit={handleJsonSubmit} />
           ) : (
             <>
-              <div className="mb-6">
+              <div className="mb-6 sm:mb-8">
                 <button
                   onClick={() => {
                     setRows([]);
@@ -766,12 +793,13 @@ function HomeClient() {
                     setSections([]);
                     historyManager.clear();
                   }}
-                  className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 hover:bg-white rounded-lg transition-colors"
+                  className="px-4 py-2.5 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-white rounded-lg transition-all duration-200 border border-gray-200 hover:border-gray-300 hover:shadow-sm"
                 >
                   ← Load New JSON
                 </button>
               </div>
 
+              <div className="space-y-6 sm:space-y-8">
               <SectionManager
                 sections={sections}
                 columns={columns}
@@ -786,20 +814,26 @@ function HomeClient() {
               <DataTable
                 rows={rows}
                 columns={visibleColumns}
-                sections={sections.map((section) => ({
-                  ...section,
-                  columnIds: section.columnIds.filter((id) => !removedColumns.has(id)),
-                }))}
+                sections={filteredSections}
                 removedColumns={removedColumns}
                 onCellEdit={handleCellEdit}
                 onColumnRename={handleColumnRename}
                 onRowDelete={handleRowDelete}
               />
+              </div>
             </>
           )
         )}
-        {activeTab === 'beautifier' && <JsonBeautifier />}
-        {activeTab === 'fixer' && <JsonFixer />}
+        {activeTab === 'beautifier' && (
+          <Suspense fallback={<div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>}>
+            <JsonBeautifier />
+          </Suspense>
+        )}
+        {activeTab === 'fixer' && (
+          <Suspense fallback={<div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>}>
+            <JsonFixer />
+          </Suspense>
+        )}
         {activeTab === 'comparator' && <ApiComparator />}
         {activeTab === 'jsoncompare' && <JsonComparator />}
         {activeTab === 'schema' && <SchemaGenerator />}
@@ -817,74 +851,207 @@ function HomeClient() {
         {activeTab === 'timezone' && <TimezoneTranslator />}
       </main>
 
-      {/* Personalized Sections */}
-      {activeTab === 'converter' && rows.length === 0 && mounted && favorites.length > 0 && (
-        <section className="max-w-7xl mx-auto container-padding py-8">
-          <div className="max-w-2xl mx-auto">
-            {/* Your Favorites */}
-            <div className="bg-gradient-to-br from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Star className="w-5 h-5 text-yellow-600 fill-yellow-600" />
-                <h3 className="text-xl font-bold text-gray-900">Your Favorites</h3>
-              </div>
-              <div className="space-y-2">
-                {favorites.map((toolId) => {
-                  const toolInfo = PersonalizationManager.getToolInfo()[toolId];
-                  return (
-                    <button
-                      key={toolId}
-                      onClick={() => handleTabChange(toolId)}
-                      className="w-full text-left px-4 py-3 bg-white rounded-lg hover:bg-yellow-50 transition-colors border border-yellow-200 group"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-semibold text-gray-900 group-hover:text-blue-600">{toolInfo.name}</h4>
-                          <p className="text-sm text-gray-600">{toolInfo.description}</p>
-                        </div>
-                        <Star className="w-5 h-5 text-yellow-600 fill-yellow-600" />
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
       {/* Services Section */}
       {activeTab === 'converter' && rows.length === 0 && (
-        <section className="max-w-7xl mx-auto container-padding py-12">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 lg:py-16">
           {/* Keyword-Rich Hero Section */}
-          <div className="text-center mb-12 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-2xl p-8 border border-blue-100">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Free Online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier & JSON Fixer
+          <div className="text-center mb-10 sm:mb-12 lg:mb-16 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-2xl p-6 sm:p-8 lg:p-10 border border-blue-100 shadow-sm">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
+              JSON Schema Generator, JSON to Excel Converter & Curl to Requests - Free Developer Tools | UnblockDevs.com
             </h1>
-            <p className="text-lg md:text-xl text-gray-700 max-w-4xl mx-auto mb-6">
-              Use our free online JSON tools to <strong>view JSON</strong>, <strong>format JSON</strong>, <strong>parse JSON</strong>, <strong>beautify JSON</strong>, and <strong>fix malformed JSON</strong> instantly. 
-              Convert JSON to Excel, JSON to CSV, or JSON to Table format. Edit, analyze, validate, repair syntax errors, and transform JSON data - all in your browser, no installation required.
+            <p className="text-base sm:text-lg lg:text-xl text-gray-700 max-w-4xl mx-auto mb-6 sm:mb-8 leading-relaxed">
+              Use <strong>UnblockDevs.com</strong> free online tools for <strong>JSON schema generation</strong>, <strong>JSON schema validation</strong>, <strong>export JSON to Excel</strong>, <strong>convert curl to requests</strong>, and <strong>JSON schema creation</strong>. 
+              Generate JSON schema, validate JSON schema, convert JSON to Excel table, convert curl to JavaScript, and create JSON schemas instantly. All tools work entirely in your browser - no installation required.
             </p>
-            <div className="flex flex-wrap justify-center gap-3 text-sm text-gray-600">
-              <span className="px-4 py-2 bg-white rounded-lg shadow-sm">✓ JSON Viewer Online</span>
-              <span className="px-4 py-2 bg-white rounded-lg shadow-sm">✓ JSON Formatter Online</span>
-              <span className="px-4 py-2 bg-white rounded-lg shadow-sm">✓ JSON Parser Online</span>
-              <span className="px-4 py-2 bg-white rounded-lg shadow-sm">✓ JSON Beautifier Online</span>
-              <span className="px-4 py-2 bg-white rounded-lg shadow-sm">✓ JSON Fixer & Repair Tool</span>
-              <span className="px-4 py-2 bg-white rounded-lg shadow-sm">✓ JSON to Excel Converter</span>
-              <span className="px-4 py-2 bg-white rounded-lg shadow-sm">✓ JSON to CSV Converter</span>
-              <span className="px-4 py-2 bg-white rounded-lg shadow-sm">✓ JSON to Table Converter</span>
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-600">
+              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ JSON Schema Generator</span>
+              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ JSON Schema Validation</span>
+              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ Export JSON to Excel</span>
+              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ Convert Curl to Requests</span>
+              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ JSON Schema Creator</span>
+              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ JSON to Excel Integration</span>
+              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ Curl to JavaScript</span>
+              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ JSON Schema Generator Online</span>
             </div>
           </div>
           
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Developer Tools</h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          {/* SEO Content Section */}
+          <div className="mb-10 sm:mb-12 lg:mb-16 bg-white rounded-2xl p-6 sm:p-8 lg:p-10 border border-gray-200 shadow-sm">
+            <div className="max-w-4xl mx-auto space-y-6">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Powerful JSON & API Development Tools at UnblockDevs.com</h2>
+              
+              <div className="space-y-4 text-gray-700 leading-relaxed">
+                <p>
+                  <strong>JSON Schema Generator & Validation:</strong> Our <strong>JSON schema generator</strong> helps you create comprehensive JSON schemas from your JSON data. Use our <strong>JSON schema validation</strong> tool to validate JSON against schemas, ensuring data integrity. Whether you're <strong>creating a JSON schema</strong>, <strong>defining JSON schema</strong>, or <strong>generating JSON schema</strong>, our <strong>schema generator from JSON</strong> makes it easy. Perfect for API documentation and data validation workflows.
+                </p>
+                
+                <p>
+                  <strong>Export JSON to Excel:</strong> Need to <strong>convert JSON to Excel</strong>? Our <strong>JSON to Excel converter</strong> allows you to <strong>export JSON to Excel</strong> with ease. Learn <strong>how to convert JSON to Excel</strong> and transform your JSON data into structured Excel spreadsheets. Our tool supports <strong>JSON to Excel integration</strong> and <strong>convert JSON to Excel table</strong> formats, making data analysis simple.
+                </p>
+                
+                <p>
+                  <strong>Convert Curl to Requests:</strong> Transform your curl commands with our <strong>curl to requests</strong> converter. <strong>Convert curl to JavaScript</strong>, Python, or other languages instantly. Our <strong>convert curl to http request</strong> tool helps developers translate API calls quickly. Whether you need to <strong>convert curl</strong> for testing or integration, our <strong>curl to</strong> converter supports multiple output formats.
+                </p>
+                
+                <p>
+                  <strong>JSON Schema Creation & Validation:</strong> Create robust JSON schemas with our <strong>JSON schema creator</strong>. Our <strong>JSON schema generation</strong> tool supports <strong>JSON schema for JSON schema</strong> patterns and helps with <strong>schema validation JSON</strong>. Use <strong>validation JSON schema</strong> to ensure your data matches expected structures. Our <strong>json-schema-generator</strong> is perfect for <strong>creating a JSON schema</strong> from existing JSON data.
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          {/* Language-Specific JSON Tools Section */}
+          <div className="mb-10 sm:mb-12 lg:mb-16 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 sm:p-8 lg:p-10 border border-indigo-100 shadow-sm">
+            <div className="max-w-4xl mx-auto space-y-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 text-center">JSON Tools for Every Programming Language</h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* JavaScript Section */}
+                <div className="bg-white rounded-xl p-6 border border-gray-200">
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                    <span className="text-2xl">🌐</span> JavaScript JSON Tools
+                  </h3>
+                  <p className="text-gray-700 text-sm leading-relaxed mb-3">
+                    Work with <strong>javascript json parse</strong> and <strong>javascript json stringify</strong> seamlessly. Our tools help with <strong>javascript validate json schema</strong>, <strong>javascript json schema validator</strong>, and <strong>javascript json manipulation</strong>. Convert data with <strong>javascript json to csv</strong> and <strong>javascript json to excel</strong>. Handle <strong>javascript nested json</strong> and <strong>javascript flatten json</strong> operations. Perfect for <strong>javascript fetch json api</strong> and <strong>javascript json response handling</strong>.
+                  </p>
+                  <ul className="text-xs text-gray-600 space-y-1">
+                    <li>• <strong>javascript json parse</strong> & <strong>javascript json stringify</strong></li>
+                    <li>• <strong>javascript json schema generator</strong> with <strong>javascript ajv json schema</strong></li>
+                    <li>• <strong>javascript json data analysis</strong> & <strong>javascript json transform</strong></li>
+                    <li>• <strong>javascript json error handling</strong> & <strong>javascript convert json</strong></li>
+                  </ul>
+                </div>
+                
+                {/* Python Section */}
+                <div className="bg-white rounded-xl p-6 border border-gray-200">
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                    <span className="text-2xl">🐍</span> Python JSON Tools
+                  </h3>
+                  <p className="text-gray-700 text-sm leading-relaxed mb-3">
+                    Master <strong>python json parsing</strong> with <strong>python json load</strong> and <strong>python json dump</strong>. Use <strong>python json schema validation</strong> and <strong>python validate json schema</strong> for data integrity. Convert between <strong>python json to dict</strong> and <strong>python dict to json</strong>. Handle <strong>python json file read</strong> and <strong>python json file write</strong>. Perfect for <strong>python pandas json analysis</strong> and <strong>python convert json to excel</strong>.
+                  </p>
+                  <ul className="text-xs text-gray-600 space-y-1">
+                    <li>• <strong>python json serialization</strong> & <strong>python json deserialization</strong></li>
+                    <li>• <strong>python json flatten</strong> & <strong>python nested json handling</strong></li>
+                    <li>• <strong>python json normalize</strong> & <strong>python json schema generator</strong></li>
+                    <li>• <strong>python json to csv</strong> & <strong>python json validation error</strong> handling</li>
+                  </ul>
+                </div>
+                
+                {/* Java Section */}
+                <div className="bg-white rounded-xl p-6 border border-gray-200">
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                    <span className="text-2xl">☕</span> Java JSON Tools
+                  </h3>
+                  <p className="text-gray-700 text-sm leading-relaxed mb-3">
+                    Work with <strong>java json parsing</strong> using <strong>java jackson json</strong> and <strong>java gson json</strong>. Convert between <strong>java json to pojo</strong> and <strong>java pojo to json</strong>. Use <strong>java json schema validation</strong> and <strong>java validate json against schema</strong>. Handle <strong>java json serialization</strong> and <strong>java json deserialization</strong>. Perfect for <strong>java read json file</strong> and <strong>java write json file</strong> operations.
+                  </p>
+                  <ul className="text-xs text-gray-600 space-y-1">
+                    <li>• <strong>java json object</strong> & <strong>java json array</strong> handling</li>
+                    <li>• <strong>java json mapper</strong> & <strong>java convert json to map</strong></li>
+                    <li>• <strong>java json to excel</strong> & <strong>java json schema generator</strong></li>
+                    <li>• <strong>java json pretty print</strong> & <strong>java json parsing error</strong> handling</li>
+                  </ul>
+                </div>
+                
+                {/* MySQL Section */}
+                <div className="bg-white rounded-xl p-6 border border-gray-200">
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                    <span className="text-2xl">🗄️</span> MySQL JSON Tools
+                  </h3>
+                  <p className="text-gray-700 text-sm leading-relaxed mb-3">
+                    Work with <strong>mysql json column</strong> and <strong>mysql json functions</strong>. Use <strong>mysql json extract</strong> and <strong>mysql json query</strong> for data retrieval. Implement <strong>mysql json validation</strong> and <strong>mysql json schema validation</strong>. Convert with <strong>mysql json to table</strong> and <strong>mysql convert json to rows</strong>. Handle <strong>mysql parse json</strong> and <strong>mysql json array</strong> operations.
+                  </p>
+                  <ul className="text-xs text-gray-600 space-y-1">
+                    <li>• <strong>mysql json index</strong> & <strong>mysql json search</strong> optimization</li>
+                    <li>• <strong>mysql json path examples</strong> & <strong>mysql json performance issues</strong></li>
+                    <li>• <strong>mysql import json data</strong> & <strong>mysql export json</strong></li>
+                    <li>• <strong>mysql json errors</strong> & <strong>mysql invalid json error</strong> handling</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* JSON Data Analysis Section */}
+          <div className="mb-10 sm:mb-12 lg:mb-16 bg-white rounded-2xl p-6 sm:p-8 lg:p-10 border border-gray-200 shadow-sm">
+            <div className="max-w-4xl mx-auto space-y-6">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">JSON Data Analysis & Processing Tools</h2>
+              
+              <div className="space-y-4 text-gray-700 leading-relaxed">
+                <p>
+                  Perform comprehensive <strong>json data analysis</strong> with our powerful tools. Use <strong>json data visualization</strong> to understand your data structures. Our <strong>json data processing</strong> tools support <strong>json analytics</strong> and <strong>json big data</strong> workflows. Transform data with <strong>json data transformation</strong> and <strong>json data normalization</strong>.
+                </p>
+                
+                <p>
+                  Clean and prepare your data with <strong>json data cleaning</strong> tools. Use <strong>json schema for analytics</strong> to ensure data quality. Perform <strong>json exploratory analysis</strong> and <strong>json dataset analysis</strong>. Work with <strong>analyze nested json</strong> structures and extract <strong>json metrics extraction</strong>. Convert data with <strong>json to dataframe</strong> and <strong>json to table conversion</strong>.
+                </p>
+                
+                <p>
+                  Advanced features include <strong>json aggregation</strong>, <strong>json statistical analysis</strong>, and <strong>json time series data</strong> handling. Build <strong>json data pipeline</strong> workflows and use <strong>json reporting tools</strong> for insights.
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          {/* Developer Utilities Section */}
+          <div className="mb-10 sm:mb-12 lg:mb-16 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 sm:p-8 lg:p-10 border border-blue-100 shadow-sm">
+            <div className="max-w-4xl mx-auto space-y-6">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Developer JSON Utilities & Conversion Tools</h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-white rounded-xl p-5 border border-gray-200">
+                  <h3 className="text-lg font-bold text-gray-900 mb-3">Database Conversions</h3>
+                  <ul className="text-sm text-gray-700 space-y-2">
+                    <li>• <strong>json to sql</strong> conversion</li>
+                    <li>• <strong>json to mysql</strong> integration</li>
+                    <li>• <strong>json to postgresql</strong> export</li>
+                    <li>• <strong>json to mongodb</strong> import</li>
+                  </ul>
+                </div>
+                
+                <div className="bg-white rounded-xl p-5 border border-gray-200">
+                  <h3 className="text-lg font-bold text-gray-900 mb-3">API & Testing Tools</h3>
+                  <ul className="text-sm text-gray-700 space-y-2">
+                    <li>• <strong>json api tester</strong> for REST APIs</li>
+                    <li>• <strong>api json validator</strong> for validation</li>
+                    <li>• <strong>rest api json tools</strong> suite</li>
+                    <li>• <strong>developer json utilities</strong> collection</li>
+                  </ul>
+                </div>
+                
+                <div className="bg-white rounded-xl p-5 border border-gray-200">
+                  <h3 className="text-lg font-bold text-gray-900 mb-3">Formatting & Editing</h3>
+                  <ul className="text-sm text-gray-700 space-y-2">
+                    <li>• <strong>json formatter online</strong> tool</li>
+                    <li>• <strong>json minifier</strong> for optimization</li>
+                    <li>• <strong>json editor online</strong> for editing</li>
+                    <li>• <strong>json viewer</strong> for visualization</li>
+                  </ul>
+                </div>
+                
+                <div className="bg-white rounded-xl p-5 border border-gray-200">
+                  <h3 className="text-lg font-bold text-gray-900 mb-3">Comparison & Debugging</h3>
+                  <ul className="text-sm text-gray-700 space-y-2">
+                    <li>• <strong>json diff tool</strong> for comparisons</li>
+                    <li>• <strong>json compare tool</strong> for analysis</li>
+                    <li>• <strong>json debugging tools</strong> suite</li>
+                    <li>• <strong>json pretty print</strong> formatting</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="text-center mb-10 sm:mb-12 lg:mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">Our Developer Tools</h2>
+            <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
               UnblockDevs provides a comprehensive suite of free online developer tools to streamline your development workflow. All tools work entirely in your browser - no installation required.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <button
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-8 sm:mb-12">
+            <div
               onClick={() => {
                 handleTabChange('converter');
                 if (typeof window !== 'undefined') {
@@ -893,25 +1060,18 @@ function HomeClient() {
               }}
               className="card card-hover text-left cursor-pointer group relative"
             >
-              <button
-                onClick={(e) => handleToggleFavorite('converter', e)}
-                className="absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 transition-colors z-10"
-                aria-label={favorites.includes('converter') ? 'Remove from favorites' : 'Add to favorites'}
-              >
-                <Star className={`w-5 h-5 ${favorites.includes('converter') ? 'text-yellow-500 fill-yellow-500' : 'text-gray-400'}`} />
-              </button>
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors pr-8">
-                JSON to Excel Converter | JSON to CSV Converter | JSON to Table Converter
+              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                Export JSON to Excel | Convert JSON to Excel Table | JSON to Excel Integration
               </h3>
               <p className="text-gray-600 text-sm">
-                Convert nested JSON data to structured Excel spreadsheets, CSV files, or HTML tables. Supports complex nested objects, arrays, and custom column organization. Export to Excel, CSV, or Table format with section management.
+                <strong>Export JSON to Excel</strong> and <strong>convert JSON to Excel table</strong> with our powerful converter. Learn <strong>how to convert JSON to Excel</strong> and transform nested JSON data into structured Excel spreadsheets. Perfect for <strong>JSON to Excel integration</strong> workflows. Supports CSV and HTML table formats with custom column organization.
               </p>
               <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
                 Try JSON to Excel Converter →
               </span>
-            </button>
+            </div>
             
-            <button
+            <div
               onClick={() => {
                 handleTabChange('beautifier');
                 if (typeof window !== 'undefined') {
@@ -921,14 +1081,7 @@ function HomeClient() {
               }}
               className="card card-hover text-left cursor-pointer group relative"
             >
-              <button
-                onClick={(e) => handleToggleFavorite('beautifier', e)}
-                className="absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 transition-colors z-10"
-                aria-label={favorites.includes('beautifier') ? 'Remove from favorites' : 'Add to favorites'}
-              >
-                <Star className={`w-5 h-5 ${favorites.includes('beautifier') ? 'text-yellow-500 fill-yellow-500' : 'text-gray-400'}`} />
-              </button>
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors pr-8">
+              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 JSON Viewer | JSON Formatter | JSON Parser | JSON Beautifier
               </h3>
               <p className="text-gray-600 text-sm">
@@ -937,9 +1090,9 @@ function HomeClient() {
               <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
                 Try JSON Viewer & Formatter →
               </span>
-            </button>
+            </div>
             
-            <button
+            <div
               onClick={() => {
                 handleTabChange('comparator');
                 if (typeof window !== 'undefined') {
@@ -949,14 +1102,7 @@ function HomeClient() {
               }}
               className="card card-hover text-left cursor-pointer group relative"
             >
-              <button
-                onClick={(e) => handleToggleFavorite('comparator', e)}
-                className="absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 transition-colors z-10"
-                aria-label={favorites.includes('comparator') ? 'Remove from favorites' : 'Add to favorites'}
-              >
-                <Star className={`w-5 h-5 ${favorites.includes('comparator') ? 'text-yellow-500 fill-yellow-500' : 'text-gray-400'}`} />
-              </button>
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors pr-8">
+              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 API Response Comparator
               </h3>
               <p className="text-gray-600 text-sm">
@@ -965,9 +1111,9 @@ function HomeClient() {
               <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
                 Try it now →
               </span>
-            </button>
+            </div>
             
-            <button
+            <div
               onClick={() => {
                 handleTabChange('jsoncompare');
                 if (typeof window !== 'undefined') {
@@ -986,9 +1132,9 @@ function HomeClient() {
               <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
                 Compare JSON Now →
               </span>
-            </button>
+            </div>
             
-            <button
+            <div
               onClick={() => {
                 handleTabChange('schema');
                 if (typeof window !== 'undefined') {
@@ -998,25 +1144,18 @@ function HomeClient() {
               }}
               className="card card-hover text-left cursor-pointer group relative"
             >
-              <button
-                onClick={(e) => handleToggleFavorite('schema', e)}
-                className="absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 transition-colors z-10"
-                aria-label={favorites.includes('schema') ? 'Remove from favorites' : 'Add to favorites'}
-              >
-                <Star className={`w-5 h-5 ${favorites.includes('schema') ? 'text-yellow-500 fill-yellow-500' : 'text-gray-400'}`} />
-              </button>
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors pr-8">
-                JSON Schema Generator
+              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                JSON Schema Generator | JSON Schema Creator | Generate JSON Schema
               </h3>
               <p className="text-gray-600 text-sm">
-                Automatically generate JSON Schema from your JSON data. Create validation schemas for API documentation and data validation.
+                Use our <strong>JSON schema generator</strong> to automatically <strong>generate JSON schema</strong> from your JSON data. Our <strong>JSON schema creator</strong> helps with <strong>JSON schema generation</strong> and <strong>creating a JSON schema</strong>. Perfect for <strong>defining JSON schema</strong> structures and <strong>schema generator from JSON</strong> workflows. Create validation schemas for API documentation and data validation.
               </p>
               <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
                 Try it now →
               </span>
-            </button>
+            </div>
             
-            <button
+            <div
               onClick={() => {
                 handleTabChange('logs');
                 if (typeof window !== 'undefined') {
@@ -1035,9 +1174,9 @@ function HomeClient() {
               <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
                 Try it now →
               </span>
-            </button>
+            </div>
             
-            <button
+            <div
               onClick={() => {
                 handleTabChange('payload');
                 if (typeof window !== 'undefined') {
@@ -1056,9 +1195,9 @@ function HomeClient() {
               <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
                 Try it now →
               </span>
-            </button>
+            </div>
             
-            <button
+            <div
               onClick={() => {
                 handleTabChange('curl');
                 if (typeof window !== 'undefined') {
@@ -1069,17 +1208,17 @@ function HomeClient() {
               className="card card-hover text-left cursor-pointer group"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                Curl to Code Converter
+                Convert Curl to Requests | Curl to JavaScript | Convert Curl to HTTP Request
               </h3>
               <p className="text-gray-600 text-sm">
-                Convert curl commands to code in multiple languages: JavaScript (Fetch), Python (Requests), Java (HttpClient), and Go (net/http). Perfect for API integration.
+                Use our <strong>curl to requests</strong> converter to <strong>convert curl to JavaScript</strong>, Python, Java, and Go. Our <strong>convert curl to http request</strong> tool helps you <strong>convert curl</strong> commands into code instantly. Perfect for API integration and testing workflows.
               </p>
               <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
                 Try it now →
               </span>
-            </button>
+            </div>
             
-            <button
+            <div
               onClick={() => {
                 handleTabChange('mock');
                 if (typeof window !== 'undefined') {
@@ -1098,9 +1237,9 @@ function HomeClient() {
               <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
                 Try it now →
               </span>
-            </button>
+            </div>
             
-            <button
+            <div
               onClick={() => {
                 handleTabChange('testdata');
                 if (typeof window !== 'undefined') {
@@ -1119,9 +1258,9 @@ function HomeClient() {
               <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
                 Try it now →
               </span>
-            </button>
+            </div>
             
-            <button
+            <div
               onClick={() => {
                 handleTabChange('config');
                 if (typeof window !== 'undefined') {
@@ -1140,9 +1279,9 @@ function HomeClient() {
               <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
                 Try it now →
               </span>
-            </button>
+            </div>
             
-            <button
+            <div
               onClick={() => {
                 handleTabChange('sql');
                 if (typeof window !== 'undefined') {
@@ -1163,9 +1302,9 @@ function HomeClient() {
               <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
                 Try it now →
               </span>
-            </button>
+            </div>
             
-            <button
+            <div
               onClick={() => {
                 handleTabChange('tokencompare');
                 if (typeof window !== 'undefined') {
@@ -1184,9 +1323,9 @@ function HomeClient() {
               <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
                 Try it now →
               </span>
-            </button>
+            </div>
             
-            <button
+            <div
               onClick={() => {
                 handleTabChange('timezone');
                 if (typeof window !== 'undefined') {
@@ -1205,14 +1344,51 @@ function HomeClient() {
               <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
                 Convert Time Now →
               </span>
-            </button>
+            </div>
           </div>
           
           {/* Ezoic Ad Placement - Middle of Content (Placement ID: 102) */}
           <div id="ezoic-pub-ad-placeholder-102"></div>
 
+          {/* Additional SEO Content Section */}
+          <div className="mt-12 mb-12 bg-gray-50 rounded-2xl p-6 sm:p-8 border border-gray-200">
+            <div className="max-w-4xl mx-auto space-y-6">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Complete Guide: JSON Schema Validation & Generation at UnblockDevs.com</h2>
+              
+              <div className="space-y-4 text-gray-700 leading-relaxed">
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">JSON Schema Validation</h3>
+                  <p>
+                    Our <strong>JSON schema validation</strong> tool allows you to <strong>validate JSON schema</strong> and ensure your data structures are correct. Use <strong>validation JSON schema</strong> to check JSON against schemas, and <strong>json validator against schema</strong> for comprehensive validation. Perfect for API testing and data quality assurance at <strong>UnblockDevs.com</strong>.
+                  </p>
+                </div>
+                
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">JSON Schema Generation & Creation</h3>
+                  <p>
+                    Need to <strong>generate JSON schema</strong>? Our <strong>json-schema-generator</strong> helps with <strong>JSON schema generation</strong> and <strong>JSON schema creation</strong>. Whether you're <strong>creating a JSON schema</strong>, <strong>defining JSON schema</strong>, or using a <strong>schema generator from JSON</strong>, our tools make it easy. The <strong>schema generator json</strong> supports <strong>JSON schema for JSON schema</strong> patterns.
+                  </p>
+                </div>
+                
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Convert JSON to Excel - Complete Integration</h3>
+                  <p>
+                    Our <strong>JSON to Excel converter</strong> enables seamless <strong>JSON to Excel integration</strong>. Learn <strong>how to convert JSON to Excel</strong> and <strong>export JSON to Excel</strong> with our powerful tool. <strong>Convert JSON to Excel table</strong> formats for better data analysis and reporting.
+                  </p>
+                </div>
+                
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Curl to Requests Converter</h3>
+                  <p>
+                    Transform API calls with our <strong>curl to requests</strong> converter. <strong>Convert curl to JavaScript</strong>, Python, or other languages. Our <strong>convert curl to http request</strong> tool helps developers quickly <strong>convert curl</strong> commands into working code. Perfect for API integration and testing.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="mt-12 text-center">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Why Choose UnblockDevs?</h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Why Choose UnblockDevs.com?</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
               <div>
                 <h4 className="font-semibold text-gray-900 mb-2">100% Free</h4>

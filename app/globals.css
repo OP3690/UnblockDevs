@@ -138,11 +138,11 @@ body {
   
   /* Enhanced Card Styles */
   .card {
-    @apply bg-white rounded-xl shadow-lg border border-gray-100 p-6 transition-all duration-300;
+    @apply bg-white rounded-xl shadow-md border border-gray-100 p-6 sm:p-8 transition-all duration-300;
   }
   
   .card-hover {
-    @apply hover:shadow-xl hover:-translate-y-1;
+    @apply hover:shadow-lg hover:-translate-y-0.5 hover:border-gray-200;
   }
   
   .card-gradient {
@@ -299,6 +299,46 @@ body {
   
   .container-padding {
     @apply px-4 sm:px-6 lg:px-8;
+  }
+  
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Improved spacing for better symmetry */
+  .section-spacing {
+    @apply py-6 sm:py-8 lg:py-10;
+  }
+  
+  /* Better card spacing */
+  .card-spacing {
+    @apply p-6 sm:p-8;
+  }
+  
+  /* Performance optimizations */
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Optimize rendering */
+  .will-change-transform {
+    will-change: transform;
+  }
+  
+  .will-change-opacity {
+    will-change: opacity;
+  }
+  
+  /* Better focus states for accessibility */
+  *:focus-visible {
+    @apply outline-2 outline-offset-2 outline-blue-500;
   }
   
   /* Buy Me a Coffee Widget Customization */
