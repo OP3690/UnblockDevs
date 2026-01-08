@@ -19,6 +19,33 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'digital-provenance-complete-guide',
+      title: 'Digital Provenance: Complete Guide 2026',
+      excerpt: 'Complete guide to digital provenance: definition, what it is, when to use it, how it works, and why it matters. Learn about data lineage, digital authenticity, blockchain provenance, supply chain traceability, and content verification.',
+      date: '2026-02-04',
+      readTime: '31 min read',
+      category: 'Technology & Security',
+      keywords: ['digital provenance', 'data provenance', 'digital authenticity', 'data lineage', 'provenance tracking']
+    },
+    {
+      slug: 'domain-specific-language-models-complete-guide',
+      title: 'Domain-Specific Language Models: Complete Guide 2026',
+      excerpt: 'Complete guide to domain-specific language models: definition, what they are, when to use them, how they work, and why they matter. Learn about specialized LLMs, fine-tuning, domain adaptation, and industry-specific AI models.',
+      date: '2026-02-04',
+      readTime: '30 min read',
+      category: 'AI & Machine Learning',
+      keywords: ['domain-specific language models', 'domain-specific llm', 'specialized language models', 'fine-tuned language models', 'domain adaptation']
+    },
+    {
+      slug: 'multiagent-systems-complete-guide',
+      title: 'Multiagent Systems: Complete Guide 2026',
+      excerpt: 'Complete guide to multiagent systems: definition, what they are, when to use them, how they work, and why they matter. Learn about agent-based systems, multi-agent AI, distributed AI, agent coordination, and autonomous agents.',
+      date: '2026-02-04',
+      readTime: '29 min read',
+      category: 'AI & Systems',
+      keywords: ['multiagent systems', 'multi-agent systems', 'agent-based systems', 'multi-agent ai', 'distributed ai']
+    },
+    {
       slug: 'ai-security-platforms-complete-guide',
       title: 'AI Security Platforms: Complete Guide 2026',
       excerpt: 'Complete guide to AI security platforms: definition, what they are, when to use them, how they work, and why they matter. Learn about AI security, model protection, adversarial defense, data privacy, and AI threat detection platforms.',
