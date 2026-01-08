@@ -6,6 +6,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // All blog posts
   const blogPosts = [
+    'physical-ai-edge-computing-complete-guide',
+    'physical-ai-autonomous-vehicles-complete-guide',
+    'physical-ai-systems-complete-guide',
     'digital-provenance-complete-guide',
     'domain-specific-language-models-complete-guide',
     'multiagent-systems-complete-guide',

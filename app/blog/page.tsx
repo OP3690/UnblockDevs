@@ -19,6 +19,33 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'physical-ai-edge-computing-complete-guide',
+      title: 'Physical AI Edge Computing: Complete Guide 2026',
+      excerpt: 'Complete guide to Physical AI edge computing: definition, what it is, when to use it, how it works, and why it matters. Learn about edge AI, real-time processing, edge devices, IoT AI, and distributed Physical AI systems.',
+      date: '2026-02-05',
+      readTime: '34 min read',
+      category: 'AI & Edge Computing',
+      keywords: ['physical ai edge computing', 'edge ai', 'edge computing ai', 'edge ai systems', 'real-time ai processing']
+    },
+    {
+      slug: 'physical-ai-autonomous-vehicles-complete-guide',
+      title: 'Physical AI in Autonomous Vehicles: Complete Guide 2026',
+      excerpt: 'Complete guide to Physical AI in autonomous vehicles: definition, what it is, when to use it, how it works, and why it matters. Learn about self-driving cars, autonomous vehicle AI, sensor fusion, perception, planning, and control systems.',
+      date: '2026-02-05',
+      readTime: '33 min read',
+      category: 'AI & Transportation',
+      keywords: ['physical ai autonomous vehicles', 'autonomous vehicles ai', 'self-driving cars ai', 'autonomous vehicle systems', 'ai in self-driving cars']
+    },
+    {
+      slug: 'physical-ai-systems-complete-guide',
+      title: 'Physical AI Systems: Complete Guide 2026',
+      excerpt: 'Complete guide to Physical AI systems: definition, what they are, when to use them, how they work, and why they matter. Learn about AI-powered physical systems, robotics, autonomous vehicles, smart manufacturing, and edge AI.',
+      date: '2026-02-05',
+      readTime: '32 min read',
+      category: 'AI & Systems',
+      keywords: ['physical ai systems', 'physical ai', 'ai-powered physical systems', 'embodied ai', 'physical intelligence']
+    },
+    {
       slug: 'digital-provenance-complete-guide',
       title: 'Digital Provenance: Complete Guide 2026',
       excerpt: 'Complete guide to digital provenance: definition, what it is, when to use it, how it works, and why it matters. Learn about data lineage, digital authenticity, blockchain provenance, supply chain traceability, and content verification.',
