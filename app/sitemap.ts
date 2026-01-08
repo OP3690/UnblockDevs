@@ -6,6 +6,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // All blog posts
   const blogPosts = [
+    'ai-security-platforms-complete-guide',
+    'ai-supercomputing-platforms-complete-guide',
+    'ai-native-development-platforms-complete-guide',
     'how-to-invest-consistently-usa-tech-stocks',
     'high-impact-tech-stocks-investment-guide',
     'xbox-game-pass-games-complete-guide',
