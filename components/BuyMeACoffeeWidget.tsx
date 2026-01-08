@@ -39,7 +39,7 @@ export default function BuyMeACoffeeWidget() {
       script.src = 'https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js';
       script.setAttribute('data-id', 'WKbStURip');
       script.setAttribute('data-description', 'Support me on Buy me a coffee!');
-      script.setAttribute('data-message', 'You have a wonderful day!!!');
+      script.setAttribute('data-message', ''); // Empty message as per official format
       script.setAttribute('data-color', '#5F7FFF');
       script.setAttribute('data-position', 'Right');
       script.setAttribute('data-x_margin', '18');
