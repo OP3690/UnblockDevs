@@ -7,22 +7,32 @@ export default function BuyMeACoffeeWidget() {
     if (typeof window === 'undefined' || typeof document === 'undefined') return;
     
     const loadWidget = () => {
-      // Check if widget script already exists
-      const existingScript = document.querySelector('script[data-name="BMC-Widget"]');
-      const existingWidget = document.querySelector('#bmc-wbtn');
-      
-      // If widget already exists, don't load again
+      // Check if widget already exists
+      const existingWidget = document.querySelector('#bmc-wbtn') || 
+                            document.querySelector('iframe[src*="buymeacoffee.com"]');
       if (existingWidget) {
+        console.log('Buy Me a Coffee widget already exists');
         return;
       }
       
-      // If script exists but widget doesn't, wait a bit
-      if (existingScript && !existingWidget) {
-        setTimeout(loadWidget, 1000);
+      // Check if script already exists
+      const existingScript = document.querySelector('script[data-name="BMC-Widget"]');
+      if (existingScript) {
+        // Script exists - wait a bit and check if widget appears
+        console.log('Buy Me a Coffee script exists, checking for widget...');
+        setTimeout(() => {
+          const widget = document.querySelector('#bmc-wbtn') || 
+                        document.querySelector('iframe[src*="buymeacoffee.com"]');
+          if (!widget) {
+            console.warn('Buy Me a Coffee script loaded but widget not found. Removing and reloading...');
+            existingScript.remove();
+            setTimeout(loadWidget, 500);
+          }
+        }, 3000);
         return;
       }
       
-      // Create and load the script
+      // Create and load the script using official Buy Me a Coffee embed format
       const script = document.createElement('script');
       script.setAttribute('data-name', 'BMC-Widget');
       script.setAttribute('data-cfasync', 'false');
@@ -38,34 +48,50 @@ export default function BuyMeACoffeeWidget() {
       
       // Handle script load
       script.onload = () => {
-        console.log('Buy Me a Coffee widget script loaded');
-        // Widget should initialize automatically after a short delay
-        setTimeout(() => {
+        console.log('Buy Me a Coffee widget script loaded successfully');
+        
+        // The widget should auto-initialize, but let's verify and wait
+        let checkCount = 0;
+        const maxChecks = 15; // Check for up to 15 seconds
+        
+        const checkForWidget = setInterval(() => {
+          checkCount++;
           const widget = document.querySelector('#bmc-wbtn');
-          if (!widget) {
-            console.debug('Buy Me a Coffee widget not initialized yet, retrying...');
-            // Retry once more after another delay
-            setTimeout(() => {
-              if (!document.querySelector('#bmc-wbtn')) {
-                console.debug('Buy Me a Coffee widget may not be available');
-              }
-            }, 2000);
+          const iframe = document.querySelector('iframe[src*="buymeacoffee.com"]');
+          const widgetContainer = document.querySelector('[id*="bmc"]');
+          
+          if (widget || iframe || widgetContainer) {
+            console.log('✅ Buy Me a Coffee widget found and initialized!', {
+              widget: !!widget,
+              iframe: !!iframe,
+              container: !!widgetContainer
+            });
+            clearInterval(checkForWidget);
+          } else if (checkCount >= maxChecks) {
+            console.warn('⚠️ Buy Me a Coffee widget did not initialize after', maxChecks, 'seconds');
+            console.log('Available window objects:', {
+              BMCWidget: typeof (window as any).BMCWidget,
+              bmcWidget: typeof (window as any).bmcWidget,
+            });
+            clearInterval(checkForWidget);
           }
-        }, 500);
+        }, 1000);
       };
       
       script.onerror = (error) => {
-        console.debug('Failed to load Buy Me a Coffee widget:', error);
+        console.error('❌ Failed to load Buy Me a Coffee widget script:', error);
       };
       
-      // Append to body
+      // Append to document body (required by Buy Me a Coffee)
       if (document.body) {
         document.body.appendChild(script);
+        console.log('Buy Me a Coffee script appended to body');
       } else {
         // Wait for body to be available
         const observer = new MutationObserver(() => {
           if (document.body) {
             document.body.appendChild(script);
+            console.log('Buy Me a Coffee script appended to body (after wait)');
             observer.disconnect();
           }
         });
@@ -73,16 +99,31 @@ export default function BuyMeACoffeeWidget() {
       }
     };
     
-    // Load widget after DOM is ready
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', loadWidget);
-    } else {
-      // DOM is already ready, but wait a bit for other scripts
-      setTimeout(loadWidget, 500);
-    }
+    // Wait for page to be fully interactive before loading widget
+    // This ensures all other scripts have loaded and won't interfere
+    const waitForPageReady = () => {
+      if (document.readyState === 'complete') {
+        // Page fully loaded, wait a bit more for any other scripts
+        setTimeout(loadWidget, 1500);
+      } else if (document.readyState === 'interactive') {
+        // DOM ready, wait for page to complete
+        window.addEventListener('load', () => {
+          setTimeout(loadWidget, 1500);
+        });
+      } else {
+        // Still loading, wait for DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', () => {
+          window.addEventListener('load', () => {
+            setTimeout(loadWidget, 1500);
+          });
+        });
+      }
+    };
+    
+    waitForPageReady();
     
     return () => {
-      document.removeEventListener('DOMContentLoaded', loadWidget);
+      // Cleanup if needed
     };
   }, []);
 
