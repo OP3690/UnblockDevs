@@ -22,9 +22,9 @@ async function migrateVisits() {
     await mongoose.connect(MONGODB_URI);
     console.log('Connected to MongoDB');
 
-    // Get source database (test)
-    const sourceDb = mongoose.connection.useDb('test');
-    const targetDb = mongoose.connection.useDb('UnblockDevs');
+    // Get source database (test) - use native driver through mongoose connection
+    const sourceDb = mongoose.connection.client.db('test');
+    const targetDb = mongoose.connection.client.db('UnblockDevs');
 
     // Check if visits collection exists in source
     const sourceCollections = await sourceDb.listCollections().toArray();
@@ -38,7 +38,7 @@ async function migrateVisits() {
     console.log('Found visits collection in test database. Starting migration...');
 
     // Get all documents from source collection
-    const sourceCollection = sourceDb.db.collection('visits');
+    const sourceCollection = sourceDb.collection('visits');
     const documents = await sourceCollection.find({}).toArray();
     
     console.log(`Found ${documents.length} documents to migrate`);
@@ -49,7 +49,7 @@ async function migrateVisits() {
     }
 
     // Create target collection in UnblockDevs database
-    const targetCollection = targetDb.db.collection('visits');
+    const targetCollection = targetDb.collection('visits');
 
     // Insert documents into target collection
     // Use insertMany with ordered: false to handle duplicates gracefully
