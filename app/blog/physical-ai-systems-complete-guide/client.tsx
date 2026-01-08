@@ -3,6 +3,9 @@
 import Link from 'next/link';
 import { Calendar, Clock, ArrowLeft, CheckCircle2, XCircle, AlertTriangle, Cpu, Zap, Brain, Target, TrendingUp, Settings, Eye, Move } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import SocialShare from '@/components/SocialShare';
+import NewsletterSignup from '@/components/NewsletterSignup';
+import FeedbackForm from '@/components/FeedbackForm';
 
 export default function PhysicalAiSystemsClient() {
   const faqData = [
@@ -92,6 +95,15 @@ export default function PhysicalAiSystemsClient() {
             and why they're transforming industries. Learn about AI-powered physical systems, robotics, 
             autonomous vehicles, smart manufacturing, and edge AI applications.
           </p>
+
+          {/* Social Share */}
+          <div className="mt-6">
+            <SocialShare 
+              url={typeof window !== 'undefined' ? window.location.href : ''}
+              title="Physical AI Systems: Complete Guide 2026"
+              description="Discover Physical AI systems: definition, what they are, when to use them, how they work, and why they matter."
+            />
+          </div>
         </div>
 
         {/* Table of Contents */}
@@ -664,6 +676,16 @@ export default function PhysicalAiSystemsClient() {
 
         {/* FAQ Schema */}
         <FAQSchema faqs={faqData} />
+
+        {/* Newsletter Signup */}
+        <section className="mt-12">
+          <NewsletterSignup />
+        </section>
+
+        {/* Feedback Form */}
+        <section className="mt-12">
+          <FeedbackForm toolName="Physical AI Systems Blog" />
+        </section>
       </article>
     </div>
   );

@@ -3,6 +3,9 @@
 import Link from 'next/link';
 import { Calendar, Clock, ArrowLeft, CheckCircle2, XCircle, AlertTriangle, Server, Zap, Brain, Target, TrendingUp, Wifi, Cpu, Database, Shield } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import SocialShare from '@/components/SocialShare';
+import NewsletterSignup from '@/components/NewsletterSignup';
+import FeedbackForm from '@/components/FeedbackForm';
 
 export default function PhysicalAiEdgeComputingClient() {
   const faqData = [
@@ -675,6 +678,16 @@ export default function PhysicalAiEdgeComputingClient() {
 
         {/* FAQ Schema */}
         <FAQSchema faqs={faqData} />
+
+        {/* Newsletter Signup */}
+        <section className="mt-12">
+          <NewsletterSignup />
+        </section>
+
+        {/* Feedback Form */}
+        <section className="mt-12">
+          <FeedbackForm toolName="Physical AI Edge Computing Blog" />
+        </section>
       </article>
     </div>
   );

@@ -4,6 +4,10 @@ import { useState, useCallback, useEffect } from 'react';
 import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, Star, TrendingUp, Mail, Scissors, Key, Clock } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import { PersonalizationManager, ToolTab } from '@/lib/personalization';
+import SocialShare from '@/components/SocialShare';
+import NewsletterSignup from '@/components/NewsletterSignup';
+import FeedbackForm from '@/components/FeedbackForm';
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget';
 import JsonInput from '@/components/JsonInput';
 import DataTable from '@/components/DataTable';
@@ -41,10 +45,19 @@ interface Section {
   columnIds: string[];
 }
 
-type ToolTab = 'converter' | 'beautifier' | 'fixer' | 'comparator' | 'jsoncompare' | 'schema' | 'logs' | 'payload' | 'curl' | 'mock' | 'testdata' | 'config' | 'sql' | 'builder' | 'insights' | 'promptchunk' | 'tokencompare' | 'timezone';
-
 function HomeClient() {
   const [activeTab, setActiveTab] = useState<ToolTab>('converter');
+  const [favorites, setFavorites] = useState<ToolTab[]>([]);
+  const [recentTools, setRecentTools] = useState<ToolTab[]>([]);
+  const [rows, setRows] = useState<FlattenedRow[]>([]);
+  const [columns, setColumns] = useState<Column[]>([]);
+  const [sections, setSections] = useState<Section[]>([]);
+  const [removedColumns, setRemovedColumns] = useState<Set<string>>(new Set());
+  const [historyManager] = useState(() => new HistoryManager(10));
+  const [totalVisits, setTotalVisits] = useState<number>(0);
+  const [activeUsers, setActiveUsers] = useState<number>(0);
+  const [mounted, setMounted] = useState<boolean>(false);
+  const [showBookmarkPrompt, setShowBookmarkPrompt] = useState<boolean>(false);
 
   // Function to show Buy Me a Coffee message (dismisses previous toast first)
   const showBuyMeACoffeeMessage = () => {
@@ -65,20 +78,31 @@ function HomeClient() {
     if (tab !== activeTab) {
       setActiveTab(tab);
       showBuyMeACoffeeMessage();
+      // Track recent tools
+      if (mounted) {
+        PersonalizationManager.addRecentTool(tab);
+        setRecentTools(PersonalizationManager.getRecentTools());
+      }
     } else {
       setActiveTab(tab);
     }
   };
-  
-  const [rows, setRows] = useState<FlattenedRow[]>([]);
-  const [columns, setColumns] = useState<Column[]>([]);
-  const [sections, setSections] = useState<Section[]>([]);
-  const [removedColumns, setRemovedColumns] = useState<Set<string>>(new Set());
-  const [historyManager] = useState(() => new HistoryManager(10));
-  const [totalVisits, setTotalVisits] = useState<number>(0);
-  const [activeUsers, setActiveUsers] = useState<number>(0);
-  const [mounted, setMounted] = useState<boolean>(false);
-  const [showBookmarkPrompt, setShowBookmarkPrompt] = useState<boolean>(false);
+
+  // Handle favorite toggle
+  const handleToggleFavorite = (toolId: ToolTab, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const isNowFavorite = PersonalizationManager.toggleFavorite(toolId);
+    setFavorites(PersonalizationManager.getFavorites());
+    toast.success(isNowFavorite ? 'Added to favorites!' : 'Removed from favorites');
+  };
+
+  // Load personalization data
+  useEffect(() => {
+    if (mounted) {
+      setFavorites(PersonalizationManager.getFavorites());
+      setRecentTools(PersonalizationManager.getRecentTools());
+    }
+  }, [mounted]);
 
   // Mark as mounted immediately on client side
   useEffect(() => {
@@ -778,6 +802,80 @@ function HomeClient() {
         {activeTab === 'timezone' && <TimezoneTranslator />}
       </main>
 
+      {/* Personalized Sections */}
+      {activeTab === 'converter' && rows.length === 0 && mounted && (favorites.length > 0 || recentTools.length > 0) && (
+        <section className="max-w-7xl mx-auto container-padding py-8">
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
+            {/* Your Favorites */}
+            {favorites.length > 0 && (
+              <div className="bg-gradient-to-br from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Star className="w-5 h-5 text-yellow-600 fill-yellow-600" />
+                  <h3 className="text-xl font-bold text-gray-900">Your Favorites</h3>
+                </div>
+                <div className="space-y-2">
+                  {favorites.map((toolId) => {
+                    const toolInfo = PersonalizationManager.getToolInfo()[toolId];
+                    return (
+                      <button
+                        key={toolId}
+                        onClick={() => handleTabChange(toolId)}
+                        className="w-full text-left px-4 py-3 bg-white rounded-lg hover:bg-yellow-50 transition-colors border border-yellow-200 group"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="font-semibold text-gray-900 group-hover:text-blue-600">{toolInfo.name}</h4>
+                            <p className="text-sm text-gray-600">{toolInfo.description}</p>
+                          </div>
+                          <Star className="w-5 h-5 text-yellow-600 fill-yellow-600" />
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Your Recent Tools */}
+            {recentTools.length > 0 && (
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Clock className="w-5 h-5 text-blue-600" />
+                  <h3 className="text-xl font-bold text-gray-900">Your Recent Tools</h3>
+                </div>
+                <div className="space-y-2">
+                  {recentTools.map((toolId) => {
+                    const toolInfo = PersonalizationManager.getToolInfo()[toolId];
+                    return (
+                      <button
+                        key={toolId}
+                        onClick={() => handleTabChange(toolId)}
+                        className="w-full text-left px-4 py-3 bg-white rounded-lg hover:bg-blue-50 transition-colors border border-blue-200 group"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="font-semibold text-gray-900 group-hover:text-blue-600">{toolInfo.name}</h4>
+                            <p className="text-sm text-gray-600">{toolInfo.description}</p>
+                          </div>
+                          <Clock className="w-5 h-5 text-blue-600" />
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* Newsletter Signup Section */}
+      {activeTab === 'converter' && rows.length === 0 && (
+        <section className="max-w-4xl mx-auto container-padding py-8">
+          <NewsletterSignup />
+        </section>
+      )}
+
       {/* Services Section */}
       {activeTab === 'converter' && rows.length === 0 && (
         <section className="max-w-7xl mx-auto container-padding py-12">
@@ -817,9 +915,16 @@ function HomeClient() {
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
               }}
-              className="card card-hover text-left cursor-pointer group"
+              className="card card-hover text-left cursor-pointer group relative"
             >
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+              <button
+                onClick={(e) => handleToggleFavorite('converter', e)}
+                className="absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 transition-colors z-10"
+                aria-label={favorites.includes('converter') ? 'Remove from favorites' : 'Add to favorites'}
+              >
+                <Star className={`w-5 h-5 ${favorites.includes('converter') ? 'text-yellow-500 fill-yellow-500' : 'text-gray-400'}`} />
+              </button>
+              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors pr-8">
                 JSON to Excel Converter | JSON to CSV Converter | JSON to Table Converter
               </h3>
               <p className="text-gray-600 text-sm">
@@ -838,9 +943,16 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="card card-hover text-left cursor-pointer group"
+              className="card card-hover text-left cursor-pointer group relative"
             >
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+              <button
+                onClick={(e) => handleToggleFavorite('beautifier', e)}
+                className="absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 transition-colors z-10"
+                aria-label={favorites.includes('beautifier') ? 'Remove from favorites' : 'Add to favorites'}
+              >
+                <Star className={`w-5 h-5 ${favorites.includes('beautifier') ? 'text-yellow-500 fill-yellow-500' : 'text-gray-400'}`} />
+              </button>
+              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors pr-8">
                 JSON Viewer | JSON Formatter | JSON Parser | JSON Beautifier
               </h3>
               <p className="text-gray-600 text-sm">
@@ -859,9 +971,16 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="card card-hover text-left cursor-pointer group"
+              className="card card-hover text-left cursor-pointer group relative"
             >
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+              <button
+                onClick={(e) => handleToggleFavorite('comparator', e)}
+                className="absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 transition-colors z-10"
+                aria-label={favorites.includes('comparator') ? 'Remove from favorites' : 'Add to favorites'}
+              >
+                <Star className={`w-5 h-5 ${favorites.includes('comparator') ? 'text-yellow-500 fill-yellow-500' : 'text-gray-400'}`} />
+              </button>
+              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors pr-8">
                 API Response Comparator
               </h3>
               <p className="text-gray-600 text-sm">
@@ -901,9 +1020,16 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="card card-hover text-left cursor-pointer group"
+              className="card card-hover text-left cursor-pointer group relative"
             >
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+              <button
+                onClick={(e) => handleToggleFavorite('schema', e)}
+                className="absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 transition-colors z-10"
+                aria-label={favorites.includes('schema') ? 'Remove from favorites' : 'Add to favorites'}
+              >
+                <Star className={`w-5 h-5 ${favorites.includes('schema') ? 'text-yellow-500 fill-yellow-500' : 'text-gray-400'}`} />
+              </button>
+              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors pr-8">
                 JSON Schema Generator
               </h3>
               <p className="text-gray-600 text-sm">
@@ -1129,8 +1255,15 @@ function HomeClient() {
         </section>
       )}
 
-      {/* Get in Touch Section */}
+      {/* Feedback Section */}
       <section className="mt-16 py-12 bg-gradient-to-r from-green-50 via-blue-50 to-indigo-50">
+        <div className="max-w-4xl mx-auto container-padding">
+          <FeedbackForm />
+        </div>
+      </section>
+
+      {/* Get in Touch Section */}
+      <section className="mt-8 py-12 bg-gradient-to-r from-green-50 via-blue-50 to-indigo-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="bg-white rounded-xl shadow-lg p-8 md:p-12">
             <div className="flex items-center justify-center gap-4 mb-4">
