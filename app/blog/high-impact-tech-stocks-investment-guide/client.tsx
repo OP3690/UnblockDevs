@@ -49,6 +49,8 @@ export default function HighImpactTechStocksClient() {
     { name: 'Meta', symbol: 'META', sector: 'Social/VR', why: 'VR/metaverse investment, advertising revenue, AI integration' },
     { name: 'Tesla', symbol: 'TSLA', sector: 'EV/Energy', why: 'EV market leader, energy storage, autonomous driving' },
     { name: 'AMD', symbol: 'AMD', sector: 'Semiconductors', why: 'CPU/GPU innovation, data center expansion, AI chips' },
+    { name: 'Intel', symbol: 'INTC', sector: 'Semiconductors', why: 'Foundry expansion, AI chip development, data center recovery' },
+    { name: 'Broadcom', symbol: 'AVGO', sector: 'Semiconductors/Networking', why: 'AI infrastructure leader, networking chips, software growth' },
   ];
 
   const techSectors = [
