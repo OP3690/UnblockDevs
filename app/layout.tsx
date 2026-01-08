@@ -326,22 +326,8 @@ export default function RootLayout({
                 ezoic.src = '//www.ezojs.com/ezoic/sa.min.js';
                 document.head.appendChild(ezoic);
                 
-                // Buy Me a Coffee Widget - Load after LCP with delay
-                setTimeout(function() {
-                  const bmc = document.createElement('script');
-                  bmc.setAttribute('data-name', 'BMC-Widget');
-                  bmc.setAttribute('data-cfasync', 'false');
-                  bmc.src = 'https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js';
-                  bmc.setAttribute('data-id', 'WKbStURip');
-                  bmc.setAttribute('data-description', 'Support me on Buy me a coffee!');
-                  bmc.setAttribute('data-message', 'You have a wonderful day!!!');
-                  bmc.setAttribute('data-color', '#5F7FFF');
-                  bmc.setAttribute('data-position', 'Right');
-                  bmc.setAttribute('data-x_margin', '18');
-                  bmc.setAttribute('data-y_margin', '18');
-                  bmc.async = true;
-                  document.head.appendChild(bmc);
-                }, 3000);
+                // Buy Me a Coffee Widget is now loaded in BuyMeACoffeeWidget component
+                // Removed from here to avoid conflicts
               }
               
               // Wait for LCP before loading deferred scripts
