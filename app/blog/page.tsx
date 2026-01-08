@@ -19,6 +19,33 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'how-to-invest-consistently-usa-tech-stocks',
+      title: 'How to Invest Consistently in USA Tech Stocks: Complete Strategy Guide 2026',
+      excerpt: 'Complete guide to consistent investing in USA tech stocks: dollar-cost averaging, long-term strategy, portfolio allocation, best practices, automation, tax strategies, and how to build wealth through systematic tech stock investing.',
+      date: '2026-02-02',
+      readTime: '28 min read',
+      category: 'Finance & Investing',
+      keywords: ['consistent tech investing', 'dollar cost averaging', 'tech stock strategy', 'systematic investing', 'long term tech investing']
+    },
+    {
+      slug: 'high-impact-tech-stocks-investment-guide',
+      title: 'High Impact Tech Stocks: Complete Investment Guide 2026',
+      excerpt: 'Complete guide to high impact tech stocks: what are high impact tech stocks, why invest, how to identify them, top tech stocks 2026, investment strategies, risks, and best practices. Learn about AI, semiconductor, cloud, and emerging tech stocks.',
+      date: '2026-02-02',
+      readTime: '25 min read',
+      category: 'Finance & Investing',
+      keywords: ['high impact tech stocks', 'tech stocks 2026', 'best tech stocks', 'ai stocks', 'tech stock investment']
+    },
+    {
+      slug: 'xbox-game-pass-games-complete-guide',
+      title: 'Xbox Game Pass Games: Complete Guide to Best Games, Value & Membership',
+      excerpt: 'Complete guide to Xbox Game Pass games: best games library, membership tiers, value analysis, what games are included, how to get the most value, and tips for choosing the right subscription. Discover must-play games on Game Pass.',
+      date: '2026-02-02',
+      readTime: '22 min read',
+      category: 'Gaming & Entertainment',
+      keywords: ['xbox game pass games', 'xbox game pass', 'game pass games list', 'best xbox game pass games', 'game pass membership']
+    },
+    {
       slug: 'git-commands-cheat-sheet-tips-tricks',
       title: 'Git Commands Cheat Sheet: Most Useful Commands, Tips & Tricks',
       excerpt: 'Complete Git commands cheat sheet with most useful commands, tips, tricks, and shortcuts. Learn essential Git commands for daily development, advanced techniques, and productivity hacks for Git workflows.',
