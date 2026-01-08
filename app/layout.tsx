@@ -495,10 +495,12 @@ export default function RootLayout({
               window.ezstandalone = window.ezstandalone || {};
               ezstandalone.cmd = ezstandalone.cmd || [];
               
-              // Comprehensive error handling for Ezoic (suppress 403 and other errors)
+              // Comprehensive error handling for Ezoic and Google AdSense (suppress 403 and deprecation warnings)
               if (typeof window !== 'undefined') {
-                // Suppress console errors from Ezoic
+                // Suppress console errors from Ezoic and Google AdSense
                 const originalError = window.console.error;
+                const originalWarn = window.console.warn;
+                
                 window.console.error = function(...args) {
                   const message = args.join(' ');
                   // Suppress Ezoic-related errors
@@ -513,6 +515,20 @@ export default function RootLayout({
                     return;
                   }
                   originalError.apply(console, args);
+                };
+                
+                // Suppress deprecation warnings from Google AdSense
+                window.console.warn = function(...args) {
+                  const message = args.join(' ');
+                  // Suppress Google AdSense unload event listener deprecation warnings
+                  if (message.includes('Unload event listeners are deprecated') ||
+                      message.includes('pagead2.googlesyndication.com') ||
+                      message.includes('lidar.js') ||
+                      message.includes('unload') && message.includes('deprecated')) {
+                    console.debug('AdSense deprecation warning suppressed:', message);
+                    return;
+                  }
+                  originalWarn.apply(console, args);
                 };
                 
                 // Suppress network errors from Ezoic
