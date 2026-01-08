@@ -649,9 +649,10 @@ export default function RootLayout({
       </head>
       <body suppressHydrationWarning>
         {/* AMP Auto Ads - Place immediately after body tag */}
-        <amp-auto-ads
-          type="adsense"
-          data-ad-client="ca-pub-6349841658473646"
+        <div
+          dangerouslySetInnerHTML={{
+            __html: '<amp-auto-ads type="adsense" data-ad-client="ca-pub-6349841658473646"></amp-auto-ads>',
+          }}
         />
         <div suppressHydrationWarning>
           {children}
