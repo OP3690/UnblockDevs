@@ -830,13 +830,6 @@ function HomeClient() {
         </section>
       )}
 
-      {/* Newsletter Signup Section */}
-      {activeTab === 'converter' && rows.length === 0 && (
-        <section className="max-w-4xl mx-auto container-padding py-8">
-          <NewsletterSignup />
-        </section>
-      )}
-
       {/* Services Section */}
       {activeTab === 'converter' && rows.length === 0 && (
         <section className="max-w-7xl mx-auto container-padding py-12">
@@ -1222,6 +1215,15 @@ function HomeClient() {
           <FeedbackForm />
         </div>
       </section>
+
+      {/* Newsletter Signup Section */}
+      {activeTab === 'converter' && rows.length === 0 && (
+        <section className="mt-8 py-8 bg-gradient-to-r from-green-50 via-blue-50 to-indigo-50">
+          <div className="max-w-4xl mx-auto container-padding">
+            <NewsletterSignup />
+          </div>
+        </section>
+      )}
 
       {/* Ezoic Ad Placement - Before Footer (Placement ID: 103) */}
       <div id="ezoic-pub-ad-placeholder-103"></div>
