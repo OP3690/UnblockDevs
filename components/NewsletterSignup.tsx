@@ -47,7 +47,7 @@ export default function NewsletterSignup({ className = '', variant = 'default' }
       } else if (data.resubscribed) {
         toast.success('Successfully resubscribed!');
       } else {
-        toast.success('Successfully subscribed! Check your email for confirmation.');
+        toast.success('Successfully subscribed!');
       }
       
       // Reset after 3 seconds
