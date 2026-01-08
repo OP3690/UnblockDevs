@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
+import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget'
 
 export const metadata: Metadata = {
   title: 'JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier, JSON Fixer Online - Free Tools | UnblockDevs',
@@ -428,6 +429,7 @@ export default function RootLayout({
         <div suppressHydrationWarning>
           {children}
         </div>
+        <BuyMeACoffeeWidget />
         <Toaster 
           position="bottom-right"
           toastOptions={{

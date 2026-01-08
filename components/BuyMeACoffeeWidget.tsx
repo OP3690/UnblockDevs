@@ -8,8 +8,7 @@ export default function BuyMeACoffeeWidget() {
     
     const loadWidget = () => {
       // Check if widget already exists
-      const existingWidget = document.querySelector('#bmc-wbtn') || 
-                            document.querySelector('iframe[src*="buymeacoffee.com"]');
+      const existingWidget = document.querySelector('#bmc-wbtn') || document.querySelector('iframe[src*="buymeacoffee.com"]');
       if (existingWidget) {
         console.log('Buy Me a Coffee widget already exists');
         return;
@@ -99,28 +98,15 @@ export default function BuyMeACoffeeWidget() {
       }
     };
     
-    // Wait for page to be fully interactive before loading widget
-    // This ensures all other scripts have loaded and won't interfere
-    const waitForPageReady = () => {
-      if (document.readyState === 'complete') {
-        // Page fully loaded, wait a bit more for any other scripts
-        setTimeout(loadWidget, 1500);
-      } else if (document.readyState === 'interactive') {
-        // DOM ready, wait for page to complete
-        window.addEventListener('load', () => {
-          setTimeout(loadWidget, 1500);
-        });
-      } else {
-        // Still loading, wait for DOMContentLoaded
-        document.addEventListener('DOMContentLoaded', () => {
-          window.addEventListener('load', () => {
-            setTimeout(loadWidget, 1500);
-          });
-        });
-      }
-    };
-    
-    waitForPageReady();
+    // Load widget as soon as DOM is ready
+    // Buy Me a Coffee widget can load early without conflicts
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      // DOM is ready, load immediately
+      loadWidget();
+    } else {
+      // Wait for DOMContentLoaded
+      document.addEventListener('DOMContentLoaded', loadWidget);
+    }
     
     return () => {
       // Cleanup if needed
