@@ -165,15 +165,23 @@ function HomeClient() {
                 if (typeof (window as any).ezstandalone.showAds === 'function') {
                   (window as any).ezstandalone.showAds();
                 }
-              } catch (e) {
+              } catch (e: any) {
                 // Silently handle Ezoic errors (site may not be approved yet)
-                console.debug('Ezoic ads initialization skipped:', e);
+                const errorMsg = e?.message || String(e);
+                if (!errorMsg.includes('Monetization not allowed') && 
+                    !errorMsg.includes('visit_uuid')) {
+                  console.debug('Ezoic ads initialization skipped:', e);
+                }
               }
             });
           }
-        } catch (e) {
+        } catch (e: any) {
           // Silently handle Ezoic errors
-          console.debug('Ezoic ads not available:', e);
+          const errorMsg = e?.message || String(e);
+          if (!errorMsg.includes('Monetization not allowed') && 
+              !errorMsg.includes('visit_uuid')) {
+            console.debug('Ezoic ads not available:', e);
+          }
         }
       };
       
@@ -189,10 +197,24 @@ function HomeClient() {
       try {
         // Refresh ads when content changes (tab switch)
         (window as any).ezstandalone.cmd.push(function() {
-          (window as any).ezstandalone.showAds();
+          try {
+            (window as any).ezstandalone.showAds();
+          } catch (e: any) {
+            // Silently handle errors (site may not be approved yet)
+            const errorMsg = e?.message || String(e);
+            if (!errorMsg.includes('Monetization not allowed') && 
+                !errorMsg.includes('visit_uuid')) {
+              console.debug('Ezoic ads refresh error:', e);
+            }
+          }
         });
-      } catch (e) {
-        console.debug('Ezoic ads refresh error:', e);
+      } catch (e: any) {
+        // Silently handle errors
+        const errorMsg = e?.message || String(e);
+        if (!errorMsg.includes('Monetization not allowed') && 
+            !errorMsg.includes('visit_uuid')) {
+          console.debug('Ezoic ads refresh error:', e);
+        }
       }
     }
   }, [activeTab, mounted]);

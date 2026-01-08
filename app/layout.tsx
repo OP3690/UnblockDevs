@@ -295,14 +295,54 @@ export default function RootLayout({
               window.ezstandalone = window.ezstandalone || {};
               ezstandalone.cmd = ezstandalone.cmd || [];
               
-              // Error handling for Ezoic
+              // Comprehensive error handling for Ezoic (suppress 403 and other errors)
               if (typeof window !== 'undefined') {
+                // Suppress console errors from Ezoic
+                const originalError = window.console.error;
+                window.console.error = function(...args) {
+                  const message = args.join(' ');
+                  // Suppress Ezoic-related errors
+                  if (message.includes('Ezoic') || 
+                      message.includes('_ezaq') || 
+                      message.includes('Monetization not allowed') ||
+                      message.includes('visit_uuid not found') ||
+                      message.includes('bad response') ||
+                      message.includes('Status; 403') ||
+                      message.includes('[EzoicAds JS]')) {
+                    console.debug('Ezoic error suppressed:', message);
+                    return;
+                  }
+                  originalError.apply(console, args);
+                };
+                
+                // Suppress network errors from Ezoic
                 window.addEventListener('error', function(e) {
-                  if (e.message && (e.message.includes('Ezoic') || e.message.includes('_ezaq'))) {
+                  if (e.message && (
+                    e.message.includes('Ezoic') || 
+                    e.message.includes('_ezaq') ||
+                    e.message.includes('g.ezoic.net') ||
+                    e.message.includes('ezojs.com') ||
+                    e.message.includes('gatekeeperconsent.com')
+                  )) {
                     e.preventDefault();
+                    e.stopPropagation();
                     console.debug('Ezoic error handled:', e.message);
+                    return false;
                   }
                 }, true);
+                
+                // Suppress unhandled promise rejections from Ezoic
+                window.addEventListener('unhandledrejection', function(e) {
+                  const reason = e.reason?.message || e.reason?.toString() || '';
+                  if (reason.includes('Ezoic') || 
+                      reason.includes('_ezaq') ||
+                      reason.includes('g.ezoic.net') ||
+                      reason.includes('ezojs.com') ||
+                      reason.includes('Monetization not allowed')) {
+                    e.preventDefault();
+                    console.debug('Ezoic promise rejection handled:', reason);
+                  }
+                });
               }
               
               // Defer non-critical scripts until after page load and LCP
@@ -320,10 +360,16 @@ export default function RootLayout({
                 gatekeeper2.async = true;
                 document.head.appendChild(gatekeeper2);
                 
-                // Ezoic Header Script - Load after LCP
+                // Ezoic Header Script - Load after LCP (with error handling)
                 const ezoic = document.createElement('script');
                 ezoic.async = true;
                 ezoic.src = '//www.ezojs.com/ezoic/sa.min.js';
+                ezoic.onerror = function() {
+                  console.debug('Ezoic script failed to load (site may not be approved yet)');
+                };
+                ezoic.onload = function() {
+                  console.debug('Ezoic script loaded successfully');
+                };
                 document.head.appendChild(ezoic);
                 
                 // Buy Me a Coffee Widget is now loaded in BuyMeACoffeeWidget component

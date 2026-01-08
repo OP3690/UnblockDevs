@@ -39,28 +39,49 @@ export default function BuyMeACoffeeWidget() {
       // Handle script load
       script.onload = () => {
         console.log('Buy Me a Coffee widget script loaded');
-        // Widget should initialize automatically
+        // Widget should initialize automatically after a short delay
+        setTimeout(() => {
+          const widget = document.querySelector('#bmc-wbtn');
+          if (!widget) {
+            console.debug('Buy Me a Coffee widget not initialized yet, retrying...');
+            // Retry once more after another delay
+            setTimeout(() => {
+              if (!document.querySelector('#bmc-wbtn')) {
+                console.debug('Buy Me a Coffee widget may not be available');
+              }
+            }, 2000);
+          }
+        }, 500);
       };
       
       script.onerror = (error) => {
-        console.error('Failed to load Buy Me a Coffee widget:', error);
+        console.debug('Failed to load Buy Me a Coffee widget:', error);
       };
       
       // Append to body
-      document.body.appendChild(script);
+      if (document.body) {
+        document.body.appendChild(script);
+      } else {
+        // Wait for body to be available
+        const observer = new MutationObserver(() => {
+          if (document.body) {
+            document.body.appendChild(script);
+            observer.disconnect();
+          }
+        });
+        observer.observe(document.documentElement, { childList: true });
+      }
     };
     
-    // Load widget after a short delay to ensure DOM is ready
-    const timeout = setTimeout(() => {
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', loadWidget);
-      } else {
-        loadWidget();
-      }
-    }, 1000);
+    // Load widget after DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadWidget);
+    } else {
+      // DOM is already ready, but wait a bit for other scripts
+      setTimeout(loadWidget, 500);
+    }
     
     return () => {
-      clearTimeout(timeout);
       document.removeEventListener('DOMContentLoaded', loadWidget);
     };
   }, []);
