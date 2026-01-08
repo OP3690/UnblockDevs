@@ -34,6 +34,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'ai-prompt-engineering-guide',
     'cursor-ai-code-editor-guide',
     'ai-tools-developers-guide',
+    'ai-productivity-tools-complete-guide',
     'chatgpt-real-life-usage-guide',
     'apache-kafka-complete-guide',
     'apache-kafka-applications',
@@ -193,6 +194,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: 'token-comparator',
       priority: 0.9,
       changefreq: 'weekly' as const,
+    },
+    {
+      url: 'lander',
+      priority: 0.6,
+      changefreq: 'monthly' as const,
     },
   ]
 
