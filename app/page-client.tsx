@@ -48,7 +48,6 @@ interface Section {
 function HomeClient() {
   const [activeTab, setActiveTab] = useState<ToolTab>('converter');
   const [favorites, setFavorites] = useState<ToolTab[]>([]);
-  const [recentTools, setRecentTools] = useState<ToolTab[]>([]);
   const [rows, setRows] = useState<FlattenedRow[]>([]);
   const [columns, setColumns] = useState<Column[]>([]);
   const [sections, setSections] = useState<Section[]>([]);
@@ -78,11 +77,6 @@ function HomeClient() {
     if (tab !== activeTab) {
       setActiveTab(tab);
       showBuyMeACoffeeMessage();
-      // Track recent tools
-      if (mounted) {
-        PersonalizationManager.addRecentTool(tab);
-        setRecentTools(PersonalizationManager.getRecentTools());
-      }
     } else {
       setActiveTab(tab);
     }
@@ -100,7 +94,6 @@ function HomeClient() {
   useEffect(() => {
     if (mounted) {
       setFavorites(PersonalizationManager.getFavorites());
-      setRecentTools(PersonalizationManager.getRecentTools());
     }
   }, [mounted]);
 
@@ -803,68 +796,36 @@ function HomeClient() {
       </main>
 
       {/* Personalized Sections */}
-      {activeTab === 'converter' && rows.length === 0 && mounted && (favorites.length > 0 || recentTools.length > 0) && (
+      {activeTab === 'converter' && rows.length === 0 && mounted && favorites.length > 0 && (
         <section className="max-w-7xl mx-auto container-padding py-8">
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
+          <div className="max-w-2xl mx-auto">
             {/* Your Favorites */}
-            {favorites.length > 0 && (
-              <div className="bg-gradient-to-br from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl p-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <Star className="w-5 h-5 text-yellow-600 fill-yellow-600" />
-                  <h3 className="text-xl font-bold text-gray-900">Your Favorites</h3>
-                </div>
-                <div className="space-y-2">
-                  {favorites.map((toolId) => {
-                    const toolInfo = PersonalizationManager.getToolInfo()[toolId];
-                    return (
-                      <button
-                        key={toolId}
-                        onClick={() => handleTabChange(toolId)}
-                        className="w-full text-left px-4 py-3 bg-white rounded-lg hover:bg-yellow-50 transition-colors border border-yellow-200 group"
-                      >
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h4 className="font-semibold text-gray-900 group-hover:text-blue-600">{toolInfo.name}</h4>
-                            <p className="text-sm text-gray-600">{toolInfo.description}</p>
-                          </div>
-                          <Star className="w-5 h-5 text-yellow-600 fill-yellow-600" />
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
+            <div className="bg-gradient-to-br from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Star className="w-5 h-5 text-yellow-600 fill-yellow-600" />
+                <h3 className="text-xl font-bold text-gray-900">Your Favorites</h3>
               </div>
-            )}
-
-            {/* Your Recent Tools */}
-            {recentTools.length > 0 && (
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <Clock className="w-5 h-5 text-blue-600" />
-                  <h3 className="text-xl font-bold text-gray-900">Your Recent Tools</h3>
-                </div>
-                <div className="space-y-2">
-                  {recentTools.map((toolId) => {
-                    const toolInfo = PersonalizationManager.getToolInfo()[toolId];
-                    return (
-                      <button
-                        key={toolId}
-                        onClick={() => handleTabChange(toolId)}
-                        className="w-full text-left px-4 py-3 bg-white rounded-lg hover:bg-blue-50 transition-colors border border-blue-200 group"
-                      >
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h4 className="font-semibold text-gray-900 group-hover:text-blue-600">{toolInfo.name}</h4>
-                            <p className="text-sm text-gray-600">{toolInfo.description}</p>
-                          </div>
-                          <Clock className="w-5 h-5 text-blue-600" />
+              <div className="space-y-2">
+                {favorites.map((toolId) => {
+                  const toolInfo = PersonalizationManager.getToolInfo()[toolId];
+                  return (
+                    <button
+                      key={toolId}
+                      onClick={() => handleTabChange(toolId)}
+                      className="w-full text-left px-4 py-3 bg-white rounded-lg hover:bg-yellow-50 transition-colors border border-yellow-200 group"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-semibold text-gray-900 group-hover:text-blue-600">{toolInfo.name}</h4>
+                          <p className="text-sm text-gray-600">{toolInfo.description}</p>
                         </div>
-                      </button>
-                    );
-                  })}
-                </div>
+                        <Star className="w-5 h-5 text-yellow-600 fill-yellow-600" />
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
-            )}
+            </div>
           </div>
         </section>
       )}
@@ -1259,38 +1220,6 @@ function HomeClient() {
       <section className="mt-16 py-12 bg-gradient-to-r from-green-50 via-blue-50 to-indigo-50">
         <div className="max-w-4xl mx-auto container-padding">
           <FeedbackForm />
-        </div>
-      </section>
-
-      {/* Get in Touch Section */}
-      <section className="mt-4 py-8 bg-gradient-to-r from-green-50 via-blue-50 to-indigo-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-            <div className="flex items-center justify-center gap-4 mb-4">
-              <div className="p-3 bg-green-100 rounded-lg">
-                <Mail className="w-8 h-8 text-green-600" />
-              </div>
-              <h2 className="text-3xl font-bold text-gray-900">Get in Touch</h2>
-            </div>
-            <p className="text-lg text-gray-700 leading-relaxed mb-6">
-              We'd love to hear from you! Write us for any additional feature request, issues, query or appreciation.
-            </p>
-            <div className="bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-lg border border-green-200 inline-block">
-              <p className="text-gray-700 mb-2">
-                <strong className="text-gray-900">Email:</strong>
-              </p>
-              <a 
-                href="mailto:support@unblockdevs.com" 
-                className="text-2xl font-bold text-green-600 hover:text-green-700 hover:underline transition-colors inline-flex items-center gap-2"
-              >
-                <Mail className="w-6 h-6" />
-                support@unblockdevs.com
-              </a>
-            </div>
-            <p className="text-sm text-gray-600 mt-6">
-              Your feedback helps us improve and build better tools for the developer community.
-            </p>
-          </div>
         </div>
       </section>
 

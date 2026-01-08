@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { MessageSquare, Send, Loader2, Check } from 'lucide-react';
+import { MessageSquare, Send, Loader2, Check, Mail } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 interface FeedbackFormProps {
@@ -210,6 +210,28 @@ export default function FeedbackForm({ toolName, className = '', variant = 'defa
           )}
         </button>
       </form>
+
+      {/* Get in Touch Section - Compact */}
+      <div className="mt-6 pt-6 border-t border-gray-200">
+        <div className="text-center">
+          <h4 className="text-lg font-bold text-gray-900 mb-2">Get in Touch</h4>
+          <p className="text-sm text-gray-600 mb-3">
+            We'd love to hear from you! Write us for any additional feature request, issues, query or appreciation.
+          </p>
+          <div className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700">
+            <Mail className="w-4 h-4" />
+            <a 
+              href="mailto:support@unblockdevs.com" 
+              className="font-semibold hover:underline"
+            >
+              support@unblockdevs.com
+            </a>
+          </div>
+          <p className="text-xs text-gray-500 mt-3">
+            Your feedback helps us improve and build better tools for the developer community.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
