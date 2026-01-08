@@ -1263,7 +1263,7 @@ function HomeClient() {
       </section>
 
       {/* Get in Touch Section */}
-      <section className="mt-8 py-12 bg-gradient-to-r from-green-50 via-blue-50 to-indigo-50">
+      <section className="mt-4 py-8 bg-gradient-to-r from-green-50 via-blue-50 to-indigo-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="bg-white rounded-xl shadow-lg p-8 md:p-12">
             <div className="flex items-center justify-center gap-4 mb-4">

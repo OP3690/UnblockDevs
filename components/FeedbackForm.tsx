@@ -32,19 +32,22 @@ export default function FeedbackForm({ toolName, className = '', variant = 'defa
     setLoading(true);
     
     try {
-      // Store feedback in localStorage (in production, send to your backend)
-      const feedbacks = JSON.parse(localStorage.getItem('user_feedbacks') || '[]');
-      const newFeedback = {
-        ...formData,
-        toolName: toolName || 'General',
-        timestamp: new Date().toISOString(),
-        id: Date.now().toString()
-      };
-      feedbacks.push(newFeedback);
-      localStorage.setItem('user_feedbacks', JSON.stringify(feedbacks));
-      
-      // In production, you would send this to your backend:
-      // await fetch('/api/feedback', { method: 'POST', body: JSON.stringify(newFeedback) });
+      const response = await fetch('/api/feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          toolName: toolName || 'General',
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to submit feedback');
+      }
       
       setSubmitted(true);
       setFormData({ name: '', email: '', message: '', type: 'feedback' });
@@ -54,8 +57,8 @@ export default function FeedbackForm({ toolName, className = '', variant = 'defa
         setSubmitted(false);
         setIsOpen(false);
       }, 2000);
-    } catch (error) {
-      toast.error('Something went wrong. Please try again.');
+    } catch (error: any) {
+      toast.error(error.message || 'Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }

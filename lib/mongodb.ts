@@ -34,6 +34,7 @@ async function connectDB() {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
+      dbName: 'UnblockDevs', // Use UnblockDevs database
     };
 
     cached.promise = mongoose.connect(getMongoUri(), opts).then((mongoose) => {

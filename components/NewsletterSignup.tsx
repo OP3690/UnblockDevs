@@ -25,25 +25,35 @@ export default function NewsletterSignup({ className = '', variant = 'default' }
     setLoading(true);
     
     try {
-      // Here you would integrate with your newsletter service (Mailchimp, ConvertKit, etc.)
-      // For now, we'll simulate an API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Store in localStorage as a simple solution
-      const subscribers = JSON.parse(localStorage.getItem('newsletter_subscribers') || '[]');
-      if (!subscribers.includes(email)) {
-        subscribers.push(email);
-        localStorage.setItem('newsletter_subscribers', JSON.stringify(subscribers));
+      const response = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to subscribe');
       }
-      
+
       setSubscribed(true);
       setEmail('');
-      toast.success('Successfully subscribed! Check your email for confirmation.');
+      
+      if (data.alreadySubscribed) {
+        toast.success('You are already subscribed!');
+      } else if (data.resubscribed) {
+        toast.success('Successfully resubscribed!');
+      } else {
+        toast.success('Successfully subscribed! Check your email for confirmation.');
+      }
       
       // Reset after 3 seconds
       setTimeout(() => setSubscribed(false), 3000);
-    } catch (error) {
-      toast.error('Something went wrong. Please try again.');
+    } catch (error: any) {
+      toast.error(error.message || 'Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
