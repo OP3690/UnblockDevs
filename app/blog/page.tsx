@@ -19,6 +19,33 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'har-to-curl-converter-complete-guide',
+      title: 'HAR to cURL Converter: Complete Guide to Convert Browser Requests to cURL',
+      excerpt: 'Master HAR to cURL conversion with our complete guide. Learn how to convert HAR files, browser network requests, and HTTP archives to cURL commands. Step-by-step tutorial with examples. Free HAR to cURL converter tool included.',
+      date: '2025-01-15',
+      readTime: '12 min read',
+      category: 'API Development',
+      keywords: ['har to curl', 'har to curl converter', 'convert har to curl', 'browser request to curl', 'network request to curl']
+    },
+    {
+      slug: 'copy-as-curl-from-browser-guide',
+      title: 'Copy as cURL from Browser: Network Request to cURL Converter Tutorial',
+      excerpt: 'Learn how to copy browser network requests as cURL commands. Step-by-step guide for Chrome, Firefox, and Edge. Convert network requests to cURL instantly with our free online tool. Perfect for API testing and debugging.',
+      date: '2025-01-15',
+      readTime: '10 min read',
+      category: 'API Development',
+      keywords: ['copy as curl online', 'copy as curl from browser', 'network request to curl', 'browser request to curl', 'curl from browser request']
+    },
+    {
+      slug: 'how-to-convert-har-files-to-curl',
+      title: 'How to Convert HAR Files to cURL: Export Browser Network Requests to cURL',
+      excerpt: 'Complete guide on how to convert HAR files to cURL commands. Learn step-by-step methods to export browser network requests, convert HTTP archives, and generate cURL commands. Free HAR to cURL converter tool included.',
+      date: '2025-01-15',
+      readTime: '11 min read',
+      category: 'API Development',
+      keywords: ['how to convert har files to curl', 'convert har file to curl', 'har file to curl converter', 'export browser network requests to curl']
+    },
+    {
       slug: 'physical-ai-edge-computing-complete-guide',
       title: 'Physical AI Edge Computing: Complete Guide 2026',
       excerpt: 'Complete guide to Physical AI edge computing: definition, what it is, when to use it, how it works, and why it matters. Learn about edge AI, real-time processing, edge devices, IoT AI, and distributed Physical AI systems.',
