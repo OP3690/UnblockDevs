@@ -4,8 +4,8 @@ import { Toaster } from 'react-hot-toast'
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget'
 
 export const metadata: Metadata = {
-  title: 'JSON Schema Generator, JSON to Excel Converter, Curl to Requests - Free Developer Tools | UnblockDevs.com',
-  description: 'Free online JSON schema generator, JSON schema validation, JSON to Excel converter, curl to requests converter, and JSON schema creator. Export JSON to Excel, convert curl to JavaScript, generate JSON schema, validate JSON schema, and create JSON schemas instantly. Professional developer tools at UnblockDevs.com.',
+  title: 'Free Developer Tools – JSON, cURL, API Testing | No Login Required | UnblockDevs',
+  description: 'Free online developer tools: JSON schema generator, JSON validator, cURL converter, HAR to cURL, token comparator, and more. No signup, no login, 100% private. All tools work in your browser.',
   keywords: [
     // Primary SEO keywords
     'curl to requests',

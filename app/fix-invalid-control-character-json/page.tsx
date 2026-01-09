@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import FixInvalidControlCharacterClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Fix "Invalid control character" JSON Error - Complete Guide | UnblockDevs',
-  description: 'Learn how to fix "Invalid control character" JSON error. Common causes: unescaped newlines, tabs, control characters. Free JSON Fixer tool to fix instantly.',
+  title: 'Free Guide: Fix "Invalid Control Character" JSON Error | UnblockDevs',
+  description: 'Fix "Invalid control character" JSON error instantly. Free guide with examples and JSON fixer tool. No signup required, works in your browser.',
   keywords: [
     'fix invalid control character json',
     'invalid control character json error',

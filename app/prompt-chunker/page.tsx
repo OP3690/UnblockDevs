@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import PromptChunkerLandingClient from './client';
 
 export const metadata: Metadata = {
-  title: 'AI Prompt Chunker - Split Long Prompts into Manageable Chunks | UnblockDevs',
-  description: 'Free AI Prompt Chunker tool. Split long AI prompts into manageable chunks with overlap for better context. Perfect for ChatGPT, Claude, and other AI tools with token limits. No signup required.',
+  title: 'Free AI Prompt Chunker – Split Long Prompts Instantly | UnblockDevs',
+  description: 'Split long AI prompts into manageable chunks with smart overlap. Free online prompt chunker for ChatGPT, Claude, and other AI tools. No signup, no login, works entirely in your browser.',
   keywords: [
     'ai prompt chunker',
     'prompt chunker',

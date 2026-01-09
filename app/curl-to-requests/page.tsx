@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import CurlToRequestsClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Convert cURL to Requests - Python, JavaScript, PHP & More | UnblockDevs',
-  description: 'Free online tool to convert cURL commands to Python Requests, JavaScript Fetch, PHP, Ruby, Java, Go, and C#. Supports authentication, headers, and all HTTP methods. No signup required.',
+  title: 'Free cURL to Code Converter – Python, JavaScript, PHP & More | UnblockDevs',
+  description: 'Convert cURL commands to Python, JavaScript, PHP, Ruby, Java, Go, and C# code instantly. Free online converter with full auth & header support. No signup, no login, instant results.',
   keywords: [
     'curl to requests',
     'convert curl to requests',

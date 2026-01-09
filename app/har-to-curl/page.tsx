@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import HarToCurlClient from './client';
 
 export const metadata: Metadata = {
-  title: 'HAR to cURL Converter | Network Request to cURL | Copy as cURL Online | UnblockDevs',
-  description: 'Free online HAR to cURL converter. Convert HAR files, browser network requests, and HTTP archives to cURL commands instantly. Network request to cURL, copy as curl online, har to curl generator. No signup required.',
+  title: 'Free HAR to cURL Converter – Convert Browser Requests Instantly | UnblockDevs',
+  description: 'Convert HAR files and browser network requests to cURL commands instantly. Free online HAR to cURL converter with multiple request support. No signup, no login, works entirely in your browser.',
   keywords: [
     'har to curl',
     'network to curl',

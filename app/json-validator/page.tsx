@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import JsonValidatorClient from './client';
 
 export const metadata: Metadata = {
-  title: 'JSON Validator - Free Online JSON Validation Tool | UnblockDevs',
-  description: 'Free online JSON Validator. Validate JSON syntax, check for errors, verify JSON structure instantly. No signup required. 100% privacy-focused JSON validation tool.',
+  title: 'Free JSON Validator & Syntax Checker – Instant Results | UnblockDevs',
+  description: 'Validate JSON syntax and check for errors instantly. Free online JSON validator with detailed error messages. No signup, no login, 100% private. Works entirely in your browser.',
   keywords: [
     'json validator',
     'json validator online',

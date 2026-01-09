@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import ConvertCurlToHttpRequestClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Convert cURL to HTTP Request - Free Online Converter | UnblockDevs',
-  description: 'Convert cURL commands to HTTP requests instantly. Free online tool to transform curl commands to HTTP request format. Supports all HTTP methods, headers, and authentication.',
+  title: 'Free cURL to HTTP Request Converter – Instant Conversion | UnblockDevs',
+  description: 'Convert cURL commands to HTTP request format instantly. Free online converter supporting all HTTP methods, headers, and authentication. No signup, no login, works in your browser.',
   keywords: [
     'convert curl to http request',
     'curl to http request',

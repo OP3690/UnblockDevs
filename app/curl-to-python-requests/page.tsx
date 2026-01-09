@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import CurlToPythonRequestsClient from './client';
 
 export const metadata: Metadata = {
-  title: 'cURL to Python Requests - Free Online Converter | UnblockDevs',
-  description: 'Convert cURL commands to Python Requests code instantly. Free online tool to transform curl commands to Python requests library. Supports authentication, headers, JSON data, and file uploads.',
+  title: 'Free cURL to Python Converter – Generate Requests Code Instantly | UnblockDevs',
+  description: 'Convert cURL commands to Python Requests code instantly. Free online converter with full auth, headers, and JSON support. No signup, no login, works in your browser.',
   keywords: [
     'curl to python requests',
     'convert curl to python',

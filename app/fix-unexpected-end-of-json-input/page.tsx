@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import FixUnexpectedEndOfJsonInputClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Fix "Unexpected end of JSON input" Error - Complete Guide | UnblockDevs',
-  description: 'Learn how to fix "Unexpected end of JSON input" error instantly. Common causes, broken JSON examples, fixed solutions, and free JSON Fixer tool. Fix this error in seconds.',
+  title: 'Free Guide: Fix "Unexpected end of JSON input" Error | UnblockDevs',
+  description: 'Fix "Unexpected end of JSON input" error instantly. Free guide with examples and JSON fixer tool. No signup required, works in your browser.',
   keywords: [
     'fix unexpected end of json input',
     'unexpected end of json input error',

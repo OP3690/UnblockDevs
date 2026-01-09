@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import JsonFixerOnlineClient from './client';
 
 export const metadata: Metadata = {
-  title: 'JSON Fixer Online - Free JSON Repair Tool | UnblockDevs',
-  description: 'Free JSON Fixer online tool. Fix broken JSON, repair syntax errors, validate JSON structure instantly. No signup required. 100% privacy-focused.',
+  title: 'Free JSON Fixer & Repair Tool – Fix Broken JSON Instantly | UnblockDevs',
+  description: 'Fix broken JSON and repair syntax errors automatically. Free online JSON fixer with smart error detection. No signup, no login, 100% private. Works entirely in your browser.',
   keywords: [
     'json fixer online',
     'json fixer online free',

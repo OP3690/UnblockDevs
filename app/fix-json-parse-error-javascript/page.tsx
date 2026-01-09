@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import FixJsonParseErrorJavascriptClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Fix JSON.parse() Error in JavaScript - Complete Guide | UnblockDevs',
-  description: 'Learn how to fix JSON.parse() errors in JavaScript. Common errors, error handling, try-catch examples, and free JSON Fixer tool to validate and fix JSON.',
+  title: 'Free Guide: Fix JSON.parse() Errors in JavaScript | UnblockDevs',
+  description: 'Learn how to fix JSON.parse() errors in JavaScript. Complete guide with examples, error handling, and free JSON fixer tool. No signup required.',
   keywords: [
     'fix json.parse error javascript',
     'json.parse error handling',

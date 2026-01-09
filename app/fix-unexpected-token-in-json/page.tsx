@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import FixUnexpectedTokenClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Fix "Unexpected token } in JSON" Error - Complete Guide | UnblockDevs',
-  description: 'Learn how to fix "Unexpected token } in JSON" error instantly. Common causes, broken JSON examples, fixed solutions, and free JSON Fixer tool.',
+  title: 'Free Guide: Fix "Unexpected token } in JSON" Error | UnblockDevs',
+  description: 'Fix "Unexpected token } in JSON" error instantly. Free guide with examples and JSON fixer tool. No signup required, works in your browser.',
   keywords: [
     'fix unexpected token in json',
     'unexpected token json error',

@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import JsonSchemaGenerationClient from './client';
 
 export const metadata: Metadata = {
-  title: 'JSON Schema Generation - Free Online Schema Generator | UnblockDevs',
-  description: 'Free online JSON Schema generator. Generate JSON Schema from sample JSON automatically. Supports Draft 7 and OpenAPI formats. Validate JSON against schemas. No signup required.',
+  title: 'Free JSON Schema Generator – Auto-Generate from JSON | UnblockDevs',
+  description: 'Generate JSON Schema from sample JSON automatically. Free online schema generator supporting Draft 7 and OpenAPI. No signup, no login, instant results. Works entirely in your browser.',
   keywords: [
     'json schema generation',
     'json schema generator',

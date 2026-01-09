@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import TokenComparatorLandingClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Token Comparator Online - Compare JWT, API Keys & Tokens | UnblockDevs',
-  description: 'Free online token comparator to compare JWT tokens, API keys, and authentication tokens character by character. Beautiful mismatch highlighting, 100% client-side, no data stored. Perfect for debugging and verification.',
+  title: 'Free Token Comparator – Compare JWT, API Keys & Tokens | UnblockDevs',
+  description: 'Compare JWT tokens, API keys, and authentication tokens character by character. Free online token comparator with visual diff highlighting. No signup, 100% private, works in your browser.',
   keywords: [
     'token comparator',
     'jwt token comparator',

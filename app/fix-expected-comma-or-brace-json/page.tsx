@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import FixExpectedCommaOrBraceClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Fix "Expected \',\' or \'}\' after property value" Error - Complete Guide | UnblockDevs',
-  description: 'Learn how to fix "Expected comma or closing brace after property value" JSON error instantly. Common causes: missing commas, trailing commas, syntax errors. Free JSON Fixer tool.',
+  title: 'Free Guide: Fix "Expected Comma or Brace" JSON Error | UnblockDevs',
+  description: 'Fix "Expected comma or closing brace" JSON error instantly. Free guide with examples and JSON fixer tool. No signup required, works in your browser.',
   keywords: [
     'fix expected comma or brace json',
     'expected comma or } after property value',
