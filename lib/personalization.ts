@@ -1,6 +1,6 @@
 // Personalization utilities for tracking user preferences
 
-export type ToolTab = 'converter' | 'beautifier' | 'fixer' | 'comparator' | 'jsoncompare' | 'schema' | 'logs' | 'payload' | 'curl' | 'mock' | 'testdata' | 'config' | 'sql' | 'builder' | 'insights' | 'promptchunk' | 'tokencompare' | 'timezone';
+export type ToolTab = 'converter' | 'beautifier' | 'fixer' | 'comparator' | 'jsoncompare' | 'schema' | 'logs' | 'payload' | 'curl' | 'mock' | 'testdata' | 'config' | 'sql' | 'builder' | 'insights' | 'promptchunk' | 'tokencompare' | 'timezone' | 'hartocurl';
 
 export interface ToolInfo {
   id: ToolTab;
@@ -110,6 +110,7 @@ export class PersonalizationManager {
       promptchunk: { id: 'promptchunk', name: 'Prompt Chunker', description: 'Split AI prompts into chunks' },
       tokencompare: { id: 'tokencompare', name: 'Token Comparator', description: 'Compare tokens character by character' },
       timezone: { id: 'timezone', name: 'Timezone Translator', description: 'Convert times across timezones' },
+      hartocurl: { id: 'hartocurl', name: 'HAR to cURL', description: 'Convert HAR files and network requests to cURL commands' },
     };
   }
 }

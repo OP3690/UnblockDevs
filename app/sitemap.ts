@@ -200,6 +200,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
       changefreq: 'monthly' as const,
     },
+    {
+      url: 'har-to-curl',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
   ]
 
   // Generate sitemap entries

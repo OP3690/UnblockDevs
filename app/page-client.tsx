@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect, useMemo, Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, TrendingUp, Mail, Scissors, Key, Clock } from 'lucide-react';
+import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, TrendingUp, Mail, Scissors, Key, Clock, Network } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { PersonalizationManager, ToolTab } from '@/lib/personalization';
@@ -60,6 +60,9 @@ const TokenComparator = dynamic(() => import('@/components/tools/TokenComparator
   loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
 });
 const TimezoneTranslator = dynamic(() => import('@/components/tools/TimezoneTranslator'), {
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+});
+const HarToCurl = dynamic(() => import('@/components/tools/HarToCurl'), {
   loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
 });
 import {
@@ -124,7 +127,7 @@ function HomeClient() {
       // Check for tab parameter in URL (e.g., ?tab=curl or ?tab=schema)
       const urlParams = new URLSearchParams(window.location.search);
       const tabParam = urlParams.get('tab');
-      if (tabParam && ['converter', 'beautifier', 'fixer', 'comparator', 'jsoncompare', 'schema', 'logs', 'payload', 'curl', 'mock', 'testdata', 'config', 'sql', 'builder', 'insights', 'promptchunk'].includes(tabParam)) {
+      if (tabParam && ['converter', 'beautifier', 'fixer', 'comparator', 'jsoncompare', 'schema', 'logs', 'payload', 'curl', 'mock', 'testdata', 'config', 'sql', 'builder', 'insights', 'promptchunk', 'tokencompare', 'timezone', 'hartocurl'].includes(tabParam)) {
         setActiveTab(tabParam as ToolTab);
         // Scroll to top when tab is set from URL
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -771,6 +774,19 @@ function HomeClient() {
                 <span className="text-sm">Timezone Translator</span>
               </div>
             </button>
+            <button
+              onClick={() => handleTabChange('hartocurl')}
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+                activeTab === 'hartocurl'
+                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
+                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <Network className="w-4 h-4" />
+                <span className="text-sm">HAR to cURL</span>
+              </div>
+            </button>
           </div>
         </div>
       </header>
@@ -849,6 +865,7 @@ function HomeClient() {
         {activeTab === 'promptchunk' && <PromptChunker />}
         {activeTab === 'tokencompare' && <TokenComparator />}
         {activeTab === 'timezone' && <TimezoneTranslator />}
+        {activeTab === 'hartocurl' && <HarToCurl />}
       </main>
 
       {/* Services Section */}
