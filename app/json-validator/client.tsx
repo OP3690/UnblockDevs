@@ -41,9 +41,12 @@ export default function JsonValidatorClient() {
               Our <strong>JSON Validator</strong> is a free online tool that validates JSON syntax and structure instantly. 
               Check for errors, verify JSON format, and ensure your JSON is valid before using it in your applications.
             </p>
-            <p className="text-gray-700 leading-relaxed">
+            <p className="text-gray-700 leading-relaxed mb-4">
               No signup required, 100% privacy-focused (all processing happens in your browser). 
               Use our <Link href="/" className="text-blue-600 hover:underline font-semibold">JSON Validator</Link> to validate JSON before parsing.
+            </p>
+            <p className="text-gray-700 leading-relaxed">
+              After validating your JSON, use our <Link href="/json-formatter" className="text-blue-600 hover:underline font-semibold">JSON Formatter</Link> to beautify it, or our <Link href="/json-fixer-online" className="text-blue-600 hover:underline font-semibold">JSON Fixer</Link> if you need to repair any syntax errors.
             </p>
           </section>
 
@@ -97,6 +100,28 @@ export default function JsonValidatorClient() {
                   <p className="text-gray-700 text-sm">If invalid, use our <Link href="/" className="text-blue-600 hover:underline">JSON Fixer</Link> to repair it automatically</p>
                 </div>
               </div>
+            </div>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Related Tools</h2>
+            <div className="flex flex-wrap gap-3 mb-6">
+              <Link href="/json-formatter" className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors text-sm font-medium">
+                <CheckCircle className="w-4 h-4" />
+                JSON Formatter
+              </Link>
+              <Link href="/json-beautifier" className="inline-flex items-center gap-2 px-4 py-2 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition-colors text-sm font-medium">
+                <CheckCircle className="w-4 h-4" />
+                JSON Beautifier
+              </Link>
+              <Link href="/json-fixer-online" className="inline-flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-700 rounded-lg hover:bg-orange-100 transition-colors text-sm font-medium">
+                <Shield className="w-4 h-4" />
+                JSON Fixer
+              </Link>
+              <Link href="/json-schema-generation" className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors text-sm font-medium">
+                <CheckCircle className="w-4 h-4" />
+                Schema Generator
+              </Link>
             </div>
           </section>
 

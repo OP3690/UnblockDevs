@@ -889,8 +889,8 @@ function HomeClient() {
               <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ JSON to Excel Integration</span>
               <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ Curl to JavaScript</span>
               <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ JSON Schema Generator Online</span>
-            </div>
-          </div>
+              </div>
+                        </div>
           
           {/* SEO Content Section */}
           <div className="mb-10 sm:mb-12 lg:mb-16 bg-white rounded-2xl p-6 sm:p-8 lg:p-10 border border-gray-200 shadow-sm">
@@ -913,9 +913,9 @@ function HomeClient() {
                 <p>
                   <strong>JSON Schema Creation & Validation:</strong> Create robust JSON schemas with our <strong>JSON schema creator</strong>. Our <strong>JSON schema generation</strong> tool supports <strong>JSON schema for JSON schema</strong> patterns and helps with <strong>schema validation JSON</strong>. Use <strong>validation JSON schema</strong> to ensure your data matches expected structures. Our <strong>json-schema-generator</strong> is perfect for <strong>creating a JSON schema</strong> from existing JSON data.
                 </p>
+                      </div>
               </div>
             </div>
-          </div>
           
           {/* Language-Specific JSON Tools Section */}
           <div className="mb-10 sm:mb-12 lg:mb-16 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 sm:p-8 lg:p-10 border border-indigo-100 shadow-sm">
@@ -937,7 +937,7 @@ function HomeClient() {
                     <li>• <strong>javascript json data analysis</strong> & <strong>javascript json transform</strong></li>
                     <li>• <strong>javascript json error handling</strong> & <strong>javascript convert json</strong></li>
                   </ul>
-                </div>
+          </div>
                 
                 {/* Python Section */}
                 <div className="bg-white rounded-xl p-6 border border-gray-200">
@@ -953,7 +953,7 @@ function HomeClient() {
                     <li>• <strong>python json normalize</strong> & <strong>python json schema generator</strong></li>
                     <li>• <strong>python json to csv</strong> & <strong>python json validation error</strong> handling</li>
                   </ul>
-                </div>
+            </div>
                 
                 {/* Java Section */}
                 <div className="bg-white rounded-xl p-6 border border-gray-200">
@@ -969,8 +969,8 @@ function HomeClient() {
                     <li>• <strong>java json to excel</strong> & <strong>java json schema generator</strong></li>
                     <li>• <strong>java json pretty print</strong> & <strong>java json parsing error</strong> handling</li>
                   </ul>
-                </div>
-                
+          </div>
+          
                 {/* MySQL Section */}
                 <div className="bg-white rounded-xl p-6 border border-gray-200">
                   <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
@@ -1469,24 +1469,26 @@ function HomeClient() {
                 Free online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier, JSON Fixer & Repair Tool, JSON to Excel converter, JSON to CSV converter, JSON to Table converter, API testing, data analysis, schema generation, SQL formatting, log analysis, and more. All tools are free and work entirely in your browser.
               </p>
               <div className="flex flex-wrap justify-center gap-4 mt-3 text-xs text-gray-600">
-                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Viewer Online</Link>
-                <Link href="/json-beautifier" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Formatter Online</Link>
-                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Parser Online</Link>
-                <Link href="/json-beautifier" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Beautifier Online</Link>
-                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Fixer Online</Link>
-                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON to Excel Converter</Link>
-                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON to CSV Converter</Link>
-                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON to Table Converter</Link>
+                <Link href="/json-formatter" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Formatter</Link>
+                <Link href="/json-validator" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Validator</Link>
+                <Link href="/json-beautifier" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Beautifier</Link>
+                <Link href="/json-fixer-online" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Fixer</Link>
+                <Link href="/json-schema-generation" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Schema Generator</Link>
+                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON to Excel</Link>
                 <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Comparator</Link>
-                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ API Response Comparator</Link>
-                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Schema Generator</Link>
-                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ SQL Formatter</Link>
-                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Log Analyzer</Link>
+                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ API Comparator</Link>
+                <Link href="/har-to-curl" className="text-blue-600 hover:text-blue-700 hover:underline">✓ HAR to cURL</Link>
+                <Link href="/curl-to-requests" className="text-blue-600 hover:text-blue-700 hover:underline">✓ cURL to Code</Link>
+                <Link href="/curl-to-python-requests" className="text-blue-600 hover:text-blue-700 hover:underline">✓ cURL to Python</Link>
+                <Link href="/convert-curl-to-http-request" className="text-blue-600 hover:text-blue-700 hover:underline">✓ cURL to HTTP</Link>
+                <Link href="/json-stringify-online" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON.stringify()</Link>
+                <Link href="/token-comparator" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Token Comparator</Link>
+                <Link href="/prompt-chunker" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Prompt Chunker</Link>
+                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Log Explorer</Link>
                 <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Payload Analyzer</Link>
                 <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Mock API Generator</Link>
-                <Link href="/prompt-chunker" className="text-blue-600 hover:text-blue-700 hover:underline">✓ AI Prompt Chunker</Link>
-                <Link href="/token-comparator" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Token Comparator</Link>
-                <Link href="/timezone-translator" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Timezone Translator</Link>
+                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ SQL Formatter</Link>
+                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Builder</Link>
               </div>
               <div className="mt-4 pt-4 border-t border-gray-200">
                 <p className="text-xs text-gray-500 mb-2 text-center">Learn more about JSON:</p>

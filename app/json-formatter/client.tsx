@@ -41,6 +41,28 @@ export default function JsonFormatterClient() {
             </div>
           </section>
 
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Related Tools</h2>
+            <div className="flex flex-wrap gap-3 mb-6">
+              <Link href="/json-validator" className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors text-sm font-medium">
+                <CheckCircle className="w-4 h-4" />
+                JSON Validator
+              </Link>
+              <Link href="/json-beautifier" className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors text-sm font-medium">
+                <Code2 className="w-4 h-4" />
+                JSON Beautifier
+              </Link>
+              <Link href="/json-fixer-online" className="inline-flex items-center gap-2 px-4 py-2 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition-colors text-sm font-medium">
+                <Code2 className="w-4 h-4" />
+                JSON Fixer
+              </Link>
+              <Link href="/json-schema-generation" className="inline-flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-700 rounded-lg hover:bg-orange-100 transition-colors text-sm font-medium">
+                <Code2 className="w-4 h-4" />
+                Schema Generator
+              </Link>
+            </div>
+          </section>
+
           <section className="mb-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-8 text-white">
             <div className="flex items-center gap-4 mb-4">
               <Code2 className="w-12 h-12" />
@@ -52,7 +74,7 @@ export default function JsonFormatterClient() {
               </div>
             </div>
             <Link
-              href="/"
+              href="/?tab=beautifier"
               className="inline-flex items-center gap-2 bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
             >
               Format JSON Now
