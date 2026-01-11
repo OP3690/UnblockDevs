@@ -347,7 +347,7 @@ curl -u username:password https://api.example.com/protected
 const credentials = btoa('username:password');
 fetch('https://api.example.com/protected', {
   headers: {
-    'Authorization': `Basic ${credentials}`
+    'Authorization': 'Basic ' + credentials
   }
 })
   .then(response => response.json())
@@ -400,7 +400,7 @@ const params = new URLSearchParams({
   limit: '10'
 });
 
-fetch(`https://api.example.com/search?${params}`)
+fetch('https://api.example.com/search?' + params)
   .then(response => response.json())
   .then(data => console.log(data));
 
