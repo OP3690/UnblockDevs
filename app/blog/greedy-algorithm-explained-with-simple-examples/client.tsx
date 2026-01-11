@@ -5,6 +5,7 @@ import { ArrowLeft, Code, AlertTriangle, Target, CheckCircle, AlertCircle, HelpC
 import FAQSchema from '@/components/FAQSchema';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import FeedbackForm from '@/components/FeedbackForm';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function GreedyAlgorithmExplainedWithSimpleExamplesClient() {
   return (
@@ -27,7 +28,14 @@ export default function GreedyAlgorithmExplainedWithSimpleExamplesClient() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="Greedy Algorithm Explained with Simple Examples"
+        description="Learn what greedy algorithm is with simple examples. Complete beginner-friendly guide to greedy algorithms, when to use them, and step-by-step examples."
+        variant="floating"
+      />
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {
@@ -550,6 +558,15 @@ print(f"Maximum value: {max_value}")  # Output: 240.0
             </div>
           </section>
         </article>
+
+        {/* Social Share Section */}
+        <section className="mt-12">
+          <BlogSocialShare 
+            title="Greedy Algorithm Explained with Simple Examples"
+            description="Learn what greedy algorithm is with simple examples. Complete beginner-friendly guide to greedy algorithms, when to use them, and step-by-step examples."
+            variant="full"
+          />
+        </section>
 
         {/* Newsletter Signup */}
         <section className="mt-12">

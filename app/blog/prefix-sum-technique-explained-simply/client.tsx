@@ -5,6 +5,7 @@ import { ArrowLeft, Code, AlertTriangle, Calculator, CheckCircle, AlertCircle, H
 import FAQSchema from '@/components/FAQSchema';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import FeedbackForm from '@/components/FeedbackForm';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function PrefixSumTechniqueExplainedSimplyClient() {
   return (
@@ -27,7 +28,14 @@ export default function PrefixSumTechniqueExplainedSimplyClient() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="Prefix Sum Technique Explained Simply"
+        description="Learn what prefix sum technique is with simple examples. Complete beginner-friendly guide to prefix sum array, range sum queries, and O(1) query time."
+        variant="floating"
+      />
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {
@@ -514,6 +522,15 @@ print(results)  # Output: [13, 20, 27]
             </div>
           </section>
         </article>
+
+        {/* Social Share Section */}
+        <section className="mt-12">
+          <BlogSocialShare 
+            title="Prefix Sum Technique Explained Simply"
+            description="Learn what prefix sum technique is with simple examples. Complete beginner-friendly guide to prefix sum array, range sum queries, and O(1) query time."
+            variant="full"
+          />
+        </section>
 
         {/* Newsletter Signup */}
         <section className="mt-12">

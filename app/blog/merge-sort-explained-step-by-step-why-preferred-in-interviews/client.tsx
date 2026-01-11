@@ -5,6 +5,7 @@ import { ArrowLeft, Code, AlertTriangle, GitMerge, CheckCircle, AlertCircle, Hel
 import FAQSchema from '@/components/FAQSchema';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import FeedbackForm from '@/components/FeedbackForm';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function MergeSortExplainedStepByStepWhyPreferredInInterviewsClient() {
   return (
@@ -27,7 +28,14 @@ export default function MergeSortExplainedStepByStepWhyPreferredInInterviewsClie
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="Merge Sort Explained Step-by-Step (Why It's Preferred in Interviews)"
+        description="Learn merge sort algorithm step-by-step with visual examples. Complete beginner-friendly guide to merge sort, divide and conquer, time complexity O(n log n), and why it's preferred in coding interviews."
+        variant="floating"
+      />
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {
@@ -608,6 +616,15 @@ print(arr)  # Output: [1, 2, 3, 5, 8, 9]`}</code></pre>
             </div>
           </section>
         </article>
+
+        {/* Social Share Section */}
+        <section className="mt-12">
+          <BlogSocialShare 
+            title="Merge Sort Explained Step-by-Step (Why It's Preferred in Interviews)"
+            description="Learn merge sort algorithm step-by-step with visual examples. Complete beginner-friendly guide to merge sort, divide and conquer, time complexity O(n log n), and why it's preferred in coding interviews."
+            variant="full"
+          />
+        </section>
 
         {/* Newsletter Signup */}
         <section className="mt-12">
