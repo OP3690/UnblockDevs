@@ -298,6 +298,33 @@ export const metadata: Metadata = {
       keywords: ['failed to fetch error', 'fix failed to fetch', 'failed to fetch cors', 'failed to fetch javascript', 'fetch api error']
     },
     {
+      slug: 'fix-cannot-read-properties-of-undefined-reading-length-javascript',
+      title: 'Fix: "Cannot Read Properties of Undefined (reading \'length\')" in JavaScript | Complete Guide 2026',
+      excerpt: 'Learn how to fix "Cannot read properties of undefined (reading \'length\')" error in JavaScript. Complete guide with solutions for undefined arrays, null checks, optional chaining, and defensive programming. Includes code examples.',
+      date: '2026-01-31',
+      readTime: '14 min read',
+      category: 'JavaScript & Development',
+      keywords: ['cannot read properties of undefined reading length', 'fix undefined length error', 'javascript undefined length', 'cannot read property length of undefined', 'fix undefined reading length']
+    },
+    {
+      slug: 'why-async-await-is-not-working-javascript-common-mistakes',
+      title: 'Why async/await Is Not Working in JavaScript (Common Mistakes) | Complete Guide 2026',
+      excerpt: 'Learn why async/await is not working in JavaScript. Complete troubleshooting guide for common mistakes, missing await keywords, promise handling, error catching, and async function issues. Includes solutions and code examples.',
+      date: '2026-01-31',
+      readTime: '15 min read',
+      category: 'JavaScript & Development',
+      keywords: ['async await not working', 'why async await not working', 'async await javascript not working', 'fix async await', 'async await common mistakes']
+    },
+    {
+      slug: 'fix-uncaught-in-promise-error-javascript-explained',
+      title: 'Fix: "Uncaught (in promise)" Error in JavaScript Explained | Complete Guide 2026',
+      excerpt: 'Learn how to fix "Uncaught (in promise)" error in JavaScript. Complete guide for unhandled promise rejections, async/await error handling, promise chains, and error catching. Includes solutions and code examples.',
+      date: '2026-01-31',
+      readTime: '14 min read',
+      category: 'JavaScript & Development',
+      keywords: ['uncaught in promise error', 'fix uncaught in promise', 'unhandled promise rejection', 'uncaught promise error', 'fix promise rejection']
+    },
+    {
       slug: 'how-to-change-whatsapp-number-without-losing-chats',
       title: 'How to Change WhatsApp Number Without Losing Chats: Step-by-Step Guide 2026',
       excerpt: 'Complete guide to changing your WhatsApp number without losing chats, messages, or data. Step-by-step instructions for Android, iPhone, and desktop. Learn how to migrate WhatsApp account safely in 2026.',

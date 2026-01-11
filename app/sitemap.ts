@@ -121,6 +121,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'fix-unexpected-token-less-than-in-json-api-returns-html',
     'why-my-api-returns-200-ok-but-data-is-empty',
     'fix-failed-to-fetch-error-javascript-cors-https-network',
+    'fix-cannot-read-properties-of-undefined-reading-length-javascript',
+    'why-async-await-is-not-working-javascript-common-mistakes',
+    'fix-uncaught-in-promise-error-javascript-explained',
   ]
 
   // Main pages
