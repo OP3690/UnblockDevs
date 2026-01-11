@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Code, AlertTriangle, Layers, CheckCircle, AlertCircle, HelpCircle, Zap, Globe, ArrowUp, ArrowDown, ArrowRight } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import FeedbackForm from '@/components/FeedbackForm';
 
@@ -27,7 +28,15 @@ export default function WhatIsStackVsQueueExplainedWithRealLifeExamplesClient() 
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="What Is Stack vs Queue? Explained with Real-Life Examples"
+        description="Complete Guide to Stack and Queue Data Structures (2026)"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {
@@ -665,6 +674,15 @@ job = printer_queue.dequeue()  # Prints "Document2.pdf"
             </div>
           </section>
         </article>
+
+                {/* Social Share Section */}
+        <section className="mt-12">
+          <BlogSocialShare 
+            title="What Is Stack vs Queue? Explained with Real-Life Examples"
+            description="Complete Guide to Stack and Queue Data Structures (2026)"
+            variant="full"
+          />
+        </section>
 
         {/* Newsletter Signup */}
         <section className="mt-12">

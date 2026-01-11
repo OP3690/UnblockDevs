@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Calendar, Clock, ArrowLeft, CheckCircle2, XCircle, AlertTriangle, BookOpen, Zap, Brain, Target, TrendingUp, Code, Database, GraduationCap, Shield } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function DomainSpecificLanguageModelsClient() {
   const faqData = [

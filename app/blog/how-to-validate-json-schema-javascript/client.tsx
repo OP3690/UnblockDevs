@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Code, Shield, CheckCircle, AlertCircle, HelpCircle, Clock, Globe, FileCheck } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import FeedbackForm from '@/components/FeedbackForm';
 
@@ -27,7 +28,15 @@ export default function HowToValidateJsonSchemaJavaScriptClient() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="How to Validate JSON Schema in JavaScript"
+        description="Complete Guide to JSON Schema Validation in JavaScript (2026)"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {
@@ -496,6 +505,15 @@ const valid = validate(data);`}</code></pre>
             </div>
           </section>
         </article>
+
+                {/* Social Share Section */}
+        <section className="mt-12">
+          <BlogSocialShare 
+            title="How to Validate JSON Schema in JavaScript"
+            description="Complete Guide to JSON Schema Validation in JavaScript (2026)"
+            variant="full"
+          />
+        </section>
 
         {/* Newsletter Signup */}
         <section className="mt-12">

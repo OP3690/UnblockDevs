@@ -5,6 +5,7 @@ import { ArrowLeft, Code, ExternalLink, FileText, Copy, CheckCircle } from 'luci
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function ApacheKafkaCheatSheetClient() {
   const [copiedCommand, setCopiedCommand] = useState<string | null>(null);
@@ -254,7 +255,15 @@ for message in consumer:
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="Apache Kafka Cheat Sheet"
+        description="Commands, Configuration & Best Practices"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {

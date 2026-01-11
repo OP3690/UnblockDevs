@@ -11,6 +11,7 @@ interface Question {
   category: string;
 }
 
+import BlogSocialShare from '@/components/BlogSocialShare';
 export default function HTMLInterviewQuestionsClient() {
   const [openQuestions, setOpenQuestions] = useState<Set<number>>(new Set());
 
@@ -139,6 +140,14 @@ export default function HTMLInterviewQuestionsClient() {
           </div>
         </div>
       </header>
+
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="HTML Interview Questions: Top 50 Questions & Answers"
+        description="HTML Interview Questions: Top 50 Questions & Answers"
+        variant="floating"
+      />
+
 
       <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <header className="mb-12 text-center">

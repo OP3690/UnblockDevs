@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Calendar, Clock, ArrowLeft, CheckCircle2, XCircle, AlertTriangle, Server, Zap, Brain, Target, TrendingUp, Cpu, Database, Network, DollarSign } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function AiSupercomputingPlatformsClient() {
   const faqData = [

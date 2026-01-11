@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Code, AlertTriangle, Database, CheckCircle, AlertCircle, HelpCircle, Clock, Globe, Search } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import FeedbackForm from '@/components/FeedbackForm';
 
@@ -27,7 +28,15 @@ export default function WhyMyApiReturns200OkButDataIsEmptyClient() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="Why My API Returns 200 OK but Data Is Empty"
+        description="Complete Troubleshooting Guide for Empty API Responses (2026)"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {
@@ -417,6 +426,15 @@ if (!users || users.length === 0) {
             </div>
           </section>
         </article>
+
+                {/* Social Share Section */}
+        <section className="mt-12">
+          <BlogSocialShare 
+            title="Why My API Returns 200 OK but Data Is Empty"
+            description="Complete Troubleshooting Guide for Empty API Responses (2026)"
+            variant="full"
+          />
+        </section>
 
         {/* Newsletter Signup */}
         <section className="mt-12">

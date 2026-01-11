@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Code, ExternalLink, Rocket, Zap, Lightbulb, Brain, Cpu, Atom, Network } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function MustLearnTechSkills2030Client() {
   const futureSkills = [
@@ -135,7 +136,15 @@ export default function MustLearnTechSkills2030Client() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="Must-Learn Tech Skills for 2030"
+        description="AGI, Quantum Computing & Future Technologies"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {

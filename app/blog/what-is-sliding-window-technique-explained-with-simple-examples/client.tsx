@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Code, AlertTriangle, Square, CheckCircle, AlertCircle, HelpCircle, Zap, Globe, Move, ArrowRight, Maximize2 } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import FeedbackForm from '@/components/FeedbackForm';
 
@@ -27,7 +28,15 @@ export default function WhatIsSlidingWindowTechniqueExplainedWithSimpleExamplesC
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="What Is Sliding Window Technique? Explained with Simple Examples"
+        description="Complete Beginner-Friendly Guide to Sliding Window (2026)"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {
@@ -643,6 +652,15 @@ print(result)  # Output: "BANC" (minimum window containing A, B, C)`}</code></pr
             </div>
           </section>
         </article>
+
+                {/* Social Share Section */}
+        <section className="mt-12">
+          <BlogSocialShare 
+            title="What Is Sliding Window Technique? Explained with Simple Examples"
+            description="Complete Beginner-Friendly Guide to Sliding Window (2026)"
+            variant="full"
+          />
+        </section>
 
         {/* Newsletter Signup */}
         <section className="mt-12">

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Send, Smartphone, Shield, CheckCircle, AlertCircle, HelpCircle, Clock, Eye, EyeOff } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import FeedbackForm from '@/components/FeedbackForm';
 
@@ -27,7 +28,15 @@ export default function HowToChangeTelegramNumberClient() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="How to Change Phone Number in Telegram Without Notifying Contacts"
+        description="Complete Privacy-Focused Guide for Android, iPhone & Desktop (2026)"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {
@@ -406,6 +415,15 @@ export default function HowToChangeTelegramNumberClient() {
             </div>
           </section>
         </article>
+
+                {/* Social Share Section */}
+        <section className="mt-12">
+          <BlogSocialShare 
+            title="How to Change Phone Number in Telegram Without Notifying Contacts"
+            description="Complete Privacy-Focused Guide for Android, iPhone & Desktop (2026)"
+            variant="full"
+          />
+        </section>
 
         {/* Newsletter Signup */}
         <section className="mt-12">

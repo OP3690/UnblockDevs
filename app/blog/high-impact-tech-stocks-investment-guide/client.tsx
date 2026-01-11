@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Calendar, Clock, ArrowLeft, CheckCircle2, XCircle, AlertTriangle, TrendingUp, DollarSign, BarChart3, Target, Shield, Zap, Brain, Cpu, Cloud } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function HighImpactTechStocksClient() {
   const faqData = [

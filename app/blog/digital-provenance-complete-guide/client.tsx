@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Calendar, Clock, ArrowLeft, CheckCircle2, XCircle, AlertTriangle, Fingerprint, Zap, Shield, Target, TrendingUp, Link2, Database, FileCheck } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function DigitalProvenanceClient() {
   const faqData = [

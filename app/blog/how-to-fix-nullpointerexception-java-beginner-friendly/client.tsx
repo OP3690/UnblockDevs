@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Code, AlertTriangle, Bug, CheckCircle, AlertCircle, HelpCircle, Clock, Shield, Lock } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import FeedbackForm from '@/components/FeedbackForm';
 
@@ -27,7 +28,15 @@ export default function HowToFixNullpointerexceptionClient() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="How to Fix &quot;NullPointerException&quot; in Java (Beginner-Friendly)"
+        description="Complete Guide to Troubleshooting NPE in Java (2026)"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {
@@ -496,6 +505,15 @@ if (user != null) {
             </div>
           </section>
         </article>
+
+                {/* Social Share Section */}
+        <section className="mt-12">
+          <BlogSocialShare 
+            title="How to Fix &quot;NullPointerException&quot; in Java (Beginner-Friendly)"
+            description="Complete Guide to Troubleshooting NPE in Java (2026)"
+            variant="full"
+          />
+        </section>
 
         {/* Newsletter Signup */}
         <section className="mt-12">

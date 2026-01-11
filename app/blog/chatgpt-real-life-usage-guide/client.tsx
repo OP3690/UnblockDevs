@@ -5,6 +5,7 @@ import { ArrowLeft, Code, ExternalLink, MessageSquare, Zap, Lightbulb, CheckCirc
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function ChatgptRealLifeUsageGuideClient() {
   const [copiedPrompt, setCopiedPrompt] = useState<string | null>(null);
@@ -118,7 +119,15 @@ export default function ChatgptRealLifeUsageGuideClient() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="ChatGPT Real-Life Usage Guide"
+        description="How, What, When & Best Prompts for Great Results"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {

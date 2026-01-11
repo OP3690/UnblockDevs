@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, FileCode, CheckCircle, XCircle, AlertTriangle, BookOpen, Code, Zap, Shield, Lightbulb, Info } from 'lucide-react';
 
+import BlogSocialShare from '@/components/BlogSocialShare';
 export default function JsonFormatStandardsGuideClient() {
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
@@ -35,8 +36,16 @@ export default function JsonFormatStandardsGuideClient() {
         </div>
       </header>
 
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="JSON Format & Standards: Complete Guide"
+        description="RFC 8259 Compliance, Syntax Rules & Production-Grade Fixing"
+        variant="floating"
+      />
+
+
       {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
           {/* Introduction */}
           <section className="mb-12">

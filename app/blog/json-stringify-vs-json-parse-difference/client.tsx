@@ -5,6 +5,7 @@ import { ArrowLeft, Code, CheckCircle, Copy, ExternalLink, ArrowRight } from 'lu
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function JsonStringifyVsJsonParseDifferenceClient() {
   const [copiedExample, setCopiedExample] = useState<string | null>(null);
@@ -36,7 +37,15 @@ export default function JsonStringifyVsJsonParseDifferenceClient() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="JSON.stringify() vs JSON.parse()"
+        description="Complete Difference Guide"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {

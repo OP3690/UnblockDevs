@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Code, AlertTriangle, Clock, CheckCircle, AlertCircle, HelpCircle, Zap, Globe, TrendingUp, BarChart3, Activity } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import FeedbackForm from '@/components/FeedbackForm';
 
@@ -27,7 +28,15 @@ export default function WhatIsTimeComplexityExplainedWithSimpleExamplesClient() 
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="What Is Time Complexity? Explained with Simple Examples"
+        description="Complete Guide to Big O Notation with Visual Graphs and Examples (2026)"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {
@@ -564,6 +573,15 @@ for i in arr:  # Outer loop: n iterations
             </div>
           </section>
         </article>
+
+                {/* Social Share Section */}
+        <section className="mt-12">
+          <BlogSocialShare 
+            title="What Is Time Complexity? Explained with Simple Examples"
+            description="Complete Guide to Big O Notation with Visual Graphs and Examples (2026)"
+            variant="full"
+          />
+        </section>
 
         {/* Newsletter Signup */}
         <section className="mt-12">

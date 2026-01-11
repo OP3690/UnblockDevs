@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Code, CheckCircle, ExternalLink, Zap, Globe } from 'lucide-react';
 
+import BlogSocialShare from '@/components/BlogSocialShare';
 export default function CurlToCodeConverter2026Client() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
@@ -28,8 +29,16 @@ export default function CurlToCodeConverter2026Client() {
         </div>
       </header>
 
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="How to Convert cURL Commands to Code in 2026"
+        description="JavaScript, Python, Go, PHP & More"
+        variant="floating"
+      />
+
+
       {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
           {/* Introduction */}
           <section className="mb-12">

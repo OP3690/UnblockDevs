@@ -5,6 +5,7 @@ import { ArrowLeft, Code, ExternalLink, Sparkles, Zap, Lightbulb, CheckCircle, C
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function AiPromptEngineeringGuideClient() {
   const [copiedPrompt, setCopiedPrompt] = useState<string | null>(null);
@@ -167,7 +168,15 @@ export default function AiPromptEngineeringGuideClient() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="AI Prompt Engineering Guide"
+        description="Best Prompts for Great Results: How, What, When & Why"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {

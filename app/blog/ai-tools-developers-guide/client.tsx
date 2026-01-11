@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Code, ExternalLink, Sparkles, Zap, CheckCircle, TrendingUp } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function AiToolsDevelopersGuideClient() {
   return (
@@ -25,7 +26,15 @@ export default function AiToolsDevelopersGuideClient() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="AI Tools for Developers"
+        description="Complete Guide: How, What, When & Best Practices"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Code, ExternalLink, TrendingUp, Zap, Lightbulb, CheckCircle, Cpu, Brain, Shield, Cloud } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function MostUsefulTechSkills2026Client() {
   const techSkills = [
@@ -137,7 +138,15 @@ export default function MostUsefulTechSkills2026Client() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="Most Useful Tech Skills for 2026"
+        description="AI, GPU Programming, Semiconductors & More"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {

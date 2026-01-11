@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Code, Zap, Users, Rocket, HelpCircle, CheckCircle, AlertCircle, Sparkles, Brain, FileText, Clock } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import FeedbackForm from '@/components/FeedbackForm';
 
@@ -27,7 +28,15 @@ export default function LowCodeAiDevelopmentClient() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="Low-Code AI Development: Empowering Non-Technical Users"
+        description="What, When, How & Why - Building AI Solutions with Tools Like Prompt Chunker"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {
@@ -452,6 +461,15 @@ export default function LowCodeAiDevelopmentClient() {
             </div>
           </section>
         </article>
+
+                {/* Social Share Section */}
+        <section className="mt-12">
+          <BlogSocialShare 
+            title="Low-Code AI Development: Empowering Non-Technical Users"
+            description="What, When, How & Why - Building AI Solutions with Tools Like Prompt Chunker"
+            variant="full"
+          />
+        </section>
 
         {/* Newsletter Signup */}
         <section className="mt-12">

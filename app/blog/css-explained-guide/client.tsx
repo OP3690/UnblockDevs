@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Code, CheckCircle, AlertCircle, Lightbulb, Zap, BookOpen, Palette, Layout, Sparkles } from 'lucide-react';
 
+import BlogSocialShare from '@/components/BlogSocialShare';
 export default function CSSExplainedClient() {
   const [activeDemo, setActiveDemo] = useState<string | null>(null);
 
@@ -156,6 +157,14 @@ export default function CSSExplainedClient() {
           </div>
         </div>
       </header>
+
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="CSS Explained: Must-Do Practices, Hidden Facts & Pro Tips"
+        description="CSS Explained: Must-Do Practices, Hidden Facts & Pro Tips"
+        variant="floating"
+      />
+
 
       <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <header className="mb-12 text-center">

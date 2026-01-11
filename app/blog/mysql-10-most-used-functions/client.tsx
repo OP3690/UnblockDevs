@@ -5,6 +5,7 @@ import { ArrowLeft, Database, ExternalLink, Code, CheckCircle, Copy } from 'luci
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function Mysql10MostUsedFunctionsClient() {
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
@@ -314,7 +315,15 @@ FROM order_items;`,
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="MySQL 10 Most Used Functions"
+        description="Complete Guide with Examples & Best Practices"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {

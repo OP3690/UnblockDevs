@@ -5,6 +5,7 @@ import { ArrowLeft, FileCode, Copy, CheckCircle, ExternalLink, Sparkles, CheckCi
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function JsonSchemaGeneratorTutorialClient() {
   const [copiedExample, setCopiedExample] = useState<string | null>(null);
@@ -136,7 +137,15 @@ export default function JsonSchemaGeneratorTutorialClient() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="JSON Schema Generator Tutorial"
+        description="Create Schemas from JSON - Complete Guide"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {

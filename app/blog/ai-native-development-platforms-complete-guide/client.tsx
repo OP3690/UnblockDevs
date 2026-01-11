@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Calendar, Clock, ArrowLeft, CheckCircle2, XCircle, AlertTriangle, Code, Zap, Brain, Target, TrendingUp, Shield, Users, Database, DollarSign } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function AiNativeDevelopmentPlatformsClient() {
   const faqData = [

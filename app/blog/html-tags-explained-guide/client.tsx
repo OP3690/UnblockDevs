@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { ArrowLeft, Code, CheckCircle, AlertCircle, Lightbulb, Zap, BookOpen, Eye } from 'lucide-react';
 
+import BlogSocialShare from '@/components/BlogSocialShare';
 export default function HTMLTagsGuideClient() {
   const [activeExample, setActiveExample] = useState<string | null>(null);
 
@@ -152,6 +153,14 @@ export default function HTMLTagsGuideClient() {
           </div>
         </div>
       </header>
+
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="HTML Tags Explained: Must‑Do Practices, Hidden Facts & Pro Tips"
+        description="HTML Tags Explained: Must‑Do Practices, Hidden Facts & Pro Tips"
+        variant="floating"
+      />
+
 
       {/* Main Content */}
       <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

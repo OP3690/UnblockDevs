@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Key, Clock, TrendingUp, ExternalLink, Code, Shield } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function TokenTechnologiesHistoryEvolutionClient() {
   return (
@@ -25,7 +26,15 @@ export default function TokenTechnologiesHistoryEvolutionClient() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="Token Technologies: History & Evolution"
+        description="From Session Cookies to Modern JWT & OAuth Tokens"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {

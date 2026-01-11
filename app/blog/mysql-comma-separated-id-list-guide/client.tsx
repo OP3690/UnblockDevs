@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Database, Code, CheckCircle, AlertTriangle, Zap, FileCode, ArrowRight } from 'lucide-react';
 
+import BlogSocialShare from '@/components/BlogSocialShare';
 export default function MysqlCommaSeparatedIdListGuideClient() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
@@ -28,8 +29,16 @@ export default function MysqlCommaSeparatedIdListGuideClient() {
         </div>
       </header>
 
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="How to Create Comma Separated ID List for MySQL IN Clause"
+        description="Complete Guide with Examples and Free SQL Formatter Tool"
+        variant="floating"
+      />
+
+
       {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
           {/* Introduction */}
           <section className="mb-12">

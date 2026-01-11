@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Code, CheckCircle, ExternalLink, Bot, Network, Target, Rocket } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function AgenticAiCompleteGuideClient() {
   return (
@@ -25,7 +26,15 @@ export default function AgenticAiCompleteGuideClient() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="Agentic AI: Complete Guide"
+        description="Autonomous AI Agents & Multi-Agent Systems"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {

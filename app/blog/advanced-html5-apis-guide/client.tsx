@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Code, CheckCircle, AlertCircle, Lightbulb, Zap, BookOpen, MapPin, Database, Paintbrush, Cpu, Camera } from 'lucide-react';
 
+import BlogSocialShare from '@/components/BlogSocialShare';
 export default function AdvancedHTML5APIsClient() {
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [storageValue, setStorageValue] = useState('');
@@ -139,6 +140,14 @@ export default function AdvancedHTML5APIsClient() {
           </div>
         </div>
       </header>
+
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="Advanced HTML5 APIs: Complete Guide with Examples"
+        description="Advanced HTML5 APIs: Complete Guide with Examples"
+        variant="floating"
+      />
+
 
       <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <header className="mb-12 text-center">

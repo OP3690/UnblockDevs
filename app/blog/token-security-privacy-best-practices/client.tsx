@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Shield, AlertTriangle, CheckCircle, XCircle, ExternalLink, Lock, Eye } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function TokenSecurityPrivacyBestPracticesClient() {
   return (
@@ -25,7 +26,15 @@ export default function TokenSecurityPrivacyBestPracticesClient() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="Token Security & Privacy: Best Practices"
+        description="Dos, Don'ts, Vulnerabilities & Privacy Considerations"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {

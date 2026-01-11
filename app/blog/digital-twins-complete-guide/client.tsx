@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Code, CheckCircle, ExternalLink, Box, Activity, Cpu, Factory } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function DigitalTwinsCompleteGuideClient() {
   return (
@@ -25,7 +26,15 @@ export default function DigitalTwinsCompleteGuideClient() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="Digital Twins: Complete Guide"
+        description="Virtual Replicas & Real-Time Simulation"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {

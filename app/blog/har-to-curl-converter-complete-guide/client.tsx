@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Code, CheckCircle, ExternalLink, Upload, FileText, Download, Copy, Network, Chrome, Globe } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function HarToCurlConverterGuideClient() {
   return (
@@ -25,7 +26,15 @@ export default function HarToCurlConverterGuideClient() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="HAR to cURL Converter: Complete Guide"
+        description="Convert Browser Network Requests to cURL Commands"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {

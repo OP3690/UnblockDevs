@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Calendar, Clock, ArrowLeft, CheckCircle2, XCircle, AlertTriangle, TrendingUp, DollarSign, Target, Calendar as CalendarIcon, Repeat, Shield, Zap, BarChart3, PiggyBank } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function ConsistentTechInvestingClient() {
   const faqData = [

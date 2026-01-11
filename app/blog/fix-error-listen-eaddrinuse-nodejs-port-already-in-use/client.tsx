@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Code, AlertTriangle, Server, CheckCircle, AlertCircle, HelpCircle, Clock, Globe, Zap } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import FeedbackForm from '@/components/FeedbackForm';
 
@@ -27,7 +28,15 @@ export default function FixErrorListenEaddrinuseNodejsPortAlreadyInUseClient() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="Fix: &quot;Error: listen EADDRINUSE&quot; in Node.js (Port Already in Use)"
+        description="Complete Guide to Fixing Port Conflicts in Node.js (2026)"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {
@@ -415,6 +424,15 @@ pm2 kill
             </div>
           </section>
         </article>
+
+                {/* Social Share Section */}
+        <section className="mt-12">
+          <BlogSocialShare 
+            title="Fix: &quot;Error: listen EADDRINUSE&quot; in Node.js (Port Already in Use)"
+            description="Complete Guide to Fixing Port Conflicts in Node.js (2026)"
+            variant="full"
+          />
+        </section>
 
         {/* Newsletter Signup */}
         <section className="mt-12">

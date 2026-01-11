@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Calendar, Clock, ArrowLeft, Copy, Check, Tv, Sparkles, Zap, Shield, Globe, Users, TrendingUp, CheckCircle2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function Ces2026FireTvStickProjectAvaClient() {
   const [copied, setCopied] = useState<string | null>(null);

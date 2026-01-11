@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, AlertTriangle, CheckCircle, Wrench, Code, ExternalLink } from 'lucide-react';
 
+import BlogSocialShare from '@/components/BlogSocialShare';
 export default function CommonJsonMistakesGuideClient() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-red-50 to-orange-50">
@@ -28,8 +29,16 @@ export default function CommonJsonMistakesGuideClient() {
         </div>
       </header>
 
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="10 Most Common JSON Mistakes Developers Make"
+        description="And How to Fix Them Instantly"
+        variant="floating"
+      />
+
+
       {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
           {/* Introduction */}
           <section className="mb-12">

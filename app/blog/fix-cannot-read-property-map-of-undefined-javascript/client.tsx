@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Code, AlertTriangle, CheckCircle, AlertCircle, HelpCircle, Clock, Globe, Bug } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import FeedbackForm from '@/components/FeedbackForm';
 
@@ -27,7 +28,15 @@ export default function FixCannotReadPropertyMapOfUndefinedJavaScriptClient() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="Fix: &quot;Cannot Read Property 'map' of Undefined&quot; in JavaScript"
+        description="Complete Guide to Fixing Map Undefined Error (2026)"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {
@@ -417,6 +426,15 @@ items.map(item => <div key={item.id}>{item.name}</div>);`}</code></pre>
             </div>
           </section>
         </article>
+
+                {/* Social Share Section */}
+        <section className="mt-12">
+          <BlogSocialShare 
+            title="Fix: &quot;Cannot Read Property 'map' of Undefined&quot; in JavaScript"
+            description="Complete Guide to Fixing Map Undefined Error (2026)"
+            variant="full"
+          />
+        </section>
 
         {/* Newsletter Signup */}
         <section className="mt-12">

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Instagram, Smartphone, Mail, Shield, CheckCircle, AlertCircle, HelpCircle, Clock, Lock } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import FeedbackForm from '@/components/FeedbackForm';
 
@@ -27,7 +28,15 @@ export default function HowToChangeInstagramPhoneEmailClient() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="How to Change Instagram Phone Number or Email (2026 Guide)"
+        description="Complete Step-by-Step Guide for Android, iPhone & Web"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {
@@ -435,6 +444,15 @@ export default function HowToChangeInstagramPhoneEmailClient() {
             </div>
           </section>
         </article>
+
+                {/* Social Share Section */}
+        <section className="mt-12">
+          <BlogSocialShare 
+            title="How to Change Instagram Phone Number or Email (2026 Guide)"
+            description="Complete Step-by-Step Guide for Android, iPhone & Web"
+            variant="full"
+          />
+        </section>
 
         {/* Newsletter Signup */}
         <section className="mt-12">

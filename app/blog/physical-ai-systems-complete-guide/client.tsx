@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Calendar, Clock, ArrowLeft, CheckCircle2, XCircle, AlertTriangle, Cpu, Zap, Brain, Target, TrendingUp, Settings, Eye, Move } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 import SocialShare from '@/components/SocialShare';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import FeedbackForm from '@/components/FeedbackForm';
@@ -676,6 +677,15 @@ export default function PhysicalAiSystemsClient() {
 
         {/* FAQ Schema */}
         <FAQSchema faqs={faqData} />
+
+                {/* Social Share Section */}
+        <section className="mt-12">
+          <BlogSocialShare 
+            title="Physical AI Systems: Complete Guide 2026"
+            description="Physical AI Systems: Complete Guide 2026"
+            variant="full"
+          />
+        </section>
 
         {/* Newsletter Signup */}
         <section className="mt-12">

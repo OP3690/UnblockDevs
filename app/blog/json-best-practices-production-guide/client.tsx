@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, FileCode, CheckCircle, AlertTriangle, Lightbulb, Shield, Zap, Code, Database } from 'lucide-react';
 
+import BlogSocialShare from '@/components/BlogSocialShare';
 export default function JsonBestPracticesGuideClient() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
@@ -28,8 +29,16 @@ export default function JsonBestPracticesGuideClient() {
         </div>
       </header>
 
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="JSON Best Practices: Production-Ready Guide"
+        description="Complete guide for developers working with JSON in production environments"
+        variant="floating"
+      />
+
+
       {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
           {/* Introduction */}
           <section className="mb-12">

@@ -5,6 +5,7 @@ import { ArrowLeft, Database, ExternalLink, Code, CheckCircle, Copy, FileJson } 
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function MysqlJsonCompleteGuideClient() {
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
@@ -238,7 +239,15 @@ SELECT JSON_EXTRACT(data, '$."user.email"') AS email;`
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="Working with JSON in MySQL"
+        description="Complete Guide to Extract & Manipulate JSON Data"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {

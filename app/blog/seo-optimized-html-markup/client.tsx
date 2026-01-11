@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Code, CheckCircle, AlertCircle, Lightbulb, Zap, BookOpen, Search, TrendingUp } from 'lucide-react';
 
+import BlogSocialShare from '@/components/BlogSocialShare';
 export default function SEOOptimizedHTMLClient() {
   const CodeBlock = ({ code, language = 'html' }: { code: string; language?: string }) => {
     const [copied, setCopied] = useState(false);
@@ -92,6 +93,14 @@ export default function SEOOptimizedHTMLClient() {
           </div>
         </div>
       </header>
+
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="SEO-Optimized HTML Markup: Complete Guide for Better Rankings"
+        description="SEO-Optimized HTML Markup: Complete Guide for Better Rankings"
+        variant="floating"
+      />
+
 
       <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <header className="mb-12 text-center">

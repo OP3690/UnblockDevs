@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Apple, Smartphone, Shield, CheckCircle, AlertCircle, HelpCircle, Clock, Cloud, Lock } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import FeedbackForm from '@/components/FeedbackForm';
 
@@ -27,7 +28,15 @@ export default function HowToChangeAppleIdPhoneNumberClient() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="How to Change Apple ID Phone Number Without Losing Data"
+        description="Complete Step-by-Step Guide for iPhone, iPad & Mac (2026)"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {
@@ -423,6 +432,15 @@ export default function HowToChangeAppleIdPhoneNumberClient() {
             </div>
           </section>
         </article>
+
+                {/* Social Share Section */}
+        <section className="mt-12">
+          <BlogSocialShare 
+            title="How to Change Apple ID Phone Number Without Losing Data"
+            description="Complete Step-by-Step Guide for iPhone, iPad & Mac (2026)"
+            variant="full"
+          />
+        </section>
 
         {/* Newsletter Signup */}
         <section className="mt-12">

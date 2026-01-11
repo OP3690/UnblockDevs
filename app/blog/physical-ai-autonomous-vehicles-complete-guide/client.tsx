@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Calendar, Clock, ArrowLeft, CheckCircle2, XCircle, AlertTriangle, Car, Zap, Brain, Target, TrendingUp, Eye, Navigation, Shield } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 import SocialShare from '@/components/SocialShare';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import FeedbackForm from '@/components/FeedbackForm';
@@ -630,6 +631,15 @@ export default function PhysicalAiAutonomousVehiclesClient() {
 
         {/* FAQ Schema */}
         <FAQSchema faqs={faqData} />
+
+                {/* Social Share Section */}
+        <section className="mt-12">
+          <BlogSocialShare 
+            title="Physical AI in Autonomous Vehicles: Complete Guide 2026"
+            description="Physical AI in Autonomous Vehicles: Complete Guide 2026"
+            variant="full"
+          />
+        </section>
 
         {/* Newsletter Signup */}
         <section className="mt-12">

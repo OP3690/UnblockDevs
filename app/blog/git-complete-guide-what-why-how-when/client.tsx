@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Calendar, Clock, ArrowLeft, Copy, Check, GitBranch, GitCommit, GitMerge, GitPullRequest, GitBranchIcon, Code, Users, Shield, Zap, CheckCircle2, AlertCircle, Info } from 'lucide-react';
 import toast from 'react-hot-toast';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function GitCompleteGuideClient() {
   const [copied, setCopied] = useState<string | null>(null);

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Code, RefreshCw, CheckCircle, AlertCircle, HelpCircle, Clock, Globe, Key } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import FeedbackForm from '@/components/FeedbackForm';
 
@@ -27,7 +28,15 @@ export default function HowToConvertCurlToJavascriptFetchClient() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="How to Convert cURL Command to JavaScript Fetch"
+        description="Complete Guide to Converting cURL to Fetch API (2026)"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {
@@ -540,6 +549,15 @@ curl -u user:pass
             </div>
           </section>
         </article>
+
+                {/* Social Share Section */}
+        <section className="mt-12">
+          <BlogSocialShare 
+            title="How to Convert cURL Command to JavaScript Fetch"
+            description="Complete Guide to Converting cURL to Fetch API (2026)"
+            variant="full"
+          />
+        </section>
 
         {/* Newsletter Signup */}
         <section className="mt-12">

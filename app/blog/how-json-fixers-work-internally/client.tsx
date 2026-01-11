@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Code, AlertTriangle, CheckCircle, ExternalLink, Brain } from 'lucide-react';
 
+import BlogSocialShare from '@/components/BlogSocialShare';
 export default function HowJsonFixersWorkClient() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-indigo-50">
@@ -24,7 +25,15 @@ export default function HowJsonFixersWorkClient() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="How JSON Fixers Work Internally"
+        description="And Why Manual Fixing Fails"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
           <section className="mb-12">
             <p className="text-lg text-gray-700 leading-relaxed mb-4">

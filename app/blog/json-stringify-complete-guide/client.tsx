@@ -5,6 +5,7 @@ import { ArrowLeft, Code, CheckCircle, Copy, ExternalLink } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import FAQSchema from '@/components/FAQSchema';
+import BlogSocialShare from '@/components/BlogSocialShare';
 
 export default function JsonStringifyCompleteGuideClient() {
   const [copiedExample, setCopiedExample] = useState<string | null>(null);
@@ -78,7 +79,15 @@ console.log(jsonString);
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Floating Social Share Bar */}
+      <BlogSocialShare 
+        title="JSON.stringify() Complete Guide"
+        description="Examples, Syntax & Best Practices"
+        variant="floating"
+      />
+
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
             {
