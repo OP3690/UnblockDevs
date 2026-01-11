@@ -55,6 +55,33 @@ export const metadata: Metadata = {
       keywords: ['cancel spotify premium', 'how to cancel spotify premium', 'spotify premium cancellation', 'cancel spotify premium refund']
     },
     {
+      slug: 'how-to-see-instagram-story-without-being-seen',
+      title: 'How to See Instagram Story Without Being Seen: Complete Guide 2026',
+      excerpt: 'Complete guide to viewing Instagram stories anonymously without being seen. Learn how to see Instagram stories without showing up in viewers list. Step-by-step methods for viewing stories privately in 2026.',
+      date: '2026-01-25',
+      readTime: '11 min read',
+      category: 'Social Media Privacy',
+      keywords: ['see instagram story without being seen', 'view instagram story anonymously', 'instagram story without showing up', 'instagram anonymous story viewer']
+    },
+    {
+      slug: 'how-to-hide-online-status-on-whatsapp',
+      title: 'How to Hide Online Status on WhatsApp: Complete Guide 2026',
+      excerpt: 'Complete guide to hiding your online status on WhatsApp. Learn how to appear offline, disable last seen, and control your privacy settings. Step-by-step instructions for Android, iPhone, and desktop in 2026.',
+      date: '2026-01-25',
+      readTime: '10 min read',
+      category: 'Messaging & Communication',
+      keywords: ['hide online status whatsapp', 'how to hide online status on whatsapp', 'whatsapp hide online status', 'appear offline whatsapp']
+    },
+    {
+      slug: 'how-to-know-if-someone-blocked-you-on-instagram',
+      title: 'How to Know If Someone Blocked You on Instagram: Complete Guide 2026',
+      excerpt: 'Complete guide to detecting if someone blocked you on Instagram. Learn the signs, methods to check, and what happens when you\'re blocked. Step-by-step instructions to determine if you\'ve been blocked on Instagram in 2026.',
+      date: '2026-01-25',
+      readTime: '12 min read',
+      category: 'Social Media Privacy',
+      keywords: ['how to know if someone blocked you on instagram', 'check if blocked on instagram', 'instagram blocked me', 'signs someone blocked you instagram']
+    },
+    {
       slug: 'how-to-change-whatsapp-number-without-losing-chats',
       title: 'How to Change WhatsApp Number Without Losing Chats: Step-by-Step Guide 2026',
       excerpt: 'Complete guide to changing your WhatsApp number without losing chats, messages, or data. Step-by-step instructions for Android, iPhone, and desktop. Learn how to migrate WhatsApp account safely in 2026.',

@@ -94,6 +94,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'how-to-cancel-netflix-subscription-without-losing-watch-history',
     'how-to-cancel-amazon-prime-membership-instantly',
     'how-to-cancel-spotify-premium-and-get-refund',
+    'how-to-see-instagram-story-without-being-seen',
+    'how-to-hide-online-status-on-whatsapp',
+    'how-to-know-if-someone-blocked-you-on-instagram',
   ]
 
   // Main pages
