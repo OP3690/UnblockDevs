@@ -109,6 +109,33 @@ export const metadata: Metadata = {
       keywords: ['see deleted instagram messages', 'view deleted instagram messages', 'recover deleted instagram messages', 'how to see deleted instagram messages']
     },
     {
+      slug: 'how-to-fix-cors-policy-error-javascript',
+      title: 'How to Fix "CORS Policy Error" in JavaScript (All Browsers): Complete Guide 2026',
+      excerpt: 'Complete guide to fixing CORS policy errors in JavaScript for all browsers. Learn CORS solutions, server-side fixes, proxy methods, and browser workarounds. Step-by-step troubleshooting guide with code examples in 2026.',
+      date: '2026-01-25',
+      readTime: '15 min read',
+      category: 'JavaScript & Development',
+      keywords: ['cors policy error', 'fix cors error javascript', 'cors policy error fix', 'how to fix cors error']
+    },
+    {
+      slug: 'fix-json-parse-error-unexpected-token',
+      title: 'Fix: JSON Parse Error – Unexpected Token (With Examples): Complete Guide 2026',
+      excerpt: 'Complete guide to fixing JSON parse errors with unexpected token. Learn common causes, solutions, and code examples. Step-by-step troubleshooting for JavaScript, Node.js, and all browsers in 2026.',
+      date: '2026-01-25',
+      readTime: '13 min read',
+      category: 'JavaScript & Development',
+      keywords: ['json parse error', 'json parse error unexpected token', 'fix json parse error', 'json parse error javascript']
+    },
+    {
+      slug: 'how-to-fix-module-not-found-error-nodejs',
+      title: 'How to Fix "Module Not Found" Error in Node.js: Complete Guide 2026',
+      excerpt: 'Complete guide to fixing "Module not found" errors in Node.js. Learn common causes, solutions, and troubleshooting steps. Step-by-step guide with code examples for npm, yarn, and package management in 2026.',
+      date: '2026-01-25',
+      readTime: '14 min read',
+      category: 'JavaScript & Development',
+      keywords: ['module not found error nodejs', 'fix module not found error', 'nodejs module not found', 'cannot find module nodejs']
+    },
+    {
       slug: 'how-to-change-whatsapp-number-without-losing-chats',
       title: 'How to Change WhatsApp Number Without Losing Chats: Step-by-Step Guide 2026',
       excerpt: 'Complete guide to changing your WhatsApp number without losing chats, messages, or data. Step-by-step instructions for Android, iPhone, and desktop. Learn how to migrate WhatsApp account safely in 2026.',

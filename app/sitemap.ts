@@ -100,6 +100,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'how-to-change-whatsapp-privacy-settings-maximum-security',
     'how-to-read-whatsapp-messages-without-blue-ticks',
     'how-to-see-deleted-instagram-messages-without-third-party-apps',
+    'how-to-fix-cors-policy-error-javascript',
+    'fix-json-parse-error-unexpected-token',
+    'how-to-fix-module-not-found-error-nodejs',
   ]
 
   // Main pages
