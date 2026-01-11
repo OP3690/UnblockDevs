@@ -19,6 +19,33 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'instagram-password-reset-email-guide',
+      title: 'Instagram Password Reset Email: Complete Guide - What, When, How & Why',
+      excerpt: 'Complete guide to Instagram password reset emails. Learn what they are, when to use them, how to reset your password, and why they\'re important for account security. Step-by-step instructions included.',
+      date: '2025-01-25',
+      readTime: '8 min read',
+      category: 'Security & Privacy',
+      keywords: ['Instagram password reset email', 'Instagram password reset', 'reset Instagram password', 'Instagram forgot password', 'Instagram account recovery']
+    },
+    {
+      slug: 'nintendo-switch-online-gamecube-games',
+      title: 'Nintendo Switch Online GameCube Games: Complete Guide - What, When, How & Why',
+      excerpt: 'Complete guide to Nintendo Switch Online GameCube games. Learn what GameCube games are available, when they were added, how to access them, and why they matter for retro gaming. Full list and instructions included.',
+      date: '2025-01-25',
+      readTime: '10 min read',
+      category: 'Gaming & Entertainment',
+      keywords: ['Nintendo Switch Online GameCube games', 'GameCube games Switch', 'Nintendo Switch Online', 'GameCube emulation Switch', 'retro games Switch']
+    },
+    {
+      slug: 'low-code-ai-development-prompt-chunker',
+      title: 'Low-Code AI Development: Empowering Non-Technical Users with Tools Like Prompt Chunker',
+      excerpt: 'Complete guide to low-code AI development. Learn what it is, when to use it, how to get started, and why tools like Prompt Chunker empower non-technical users to build AI solutions without coding.',
+      date: '2025-01-25',
+      readTime: '12 min read',
+      category: 'AI & Development',
+      keywords: ['low-code AI development', 'no-code AI', 'prompt chunker', 'AI tools for non-technical users', 'low-code development', 'AI prompt engineering']
+    },
+    {
       slug: 'har-to-curl-converter-complete-guide',
       title: 'HAR to cURL Converter: Complete Guide to Convert Browser Requests to cURL',
       excerpt: 'Master HAR to cURL conversion with our complete guide. Learn how to convert HAR files, browser network requests, and HTTP archives to cURL commands. Step-by-step tutorial with examples. Free HAR to cURL converter tool included.',
