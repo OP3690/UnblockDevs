@@ -1,10 +1,24 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Check, Share2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 // Real SVG Icons
+const ShareIcon = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <circle cx="18" cy="5" r="3"/>
+    <circle cx="6" cy="12" r="3"/>
+    <circle cx="18" cy="19" r="3"/>
+    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+  </svg>
+);
+
+const CheckIcon = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <polyline points="20 6 9 17 4 12"/>
+  </svg>
+);
 const WhatsAppIcon = ({ className }: { className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className={className}>
     <path fill="#25D366" d="M16 2C8.3 2 2 8.3 2 16c0 2.8.8 5.4 2.3 7.7L2 30l6.5-2.1C10.7 29.3 13.3 30 16 30c7.7 0 14-6.3 14-14S23.7 2 16 2z"/>
@@ -133,7 +147,7 @@ export default function BlogSocialShare({ title, url, description, variant = 'fu
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
-              <Share2 className="w-4 h-4" />
+              <ShareIcon className="w-4 h-4" />
               <span className="hidden sm:inline">Share:</span>
             </div>
             <div className="flex items-center gap-2 sm:gap-3">
@@ -151,7 +165,7 @@ export default function BlogSocialShare({ title, url, description, variant = 'fu
                 className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all hover:scale-105 text-sm font-medium shadow-sm"
                 aria-label="Copy link"
               >
-                {copied ? <Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" /> : <CopyLinkIcon className="w-4 h-4 sm:w-5 sm:h-5" />}
+                {copied ? <CheckIcon className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" /> : <CopyLinkIcon className="w-4 h-4 sm:w-5 sm:h-5" />}
                 <span className="hidden sm:inline">{copied ? 'Copied!' : 'Copy'}</span>
               </button>
               {/* Desktop: LinkedIn, X */}
@@ -182,7 +196,7 @@ export default function BlogSocialShare({ title, url, description, variant = 'fu
   return (
     <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-xl p-6 sm:p-8 border border-gray-200 shadow-sm">
       <div className="flex items-center gap-2 mb-4">
-        <Share2 className="w-5 h-5 text-gray-700" />
+        <ShareIcon className="w-5 h-5 text-gray-700" />
         <h3 className="text-lg font-bold text-gray-900">Share this article</h3>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
@@ -200,7 +214,7 @@ export default function BlogSocialShare({ title, url, description, variant = 'fu
           className="flex flex-col items-center gap-2 p-4 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all hover:scale-110 shadow-md"
           aria-label="Copy link"
         >
-          {copied ? <Check className="w-6 h-6 text-green-600" /> : <CopyLinkIcon className="w-6 h-6" />}
+          {copied ? <CheckIcon className="w-6 h-6 text-green-600" /> : <CopyLinkIcon className="w-6 h-6" />}
           <span className="text-xs font-medium">{copied ? 'Copied!' : 'Copy Link'}</span>
         </button>
         <button
