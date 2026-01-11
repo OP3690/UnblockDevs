@@ -130,6 +130,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'why-my-code-works-locally-but-fails-on-submission-common-reasons',
     'how-to-read-error-messages-properly-as-beginner-programmer',
     'how-to-debug-code-step-by-step-beginner-friendly-guide',
+    'what-is-time-complexity-explained-with-simple-examples',
+    'what-is-stack-vs-queue-explained-with-real-life-examples',
+    'binary-search-explained-like-youre-5-with-code-example',
   ]
 
   // Main pages

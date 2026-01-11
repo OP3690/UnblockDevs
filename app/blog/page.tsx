@@ -46,6 +46,33 @@ export const metadata: Metadata = {
       keywords: ['how to debug code', 'debug code step by step', 'debugging guide beginner', 'how to debug programming']
     },
     {
+      slug: 'what-is-time-complexity-explained-with-simple-examples',
+      title: 'What Is Time Complexity? Explained with Simple Examples | Complete Guide 2026',
+      excerpt: 'Learn what time complexity is with simple examples. Complete guide to Big O notation, O(1), O(n), O(log n), O(n²) with visual graphs, charts, and beginner-friendly explanations. Perfect for coding interviews.',
+      date: '2026-02-02',
+      readTime: '18 min read',
+      category: 'Algorithms & Data Structures',
+      keywords: ['what is time complexity', 'time complexity explained', 'big o notation explained', 'time complexity examples', 'o1 on olog n time complexity']
+    },
+    {
+      slug: 'what-is-stack-vs-queue-explained-with-real-life-examples',
+      title: 'What Is Stack vs Queue? Explained with Real-Life Examples | Complete Guide 2026',
+      excerpt: 'Learn the difference between stack and queue data structures with real-life examples. Complete guide with visual diagrams, LIFO vs FIFO, use cases, and code examples. Perfect for coding interviews.',
+      date: '2026-02-02',
+      readTime: '16 min read',
+      category: 'Algorithms & Data Structures',
+      keywords: ['stack vs queue', 'what is stack', 'what is queue', 'stack and queue difference', 'lifo vs fifo']
+    },
+    {
+      slug: 'binary-search-explained-like-youre-5-with-code-example',
+      title: 'Binary Search Explained Like You\'re 5 (With Code Example) | Complete Guide 2026',
+      excerpt: 'Learn binary search explained in simple terms with visual examples. Complete beginner-friendly guide to binary search algorithm with step-by-step diagrams, code examples, and real-world analogies. Perfect for coding interviews.',
+      date: '2026-02-02',
+      readTime: '17 min read',
+      category: 'Algorithms & Data Structures',
+      keywords: ['binary search explained', 'binary search like you\'re 5', 'binary search simple explanation', 'binary search algorithm', 'binary search tutorial']
+    },
+    {
       slug: 'how-to-cancel-audible-subscription-mobile-desktop',
       title: 'How to Cancel Audible Subscription on Mobile & Desktop: Complete Guide 2026',
       excerpt: 'Complete guide to canceling your Audible subscription on mobile (Android, iPhone) and desktop. Step-by-step instructions to cancel Audible membership, keep your credits, and preserve your audiobook library. Learn how to cancel Audible without losing access in 2026.',
