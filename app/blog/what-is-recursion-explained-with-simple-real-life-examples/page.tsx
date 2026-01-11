@@ -32,6 +32,8 @@ export const metadata: Metadata = {
   },
 };
 
+import WhatIsRecursionExplainedWithSimpleRealLifeExamplesClient from './client';
+
 export default function WhatIsRecursionExplainedWithSimpleRealLifeExamplesPage() {
-  return null;
+  return <WhatIsRecursionExplainedWithSimpleRealLifeExamplesClient />;
 }

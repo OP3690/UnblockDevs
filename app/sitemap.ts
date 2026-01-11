@@ -136,6 +136,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'what-is-recursion-explained-with-simple-real-life-examples',
     'what-is-hashmap-hashtable-explained-simply-with-examples',
     'what-is-two-pointer-technique-explained-for-beginners',
+    'what-is-sliding-window-technique-explained-with-simple-examples',
+    'what-is-linked-list-singly-vs-doubly-explained-simply',
+    'what-is-bfs-vs-dfs-differences-explained-with-examples',
   ]
 
   // Main pages

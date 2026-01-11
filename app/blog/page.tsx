@@ -100,6 +100,33 @@ export const metadata: Metadata = {
       keywords: ['two pointer technique', 'two pointers', 'two pointer algorithm', 'two pointer explained', 'two pointer tutorial', 'fast and slow pointers', 'sliding window']
     },
     {
+      slug: 'what-is-sliding-window-technique-explained-with-simple-examples',
+      title: 'What Is Sliding Window Technique? Explained with Simple Examples | Complete Guide 2026',
+      excerpt: 'Learn what the sliding window technique is with simple examples. Complete beginner-friendly guide to sliding window algorithm, fixed vs variable window, and O(n) solutions. Perfect for coding interviews.',
+      date: '2026-02-04',
+      readTime: '17 min read',
+      category: 'Algorithms & Data Structures',
+      keywords: ['sliding window technique', 'sliding window algorithm', 'sliding window explained', 'sliding window tutorial', 'sliding window pattern', 'fixed sliding window', 'variable sliding window']
+    },
+    {
+      slug: 'what-is-linked-list-singly-vs-doubly-explained-simply',
+      title: 'What Is Linked List? Singly vs Doubly Explained Simply | Complete Guide 2026',
+      excerpt: 'Learn what linked list is with simple examples. Complete beginner-friendly guide to singly linked list vs doubly linked list, differences, advantages, and when to use each. Perfect for coding interviews.',
+      date: '2026-02-04',
+      readTime: '16 min read',
+      category: 'Algorithms & Data Structures',
+      keywords: ['what is linked list', 'linked list explained', 'singly linked list', 'doubly linked list', 'linked list vs array', 'linked list tutorial', 'singly vs doubly linked list']
+    },
+    {
+      slug: 'what-is-bfs-vs-dfs-differences-explained-with-examples',
+      title: 'What Is BFS vs DFS? Differences Explained with Examples | Complete Guide 2026',
+      excerpt: 'Learn the differences between BFS (Breadth-First Search) and DFS (Depth-First Search) with simple examples. Complete beginner-friendly guide to graph traversal algorithms with visual diagrams. Perfect for coding interviews.',
+      date: '2026-02-04',
+      readTime: '18 min read',
+      category: 'Algorithms & Data Structures',
+      keywords: ['bfs vs dfs', 'breadth first search', 'depth first search', 'bfs algorithm', 'dfs algorithm', 'graph traversal', 'tree traversal', 'bfs vs dfs difference']
+    },
+    {
       slug: 'how-to-cancel-audible-subscription-mobile-desktop',
       title: 'How to Cancel Audible Subscription on Mobile & Desktop: Complete Guide 2026',
       excerpt: 'Complete guide to canceling your Audible subscription on mobile (Android, iPhone) and desktop. Step-by-step instructions to cancel Audible membership, keep your credits, and preserve your audiobook library. Learn how to cancel Audible without losing access in 2026.',

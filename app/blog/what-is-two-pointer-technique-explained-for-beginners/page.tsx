@@ -32,6 +32,8 @@ export const metadata: Metadata = {
   },
 };
 
+import WhatIsTwoPointerTechniqueExplainedForBeginnersClient from './client';
+
 export default function WhatIsTwoPointerTechniqueExplainedForBeginnersPage() {
-  return null;
+  return <WhatIsTwoPointerTechniqueExplainedForBeginnersClient />;
 }

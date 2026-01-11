@@ -32,6 +32,8 @@ export const metadata: Metadata = {
   },
 };
 
+import WhatIsHashMapHashTableExplainedSimplyWithExamplesClient from './client';
+
 export default function WhatIsHashMapHashTableExplainedSimplyWithExamplesPage() {
-  return null;
+  return <WhatIsHashMapHashTableExplainedSimplyWithExamplesClient />;
 }
