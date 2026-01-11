@@ -438,7 +438,7 @@ const jsonString2 = stringify(obj);
               </div>
               <div className="border-b border-gray-200 pb-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">How do I fix JSON.stringify() returning undefined?</h3>
-                <p className="text-gray-700 leading-relaxed">Use a replacer function to handle undefined values: <code className="bg-gray-100 px-1 rounded">JSON.stringify(obj, (key, value) => value === undefined ? null : value)</code>. Or filter out undefined properties before stringifying. For circular references, use a library like flatted or handle them manually. Always check if the value is undefined before stringifying.</p>
+                <p className="text-gray-700 leading-relaxed">Use a replacer function to handle undefined values: <code className="bg-gray-100 px-1 rounded">JSON.stringify(obj, (key, value) =&gt; value === undefined ? null : value)</code>. Or filter out undefined properties before stringifying. For circular references, use a library like flatted or handle them manually. Always check if the value is undefined before stringifying.</p>
               </div>
               <div className="border-b border-gray-200 pb-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Why are undefined properties omitted in JSON.stringify()?</h3>
@@ -446,7 +446,7 @@ const jsonString2 = stringify(obj);
               </div>
               <div className="border-b border-gray-200 pb-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Can I include undefined values in JSON.stringify()?</h3>
-                <p className="text-gray-700 leading-relaxed">You can convert undefined to null using a replacer function: <code className="bg-gray-100 px-1 rounded">JSON.stringify(obj, (key, value) => value === undefined ? null : value)</code>. This will include the property with a null value instead of omitting it. However, undefined itself cannot be included in JSON as it is not a valid JSON value.</p>
+                <p className="text-gray-700 leading-relaxed">You can convert undefined to null using a replacer function: <code className="bg-gray-100 px-1 rounded">JSON.stringify(obj, (key, value) =&gt; value === undefined ? null : value)</code>. This will include the property with a null value instead of omitting it. However, undefined itself cannot be included in JSON as it is not a valid JSON value.</p>
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">How do I handle circular references in JSON.stringify()?</h3>
