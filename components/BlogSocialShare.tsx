@@ -228,19 +228,17 @@ export default function BlogSocialShare({ title, url, description, variant = 'fu
               {/* Desktop: LinkedIn, X */}
               <button
                 onClick={shareToLinkedIn}
-                className="hidden md:flex items-center gap-2 px-4 py-2 bg-[#0077B5] text-white rounded-lg hover:bg-[#006399] transition-all hover:scale-105 text-sm font-medium shadow-sm"
+                className="hidden md:flex items-center justify-center px-3 py-2 bg-[#0077B5] text-white rounded-lg hover:bg-[#006399] transition-all hover:scale-105 text-sm font-medium shadow-sm"
                 aria-label="Share on LinkedIn"
               >
-                <LinkedInIcon className="w-4 h-4" />
-                <span>LinkedIn</span>
+                <LinkedInIcon className="w-5 h-5" />
               </button>
               <button
                 onClick={shareToX}
-                className="hidden md:flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-all hover:scale-105 text-sm font-medium shadow-sm"
+                className="hidden md:flex items-center justify-center px-3 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-all hover:scale-105 text-sm font-medium shadow-sm"
                 aria-label="Share on X (Twitter)"
               >
-                <XIcon className="w-4 h-4" />
-                <span>X</span>
+                <XIcon className="w-5 h-5" />
               </button>
             </div>
           </div>
@@ -276,19 +274,17 @@ export default function BlogSocialShare({ title, url, description, variant = 'fu
         </button>
         <button
           onClick={shareToLinkedIn}
-          className="flex flex-col items-center gap-2 p-4 bg-[#0077B5] text-white rounded-lg hover:bg-[#006399] transition-all hover:scale-110 shadow-md"
+          className="flex flex-col items-center justify-center gap-2 p-4 bg-[#0077B5] text-white rounded-lg hover:bg-[#006399] transition-all hover:scale-110 shadow-md"
           aria-label="Share on LinkedIn"
         >
           <LinkedInIcon className="w-6 h-6" />
-          <span className="text-xs font-medium">LinkedIn</span>
         </button>
         <button
           onClick={shareToX}
-          className="flex flex-col items-center gap-2 p-4 bg-black text-white rounded-lg hover:bg-gray-800 transition-all hover:scale-110 shadow-md"
+          className="flex flex-col items-center justify-center gap-2 p-4 bg-black text-white rounded-lg hover:bg-gray-800 transition-all hover:scale-110 shadow-md"
           aria-label="Share on X (Twitter)"
         >
           <XIcon className="w-6 h-6" />
-          <span className="text-xs font-medium">X</span>
         </button>
         <button
           onClick={shareToFacebook}
