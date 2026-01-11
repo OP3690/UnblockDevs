@@ -106,6 +106,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'fix-python-keyerror-explained-examples',
     'how-to-fix-nullpointerexception-java-beginner-friendly',
     'how-to-convert-curl-command-to-javascript-fetch',
+    'how-to-read-json-file-python-3-ways',
+    'how-to-validate-json-schema-javascript',
+    'how-to-convert-json-to-csv-python',
   ]
 
   // Main pages

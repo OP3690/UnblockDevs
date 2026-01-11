@@ -163,6 +163,33 @@ export const metadata: Metadata = {
       keywords: ['convert curl to javascript fetch', 'curl to fetch api', 'convert curl to fetch', 'curl command to javascript']
     },
     {
+      slug: 'how-to-read-json-file-python-3-ways',
+      title: 'How to Read JSON File in Python (3 Ways): Complete Guide 2026',
+      excerpt: 'Learn 3 methods to read JSON files in Python: json.load(), json.loads(), and pandas.read_json(). Includes examples, error handling, and best practices for parsing JSON data in Python. Complete guide with code examples.',
+      date: '2026-01-26',
+      readTime: '14 min read',
+      category: 'Python & Development',
+      keywords: ['read json file python', 'python json parser', 'json.load python', 'pandas read json', 'parse json file python']
+    },
+    {
+      slug: 'how-to-validate-json-schema-javascript',
+      title: 'How to Validate JSON Schema in JavaScript: Complete Guide 2026',
+      excerpt: 'Learn how to validate JSON data against JSON Schema in JavaScript using ajv, jsonschema, and custom validation. Includes examples, error handling, and best practices for JSON Schema validation in JavaScript applications.',
+      date: '2026-01-26',
+      readTime: '15 min read',
+      category: 'JavaScript & Development',
+      keywords: ['validate json schema javascript', 'json schema validation', 'ajv json schema', 'jsonschema library', 'json schema validator']
+    },
+    {
+      slug: 'how-to-convert-json-to-csv-python',
+      title: 'How to Convert JSON to CSV in Python: Complete Guide 2026',
+      excerpt: 'Learn how to convert JSON to CSV in Python using pandas, csv module, and json_normalize. Includes examples for nested JSON, arrays, and handling different JSON structures. Step-by-step guide with code examples.',
+      date: '2026-01-26',
+      readTime: '13 min read',
+      category: 'Python & Development',
+      keywords: ['convert json to csv python', 'json to csv python', 'pandas json to csv', 'json_normalize python', 'convert json csv']
+    },
+    {
       slug: 'how-to-change-whatsapp-number-without-losing-chats',
       title: 'How to Change WhatsApp Number Without Losing Chats: Step-by-Step Guide 2026',
       excerpt: 'Complete guide to changing your WhatsApp number without losing chats, messages, or data. Step-by-step instructions for Android, iPhone, and desktop. Learn how to migrate WhatsApp account safely in 2026.',
