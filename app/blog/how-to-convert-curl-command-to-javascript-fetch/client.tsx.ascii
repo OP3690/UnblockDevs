@@ -100,7 +100,7 @@ export default function HowToConvertCurlToJavascriptFetchClient() {
               </div>
               <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                 <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                  <RefreshCw className="w-5 h-5 text-green-600" />
+                  <ArrowRightLeft className="w-5 h-5 text-green-600" />
                   Fetch API Structure
                 </h3>
                 <p className="text-gray-700 text-sm mb-2">Fetch API uses <code className="bg-gray-100 px-1 rounded">fetch(url, options)</code> where options is an object with <code className="bg-gray-100 px-1 rounded">method</code>, <code className="bg-gray-100 px-1 rounded">headers</code>, <code className="bg-gray-100 px-1 rounded">body</code>, <code className="bg-gray-100 px-1 rounded">credentials</code>, and other properties. Headers are an object, body is a string or FormData.</p>
@@ -111,7 +111,7 @@ export default function HowToConvertCurlToJavascriptFetchClient() {
                   <Key className="w-5 h-5 text-purple-600" />
                   Common Conversions
                 </h3>
-                <p className="text-gray-700 text-sm mb-2">Common mappings: <code className="bg-gray-100 px-1 rounded">-X GET</code> becomes <code className="bg-gray-100 px-1 rounded">method: "GET"</code>, <code className="bg-gray-100 px-1 rounded">-H "Key: Value"</code> becomes <code className="bg-gray-100 px-1 rounded">headers object with Key: Value</code>, <code className="bg-gray-100 px-1 rounded">-d 'data'</code> becomes <code className="bg-gray-100 px-1 rounded">body: "data"</code>, <code className="bg-gray-100 px-1 rounded">-u user:pass</code> becomes <code className="bg-gray-100 px-1 rounded">headers with Authorization: Basic</code>.</p>
+                <p className="text-gray-700 text-sm mb-2">Common mappings: <code className="bg-gray-100 px-1 rounded">-X GET</code>  <code className="bg-gray-100 px-1 rounded">method: "GET"</code>, <code className="bg-gray-100 px-1 rounded">-H "Key: Value"</code>  <code className="bg-gray-100 px-1 rounded">headers object with Key: Value</code>, <code className="bg-gray-100 px-1 rounded">-d 'data'</code>  <code className="bg-gray-100 px-1 rounded">body: "data"</code>, <code className="bg-gray-100 px-1 rounded">-u user:pass</code>  <code className="bg-gray-100 px-1 rounded">headers with Authorization: Basic</code>.</p>
                 <p className="text-gray-600 text-xs">Understanding these mappings enables accurate conversion.</p>
               </div>
               <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
@@ -450,7 +450,7 @@ fetch(url.toString())
               </div>
               <div className="p-5 bg-purple-50 rounded-lg border border-purple-200">
                 <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                  <RefreshCw className="w-5 h-5 text-purple-600" />
+                  <ArrowRightLeft className="w-5 h-5 text-purple-600" />
                   API Integration
                 </h3>
                 <p className="text-gray-700 text-sm">Many APIs provide cURL examples in their documentation. Converting these to fetch allows you to implement the same requests in your JavaScript applications, ensuring consistency between documentation and implementation.</p>
@@ -477,37 +477,37 @@ fetch(url.toString())
               <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                 <h3 className="font-semibold text-gray-900 mb-2">HTTP Methods</h3>
                 <div className="bg-gray-900 text-gray-100 p-3 rounded-lg overflow-x-auto mb-2">
-                  <pre className="text-sm"><code>{`curl -X GET    becomes method: 'GET'
-curl -X POST   becomes method: 'POST'
-curl -X PUT    becomes method: 'PUT'
-curl -X DELETE becomes method: 'DELETE'
-curl -X PATCH  becomes method: 'PATCH'`}</code></pre>
+                  <pre className="text-sm"><code>{`curl -X GET     method: 'GET'
+curl -X POST    method: 'POST'
+curl -X PUT     method: 'PUT'
+curl -X DELETE  method: 'DELETE'
+curl -X PATCH   method: 'PATCH'`}</code></pre>
                 </div>
               </div>
               <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                 <h3 className="font-semibold text-gray-900 mb-2">Headers</h3>
                 <div className="bg-gray-900 text-gray-100 p-3 rounded-lg overflow-x-auto mb-2">
-                  <pre className="text-sm"><code>{`curl -H "Header: Value" becomes headers object with Header: Value
+                  <pre className="text-sm"><code>{`curl -H "Header: Value"  headers object with Header: Value
 curl -H "Content-Type: application/json"
-     becomes headers object with Content-Type: application/json`}</code></pre>
+      headers object with Content-Type: application/json`}</code></pre>
                 </div>
               </div>
               <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                 <h3 className="font-semibold text-gray-900 mb-2">Data/Body</h3>
                 <div className="bg-gray-900 text-gray-100 p-3 rounded-lg overflow-x-auto mb-2">
-                  <pre className="text-sm"><code>{`curl -d with JSON data becomes body: JSON.stringify(data)
-curl -d "key=value"        becomes body: 'key=value' (form data)
-curl --data-raw 'data'     becomes body: 'data'`}</code></pre>
+                  <pre className="text-sm"><code>{`curl -d with JSON data  body: JSON.stringify(data)
+curl -d "key=value"         body: 'key=value' (form data)
+curl --data-raw 'data'      body: 'data'`}</code></pre>
                 </div>
               </div>
               <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                 <h3 className="font-semibold text-gray-900 mb-2">Authentication</h3>
                 <div className="bg-gray-900 text-gray-100 p-3 rounded-lg overflow-x-auto mb-2">
                   <pre className="text-sm"><code>{`curl -H "Authorization: Bearer token"
-     becomes headers object with Authorization: Bearer token
+      headers object with Authorization: Bearer token
 
 curl -u user:pass
-     becomes headers object with Authorization: Basic + btoa`}</code></pre>
+      headers object with Authorization: Basic + btoa`}</code></pre>
                 </div>
               </div>
             </div>
