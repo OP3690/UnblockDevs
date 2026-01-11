@@ -127,6 +127,33 @@ export const metadata: Metadata = {
       keywords: ['bfs vs dfs', 'breadth first search', 'depth first search', 'bfs algorithm', 'dfs algorithm', 'graph traversal', 'tree traversal', 'bfs vs dfs difference']
     },
     {
+      slug: 'prefix-sum-technique-explained-simply',
+      title: 'Prefix Sum Technique Explained Simply | Complete Guide 2026',
+      excerpt: 'Learn what prefix sum technique is with simple examples. Complete beginner-friendly guide to prefix sum array, range sum queries, and O(1) query time. Perfect for coding interviews.',
+      date: '2026-02-05',
+      readTime: '16 min read',
+      category: 'Algorithms & Data Structures',
+      keywords: ['prefix sum', 'prefix sum technique', 'prefix sum array', 'prefix sum explained', 'prefix sum tutorial', 'range sum query', 'cumulative sum', 'prefix sum example']
+    },
+    {
+      slug: 'merge-sort-explained-step-by-step-why-preferred-in-interviews',
+      title: 'Merge Sort Explained Step-by-Step (Why It\'s Preferred in Interviews) | Complete Guide 2026',
+      excerpt: 'Learn merge sort algorithm step-by-step with visual examples. Complete beginner-friendly guide to merge sort, divide and conquer, time complexity O(n log n), and why it\'s preferred in coding interviews. Perfect for coding interviews.',
+      date: '2026-02-05',
+      readTime: '18 min read',
+      category: 'Algorithms & Data Structures',
+      keywords: ['merge sort', 'merge sort explained', 'merge sort algorithm', 'merge sort tutorial', 'merge sort step by step', 'merge sort interview', 'divide and conquer', 'merge sort python']
+    },
+    {
+      slug: 'greedy-algorithm-explained-with-simple-examples',
+      title: 'Greedy Algorithm Explained with Simple Examples | Complete Guide 2026',
+      excerpt: 'Learn what greedy algorithm is with simple examples. Complete beginner-friendly guide to greedy algorithms, when to use them, and step-by-step examples. Perfect for coding interviews.',
+      date: '2026-02-05',
+      readTime: '17 min read',
+      category: 'Algorithms & Data Structures',
+      keywords: ['greedy algorithm', 'greedy algorithm explained', 'greedy algorithm tutorial', 'greedy algorithm examples', 'greedy algorithm interview', 'greedy approach', 'greedy strategy']
+    },
+    {
       slug: 'how-to-cancel-audible-subscription-mobile-desktop',
       title: 'How to Cancel Audible Subscription on Mobile & Desktop: Complete Guide 2026',
       excerpt: 'Complete guide to canceling your Audible subscription on mobile (Android, iPhone) and desktop. Step-by-step instructions to cancel Audible membership, keep your credits, and preserve your audiobook library. Learn how to cancel Audible without losing access in 2026.',

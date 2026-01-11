@@ -139,6 +139,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'what-is-sliding-window-technique-explained-with-simple-examples',
     'what-is-linked-list-singly-vs-doubly-explained-simply',
     'what-is-bfs-vs-dfs-differences-explained-with-examples',
+    'prefix-sum-technique-explained-simply',
+    'merge-sort-explained-step-by-step-why-preferred-in-interviews',
+    'greedy-algorithm-explained-with-simple-examples',
   ]
 
   // Main pages
