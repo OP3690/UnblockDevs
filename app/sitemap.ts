@@ -124,6 +124,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'fix-cannot-read-properties-of-undefined-reading-length-javascript',
     'why-async-await-is-not-working-javascript-common-mistakes',
     'fix-uncaught-in-promise-error-javascript-explained',
+    'fix-error-listen-eaddrinuse-nodejs-port-already-in-use',
+    'why-process-env-is-undefined-nodejs-and-how-to-fix-it',
+    'fix-hydration-failed-error-nextjs-server-vs-client-mismatch',
   ]
 
   // Main pages
