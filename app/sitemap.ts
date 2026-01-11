@@ -85,6 +85,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'instagram-password-reset-email-guide',
     'nintendo-switch-online-gamecube-games',
     'low-code-ai-development-prompt-chunker',
+    'how-to-change-whatsapp-number-without-losing-chats',
+    'how-to-change-phone-number-telegram-without-notifying',
+    'how-to-change-email-address-google-account-safely',
+    'how-to-change-instagram-phone-number-email-2026',
+    'how-to-change-apple-id-phone-number-without-losing-data',
   ]
 
   // Main pages

@@ -19,6 +19,51 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'how-to-change-whatsapp-number-without-losing-chats',
+      title: 'How to Change WhatsApp Number Without Losing Chats: Step-by-Step Guide 2026',
+      excerpt: 'Complete guide to changing your WhatsApp number without losing chats, messages, or data. Step-by-step instructions for Android, iPhone, and desktop. Learn how to migrate WhatsApp account safely in 2026.',
+      date: '2026-01-25',
+      readTime: '12 min read',
+      category: 'Messaging & Communication',
+      keywords: ['change whatsapp number', 'change whatsapp number without losing chats', 'migrate whatsapp number', 'whatsapp number change guide']
+    },
+    {
+      slug: 'how-to-change-phone-number-telegram-without-notifying',
+      title: 'How to Change Phone Number in Telegram Without Notifying Contacts: Complete Guide 2026',
+      excerpt: 'Complete guide to changing your Telegram phone number without notifying contacts. Step-by-step instructions for Android, iPhone, and desktop. Learn how to change Telegram number privately in 2026.',
+      date: '2026-01-25',
+      readTime: '11 min read',
+      category: 'Messaging & Communication',
+      keywords: ['change telegram phone number', 'change telegram number without notifying', 'telegram number change guide', 'telegram privacy settings']
+    },
+    {
+      slug: 'how-to-change-email-address-google-account-safely',
+      title: 'How to Change Email Address in Google Account Safely: Complete Guide 2026',
+      excerpt: 'Complete guide to changing your Google account email address safely. Step-by-step instructions to update Gmail, preserve data, and maintain account security. Learn how to change Google email without losing data in 2026.',
+      date: '2026-01-25',
+      readTime: '14 min read',
+      category: 'Account Management',
+      keywords: ['change google account email', 'change gmail address', 'google email change guide', 'change google email safely']
+    },
+    {
+      slug: 'how-to-change-instagram-phone-number-email-2026',
+      title: 'How to Change Instagram Phone Number or Email: Complete Guide 2026',
+      excerpt: 'Complete guide to changing your Instagram phone number or email address in 2026. Step-by-step instructions for Android, iPhone, and web. Learn how to update Instagram contact info safely without losing account access.',
+      date: '2026-01-25',
+      readTime: '10 min read',
+      category: 'Social Media',
+      keywords: ['change instagram phone number', 'change instagram email', 'instagram phone number change 2026', 'update instagram contact info']
+    },
+    {
+      slug: 'how-to-change-apple-id-phone-number-without-losing-data',
+      title: 'How to Change Apple ID Phone Number Without Losing Data: Complete Guide 2026',
+      excerpt: 'Complete guide to changing your Apple ID phone number without losing data, photos, or iCloud content. Step-by-step instructions for iPhone, iPad, and Mac. Learn how to update Apple ID phone number safely in 2026.',
+      date: '2026-01-25',
+      readTime: '13 min read',
+      category: 'Account Management',
+      keywords: ['change apple id phone number', 'change apple id phone number without losing data', 'apple id phone number change 2026', 'update apple id phone number']
+    },
+    {
       slug: 'instagram-password-reset-email-guide',
       title: 'Instagram Password Reset Email: Complete Guide - What, When, How & Why',
       excerpt: 'Complete guide to Instagram password reset emails. Learn what they are, when to use them, how to reset your password, and why they\'re important for account security. Step-by-step instructions included.',
