@@ -1,22 +1,58 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { MessageCircle, Linkedin, Twitter, Facebook, Send, Copy, Check, Share2 } from 'lucide-react';
-
-// Custom Reddit Icon SVG
-const RedditIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/>
-  </svg>
-);
-
-// Custom Telegram Icon SVG
-const TelegramIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.197l-1.84 8.678c-.135.604-.48.752-.978.465l-2.707-1.995-1.307 1.257c-.15.15-.277.277-.568.277l.202-2.87 5.023-4.54c.22-.196-.048-.305-.342-.11l-6.203 3.907-2.67-.838c-.58-.182-.595-.58.135-.88l10.44-4.02c.483-.18.906.112.75.78z"/>
-  </svg>
-);
+import { Check, Share2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+
+// Real SVG Icons
+const WhatsAppIcon = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className={className}>
+    <path fill="#25D366" d="M16 2C8.3 2 2 8.3 2 16c0 2.8.8 5.4 2.3 7.7L2 30l6.5-2.1C10.7 29.3 13.3 30 16 30c7.7 0 14-6.3 14-14S23.7 2 16 2z"/>
+    <path fill="#fff" d="M12.5 9.5c-.3-.6-.6-.6-.9-.6h-.7c-.3 0-.7.1-1 .4-.3.3-1.3 1.3-1.3 3.2s1.4 3.7 1.6 3.9c.2.3 2.7 4.3 6.6 5.9 3.2 1.3 3.9 1 4.6.9.7-.1 2.3-.9 2.6-1.8.3-.9.3-1.6.2-1.8-.1-.2-.3-.3-.7-.5l-2.3-1.1c-.3-.1-.6-.2-.8.2-.2.3-.9 1.1-1.1 1.3-.2.2-.4.3-.8.1-.4-.2-1.6-.6-3.1-1.9-1.1-1-1.9-2.3-2.1-2.7-.2-.4 0-.6.2-.8.2-.2.4-.4.6-.6.2-.2.3-.4.4-.6.1-.2 0-.4-.1-.6l-.9-2.3z"/>
+  </svg>
+);
+
+const LinkedInIcon = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className}>
+    <path fill="#0A66C2" d="M22.23 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.72V1.72C24 .77 23.21 0 22.23 0z"/>
+    <path fill="#fff" d="M3.56 9h3.56v12H3.56zM5.34 3.5c1.14 0 2.06.93 2.06 2.07 0 1.14-.92 2.06-2.06 2.06A2.06 2.06 0 013.28 5.57c0-1.14.92-2.07 2.06-2.07zM10.69 9h3.41v1.64h.05c.47-.9 1.63-1.85 3.35-1.85 3.58 0 4.24 2.36 4.24 5.43V21h-3.56v-6.08c0-1.45-.03-3.32-2.02-3.32-2.02 0-2.33 1.58-2.33 3.21V21h-3.56z"/>
+  </svg>
+);
+
+const XIcon = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className}>
+    <path fill="currentColor" d="M18.3 2H21l-6.6 7.6L22 22h-6.2l-4.8-6.1L5.4 22H2.7l7-8.1L2 2h6.3l4.3 5.5L18.3 2z"/>
+  </svg>
+);
+
+const FacebookIcon = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className}>
+    <path fill="#1877F2" d="M24 12c0-6.6-5.4-12-12-12S0 5.4 0 12c0 6 4.4 10.9 10.1 11.8v-8.3H7.1V12h3V9.4c0-3 1.8-4.7 4.6-4.7 1.3 0 2.6.2 2.6.2v2.9h-1.5c-1.5 0-2 .9-2 1.9V12h3.4l-.5 3.5h-2.9v8.3C19.6 22.9 24 18 24 12z"/>
+  </svg>
+);
+
+const RedditIcon = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className}>
+    <path fill="#FF4500" d="M24 12c0 6.6-5.4 12-12 12S0 18.6 0 12 5.4 0 12 0s12 5.4 12 12z"/>
+    <circle cx="8.5" cy="12" r="1.5" fill="#fff"/>
+    <circle cx="15.5" cy="12" r="1.5" fill="#fff"/>
+    <path fill="#fff" d="M7 14c1.5 1.5 8.5 1.5 10 0"/>
+  </svg>
+);
+
+const TelegramIcon = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className}>
+    <path fill="#229ED9" d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0z"/>
+    <path fill="#fff" d="M17.4 7.2L6.9 11.5c-.7.3-.7.7-.1.9l2.7.8 1 3.1c.1.4.3.4.6.2l1.6-1.2 2.7 2c.5.3.8.2.9-.4l1.8-8.5c.1-.6-.2-.8-.7-.6z"/>
+  </svg>
+);
+
+const CopyLinkIcon = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className}>
+    <path fill="currentColor" d="M10 13a5 5 0 007.07 0l2.83-2.83a5 5 0 00-7.07-7.07L11 4.93"/>
+    <path fill="currentColor" d="M14 11a5 5 0 00-7.07 0L4.1 13.83a5 5 0 007.07 7.07L13 19.07"/>
+  </svg>
+);
 
 interface BlogSocialShareProps {
   title: string;
@@ -104,35 +140,35 @@ export default function BlogSocialShare({ title, url, description, variant = 'fu
               {/* Mobile-first: WhatsApp + Copy Link first */}
               <button
                 onClick={shareToWhatsApp}
-                className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 bg-[#25D366] text-white rounded-lg hover:bg-[#20BA5A] transition-colors text-sm font-medium shadow-sm"
+                className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 bg-[#25D366] text-white rounded-lg hover:bg-[#20BA5A] transition-all hover:scale-105 text-sm font-medium shadow-sm"
                 aria-label="Share on WhatsApp"
               >
-                <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+                <WhatsAppIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span className="hidden sm:inline">WhatsApp</span>
               </button>
               <button
                 onClick={copyToClipboard}
-                className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium shadow-sm"
+                className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all hover:scale-105 text-sm font-medium shadow-sm"
                 aria-label="Copy link"
               >
-                {copied ? <Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" /> : <Copy className="w-4 h-4 sm:w-5 sm:h-5" />}
+                {copied ? <Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" /> : <CopyLinkIcon className="w-4 h-4 sm:w-5 sm:h-5" />}
                 <span className="hidden sm:inline">{copied ? 'Copied!' : 'Copy'}</span>
               </button>
               {/* Desktop: LinkedIn, X */}
               <button
                 onClick={shareToLinkedIn}
-                className="hidden md:flex items-center gap-2 px-4 py-2 bg-[#0077B5] text-white rounded-lg hover:bg-[#006399] transition-colors text-sm font-medium shadow-sm"
+                className="hidden md:flex items-center gap-2 px-4 py-2 bg-[#0077B5] text-white rounded-lg hover:bg-[#006399] transition-all hover:scale-105 text-sm font-medium shadow-sm"
                 aria-label="Share on LinkedIn"
               >
-                <Linkedin className="w-4 h-4" />
+                <LinkedInIcon className="w-4 h-4" />
                 <span>LinkedIn</span>
               </button>
               <button
                 onClick={shareToX}
-                className="hidden md:flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium shadow-sm"
+                className="hidden md:flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-all hover:scale-105 text-sm font-medium shadow-sm"
                 aria-label="Share on X (Twitter)"
               >
-                <Twitter className="w-4 h-4" />
+                <XIcon className="w-4 h-4" />
                 <span>X</span>
               </button>
             </div>
@@ -153,47 +189,47 @@ export default function BlogSocialShare({ title, url, description, variant = 'fu
         {/* Mobile-first: WhatsApp + Copy Link first */}
         <button
           onClick={shareToWhatsApp}
-          className="flex flex-col items-center gap-2 p-4 bg-[#25D366] text-white rounded-lg hover:bg-[#20BA5A] transition-all hover:scale-105 shadow-md"
+          className="flex flex-col items-center gap-2 p-4 bg-[#25D366] text-white rounded-lg hover:bg-[#20BA5A] transition-all hover:scale-110 shadow-md"
           aria-label="Share on WhatsApp"
         >
-          <MessageCircle className="w-6 h-6" />
+          <WhatsAppIcon className="w-6 h-6" />
           <span className="text-xs font-medium">WhatsApp</span>
         </button>
         <button
           onClick={copyToClipboard}
-          className="flex flex-col items-center gap-2 p-4 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all hover:scale-105 shadow-md"
+          className="flex flex-col items-center gap-2 p-4 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all hover:scale-110 shadow-md"
           aria-label="Copy link"
         >
-          {copied ? <Check className="w-6 h-6 text-green-600" /> : <Copy className="w-6 h-6" />}
+          {copied ? <Check className="w-6 h-6 text-green-600" /> : <CopyLinkIcon className="w-6 h-6" />}
           <span className="text-xs font-medium">{copied ? 'Copied!' : 'Copy Link'}</span>
         </button>
         <button
           onClick={shareToLinkedIn}
-          className="flex flex-col items-center gap-2 p-4 bg-[#0077B5] text-white rounded-lg hover:bg-[#006399] transition-all hover:scale-105 shadow-md"
+          className="flex flex-col items-center gap-2 p-4 bg-[#0077B5] text-white rounded-lg hover:bg-[#006399] transition-all hover:scale-110 shadow-md"
           aria-label="Share on LinkedIn"
         >
-          <Linkedin className="w-6 h-6" />
+          <LinkedInIcon className="w-6 h-6" />
           <span className="text-xs font-medium">LinkedIn</span>
         </button>
         <button
           onClick={shareToX}
-          className="flex flex-col items-center gap-2 p-4 bg-black text-white rounded-lg hover:bg-gray-800 transition-all hover:scale-105 shadow-md"
+          className="flex flex-col items-center gap-2 p-4 bg-black text-white rounded-lg hover:bg-gray-800 transition-all hover:scale-110 shadow-md"
           aria-label="Share on X (Twitter)"
         >
-          <Twitter className="w-6 h-6" />
+          <XIcon className="w-6 h-6" />
           <span className="text-xs font-medium">X</span>
         </button>
         <button
           onClick={shareToFacebook}
-          className="flex flex-col items-center gap-2 p-4 bg-[#1877F2] text-white rounded-lg hover:bg-[#166FE5] transition-all hover:scale-105 shadow-md"
+          className="flex flex-col items-center gap-2 p-4 bg-[#1877F2] text-white rounded-lg hover:bg-[#166FE5] transition-all hover:scale-110 shadow-md"
           aria-label="Share on Facebook"
         >
-          <Facebook className="w-6 h-6" />
+          <FacebookIcon className="w-6 h-6" />
           <span className="text-xs font-medium">Facebook</span>
         </button>
         <button
           onClick={shareToReddit}
-          className="flex flex-col items-center gap-2 p-4 bg-[#FF4500] text-white rounded-lg hover:bg-[#E03D00] transition-all hover:scale-105 shadow-md"
+          className="flex flex-col items-center gap-2 p-4 bg-[#FF4500] text-white rounded-lg hover:bg-[#E03D00] transition-all hover:scale-110 shadow-md"
           aria-label="Share on Reddit"
         >
           <RedditIcon className="w-6 h-6" />
@@ -201,7 +237,7 @@ export default function BlogSocialShare({ title, url, description, variant = 'fu
         </button>
         <button
           onClick={shareToTelegram}
-          className="flex flex-col items-center gap-2 p-4 bg-[#0088CC] text-white rounded-lg hover:bg-[#0077B5] transition-all hover:scale-105 shadow-md"
+          className="flex flex-col items-center gap-2 p-4 bg-[#0088CC] text-white rounded-lg hover:bg-[#0077B5] transition-all hover:scale-110 shadow-md"
           aria-label="Share on Telegram"
         >
           <TelegramIcon className="w-6 h-6" />
