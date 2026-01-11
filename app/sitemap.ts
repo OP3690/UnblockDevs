@@ -115,6 +115,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'fix-cannot-read-property-map-of-undefined-javascript',
     'how-to-convert-curl-to-fetch-axios-automatically',
     'fix-unexpected-end-of-json-input-error-explained',
+    'how-to-validate-api-response-using-json-schema',
+    'why-my-api-works-in-postman-but-not-in-browser',
+    'fix-maximum-call-stack-size-exceeded-javascript',
   ]
 
   // Main pages

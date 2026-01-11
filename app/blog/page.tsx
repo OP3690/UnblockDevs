@@ -244,6 +244,33 @@ export const metadata: Metadata = {
       keywords: ['unexpected end of json input', 'fix json parse error', 'json parse error unexpected end', 'unexpected end of json input fix', 'json parse error javascript']
     },
     {
+      slug: 'how-to-validate-api-response-using-json-schema',
+      title: 'How to Validate API Response Using JSON Schema | Complete Guide 2026',
+      excerpt: 'Learn how to validate API responses using JSON Schema. Complete guide with code examples for JavaScript, Python, Node.js, and automated testing. Includes validation libraries, best practices, and error handling.',
+      date: '2026-01-29',
+      readTime: '16 min read',
+      category: 'API Development & Testing',
+      keywords: ['validate api response json schema', 'json schema validation', 'api response validation', 'json schema validator', 'validate api response javascript']
+    },
+    {
+      slug: 'why-my-api-works-in-postman-but-not-in-browser',
+      title: 'Why My API Works in Postman but Not in Browser | Fix Guide 2026',
+      excerpt: 'Learn why your API works in Postman but fails in browsers. Complete troubleshooting guide for CORS errors, authentication issues, preflight requests, and browser security restrictions. Includes solutions and code examples.',
+      date: '2026-01-29',
+      readTime: '15 min read',
+      category: 'API Development & Testing',
+      keywords: ['api works in postman but not browser', 'cors error browser', 'api not working in browser', 'postman vs browser api', 'cors policy error']
+    },
+    {
+      slug: 'fix-maximum-call-stack-size-exceeded-javascript',
+      title: 'Fix: "Maximum Call Stack Size Exceeded" in JavaScript | Complete Guide 2026',
+      excerpt: 'Learn how to fix "Maximum call stack size exceeded" error in JavaScript. Complete guide with solutions for infinite recursion, circular references, deep recursion, and stack overflow. Includes code examples and debugging tips.',
+      date: '2026-01-29',
+      readTime: '14 min read',
+      category: 'JavaScript & Development',
+      keywords: ['maximum call stack size exceeded', 'javascript stack overflow', 'infinite recursion javascript', 'fix call stack exceeded', 'javascript recursion error']
+    },
+    {
       slug: 'how-to-change-whatsapp-number-without-losing-chats',
       title: 'How to Change WhatsApp Number Without Losing Chats: Step-by-Step Guide 2026',
       excerpt: 'Complete guide to changing your WhatsApp number without losing chats, messages, or data. Step-by-step instructions for Android, iPhone, and desktop. Learn how to migrate WhatsApp account safely in 2026.',
