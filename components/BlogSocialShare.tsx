@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 
-// Real SVG Icons
+// Clean, Symmetric SVG Icons
 const ShareIcon = ({ className }: { className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
     <circle cx="18" cy="5" r="3"/>
@@ -19,52 +19,59 @@ const CheckIcon = ({ className }: { className?: string }) => (
     <polyline points="20 6 9 17 4 12"/>
   </svg>
 );
+
 const WhatsAppIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className={className}>
-    <path fill="#25D366" d="M16 2C8.3 2 2 8.3 2 16c0 2.8.8 5.4 2.3 7.7L2 30l6.5-2.1C10.7 29.3 13.3 30 16 30c7.7 0 14-6.3 14-14S23.7 2 16 2z"/>
-    <path fill="#fff" d="M12.5 9.5c-.3-.6-.6-.6-.9-.6h-.7c-.3 0-.7.1-1 .4-.3.3-1.3 1.3-1.3 3.2s1.4 3.7 1.6 3.9c.2.3 2.7 4.3 6.6 5.9 3.2 1.3 3.9 1 4.6.9.7-.1 2.3-.9 2.6-1.8.3-.9.3-1.6.2-1.8-.1-.2-.3-.3-.7-.5l-2.3-1.1c-.3-.1-.6-.2-.8.2-.2.3-.9 1.1-1.1 1.3-.2.2-.4.3-.8.1-.4-.2-1.6-.6-3.1-1.9-1.1-1-1.9-2.3-2.1-2.7-.2-.4 0-.6.2-.8.2-.2.4-.4.6-.6.2-.2.3-.4.4-.6.1-.2 0-.4-.1-.6l-.9-2.3z"/>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className}>
+    <circle cx="12" cy="12" r="10" fill="#25D366"/>
+    <circle cx="9" cy="10" r="1" fill="#fff"/>
+    <circle cx="15" cy="10" r="1" fill="#fff"/>
+    <path d="M8 14c1 1.5 4 1.5 8 0" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
   </svg>
 );
 
 const LinkedInIcon = ({ className }: { className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className}>
-    <path fill="#0A66C2" d="M22.23 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.72V1.72C24 .77 23.21 0 22.23 0z"/>
-    <path fill="#fff" d="M3.56 9h3.56v12H3.56zM5.34 3.5c1.14 0 2.06.93 2.06 2.07 0 1.14-.92 2.06-2.06 2.06A2.06 2.06 0 013.28 5.57c0-1.14.92-2.07 2.06-2.07zM10.69 9h3.41v1.64h.05c.47-.9 1.63-1.85 3.35-1.85 3.58 0 4.24 2.36 4.24 5.43V21h-3.56v-6.08c0-1.45-.03-3.32-2.02-3.32-2.02 0-2.33 1.58-2.33 3.21V21h-3.56z"/>
+    <rect width="24" height="24" rx="4" fill="#0A66C2"/>
+    <circle cx="7.5" cy="7.5" r="1.5" fill="#fff"/>
+    <rect x="6" y="10" width="3" height="8" fill="#fff"/>
+    <path fill="#fff" d="M11.5 10c-1.5 0-2.5 1-2.5 2.5v5.5h3v-5.5c0-1.5-1-2.5-2.5-2.5h-1v-3h1z"/>
+    <rect x="13.5" y="10" width="3" height="8" fill="#fff"/>
   </svg>
 );
 
 const XIcon = ({ className }: { className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className}>
-    <path fill="currentColor" d="M18.3 2H21l-6.6 7.6L22 22h-6.2l-4.8-6.1L5.4 22H2.7l7-8.1L2 2h6.3l4.3 5.5L18.3 2z"/>
+    <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
   </svg>
 );
 
 const FacebookIcon = ({ className }: { className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className}>
-    <path fill="#1877F2" d="M24 12c0-6.6-5.4-12-12-12S0 5.4 0 12c0 6 4.4 10.9 10.1 11.8v-8.3H7.1V12h3V9.4c0-3 1.8-4.7 4.6-4.7 1.3 0 2.6.2 2.6.2v2.9h-1.5c-1.5 0-2 .9-2 1.9V12h3.4l-.5 3.5h-2.9v8.3C19.6 22.9 24 18 24 12z"/>
+    <circle cx="12" cy="12" r="10" fill="#1877F2"/>
+    <path fill="#fff" d="M13 8h2v-2h-2c-1.5 0-2.5 1-2.5 2.5v1h-2v2h2v5h2.5v-5h2l.5-2h-2.5v-1c0-.3.2-.5.5-.5z"/>
   </svg>
 );
 
 const RedditIcon = ({ className }: { className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className}>
-    <path fill="#FF4500" d="M24 12c0 6.6-5.4 12-12 12S0 18.6 0 12 5.4 0 12 0s12 5.4 12 12z"/>
-    <circle cx="8.5" cy="12" r="1.5" fill="#fff"/>
-    <circle cx="15.5" cy="12" r="1.5" fill="#fff"/>
-    <path fill="#fff" d="M7 14c1.5 1.5 8.5 1.5 10 0"/>
+    <circle cx="12" cy="12" r="10" fill="#FF4500"/>
+    <circle cx="9" cy="11" r="1.5" fill="#fff"/>
+    <circle cx="15" cy="11" r="1.5" fill="#fff"/>
+    <path d="M8 14c1.5 1.5 8 1.5 8 0" stroke="#fff" strokeWidth="2" strokeLinecap="round" fill="none"/>
   </svg>
 );
 
 const TelegramIcon = ({ className }: { className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className}>
-    <path fill="#229ED9" d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0z"/>
-    <path fill="#fff" d="M17.4 7.2L6.9 11.5c-.7.3-.7.7-.1.9l2.7.8 1 3.1c.1.4.3.4.6.2l1.6-1.2 2.7 2c.5.3.8.2.9-.4l1.8-8.5c.1-.6-.2-.8-.7-.6z"/>
+    <circle cx="12" cy="12" r="10" fill="#229ED9"/>
+    <path fill="#fff" d="M17.5 7.5l-9 3.5 2 2 5-3 3 2.5-1 1-4-2.5-2.5 2-1 5.5-2.5-1z"/>
   </svg>
 );
 
 const CopyLinkIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className}>
-    <path fill="currentColor" d="M10 13a5 5 0 007.07 0l2.83-2.83a5 5 0 00-7.07-7.07L11 4.93"/>
-    <path fill="currentColor" d="M14 11a5 5 0 00-7.07 0L4.1 13.83a5 5 0 007.07 7.07L13 19.07"/>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
   </svg>
 );
 
