@@ -19,6 +19,42 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'how-to-cancel-audible-subscription-mobile-desktop',
+      title: 'How to Cancel Audible Subscription on Mobile & Desktop: Complete Guide 2026',
+      excerpt: 'Complete guide to canceling your Audible subscription on mobile (Android, iPhone) and desktop. Step-by-step instructions to cancel Audible membership, keep your credits, and preserve your audiobook library. Learn how to cancel Audible without losing access in 2026.',
+      date: '2026-01-25',
+      readTime: '12 min read',
+      category: 'Subscriptions & Services',
+      keywords: ['cancel audible subscription', 'how to cancel audible', 'cancel audible membership', 'audible cancellation guide']
+    },
+    {
+      slug: 'how-to-cancel-netflix-subscription-without-losing-watch-history',
+      title: 'How to Cancel Netflix Subscription Without Losing Watch History: Complete Guide 2026',
+      excerpt: 'Complete guide to canceling your Netflix subscription without losing watch history, recommendations, or account data. Step-by-step instructions for mobile, desktop, and TV. Learn how to cancel Netflix and preserve your viewing history in 2026.',
+      date: '2026-01-25',
+      readTime: '11 min read',
+      category: 'Subscriptions & Services',
+      keywords: ['cancel netflix subscription', 'how to cancel netflix', 'cancel netflix without losing history', 'netflix cancellation guide']
+    },
+    {
+      slug: 'how-to-cancel-amazon-prime-membership-instantly',
+      title: 'How to Cancel Amazon Prime Membership Instantly: Complete Guide 2026',
+      excerpt: 'Complete guide to canceling your Amazon Prime membership instantly. Step-by-step instructions for mobile, desktop, and app. Learn how to cancel Amazon Prime, get refunds, and end membership immediately in 2026.',
+      date: '2026-01-25',
+      readTime: '13 min read',
+      category: 'Subscriptions & Services',
+      keywords: ['cancel amazon prime', 'how to cancel amazon prime', 'cancel amazon prime membership', 'amazon prime cancellation guide']
+    },
+    {
+      slug: 'how-to-cancel-spotify-premium-and-get-refund',
+      title: 'How to Cancel Spotify Premium and Get Refund (If Eligible): Complete Guide 2026',
+      excerpt: 'Complete guide to canceling Spotify Premium subscription and getting refunds if eligible. Step-by-step instructions for mobile, desktop, and web. Learn how to cancel Spotify Premium, downgrade to free, and request refunds in 2026.',
+      date: '2026-01-25',
+      readTime: '12 min read',
+      category: 'Subscriptions & Services',
+      keywords: ['cancel spotify premium', 'how to cancel spotify premium', 'spotify premium cancellation', 'cancel spotify premium refund']
+    },
+    {
       slug: 'how-to-change-whatsapp-number-without-losing-chats',
       title: 'How to Change WhatsApp Number Without Losing Chats: Step-by-Step Guide 2026',
       excerpt: 'Complete guide to changing your WhatsApp number without losing chats, messages, or data. Step-by-step instructions for Android, iPhone, and desktop. Learn how to migrate WhatsApp account safely in 2026.',

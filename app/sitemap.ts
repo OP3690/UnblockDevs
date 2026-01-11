@@ -90,6 +90,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'how-to-change-email-address-google-account-safely',
     'how-to-change-instagram-phone-number-email-2026',
     'how-to-change-apple-id-phone-number-without-losing-data',
+    'how-to-cancel-audible-subscription-mobile-desktop',
+    'how-to-cancel-netflix-subscription-without-losing-watch-history',
+    'how-to-cancel-amazon-prime-membership-instantly',
+    'how-to-cancel-spotify-premium-and-get-refund',
   ]
 
   // Main pages
