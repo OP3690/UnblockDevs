@@ -19,6 +19,33 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'why-my-code-works-locally-but-fails-on-submission-common-reasons',
+      title: 'Why My Code Works Locally but Fails on Submission (Common Reasons) | Complete Guide 2026',
+      excerpt: 'Learn why your code works locally but fails on submission. Complete troubleshooting guide for environment differences, dependencies, paths, time zones, and submission platform issues. Beginner-friendly explanations with solutions.',
+      date: '2026-02-01',
+      readTime: '16 min read',
+      category: 'Programming & Development',
+      keywords: ['code works locally but fails on submission', 'code works locally but not on server', 'why code fails on submission', 'local vs production code issues']
+    },
+    {
+      slug: 'how-to-read-error-messages-properly-as-beginner-programmer',
+      title: 'How to Read Error Messages Properly as a Beginner Programmer | Complete Guide 2026',
+      excerpt: 'Learn how to read and understand error messages as a beginner programmer. Complete guide to interpreting error types, stack traces, line numbers, and fixing common errors. Beginner-friendly explanations with examples.',
+      date: '2026-02-01',
+      readTime: '15 min read',
+      category: 'Programming & Development',
+      keywords: ['how to read error messages', 'understand error messages beginner', 'programming error messages explained', 'read error messages properly']
+    },
+    {
+      slug: 'how-to-debug-code-step-by-step-beginner-friendly-guide',
+      title: 'How to Debug Code Step by Step (Beginner-Friendly Guide) | Complete Guide 2026',
+      excerpt: 'Learn how to debug code step by step as a beginner. Complete guide to debugging techniques, tools, and strategies. Beginner-friendly explanations with examples for finding and fixing bugs in your code.',
+      date: '2026-02-01',
+      readTime: '17 min read',
+      category: 'Programming & Development',
+      keywords: ['how to debug code', 'debug code step by step', 'debugging guide beginner', 'how to debug programming']
+    },
+    {
       slug: 'how-to-cancel-audible-subscription-mobile-desktop',
       title: 'How to Cancel Audible Subscription on Mobile & Desktop: Complete Guide 2026',
       excerpt: 'Complete guide to canceling your Audible subscription on mobile (Android, iPhone) and desktop. Step-by-step instructions to cancel Audible membership, keep your credits, and preserve your audiobook library. Learn how to cancel Audible without losing access in 2026.',

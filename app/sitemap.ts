@@ -127,6 +127,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'fix-error-listen-eaddrinuse-nodejs-port-already-in-use',
     'why-process-env-is-undefined-nodejs-and-how-to-fix-it',
     'fix-hydration-failed-error-nextjs-server-vs-client-mismatch',
+    'why-my-code-works-locally-but-fails-on-submission-common-reasons',
+    'how-to-read-error-messages-properly-as-beginner-programmer',
+    'how-to-debug-code-step-by-step-beginner-friendly-guide',
   ]
 
   // Main pages
