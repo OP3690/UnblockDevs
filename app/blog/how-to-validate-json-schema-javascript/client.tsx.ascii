@@ -7,7 +7,6 @@ import NewsletterSignup from '@/components/NewsletterSignup';
 import FeedbackForm from '@/components/FeedbackForm';
 
 export default function HowToValidateJsonSchemaJavaScriptClient() {
-  return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50 to-purple-50">
       <header className="bg-white shadow-md border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -112,7 +111,7 @@ export default function HowToValidateJsonSchemaJavaScriptClient() {
                   Validation Process
                 </h3>
                 <p className="text-gray-700 text-sm mb-2">The validation process: 1) Define a JSON Schema, 2) Load the schema into a validator, 3) Validate JSON data against the schema, 4) Check the validation result, 5) Handle errors if validation fails. Validators return boolean results and detailed error information.</p>
-                <p className="text-gray-600 text-xs">Process: Schema → Validator → Data → Result (valid/invalid + errors)</p>
+                <p className="text-gray-600 text-xs">Process: Schema  Validator  Data  Result (valid/invalid + errors)</p>
               </div>
               <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                 <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
@@ -487,7 +486,7 @@ const valid = validate(data);`}</code></pre>
               </div>
               <div className="border-b border-gray-200 pb-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">How do I handle validation errors in JavaScript?</h3>
-                <p className="text-gray-700 leading-relaxed">Check the validation result and access error details. With ajv: <code className="bg-gray-100 px-1 rounded">if (!valid) then console.log(validate.errors)</code>. Errors include the path to invalid fields, error messages, and schema paths. Use this information to provide user-friendly error messages or log debugging information.</p>
+                <p className="text-gray-700 leading-relaxed">Check the validation result and access error details. With ajv: <code className="bg-gray-100 px-1 rounded">if (!valid) { console.log(validate.errors); }</code>. Errors include the path to invalid fields, error messages, and schema paths. Use this information to provide user-friendly error messages or log debugging information.</p>
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">What JSON Schema versions are supported?</h3>
@@ -495,7 +494,8 @@ const valid = validate(data);`}</code></pre>
               </div>
             </div>
           </section>
-        </article>
+        </articiconv: warning: invalid characters: 3
+le>
 
         {/* Newsletter Signup */}
         <section className="mt-12">
