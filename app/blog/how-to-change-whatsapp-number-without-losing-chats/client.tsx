@@ -36,7 +36,7 @@ export default function HowToChangeWhatsappNumberClient() {
             },
             {
               question: 'How do I change my WhatsApp number?',
-              answer: 'Go to WhatsApp Settings > Account > Change Number. Enter your old and new phone numbers, verify the new number with the code sent via SMS, and confirm the change. All your chats and data will be transferred automatically.',
+              answer: 'Go to WhatsApp Settings &gt; Account &gt; Change Number. Enter your old and new phone numbers, verify the new number with the code sent via SMS, and confirm the change. All your chats and data will be transferred automatically.',
             },
             {
               question: 'Will my contacts be notified when I change my WhatsApp number?',
@@ -195,7 +195,7 @@ export default function HowToChangeWhatsappNumberClient() {
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold text-gray-900 mb-2">Create a Backup (Recommended)</h3>
-                  <p className="text-gray-700 text-sm mb-2">Before changing your number, create a backup of your WhatsApp data. On Android: Settings > Chats > Chat backup > Back up. On iPhone: Settings > Chats > Chat Backup > Back Up Now.</p>
+                  <p className="text-gray-700 text-sm mb-2">Before changing your number, create a backup of your WhatsApp data. On Android: Settings &gt; Chats &gt; Chat backup &gt; Back up. On iPhone: Settings &gt; Chats &gt; Chat Backup &gt; Back Up Now.</p>
                   <p className="text-gray-600 text-xs">This ensures you have a safety net in case anything goes wrong during the number change process.</p>
                 </div>
               </div>
@@ -372,7 +372,7 @@ export default function HowToChangeWhatsappNumberClient() {
                 <ul className="list-disc list-inside text-gray-700 text-sm space-y-1 ml-4">
                   <li>Wait a few minutes for the migration to complete</li>
                   <li>Restart WhatsApp and check again</li>
-                  <li>Restore from your backup: Settings > Chats > Chat Backup > Restore</li>
+                  <li>Restore from your backup: Settings &gt; Chats &gt; Chat Backup &gt; Restore</li>
                   <li>Ensure you have a stable internet connection</li>
                   <li>If issues persist, contact WhatsApp support</li>
                 </ul>

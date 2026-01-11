@@ -36,7 +36,7 @@ export default function HowToChangeAppleIdPhoneNumberClient() {
             },
             {
               question: 'How do I change my Apple ID phone number?',
-              answer: 'Go to Settings (iPhone/iPad) or System Settings (Mac) > [Your Name] > Name, Phone Numbers, Email > Edit next to Phone Numbers. Add your new phone number, verify it with the code sent via SMS, then remove your old number. Your data remains intact throughout the process.',
+              answer: 'Go to Settings (iPhone/iPad) or System Settings (Mac) &gt; [Your Name] &gt; Name, Phone Numbers, Email &gt; Edit next to Phone Numbers. Add your new phone number, verify it with the code sent via SMS, then remove your old number. Your data remains intact throughout the process.',
             },
             {
               question: 'Will I lose my iCloud data when changing Apple ID phone number?',
@@ -44,7 +44,7 @@ export default function HowToChangeAppleIdPhoneNumberClient() {
             },
             {
               question: 'Do I need to backup before changing Apple ID phone number?',
-              answer: 'While your data is preserved during phone number changes, it\'s always good practice to ensure your iCloud backup is up to date. Go to Settings > [Your Name] > iCloud > iCloud Backup > Back Up Now to create a fresh backup before making changes.',
+              answer: 'While your data is preserved during phone number changes, it\'s always good practice to ensure your iCloud backup is up to date. Go to Settings &gt; [Your Name] &gt; iCloud &gt; iCloud Backup &gt; Back Up Now to create a fresh backup before making changes.',
             },
             {
               question: 'Can I change Apple ID phone number on the same device?',
@@ -198,7 +198,7 @@ export default function HowToChangeAppleIdPhoneNumberClient() {
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold text-gray-900 mb-2">Ensure iCloud Backup is Current</h3>
-                  <p className="text-gray-700 text-sm mb-2">Before changing your phone number, ensure your iCloud backup is up to date. On iPhone/iPad: Settings > [Your Name] > iCloud > iCloud Backup > Back Up Now. On Mac: System Settings > [Your Name] > iCloud > iCloud Backup.</p>
+                  <p className="text-gray-700 text-sm mb-2">Before changing your phone number, ensure your iCloud backup is up to date. On iPhone/iPad: Settings &gt; [Your Name] &gt; iCloud &gt; iCloud Backup &gt; Back Up Now. On Mac: System Settings &gt; [Your Name] &gt; iCloud &gt; iCloud Backup.</p>
                   <p className="text-gray-600 text-xs">While your data is safe, having a current backup provides extra security.</p>
                 </div>
               </div>
@@ -410,7 +410,7 @@ export default function HowToChangeAppleIdPhoneNumberClient() {
               </div>
               <div className="border-b border-gray-200 pb-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">What happens to two-factor authentication when I change my phone number?</h3>
-                <p className="text-gray-700 leading-relaxed">If you have two-factor authentication enabled, you should update it to use your new phone number. Go to Settings > [Your Name] > Sign-In & Security > Two-Factor Authentication and verify your new number is listed. Apple may automatically update 2FA, but it's good to verify.</p>
+                <p className="text-gray-700 leading-relaxed">If you have two-factor authentication enabled, you should update it to use your new phone number. Go to Settings &gt; [Your Name] &gt; Sign-In &amp; Security &gt; Two-Factor Authentication and verify your new number is listed. Apple may automatically update 2FA, but it's good to verify.</p>
               </div>
               <div className="border-b border-gray-200 pb-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Can I have multiple phone numbers on my Apple ID?</h3>

@@ -36,7 +36,7 @@ export default function HowToChangeGoogleEmailClient() {
             },
             {
               question: 'How do I change my Gmail address?',
-              answer: 'If you have a Gmail address, you cannot directly change it, but you can: 1) Add an email alias, 2) Create a new Gmail account and transfer data, or 3) Use Gmail\'s forwarding feature. For non-Gmail addresses used with Google, go to Google Account > Personal info > Email > Edit.',
+              answer: 'If you have a Gmail address, you cannot directly change it, but you can: 1) Add an email alias, 2) Create a new Gmail account and transfer data, or 3) Use Gmail\'s forwarding feature. For non-Gmail addresses used with Google, go to Google Account &gt; Personal info &gt; Email &gt; Edit.',
             },
             {
               question: 'Will I lose my data when changing Google email?',
@@ -103,7 +103,7 @@ export default function HowToChangeGoogleEmailClient() {
                   <CheckCircle className="w-5 h-5 text-blue-600" />
                   Non-Gmail Address
                 </h3>
-                <p className="text-gray-700 text-sm mb-2">If you use a non-Gmail email (like @yahoo.com, @outlook.com) with your Google account, you can change it directly in Google Account settings. Go to Personal info > Email > Edit to update your email address.</p>
+                <p className="text-gray-700 text-sm mb-2">If you use a non-Gmail email (like @yahoo.com, @outlook.com) with your Google account, you can change it directly in Google Account settings. Go to Personal info &gt; Email &gt; Edit to update your email address.</p>
                 <p className="text-gray-600 text-xs">You'll need to verify the new email address before it becomes active.</p>
               </div>
               <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
@@ -112,7 +112,7 @@ export default function HowToChangeGoogleEmailClient() {
                   Email Aliases
                 </h3>
                 <p className="text-gray-700 text-sm mb-2">You can add email aliases to your Gmail account, allowing you to receive emails at different addresses while keeping your primary Gmail address. This is useful for organization without changing your main email.</p>
-                <p className="text-gray-600 text-xs">Aliases can be added in Gmail Settings > Accounts and Import > Send mail as.</p>
+                <p className="text-gray-600 text-xs">Aliases can be added in Gmail Settings &gt; Accounts and Import &gt; Send mail as.</p>
               </div>
               <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                 <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
@@ -201,7 +201,7 @@ export default function HowToChangeGoogleEmailClient() {
                   </div>
                   <div className="flex-1">
                     <h4 className="font-semibold text-gray-900 mb-2">Enable Two-Factor Authentication</h4>
-                    <p className="text-gray-700 text-sm mb-2">Before changing your email, ensure two-factor authentication is enabled. Go to Google Account > Security > 2-Step Verification and set it up if not already enabled.</p>
+                    <p className="text-gray-700 text-sm mb-2">Before changing your email, ensure two-factor authentication is enabled. Go to Google Account &gt; Security &gt; 2-Step Verification and set it up if not already enabled.</p>
                     <p className="text-gray-600 text-xs">This adds an extra layer of security during the email change process.</p>
                   </div>
                 </div>
@@ -261,7 +261,7 @@ export default function HowToChangeGoogleEmailClient() {
                   </div>
                   <div className="flex-1">
                     <h4 className="font-semibold text-gray-900 mb-2">Update Recovery Information</h4>
-                    <p className="text-gray-700 text-sm mb-2">After changing your email, update your recovery email and phone number in Google Account > Security. This ensures you can recover your account if needed.</p>
+                    <p className="text-gray-700 text-sm mb-2">After changing your email, update your recovery email and phone number in Google Account &gt; Security. This ensures you can recover your account if needed.</p>
                     <p className="text-gray-600 text-xs">Recovery information is crucial for account security.</p>
                   </div>
                 </div>
@@ -278,7 +278,7 @@ export default function HowToChangeGoogleEmailClient() {
               <div className="space-y-4">
                 <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                   <h4 className="font-semibold text-gray-900 mb-2">Option 1: Add Email Alias</h4>
-                  <p className="text-gray-700 text-sm mb-2">Go to Gmail Settings > Accounts and Import > Send mail as > Add another email address. This allows you to send emails from a different address while keeping your Gmail address.</p>
+                  <p className="text-gray-700 text-sm mb-2">Go to Gmail Settings &gt; Accounts and Import &gt; Send mail as &gt; Add another email address. This allows you to send emails from a different address while keeping your Gmail address.</p>
                   <p className="text-gray-600 text-xs">This is the simplest option if you just need to use a different email for sending.</p>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
@@ -288,7 +288,7 @@ export default function HowToChangeGoogleEmailClient() {
                 </div>
                 <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                   <h4 className="font-semibold text-gray-900 mb-2">Option 3: Use Gmail Forwarding</h4>
-                  <p className="text-gray-700 text-sm mb-2">Set up Gmail forwarding to automatically forward all emails from your Gmail address to a new email address. Go to Gmail Settings > Forwarding and POP/IMAP > Add a forwarding address.</p>
+                  <p className="text-gray-700 text-sm mb-2">Set up Gmail forwarding to automatically forward all emails from your Gmail address to a new email address. Go to Gmail Settings &gt; Forwarding and POP/IMAP &gt; Add a forwarding address.</p>
                   <p className="text-gray-600 text-xs">This allows you to receive Gmail at a different address without changing your account.</p>
                 </div>
               </div>
@@ -351,14 +351,14 @@ export default function HowToChangeGoogleEmailClient() {
                 <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-1">Enable Two-Factor Authentication</h3>
-                  <p className="text-gray-700 text-sm">Go to Google Account > Security > 2-Step Verification and enable it. This adds an extra layer of security during the email change process.</p>
+                  <p className="text-gray-700 text-sm">Go to Google Account &gt; Security &gt; 2-Step Verification and enable it. This adds an extra layer of security during the email change process.</p>
                 </div>
               </div>
               <div className="flex items-start gap-3 p-4 bg-green-50 rounded-lg border border-green-200">
                 <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-1">Update Recovery Information</h3>
-                  <p className="text-gray-700 text-sm">Ensure your recovery phone number and recovery email are up to date. Go to Google Account > Security > Recovery options.</p>
+                  <p className="text-gray-700 text-sm">Ensure your recovery phone number and recovery email are up to date. Go to Google Account &gt; Security &gt; Recovery options.</p>
                 </div>
               </div>
               <div className="flex items-start gap-3 p-4 bg-green-50 rounded-lg border border-green-200">

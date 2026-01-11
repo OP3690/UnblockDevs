@@ -36,7 +36,7 @@ export default function HowToChangeTelegramNumberClient() {
             },
             {
               question: 'How do I change my Telegram phone number?',
-              answer: 'Go to Telegram Settings > Privacy and Security > Phone Number > Change Number. Enter your new phone number, verify it with the code sent via SMS, and confirm. Your chats and data will be preserved, and you can choose privacy settings for who sees your number.',
+              answer: 'Go to Telegram Settings &gt; Privacy and Security &gt; Phone Number &gt; Change Number. Enter your new phone number, verify it with the code sent via SMS, and confirm. Your chats and data will be preserved, and you can choose privacy settings for who sees your number.',
             },
             {
               question: 'Will my contacts be notified when I change my Telegram number?',
@@ -108,7 +108,7 @@ export default function HowToChangeTelegramNumberClient() {
                   <Shield className="w-5 h-5 text-purple-600" />
                   Privacy Settings Preserved
                 </h3>
-                <p className="text-gray-700 text-sm mb-2">Your privacy settings, blocked users, two-step verification, and security settings are all preserved. You can also configure who can see your phone number in Settings > Privacy and Security.</p>
+                <p className="text-gray-700 text-sm mb-2">Your privacy settings, blocked users, two-step verification, and security settings are all preserved. You can also configure who can see your phone number in Settings &gt; Privacy and Security.</p>
                 <p className="text-gray-600 text-xs">You have granular control over phone number visibility.</p>
               </div>
               <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
@@ -360,7 +360,7 @@ export default function HowToChangeTelegramNumberClient() {
             <div className="space-y-3">
               <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                 <h3 className="font-semibold text-gray-900 mb-2">Who Can See My Phone Number</h3>
-                <p className="text-gray-700 text-sm mb-2">Go to Settings > Privacy and Security > Phone Number. You can choose:</p>
+                <p className="text-gray-700 text-sm mb-2">Go to Settings &gt; Privacy and Security &gt; Phone Number. You can choose:</p>
                 <ul className="list-disc list-inside text-gray-700 text-sm space-y-1 ml-4">
                   <li><strong>Everybody:</strong> Anyone can see your phone number</li>
                   <li><strong>My Contacts:</strong> Only people in your contacts can see it</li>
@@ -389,7 +389,7 @@ export default function HowToChangeTelegramNumberClient() {
               </div>
               <div className="border-b border-gray-200 pb-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Can I change Telegram number on desktop?</h3>
-                <p className="text-gray-700 leading-relaxed">Yes, you can change your Telegram number from the desktop app. Go to Settings > Privacy and Security > Phone Number > Change Number. The process is the same as on mobile, and you'll receive the verification code via SMS on your new number.</p>
+                <p className="text-gray-700 leading-relaxed">Yes, you can change your Telegram number from the desktop app. Go to Settings &gt; Privacy and Security &gt; Phone Number &gt; Change Number. The process is the same as on mobile, and you'll receive the verification code via SMS on your new number.</p>
               </div>
               <div className="border-b border-gray-200 pb-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">What happens to Telegram channels when I change my number?</h3>

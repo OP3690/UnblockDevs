@@ -32,15 +32,15 @@ export default function HowToChangeInstagramPhoneEmailClient() {
           faqs={[
             {
               question: 'Can I change my Instagram phone number or email?',
-              answer: 'Yes, you can change both your phone number and email address in Instagram. Go to Settings > Personal information > Phone number or Email, then follow the prompts to update. You\'ll need to verify the new contact information with a code sent via SMS or email.',
+              answer: 'Yes, you can change both your phone number and email address in Instagram. Go to Settings &gt; Personal information &gt; Phone number or Email, then follow the prompts to update. You\'ll need to verify the new contact information with a code sent via SMS or email.',
             },
             {
               question: 'How do I change my Instagram phone number?',
-              answer: 'Go to Instagram Settings > Personal information > Phone number > Edit. Enter your new phone number, verify it with the code sent via SMS, and confirm. Your account data, posts, and followers remain unchanged.',
+              answer: 'Go to Instagram Settings &gt; Personal information &gt; Phone number &gt; Edit. Enter your new phone number, verify it with the code sent via SMS, and confirm. Your account data, posts, and followers remain unchanged.',
             },
             {
               question: 'How do I change my Instagram email address?',
-              answer: 'Go to Instagram Settings > Personal information > Email > Edit. Enter your new email address, verify it with the code sent to your new email, and confirm. Make sure you have access to the new email before starting.',
+              answer: 'Go to Instagram Settings &gt; Personal information &gt; Email &gt; Edit. Enter your new email address, verify it with the code sent to your new email, and confirm. Make sure you have access to the new email before starting.',
             },
             {
               question: 'Will I lose my Instagram account data when changing phone or email?',
@@ -202,7 +202,7 @@ export default function HowToChangeInstagramPhoneEmailClient() {
                   <div className="flex-1">
                     <h4 className="font-semibold text-gray-900 mb-2">Open Instagram Settings</h4>
                     <p className="text-gray-700 text-sm mb-2">Open the Instagram app and tap your profile picture in the bottom right. Tap the three horizontal lines (☰) in the top right, then tap "Settings and privacy".</p>
-                    <p className="text-gray-600 text-xs">On web, click your profile picture > Settings.</p>
+                    <p className="text-gray-600 text-xs">On web, click your profile picture &gt; Settings.</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
@@ -279,7 +279,7 @@ export default function HowToChangeInstagramPhoneEmailClient() {
                   </div>
                   <div className="flex-1">
                     <h4 className="font-semibold text-gray-900 mb-2">Open Instagram Settings</h4>
-                    <p className="text-gray-700 text-sm mb-2">Open Instagram and go to Settings > Personal information (same steps as phone number change).</p>
+                    <p className="text-gray-700 text-sm mb-2">Open Instagram and go to Settings &gt; Personal information (same steps as phone number change).</p>
                     <p className="text-gray-600 text-xs">The process is similar to changing your phone number.</p>
                   </div>
                 </div>
@@ -397,12 +397,12 @@ export default function HowToChangeInstagramPhoneEmailClient() {
             <div className="space-y-3">
               <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                 <h3 className="font-semibold text-gray-900 mb-2">Update 2FA Settings</h3>
-                <p className="text-gray-700 text-sm mb-2">After changing your phone number, go to Settings > Security > Two-Factor Authentication and verify that your new phone number is listed. If not, update it to ensure you receive verification codes.</p>
+                <p className="text-gray-700 text-sm mb-2">After changing your phone number, go to Settings &gt; Security &gt; Two-Factor Authentication and verify that your new phone number is listed. If not, update it to ensure you receive verification codes.</p>
                 <p className="text-gray-600 text-xs">Instagram may automatically update 2FA when you change your phone number, but it's good to verify.</p>
               </div>
               <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                 <h3 className="font-semibold text-gray-900 mb-2">Backup Codes</h3>
-                <p className="text-gray-700 text-sm mb-2">If you use backup codes for 2FA, make sure you have them saved. These codes can be used to access your account if you can't receive SMS codes. Go to Settings > Security > Two-Factor Authentication > Backup codes.</p>
+                <p className="text-gray-700 text-sm mb-2">If you use backup codes for 2FA, make sure you have them saved. These codes can be used to access your account if you can't receive SMS codes. Go to Settings &gt; Security &gt; Two-Factor Authentication &gt; Backup codes.</p>
                 <p className="text-gray-600 text-xs">Save backup codes in a secure location separate from your phone.</p>
               </div>
             </div>
