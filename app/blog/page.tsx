@@ -217,6 +217,33 @@ export const metadata: Metadata = {
       keywords: ['json.stringify returns undefined', 'json.stringify undefined fix', 'why json.stringify undefined', 'json.stringify undefined value', 'fix json.stringify undefined']
     },
     {
+      slug: 'fix-cannot-read-property-map-of-undefined-javascript',
+      title: 'Fix: "Cannot Read Property \'map\' of Undefined" in JavaScript | Complete Guide 2026',
+      excerpt: 'Learn how to fix "Cannot read property \'map\' of undefined" error in JavaScript and React. Includes solutions, best practices, and code examples for handling undefined arrays and preventing this common error.',
+      date: '2026-01-28',
+      readTime: '14 min read',
+      category: 'JavaScript & Development',
+      keywords: ['cannot read property map of undefined', 'fix map undefined error', 'javascript map undefined', 'react map undefined error', 'cannot read property map']
+    },
+    {
+      slug: 'how-to-convert-curl-to-fetch-axios-automatically',
+      title: 'How to Convert cURL to Fetch / Axios Automatically | Complete Guide 2026',
+      excerpt: 'Learn how to convert cURL commands to JavaScript Fetch and Axios automatically. Includes online tools, manual conversion methods, and code examples for all HTTP methods and authentication types.',
+      date: '2026-01-28',
+      readTime: '15 min read',
+      category: 'JavaScript & Development',
+      keywords: ['convert curl to fetch', 'convert curl to axios', 'curl to fetch converter', 'curl to axios converter', 'convert curl command to javascript']
+    },
+    {
+      slug: 'fix-unexpected-end-of-json-input-error-explained',
+      title: 'Fix: "Unexpected End of JSON Input" Error Explained | Complete Guide 2026',
+      excerpt: 'Learn how to fix "Unexpected end of JSON input" error in JavaScript, Node.js, and all browsers. Includes common causes, solutions, and code examples for handling incomplete JSON data and parsing errors.',
+      date: '2026-01-28',
+      readTime: '13 min read',
+      category: 'JavaScript & Development',
+      keywords: ['unexpected end of json input', 'fix json parse error', 'json parse error unexpected end', 'unexpected end of json input fix', 'json parse error javascript']
+    },
+    {
       slug: 'how-to-change-whatsapp-number-without-losing-chats',
       title: 'How to Change WhatsApp Number Without Losing Chats: Step-by-Step Guide 2026',
       excerpt: 'Complete guide to changing your WhatsApp number without losing chats, messages, or data. Step-by-step instructions for Android, iPhone, and desktop. Learn how to migrate WhatsApp account safely in 2026.',

@@ -112,6 +112,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'how-to-parse-nested-json-java',
     'fix-access-control-allow-origin-missing-header-error',
     'why-json-stringify-returns-undefined-fix',
+    'fix-cannot-read-property-map-of-undefined-javascript',
+    'how-to-convert-curl-to-fetch-axios-automatically',
+    'fix-unexpected-end-of-json-input-error-explained',
   ]
 
   // Main pages
