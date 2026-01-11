@@ -133,6 +133,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'what-is-time-complexity-explained-with-simple-examples',
     'what-is-stack-vs-queue-explained-with-real-life-examples',
     'binary-search-explained-like-youre-5-with-code-example',
+    'what-is-recursion-explained-with-simple-real-life-examples',
+    'what-is-hashmap-hashtable-explained-simply-with-examples',
+    'what-is-two-pointer-technique-explained-for-beginners',
   ]
 
   // Main pages

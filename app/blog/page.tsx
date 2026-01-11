@@ -73,6 +73,33 @@ export const metadata: Metadata = {
       keywords: ['binary search explained', 'binary search like you\'re 5', 'binary search simple explanation', 'binary search algorithm', 'binary search tutorial']
     },
     {
+      slug: 'what-is-recursion-explained-with-simple-real-life-examples',
+      title: 'What Is Recursion? Explained with Simple Real-Life Examples | Complete Guide 2026',
+      excerpt: 'Learn what recursion is with simple real-life examples. Complete beginner-friendly guide to recursion with visual diagrams, flow charts, code examples, and step-by-step explanations. Perfect for coding interviews.',
+      date: '2026-02-03',
+      readTime: '18 min read',
+      category: 'Algorithms & Data Structures',
+      keywords: ['what is recursion', 'recursion explained', 'recursion examples', 'recursion tutorial', 'recursion beginner', 'recursive function', 'recursion in programming']
+    },
+    {
+      slug: 'what-is-hashmap-hashtable-explained-simply-with-examples',
+      title: 'What Is HashMap / HashTable? Explained Simply (With Examples) | Complete Guide 2026',
+      excerpt: 'Learn what HashMap and HashTable are with simple examples. Complete beginner-friendly guide to hash maps, hash tables, hash functions, collision handling, and O(1) lookup. Perfect for coding interviews.',
+      date: '2026-02-03',
+      readTime: '17 min read',
+      category: 'Algorithms & Data Structures',
+      keywords: ['what is hashmap', 'what is hashtable', 'hashmap explained', 'hashtable explained', 'hash map tutorial', 'hash table tutorial', 'hashmap vs hashtable']
+    },
+    {
+      slug: 'what-is-two-pointer-technique-explained-for-beginners',
+      title: 'What Is Two Pointer Technique? Explained for Beginners | Complete Guide 2026',
+      excerpt: 'Learn what the two pointer technique is with simple examples. Complete beginner-friendly guide to two pointers, sliding window, fast and slow pointers, and O(n) solutions. Perfect for coding interviews.',
+      date: '2026-02-03',
+      readTime: '16 min read',
+      category: 'Algorithms & Data Structures',
+      keywords: ['two pointer technique', 'two pointers', 'two pointer algorithm', 'two pointer explained', 'two pointer tutorial', 'fast and slow pointers', 'sliding window']
+    },
+    {
       slug: 'how-to-cancel-audible-subscription-mobile-desktop',
       title: 'How to Cancel Audible Subscription on Mobile & Desktop: Complete Guide 2026',
       excerpt: 'Complete guide to canceling your Audible subscription on mobile (Android, iPhone) and desktop. Step-by-step instructions to cancel Audible membership, keep your credits, and preserve your audiobook library. Learn how to cancel Audible without losing access in 2026.',
