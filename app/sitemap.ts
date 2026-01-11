@@ -109,6 +109,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'how-to-read-json-file-python-3-ways',
     'how-to-validate-json-schema-javascript',
     'how-to-convert-json-to-csv-python',
+    'how-to-parse-nested-json-java',
+    'fix-access-control-allow-origin-missing-header-error',
+    'why-json-stringify-returns-undefined-fix',
   ]
 
   // Main pages

@@ -190,6 +190,33 @@ export const metadata: Metadata = {
       keywords: ['convert json to csv python', 'json to csv python', 'pandas json to csv', 'json_normalize python', 'convert json csv']
     },
     {
+      slug: 'how-to-parse-nested-json-java',
+      title: 'How to Parse Nested JSON in Java: Complete Guide 2026',
+      excerpt: 'Learn how to parse nested JSON in Java using Jackson, Gson, and org.json. Includes examples for deeply nested objects, arrays, and handling complex JSON structures in Java applications. Step-by-step guide with code examples.',
+      date: '2026-01-27',
+      readTime: '15 min read',
+      category: 'Java & Development',
+      keywords: ['parse nested json java', 'java json parser', 'jackson nested json', 'gson nested json', 'parse json java']
+    },
+    {
+      slug: 'fix-access-control-allow-origin-missing-header-error',
+      title: 'Fix: "Access-Control-Allow-Origin" Missing Header Error | Complete Guide 2026',
+      excerpt: 'Learn how to fix "Access-Control-Allow-Origin" missing header error in JavaScript, Node.js, Express, and all browsers. Includes CORS solutions, server-side fixes, and troubleshooting steps with code examples.',
+      date: '2026-01-27',
+      readTime: '14 min read',
+      category: 'JavaScript & Development',
+      keywords: ['access-control-allow-origin missing', 'cors error fix', 'cors header missing', 'fix cors error', 'access-control-allow-origin error']
+    },
+    {
+      slug: 'why-json-stringify-returns-undefined-fix',
+      title: 'Why JSON.stringify() Returns Undefined (And How to Fix It): Complete Guide 2026',
+      excerpt: 'Learn why JSON.stringify() returns undefined and how to fix it. Includes common causes, solutions, and best practices for handling undefined values, circular references, and special values in JSON.stringify() with code examples.',
+      date: '2026-01-27',
+      readTime: '13 min read',
+      category: 'JavaScript & Development',
+      keywords: ['json.stringify returns undefined', 'json.stringify undefined fix', 'why json.stringify undefined', 'json.stringify undefined value', 'fix json.stringify undefined']
+    },
+    {
       slug: 'how-to-change-whatsapp-number-without-losing-chats',
       title: 'How to Change WhatsApp Number Without Losing Chats: Step-by-Step Guide 2026',
       excerpt: 'Complete guide to changing your WhatsApp number without losing chats, messages, or data. Step-by-step instructions for Android, iPhone, and desktop. Learn how to migrate WhatsApp account safely in 2026.',

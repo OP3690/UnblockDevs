@@ -1,0 +1,489 @@
+'use client';
+
+import Link from 'next/link';
+import { ArrowLeft, Code, FileJson, CheckCircle, AlertCircle, HelpCircle, Clock, Globe, Database } from 'lucide-react';
+import FAQSchema from '@/components/FAQSchema';
+import NewsletterSignup from '@/components/NewsletterSignup';
+import FeedbackForm from '@/components/FeedbackForm';
+
+export default function HowToParseNestedJsonJavaClient() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-orange-50 to-red-50">
+      <header className="bg-white shadow-md border-b border-gray-200">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <Link href="/blog" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Blog
+          </Link>
+          <div className="flex items-center gap-3">
+            <div className="p-3 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg">
+              <FileJson className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">How to Parse Nested JSON in Java</h1>
+              <p className="text-sm text-gray-500 mt-1">Complete Guide to Parsing Nested JSON in Java (2026)</p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <FAQSchema
+          faqs={[
+            {
+              question: 'How do I parse nested JSON in Java?',
+              answer: 'Use Jackson ObjectMapper or Gson to parse nested JSON. With Jackson: ObjectMapper mapper = new ObjectMapper(); MyClass obj = mapper.readValue(jsonString, MyClass.class). Create Java classes that match the JSON structure with nested objects and arrays. Jackson automatically maps nested JSON to nested Java objects.',
+            },
+            {
+              question: 'What is the best library for parsing nested JSON in Java?',
+              answer: 'Jackson is the most popular and fastest JSON library for Java. It provides ObjectMapper for automatic mapping, supports nested structures, and has excellent performance. Gson is also popular and easier to use for simple cases. Both handle nested JSON structures well.',
+            },
+            {
+              question: 'How do I parse deeply nested JSON objects in Java?',
+              answer: 'Create nested Java classes that match the JSON structure. Use Jackson ObjectMapper.readValue() or Gson.fromJson() to automatically map nested JSON to nested Java objects. Access nested data using dot notation or getter methods on the nested objects.',
+            },
+            {
+              question: 'Can I parse JSON arrays in nested JSON?',
+              answer: 'Yes, use List or Array types in your Java classes. Jackson and Gson automatically parse JSON arrays into Java List or Array objects. For nested arrays, use List of List or nested collection types that match your JSON structure.',
+            },
+            {
+              question: 'How do I handle missing fields in nested JSON?',
+              answer: 'Use @JsonIgnoreProperties(ignoreUnknown = true) annotation with Jackson to ignore unknown fields. Use Optional types or nullable fields for optional nested objects. Check for null before accessing nested properties to avoid NullPointerException.',
+            },
+          ]}
+        />
+
+        <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
+          {/* Definition Section */}
+          <section className="mb-12">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <HelpCircle className="w-6 h-6 text-blue-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900">Definition: What is Parsing Nested JSON in Java?</h2>
+            </div>
+            <p className="text-lg text-gray-700 leading-relaxed mb-4">
+              <strong>Parsing nested JSON in Java</strong> is the process of converting nested JSON (JavaScript Object Notation) data into Java objects with nested structures. Nested JSON contains objects within objects, arrays within objects, or objects within arrays, creating a hierarchical data structure that needs to be mapped to corresponding Java classes.
+            </p>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Java libraries like Jackson and Gson provide automatic mapping of nested JSON structures to nested Java objects. You create Java classes that mirror the JSON structure, with nested classes representing nested JSON objects, and List or Array types representing JSON arrays. The parser automatically converts the JSON hierarchy into a Java object hierarchy.
+            </p>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Parsing nested JSON is essential for working with complex API responses, configuration files, and data files that contain hierarchical data. Java's type system and JSON libraries make it straightforward to work with nested structures, providing type safety and automatic mapping capabilities.
+            </p>
+            <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+              <p className="text-blue-800 text-sm">
+                <strong>Key Point:</strong> Nested JSON parsing converts hierarchical JSON data into nested Java objects. Libraries like Jackson and Gson automatically map nested JSON structures to nested Java classes, making it easy to work with complex data structures.
+              </p>
+            </div>
+          </section>
+
+          {/* What Section */}
+          <section className="mb-12">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-green-100 rounded-lg">
+                <Globe className="w-6 h-6 text-green-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900">What: Understanding Nested JSON Parsing in Java</h2>
+            </div>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Nested JSON parsing in Java involves several components:
+            </p>
+            <div className="space-y-4 mb-6">
+              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                  <Database className="w-5 h-5 text-blue-600" />
+                  Nested JSON Structure
+                </h3>
+                <p className="text-gray-700 text-sm mb-2">Nested JSON contains objects within objects, creating a hierarchy. For example, a user object may contain an address object, which may contain a location object. JSON arrays can also contain objects, creating arrays of nested structures.</p>
+                <p className="text-gray-600 text-xs">Example: user object containing address object containing location object</p>
+              </div>
+              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                  <Code className="w-5 h-5 text-green-600" />
+                  Java Class Mapping
+                </h3>
+                <p className="text-gray-700 text-sm mb-2">Create Java classes that mirror the JSON structure. Nested JSON objects map to nested Java classes, and JSON arrays map to Java List or Array types. Use annotations like <code className="bg-gray-100 px-1 rounded">@JsonProperty</code> to map field names.</p>
+                <p className="text-gray-600 text-xs">Example: class User { Address address; } class Address { String city; }</p>
+              </div>
+              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                  <FileJson className="w-5 h-5 text-purple-600" />
+                  JSON Libraries
+                </h3>
+                <p className="text-gray-700 text-sm mb-2">Jackson and Gson are the most popular JSON libraries for Java. Jackson's <code className="bg-gray-100 px-1 rounded">ObjectMapper</code> provides automatic mapping, while Gson's <code className="bg-gray-100 px-1 rounded">fromJson()</code> method converts JSON to Java objects. Both handle nested structures automatically.</p>
+                <p className="text-gray-600 text-xs">Libraries: Jackson (fastest), Gson (simple), org.json (basic)</p>
+              </div>
+              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-orange-600" />
+                  Type Safety
+                </h3>
+                <p className="text-gray-700 text-sm mb-2">Java's type system provides compile-time type checking for nested structures. When you parse nested JSON into typed Java objects, you get type safety and IDE support. Access nested data using getter methods or direct field access.</p>
+                <p className="text-gray-600 text-xs">Type safety prevents runtime errors and provides better code maintainability</p>
+              </div>
+            </div>
+            <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
+              <p className="text-green-800 text-sm">
+                <strong>Important:</strong> Understanding your JSON structure is crucial for creating the correct Java class hierarchy. Match nested JSON objects with nested Java classes, and JSON arrays with Java List or Array types. Use appropriate annotations for field mapping.
+              </p>
+            </div>
+          </section>
+
+          {/* When Section */}
+          <section className="mb-12">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-orange-100 rounded-lg">
+                <Clock className="w-6 h-6 text-orange-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900">When: When to Parse Nested JSON in Java</h2>
+            </div>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              You should parse nested JSON in Java in these situations:
+            </p>
+            <div className="space-y-3 mb-6">
+              <div className="flex items-start gap-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <CheckCircle className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-1">API Response Processing</h3>
+                  <p className="text-gray-700 text-sm">When working with REST APIs that return nested JSON responses, parsing nested JSON allows you to access hierarchical data structures. Most modern APIs return nested JSON with objects containing other objects or arrays.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-4 bg-green-50 rounded-lg border border-green-200">
+                <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-1">Configuration File Parsing</h3>
+                  <p className="text-gray-700 text-sm">When loading configuration files in JSON format with nested settings, parsing nested JSON enables you to access configuration hierarchies. Nested JSON is common for complex application configurations.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-4 bg-purple-50 rounded-lg border border-purple-200">
+                <CheckCircle className="w-5 h-5 text-purple-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-1">Data File Processing</h3>
+                  <p className="text-gray-700 text-sm">When processing data files stored in nested JSON format, parsing allows you to work with hierarchical data structures. Nested JSON is ideal for representing complex data relationships.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                <CheckCircle className="w-5 h-5 text-yellow-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-1">Microservices Communication</h3>
+                  <p className="text-gray-700 text-sm">When building microservices that exchange nested JSON data, parsing nested JSON enables type-safe data handling. Nested structures are common in microservice architectures for representing complex domain models.</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-orange-50 border-l-4 border-orange-500 p-4 rounded-r-lg">
+              <p className="text-orange-800 text-sm">
+                <strong>Common Scenario:</strong> Parsing nested JSON is most common when working with API responses, configuration files, and data processing tasks. Nested JSON structures are standard in modern applications for representing hierarchical data.
+              </p>
+            </div>
+          </section>
+
+          {/* How To Section */}
+          <section className="mb-12">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-purple-100 rounded-lg">
+                <Code className="w-6 h-6 text-purple-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900">How To: Step-by-Step Guide to Parse Nested JSON</h2>
+            </div>
+            <p className="text-gray-700 leading-relaxed mb-6">
+              Follow these methods to parse nested JSON in Java:
+            </p>
+            
+            <div className="mb-8">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Method 1: Using Jackson ObjectMapper</h3>
+              <p className="text-gray-700 mb-4">Jackson is the most popular JSON library for Java:</p>
+              
+              <div className="mb-6">
+                <h4 className="font-semibold text-gray-900 mb-2">Add Dependency (Maven)</h4>
+                <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-2">
+                  <pre className="text-sm"><code>{`<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>2.15.2</version>
+</dependency>`}</code></pre>
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <h4 className="font-semibold text-gray-900 mb-2">Create Java Classes</h4>
+                <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-2">
+                  <pre className="text-sm"><code>{`// User.java
+public class User {
+    private String name;
+    private int age;
+    private Address address;  // Nested object
+    private List<String> hobbies;  // Array
+    
+    // Getters and setters
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    
+    public Address getAddress() { return address; }
+    public void setAddress(Address address) { this.address = address; }
+    
+    public List<String> getHobbies() { return hobbies; }
+    public void setHobbies(List<String> hobbies) { this.hobbies = hobbies; }
+}
+
+// Address.java
+public class Address {
+    private String street;
+    private String city;
+    private String zipCode;
+    private Location location;  // Deeply nested object
+    
+    // Getters and setters
+    public String getStreet() { return street; }
+    public void setStreet(String street) { this.street = street; }
+    
+    public Location getLocation() { return location; }
+    public void setLocation(Location location) { this.location = location; }
+}
+
+// Location.java
+public class Location {
+    private double latitude;
+    private double longitude;
+    
+    // Getters and setters
+    public double getLatitude() { return latitude; }
+    public void setLatitude(double latitude) { this.latitude = latitude; }
+}`}</code></pre>
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <h4 className="font-semibold text-gray-900 mb-2">Parse Nested JSON</h4>
+                <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-2">
+                  <pre className="text-sm"><code>{`import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+
+public class JsonParser {
+    public static void main(String[] args) {
+        String jsonString = "{\\"name\\": \\"John\\", \\"age\\": 30, " +
+            "\\"address\\": {\\"street\\": \\"123 Main St\\", " +
+            "\\"city\\": \\"New York\\", \\"zipCode\\": \\"10001\\", " +
+            "\\"location\\": {\\"latitude\\": 40.7128, \\"longitude\\": -74.0060}}, " +
+            "\\"hobbies\\": [\\"reading\\", \\"coding\\"]}";
+        
+        ObjectMapper mapper = new ObjectMapper();
+        
+        try {
+            // Parse nested JSON to Java object
+            User user = mapper.readValue(jsonString, User.class);
+            
+            // Access nested data
+            System.out.println(user.getName());  // John
+            System.out.println(user.getAddress().getCity());  // New York
+            System.out.println(user.getAddress().getLocation().getLatitude());  // 40.7128
+            System.out.println(user.getHobbies().get(0));  // reading
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}`}</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div className="mb-8">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Method 2: Using Gson</h3>
+              <p className="text-gray-700 mb-4">Gson is simpler and easier to use:</p>
+              
+              <div className="mb-6">
+                <h4 className="font-semibold text-gray-900 mb-2">Add Dependency (Maven)</h4>
+                <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-2">
+                  <pre className="text-sm"><code>{`<dependency>
+    <groupId>com.google.code.gson</groupId>
+    <artifactId>gson</artifactId>
+    <version>2.10.1</version>
+</dependency>`}</code></pre>
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <h4 className="font-semibold text-gray-900 mb-2">Parse with Gson</h4>
+                <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-2">
+                  <pre className="text-sm"><code>{`import com.google.gson.Gson;
+
+public class GsonParser {
+    public static void main(String[] args) {
+        String jsonString = "{\\"name\\": \\"John\\", \\"age\\": 30, " +
+            "\\"address\\": {\\"street\\": \\"123 Main St\\", " +
+            "\\"city\\": \\"New York\\"}}";
+        
+        Gson gson = new Gson();
+        
+        // Parse nested JSON
+        User user = gson.fromJson(jsonString, User.class);
+        
+        // Access nested data
+        System.out.println(user.getName());
+        System.out.println(user.getAddress().getCity());
+    }
+}`}</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div className="mb-8">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Method 3: Handling Arrays in Nested JSON</h3>
+              
+              <div className="mb-6">
+                <h4 className="font-semibold text-gray-900 mb-2">Parse JSON with Nested Arrays</h4>
+                <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-2">
+                  <pre className="text-sm"><code>{`// User.java with nested arrays
+public class User {
+    private String name;
+    private List<Address> addresses;  // Array of nested objects
+    private List<List<String>> tags;  // Nested arrays
+    
+    // Getters and setters
+    public List<Address> getAddresses() { return addresses; }
+    public void setAddresses(List<Address> addresses) { 
+        this.addresses = addresses; 
+    }
+}
+
+// Parse JSON with arrays
+String jsonString = "{\\"name\\": \\"John\\", " +
+    "\\"addresses\\": [{\\"city\\": \\"New York\\"}, " +
+    "{\\"city\\": \\"London\\"}]}";
+
+ObjectMapper mapper = new ObjectMapper();
+User user = mapper.readValue(jsonString, User.class);
+
+// Access array elements
+System.out.println(user.getAddresses().get(0).getCity());  // New York
+System.out.println(user.getAddresses().get(1).getCity());  // London`}</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div className="mb-8">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Method 4: Using Annotations</h3>
+              
+              <div className="mb-6">
+                <h4 className="font-semibold text-gray-900 mb-2">Custom Field Mapping</h4>
+                <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-2">
+                  <pre className="text-sm"><code>{`import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class User {
+    @JsonProperty("user_name")  // Map JSON field to Java field
+    private String name;
+    
+    @JsonProperty("user_address")
+    private Address address;
+    
+    // Getters and setters
+}
+
+// JSON with different field names
+String jsonString = "{\\"user_name\\": \\"John\\", " +
+    "\\"user_address\\": {\\"city\\": \\"New York\\"}}";
+
+ObjectMapper mapper = new ObjectMapper();
+User user = mapper.readValue(jsonString, User.class);`}</code></pre>
+                </div>
+              </div>
+            </div>
+            <div className="mt-6 bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-r-lg">
+              <p className="text-indigo-800 text-sm">
+                <strong>Best Practice:</strong> Create Java classes that match your JSON structure exactly. Use nested classes for nested objects, List or Array for JSON arrays, and annotations for custom field mapping. Always handle IOException when parsing JSON, and check for null values before accessing nested properties.
+              </p>
+            </div>
+          </section>
+
+          {/* Why Section */}
+          <section className="mb-12">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-red-100 rounded-lg">
+                <CheckCircle className="w-6 h-6 text-red-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900">Why: Why Parse Nested JSON in Java</h2>
+            </div>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Parsing nested JSON in Java is important for several reasons:
+            </p>
+            <div className="grid md:grid-cols-2 gap-4 mb-6">
+              <div className="p-5 bg-blue-50 rounded-lg border border-blue-200">
+                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                  <Database className="w-5 h-5 text-blue-600" />
+                  Type Safety
+                </h3>
+                <p className="text-gray-700 text-sm">Parsing nested JSON into typed Java objects provides compile-time type checking. This prevents runtime errors, improves code maintainability, and enables IDE autocomplete and refactoring support for nested data structures.</p>
+              </div>
+              <div className="p-5 bg-green-50 rounded-lg border border-green-200">
+                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                  <Code className="w-5 h-5 text-green-600" />
+                  Code Readability
+                </h3>
+                <p className="text-gray-700 text-sm">Working with typed Java objects is more readable than manually parsing JSON strings. Access nested data using getter methods (e.g., user.getAddress().getCity()) instead of complex JSON path expressions.</p>
+              </div>
+              <div className="p-5 bg-purple-50 rounded-lg border border-purple-200">
+                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                  <FileJson className="w-5 h-5 text-purple-600" />
+                  Automatic Mapping
+                </h3>
+                <p className="text-gray-700 text-sm">Libraries like Jackson and Gson automatically map nested JSON structures to nested Java objects. This eliminates manual parsing code and reduces the chance of errors when working with complex nested data.</p>
+              </div>
+              <div className="p-5 bg-orange-50 rounded-lg border border-orange-200">
+                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                  <Globe className="w-5 h-5 text-orange-600" />
+                  API Integration
+                </h3>
+                <p className="text-gray-700 text-sm">Most modern APIs return nested JSON data. Parsing nested JSON enables seamless integration with REST APIs, allowing you to work with complex API responses in a type-safe manner.</p>
+              </div>
+            </div>
+            <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
+              <p className="text-red-800 text-sm">
+                <strong>Important:</strong> Parsing nested JSON into typed Java objects is essential for building robust Java applications. It provides type safety, improves code quality, and makes working with complex data structures much easier than manual JSON parsing.
+              </p>
+            </div>
+          </section>
+
+          {/* FAQ Section */}
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
+            <div className="space-y-6">
+              <div className="border-b border-gray-200 pb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">What is the best library for parsing nested JSON in Java?</h3>
+                <p className="text-gray-700 leading-relaxed"><strong>Jackson</strong> is the most popular and fastest JSON library for Java. It provides <code className="bg-gray-100 px-1 rounded">ObjectMapper</code> for automatic mapping, supports nested structures, and has excellent performance. <strong>Gson</strong> is also popular and easier to use for simple cases. Both handle nested JSON structures well.</p>
+              </div>
+              <div className="border-b border-gray-200 pb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">How do I parse deeply nested JSON objects?</h3>
+                <p className="text-gray-700 leading-relaxed">Create nested Java classes that match the JSON structure. Use Jackson <code className="bg-gray-100 px-1 rounded">ObjectMapper.readValue()</code> or Gson <code className="bg-gray-100 px-1 rounded">fromJson()</code> to automatically map nested JSON to nested Java objects. Access nested data using dot notation or getter methods on the nested objects.</p>
+              </div>
+              <div className="border-b border-gray-200 pb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Can I parse JSON arrays in nested JSON?</h3>
+                <p className="text-gray-700 leading-relaxed">Yes, use <code className="bg-gray-100 px-1 rounded">List</code> or <code className="bg-gray-100 px-1 rounded">Array</code> types in your Java classes. Jackson and Gson automatically parse JSON arrays into Java List or Array objects. For nested arrays, use List of List or nested collection types that match your JSON structure.</p>
+              </div>
+              <div className="border-b border-gray-200 pb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">How do I handle missing fields in nested JSON?</h3>
+                <p className="text-gray-700 leading-relaxed">Use <code className="bg-gray-100 px-1 rounded">@JsonIgnoreProperties(ignoreUnknown = true)</code> annotation with Jackson to ignore unknown fields. Use Optional types or nullable fields for optional nested objects. Always check for null before accessing nested properties to avoid NullPointerException.</p>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">What is the difference between Jackson and Gson?</h3>
+                <p className="text-gray-700 leading-relaxed">Jackson is faster and more feature-rich, with better performance for large JSON files. Gson is simpler and easier to use, with a more intuitive API. Both support nested JSON parsing, but Jackson is generally preferred for production applications due to its performance and extensive feature set.</p>
+              </div>
+            </div>
+          </section>
+        </article>
+
+        {/* Newsletter Signup */}
+        <section className="mt-12">
+          <NewsletterSignup />
+        </section>
+
+        {/* Feedback Form */}
+        <section className="mt-12">
+          <FeedbackForm toolName="How to Parse Nested JSON in Java Guide" />
+        </section>
+      </main>
+    </div>
+  );
+}
