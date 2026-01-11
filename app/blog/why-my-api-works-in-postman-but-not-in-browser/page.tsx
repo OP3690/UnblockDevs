@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import WhyMyApiWorksInPostmanButNotInBrowserClient from './client';
 
 export const metadata: Metadata = {
   title: 'Why My API Works in Postman but Not in Browser | Fix Guide 2026',
@@ -33,5 +34,5 @@ export const metadata: Metadata = {
 };
 
 export default function WhyMyApiWorksInPostmanButNotInBrowserPage() {
-  return null;
+  return <WhyMyApiWorksInPostmanButNotInBrowserClient />;
 }

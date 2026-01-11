@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import FixMaximumCallStackSizeExceededJavaScriptClient from './client';
 
 export const metadata: Metadata = {
   title: 'Fix: "Maximum Call Stack Size Exceeded" in JavaScript | Complete Guide 2026',
@@ -33,5 +34,5 @@ export const metadata: Metadata = {
 };
 
 export default function FixMaximumCallStackSizeExceededJavaScriptPage() {
-  return null;
+  return <FixMaximumCallStackSizeExceededJavaScriptClient />;
 }

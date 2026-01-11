@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import HowToValidateApiResponseUsingJsonSchemaClient from './client';
 
 export const metadata: Metadata = {
   title: 'How to Validate API Response Using JSON Schema | Complete Guide 2026',
@@ -33,5 +34,5 @@ export const metadata: Metadata = {
 };
 
 export default function HowToValidateApiResponseUsingJsonSchemaPage() {
-  return null;
+  return <HowToValidateApiResponseUsingJsonSchemaClient />;
 }

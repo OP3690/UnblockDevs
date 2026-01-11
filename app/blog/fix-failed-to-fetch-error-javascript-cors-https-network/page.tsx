@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import FixFailedToFetchErrorJavaScriptCorsHttpsNetworkClient from './client';
 
 export const metadata: Metadata = {
   title: 'Fix: "Failed to Fetch" Error in JavaScript (CORS, HTTPS, Network) | Complete Guide 2026',
@@ -33,5 +34,5 @@ export const metadata: Metadata = {
 };
 
 export default function FixFailedToFetchErrorJavaScriptCorsHttpsNetworkPage() {
-  return null;
+  return <FixFailedToFetchErrorJavaScriptCorsHttpsNetworkClient />;
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import WhyMyApiReturns200OkButDataIsEmptyClient from './client';
 
 export const metadata: Metadata = {
   title: 'Why My API Returns 200 OK but Data Is Empty | Complete Guide 2026',
@@ -33,5 +34,5 @@ export const metadata: Metadata = {
 };
 
 export default function WhyMyApiReturns200OkButDataIsEmptyPage() {
-  return null;
+  return <WhyMyApiReturns200OkButDataIsEmptyClient />;
 }

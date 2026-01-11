@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import FixUnexpectedTokenLessThanInJsonApiReturnsHtmlClient from './client';
 
 export const metadata: Metadata = {
   title: 'Fix: "Unexpected token < in JSON at position 0" (API Returns HTML) | Complete Guide 2026',
@@ -33,5 +34,5 @@ export const metadata: Metadata = {
 };
 
 export default function FixUnexpectedTokenLessThanInJsonApiReturnsHtmlPage() {
-  return null;
+  return <FixUnexpectedTokenLessThanInJsonApiReturnsHtmlClient />;
 }
