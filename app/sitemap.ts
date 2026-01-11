@@ -97,6 +97,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'how-to-see-instagram-story-without-being-seen',
     'how-to-hide-online-status-on-whatsapp',
     'how-to-know-if-someone-blocked-you-on-instagram',
+    'how-to-change-whatsapp-privacy-settings-maximum-security',
+    'how-to-read-whatsapp-messages-without-blue-ticks',
+    'how-to-see-deleted-instagram-messages-without-third-party-apps',
   ]
 
   // Main pages

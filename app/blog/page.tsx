@@ -82,6 +82,33 @@ export const metadata: Metadata = {
       keywords: ['how to know if someone blocked you on instagram', 'check if blocked on instagram', 'instagram blocked me', 'signs someone blocked you instagram']
     },
     {
+      slug: 'how-to-change-whatsapp-privacy-settings-maximum-security',
+      title: 'How to Change WhatsApp Privacy Settings for Maximum Security: Complete Guide 2026',
+      excerpt: 'Complete guide to configuring WhatsApp privacy settings for maximum security. Learn how to protect your profile, last seen, status, and messages. Step-by-step security settings for Android, iPhone, and desktop in 2026.',
+      date: '2026-01-25',
+      readTime: '14 min read',
+      category: 'Messaging & Communication',
+      keywords: ['whatsapp privacy settings', 'whatsapp security settings', 'how to change whatsapp privacy settings', 'whatsapp maximum security']
+    },
+    {
+      slug: 'how-to-read-whatsapp-messages-without-blue-ticks',
+      title: 'How to Read WhatsApp Messages Without Blue Ticks: Complete Guide 2026',
+      excerpt: 'Complete guide to reading WhatsApp messages without showing blue ticks (read receipts). Learn how to read messages without the sender knowing. Step-by-step methods for Android, iPhone, and desktop in 2026.',
+      date: '2026-01-25',
+      readTime: '11 min read',
+      category: 'Messaging & Communication',
+      keywords: ['read whatsapp messages without blue ticks', 'how to read whatsapp without blue ticks', 'whatsapp read without blue checkmarks', 'disable blue ticks whatsapp']
+    },
+    {
+      slug: 'how-to-see-deleted-instagram-messages-without-third-party-apps',
+      title: 'How to See Deleted Instagram Messages Without Third-Party Apps: Complete Guide 2026',
+      excerpt: 'Complete guide to viewing deleted Instagram messages without third-party apps. Learn native methods, limitations, and what happens when messages are deleted. Step-by-step guide for Android, iPhone, and desktop in 2026.',
+      date: '2026-01-25',
+      readTime: '12 min read',
+      category: 'Social Media Privacy',
+      keywords: ['see deleted instagram messages', 'view deleted instagram messages', 'recover deleted instagram messages', 'how to see deleted instagram messages']
+    },
+    {
       slug: 'how-to-change-whatsapp-number-without-losing-chats',
       title: 'How to Change WhatsApp Number Without Losing Chats: Step-by-Step Guide 2026',
       excerpt: 'Complete guide to changing your WhatsApp number without losing chats, messages, or data. Step-by-step instructions for Android, iPhone, and desktop. Learn how to migrate WhatsApp account safely in 2026.',
