@@ -1524,6 +1524,27 @@ function HomeClient() {
               </div>
             </div>
             
+            {/* Popular Blog Posts Section - Internal Links for SEO */}
+            <div className="mt-8 pt-8 border-t border-gray-200">
+              <h3 className="text-sm font-semibold text-gray-900 mb-4 text-center">Popular Developer Guides</h3>
+              <div className="flex flex-wrap justify-center gap-3 text-xs">
+                <Link href="/blog/chatgpt-real-life-usage-guide" className="text-blue-600 hover:text-blue-700 hover:underline">ChatGPT Usage Guide</Link>
+                <Link href="/blog/ai-prompt-engineering-guide" className="text-blue-600 hover:text-blue-700 hover:underline">AI Prompt Engineering</Link>
+                <Link href="/blog/blockchain-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Blockchain Guide</Link>
+                <Link href="/blog/mysql-10-most-used-functions" className="text-blue-600 hover:text-blue-700 hover:underline">MySQL Functions</Link>
+                <Link href="/blog/token-security-privacy-best-practices" className="text-blue-600 hover:text-blue-700 hover:underline">Token Security</Link>
+                <Link href="/blog/5g-6g-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">5G & 6G Guide</Link>
+                <Link href="/blog/tokens-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Tokens Guide</Link>
+                <Link href="/blog/token-technologies-history-evolution" className="text-blue-600 hover:text-blue-700 hover:underline">Token History</Link>
+                <Link href="/blog/agentic-ai-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Agentic AI</Link>
+                <Link href="/blog/apache-kafka-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Apache Kafka</Link>
+                <Link href="/blog/confidential-computing-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Confidential Computing</Link>
+                <Link href="/blog/cursor-ai-code-editor-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Cursor AI Editor</Link>
+                <Link href="/blog/digital-twins-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Digital Twins</Link>
+                <Link href="/blog/apache-kafka-cheat-sheet" className="text-blue-600 hover:text-blue-700 hover:underline">Kafka Cheat Sheet</Link>
+              </div>
+            </div>
+            
             {/* Footer Links */}
             <div className="pt-4 border-t border-gray-200">
               <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-600 mb-3">
