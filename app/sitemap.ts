@@ -82,6 +82,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'mysql-comma-separated-id-list-guide',
     'seo-optimized-html-markup',
     'structured-log-analysis-tools',
+    'instagram-password-reset-email-guide',
+    'nintendo-switch-online-gamecube-games',
+    'low-code-ai-development-prompt-chunker',
   ]
 
   // Main pages
