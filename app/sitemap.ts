@@ -118,6 +118,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'how-to-validate-api-response-using-json-schema',
     'why-my-api-works-in-postman-but-not-in-browser',
     'fix-maximum-call-stack-size-exceeded-javascript',
+    'fix-unexpected-token-less-than-in-json-api-returns-html',
+    'why-my-api-returns-200-ok-but-data-is-empty',
+    'fix-failed-to-fetch-error-javascript-cors-https-network',
   ]
 
   // Main pages

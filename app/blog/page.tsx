@@ -271,6 +271,33 @@ export const metadata: Metadata = {
       keywords: ['maximum call stack size exceeded', 'javascript stack overflow', 'infinite recursion javascript', 'fix call stack exceeded', 'javascript recursion error']
     },
     {
+      slug: 'fix-unexpected-token-less-than-in-json-api-returns-html',
+      title: 'Fix: "Unexpected token &lt; in JSON at position 0" (API Returns HTML) | Complete Guide 2026',
+      excerpt: 'Learn how to fix "Unexpected token &lt; in JSON at position 0" error when API returns HTML instead of JSON. Complete troubleshooting guide with solutions for wrong Content-Type, error pages, redirects, and CORS issues.',
+      date: '2026-01-30',
+      readTime: '14 min read',
+      category: 'API Development & Testing',
+      keywords: ['unexpected token in json at position 0', 'api returns html instead of json', 'json parse error unexpected token', 'fix unexpected token json', 'api returns html error']
+    },
+    {
+      slug: 'why-my-api-returns-200-ok-but-data-is-empty',
+      title: 'Why My API Returns 200 OK but Data Is Empty | Complete Guide 2026',
+      excerpt: 'Learn why your API returns 200 OK status but empty data. Complete troubleshooting guide for empty responses, null data, empty arrays, and API response issues. Includes solutions and debugging tips.',
+      date: '2026-01-30',
+      readTime: '13 min read',
+      category: 'API Development & Testing',
+      keywords: ['api returns 200 but empty data', 'api returns 200 ok but no data', 'api response empty', 'api returns empty array', 'api 200 ok but null']
+    },
+    {
+      slug: 'fix-failed-to-fetch-error-javascript-cors-https-network',
+      title: 'Fix: "Failed to Fetch" Error in JavaScript (CORS, HTTPS, Network) | Complete Guide 2026',
+      excerpt: 'Learn how to fix "Failed to fetch" error in JavaScript. Complete troubleshooting guide for CORS errors, HTTPS issues, network problems, and fetch API failures. Includes solutions and code examples.',
+      date: '2026-01-30',
+      readTime: '15 min read',
+      category: 'API Development & Testing',
+      keywords: ['failed to fetch error', 'fix failed to fetch', 'failed to fetch cors', 'failed to fetch javascript', 'fetch api error']
+    },
+    {
       slug: 'how-to-change-whatsapp-number-without-losing-chats',
       title: 'How to Change WhatsApp Number Without Losing Chats: Step-by-Step Guide 2026',
       excerpt: 'Complete guide to changing your WhatsApp number without losing chats, messages, or data. Step-by-step instructions for Android, iPhone, and desktop. Learn how to migrate WhatsApp account safely in 2026.',
