@@ -136,6 +136,33 @@ export const metadata: Metadata = {
       keywords: ['module not found error nodejs', 'fix module not found error', 'nodejs module not found', 'cannot find module nodejs']
     },
     {
+      slug: 'fix-python-keyerror-explained-examples',
+      title: 'Fix: Python KeyError Explained with Examples: Complete Guide 2026',
+      excerpt: 'Complete guide to fixing Python KeyError exceptions. Learn what causes KeyError, how to fix it, and see practical code examples. Step-by-step troubleshooting for dictionaries and data structures in 2026.',
+      date: '2026-01-25',
+      readTime: '12 min read',
+      category: 'Python & Development',
+      keywords: ['python keyerror', 'fix python keyerror', 'keyerror python', 'python keyerror fix']
+    },
+    {
+      slug: 'how-to-fix-nullpointerexception-java-beginner-friendly',
+      title: 'How to Fix "NullPointerException" in Java (Beginner-Friendly): Complete Guide 2026',
+      excerpt: 'Complete beginner-friendly guide to fixing NullPointerException in Java. Learn what causes NPE, how to prevent it, and see practical code examples. Step-by-step troubleshooting guide for Java developers in 2026.',
+      date: '2026-01-25',
+      readTime: '14 min read',
+      category: 'Java & Development',
+      keywords: ['nullpointerexception java', 'fix nullpointerexception', 'java nullpointerexception', 'how to fix nullpointerexception']
+    },
+    {
+      slug: 'how-to-convert-curl-command-to-javascript-fetch',
+      title: 'How to Convert cURL Command to JavaScript Fetch: Complete Guide 2026',
+      excerpt: 'Complete guide to converting cURL commands to JavaScript fetch API. Learn how to convert GET, POST, PUT, DELETE requests with headers, authentication, and data. Step-by-step examples for all HTTP methods in 2026.',
+      date: '2026-01-25',
+      readTime: '13 min read',
+      category: 'JavaScript & Development',
+      keywords: ['convert curl to javascript fetch', 'curl to fetch api', 'convert curl to fetch', 'curl command to javascript']
+    },
+    {
       slug: 'how-to-change-whatsapp-number-without-losing-chats',
       title: 'How to Change WhatsApp Number Without Losing Chats: Step-by-Step Guide 2026',
       excerpt: 'Complete guide to changing your WhatsApp number without losing chats, messages, or data. Step-by-step instructions for Android, iPhone, and desktop. Learn how to migrate WhatsApp account safely in 2026.',

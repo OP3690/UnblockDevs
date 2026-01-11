@@ -103,6 +103,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'how-to-fix-cors-policy-error-javascript',
     'fix-json-parse-error-unexpected-token',
     'how-to-fix-module-not-found-error-nodejs',
+    'fix-python-keyerror-explained-examples',
+    'how-to-fix-nullpointerexception-java-beginner-friendly',
+    'how-to-convert-curl-command-to-javascript-fetch',
   ]
 
   // Main pages
