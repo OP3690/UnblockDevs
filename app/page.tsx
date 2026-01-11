@@ -2,6 +2,14 @@
 
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
+import type { Metadata } from 'next';
+
+// Export metadata for SEO - canonical URL always points to base URL (ignores query params)
+export const metadata: Metadata = {
+  alternates: {
+    canonical: 'https://unblockdevs.com',
+  },
+};
 
 const HomeClient = dynamic(() => import('./page-client'), {
   ssr: false,

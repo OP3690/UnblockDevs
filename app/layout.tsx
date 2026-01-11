@@ -462,6 +462,27 @@ export default function RootLayout({
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="manifest" href="/manifest.json" />
         
+        {/* Canonical URL - Always points to base URL (removes query parameters) */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                // Remove existing canonical tags
+                const existingCanonicals = document.querySelectorAll('link[rel="canonical"]');
+                existingCanonicals.forEach(function(link) {
+                  link.remove();
+                });
+                
+                // Create new canonical tag pointing to base URL
+                const canonical = document.createElement('link');
+                canonical.rel = 'canonical';
+                canonical.href = 'https://unblockdevs.com';
+                document.head.appendChild(canonical);
+              })();
+            `,
+          }}
+        />
+        
         {/* Google Analytics - Load after page load */}
         <script
           async
