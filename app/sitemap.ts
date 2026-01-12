@@ -167,7 +167,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changefreq: 'monthly' as const,
     },
     {
+      url: 'contact',
+      priority: 0.6,
+      changefreq: 'monthly' as const,
+    },
+    {
       url: 'privacy-policy',
+      priority: 0.5,
+      changefreq: 'monthly' as const,
+    },
+    {
+      url: 'terms',
+      priority: 0.5,
+      changefreq: 'monthly' as const,
+    },
+    {
+      url: 'disclaimer',
       priority: 0.5,
       changefreq: 'monthly' as const,
     },

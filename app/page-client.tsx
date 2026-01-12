@@ -1549,13 +1549,6 @@ function HomeClient() {
             <div className="pt-4 border-t border-gray-200">
               <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-600 mb-3">
                 <Link
-                  href="/privacy-policy"
-                  className="hover:text-blue-600 hover:underline transition-colors"
-                >
-                  Privacy Policy
-                </Link>
-                <span className="text-gray-300">•</span>
-                <Link
                   href="/about"
                   className="hover:text-blue-600 hover:underline transition-colors"
                 >
@@ -1563,10 +1556,38 @@ function HomeClient() {
                 </Link>
                 <span className="text-gray-300">•</span>
                 <Link
+                  href="/contact"
+                  className="hover:text-blue-600 hover:underline transition-colors"
+                >
+                  Contact
+                </Link>
+                <span className="text-gray-300">•</span>
+                <Link
                   href="/blog"
                   className="hover:text-blue-600 hover:underline transition-colors"
                 >
                   Blog
+                </Link>
+                <span className="text-gray-300">•</span>
+                <Link
+                  href="/privacy-policy"
+                  className="hover:text-blue-600 hover:underline transition-colors"
+                >
+                  Privacy Policy
+                </Link>
+                <span className="text-gray-300">•</span>
+                <Link
+                  href="/terms"
+                  className="hover:text-blue-600 hover:underline transition-colors"
+                >
+                  Terms & Conditions
+                </Link>
+                <span className="text-gray-300">•</span>
+                <Link
+                  href="/disclaimer"
+                  className="hover:text-blue-600 hover:underline transition-colors"
+                >
+                  Disclaimer
                 </Link>
               </div>
               <p className="text-sm text-gray-600">
