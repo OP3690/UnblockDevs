@@ -19,6 +19,33 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'what-is-data-modeling-explained-simply-with-examples',
+      title: 'What Is Data Modeling? Explained Simply with Examples (Complete Guide)',
+      excerpt: 'Learn what data modeling is with simple examples. Understand conceptual, logical, and physical data models, entity-relationship diagrams, and data modeling best practices. Beginner-friendly guide.',
+      date: '2026-02-08',
+      readTime: '14 min read',
+      category: 'Data Engineering & Analytics',
+      keywords: ['data modeling', 'what is data modeling', 'data model', 'conceptual data model', 'logical data model', 'entity relationship diagram']
+    },
+    {
+      slug: 'batch-processing-vs-stream-processing-key-differences-explained',
+      title: 'Batch Processing vs Stream Processing: Key Differences Explained (Complete Guide)',
+      excerpt: 'Learn the difference between batch processing and stream processing. Understand when to use each, latency, throughput, use cases, and real-world examples. Complete comparison guide.',
+      date: '2026-02-08',
+      readTime: '15 min read',
+      category: 'Data Engineering & Analytics',
+      keywords: ['batch processing vs stream processing', 'batch vs stream processing', 'batch processing', 'stream processing', 'real-time processing']
+    },
+    {
+      slug: 'common-data-quality-issues-and-how-data-engineers-fix-them',
+      title: 'Common Data Quality Issues and How Data Engineers Fix Them (Complete Guide)',
+      excerpt: 'Learn common data quality issues: missing values, duplicates, inconsistencies, format errors. Understand how data engineers identify, fix, and prevent data quality problems. Complete guide with solutions.',
+      date: '2026-02-08',
+      readTime: '16 min read',
+      category: 'Data Engineering & Analytics',
+      keywords: ['data quality issues', 'data quality problems', 'data quality fixes', 'data cleaning', 'data validation', 'missing data']
+    },
+    {
       slug: 'what-is-a-data-pipeline-explained-for-beginners',
       title: 'What Is a Data Pipeline? Explained for Beginners (Complete Guide)',
       excerpt: 'Learn what a data pipeline is with simple examples. Understand ETL, data processing, data flow, and how data pipelines work in real-world applications. Beginner-friendly guide with visualizations.',
