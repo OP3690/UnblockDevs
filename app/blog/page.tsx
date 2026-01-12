@@ -19,6 +19,33 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'what-is-big-o-notation-explained-without-math',
+      title: 'What Is Big-O Notation? Explained Without Math (Complete Guide)',
+      excerpt: 'Learn Big-O notation explained simply without complex math. Understand O(1), O(n), O(log n), O(n²) with real-world examples, visual charts, and beginner-friendly explanations. Perfect for coding interviews.',
+      date: '2026-02-05',
+      readTime: '15 min read',
+      category: 'Algorithms & Data Structures',
+      keywords: ['big o notation', 'big o notation explained', 'time complexity', 'o1 on olog n', 'big o notation examples', 'algorithm complexity']
+    },
+    {
+      slug: 'difference-between-array-and-linked-list-explained-simply',
+      title: 'Difference Between Array and Linked List Explained Simply (Complete Guide)',
+      excerpt: 'Learn the difference between arrays and linked lists with simple examples. Understand when to use arrays vs linked lists, time complexity, memory usage, and real-world use cases. Perfect for coding interviews.',
+      date: '2026-02-05',
+      readTime: '14 min read',
+      category: 'Algorithms & Data Structures',
+      keywords: ['array vs linked list', 'difference between array and linked list', 'array vs linked list difference', 'when to use array vs linked list']
+    },
+    {
+      slug: 'how-to-choose-the-right-data-structure-for-a-problem',
+      title: 'How to Choose the Right Data Structure for a Problem (Complete Guide)',
+      excerpt: 'Learn how to choose the right data structure: arrays, linked lists, stacks, queues, trees, hash maps. Decision framework with examples, time complexity comparison, and real-world use cases. Perfect for coding interviews.',
+      date: '2026-02-05',
+      readTime: '16 min read',
+      category: 'Algorithms & Data Structures',
+      keywords: ['choose data structure', 'which data structure to use', 'data structure selection', 'how to choose data structure', 'array vs linked list vs hashmap']
+    },
+    {
       slug: 'how-to-debug-javascript-errors-using-browser-devtools',
       title: 'How to Debug JavaScript Errors Using Browser DevTools (Complete Guide)',
       excerpt: 'Master JavaScript debugging with Chrome DevTools, Firefox DevTools, and Edge DevTools. Learn to fix errors, use breakpoints, inspect variables, and debug production issues. Step-by-step guide with examples.',
