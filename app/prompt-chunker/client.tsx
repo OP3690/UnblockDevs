@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Scissors, ExternalLink, CheckCircle, Zap, Info, Copy, Download } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import PromptChunker from '@/components/tools/PromptChunker';
 
 export default function PromptChunkerLandingClient() {
   return (
@@ -54,6 +55,12 @@ export default function PromptChunkerLandingClient() {
             },
           ]}
         />
+        
+        {/* Tool Component - Moved to top */}
+        <div className="mb-8">
+          <PromptChunker />
+        </div>
+
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
           <section className="mb-12">
             <p className="text-lg text-gray-700 leading-relaxed mb-4">

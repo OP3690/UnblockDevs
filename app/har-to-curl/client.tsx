@@ -44,6 +44,11 @@ export default function HarToCurlClient() {
           ]}
         />
 
+        {/* Tool Component - Moved to top */}
+        <div className="mb-8">
+          <HarToCurl />
+        </div>
+
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12 mb-8">
           <section className="mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">What is HAR to cURL Conversion?</h2>
@@ -291,9 +296,6 @@ export default function HarToCurlClient() {
             </div>
           </section>
         </article>
-
-        {/* Tool Component */}
-        <HarToCurl />
       </main>
     </div>
   );

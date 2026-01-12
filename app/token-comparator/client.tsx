@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, Key, Shield, CheckCircle, ExternalLink } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import TokenComparator from '@/components/tools/TokenComparator';
 
 export default function TokenComparatorLandingClient() {
   return (
@@ -46,6 +47,12 @@ export default function TokenComparatorLandingClient() {
             },
           ]}
         />
+        
+        {/* Tool Component - Moved to top */}
+        <div className="mb-8">
+          <TokenComparator />
+        </div>
+
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
           <section className="mb-12">
             <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg mb-6">
