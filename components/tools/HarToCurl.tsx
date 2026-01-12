@@ -199,6 +199,24 @@ export default function HarToCurl() {
         </p>
       </div>
 
+      {/* Instructions */}
+      <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8">
+        <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+          <AlertCircle className="w-5 h-5 text-blue-600" />
+          How to Use
+        </h3>
+        <div className="space-y-2 text-sm text-gray-700">
+          <p>
+            <strong>HAR to cURL:</strong> Export network requests from Chrome DevTools (Network tab → Right-click → Save all as HAR) 
+            or Firefox (Network tab → Right-click → Save All As HAR). Upload the HAR file or paste its JSON content to convert to cURL.
+          </p>
+          <p>
+            <strong>Basic cURL Generator:</strong> Enter a URL and select HTTP method to generate a simple cURL command. 
+            This is a quick helper for basic requests without authentication or custom headers.
+          </p>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* HAR to cURL Converter */}
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
@@ -367,24 +385,6 @@ export default function HarToCurl() {
               </div>
             )}
           </div>
-        </div>
-      </div>
-
-      {/* Instructions */}
-      <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
-        <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
-          <AlertCircle className="w-5 h-5 text-blue-600" />
-          How to Use
-        </h3>
-        <div className="space-y-2 text-sm text-gray-700">
-          <p>
-            <strong>HAR to cURL:</strong> Export network requests from Chrome DevTools (Network tab → Right-click → Save all as HAR) 
-            or Firefox (Network tab → Right-click → Save All As HAR). Upload the HAR file or paste its JSON content to convert to cURL.
-          </p>
-          <p>
-            <strong>Basic cURL Generator:</strong> Enter a URL and select HTTP method to generate a simple cURL command. 
-            This is a quick helper for basic requests without authentication or custom headers.
-          </p>
         </div>
       </div>
     </div>
