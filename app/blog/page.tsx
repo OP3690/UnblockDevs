@@ -19,6 +19,33 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'breadth-first-search-explained-with-easy-tree-examples',
+      title: 'Breadth-First Search Explained with Easy Tree Examples (Complete Guide)',
+      excerpt: 'Learn Breadth-First Search (BFS) algorithm with simple tree examples, step-by-step visualizations, code examples, and real-world use cases. Perfect for coding interviews and graph traversal.',
+      date: '2026-02-06',
+      readTime: '14 min read',
+      category: 'Algorithms & Data Structures',
+      keywords: ['breadth first search', 'bfs algorithm', 'bfs explained', 'breadth first search example', 'bfs tree traversal', 'graph traversal bfs']
+    },
+    {
+      slug: 'depth-first-search-explained-step-by-step',
+      title: 'Depth-First Search Explained Step by Step (Complete Guide)',
+      excerpt: 'Learn Depth-First Search (DFS) algorithm step by step with simple examples, visualizations, recursive and iterative implementations, and real-world use cases. Perfect for coding interviews.',
+      date: '2026-02-06',
+      readTime: '15 min read',
+      category: 'Algorithms & Data Structures',
+      keywords: ['depth first search', 'dfs algorithm', 'dfs explained', 'depth first search example', 'dfs tree traversal', 'graph traversal dfs']
+    },
+    {
+      slug: 'why-sorting-is-important-and-how-different-sorting-algorithms-work',
+      title: 'Why Sorting Is Important and How Different Sorting Algorithms Work (Complete Guide)',
+      excerpt: 'Learn why sorting is important in programming. Understand how different sorting algorithms work: Bubble Sort, Quick Sort, Merge Sort, Heap Sort with examples, time complexity, and when to use each. Perfect for coding interviews.',
+      date: '2026-02-06',
+      readTime: '16 min read',
+      category: 'Algorithms & Data Structures',
+      keywords: ['sorting algorithms', 'why sorting is important', 'sorting algorithms explained', 'bubble sort', 'quick sort', 'merge sort', 'heap sort']
+    },
+    {
       slug: 'what-is-big-o-notation-explained-without-math',
       title: 'What Is Big-O Notation? Explained Without Math (Complete Guide)',
       excerpt: 'Learn Big-O notation explained simply without complex math. Understand O(1), O(n), O(log n), O(n²) with real-world examples, visual charts, and beginner-friendly explanations. Perfect for coding interviews.',
