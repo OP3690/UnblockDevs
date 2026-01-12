@@ -53,7 +53,7 @@ export default function JsonBeautifierClient() {
             <div className="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg mt-6">
               <p className="font-semibold text-blue-900 mb-2">💡 Real-World Example</p>
               <p className="text-blue-800 text-sm mb-2">
-                <strong>Before (Minified):</strong> <code className="bg-white px-2 py-1 rounded">{"{"}"name":"John","age":30,"address":{"street":"123 Main St","city":"New York"}{"}"}</code>
+                <strong>Before (Minified):</strong> <code className="bg-white px-2 py-1 rounded">{'{'}"name":"John","age":30,"address":{'{'}"street":"123 Main St","city":"New York"{'}'}{'}'}</code>
               </p>
               <p className="text-blue-800 text-sm">
                 <strong>After (Beautified):</strong> The same data becomes readable with proper indentation, making it easy to see the nested structure and relationships.
