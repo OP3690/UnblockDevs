@@ -19,6 +19,33 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'how-to-debug-javascript-errors-using-browser-devtools',
+      title: 'How to Debug JavaScript Errors Using Browser DevTools (Complete Guide)',
+      excerpt: 'Master JavaScript debugging with Chrome DevTools, Firefox DevTools, and Edge DevTools. Learn to fix errors, use breakpoints, inspect variables, and debug production issues. Step-by-step guide with examples.',
+      date: '2026-02-04',
+      readTime: '14 min read',
+      category: 'JavaScript & Debugging',
+      keywords: ['debug javascript errors', 'browser devtools', 'chrome devtools', 'javascript debugging', 'debug javascript', 'devtools tutorial']
+    },
+    {
+      slug: 'common-http-status-codes-every-developer-should-understand',
+      title: 'Common HTTP Status Codes Every Developer Should Understand (Complete Guide)',
+      excerpt: 'Learn all HTTP status codes: 200, 201, 400, 401, 403, 404, 500, 502, 503. Understand what each code means, when to use them, and how to handle them in your applications. Complete reference guide.',
+      date: '2026-02-04',
+      readTime: '15 min read',
+      category: 'API & Web Development',
+      keywords: ['http status codes', 'status codes', 'http codes', '200 ok', '404 not found', '500 internal server error', 'api status codes']
+    },
+    {
+      slug: 'how-to-handle-api-rate-limits-gracefully-in-production',
+      title: 'How to Handle API Rate Limits Gracefully in Production (Complete Guide)',
+      excerpt: 'Learn how to handle API rate limits: exponential backoff, retry strategies, rate limit headers, circuit breakers, and best practices for production applications. Complete guide with code examples.',
+      date: '2026-02-04',
+      readTime: '16 min read',
+      category: 'API & Web Development',
+      keywords: ['api rate limits', 'rate limiting', 'handle rate limits', 'exponential backoff', 'retry strategy', '429 too many requests']
+    },
+    {
       slug: 'why-my-code-works-locally-but-fails-on-submission-common-reasons',
       title: 'Why My Code Works Locally but Fails on Submission (Common Reasons) | Complete Guide 2026',
       excerpt: 'Learn why your code works locally but fails on submission. Complete troubleshooting guide for environment differences, dependencies, paths, time zones, and submission platform issues. Beginner-friendly explanations with solutions.',
