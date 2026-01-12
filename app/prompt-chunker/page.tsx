@@ -27,6 +27,9 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://unblockdevs.com/prompt-chunker',
   },
+  alternates: {
+    canonical: 'https://unblockdevs.com/prompt-chunker',
+  },
 };
 
 export default function PromptChunkerLanding() {

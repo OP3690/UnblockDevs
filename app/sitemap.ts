@@ -298,6 +298,66 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
       changefreq: 'weekly' as const,
     },
+    {
+      url: 'api-comparator',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'json-comparator',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'log-explorer',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'payload-analyzer',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'curl-converter',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'mock-api-generator',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'test-data-generator',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'config-comparator',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'sql-formatter',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'json-builder',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'data-insights',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'timezone-translator',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
   ]
 
   // Generate sitemap entries

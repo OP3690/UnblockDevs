@@ -16,6 +16,15 @@ export const metadata: Metadata = {
     'token comparison tool',
     'compare api keys'
   ],
+  openGraph: {
+    title: 'Free Token Comparator – Compare JWT, API Keys & Tokens',
+    description: 'Compare JWT tokens, API keys, and authentication tokens character by character. Free online token comparator with visual diff highlighting.',
+    type: 'website',
+    url: 'https://unblockdevs.com/token-comparator',
+  },
+  alternates: {
+    canonical: 'https://unblockdevs.com/token-comparator',
+  },
 };
 
 export default function TokenComparatorLanding() {

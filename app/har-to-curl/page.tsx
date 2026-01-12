@@ -30,6 +30,10 @@ export const metadata: Metadata = {
     title: 'HAR to cURL Converter | Network Request to cURL | UnblockDevs',
     description: 'Convert HAR files and browser network requests to cURL commands instantly. Free online tool for developers.',
     type: 'website',
+    url: 'https://unblockdevs.com/har-to-curl',
+  },
+  alternates: {
+    canonical: 'https://unblockdevs.com/har-to-curl',
   },
 };
 
