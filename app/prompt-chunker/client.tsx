@@ -251,30 +251,132 @@ export default function PromptChunkerLandingClient() {
           </section>
 
           <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">What Problem Does the AI Prompt Chunker Solve?</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Modern AI tools like <strong>ChatGPT</strong>, <strong>Claude</strong>, <strong>Gemini</strong>, and other large language models have token limits that restrict the length of prompts you can send. These limits vary by model and subscription tier, but they're a real constraint when working with complex, detailed prompts.
+            </p>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              The <strong>AI Prompt Chunker</strong> solves this critical problem by intelligently splitting long prompts into smaller, manageable chunks that fit within token limits. But it doesn't just split—it preserves context through smart overlap and automatically adds instructions that help AI tools understand how to process and consolidate the chunks.
+            </p>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Without a chunking tool, developers and content creators face several challenges:
+            </p>
+            <ul className="list-disc list-inside space-y-2 text-gray-700 mb-6 ml-4">
+              <li><strong>Token limit errors:</strong> Long prompts get truncated or rejected, wasting time and effort</li>
+              <li><strong>Lost context:</strong> When manually splitting prompts, important context between sections can be lost</li>
+              <li><strong>Manual work:</strong> Manually splitting and managing chunks is time-consuming and error-prone</li>
+              <li><strong>Inconsistent results:</strong> Without proper instructions, AI tools may not understand how to consolidate chunks</li>
+              <li><strong>No overlap management:</strong> Manual splitting doesn't preserve context between chunks effectively</li>
+            </ul>
+            <p className="text-gray-700 leading-relaxed">
+              Our tool eliminates all these problems by automating the entire chunking process with intelligent overlap, automatic AI instructions, and a user-friendly interface that makes working with long prompts effortless.
+            </p>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Who Is the AI Prompt Chunker For?</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              The <strong>AI Prompt Chunker</strong> is designed for anyone who works with AI tools and needs to send long, detailed prompts. Here's who benefits most:
+            </p>
+            <div className="space-y-4 mb-6">
+              <div className="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                <h3 className="font-semibold text-gray-900 mb-2">Developers & Engineers</h3>
+                <p className="text-sm text-gray-700">
+                  Developers using AI for code generation, debugging, documentation, or technical analysis often need to send complex, multi-part prompts. The chunker helps them work within token limits while maintaining technical context and accuracy.
+                </p>
+              </div>
+              <div className="p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
+                <h3 className="font-semibold text-gray-900 mb-2">Content Creators & Writers</h3>
+                <p className="text-sm text-gray-700">
+                  Writers, bloggers, and content creators who use AI for long-form content generation, editing, or research need to send detailed prompts with extensive context. The chunker ensures their creative vision isn't limited by token constraints.
+                </p>
+              </div>
+              <div className="p-4 bg-purple-50 rounded-lg border-l-4 border-purple-500">
+                <h3 className="font-semibold text-gray-900 mb-2">Researchers & Analysts</h3>
+                <p className="text-sm text-gray-700">
+                  Researchers analyzing data, conducting literature reviews, or processing large amounts of information need to send comprehensive prompts. The chunker helps them maintain analytical context across multiple chunks.
+                </p>
+              </div>
+              <div className="p-4 bg-orange-50 rounded-lg border-l-4 border-orange-500">
+                <h3 className="font-semibold text-gray-900 mb-2">Business Professionals</h3>
+                <p className="text-sm text-gray-700">
+                  Business professionals using AI for reports, presentations, market analysis, or strategic planning often work with complex, multi-faceted prompts. The chunker enables them to leverage AI effectively for comprehensive business tasks.
+                </p>
+              </div>
+              <div className="p-4 bg-pink-50 rounded-lg border-l-4 border-pink-500">
+                <h3 className="font-semibold text-gray-900 mb-2">Students & Educators</h3>
+                <p className="text-sm text-gray-700">
+                  Students and educators using AI for learning, research, or teaching need to send detailed prompts with extensive context. The chunker helps them work within free tier limits while maintaining educational value.
+                </p>
+              </div>
+            </div>
+            <p className="text-gray-700 leading-relaxed">
+              Whether you're on a free tier with strict token limits or a paid tier that still has constraints, the <strong>AI Prompt Chunker</strong> makes it possible to work with prompts of any length while maintaining context and ensuring AI tools understand your complete request.
+            </p>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Advanced Chunking Strategies</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              While the basic chunking process is straightforward, understanding advanced strategies can help you get better results:
+            </p>
+            <div className="space-y-4 mb-6">
+              <div className="p-4 bg-gray-50 rounded-lg">
+                <h3 className="font-semibold text-gray-900 mb-2">Choosing the Right Chunk Size</h3>
+                <p className="text-sm text-gray-700 mb-2">
+                  The optimal chunk size depends on your AI tool's token limit and the complexity of your prompt:
+                </p>
+                <ul className="list-disc list-inside space-y-1 text-sm text-gray-700 ml-4">
+                  <li><strong>Small chunks (200-300 words):</strong> Best for free tiers with strict limits or when working with very complex prompts</li>
+                  <li><strong>Medium chunks (400-600 words):</strong> Ideal for most use cases, balancing context preservation with chunk count</li>
+                  <li><strong>Large chunks (700-1000 words):</strong> Suitable for paid tiers with higher limits, reducing the number of chunks to manage</li>
+                </ul>
+              </div>
+              <div className="p-4 bg-gray-50 rounded-lg">
+                <h3 className="font-semibold text-gray-900 mb-2">Optimizing Overlap Percentage</h3>
+                <p className="text-sm text-gray-700 mb-2">
+                  Overlap is crucial for maintaining context between chunks:
+                </p>
+                <ul className="list-disc list-inside space-y-1 text-sm text-gray-700 ml-4">
+                  <li><strong>Low overlap (10-20%):</strong> Use when chunks are naturally self-contained or when you want fewer total chunks</li>
+                  <li><strong>Medium overlap (30-50%):</strong> Recommended for most prompts, ensuring smooth context transitions</li>
+                  <li><strong>High overlap (60-80%):</strong> Best for highly technical or complex prompts where context is critical</li>
+                </ul>
+              </div>
+              <div className="p-4 bg-gray-50 rounded-lg">
+                <h3 className="font-semibold text-gray-900 mb-2">Word vs Character Chunking</h3>
+                <p className="text-sm text-gray-700">
+                  <strong>Word-based chunking</strong> is generally preferred as it respects natural language boundaries and produces more coherent chunks. <strong>Character-based chunking</strong> is useful when you need precise control over chunk size or when working with code or structured data where word boundaries are less important.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section className="mb-12">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Learn More About AI & Prompt Engineering</h2>
             <div className="space-y-3">
               <Link
-                href="/blog/ai-prompt-engineering-guide"
+                href="/blog/low-code-ai-development-prompt-chunker"
                 className="block p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200 hover:border-purple-400 hover:shadow-md transition-all"
               >
-                <h3 className="font-semibold text-gray-900 mb-1">AI Prompt Engineering Guide</h3>
-                <p className="text-sm text-gray-600 mb-2">Complete guide to AI prompt engineering: how to write effective prompts, best practices, techniques, and templates.</p>
+                <h3 className="font-semibold text-gray-900 mb-1">Low-Code AI Development: Empowering Non-Technical Users with Tools Like Prompt Chunker</h3>
+                <p className="text-sm text-gray-600 mb-2">Learn how low-code AI tools like the Prompt Chunker are making AI accessible to non-technical users, enabling anyone to leverage AI capabilities without coding knowledge.</p>
                 <span className="text-purple-600 text-sm font-medium hover:underline">Read Guide →</span>
               </Link>
               <Link
-                href="/blog/chatgpt-real-life-usage-guide"
+                href="/blog/how-to-debug-code-step-by-step-beginner-friendly-guide"
                 className="block p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200 hover:border-green-400 hover:shadow-md transition-all"
               >
-                <h3 className="font-semibold text-gray-900 mb-1">ChatGPT Real-Life Usage Guide</h3>
-                <p className="text-sm text-gray-600 mb-2">Complete guide to using ChatGPT in real life: practical use cases, best prompts, when to use it, and how to get great results.</p>
+                <h3 className="font-semibold text-gray-900 mb-1">How to Debug Code Step-by-Step: Beginner-Friendly Guide</h3>
+                <p className="text-sm text-gray-600 mb-2">Master the art of debugging with this comprehensive guide. Learn systematic approaches, tools, and techniques to identify and fix bugs efficiently.</p>
                 <span className="text-green-600 text-sm font-medium hover:underline">Read Guide →</span>
               </Link>
               <Link
-                href="/blog/ai-tools-developers-guide"
+                href="/blog/how-to-convert-curl-to-fetch-axios-automatically"
                 className="block p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 hover:border-blue-400 hover:shadow-md transition-all"
               >
-                <h3 className="font-semibold text-gray-900 mb-1">AI Tools for Developers: Complete Guide</h3>
-                <p className="text-sm text-gray-600 mb-2">Complete guide to AI tools for developers: Cursor, GitHub Copilot, ChatGPT, and more. Learn how, what, when to use each tool.</p>
+                <h3 className="font-semibold text-gray-900 mb-1">How to Convert cURL to Fetch / Axios Automatically</h3>
+                <p className="text-sm text-gray-600 mb-2">Learn how to convert cURL commands to JavaScript Fetch or Axios requests automatically. Perfect for developers working with APIs and network requests.</p>
                 <span className="text-blue-600 text-sm font-medium hover:underline">Read Guide →</span>
               </Link>
             </div>

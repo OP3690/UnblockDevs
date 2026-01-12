@@ -81,6 +81,28 @@ interface Section {
   columnIds: string[];
 }
 
+// Mapping of tool tabs to their page URLs (except 'converter' which stays on homepage)
+const toolPageUrls: Record<Exclude<ToolTab, 'converter'>, string> = {
+  beautifier: '/json-beautifier',
+  fixer: '/json-fixer-online',
+  comparator: '/api-comparator',
+  jsoncompare: '/json-comparator',
+  schema: '/json-schema-generation',
+  logs: '/log-explorer',
+  payload: '/payload-analyzer',
+  curl: '/curl-converter',
+  mock: '/mock-api-generator',
+  testdata: '/test-data-generator',
+  config: '/config-comparator',
+  sql: '/sql-formatter',
+  builder: '/json-builder',
+  insights: '/data-insights',
+  promptchunk: '/prompt-chunker',
+  tokencompare: '/token-comparator',
+  timezone: '/timezone-translator',
+  hartocurl: '/har-to-curl',
+};
+
 function HomeClient() {
   const [activeTab, setActiveTab] = useState<ToolTab>('converter');
   const [rows, setRows] = useState<FlattenedRow[]>([]);
@@ -546,91 +568,63 @@ function HomeClient() {
                 <span className="text-sm">Json to Excel</span>
               </div>
             </button>
-            <button
-              onClick={() => handleTabChange('beautifier')}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
-                activeTab === 'beautifier'
-                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
-                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
-              }`}
+            <Link
+              href={toolPageUrls.beautifier}
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
             >
               <div className="flex items-center gap-2">
                 <Code2 className="w-4 h-4" />
                 <span className="text-sm">JSON Beautifier</span>
               </div>
-            </button>
-            <button
-              onClick={() => handleTabChange('fixer')}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
-                activeTab === 'fixer'
-                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
-                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
-              }`}
+            </Link>
+            <Link
+              href={toolPageUrls.fixer}
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
             >
               <div className="flex items-center gap-2">
                 <Wrench className="w-4 h-4" />
                 <span className="text-sm">JSON Fixer</span>
               </div>
-            </button>
-            <button
-              onClick={() => handleTabChange('builder')}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
-                activeTab === 'builder'
-                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
-                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
-              }`}
+            </Link>
+            <Link
+              href={toolPageUrls.builder}
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
             >
               <div className="flex items-center gap-2">
                 <FileSpreadsheet className="w-4 h-4" />
                 <span className="text-sm">JSON Builder</span>
               </div>
-            </button>
-            <button
-              onClick={() => handleTabChange('comparator')}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
-                activeTab === 'comparator'
-                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
-                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
-              }`}
+            </Link>
+            <Link
+              href={toolPageUrls.comparator}
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
             >
               <div className="flex items-center gap-2">
                 <GitCompare className="w-4 h-4" />
                 <span className="text-sm">API Compare</span>
               </div>
-            </button>
-            <button
-              onClick={() => handleTabChange('jsoncompare')}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
-                activeTab === 'jsoncompare'
-                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
-                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
-              }`}
+            </Link>
+            <Link
+              href={toolPageUrls.jsoncompare}
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
             >
               <div className="flex items-center gap-2">
                 <GitCompare className="w-4 h-4" />
                 <span className="text-sm">JSON Compare</span>
               </div>
-            </button>
-            <button
-              onClick={() => handleTabChange('schema')}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
-                activeTab === 'schema'
-                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
-                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
-              }`}
+            </Link>
+            <Link
+              href={toolPageUrls.schema}
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
             >
               <div className="flex items-center gap-2">
                 <FileCode className="w-4 h-4" />
                 <span className="text-sm">Schema</span>
               </div>
-            </button>
-            <button
-              onClick={() => handleTabChange('logs')}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
-                activeTab === 'logs'
-                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
-                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
-              }`}
+            </Link>
+            <Link
+              href={toolPageUrls.logs}
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
             >
               <div className="flex items-center gap-2">
                 <FileSearch className="w-4 h-4" />
@@ -640,105 +634,73 @@ function HomeClient() {
                   Most Used
                 </span>
               </div>
-            </button>
-            <button
-              onClick={() => handleTabChange('payload')}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
-                activeTab === 'payload'
-                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
-                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
-              }`}
+            </Link>
+            <Link
+              href={toolPageUrls.payload}
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
             >
               <div className="flex items-center gap-2">
                 <BarChart3 className="w-4 h-4" />
                 <span className="text-sm">Payload</span>
               </div>
-            </button>
-            <button
-              onClick={() => handleTabChange('curl')}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
-                activeTab === 'curl'
-                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
-                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
-              }`}
+            </Link>
+            <Link
+              href={toolPageUrls.curl}
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
             >
               <div className="flex items-center gap-2">
                 <Code className="w-4 h-4" />
                 <span className="text-sm">Convert Curl</span>
               </div>
-            </button>
-            <button
-              onClick={() => handleTabChange('mock')}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
-                activeTab === 'mock'
-                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
-                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
-              }`}
+            </Link>
+            <Link
+              href={toolPageUrls.mock}
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
             >
               <div className="flex items-center gap-2">
                 <Server className="w-4 h-4" />
                 <span className="text-sm">Mock API</span>
               </div>
-            </button>
-            <button
-              onClick={() => handleTabChange('testdata')}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
-                activeTab === 'testdata'
-                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
-                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
-              }`}
+            </Link>
+            <Link
+              href={toolPageUrls.testdata}
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
             >
               <div className="flex items-center gap-2">
                 <Database className="w-4 h-4" />
                 <span className="text-sm">Test Data</span>
               </div>
-            </button>
-            <button
-              onClick={() => handleTabChange('config')}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
-                activeTab === 'config'
-                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
-                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
-              }`}
+            </Link>
+            <Link
+              href={toolPageUrls.config}
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
             >
               <div className="flex items-center gap-2">
                 <Settings className="w-4 h-4" />
                 <span className="text-sm">Config</span>
               </div>
-            </button>
-            <button
-              onClick={() => handleTabChange('sql')}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
-                activeTab === 'sql'
-                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
-                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
-              }`}
+            </Link>
+            <Link
+              href={toolPageUrls.sql}
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
             >
               <div className="flex items-center gap-2">
                 <Database className="w-4 h-4" />
                 <span className="text-sm">SQL Formatter</span>
               </div>
-            </button>
-            <button
-              onClick={() => handleTabChange('insights')}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
-                activeTab === 'insights'
-                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
-                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
-              }`}
+            </Link>
+            <Link
+              href={toolPageUrls.insights}
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
             >
               <div className="flex items-center gap-2">
                 <BarChart3 className="w-4 h-4" />
                 <span className="text-sm">Data Insights</span>
               </div>
-            </button>
-            <button
-              onClick={() => handleTabChange('promptchunk')}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
-                activeTab === 'promptchunk'
-                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
-                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
-              }`}
+            </Link>
+            <Link
+              href={toolPageUrls.promptchunk}
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
             >
               <div className="flex items-center gap-2">
                 <Scissors className="w-4 h-4" />
@@ -747,46 +709,34 @@ function HomeClient() {
                   AI
                 </span>
               </div>
-            </button>
-            <button
-              onClick={() => handleTabChange('tokencompare')}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
-                activeTab === 'tokencompare'
-                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
-                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
-              }`}
+            </Link>
+            <Link
+              href={toolPageUrls.tokencompare}
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
             >
               <div className="flex items-center gap-2">
                 <Key className="w-4 h-4" />
                 <span className="text-sm">Token Comparator</span>
               </div>
-            </button>
-            <button
-              onClick={() => handleTabChange('timezone')}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
-                activeTab === 'timezone'
-                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
-                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
-              }`}
+            </Link>
+            <Link
+              href={toolPageUrls.timezone}
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
             >
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4" />
                 <span className="text-sm">Timezone Translator</span>
               </div>
-            </button>
-            <button
-              onClick={() => handleTabChange('hartocurl')}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
-                activeTab === 'hartocurl'
-                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
-                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
-              }`}
+            </Link>
+            <Link
+              href={toolPageUrls.hartocurl}
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
             >
               <div className="flex items-center gap-2">
                 <Network className="w-4 h-4" />
                 <span className="text-sm">HAR to cURL</span>
               </div>
-            </button>
+            </Link>
           </div>
         </div>
       </header>
@@ -840,32 +790,6 @@ function HomeClient() {
             </>
           )
         )}
-        {activeTab === 'beautifier' && (
-          <Suspense fallback={<div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>}>
-            <JsonBeautifier />
-          </Suspense>
-        )}
-        {activeTab === 'fixer' && (
-          <Suspense fallback={<div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>}>
-            <JsonFixer />
-          </Suspense>
-        )}
-        {activeTab === 'comparator' && <ApiComparator />}
-        {activeTab === 'jsoncompare' && <JsonComparator />}
-        {activeTab === 'schema' && <SchemaGenerator />}
-        {activeTab === 'logs' && <LogExplorer />}
-        {activeTab === 'payload' && <PayloadAnalyzer />}
-        {activeTab === 'curl' && <CurlConverter />}
-        {activeTab === 'mock' && <MockApiGenerator />}
-        {activeTab === 'testdata' && <TestDataGenerator />}
-        {activeTab === 'config' && <ConfigComparator />}
-        {activeTab === 'sql' && <SqlFormatter />}
-        {activeTab === 'builder' && <JsonBuilder />}
-        {activeTab === 'insights' && <DataInsights />}
-        {activeTab === 'promptchunk' && <PromptChunker />}
-        {activeTab === 'tokencompare' && <TokenComparator />}
-        {activeTab === 'timezone' && <TimezoneTranslator />}
-        {activeTab === 'hartocurl' && <HarToCurl />}
       </main>
 
       {/* Services Section */}
