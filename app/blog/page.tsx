@@ -19,6 +19,33 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'what-is-a-data-pipeline-explained-for-beginners',
+      title: 'What Is a Data Pipeline? Explained for Beginners (Complete Guide)',
+      excerpt: 'Learn what a data pipeline is with simple examples. Understand ETL, data processing, data flow, and how data pipelines work in real-world applications. Beginner-friendly guide with visualizations.',
+      date: '2026-02-07',
+      readTime: '15 min read',
+      category: 'Data Engineering & Analytics',
+      keywords: ['data pipeline', 'what is data pipeline', 'data pipeline explained', 'etl pipeline', 'data processing pipeline', 'data pipeline architecture']
+    },
+    {
+      slug: 'difference-between-structured-semi-structured-and-unstructured-data',
+      title: 'Difference Between Structured, Semi-Structured, and Unstructured Data (Complete Guide)',
+      excerpt: 'Learn the difference between structured, semi-structured, and unstructured data with examples. Understand when to use each type, storage options, and processing methods. Complete comparison guide.',
+      date: '2026-02-07',
+      readTime: '14 min read',
+      category: 'Data Engineering & Analytics',
+      keywords: ['structured data', 'semi structured data', 'unstructured data', 'difference between structured and unstructured data', 'structured vs unstructured data']
+    },
+    {
+      slug: 'what-is-feature-engineering-and-why-it-is-important-in-machine-learning',
+      title: 'What Is Feature Engineering and Why It Is Important in Machine Learning (Complete Guide)',
+      excerpt: 'Learn what feature engineering is in machine learning. Understand feature selection, feature transformation, feature creation, and why it\'s crucial for model performance. Complete guide with examples.',
+      date: '2026-02-07',
+      readTime: '16 min read',
+      category: 'Machine Learning & AI',
+      keywords: ['feature engineering', 'what is feature engineering', 'feature engineering machine learning', 'feature selection', 'feature transformation', 'ml feature engineering']
+    },
+    {
       slug: 'breadth-first-search-explained-with-easy-tree-examples',
       title: 'Breadth-First Search Explained with Easy Tree Examples (Complete Guide)',
       excerpt: 'Learn Breadth-First Search (BFS) algorithm with simple tree examples, step-by-step visualizations, code examples, and real-world use cases. Perfect for coding interviews and graph traversal.',
