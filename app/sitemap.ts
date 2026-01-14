@@ -157,6 +157,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'prefix-sum-technique-explained-simply',
     'merge-sort-explained-step-by-step-why-preferred-in-interviews',
     'greedy-algorithm-explained-with-simple-examples',
+    'claude-ai-collaborative-work-complete-guide',
+    'benfords-law-explained-complete-guide',
+    'apple-creator-studio-complete-guide',
   ]
 
   // Main pages
