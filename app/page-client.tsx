@@ -984,6 +984,62 @@ function HomeClient() {
             </div>
           </div>
           
+          {/* About UnblockDevs Platform Section */}
+          <div className="mb-10 sm:mb-12 lg:mb-16 bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 rounded-2xl p-6 sm:p-8 lg:p-10 border border-gray-200 shadow-sm">
+            <div className="max-w-4xl mx-auto space-y-6">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 text-center">About UnblockDevs - Free Privacy-Focused Developer Tools</h2>
+              
+              <div className="space-y-4 text-gray-700 leading-relaxed">
+                <p>
+                  <strong>UnblockDevs</strong> is a comprehensive platform providing free, privacy-focused developer tools designed to help developers work more efficiently without compromising their privacy or requiring signups. Founded with the vision of making professional-grade development tools accessible to everyone, we've built a platform that processes all data locally in your browser, ensuring your code, JSON, API responses, and sensitive information never leave your device.
+                </p>
+                
+                <p>
+                  Our mission is to democratize access to high-quality developer tools while maintaining the highest standards of privacy and security. We believe that developers shouldn't have to choose between powerful tools and privacy, and that essential utilities shouldn't require account creation, credit cards, or data sharing. Since our launch, UnblockDevs has served millions of developers worldwide, processing billions of operations entirely in users' browsers.
+                </p>
+                
+                <div className="grid md:grid-cols-3 gap-4 mt-6">
+                  <div className="bg-white rounded-lg p-4 border border-gray-200 text-center">
+                    <div className="text-2xl font-bold text-blue-600 mb-1">19+</div>
+                    <div className="text-sm text-gray-700">Professional Tools</div>
+                  </div>
+                  <div className="bg-white rounded-lg p-4 border border-gray-200 text-center">
+                    <div className="text-2xl font-bold text-blue-600 mb-1">100%</div>
+                    <div className="text-sm text-gray-700">Browser-Based Processing</div>
+                  </div>
+                  <div className="bg-white rounded-lg p-4 border border-gray-200 text-center">
+                    <div className="text-2xl font-bold text-blue-600 mb-1">Free</div>
+                    <div className="text-sm text-gray-700">Forever, No Signup Required</div>
+                  </div>
+                </div>
+                
+                <p className="mt-6">
+                  <strong>Privacy First:</strong> All processing happens in your browser. Your data never leaves your device, ensuring maximum privacy and security. We don't track, store, or transmit your data. <strong>No Barriers:</strong> Start using tools immediately without creating accounts, providing emails, or dealing with password management. <strong>Quality & Reliability:</strong> Free doesn't mean low quality. We maintain professional-grade standards for all our tools, ensuring accuracy, performance, and reliability.
+                </p>
+                
+                <p>
+                  <strong>Comprehensive Tool Suite:</strong> UnblockDevs provides 19+ professional tools covering JSON processing, API testing, code conversion, data analysis, and more. From JSON beautifiers and validators to API comparators and cURL converters, we have the tools you need for modern development workflows. <strong>Educational Content:</strong> Beyond tools, we've created an extensive library of 100+ educational blog posts covering topics from JSON processing and API testing to advanced algorithms, data engineering, and AI development.
+                </p>
+                
+                <p>
+                  <strong>Technology & Architecture:</strong> UnblockDevs is built using modern web technologies including Next.js 14+, TypeScript, and Tailwind CSS. All tools are optimized for performance, accessibility, and user experience. Our client-side processing architecture ensures fast, secure, and private operations. <strong>Community-Driven:</strong> Our tools are built for the developer community, and we actively listen to feedback, feature requests, and suggestions. Many of our tools and features were inspired by user requests and community needs.
+                </p>
+                
+                <div className="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg mt-6">
+                  <p className="font-semibold text-blue-900 mb-2">Why Choose UnblockDevs?</p>
+                  <ul className="text-sm text-blue-800 space-y-1">
+                    <li>✓ All tools process data entirely in your browser - complete privacy</li>
+                    <li>✓ No signup required - start using tools immediately</li>
+                    <li>✓ 100% free forever - no usage limits or credit cards</li>
+                    <li>✓ Professional-grade tools with enterprise-level quality</li>
+                    <li>✓ Comprehensive educational content and tutorials</li>
+                    <li>✓ Regular updates and new tools based on community feedback</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="text-center mb-10 sm:mb-12 lg:mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">Our Developer Tools</h2>
             <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
