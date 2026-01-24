@@ -300,6 +300,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changefreq: 'weekly' as const,
     },
     {
+      url: 'curl-failure-root-cause-engine',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
       url: 'api-comparator',
       priority: 0.9,
       changefreq: 'weekly' as const,

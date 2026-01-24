@@ -1,6 +1,6 @@
 // Personalization utilities for tracking user preferences
 
-export type ToolTab = 'converter' | 'beautifier' | 'fixer' | 'comparator' | 'jsoncompare' | 'schema' | 'logs' | 'payload' | 'curl' | 'mock' | 'testdata' | 'config' | 'sql' | 'builder' | 'insights' | 'promptchunk' | 'tokencompare' | 'timezone' | 'hartocurl';
+export type ToolTab = 'converter' | 'beautifier' | 'fixer' | 'comparator' | 'jsoncompare' | 'schema' | 'logs' | 'payload' | 'curl' | 'mock' | 'testdata' | 'config' | 'sql' | 'builder' | 'insights' | 'promptchunk' | 'tokencompare' | 'timezone' | 'hartocurl' | 'curlfailure';
 
 export interface ToolInfo {
   id: ToolTab;
@@ -111,6 +111,7 @@ export class PersonalizationManager {
       tokencompare: { id: 'tokencompare', name: 'Token Comparator', description: 'Compare tokens character by character' },
       timezone: { id: 'timezone', name: 'Timezone Translator', description: 'Convert times across timezones' },
       hartocurl: { id: 'hartocurl', name: 'HAR to cURL', description: 'Convert HAR files and network requests to cURL commands' },
+      curlfailure: { id: 'curlfailure', name: 'cURL Failure Root-Cause Engine', description: 'Diagnose why your API call is failing with ranked root causes and fix suggestions' },
     };
   }
 }

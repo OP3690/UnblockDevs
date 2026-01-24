@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect, useMemo, Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, TrendingUp, Mail, Scissors, Key, Clock, Network } from 'lucide-react';
+import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, TrendingUp, Mail, Scissors, Key, Clock, Network, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { PersonalizationManager, ToolTab } from '@/lib/personalization';
@@ -101,6 +101,7 @@ const toolPageUrls: Record<Exclude<ToolTab, 'converter'>, string> = {
   tokencompare: '/token-comparator',
   timezone: '/timezone-translator',
   hartocurl: '/har-to-curl',
+  curlfailure: '/curl-failure-root-cause-engine',
 };
 
 function HomeClient() {
@@ -149,7 +150,7 @@ function HomeClient() {
       // Check for tab parameter in URL (e.g., ?tab=curl or ?tab=schema)
       const urlParams = new URLSearchParams(window.location.search);
       const tabParam = urlParams.get('tab');
-      if (tabParam && ['converter', 'beautifier', 'fixer', 'comparator', 'jsoncompare', 'schema', 'logs', 'payload', 'curl', 'mock', 'testdata', 'config', 'sql', 'builder', 'insights', 'promptchunk', 'tokencompare', 'timezone', 'hartocurl'].includes(tabParam)) {
+      if (tabParam && ['converter', 'beautifier', 'fixer', 'comparator', 'jsoncompare', 'schema', 'logs', 'payload', 'curl', 'mock', 'testdata', 'config', 'sql', 'builder', 'insights', 'promptchunk', 'tokencompare', 'timezone', 'hartocurl', 'curlfailure'].includes(tabParam)) {
         setActiveTab(tabParam as ToolTab);
         // Scroll to top when tab is set from URL
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -735,6 +736,15 @@ function HomeClient() {
               <div className="flex items-center gap-2">
                 <Network className="w-4 h-4" />
                 <span className="text-sm">HAR to cURL</span>
+              </div>
+            </Link>
+            <Link
+              href={toolPageUrls.curlfailure}
+              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
+            >
+              <div className="flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4" />
+                <span className="text-sm">cURL Failure Analyzer</span>
               </div>
             </Link>
           </div>
