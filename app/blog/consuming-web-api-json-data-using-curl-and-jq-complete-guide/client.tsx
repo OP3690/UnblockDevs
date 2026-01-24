@@ -375,7 +375,7 @@ export default function ConsumingWebApiJsonDataUsingCurlAndJqCompleteGuideClient
                         <span className="text-green-600"># Create new object with selected fields</span>
                       </p>
                       <p className="text-xs font-mono text-gray-800">
-                        <span className="text-green-600">$</span> curl -s "https://api.example.com/users" | jq ".users[] | {'name': .name, 'age': .age}"
+                        <span className="text-green-600">$</span> curl -s "https://api.example.com/users" | jq ".users[] | {"{"}"name": .name, "age": .age{"}"}"
                       </p>
                     </div>
                   </div>
