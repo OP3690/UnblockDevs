@@ -141,7 +141,7 @@ export default function HowToPostJsonDataUsingCurlCompleteGuideClient() {
                   The JSON data is sent in the HTTP request body. It can be provided inline as a string, read from a file, or constructed dynamically. The JSON must be valid and properly formatted.
                 </p>
                 <p className="text-xs text-gray-600">
-                  <strong>cURL flag:</strong> <code className="bg-white px-2 py-1 rounded">-d '{"key":"value"}'</code> or <code className="bg-white px-2 py-1 rounded">-d @file.json</code>
+                  <strong>cURL flag:</strong> <code className="bg-white px-2 py-1 rounded">-d '{'{'}"key":"value"{'}'}'</code> or <code className="bg-white px-2 py-1 rounded">-d @file.json</code>
                 </p>
               </div>
 
@@ -169,7 +169,7 @@ export default function HowToPostJsonDataUsingCurlCompleteGuideClient() {
                   -H "Content-Type: application/json" \
                 </p>
                 <p className="text-sm font-mono text-gray-800 mb-2 pl-4">
-                  -d '{"key": "value"}' \
+                  -d '{'{'}"key": "value"{'}'}' \
                 </p>
                 <p className="text-sm font-mono text-gray-800">
                   "https://api.example.com/endpoint"
@@ -186,7 +186,7 @@ export default function HowToPostJsonDataUsingCurlCompleteGuideClient() {
                 </div>
                 <div className="flex items-start gap-2">
                   <span className="text-blue-600 font-bold">3.</span>
-                  <span><strong>-d '{"key": "value"}:</strong> Includes JSON data in request body</span>
+                  <span><strong>-d '{'{'}"key": "value"{'}'}:</strong> Includes JSON data in request body</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <span className="text-blue-600 font-bold">4.</span>
@@ -284,7 +284,7 @@ export default function HowToPostJsonDataUsingCurlCompleteGuideClient() {
                     </p>
                     <div className="bg-white p-4 rounded-lg border border-gray-200 mt-2">
                       <p className="text-xs font-mono text-gray-800">
-                        <span className="text-green-600">$</span> curl -X POST -H "Content-Type: application/json" -d '{"name":"John","age":30}' "https://api.example.com/users"
+                        <span className="text-green-600">$</span> curl -X POST -H "Content-Type: application/json" -d '{'{'}"name":"John","age":30{'}'}' "https://api.example.com/users"
                       </p>
                     </div>
                     <p className="text-xs text-gray-600 mt-2">
@@ -306,7 +306,7 @@ export default function HowToPostJsonDataUsingCurlCompleteGuideClient() {
                       <p className="text-xs font-mono text-gray-800 mb-2">
                         <span className="text-green-600"># Create data.json file</span>
                       </p>
-                      <p className="text-xs font-mono text-gray-800 mb-2">echo '{"name":"John","age":30}' &gt; data.json</p>
+                      <p className="text-xs font-mono text-gray-800 mb-2">echo '{'{'}"name":"John","age":30{'}'}' &gt; data.json</p>
                       <p className="text-xs font-mono text-gray-800 mb-2">
                         <span className="text-green-600"># Post from file</span>
                       </p>
@@ -338,7 +338,7 @@ export default function HowToPostJsonDataUsingCurlCompleteGuideClient() {
                       </p>
                       <p className="text-xs font-mono text-gray-800 mb-2 pl-4">-H "Content-Type: application/json" \</p>
                       <p className="text-xs font-mono text-gray-800 mb-2 pl-4">-H "Authorization: Bearer YOUR_TOKEN" \</p>
-                      <p className="text-xs font-mono text-gray-800 mb-2 pl-4">-d '{"name":"John"}' \</p>
+                      <p className="text-xs font-mono text-gray-800 mb-2 pl-4">-d '{'{'}"name":"John"{'}'}' \</p>
                       <p className="text-xs font-mono text-gray-800">"https://api.example.com/users"</p>
                     </div>
                   </div>
@@ -361,7 +361,7 @@ export default function HowToPostJsonDataUsingCurlCompleteGuideClient() {
                         <span className="text-green-600">$</span> curl -X POST \
                       </p>
                       <p className="text-xs font-mono text-gray-800 mb-2 pl-4">-H "Content-Type: application/json" \</p>
-                      <p className="text-xs font-mono text-gray-800 mb-2 pl-4">--data-raw '{"name":"John\'s Data","value":"test"}' \</p>
+                      <p className="text-xs font-mono text-gray-800 mb-2 pl-4">--data-raw '{'{'}"name":"John\'s Data","value":"test"{'}'}' \</p>
                       <p className="text-xs font-mono text-gray-800">"https://api.example.com/endpoint"</p>
                     </div>
                   </div>
@@ -381,7 +381,7 @@ export default function HowToPostJsonDataUsingCurlCompleteGuideClient() {
                         <span className="text-green-600"># Include response headers</span>
                       </p>
                       <p className="text-xs font-mono text-gray-800 mb-2">
-                        <span className="text-green-600">$</span> curl -X POST -i -H "Content-Type: application/json" -d '{"name":"John"}' "https://api.example.com/users"
+                        <span className="text-green-600">$</span> curl -X POST -i -H "Content-Type: application/json" -d '{'{'}"name":"John"{'}'}' "https://api.example.com/users"
                       </p>
                       <p className="text-xs font-mono text-gray-800 mb-2">
                         <span className="text-green-600"># Pretty print JSON response (if jq installed)</span>
@@ -609,7 +609,7 @@ export default function HowToPostJsonDataUsingCurlCompleteGuideClient() {
                 <h3 className="font-semibold text-gray-900 mb-2">Example 2: POST from JSON File</h3>
                 <div className="bg-white p-4 rounded-lg border border-green-200 mt-2">
                   <p className="text-xs font-mono text-gray-800 mb-2">
-                    <span className="text-green-600"># data.json contains: {"{"}"name":"John","data":"value"{"}"}</span>
+                    <span className="text-green-600"># data.json contains: {'{'}"name":"John","data":"value"{'}'}</span>
                   </p>
                   <p className="text-xs font-mono text-gray-800">
                     <span className="text-green-600">$</span> curl -X POST -H "Content-Type: application/json" -d @data.json "https://api.example.com/endpoint"
