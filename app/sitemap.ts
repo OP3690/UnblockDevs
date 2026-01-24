@@ -160,6 +160,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'claude-ai-collaborative-work-complete-guide',
     'benfords-law-explained-complete-guide',
     'apple-creator-studio-complete-guide',
+    'consuming-web-api-json-data-using-curl-and-jq-complete-guide',
+    'how-to-post-json-data-using-curl-complete-guide',
+    'post-json-data-with-curl-examples-complete-guide',
   ]
 
   // Main pages

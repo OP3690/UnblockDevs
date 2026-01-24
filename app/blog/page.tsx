@@ -100,6 +100,33 @@ export const metadata: Metadata = {
       keywords: ['apple creator studio', 'apple creator studio guide', 'apple creator studio tutorial', 'apple content creation', 'apple creator tools', 'apple studio app']
     },
     {
+      slug: 'consuming-web-api-json-data-using-curl-and-jq-complete-guide',
+      title: 'Consuming Web API JSON Data Using curl and jq: Complete Guide 2026',
+      excerpt: 'Learn how to consume Web API JSON data using curl and jq. Complete guide with examples, best practices, and step-by-step tutorials for API testing and data processing.',
+      date: '2026-02-10',
+      readTime: '14 min read',
+      category: 'API Development & Testing',
+      keywords: ['consuming web api json data using curl and jq', 'curl jq json', 'curl jq tutorial', 'curl jq examples', 'jq curl command', 'curl jq parse json']
+    },
+    {
+      slug: 'how-to-post-json-data-using-curl-complete-guide',
+      title: 'How to Post JSON Data Using cURL: Complete Guide 2026',
+      excerpt: 'Learn how to post JSON data using cURL with complete examples. Step-by-step guide for POST requests with JSON payloads, headers, authentication, and error handling. Perfect for API testing and integration.',
+      date: '2026-02-10',
+      readTime: '13 min read',
+      category: 'API Development & Testing',
+      keywords: ['how to post json data using curl', 'curl post json', 'curl post json data', 'curl send json', 'curl post json example', 'curl json post request']
+    },
+    {
+      slug: 'post-json-data-with-curl-examples-complete-guide',
+      title: 'POST JSON Data with cURL: Examples & Complete Guide 2026',
+      excerpt: 'Learn POST JSON data with cURL through practical examples. Complete guide with real-world cURL POST JSON examples, authentication, error handling, and best practices for API testing.',
+      date: '2026-02-10',
+      readTime: '12 min read',
+      category: 'API Development & Testing',
+      keywords: ['post json data with curl example', 'curl post json example', 'curl post json data example', 'curl post json request example', 'curl post json body example', 'curl post json payload example']
+    },
+    {
       slug: 'breadth-first-search-explained-with-easy-tree-examples',
       title: 'Breadth-First Search Explained with Easy Tree Examples (Complete Guide)',
       excerpt: 'Learn Breadth-First Search (BFS) algorithm with simple tree examples, step-by-step visualizations, code examples, and real-world use cases. Perfect for coding interviews and graph traversal.',
