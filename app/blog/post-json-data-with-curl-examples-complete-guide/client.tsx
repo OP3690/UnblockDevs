@@ -442,7 +442,7 @@ export default function PostJsonDataWithCurlExamplesCompleteGuideClient() {
                   <tbody>
                     <tr>
                       <td className="border border-gray-300 px-4 py-2 font-semibold">Basic POST</td>
-                      <td className="border border-gray-300 px-4 py-2 font-mono text-xs">curl -X POST -H "Content-Type: application/json" -d '{"key":"value"}' "URL"</td>
+                      <td className="border border-gray-300 px-4 py-2 font-mono text-xs">curl -X POST -H "Content-Type: application/json" -d '{'{'}"key":"value"{'}'}' "URL"</td>
                       <td className="border border-gray-300 px-4 py-2">Simple API requests</td>
                     </tr>
                     <tr className="bg-gray-50">
@@ -552,7 +552,7 @@ export default function PostJsonDataWithCurlExamplesCompleteGuideClient() {
                     <span className="text-green-600">$</span> curl -X POST \
                   </p>
                   <p className="text-xs font-mono text-gray-800 pl-4">-H "Content-Type: application/json" \</p>
-                  <p className="text-xs font-mono text-gray-800 pl-4">-d '{"name":"Product","price":99.99,"category":"Electronics"}' \</p>
+                  <p className="text-xs font-mono text-gray-800 pl-4">-d '{'{'}"name":"Product","price":99.99,"category":"Electronics"{'}'}' \</p>
                   <p className="text-xs font-mono text-gray-800 pl-4">"https://api.example.com/products"</p>
                 </div>
                 <p className="text-sm text-gray-700 mt-3">
@@ -571,7 +571,7 @@ export default function PostJsonDataWithCurlExamplesCompleteGuideClient() {
                   </p>
                   <p className="text-xs font-mono text-gray-800 pl-4">-H "Content-Type: application/json" \</p>
                   <p className="text-xs font-mono text-gray-800 pl-4">-H "Authorization: Bearer $TOKEN" \</p>
-                  <p className="text-xs font-mono text-gray-800 pl-4">-d '{"status":"active","lastLogin":"2026-02-09T10:00:00Z"}' \</p>
+                  <p className="text-xs font-mono text-gray-800 pl-4">-d '{'{'}"status":"active","lastLogin":"2026-02-09T10:00:00Z"{'}'}' \</p>
                   <p className="text-xs font-mono text-gray-800 pl-4">"https://api.example.com/users/123/update"</p>
                 </div>
                 <p className="text-sm text-gray-700 mt-3">
@@ -589,7 +589,7 @@ export default function PostJsonDataWithCurlExamplesCompleteGuideClient() {
                     <span className="text-green-600">$</span> curl -X POST \
                   </p>
                   <p className="text-xs font-mono text-gray-800 pl-4">-H "Content-Type: application/json" \</p>
-                  <p className="text-xs font-mono text-gray-800 pl-4">-d '{"email":"user@example.com","message":"Hello","subject":"Inquiry"}' \</p>
+                  <p className="text-xs font-mono text-gray-800 pl-4">-d '{'{'}"email":"user@example.com","message":"Hello","subject":"Inquiry"{'}'}' \</p>
                   <p className="text-xs font-mono text-gray-800 pl-4">"https://api.example.com/contact"</p>
                 </div>
                 <p className="text-sm text-gray-700 mt-3">

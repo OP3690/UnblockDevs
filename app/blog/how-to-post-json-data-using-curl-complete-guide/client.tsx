@@ -387,7 +387,7 @@ export default function HowToPostJsonDataUsingCurlCompleteGuideClient() {
                         <span className="text-green-600"># Pretty print JSON response (if jq installed)</span>
                       </p>
                       <p className="text-xs font-mono text-gray-800">
-                        <span className="text-green-600">$</span> curl -X POST -H "Content-Type: application/json" -d '{"name":"John"}' "https://api.example.com/users" | jq
+                        <span className="text-green-600">$</span> curl -X POST -H "Content-Type: application/json" -d '{'{'}"name":"John"{'}'}' "https://api.example.com/users" | jq
                       </p>
                     </div>
                   </div>
@@ -407,13 +407,13 @@ export default function HowToPostJsonDataUsingCurlCompleteGuideClient() {
                         <span className="text-green-600"># Verbose mode (shows request/response details)</span>
                       </p>
                       <p className="text-xs font-mono text-gray-800 mb-2">
-                        <span className="text-green-600">$</span> curl -v -X POST -H "Content-Type: application/json" -d '{"name":"John"}' "https://api.example.com/users"
+                        <span className="text-green-600">$</span> curl -v -X POST -H "Content-Type: application/json" -d '{'{'}"name":"John"{'}'}' "https://api.example.com/users"
                       </p>
                       <p className="text-xs font-mono text-gray-800 mb-2">
                         <span className="text-green-600"># Show only HTTP status code</span>
                       </p>
                       <p className="text-xs font-mono text-gray-800">
-                        <span className="text-green-600">$</span> curl -s -o /dev/null -w "%{http_code}" -X POST -H "Content-Type: application/json" -d '{"name":"John"}' "https://api.example.com/users"
+                        <span className="text-green-600">$</span> curl -s -o /dev/null -w "%{http_code}" -X POST -H "Content-Type: application/json" -d '{'{'}"name":"John"{'}'}' "https://api.example.com/users"
                       </p>
                     </div>
                   </div>
@@ -427,13 +427,13 @@ export default function HowToPostJsonDataUsingCurlCompleteGuideClient() {
                 <div className="bg-white p-4 rounded-lg border border-blue-200">
                   <p className="text-sm font-semibold text-gray-900 mb-2">Pattern 1: Simple POST</p>
                   <p className="text-xs font-mono text-gray-800">
-                    curl -X POST -H "Content-Type: application/json" -d '{"key":"value"}' "URL"
+                    curl -X POST -H "Content-Type: application/json" -d '{'{'}"key":"value"{'}'}' "URL"
                   </p>
                 </div>
                 <div className="bg-white p-4 rounded-lg border border-blue-200">
                   <p className="text-sm font-semibold text-gray-900 mb-2">Pattern 2: POST with Authentication</p>
                   <p className="text-xs font-mono text-gray-800">
-                    curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer TOKEN" -d '{"key":"value"}' "URL"
+                    curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer TOKEN" -d '{'{'}"key":"value"{'}'}' "URL"
                   </p>
                 </div>
                 <div className="bg-white p-4 rounded-lg border border-blue-200">
@@ -445,7 +445,7 @@ export default function HowToPostJsonDataUsingCurlCompleteGuideClient() {
                 <div className="bg-white p-4 rounded-lg border border-blue-200">
                   <p className="text-sm font-semibold text-gray-900 mb-2">Pattern 4: POST with Multiple Headers</p>
                   <p className="text-xs font-mono text-gray-800">
-                    curl -X POST -H "Content-Type: application/json" -H "X-API-Key: KEY" -H "X-Request-ID: ID" -d '{"key":"value"}' "URL"
+                    curl -X POST -H "Content-Type: application/json" -H "X-API-Key: KEY" -H "X-Request-ID: ID" -d '{'{'}"key":"value"{'}'}' "URL"
                   </p>
                 </div>
               </div>
@@ -597,7 +597,7 @@ export default function HowToPostJsonDataUsingCurlCompleteGuideClient() {
                   </p>
                   <p className="text-xs font-mono text-gray-800 pl-4">-H "Content-Type: application/json" \</p>
                   <p className="text-xs font-mono text-gray-800 pl-4">-H "Authorization: Bearer $TOKEN" \</p>
-                  <p className="text-xs font-mono text-gray-800 pl-4">-d '{"name":"John Doe","email":"john@example.com","age":30}' \</p>
+                  <p className="text-xs font-mono text-gray-800 pl-4">-d '{'{'}"name":"John Doe","email":"john@example.com","age":30{'}'}' \</p>
                   <p className="text-xs font-mono text-gray-800 pl-4">"https://api.example.com/users"</p>
                 </div>
                 <p className="text-sm text-gray-700 mt-3">
@@ -628,7 +628,7 @@ export default function HowToPostJsonDataUsingCurlCompleteGuideClient() {
                   </p>
                   <p className="text-xs font-mono text-gray-800 pl-4">-H "Content-Type: application/json" \</p>
                   <p className="text-xs font-mono text-gray-800 pl-4">-H "X-API-Key: $API_KEY" \</p>
-                  <p className="text-xs font-mono text-gray-800 pl-4">-d '{"action":"create","data":{"key":"value"}}' \</p>
+                  <p className="text-xs font-mono text-gray-800 pl-4">-d '{'{'}"action":"create","data":{'{'}"key":"value"{'}'}{'}'}' \</p>
                   <p className="text-xs font-mono text-gray-800 pl-4">"https://api.example.com/actions"</p>
                 </div>
                 <p className="text-sm text-gray-700 mt-3">
