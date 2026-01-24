@@ -447,7 +447,7 @@ export default function PostJsonDataWithCurlExamplesCompleteGuideClient() {
                     </tr>
                     <tr className="bg-gray-50">
                       <td className="border border-gray-300 px-4 py-2 font-semibold">POST with Auth</td>
-                      <td className="border border-gray-300 px-4 py-2 font-mono text-xs">curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer TOKEN" -d '{"key":"value"}' "URL"</td>
+                      <td className="border border-gray-300 px-4 py-2 font-mono text-xs">curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer TOKEN" -d '{'{'}"key":"value"{'}'}' "URL"</td>
                       <td className="border border-gray-300 px-4 py-2">Authenticated requests</td>
                     </tr>
                     <tr>
@@ -457,12 +457,12 @@ export default function PostJsonDataWithCurlExamplesCompleteGuideClient() {
                     </tr>
                     <tr className="bg-gray-50">
                       <td className="border border-gray-300 px-4 py-2 font-semibold">POST with Verbose</td>
-                      <td className="border border-gray-300 px-4 py-2 font-mono text-xs">curl -v -X POST -H "Content-Type: application/json" -d '{"key":"value"}' "URL"</td>
+                      <td className="border border-gray-300 px-4 py-2 font-mono text-xs">curl -v -X POST -H "Content-Type: application/json" -d '{'{'}"key":"value"{'}'}' "URL"</td>
                       <td className="border border-gray-300 px-4 py-2">Debugging requests</td>
                     </tr>
                     <tr>
                       <td className="border border-gray-300 px-4 py-2 font-semibold">POST with jq</td>
-                      <td className="border border-gray-300 px-4 py-2 font-mono text-xs">curl -X POST -H "Content-Type: application/json" -d '{"key":"value"}' "URL" | jq</td>
+                      <td className="border border-gray-300 px-4 py-2 font-mono text-xs">curl -X POST -H "Content-Type: application/json" -d '{'{'}"key":"value"{'}'}' "URL" | jq</td>
                       <td className="border border-gray-300 px-4 py-2">Pretty print response</td>
                     </tr>
                   </tbody>

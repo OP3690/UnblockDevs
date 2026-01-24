@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Send, Zap, CheckCircle, AlertCircle, HelpCircle, Globe, Clock, Code, TrendingUp, BarChart3, Activity, Network, FileText, ArrowRight, Key } from 'lucide-react';
+import { ArrowLeft, Send, Zap, CheckCircle, AlertCircle, HelpCircle, Globe, Clock, Code, TrendingUp, BarChart3, Activity, Network, FileText, ArrowRight, Key, Terminal } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
 import BlogSocialShare from '@/components/BlogSocialShare';
 import NewsletterSignup from '@/components/NewsletterSignup';
@@ -413,7 +413,7 @@ export default function HowToPostJsonDataUsingCurlCompleteGuideClient() {
                         <span className="text-green-600"># Show only HTTP status code</span>
                       </p>
                       <p className="text-xs font-mono text-gray-800">
-                        <span className="text-green-600">$</span> curl -s -o /dev/null -w "%{http_code}" -X POST -H "Content-Type: application/json" -d '{'{'}"name":"John"{'}'}' "https://api.example.com/users"
+                        <span className="text-green-600">$</span> curl -s -o /dev/null -w "%{'{'}http_code{'}'}" -X POST -H "Content-Type: application/json" -d '{'{'}"name":"John"{'}'}' "https://api.example.com/users"
                       </p>
                     </div>
                   </div>
