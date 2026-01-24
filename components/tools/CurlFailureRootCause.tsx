@@ -123,45 +123,99 @@ export default function CurlFailureRootCause() {
 
     // 400 Bad Request
     if (status === 400) {
-      // Check for JSON syntax errors
-      if (parsed.body) {
-        try {
-          JSON.parse(parsed.body);
-        } catch {
+      // Check for missing Content-Type (HIGHEST PRIORITY for 400 with JSON body)
+      if (parsed.method !== 'GET' && parsed.body && !parsed.contentType) {
+        // Check if body looks like JSON
+        let isJsonBody = false;
+        if (parsed.body) {
+          try {
+            JSON.parse(parsed.body);
+            isJsonBody = true;
+          } catch {
+            // Not JSON, might be form data
+            isJsonBody = false;
+          }
+        }
+        
+        if (isJsonBody) {
+          // Generate corrected cURL with Content-Type header
+          let correctedCurl = curlCommand;
+          // Check if command already has line continuation
+          const hasLineContinuation = curlCommand.includes('\\');
+          
+          if (hasLineContinuation) {
+            // Insert Content-Type header before the -d flag
+            correctedCurl = curlCommand.replace(
+              /(\s+)(-d\s+)/i,
+              `$1-H "Content-Type: application/json" \\\n$1$2`
+            );
+            // If no -d found, add after method
+            if (correctedCurl === curlCommand) {
+              correctedCurl = curlCommand.replace(
+                /(-X\s+\w+\s+)/i,
+                `$1-H "Content-Type: application/json" \\\n  `
+              );
+            }
+          } else {
+            // Single line command - add header before -d or after URL
+            if (curlCommand.includes('-d')) {
+              correctedCurl = curlCommand.replace(
+                /(\s+)(-d\s+)/i,
+                `$1-H "Content-Type: application/json" \\\n$1$2`
+              );
+            } else {
+              correctedCurl = curlCommand.replace(
+                /(-X\s+\w+\s+)/i,
+                `$1-H "Content-Type: application/json" \\\n  `
+              );
+            }
+          }
+          
           causes.push({
-            cause: 'Invalid JSON in Request Body',
+            cause: 'Missing Content-Type Header',
             confidence: 95,
-            fix: 'Fix JSON syntax errors. Ensure proper quotes, commas, and brackets.',
-            correctedCurl: curlCommand.replace(
-              /-d\s+["']([^"']+)["']/i,
-              (match, body) => {
-                try {
-                  const fixed = JSON.stringify(JSON.parse(body));
-                  return `-d '${fixed}'`;
-                } catch {
-                  return match;
-                }
-              }
-            ),
-            explanation: 'The request body contains invalid JSON syntax.',
+            fix: 'Add Content-Type header: -H "Content-Type: application/json"',
+            correctedCurl: correctedCurl,
+            explanation: 'POST/PUT/PATCH requests with JSON body require Content-Type: application/json header. Without it, the server may interpret the body as form-encoded data.',
           });
-          issues.push('Invalid JSON');
+          issues.push('Missing Content-Type');
         }
       }
 
-      // Check for missing Content-Type
-      if (parsed.method !== 'GET' && parsed.body && !parsed.contentType) {
-        causes.push({
-          cause: 'Missing Content-Type Header',
-          confidence: 90,
-          fix: 'Add Content-Type header: -H "Content-Type: application/json"',
-          correctedCurl: curlCommand.replace(
-            /(-X\s+\w+\s+)/i,
-            `$1-H "Content-Type: application/json" \\\n  `
-          ),
-          explanation: 'POST/PUT/PATCH requests with a body typically require a Content-Type header.',
-        });
-        issues.push('Missing Content-Type');
+      // Check for JSON syntax errors (only if JSON parsing actually fails)
+      if (parsed.body) {
+        let jsonIsValid = false;
+        try {
+          JSON.parse(parsed.body);
+          jsonIsValid = true;
+        } catch (e) {
+          jsonIsValid = false;
+        }
+        
+        if (!jsonIsValid) {
+          // Only flag as invalid JSON if it looks like it was intended to be JSON
+          // (starts with { or [)
+          if (parsed.body.trim().startsWith('{') || parsed.body.trim().startsWith('[')) {
+            causes.push({
+              cause: 'Invalid JSON in Request Body',
+              confidence: 90,
+              fix: 'Fix JSON syntax errors. Ensure proper quotes, commas, and brackets.',
+              correctedCurl: curlCommand.replace(
+                /-d\s+["']([^"']+)["']/i,
+                (match, body) => {
+                  try {
+                    const fixed = JSON.stringify(JSON.parse(body));
+                    return `-d '${fixed}'`;
+                  } catch {
+                    return match;
+                  }
+                }
+              ),
+              explanation: 'The request body contains invalid JSON syntax that cannot be parsed.',
+            });
+            issues.push('Invalid JSON');
+          }
+        }
       }
 
       // Check for method/body mismatch
@@ -221,26 +275,53 @@ export default function CurlFailureRootCause() {
       issues.push('Server error');
     }
 
-    // Check response body for error messages
+    // Check response body for error messages and status code consistency
     if (responseBody) {
       try {
         const body = JSON.parse(responseBody);
         if (body.error || body.message) {
-          const errorMsg = body.error || body.message || '';
-          if (errorMsg.toLowerCase().includes('token') || errorMsg.toLowerCase().includes('auth')) {
+          const errorMsg = (body.error || body.message || '').toString().toLowerCase();
+          
+          // Status code vs response body consistency check
+          const isAuthError = errorMsg.includes('unauthorized') || errorMsg.includes('token') || errorMsg.includes('auth') || errorMsg.includes('authentication');
+          const isValidationError = errorMsg.includes('validation') || errorMsg.includes('invalid') || errorMsg.includes('bad request');
+          
+          if (isAuthError && status !== 401 && status !== 403) {
+            causes.push({
+              cause: 'Status Code Mismatch Warning',
+              confidence: 75,
+              fix: `Response body suggests authentication error ("${body.error || body.message}"), but status code is ${status} (expected 401 or 403). Verify the status code is correct, or check for proxy/load balancer interference.`,
+              explanation: 'There is a mismatch between the HTTP status code and the error message in the response body. This may indicate an incorrect status code or proxy-level error handling.',
+            });
+            issues.push('Status code mismatch');
+          }
+          
+          if (isValidationError && status !== 400) {
+            causes.push({
+              cause: 'Status Code Mismatch Warning',
+              confidence: 70,
+              fix: `Response body suggests validation error ("${body.error || body.message}"), but status code is ${status} (expected 400). Verify the status code is correct.`,
+              explanation: 'There is a mismatch between the HTTP status code and the error message. Validation errors typically return 400 Bad Request.',
+            });
+            issues.push('Status code mismatch');
+          }
+          
+          // Add specific error causes based on response body
+          if (isAuthError) {
             causes.push({
               cause: 'Authentication Error (from response)',
-              confidence: 85,
+              confidence: status === 401 || status === 403 ? 90 : 70,
               fix: 'Check your authentication credentials. Token may be invalid or expired.',
-              explanation: `Server response indicates: ${errorMsg}`,
+              explanation: `Server response indicates: ${body.error || body.message}`,
             });
           }
-          if (errorMsg.toLowerCase().includes('validation') || errorMsg.toLowerCase().includes('invalid')) {
+          
+          if (isValidationError) {
             causes.push({
               cause: 'Validation Error',
-              confidence: 90,
+              confidence: status === 400 ? 90 : 75,
               fix: 'Check request body format and required fields. Review API documentation.',
-              explanation: `Server response indicates: ${errorMsg}`,
+              explanation: `Server response indicates: ${body.error || body.message}`,
             });
           }
         }
