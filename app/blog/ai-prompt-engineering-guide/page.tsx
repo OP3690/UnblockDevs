@@ -3,8 +3,10 @@ import AiPromptEngineeringGuideClient from './client';
 
 export const metadata: Metadata = {
   title: 'AI Prompt Engineering Guide: Best Prompts for Great Results | UnblockDevs',
-  description: 'Complete guide to AI prompt engineering: how to write effective prompts, best practices, techniques, and templates. Learn how to get great results from ChatGPT, Cursor, and other AI tools.',
+  description: 'UnblockDevs AI Guide: Complete guide to AI prompt engineering: how to write effective prompts, best practices, techniques, and templates. Learn how to get great results from ChatGPT, Cursor, and other AI tools.',
   keywords: [
+    'unblock devs ai',
+    'unblockdevs ai',
     'ai prompt engineering',
     'how to write ai prompts',
     'best ai prompts',

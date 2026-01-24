@@ -3,8 +3,10 @@ import AiSupercomputingPlatformsClient from './client';
 
 export const metadata: Metadata = {
   title: 'AI Supercomputing Platforms: Complete Guide 2026 | UnblockDevs',
-  description: 'Complete guide to AI supercomputing platforms: definition, what they are, when to use them, how they work, and why they matter. Learn about AI supercomputers, GPU clusters, distributed training, and high-performance AI computing infrastructure.',
+  description: 'UnblockDevs AI Guide: Complete guide to AI supercomputing platforms: definition, what they are, when to use them, how they work, and why they matter. Learn about AI supercomputers, GPU clusters, distributed training, and high-performance AI computing infrastructure.',
   keywords: [
+    'unblock devs ai',
+    'unblockdevs ai',
     'ai supercomputing platforms',
     'ai supercomputers',
     'ai supercomputing',

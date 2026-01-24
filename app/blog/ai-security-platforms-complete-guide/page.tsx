@@ -3,8 +3,10 @@ import AiSecurityPlatformsClient from './client';
 
 export const metadata: Metadata = {
   title: 'AI Security Platforms: Complete Guide 2026 | UnblockDevs',
-  description: 'Complete guide to AI security platforms: definition, what they are, when to use them, how they work, and why they matter. Learn about AI security, model protection, adversarial defense, data privacy, and AI threat detection platforms.',
+  description: 'UnblockDevs AI Guide: Complete guide to AI security platforms: definition, what they are, when to use them, how they work, and why they matter. Learn about AI security, model protection, adversarial defense, data privacy, and AI threat detection platforms.',
   keywords: [
+    'unblock devs ai',
+    'unblockdevs ai',
     'ai security platforms',
     'ai security',
     'ai model security',

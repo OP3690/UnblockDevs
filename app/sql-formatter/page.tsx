@@ -3,8 +3,10 @@ import SqlFormatterClient from './client';
 
 export const metadata: Metadata = {
   title: 'Free SQL Formatter Online - Format SQL Queries Instantly | UnblockDevs',
-  description: 'Format SQL queries instantly. Free online SQL formatter tool to beautify, format, and prettify SQL code with proper indentation and syntax highlighting. No signup required.',
+  description: 'UnblockDevs SQL Formatter: Format SQL queries instantly. Free online SQL formatter tool to beautify, format, and prettify SQL code with proper indentation and syntax highlighting. Supports MySQL, PostgreSQL, Oracle, and more. No signup required.',
   keywords: [
+    'unblock devs mysql',
+    'unblockdevs mysql',
     'sql formatter',
     'format sql online',
     'sql beautifier',
@@ -12,11 +14,13 @@ export const metadata: Metadata = {
     'sql formatter online',
     'format sql query',
     'sql code formatter',
-    'sql prettifier'
+    'sql prettifier',
+    'mysql formatter',
+    'mysql query formatter'
   ],
   openGraph: {
-    title: 'Free SQL Formatter Online - Format SQL Queries Instantly',
-    description: 'Format SQL queries instantly. Free online SQL formatter tool.',
+    title: 'UnblockDevs SQL Formatter - Format SQL Queries Instantly',
+    description: 'UnblockDevs SQL Formatter: Format SQL queries instantly. Free online SQL formatter tool for MySQL, PostgreSQL, Oracle, and more.',
     type: 'website',
   },
   alternates: {

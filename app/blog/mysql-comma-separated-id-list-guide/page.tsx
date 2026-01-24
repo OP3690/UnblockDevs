@@ -3,8 +3,10 @@ import MysqlCommaSeparatedIdListGuideClient from './client';
 
 export const metadata: Metadata = {
   title: 'How to Create Comma Separated ID List for MySQL IN Clause - Complete Guide | UnblockDevs',
-  description: 'Learn how to create comma separated ID lists for MySQL IN clause. Convert multiple IDs, arrays, and values into MySQL-friendly format. Complete guide with examples, best practices, and free SQL formatter tool.',
+  description: 'UnblockDevs MySQL Guide: Learn how to create comma separated ID lists for MySQL IN clause. Convert multiple IDs, arrays, and values into MySQL-friendly format. Complete guide with examples, best practices, and free SQL formatter tool.',
   keywords: [
+    'unblock devs mysql',
+    'unblockdevs mysql',
     'comma separated ID list MySQL',
     'MySQL IN clause',
     'comma separated values MySQL',

@@ -3,8 +3,10 @@ import TokenComparatorLandingClient from './client';
 
 export const metadata: Metadata = {
   title: 'Free Token Comparator – Compare JWT, API Keys & Tokens | UnblockDevs',
-  description: 'Compare JWT tokens, API keys, and authentication tokens character by character. Free online token comparator with visual diff highlighting. No signup, 100% private, works in your browser.',
+  description: 'UnblockDevs Token Comparator: Compare JWT tokens, API keys, and authentication tokens character by character. Free online token comparator with visual diff highlighting. No signup, 100% private, works in your browser.',
   keywords: [
+    'unblock devs token',
+    'unblockdevs token',
     'token comparator',
     'jwt token comparator',
     'compare tokens',
@@ -17,8 +19,8 @@ export const metadata: Metadata = {
     'compare api keys'
   ],
   openGraph: {
-    title: 'Free Token Comparator – Compare JWT, API Keys & Tokens',
-    description: 'Compare JWT tokens, API keys, and authentication tokens character by character. Free online token comparator with visual diff highlighting.',
+    title: 'UnblockDevs Token Comparator – Compare JWT, API Keys & Tokens',
+    description: 'UnblockDevs Token Comparator: Compare JWT tokens, API keys, and authentication tokens character by character. Free online token comparator with visual diff highlighting.',
     type: 'website',
     url: 'https://unblockdevs.com/token-comparator',
   },

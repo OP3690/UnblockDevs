@@ -3,8 +3,10 @@ import AiProductivityToolsCompleteGuideClient from './client';
 
 export const metadata: Metadata = {
   title: 'AI Productivity Tools: Complete Guide to Cursor, Claude, and More | UnblockDevs',
-  description: 'Complete guide to AI productivity tools: Cursor AI, Claude, Perplexity, and other AI assistants. Learn how to use them effectively, best prompts, and real-world applications.',
+  description: 'UnblockDevs AI Tools Guide: Complete guide to AI productivity tools: Cursor AI, Claude, Perplexity, and other AI assistants. Learn how to use them effectively, best prompts, and real-world applications.',
   keywords: [
+    'unblock devs ai',
+    'unblockdevs ai',
     'ai productivity tools',
     'cursor ai',
     'claude ai',

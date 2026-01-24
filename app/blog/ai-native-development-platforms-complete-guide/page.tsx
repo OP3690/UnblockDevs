@@ -3,8 +3,10 @@ import AiNativeDevelopmentPlatformsClient from './client';
 
 export const metadata: Metadata = {
   title: 'AI-Native Development Platforms: Complete Guide 2026 | UnblockDevs',
-  description: 'Complete guide to AI-native development platforms: definition, what they are, when to use them, how they work, and why they matter. Learn about AI-first development tools, platforms, and best practices for building AI-powered applications.',
+  description: 'UnblockDevs AI Guide: Complete guide to AI-native development platforms: definition, what they are, when to use them, how they work, and why they matter. Learn about AI-first development tools, platforms, and best practices for building AI-powered applications.',
   keywords: [
+    'unblock devs ai',
+    'unblockdevs ai',
     'ai-native development platforms',
     'ai-native platforms',
     'ai development platforms',
