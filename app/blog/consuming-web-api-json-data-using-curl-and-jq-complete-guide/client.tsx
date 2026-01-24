@@ -48,7 +48,7 @@ export default function ConsumingWebApiJsonDataUsingCurlAndJqCompleteGuideClient
             },
             {
               question: 'What are common jq filters for API JSON data?',
-              answer: 'Common jq filters include: `.` (pretty print), `.field` (access field), `.[]` (array iteration), `.[0]` (first element), `.users[]` (iterate users array), `.users[0].name` (nested access), `select(.age > 18)` (filtering), `map(.name)` (transform), and `{name: .name, age: .age}` (create new object).',
+              answer: 'Common jq filters include: `.` (pretty print), `.field` (access field), `.[]` (array iteration), `.[0]` (first element), `.users[]` (iterate users array), `.users[0].name` (nested access), `select(.age &gt; 18)` (filtering), `map(.name)` (transform), and creating new objects with field selection.',
             },
             {
               question: 'How do I handle authentication with curl and jq?',
