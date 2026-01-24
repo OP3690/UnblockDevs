@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Code2, Zap, CheckCircle, AlertCircle, HelpCircle, Globe, Clock, Code, TrendingUp, BarChart3, Activity, Network, FileText, ArrowRight, Key, BookOpen } from 'lucide-react';
+import { ArrowLeft, Code2, Zap, CheckCircle, AlertCircle, HelpCircle, Globe, Clock, Code, TrendingUp, BarChart3, Activity, Network, FileText, ArrowRight, Key, BookOpen, Terminal } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
 import BlogSocialShare from '@/components/BlogSocialShare';
 import NewsletterSignup from '@/components/NewsletterSignup';
