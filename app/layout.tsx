@@ -641,21 +641,36 @@ export default function RootLayout({
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="manifest" href="/manifest.json" />
         
-        {/* Canonical URL - Always points to base URL (removes query parameters) */}
+        {/* Canonical URL - Smart canonical handling (removes query parameters, preserves page URLs) */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
+                // Get current URL without query parameters
+                const currentPath = window.location.pathname;
+                const hasQueryParams = window.location.search.length > 0;
+                const isHomepage = currentPath === '/' || currentPath === '';
+                
                 // Remove existing canonical tags
                 const existingCanonicals = document.querySelectorAll('link[rel="canonical"]');
                 existingCanonicals.forEach(function(link) {
                   link.remove();
                 });
                 
-                // Create new canonical tag pointing to base URL
+                // Determine canonical URL
+                let canonicalUrl;
+                if (isHomepage || hasQueryParams) {
+                  // Homepage or URLs with query params -> base URL
+                  canonicalUrl = 'https://unblockdevs.com';
+                } else {
+                  // Dedicated pages -> preserve their URL (without query params)
+                  canonicalUrl = 'https://unblockdevs.com' + currentPath;
+                }
+                
+                // Create new canonical tag
                 const canonical = document.createElement('link');
                 canonical.rel = 'canonical';
-                canonical.href = 'https://unblockdevs.com';
+                canonical.href = canonicalUrl;
                 document.head.appendChild(canonical);
               })();
             `,

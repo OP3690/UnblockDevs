@@ -14,6 +14,9 @@ export const metadata: Metadata = {
     'json schema from json',
     'auto generate json schema'
   ],
+  alternates: {
+    canonical: 'https://unblockdevs.com/json-schema-generation',
+  },
 };
 
 export default function JsonSchemaGeneration() {
