@@ -688,6 +688,10 @@ function HomeClient() {
               <div className="flex items-center gap-2">
                 <Database className="w-4 h-4" />
                 <span className="text-sm">SQL Formatter</span>
+                <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold flex items-center gap-1">
+                  <TrendingUp className="w-3 h-3" />
+                  Frequently Used
+                </span>
               </div>
             </Link>
             <Link
