@@ -555,7 +555,7 @@ function HomeClient() {
           </div>
           
           {/* Tabs */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-2 sm:gap-3 pt-4 pb-0 -mb-px justify-items-center">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-2 sm:gap-3 pt-4 pb-0 -mb-px justify-items-center">
             <button
               onClick={() => handleTabChange('converter')}
               className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 w-full max-w-fit ${
@@ -630,8 +630,8 @@ function HomeClient() {
               <div className="flex items-center gap-2">
                 <FileSearch className="w-4 h-4" />
                 <span className="text-sm">Logs Analyzer</span>
-                <span className="px-2 py-0.5 bg-orange-100 text-orange-700 rounded-full text-xs font-semibold flex items-center gap-1">
-                  <TrendingUp className="w-3 h-3" />
+                <span className="px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded-full text-[10px] font-semibold flex items-center gap-0.5">
+                  <TrendingUp className="w-2.5 h-2.5" />
                   Most Used
                 </span>
               </div>
@@ -688,8 +688,8 @@ function HomeClient() {
               <div className="flex items-center gap-2">
                 <Database className="w-4 h-4" />
                 <span className="text-sm">SQL Formatter</span>
-                <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold flex items-center gap-1">
-                  <TrendingUp className="w-3 h-3" />
+                <span className="px-1.5 py-0.5 bg-blue-100 text-blue-700 rounded-full text-[10px] font-semibold flex items-center gap-0.5">
+                  <TrendingUp className="w-2.5 h-2.5" />
                   Frequently Used
                 </span>
               </div>
@@ -710,7 +710,7 @@ function HomeClient() {
               <div className="flex items-center gap-2">
                 <Scissors className="w-4 h-4" />
                 <span className="text-sm">Prompt Chunker</span>
-                <span className="px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold">
+                <span className="px-1.5 py-0.5 bg-purple-100 text-purple-700 rounded-full text-[10px] font-semibold">
                   AI
                 </span>
               </div>
