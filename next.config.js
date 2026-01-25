@@ -28,8 +28,12 @@ const nextConfig = {
   // Redirects configuration
   async redirects() {
     return [
-      // No redirects configured - all redirects should be managed in Vercel Dashboard
-      // If you see redirects to /lander, remove them from Vercel Dashboard
+      // Permanent redirect from /lander to homepage (301 redirect for SEO)
+      {
+        source: '/lander',
+        destination: '/',
+        permanent: true, // 301 redirect
+      },
     ]
   },
   // Headers for better caching
