@@ -555,10 +555,10 @@ function HomeClient() {
           </div>
           
           {/* Tabs */}
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-4 pb-0 -mb-px overflow-x-auto scrollbar-hide">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-2 sm:gap-3 pt-4 pb-0 -mb-px justify-items-center">
             <button
               onClick={() => handleTabChange('converter')}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 ${
+              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 w-full max-w-fit ${
                 activeTab === 'converter'
                   ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
                   : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
@@ -571,7 +571,7 @@ function HomeClient() {
             </button>
             <Link
               href={toolPageUrls.beautifier}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
+              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
             >
               <div className="flex items-center gap-2">
                 <Code2 className="w-4 h-4" />
@@ -580,7 +580,7 @@ function HomeClient() {
             </Link>
             <Link
               href={toolPageUrls.fixer}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
+              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
             >
               <div className="flex items-center gap-2">
                 <Wrench className="w-4 h-4" />
@@ -589,7 +589,7 @@ function HomeClient() {
             </Link>
             <Link
               href={toolPageUrls.builder}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
+              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
             >
               <div className="flex items-center gap-2">
                 <FileSpreadsheet className="w-4 h-4" />
@@ -598,7 +598,7 @@ function HomeClient() {
             </Link>
             <Link
               href={toolPageUrls.comparator}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
+              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
             >
               <div className="flex items-center gap-2">
                 <GitCompare className="w-4 h-4" />
@@ -607,7 +607,7 @@ function HomeClient() {
             </Link>
             <Link
               href={toolPageUrls.jsoncompare}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
+              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
             >
               <div className="flex items-center gap-2">
                 <GitCompare className="w-4 h-4" />
@@ -616,7 +616,7 @@ function HomeClient() {
             </Link>
             <Link
               href={toolPageUrls.schema}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
+              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
             >
               <div className="flex items-center gap-2">
                 <FileCode className="w-4 h-4" />
@@ -625,7 +625,7 @@ function HomeClient() {
             </Link>
             <Link
               href={toolPageUrls.logs}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
+              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
             >
               <div className="flex items-center gap-2">
                 <FileSearch className="w-4 h-4" />
@@ -638,7 +638,7 @@ function HomeClient() {
             </Link>
             <Link
               href={toolPageUrls.payload}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
+              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
             >
               <div className="flex items-center gap-2">
                 <BarChart3 className="w-4 h-4" />
@@ -647,7 +647,7 @@ function HomeClient() {
             </Link>
             <Link
               href={toolPageUrls.curl}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
+              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
             >
               <div className="flex items-center gap-2">
                 <Code className="w-4 h-4" />
@@ -656,7 +656,7 @@ function HomeClient() {
             </Link>
             <Link
               href={toolPageUrls.mock}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
+              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
             >
               <div className="flex items-center gap-2">
                 <Server className="w-4 h-4" />
@@ -665,7 +665,7 @@ function HomeClient() {
             </Link>
             <Link
               href={toolPageUrls.testdata}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
+              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
             >
               <div className="flex items-center gap-2">
                 <Database className="w-4 h-4" />
@@ -674,7 +674,7 @@ function HomeClient() {
             </Link>
             <Link
               href={toolPageUrls.config}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
+              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
             >
               <div className="flex items-center gap-2">
                 <Settings className="w-4 h-4" />
@@ -683,7 +683,7 @@ function HomeClient() {
             </Link>
             <Link
               href={toolPageUrls.sql}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
+              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
             >
               <div className="flex items-center gap-2">
                 <Database className="w-4 h-4" />
@@ -696,7 +696,7 @@ function HomeClient() {
             </Link>
             <Link
               href={toolPageUrls.insights}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
+              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
             >
               <div className="flex items-center gap-2">
                 <BarChart3 className="w-4 h-4" />
@@ -705,7 +705,7 @@ function HomeClient() {
             </Link>
             <Link
               href={toolPageUrls.promptchunk}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
+              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
             >
               <div className="flex items-center gap-2">
                 <Scissors className="w-4 h-4" />
@@ -717,7 +717,7 @@ function HomeClient() {
             </Link>
             <Link
               href={toolPageUrls.tokencompare}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
+              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
             >
               <div className="flex items-center gap-2">
                 <Key className="w-4 h-4" />
@@ -726,7 +726,7 @@ function HomeClient() {
             </Link>
             <Link
               href={toolPageUrls.timezone}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
+              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
             >
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4" />
@@ -735,7 +735,7 @@ function HomeClient() {
             </Link>
             <Link
               href={toolPageUrls.hartocurl}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
+              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
             >
               <div className="flex items-center gap-2">
                 <Network className="w-4 h-4" />
@@ -744,7 +744,7 @@ function HomeClient() {
             </Link>
             <Link
               href={toolPageUrls.curlfailure}
-              className={`px-4 sm:px-5 py-3 sm:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent`}
+              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
             >
               <div className="flex items-center gap-2">
                 <AlertTriangle className="w-4 h-4" />
