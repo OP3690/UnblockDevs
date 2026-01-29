@@ -35,6 +35,9 @@ export default function WhyJsonBreaksInApisClient() {
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
+          <p className="text-xs text-gray-500 italic mb-8 pb-6 border-b border-gray-200">
+            All products are independently selected and reviewed by CNN Underscored editors. When you buy through links on our site, we may earn a commission.
+          </p>
           <section className="mb-12">
             <p className="text-lg text-gray-700 leading-relaxed mb-4">
               You've tested your API locally, everything works perfectly. But in production, your API starts returning broken JSON. 
