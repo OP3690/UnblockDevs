@@ -760,12 +760,14 @@ function HomeClient() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12 animate-fade-in">
-        <p className="text-xs text-gray-500 italic mb-6 pb-4 border-b border-gray-200 text-center">
-          We earn commissions when you shop through the links below.
-        </p>
         {activeTab === 'converter' && (
           rows.length === 0 ? (
-            <JsonInput onJsonSubmit={handleJsonSubmit} />
+            <>
+              <JsonInput onJsonSubmit={handleJsonSubmit} />
+              <p className="text-xs text-gray-500 italic mt-6 pt-4 border-t border-gray-200 text-center">
+                We earn commissions when you shop through the links below.
+              </p>
+            </>
           ) : (
             <>
               <div className="mb-6 sm:mb-8">
