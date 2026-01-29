@@ -60,6 +60,9 @@ export default function TokensCompleteGuideClient() {
           ]}
         />
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
+          <p className="text-xs text-gray-500 italic mb-8 pb-6 border-b border-gray-200">
+            All products are independently selected and reviewed by CNN Underscored editors. When you buy through links on our site, we may earn a commission.
+          </p>
           <section className="mb-12">
             <p className="text-lg text-gray-700 leading-relaxed mb-4">
               <strong>Tokens</strong> are fundamental to modern authentication and authorization systems. Understanding 

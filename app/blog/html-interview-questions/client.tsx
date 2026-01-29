@@ -150,6 +150,9 @@ export default function HTMLInterviewQuestionsClient() {
 
 
       <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <p className="text-xs text-gray-500 italic mb-8 pb-6 border-b border-gray-200">
+          All products are independently selected and reviewed by CNN Underscored editors. When you buy through links on our site, we may earn a commission.
+        </p>
         <header className="mb-12 text-center">
           <h1 className="text-5xl font-extrabold text-gray-900 mb-6 leading-tight">
             HTML Interview Questions: Top 50 Questions & Answers

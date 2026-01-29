@@ -31,6 +31,9 @@ export default function BlogPostClient() {
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-20 md:pt-24">
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
+          <p className="text-xs text-gray-500 italic mb-8 pb-6 border-b border-gray-200">
+            All products are independently selected and reviewed by CNN Underscored editors. When you buy through links on our site, we may earn a commission.
+          </p>
           {/* Introduction */}
           <section className="mb-12">
             <p className="text-lg text-gray-700 leading-relaxed mb-4">
