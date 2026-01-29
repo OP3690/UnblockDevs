@@ -64,7 +64,7 @@ export default function WhyMyApiWorksInPostmanButNotInBrowserClient() {
 
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
           <p className="text-xs text-gray-500 italic mb-8 pb-6 border-b border-gray-200">
-            All products are independently selected and reviewed by CNN Underscored editors. When you buy through links on our site, we may earn a commission.
+            We earn commissions when you shop through the links below.
           </p>
           {/* Definition Section */}
           <section className="mb-12">

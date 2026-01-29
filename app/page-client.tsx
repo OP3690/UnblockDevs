@@ -761,7 +761,7 @@ function HomeClient() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12 animate-fade-in">
         <p className="text-xs text-gray-500 italic mb-6 pb-4 border-b border-gray-200 text-center">
-          All products are independently selected and reviewed by CNN Underscored editors. When you buy through links on our site, we may earn a commission.
+          We earn commissions when you shop through the links below.
         </p>
         {activeTab === 'converter' && (
           rows.length === 0 ? (

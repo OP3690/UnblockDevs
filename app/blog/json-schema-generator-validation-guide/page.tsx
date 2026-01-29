@@ -51,7 +51,7 @@ export default function BlogPost() {
 
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <p className="text-xs text-gray-500 italic mb-8 pb-6 border-b border-gray-200">
-          All products are independently selected and reviewed by CNN Underscored editors. When you buy through links on our site, we may earn a commission.
+          We earn commissions when you shop through the links below.
         </p>
         <header className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
