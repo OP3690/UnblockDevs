@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ArrowLeft, FileCode, CheckCircle, XCircle, AlertTriangle, BookOpen, Code, Zap, Shield, Lightbulb, Info } from 'lucide-react';
 
 import BlogSocialShare from '@/components/BlogSocialShare';
-import CommissionDisclosure from '@/components/CommissionDisclosure';
+import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
 export default function JsonFormatStandardsGuideClient() {
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
@@ -46,9 +46,8 @@ export default function JsonFormatStandardsGuideClient() {
 
 
       {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
+      <BlogLayoutWithSidebarAds>
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          <CommissionDisclosure />
           {/* Introduction */}
           <section className="mb-12">
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 p-6 rounded-r-lg mb-6">
@@ -889,7 +888,7 @@ return output`}
             </div>
           </section>
         </article>
-      </main>
+      </BlogLayoutWithSidebarAds>
 
       {/* Footer Navigation */}
       <footer className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

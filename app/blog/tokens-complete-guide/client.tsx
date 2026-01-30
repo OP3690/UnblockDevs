@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { ArrowLeft, Key, Shield, CheckCircle, ExternalLink, Lock, Clock, User } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
 import BlogSocialShare from '@/components/BlogSocialShare';
-import CommissionDisclosure from '@/components/CommissionDisclosure';
+import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
 
 export default function TokensCompleteGuideClient() {
   return (
@@ -35,7 +35,7 @@ export default function TokensCompleteGuideClient() {
       />
 
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
+      <BlogLayoutWithSidebarAds>
         <FAQSchema
           faqs={[
             {
@@ -61,7 +61,6 @@ export default function TokensCompleteGuideClient() {
           ]}
         />
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          <CommissionDisclosure />
           <section className="mb-12">
             <p className="text-lg text-gray-700 leading-relaxed mb-4">
               <strong>Tokens</strong> are fundamental to modern authentication and authorization systems. Understanding 
@@ -324,7 +323,7 @@ export default function TokensCompleteGuideClient() {
             </Link>
           </section>
         </article>
-      </main>
+      </BlogLayoutWithSidebarAds>
     </div>
   );
 }

@@ -6,7 +6,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import FAQSchema from '@/components/FAQSchema';
 import BlogSocialShare from '@/components/BlogSocialShare';
-import CommissionDisclosure from '@/components/CommissionDisclosure';
+import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
 
 export default function JsonStringifyCompleteGuideClient() {
   const [copiedExample, setCopiedExample] = useState<string | null>(null);
@@ -88,7 +88,7 @@ console.log(jsonString);
       />
 
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
+      <BlogLayoutWithSidebarAds>
         <FAQSchema
           faqs={[
             {
@@ -110,7 +110,6 @@ console.log(jsonString);
           ]}
         />
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          <CommissionDisclosure />
           <section className="mb-12">
             <p className="text-lg text-gray-700 leading-relaxed mb-4">
               <code className="bg-gray-100 px-1 rounded">JSON.stringify()</code> is one of the most important methods 
@@ -295,7 +294,7 @@ const noNewlines = JSON.stringify(obj, null, 0);`}</code>
             </Link>
           </section>
         </article>
-      </main>
+      </BlogLayoutWithSidebarAds>
     </div>
   );
 }

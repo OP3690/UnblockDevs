@@ -6,7 +6,7 @@ import FAQSchema from '@/components/FAQSchema';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import FeedbackForm from '@/components/FeedbackForm';
 import BlogSocialShare from '@/components/BlogSocialShare';
-import CommissionDisclosure from '@/components/CommissionDisclosure';
+import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
 
 export default function GreedyAlgorithmExplainedWithSimpleExamplesClient() {
   return (
@@ -36,7 +36,7 @@ export default function GreedyAlgorithmExplainedWithSimpleExamplesClient() {
         variant="floating"
       />
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
+      <BlogLayoutWithSidebarAds>
         <FAQSchema
           faqs={[
             {
@@ -63,7 +63,6 @@ export default function GreedyAlgorithmExplainedWithSimpleExamplesClient() {
         />
 
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          <CommissionDisclosure />
           {/* Definition Section */}
           <section className="mb-12">
             <div className="flex items-center gap-3 mb-4">
@@ -579,7 +578,7 @@ print(f"Maximum value: {max_value}")  # Output: 240.0
         <section className="mt-12">
           <FeedbackForm toolName="Greedy Algorithm Guide" />
         </section>
-      </main>
+      </BlogLayoutWithSidebarAds>
     </div>
   );
 }

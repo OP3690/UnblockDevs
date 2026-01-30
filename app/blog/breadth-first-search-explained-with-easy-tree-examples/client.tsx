@@ -6,7 +6,7 @@ import { ArrowLeft, BookOpen, Zap, Layers, CheckCircle, AlertCircle, Target, Tre
 import BlogSocialShare from '@/components/BlogSocialShare';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import FAQSchema from '@/components/FAQSchema';
-import CommissionDisclosure from '@/components/CommissionDisclosure';
+import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
 
 export default function BlogPostClient() {
   return (
@@ -30,9 +30,8 @@ export default function BlogPostClient() {
       />
 
       {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-20 md:pt-24">
+      <BlogLayoutWithSidebarAds>
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          <CommissionDisclosure />
           {/* Introduction */}
           <section className="mb-12">
             <p className="text-lg text-gray-700 leading-relaxed mb-4">
@@ -484,7 +483,7 @@ export default function BlogPostClient() {
         <section className="mt-12">
           <NewsletterSignup />
         </section>
-      </main>
+      </BlogLayoutWithSidebarAds>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { ArrowLeft, X, CheckCircle, ExternalLink } from 'lucide-react';
 
 import BlogSocialShare from '@/components/BlogSocialShare';
-import CommissionDisclosure from '@/components/CommissionDisclosure';
+import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
 export default function InvalidJsonVsValidJsonClient() {
   const examples = [
     {
@@ -120,9 +120,8 @@ export default function InvalidJsonVsValidJsonClient() {
       />
 
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
+      <BlogLayoutWithSidebarAds>
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          <CommissionDisclosure />
           <section className="mb-12">
             <p className="text-lg text-gray-700 leading-relaxed mb-4">
               Understanding the difference between <strong>invalid JSON</strong> and <strong>valid JSON</strong> is crucial for every developer. 
@@ -218,7 +217,7 @@ export default function InvalidJsonVsValidJsonClient() {
             </Link>
           </section>
         </article>
-      </main>
+      </BlogLayoutWithSidebarAds>
     </div>
   );
 }
