@@ -6,6 +6,7 @@ import FAQSchema from '@/components/FAQSchema';
 import BlogSocialShare from '@/components/BlogSocialShare';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import FeedbackForm from '@/components/FeedbackForm';
+import CommissionDisclosure from '@/components/CommissionDisclosure';
 
 export default function FixCannotReadPropertiesOfUndefinedReadingLengthJavaScriptClient() {
   return (
@@ -63,9 +64,7 @@ export default function FixCannotReadPropertiesOfUndefinedReadingLengthJavaScrip
         />
 
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          <p className="text-xs text-gray-500 italic mb-8 pb-6 border-b border-gray-200">
-            We earn commissions when you shop through the links below.
-          </p>
+          <CommissionDisclosure />
           {/* Definition Section */}
           <section className="mb-12">
             <div className="flex items-center gap-3 mb-4">

@@ -11,6 +11,7 @@ import NewsletterSignup from '@/components/NewsletterSignup';
 import FeedbackForm from '@/components/FeedbackForm';
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget';
 import JsonInput from '@/components/JsonInput';
+import CommissionDisclosure from '@/components/CommissionDisclosure';
 import DataTable from '@/components/DataTable';
 import SectionManager from '@/components/SectionManager';
 import JsonBeautifier from '@/components/JsonBeautifier';
@@ -764,9 +765,7 @@ function HomeClient() {
           rows.length === 0 ? (
             <>
               <JsonInput onJsonSubmit={handleJsonSubmit} />
-              <p className="text-xs text-gray-500 italic mt-6 pt-4 border-t border-gray-200 text-center">
-                We earn commissions when you shop through the links below.
-              </p>
+              <CommissionDisclosure variant="belowInput" />
             </>
           ) : (
             <>

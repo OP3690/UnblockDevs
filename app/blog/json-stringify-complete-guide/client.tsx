@@ -109,9 +109,7 @@ console.log(jsonString);
           ]}
         />
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          <p className="text-xs text-gray-500 italic mb-8 pb-6 border-b border-gray-200">
-            We earn commissions when you shop through the links below.
-          </p>
+          <CommissionDisclosure />
           <section className="mb-12">
             <p className="text-lg text-gray-700 leading-relaxed mb-4">
               <code className="bg-gray-100 px-1 rounded">JSON.stringify()</code> is one of the most important methods 

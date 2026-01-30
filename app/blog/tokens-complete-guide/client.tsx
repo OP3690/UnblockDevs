@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ArrowLeft, Key, Shield, CheckCircle, ExternalLink, Lock, Clock, User } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
 import BlogSocialShare from '@/components/BlogSocialShare';
+import CommissionDisclosure from '@/components/CommissionDisclosure';
 
 export default function TokensCompleteGuideClient() {
   return (
@@ -60,9 +61,7 @@ export default function TokensCompleteGuideClient() {
           ]}
         />
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          <p className="text-xs text-gray-500 italic mb-8 pb-6 border-b border-gray-200">
-            We earn commissions when you shop through the links below.
-          </p>
+          <CommissionDisclosure />
           <section className="mb-12">
             <p className="text-lg text-gray-700 leading-relaxed mb-4">
               <strong>Tokens</strong> are fundamental to modern authentication and authorization systems. Understanding 
