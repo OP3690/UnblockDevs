@@ -6,6 +6,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import FAQSchema from '@/components/FAQSchema';
 import BlogSocialShare from '@/components/BlogSocialShare';
+import CommissionDisclosure from '@/components/CommissionDisclosure';
 
 export default function JsonStringifyVsJsonParseDifferenceClient() {
   const [copiedExample, setCopiedExample] = useState<string | null>(null);

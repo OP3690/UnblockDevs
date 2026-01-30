@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ArrowLeft, X, CheckCircle, ExternalLink } from 'lucide-react';
 
 import BlogSocialShare from '@/components/BlogSocialShare';
+import CommissionDisclosure from '@/components/CommissionDisclosure';
 export default function InvalidJsonVsValidJsonClient() {
   const examples = [
     {

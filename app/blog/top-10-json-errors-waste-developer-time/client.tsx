@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ArrowLeft, Clock, AlertTriangle, CheckCircle, Wrench, ExternalLink } from 'lucide-react';
 
 import BlogSocialShare from '@/components/BlogSocialShare';
+import CommissionDisclosure from '@/components/CommissionDisclosure';
 export default function Top10JsonErrorsClient() {
   const errors = [
     {

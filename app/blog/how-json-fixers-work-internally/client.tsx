@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ArrowLeft, Code, AlertTriangle, CheckCircle, ExternalLink, Brain } from 'lucide-react';
 
 import BlogSocialShare from '@/components/BlogSocialShare';
+import CommissionDisclosure from '@/components/CommissionDisclosure';
 export default function HowJsonFixersWorkClient() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-indigo-50">

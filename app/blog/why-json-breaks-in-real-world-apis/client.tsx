@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ArrowLeft, AlertTriangle, CheckCircle, Wrench, ExternalLink, Code, Server } from 'lucide-react';
 
 import BlogSocialShare from '@/components/BlogSocialShare';
+import CommissionDisclosure from '@/components/CommissionDisclosure';
 export default function WhyJsonBreaksInApisClient() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-red-50 to-orange-50">
