@@ -51,6 +51,9 @@ export default function JsonInput({ onJsonSubmit }: JsonInputProps) {
     reader.readAsText(file);
   };
 
+  const textareaId = 'json-input-field';
+  const errorId = 'json-input-error';
+
   const handleSubmit = () => {
     if (!jsonText.trim()) {
       setError('Please enter or upload JSON data');
@@ -59,7 +62,7 @@ export default function JsonInput({ onJsonSubmit }: JsonInputProps) {
 
     const validation = validateJson(jsonText);
     if (!validation.valid) {
-      setError(validation.error || 'Invalid JSON');
+      setError(validation.error || 'Invalid JSON format.');
       toast.error('Invalid JSON format');
       return;
     }
@@ -120,11 +123,12 @@ export default function JsonInput({ onJsonSubmit }: JsonInputProps) {
       </div>
 
       <div className="mb-6">
-        <label className="block text-sm font-semibold text-gray-700 mb-3">
-          JSON Text
+        <label htmlFor={textareaId} className="block text-sm font-semibold text-gray-700 mb-3">
+          JSON Input:
         </label>
         <div className="relative">
           <textarea
+            id={textareaId}
             value={jsonText}
             onChange={handleTextChange}
             placeholder='Paste your JSON here, e.g., {"name": "John", "age": 30}'
@@ -133,10 +137,12 @@ export default function JsonInput({ onJsonSubmit }: JsonInputProps) {
                 ? 'border-red-300 focus:ring-red-500'
                 : 'border-gray-300 focus:border-blue-500'
             }`}
+            aria-invalid={!!error}
+            aria-describedby={error ? errorId : undefined}
           />
           {error && (
-            <div className="absolute bottom-3 left-3 right-3 bg-red-50 border border-red-200 rounded-lg p-3 flex items-start gap-2.5 shadow-sm">
-              <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+            <div id={errorId} className="absolute bottom-3 left-3 right-3 bg-red-50 border border-red-200 rounded-lg p-3 flex items-start gap-2.5 shadow-sm" role="alert">
+              <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" aria-hidden="true" />
               <span className="text-sm text-red-700 font-medium">{error}</span>
             </div>
           )}

@@ -4,8 +4,8 @@ import { Toaster } from 'react-hot-toast'
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget'
 
 export const metadata: Metadata = {
-  title: 'Free JSON Tools | Viewer, Formatter, Parser | UnblockDevs',
-  description: 'Interact with free JSON Viewer Tools online. Edit, validate, and convert JSON instantly. No signup—live demo and downloadable results.',
+  title: 'JSON Viewer Tools – Free Online Formatter, Parser & Viewer | UnblockDevs',
+  description: 'JSON Viewer Tools: view, format, validate, and convert JSON in your browser. Free JSON formatter, parser, and validator—no signup. Clear overview of services.',
   keywords: [
     // JSON Viewer Tools
     'json viewer',
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://unblockdevs.com',
     title: 'Free JSON Tools | Viewer, Formatter, Parser | UnblockDevs',
-    description: 'Interact with free JSON Viewer Tools online. Edit, validate, convert—live demo and downloadable results. No signup.',
+    description: 'JSON Viewer Tools: view, format, validate, and convert JSON in your browser. Free formatter, parser, validator—no signup. Clear overview of services.',
     siteName: 'UnblockDevs',
       images: [
         {
@@ -83,7 +83,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Free JSON Tools | Viewer, Formatter, Parser | UnblockDevs',
-    description: 'Interact with free JSON Viewer Tools online. Edit, validate, convert—live demo and downloadable results. No signup.',
+    description: 'JSON Viewer Tools: view, format, validate, and convert JSON in your browser. Free formatter, parser, validator—no signup. Clear overview of services.',
     images: ['/og-image.png'],
   },
   alternates: {
@@ -139,7 +139,7 @@ export default function RootLayout({
       price: '0',
       priceCurrency: 'USD',
     },
-    description: 'Interact with free JSON Viewer Tools online. Edit, validate, and convert JSON instantly. No signup—live demo and downloadable results.',
+    description: 'JSON Viewer Tools: view, format, validate, and convert JSON in your browser. Free formatter, parser, validator—no signup. Clear overview of services.',
     url: 'https://unblockdevs.com',
     aggregateRating: {
       '@type': 'AggregateRating',

@@ -493,9 +493,15 @@ function HomeClient() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="relative min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <BuyMeACoffeeWidget />
-      
+      {/* Skip to main content for keyboard and screen reader users */}
+      <a
+        href="#main-content"
+        className="absolute left-[-9999px] w-px h-px overflow-hidden focus:left-4 focus:top-4 focus:z-[100] focus:w-auto focus:h-auto focus:overflow-visible focus:px-4 focus:py-3 focus:bg-white focus:text-gray-900 focus:font-semibold focus:rounded-lg focus:shadow-lg focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
+      >
+        Skip to main content
+      </a>
       {/* Bookmark Prompt Banner */}
       {showBookmarkPrompt && (
         <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-md border-b border-blue-500/30 animate-slide-down">
@@ -527,7 +533,7 @@ function HomeClient() {
       )}
 
       {/* Header */}
-      <header className={`bg-white/98 backdrop-blur-lg shadow-md border-b border-gray-200/70 ${showBookmarkPrompt ? 'sticky top-[73px]' : 'sticky top-0'} z-40 transition-all duration-300`}>
+      <header role="banner" className={`bg-white/98 backdrop-blur-lg shadow-md border-b border-gray-200/70 ${showBookmarkPrompt ? 'sticky top-[73px]' : 'sticky top-0'} z-40 transition-all duration-300`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Top Bar - Ad Friendly */}
           <div className="flex items-center justify-between py-6 border-b border-gray-100 gap-6">
@@ -836,7 +842,7 @@ function HomeClient() {
       </div>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12 animate-fade-in">
+      <main id="main-content" role="main" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12 animate-fade-in">
         {activeTab === 'converter' && (
           rows.length === 0 ? (
             <>
