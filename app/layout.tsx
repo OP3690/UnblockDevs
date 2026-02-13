@@ -4,7 +4,7 @@ import { Toaster } from 'react-hot-toast'
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget'
 
 export const metadata: Metadata = {
-  title: 'Free Developer Tools – JSON, cURL, API Testing | No Login Required | UnblockDevs',
+  title: 'Free JSON Viewer Tools | Formatter, Parser, and More',
   description: 'Free online tools for JSON formatting, parsing, and viewing without login. 100% private and browser-based.',
   keywords: [
     // Primary SEO keywords
