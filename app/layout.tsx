@@ -4,8 +4,8 @@ import { Toaster } from 'react-hot-toast'
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget'
 
 export const metadata: Metadata = {
-  title: 'JSON Viewer | Formatter, Parser & Validator Online – Free JSON Tools | UnblockDevs',
-  description: 'Free JSON Tools — View, Validate, and Convert in Your Browser. Access the JSON Viewer, Formatter, Validator, and more — no signup, instant access, private by design.',
+  title: 'Free JSON Tools | Viewer, Formatter, Parser | UnblockDevs',
+  description: 'Free JSON tools for developers: view, format, validate, and convert JSON in your browser. No signup required.',
   keywords: [
     // JSON Viewer Tools
     'json viewer',
@@ -68,8 +68,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://unblockdevs.com',
-    title: 'JSON Viewer | Formatter, Parser & Validator Online – Free JSON Tools | UnblockDevs',
-    description: 'Free JSON Tools — View, Validate, and Convert in Your Browser. JSON Viewer, Formatter, Validator — no signup, instant access, private by design.',
+    title: 'Free JSON Tools | Viewer, Formatter, Parser | UnblockDevs',
+    description: 'Free JSON Viewer, Formatter & Parser in your browser. No signup. Fast & private.',
     siteName: 'UnblockDevs',
       images: [
         {
@@ -82,8 +82,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'JSON Viewer | Formatter, Parser & Validator Online – Free JSON Tools | UnblockDevs',
-    description: 'Free JSON Tools — View, Validate, and Convert in Your Browser. JSON Viewer, Formatter, Validator — no signup, instant access, private by design.',
+    title: 'Free JSON Tools | Viewer, Formatter, Parser | UnblockDevs',
+    description: 'Free JSON Viewer, Formatter & Parser in your browser. No signup. Fast & private.',
     images: ['/og-image.png'],
   },
   alternates: {
@@ -139,7 +139,7 @@ export default function RootLayout({
       price: '0',
       priceCurrency: 'USD',
     },
-    description: 'Free JSON Tools — View, Validate, and Convert in Your Browser. JSON Viewer, Formatter, Validator — no signup, instant access, private by design.',
+    description: 'Free JSON tools for developers: view, format, validate, and convert JSON in your browser. No signup required.',
     url: 'https://unblockdevs.com',
     aggregateRating: {
       '@type': 'AggregateRating',

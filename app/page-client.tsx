@@ -769,8 +769,9 @@ function HomeClient() {
               </div>
               {/* Primary conversion CTAs — guide users to tool usage */}
               <div className="mt-8 mb-6 text-center">
-                <p className="text-gray-700 font-medium mb-3">Free JSON Tools — View, Validate, and Convert in Your Browser</p>
-                <p className="text-gray-600 text-sm mb-4 max-w-xl mx-auto">Access the JSON Viewer, Formatter, Validator, and more — no signup, instant access, private by design.</p>
+                <h2 className="text-lg font-bold text-gray-900 mb-2">Free JSON Tools for Developers</h2>
+                <p className="text-gray-700 text-sm mb-3 max-w-xl mx-auto">Explore fast, secure JSON Viewer, JSON Formatter, and JSON Parser — all in your browser. No signup required.</p>
+                <p className="text-gray-600 text-sm mb-4 max-w-xl mx-auto">Start here: paste your JSON to view, format, validate, or convert to CSV/Excel.</p>
                 <div className="flex flex-wrap items-center justify-center gap-3">
                   <a
                     href="#json-input-section"
