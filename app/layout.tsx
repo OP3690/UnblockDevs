@@ -5,7 +5,7 @@ import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget'
 
 export const metadata: Metadata = {
   title: 'Free Developer Tools – JSON, cURL, API Testing | No Login Required | UnblockDevs',
-  description: 'Free online developer tools: JSON schema generator, JSON validator, cURL converter, HAR to cURL, token comparator, and more. No signup, no login, 100% private. All tools work in your browser.',
+  description: 'Free online tools for JSON formatting, parsing, and viewing without login. 100% private and browser-based.',
   keywords: [
     // Primary SEO keywords
     'curl to requests',
