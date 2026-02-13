@@ -5,7 +5,7 @@ import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget'
 
 export const metadata: Metadata = {
   title: 'JSON Viewer | Formatter, Parser & Validator Online – Free JSON Tools | UnblockDevs',
-  description: 'JSON Viewer with JSON formatter, parser, validator, beautifier, and fixer in one place. Convert JSON to CSV, Excel, Table. Free, private, browser-based—no login.',
+  description: 'Free JSON Tools — View, Validate, and Convert in Your Browser. Access the JSON Viewer, Formatter, Validator, and more — no signup, instant access, private by design.',
   keywords: [
     // JSON Viewer Tools
     'json viewer',
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://unblockdevs.com',
     title: 'JSON Viewer | Formatter, Parser & Validator Online – Free JSON Tools | UnblockDevs',
-    description: 'JSON Viewer with JSON formatter, parser, validator, beautifier, and fixer. Convert JSON to CSV, Excel, Table. Free, private, browser-based.',
+    description: 'Free JSON Tools — View, Validate, and Convert in Your Browser. JSON Viewer, Formatter, Validator — no signup, instant access, private by design.',
     siteName: 'UnblockDevs',
       images: [
         {
@@ -83,7 +83,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'JSON Viewer | Formatter, Parser & Validator Online – Free JSON Tools | UnblockDevs',
-    description: 'JSON Viewer with JSON formatter, parser, validator, beautifier, and fixer. Convert JSON to CSV, Excel, Table. Free, private, browser-based.',
+    description: 'Free JSON Tools — View, Validate, and Convert in Your Browser. JSON Viewer, Formatter, Validator — no signup, instant access, private by design.',
     images: ['/og-image.png'],
   },
   alternates: {
@@ -139,7 +139,7 @@ export default function RootLayout({
       price: '0',
       priceCurrency: 'USD',
     },
-    description: 'JSON Viewer with JSON formatter, parser, validator, beautifier, and fixer. Convert JSON to CSV, Excel, Table. Free, private, browser-based.',
+    description: 'Free JSON Tools — View, Validate, and Convert in Your Browser. JSON Viewer, Formatter, Validator — no signup, instant access, private by design.',
     url: 'https://unblockdevs.com',
     aggregateRating: {
       '@type': 'AggregateRating',

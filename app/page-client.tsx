@@ -764,7 +764,29 @@ function HomeClient() {
         {activeTab === 'converter' && (
           rows.length === 0 ? (
             <>
-              <JsonInput onJsonSubmit={handleJsonSubmit} />
+              <div id="json-input-section">
+                <JsonInput onJsonSubmit={handleJsonSubmit} />
+              </div>
+              {/* Primary conversion CTAs — guide users to tool usage */}
+              <div className="mt-8 mb-6 text-center">
+                <p className="text-gray-700 font-medium mb-3">Free JSON Tools — View, Validate, and Convert in Your Browser</p>
+                <p className="text-gray-600 text-sm mb-4 max-w-xl mx-auto">Access the JSON Viewer, Formatter, Validator, and more — no signup, instant access, private by design.</p>
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                  <a
+                    href="#json-input-section"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Open JSON Viewer
+                  </a>
+                  <Link
+                    href="/json-beautifier"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Try JSON Formatter
+                  </Link>
+                </div>
+                <p className="text-gray-500 text-xs mt-4">No signup. No login. Your data stays private.</p>
+              </div>
               <CommissionDisclosure variant="belowInput" />
             </>
           ) : (
