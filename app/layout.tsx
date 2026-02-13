@@ -5,7 +5,7 @@ import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget'
 
 export const metadata: Metadata = {
   title: 'Free JSON Tools | Viewer, Formatter, Parser | UnblockDevs',
-  description: 'Free JSON tools for developers: view, format, validate, and convert JSON in your browser. No signup required.',
+  description: 'Interact with free JSON Viewer Tools online. Edit, validate, and convert JSON instantly. No signup—live demo and downloadable results.',
   keywords: [
     // JSON Viewer Tools
     'json viewer',
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://unblockdevs.com',
     title: 'Free JSON Tools | Viewer, Formatter, Parser | UnblockDevs',
-    description: 'Free JSON Viewer, Formatter & Parser in your browser. No signup. Fast & private.',
+    description: 'Interact with free JSON Viewer Tools online. Edit, validate, convert—live demo and downloadable results. No signup.',
     siteName: 'UnblockDevs',
       images: [
         {
@@ -83,7 +83,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Free JSON Tools | Viewer, Formatter, Parser | UnblockDevs',
-    description: 'Free JSON Viewer, Formatter & Parser in your browser. No signup. Fast & private.',
+    description: 'Interact with free JSON Viewer Tools online. Edit, validate, convert—live demo and downloadable results. No signup.',
     images: ['/og-image.png'],
   },
   alternates: {
@@ -139,7 +139,7 @@ export default function RootLayout({
       price: '0',
       priceCurrency: 'USD',
     },
-    description: 'Free JSON tools for developers: view, format, validate, and convert JSON in your browser. No signup required.',
+    description: 'Interact with free JSON Viewer Tools online. Edit, validate, and convert JSON instantly. No signup—live demo and downloadable results.',
     url: 'https://unblockdevs.com',
     aggregateRating: {
       '@type': 'AggregateRating',

@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect, useMemo, Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, TrendingUp, Mail, Scissors, Key, Clock, Network, AlertTriangle } from 'lucide-react';
+import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, TrendingUp, Mail, Scissors, Key, Clock, Network, AlertTriangle, Copy, ChevronDown, ChevronUp, Play } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { PersonalizationManager, ToolTab } from '@/lib/personalization';
@@ -116,6 +116,29 @@ function HomeClient() {
   const [activeUsers, setActiveUsers] = useState<number>(0);
   const [mounted, setMounted] = useState<boolean>(false);
   const [showBookmarkPrompt, setShowBookmarkPrompt] = useState<boolean>(false);
+  const [samplePanelOpen, setSamplePanelOpen] = useState<boolean>(true);
+
+  // Sample JSON for engagement: live demo snippet and interactive panel
+  const SAMPLE_JSON_FORMATTED = `{
+  "name": "Live demo",
+  "items": [1, 2, 3],
+  "nested": {
+    "key": "value"
+  }
+}`;
+
+  const copySampleJson = useCallback(() => {
+    navigator.clipboard.writeText(SAMPLE_JSON_FORMATTED).then(() => toast.success('Copied to clipboard')).catch(() => toast.error('Copy failed'));
+  }, []);
+  const downloadSampleJson = useCallback(() => {
+    const blob = new Blob([SAMPLE_JSON_FORMATTED], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'sample.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast.success('Downloaded sample.json');
+  }, []);
 
   // Function to show Buy Me a Coffee message (dismisses previous toast first)
   const showBuyMeACoffeeMessage = useCallback(() => {
@@ -756,14 +779,102 @@ function HomeClient() {
         </div>
       </header>
 
-      {/* Ezoic Ad Placement - Top of Content (Placement ID: 101) */}
-      <div id="ezoic-pub-ad-placeholder-101"></div>
+      {/* Ezoic Ad + Interactive sample panel (engagement): side-by-side on lg when converter empty */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {activeTab === 'converter' && rows.length === 0 ? (
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 py-6">
+            <div className="lg:col-span-2 min-h-[120px]">
+              <div id="ezoic-pub-ad-placeholder-101"></div>
+            </div>
+            <div className="lg:col-span-3">
+              <section className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden" aria-label="Example JSON">
+                <button
+                  type="button"
+                  onClick={() => setSamplePanelOpen((o) => !o)}
+                  className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-200 text-left font-semibold text-gray-900 hover:bg-gray-100 transition-colors"
+                >
+                  <span>Example JSON — try it live</span>
+                  {samplePanelOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                </button>
+                {samplePanelOpen && (
+                  <div className="p-4 space-y-3">
+                    <pre className="text-sm text-gray-800 bg-gray-50 p-3 rounded-lg overflow-x-auto border border-gray-100 font-mono whitespace-pre-wrap break-words">
+                      {SAMPLE_JSON_FORMATTED}
+                    </pre>
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={copySampleJson}
+                        className="inline-flex items-center gap-2 px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                      >
+                        <Copy className="w-4 h-4" />
+                        Copy
+                      </button>
+                      <button
+                        type="button"
+                        onClick={downloadSampleJson}
+                        className="inline-flex items-center gap-2 px-3 py-2 bg-white border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                      >
+                        <Download className="w-4 h-4" />
+                        Download
+                      </button>
+                      <a
+                        href="#json-input-section"
+                        className="inline-flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-800 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors"
+                      >
+                        Use in viewer
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </section>
+            </div>
+          </div>
+        ) : (
+          <div id="ezoic-pub-ad-placeholder-101"></div>
+        )}
+      </div>
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12 animate-fade-in">
         {activeTab === 'converter' && (
           rows.length === 0 ? (
             <>
+              {/* Hero: CTA, tool carousel, live demo snippet, mini-tour (engagement) */}
+              <section className="mb-8 sm:mb-10 rounded-2xl bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border border-blue-100 p-6 sm:p-8">
+                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Try JSON Viewer Online now</h2>
+                <p className="text-gray-600 mb-6 max-w-2xl">Edit, validate, and convert JSON instantly. No signup—live demo and downloadable results.</p>
+                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100" style={{ scrollbarWidth: 'thin' }}>
+                  <Link href="#json-input-section" className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                    <Play className="w-4 h-4" />
+                    JSON Viewer
+                  </Link>
+                  <Link href="/json-beautifier" className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                    <Code2 className="w-4 h-4" />
+                    Formatter
+                  </Link>
+                  <Link href="/json-fixer-online" className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                    <Wrench className="w-4 h-4" />
+                    Validator
+                  </Link>
+                  <Link href="/json-schema-generation" className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                    <FileCode className="w-4 h-4" />
+                    Schema
+                  </Link>
+                  <Link href="/json-comparator" className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                    <GitCompare className="w-4 h-4" />
+                    Compare
+                  </Link>
+                </div>
+                <div className="mt-6 pt-6 border-t border-blue-100">
+                  <p className="text-sm font-semibold text-gray-700 mb-2">Mini-tour</p>
+                  <ol className="text-sm text-gray-600 space-y-1 list-decimal list-inside">
+                    <li>Paste your JSON above (or use the example panel)</li>
+                    <li>View, format, validate, or convert to CSV/Excel</li>
+                    <li>Download results or copy—no signup required</li>
+                  </ol>
+                </div>
+              </section>
               <div id="json-input-section">
                 <JsonInput onJsonSubmit={handleJsonSubmit} />
               </div>
