@@ -4,8 +4,8 @@ import { Toaster } from 'react-hot-toast'
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget'
 
 export const metadata: Metadata = {
-  title: 'JSON Viewer Tools, Formatter & Parser Online – Deep-Dive JSON Tools | UnblockDevs',
-  description: 'Free online JSON Viewer Tools: robust JSON formatter, validator, tree view, schema generator, and converters with real-world examples and in-browser reliability.',
+  title: 'JSON Viewer | Formatter, Parser & Validator Online – Free JSON Tools | UnblockDevs',
+  description: 'JSON Viewer with JSON formatter, parser, validator, beautifier, and fixer in one place. Convert JSON to CSV, Excel, Table. Free, private, browser-based—no login.',
   keywords: [
     // JSON Viewer Tools
     'json viewer',
@@ -68,8 +68,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://unblockdevs.com',
-    title: 'JSON Viewer Tools, Formatter & Parser Online – Deep-Dive JSON Tools | UnblockDevs',
-    description: 'Explore deep JSON tooling: view, validate, beautify, fix, convert to Excel/CSV/Table with step-by-step examples and in-browser editing.',
+    title: 'JSON Viewer | Formatter, Parser & Validator Online – Free JSON Tools | UnblockDevs',
+    description: 'JSON Viewer with JSON formatter, parser, validator, beautifier, and fixer. Convert JSON to CSV, Excel, Table. Free, private, browser-based.',
     siteName: 'UnblockDevs',
       images: [
         {
@@ -82,8 +82,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'JSON Viewer Tools, Formatter & Parser Online – Deep-Dive JSON Tools | UnblockDevs',
-    description: 'Explore deep JSON tooling: view, validate, beautify, fix, convert to Excel/CSV/Table with step-by-step examples and in-browser editing.',
+    title: 'JSON Viewer | Formatter, Parser & Validator Online – Free JSON Tools | UnblockDevs',
+    description: 'JSON Viewer with JSON formatter, parser, validator, beautifier, and fixer. Convert JSON to CSV, Excel, Table. Free, private, browser-based.',
     images: ['/og-image.png'],
   },
   alternates: {
@@ -139,7 +139,7 @@ export default function RootLayout({
       price: '0',
       priceCurrency: 'USD',
     },
-    description: 'Free online JSON Viewer Tools: robust formatter, validator, tree view, schema generator, and converters with real-world examples and in-browser reliability.',
+    description: 'JSON Viewer with JSON formatter, parser, validator, beautifier, and fixer. Convert JSON to CSV, Excel, Table. Free, private, browser-based.',
     url: 'https://unblockdevs.com',
     aggregateRating: {
       '@type': 'AggregateRating',
