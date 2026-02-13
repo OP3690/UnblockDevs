@@ -3,16 +3,15 @@ import Link from 'next/link';
 import { FileText, Calendar, Clock, ArrowRight } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Developer Blog - JSON Tools, API Testing & Web Development | UnblockDevs',
-  description: 'Read technical blogs about JSON Viewer, JSON Parser, JSON Beautifier, API testing, web development, and developer tools. Learn best practices, tips, and tutorials.',
+  title: 'Developer Study Materials - Articles, Tutorials & Best Practices | UnblockDevs',
+  description: 'Developer study materials: technical articles, tutorials, and best practices on JSON tools, API testing, web development, and more. Learn with guides and examples.',
   keywords: [
-    'JSON blog',
-    'developer blog',
+    'developer study materials',
     'JSON tutorial',
-    'API testing blog',
+    'API testing',
     'web development blog',
-    'JSON best practices',
-    'developer tools blog',
+    'developer guides',
+    'technical articles',
     'programming tutorials'
   ],
 };
@@ -1426,20 +1425,22 @@ export const metadata: Metadata = {
 
 export default function BlogPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-blue-50/30">
       {/* Header */}
-      <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
+      <header className="bg-white/90 backdrop-blur-sm shadow-sm border-b border-gray-200/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">Developer Blog</h1>
-              <p className="text-lg text-gray-600">
-                Technical articles, tutorials, and best practices for developers
+              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-1.5 tracking-tight">
+                Developer Study Materials <span className="text-primary-600">📚</span>
+              </h1>
+              <p className="text-base sm:text-lg text-gray-600">
+                Articles, tutorials, and best practices for developers
               </p>
             </div>
             <Link
               href="/"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 transition-colors shrink-0 w-fit"
             >
               ← Back to Tools
             </Link>
@@ -1447,47 +1448,54 @@ export default function BlogPage() {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {/* Intro */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-2">
+        <p className="text-gray-600 text-center max-w-2xl mx-auto text-sm sm:text-base">
+          Browse guides on JSON, APIs, data engineering, AI, and more. All free to read—no signup required.
+        </p>
+      </div>
+
+      {/* Main Content - Post Grid */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+        <div className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
           {blogPosts.map((post) => (
             <article
               key={post.slug}
-              className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden"
+              className="group bg-white rounded-xl shadow-md hover:shadow-lg border border-gray-100 hover:border-primary-200/60 transition-all duration-300 overflow-hidden"
             >
-              <div className="p-6">
+              <div className="p-5 sm:p-6 h-full flex flex-col">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="px-3 py-1 text-xs font-semibold text-blue-600 bg-blue-50 rounded-full">
+                  <span className="px-2.5 py-1 text-xs font-semibold text-primary-700 bg-primary-50 rounded-lg">
                     {post.category}
                   </span>
                 </div>
-                <h2 className="text-xl font-bold text-gray-900 mb-3 hover:text-blue-600 transition-colors">
-                  <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2.5 line-clamp-2 group-hover:text-primary-600 transition-colors">
+                  <Link href={`/blog/${post.slug}`} className="focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 rounded">
+                    {post.title}
+                  </Link>
                 </h2>
-                <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
-                <div className="flex items-center justify-between text-sm text-gray-500">
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4" />
-                      <time dateTime={post.date}>
-                        {new Date(post.date).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric'
-                        })}
-                      </time>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      <span>{post.readTime}</span>
-                    </div>
+                <p className="text-gray-600 text-sm sm:text-base mb-4 line-clamp-3 flex-1">{post.excerpt}</p>
+                <div className="flex items-center gap-4 text-xs sm:text-sm text-gray-500 mt-auto">
+                  <div className="flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5 flex-shrink-0" />
+                    <time dateTime={post.date}>
+                      {new Date(post.date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                      })}
+                    </time>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 flex-shrink-0" />
+                    <span>{post.readTime}</span>
                   </div>
                 </div>
                 <Link
                   href={`/blog/${post.slug}`}
-                  className="mt-4 inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors"
+                  className="mt-4 inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 font-semibold text-sm transition-colors"
                 >
-                  Read more <ArrowRight className="w-4 h-4" />
+                  Read more <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                 </Link>
               </div>
             </article>
@@ -1495,11 +1503,11 @@ export default function BlogPage() {
         </div>
 
         {/* SEO Content Section */}
-        <section className="mt-16 bg-white rounded-lg shadow-md p-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">About Our Developer Blog</h2>
+        <section className="mt-14 sm:mt-16 bg-white rounded-xl shadow-md border border-gray-100 p-6 sm:p-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-5">About Developer Study Materials</h2>
           <div className="prose prose-lg max-w-none text-gray-700">
             <p className="mb-4">
-              Welcome to the UnblockDevs Developer Blog, your go-to resource for technical articles, tutorials, and best practices covering <strong>JSON Viewer</strong>, <strong>JSON Parser</strong>, <strong>JSON Beautifier</strong>, API testing, web development, and more.
+              Welcome to <strong>Developer Study Materials</strong> by UnblockDevs—your go-to resource for articles, tutorials, and best practices on <strong>JSON Viewer</strong>, <strong>JSON Parser</strong>, <strong>JSON Beautifier</strong>, API testing, web development, and more.
             </p>
             <p className="mb-4">
               Our blog covers a wide range of topics including:
@@ -1518,9 +1526,9 @@ export default function BlogPage() {
           </div>
         </section>
 
-        {/* Featured Blog Posts - Internal Links for SEO */}
-        <section className="mt-16 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-md p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Featured Developer Guides</h2>
+        {/* Featured - Internal Links for SEO */}
+        <section className="mt-14 sm:mt-16 bg-gradient-to-r from-primary-50/80 to-indigo-50/80 rounded-xl border border-gray-100 shadow-sm p-6 sm:p-8">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-5">Featured Guides</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Link href="/blog/chatgpt-real-life-usage-guide" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
               <h3 className="font-semibold text-gray-900 mb-2">ChatGPT Real-Life Usage Guide</h3>

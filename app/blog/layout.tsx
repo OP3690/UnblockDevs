@@ -12,7 +12,7 @@ export default function BlogLayout({
       {/* Top ad strip - above all blog content (list or post) */}
       <div
         id="ezoic-pub-ad-placeholder-200"
-        className="min-h-[90px] flex items-center justify-center bg-gray-50/50 border-b border-gray-100 py-3"
+        className="min-h-[50px] flex items-center justify-center bg-gray-50/50 border-b border-gray-100 py-2"
         aria-label="Advertisement"
       />
       {children}

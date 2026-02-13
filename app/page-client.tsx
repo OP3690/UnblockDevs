@@ -183,10 +183,10 @@ function HomeClient() {
       // Check if bookmark prompt was dismissed
       const dismissed = localStorage.getItem('bookmarkPromptDismissed');
       if (!dismissed) {
-        // Show after a short delay for better UX
+        // Show after 10 seconds for better UX
         const timer = setTimeout(() => {
           setShowBookmarkPrompt(true);
-        }, 1500);
+        }, 10000);
         return () => clearTimeout(timer);
       }
     }
