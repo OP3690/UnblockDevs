@@ -106,7 +106,7 @@ const toolPageUrls: Record<Exclude<ToolTab, 'converter'>, string> = {
 };
 
 function HomeClient() {
-  const [activeTab, setActiveTab] = useState<ToolTab>('converter');
+  const [activeTab, setActiveTab] = useState<ToolTab>('beautifier');
   const [rows, setRows] = useState<FlattenedRow[]>([]);
   const [columns, setColumns] = useState<Column[]>([]);
   const [sections, setSections] = useState<Section[]>([]);
@@ -532,409 +532,289 @@ function HomeClient() {
         </div>
       )}
 
-      {/* Header */}
-      <header role="banner" className={`bg-white/98 backdrop-blur-lg shadow-md border-b border-gray-200/70 ${showBookmarkPrompt ? 'sticky top-[73px]' : 'sticky top-0'} z-40 transition-all duration-300`}>
+      {/* Header - Professional layout */}
+      <header role="banner" className={`bg-white border-b border-gray-200 ${showBookmarkPrompt ? 'sticky top-[73px]' : 'sticky top-0'} z-40 shadow-sm`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Top Bar - Ad Friendly */}
-          <div className="flex items-center justify-between py-6 border-b border-gray-100 gap-6">
-            <div className="flex items-center gap-6 flex-1 min-w-0">
-              <div className="p-4 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 rounded-2xl shadow-lg transform hover:scale-105 transition-transform duration-300 flex-shrink-0">
-                <FileSpreadsheet className="w-10 h-10 text-white" />
+          {/* Top bar: logo left, nav right */}
+          <div className="flex items-center justify-between gap-4 py-3.5 sm:py-4">
+            <Link href="/" className="flex items-center gap-3 flex-shrink-0 group">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-primary-700 text-white shadow-md shadow-primary-500/25 group-hover:shadow-lg group-hover:shadow-primary-500/30 transition-shadow">
+                <Wrench className="h-5 w-5" />
               </div>
-              <div className="flex flex-col flex-1 min-w-0">
-                <div className="text-3xl sm:text-4xl font-extrabold gradient-text mb-2 leading-tight" aria-label="UnblockDevs">
-                  UnblockDevs
-                </div>
-                <p className="text-xs sm:text-sm text-gray-600 font-medium leading-relaxed">
-                  <span className="block">Free Online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier</span>
-                  <span className="block">JSON to Excel Converter, JSON to CSV Converter, JSON to Table Converter</span>
-                  <span className="block">Edit, View, Analyze, Format, Validate & Convert JSON Data Instantly</span>
-                </p>
+              <div>
+                <span className="text-xl font-bold tracking-tight text-gray-900">UnblockDevs</span>
+                <p className="text-xs font-medium text-gray-500 hidden sm:block mt-0.5">Developers tool for Daily Use!!!</p>
               </div>
-            </div>
-            <div className="flex items-center gap-3 flex-shrink-0">
-              {/* Google AdSense Ad Container - Hidden from UI but in DOM for ad injection */}
-              <div className="hidden">
-                <ins
-                  className="adsbygoogle"
-                  style={{ display: 'block', minWidth: '300px', minHeight: '100px' }}
-                  data-ad-client="ca-pub-6349841658473646"
-                  data-ad-slot="HEADER_AD_SLOT"
-                  data-ad-format="auto"
-                  data-full-width-responsive="false"
-                ></ins>
-              </div>
-            {/* Ezoic Ad Container - Header (Placement ID: 100) */}
-            <div id="ezoic-pub-ad-placeholder-100"></div>
-              <Link
-                href="/blog"
-                className="px-4 sm:px-5 py-2.5 sm:py-3 text-sm font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-all duration-200 flex items-center gap-2 border border-gray-200/50 hover:border-gray-300 hover:shadow-sm flex-shrink-0"
-                aria-label="Read our developer blog"
-              >
-                <FileText className="w-4 h-4" />
-                <span className="hidden sm:inline">Blog</span>
+            </Link>
+            <div id="ezoic-pub-ad-placeholder-100" className="hidden lg:block flex-1 min-w-0" />
+            <nav className="flex items-center justify-end gap-2 sm:gap-3 flex-shrink-0" aria-label="Main navigation">
+              <div className="hidden"><ins className="adsbygoogle" style={{ display: 'block', minWidth: '300px', minHeight: '100px' }} data-ad-client="ca-pub-6349841658473646" data-ad-slot="HEADER_AD_SLOT" data-ad-format="auto" data-full-width-responsive="false" /></div>
+              <Link href="/blog" className="px-4 py-2.5 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-lg shadow-md shadow-primary-500/30 hover:shadow-lg transition-all ring-2 ring-primary-200/50" aria-label="Developers Study Materials">
+                <FileText className="h-4 w-4 sm:hidden" />
+                <span className="hidden sm:inline">Developers Study Materials 📚</span>
               </Link>
-              <Link
-                href="/about"
-                className="px-4 sm:px-5 py-2.5 sm:py-3 text-sm font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-all duration-200 flex items-center gap-2 border border-gray-200/50 hover:border-gray-300 hover:shadow-sm flex-shrink-0"
-                aria-label="Learn more about us"
-              >
-                <span className="hidden sm:inline">About</span>
-              </Link>
-            </div>
+              <Link href="/about" className="px-4 py-2.5 text-sm font-medium text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors">About</Link>
+            </nav>
           </div>
-          
-          {/* Tabs */}
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-2 sm:gap-3 pt-4 pb-0 -mb-px justify-items-center">
+
+          {/* Tool tabs - 3 rows (7 cols on md+) */}
+          <div className="bg-gray-50/90 border-t border-gray-100 rounded-b-lg px-1 sm:px-2 py-2.5 pb-3">
+            <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 gap-1.5 sm:gap-2">
             <button
-              onClick={() => handleTabChange('converter')}
-              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 w-full max-w-fit ${
-                activeTab === 'converter'
-                  ? 'tab-active bg-blue-50 text-blue-700 border-blue-600'
-                  : 'tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
+              onClick={() => handleTabChange('beautifier')}
+              className={`w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm transition-all duration-200 rounded-lg flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0 ${
+                activeTab === 'beautifier'
+                  ? 'bg-white text-primary-700 border-2 border-primary-500 shadow-sm ring-2 ring-primary-100'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-white/80 border-2 border-transparent hover:border-gray-200'
               }`}
             >
-              <div className="flex items-center gap-2">
-                <FileSpreadsheet className="w-4 h-4" />
-                <span className="text-sm">Json to Excel</span>
-              </div>
+              <Code2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-center break-words line-clamp-2">JSON Beautifier</span>
             </button>
-            <Link
-              href={toolPageUrls.beautifier}
-              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
-            >
-              <div className="flex items-center gap-2">
-                <Code2 className="w-4 h-4" />
-                <span className="text-sm">JSON Beautifier</span>
-              </div>
+            <Link href={toolPageUrls.sql} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
+              <Database className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-center break-words line-clamp-2">SQL Formatter</span>
+              <span className="px-1.5 py-0.5 bg-red-100 text-red-600 rounded-md text-[10px] font-semibold flex-shrink-0">Hot</span>
             </Link>
-            <Link
-              href={toolPageUrls.fixer}
-              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
-            >
-              <div className="flex items-center gap-2">
-                <Wrench className="w-4 h-4" />
-                <span className="text-sm">JSON Fixer</span>
-              </div>
+            <Link href={toolPageUrls.tokencompare} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
+              <Key className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-center break-words line-clamp-2">Token Compare</span>
             </Link>
-            <Link
-              href={toolPageUrls.builder}
-              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
-            >
-              <div className="flex items-center gap-2">
-                <FileSpreadsheet className="w-4 h-4" />
-                <span className="text-sm">JSON Builder</span>
-              </div>
+            <Link href={toolPageUrls.promptchunk} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
+              <Scissors className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-center break-words line-clamp-2">Prompt Chunker</span>
+              <span className="px-1.5 py-0.5 bg-purple-100 text-purple-600 rounded-md text-[10px] font-semibold flex-shrink-0">AI</span>
             </Link>
-            <Link
-              href={toolPageUrls.comparator}
-              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
+            <button
+              onClick={() => handleTabChange('converter')}
+              className={`w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm transition-all duration-200 rounded-lg flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0 ${
+                activeTab === 'converter'
+                  ? 'bg-white text-primary-700 border-2 border-primary-500 shadow-sm ring-2 ring-primary-100'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-white/80 border-2 border-transparent hover:border-gray-200'
+              }`}
             >
-              <div className="flex items-center gap-2">
-                <GitCompare className="w-4 h-4" />
-                <span className="text-sm">API Compare</span>
-              </div>
+              <FileSpreadsheet className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-center break-words line-clamp-2">Json to Excel</span>
+            </button>
+            <Link href={toolPageUrls.fixer} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
+              <Wrench className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-center break-words line-clamp-2">JSON Fixer</span>
+              <span className="px-1.5 py-0.5 bg-emerald-100 text-emerald-700 rounded-md text-[10px] font-semibold flex-shrink-0" title="Popular">★</span>
             </Link>
-            <Link
-              href={toolPageUrls.jsoncompare}
-              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
-            >
-              <div className="flex items-center gap-2">
-                <GitCompare className="w-4 h-4" />
-                <span className="text-sm">JSON Compare</span>
-              </div>
+            <Link href={toolPageUrls.builder} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
+              <FileSpreadsheet className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-center break-words line-clamp-2">JSON Builder</span>
             </Link>
-            <Link
-              href={toolPageUrls.schema}
-              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
-            >
-              <div className="flex items-center gap-2">
-                <FileCode className="w-4 h-4" />
-                <span className="text-sm">Schema</span>
-              </div>
+            <Link href={toolPageUrls.comparator} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
+              <GitCompare className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-center break-words line-clamp-2">API Compare</span>
             </Link>
-            <Link
-              href={toolPageUrls.logs}
-              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
-            >
-              <div className="flex items-center gap-2">
-                <FileSearch className="w-4 h-4" />
-                <span className="text-sm">Logs Analyzer</span>
-                <span className="px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded-full text-[10px] font-semibold flex items-center gap-0.5">
-                  <TrendingUp className="w-2.5 h-2.5" />
-                  Most Used
-                </span>
-              </div>
+            <Link href={toolPageUrls.jsoncompare} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
+              <GitCompare className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-center break-words line-clamp-2">JSON Compare</span>
             </Link>
-            <Link
-              href={toolPageUrls.payload}
-              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
-            >
-              <div className="flex items-center gap-2">
-                <BarChart3 className="w-4 h-4" />
-                <span className="text-sm">Payload</span>
-              </div>
+            <Link href={toolPageUrls.schema} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
+              <FileCode className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-center break-words line-clamp-2">Schema</span>
             </Link>
-            <Link
-              href={toolPageUrls.curl}
-              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
-            >
-              <div className="flex items-center gap-2">
-                <Code className="w-4 h-4" />
-                <span className="text-sm">Convert Curl</span>
-              </div>
+            <Link href={toolPageUrls.logs} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
+              <FileSearch className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-center break-words line-clamp-2">Logs Analyzer</span>
             </Link>
-            <Link
-              href={toolPageUrls.mock}
-              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
-            >
-              <div className="flex items-center gap-2">
-                <Server className="w-4 h-4" />
-                <span className="text-sm">Mock API</span>
-              </div>
+            <Link href={toolPageUrls.payload} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
+              <BarChart3 className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-center break-words line-clamp-2">Payload</span>
             </Link>
-            <Link
-              href={toolPageUrls.testdata}
-              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
-            >
-              <div className="flex items-center gap-2">
-                <Database className="w-4 h-4" />
-                <span className="text-sm">Test Data</span>
-              </div>
+            <Link href={toolPageUrls.curl} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
+              <Code className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-center break-words line-clamp-2">Convert Curl</span>
+              <span className="px-1.5 py-0.5 bg-emerald-100 text-emerald-700 rounded-md text-[10px] font-semibold flex-shrink-0" title="Popular">★</span>
             </Link>
-            <Link
-              href={toolPageUrls.config}
-              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
-            >
-              <div className="flex items-center gap-2">
-                <Settings className="w-4 h-4" />
-                <span className="text-sm">Config</span>
-              </div>
+            <Link href={toolPageUrls.mock} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
+              <Server className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-center break-words line-clamp-2">Mock API</span>
             </Link>
-            <Link
-              href={toolPageUrls.sql}
-              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
-            >
-              <div className="flex items-center gap-2">
-                <Database className="w-4 h-4" />
-                <span className="text-sm">SQL Formatter</span>
-                <span className="px-1.5 py-0.5 bg-blue-100 text-blue-700 rounded-full text-[10px] font-semibold flex items-center gap-0.5">
-                  <TrendingUp className="w-2.5 h-2.5" />
-                  Frequently Used
-                </span>
-              </div>
+            <Link href={toolPageUrls.testdata} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
+              <Database className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-center break-words line-clamp-2">Test Data</span>
             </Link>
-            <Link
-              href={toolPageUrls.insights}
-              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
-            >
-              <div className="flex items-center gap-2">
-                <BarChart3 className="w-4 h-4" />
-                <span className="text-sm">Data Insights</span>
-              </div>
+            <Link href={toolPageUrls.config} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
+              <Settings className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-center break-words line-clamp-2">Config</span>
             </Link>
-            <Link
-              href={toolPageUrls.promptchunk}
-              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
-            >
-              <div className="flex items-center gap-2">
-                <Scissors className="w-4 h-4" />
-                <span className="text-sm">Prompt Chunker</span>
-                <span className="px-1.5 py-0.5 bg-purple-100 text-purple-700 rounded-full text-[10px] font-semibold">
-                  AI
-                </span>
-              </div>
+            <Link href={toolPageUrls.insights} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
+              <BarChart3 className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-center break-words line-clamp-2">Data Insights</span>
             </Link>
-            <Link
-              href={toolPageUrls.tokencompare}
-              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
-            >
-              <div className="flex items-center gap-2">
-                <Key className="w-4 h-4" />
-                <span className="text-sm">Token Comparator</span>
-              </div>
+            <Link href={toolPageUrls.timezone} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
+              <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-center break-words line-clamp-2">Timezone</span>
             </Link>
-            <Link
-              href={toolPageUrls.timezone}
-              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
-            >
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4" />
-                <span className="text-sm">Timezone Translator</span>
-              </div>
+            <Link href={toolPageUrls.hartocurl} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
+              <Network className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-center break-words line-clamp-2">HAR to cURL</span>
+              <span className="px-1.5 py-0.5 bg-emerald-100 text-emerald-700 rounded-md text-[10px] font-semibold flex-shrink-0" title="Popular">★</span>
             </Link>
-            <Link
-              href={toolPageUrls.hartocurl}
-              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
-            >
-              <div className="flex items-center gap-2">
-                <Network className="w-4 h-4" />
-                <span className="text-sm">HAR to cURL</span>
-              </div>
+            <Link href={toolPageUrls.curlfailure} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
+              <AlertTriangle className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-center break-words line-clamp-2">cURL Analyzer</span>
             </Link>
-            <Link
-              href={toolPageUrls.curlfailure}
-              className={`px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 font-semibold transition-all duration-200 whitespace-nowrap rounded-t-xl border-b-3 tab-inactive text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent w-full max-w-fit`}
-            >
-              <div className="flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4" />
-                <span className="text-sm">cURL Failure Analyzer</span>
-              </div>
-            </Link>
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Ezoic Ad + Interactive sample panel (engagement): side-by-side on lg when converter empty */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {activeTab === 'converter' && rows.length === 0 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 py-6">
-            <div className="lg:col-span-2 min-h-[120px]">
-              <div id="ezoic-pub-ad-placeholder-101"></div>
-            </div>
-            <div className="lg:col-span-3">
-              <section className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden" aria-label="Example JSON">
-                <button
-                  type="button"
-                  onClick={() => setSamplePanelOpen((o) => !o)}
-                  className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-200 text-left font-semibold text-gray-900 hover:bg-gray-100 transition-colors"
-                >
-                  <span>Example JSON — try it live</span>
-                  {samplePanelOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-                </button>
-                {samplePanelOpen && (
-                  <div className="p-4 space-y-3">
-                    <pre className="text-sm text-gray-800 bg-gray-50 p-3 rounded-lg overflow-x-auto border border-gray-100 font-mono whitespace-pre-wrap break-words">
-                      {SAMPLE_JSON_FORMATTED}
-                    </pre>
-                    <div className="flex flex-wrap gap-2">
-                      <button
-                        type="button"
-                        onClick={copySampleJson}
-                        className="inline-flex items-center gap-2 px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
-                      >
-                        <Copy className="w-4 h-4" />
-                        Copy
-                      </button>
-                      <button
-                        type="button"
-                        onClick={downloadSampleJson}
-                        className="inline-flex items-center gap-2 px-3 py-2 bg-white border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
-                      >
-                        <Download className="w-4 h-4" />
-                        Download
-                      </button>
-                      <a
-                        href="#json-input-section"
-                        className="inline-flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-800 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors"
-                      >
-                        Use in viewer
-                      </a>
-                    </div>
-                  </div>
-                )}
-              </section>
-            </div>
-          </div>
-        ) : (
-          <div id="ezoic-pub-ad-placeholder-101"></div>
-        )}
+      {/* Ad strip */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 border-b border-gray-100">
+        <div id="ezoic-pub-ad-placeholder-101" className="min-h-[90px] flex items-center justify-center" />
       </div>
 
-      {/* Main Content */}
-      <main id="main-content" role="main" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12 animate-fade-in">
+      {/* Main Content - Professional layout */}
+      <main id="main-content" role="main" className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in bg-gray-50/40 ${activeTab === 'beautifier' ? 'pt-0 sm:pt-1 pb-8 sm:pb-12 lg:pb-14' : 'py-8 sm:py-12 lg:py-14'}`}>
+        {activeTab === 'beautifier' && (
+          <div className="max-w-4xl mx-auto -mt-10 sm:-mt-12">
+            <JsonBeautifier />
+            <p className="mt-6 text-center text-sm text-gray-500">
+              <button type="button" onClick={() => handleTabChange('converter')} className="text-blue-600 hover:underline font-medium">Json to Excel</button>
+              {' — convert JSON to Excel/CSV'}
+            </p>
+          </div>
+        )}
         {activeTab === 'converter' && (
           rows.length === 0 ? (
-            <>
-              {/* Semantic heading hierarchy for SEO and content organization */}
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-6">JSON Viewer Tools – Free Online JSON Formatter, Parser & Viewer</h1>
+            <div className="max-w-4xl mx-auto space-y-10 sm:space-y-12">
+              {/* Hero: title + input */}
+              <header className="pt-2 sm:pt-4">
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 mb-1.5">JSON Viewer Tools</h1>
+                <p className="text-gray-500 text-sm sm:text-base mb-6">Free online formatter, parser & viewer. Paste JSON to view, format, or convert to Excel/CSV.</p>
+                <div id="json-input-section" className="scroll-mt-6">
+                  <JsonInput onJsonSubmit={handleJsonSubmit} />
+                </div>
+              </header>
 
-              <section className="mb-6" aria-labelledby="overview-heading">
-                <h2 id="overview-heading" className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Overview of JSON Tools</h2>
-                <p className="text-gray-700 max-w-3xl">Explore a suite of JSON tools including a JSON Viewer, JSON Formatter, and JSON Parser—all in your browser, with no signup.</p>
+              <hr className="border-gray-200" aria-hidden="true" />
+
+              {/* Overview */}
+              <section className="text-center" aria-labelledby="overview-heading">
+                <h2 id="overview-heading" className="text-base font-semibold text-gray-900 mb-2 uppercase tracking-wider text-gray-500">Overview</h2>
+                <p className="text-gray-600 text-sm max-w-xl mx-auto leading-relaxed">JSON Viewer, Formatter, and Parser in your browser. No signup.</p>
               </section>
 
-              <section className="mb-8 sm:mb-10" aria-labelledby="key-features-heading">
-                <h2 id="key-features-heading" className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">Key Features</h2>
-                <ul className="space-y-4 list-none">
-                  <li>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-1">JSON Viewer Online</h3>
-                    <p className="text-gray-700 text-sm">View and navigate JSON data with an interactive tree view.</p>
+              {/* Key Features */}
+              <section className="text-center" aria-labelledby="key-features-heading">
+                <h2 id="key-features-heading" className="text-base font-semibold text-gray-500 uppercase tracking-wider mb-4">Key Features</h2>
+                <ul className="grid grid-cols-1 sm:grid-cols-3 gap-3 list-none">
+                  <li className="bg-white rounded-xl border border-gray-200 p-4 text-center shadow-sm hover:shadow transition-shadow duration-200">
+                    <h3 className="text-sm font-semibold text-gray-900 mb-1">JSON Viewer Online</h3>
+                    <p className="text-gray-500 text-xs leading-relaxed">View and navigate JSON with a tree view.</p>
                   </li>
-                  <li>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-1">JSON Formatter & Beautifier</h3>
-                    <p className="text-gray-700 text-sm">Format and prettify JSON for readability.</p>
+                  <li className="bg-white rounded-xl border border-gray-200 p-4 text-center shadow-sm hover:shadow transition-shadow duration-200">
+                    <h3 className="text-sm font-semibold text-gray-900 mb-1">Formatter & Beautifier</h3>
+                    <p className="text-gray-500 text-xs leading-relaxed">Format and prettify JSON.</p>
                   </li>
-                  <li>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-1">JSON Parser & Validator</h3>
-                    <p className="text-gray-700 text-sm">Parse, validate, and fix malformed JSON quickly.</p>
+                  <li className="bg-white rounded-xl border border-gray-200 p-4 text-center shadow-sm hover:shadow transition-shadow duration-200">
+                    <h3 className="text-sm font-semibold text-gray-900 mb-1">Parser & Validator</h3>
+                    <p className="text-gray-500 text-xs leading-relaxed">Parse, validate, fix malformed JSON.</p>
                   </li>
                 </ul>
               </section>
 
-              {/* Hero: CTA, tool carousel, live demo snippet, mini-tour (engagement) */}
-              <section className="mb-8 sm:mb-10 rounded-2xl bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border border-blue-100 p-6 sm:p-8">
-                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Try JSON Viewer Online now</h2>
-                <p className="text-gray-600 mb-6 max-w-2xl">Edit, validate, and convert JSON instantly. No signup—live demo and downloadable results.</p>
-                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100" style={{ scrollbarWidth: 'thin' }}>
-                  <Link href="#json-input-section" className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
-                    <Play className="w-4 h-4" />
+              {/* Example JSON */}
+              <section className="w-full" aria-label="Example JSON">
+                <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+                  <button
+                    type="button"
+                    onClick={() => setSamplePanelOpen((o) => !o)}
+                    className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-200 text-left font-semibold text-gray-900 hover:bg-gray-100 transition-colors"
+                  >
+                    <span>Example JSON — try it live</span>
+                    {samplePanelOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                  </button>
+                  {samplePanelOpen && (
+                    <div className="p-4 space-y-3">
+                      <pre className="text-sm text-gray-800 bg-gray-50 p-3 rounded-lg overflow-x-auto border border-gray-100 font-mono whitespace-pre-wrap break-words">
+                        {SAMPLE_JSON_FORMATTED}
+                      </pre>
+                      <div className="flex flex-wrap justify-center gap-2">
+                        <button
+                          type="button"
+                          onClick={copySampleJson}
+                          className="inline-flex items-center gap-2 px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                        >
+                          <Copy className="w-4 h-4" />
+                          Copy
+                        </button>
+                        <button
+                          type="button"
+                          onClick={downloadSampleJson}
+                          className="inline-flex items-center gap-2 px-3 py-2 bg-white border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                        >
+                          <Download className="w-4 h-4" />
+                          Download
+                        </button>
+                        <a
+                          href="#json-input-section"
+                          className="inline-flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-800 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors"
+                        >
+                          Use in viewer
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </section>
+
+              {/* Try more tools */}
+              <section className="rounded-xl border border-gray-200 bg-white p-5 sm:p-6 text-center shadow-sm">
+                <h2 className="text-base font-semibold text-gray-900 mb-2">Try more tools</h2>
+                <p className="text-gray-500 text-sm mb-4 max-w-lg mx-auto">Edit, validate, convert JSON. No signup.</p>
+                <div className="flex flex-wrap justify-center gap-2">
+                  <Link href="#json-input-section" className="inline-flex items-center gap-1.5 px-3 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors">
+                    <Play className="w-3.5 h-3.5" />
                     JSON Viewer
                   </Link>
-                  <Link href="/json-beautifier" className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
-                    <Code2 className="w-4 h-4" />
+                  <Link href="/json-beautifier" className="inline-flex items-center gap-1.5 px-3 py-2 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                    <Code2 className="w-3.5 h-3.5" />
                     Formatter
                   </Link>
-                  <Link href="/json-fixer-online" className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
-                    <Wrench className="w-4 h-4" />
+                  <Link href="/json-fixer-online" className="inline-flex items-center gap-1.5 px-3 py-2 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                    <Wrench className="w-3.5 h-3.5" />
                     Validator
                   </Link>
-                  <Link href="/json-schema-generation" className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
-                    <FileCode className="w-4 h-4" />
+                  <Link href="/json-schema-generation" className="inline-flex items-center gap-1.5 px-3 py-2 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                    <FileCode className="w-3.5 h-3.5" />
                     Schema
                   </Link>
-                  <Link href="/json-comparator" className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
-                    <GitCompare className="w-4 h-4" />
+                  <Link href="/json-comparator" className="inline-flex items-center gap-1.5 px-3 py-2 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                    <GitCompare className="w-3.5 h-3.5" />
                     Compare
                   </Link>
                 </div>
-                <div className="mt-6 pt-6 border-t border-blue-100">
-                  <p className="text-sm font-semibold text-gray-700 mb-2">Mini-tour</p>
-                  <ol className="text-sm text-gray-600 space-y-1 list-decimal list-inside">
+                <div className="mt-5 pt-5 border-t border-gray-100 text-center">
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Mini-tour</p>
+                  <ol className="text-sm text-gray-600 space-y-1 list-decimal list-inside inline-block text-left">
                     <li>Paste your JSON above (or use the example panel)</li>
                     <li>View, format, validate, or convert to CSV/Excel</li>
-                    <li>Download results or copy—no signup required</li>
+                    <li>Download or copy—no signup required</li>
                   </ol>
                 </div>
               </section>
-              <div id="json-input-section">
-                <JsonInput onJsonSubmit={handleJsonSubmit} />
-              </div>
-              {/* Primary conversion CTAs — guide users to tool usage */}
-              <div className="mt-8 mb-6 text-center">
-                <h2 className="text-lg font-bold text-gray-900 mb-2">Free JSON Tools for Developers</h2>
-                <p className="text-gray-700 text-sm mb-3 max-w-xl mx-auto">Explore fast, secure JSON Viewer, JSON Formatter, and JSON Parser — all in your browser. No signup required.</p>
-                <p className="text-gray-600 text-sm mb-4 max-w-xl mx-auto">Start here: paste your JSON to view, format, validate, or convert to CSV/Excel.</p>
-                <div className="flex flex-wrap items-center justify-center gap-3">
-                  <a
-                    href="#json-input-section"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
-                  >
+
+              {/* Footer CTA + links */}
+              <div className="rounded-xl border border-gray-200 bg-white p-5 sm:p-6 text-center shadow-sm">
+                <h2 className="text-sm font-semibold text-gray-900 mb-1">Free JSON Tools for Developers</h2>
+                <p className="text-gray-500 text-xs mb-4 max-w-md mx-auto">Paste JSON to view, format, validate, or convert. No signup—data stays private.</p>
+                <div className="flex flex-wrap items-center justify-center gap-2 mb-5">
+                  <a href="#json-input-section" className="inline-flex items-center gap-1.5 px-3 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors">
                     Open JSON Viewer
                   </a>
-                  <Link
-                    href="/json-beautifier"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
-                  >
-                    Try JSON Formatter
+                  <Link href="/json-beautifier" className="inline-flex items-center gap-1.5 px-3 py-2 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                    Try Formatter
                   </Link>
                 </div>
-                <p className="text-gray-500 text-xs mt-4">No signup. No login. Your data stays private.</p>
-              </div>
-              {/* Internal links — JSON tools hub and related tools for crawl efficiency and conversions */}
-              <nav className="mt-8 mb-6 p-4 sm:p-5 bg-gray-50 rounded-xl border border-gray-200" aria-label="JSON tools navigation">
-                <h2 className="text-sm font-semibold text-gray-700 mb-3">JSON Viewer Tools & related tools</h2>
-                <ul className="flex flex-wrap gap-x-4 gap-y-2 text-sm">
+                <nav className="pt-5 border-t border-gray-200" aria-label="JSON tools navigation">
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Related tools</p>
+                  <ul className="flex flex-wrap justify-center gap-x-3 gap-y-1.5 text-sm">
                   <li><Link href="/tools/json" className="text-blue-600 hover:underline font-medium">All JSON tools</Link></li>
                   <li><Link href="/#json-input-section" className="text-blue-600 hover:underline">JSON viewer online</Link></li>
                   <li><Link href="/json-beautifier" className="text-blue-600 hover:underline">JSON formatter online</Link></li>
@@ -944,10 +824,11 @@ function HomeClient() {
                   <li><Link href="/json-beautifier" className="text-blue-600 hover:underline">JSON beautifier</Link></li>
                   <li><Link href="/json-schema-generation" className="text-blue-600 hover:underline">JSON schema generator</Link></li>
                   <li><Link href="/json-comparator" className="text-blue-600 hover:underline">JSON comparator</Link></li>
-                </ul>
-              </nav>
+                  </ul>
+                </nav>
+              </div>
               <CommissionDisclosure variant="belowInput" />
-            </>
+            </div>
           ) : (
             <>
               <div className="mb-6 sm:mb-8">
@@ -991,8 +872,8 @@ function HomeClient() {
         )}
       </main>
 
-      {/* Services Section */}
-      {activeTab === 'converter' && rows.length === 0 && (
+      {/* Services Section - show on home page (Beautifier only) */}
+      {activeTab === 'beautifier' && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 lg:py-16">
           {/* Keyword-Rich Hero Section */}
           <div className="text-center mb-10 sm:mb-12 lg:mb-16 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-2xl p-6 sm:p-8 lg:p-10 border border-blue-100 shadow-sm">
@@ -1610,8 +1491,8 @@ function HomeClient() {
         </div>
       </section>
 
-      {/* Newsletter Signup Section */}
-      {activeTab === 'converter' && rows.length === 0 && (
+      {/* Newsletter Signup Section - show on home page (Beautifier only) */}
+      {activeTab === 'beautifier' && (
         <section className="mt-8 py-8 bg-gradient-to-r from-green-50 via-blue-50 to-indigo-50">
           <div className="max-w-4xl mx-auto container-padding">
             <NewsletterSignup />

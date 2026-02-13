@@ -149,136 +149,102 @@ export default function SqlFormatter() {
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-lg shadow-lg p-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-          <Database className="w-6 h-6 text-primary-600" />
-          SQL Formatter - Comma Separated ID List for MySQL, PostgreSQL, Oracle, Trino & More
+        <h2 className="text-lg font-bold text-gray-800 mb-1 flex items-center gap-2">
+          <Database className="w-5 h-5 text-primary-600" />
+          Comma-separated ID list for SQL IN clause
         </h2>
-        <p className="text-gray-600 mb-4">
-          Create comma separated ID lists for SQL IN clause instantly. Convert multiple IDs, arrays, or values into properly formatted SQL IN query format for 
-          <strong> MySQL</strong>, <strong>PostgreSQL</strong>, <strong>Oracle</strong>, <strong>Trino</strong>, <strong>SQL Server</strong>, <strong>SQLite</strong>, and other databases. 
-          Perfect for converting lists of IDs into SQL-friendly comma separated values with proper quoting. Generate comma separated IDs for MySQL IN clause, 
-          PostgreSQL IN clause, Oracle IN clause, Trino IN clause, and more.
+        <p className="text-sm text-gray-500 mb-4">
+          Paste IDs (space, comma, or newline separated). Output works for MySQL, PostgreSQL, Oracle, Trino, SQL Server, SQLite.
         </p>
-        <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mb-4">
-          <p className="text-sm text-blue-800">
-            <strong>Quick Guide:</strong> Paste your IDs (one per line, comma-separated, or space-separated) and get instant formatted output ready for SQL WHERE IN clause. 
-            Works with <strong>MySQL</strong>, <strong>PostgreSQL</strong>, <strong>Oracle</strong>, <strong>Trino</strong>, <strong>SQL Server</strong>, <strong>SQLite</strong>, and other SQL databases. 
-            Supports both numeric and string IDs with automatic proper quoting. Create comma separated IDs for MySQL, PostgreSQL, Oracle, Trino queries instantly.
-          </p>
-        </div>
 
+        {/* Input first - prominent */}
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Format Type</label>
-          <div className="flex gap-2 flex-wrap">
-            <button
-              onClick={() => setFormatType('sql')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                formatType === 'sql'
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              Values Only: "ID-123","ID-456"
-            </button>
-            <button
-              onClick={() => setFormatType('sqlWithIn')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                formatType === 'sqlWithIn'
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              With IN Clause: IN ("ID-123","ID-456")
-            </button>
-          </div>
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Quote Type</label>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setQuoteType('single')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                quoteType === 'single'
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              Single Quotes: 'ID-123','ID-456'
-            </button>
-            <button
-              onClick={() => setQuoteType('double')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                quoteType === 'double'
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              Double Quotes: "ID-123","ID-456"
-            </button>
-          </div>
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Output Format</label>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setOutputFormat('horizontal')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                outputFormat === 'horizontal'
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              Horizontal: 'ID-123','ID-456'
-            </button>
-            <button
-              onClick={() => setOutputFormat('vertical')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                outputFormat === 'vertical'
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              Vertical: 'ID-123',\n'ID-456'
-            </button>
-          </div>
-          <p className="text-xs text-gray-500 mt-2">
-            Note: When copying, output is always copied in vertical format for better readability.
-          </p>
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Input (separate values by space, comma, newline, or semicolon)
+          <label className="block text-sm font-medium text-gray-700 mb-1.5">
+            Input
           </label>
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="ID-123456   ID-11112223
-ID-33334444
-ID-55556666"
-            className="w-full h-48 p-4 border-2 border-gray-300 rounded-lg font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary-500"
+            placeholder={'ID-123456   ID-11112223\nID-33334444\nID-55556666'}
+            className="w-full h-40 p-4 border-2 border-gray-300 rounded-lg font-mono text-sm resize-y min-h-[120px] focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
           />
-          <div className="mt-2 text-xs text-gray-500">
-            <p className="font-semibold mb-1">Supported Input Formats:</p>
-            <ul className="list-disc list-inside ml-2 space-y-1">
-              <li>Space-separated: <code className="bg-gray-100 px-1 rounded">ID-123456 ID-11112223</code></li>
-              <li>Comma-separated: <code className="bg-gray-100 px-1 rounded">ID-123456, ID-11112223</code></li>
-              <li>Newline-separated: <code className="bg-gray-100 px-1 rounded">ID-123456\nID-11112223</code></li>
-              <li>Semicolon-separated: <code className="bg-gray-100 px-1 rounded">ID-123456; ID-11112223</code></li>
-            </ul>
-            <p className="font-semibold mt-2 mb-1">Use Cases:</p>
-            <ul className="list-disc list-inside ml-2 space-y-1">
-              <li>Convert array to comma separated list for MySQL</li>
-              <li>Format multiple IDs for MySQL IN clause</li>
-              <li>Generate comma separated values from table data</li>
-              <li>Prepare ID list for MySQL WHERE IN query</li>
-            </ul>
+          <p className="text-xs text-gray-500 mt-1">
+            Accepts space, comma, newline, or semicolon. Copy uses vertical format.
+          </p>
+        </div>
+
+        {/* Options - compact row(s) */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4 p-4 bg-gray-50 rounded-lg border border-gray-100">
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">Format</label>
+            <div className="flex gap-1.5 flex-wrap">
+              <button
+                onClick={() => setFormatType('sql')}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                  formatType === 'sql' ? 'bg-primary-600 text-white' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-100'
+                }`}
+                title="Values only: 'ID-123','ID-456'"
+              >
+                Values only
+              </button>
+              <button
+                onClick={() => setFormatType('sqlWithIn')}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                  formatType === 'sqlWithIn' ? 'bg-primary-600 text-white' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-100'
+                }`}
+                title="With IN clause"
+              >
+                With IN
+              </button>
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">Quotes</label>
+            <div className="flex gap-1.5 flex-wrap">
+              <button
+                onClick={() => setQuoteType('single')}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                  quoteType === 'single' ? 'bg-primary-600 text-white' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-100'
+                }`}
+                title="Single quotes"
+              >
+                Single '
+              </button>
+              <button
+                onClick={() => setQuoteType('double')}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                  quoteType === 'double' ? 'bg-primary-600 text-white' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-100'
+                }`}
+                title="Double quotes"
+              >
+                Double "
+              </button>
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">Layout</label>
+            <div className="flex gap-1.5 flex-wrap">
+              <button
+                onClick={() => setOutputFormat('horizontal')}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                  outputFormat === 'horizontal' ? 'bg-primary-600 text-white' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                Horizontal
+              </button>
+              <button
+                onClick={() => setOutputFormat('vertical')}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                  outputFormat === 'vertical' ? 'bg-primary-600 text-white' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                Vertical
+              </button>
+            </div>
           </div>
         </div>
 
-        <div className="flex gap-3 mb-4">
+        <div className="flex gap-3">
           <button
             onClick={formatInput}
             disabled={!input.trim()}

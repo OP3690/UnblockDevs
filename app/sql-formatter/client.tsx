@@ -12,17 +12,20 @@ export default function SqlFormatterClient() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
       <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-2 transition-colors"
+          >
             <ArrowLeft className="w-4 h-4" />
             Back to Tools
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">SQL Formatter - Format SQL Queries Instantly</h1>
-          <p className="text-sm text-gray-500 mt-1">Beautify, format, and prettify SQL code with proper indentation</p>
+          <h1 className="text-2xl font-bold text-gray-900">SQL Formatter</h1>
+          <p className="text-sm text-gray-500 mt-0.5">Format SQL IN clause lists — MySQL, PostgreSQL, Oracle, Trino & more</p>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Tool Component */}
         <div className="mb-8">
           <SqlFormatter />

@@ -410,13 +410,27 @@ export default function JsonBeautifier() {
           </div>
         </div>
 
-        <button
-          onClick={() => beautifyJson(jsonText, indentSize)}
-          disabled={!jsonText.trim()}
-          className="w-full py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors shadow-md hover:shadow-lg"
-        >
-          Beautify JSON
-        </button>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <button
+            onClick={() => beautifyJson(jsonText, indentSize)}
+            disabled={!jsonText.trim()}
+            className="flex-1 py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors shadow-md hover:shadow-lg"
+          >
+            Beautify JSON
+          </button>
+          <button
+            type="button"
+            onClick={handleClear}
+            disabled={!jsonText.trim() && !beautifiedJson}
+            className={`py-3 px-6 rounded-lg font-semibold border-2 transition-colors ${
+              beautifiedJson
+                ? 'border-primary-500 bg-primary-50 text-primary-700 hover:bg-primary-100 hover:border-primary-600 ring-2 ring-primary-200 ring-offset-2'
+                : 'border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400'
+            } disabled:bg-gray-100 disabled:border-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed disabled:ring-0 disabled:ring-offset-0`}
+          >
+            Clear
+          </button>
+        </div>
       </div>
 
       {/* Statistics */}
