@@ -183,6 +183,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changefreq: 'weekly' as const,
     },
     {
+      url: 'tools/json',
+      priority: 0.85,
+      changefreq: 'weekly' as const,
+    },
+    {
       url: 'about',
       priority: 0.7,
       changefreq: 'monthly' as const,

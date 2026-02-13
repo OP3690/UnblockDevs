@@ -787,6 +787,21 @@ function HomeClient() {
                 </div>
                 <p className="text-gray-500 text-xs mt-4">No signup. No login. Your data stays private.</p>
               </div>
+              {/* Internal links — JSON tools hub and related tools for crawl efficiency and conversions */}
+              <nav className="mt-8 mb-6 p-4 sm:p-5 bg-gray-50 rounded-xl border border-gray-200" aria-label="JSON tools navigation">
+                <h2 className="text-sm font-semibold text-gray-700 mb-3">JSON Viewer Tools & related tools</h2>
+                <ul className="flex flex-wrap gap-x-4 gap-y-2 text-sm">
+                  <li><Link href="/tools/json" className="text-blue-600 hover:underline font-medium">All JSON tools</Link></li>
+                  <li><Link href="/#json-input-section" className="text-blue-600 hover:underline">JSON viewer online</Link></li>
+                  <li><Link href="/json-beautifier" className="text-blue-600 hover:underline">JSON formatter online</Link></li>
+                  <li><Link href="/#json-input-section" className="text-blue-600 hover:underline">JSON parser online</Link></li>
+                  <li><Link href="/#json-input-section" className="text-blue-600 hover:underline">JSON to CSV/Excel/Table</Link></li>
+                  <li><Link href="/json-fixer-online" className="text-blue-600 hover:underline">JSON validator</Link></li>
+                  <li><Link href="/json-beautifier" className="text-blue-600 hover:underline">JSON beautifier</Link></li>
+                  <li><Link href="/json-schema-generation" className="text-blue-600 hover:underline">JSON schema generator</Link></li>
+                  <li><Link href="/json-comparator" className="text-blue-600 hover:underline">JSON comparator</Link></li>
+                </ul>
+              </nav>
               <CommissionDisclosure variant="belowInput" />
             </>
           ) : (
@@ -863,11 +878,11 @@ function HomeClient() {
               
               <div className="space-y-4 text-gray-700 leading-relaxed">
                 <p>
-                  <strong>JSON Schema Generator & Validation:</strong> Our <strong>JSON schema generator</strong> helps you create comprehensive JSON schemas from your JSON data. Use our <strong>JSON schema validation</strong> tool to validate JSON against schemas, ensuring data integrity. Whether you're <strong>creating a JSON schema</strong>, <strong>defining JSON schema</strong>, or <strong>generating JSON schema</strong>, our <strong>schema generator from JSON</strong> makes it easy. Perfect for API documentation and data validation workflows.
+                  <strong>JSON Schema Generator & Validation:</strong> Our <Link href="/json-schema-generation" className="text-blue-600 hover:underline font-medium">JSON schema generator</Link> helps you create comprehensive JSON schemas from your JSON data. Use our <strong>JSON schema validation</strong> tool to validate JSON against schemas, ensuring data integrity. Whether you&apos;re <strong>creating a JSON schema</strong>, <strong>defining JSON schema</strong>, or <strong>generating JSON schema</strong>, our <strong>schema generator from JSON</strong> makes it easy. Perfect for API documentation and data validation workflows.
                 </p>
                 
                 <p>
-                  <strong>Export JSON to Excel:</strong> Need to <strong>convert JSON to Excel</strong>? Our <strong>JSON to Excel converter</strong> allows you to <strong>export JSON to Excel</strong> with ease. Learn <strong>how to convert JSON to Excel</strong> and transform your JSON data into structured Excel spreadsheets. Our tool supports <strong>JSON to Excel integration</strong> and <strong>convert JSON to Excel table</strong> formats, making data analysis simple.
+                  <strong>Export JSON to Excel:</strong> Need to <strong>convert JSON to Excel</strong>? Our <Link href="/#json-input-section" className="text-blue-600 hover:underline font-medium">JSON to Excel converter</Link> allows you to <strong>export JSON to Excel</strong> with ease. Learn <strong>how to convert JSON to Excel</strong> and transform your JSON data into structured Excel spreadsheets. Our <Link href="/#json-input-section" className="text-blue-600 hover:underline font-medium">JSON Viewer Tools</Link> support <strong>JSON to Excel integration</strong> and <strong>convert JSON to Excel table</strong> formats, making data analysis simple.
                 </p>
                 
                 <p>
@@ -875,7 +890,7 @@ function HomeClient() {
                 </p>
                 
                 <p>
-                  <strong>JSON Schema Creation & Validation:</strong> Create robust JSON schemas with our <strong>JSON schema creator</strong>. Our <strong>JSON schema generation</strong> tool supports <strong>JSON schema for JSON schema</strong> patterns and helps with <strong>schema validation JSON</strong>. Use <strong>validation JSON schema</strong> to ensure your data matches expected structures. Our <strong>json-schema-generator</strong> is perfect for <strong>creating a JSON schema</strong> from existing JSON data.
+                  <strong>JSON Schema Creation & Validation:</strong> Create robust JSON schemas with our <Link href="/json-schema-generation" className="text-blue-600 hover:underline font-medium">JSON schema creator</Link>. Our <strong>JSON schema generation</strong> tool supports <strong>JSON schema for JSON schema</strong> patterns and helps with <strong>schema validation JSON</strong>. Use <strong>validation JSON schema</strong> to ensure your data matches expected structures. Our <Link href="/json-schema-generation" className="text-blue-600 hover:underline font-medium">json-schema-generator</Link> is perfect for <strong>creating a JSON schema</strong> from existing JSON data. Try our <Link href="/json-beautifier" className="text-blue-600 hover:underline font-medium">JSON formatter online</Link> or <Link href="/#json-input-section" className="text-blue-600 hover:underline font-medium">JSON parser online</Link> for viewing and formatting.
                 </p>
                       </div>
               </div>
