@@ -72,7 +72,7 @@ export default function PhysicalAiEdgeComputingClient() {
             className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-6 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to Blog</span>
+            <span>Back to Developer Study Materials</span>
           </Link>
           
           <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">

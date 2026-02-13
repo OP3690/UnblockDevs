@@ -40,7 +40,7 @@ export default function BrokenJsonExamplesClient() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <Link href="/blog" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors">
             <ArrowLeft className="w-4 h-4" />
-            Back to Blog
+            Back to Developer Study Materials
           </Link>
           <h1 className="text-3xl font-bold text-gray-900">25 Broken JSON Examples and How to Fix Them</h1>
           <p className="text-sm text-gray-500 mt-1">Learn from real mistakes developers make</p>

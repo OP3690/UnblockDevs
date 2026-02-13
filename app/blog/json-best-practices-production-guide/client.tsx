@@ -16,7 +16,7 @@ export default function JsonBestPracticesGuideClient() {
             className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Blog
+            Back to Developer Study Materials
           </Link>
           <div className="flex items-center gap-3">
             <div className="p-3 bg-blue-100 rounded-lg">
@@ -514,7 +514,7 @@ const json = JSON.stringify({ name: userInput });`}
             className="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Blog
+            Back to Developer Study Materials
           </Link>
           <Link
             href="/"

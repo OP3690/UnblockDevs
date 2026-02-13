@@ -15,7 +15,7 @@ export default function CurlToCodeConverter2026Client() {
             className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Blog
+            Back to Developer Study Materials
           </Link>
           <div className="flex items-center gap-3">
             <div className="p-3 bg-blue-100 rounded-lg">

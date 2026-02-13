@@ -143,7 +143,7 @@ export default function CSSExplainedClient() {
             className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Blog
+            Back to Developer Study Materials
           </Link>
           <div className="flex items-center gap-2 mb-2">
             <span className="px-3 py-1 text-xs font-semibold text-purple-600 bg-purple-50 rounded-full">
@@ -632,7 +632,7 @@ h1, h2, h3, h4, h5, h6 {
             className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 border-2 border-gray-200 hover:border-purple-500"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Blog
+            Back to Developer Study Materials
           </Link>
           <Link
             href="/blog/html-tags-explained-guide"
