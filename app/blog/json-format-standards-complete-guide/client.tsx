@@ -20,7 +20,7 @@ export default function JsonFormatStandardsGuideClient() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Developer Study Materials
@@ -895,7 +895,7 @@ return output`}
         <div className="flex items-center justify-center gap-4">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Developer Study Materials

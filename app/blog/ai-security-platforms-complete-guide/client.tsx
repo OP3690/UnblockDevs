@@ -66,7 +66,7 @@ export default function AiSecurityPlatformsClient() {
         <div className="mb-8">
           <Link 
             href="/blog" 
-            className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-6 transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-6 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Developer Study Materials</span>
