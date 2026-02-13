@@ -536,9 +536,9 @@ function HomeClient() {
                 <FileSpreadsheet className="w-10 h-10 text-white" />
               </div>
               <div className="flex flex-col flex-1 min-w-0">
-                <h1 className="text-3xl sm:text-4xl font-extrabold gradient-text mb-2 leading-tight">
+                <div className="text-3xl sm:text-4xl font-extrabold gradient-text mb-2 leading-tight" aria-label="UnblockDevs">
                   UnblockDevs
-                </h1>
+                </div>
                 <p className="text-xs sm:text-sm text-gray-600 font-medium leading-relaxed">
                   <span className="block">Free Online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier</span>
                   <span className="block">JSON to Excel Converter, JSON to CSV Converter, JSON to Table Converter</span>
@@ -840,6 +840,32 @@ function HomeClient() {
         {activeTab === 'converter' && (
           rows.length === 0 ? (
             <>
+              {/* Semantic heading hierarchy for SEO and content organization */}
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-6">JSON Viewer Tools – Free Online JSON Formatter, Parser & Viewer</h1>
+
+              <section className="mb-6" aria-labelledby="overview-heading">
+                <h2 id="overview-heading" className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Overview of JSON Tools</h2>
+                <p className="text-gray-700 max-w-3xl">Explore a suite of JSON tools including a JSON Viewer, JSON Formatter, and JSON Parser—all in your browser, with no signup.</p>
+              </section>
+
+              <section className="mb-8 sm:mb-10" aria-labelledby="key-features-heading">
+                <h2 id="key-features-heading" className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">Key Features</h2>
+                <ul className="space-y-4 list-none">
+                  <li>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-1">JSON Viewer Online</h3>
+                    <p className="text-gray-700 text-sm">View and navigate JSON data with an interactive tree view.</p>
+                  </li>
+                  <li>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-1">JSON Formatter & Beautifier</h3>
+                    <p className="text-gray-700 text-sm">Format and prettify JSON for readability.</p>
+                  </li>
+                  <li>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-1">JSON Parser & Validator</h3>
+                    <p className="text-gray-700 text-sm">Parse, validate, and fix malformed JSON quickly.</p>
+                  </li>
+                </ul>
+              </section>
+
               {/* Hero: CTA, tool carousel, live demo snippet, mini-tour (engagement) */}
               <section className="mb-8 sm:mb-10 rounded-2xl bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border border-blue-100 p-6 sm:p-8">
                 <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Try JSON Viewer Online now</h2>

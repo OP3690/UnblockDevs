@@ -18,7 +18,7 @@ export default function Home() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center">
         <div className="text-center max-w-lg px-4">
-          <h1 className="text-xl font-bold text-gray-900 mb-2">Free JSON Tools for Developers</h1>
+          <h1 className="text-xl font-bold text-gray-900 mb-2">JSON Viewer Tools – Free Online JSON Formatter, Parser & Viewer</h1>
           <p className="text-gray-700 text-sm mb-4">Explore fast, secure JSON Viewer, JSON Formatter, and JSON Parser — all in your browser. No signup required.</p>
           <p className="text-gray-600 text-sm mb-6">Start here: paste your JSON to view, format, validate, or convert to CSV/Excel.</p>
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto mb-3"></div>
