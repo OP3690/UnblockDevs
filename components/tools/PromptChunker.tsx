@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Copy, Scissors, Download, Settings, Info, ChevronDown, ChevronUp, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
@@ -23,6 +23,7 @@ export default function PromptChunker() {
   const [showSettings, setShowSettings] = useState(true);
   const [expandedChunks, setExpandedChunks] = useState<Set<number>>(new Set());
   const [copiedChunks, setCopiedChunks] = useState<Set<number>>(new Set());
+  const resultsSectionRef = useRef<HTMLDivElement>(null);
 
   const splitIntoChunks = () => {
     if (!prompt.trim()) {
@@ -95,6 +96,9 @@ export default function PromptChunker() {
     setExpandedChunks(new Set());
     setCopiedChunks(new Set());
     toast.success(`Split into ${newChunks.length} chunks`);
+    setTimeout(() => {
+      resultsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
   };
 
   const copyChunk = (chunk: Chunk) => {
@@ -286,7 +290,7 @@ export default function PromptChunker() {
 
       {/* Chunks Display */}
       {chunks.length > 0 && (
-        <div className="space-y-4">
+        <div ref={resultsSectionRef} className="space-y-4 scroll-mt-4">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-gray-900">
               Generated Chunks ({chunks.length})

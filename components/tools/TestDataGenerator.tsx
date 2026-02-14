@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Database, Copy, Check, Download, Users, FileText, CreditCard, ShoppingBag, Newspaper, Sparkles, Server, Shield, Brain, Activity, AlertTriangle, TrendingUp } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { validateJson } from '@/lib/jsonParser';
@@ -462,6 +462,7 @@ export default function TestDataGenerator() {
   const [count, setCount] = useState(10);
   const [generatedData, setGeneratedData] = useState('');
   const [copied, setCopied] = useState(false);
+  const resultsSectionRef = useRef<HTMLDivElement>(null);
   const [dataType, setDataType] = useState<PredefinedDataType>('custom');
 
   const generateValue = (type: string, key: string): any => {
@@ -565,6 +566,9 @@ export default function TestDataGenerator() {
 
       setGeneratedData(JSON.stringify(data, null, 2));
       toast.success(`Generated ${data.length} test records`);
+      setTimeout(() => {
+        resultsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     } catch (err: any) {
       toast.error('Failed to generate test data');
     }
@@ -736,7 +740,7 @@ export default function TestDataGenerator() {
       </div>
 
       {generatedData && (
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div ref={resultsSectionRef} className="bg-white rounded-lg shadow-lg p-6 scroll-mt-4">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-bold text-gray-800">
               Generated Test Data ({dataType !== 'custom' ? predefinedDataTypes.find(t => t.id === dataType)?.name : 'Custom'})

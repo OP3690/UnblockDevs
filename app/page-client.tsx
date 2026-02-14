@@ -541,9 +541,12 @@ function HomeClient() {
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-primary-700 text-white shadow-md shadow-primary-500/25 group-hover:shadow-lg group-hover:shadow-primary-500/30 transition-shadow">
                 <Wrench className="h-5 w-5" />
               </div>
-              <div>
+              <div className="flex flex-col gap-0.5">
                 <span className="text-xl font-bold tracking-tight text-gray-900">UnblockDevs</span>
-                <p className="text-xs font-medium text-gray-500 hidden sm:block mt-0.5">Developers tool for Daily Use!!!</p>
+                <span className="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-primary-700 bg-gradient-to-r from-primary-50 to-primary-100/80 px-2.5 py-1 rounded-lg border border-primary-200/90 shadow-sm ring-1 ring-primary-100/50 group-hover:ring-primary-200/70 group-hover:shadow transition-all duration-200 w-fit">
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse shrink-0" aria-hidden />
+                  Developers tool for Daily Use!!!
+                </span>
               </div>
             </Link>
             <div id="ezoic-pub-ad-placeholder-100" className="hidden lg:block flex-1 min-w-0" />
@@ -664,20 +667,28 @@ function HomeClient() {
         </div>
       </header>
 
-      {/* Ad strip */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 border-b border-gray-100">
-        <div id="ezoic-pub-ad-placeholder-101" className="min-h-[90px] flex items-center justify-center" />
+      {/* Ad strip - compact so tool content sits closer to tabs */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-1.5 border-b border-gray-100">
+        <div id="ezoic-pub-ad-placeholder-101" className="min-h-[50px] flex items-center justify-center" />
       </div>
 
       {/* Main Content - Professional layout */}
-      <main id="main-content" role="main" className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in bg-gray-50/40 ${activeTab === 'beautifier' ? 'pt-0 sm:pt-1 pb-8 sm:pb-12 lg:pb-14' : 'py-8 sm:py-12 lg:py-14'}`}>
+      <main id="main-content" role="main" className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in ${activeTab === 'beautifier' ? 'pt-0 pb-8 sm:pb-12 lg:pb-14' : 'py-8 sm:py-12 lg:py-14'}`}>
         {activeTab === 'beautifier' && (
-          <div className="max-w-4xl mx-auto -mt-10 sm:-mt-12">
-            <JsonBeautifier />
-            <p className="mt-6 text-center text-sm text-gray-500">
-              <button type="button" onClick={() => handleTabChange('converter')} className="text-blue-600 hover:underline font-medium">Json to Excel</button>
-              {' — convert JSON to Excel/CSV'}
-            </p>
+          <div className="max-w-4xl mx-auto -mt-6 sm:-mt-8">
+            <div className="rounded-2xl bg-white/80 backdrop-blur-sm shadow-lg border border-gray-100 p-4 sm:p-6">
+              <JsonBeautifier />
+            </div>
+            <div className="mt-6 text-center">
+              <button
+                type="button"
+                onClick={() => handleTabChange('converter')}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 transition-colors"
+              >
+                <FileSpreadsheet className="w-4 h-4" />
+                Json to Excel — convert JSON to Excel/CSV
+              </button>
+            </div>
           </div>
         )}
         {activeTab === 'converter' && (
@@ -875,14 +886,13 @@ function HomeClient() {
       {/* Services Section - show on home page (Beautifier only) */}
       {activeTab === 'beautifier' && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 lg:py-16">
-          {/* Keyword-Rich Hero Section */}
-          <div className="text-center mb-10 sm:mb-12 lg:mb-16 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-2xl p-6 sm:p-8 lg:p-10 border border-blue-100 shadow-sm">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
-              JSON Schema Generator, JSON to Excel Converter & Curl to Requests - Free Developer Tools | UnblockDevs.com
-            </h1>
-            <p className="text-base sm:text-lg lg:text-xl text-gray-700 max-w-4xl mx-auto mb-6 sm:mb-8 leading-relaxed">
-              Use <strong>UnblockDevs.com</strong> free online tools for <strong>JSON schema generation</strong>, <strong>JSON schema validation</strong>, <strong>export JSON to Excel</strong>, <strong>convert curl to requests</strong>, and <strong>JSON schema creation</strong>. 
-              Generate JSON schema, validate JSON schema, convert JSON to Excel table, convert curl to JavaScript, and create JSON schemas instantly. All tools work entirely in your browser - no installation required.
+          {/* Hero Section */}
+          <div className="text-center mb-12 sm:mb-14 lg:mb-16 bg-gradient-to-br from-primary-50 via-indigo-50/80 to-purple-50/80 rounded-2xl p-8 sm:p-10 lg:p-12 border border-primary-100/80 shadow-sm">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight tracking-tight">
+              Free Developer Tools — JSON, API & More
+            </h2>
+            <p className="text-base sm:text-lg text-gray-700 max-w-3xl mx-auto mb-6 sm:mb-8 leading-relaxed">
+              <strong>UnblockDevs</strong> gives you <strong>JSON schema generation</strong>, <strong>JSON to Excel</strong>, <strong>curl to code</strong>, and 19+ other tools. All run in your browser — no signup, no install.
             </p>
             <div className="flex flex-wrap justify-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-600">
               <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ JSON Schema Generator</span>
@@ -1120,14 +1130,14 @@ function HomeClient() {
             </div>
           </div>
 
-          <div className="text-center mb-10 sm:mb-12 lg:mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">Our Developer Tools</h2>
-            <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              UnblockDevs provides a comprehensive suite of free online developer tools to streamline your development workflow. All tools work entirely in your browser - no installation required.
+          <div className="text-center mb-10 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">Our Developer Tools</h2>
+            <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto">
+              Free online tools. No signup. Everything runs in your browser.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-8 sm:mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 mb-10 sm:mb-12">
             <div
               onClick={() => {
                 handleTabChange('converter');
@@ -1135,7 +1145,7 @@ function HomeClient() {
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
               }}
-              className="card card-hover text-left cursor-pointer group relative"
+              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 Export JSON to Excel | Convert JSON to Excel Table | JSON to Excel Integration
@@ -1156,7 +1166,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="card card-hover text-left cursor-pointer group relative"
+              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 JSON Viewer | JSON Formatter | JSON Parser | JSON Beautifier
@@ -1177,7 +1187,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="card card-hover text-left cursor-pointer group relative"
+              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 API Response Comparator
@@ -1198,7 +1208,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="card card-hover text-left cursor-pointer group"
+              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 JSON Comparator & Diff Tool
@@ -1219,7 +1229,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="card card-hover text-left cursor-pointer group relative"
+              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 JSON Schema Generator | JSON Schema Creator | Generate JSON Schema
@@ -1240,7 +1250,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="card card-hover text-left cursor-pointer group"
+              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 Logs Analyzer
@@ -1261,7 +1271,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="card card-hover text-left cursor-pointer group"
+              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 Payload Analyzer
@@ -1282,7 +1292,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="card card-hover text-left cursor-pointer group"
+              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 Convert Curl to Requests | Curl to JavaScript | Convert Curl to HTTP Request
@@ -1303,7 +1313,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="card card-hover text-left cursor-pointer group"
+              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 Mock API Generator
@@ -1324,7 +1334,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="card card-hover text-left cursor-pointer group"
+              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 Test Data Generator
@@ -1345,7 +1355,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="card card-hover text-left cursor-pointer group"
+              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 Config Comparator
@@ -1366,7 +1376,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="card card-hover text-left cursor-pointer group"
+              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 SQL Formatter - Comma Separated ID List for MySQL, PostgreSQL, Oracle, Trino
@@ -1389,7 +1399,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="card card-hover text-left cursor-pointer group"
+              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 Token Comparator - Compare Tokens Character by Character
@@ -1410,7 +1420,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="card card-hover text-left cursor-pointer group"
+              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 Timezone Translator for Humans
@@ -1579,7 +1589,7 @@ function HomeClient() {
                   className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
                 >
                   <FileText className="w-4 h-4" />
-                  Read Developer Blog
+                  Developer Study Materials
                 </Link>
               </div>
             </div>

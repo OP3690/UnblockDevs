@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Code, Copy, Check, Download, Sparkles, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
@@ -11,6 +11,7 @@ export default function CurlConverter() {
   const [targetLanguage, setTargetLanguage] = useState('javascript');
   const [copied, setCopied] = useState(false);
   const [showExamples, setShowExamples] = useState(false);
+  const resultsSectionRef = useRef<HTMLDivElement>(null);
 
   const parseCurl = (curl: string) => {
     // Remove line breaks and normalize spaces
@@ -349,6 +350,9 @@ request(options, function (error, response, body) {
 
       setConvertedCode(code);
       toast.success('Converted successfully!');
+      setTimeout(() => {
+        resultsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     } catch (err: any) {
       toast.error('Failed to parse curl command: ' + err.message);
     }
@@ -481,7 +485,7 @@ request(options, function (error, response, body) {
       </div>
 
       {convertedCode && (
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div ref={resultsSectionRef} className="bg-white rounded-lg shadow-lg p-6 scroll-mt-4">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-bold text-gray-800">Converted Code ({targetLanguage})</h3>
             <div className="flex gap-2">

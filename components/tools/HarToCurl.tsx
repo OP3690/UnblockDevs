@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Upload, Copy, Check, Download, FileText, Code, AlertCircle, Info } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -34,6 +34,12 @@ export default function HarToCurl() {
   const [basicMethod, setBasicMethod] = useState('GET');
   const [basicCurl, setBasicCurl] = useState('');
   const [basicCopied, setBasicCopied] = useState(false);
+  const harResultsRef = useRef<HTMLDivElement>(null);
+  const basicResultsRef = useRef<HTMLDivElement>(null);
+
+  const scrollToOutput = (ref: React.RefObject<HTMLDivElement | null>) => {
+    setTimeout(() => ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+  };
 
   const convertHarToCurl = (har: HarFile, entryIndex: number = 0): string => {
     if (!har.log?.entries || har.log.entries.length === 0) {
@@ -100,6 +106,7 @@ export default function HarToCurl() {
         const curl = convertHarToCurl(har, 0);
         setCurlCommand(curl);
         toast.success(`Found ${har.log.entries.length} request(s) in HAR file`);
+        scrollToOutput(harResultsRef);
       } catch (error: any) {
         toast.error(`Failed to parse HAR file: ${error.message}`);
       }
@@ -140,6 +147,7 @@ export default function HarToCurl() {
       setSelectedEntryIndex(index);
       const curl = convertHarToCurl(har, index);
       setCurlCommand(curl);
+      scrollToOutput(harResultsRef);
     } catch (error: any) {
       toast.error(`Failed to convert entry: ${error.message}`);
     }
@@ -174,6 +182,7 @@ export default function HarToCurl() {
     curl += ` "${basicUrl}"`;
     
     setBasicCurl(curl);
+    scrollToOutput(basicResultsRef);
   };
 
   const handleBasicCopy = () => {
@@ -282,7 +291,7 @@ export default function HarToCurl() {
           )}
 
           {curlCommand && (
-            <div className="mb-4">
+            <div ref={harResultsRef} className="mb-4 scroll-mt-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Generated cURL Command
               </label>
@@ -366,7 +375,7 @@ export default function HarToCurl() {
             </button>
 
             {basicCurl && (
-              <div>
+              <div ref={basicResultsRef} className="scroll-mt-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Generated cURL Command
                 </label>

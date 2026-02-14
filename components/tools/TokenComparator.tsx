@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Key, Copy, Check, AlertCircle, CheckCircle, Shield, Eye, EyeOff, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
@@ -24,6 +24,7 @@ export default function TokenComparator() {
     mismatches: number;
     matchPercentage: number;
   } | null>(null);
+  const resultsSectionRef = useRef<HTMLDivElement>(null);
 
   const compareTokens = () => {
     if (!token1.trim() || !token2.trim()) {
@@ -110,6 +111,9 @@ export default function TokenComparator() {
     } else {
       toast.success(`Comparison complete: ${mismatches} mismatch${mismatches !== 1 ? 'es' : ''} found`);
     }
+    setTimeout(() => {
+      resultsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
   };
 
   const copyToken = (token: string, tokenNum: number) => {
@@ -287,7 +291,7 @@ export default function TokenComparator() {
 
       {/* Comparison Stats */}
       {comparisonStats && (
-        <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+        <div ref={resultsSectionRef} className="bg-white rounded-xl shadow-md p-6 border border-gray-200 scroll-mt-4">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Comparison Statistics</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">

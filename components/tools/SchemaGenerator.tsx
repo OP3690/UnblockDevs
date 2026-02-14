@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { FileCode, Copy, Check, Download, Sparkles, CheckCircle, XCircle, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { validateJson } from '@/lib/jsonParser';
@@ -14,6 +14,7 @@ export default function SchemaGenerator() {
   const [showExamples, setShowExamples] = useState(false);
   const [validationResult, setValidationResult] = useState<{ valid: boolean; errors: string[] } | null>(null);
   const [jsonToValidate, setJsonToValidate] = useState('');
+  const resultsSectionRef = useRef<HTMLDivElement>(null);
 
   const generateSchema = (obj: any, required: boolean = true): any => {
     if (obj === null) {
@@ -135,6 +136,9 @@ export default function SchemaGenerator() {
       }
       
       toast.success('Schema generated successfully!');
+      setTimeout(() => {
+        resultsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     } catch (err: any) {
       toast.error('Failed to generate schema: ' + err.message);
     }
@@ -316,7 +320,7 @@ export default function SchemaGenerator() {
 
       {schema && (
         <>
-          <div className="bg-white rounded-lg shadow-lg p-6">
+          <div ref={resultsSectionRef} className="bg-white rounded-lg shadow-lg p-6 scroll-mt-4">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold text-gray-800">Generated Schema ({schemaFormat === 'draft7' ? 'Draft 7' : 'OpenAPI'})</h3>
               <div className="flex gap-2">

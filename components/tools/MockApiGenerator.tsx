@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Server, Copy, Check, Download, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { validateJson } from '@/lib/jsonParser';
@@ -13,6 +13,7 @@ export default function MockApiGenerator() {
   const [latency, setLatency] = useState(0);
   const [mockCode, setMockCode] = useState('');
   const [copied, setCopied] = useState(false);
+  const resultsSectionRef = useRef<HTMLDivElement>(null);
 
   const generateMockApi = () => {
     const validation = validateJson(jsonText);
@@ -46,6 +47,9 @@ app.listen(3001, () => {
 
       setMockCode(code);
       toast.success('Mock API code generated!');
+      setTimeout(() => {
+        resultsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     } catch (err: any) {
       toast.error('Failed to generate mock API');
     }
@@ -137,7 +141,7 @@ app.listen(3001, () => {
       </div>
 
       {mockCode && (
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div ref={resultsSectionRef} className="bg-white rounded-lg shadow-lg p-6 scroll-mt-4">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-bold text-gray-800">Mock Server Code</h3>
             <div className="flex gap-2">

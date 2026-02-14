@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Settings, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { validateJson } from '@/lib/jsonParser';
@@ -19,6 +19,7 @@ export default function ConfigComparator() {
   const [diffResults, setDiffResults] = useState<DiffItem[]>([]);
   const [maskSecrets, setMaskSecrets] = useState(true);
   const [secretKeys, setSecretKeys] = useState(['password', 'secret', 'key', 'token', 'api_key']);
+  const resultsSectionRef = useRef<HTMLDivElement>(null);
 
   const isSecretKey = (key: string): boolean => {
     return secretKeys.some((secret) => key.toLowerCase().includes(secret.toLowerCase()));
@@ -103,6 +104,9 @@ export default function ConfigComparator() {
 
       setDiffResults(results);
       toast.success(`Comparison complete: ${results.length} keys analyzed`);
+      setTimeout(() => {
+        resultsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     } catch (err: any) {
       toast.error('Failed to compare configs');
     }
@@ -171,7 +175,7 @@ export default function ConfigComparator() {
       </div>
 
       {diffResults.length > 0 && (
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div ref={resultsSectionRef} className="bg-white rounded-lg shadow-lg p-6 scroll-mt-4">
           <h3 className="text-lg font-bold text-gray-800 mb-4">
             Comparison Results ({diffResults.length} keys)
           </h3>

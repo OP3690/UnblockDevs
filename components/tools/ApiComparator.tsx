@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { GitCompare, Plus, X, AlertCircle, CheckCircle, Minus, Search, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { validateJson } from '@/lib/jsonParser';
@@ -22,6 +22,7 @@ export default function ApiComparator() {
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [highlightedField, setHighlightedField] = useState<string | null>(null);
+  const resultsSectionRef = useRef<HTMLDivElement>(null);
 
   const flattenObject = (obj: any, prefix: string = '', result: Map<string, any> = new Map()): Map<string, any> => {
     if (Array.isArray(obj)) {
@@ -126,6 +127,9 @@ export default function ApiComparator() {
       setBreakingChanges(breaking);
       setError(null);
       toast.success(`Comparison complete: ${changedResults.length} changes found out of ${results.length} fields`);
+      setTimeout(() => {
+        document.querySelector<HTMLElement>('[data-results-start]')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     } catch (err: any) {
       setError(err.message);
       toast.error('Comparison failed');
@@ -198,7 +202,7 @@ export default function ApiComparator() {
       </div>
 
       {breakingChanges.length > 0 && (
-        <div className="bg-red-50 border-2 border-red-200 rounded-lg p-6">
+        <div ref={resultsSectionRef} data-results-start className="bg-red-50 border-2 border-red-200 rounded-lg p-6 scroll-mt-4">
           <h3 className="text-lg font-bold text-red-800 mb-3 flex items-center gap-2">
             <AlertCircle className="w-5 h-5" />
             Breaking Changes Detected ({breakingChanges.length})
@@ -215,7 +219,7 @@ export default function ApiComparator() {
       )}
 
       {diffResults.length > 0 && (
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div ref={resultsSectionRef} data-results-start className="bg-white rounded-lg shadow-lg p-6 scroll-mt-4">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-bold text-gray-800">
               Comparison Results ({diffResults.filter(r => r.status !== 'unchanged').length} changes)

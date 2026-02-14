@@ -39,6 +39,7 @@ export default function JsonBeautifier() {
   const [json2, setJson2] = useState('');
   const [diffMode, setDiffMode] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const resultsSectionRef = useRef<HTMLDivElement>(null);
 
   const getDataType = (value: any): string => {
     if (value === null) return 'null';
@@ -138,6 +139,9 @@ export default function JsonBeautifier() {
       setJsonStats(stats);
 
       toast.success('JSON beautified successfully');
+      setTimeout(() => {
+        resultsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     } catch (err: any) {
       setError(err.message);
       setBeautifiedJson('');
@@ -435,7 +439,7 @@ export default function JsonBeautifier() {
 
       {/* Statistics */}
       {jsonStats && (
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div ref={resultsSectionRef} className="bg-white rounded-lg shadow-lg p-6 scroll-mt-4">
           <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
             <BarChart3 className="w-5 h-5 text-primary-600" />
             JSON Statistics

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Database, Copy, Check, RefreshCw, Download, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
@@ -12,6 +12,7 @@ export default function SqlFormatter() {
   const [formatType, setFormatType] = useState<'sql' | 'sqlWithIn'>('sql');
   const [quoteType, setQuoteType] = useState<'single' | 'double'>('single');
   const [outputFormat, setOutputFormat] = useState<'horizontal' | 'vertical'>('vertical');
+  const resultsSectionRef = useRef<HTMLDivElement>(null);
 
   const formatInput = () => {
     if (!input.trim()) {
@@ -59,6 +60,9 @@ export default function SqlFormatter() {
 
       setFormattedOutput(output);
       toast.success(`Formatted ${values.length} value(s)`);
+      setTimeout(() => {
+        resultsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     } catch (err: any) {
       toast.error('Failed to format input');
     }
@@ -264,7 +268,7 @@ export default function SqlFormatter() {
       </div>
 
       {formattedOutput && (
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div ref={resultsSectionRef} className="bg-white rounded-lg shadow-lg p-6 scroll-mt-4">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-bold text-gray-800">Formatted Output</h3>
             <div className="flex gap-2">
