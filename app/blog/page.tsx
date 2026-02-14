@@ -1116,6 +1116,33 @@ export const metadata: Metadata = {
       keywords: ['make money with AI 2026', 'AI content creation money', 'AI automation services', 'selling AI prompts', 'AI YouTube automation', 'AI freelancing', 'AI SaaS tools']
     },
     {
+      slug: 'how-students-can-make-money-using-ai-2026',
+      title: "How Students Can Make Money Using AI in 2026",
+      excerpt: "How students can make money with AI in 2026: AI assignment help, AI freelancing, selling AI notes, YouTube shorts with AI, building small AI tools. Step-by-step with flow and examples.",
+      date: '2026-02-24',
+      readTime: '9 min read',
+      category: 'AI & Machine Learning',
+      keywords: ['students make money AI 2026', 'AI assignment help', 'AI freelancing students', 'selling notes AI', 'YouTube shorts AI', 'building AI tools students', 'student side hustle AI']
+    },
+    {
+      slug: 'passive-income-with-ai-is-it-really-possible',
+      title: "Passive Income with AI: Is It Really Possible?",
+      excerpt: "Passive income with AI: AI blog automation, AI YouTube automation, AI print-on-demand, AI affiliate marketing, and the truth about automation myths. Honest guide with flow and examples.",
+      date: '2026-02-24',
+      readTime: '10 min read',
+      category: 'AI & Machine Learning',
+      keywords: ['passive income AI', 'AI blog automation', 'AI YouTube automation', 'AI print on demand', 'AI affiliate marketing', 'AI automation myths', 'passive income automation']
+    },
+    {
+      slug: 'how-to-create-sell-ai-digital-products-templates-prompts-tools',
+      title: "How to Create and Sell AI Digital Products (Templates, Prompts & Tools)",
+      excerpt: "Create and sell AI digital products: prompt packs, AI-generated ebooks, Notion templates with AI workflows, micro SaaS ideas. Step-by-step with flow and examples.",
+      date: '2026-02-24',
+      readTime: '10 min read',
+      category: 'AI & Machine Learning',
+      keywords: ['sell AI digital products', 'selling prompt packs', 'AI generated ebooks', 'Notion templates AI', 'micro SaaS AI', 'AI templates prompts tools']
+    },
+    {
       slug: 'how-to-start-ai-side-hustle-zero-step-by-step',
       title: "How to Start an AI Side Hustle with $0 (Step-by-Step Guide)",
       excerpt: "Start an AI side hustle with zero budget: free AI tools, how to find clients, how to price services, and realistic income expectations. Step-by-step guide with flow.",
