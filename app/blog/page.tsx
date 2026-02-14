@@ -1008,6 +1008,33 @@ export const metadata: Metadata = {
       keywords: ['ai prompt engineering', 'how to write ai prompts', 'best ai prompts', 'prompt engineering techniques', 'chatgpt prompts']
     },
     {
+      slug: 'how-ai-works-simple-explanation-for-beginners',
+      title: "How AI Works: A Simple Explanation for Beginners (With Real Examples)",
+      excerpt: "Learn how AI works in simple terms. What AI is, machine learning vs deep learning, how models are trained, and real-world examples: chatbots, recommendations, image recognition. Beginner-friendly guide with flow and examples.",
+      date: '2026-02-24',
+      readTime: '8 min read',
+      category: 'AI & Machine Learning',
+      keywords: ['how AI works', 'what is artificial intelligence', 'AI explained for beginners', 'machine learning vs deep learning', 'how AI models are trained', 'AI real world examples']
+    },
+    {
+      slug: 'machine-learning-vs-deep-learning-vs-ai-difference',
+      title: "Machine Learning vs Deep Learning vs AI: What's the Difference?",
+      excerpt: "Understand the difference between AI, machine learning, and deep learning. Simple definitions, visual comparison table, when to use each, and real-world use cases. Complete guide with examples.",
+      date: '2026-02-24',
+      readTime: '7 min read',
+      category: 'AI & Machine Learning',
+      keywords: ['machine learning vs deep learning', 'AI vs machine learning', 'difference between AI and machine learning', 'when to use machine learning', 'when to use deep learning', 'AI ML DL difference']
+    },
+    {
+      slug: 'how-chatgpt-generative-ai-models-work',
+      title: "How ChatGPT and Generative AI Models Work (Behind the Scenes)",
+      excerpt: "Learn how ChatGPT and generative AI work: what is a Large Language Model (LLM), training data, tokens and probability prediction, and why AI sometimes makes mistakes. Simple explanation with flow.",
+      date: '2026-02-24',
+      readTime: '8 min read',
+      category: 'AI & Machine Learning',
+      keywords: ['how ChatGPT works', 'how generative AI works', 'what is large language model', 'LLM explained', 'tokens AI', 'why AI makes mistakes', 'AI hallucination']
+    },
+    {
       slug: 'cursor-ai-code-editor-guide',
       title: 'Cursor AI Code Editor: Complete Guide & Best Practices',
       excerpt: 'Complete guide to Cursor AI code editor: how to use it, what it does, when to use it, and best practices. Learn Cursor shortcuts, features, and prompt techniques for maximum productivity.',
