@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { FileText, Calendar, Clock, ArrowRight } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Developer's Study Materials - Articles, Tutorials & Best Practices | UnblockDevs',
+  title: "Developer's Study Materials - Articles, Tutorials & Best Practices | UnblockDevs",
   description: 'Developer study materials: technical articles, tutorials, and best practices on JSON tools, API testing, web development, and more. Learn with guides and examples.',
   keywords: [
     'developer study materials',
