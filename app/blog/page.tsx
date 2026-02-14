@@ -1035,6 +1035,33 @@ export const metadata: Metadata = {
       keywords: ['how ChatGPT works', 'how generative AI works', 'what is large language model', 'LLM explained', 'tokens AI', 'why AI makes mistakes', 'AI hallucination']
     },
     {
+      slug: 'can-ai-replace-human-jobs-truth',
+      title: "Can AI Replace Human Jobs? The Truth No One Tells You",
+      excerpt: "Can AI replace human jobs? Jobs AI is replacing vs jobs AI cannot replace, future-proof skills, and what students should learn in 2026. Honest guide with examples and flow.",
+      date: '2026-02-24',
+      readTime: '8 min read',
+      category: 'AI & Machine Learning',
+      keywords: ['can AI replace human jobs', 'AI replacing jobs', 'jobs AI cannot replace', 'future proof skills 2026', 'what to learn in 2026', 'AI and employment']
+    },
+    {
+      slug: 'is-ai-dangerous-what-could-really-happen-future',
+      title: "Is AI Dangerous? What Could Really Happen in the Future",
+      excerpt: "Is AI dangerous? AI risks (misinformation, deepfakes), AI myths vs reality, regulation and control, and should we be worried? Honest guide with examples.",
+      date: '2026-02-24',
+      readTime: '8 min read',
+      category: 'AI & Machine Learning',
+      keywords: ['is AI dangerous', 'AI risks', 'AI misinformation', 'deepfakes AI', 'AI myths vs reality', 'AI regulation', 'AI safety']
+    },
+    {
+      slug: 'how-ai-knows-what-youre-thinking-why-accurate',
+      title: "How AI Knows What You're Thinking (And Why It Feels So Accurate)",
+      excerpt: "How does AI feel so accurate? Recommendation systems, data tracking, predictive models, and the psychology behind AI predictions. Simple explanation with flow and examples.",
+      date: '2026-02-24',
+      readTime: '7 min read',
+      category: 'AI & Machine Learning',
+      keywords: ["how AI knows what you're thinking", 'why AI feels accurate', 'recommendation systems', 'data tracking AI', 'predictive models', 'psychology AI predictions']
+    },
+    {
       slug: 'cursor-ai-code-editor-guide',
       title: 'Cursor AI Code Editor: Complete Guide & Best Practices',
       excerpt: 'Complete guide to Cursor AI code editor: how to use it, what it does, when to use it, and best practices. Learn Cursor shortcuts, features, and prompt techniques for maximum productivity.',
