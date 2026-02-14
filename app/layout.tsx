@@ -1,7 +1,10 @@
 import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget'
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' })
 
 export const metadata: Metadata = {
   title: 'JSON Viewer Tools – Free Online Formatter, Parser & Viewer | UnblockDevs',
@@ -174,7 +177,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en">
+    <html lang="en" className={inter.variable}>
       <head>
         {/* Critical preconnect hints - Must be first for mobile performance (1,000ms+ savings) */}
         <link rel="preconnect" href="https://g.ezoic.net" />
@@ -416,7 +419,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body suppressHydrationWarning>
+      <body className="font-sans antialiased" suppressHydrationWarning>
         {/* AMP Auto Ads - Place immediately after body tag */}
         <div
           dangerouslySetInnerHTML={{

@@ -36,7 +36,7 @@ export default function BlogPost() {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Developer Study Materials
+            Back to Developer's Study Materials
           </Link>
           <div className="flex items-center gap-2 mb-2">
             <span className="px-3 py-1 text-xs font-semibold text-blue-600 bg-blue-50 rounded-full">

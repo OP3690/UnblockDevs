@@ -493,7 +493,7 @@ function HomeClient() {
   };
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="relative min-h-screen flex flex-col bg-gradient-to-b from-slate-50/90 via-white/40 to-slate-100/90">
       <BuyMeACoffeeWidget />
       {/* Skip to main content for keyboard and screen reader users */}
       <a
@@ -533,36 +533,35 @@ function HomeClient() {
       )}
 
       {/* Header - Professional layout */}
-      <header role="banner" className={`bg-white border-b border-gray-200 ${showBookmarkPrompt ? 'sticky top-[73px]' : 'sticky top-0'} z-40 shadow-sm`}>
+      <header role="banner" className={`bg-white/95 backdrop-blur-sm border-b border-gray-200/80 ${showBookmarkPrompt ? 'sticky top-[73px]' : 'sticky top-0'} z-40 shadow-[0_1px_3px_0_rgba(0,0,0,0.06)]`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Top bar: logo left, nav right */}
-          <div className="flex items-center justify-between gap-4 py-3.5 sm:py-4">
+          <div className="flex items-center justify-between gap-4 py-4 sm:py-5">
             <Link href="/" className="flex items-center gap-3 flex-shrink-0 group">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-primary-700 text-white shadow-md shadow-primary-500/25 group-hover:shadow-lg group-hover:shadow-primary-500/30 transition-shadow">
-                <Wrench className="h-5 w-5" />
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-primary-700 text-white shadow-pro-md group-hover:shadow-pro-lg transition-all duration-200">
+                <Wrench className="h-5 w-5" aria-hidden />
               </div>
               <div className="flex flex-col gap-0.5">
-                <span className="text-xl font-bold tracking-tight text-gray-900">UnblockDevs</span>
-                <span className="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-primary-700 bg-gradient-to-r from-primary-50 to-primary-100/80 px-2.5 py-1 rounded-lg border border-primary-200/90 shadow-sm ring-1 ring-primary-100/50 group-hover:ring-primary-200/70 group-hover:shadow transition-all duration-200 w-fit">
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse shrink-0" aria-hidden />
-                  Developers tool for Daily Use!!!
+                <span className="text-xl font-bold tracking-tight text-gray-900" style={{ letterSpacing: '-0.02em' }}>UnblockDevs</span>
+                <span className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-primary-700 bg-primary-50 px-2.5 py-1 rounded-md border border-primary-200/70 w-fit">
+                  Developer tools for daily use
                 </span>
               </div>
             </Link>
             <div id="ezoic-pub-ad-placeholder-100" className="hidden lg:block flex-1 min-w-0" />
             <nav className="flex items-center justify-end gap-2 sm:gap-3 flex-shrink-0" aria-label="Main navigation">
               <div className="hidden"><ins className="adsbygoogle" style={{ display: 'block', minWidth: '300px', minHeight: '100px' }} data-ad-client="ca-pub-6349841658473646" data-ad-slot="HEADER_AD_SLOT" data-ad-format="auto" data-full-width-responsive="false" /></div>
-              <Link href="/blog" className="px-4 py-2.5 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-lg shadow-md shadow-primary-500/30 hover:shadow-lg transition-all ring-2 ring-primary-200/50" aria-label="Developers Study Materials">
-                <FileText className="h-4 w-4 sm:hidden" />
-                <span className="hidden sm:inline">Developers Study Materials 📚</span>
+              <Link href="/blog" className="px-4 py-2.5 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-lg shadow-pro hover:shadow-pro-md transition-all duration-200" aria-label="Developer's Study Materials">
+                <FileText className="h-4 w-4 sm:hidden" aria-hidden />
+                <span className="hidden sm:inline">Developer's Study Materials 📚</span>
               </Link>
-              <Link href="/about" className="px-4 py-2.5 text-sm font-medium text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors">About</Link>
+              <Link href="/about" className="px-4 py-2.5 text-sm font-medium text-gray-600 hover:text-primary-700 hover:bg-primary-50 rounded-lg border border-transparent hover:border-primary-200/80 transition-all duration-200">About</Link>
             </nav>
           </div>
 
           {/* Tool tabs - 3 rows (7 cols on md+) */}
-          <div className="bg-gray-50/90 border-t border-gray-100 rounded-b-lg px-1 sm:px-2 py-2.5 pb-3">
-            <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 gap-1.5 sm:gap-2">
+          <div className="bg-gray-50/95 border-t border-gray-100 px-1 sm:px-2 py-3 pb-3.5">
+            <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 gap-2 sm:gap-2.5">
             <button
               onClick={() => handleTabChange('beautifier')}
               className={`w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm transition-all duration-200 rounded-lg flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0 ${
@@ -668,22 +667,22 @@ function HomeClient() {
       </header>
 
       {/* Ad strip - compact so tool content sits closer to tabs */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-1.5 border-b border-gray-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 border-b border-gray-100/80 bg-white/30">
         <div id="ezoic-pub-ad-placeholder-101" className="min-h-[50px] flex items-center justify-center" />
       </div>
 
       {/* Main Content - Professional layout */}
-      <main id="main-content" role="main" className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in ${activeTab === 'beautifier' ? 'pt-0 pb-8 sm:pb-12 lg:pb-14' : 'py-8 sm:py-12 lg:py-14'}`}>
+      <main id="main-content" role="main" className={`flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 animate-fade-in ${activeTab === 'beautifier' ? 'pt-0 pb-10 sm:pb-14 lg:pb-16' : 'py-10 sm:py-14 lg:py-16'}`}>
         {activeTab === 'beautifier' && (
           <div className="max-w-4xl mx-auto -mt-6 sm:-mt-8">
-            <div className="rounded-2xl bg-white/80 backdrop-blur-sm shadow-lg border border-gray-100 p-4 sm:p-6">
+            <div className="rounded-2xl bg-white/95 backdrop-blur-sm shadow-pro-lg border border-gray-100/90 p-5 sm:p-6 lg:p-8">
               <JsonBeautifier />
             </div>
             <div className="mt-6 text-center">
               <button
                 type="button"
                 onClick={() => handleTabChange('converter')}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 transition-colors"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold text-primary-700 bg-primary-50 border border-primary-200 hover:bg-primary-100 hover:border-primary-300 transition-all duration-200 shadow-pro"
               >
                 <FileSpreadsheet className="w-4 h-4" />
                 Json to Excel — convert JSON to Excel/CSV
@@ -695,9 +694,9 @@ function HomeClient() {
           rows.length === 0 ? (
             <div className="max-w-4xl mx-auto space-y-10 sm:space-y-12">
               {/* Hero: title + input */}
-              <header className="pt-2 sm:pt-4">
-                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 mb-1.5">JSON Viewer Tools</h1>
-                <p className="text-gray-500 text-sm sm:text-base mb-6">Free online formatter, parser & viewer. Paste JSON to view, format, or convert to Excel/CSV.</p>
+              <header className="pt-4 sm:pt-6">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2" style={{ letterSpacing: '-0.02em' }}>JSON Viewer Tools</h1>
+                <p className="text-gray-600 text-sm sm:text-base mb-8 max-w-2xl leading-relaxed">Free online formatter, parser & viewer. Paste JSON to view, format, or convert to Excel/CSV.</p>
                 <div id="json-input-section" className="scroll-mt-6">
                   <JsonInput onJsonSubmit={handleJsonSubmit} />
                 </div>
@@ -776,9 +775,9 @@ function HomeClient() {
               </section>
 
               {/* Try more tools */}
-              <section className="rounded-xl border border-gray-200 bg-white p-5 sm:p-6 text-center shadow-sm">
-                <h2 className="text-base font-semibold text-gray-900 mb-2">Try more tools</h2>
-                <p className="text-gray-500 text-sm mb-4 max-w-lg mx-auto">Edit, validate, convert JSON. No signup.</p>
+              <section className="rounded-2xl border border-gray-200/80 bg-white/95 p-6 sm:p-8 text-center shadow-md">
+                <h2 className="text-lg font-semibold text-gray-900 mb-2">Try more tools</h2>
+                <p className="text-gray-600 text-sm mb-5 max-w-lg mx-auto">Edit, validate, convert JSON. No signup.</p>
                 <div className="flex flex-wrap justify-center gap-2">
                   <Link href="#json-input-section" className="inline-flex items-center gap-1.5 px-3 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors">
                     <Play className="w-3.5 h-3.5" />
@@ -887,8 +886,8 @@ function HomeClient() {
       {activeTab === 'beautifier' && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 lg:py-16">
           {/* Hero Section */}
-          <div className="text-center mb-12 sm:mb-14 lg:mb-16 bg-gradient-to-br from-primary-50 via-indigo-50/80 to-purple-50/80 rounded-2xl p-8 sm:p-10 lg:p-12 border border-primary-100/80 shadow-sm">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight tracking-tight">
+          <div className="text-center mb-14 sm:mb-16 lg:mb-20 bg-gradient-to-br from-primary-50/90 via-indigo-50/70 to-purple-50/70 rounded-2xl p-8 sm:p-10 lg:p-14 border border-primary-100/60 shadow-pro-lg">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight" style={{ letterSpacing: '-0.02em' }}>
               Free Developer Tools — JSON, API & More
             </h2>
             <p className="text-base sm:text-lg text-gray-700 max-w-3xl mx-auto mb-6 sm:mb-8 leading-relaxed">
@@ -1075,7 +1074,7 @@ function HomeClient() {
           </div>
           
           {/* About UnblockDevs Platform Section */}
-          <div className="mb-10 sm:mb-12 lg:mb-16 bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 rounded-2xl p-6 sm:p-8 lg:p-10 border border-gray-200 shadow-sm">
+          <div className="mb-12 sm:mb-16 lg:mb-20 bg-gradient-to-br from-gray-50/90 via-blue-50/80 to-indigo-50/80 rounded-2xl p-8 sm:p-10 lg:p-12 border border-gray-200/80 shadow-md">
             <div className="max-w-4xl mx-auto space-y-6">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 text-center">About UnblockDevs - Free Privacy-Focused Developer Tools</h2>
               
@@ -1130,14 +1129,14 @@ function HomeClient() {
             </div>
           </div>
 
-          <div className="text-center mb-10 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">Our Developer Tools</h2>
-            <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto">
+          <div className="text-center mb-12 sm:mb-14">
+            <h2 className="heading-section mb-2">Our Developer Tools</h2>
+            <p className="heading-section-sub mx-auto">
               Free online tools. No signup. Everything runs in your browser.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 mb-10 sm:mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 mb-12 sm:mb-16">
             <div
               onClick={() => {
                 handleTabChange('converter');
@@ -1145,7 +1144,7 @@ function HomeClient() {
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
               }}
-              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
+              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 Export JSON to Excel | Convert JSON to Excel Table | JSON to Excel Integration
@@ -1166,7 +1165,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
+              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 JSON Viewer | JSON Formatter | JSON Parser | JSON Beautifier
@@ -1187,7 +1186,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
+              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 API Response Comparator
@@ -1208,7 +1207,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
+              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 JSON Comparator & Diff Tool
@@ -1229,7 +1228,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
+              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 JSON Schema Generator | JSON Schema Creator | Generate JSON Schema
@@ -1250,7 +1249,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
+              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 Logs Analyzer
@@ -1271,7 +1270,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
+              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 Payload Analyzer
@@ -1292,7 +1291,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
+              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 Convert Curl to Requests | Curl to JavaScript | Convert Curl to HTTP Request
@@ -1313,7 +1312,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
+              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 Mock API Generator
@@ -1334,7 +1333,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
+              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 Test Data Generator
@@ -1355,7 +1354,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
+              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 Config Comparator
@@ -1376,7 +1375,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
+              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 SQL Formatter - Comma Separated ID List for MySQL, PostgreSQL, Oracle, Trino
@@ -1399,7 +1398,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
+              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 Token Comparator - Compare Tokens Character by Character
@@ -1420,7 +1419,7 @@ function HomeClient() {
                 }
                 showBuyMeACoffeeMessage();
               }}
-              className="bg-white rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-lg transition-all duration-200"
+              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 Timezone Translator for Humans
@@ -1438,7 +1437,7 @@ function HomeClient() {
           <div id="ezoic-pub-ad-placeholder-102"></div>
 
           {/* Additional SEO Content Section */}
-          <div className="mt-12 mb-12 bg-gray-50 rounded-2xl p-6 sm:p-8 border border-gray-200">
+          <div className="mt-14 mb-14 sm:mt-16 sm:mb-16 bg-gray-50/90 rounded-2xl p-8 sm:p-10 border border-gray-200/80 shadow-sm">
             <div className="max-w-4xl mx-auto space-y-6">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Complete Guide: JSON Schema Validation & Generation at UnblockDevs.com</h2>
               
@@ -1474,9 +1473,9 @@ function HomeClient() {
             </div>
           </div>
 
-          <div className="mt-12 text-center">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Why Choose UnblockDevs.com?</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          <div className="mt-14 sm:mt-16 text-center">
+            <h3 className="heading-section mb-6">Why Choose UnblockDevs?</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-4xl mx-auto">
               <div>
                 <h4 className="font-semibold text-gray-900 mb-2">100% Free</h4>
                 <p className="text-sm text-gray-600">All tools are completely free to use with no registration required.</p>
@@ -1495,7 +1494,7 @@ function HomeClient() {
       )}
 
       {/* Feedback Section */}
-      <section className="mt-16 py-12 bg-gradient-to-r from-green-50 via-blue-50 to-indigo-50">
+      <section className="mt-16 sm:mt-20 py-12 sm:py-14 bg-gradient-to-r from-green-50/90 via-blue-50/80 to-indigo-50/90 border-y border-gray-100/80">
         <div className="max-w-4xl mx-auto container-padding">
           <FeedbackForm />
         </div>
@@ -1503,7 +1502,7 @@ function HomeClient() {
 
       {/* Newsletter Signup Section - show on home page (Beautifier only) */}
       {activeTab === 'beautifier' && (
-        <section className="mt-8 py-8 bg-gradient-to-r from-green-50 via-blue-50 to-indigo-50">
+        <section className="mt-10 py-10 sm:py-12 bg-gradient-to-r from-green-50/80 via-blue-50/70 to-indigo-50/80">
           <div className="max-w-4xl mx-auto container-padding">
             <NewsletterSignup />
           </div>
@@ -1514,10 +1513,10 @@ function HomeClient() {
       <div id="ezoic-pub-ad-placeholder-103"></div>
 
       {/* Footer */}
-      <footer className="mt-16 py-8 border-t-2 border-gray-200/50 bg-white/80 backdrop-blur-lg">
+      <footer className="mt-auto pt-16 pb-10 sm:pt-20 sm:pb-12 border-t border-gray-200/80 bg-white/90 backdrop-blur-md shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
         <div className="max-w-7xl mx-auto container-padding">
           {/* Stats Section */}
-          <div className="flex flex-wrap items-center justify-center gap-6 mb-6 pb-6 border-b border-gray-200">
+          <div className="flex flex-wrap items-center justify-center gap-6 mb-8 pb-8 border-b border-gray-200/80">
             <div className="flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-lg">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
               <span className="text-sm font-semibold text-gray-700">Active Users:</span>
@@ -1532,11 +1531,11 @@ function HomeClient() {
           {/* Main Footer Content */}
           <div className="text-center space-y-3">
             <div className="space-y-2">
-              <p className="text-gray-600">
-                <strong className="text-gray-900">UnblockDevs</strong> • Free Online Developer Tools Suite
+              <p className="text-sm font-medium text-gray-700">
+                <strong className="text-gray-900">UnblockDevs</strong> — Free Online Developer Tools Suite
               </p>
-              <p className="text-xs text-gray-500">
-                Free online JSON Viewer, JSON Formatter, JSON Parser, JSON Beautifier, JSON Fixer & Repair Tool, JSON to Excel converter, JSON to CSV converter, JSON to Table converter, API testing, data analysis, schema generation, SQL formatting, log analysis, and more. All tools are free and work entirely in your browser.
+              <p className="text-xs text-gray-500 leading-relaxed mt-1">
+                JSON Viewer, Formatter, Parser, Beautifier, Fixer, JSON to Excel/CSV, API testing, schema generation, SQL formatting, log analysis, and more. All tools are free and run in your browser.
               </p>
               <div className="flex flex-wrap justify-center gap-4 mt-3 text-xs text-gray-600">
                 <Link href="/json-formatter" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Formatter</Link>
@@ -1589,7 +1588,7 @@ function HomeClient() {
                   className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
                 >
                   <FileText className="w-4 h-4" />
-                  Developer Study Materials
+                  Developer's Study Materials 📚
                 </Link>
               </div>
             </div>
@@ -1661,7 +1660,7 @@ function HomeClient() {
                 </Link>
               </div>
               <p className="text-sm text-gray-600">
-                Built by <span className="font-semibold text-gray-900">Developer</span> with <span className="text-red-500">❤️</span> to fellow <span className="font-semibold text-gray-900">Developers</span>
+                Built for <span className="font-semibold text-gray-900">developers</span>, by developers.
               </p>
             </div>
           </div>

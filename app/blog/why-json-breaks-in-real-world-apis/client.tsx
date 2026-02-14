@@ -12,7 +12,7 @@ export default function WhyJsonBreaksInApisClient() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <Link href="/blog" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
             <ArrowLeft className="w-4 h-4" />
-            Back to Developer Study Materials
+            Back to Developer's Study Materials
           </Link>
           <div className="flex items-center gap-3">
             <div className="p-3 bg-red-100 rounded-lg">

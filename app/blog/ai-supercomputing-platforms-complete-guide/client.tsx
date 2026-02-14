@@ -60,7 +60,7 @@ export default function AiSupercomputingPlatformsClient() {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-6 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to Developer Study Materials</span>
+            <span>Back to Developer's Study Materials</span>
           </Link>
           
           <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">

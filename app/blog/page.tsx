@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { FileText, Calendar, Clock, ArrowRight } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Developer Study Materials - Articles, Tutorials & Best Practices | UnblockDevs',
+  title: 'Developer's Study Materials - Articles, Tutorials & Best Practices | UnblockDevs',
   description: 'Developer study materials: technical articles, tutorials, and best practices on JSON tools, API testing, web development, and more. Learn with guides and examples.',
   keywords: [
     'developer study materials',
@@ -1432,7 +1432,7 @@ export default function BlogPage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-1.5 tracking-tight">
-                Developer Study Materials <span className="text-primary-600">📚</span>
+                Developer's Study Materials <span className="text-primary-600">📚</span>
               </h1>
               <p className="text-base sm:text-lg text-gray-600">
                 Articles, tutorials, and best practices for developers
@@ -1504,10 +1504,10 @@ export default function BlogPage() {
 
         {/* SEO Content Section */}
         <section className="mt-14 sm:mt-16 bg-white rounded-xl shadow-md border border-gray-100 p-6 sm:p-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-5">About Developer Study Materials</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-5">About Developer's Study Materials</h2>
           <div className="prose prose-lg max-w-none text-gray-700">
             <p className="mb-4">
-              Welcome to <strong>Developer Study Materials</strong> by UnblockDevs—your go-to resource for articles, tutorials, and best practices on <strong>JSON Viewer</strong>, <strong>JSON Parser</strong>, <strong>JSON Beautifier</strong>, API testing, web development, and more.
+              Welcome to <strong>Developer's Study Materials</strong> by UnblockDevs—your go-to resource for articles, tutorials, and best practices on <strong>JSON Viewer</strong>, <strong>JSON Parser</strong>, <strong>JSON Beautifier</strong>, API testing, web development, and more.
             </p>
             <p className="mb-4">
               Our blog covers a wide range of topics including:
