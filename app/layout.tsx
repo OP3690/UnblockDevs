@@ -89,8 +89,9 @@ export const metadata: Metadata = {
     description: 'JSON Viewer Tools: view, format, validate, and convert JSON in your browser. Free formatter, parser, validator—no signup. Clear overview of services.',
     images: ['/og-image.png'],
   },
+  metadataBase: new URL('https://unblockdevs.com'),
   alternates: {
-    canonical: 'https://unblockdevs.com',
+    canonical: 'https://unblockdevs.com/',
   },
   icons: {
     icon: [
@@ -198,37 +199,23 @@ export default function RootLayout({
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="manifest" href="/manifest.json" />
         
-        {/* Canonical URL - Smart canonical handling (removes query parameters, preserves page URLs) */}
+        {/* Canonical: strip query params (?tab= etc); homepage -> https://unblockdevs.com/ */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                // Get current URL without query parameters
-                const currentPath = window.location.pathname;
-                const hasQueryParams = window.location.search.length > 0;
-                const isHomepage = currentPath === '/' || currentPath === '';
-                
-                // Remove existing canonical tags
-                const existingCanonicals = document.querySelectorAll('link[rel="canonical"]');
-                existingCanonicals.forEach(function(link) {
-                  link.remove();
-                });
-                
-                // Determine canonical URL
-                let canonicalUrl;
-                if (isHomepage || hasQueryParams) {
-                  // Homepage or URLs with query params -> base URL
-                  canonicalUrl = 'https://unblockdevs.com';
-                } else {
-                  // Dedicated pages -> preserve their URL (without query params)
-                  canonicalUrl = 'https://unblockdevs.com' + currentPath;
-                }
-                
-                // Create new canonical tag
-                const canonical = document.createElement('link');
-                canonical.rel = 'canonical';
-                canonical.href = canonicalUrl;
-                document.head.appendChild(canonical);
+                var path = window.location.pathname || '';
+                var isRoot = path === '/' || path === '';
+                var hasQuery = (window.location.search || '').length > 0;
+                var canonicalHref = (isRoot || hasQuery)
+                  ? 'https://unblockdevs.com/'
+                  : 'https://unblockdevs.com' + path.replace(/\\/$/, '') || '/';
+                var existing = document.querySelectorAll('link[rel="canonical"]');
+                for (var i = 0; i < existing.length; i++) existing[i].remove();
+                var link = document.createElement('link');
+                link.rel = 'canonical';
+                link.href = canonicalHref;
+                document.head.appendChild(link);
               })();
             `,
           }}
