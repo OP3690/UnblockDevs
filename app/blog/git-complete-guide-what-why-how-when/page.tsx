@@ -41,6 +41,7 @@ export const metadata: Metadata = {
     'git commit best practices',
     'git repository management'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/git-complete-guide-what-why-how-when' },
 };
 
 export default function GitCompleteGuide() {

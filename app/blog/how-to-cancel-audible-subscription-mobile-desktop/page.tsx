@@ -28,6 +28,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
   },
+  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-cancel-audible-subscription-mobile-desktop' },
 };
 
 export default function HowToCancelAudibleSubscriptionGuide() {

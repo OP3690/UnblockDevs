@@ -26,6 +26,7 @@ export const metadata: Metadata = {
     'agent collaboration',
     'multiagent systems best practices'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/multiagent-systems-complete-guide' },
 };
 
 export default function MultiagentSystems() {

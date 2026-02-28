@@ -26,6 +26,7 @@ export const metadata: Metadata = {
     'edge ai infrastructure',
     'edge ai deployment'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/physical-ai-edge-computing-complete-guide' },
 };
 
 export default function PhysicalAiEdgeComputing() {

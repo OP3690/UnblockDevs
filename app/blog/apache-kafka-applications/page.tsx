@@ -13,6 +13,7 @@ export const metadata: Metadata = {
     'kafka iot',
     'kafka analytics'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/apache-kafka-applications' },
 };
 
 export default function ApacheKafkaApplications() {

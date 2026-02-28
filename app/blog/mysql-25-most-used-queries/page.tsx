@@ -17,6 +17,7 @@ export const metadata: Metadata = {
     'mysql database queries',
     'mysql query guide'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/mysql-25-most-used-queries' },
 };
 
 export default function Mysql25MostUsedQueries() {

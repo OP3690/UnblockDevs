@@ -24,6 +24,7 @@ export const metadata: Metadata = {
     publishedTime: '2024-01-12T00:00:00Z',
     authors: ['UnblockDevs'],
   },
+  alternates: { canonical: 'https://unblockdevs.com/blog/json-to-excel-converter-best-practices' },
 };
 
 export default function BlogPost() {

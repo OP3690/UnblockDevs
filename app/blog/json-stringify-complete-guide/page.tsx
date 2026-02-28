@@ -18,6 +18,7 @@ export const metadata: Metadata = {
     'json stringify js',
     'json stringify example'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/json-stringify-complete-guide' },
 };
 
 export default function JsonStringifyCompleteGuide() {

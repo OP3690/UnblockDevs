@@ -36,6 +36,7 @@ export const metadata: Metadata = {
     'git daily commands',
     'git essential commands'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/git-commands-cheat-sheet-tips-tricks' },
 };
 
 export default function GitCommandsCheatSheet() {

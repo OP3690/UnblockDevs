@@ -24,6 +24,7 @@ export const metadata: Metadata = {
     'systematic investment plan tech',
     'tech stock savings strategy'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-invest-consistently-usa-tech-stocks' },
 };
 
 export default function ConsistentTechInvesting() {

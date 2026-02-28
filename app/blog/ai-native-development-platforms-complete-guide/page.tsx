@@ -28,6 +28,7 @@ export const metadata: Metadata = {
     'ai platform architecture',
     'ai-native development workflow'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/ai-native-development-platforms-complete-guide' },
 };
 
 export default function AiNativeDevelopmentPlatforms() {

@@ -30,6 +30,7 @@ export const metadata: Metadata = {
     title: 'How to Debug Code Step by Step (Beginner-Friendly Guide) | Complete Guide 2026',
     description: 'Learn how to debug code step by step as a beginner. Complete guide to debugging techniques, tools, and strategies for finding and fixing bugs.',
   },
+  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-debug-code-step-by-step-beginner-friendly-guide' },
 };
 
 import HowToDebugCodeStepByStepBeginnerFriendlyGuideClient from './client';

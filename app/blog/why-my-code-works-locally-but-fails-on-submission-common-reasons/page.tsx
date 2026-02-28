@@ -30,6 +30,7 @@ export const metadata: Metadata = {
     title: 'Why My Code Works Locally but Fails on Submission (Common Reasons) | Complete Guide 2026',
     description: 'Learn why your code works locally but fails on submission. Complete troubleshooting guide for environment differences, dependencies, and submission platform issues.',
   },
+  alternates: { canonical: 'https://unblockdevs.com/blog/why-my-code-works-locally-but-fails-on-submission-common-reasons' },
 };
 
 import WhyMyCodeWorksLocallyButFailsOnSubmissionCommonReasonsClient from './client';

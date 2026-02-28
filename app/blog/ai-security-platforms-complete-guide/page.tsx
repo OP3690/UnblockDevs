@@ -28,6 +28,7 @@ export const metadata: Metadata = {
     'ai security governance',
     'ai security platform features'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/ai-security-platforms-complete-guide' },
 };
 
 export default function AiSecurityPlatforms() {

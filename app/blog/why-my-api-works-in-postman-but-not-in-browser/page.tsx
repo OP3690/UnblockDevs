@@ -31,6 +31,7 @@ export const metadata: Metadata = {
     title: 'Why My API Works in Postman but Not in Browser | Fix Guide 2026',
     description: 'Learn why your API works in Postman but fails in browsers. Complete troubleshooting guide for CORS errors, authentication issues, and browser security restrictions.',
   },
+  alternates: { canonical: 'https://unblockdevs.com/blog/why-my-api-works-in-postman-but-not-in-browser' },
 };
 
 export default function WhyMyApiWorksInPostmanButNotInBrowserPage() {

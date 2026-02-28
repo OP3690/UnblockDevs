@@ -18,6 +18,7 @@ export const metadata: Metadata = {
     description: 'Step-by-step guide to convert cURL commands to Python Requests with real examples and best practices.',
     type: 'article',
   },
+  alternates: { canonical: 'https://unblockdevs.com/blog/curl-to-python-requests-complete-guide' },
 };
 
 export default function CurlToPythonRequestsGuide() {

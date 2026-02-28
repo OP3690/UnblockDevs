@@ -13,6 +13,7 @@ export const metadata: Metadata = {
     'ai code editor',
     'cursor best practices'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/cursor-ai-code-editor-guide' },
 };
 
 export default function CursorAiCodeEditorGuide() {
