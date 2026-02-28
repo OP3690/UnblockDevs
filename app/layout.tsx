@@ -314,6 +314,12 @@ export default function RootLayout({
                 adsScript.crossOrigin = 'anonymous';
                 adsScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6349841658473646';
                 document.head.appendChild(adsScript);
+                // AMP Auto Ads - more ad placements (loads after LCP)
+                var ampAutoAds = document.createElement('script');
+                ampAutoAds.async = true;
+                ampAutoAds.setAttribute('custom-element', 'amp-auto-ads');
+                ampAutoAds.src = 'https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js';
+                document.head.appendChild(ampAutoAds);
                 // Ezoic - gatekeeper + sa.min.js
                 var gatekeeper1 = document.createElement('script');
                 gatekeeper1.setAttribute('data-cfasync', 'false');
@@ -392,6 +398,12 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased" suppressHydrationWarning>
+        {/* AMP Auto Ads - maximum ad placements (script loads deferred after LCP) */}
+        <div
+          dangerouslySetInnerHTML={{
+            __html: '<amp-auto-ads type="adsense" data-ad-client="ca-pub-6349841658473646"></amp-auto-ads>',
+          }}
+        />
         <div suppressHydrationWarning>
           {children}
         </div>
