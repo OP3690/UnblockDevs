@@ -118,7 +118,6 @@ function HomeClient() {
   const [mounted, setMounted] = useState<boolean>(false);
   const [showBookmarkPrompt, setShowBookmarkPrompt] = useState<boolean>(false);
   const [samplePanelOpen, setSamplePanelOpen] = useState<boolean>(true);
-  const [tabsExpanded, setTabsExpanded] = useState<boolean>(false);
 
   // Sample JSON for engagement: live demo snippet and interactive panel
   const SAMPLE_JSON_FORMATTED = `{
@@ -562,126 +561,121 @@ function HomeClient() {
             </nav>
           </div>
 
-          {/* Tool tabs - expandable: first row visible by default, "More tools" to expand */}
-          <div className="bg-gray-50/95 border-t border-gray-100 px-1 sm:px-2 py-2.5 pb-2">
-            <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 gap-2 sm:gap-2.5">
+          {/* Tool tabs — compact grid, clear labels, small badges */}
+          <div className="border-t border-gray-200/80 bg-gradient-to-b from-gray-50 to-white/80 px-3 sm:px-4 py-3">
+<div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3 mb-2">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider sm:shrink-0">Developer&apos;s Daily Tools</p>
+              <div className="flex justify-center sm:flex-1">
+                <p className="text-sm text-emerald-700 font-bold bg-emerald-50 border border-emerald-200/80 rounded-md px-3 py-1.5 inline-flex items-center">
+                  <Lock className="w-4 h-4 mr-2 shrink-0" aria-hidden />
+                  100% client-side — your data never leaves your device.
+                </p>
+              </div>
+            </div>
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-2">
             <button
               onClick={() => handleTabChange('beautifier')}
-              className={`w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm transition-all duration-200 rounded-lg flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0 ${
+              className={`group tab-card w-full px-2.5 py-2 rounded-xl border text-left transition-all duration-200 flex items-start gap-2 min-h-[2.5rem] ${
                 activeTab === 'beautifier'
-                  ? 'bg-white text-primary-700 border-2 border-primary-500 shadow-sm ring-2 ring-primary-100'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-white/80 border-2 border-transparent hover:border-gray-200'
+                  ? 'bg-primary-50 border-primary-300 text-primary-800 shadow-sm'
+                  : 'bg-white/90 border-gray-200/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm'
               }`}
             >
-              <Code2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="text-center break-words line-clamp-2">JSON Beautifier</span>
+              <Code2 className="w-4 h-4 flex-shrink-0 text-primary-600" />
+              <span className="text-xs font-medium break-words">JSON Beautifier</span>
             </button>
-            <Link href={toolPageUrls.sql} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
-              <Database className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="text-center break-words line-clamp-2">SQL Formatter</span>
-              <span className="px-1.5 py-0.5 bg-red-100 text-red-600 rounded-md text-[10px] font-semibold flex-shrink-0 animate-badge-flash">Hot</span>
+            <Link href={toolPageUrls.sql} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-start gap-2 min-h-[2.5rem]">
+              <Database className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600 mt-0.5" />
+              <span className="text-xs font-medium break-words flex-1 min-w-0">SQL Formatter</span>
+              <span className="shrink-0 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-red-100 text-red-600">Hot</span>
             </Link>
-            <Link href={toolPageUrls.schemamasker} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
-              <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="text-center break-words line-clamp-2">Schema Masker</span>
-              <span className="px-1.5 py-0.5 bg-purple-100 text-purple-600 rounded-md text-[10px] font-semibold flex-shrink-0 animate-badge-flash">AI</span>
+            <Link href={toolPageUrls.schemamasker} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-start gap-2 min-h-[2.5rem]">
+              <ShieldCheck className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600 mt-0.5" />
+              <span className="text-xs font-medium break-words flex-1 min-w-0">Schema Masker</span>
+              <span className="shrink-0 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-violet-100 text-violet-600">AI</span>
             </Link>
-            <Link href={toolPageUrls.jsonpromptshield} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
-              <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="text-center break-words line-clamp-2">JSON Shield</span>
-              <span className="px-1.5 py-0.5 bg-purple-100 text-purple-600 rounded-md text-[10px] font-semibold flex-shrink-0 animate-badge-flash">AI</span>
+            <Link href={toolPageUrls.jsonpromptshield} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-start gap-2 min-h-[2.5rem]">
+              <Shield className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600 mt-0.5" />
+              <span className="text-xs font-medium break-words flex-1 min-w-0">JSON Shield</span>
+              <span className="shrink-0 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-violet-100 text-violet-600">AI</span>
             </Link>
-            <Link href={toolPageUrls.promptchunk} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
-              <Scissors className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="text-center break-words line-clamp-2">Prompt Chunker</span>
-              <span className="px-1.5 py-0.5 bg-purple-100 text-purple-600 rounded-md text-[10px] font-semibold flex-shrink-0 animate-badge-flash">AI</span>
+            <Link href={toolPageUrls.promptchunk} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-start gap-2 min-h-[2.5rem]">
+              <Scissors className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600 mt-0.5" />
+              <span className="text-xs font-medium break-words flex-1 min-w-0">Prompt Chunker</span>
+              <span className="shrink-0 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-violet-100 text-violet-600">AI</span>
             </Link>
-            <Link href={toolPageUrls.tokencompare} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
-              <Key className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="text-center break-words line-clamp-2">Token Compare</span>
+            <Link href={toolPageUrls.tokencompare} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-start gap-2 min-h-[2.5rem]">
+              <Key className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600 mt-0.5" />
+              <span className="text-xs font-medium break-words">Token Compare</span>
             </Link>
             <button
               onClick={() => handleTabChange('converter')}
-              className={`w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm transition-all duration-200 rounded-lg flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0 ${
+              className={`group tab-card w-full px-2.5 py-2 rounded-xl border text-left transition-all duration-200 flex items-start gap-2 min-h-[2.5rem] ${
                 activeTab === 'converter'
-                  ? 'bg-white text-primary-700 border-2 border-primary-500 shadow-sm ring-2 ring-primary-100'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-white/80 border-2 border-transparent hover:border-gray-200'
+                  ? 'bg-primary-50 border-primary-300 text-primary-800 shadow-sm'
+                  : 'bg-white/90 border-gray-200/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm'
               }`}
             >
-              <FileSpreadsheet className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="text-center break-words line-clamp-2">Json to Excel</span>
+              <FileSpreadsheet className="w-4 h-4 flex-shrink-0 text-primary-600" />
+              <span className="text-xs font-medium break-words">Json to Excel</span>
             </button>
-            </div>
-            <div className="flex justify-center pt-1">
-              <button
-                type="button"
-                onClick={() => setTabsExpanded(!tabsExpanded)}
-                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-primary-700 bg-primary-50 hover:bg-primary-100 rounded border border-primary-200/80 transition-colors"
-                aria-expanded={tabsExpanded}
-              >
-                {tabsExpanded ? <><ChevronUp className="w-3.5 h-3.5" aria-hidden /> Show less</> : <><ChevronDown className="w-3.5 h-3.5" aria-hidden /> More tools</>}
-              </button>
-            </div>
-            {tabsExpanded && (
-            <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 gap-2 sm:gap-2.5 mt-2">
-            <Link href={toolPageUrls.fixer} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
-              <Wrench className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="text-center break-words line-clamp-2">JSON Fixer</span>
+            <Link href={toolPageUrls.fixer} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-start gap-2 min-h-[2.5rem]">
+              <Wrench className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600 mt-0.5" />
+              <span className="text-xs font-medium break-words">JSON Fixer</span>
             </Link>
-            <Link href={toolPageUrls.builder} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
-              <FileSpreadsheet className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="text-center break-words line-clamp-2">JSON Builder</span>
+            <Link href={toolPageUrls.builder} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-start gap-2 min-h-[2.5rem]">
+              <FileSpreadsheet className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600 mt-0.5" />
+              <span className="text-xs font-medium break-words">JSON Builder</span>
             </Link>
-            <Link href={toolPageUrls.comparator} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
-              <GitCompare className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="text-center break-words line-clamp-2">API Compare</span>
+            <Link href={toolPageUrls.comparator} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-start gap-2 min-h-[2.5rem]">
+              <GitCompare className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600 mt-0.5" />
+              <span className="text-xs font-medium break-words">API Compare</span>
             </Link>
-            <Link href={toolPageUrls.jsoncompare} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
-              <GitCompare className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="text-center break-words line-clamp-2">JSON Compare</span>
+            <Link href={toolPageUrls.jsoncompare} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-start gap-2 min-h-[2.5rem]">
+              <GitCompare className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600 mt-0.5" />
+              <span className="text-xs font-medium break-words">JSON Compare</span>
             </Link>
-            <Link href={toolPageUrls.schema} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
-              <FileCode className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="text-center break-words line-clamp-2">Schema</span>
+            <Link href={toolPageUrls.schema} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-start gap-2 min-h-[2.5rem]">
+              <FileCode className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600 mt-0.5" />
+              <span className="text-xs font-medium break-words">Schema</span>
             </Link>
-            <Link href={toolPageUrls.logs} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
-              <FileSearch className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="text-center break-words line-clamp-2">Logs Analyzer</span>
+            <Link href={toolPageUrls.logs} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-start gap-2 min-h-[2.5rem]">
+              <FileSearch className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600 mt-0.5" />
+              <span className="text-xs font-medium break-words">Logs Analyzer</span>
             </Link>
-            <Link href={toolPageUrls.payload} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
-              <BarChart3 className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="text-center break-words line-clamp-2">Payload</span>
+            <Link href={toolPageUrls.payload} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-start gap-2 min-h-[2.5rem]">
+              <BarChart3 className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600 mt-0.5" />
+              <span className="text-xs font-medium break-words">Payload</span>
             </Link>
-            <Link href={toolPageUrls.curl} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
-              <Code className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="text-center break-words line-clamp-2">Convert Curl</span>
+            <Link href={toolPageUrls.curl} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-start gap-2 min-h-[2.5rem]">
+              <Code className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600 mt-0.5" />
+              <span className="text-xs font-medium break-words">Convert Curl</span>
             </Link>
-            <Link href={toolPageUrls.mock} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
-              <Server className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="text-center break-words line-clamp-2">Mock API</span>
+            <Link href={toolPageUrls.mock} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-start gap-2 min-h-[2.5rem]">
+              <Server className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600 mt-0.5" />
+              <span className="text-xs font-medium break-words">Mock API</span>
             </Link>
-            <Link href={toolPageUrls.testdata} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
-              <Database className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="text-center break-words line-clamp-2">Test Data</span>
+            <Link href={toolPageUrls.testdata} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-start gap-2 min-h-[2.5rem]">
+              <Database className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600 mt-0.5" />
+              <span className="text-xs font-medium break-words">Test Data</span>
             </Link>
-            <Link href={toolPageUrls.config} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
-              <Settings className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="text-center break-words line-clamp-2">Config</span>
+            <Link href={toolPageUrls.config} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-start gap-2 min-h-[2.5rem]">
+              <Settings className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600 mt-0.5" />
+              <span className="text-xs font-medium break-words">Config</span>
             </Link>
-            <Link href={toolPageUrls.timezone} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
-              <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="text-center break-words line-clamp-2">Timezone</span>
+            <Link href={toolPageUrls.timezone} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-start gap-2 min-h-[2.5rem]">
+              <Clock className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600 mt-0.5" />
+              <span className="text-xs font-medium break-words">Timezone</span>
             </Link>
-            <Link href={toolPageUrls.hartocurl} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
-              <Network className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="text-center break-words line-clamp-2">HAR to cURL</span>
+            <Link href={toolPageUrls.hartocurl} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-start gap-2 min-h-[2.5rem]">
+              <Network className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600 mt-0.5" />
+              <span className="text-xs font-medium break-words">HAR to cURL</span>
             </Link>
-            <Link href={toolPageUrls.curlfailure} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
-              <AlertTriangle className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="text-center break-words line-clamp-2">cURL Analyzer</span>
+            <Link href={toolPageUrls.curlfailure} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-start gap-2 min-h-[2.5rem]">
+              <AlertTriangle className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600 mt-0.5" />
+              <span className="text-xs font-medium break-words">cURL Analyzer</span>
             </Link>
             </div>
-            )}
           </div>
         </div>
       </header>
