@@ -1,13 +1,20 @@
 'use client';
 
 import Link from 'next/link';
-import { Shield, Zap, CheckCircle, Code, Heart, Mail, Users, Target, Globe, Lock, Rocket, Award, TrendingUp, BookOpen, Lightbulb } from 'lucide-react';
+import { Shield, Zap, CheckCircle, Code, Heart, Mail, Users, Target, Globe, Lock, Rocket, Award, TrendingUp, BookOpen, Lightbulb, ArrowLeft } from 'lucide-react';
 
 export default function AboutClient() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
       <header className="bg-white shadow-md border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-sm font-medium text-primary-600 hover:text-primary-700 mb-4"
+          >
+            <ArrowLeft className="w-4 h-4" aria-hidden />
+            Back to Tools
+          </Link>
           <h1 className="text-3xl font-bold text-gray-900">About UnblockDevs</h1>
           <p className="text-sm text-gray-500 mt-1">Free Developer Tools - Privacy-Focused & No Signup Required</p>
         </div>
