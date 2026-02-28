@@ -592,17 +592,17 @@ function HomeClient() {
             <Link href={toolPageUrls.schemamasker} className="group tab-card relative w-full px-2.5 py-2 pr-8 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <ShieldCheck className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0 flex-1">Schema Masker</span>
-              <span className="absolute top-1.5 right-1.5 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-violet-100 text-violet-600">AI</span>
+              <span className="absolute top-1.5 right-1.5 text-xs font-semibold px-2 py-0.5 rounded bg-violet-100 text-violet-600">AI</span>
             </Link>
             <Link href={toolPageUrls.jsonpromptshield} className="group tab-card relative w-full px-2.5 py-2 pr-8 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <Shield className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0 flex-1">JSON Shield</span>
-              <span className="absolute top-1.5 right-1.5 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-violet-100 text-violet-600">AI</span>
+              <span className="absolute top-1.5 right-1.5 text-xs font-semibold px-2 py-0.5 rounded bg-violet-100 text-violet-600">AI</span>
             </Link>
             <Link href={toolPageUrls.promptchunk} className="group tab-card relative w-full px-2.5 py-2 pr-8 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <Scissors className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0 flex-1">Prompt Chunker</span>
-              <span className="absolute top-1.5 right-1.5 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-violet-100 text-violet-600">AI</span>
+              <span className="absolute top-1.5 right-1.5 text-xs font-semibold px-2 py-0.5 rounded bg-violet-100 text-violet-600">AI</span>
             </Link>
             <Link href={toolPageUrls.tokencompare} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <Key className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
