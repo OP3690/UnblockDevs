@@ -6,12 +6,12 @@ import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, F
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { PersonalizationManager, ToolTab } from '@/lib/personalization';
-import SocialShare from '@/components/SocialShare';
-import NewsletterSignup from '@/components/NewsletterSignup';
-import FeedbackForm from '@/components/FeedbackForm';
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget';
 import JsonInput from '@/components/JsonInput';
-import CommissionDisclosure from '@/components/CommissionDisclosure';
+// Below-fold / non-critical: lazy load to reduce initial JS (LCP)
+const NewsletterSignup = dynamic(() => import('@/components/NewsletterSignup'), { ssr: false, loading: () => null });
+const FeedbackForm = dynamic(() => import('@/components/FeedbackForm'), { ssr: false, loading: () => null });
+const CommissionDisclosure = dynamic(() => import('@/components/CommissionDisclosure'), { ssr: false, loading: () => null });
 import DataTable from '@/components/DataTable';
 import SectionManager from '@/components/SectionManager';
 import JsonBeautifier from '@/components/JsonBeautifier';
@@ -198,28 +198,26 @@ function HomeClient() {
     localStorage.setItem('bookmarkPromptDismissed', 'true');
   };
 
-  // Initialize Google AdSense for header ad
+  // Initialize Google AdSense (script loads deferred after LCP; retry until it's ready)
   useEffect(() => {
-    if (mounted && typeof window !== 'undefined') {
-      // Wait for AdSense script to load
-      const initAdSense = () => {
-        try {
-          if ((window as any).adsbygoogle && (window as any).adsbygoogle.loaded !== true) {
-            ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
-          }
-        } catch (e) {
-          // Silently fail - AdSense may not be configured yet
-          console.debug('AdSense not ready:', e);
+    if (!mounted || typeof window === 'undefined') return;
+    const initAdSense = () => {
+      try {
+        (window as any).adsbygoogle = (window as any).adsbygoogle || [];
+        if ((window as any).adsbygoogle.loaded !== true) {
+          ((window as any).adsbygoogle as any[]).push({});
         }
-      };
-      
-      // Try immediately
-      initAdSense();
-      
-      // Also try after a delay in case script is still loading
-      const timer = setTimeout(initAdSense, 1000);
-      return () => clearTimeout(timer);
-    }
+      } catch (_) {}
+    };
+    initAdSense();
+    const t1 = setTimeout(initAdSense, 800);
+    const t2 = setTimeout(initAdSense, 2500);
+    const t3 = setTimeout(initAdSense, 5000);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+    };
   }, [mounted]);
 
   // Initialize Ezoic ads with error handling

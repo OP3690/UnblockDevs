@@ -221,39 +221,7 @@ export default function RootLayout({
           }}
         />
         
-        {/* Google Analytics - Load after page load */}
-        <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-N6DF8NPHY8"
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-N6DF8NPHY8', {
-                allow_enhanced_conversions: true
-              });
-            `,
-          }}
-        />
-        
-        {/* Google AdSense - Defer loading */}
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6349841658473646"
-          crossOrigin="anonymous"
-        />
-        
-        {/* AMP Auto Ads - For AMP pages */}
-        <script
-          async
-          custom-element="amp-auto-ads"
-          src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js"
-        />
-        
-        {/* Ezoic and Buy Me a Coffee - Load after page is interactive to improve LCP */}
+        {/* Third-party (gtag, AdSense, Ezoic) load after LCP + idle to reduce unused JS */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -327,72 +295,89 @@ export default function RootLayout({
                 });
               }
               
-              // Defer non-critical scripts until after page load and LCP
+              var deferredLoaded = false;
               function loadDeferredScripts() {
-                // Ezoic Privacy Scripts - Load after LCP
-                const gatekeeper1 = document.createElement('script');
+                if (deferredLoaded) return;
+                deferredLoaded = true;
+                // Google Analytics - load after LCP to reduce main-thread JS
+                var gtagScript = document.createElement('script');
+                gtagScript.async = true;
+                gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-N6DF8NPHY8';
+                document.head.appendChild(gtagScript);
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-N6DF8NPHY8', { allow_enhanced_conversions: true });
+                // Google AdSense - load after LCP to reduce unused JS (518 KiB savings)
+                var adsScript = document.createElement('script');
+                adsScript.async = true;
+                adsScript.crossOrigin = 'anonymous';
+                adsScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6349841658473646';
+                document.head.appendChild(adsScript);
+                // Ezoic - gatekeeper + sa.min.js
+                var gatekeeper1 = document.createElement('script');
                 gatekeeper1.setAttribute('data-cfasync', 'false');
                 gatekeeper1.src = 'https://cmp.gatekeeperconsent.com/min.js';
                 gatekeeper1.async = true;
                 document.head.appendChild(gatekeeper1);
-                
-                const gatekeeper2 = document.createElement('script');
+                var gatekeeper2 = document.createElement('script');
                 gatekeeper2.setAttribute('data-cfasync', 'false');
                 gatekeeper2.src = 'https://the.gatekeeperconsent.com/cmp.min.js';
                 gatekeeper2.async = true;
                 document.head.appendChild(gatekeeper2);
-                
-                // Ezoic Header Script - Load after LCP (with error handling)
-                const ezoic = document.createElement('script');
+                var ezoic = document.createElement('script');
                 ezoic.async = true;
                 ezoic.src = '//www.ezojs.com/ezoic/sa.min.js';
-                ezoic.onerror = function() {
-                  console.debug('Ezoic script failed to load (site may not be approved yet)');
-                };
-                ezoic.onload = function() {
-                  console.debug('Ezoic script loaded successfully');
-                };
+                ezoic.onerror = function() {};
                 document.head.appendChild(ezoic);
-                
-                // Buy Me a Coffee Widget is now loaded in BuyMeACoffeeWidget component
-                // Removed from here to avoid conflicts
+                // Buy Me a Coffee - defer to reduce initial JS
+                var bmc = document.createElement('script');
+                bmc.setAttribute('data-name', 'BMC-Widget');
+                bmc.setAttribute('data-cfasync', 'false');
+                bmc.src = 'https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js';
+                bmc.setAttribute('data-id', 'WKbStURip');
+                bmc.setAttribute('data-description', 'Support me on Buy me a coffee!');
+                bmc.setAttribute('data-message', 'You have a Wonderful Day!!!');
+                bmc.setAttribute('data-color', '#5F7FFF');
+                bmc.setAttribute('data-position', 'Right');
+                bmc.setAttribute('data-x_margin', '18');
+                bmc.setAttribute('data-y_margin', '18');
+                document.body.appendChild(bmc);
               }
-              
-              // Wait for LCP before loading deferred scripts
+              function whenIdleThenDeferred() {
+                if (window.requestIdleCallback) {
+                  requestIdleCallback(loadDeferredScripts, { timeout: 3500 });
+                } else {
+                  loadDeferredScripts();
+                }
+              }
               if ('PerformanceObserver' in window) {
                 try {
-                  const observer = new PerformanceObserver((list) => {
-                    const entries = list.getEntries();
-                    const lastEntry = entries[entries.length - 1];
+                  var observer = new PerformanceObserver(function(list) {
+                    var entries = list.getEntries();
+                    var lastEntry = entries[entries.length - 1];
                     if (lastEntry && lastEntry.renderTime) {
-                      // LCP has occurred, load deferred scripts
-                      loadDeferredScripts();
                       observer.disconnect();
+                      whenIdleThenDeferred();
                     }
                   });
                   observer.observe({ type: 'largest-contentful-paint', buffered: true });
-                  
-                  // Fallback: Load after 2 seconds if LCP doesn't fire
-                  setTimeout(() => {
+                  setTimeout(function() {
                     observer.disconnect();
-                    loadDeferredScripts();
-                  }, 2000);
+                    whenIdleThenDeferred();
+                  }, 3500);
                 } catch (e) {
-                  // Fallback if PerformanceObserver fails
                   if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', loadDeferredScripts);
+                    document.addEventListener('DOMContentLoaded', function() { setTimeout(whenIdleThenDeferred, 500); });
                   } else {
-                    setTimeout(loadDeferredScripts, 1000);
+                    setTimeout(whenIdleThenDeferred, 1500);
                   }
                 }
               } else {
-                // Fallback for browsers without PerformanceObserver
                 if (document.readyState === 'loading') {
-                  document.addEventListener('DOMContentLoaded', () => {
-                    setTimeout(loadDeferredScripts, 1000);
-                  });
+                  document.addEventListener('DOMContentLoaded', function() { setTimeout(whenIdleThenDeferred, 1000); });
                 } else {
-                  setTimeout(loadDeferredScripts, 1000);
+                  setTimeout(whenIdleThenDeferred, 1500);
                 }
               }
             `,
@@ -407,30 +392,10 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased" suppressHydrationWarning>
-        {/* AMP Auto Ads - Place immediately after body tag */}
-        <div
-          dangerouslySetInnerHTML={{
-            __html: '<amp-auto-ads type="adsense" data-ad-client="ca-pub-6349841658473646"></amp-auto-ads>',
-          }}
-        />
         <div suppressHydrationWarning>
           {children}
         </div>
         <BuyMeACoffeeWidget />
-        
-        {/* Buy Me a Coffee Widget Script - Load synchronously to catch DOMContentLoaded */}
-        <script
-          data-name="BMC-Widget"
-          data-cfasync="false"
-          src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
-          data-id="WKbStURip"
-          data-description="Support me on Buy me a coffee!"
-          data-message="You have a Wonderful Day!!!"
-          data-color="#5F7FFF"
-          data-position="Right"
-          data-x_margin="18"
-          data-y_margin="18"
-        />
         
         <Toaster 
           position="bottom-right"
