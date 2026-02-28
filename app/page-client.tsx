@@ -562,8 +562,8 @@ function HomeClient() {
             </nav>
           </div>
 
-          {/* Tool tabs - expandable: first row visible by default, "Explore More tools" to expand */}
-          <div className="bg-gray-50/95 border-t border-gray-100 px-1 sm:px-2 py-3 pb-3.5">
+          {/* Tool tabs - expandable: first row visible by default, "More tools" to expand */}
+          <div className="bg-gray-50/95 border-t border-gray-100 px-1 sm:px-2 py-2.5 pb-2">
             <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 gap-2 sm:gap-2.5">
             <button
               onClick={() => handleTabChange('beautifier')}
@@ -612,24 +612,14 @@ function HomeClient() {
               <span className="text-center break-words line-clamp-2">Json to Excel</span>
             </button>
             </div>
-            <div className="flex justify-center pt-2 pb-1">
+            <div className="flex justify-center pt-1">
               <button
                 type="button"
                 onClick={() => setTabsExpanded(!tabsExpanded)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-primary-700 bg-primary-50 hover:bg-primary-100 rounded-lg border border-primary-200/80 transition-colors"
+                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-primary-700 bg-primary-50 hover:bg-primary-100 rounded border border-primary-200/80 transition-colors"
                 aria-expanded={tabsExpanded}
               >
-                {tabsExpanded ? (
-                  <>
-                    <ChevronUp className="w-4 h-4" aria-hidden />
-                    Show less
-                  </>
-                ) : (
-                  <>
-                    <ChevronDown className="w-4 h-4" aria-hidden />
-                    Explore More tools
-                  </>
-                )}
+                {tabsExpanded ? <><ChevronUp className="w-3.5 h-3.5" aria-hidden /> Show less</> : <><ChevronDown className="w-3.5 h-3.5" aria-hidden /> More tools</>}
               </button>
             </div>
             {tabsExpanded && (

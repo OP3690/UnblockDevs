@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 
+// Exact embed from Buy Me a Coffee — script must be in DOM so widget can read data-* and render
 const BMC_SCRIPT_URL = 'https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js';
 
 export default function BuyMeACoffeeWidget() {
@@ -15,12 +16,12 @@ export default function BuyMeACoffeeWidget() {
     script.src = BMC_SCRIPT_URL;
     script.setAttribute('data-id', 'WKbStURip');
     script.setAttribute('data-description', 'Support me on Buy me a coffee!');
-    script.setAttribute('data-message', 'You have a Wonderful Day!!!');
+    script.setAttribute('data-message', '');
     script.setAttribute('data-color', '#5F7FFF');
     script.setAttribute('data-position', 'Right');
     script.setAttribute('data-x_margin', '18');
     script.setAttribute('data-y_margin', '18');
-    script.async = true;
+    script.defer = true;
     document.body.appendChild(script);
   }, []);
 
