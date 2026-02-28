@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Fira_Code } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget'
+import DevModeWrapper from '@/components/DevModeWrapper'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' })
+const firaCode = Fira_Code({ subsets: ['latin'], variable: '--font-fira-code', display: 'swap' })
 
 export const metadata: Metadata = {
   title: 'JSON Viewer Tools – Free Online Formatter, Parser & Viewer | UnblockDevs',
@@ -178,7 +180,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={`${inter.variable} ${firaCode.variable}`}>
       <head>
         {/* Critical preconnect hints - Must be first for mobile performance (1,000ms+ savings) */}
         <link rel="preconnect" href="https://g.ezoic.net" />
@@ -391,10 +393,12 @@ export default function RootLayout({
             __html: '<amp-auto-ads type="adsense" data-ad-client="ca-pub-6349841658473646"></amp-auto-ads>',
           }}
         />
-        <div suppressHydrationWarning>
-          {children}
-        </div>
-        <BuyMeACoffeeWidget />
+        <DevModeWrapper>
+          <div suppressHydrationWarning>
+            {children}
+          </div>
+          <BuyMeACoffeeWidget />
+        </DevModeWrapper>
         <Toaster 
           position="bottom-right"
           toastOptions={{

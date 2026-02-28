@@ -402,3 +402,254 @@ iframe[src*="buymeacoffee.com"] {
   /* The widget loads in an iframe, so CSS cannot override the minimum amount */
 }
 
+/* ========== Dev Mode — Green hacker / terminal theme (dark bg, high-contrast text) ========== */
+html.dev-mode {
+  --dev-bg: #0a0e14;
+  --dev-bg-card: #0c1016;
+  --dev-bg-elevated: #0f1419;
+  --dev-text: #d4ffb8;
+  --dev-text-dim: #9ee69a;
+  --dev-text-muted: #7ee787;
+  --dev-border: #238636;
+  --dev-border-strong: #2ea043;
+  --dev-accent: #00ff41;
+  font-family: var(--font-fira-code), 'Fira Code', 'Consolas', 'Monaco', monospace !important;
+}
+
+html.dev-mode,
+html.dev-mode body {
+  background: var(--dev-bg) !important;
+  color: var(--dev-text) !important;
+}
+
+html.dev-mode .dev-mode-toggle-container {
+  background: var(--dev-bg-card) !important;
+  border: 1px solid var(--dev-border-strong) !important;
+  border-radius: 0.5rem !important;
+  color: var(--dev-text) !important;
+  box-shadow: 0 0 0 1px var(--dev-border);
+  padding: 0.25rem 0.5rem !important;
+}
+
+html.dev-mode a {
+  color: var(--dev-text-dim) !important;
+}
+
+html.dev-mode a:hover {
+  color: var(--dev-accent) !important;
+}
+
+/* Force all text to be readable green (no gray on dark) */
+html.dev-mode p,
+html.dev-mode li,
+html.dev-mode span,
+html.dev-mode td,
+html.dev-mode th,
+html.dev-mode label,
+html.dev-mode h1,
+html.dev-mode h2,
+html.dev-mode h3,
+html.dev-mode h4,
+html.dev-mode h5,
+html.dev-mode h6 {
+  color: var(--dev-text) !important;
+}
+
+html.dev-mode [class*="text-gray-"],
+html.dev-mode .text-gray-500,
+html.dev-mode .text-gray-600,
+html.dev-mode .text-gray-700,
+html.dev-mode .text-gray-900,
+html.dev-mode .text-slate-500,
+html.dev-mode .text-slate-600 {
+  color: var(--dev-text-dim) !important;
+}
+
+/* Borders in dev mode: visible green */
+html.dev-mode input,
+html.dev-mode textarea,
+html.dev-mode pre {
+  border: 1px solid var(--dev-border) !important;
+}
+
+html.dev-mode [class*="border-gray"],
+html.dev-mode [class*="border-emerald"],
+html.dev-mode [class*="border-blue"],
+html.dev-mode [class*="border-violet"],
+html.dev-mode [class*="border-slate"] {
+  border-color: var(--dev-border) !important;
+}
+
+/* Force ALL light backgrounds to dark — catch every common pattern */
+html.dev-mode [class*="bg-white"],
+html.dev-mode .bg-white,
+html.dev-mode [class*="bg-gray-50"],
+html.dev-mode [class*="bg-gray-100"],
+html.dev-mode [class*="bg-gray-200"],
+html.dev-mode [class*="bg-slate-50"],
+html.dev-mode [class*="bg-slate-100"],
+html.dev-mode .bg-gray-50,
+html.dev-mode .bg-gray-100,
+html.dev-mode .bg-slate-50,
+html.dev-mode .bg-slate-100 {
+  background: var(--dev-bg-card) !important;
+  color: var(--dev-text) !important;
+}
+
+/* Cards and rounded content blocks — always dark background + readable text */
+html.dev-mode .rounded-xl,
+html.dev-mode .rounded-2xl,
+html.dev-mode .rounded-lg,
+html.dev-mode [class*="rounded-"][class*="border"],
+html.dev-mode section[class*="bg-"],
+html.dev-mode div[class*="rounded-"][class*="border"] {
+  background: var(--dev-bg-card) !important;
+  border-color: var(--dev-border) !important;
+  color: var(--dev-text) !important;
+}
+
+html.dev-mode .rounded-xl *,
+html.dev-mode .rounded-2xl *,
+html.dev-mode .rounded-lg * {
+  color: inherit;
+}
+
+html.dev-mode .rounded-xl p,
+html.dev-mode .rounded-xl li,
+html.dev-mode .rounded-xl span,
+html.dev-mode .rounded-2xl p,
+html.dev-mode .rounded-2xl li,
+html.dev-mode .rounded-2xl span,
+html.dev-mode .rounded-lg p,
+html.dev-mode .rounded-lg li,
+html.dev-mode .rounded-lg span {
+  color: var(--dev-text) !important;
+}
+
+html.dev-mode header,
+html.dev-mode [role="banner"] {
+  background: var(--dev-bg-card) !important;
+  border-bottom: 1px solid var(--dev-border) !important;
+}
+
+/* Inputs, textareas, pre, code — clear box and readable text */
+html.dev-mode input,
+html.dev-mode textarea,
+html.dev-mode pre,
+html.dev-mode [class*="font-mono"] {
+  background: var(--dev-bg) !important;
+  color: var(--dev-text) !important;
+  border: 1px solid var(--dev-border) !important;
+  caret-color: var(--dev-accent);
+}
+
+html.dev-mode pre {
+  padding: 0.75rem 1rem !important;
+  border-radius: 0.5rem !important;
+}
+
+/* Inline code and tag-like elements (exclude pre > code blocks) */
+html.dev-mode code:not(pre code),
+html.dev-mode kbd {
+  color: var(--dev-text-dim) !important;
+  background: rgba(46, 160, 67, 0.15) !important;
+  border: 1px solid var(--dev-border) !important;
+  padding: 0.125rem 0.375rem !important;
+  border-radius: 0.25rem !important;
+}
+
+html.dev-mode pre code {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  color: var(--dev-text) !important;
+}
+
+html.dev-mode kbd {
+  font-family: inherit !important;
+}
+
+/* Buttons: visible border */
+html.dev-mode button:not(.dev-mode-toggle-container button),
+html.dev-mode [type="button"]:not(.dev-mode-toggle-container [type="button"]) {
+  border: 1px solid var(--dev-border) !important;
+  color: var(--dev-text) !important;
+}
+
+/* Primary-style buttons in dev mode */
+html.dev-mode .bg-primary-50,
+html.dev-mode .bg-primary-600,
+html.dev-mode [class*="bg-primary-"] {
+  background: var(--dev-bg-elevated) !important;
+  color: var(--dev-text-dim) !important;
+  border: 1px solid var(--dev-border-strong) !important;
+}
+
+/* Gradient overlays and any from-/via-/to- (Tailwind) — solid dark + border */
+html.dev-mode [class*="gradient"],
+html.dev-mode [class*="from-"],
+html.dev-mode [class*="via-"],
+html.dev-mode [class*="to-"] {
+  background: var(--dev-bg-card) !important;
+  border: 1px solid var(--dev-border) !important;
+  color: var(--dev-text) !important;
+}
+
+/* Card-like panels (shadow + rounded) — e.g. SQL Formatter, blog cards */
+html.dev-mode [class*="shadow-sm"][class*="rounded"],
+html.dev-mode [class*="shadow-md"][class*="rounded"],
+html.dev-mode [class*="shadow-lg"][class*="rounded"],
+html.dev-mode [class*="shadow-"][class*="rounded"] {
+  background: var(--dev-bg-card) !important;
+  border: 1px solid var(--dev-border) !important;
+  color: var(--dev-text) !important;
+}
+
+html.dev-mode [class*="shadow-sm"][class*="rounded"] p,
+html.dev-mode [class*="shadow-sm"][class*="rounded"] li,
+html.dev-mode [class*="shadow-sm"][class*="rounded"] span,
+html.dev-mode [class*="shadow-md"][class*="rounded"] p,
+html.dev-mode [class*="shadow-md"][class*="rounded"] li,
+html.dev-mode [class*="shadow-md"][class*="rounded"] span {
+  color: var(--dev-text) !important;
+}
+
+/* Badges — readable with border */
+html.dev-mode .bg-emerald-50,
+html.dev-mode .bg-emerald-100 {
+  background: rgba(46, 160, 67, 0.2) !important;
+  border: 1px solid var(--dev-border) !important;
+  color: var(--dev-text-dim) !important;
+}
+
+/* AI tags and violet badges — always visible in dev mode (bright green on tinted background) */
+html.dev-mode .bg-violet-100,
+html.dev-mode .text-violet-600,
+html.dev-mode span.rounded.bg-violet-100,
+html.dev-mode [class*="bg-violet-100"] {
+  background: rgba(0, 255, 65, 0.25) !important;
+  color: var(--dev-accent) !important;
+  border: 1px solid var(--dev-border-strong) !important;
+}
+
+html.dev-mode .bg-red-100,
+html.dev-mode .text-red-600 {
+  color: var(--dev-text-dim) !important;
+  background: rgba(46, 160, 67, 0.2) !important;
+  border: 1px solid var(--dev-border) !important;
+}
+
+/* Tool tabs / cards — clear borders */
+html.dev-mode .tab-card,
+html.dev-mode [class*="rounded-xl"][class*="border"] {
+  border: 1px solid var(--dev-border) !important;
+  background: var(--dev-bg-card) !important;
+  color: var(--dev-text) !important;
+}
+
+/* Ensure hr and dividers visible */
+html.dev-mode hr {
+  border-color: var(--dev-border) !important;
+  border-width: 1px !important;
+}
+

@@ -7,6 +7,7 @@ import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { PersonalizationManager, ToolTab } from '@/lib/personalization';
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget';
+import { useDevMode } from '@/components/DevModeWrapper';
 import JsonInput from '@/components/JsonInput';
 // Below-fold / non-critical: lazy load to reduce initial JS (LCP)
 const NewsletterSignup = dynamic(() => import('@/components/NewsletterSignup'), { ssr: false, loading: () => null });
@@ -118,6 +119,7 @@ function HomeClient() {
   const [mounted, setMounted] = useState<boolean>(false);
   const [showBookmarkPrompt, setShowBookmarkPrompt] = useState<boolean>(false);
   const [samplePanelOpen, setSamplePanelOpen] = useState<boolean>(true);
+  const { devMode, setDevMode } = useDevMode();
 
   // Sample JSON for engagement: live demo snippet and interactive panel
   const SAMPLE_JSON_FORMATTED = `{
@@ -528,15 +530,40 @@ function HomeClient() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Top bar: logo left, nav right */}
           <div className="flex items-center justify-between gap-4 py-3 sm:py-4">
-            <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0 group">
+            <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0 group min-w-0">
               <Link href="/" className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-primary-700 text-white shadow-md hover:shadow-lg transition-all duration-200">
                 <Wrench className="h-5 w-5" aria-hidden />
               </Link>
               <div className="flex flex-col gap-1 min-w-0 justify-center py-0.5">
-                <Link href="/" className="min-w-0">
-                  <span className="text-lg sm:text-xl font-bold tracking-tight text-gray-900 group-hover:text-primary-700 transition-colors leading-tight" style={{ letterSpacing: '-0.02em' }}>UnblockDevs</span>
-                  <p className="hidden sm:block text-sm text-gray-500 group-hover:text-gray-700 transition-colors">Developer tools for daily use</p>
-                </Link>
+                {/* Line 1: UnblockDevs | Mode */}
+                <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+                  <Link href="/" className="shrink-0">
+                    <span className="text-lg sm:text-xl font-bold tracking-tight text-gray-900 group-hover:text-primary-700 transition-colors leading-tight" style={{ letterSpacing: '-0.02em' }}>UnblockDevs</span>
+                  </Link>
+                  <span className="text-gray-300 font-medium shrink-0" aria-hidden>|</span>
+                  <div className="flex items-center gap-2 flex-shrink-0 dev-mode-toggle-container">
+                    <span className="text-xs font-medium text-gray-500 whitespace-nowrap">Mode</span>
+                    <button
+                      type="button"
+                      onClick={() => setDevMode(!devMode)}
+                      className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-1 ${
+                        devMode ? 'bg-emerald-500' : 'bg-gray-200'
+                      }`}
+                      aria-label={devMode ? 'Switch to Light mode' : 'Switch to Dev mode'}
+                      aria-pressed={devMode}
+                    >
+                      <span
+                        className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition ${
+                          devMode ? 'translate-x-4' : 'translate-x-0.5'
+                        }`}
+                      />
+                    </button>
+                    <span className={`min-w-[3.25rem] text-xs font-semibold whitespace-nowrap ${devMode ? 'text-emerald-600' : 'text-gray-600'}`}>
+                      {devMode ? 'Dev' : 'Light'}
+                    </span>
+                  </div>
+                </div>
+                <p className="hidden sm:block text-sm text-gray-500 group-hover:text-gray-700 transition-colors">Developer tools for daily use</p>
                 <div className="hidden sm:flex flex-wrap items-center gap-1.5 mt-1">
                   <span className="inline-flex items-center gap-1 rounded-md bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-800 border border-emerald-200 shadow-sm">🔒 No data stored</span>
                   <span className="text-gray-300 font-medium" aria-hidden>·</span>
@@ -562,8 +589,8 @@ function HomeClient() {
           </div>
 
           {/* Tool tabs — compact grid, clear labels, small badges */}
-          <div className="border-t border-gray-200/80 bg-gradient-to-b from-gray-50 to-white/80 px-3 sm:px-4 py-3">
-<div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3 mb-2">
+          <div className="border-t border-gray-200/80 bg-gray-50/70 px-4 sm:px-6 lg:px-8 py-3">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3 mb-2">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider sm:shrink-0">Developer&apos;s Daily Tools</p>
               <div className="flex justify-center sm:flex-1">
                 <p className="text-sm text-emerald-700 font-bold bg-emerald-50 border border-emerald-200/80 rounded-md px-3 py-1.5 inline-flex items-center">
@@ -687,10 +714,11 @@ function HomeClient() {
       </div>
 
       {/* Main Content */}
-      <main id="main-content" role="main" className={`flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 animate-fade-in ${activeTab === 'beautifier' ? 'pt-4 sm:pt-6 pb-10 sm:pb-12 lg:pb-14' : 'py-8 sm:py-10 lg:py-12'}`}>
+      <main id="main-content" role="main" className={`flex-1 w-full animate-fade-in ${activeTab === 'beautifier' ? 'pt-4 sm:pt-6 pb-10 sm:pb-12 lg:pb-14' : 'py-8 sm:py-10 lg:py-12'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {activeTab === 'beautifier' && (
           <div className="max-w-4xl mx-auto">
-            <div className="rounded-2xl bg-white shadow-lg border border-gray-200/90 p-5 sm:p-6 lg:p-8">
+            <div className="rounded-2xl bg-white shadow-md border border-gray-200 p-5 sm:p-6 lg:p-8">
               <JsonBeautifier />
             </div>
           </div>
@@ -707,29 +735,24 @@ function HomeClient() {
                 </div>
               </header>
 
-              <hr className="border-gray-200" aria-hidden="true" />
-
-              {/* Overview */}
-              <section className="text-center" aria-labelledby="overview-heading">
-                <h2 id="overview-heading" className="text-base font-semibold text-gray-900 mb-2 uppercase tracking-wider text-gray-500">Overview</h2>
-                <p className="text-gray-600 text-sm max-w-xl mx-auto leading-relaxed">JSON Viewer, Formatter, and Parser in your browser. No signup.</p>
-              </section>
-
-              {/* Key Features */}
-              <section className="text-center" aria-labelledby="key-features-heading">
-                <h2 id="key-features-heading" className="text-base font-semibold text-gray-500 uppercase tracking-wider mb-4">Key Features</h2>
-                <ul className="grid grid-cols-1 sm:grid-cols-3 gap-3 list-none">
-                  <li className="bg-white rounded-xl border border-gray-200 p-4 text-center shadow-sm hover:shadow transition-shadow duration-200">
+              {/* Overview + Key Features */}
+              <section className="space-y-4" aria-labelledby="overview-heading">
+                <div className="text-center">
+                  <h2 id="overview-heading" className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Overview</h2>
+                  <p className="text-gray-600 text-sm max-w-xl mx-auto">JSON Viewer, Formatter, and Parser in your browser. No signup.</p>
+                </div>
+                <ul className="grid grid-cols-1 sm:grid-cols-3 gap-3 list-none" aria-label="Key features">
+                  <li className="bg-white rounded-xl border border-gray-200 p-4 text-center shadow-sm hover:shadow transition-shadow flex flex-col min-h-[5.5rem]">
                     <h3 className="text-sm font-semibold text-gray-900 mb-1">JSON Viewer Online</h3>
-                    <p className="text-gray-500 text-xs leading-relaxed">View and navigate JSON with a tree view.</p>
+                    <p className="text-gray-500 text-xs leading-relaxed mt-auto">View and navigate JSON with a tree view.</p>
                   </li>
-                  <li className="bg-white rounded-xl border border-gray-200 p-4 text-center shadow-sm hover:shadow transition-shadow duration-200">
+                  <li className="bg-white rounded-xl border border-gray-200 p-4 text-center shadow-sm hover:shadow transition-shadow flex flex-col min-h-[5.5rem]">
                     <h3 className="text-sm font-semibold text-gray-900 mb-1">Formatter & Beautifier</h3>
-                    <p className="text-gray-500 text-xs leading-relaxed">Format and prettify JSON.</p>
+                    <p className="text-gray-500 text-xs leading-relaxed mt-auto">Format and prettify JSON.</p>
                   </li>
-                  <li className="bg-white rounded-xl border border-gray-200 p-4 text-center shadow-sm hover:shadow transition-shadow duration-200">
+                  <li className="bg-white rounded-xl border border-gray-200 p-4 text-center shadow-sm hover:shadow transition-shadow flex flex-col min-h-[5.5rem]">
                     <h3 className="text-sm font-semibold text-gray-900 mb-1">Parser & Validator</h3>
-                    <p className="text-gray-500 text-xs leading-relaxed">Parse, validate, fix malformed JSON.</p>
+                    <p className="text-gray-500 text-xs leading-relaxed mt-auto">Parse, validate, fix malformed JSON.</p>
                   </li>
                 </ul>
               </section>
@@ -780,9 +803,9 @@ function HomeClient() {
               </section>
 
               {/* Try more tools */}
-              <section className="rounded-2xl border border-gray-200/80 bg-white/95 p-6 sm:p-8 text-center shadow-md">
-                <h2 className="text-lg font-semibold text-gray-900 mb-2">Try more tools</h2>
-                <p className="text-gray-600 text-sm mb-5 max-w-lg mx-auto">Edit, validate, convert JSON. No signup.</p>
+              <section className="rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 text-center shadow-sm">
+                <h2 className="text-lg font-semibold text-gray-900 mb-1">Try more tools</h2>
+                <p className="text-gray-600 text-sm mb-4 max-w-lg mx-auto">Edit, validate, convert JSON. No signup.</p>
                 <div className="flex flex-wrap justify-center gap-2">
                   <Link href="#json-input-section" className="inline-flex items-center gap-1.5 px-3 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors">
                     <Play className="w-3.5 h-3.5" />
@@ -816,7 +839,7 @@ function HomeClient() {
               </section>
 
               {/* Footer CTA + links */}
-              <div className="rounded-xl border border-gray-200 bg-white p-5 sm:p-6 text-center shadow-sm">
+              <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6 text-center shadow-sm">
                 <h2 className="text-sm font-semibold text-gray-900 mb-1">Free JSON Tools for Developers</h2>
                 <p className="text-gray-500 text-xs mb-4 max-w-md mx-auto">Paste JSON to view, format, validate, or convert. No signup—data stays private.</p>
                 <div className="flex flex-wrap items-center justify-center gap-2 mb-5">
@@ -885,6 +908,7 @@ function HomeClient() {
             </>
           )
         )}
+        </div>
       </main>
 
       {/* Services Section — show on home (Beautifier only) */}
