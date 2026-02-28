@@ -1,6 +1,6 @@
 // Personalization utilities for tracking user preferences
 
-export type ToolTab = 'converter' | 'beautifier' | 'fixer' | 'comparator' | 'jsoncompare' | 'schema' | 'logs' | 'payload' | 'curl' | 'mock' | 'testdata' | 'config' | 'sql' | 'builder' | 'insights' | 'promptchunk' | 'tokencompare' | 'timezone' | 'hartocurl' | 'curlfailure';
+export type ToolTab = 'converter' | 'beautifier' | 'fixer' | 'comparator' | 'jsoncompare' | 'schema' | 'logs' | 'payload' | 'curl' | 'mock' | 'testdata' | 'config' | 'sql' | 'builder' | 'promptchunk' | 'schemamasker' | 'jsonpromptshield' | 'tokencompare' | 'timezone' | 'hartocurl' | 'curlfailure';
 
 export interface ToolInfo {
   id: ToolTab;
@@ -106,8 +106,9 @@ export class PersonalizationManager {
       config: { id: 'config', name: 'Config Comparator', description: 'Compare configurations' },
       sql: { id: 'sql', name: 'SQL Formatter', description: 'Format SQL queries' },
       builder: { id: 'builder', name: 'JSON Builder', description: 'Build JSON interactively' },
-      insights: { id: 'insights', name: 'Data Insights', description: 'Get insights from data' },
       promptchunk: { id: 'promptchunk', name: 'Prompt Chunker', description: 'Split AI prompts into chunks' },
+      schemamasker: { id: 'schemamasker', name: 'AI Schema Masker', description: 'Mask SQL identifiers for AI-safe prompts (client-side)' },
+      jsonpromptshield: { id: 'jsonpromptshield', name: 'JSON Shield', description: 'Mask JSON keys & values for AI, 100% client-side' },
       tokencompare: { id: 'tokencompare', name: 'Token Comparator', description: 'Compare tokens character by character' },
       timezone: { id: 'timezone', name: 'Timezone Translator', description: 'Convert times across timezones' },
       hartocurl: { id: 'hartocurl', name: 'HAR to cURL', description: 'Convert HAR files and network requests to cURL commands' },

@@ -72,6 +72,16 @@
   animation: fade-in 0.3s ease-out;
 }
 
+/* Gentle flash for Hot / AI badges */
+@keyframes badge-flash {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.animate-badge-flash {
+  animation: badge-flash 1.5s ease-in-out infinite;
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 248, 250, 252;

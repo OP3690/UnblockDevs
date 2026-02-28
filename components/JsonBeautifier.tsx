@@ -639,33 +639,33 @@ export default function JsonBeautifier() {
         </div>
       )}
 
-      {/* Blog Links Section */}
+      {/* Blog Links Section - Latest */}
       <div className="mt-12 bg-white rounded-xl shadow-lg p-8 border border-gray-200">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Learn More About JSON Formatting</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Latest: AI Safety &amp; Data Masking</h2>
         <div className="space-y-3">
           <Link
-            href="/blog/complete-guide-json-viewer-parser-beautifier"
-            className="block p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 hover:border-blue-400 hover:shadow-md transition-all"
+            href="/blog/how-to-safely-mask-table-column-names-before-sending-queries-to-ai"
+            className="block p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg border border-emerald-200 hover:border-emerald-400 hover:shadow-md transition-all"
           >
-            <h3 className="font-semibold text-gray-900 mb-1">Complete Guide to JSON Viewer, Parser, and Beautifier Tools</h3>
-            <p className="text-sm text-gray-600 mb-2">Comprehensive guide to JSON viewing, parsing, and beautification tools with examples and best practices.</p>
-            <span className="text-blue-600 text-sm font-medium hover:underline">Read Guide →</span>
+            <h3 className="font-semibold text-gray-900 mb-1">How to Safely Mask Table &amp; Column Names Before Sending Queries to AI</h3>
+            <p className="text-sm text-gray-600 mb-2">Hide database schema from AI, anonymize identifiers, and restore AI output. Client-side, reversible masking—no data leaves your device.</p>
+            <span className="text-emerald-600 text-sm font-medium hover:underline">Read Guide →</span>
           </Link>
           <Link
-            href="/blog/json-format-standards-complete-guide"
-            className="block p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200 hover:border-green-400 hover:shadow-md transition-all"
+            href="/blog/how-to-mask-json-payloads-before-sending-to-ai-without-breaking-structure"
+            className="block p-4 bg-gradient-to-r from-violet-50 to-indigo-50 rounded-lg border border-violet-200 hover:border-violet-400 hover:shadow-md transition-all"
           >
-            <h3 className="font-semibold text-gray-900 mb-1">JSON Format & Standards: Complete Guide to RFC 8259</h3>
-            <p className="text-sm text-gray-600 mb-2">Learn about JSON format standards, syntax rules, and best practices according to RFC 8259 specification.</p>
-            <span className="text-green-600 text-sm font-medium hover:underline">Read Guide →</span>
+            <h3 className="font-semibold text-gray-900 mb-1">How to Mask JSON Payloads Before Sending Data to AI (Without Breaking Structure)</h3>
+            <p className="text-sm text-gray-600 mb-2">Anonymize API payloads and JSON for AI. Keys and string values masked; numbers unchanged. Preserve structure, restore exactly—client-side only.</p>
+            <span className="text-violet-600 text-sm font-medium hover:underline">Read Guide →</span>
           </Link>
           <Link
-            href="/blog/json-best-practices-production-guide"
-            className="block p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200 hover:border-purple-400 hover:shadow-md transition-all"
+            href="/blog/how-to-use-ai-for-mysql-without-exposing-database-schema"
+            className="block p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg border border-amber-200 hover:border-amber-400 hover:shadow-md transition-all"
           >
-            <h3 className="font-semibold text-gray-900 mb-1">JSON Best Practices: Production-Ready Guide for Developers</h3>
-            <p className="text-sm text-gray-600 mb-2">Production-ready guide covering JSON best practices, formatting standards, and optimization techniques.</p>
-            <span className="text-purple-600 text-sm font-medium hover:underline">Read Guide →</span>
+            <h3 className="font-semibold text-gray-900 mb-1">How to Use AI for MySQL Without Exposing Your Database Schema</h3>
+            <p className="text-sm text-gray-600 mb-2">Anonymize MySQL table and column names before ChatGPT or any AI. Reversible, client-side schema abstraction—compliance and security first.</p>
+            <span className="text-amber-600 text-sm font-medium hover:underline">Read Guide →</span>
           </Link>
         </div>
       </div>

@@ -8,7 +8,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Blog slugs from filesystem: every app/blog/<slug>/ with page.tsx is in sitemap (includes all 18+ new AI blogs)
   const blogDir = path.join(process.cwd(), 'app/blog')
-  const blogSlugs = fs.readdirSync(blogDir, { withFileTypes: true })
+  const blogSlugs = fs
+    .readdirSync(blogDir, { withFileTypes: true })
     .filter((d) => d.isDirectory() && fs.existsSync(path.join(blogDir, d.name, 'page.tsx')))
     .map((d) => d.name)
 
@@ -207,13 +208,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changefreq: 'weekly' as const,
     },
     {
-      url: 'data-insights',
+      url: 'timezone-translator',
       priority: 0.9,
       changefreq: 'weekly' as const,
     },
     {
-      url: 'timezone-translator',
-      priority: 0.9,
+      url: 'ai-schema-masker',
+      priority: 0.85,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'json-prompt-shield',
+      priority: 0.85,
       changefreq: 'weekly' as const,
     },
   ]

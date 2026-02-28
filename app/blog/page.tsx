@@ -18,6 +18,33 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'how-to-safely-mask-table-column-names-before-sending-queries-to-ai',
+      title: 'How to Safely Mask Table & Column Names Before Sending Queries to AI',
+      excerpt: 'Your company policy says you cannot share database schema with AI. Learn why exposing schema is risky, step-by-step masking strategy, how to generate a safe AI-ready prompt, and how to restore AI output back to original names. Client-side, reversible.',
+      date: '2026-02-28',
+      readTime: '8 min read',
+      category: 'AI & Security',
+      keywords: ['mask table name for ChatGPT', 'hide database schema from AI', 'secure SQL before AI', 'anonymize database schema']
+    },
+    {
+      slug: 'how-to-mask-json-payloads-before-sending-to-ai-without-breaking-structure',
+      title: 'How to Mask JSON Payloads Before Sending Data to AI (Without Breaking Structure)',
+      excerpt: 'You want AI to help debug an API response but the payload contains sensitive data. Learn why masking JSON is harder than SQL, recursive traversal approach, how to preserve numeric values, and how to restore JSON exactly. Client-side, enterprise-safe.',
+      date: '2026-02-28',
+      readTime: '8 min read',
+      category: 'AI & Security',
+      keywords: ['mask JSON before ChatGPT', 'anonymize API payload', 'hide sensitive JSON data', 'secure API logs before AI']
+    },
+    {
+      slug: 'how-to-use-ai-for-mysql-without-exposing-database-schema',
+      title: 'How to Use AI for MySQL Without Exposing Your Database Schema',
+      excerpt: 'Can you paste your production MySQL schema into ChatGPT? Learn the problem with sharing MySQL structure, risks (business logic, architecture, regulation), and the smart solution: a reversible, client-side schema abstraction layer with real MySQL example.',
+      date: '2026-02-28',
+      readTime: '8 min read',
+      category: 'AI & Security',
+      keywords: ['secure MySQL AI queries', 'anonymize MySQL schema', 'use ChatGPT with MySQL safely', 'hide column names before AI']
+    },
+    {
       slug: 'what-is-data-modeling-explained-simply-with-examples',
       title: 'What Is Data Modeling? Explained Simply with Examples (Complete Guide)',
       excerpt: 'Learn what data modeling is with simple examples. Understand conceptual, logical, and physical data models, entity-relationship diagrams, and data modeling best practices. Beginner-friendly guide.',

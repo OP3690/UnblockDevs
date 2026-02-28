@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect, useMemo, Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, TrendingUp, Mail, Scissors, Key, Clock, Network, AlertTriangle, Copy, ChevronDown, ChevronUp, Play } from 'lucide-react';
+import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, TrendingUp, Mail, Scissors, Key, Clock, Network, AlertTriangle, Copy, ChevronDown, ChevronUp, Play, ShieldCheck, Shield, Lock } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { PersonalizationManager, ToolTab } from '@/lib/personalization';
@@ -97,8 +97,9 @@ const toolPageUrls: Record<Exclude<ToolTab, 'converter'>, string> = {
   config: '/config-comparator',
   sql: '/sql-formatter',
   builder: '/json-builder',
-  insights: '/data-insights',
   promptchunk: '/prompt-chunker',
+  schemamasker: '/ai-schema-masker',
+  jsonpromptshield: '/json-prompt-shield',
   tokencompare: '/token-comparator',
   timezone: '/timezone-translator',
   hartocurl: '/har-to-curl',
@@ -174,7 +175,7 @@ function HomeClient() {
       // Check for tab parameter in URL (e.g., ?tab=curl or ?tab=schema)
       const urlParams = new URLSearchParams(window.location.search);
       const tabParam = urlParams.get('tab');
-      if (tabParam && ['converter', 'beautifier', 'fixer', 'comparator', 'jsoncompare', 'schema', 'logs', 'payload', 'curl', 'mock', 'testdata', 'config', 'sql', 'builder', 'insights', 'promptchunk', 'tokencompare', 'timezone', 'hartocurl', 'curlfailure'].includes(tabParam)) {
+      if (tabParam && ['converter', 'beautifier', 'fixer', 'comparator', 'jsoncompare', 'schema', 'logs', 'payload', 'curl', 'mock', 'testdata', 'config', 'sql', 'builder', 'promptchunk', 'schemamasker', 'jsonpromptshield', 'tokencompare', 'timezone', 'hartocurl', 'curlfailure'].includes(tabParam)) {
         setActiveTab(tabParam as ToolTab);
         // Scroll to top when tab is set from URL
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -537,17 +538,28 @@ function HomeClient() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Top bar: logo left, nav right */}
           <div className="flex items-center justify-between gap-4 py-4 sm:py-5">
-            <Link href="/" className="flex items-center gap-3 flex-shrink-0 group">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-primary-700 text-white shadow-pro-md group-hover:shadow-pro-lg transition-all duration-200">
+            <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0 group">
+              <Link href="/" className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-primary-700 text-white shadow-md hover:shadow-lg transition-all duration-200">
                 <Wrench className="h-5 w-5" aria-hidden />
+              </Link>
+              <div className="flex flex-col gap-1 min-w-0 justify-center py-0.5">
+                <Link href="/" className="min-w-0">
+                  <span className="text-lg sm:text-xl font-bold tracking-tight text-gray-900 group-hover:text-primary-700 transition-colors leading-tight" style={{ letterSpacing: '-0.02em' }}>UnblockDevs</span>
+                  <p className="hidden sm:block text-sm text-gray-500 group-hover:text-gray-700 transition-colors">Developer tools for daily use</p>
+                </Link>
+                <div className="hidden sm:flex flex-wrap items-center gap-1.5 mt-1">
+                  <span className="inline-flex items-center gap-1 rounded-md bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-800 border border-emerald-200 shadow-sm">🔒 No data stored</span>
+                  <span className="text-gray-300 font-medium" aria-hidden>·</span>
+                  <span className="inline-flex items-center gap-1 rounded-md bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-800 border border-blue-200 shadow-sm">💻 100% in-browser</span>
+                  <span className="text-gray-300 font-medium" aria-hidden>·</span>
+                  <Link href={toolPageUrls.schemamasker} className="inline-flex items-center gap-1 rounded-md bg-violet-100 px-2.5 py-1 text-xs font-semibold text-violet-800 border border-violet-200 shadow-sm hover:bg-violet-200/80 transition-colors">🛡️ AI Data Masker</Link>
+                  <span className="text-gray-300 font-medium" aria-hidden>·</span>
+                  <span className="inline-flex items-center gap-1 rounded-md bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-800 border border-amber-200 shadow-sm">✓ No signup</span>
+                  <span className="text-gray-300 font-medium hidden md:inline" aria-hidden>·</span>
+                  <Link href={toolPageUrls.schemamasker} className="hidden md:inline-flex items-center rounded-md bg-primary-100 px-2.5 py-1 text-xs font-semibold text-primary-800 border border-primary-200 shadow-sm hover:bg-primary-200/80 transition-colors">Use AI without leaking your data</Link>
+                </div>
               </div>
-              <div className="flex flex-col gap-0.5">
-                <span className="text-xl font-bold tracking-tight text-gray-900" style={{ letterSpacing: '-0.02em' }}>UnblockDevs</span>
-                <span className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-primary-700 bg-primary-50 px-2.5 py-1 rounded-md border border-primary-200/70 w-fit">
-                  Developer tools for daily use
-                </span>
-              </div>
-            </Link>
+            </div>
             <div id="ezoic-pub-ad-placeholder-100" className="hidden lg:block flex-1 min-w-0" />
             <nav className="flex items-center justify-end gap-2 sm:gap-3 flex-shrink-0" aria-label="Main navigation">
               <div className="hidden"><ins className="adsbygoogle" style={{ display: 'block', minWidth: '300px', minHeight: '100px' }} data-ad-client="ca-pub-6349841658473646" data-ad-slot="HEADER_AD_SLOT" data-ad-format="auto" data-full-width-responsive="false" /></div>
@@ -576,16 +588,26 @@ function HomeClient() {
             <Link href={toolPageUrls.sql} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
               <Database className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
               <span className="text-center break-words line-clamp-2">SQL Formatter</span>
-              <span className="px-1.5 py-0.5 bg-red-100 text-red-600 rounded-md text-[10px] font-semibold flex-shrink-0">Hot</span>
+              <span className="px-1.5 py-0.5 bg-red-100 text-red-600 rounded-md text-[10px] font-semibold flex-shrink-0 animate-badge-flash">Hot</span>
             </Link>
-            <Link href={toolPageUrls.tokencompare} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
-              <Key className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="text-center break-words line-clamp-2">Token Compare</span>
+            <Link href={toolPageUrls.schemamasker} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
+              <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-center break-words line-clamp-2">Schema Masker</span>
+              <span className="px-1.5 py-0.5 bg-purple-100 text-purple-600 rounded-md text-[10px] font-semibold flex-shrink-0 animate-badge-flash">AI</span>
+            </Link>
+            <Link href={toolPageUrls.jsonpromptshield} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
+              <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-center break-words line-clamp-2">JSON Shield</span>
+              <span className="px-1.5 py-0.5 bg-purple-100 text-purple-600 rounded-md text-[10px] font-semibold flex-shrink-0 animate-badge-flash">AI</span>
             </Link>
             <Link href={toolPageUrls.promptchunk} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
               <Scissors className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
               <span className="text-center break-words line-clamp-2">Prompt Chunker</span>
-              <span className="px-1.5 py-0.5 bg-purple-100 text-purple-600 rounded-md text-[10px] font-semibold flex-shrink-0">AI</span>
+              <span className="px-1.5 py-0.5 bg-purple-100 text-purple-600 rounded-md text-[10px] font-semibold flex-shrink-0 animate-badge-flash">AI</span>
+            </Link>
+            <Link href={toolPageUrls.tokencompare} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
+              <Key className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-center break-words line-clamp-2">Token Compare</span>
             </Link>
             <button
               onClick={() => handleTabChange('converter')}
@@ -601,7 +623,6 @@ function HomeClient() {
             <Link href={toolPageUrls.fixer} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
               <Wrench className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
               <span className="text-center break-words line-clamp-2">JSON Fixer</span>
-              <span className="px-1.5 py-0.5 bg-emerald-100 text-emerald-700 rounded-md text-[10px] font-semibold flex-shrink-0" title="Popular">★</span>
             </Link>
             <Link href={toolPageUrls.builder} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
               <FileSpreadsheet className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
@@ -630,7 +651,6 @@ function HomeClient() {
             <Link href={toolPageUrls.curl} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
               <Code className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
               <span className="text-center break-words line-clamp-2">Convert Curl</span>
-              <span className="px-1.5 py-0.5 bg-emerald-100 text-emerald-700 rounded-md text-[10px] font-semibold flex-shrink-0" title="Popular">★</span>
             </Link>
             <Link href={toolPageUrls.mock} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
               <Server className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
@@ -644,10 +664,6 @@ function HomeClient() {
               <Settings className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
               <span className="text-center break-words line-clamp-2">Config</span>
             </Link>
-            <Link href={toolPageUrls.insights} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
-              <BarChart3 className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="text-center break-words line-clamp-2">Data Insights</span>
-            </Link>
             <Link href={toolPageUrls.timezone} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
               <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
               <span className="text-center break-words line-clamp-2">Timezone</span>
@@ -655,7 +671,6 @@ function HomeClient() {
             <Link href={toolPageUrls.hartocurl} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
               <Network className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
               <span className="text-center break-words line-clamp-2">HAR to cURL</span>
-              <span className="px-1.5 py-0.5 bg-emerald-100 text-emerald-700 rounded-md text-[10px] font-semibold flex-shrink-0" title="Popular">★</span>
             </Link>
             <Link href={toolPageUrls.curlfailure} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
               <AlertTriangle className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
@@ -677,16 +692,6 @@ function HomeClient() {
           <div className="max-w-4xl mx-auto -mt-6 sm:-mt-8">
             <div className="rounded-2xl bg-white/95 backdrop-blur-sm shadow-pro-lg border border-gray-100/90 p-5 sm:p-6 lg:p-8">
               <JsonBeautifier />
-            </div>
-            <div className="mt-6 text-center">
-              <button
-                type="button"
-                onClick={() => handleTabChange('converter')}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold text-primary-700 bg-primary-50 border border-primary-200 hover:bg-primary-100 hover:border-primary-300 transition-all duration-200 shadow-pro"
-              >
-                <FileSpreadsheet className="w-4 h-4" />
-                Json to Excel — convert JSON to Excel/CSV
-              </button>
             </div>
           </div>
         )}
@@ -886,187 +891,144 @@ function HomeClient() {
       {activeTab === 'beautifier' && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 lg:py-16">
           {/* Hero Section */}
-          <div className="text-center mb-14 sm:mb-16 lg:mb-20 bg-gradient-to-br from-primary-50/90 via-indigo-50/70 to-purple-50/70 rounded-2xl p-8 sm:p-10 lg:p-14 border border-primary-100/60 shadow-pro-lg">
+          <div className="text-center mb-14 sm:mb-16 lg:mb-20 bg-gradient-to-br from-emerald-50/90 via-indigo-50/70 to-violet-50/70 rounded-2xl p-8 sm:p-10 lg:p-14 border border-emerald-100/60 shadow-pro-lg">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight" style={{ letterSpacing: '-0.02em' }}>
-              Free Developer Tools — JSON, API & More
+              AI-Safe Tools — Data Security &amp; Privacy First
             </h2>
             <p className="text-base sm:text-lg text-gray-700 max-w-3xl mx-auto mb-6 sm:mb-8 leading-relaxed">
-              <strong>UnblockDevs</strong> gives you <strong>JSON schema generation</strong>, <strong>JSON to Excel</strong>, <strong>curl to code</strong>, and 19+ other tools. All run in your browser — no signup, no install.
+              <strong>UnblockDevs</strong> lets you use <strong>AI</strong> for SQL and JSON without exposing real schemas or sensitive data. <strong>Data masking</strong>, <strong>client-side only</strong>, <strong>no server storage</strong>. Mask before you send to ChatGPT—restore after. Plus JSON, API, and 19+ tools. No signup, no install.
             </p>
             <div className="flex flex-wrap justify-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-600">
-              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ JSON Schema Generator</span>
-              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ JSON Schema Validation</span>
-              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ Export JSON to Excel</span>
-              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ Convert Curl to Requests</span>
-              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ JSON Schema Creator</span>
-              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ JSON to Excel Integration</span>
-              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ Curl to JavaScript</span>
-              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ JSON Schema Generator Online</span>
-              </div>
-                        </div>
-          
-          {/* SEO Content Section */}
-          <div className="mb-10 sm:mb-12 lg:mb-16 bg-white rounded-2xl p-6 sm:p-8 lg:p-10 border border-gray-200 shadow-sm">
-            <div className="max-w-4xl mx-auto space-y-6">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Powerful JSON & API Development Tools at UnblockDevs.com</h2>
-              
-              <div className="space-y-4 text-gray-700 leading-relaxed">
-                <p>
-                  <strong>JSON Schema Generator & Validation:</strong> Our <Link href="/json-schema-generation" className="text-blue-600 hover:underline font-medium">JSON schema generator</Link> helps you create comprehensive JSON schemas from your JSON data. Use our <strong>JSON schema validation</strong> tool to validate JSON against schemas, ensuring data integrity. Whether you&apos;re <strong>creating a JSON schema</strong>, <strong>defining JSON schema</strong>, or <strong>generating JSON schema</strong>, our <strong>schema generator from JSON</strong> makes it easy. Perfect for API documentation and data validation workflows.
-                </p>
-                
-                <p>
-                  <strong>Export JSON to Excel:</strong> Need to <strong>convert JSON to Excel</strong>? Our <Link href="/#json-input-section" className="text-blue-600 hover:underline font-medium">JSON to Excel converter</Link> allows you to <strong>export JSON to Excel</strong> with ease. Learn <strong>how to convert JSON to Excel</strong> and transform your JSON data into structured Excel spreadsheets. Our <Link href="/#json-input-section" className="text-blue-600 hover:underline font-medium">JSON Viewer Tools</Link> support <strong>JSON to Excel integration</strong> and <strong>convert JSON to Excel table</strong> formats, making data analysis simple.
-                </p>
-                
-                <p>
-                  <strong>Convert Curl to Requests:</strong> Transform your curl commands with our <strong>curl to requests</strong> converter. <strong>Convert curl to JavaScript</strong>, Python, or other languages instantly. Our <strong>convert curl to http request</strong> tool helps developers translate API calls quickly. Whether you need to <strong>convert curl</strong> for testing or integration, our <strong>curl to</strong> converter supports multiple output formats.
-                </p>
-                
-                <p>
-                  <strong>JSON Schema Creation & Validation:</strong> Create robust JSON schemas with our <Link href="/json-schema-generation" className="text-blue-600 hover:underline font-medium">JSON schema creator</Link>. Our <strong>JSON schema generation</strong> tool supports <strong>JSON schema for JSON schema</strong> patterns and helps with <strong>schema validation JSON</strong>. Use <strong>validation JSON schema</strong> to ensure your data matches expected structures. Our <Link href="/json-schema-generation" className="text-blue-600 hover:underline font-medium">json-schema-generator</Link> is perfect for <strong>creating a JSON schema</strong> from existing JSON data. Try our <Link href="/json-beautifier" className="text-blue-600 hover:underline font-medium">JSON formatter online</Link> or <Link href="/#json-input-section" className="text-blue-600 hover:underline font-medium">JSON parser online</Link> for viewing and formatting.
-                </p>
-                      </div>
-              </div>
+              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ AI Schema Masker (SQL)</span>
+              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ JSON Shield (Payload Masking)</span>
+              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ 100% Data Security</span>
+              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ No Data Storage</span>
+              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ Client-Side Only</span>
+              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ Compliance-Friendly</span>
+              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ Reversible Masking</span>
+              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ JSON &amp; API Tools</span>
             </div>
+          </div>
           
-          {/* Language-Specific JSON Tools Section */}
-          <div className="mb-10 sm:mb-12 lg:mb-16 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 sm:p-8 lg:p-10 border border-indigo-100 shadow-sm">
+          {/* AI Safety, Privacy & Secure Masking Tools Section */}
+          <div className="mb-10 sm:mb-12 lg:mb-16 bg-gradient-to-br from-emerald-50 via-violet-50/50 to-indigo-50 rounded-2xl p-6 sm:p-8 lg:p-10 border border-emerald-100 shadow-sm">
             <div className="max-w-4xl mx-auto space-y-8">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 text-center">JSON Tools for Every Programming Language</h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* JavaScript Section */}
-                <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 text-center">AI Safety, Privacy &amp; Secure Data Masking</h2>
+              <p className="text-gray-700 text-center text-sm sm:text-base max-w-2xl mx-auto">
+                Use <strong>AI</strong> for SQL and JSON without exposing real schemas or sensitive data. Our tools run <strong>100% client-side</strong>—nothing leaves your browser. <strong>AI safety</strong> and <strong>privacy</strong> first: mask before you send, restore after you get AI help.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* JSON Shield */}
+                <div className="bg-white rounded-xl p-6 border border-violet-200 shadow-sm">
                   <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
-                    <span className="text-2xl">🌐</span> JavaScript JSON Tools
+                    <Shield className="w-5 h-5 text-violet-600 flex-shrink-0" />
+                    JSON Shield
                   </h3>
                   <p className="text-gray-700 text-sm leading-relaxed mb-3">
-                    Work with <strong>javascript json parse</strong> and <strong>javascript json stringify</strong> seamlessly. Our tools help with <strong>javascript validate json schema</strong>, <strong>javascript json schema validator</strong>, and <strong>javascript json manipulation</strong>. Convert data with <strong>javascript json to csv</strong> and <strong>javascript json to excel</strong>. Handle <strong>javascript nested json</strong> and <strong>javascript flatten json</strong> operations. Perfect for <strong>javascript fetch json api</strong> and <strong>javascript json response handling</strong>.
+                    Mask <strong>JSON payloads</strong> before sending to ChatGPT or any AI. Keys become <strong>K_00001</strong>, string values become <strong>S_00001</strong>; numbers stay unchanged. Preserve structure, restore exactly. Perfect for <strong>API payloads</strong>, logs, and configs—<strong>no data leaves your browser</strong>.
                   </p>
                   <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• <strong>javascript json parse</strong> & <strong>javascript json stringify</strong></li>
-                    <li>• <strong>javascript json schema generator</strong> with <strong>javascript ajv json schema</strong></li>
-                    <li>• <strong>javascript json data analysis</strong> & <strong>javascript json transform</strong></li>
-                    <li>• <strong>javascript json error handling</strong> & <strong>javascript convert json</strong></li>
+                    <li>• Mask keys &amp; string values; keep numbers</li>
+                    <li>• Deterministic, fully reversible mapping</li>
+                    <li>• Client-side only; enterprise-safe</li>
+                    <li>• Handles large payloads (MBs)</li>
                   </ul>
-          </div>
-                
-                {/* Python Section */}
-                <div className="bg-white rounded-xl p-6 border border-gray-200">
+                  <Link href="/json-prompt-shield" className="mt-3 inline-block text-sm font-semibold text-violet-600 hover:text-violet-700">Try JSON Shield →</Link>
+                </div>
+
+                {/* SQL Mask / AI Schema Masker */}
+                <div className="bg-white rounded-xl p-6 border border-emerald-200 shadow-sm">
                   <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
-                    <span className="text-2xl">🐍</span> Python JSON Tools
+                    <ShieldCheck className="w-5 h-5 text-emerald-600 flex-shrink-0" />
+                    SQL Mask
                   </h3>
                   <p className="text-gray-700 text-sm leading-relaxed mb-3">
-                    Master <strong>python json parsing</strong> with <strong>python json load</strong> and <strong>python json dump</strong>. Use <strong>python json schema validation</strong> and <strong>python validate json schema</strong> for data integrity. Convert between <strong>python json to dict</strong> and <strong>python dict to json</strong>. Handle <strong>python json file read</strong> and <strong>python json file write</strong>. Perfect for <strong>python pandas json analysis</strong> and <strong>python convert json to excel</strong>.
+                    Mask <strong>table and column names</strong> in raw SQL before sending to AI. Tables → <strong>T_00001</strong>, columns → <strong>C_00001</strong>. Compiler-level, token-aware masking—no regex, no broken strings. Send masked SQL to AI, paste the response, <strong>restore</strong> to real names in one click.
                   </p>
                   <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• <strong>python json serialization</strong> & <strong>python json deserialization</strong></li>
-                    <li>• <strong>python json flatten</strong> & <strong>python nested json handling</strong></li>
-                    <li>• <strong>python json normalize</strong> & <strong>python json schema generator</strong></li>
-                    <li>• <strong>python json to csv</strong> & <strong>python json validation error</strong> handling</li>
+                    <li>• Hide database schema from AI</li>
+                    <li>• Deterministic reversible mapping</li>
+                    <li>• Client-side only; no server, no logging</li>
+                    <li>• Handles procedures, CTEs, complex SQL</li>
                   </ul>
-            </div>
-                
-                {/* Java Section */}
-                <div className="bg-white rounded-xl p-6 border border-gray-200">
+                  <Link href="/ai-schema-masker" className="mt-3 inline-block text-sm font-semibold text-emerald-600 hover:text-emerald-700">Try AI Schema Masker →</Link>
+                </div>
+
+                {/* MySQL Mask */}
+                <div className="bg-white rounded-xl p-6 border border-amber-200 shadow-sm">
                   <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
-                    <span className="text-2xl">☕</span> Java JSON Tools
+                    <ShieldCheck className="w-5 h-5 text-amber-600 flex-shrink-0" />
+                    MySQL Mask
                   </h3>
                   <p className="text-gray-700 text-sm leading-relaxed mb-3">
-                    Work with <strong>java json parsing</strong> using <strong>java jackson json</strong> and <strong>java gson json</strong>. Convert between <strong>java json to pojo</strong> and <strong>java pojo to json</strong>. Use <strong>java json schema validation</strong> and <strong>java validate json against schema</strong>. Handle <strong>java json serialization</strong> and <strong>java json deserialization</strong>. Perfect for <strong>java read json file</strong> and <strong>java write json file</strong> operations.
+                    Use <strong>AI for MySQL</strong> without exposing your schema. Same engine as SQL Mask: define tables and columns (or paste MySQL), get masked prompts. Build <strong>AI-safe prompts</strong> with optional <strong>JOIN</strong> definitions. Restore AI output to run in your MySQL database—<strong>privacy</strong> and <strong>compliance</strong> preserved.
                   </p>
                   <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• <strong>java json object</strong> & <strong>java json array</strong> handling</li>
-                    <li>• <strong>java json mapper</strong> & <strong>java convert json to map</strong></li>
-                    <li>• <strong>java json to excel</strong> & <strong>java json schema generator</strong></li>
-                    <li>• <strong>java json pretty print</strong> & <strong>java json parsing error</strong> handling</li>
+                    <li>• Anonymize MySQL schema for AI</li>
+                    <li>• Prompt compiler with JOIN support</li>
+                    <li>• No server storage; no schema logging</li>
+                    <li>• FinTech, healthcare, banking friendly</li>
                   </ul>
-          </div>
-          
-                {/* MySQL Section */}
-                <div className="bg-white rounded-xl p-6 border border-gray-200">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
-                    <span className="text-2xl">🗄️</span> MySQL JSON Tools
-                  </h3>
-                  <p className="text-gray-700 text-sm leading-relaxed mb-3">
-                    Work with <strong>mysql json column</strong> and <strong>mysql json functions</strong>. Use <strong>mysql json extract</strong> and <strong>mysql json query</strong> for data retrieval. Implement <strong>mysql json validation</strong> and <strong>mysql json schema validation</strong>. Convert with <strong>mysql json to table</strong> and <strong>mysql convert json to rows</strong>. Handle <strong>mysql parse json</strong> and <strong>mysql json array</strong> operations.
-                  </p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• <strong>mysql json index</strong> & <strong>mysql json search</strong> optimization</li>
-                    <li>• <strong>mysql json path examples</strong> & <strong>mysql json performance issues</strong></li>
-                    <li>• <strong>mysql import json data</strong> & <strong>mysql export json</strong></li>
-                    <li>• <strong>mysql json errors</strong> & <strong>mysql invalid json error</strong> handling</li>
-                  </ul>
+                  <Link href="/ai-schema-masker" className="mt-3 inline-block text-sm font-semibold text-amber-600 hover:text-amber-700">Try AI Schema Masker →</Link>
                 </div>
               </div>
-            </div>
-          </div>
-          
-          {/* JSON Data Analysis Section */}
-          <div className="mb-10 sm:mb-12 lg:mb-16 bg-white rounded-2xl p-6 sm:p-8 lg:p-10 border border-gray-200 shadow-sm">
-            <div className="max-w-4xl mx-auto space-y-6">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">JSON Data Analysis & Processing Tools</h2>
-              
-              <div className="space-y-4 text-gray-700 leading-relaxed">
-                <p>
-                  Perform comprehensive <strong>json data analysis</strong> with our powerful tools. Use <strong>json data visualization</strong> to understand your data structures. Our <strong>json data processing</strong> tools support <strong>json analytics</strong> and <strong>json big data</strong> workflows. Transform data with <strong>json data transformation</strong> and <strong>json data normalization</strong>.
-                </p>
-                
-                <p>
-                  Clean and prepare your data with <strong>json data cleaning</strong> tools. Use <strong>json schema for analytics</strong> to ensure data quality. Perform <strong>json exploratory analysis</strong> and <strong>json dataset analysis</strong>. Work with <strong>analyze nested json</strong> structures and extract <strong>json metrics extraction</strong>. Convert data with <strong>json to dataframe</strong> and <strong>json to table conversion</strong>.
-                </p>
-                
-                <p>
-                  Advanced features include <strong>json aggregation</strong>, <strong>json statistical analysis</strong>, and <strong>json time series data</strong> handling. Build <strong>json data pipeline</strong> workflows and use <strong>json reporting tools</strong> for insights.
+
+              <div className="bg-white/80 rounded-xl p-5 border border-emerald-200">
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Why AI safety and privacy matter</h3>
+                <p className="text-gray-700 text-sm leading-relaxed">
+                  Sending raw <strong>SQL</strong> or <strong>JSON</strong> to AI can leak business logic, table names, and sensitive identifiers. Many policies forbid sharing schema with third parties. Our masking tools let you get <strong>AI help</strong> while keeping data on your device: mask → send only placeholders → restore. <strong>100% data security</strong>, client-side only.
                 </p>
               </div>
             </div>
           </div>
           
-          {/* Developer Utilities Section */}
+          {/* AI, JSON, Safety & Client-Side Tools Section */}
           <div className="mb-10 sm:mb-12 lg:mb-16 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 sm:p-8 lg:p-10 border border-blue-100 shadow-sm">
             <div className="max-w-4xl mx-auto space-y-6">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Developer JSON Utilities & Conversion Tools</h2>
-              
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">AI-Safe JSON &amp; SQL Tools — Security First, Client-Side Only</h2>
+              <p className="text-gray-700 text-sm sm:text-base mb-6">
+                All tools run <strong>100% in your browser</strong>. <strong>No data storage</strong> on our servers—no uploads, no logging. Your <strong>JSON</strong>, SQL, and schemas stay on your device. <strong>AI safety</strong> and <strong>security</strong> by design: mask before AI, format and validate locally.
+              </p>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-white rounded-xl p-5 border border-gray-200">
-                  <h3 className="text-lg font-bold text-gray-900 mb-3">Database Conversions</h3>
+                <div className="bg-white rounded-xl p-5 border border-emerald-100">
+                  <h3 className="text-lg font-bold text-gray-900 mb-3">AI Safety &amp; No Data Storage</h3>
                   <ul className="text-sm text-gray-700 space-y-2">
-                    <li>• <strong>json to sql</strong> conversion</li>
-                    <li>• <strong>json to mysql</strong> integration</li>
-                    <li>• <strong>json to postgresql</strong> export</li>
-                    <li>• <strong>json to mongodb</strong> import</li>
+                    <li>• <strong>AI-safe JSON</strong> masking — keys &amp; values masked client-side</li>
+                    <li>• <strong>AI-safe SQL</strong> — table &amp; column names masked before AI</li>
+                    <li>• <strong>No server storage</strong> — nothing sent, nothing saved</li>
+                    <li>• <strong>Client-side only</strong> — all operations in your browser</li>
                   </ul>
                 </div>
-                
-                <div className="bg-white rounded-xl p-5 border border-gray-200">
-                  <h3 className="text-lg font-bold text-gray-900 mb-3">API & Testing Tools</h3>
+
+                <div className="bg-white rounded-xl p-5 border border-blue-100">
+                  <h3 className="text-lg font-bold text-gray-900 mb-3">Security &amp; Privacy</h3>
                   <ul className="text-sm text-gray-700 space-y-2">
-                    <li>• <strong>json api tester</strong> for REST APIs</li>
-                    <li>• <strong>api json validator</strong> for validation</li>
-                    <li>• <strong>rest api json tools</strong> suite</li>
-                    <li>• <strong>developer json utilities</strong> collection</li>
+                    <li>• <strong>JSON</strong> and SQL never leave your device</li>
+                    <li>• <strong>No logging</strong> of schemas, payloads, or identifiers</li>
+                    <li>• <strong>Reversible masking</strong> — restore after AI, run locally</li>
+                    <li>• <strong>Enterprise-safe</strong> — FinTech, healthcare, banking friendly</li>
                   </ul>
                 </div>
-                
+
                 <div className="bg-white rounded-xl p-5 border border-gray-200">
-                  <h3 className="text-lg font-bold text-gray-900 mb-3">Formatting & Editing</h3>
+                  <h3 className="text-lg font-bold text-gray-900 mb-3">JSON Utilities — All Client-Side</h3>
                   <ul className="text-sm text-gray-700 space-y-2">
-                    <li>• <strong>json formatter online</strong> tool</li>
-                    <li>• <strong>json minifier</strong> for optimization</li>
-                    <li>• <strong>json editor online</strong> for editing</li>
-                    <li>• <strong>json viewer</strong> for visualization</li>
+                    <li>• <strong>JSON formatter</strong> &amp; <strong>JSON minifier</strong> — in-browser</li>
+                    <li>• <strong>JSON validator</strong> &amp; <strong>JSON viewer</strong> — no upload</li>
+                    <li>• <strong>JSON compare</strong> &amp; <strong>JSON diff</strong> — local only</li>
+                    <li>• <strong>JSON to CSV/Excel</strong> — conversion in your browser</li>
                   </ul>
                 </div>
-                
+
                 <div className="bg-white rounded-xl p-5 border border-gray-200">
-                  <h3 className="text-lg font-bold text-gray-900 mb-3">Comparison & Debugging</h3>
+                  <h3 className="text-lg font-bold text-gray-900 mb-3">API &amp; Debugging — Zero Server</h3>
                   <ul className="text-sm text-gray-700 space-y-2">
-                    <li>• <strong>json diff tool</strong> for comparisons</li>
-                    <li>• <strong>json compare tool</strong> for analysis</li>
-                    <li>• <strong>json debugging tools</strong> suite</li>
-                    <li>• <strong>json pretty print</strong> formatting</li>
+                    <li>• <strong>API JSON tester</strong> — validate responses client-side</li>
+                    <li>• <strong>JSON pretty print</strong> &amp; structure view — local</li>
+                    <li>• <strong>JSON debugging</strong> — no data sent to any server</li>
+                    <li>• <strong>REST API tools</strong> — all operations client-side only</li>
                   </ul>
                 </div>
               </div>
@@ -1076,417 +1038,88 @@ function HomeClient() {
           {/* About UnblockDevs Platform Section */}
           <div className="mb-12 sm:mb-16 lg:mb-20 bg-gradient-to-br from-gray-50/90 via-blue-50/80 to-indigo-50/80 rounded-2xl p-8 sm:p-10 lg:p-12 border border-gray-200/80 shadow-md">
             <div className="max-w-4xl mx-auto space-y-6">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 text-center">About UnblockDevs - Free Privacy-Focused Developer Tools</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 text-center">About UnblockDevs — AI Safety, Data Security &amp; Compliance-First Tools</h2>
               
               <div className="space-y-4 text-gray-700 leading-relaxed">
                 <p>
-                  <strong>UnblockDevs</strong> is a comprehensive platform providing free, privacy-focused developer tools designed to help developers work more efficiently without compromising their privacy or requiring signups. Founded with the vision of making professional-grade development tools accessible to everyone, we've built a platform that processes all data locally in your browser, ensuring your code, JSON, API responses, and sensitive information never leave your device.
+                  <strong>UnblockDevs</strong> is built for developers who need to use <strong>AI</strong> without risking <strong>data security</strong> or <strong>compliance</strong>. We provide free, client-side tools so your JSON, SQL, and schemas never leave your device. <strong>Data masking for AI</strong> is at the core: mask table names, column names, and JSON keys before sending anything to ChatGPT or other AI—then restore the AI&apos;s output locally. No server storage, no logging, no signups. <strong>Safety</strong> and <strong>privacy</strong> by design.
                 </p>
                 
                 <p>
-                  Our mission is to democratize access to high-quality developer tools while maintaining the highest standards of privacy and security. We believe that developers shouldn't have to choose between powerful tools and privacy, and that essential utilities shouldn't require account creation, credit cards, or data sharing. Since our launch, UnblockDevs has served millions of developers worldwide, processing billions of operations entirely in users' browsers.
+                  Our mission is to make <strong>AI-safe workflows</strong> accessible: use AI for SQL and JSON while staying within <strong>compliance</strong> (FinTech, healthcare, banking). We believe you shouldn&apos;t have to choose between AI productivity and data security. All processing runs in your browser—<strong>100% client-side</strong>—so your code, API payloads, and database identifiers never touch our servers. No account creation, no data sharing, no storage of your sensitive information.
                 </p>
                 
                 <div className="grid md:grid-cols-3 gap-4 mt-6">
                   <div className="bg-white rounded-lg p-4 border border-gray-200 text-center">
                     <div className="text-2xl font-bold text-blue-600 mb-1">19+</div>
-                    <div className="text-sm text-gray-700">Professional Tools</div>
+                    <div className="text-sm text-gray-700">Tools incl. AI Masking</div>
                   </div>
                   <div className="bg-white rounded-lg p-4 border border-gray-200 text-center">
                     <div className="text-2xl font-bold text-blue-600 mb-1">100%</div>
-                    <div className="text-sm text-gray-700">Browser-Based Processing</div>
+                    <div className="text-sm text-gray-700">Client-Side, No Storage</div>
                   </div>
                   <div className="bg-white rounded-lg p-4 border border-gray-200 text-center">
                     <div className="text-2xl font-bold text-blue-600 mb-1">Free</div>
-                    <div className="text-sm text-gray-700">Forever, No Signup Required</div>
+                    <div className="text-sm text-gray-700">Forever, No Signup</div>
                   </div>
                 </div>
                 
                 <p className="mt-6">
-                  <strong>Privacy First:</strong> All processing happens in your browser. Your data never leaves your device, ensuring maximum privacy and security. We don't track, store, or transmit your data. <strong>No Barriers:</strong> Start using tools immediately without creating accounts, providing emails, or dealing with password management. <strong>Quality & Reliability:</strong> Free doesn't mean low quality. We maintain professional-grade standards for all our tools, ensuring accuracy, performance, and reliability.
+                  <strong>AI Safety &amp; Data Masking:</strong> Use our <strong>JSON Shield</strong> and <strong>AI Schema Masker</strong> to anonymize payloads and SQL before AI. Deterministic, reversible mapping—restore AI output to real names in one click. <strong>Data Security:</strong> No uploads, no server processing. Your data stays in your browser. <strong>Compliance:</strong> No logging of schemas or identifiers; suitable for regulated industries. <strong>No Barriers:</strong> Start immediately—no accounts, no credit cards.
                 </p>
                 
                 <p>
-                  <strong>Comprehensive Tool Suite:</strong> UnblockDevs provides 19+ professional tools covering JSON processing, API testing, code conversion, data analysis, and more. From JSON beautifiers and validators to API comparators and cURL converters, we have the tools you need for modern development workflows. <strong>Educational Content:</strong> Beyond tools, we've created an extensive library of 100+ educational blog posts covering topics from JSON processing and API testing to advanced algorithms, data engineering, and AI development.
+                  <strong>Tool Suite:</strong> Beyond <strong>data masking for AI</strong>, we offer JSON formatters, validators, API comparators, cURL converters, and more—all client-side. <strong>Educational Content:</strong> 100+ blog posts on JSON, API testing, data engineering, and <strong>how to safely use AI</strong> with MySQL and JSON (masking, privacy, compliance).
                 </p>
                 
                 <p>
-                  <strong>Technology & Architecture:</strong> UnblockDevs is built using modern web technologies including Next.js 14+, TypeScript, and Tailwind CSS. All tools are optimized for performance, accessibility, and user experience. Our client-side processing architecture ensures fast, secure, and private operations. <strong>Community-Driven:</strong> Our tools are built for the developer community, and we actively listen to feedback, feature requests, and suggestions. Many of our tools and features were inspired by user requests and community needs.
+                  <strong>Architecture:</strong> Built with Next.js, TypeScript, and Tailwind. Every tool runs in your browser—fast, secure, private. <strong>Community-Driven:</strong> Tools and features (including AI masking) were shaped by developers who need <strong>AI safety</strong> and <strong>data security</strong> without sacrificing productivity.
                 </p>
                 
                 <div className="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg mt-6">
                   <p className="font-semibold text-blue-900 mb-2">Why Choose UnblockDevs?</p>
                   <ul className="text-sm text-blue-800 space-y-1">
-                    <li>✓ All tools process data entirely in your browser - complete privacy</li>
-                    <li>✓ No signup required - start using tools immediately</li>
-                    <li>✓ 100% free forever - no usage limits or credit cards</li>
-                    <li>✓ Professional-grade tools with enterprise-level quality</li>
-                    <li>✓ Comprehensive educational content and tutorials</li>
-                    <li>✓ Regular updates and new tools based on community feedback</li>
+                    <li>✓ <strong>AI safety</strong> — data masking for AI; schema never sent to servers</li>
+                    <li>✓ <strong>Data security</strong> — 100% client-side; no storage, no logging</li>
+                    <li>✓ <strong>Compliance-friendly</strong> — FinTech, healthcare, banking safe</li>
+                    <li>✓ No signup — use tools immediately, no account or email</li>
+                    <li>✓ Free forever — no usage limits, no credit cards</li>
+                    <li>✓ JSON Shield &amp; SQL/MySQL mask — restore AI output locally</li>
                   </ul>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="text-center mb-12 sm:mb-14">
-            <h2 className="heading-section mb-2">Our Developer Tools</h2>
-            <p className="heading-section-sub mx-auto">
-              Free online tools. No signup. Everything runs in your browser.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 mb-12 sm:mb-16">
-            <div
-              onClick={() => {
-                handleTabChange('converter');
-                if (typeof window !== 'undefined') {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-              }}
-              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
-            >
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                Export JSON to Excel | Convert JSON to Excel Table | JSON to Excel Integration
-              </h3>
-              <p className="text-gray-600 text-sm">
-                <strong>Export JSON to Excel</strong> and <strong>convert JSON to Excel table</strong> with our powerful converter. Learn <strong>how to convert JSON to Excel</strong> and transform nested JSON data into structured Excel spreadsheets. Perfect for <strong>JSON to Excel integration</strong> workflows. Supports CSV and HTML table formats with custom column organization.
-              </p>
-              <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
-                Try JSON to Excel Converter →
-              </span>
-            </div>
-            
-            <div
-              onClick={() => {
-                handleTabChange('beautifier');
-                if (typeof window !== 'undefined') {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-                showBuyMeACoffeeMessage();
-              }}
-              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
-            >
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                JSON Viewer | JSON Formatter | JSON Parser | JSON Beautifier
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Free online JSON Viewer, JSON Formatter, JSON Parser, and JSON Beautifier. View, format, parse, and beautify JSON data with customizable indentation. Visualize JSON structure, analyze data types, and get detailed statistics about your JSON files.
-              </p>
-              <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
-                Try JSON Viewer & Formatter →
-              </span>
-            </div>
-            
-            <div
-              onClick={() => {
-                handleTabChange('comparator');
-                if (typeof window !== 'undefined') {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-                showBuyMeACoffeeMessage();
-              }}
-              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
-            >
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                API Response Comparator
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Compare two API responses to detect changes, additions, and breaking changes. Identify field-level differences with visual highlighting and detailed change reports.
-              </p>
-              <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
-                Try it now →
-              </span>
-            </div>
-            
-            <div
-              onClick={() => {
-                handleTabChange('jsoncompare');
-                if (typeof window !== 'undefined') {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-                showBuyMeACoffeeMessage();
-              }}
-              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
-            >
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                JSON Comparator & Diff Tool
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Compare two JSON payloads side-by-side with semantic diff. Visualize additions, deletions, and modifications with color-coded highlighting. Perfect for debugging API responses and config files.
-              </p>
-              <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
-                Compare JSON Now →
-              </span>
-            </div>
-            
-            <div
-              onClick={() => {
-                handleTabChange('schema');
-                if (typeof window !== 'undefined') {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-                showBuyMeACoffeeMessage();
-              }}
-              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
-            >
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                JSON Schema Generator | JSON Schema Creator | Generate JSON Schema
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Use our <strong>JSON schema generator</strong> to automatically <strong>generate JSON schema</strong> from your JSON data. Our <strong>JSON schema creator</strong> helps with <strong>JSON schema generation</strong> and <strong>creating a JSON schema</strong>. Perfect for <strong>defining JSON schema</strong> structures and <strong>schema generator from JSON</strong> workflows. Create validation schemas for API documentation and data validation.
-              </p>
-              <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
-                Try it now →
-              </span>
-            </div>
-            
-            <div
-              onClick={() => {
-                handleTabChange('logs');
-                if (typeof window !== 'undefined') {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-                showBuyMeACoffeeMessage();
-              }}
-              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
-            >
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                Logs Analyzer
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Parse, filter, and analyze structured logs in JSON or text format. Filter by log level, search through logs, and identify patterns in your application logs.
-              </p>
-              <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
-                Try it now →
-              </span>
-            </div>
-            
-            <div
-              onClick={() => {
-                handleTabChange('payload');
-                if (typeof window !== 'undefined') {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-                showBuyMeACoffeeMessage();
-              }}
-              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
-            >
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                Payload Analyzer
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Analyze JSON payload sizes, structure, and complexity. Get insights into API request/response payloads to optimize performance.
-              </p>
-              <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
-                Try it now →
-              </span>
-            </div>
-            
-            <div
-              onClick={() => {
-                handleTabChange('curl');
-                if (typeof window !== 'undefined') {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-                showBuyMeACoffeeMessage();
-              }}
-              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
-            >
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                Convert Curl to Requests | Curl to JavaScript | Convert Curl to HTTP Request
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Use our <strong>curl to requests</strong> converter to <strong>convert curl to JavaScript</strong>, Python, Java, and Go. Our <strong>convert curl to http request</strong> tool helps you <strong>convert curl</strong> commands into code instantly. Perfect for API integration and testing workflows.
-              </p>
-              <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
-                Try it now →
-              </span>
-            </div>
-            
-            <div
-              onClick={() => {
-                handleTabChange('mock');
-                if (typeof window !== 'undefined') {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-                showBuyMeACoffeeMessage();
-              }}
-              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
-            >
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                Mock API Generator
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Generate mock API endpoints and responses for testing and development. Create realistic test data and API responses without backend setup.
-              </p>
-              <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
-                Try it now →
-              </span>
-            </div>
-            
-            <div
-              onClick={() => {
-                handleTabChange('testdata');
-                if (typeof window !== 'undefined') {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-                showBuyMeACoffeeMessage();
-              }}
-              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
-            >
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                Test Data Generator
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Generate realistic test data for your applications. Create sample data sets for testing, demos, and development purposes.
-              </p>
-              <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
-                Try it now →
-              </span>
-            </div>
-            
-            <div
-              onClick={() => {
-                handleTabChange('config');
-                if (typeof window !== 'undefined') {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-                showBuyMeACoffeeMessage();
-              }}
-              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
-            >
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                Config Comparator
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Compare environment configurations, identify differences between dev, staging, and production configs. Ensure consistency across environments.
-              </p>
-              <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
-                Try it now →
-              </span>
-            </div>
-            
-            <div
-              onClick={() => {
-                handleTabChange('sql');
-                if (typeof window !== 'undefined') {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-                showBuyMeACoffeeMessage();
-              }}
-              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
-            >
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                SQL Formatter - Comma Separated ID List for MySQL, PostgreSQL, Oracle, Trino
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Create comma separated ID lists for SQL IN clause. Convert multiple IDs, arrays, or values into properly formatted SQL IN query format for 
-                MySQL, PostgreSQL, Oracle, Trino, SQL Server, SQLite, and more. Generate comma separated IDs for MySQL IN clause, PostgreSQL IN clause, 
-                Oracle IN clause, Trino IN clause, and other database queries.
-              </p>
-              <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
-                Try it now →
-              </span>
-            </div>
-            
-            <div
-              onClick={() => {
-                handleTabChange('tokencompare');
-                if (typeof window !== 'undefined') {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-                showBuyMeACoffeeMessage();
-              }}
-              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
-            >
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                Token Comparator - Compare Tokens Character by Character
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Compare two tokens (JWT, API keys, authentication tokens) character by character with beautiful mismatch highlighting. 100% client-side - your tokens never leave your device.
-              </p>
-              <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
-                Try it now →
-              </span>
-            </div>
-            
-            <div
-              onClick={() => {
-                handleTabChange('timezone');
-                if (typeof window !== 'undefined') {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-                showBuyMeACoffeeMessage();
-              }}
-              className="bg-white/95 rounded-xl border-2 border-gray-100 p-5 sm:p-6 text-left cursor-pointer group hover:border-primary-200 hover:shadow-xl hover:shadow-primary-100/30 transition-all duration-200"
-            >
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                Timezone Translator for Humans
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Convert times across timezones instantly. Enter "3pm New York" and see the time in all your selected cities. Perfect for scheduling meetings across the globe.
-              </p>
-              <span className="text-blue-600 text-sm font-medium mt-2 inline-block group-hover:underline">
-                Convert Time Now →
-              </span>
-            </div>
-          </div>
-          
           {/* Ezoic Ad Placement - Middle of Content (Placement ID: 102) */}
           <div id="ezoic-pub-ad-placeholder-102"></div>
 
-          {/* Additional SEO Content Section */}
-          <div className="mt-14 mb-14 sm:mt-16 sm:mb-16 bg-gray-50/90 rounded-2xl p-8 sm:p-10 border border-gray-200/80 shadow-sm">
-            <div className="max-w-4xl mx-auto space-y-6">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Complete Guide: JSON Schema Validation & Generation at UnblockDevs.com</h2>
-              
-              <div className="space-y-4 text-gray-700 leading-relaxed">
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">JSON Schema Validation</h3>
-                  <p>
-                    Our <strong>JSON schema validation</strong> tool allows you to <strong>validate JSON schema</strong> and ensure your data structures are correct. Use <strong>validation JSON schema</strong> to check JSON against schemas, and <strong>json validator against schema</strong> for comprehensive validation. Perfect for API testing and data quality assurance at <strong>UnblockDevs.com</strong>.
-                  </p>
-                </div>
-                
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">JSON Schema Generation & Creation</h3>
-                  <p>
-                    Need to <strong>generate JSON schema</strong>? Our <strong>json-schema-generator</strong> helps with <strong>JSON schema generation</strong> and <strong>JSON schema creation</strong>. Whether you're <strong>creating a JSON schema</strong>, <strong>defining JSON schema</strong>, or using a <strong>schema generator from JSON</strong>, our tools make it easy. The <strong>schema generator json</strong> supports <strong>JSON schema for JSON schema</strong> patterns.
-                  </p>
-                </div>
-                
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Convert JSON to Excel - Complete Integration</h3>
-                  <p>
-                    Our <strong>JSON to Excel converter</strong> enables seamless <strong>JSON to Excel integration</strong>. Learn <strong>how to convert JSON to Excel</strong> and <strong>export JSON to Excel</strong> with our powerful tool. <strong>Convert JSON to Excel table</strong> formats for better data analysis and reporting.
-                  </p>
-                </div>
-                
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Curl to Requests Converter</h3>
-                  <p>
-                    Transform API calls with our <strong>curl to requests</strong> converter. <strong>Convert curl to JavaScript</strong>, Python, or other languages. Our <strong>convert curl to http request</strong> tool helps developers quickly <strong>convert curl</strong> commands into working code. Perfect for API integration and testing.
-                  </p>
-                </div>
-              </div>
+          <div className="mt-14 sm:mt-16">
+            <div className="text-center mb-8">
+              <h3 className="heading-section mb-2">Why Choose UnblockDevs?</h3>
+              <p className="text-gray-600 text-sm sm:text-base max-w-xl mx-auto">We built this for developers who care where their data goes. No upsells, no lock-in—just tools that work.</p>
             </div>
-          </div>
-
-          <div className="mt-14 sm:mt-16 text-center">
-            <h3 className="heading-section mb-6">Why Choose UnblockDevs?</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-4xl mx-auto">
-              <div>
-                <h4 className="font-semibold text-gray-900 mb-2">100% Free</h4>
-                <p className="text-sm text-gray-600">All tools are completely free to use with no registration required.</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 max-w-4xl mx-auto">
+              <div className="bg-white rounded-xl p-5 sm:p-6 border border-gray-200 shadow-sm text-center md:text-left">
+                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 mb-3">
+                  <span className="text-lg font-bold">∞</span>
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-1.5">Always free</h4>
+                <p className="text-sm text-gray-600 leading-relaxed">No trials, no “pro” tier, no credit card. Use every tool as much as you need. We don’t gate features behind signup.</p>
               </div>
-              <div>
-                <h4 className="font-semibold text-gray-900 mb-2">Privacy First</h4>
-                <p className="text-sm text-gray-600">All processing happens in your browser. Your data never leaves your device.</p>
+              <div className="bg-white rounded-xl p-5 sm:p-6 border border-gray-200 shadow-sm text-center md:text-left">
+                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 text-blue-600 mb-3">
+                  <Lock className="w-5 h-5" aria-hidden />
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-1.5">Your data stays yours</h4>
+                <p className="text-sm text-gray-600 leading-relaxed">Everything runs in your browser. We don’t send your JSON, SQL, or schemas to our servers—there are no servers for your data. No tracking, no logging.</p>
               </div>
-              <div>
-                <h4 className="font-semibold text-gray-900 mb-2">No Installation</h4>
-                <p className="text-sm text-gray-600">Works entirely in your browser - no downloads or installations needed.</p>
+              <div className="bg-white rounded-xl p-5 sm:p-6 border border-gray-200 shadow-sm text-center md:text-left">
+                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-violet-100 text-violet-600 mb-3">
+                  <Code className="w-5 h-5" aria-hidden />
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-1.5">No install, no setup</h4>
+                <p className="text-sm text-gray-600 leading-relaxed">Open the page and start. No npm install, no API keys, no config. Works on any device with a modern browser.</p>
               </div>
             </div>
           </div>
@@ -1660,7 +1293,7 @@ function HomeClient() {
                 </Link>
               </div>
               <p className="text-sm text-gray-600">
-                Built for <span className="font-semibold text-gray-900">developers</span>, by developers.
+                🚀 Built for developers who ship—by developers who get it. No gatekeeping, no compromise.
               </p>
             </div>
           </div>
