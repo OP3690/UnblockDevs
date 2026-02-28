@@ -484,7 +484,7 @@ function HomeClient() {
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col bg-gradient-to-b from-slate-50/90 via-white/40 to-slate-100/90">
+    <div className="relative min-h-screen flex flex-col bg-gradient-to-b from-slate-50 via-white to-slate-50/80">
       <BuyMeACoffeeWidget />
       {/* Skip to main content for keyboard and screen reader users */}
       <a
@@ -527,7 +527,7 @@ function HomeClient() {
       <header role="banner" className={`bg-white/95 backdrop-blur-sm border-b border-gray-200/80 ${showBookmarkPrompt ? 'sticky top-[73px]' : 'sticky top-0'} z-40 shadow-[0_1px_3px_0_rgba(0,0,0,0.06)]`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Top bar: logo left, nav right */}
-          <div className="flex items-center justify-between gap-4 py-4 sm:py-5">
+          <div className="flex items-center justify-between gap-4 py-3 sm:py-4">
             <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0 group">
               <Link href="/" className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-primary-700 text-white shadow-md hover:shadow-lg transition-all duration-200">
                 <Wrench className="h-5 w-5" aria-hidden />
@@ -680,32 +680,28 @@ function HomeClient() {
         </div>
       </header>
 
-      {/* Ad strip - compact so tool content sits closer to tabs */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 border-b border-gray-100/80 bg-white/30">
+      {/* Ad strip — single row, minimal gap before main content */}
+      <div key={activeTab} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-1.5 border-b border-gray-100 bg-white/50">
         <div id="ezoic-pub-ad-placeholder-101" className="min-h-[50px] flex items-center justify-center" />
-      </div>
-
-      {/* Tab-change ad: remounts when user switches tabs so ads refresh */}
-      <div key={activeTab} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 border-b border-gray-100/80 bg-white/30">
         <div id="ezoic-pub-ad-placeholder-111" className="min-h-[90px] flex items-center justify-center" aria-label="Advertisement" />
       </div>
 
-      {/* Main Content - Professional layout */}
-      <main id="main-content" role="main" className={`flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 animate-fade-in ${activeTab === 'beautifier' ? 'pt-0 pb-10 sm:pb-14 lg:pb-16' : 'py-10 sm:py-14 lg:py-16'}`}>
+      {/* Main Content */}
+      <main id="main-content" role="main" className={`flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 animate-fade-in ${activeTab === 'beautifier' ? 'pt-4 sm:pt-6 pb-10 sm:pb-12 lg:pb-14' : 'py-8 sm:py-10 lg:py-12'}`}>
         {activeTab === 'beautifier' && (
-          <div className="max-w-4xl mx-auto -mt-6 sm:-mt-8">
-            <div className="rounded-2xl bg-white/95 backdrop-blur-sm shadow-pro-lg border border-gray-100/90 p-5 sm:p-6 lg:p-8">
+          <div className="max-w-4xl mx-auto">
+            <div className="rounded-2xl bg-white shadow-lg border border-gray-200/90 p-5 sm:p-6 lg:p-8">
               <JsonBeautifier />
             </div>
           </div>
         )}
         {activeTab === 'converter' && (
           rows.length === 0 ? (
-            <div className="max-w-4xl mx-auto space-y-10 sm:space-y-12">
+            <div className="max-w-4xl mx-auto space-y-8 sm:space-y-10">
               {/* Hero: title + input */}
-              <header className="pt-4 sm:pt-6">
+              <header className="pt-2 sm:pt-4">
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2" style={{ letterSpacing: '-0.02em' }}>JSON Viewer Tools</h1>
-                <p className="text-gray-600 text-sm sm:text-base mb-8 max-w-2xl leading-relaxed">Free online formatter, parser & viewer. Paste JSON to view, format, or convert to Excel/CSV.</p>
+                <p className="text-gray-600 text-sm sm:text-base mb-6 max-w-2xl leading-relaxed">Free online formatter, parser & viewer. Paste JSON to view, format, or convert to Excel/CSV.</p>
                 <div id="json-input-section" className="scroll-mt-6">
                   <JsonInput onJsonSubmit={handleJsonSubmit} />
                 </div>
@@ -891,11 +887,11 @@ function HomeClient() {
         )}
       </main>
 
-      {/* Services Section - show on home page (Beautifier only) */}
+      {/* Services Section — show on home (Beautifier only) */}
       {activeTab === 'beautifier' && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 lg:py-16">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12">
           {/* Hero Section */}
-          <div className="text-center mb-14 sm:mb-16 lg:mb-20 bg-gradient-to-br from-emerald-50/90 via-indigo-50/70 to-violet-50/70 rounded-2xl p-8 sm:p-10 lg:p-14 border border-emerald-100/60 shadow-pro-lg">
+          <div className="text-center mb-10 sm:mb-12 bg-gradient-to-br from-emerald-50/90 via-indigo-50/70 to-violet-50/70 rounded-2xl p-6 sm:p-8 lg:p-10 border border-emerald-100/60 shadow-md">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight" style={{ letterSpacing: '-0.02em' }}>
               AI-Safe Tools — Data Security &amp; Privacy First
             </h2>
@@ -915,7 +911,7 @@ function HomeClient() {
           </div>
           
           {/* AI Safety, Privacy & Secure Masking Tools Section */}
-          <div className="mb-10 sm:mb-12 lg:mb-16 bg-gradient-to-br from-emerald-50 via-violet-50/50 to-indigo-50 rounded-2xl p-6 sm:p-8 lg:p-10 border border-emerald-100 shadow-sm">
+          <div className="mb-8 sm:mb-10 bg-gradient-to-br from-emerald-50 via-violet-50/50 to-indigo-50 rounded-2xl p-5 sm:p-6 lg:p-8 border border-emerald-100 shadow-sm">
             <div className="max-w-4xl mx-auto space-y-8">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 text-center">AI Safety, Privacy &amp; Secure Data Masking</h2>
               <p className="text-gray-700 text-center text-sm sm:text-base max-w-2xl mx-auto">
@@ -988,7 +984,7 @@ function HomeClient() {
           </div>
           
           {/* AI, JSON, Safety & Client-Side Tools Section */}
-          <div className="mb-10 sm:mb-12 lg:mb-16 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 sm:p-8 lg:p-10 border border-blue-100 shadow-sm">
+          <div className="mb-8 sm:mb-10 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-5 sm:p-6 lg:p-8 border border-blue-100 shadow-sm">
             <div className="max-w-4xl mx-auto space-y-6">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">AI-Safe JSON &amp; SQL Tools — Security First, Client-Side Only</h2>
               <p className="text-gray-700 text-sm sm:text-base mb-6">
@@ -1040,7 +1036,7 @@ function HomeClient() {
           </div>
           
           {/* About UnblockDevs Platform Section */}
-          <div className="mb-12 sm:mb-16 lg:mb-20 bg-gradient-to-br from-gray-50/90 via-blue-50/80 to-indigo-50/80 rounded-2xl p-8 sm:p-10 lg:p-12 border border-gray-200/80 shadow-md">
+          <div className="mb-8 sm:mb-10 bg-gradient-to-br from-gray-50/90 via-blue-50/80 to-indigo-50/80 rounded-2xl p-6 sm:p-8 lg:p-10 border border-gray-200/80 shadow-sm">
             <div className="max-w-4xl mx-auto space-y-6">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 text-center">About UnblockDevs — AI Safety, Data Security &amp; Compliance-First Tools</h2>
               
@@ -1098,8 +1094,8 @@ function HomeClient() {
           {/* Ezoic Ad Placement - Middle of Content (Placement ID: 102) */}
           <div id="ezoic-pub-ad-placeholder-102"></div>
 
-          <div className="mt-14 sm:mt-16">
-            <div className="text-center mb-8">
+          <div className="mt-10 sm:mt-12">
+            <div className="text-center mb-6">
               <h3 className="heading-section mb-2">Why Choose UnblockDevs?</h3>
               <p className="text-gray-600 text-sm sm:text-base max-w-xl mx-auto">We built this for developers who care where their data goes. No upsells, no lock-in—just tools that work.</p>
             </div>
@@ -1131,15 +1127,15 @@ function HomeClient() {
       )}
 
       {/* Feedback Section */}
-      <section className="mt-16 sm:mt-20 py-12 sm:py-14 bg-gradient-to-r from-green-50/90 via-blue-50/80 to-indigo-50/90 border-y border-gray-100/80">
+      <section className="mt-12 sm:mt-14 py-10 sm:py-12 bg-gradient-to-r from-green-50/90 via-blue-50/80 to-indigo-50/90 border-y border-gray-100/80">
         <div className="max-w-4xl mx-auto container-padding">
           <FeedbackForm />
         </div>
       </section>
 
-      {/* Newsletter Signup Section - show on home page (Beautifier only) */}
+      {/* Newsletter Signup Section — show on home (Beautifier only) */}
       {activeTab === 'beautifier' && (
-        <section className="mt-10 py-10 sm:py-12 bg-gradient-to-r from-green-50/80 via-blue-50/70 to-indigo-50/80">
+        <section className="mt-8 py-8 sm:py-10 bg-gradient-to-r from-green-50/80 via-blue-50/70 to-indigo-50/80">
           <div className="max-w-4xl mx-auto container-padding">
             <NewsletterSignup />
           </div>
@@ -1150,10 +1146,10 @@ function HomeClient() {
       <div id="ezoic-pub-ad-placeholder-103"></div>
 
       {/* Footer */}
-      <footer className="mt-auto pt-16 pb-10 sm:pt-20 sm:pb-12 border-t border-gray-200/80 bg-white/90 backdrop-blur-md shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+      <footer className="mt-auto pt-12 pb-8 sm:pt-16 sm:pb-10 border-t border-gray-200/80 bg-white/90 backdrop-blur-md shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
         <div className="max-w-7xl mx-auto container-padding">
           {/* Stats Section */}
-          <div className="flex flex-wrap items-center justify-center gap-6 mb-8 pb-8 border-b border-gray-200/80">
+          <div className="flex flex-wrap items-center justify-center gap-6 mb-6 pb-6 border-b border-gray-200/80">
             <div className="flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-lg">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
               <span className="text-sm font-semibold text-gray-700">Active Users:</span>
