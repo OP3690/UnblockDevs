@@ -259,31 +259,23 @@ function HomeClient() {
   }, [mounted]);
 
   // Refresh Ezoic ads when tab changes (for dynamic content)
+  // Refresh ads when user switches tabs (Ezoic + AdSense)
   useEffect(() => {
-    if (mounted && typeof window !== 'undefined' && (window as any).ezstandalone) {
-      try {
-        // Refresh ads when content changes (tab switch)
+    if (!mounted || typeof window === 'undefined') return;
+    try {
+      if ((window as any).ezstandalone?.cmd) {
         (window as any).ezstandalone.cmd.push(function() {
           try {
-          (window as any).ezstandalone.showAds();
-          } catch (e: any) {
-            // Silently handle errors (site may not be approved yet)
-            const errorMsg = e?.message || String(e);
-            if (!errorMsg.includes('Monetization not allowed') && 
-                !errorMsg.includes('visit_uuid')) {
-              console.debug('Ezoic ads refresh error:', e);
+            if (typeof (window as any).ezstandalone.showAds === 'function') {
+              (window as any).ezstandalone.showAds();
             }
-          }
+          } catch (_) {}
         });
-      } catch (e: any) {
-        // Silently handle errors
-        const errorMsg = e?.message || String(e);
-        if (!errorMsg.includes('Monetization not allowed') && 
-            !errorMsg.includes('visit_uuid')) {
-        console.debug('Ezoic ads refresh error:', e);
-        }
       }
-    }
+      if ((window as any).adsbygoogle) {
+        ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+      }
+    } catch (_) {}
   }, [activeTab, mounted]);
 
   // Track visits and active users using API
@@ -682,6 +674,11 @@ function HomeClient() {
       {/* Ad strip - compact so tool content sits closer to tabs */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 border-b border-gray-100/80 bg-white/30">
         <div id="ezoic-pub-ad-placeholder-101" className="min-h-[50px] flex items-center justify-center" />
+      </div>
+
+      {/* Tab-change ad: remounts when user switches tabs so ads refresh */}
+      <div key={activeTab} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 border-b border-gray-100/80 bg-white/30">
+        <div id="ezoic-pub-ad-placeholder-111" className="min-h-[90px] flex items-center justify-center" aria-label="Advertisement" />
       </div>
 
       {/* Main Content - Professional layout */}
