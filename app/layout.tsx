@@ -3,7 +3,6 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget'
-import SideAd from '@/components/SideAd'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' })
 
@@ -405,11 +404,8 @@ export default function RootLayout({
             __html: '<amp-auto-ads type="adsense" data-ad-client="ca-pub-6349841658473646"></amp-auto-ads>',
           }}
         />
-        <div className="flex flex-1 min-h-screen" suppressHydrationWarning>
-          <div className="flex-1 min-w-0">
-            {children}
-          </div>
-          <SideAd />
+        <div suppressHydrationWarning>
+          {children}
         </div>
         <BuyMeACoffeeWidget />
         
