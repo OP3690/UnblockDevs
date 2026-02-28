@@ -336,19 +336,6 @@ export default function RootLayout({
                 ezoic.src = '//www.ezojs.com/ezoic/sa.min.js';
                 ezoic.onerror = function() {};
                 document.head.appendChild(ezoic);
-                // Buy Me a Coffee - defer to reduce initial JS
-                var bmc = document.createElement('script');
-                bmc.setAttribute('data-name', 'BMC-Widget');
-                bmc.setAttribute('data-cfasync', 'false');
-                bmc.src = 'https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js';
-                bmc.setAttribute('data-id', 'WKbStURip');
-                bmc.setAttribute('data-description', 'Support me on Buy me a coffee!');
-                bmc.setAttribute('data-message', 'You have a Wonderful Day!!!');
-                bmc.setAttribute('data-color', '#5F7FFF');
-                bmc.setAttribute('data-position', 'Right');
-                bmc.setAttribute('data-x_margin', '18');
-                bmc.setAttribute('data-y_margin', '18');
-                document.body.appendChild(bmc);
               }
               function whenIdleThenDeferred() {
                 if (window.requestIdleCallback) {
@@ -408,7 +395,20 @@ export default function RootLayout({
           {children}
         </div>
         <BuyMeACoffeeWidget />
-        
+        {/* Buy Me a Coffee - load early so widget appears (was deferred, caused widget not to show) */}
+        <script
+          data-name="BMC-Widget"
+          data-cfasync="false"
+          src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
+          data-id="WKbStURip"
+          data-description="Support me on Buy me a coffee!"
+          data-message="You have a Wonderful Day!!!"
+          data-color="#5F7FFF"
+          data-position="Right"
+          data-x_margin="18"
+          data-y_margin="18"
+          async
+        />
         <Toaster 
           position="bottom-right"
           toastOptions={{
