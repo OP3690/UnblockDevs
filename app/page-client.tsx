@@ -118,6 +118,7 @@ function HomeClient() {
   const [mounted, setMounted] = useState<boolean>(false);
   const [showBookmarkPrompt, setShowBookmarkPrompt] = useState<boolean>(false);
   const [samplePanelOpen, setSamplePanelOpen] = useState<boolean>(true);
+  const [tabsExpanded, setTabsExpanded] = useState<boolean>(false);
 
   // Sample JSON for engagement: live demo snippet and interactive panel
   const SAMPLE_JSON_FORMATTED = `{
@@ -561,7 +562,7 @@ function HomeClient() {
             </nav>
           </div>
 
-          {/* Tool tabs - 3 rows (7 cols on md+) */}
+          {/* Tool tabs - expandable: first row visible by default, "Explore More tools" to expand */}
           <div className="bg-gray-50/95 border-t border-gray-100 px-1 sm:px-2 py-3 pb-3.5">
             <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 gap-2 sm:gap-2.5">
             <button
@@ -610,6 +611,29 @@ function HomeClient() {
               <FileSpreadsheet className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
               <span className="text-center break-words line-clamp-2">Json to Excel</span>
             </button>
+            </div>
+            <div className="flex justify-center pt-2 pb-1">
+              <button
+                type="button"
+                onClick={() => setTabsExpanded(!tabsExpanded)}
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-primary-700 bg-primary-50 hover:bg-primary-100 rounded-lg border border-primary-200/80 transition-colors"
+                aria-expanded={tabsExpanded}
+              >
+                {tabsExpanded ? (
+                  <>
+                    <ChevronUp className="w-4 h-4" aria-hidden />
+                    Show less
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="w-4 h-4" aria-hidden />
+                    Explore More tools
+                  </>
+                )}
+              </button>
+            </div>
+            {tabsExpanded && (
+            <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 gap-2 sm:gap-2.5 mt-2">
             <Link href={toolPageUrls.fixer} className="w-full px-2 sm:px-3 py-2.5 sm:py-2.5 font-medium text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg border-2 border-transparent hover:border-gray-200 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 min-h-[2.75rem] sm:min-h-0">
               <Wrench className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
               <span className="text-center break-words line-clamp-2">JSON Fixer</span>
@@ -667,6 +691,7 @@ function HomeClient() {
               <span className="text-center break-words line-clamp-2">cURL Analyzer</span>
             </Link>
             </div>
+            )}
           </div>
         </div>
       </header>

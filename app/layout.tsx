@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget'
@@ -395,6 +396,19 @@ export default function RootLayout({
           {children}
         </div>
         <BuyMeACoffeeWidget />
+        <Script
+          src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
+          strategy="beforeInteractive"
+          data-name="BMC-Widget"
+          data-cfasync="false"
+          data-id="WKbStURip"
+          data-description="Support me on Buy me a coffee!"
+          data-message="You have a Wonderful Day!!!"
+          data-color="#5F7FFF"
+          data-position="Right"
+          data-x_margin="18"
+          data-y_margin="18"
+        />
         <Toaster 
           position="bottom-right"
           toastOptions={{
