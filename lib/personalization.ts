@@ -1,6 +1,6 @@
 // Personalization utilities for tracking user preferences
 
-export type ToolTab = 'converter' | 'beautifier' | 'fixer' | 'comparator' | 'jsoncompare' | 'schema' | 'logs' | 'payload' | 'curl' | 'mock' | 'testdata' | 'config' | 'sql' | 'builder' | 'promptchunk' | 'schemamasker' | 'jsonpromptshield' | 'tokencompare' | 'timezone' | 'hartocurl' | 'curlfailure';
+export type ToolTab = 'converter' | 'beautifier' | 'fixer' | 'comparator' | 'jsoncompare' | 'schema' | 'logs' | 'payload' | 'curl' | 'mock' | 'testdata' | 'config' | 'sql' | 'builder' | 'promptchunk' | 'schemamasker' | 'jsonpromptshield' | 'codemasker' | 'regextester' | 'tokencompare' | 'timezone' | 'hartocurl' | 'curlfailure';
 
 export interface ToolInfo {
   id: ToolTab;
@@ -109,6 +109,8 @@ export class PersonalizationManager {
       promptchunk: { id: 'promptchunk', name: 'Prompt Chunker', description: 'Split AI prompts into chunks' },
       schemamasker: { id: 'schemamasker', name: 'AI Schema Masker', description: 'Mask SQL identifiers for AI-safe prompts (client-side)' },
       jsonpromptshield: { id: 'jsonpromptshield', name: 'JSON Shield', description: 'Mask JSON keys & values for AI, 100% client-side' },
+      codemasker: { id: 'codemasker', name: 'Code Prompt Shield', description: 'Reversible code masking: variables, secrets, PII—safe for AI, multi-language' },
+      regextester: { id: 'regextester', name: 'Regex Tester', description: 'Test and debug regular expressions with live matches, groups, and replace' },
       tokencompare: { id: 'tokencompare', name: 'Token Comparator', description: 'Compare tokens character by character' },
       timezone: { id: 'timezone', name: 'Timezone Translator', description: 'Convert times across timezones' },
       hartocurl: { id: 'hartocurl', name: 'HAR to cURL', description: 'Convert HAR files and network requests to cURL commands' },

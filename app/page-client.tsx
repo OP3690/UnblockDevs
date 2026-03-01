@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect, useMemo, Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, TrendingUp, Mail, Scissors, Key, Clock, Network, AlertTriangle, Copy, ChevronDown, ChevronUp, Play, ShieldCheck, Shield, Lock } from 'lucide-react';
+import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, TrendingUp, Mail, Scissors, Key, Clock, Network, AlertTriangle, Copy, ChevronDown, ChevronUp, Play, ShieldCheck, Shield, Lock, Image } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { PersonalizationManager, ToolTab } from '@/lib/personalization';
@@ -101,6 +101,8 @@ const toolPageUrls: Record<Exclude<ToolTab, 'converter'>, string> = {
   promptchunk: '/prompt-chunker',
   schemamasker: '/ai-schema-masker',
   jsonpromptshield: '/json-prompt-shield',
+  codemasker: '/code-prompt-shield',
+  regextester: '/regex-tester',
   tokencompare: '/token-comparator',
   timezone: '/timezone-translator',
   hartocurl: '/har-to-curl',
@@ -626,6 +628,11 @@ function HomeClient() {
               <span className="text-xs font-medium break-words min-w-0 flex-1">JSON Shield</span>
               <span className="absolute top-1.5 right-1.5 text-xs font-semibold px-2 py-0.5 rounded bg-violet-100 text-violet-600">AI</span>
             </Link>
+            <Link href={toolPageUrls.codemasker} className="group tab-card relative w-full px-2.5 py-2 pr-8 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+              <Shield className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
+              <span className="text-xs font-medium break-words min-w-0 flex-1">Code Shield</span>
+              <span className="absolute top-1.5 right-1.5 text-xs font-semibold px-2 py-0.5 rounded bg-violet-100 text-violet-600">AI</span>
+            </Link>
             <Link href={toolPageUrls.promptchunk} className="group tab-card relative w-full px-2.5 py-2 pr-8 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <Scissors className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0 flex-1">Prompt Chunker</span>
@@ -634,6 +641,14 @@ function HomeClient() {
             <Link href={toolPageUrls.tokencompare} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <Key className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">Token Compare</span>
+            </Link>
+            <Link href="/svg-to-image" className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+              <Image className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
+              <span className="text-xs font-medium break-words min-w-0">SVG to JPEG/PNG</span>
+            </Link>
+            <Link href={toolPageUrls.regextester} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+              <Code2 className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
+              <span className="text-xs font-medium break-words min-w-0">Regex Tester</span>
             </Link>
             <button
               onClick={() => handleTabChange('converter')}
