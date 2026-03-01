@@ -222,6 +222,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.85,
       changefreq: 'weekly' as const,
     },
+    {
+      url: 'code-prompt-shield',
+      priority: 0.85,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'regex-tester',
+      priority: 0.85,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'svg-to-image',
+      priority: 0.85,
+      changefreq: 'weekly' as const,
+    },
   ]
 
   // Generate sitemap entries
