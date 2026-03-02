@@ -204,9 +204,9 @@ export default function TestDataGeneratorClient() {
                 <h3 className="font-semibold text-gray-900 mb-1">Mock API Generator</h3>
                 <p className="text-sm text-gray-700">Generate mock APIs with test data</p>
               </Link>
-              <Link href="/json-builder" className="p-4 bg-green-50 rounded-lg border border-green-200 hover:bg-green-100 transition-colors">
-                <h3 className="font-semibold text-gray-900 mb-1">JSON Builder</h3>
-                <p className="text-sm text-gray-700">Build JSON structures interactively</p>
+              <Link href="/log-unpacker" className="p-4 bg-green-50 rounded-lg border border-green-200 hover:bg-green-100 transition-colors">
+                <h3 className="font-semibold text-gray-900 mb-1">Log Unpacker</h3>
+                <p className="text-sm text-gray-700">Unescape JSON, decode JWTs, scrub paths</p>
               </Link>
               <Link href="/json-beautifier" className="p-4 bg-purple-50 rounded-lg border border-purple-200 hover:bg-purple-100 transition-colors">
                 <h3 className="font-semibold text-gray-900 mb-1">JSON Beautifier</h3>

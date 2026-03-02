@@ -340,9 +340,9 @@ export default function JsonSchemaGenerationClient() {
                 <h3 className="font-semibold text-gray-900 mb-1">JSON Fixer</h3>
                 <p className="text-sm text-gray-700">Fix broken JSON before generating schemas</p>
               </Link>
-              <Link href="/json-builder" className="p-4 bg-orange-50 rounded-lg border border-orange-200 hover:bg-orange-100 transition-colors">
-                <h3 className="font-semibold text-gray-900 mb-1">JSON Builder</h3>
-                <p className="text-sm text-gray-700">Build JSON structures interactively</p>
+              <Link href="/log-unpacker" className="p-4 bg-orange-50 rounded-lg border border-orange-200 hover:bg-orange-100 transition-colors">
+                <h3 className="font-semibold text-gray-900 mb-1">Log Unpacker</h3>
+                <p className="text-sm text-gray-700">Unescape JSON, decode JWTs, scrub paths</p>
               </Link>
             </div>
           </section>

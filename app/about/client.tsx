@@ -316,7 +316,7 @@ export default function AboutClient() {
                 <ul className="space-y-2 text-sm text-gray-700">
                   <li><Link href="/log-explorer" className="text-blue-600 hover:underline">Log Explorer</Link> - Explore and analyze logs</li>
                   <li><Link href="/sql-formatter" className="text-blue-600 hover:underline">SQL Formatter</Link> - Format SQL queries</li>
-                  <li><Link href="/json-builder" className="text-blue-600 hover:underline">JSON Builder</Link> - Build JSON interactively</li>
+                  <li><Link href="/log-unpacker" className="text-blue-600 hover:underline">Log Unpacker & Sanitizer</Link> - Unescape JSON, decode JWTs, scrub paths</li>
                   <li><Link href="/test-data-generator" className="text-blue-600 hover:underline">Test Data Generator</Link> - Generate test data</li>
                   <li><Link href="/config-comparator" className="text-blue-600 hover:underline">Config Comparator</Link> - Compare configurations</li>
                 </ul>

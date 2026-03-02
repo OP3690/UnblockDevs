@@ -73,11 +73,11 @@ const jsonTools = [
     anchor: 'JSON comparator',
   },
   {
-    href: '/json-builder',
-    title: 'JSON builder',
-    description: 'Build JSON visually. Create and edit JSON structure with a visual JSON editor.',
+    href: '/log-unpacker',
+    title: 'Log Unpacker & Sanitizer',
+    description: 'Unescape nested JSON, decode JWTs, scrub paths. Client-side log unpacker and sanitizer.',
     icon: Wrench,
-    anchor: 'JSON builder',
+    anchor: 'Log Unpacker',
   },
 ];
 

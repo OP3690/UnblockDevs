@@ -49,9 +49,6 @@ const ConfigComparator = dynamic(() => import('@/components/tools/ConfigComparat
 const SqlFormatter = dynamic(() => import('@/components/tools/SqlFormatter'), {
   loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
 });
-const JsonBuilder = dynamic(() => import('@/components/tools/JsonBuilder'), {
-  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
-});
 const DataInsights = dynamic(() => import('@/components/tools/DataInsights'), {
   loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
 });
@@ -97,7 +94,7 @@ const toolPageUrls: Record<Exclude<ToolTab, 'converter'>, string> = {
   testdata: '/test-data-generator',
   config: '/config-comparator',
   sql: '/sql-formatter',
-  builder: '/json-builder',
+  builder: '/log-unpacker',
   promptchunk: '/prompt-chunker',
   schemamasker: '/ai-schema-masker',
   jsonpromptshield: '/json-prompt-shield',
@@ -667,7 +664,7 @@ function HomeClient() {
             </Link>
             <Link href={toolPageUrls.builder} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <FileSpreadsheet className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">JSON Builder</span>
+              <span className="text-xs font-medium break-words min-w-0">Log Unpacker</span>
             </Link>
             <Link href={toolPageUrls.comparator} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <GitCompare className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
