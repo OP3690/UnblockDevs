@@ -395,7 +395,7 @@ function inspectStringSideChannel(
   value: string,
   ctx: TraverseContext,
   path: string
-): { data: string; annotations: PathAnnotationItem[] } {
+): SideChannelAcc {
   const parsed = tryParseAndInspectString(value, ctx);
   if (parsed !== null) {
     const next = deepInspectSideChannel(parsed, { ...ctx, depthLeft: ctx.depthLeft - 1 }, path);

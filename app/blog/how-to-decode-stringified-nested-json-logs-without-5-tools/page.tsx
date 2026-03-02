@@ -86,7 +86,7 @@ export default function DecodeStringifiedNestedJsonLogsPage() {
               For example, a log entry might look like a long string full of backslashes and quotes—e.g. a
               <code className="rounded bg-gray-100 px-1.5 py-0.5 text-sm"> context </code>
               field whose value is the string
-              <code className="rounded bg-gray-100 px-1.5 py-0.5 text-sm"> &quot;{\\&quot;service\\&quot;:\\&quot;api\\&quot;}&quot; </code>
+              <code className="rounded bg-gray-100 px-1.5 py-0.5 text-sm">{' "\u007B\\"service\\":\\"api\\"\u007D" '}</code>
               instead of a nested object. The outer quotes and backslashes are the &quot;stringification&quot;—the real
               payload is JSON buried inside.
             </p>
@@ -115,7 +115,7 @@ export default function DecodeStringifiedNestedJsonLogsPage() {
               </li>
               <li>
                 <strong>Layer 2:</strong> One or more values that are <em>strings</em> but contain valid JSON when
-                unescaped (e.g. <code>context</code> is a string like <code>&quot;{\\'&quot;service\\'&quot;: ...}&quot;</code>).
+                unescaped (e.g. <code>context</code> is a string like <code>{' "{\\"service\\": ...}" '}</code>).
               </li>
               <li>
                 <strong>Layer 3+:</strong> Inside that string, there may be another JSON string (e.g. a{' '}
@@ -205,7 +205,7 @@ export default function DecodeStringifiedNestedJsonLogsPage() {
                 object with keys like <code>timestamp</code>, <code>level</code>, <code>context</code>.
               </li>
               <li>
-                <strong>Inspect each value.</strong> If a value is a string and it starts with <code>{'{{'}'}</code> or{' '}
+                <strong>Inspect each value.</strong> If a value is a string and it starts with <code>{'{'}</code> or{' '}
                 <code>[</code>, try <code>JSON.parse</code> on it. If it succeeds, you now have an object or array.
               </li>
               <li>
@@ -254,8 +254,7 @@ export default function DecodeStringifiedNestedJsonLogsPage() {
             </p>
             <p className="mb-4 leading-relaxed text-gray-700">
               <strong>Common pitfalls when decoding:</strong> (1) Forgetting to set a maximum recursion depth—malformed
-              or malicious input can cause infinite loops. (2) Assuming every string that starts with{' '}
-              <code>{'{{'}'}</code> is JSON—sometimes it’s a different format or corrupted. (3) Not handling parse
+              or malicious input can cause infinite loops. (2) Assuming every string that starts with <code>{'{'}</code> is JSON—sometimes it’s a different format or corrupted. (3) Not handling parse
               errors: if one branch fails, the rest of the structure can still be decoded. (4) Exposing decoded data:
               when sharing with AI or teammates, use a sanitized export that scrubs paths and redacts tokens.
             </p>
