@@ -407,7 +407,7 @@ export default function SmartJsonDiff() {
                 <label key={k} className="flex items-center gap-1.5">
                   <input
                     type="checkbox"
-                    checked={!!(config as Record<string, boolean>)[k]}
+                    checked={Boolean((config as any)[k])}
                     onChange={(e) => setConfig((c) => ({ ...c, [k]: e.target.checked }))}
                     className="h-3.5 w-3.5 rounded border-gray-300 text-primary-600"
                   />
