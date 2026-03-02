@@ -13,6 +13,26 @@ export interface ExportOptions {
   fileName?: string;
 }
 
+/** Excel sheet names: max 31 chars, no \ / * ? : [ ] */
+function sanitizeSheetName(name: string): string {
+  const sanitized = name.replace(/[\\/*?:\[\]]/g, '').slice(0, 31);
+  return sanitized || 'Sheet';
+}
+
+/** Trigger browser download via Blob + anchor (more reliable than XLSX.writeFile) */
+function downloadWorkbook(wb: XLSX.WorkBook, fileName: string): void {
+  const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+  const blob = new Blob([wbout], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 /**
  * Exports data to Excel file
  */
@@ -23,25 +43,35 @@ export function exportToExcel(
 ): void {
   const { sections = [], singleSheet = true, fileName = 'export.xlsx' } = options;
 
+  // Ensure we have at least one column to export
+  const cols = columns.length > 0 ? columns : (rows[0] ? Object.keys(rows[0]) : []);
+  if (cols.length === 0) return;
+
   if (singleSheet || sections.length === 0) {
-    // Single sheet export
-    const ws = createWorksheet(rows, columns);
+    const ws = createWorksheet(rows, cols);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Data');
-    XLSX.writeFile(wb, fileName);
+    XLSX.utils.book_append_sheet(wb, ws, sanitizeSheetName('Data'));
+    downloadWorkbook(wb, fileName);
   } else {
-    // Multi-sheet export (one sheet per section)
     const wb = XLSX.utils.book_new();
-    
+    let sheetIndex = 0;
     sections.forEach((section) => {
       const sectionColumns = section.columnIds.filter((id) => columns.includes(id));
       if (sectionColumns.length > 0) {
         const ws = createWorksheet(rows, sectionColumns, section.name);
-        XLSX.utils.book_append_sheet(wb, ws, section.name || 'Sheet');
+        const name = sanitizeSheetName(section.name || `Sheet${sheetIndex + 1}`);
+        XLSX.utils.book_append_sheet(wb, ws, name);
+        sheetIndex++;
       }
     });
-    
-    XLSX.writeFile(wb, fileName);
+    if (sheetIndex > 0) {
+      downloadWorkbook(wb, fileName);
+    } else {
+      // No sections had columns; fall back to single sheet
+      const ws = createWorksheet(rows, cols);
+      XLSX.utils.book_append_sheet(wb, ws, sanitizeSheetName('Data'));
+      downloadWorkbook(wb, fileName);
+    }
   }
 }
 

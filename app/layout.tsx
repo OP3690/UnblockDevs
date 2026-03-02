@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter, Fira_Code } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
@@ -7,6 +7,12 @@ import DevModeWrapper from '@/components/DevModeWrapper'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' })
 const firaCode = Fira_Code({ subsets: ['latin'], variable: '--font-fira-code', display: 'swap' })
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+}
 
 export const metadata: Metadata = {
   title: 'JSON Viewer Tools – Free Online Formatter, Parser & Viewer | UnblockDevs',
@@ -116,11 +122,6 @@ export const metadata: Metadata = {
   },
   category: 'Developer Tools',
   classification: 'Web Application',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-  },
   verification: {
     google: 'your-google-verification-code', // Replace with actual verification code
     other: {
