@@ -18,6 +18,33 @@ export const metadata: Metadata = {
 
   const blogPosts = [
     {
+      slug: 'how-to-decode-stringified-nested-json-logs-without-5-tools',
+      title: 'How to Decode Stringified Nested JSON Logs (Without Using 5 Different Tools)',
+      excerpt: 'Stop switching between unescapers, jwt.io, and epoch converters. Learn what stringified nested JSON is, when it happens, and how to unescape and parse it in one place.',
+      date: '2025-03-02',
+      readTime: '6 min read',
+      category: 'JSON & Logs',
+      keywords: ['decode stringified JSON', 'stringified JSON logs', 'nested JSON decode', 'unescape JSON', 'JSON log decoder']
+    },
+    {
+      slug: 'ultimate-guide-fixing-escaped-json-jwt-epoch-stack-traces-logs',
+      title: 'The Ultimate Guide to Fixing Escaped JSON, JWTs, Epoch Timestamps & Stack Traces in Logs',
+      excerpt: 'Fix escaped JSON, decode JWTs, convert epoch timestamps, and clean stack traces in logs. One guide for all embedded log problems—with flow and examples.',
+      date: '2025-03-02',
+      readTime: '7 min read',
+      category: 'JSON & Logs',
+      keywords: ['escaped JSON', 'JWT decode', 'epoch timestamp converter', 'stack trace debugging', 'log parsing']
+    },
+    {
+      slug: 'stringified-json-hell-unescape-decode-jwt-epoch-sanitize-logs',
+      title: 'Stringified JSON Hell: How to Unescape, Decode JWTs, Convert Epoch Time & Sanitize Logs in Seconds',
+      excerpt: 'If your logs look like one long mess of backslashes, tokens, and numbers—you\'re in stringified JSON hell. Here\'s how to get out in seconds with one workflow.',
+      date: '2025-03-02',
+      readTime: '6 min read',
+      category: 'JSON & Logs',
+      keywords: ['stringified JSON', 'unescape JSON', 'decode JWT', 'epoch time converter', 'sanitize logs']
+    },
+    {
       slug: 'how-to-safely-mask-table-column-names-before-sending-queries-to-ai',
       title: 'How to Safely Mask Table & Column Names Before Sending Queries to AI',
       excerpt: 'Your company policy says you cannot share database schema with AI. Learn why exposing schema is risky, step-by-step masking strategy, how to generate a safe AI-ready prompt, and how to restore AI output back to original names. Client-side, reversible.',
