@@ -96,7 +96,7 @@ export class PersonalizationManager {
       beautifier: { id: 'beautifier', name: 'JSON Beautifier', description: 'Format and beautify JSON data' },
       fixer: { id: 'fixer', name: 'JSON Fixer', description: 'Fix and repair broken JSON' },
       comparator: { id: 'comparator', name: 'API Comparator', description: 'Compare API responses' },
-      jsoncompare: { id: 'jsoncompare', name: 'JSON Comparator', description: 'Compare two JSON objects' },
+      jsoncompare: { id: 'jsoncompare', name: 'Smart JSON Data Diff', description: 'Semantic JSON comparison for API payloads' },
       schema: { id: 'schema', name: 'Schema Generator', description: 'Generate JSON schemas' },
       logs: { id: 'logs', name: 'Log Explorer', description: 'Explore and analyze logs' },
       payload: { id: 'payload', name: 'Payload Analyzer', description: 'Analyze API payloads' },

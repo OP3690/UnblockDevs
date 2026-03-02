@@ -67,10 +67,10 @@ const jsonTools = [
   },
   {
     href: '/json-comparator',
-    title: 'JSON comparator',
-    description: 'Compare two JSON objects or files. Diff JSON and see changes. JSON compare tool online.',
+    title: 'Smart JSON Data Diff',
+    description: 'Semantic JSON comparison. Normalizes UUIDs, timestamps, JWTs so only real logic changes appear.',
     icon: GitCompare,
-    anchor: 'JSON comparator',
+    anchor: 'Smart JSON Diff',
   },
   {
     href: '/log-unpacker',

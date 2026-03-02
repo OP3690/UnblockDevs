@@ -635,17 +635,19 @@ function HomeClient() {
               <span className="text-xs font-medium break-words min-w-0 flex-1">Prompt Chunker</span>
               <span className="absolute top-1.5 right-1.5 text-xs font-semibold px-2 py-0.5 rounded bg-violet-100 text-violet-600">AI</span>
             </Link>
-            <Link href={toolPageUrls.tokencompare} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <Key className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">Token Compare</span>
+            <Link href={toolPageUrls.builder} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+              <FileSpreadsheet className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
+              <span className="text-xs font-medium break-words min-w-0">Log Unpacker</span>
+              <Star className="w-3.5 h-3.5 flex-shrink-0 fill-emerald-500 text-emerald-500" aria-hidden />
             </Link>
             <Link href="/svg-to-image" className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <Image className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">SVG to JPEG/PNG</span>
             </Link>
-            <Link href={toolPageUrls.regextester} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <Code2 className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">Regex Tester</span>
+            <Link href={toolPageUrls.jsoncompare} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+              <GitCompare className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
+              <span className="text-xs font-medium break-words min-w-0">Smart JSON Diff</span>
+              <Star className="w-3.5 h-3.5 flex-shrink-0 fill-emerald-500 text-emerald-500" aria-hidden />
             </Link>
             <button
               onClick={() => handleTabChange('converter')}
@@ -662,18 +664,17 @@ function HomeClient() {
               <Wrench className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">JSON Fixer</span>
             </Link>
-            <Link href={toolPageUrls.builder} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <FileSpreadsheet className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">Log Unpacker</span>
-              <Star className="w-3.5 h-3.5 flex-shrink-0 fill-emerald-500 text-emerald-500" aria-hidden />
+            <Link href={toolPageUrls.tokencompare} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+              <Key className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
+              <span className="text-xs font-medium break-words min-w-0">Token Compare</span>
             </Link>
             <Link href={toolPageUrls.comparator} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <GitCompare className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">API Compare</span>
             </Link>
-            <Link href={toolPageUrls.jsoncompare} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <GitCompare className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">JSON Compare</span>
+            <Link href={toolPageUrls.regextester} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+              <Code2 className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
+              <span className="text-xs font-medium break-words min-w-0">Regex Tester</span>
             </Link>
             <Link href={toolPageUrls.schema} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <FileCode className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />

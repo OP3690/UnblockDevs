@@ -296,7 +296,7 @@ export default function AboutClient() {
                   <li><Link href="/json-beautifier" className="text-blue-600 hover:underline">JSON Beautifier</Link> - Format and prettify JSON</li>
                   <li><Link href="/json-fixer-online" className="text-blue-600 hover:underline">JSON Fixer</Link> - Fix broken JSON automatically</li>
                   <li><Link href="/json-validator" className="text-blue-600 hover:underline">JSON Validator</Link> - Validate JSON syntax</li>
-                  <li><Link href="/json-comparator" className="text-blue-600 hover:underline">JSON Comparator</Link> - Compare two JSON objects</li>
+                  <li><Link href="/json-comparator" className="text-blue-600 hover:underline">Smart JSON Data Diff</Link> - Semantic comparison for API payloads</li>
                   <li><Link href="/json-schema-generation" className="text-blue-600 hover:underline">JSON Schema Generator</Link> - Generate schemas from JSON</li>
                   <li><Link href="/" className="text-blue-600 hover:underline">JSON to Excel</Link> - Convert JSON to spreadsheets</li>
                 </ul>

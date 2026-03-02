@@ -5,7 +5,7 @@ import { ArrowLeft, GitCompare, ExternalLink } from 'lucide-react';
 import Breadcrumb from '@/components/Breadcrumb';
 import dynamic from 'next/dynamic';
 
-const JsonComparator = dynamic(() => import('@/components/tools/JsonComparator'), {
+const SmartJsonDiff = dynamic(() => import('@/components/tools/SmartJsonDiff'), {
   loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
 });
 
@@ -14,20 +14,20 @@ export default function JsonComparatorClient() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
       <header className="bg-white shadow-md border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Tools', href: '/tools/json' }, { label: 'JSON', href: '/tools/json' }, { label: 'JSON comparator' }]} />
+          <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Tools', href: '/tools/json' }, { label: 'JSON', href: '/tools/json' }, { label: 'Smart JSON Data Diff' }]} />
           <Link href="/" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
             <ArrowLeft className="w-4 h-4" />
             Back to Tools
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">JSON Comparator - Compare Two JSON Objects</h1>
-          <p className="text-sm text-gray-500 mt-1">Compare two JSON objects to find differences and detect changes</p>
+          <h1 className="text-3xl font-bold text-gray-900">Smart JSON Data Diff</h1>
+          <p className="text-sm text-gray-500 mt-1">Semantic comparison for API payloads — normalizes dynamic noise so only real logic changes appear</p>
         </div>
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Tool Component */}
         <div className="mb-8">
-          <JsonComparator />
+          <SmartJsonDiff />
         </div>
 
         {/* SEO Content Section - 1000-1200 words */}
