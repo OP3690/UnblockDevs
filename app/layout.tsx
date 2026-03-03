@@ -15,8 +15,8 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'JSON Viewer Tools – Free Online Formatter, Parser & Viewer | UnblockDevs',
-  description: 'JSON Viewer Tools: view, format, validate, and convert JSON in your browser. Free JSON formatter, parser, and validator—no signup. Clear overview of services.',
+  title: 'Use AI Safely — AI Schema Masking, JSON Masking & Log Unpacker | UnblockDevs',
+  description: 'Mask JSON and SQL before sending to AI. Fix stringified JSON, unpack logs, decode JWTs. AI Schema Masking, JSON masking, formatter, parser—100% in-browser, no signup.',
   keywords: [
     // JSON Viewer Tools
     'json viewer',
@@ -54,6 +54,14 @@ export const metadata: Metadata = {
     'json schema validation',
     'generate json schema',
     'validate json schema',
+    // AI safety & masking
+    'ai schema masking',
+    'json masking',
+    'mask json for ai',
+    'log unpacker',
+    'stringified json fix',
+    'unescape json',
+    'decode jwt',
     // Brand & high-intent
     'unblockdevs',
     'unblock devs json',
@@ -79,8 +87,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://unblockdevs.com',
-    title: 'Free JSON Tools | Viewer, Formatter, Parser | UnblockDevs',
-    description: 'JSON Viewer Tools: view, format, validate, and convert JSON in your browser. Free formatter, parser, validator—no signup. Clear overview of services.',
+    title: 'Use AI Safely — Schema Masking, JSON Masking & Log Unpacker | UnblockDevs',
+    description: 'Mask JSON and SQL before sending to AI. Fix stringified JSON, unpack logs. AI Schema Masking, JSON masking, formatter, parser—100% in-browser, no signup.',
     siteName: 'UnblockDevs',
       images: [
         {
@@ -93,8 +101,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Free JSON Tools | Viewer, Formatter, Parser | UnblockDevs',
-    description: 'JSON Viewer Tools: view, format, validate, and convert JSON in your browser. Free formatter, parser, validator—no signup. Clear overview of services.',
+    title: 'Use AI Safely — Schema Masking, JSON Masking & Log Unpacker | UnblockDevs',
+    description: 'Mask JSON and SQL before sending to AI. Fix stringified JSON, unpack logs. AI Schema Masking, JSON masking—100% in-browser, no signup.',
     images: ['/og-image.png'],
   },
   metadataBase: new URL('https://unblockdevs.com'),

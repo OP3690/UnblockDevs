@@ -534,12 +534,12 @@ function HomeClient() {
                 <Wrench className="h-5 w-5" aria-hidden />
               </Link>
               <div className="flex flex-col gap-1 min-w-0 justify-center py-0.5">
-                {/* Line 1: UnblockDevs | Mode */}
+                {/* Line 1: UnblockDevs | Mode | Active Users | Total Visits */}
                 <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                   <Link href="/" className="shrink-0">
                     <span className="text-lg sm:text-xl font-bold tracking-tight text-gray-900 group-hover:text-primary-700 transition-colors leading-tight" style={{ letterSpacing: '-0.02em' }}>UnblockDevs</span>
                   </Link>
-                  <span className="text-gray-300 font-medium shrink-0" aria-hidden>|</span>
+                  <span className="text-gray-300 font-medium shrink-0 hidden sm:inline" aria-hidden>|</span>
                   <div className="flex items-center gap-2 flex-shrink-0 dev-mode-toggle-container">
                     <span className="text-xs font-medium text-gray-500 whitespace-nowrap">Mode</span>
                     <button
@@ -559,6 +559,18 @@ function HomeClient() {
                     </button>
                     <span className={`min-w-[3.25rem] text-xs font-semibold whitespace-nowrap ${devMode ? 'text-emerald-600' : 'text-gray-600'}`}>
                       {devMode ? 'Dev' : 'Light'}
+                    </span>
+                  </div>
+                  <span className="text-gray-300 font-medium shrink-0 hidden md:inline" aria-hidden>|</span>
+                  <div className="hidden md:flex items-center gap-4 flex-shrink-0">
+                    <span className="flex items-center gap-1.5 text-xs">
+                      <span className="text-gray-500 font-medium">Active Users:</span>
+                      <span className="font-bold text-blue-600">{activeUsers}</span>
+                    </span>
+                    <span className="text-gray-300 font-medium" aria-hidden>·</span>
+                    <span className="flex items-center gap-1.5 text-xs">
+                      <span className="text-gray-500 font-medium">Total Visits:</span>
+                      <span className="font-bold text-purple-600">{totalVisits.toLocaleString()}</span>
                     </span>
                   </div>
                 </div>
@@ -742,8 +754,8 @@ function HomeClient() {
             <div className="max-w-4xl mx-auto space-y-8 sm:space-y-10">
               {/* Hero: title + input */}
               <header className="pt-2 sm:pt-4">
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2" style={{ letterSpacing: '-0.02em' }}>JSON Viewer Tools</h1>
-                <p className="text-gray-600 text-sm sm:text-base mb-6 max-w-2xl leading-relaxed">Free online formatter, parser & viewer. Paste JSON to view, format, or convert to Excel/CSV.</p>
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2" style={{ letterSpacing: '-0.02em' }}>Use AI Safely — Schema Masking, JSON Masking & Log Unpacker</h1>
+                <p className="text-gray-600 text-sm sm:text-base mb-6 max-w-2xl leading-relaxed">Mask JSON and SQL before sending to AI. Fix stringified JSON, unpack logs, decode JWTs. Format, parse, validate — 100% in-browser, no signup.</p>
                 <div id="json-input-section" className="scroll-mt-6">
                   <JsonInput onJsonSubmit={handleJsonSubmit} />
                 </div>
@@ -752,8 +764,8 @@ function HomeClient() {
               {/* Overview + Key Features */}
               <section className="space-y-4" aria-labelledby="overview-heading">
                 <div className="text-center">
-                  <h2 id="overview-heading" className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Overview</h2>
-                  <p className="text-gray-600 text-sm max-w-xl mx-auto">JSON Viewer, Formatter, and Parser in your browser. No signup.</p>
+<h2 id="overview-heading" className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Overview</h2>
+                <p className="text-gray-600 text-sm max-w-xl mx-auto">AI Schema Masking, JSON masking, Log Unpacker, formatter & parser — use AI without exposing your data. No signup.</p>
                 </div>
                 <ul className="grid grid-cols-1 sm:grid-cols-3 gap-3 list-none" aria-label="Key features">
                   <li className="bg-white rounded-xl border border-gray-200 p-4 text-center shadow-sm hover:shadow transition-shadow flex flex-col min-h-[5.5rem]">
@@ -1186,19 +1198,6 @@ function HomeClient() {
       {/* Footer */}
       <footer className="mt-auto pt-12 pb-8 sm:pt-16 sm:pb-10 border-t border-gray-200/80 bg-white/90 backdrop-blur-md shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
         <div className="max-w-7xl mx-auto container-padding">
-          {/* Stats Section */}
-          <div className="flex flex-wrap items-center justify-center gap-6 mb-6 pb-6 border-b border-gray-200/80">
-            <div className="flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-lg">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-sm font-semibold text-gray-700">Active Users:</span>
-              <span className="text-lg font-bold text-blue-600">{activeUsers}</span>
-            </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-purple-50 rounded-lg">
-              <span className="text-sm font-semibold text-gray-700">Total Visits:</span>
-              <span className="text-lg font-bold text-purple-600">{totalVisits.toLocaleString()}</span>
-            </div>
-          </div>
-
           {/* Main Footer Content */}
           <div className="text-center space-y-3">
             <div className="space-y-2">
