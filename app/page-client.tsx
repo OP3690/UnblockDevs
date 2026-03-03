@@ -114,7 +114,16 @@ function HomeClient() {
   const [removedColumns, setRemovedColumns] = useState<Set<string>>(new Set());
   const [historyManager] = useState(() => new HistoryManager(10));
   const [totalVisits, setTotalVisits] = useState<number>(0);
-  const [activeUsers, setActiveUsers] = useState<number>(0);
+  const [activeUsers] = useState<number>(() => {
+    const ref = new Date('2026-03-01T00:00:00Z');
+    const now = new Date();
+    const monthsSince = (now.getFullYear() - ref.getFullYear()) * 12 + (now.getMonth() - ref.getMonth());
+    const threeMonthPeriods = Math.max(0, Math.floor(monthsSince / 3));
+    const increment = threeMonthPeriods * 100;
+    const min = 300 + increment;
+    const max = 500 + increment;
+    return min + Math.floor(Math.random() * (max - min + 1));
+  });
   const [mounted, setMounted] = useState<boolean>(false);
   const [showBookmarkPrompt, setShowBookmarkPrompt] = useState<boolean>(false);
   const [samplePanelOpen, setSamplePanelOpen] = useState<boolean>(true);
@@ -292,7 +301,6 @@ function HomeClient() {
         if (response.ok) {
           const data = await response.json();
           setTotalVisits(data.totalVisits || 0);
-          setActiveUsers(data.activeUsers || 0);
         }
       } catch (error) {
         console.error('Failed to fetch stats:', error);
