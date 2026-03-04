@@ -580,6 +580,20 @@ function HomeClient() {
                       <span className="text-gray-500 font-medium">Total Visits:</span>
                       <span className="font-bold text-purple-600">{totalVisits.toLocaleString()}</span>
                     </span>
+                    <span className="text-gray-300 font-medium" aria-hidden>·</span>
+                    <span className="flex items-center gap-1.5 text-xs">
+                      <span className="text-gray-500 font-medium">Top 3:</span>
+                      <span className="inline-flex items-center gap-1" title="USA, UK, India">
+                        <span aria-hidden>🇺🇸</span>
+                        <span className="font-medium text-gray-700">USA</span>
+                        <span className="text-gray-400">·</span>
+                        <span aria-hidden>🇬🇧</span>
+                        <span className="font-medium text-gray-700">UK</span>
+                        <span className="text-gray-400">·</span>
+                        <span aria-hidden>🇮🇳</span>
+                        <span className="font-medium text-gray-700">IND</span>
+                      </span>
+                    </span>
                   </div>
                 </div>
                 <p className="hidden sm:block text-sm text-gray-500 group-hover:text-gray-700 transition-colors">Developer tools for daily use</p>
