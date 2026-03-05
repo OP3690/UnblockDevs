@@ -361,10 +361,11 @@ export default function JsonBeautifier() {
             </label>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="json-beautifier-indent" className="block text-sm font-medium text-gray-700 mb-2">
               Indent Size
             </label>
             <select
+              id="json-beautifier-indent"
               value={indentSize}
               onChange={(e) => {
                 const size = parseInt(e.target.value);

@@ -695,7 +695,7 @@ export default function AiSchemaMaskerClient() {
                           value={j.joinType}
                           onChange={(e) => updateJoin(j.id, { joinType: e.target.value as JoinType })}
                           className="px-2 py-1.5 text-sm rounded border border-slate-200 bg-white min-w-[120px]"
-                          title="Join type"
+                          aria-label="Join type"
                         >
                           {JOIN_TYPE_OPTIONS.map((opt) => (
                             <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -709,6 +709,7 @@ export default function AiSchemaMaskerClient() {
                             updateJoin(j.id, { leftTable: name, leftColumn: cols[0] ?? '' });
                           }}
                           className="px-2 py-1.5 text-sm font-mono rounded border border-slate-200 bg-white min-w-[100px]"
+                          aria-label="Left table"
                         >
                           {tableNames.map((n) => (
                             <option key={n} value={n}>{n}</option>
@@ -718,6 +719,7 @@ export default function AiSchemaMaskerClient() {
                           value={j.leftColumn}
                           onChange={(e) => updateJoin(j.id, { leftColumn: e.target.value })}
                           className="px-2 py-1.5 text-sm font-mono rounded border border-slate-200 bg-white min-w-[90px]"
+                          aria-label="Left column"
                         >
                           {getColumnsForTable(j.leftTable).map((c) => (
                             <option key={c} value={c}>{c}</option>
@@ -732,6 +734,7 @@ export default function AiSchemaMaskerClient() {
                             updateJoin(j.id, { rightTable: name, rightColumn: cols[0] ?? '' });
                           }}
                           className="px-2 py-1.5 text-sm font-mono rounded border border-slate-200 bg-white min-w-[100px]"
+                          aria-label="Right table"
                         >
                           {tableNames.map((n) => (
                             <option key={n} value={n}>{n}</option>
@@ -741,6 +744,7 @@ export default function AiSchemaMaskerClient() {
                           value={j.rightColumn}
                           onChange={(e) => updateJoin(j.id, { rightColumn: e.target.value })}
                           className="px-2 py-1.5 text-sm font-mono rounded border border-slate-200 bg-white min-w-[90px]"
+                          aria-label="Right column"
                         >
                           {getColumnsForTable(j.rightTable).map((c) => (
                             <option key={c} value={c}>{c}</option>

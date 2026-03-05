@@ -875,12 +875,14 @@ export default function SvgToImageClient() {
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Line cap</label>
+                      <label htmlFor="svg-line-cap" className="block text-sm font-medium text-gray-700 mb-2">Line cap</label>
                       <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-2">
                         <select
+                          id="svg-line-cap"
                           value={overrides.strokeLinecap}
                           onChange={(e) => updateOverride('strokeLinecap', e.target.value as SvgOverrides['strokeLinecap'])}
                           className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+                          aria-label="Stroke line cap"
                         >
                           <option value="butt">Butt</option>
                           <option value="round">Round</option>
@@ -889,12 +891,14 @@ export default function SvgToImageClient() {
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Line join</label>
+                      <label htmlFor="svg-line-join" className="block text-sm font-medium text-gray-700 mb-2">Line join</label>
                       <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-2">
                         <select
+                          id="svg-line-join"
                           value={overrides.strokeLinejoin}
                           onChange={(e) => updateOverride('strokeLinejoin', e.target.value as SvgOverrides['strokeLinejoin'])}
                           className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+                          aria-label="Stroke line join"
                         >
                           <option value="miter">Miter</option>
                           <option value="round">Round</option>

@@ -175,11 +175,13 @@ export default function LogUnpacker() {
               <span className="text-sm text-gray-700">Mask PII in JWT (sub, name, email)</span>
             </label>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">Output:</span>
+              <label htmlFor="log-unpacker-output-mode" className="text-sm text-gray-600">Output:</label>
               <select
+                id="log-unpacker-output-mode"
                 value={annotationMode}
                 onChange={(e) => setAnnotationMode(e.target.value as AnnotationMode)}
                 className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-400/20"
+                aria-label="Output annotation mode"
               >
                 <option value="inline">Inline (developer)</option>
                 <option value="sideChannel">Side-channel (schema-safe)</option>

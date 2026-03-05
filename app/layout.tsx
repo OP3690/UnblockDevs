@@ -217,11 +217,22 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${firaCode.variable}`}>
       <head>
-        {/* Critical preconnect hints - Must be first for mobile performance (1,000ms+ savings) */}
-        <link rel="preconnect" href="https://g.ezoic.net" />
-        <link rel="preconnect" href="https://privacy.gatekeeperconsent.com" />
-        <link rel="preconnect" href="https://cdnjs.buymeacoffee.com" />
-        <link rel="preconnect" href="https://www.ezojs.com" />
+        {/* JSON-LD for rich results: WebApplication + SoftwareApplication (crawlers see first) */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }}
+        />
+        {/* Preconnect: only 2 origins to avoid "too many preconnect" (Lighthouse). Fonts for LCP. */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link rel="dns-prefetch" href="https://g.ezoic.net" />
+        <link rel="dns-prefetch" href="https://privacy.gatekeeperconsent.com" />
+        <link rel="dns-prefetch" href="https://cdnjs.buymeacoffee.com" />
+        <link rel="dns-prefetch" href="https://www.ezojs.com" />
         <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
         <link rel="dns-prefetch" href="https://lb.eu-1-id5-sync.com" />
         <link rel="dns-prefetch" href="https://cdn.id5-sync.com" />
@@ -235,197 +246,6 @@ export default function RootLayout({
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon.png" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="manifest" href="/manifest.json" />
-        
-        {/* Canonical: strip query params (?tab= etc); homepage -> https://unblockdevs.com/ */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                var path = window.location.pathname || '';
-                var isRoot = path === '/' || path === '';
-                var hasQuery = (window.location.search || '').length > 0;
-                var canonicalHref = (isRoot || hasQuery)
-                  ? 'https://unblockdevs.com/'
-                  : 'https://unblockdevs.com' + path.replace(/\\/$/, '') || '/';
-                var existing = document.querySelectorAll('link[rel="canonical"]');
-                for (var i = 0; i < existing.length; i++) existing[i].remove();
-                var link = document.createElement('link');
-                link.rel = 'canonical';
-                link.href = canonicalHref;
-                document.head.appendChild(link);
-              })();
-            `,
-          }}
-        />
-        
-        {/* Third-party (gtag, AdSense, Ezoic) load after LCP + idle to reduce unused JS */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              // Initialize Ezoic early but defer loading
-              window.ezstandalone = window.ezstandalone || {};
-              ezstandalone.cmd = ezstandalone.cmd || [];
-              
-              // Comprehensive error handling for Ezoic and Google AdSense (suppress 403 and deprecation warnings)
-              if (typeof window !== 'undefined') {
-                // Suppress console errors from Ezoic and Google AdSense
-                const originalError = window.console.error;
-                const originalWarn = window.console.warn;
-                
-                window.console.error = function(...args) {
-                  const message = args.join(' ');
-                  // Suppress Ezoic-related errors
-                  if (message.includes('Ezoic') || 
-                      message.includes('_ezaq') || 
-                      message.includes('Monetization not allowed') ||
-                      message.includes('visit_uuid not found') ||
-                      message.includes('bad response') ||
-                      message.includes('Status; 403') ||
-                      message.includes('[EzoicAds JS]')) {
-                    console.debug('Ezoic error suppressed:', message);
-                    return;
-                  }
-                  originalError.apply(console, args);
-                };
-                
-                // Suppress deprecation warnings from Google AdSense
-                window.console.warn = function(...args) {
-                  const message = args.join(' ');
-                  // Suppress Google AdSense unload event listener deprecation warnings
-                  if (message.includes('Unload event listeners are deprecated') ||
-                      message.includes('pagead2.googlesyndication.com') ||
-                      message.includes('lidar.js') ||
-                      message.includes('unload') && message.includes('deprecated')) {
-                    console.debug('AdSense deprecation warning suppressed:', message);
-                    return;
-                  }
-                  originalWarn.apply(console, args);
-                };
-                
-                // Suppress network errors from Ezoic
-                window.addEventListener('error', function(e) {
-                  if (e.message && (
-                    e.message.includes('Ezoic') || 
-                    e.message.includes('_ezaq') ||
-                    e.message.includes('g.ezoic.net') ||
-                    e.message.includes('ezojs.com') ||
-                    e.message.includes('gatekeeperconsent.com')
-                  )) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.debug('Ezoic error handled:', e.message);
-                    return false;
-                  }
-                }, true);
-                
-                // Suppress unhandled promise rejections from Ezoic
-                window.addEventListener('unhandledrejection', function(e) {
-                  const reason = e.reason?.message || e.reason?.toString() || '';
-                  if (reason.includes('Ezoic') || 
-                      reason.includes('_ezaq') ||
-                      reason.includes('g.ezoic.net') ||
-                      reason.includes('ezojs.com') ||
-                      reason.includes('Monetization not allowed')) {
-                    e.preventDefault();
-                    console.debug('Ezoic promise rejection handled:', reason);
-                  }
-                });
-              }
-              
-              var deferredLoaded = false;
-              function loadDeferredScripts() {
-                if (deferredLoaded) return;
-                deferredLoaded = true;
-                // Google Analytics - load after LCP to reduce main-thread JS
-                var gtagScript = document.createElement('script');
-                gtagScript.async = true;
-                gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-N6DF8NPHY8';
-                document.head.appendChild(gtagScript);
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', 'G-N6DF8NPHY8', { allow_enhanced_conversions: true });
-                // Google AdSense - load after LCP to reduce unused JS (518 KiB savings)
-                var adsScript = document.createElement('script');
-                adsScript.async = true;
-                adsScript.crossOrigin = 'anonymous';
-                adsScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6349841658473646';
-                document.head.appendChild(adsScript);
-                // AMP Auto Ads - more ad placements (loads after LCP)
-                var ampAutoAds = document.createElement('script');
-                ampAutoAds.async = true;
-                ampAutoAds.setAttribute('custom-element', 'amp-auto-ads');
-                ampAutoAds.src = 'https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js';
-                document.head.appendChild(ampAutoAds);
-                // Ezoic - gatekeeper + sa.min.js
-                var gatekeeper1 = document.createElement('script');
-                gatekeeper1.setAttribute('data-cfasync', 'false');
-                gatekeeper1.src = 'https://cmp.gatekeeperconsent.com/min.js';
-                gatekeeper1.async = true;
-                document.head.appendChild(gatekeeper1);
-                var gatekeeper2 = document.createElement('script');
-                gatekeeper2.setAttribute('data-cfasync', 'false');
-                gatekeeper2.src = 'https://the.gatekeeperconsent.com/cmp.min.js';
-                gatekeeper2.async = true;
-                document.head.appendChild(gatekeeper2);
-                var ezoic = document.createElement('script');
-                ezoic.async = true;
-                ezoic.src = '//www.ezojs.com/ezoic/sa.min.js';
-                ezoic.onerror = function() {};
-                document.head.appendChild(ezoic);
-              }
-              function whenIdleThenDeferred() {
-                if (window.requestIdleCallback) {
-                  requestIdleCallback(loadDeferredScripts, { timeout: 3500 });
-                } else {
-                  loadDeferredScripts();
-                }
-              }
-              if ('PerformanceObserver' in window) {
-                try {
-                  var observer = new PerformanceObserver(function(list) {
-                    var entries = list.getEntries();
-                    var lastEntry = entries[entries.length - 1];
-                    if (lastEntry && lastEntry.renderTime) {
-                      observer.disconnect();
-                      whenIdleThenDeferred();
-                    }
-                  });
-                  observer.observe({ type: 'largest-contentful-paint', buffered: true });
-                  setTimeout(function() {
-                    observer.disconnect();
-                    whenIdleThenDeferred();
-                  }, 3500);
-                } catch (e) {
-                  if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', function() { setTimeout(whenIdleThenDeferred, 500); });
-                  } else {
-                    setTimeout(whenIdleThenDeferred, 1500);
-                  }
-                }
-              } else {
-                if (document.readyState === 'loading') {
-                  document.addEventListener('DOMContentLoaded', function() { setTimeout(whenIdleThenDeferred, 1000); });
-                } else {
-                  setTimeout(whenIdleThenDeferred, 1500);
-                }
-              }
-            `,
-          }}
-        />
-        
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredData),
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(softwareAppSchema),
-          }}
-        />
       </head>
       <body className="font-sans antialiased" suppressHydrationWarning>
         {/* AMP Auto Ads - maximum ad placements (script loads deferred after LCP) */}
@@ -465,6 +285,9 @@ export default function RootLayout({
             },
           }}
         />
+        {/* Non-render-blocking: canonical + deferred third-party (gtag, AdSense, Ezoic) */}
+        <script dangerouslySetInnerHTML={{ __html: `(function(){var p=window.location.pathname||'';var r=p==='/'||p==='';var q=(window.location.search||'').length>0;var h=r||q?'https://unblockdevs.com/':'https://unblockdevs.com'+p.replace(/\\/$/,'')||'/';var all=document.querySelectorAll('link[rel="canonical"]');for(var i=0;i<all.length;i++)all[i].remove();var l=document.createElement('link');l.rel='canonical';l.href=h;document.head.appendChild(l);})();` }} />
+        <script dangerouslySetInnerHTML={{ __html: `window.ezstandalone=window.ezstandalone||{};ezstandalone.cmd=ezstandalone.cmd||[];if(typeof window!=='undefined'){var oe=console.error,ow=console.warn;console.error=function(){var m=Array.prototype.join.call(arguments,' ');if(/Ezoic|_ezaq|Monetization not allowed|visit_uuid|bad response|Status; 403|\\[EzoicAds JS\\]/.test(m)){console.debug('Ezoic error suppressed:',m);return;}oe.apply(console,arguments);};console.warn=function(){var m=Array.prototype.join.call(arguments,' ');if(/Unload event listeners are deprecated|pagead2\\.googlesyndication|lidar\\.js|unload.*deprecated/.test(m)){console.debug('AdSense warning suppressed:',m);return;}ow.apply(console,arguments);};window.addEventListener('error',function(e){if(e.message&&/Ezoic|_ezaq|g\\.ezoic\\.net|ezojs\\.com|gatekeeperconsent\\.com/.test(e.message)){e.preventDefault();e.stopPropagation();return false;}},true);window.addEventListener('unhandledrejection',function(e){var r=(e.reason&&e.reason.message)||(e.reason&&e.reason.toString())||'';if(/Ezoic|_ezaq|g\\.ezoic\\.net|ezojs\\.com|Monetization not allowed/.test(r))e.preventDefault();});}var def=false;function loadDef(){if(def)return;def=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-N6DF8NPHY8';document.head.appendChild(s);window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-N6DF8NPHY8',{allow_enhanced_conversions:true});var a=document.createElement('script');a.async=true;a.crossOrigin='anonymous';a.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6349841658473646';document.head.appendChild(a);var g1=document.createElement('script');g1.setAttribute('data-cfasync','false');g1.src='https://cmp.gatekeeperconsent.com/min.js';g1.async=true;document.head.appendChild(g1);var g2=document.createElement('script');g2.setAttribute('data-cfasync','false');g2.src='https://the.gatekeeperconsent.com/cmp.min.js';g2.async=true;document.head.appendChild(g2);var ez=document.createElement('script');ez.async=true;ez.src='//www.ezojs.com/ezoic/sa.min.js';ez.onerror=function(){};document.head.appendChild(ez);}function go(){if(window.requestIdleCallback)requestIdleCallback(loadDef,{timeout:3500});else loadDef();}if('PerformanceObserver' in window){try{var po=new PerformanceObserver(function(list){var e=list.getEntries();if(e.length&&e[e.length-1].renderTime){po.disconnect();go();}});po.observe({type:'largest-contentful-paint',buffered:true});setTimeout(function(){po.disconnect();go();},3500);}catch(err){if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(go,500);});else setTimeout(go,1500);}}else{if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(go,1000);});else setTimeout(go,1500);}` }} />
       </body>
     </html>
   )

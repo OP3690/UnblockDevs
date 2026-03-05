@@ -114,16 +114,8 @@ function HomeClient() {
   const [removedColumns, setRemovedColumns] = useState<Set<string>>(new Set());
   const [historyManager] = useState(() => new HistoryManager(10));
   const [totalVisits, setTotalVisits] = useState<number>(0);
-  const [activeUsers] = useState<number>(() => {
-    const ref = new Date('2026-03-01T00:00:00Z');
-    const now = new Date();
-    const monthsSince = (now.getFullYear() - ref.getFullYear()) * 12 + (now.getMonth() - ref.getMonth());
-    const threeMonthPeriods = Math.max(0, Math.floor(monthsSince / 3));
-    const increment = threeMonthPeriods * 100;
-    const min = 300 + increment;
-    const max = 500 + increment;
-    return min + Math.floor(Math.random() * (max - min + 1));
-  });
+  // Deterministic initial value for SSR/hydration; real value set in useEffect
+  const [activeUsers, setActiveUsers] = useState<number>(400);
   const [mounted, setMounted] = useState<boolean>(false);
   const [showBookmarkPrompt, setShowBookmarkPrompt] = useState<boolean>(false);
   const [samplePanelOpen, setSamplePanelOpen] = useState<boolean>(true);
@@ -176,30 +168,28 @@ function HomeClient() {
   }, [activeTab, showBuyMeACoffeeMessage]);
 
 
-  // Mark as mounted immediately on client side
+  // Mark as mounted and set client-only state (avoids hydration mismatch with SSR)
   useEffect(() => {
-    // Ensure we're on client side
-    if (typeof window !== 'undefined') {
-      setMounted(true);
-      
-      // Check for tab parameter in URL (e.g., ?tab=curl or ?tab=schema)
-      const urlParams = new URLSearchParams(window.location.search);
+    if (typeof window === 'undefined') return;
+    setMounted(true);
+    const ref = new Date('2026-03-01T00:00:00Z');
+    const now = new Date();
+    const monthsSince = (now.getFullYear() - ref.getFullYear()) * 12 + (now.getMonth() - ref.getMonth());
+    const threeMonthPeriods = Math.max(0, Math.floor(monthsSince / 3));
+    const increment = threeMonthPeriods * 100;
+    const min = 300 + increment;
+    const max = 500 + increment;
+    setActiveUsers(min + Math.floor(Math.random() * (max - min + 1)));
+    const urlParams = new URLSearchParams(window.location.search);
       const tabParam = urlParams.get('tab');
       if (tabParam && ['converter', 'beautifier', 'fixer', 'comparator', 'jsoncompare', 'schema', 'logs', 'payload', 'curl', 'mock', 'testdata', 'config', 'sql', 'builder', 'promptchunk', 'schemamasker', 'jsonpromptshield', 'tokencompare', 'timezone', 'hartocurl', 'curlfailure'].includes(tabParam)) {
-        setActiveTab(tabParam as ToolTab);
-        // Scroll to top when tab is set from URL
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-      
-      // Check if bookmark prompt was dismissed
-      const dismissed = localStorage.getItem('bookmarkPromptDismissed');
-      if (!dismissed) {
-        // Show after 10 seconds for better UX
-        const timer = setTimeout(() => {
-          setShowBookmarkPrompt(true);
-        }, 10000);
-        return () => clearTimeout(timer);
-      }
+      setActiveTab(tabParam as ToolTab);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    const dismissed = localStorage.getItem('bookmarkPromptDismissed');
+    if (!dismissed) {
+      const timer = setTimeout(() => setShowBookmarkPrompt(true), 10000);
+      return () => clearTimeout(timer);
     }
   }, []);
 
@@ -533,12 +523,12 @@ function HomeClient() {
       )}
 
       {/* Header - Professional layout */}
-      <header role="banner" className={`bg-white/95 backdrop-blur-sm border-b border-gray-200/80 ${showBookmarkPrompt ? 'sticky top-[73px]' : 'sticky top-0'} z-40 shadow-[0_1px_3px_0_rgba(0,0,0,0.06)]`}>
+      <header className={`bg-white/95 backdrop-blur-sm border-b border-gray-200/80 ${showBookmarkPrompt ? 'sticky top-[73px]' : 'sticky top-0'} z-40 shadow-[0_1px_3px_0_rgba(0,0,0,0.06)]`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Top bar: logo left, nav right */}
           <div className="flex items-center justify-between gap-4 py-3 sm:py-4">
             <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0 group min-w-0">
-              <Link href="/" className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-primary-700 text-white shadow-md hover:shadow-lg transition-all duration-200">
+              <Link href="/" className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-primary-700 text-white shadow-md hover:shadow-lg transition-all duration-200" aria-label="UnblockDevs home">
                 <Wrench className="h-5 w-5" aria-hidden />
               </Link>
               <div className="flex flex-col gap-1 min-w-0 justify-center py-0.5">
@@ -549,7 +539,7 @@ function HomeClient() {
                   </Link>
                   <span className="text-gray-300 font-medium shrink-0 hidden sm:inline" aria-hidden>|</span>
                   <div className="flex items-center gap-2 flex-shrink-0 dev-mode-toggle-container">
-                    <span className="text-xs font-medium text-gray-500 whitespace-nowrap">Mode</span>
+                    <span className="text-xs font-medium text-gray-600 whitespace-nowrap">Mode</span>
                     <button
                       type="button"
                       onClick={() => setDevMode(!devMode)}
@@ -572,17 +562,17 @@ function HomeClient() {
                   <span className="text-gray-300 font-medium shrink-0 hidden md:inline" aria-hidden>|</span>
                   <div className="hidden md:flex items-center gap-4 flex-shrink-0">
                     <span className="flex items-center gap-1.5 text-xs">
-                      <span className="text-gray-500 font-medium">Active Users:</span>
+                      <span className="text-gray-600 font-medium">Active Users:</span>
                       <span className="font-bold text-blue-600">{activeUsers}</span>
                     </span>
                     <span className="text-gray-300 font-medium" aria-hidden>·</span>
                     <span className="flex items-center gap-1.5 text-xs">
-                      <span className="text-gray-500 font-medium">Total Visits:</span>
+                      <span className="text-gray-600 font-medium">Total Visits:</span>
                       <span className="font-bold text-purple-600">{totalVisits.toLocaleString()}</span>
                     </span>
                     <span className="text-gray-300 font-medium" aria-hidden>·</span>
                     <span className="flex items-center gap-1.5 text-xs">
-                      <span className="text-gray-500 font-medium">Top 3:</span>
+                      <span className="text-gray-600 font-medium">Top 3:</span>
                       <span className="inline-flex items-center gap-1" title="USA, UK, India">
                         <span aria-hidden>🇺🇸</span>
                         <span className="font-medium text-gray-700">USA</span>
@@ -596,7 +586,7 @@ function HomeClient() {
                     </span>
                   </div>
                 </div>
-                <p className="hidden sm:block text-sm text-gray-500 group-hover:text-gray-700 transition-colors">Developer tools for daily use</p>
+                <p className="hidden sm:block text-sm text-gray-600 group-hover:text-gray-700 transition-colors">Developer tools for daily use</p>
                 <div className="hidden sm:flex flex-wrap items-center gap-1.5 mt-1">
                   <span className="inline-flex items-center gap-1 rounded-md bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-800 border border-emerald-200 shadow-sm">🔒 No data stored</span>
                   <span className="text-gray-300 font-medium" aria-hidden>·</span>
@@ -624,7 +614,7 @@ function HomeClient() {
           {/* Tool tabs — compact grid, clear labels, small badges */}
           <div className="border-t border-gray-200/80 bg-gray-50/70 px-4 sm:px-6 lg:px-8 py-3">
             <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3 mb-2">
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider sm:shrink-0">Developer&apos;s Daily Tools</p>
+              <p className="text-xs font-semibold text-gray-600 uppercase tracking-wider sm:shrink-0">Developer&apos;s Daily Tools</p>
               <div className="flex justify-center sm:flex-1">
                 <p className="text-sm text-emerald-700 font-bold bg-emerald-50 border border-emerald-200/80 rounded-md px-3 py-1.5 inline-flex items-center">
                   <Lock className="w-4 h-4 mr-2 shrink-0" aria-hidden />
@@ -762,7 +752,7 @@ function HomeClient() {
       </div>
 
       {/* Main Content */}
-      <main id="main-content" role="main" className={`flex-1 w-full animate-fade-in ${activeTab === 'beautifier' ? 'pt-4 sm:pt-6 pb-10 sm:pb-12 lg:pb-14' : 'py-8 sm:py-10 lg:py-12'}`}>
+      <main id="main-content" className={`flex-1 w-full animate-fade-in ${activeTab === 'beautifier' ? 'pt-4 sm:pt-6 pb-10 sm:pb-12 lg:pb-14' : 'py-8 sm:py-10 lg:py-12'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {activeTab === 'beautifier' && (
           <div className="max-w-4xl mx-auto">
@@ -786,21 +776,21 @@ function HomeClient() {
               {/* Overview + Key Features */}
               <section className="space-y-4" aria-labelledby="overview-heading">
                 <div className="text-center">
-<h2 id="overview-heading" className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Overview</h2>
+<h2 id="overview-heading" className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">Overview</h2>
                 <p className="text-gray-600 text-sm max-w-xl mx-auto">AI Schema Masking, JSON masking, Log Unpacker, formatter & parser — use AI without exposing your data. No signup.</p>
                 </div>
                 <ul className="grid grid-cols-1 sm:grid-cols-3 gap-3 list-none" aria-label="Key features">
                   <li className="bg-white rounded-xl border border-gray-200 p-4 text-center shadow-sm hover:shadow transition-shadow flex flex-col min-h-[5.5rem]">
                     <h3 className="text-sm font-semibold text-gray-900 mb-1">JSON Viewer Online</h3>
-                    <p className="text-gray-500 text-xs leading-relaxed mt-auto">View and navigate JSON with a tree view.</p>
+                    <p className="text-gray-600 text-xs leading-relaxed mt-auto">View and navigate JSON with a tree view.</p>
                   </li>
                   <li className="bg-white rounded-xl border border-gray-200 p-4 text-center shadow-sm hover:shadow transition-shadow flex flex-col min-h-[5.5rem]">
                     <h3 className="text-sm font-semibold text-gray-900 mb-1">Formatter & Beautifier</h3>
-                    <p className="text-gray-500 text-xs leading-relaxed mt-auto">Format and prettify JSON.</p>
+                    <p className="text-gray-600 text-xs leading-relaxed mt-auto">Format and prettify JSON.</p>
                   </li>
                   <li className="bg-white rounded-xl border border-gray-200 p-4 text-center shadow-sm hover:shadow transition-shadow flex flex-col min-h-[5.5rem]">
                     <h3 className="text-sm font-semibold text-gray-900 mb-1">Parser & Validator</h3>
-                    <p className="text-gray-500 text-xs leading-relaxed mt-auto">Parse, validate, fix malformed JSON.</p>
+                    <p className="text-gray-600 text-xs leading-relaxed mt-auto">Parse, validate, fix malformed JSON.</p>
                   </li>
                 </ul>
               </section>
@@ -888,7 +878,7 @@ function HomeClient() {
                   </Link>
                 </div>
                 <div className="mt-5 pt-5 border-t border-gray-100 text-center">
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Mini-tour</p>
+                  <p className="text-xs font-medium text-gray-600 uppercase tracking-wider mb-2">Mini-tour</p>
                   <ol className="text-sm text-gray-600 space-y-1 list-decimal list-inside inline-block text-left">
                     <li>Paste your JSON above (or use the example panel)</li>
                     <li>View, format, validate, or convert to CSV/Excel</li>
@@ -900,7 +890,7 @@ function HomeClient() {
               {/* Footer CTA + links */}
               <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6 text-center shadow-sm">
                 <h2 className="text-sm font-semibold text-gray-900 mb-1">Free JSON Tools for Developers</h2>
-                <p className="text-gray-500 text-xs mb-4 max-w-md mx-auto">Paste JSON to view, format, validate, or convert. No signup—data stays private.</p>
+                <p className="text-gray-600 text-xs mb-4 max-w-md mx-auto">Paste JSON to view, format, validate, or convert. No signup—data stays private.</p>
                 <div className="flex flex-wrap items-center justify-center gap-2 mb-5">
                   <a href="#json-input-section" className="inline-flex items-center gap-1.5 px-3 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors">
                     Open JSON Viewer
@@ -910,7 +900,7 @@ function HomeClient() {
                   </Link>
                 </div>
                 <nav className="pt-5 border-t border-gray-200" aria-label="JSON tools navigation">
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Related tools</p>
+                  <p className="text-xs font-medium text-gray-600 uppercase tracking-wider mb-2">Related tools</p>
                   <ul className="flex flex-wrap justify-center gap-x-3 gap-y-1.5 text-sm">
                   <li><Link href="/tools/json" className="text-blue-600 hover:underline font-medium">All JSON tools</Link></li>
                   <li><Link href="/#json-input-section" className="text-blue-600 hover:underline">JSON viewer online</Link></li>

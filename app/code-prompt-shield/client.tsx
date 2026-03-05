@@ -285,11 +285,13 @@ export default function CodePromptShieldClient() {
           </h2>
           <div className="flex flex-wrap gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Language</label>
+              <label htmlFor="code-shield-language" className="block text-sm font-medium text-slate-700 mb-1">Language</label>
               <select
+                id="code-shield-language"
                 value={language}
                 onChange={(e) => setLanguage(e.target.value as LangId)}
                 className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+                aria-label="Source code language"
               >
                 {LANGUAGES.map((l) => (
                   <option key={l.id} value={l.id}>
