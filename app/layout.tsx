@@ -54,6 +54,23 @@ export const metadata: Metadata = {
     'json schema validation',
     'generate json schema',
     'validate json schema',
+    // Primary (high intent) — mask/sanitize before AI
+    'mask json before sending to ai',
+    'sanitize data before chatgpt',
+    'json masking tool online',
+    'sql schema masking ai',
+    'hide sensitive data from chatgpt',
+    // Secondary — developer tools
+    'online json formatter',
+    'jwt decoder online',
+    'log unpacker tool',
+    'unescape json logs',
+    'fix stringified json',
+    // Long-tail
+    'how to safely use chatgpt with production data',
+    'gdpr compliant ai tool for developers',
+    'mask pii before sending to llm',
+    'anonymize api response before ai',
     // AI safety & masking
     'ai schema masking',
     'json masking',
@@ -154,7 +171,7 @@ export default function RootLayout({
       price: '0',
       priceCurrency: 'USD',
     },
-    description: 'JSON Viewer Tools: view, format, validate, and convert JSON in your browser. Free formatter, parser, validator—no signup. Clear overview of services.',
+    description: 'Mask JSON and SQL before sending to AI. Sanitize data before ChatGPT—JSON masking, AI schema masking, log unpacker, JWT decoder. Fix stringified JSON, unescape logs. 100% browser-based; your data never reaches our servers. Free JSON formatter, parser, validator.',
     url: 'https://unblockdevs.com',
     aggregateRating: {
       '@type': 'AggregateRating',
@@ -162,30 +179,39 @@ export default function RootLayout({
       ratingCount: '2500',
     },
     featureList: [
-      'JSON Viewer Online',
-      'JSON Formatter Online',
-      'JSON Parser Online',
-      'JSON Beautifier Online',
-      'JSON Fixer & Repair Tool',
+      'Mask JSON before sending to AI',
+      'JSON masking tool online',
+      'SQL schema masking for AI',
+      'Sanitize data before ChatGPT',
+      'Log unpacker — unescape JSON logs',
+      'JWT decoder online',
+      'Fix stringified JSON',
+      'JSON Formatter & Parser',
       'JSON to Excel Converter',
-      'JSON to CSV Converter',
-      'JSON to Table Converter',
-      'JSON Beautifier & Minifier',
       'API Response Comparator',
       'JSON Schema Generator',
-      'Logs Analyzer',
-      'Payload Analyzer',
-      'Curl to Code Converter',
-      'Mock API Generator',
-      'Test Data Generator',
+      'Smart JSON Data Diff',
       'Config Comparator',
       'SQL Formatter',
+      '100% browser-based — no data stored',
     ],
     provider: {
       '@type': 'Organization',
       name: 'UnblockDevs',
       url: 'https://unblockdevs.com',
     },
+  };
+
+  const softwareAppSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'UnblockDevs',
+    applicationCategory: 'DeveloperApplication',
+    operatingSystem: 'Any',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    description: 'Free online tools to mask JSON and SQL before sending to AI, sanitize data before ChatGPT, fix stringified JSON, and unpack logs. GDPR-friendly; 100% client-side.',
+    url: 'https://unblockdevs.com',
+    featureList: ['JSON masking', 'AI schema masking', 'Log unpacker', 'JWT decoder', 'JSON formatter', 'No signup required'],
   };
 
   return (
@@ -392,6 +418,12 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(structuredData),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(softwareAppSchema),
           }}
         />
       </head>
