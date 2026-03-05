@@ -25,15 +25,17 @@ const nextConfig = {
       exclude: ['error', 'warn'],
     } : false,
   },
-  // Redirects configuration
+  // Redirects configuration (keyword URLs → tool pages for SEO)
   async redirects() {
     return [
-      // Permanent redirect from /lander to homepage (301 redirect for SEO)
       {
         source: '/lander',
         destination: '/',
-        permanent: true, // 301 redirect
+        permanent: true,
       },
+      { source: '/json-masking', destination: '/json-prompt-shield', permanent: true },
+      { source: '/sql-schema-masking', destination: '/ai-schema-masker', permanent: true },
+      { source: '/jwt-decoder', destination: '/token-comparator', permanent: true },
     ]
   },
   // Headers for better caching

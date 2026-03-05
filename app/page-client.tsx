@@ -805,6 +805,17 @@ function HomeClient() {
                 </ul>
               </section>
 
+              {/* How it works — E-E-A-T / trust */}
+              <section className="rounded-2xl border border-emerald-200/80 bg-emerald-50/60 p-5 sm:p-6" aria-labelledby="how-it-works-heading">
+                <h2 id="how-it-works-heading" className="text-sm font-semibold text-gray-800 uppercase tracking-wider mb-3">How it works</h2>
+                <p className="text-gray-700 text-sm leading-relaxed mb-3">
+                  All tools run <strong>entirely in your browser</strong>. Your JSON, SQL, and logs never leave your device — nothing is sent to our servers or stored. Paste your data, mask or format it, then copy the result. Use the output safely with ChatGPT or any AI without exposing real schemas or PII.
+                </p>
+                <p className="text-gray-600 text-xs leading-relaxed">
+                  Masking is deterministic and reversible: you can restore original names after getting AI responses. No signup, no account, no tracking.
+                </p>
+              </section>
+
               {/* Example JSON */}
               <section className="w-full" aria-label="Example JSON">
                 <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
