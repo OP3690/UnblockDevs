@@ -20,7 +20,7 @@ export default function HarToCurlClient() {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-gray-900">HAR to cURL Converter</h1>
-              <p className="text-sm text-gray-500 mt-1">Convert browser network requests to cURL commands instantly</p>
+              <p className="text-sm text-gray-500 mt-1">Convert network HAR files into reproducible API requests: cURL, Python, Go, Java, PHP, Ruby. Clean headers, mask secrets, timeline, batch script, AI debug prompt. 100% client-side.</p>
             </div>
           </div>
         </div>

@@ -4,22 +4,22 @@ import CodePromptShieldClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/code-prompt-shield';
 
 export const metadata: Metadata = {
-  title: 'Code Prompt Shield – Reversible Code Masking for AI | UnblockDevs',
+  title: 'Code Prompt Shield – Protect Your Code Before Sending to AI | UnblockDevs',
   description:
-    'Mask variables, function names, secrets, and PII in code before sending to AI. Deterministic, reversible, multi-language. Python, JavaScript, TypeScript, Java, Go, C#, PHP, Rust. 100% client-side.',
+    'Anonymize code for ChatGPT, Claude, Copilot. Mask variables, functions, secrets, database schema, and PII before sending to AI. Deterministic mapping, SQL/JSON support, risk score, .maskmap export. 100% client-side.',
   keywords: [
-    'code masking',
+    'anonymize code for ChatGPT',
+    'mask code before AI',
+    'protect secrets in AI prompts',
+    'AI prompt privacy tool',
     'code prompt shield',
-    'AI code privacy',
-    'reversible code mask',
     'mask code for AI',
-    'source code masker',
-    'multi-language code masking',
-    'client-side code masking',
+    'reversible code mask',
+    'protect code before sending to AI',
   ],
   openGraph: {
-    title: 'Code Prompt Shield – Reversible Code Masking for AI',
-    description: 'Mask identifiers, secrets, and PII in code. Send safe prompts to AI. Restore original code from AI response. Client-side only.',
+    title: 'Code Prompt Shield – Protect Your Code Before Sending to AI',
+    description: 'Mask identifiers, secrets, schema, and PII. Copy safe prompts for ChatGPT, Claude, Copilot. Restore AI response with original names. Client-side only.',
     type: 'website',
     url: canonicalUrl,
   },

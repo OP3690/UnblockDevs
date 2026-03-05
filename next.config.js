@@ -6,14 +6,6 @@ const nextConfig = {
     swcMinify: true,
     compress: true,
   }),
-  // Disable CSS optimization in development to prevent caching issues
-  ...(process.env.NODE_ENV === 'development' && {
-    webpack: (config) => {
-      // Force CSS to reload properly
-      config.cache = false;
-      return config;
-    },
-  }),
   // Optimize images
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -36,6 +28,8 @@ const nextConfig = {
       { source: '/json-masking', destination: '/json-prompt-shield', permanent: true },
       { source: '/sql-schema-masking', destination: '/ai-schema-masker', permanent: true },
       { source: '/jwt-decoder', destination: '/token-comparator', permanent: true },
+      { source: '/convert-list-to-sql-in', destination: '/sql-in-generator', permanent: true },
+      { source: '/comma-separated-list-to-sql', destination: '/sql-in-generator', permanent: true },
     ]
   },
   // Headers for better caching

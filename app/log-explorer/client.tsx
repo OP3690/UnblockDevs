@@ -17,8 +17,8 @@ export default function LogExplorerClient() {
             <ArrowLeft className="w-4 h-4" />
             Back to Tools
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Log Explorer - Analyze & Explore Logs Instantly</h1>
-          <p className="text-sm text-gray-500 mt-1">Parse, filter, search, and analyze log files with ease</p>
+          <h1 className="text-3xl font-bold text-gray-900">Log Explorer — Advanced Log Analysis Workbench</h1>
+          <p className="text-sm text-gray-500 mt-1">Analyze, search, decode, and visualize JSON, Node, Kubernetes, and CloudWatch logs. 100% client-side.</p>
         </div>
       </header>
 

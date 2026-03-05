@@ -2,21 +2,23 @@ import type { Metadata } from 'next';
 import JsonBeautifierClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Free JSON Beautifier Online - Format & Prettify JSON Instantly | UnblockDevs',
-  description: 'Beautify and format JSON instantly with our free online JSON beautifier. Prettify JSON with customizable indentation, syntax highlighting, and structure visualization. No signup required.',
+  title: 'JSON Beautifier Online - Developer JSON Workbench | Format, Validate, Fix | UnblockDevs',
+  description: 'Developer JSON workbench: format json, fix invalid JSON, tree view with JSONPath, TypeScript & SQL generator, sensitive data detection. JSON beautifier, formatter, validator, parser online. Free, no signup.',
   keywords: [
+    'json beautifier online',
+    'format json',
+    'json formatter tool',
+    'json validator online',
+    'json viewer',
+    'json parser tool',
     'json beautifier',
     'json formatter',
-    'format json online',
     'prettify json',
-    'json prettifier',
-    'beautify json online',
-    'json formatter online',
-    'json beautifier free'
+    'developer json toolkit',
   ],
   openGraph: {
-    title: 'Free JSON Beautifier Online - Format & Prettify JSON Instantly',
-    description: 'Beautify and format JSON instantly with our free online JSON beautifier. No signup required.',
+    title: 'JSON Beautifier Online - Developer JSON Workbench | UnblockDevs',
+    description: 'Format, validate, fix JSON. Tree view, JSONPath, TypeScript & SQL generator. JSON beautifier and workbench for developers.',
     type: 'website',
   },
   alternates: {

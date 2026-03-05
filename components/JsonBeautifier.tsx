@@ -1,10 +1,25 @@
 'use client';
 
-import { useState, useRef, useMemo } from 'react';
-import { Upload, FileText, X, Copy, Check, Download, ChevronRight, ChevronDown, Minus, Search, BarChart3, Code2, Eye, ExternalLink } from 'lucide-react';
+import { useState, useRef, useMemo, useEffect } from 'react';
+import { Upload, FileText, X, Copy, Check, Download, ChevronRight, ChevronDown, Minus, Search, BarChart3, Code2, Eye, ExternalLink, AlertTriangle, Wrench, Shield, GitCompare, Sparkles, Database, FileCode } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { validateJson } from '@/lib/jsonParser';
 import Link from 'next/link';
+import {
+  detectJsonErrorsAndFix,
+  getDuplicateKeys,
+  detectSensitiveInJson,
+  pathToJsonPath,
+  jsonToTypeScript,
+  jsonToSqlTable,
+  jsonToModel,
+  jsonToJsonSchema,
+  analyzeArray,
+  removeNoiseFields,
+  generateRandomJson,
+  type ArrayAnalysis,
+  type SensitiveMatch,
+} from '@/lib/jsonWorkbench';
 
 interface JsonNode {
   key: string;
@@ -34,10 +49,19 @@ export default function JsonBeautifier() {
   const [copied, setCopied] = useState(false);
   const [indentSize, setIndentSize] = useState(2);
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeTab, setActiveTab] = useState<'beautified' | 'minified' | 'structure'>('beautified');
+  const [activeTab, setActiveTab] = useState<'beautified' | 'minified' | 'structure' | 'generate'>('beautified');
   const [highlightNulls, setHighlightNulls] = useState(true);
   const [json2, setJson2] = useState('');
   const [diffMode, setDiffMode] = useState(false);
+  const [fixResult, setFixResult] = useState<{ errors: { line: number; message: string }[]; suggestedFix: string } | null>(null);
+  const [duplicateKeys, setDuplicateKeys] = useState<string[]>([]);
+  const [duplicateKeysExpanded, setDuplicateKeysExpanded] = useState(false);
+  const [duplicateKeysCopied, setDuplicateKeysCopied] = useState(false);
+  const [sensitiveMatches, setSensitiveMatches] = useState<SensitiveMatch[]>([]);
+  const [arrayAnalysis, setArrayAnalysis] = useState<ArrayAnalysis | null>(null);
+  const [generatedCode, setGeneratedCode] = useState('');
+  const [generateTab, setGenerateTab] = useState<'ts' | 'sql' | 'model' | 'schema'>('ts');
+  const [modelLang, setModelLang] = useState<'typescript' | 'python' | 'go' | 'java' | 'csharp'>('typescript');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const resultsSectionRef = useRef<HTMLDivElement>(null);
 
@@ -116,6 +140,13 @@ export default function JsonBeautifier() {
       setMinifiedJson('');
       setJsonStructure([]);
       setJsonStats(null);
+      setFixResult(() => {
+        const res = detectJsonErrorsAndFix(jsonString);
+        return { errors: res.errors, suggestedFix: res.suggestedFix };
+      });
+      setDuplicateKeys([]);
+      setSensitiveMatches([]);
+      setArrayAnalysis(null);
       toast.error('Invalid JSON format');
       return;
     }
@@ -125,16 +156,19 @@ export default function JsonBeautifier() {
       const indentStr = indent === 0 ? '\t' : ' '.repeat(indent);
       const beautified = JSON.stringify(parsed, null, indentStr);
       const minified = JSON.stringify(parsed);
-      
+
       setBeautifiedJson(beautified);
       setMinifiedJson(minified);
       setError(null);
+      setFixResult(null);
 
-      // Build structure tree
+      setDuplicateKeys(getDuplicateKeys(jsonString));
+      setSensitiveMatches(detectSensitiveInJson(parsed));
+      setArrayAnalysis(Array.isArray(parsed) ? analyzeArray(parsed) : null);
+
       const structure = buildStructure(parsed);
       setJsonStructure([structure]);
 
-      // Calculate statistics
       const stats = calculateStats(parsed);
       setJsonStats(stats);
 
@@ -148,6 +182,7 @@ export default function JsonBeautifier() {
       setMinifiedJson('');
       setJsonStructure([]);
       setJsonStats(null);
+      setFixResult(null);
       toast.error('Failed to beautify JSON');
     }
   };
@@ -195,12 +230,78 @@ export default function JsonBeautifier() {
     setJsonStructure([]);
     setJsonStats(null);
     setError(null);
+    setFixResult(null);
+    setDuplicateKeys([]);
+    setSensitiveMatches([]);
+    setArrayAnalysis(null);
     setFileName(null);
     setSearchTerm('');
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
   };
+
+  const applySuggestedFix = () => {
+    if (!fixResult?.suggestedFix) return;
+    setJsonText(fixResult.suggestedFix);
+    setFixResult(null);
+    setError(null);
+    beautifyJson(fixResult.suggestedFix, indentSize);
+    toast.success('Applied suggested fix');
+  };
+
+  const handleRemoveNoiseFields = () => {
+    const validation = validateJson(jsonText);
+    if (!validation.valid) {
+      toast.error('Valid JSON required');
+      return;
+    }
+    const cleaned = removeNoiseFields(validation.data);
+    const str = JSON.stringify(cleaned, null, indentSize === 0 ? '\t' : ' '.repeat(indentSize));
+    setJsonText(str);
+    beautifyJson(str, indentSize);
+    toast.success('Noise fields removed');
+  };
+
+  const handleGenerateSample = () => {
+    const count = 10;
+    const sample = generateRandomJson(count);
+    const str = JSON.stringify(sample, null, 2);
+    setJsonText(str);
+    beautifyJson(str, indentSize);
+    toast.success(`Generated ${count} sample objects`);
+  };
+
+  const copyJsonPath = (path: string) => {
+    const jpath = pathToJsonPath(path);
+    navigator.clipboard.writeText(jpath);
+    toast.success(`Copied ${jpath}`);
+  };
+
+  // Update generated code when tab or parsed data changes
+  const parsedForGenerate = useMemo(() => {
+    if (!beautifiedJson) return null;
+    try {
+      return JSON.parse(beautifiedJson);
+    } catch {
+      return null;
+    }
+  }, [beautifiedJson]);
+
+  useEffect(() => {
+    if (!parsedForGenerate || !beautifiedJson) {
+      setGeneratedCode('');
+      return;
+    }
+    try {
+      if (generateTab === 'ts') setGeneratedCode(jsonToTypeScript(parsedForGenerate, 'Root'));
+      else if (generateTab === 'sql') setGeneratedCode(jsonToSqlTable(parsedForGenerate, 'items'));
+      else if (generateTab === 'model') setGeneratedCode(jsonToModel(parsedForGenerate, modelLang, 'Model'));
+      else if (generateTab === 'schema') setGeneratedCode(JSON.stringify({ $schema: 'http://json-schema.org/draft-07/schema#', ...jsonToJsonSchema(parsedForGenerate) }, null, 2));
+    } catch {
+      setGeneratedCode('Unable to generate');
+    }
+  }, [parsedForGenerate, generateTab, modelLang, beautifiedJson]);
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -304,8 +405,17 @@ export default function JsonBeautifier() {
             </span>
           )}
           <span className="text-xs text-gray-400 ml-2 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-            ({node.path})
+            {pathToJsonPath(node.path)}
           </span>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); copyJsonPath(node.path); }}
+            className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-gray-200 text-gray-500 hover:text-gray-700"
+            title={`Copy ${pathToJsonPath(node.path)}`}
+            aria-label={`Copy JSONPath ${pathToJsonPath(node.path)}`}
+          >
+            <Copy className="w-3.5 h-3.5" />
+          </button>
         </div>
         {hasChildren && node.expanded && (
           <div className="ml-4">
@@ -321,10 +431,13 @@ export default function JsonBeautifier() {
       {/* Input Section */}
       <div className="bg-white rounded-lg shadow-lg p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-            <Code2 className="w-6 h-6 text-primary-600" />
-            JSON Beautifier
-          </h2>
+          <div>
+            <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+              <Code2 className="w-6 h-6 text-primary-600" />
+              Developer JSON Workbench
+            </h2>
+            <p className="text-sm text-gray-500 mt-0.5">Format, validate, fix, explore paths, generate TypeScript &amp; SQL — all in one</p>
+          </div>
           <div className="flex items-center gap-2">
             {fileName && (
               <span className="text-sm text-gray-600 flex items-center gap-1">
@@ -415,6 +528,51 @@ export default function JsonBeautifier() {
           </div>
         </div>
 
+        {fixResult && fixResult.errors.length > 0 && (
+          <div className="mb-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <AlertTriangle className="w-5 h-5 text-amber-600" />
+              <span className="font-semibold text-amber-800">Invalid JSON detected</span>
+            </div>
+            <ul className="list-disc list-inside text-sm text-amber-800 mb-3">
+              {fixResult.errors.map((e, i) => (
+                <li key={i}>{e.message}{e.line ? ` (line ${e.line})` : ''}</li>
+              ))}
+            </ul>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={applySuggestedFix}
+                className="inline-flex items-center gap-2 px-3 py-2 bg-amber-600 text-white text-sm font-medium rounded-lg hover:bg-amber-700"
+              >
+                <Wrench className="w-4 h-4" />
+                Apply suggested fix
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div className="flex flex-wrap gap-2 mb-4">
+          <button
+            type="button"
+            onClick={handleGenerateSample}
+            className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg"
+          >
+            <Sparkles className="w-4 h-4" />
+            Generate sample JSON
+          </button>
+          {beautifiedJson && (
+            <button
+              type="button"
+              onClick={handleRemoveNoiseFields}
+              className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg"
+              title="Remove timestamp, request_id, trace_id, session_id, etc."
+            >
+              Remove noise fields
+            </button>
+          )}
+        </div>
+
         <div className="flex flex-col sm:flex-row gap-3">
           <button
             onClick={() => beautifyJson(jsonText, indentSize)}
@@ -438,35 +596,130 @@ export default function JsonBeautifier() {
         </div>
       </div>
 
+      {/* Duplicate key warning */}
+      {duplicateKeys.length > 0 && (
+        <div className="rounded-xl border border-amber-200/80 bg-gradient-to-br from-amber-50 to-orange-50/50 shadow-sm overflow-hidden">
+          <div className="flex items-start justify-between gap-4 p-4 sm:p-5">
+            <div className="flex items-start gap-3 min-w-0">
+              <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center">
+                <AlertTriangle className="w-5 h-5 text-amber-600" aria-hidden />
+              </div>
+              <div className="min-w-0">
+                <h3 className="font-semibold text-amber-900 flex items-center gap-2 flex-wrap">
+                  {duplicateKeys.length} duplicate key{duplicateKeys.length !== 1 ? 's' : ''} found
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-amber-200/80 text-amber-800">
+                    JSON keeps last value only
+                  </span>
+                </h3>
+                <p className="text-sm text-amber-700/90 mt-1">
+                  These keys appear more than once in the same object. <code className="text-amber-800 bg-amber-100/80 px-1 rounded">JSON.parse</code> keeps only the last occurrence — earlier values are lost.
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                const list = duplicateKeys.join('\n');
+                navigator.clipboard.writeText(list);
+                setDuplicateKeysCopied(true);
+                toast.success('Key names copied');
+                setTimeout(() => setDuplicateKeysCopied(false), 2000);
+              }}
+              className="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg bg-amber-100 text-amber-800 hover:bg-amber-200 transition-colors"
+            >
+              {duplicateKeysCopied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+              {duplicateKeysCopied ? 'Copied' : 'Copy keys'}
+            </button>
+          </div>
+          <div className="px-4 sm:px-5 pb-4 pt-0">
+            <div className="flex flex-wrap gap-2">
+              {(duplicateKeysExpanded ? duplicateKeys : duplicateKeys.slice(0, 12)).map((key) => (
+                <span
+                  key={key}
+                  className="inline-flex items-center px-2.5 py-1 rounded-md text-sm font-mono bg-white/90 border border-amber-200/80 text-amber-900 shadow-sm"
+                >
+                  {key}
+                </span>
+              ))}
+              {duplicateKeys.length > 12 && (
+                <button
+                  type="button"
+                  onClick={() => setDuplicateKeysExpanded((e) => !e)}
+                  className="inline-flex items-center px-2.5 py-1 rounded-md text-sm font-medium text-amber-700 hover:text-amber-800 hover:bg-amber-100/80 transition-colors"
+                >
+                  {duplicateKeysExpanded ? 'Show less' : `+${duplicateKeys.length - 12} more`}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Sensitive data warning */}
+      {sensitiveMatches.length > 0 && (
+        <div className="bg-rose-50 border border-rose-200 rounded-lg p-4">
+          <div className="flex items-center gap-2 text-rose-800 font-medium mb-2">
+            <Shield className="w-5 h-5 flex-shrink-0" />
+            Sensitive data found
+          </div>
+          <ul className="text-sm text-rose-700 space-y-1 mb-3">
+            {sensitiveMatches.slice(0, 8).map((m, i) => (
+              <li key={i}><span className="font-mono">{m.path}</span>: {m.kind} — {m.value}</li>
+            ))}
+            {sensitiveMatches.length > 8 && <li>… and {sensitiveMatches.length - 8} more</li>}
+          </ul>
+          <Link
+            href="/ai-schema-masker"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-rose-700 hover:text-rose-800"
+          >
+            Mask before sending to AI →
+          </Link>
+        </div>
+      )}
+
+      {/* Array analyzer */}
+      {arrayAnalysis && (
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+          <h3 className="font-semibold text-slate-800 mb-2">Array analysis</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
+            <div><span className="text-slate-500">Length</span> <span className="font-medium">{arrayAnalysis.length}</span></div>
+            <div><span className="text-slate-500">Common keys</span> <span className="font-medium">{arrayAnalysis.commonKeys.join(', ') || '—'}</span></div>
+            <div><span className="text-slate-500">Unique keys</span> <span className="font-medium">{arrayAnalysis.uniqueKeys.length ? arrayAnalysis.uniqueKeys.join(', ') : 'none'}</span></div>
+          </div>
+        </div>
+      )}
+
       {/* Statistics */}
       {jsonStats && (
         <div ref={resultsSectionRef} className="bg-white rounded-lg shadow-lg p-6 scroll-mt-4">
           <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
             <BarChart3 className="w-5 h-5 text-primary-600" />
-            JSON Statistics
+            JSON key statistics
           </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             <div className="bg-blue-50 p-4 rounded-lg">
-              <div className="text-sm text-gray-600">Total Keys</div>
+              <div className="text-sm text-gray-600">Keys</div>
               <div className="text-2xl font-bold text-blue-600">{jsonStats.totalKeys}</div>
             </div>
             <div className="bg-green-50 p-4 rounded-lg">
-              <div className="text-sm text-gray-600">Total Values</div>
+              <div className="text-sm text-gray-600">Values</div>
               <div className="text-2xl font-bold text-green-600">{jsonStats.totalValues}</div>
             </div>
+            <div className="bg-indigo-50 p-4 rounded-lg">
+              <div className="text-sm text-gray-600">Objects</div>
+              <div className="text-2xl font-bold text-indigo-600">{jsonStats.types['object'] ?? 0}</div>
+            </div>
             <div className="bg-purple-50 p-4 rounded-lg">
-              <div className="text-sm text-gray-600">Max Depth</div>
-              <div className="text-2xl font-bold text-purple-600">{jsonStats.depth}</div>
+              <div className="text-sm text-gray-600">Arrays</div>
+              <div className="text-2xl font-bold text-purple-600">{jsonStats.types['array'] ?? 0}</div>
             </div>
             <div className="bg-orange-50 p-4 rounded-lg">
-              <div className="text-sm text-gray-600">Size</div>
-              <div className="text-2xl font-bold text-orange-600">
-                {(jsonStats.size / 1024).toFixed(2)} KB
-              </div>
+              <div className="text-sm text-gray-600">Depth / Size</div>
+              <div className="text-xl font-bold text-orange-600">{jsonStats.depth} / {(jsonStats.size / 1024).toFixed(2)} KB</div>
             </div>
           </div>
           <div className="mt-4">
-            <div className="text-sm font-semibold text-gray-700 mb-2">Data Types:</div>
+            <div className="text-sm font-semibold text-gray-700 mb-2">Data types</div>
             <div className="flex flex-wrap gap-2">
               {Object.entries(jsonStats.types).map(([type, count]) => (
                 <span
@@ -517,6 +770,17 @@ export default function JsonBeautifier() {
                   }`}
                 >
                   Structure
+                </button>
+                <button
+                  onClick={() => setActiveTab('generate')}
+                  className={`px-4 py-2 font-medium rounded-t-lg transition-colors ${
+                    activeTab === 'generate'
+                      ? 'bg-primary-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  <FileCode className="w-4 h-4 inline mr-1" />
+                  Generate
                 </button>
               </div>
               <div className="flex gap-2">
@@ -574,6 +838,15 @@ export default function JsonBeautifier() {
                     </button>
                   </>
                 )}
+                {activeTab === 'generate' && generatedCode && (
+                  <button
+                    onClick={() => { handleCopy(generatedCode); }}
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                  >
+                    <Copy className="w-4 h-4" />
+                    Copy
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -624,7 +897,7 @@ export default function JsonBeautifier() {
                   </div>
                 </div>
                 <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-                  <h4 className="font-semibold text-blue-900 mb-2">Legend:</h4>
+                  <h4 className="font-semibold text-blue-900 mb-2">Click a field → copy JSONPath (e.g. $.user.profile.name)</h4>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
                     <div><span className="text-purple-600 font-medium">string</span> - Text</div>
                     <div><span className="text-purple-600 font-medium">number</span> - Number</div>
@@ -636,9 +909,58 @@ export default function JsonBeautifier() {
                 </div>
               </div>
             )}
+
+            {activeTab === 'generate' && (
+              <div>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {(['ts', 'sql', 'model', 'schema'] as const).map((tab) => (
+                    <button
+                      key={tab}
+                      onClick={() => setGenerateTab(tab)}
+                      className={`px-3 py-1.5 text-sm font-medium rounded-lg ${
+                        generateTab === tab ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      {tab === 'ts' && 'TypeScript'}
+                      {tab === 'sql' && 'SQL table'}
+                      {tab === 'model' && 'API model'}
+                      {tab === 'schema' && 'JSON Schema'}
+                    </button>
+                  ))}
+                  {generateTab === 'model' && (
+                    <select
+                      value={modelLang}
+                      onChange={(e) => setModelLang(e.target.value as typeof modelLang)}
+                      className="ml-2 px-2 py-1.5 border border-gray-300 rounded-lg text-sm"
+                    >
+                      <option value="typescript">TypeScript</option>
+                      <option value="python">Python</option>
+                      <option value="go">Go</option>
+                      <option value="java">Java</option>
+                      <option value="csharp">C#</option>
+                    </select>
+                  )}
+                </div>
+                <pre className="bg-gray-50 p-4 rounded-lg border border-gray-200 overflow-x-auto text-sm font-mono whitespace-pre-wrap">
+                  <code>{generatedCode || 'Generate by beautifying JSON first.'}</code>
+                </pre>
+              </div>
+            )}
           </div>
         </div>
       )}
+
+      {/* Related tools */}
+      <div className="mt-6 flex flex-wrap gap-4 text-sm">
+        <Link href="/json-comparator" className="inline-flex items-center gap-1.5 text-primary-600 hover:text-primary-700 font-medium">
+          <GitCompare className="w-4 h-4" />
+          Compare two JSONs
+        </Link>
+        <Link href="/ai-schema-masker" className="inline-flex items-center gap-1.5 text-primary-600 hover:text-primary-700 font-medium">
+          <Shield className="w-4 h-4" />
+          Mask JSON before sending to AI
+        </Link>
+      </div>
 
       {/* Blog Links Section - Latest */}
       <div className="mt-12 bg-white rounded-xl shadow-lg p-8 border border-gray-200">

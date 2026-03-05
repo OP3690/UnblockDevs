@@ -17,8 +17,8 @@ export default function MockApiGeneratorClient() {
             <ArrowLeft className="w-4 h-4" />
             Back to Tools
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Mock API Generator - Generate Fake Endpoints Instantly</h1>
-          <p className="text-sm text-gray-500 mt-1">Create mock REST APIs with custom responses, delays, and status codes</p>
+          <h1 className="text-3xl font-bold text-gray-900">Mock API Generator – Create Fake REST APIs Instantly</h1>
+          <p className="text-sm text-gray-500 mt-1">Dynamic responses, auth simulation, latency, rate limiting, conditional rules. Export to Postman & OpenAPI.</p>
         </div>
       </header>
 

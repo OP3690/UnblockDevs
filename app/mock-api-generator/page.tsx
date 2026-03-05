@@ -2,21 +2,21 @@ import type { Metadata } from 'next';
 import MockApiGeneratorClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Free Mock API Generator Online - Generate Fake Endpoints Instantly | UnblockDevs',
-  description: 'Generate mock API endpoints instantly. Free online mock API generator tool to create fake REST APIs with custom responses, delays, and status codes. No backend needed. No signup required.',
+  title: 'Free Mock API Generator – Create Fake REST APIs Instantly | UnblockDevs',
+  description: 'Create mock REST APIs with dynamic responses, auth simulation, latency, rate limiting, and error scenarios. Export to Postman, OpenAPI. Template placeholders: uuid, name, email. No signup.',
   keywords: [
     'mock api generator',
-    'free mock api',
-    'mock api online',
-    'fake api generator',
+    'fake api',
     'mock rest api',
-    'mock endpoint generator',
-    'test api generator',
-    'mock api tool'
+    'generate test api',
+    'mock api online',
+    'fake rest api',
+    'postman mock',
+    'openapi mock',
   ],
   openGraph: {
-    title: 'Free Mock API Generator Online - Generate Fake Endpoints Instantly',
-    description: 'Generate mock API endpoints instantly. Free online mock API generator tool.',
+    title: 'Free Mock API Generator – Create Fake REST APIs Instantly',
+    description: 'Dynamic mock APIs with auth, rate limit, latency. Export Postman & OpenAPI.',
     type: 'website',
   },
   alternates: {

@@ -203,6 +203,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changefreq: 'weekly' as const,
     },
     {
+      url: 'sql-in-generator',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
       url: 'log-unpacker',
       priority: 0.9,
       changefreq: 'weekly' as const,

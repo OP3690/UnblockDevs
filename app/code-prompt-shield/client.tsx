@@ -13,6 +13,9 @@ import {
   Code2,
   ChevronDown,
   ChevronUp,
+  AlertTriangle,
+  MessageSquare,
+  FileJson,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -22,6 +25,8 @@ const LANGUAGES = [
   { id: 'python', name: 'Python' },
   { id: 'java', name: 'Java' },
   { id: 'go', name: 'Go' },
+  { id: 'sql', name: 'SQL' },
+  { id: 'json', name: 'JSON' },
   { id: 'csharp', name: 'C#' },
   { id: 'php', name: 'PHP' },
   { id: 'rust', name: 'Rust' },
@@ -43,20 +48,32 @@ const PYTHON_KEYWORDS = new Set([
   'raise', 'assert', 'global', 'nonlocal', 'async', 'await', 'match', 'case',
 ]);
 
+const SQL_KEYWORDS = new Set([
+  'select', 'from', 'where', 'join', 'inner', 'left', 'right', 'on', 'and', 'or', 'in', 'insert', 'into', 'values',
+  'update', 'set', 'delete', 'create', 'table', 'index', 'order', 'group', 'by', 'having', 'limit', 'offset',
+  'as', 'null', 'true', 'false', 'between', 'like', 'exists', 'union', 'all', 'distinct', 'asc', 'desc',
+  'primary', 'key', 'foreign', 'references', 'constraint', 'default', 'check', 'unique', 'drop', 'alter',
+]);
+
 const COMMON_KEYWORDS = new Set(['int', 'string', 'bool', 'void', 'null', 'true', 'false', 'new', 'return', 'import']);
 
 function getKeywords(lang: LangId): Set<string> {
   if (lang === 'python') return PYTHON_KEYWORDS;
   if (lang === 'javascript' || lang === 'typescript') return JS_TS_KEYWORDS;
+  if (lang === 'sql') return SQL_KEYWORDS;
+  if (lang === 'json') return new Set();
   return COMMON_KEYWORDS;
 }
 
-function simpleHash(str: string, seed = 0): string {
-  let h = seed;
-  for (let i = 0; i < str.length; i++) {
-    h = ((h << 5) - h + str.charCodeAt(i)) | 0;
+/** Deterministic hash: same input → same output (for consistent mapping across prompts). */
+function deterministicHash(str: string, prefix: string): string {
+  let h = 0;
+  const s = prefix + str;
+  for (let i = 0; i < s.length; i++) {
+    h = ((h << 5) - h + s.charCodeAt(i)) | 0;
   }
-  return Math.abs(h).toString(36).slice(0, 6);
+  const hex = Math.abs(h).toString(36).slice(0, 4);
+  return hex.toUpperCase().replace(/\d/g, (d) => String.fromCharCode(65 + parseInt(d, 10)));
 }
 
 export interface CodeShieldMapping {
@@ -75,6 +92,24 @@ const DEFAULT_EXAMPLE = `function getUserEmail(userId) {
   return fetchCustomerEmail(userId, apiKey);
 }`;
 
+/** Deterministic placeholder: same original + prefix → same masked token (consistent across sessions). */
+function ensureMask(
+  original: string,
+  prefix: string,
+  map: Record<string, string>,
+  reverseMap: Record<string, string>,
+  counterByPrefix: Record<string, number>
+): string {
+  if (reverseMap[original]) return reverseMap[original];
+  const n = (counterByPrefix[prefix] ?? 0) + 1;
+  counterByPrefix[prefix] = n;
+  const suffix = deterministicHash(original, prefix) + (n > 1 ? String(n) : '');
+  const masked = `${prefix}_${suffix}`;
+  map[masked] = original;
+  reverseMap[original] = masked;
+  return masked;
+}
+
 function maskCode(
   source: string,
   language: LangId,
@@ -83,64 +118,64 @@ function maskCode(
   const keywords = getKeywords(language);
   const map: Record<string, string> = {};
   const reverseMap: Record<string, string> = {};
-  let counter = 0;
-
-  const salt = `code-shield-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-
-  const ensureMask = (original: string, prefix: string): string => {
-    if (reverseMap[original]) return reverseMap[original];
-    const masked = `${prefix}_${simpleHash(original + salt)}${counter > 0 ? String(counter) : ''}`;
-    counter++;
-    map[masked] = original;
-    reverseMap[original] = masked;
-    return masked;
-  };
+  const counterByPrefix: Record<string, number> = {};
+  const ensure = (original: string, prefix: string) => ensureMask(original, prefix, map, reverseMap, counterByPrefix);
 
   let result = source;
 
-  if (options.maskSecrets || options.maskPII) {
-    const stringLiteralRegex = /(["'`])(?:(?!\1)[^\\]|\\.)*\1/g;
-    const secretPatterns = [
-      /api[_-]?key|secret|password|token|bearer|auth|credential|private[_-]?key|connection[_-]?string/i,
-      /postgres:\/\//i,
-      /mysql:\/\//i,
-      /mongodb(\+srv)?:\/\//i,
-      /sk-[a-zA-Z0-9]+|pk_[a-zA-Z0-9]+/i,
-    ];
-    const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
-    const piiPhone = /\b\d{3}[-.]?\d{3}[-.]?\d{4}\b/g;
+  const stringLiteralRegex = /(["'`])(?:(?!\1)[^\\]|\\.)*\1/g;
+  const secretPatterns = [
+    /api[_-]?key|secret|password|token|bearer|auth|credential|private[_-]?key|connection[_-]?string/i,
+    /postgres:\/\//i, /mysql:\/\//i, /mongodb(\+srv)?:\/\//i,
+    /sk-[a-zA-Z0-9]{20,}|pk_[a-zA-Z0-9]+/i,
+    /eyJ[A-Za-z0-9_-]+\.eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/i,
+    /AKIA[0-9A-Z]{16}/i,
+    /-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----/i,
+  ];
+  const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+  const piiPhone = /\b\d{3}[-.]?\d{3}[-.]?\d{4}\b/g;
+  const ipRegex = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/g;
 
+  if (options.maskSecrets || options.maskPII) {
     result = result.replace(stringLiteralRegex, (match) => {
       const inner = match.slice(1, -1);
       const unescaped = inner.replace(/\\'/g, "'").replace(/\\"/g, '"').replace(/\\`/g, '`');
-      if (options.maskPII && emailRegex.test(unescaped)) {
-        const masked = ensureMask(unescaped, 'PII');
-        return match[0] + masked + match[match.length - 1];
-      }
-      if (options.maskPII && piiPhone.test(unescaped)) {
-        const masked = ensureMask(unescaped, 'PII');
-        return match[0] + masked + match[match.length - 1];
-      }
-      if (options.maskSecrets && secretPatterns.some((p) => p.test(inner) || p.test(match))) {
-        const masked = ensureMask(unescaped, 'SECRET');
-        return match[0] + masked + match[match.length - 1];
-      }
+      if (options.maskPII && emailRegex.test(unescaped)) return match[0] + ensure(unescaped, 'PII') + match[match.length - 1];
+      if (options.maskPII && piiPhone.test(unescaped)) return match[0] + ensure(unescaped, 'PII') + match[match.length - 1];
+      if (options.maskPII && ipRegex.test(unescaped)) return match[0] + ensure(unescaped, 'PII') + match[match.length - 1];
+      if (options.maskSecrets && secretPatterns.some((p) => p.test(inner) || p.test(match))) return match[0] + ensure(unescaped, 'SECRET') + match[match.length - 1];
       return match;
     });
   }
 
-  if (options.maskIdentifiers) {
+  if (language === 'sql' && options.maskIdentifiers) {
+    const sqlKeywords = SQL_KEYWORDS;
+    result = result.replace(/\b(FROM|JOIN|INTO|UPDATE)\s+([a-zA-Z_][a-zA-Z0-9_]*)/gi, (_, kw, id) => {
+      if (sqlKeywords.has(id.toLowerCase())) return _;
+      return kw + ' ' + ensure(id, 'TABLE');
+    });
+    result = result.replace(/\b([a-zA-Z_][a-zA-Z0-9_]*)\b/g, (word) => {
+      if (reverseMap[word]) return reverseMap[word];
+      if (sqlKeywords.has(word.toLowerCase())) return word;
+      return ensure(word, 'COL');
+    });
+  } else if (language === 'json' && options.maskIdentifiers) {
+    result = result.replace(/"([^"\\]*(?:\\.[^"\\]*)*)"\s*:/g, (match, key) => {
+      const unescaped = key.replace(/\\"/g, '"');
+      if (/^\s*$/.test(unescaped)) return match;
+      return `"${ensure(unescaped, 'KEY')}" :`;
+    });
+  } else if (options.maskIdentifiers) {
     const identifierRegex = /\b([a-zA-Z_$][a-zA-Z0-9_$]*)\b/g;
     result = result.replace(identifierRegex, (word) => {
       if (keywords.has(word)) return word;
       if (reverseMap[word]) return reverseMap[word];
-      const masked = ensureMask(word, 'VAR');
-      return masked;
+      return ensure(word, 'VAR');
     });
   }
 
   const mapping: CodeShieldMapping = {
-    version: '1.0',
+    version: '2.0',
     language,
     createdAt: new Date().toISOString(),
     maskIdentifiers: options.maskIdentifiers,
@@ -151,6 +186,34 @@ function maskCode(
   };
 
   return { masked: result, mapping };
+}
+
+export type RiskItem = { type: string; label: string };
+export function analyzePromptRisk(source: string): { score: number; risks: RiskItem[] } {
+  const risks: RiskItem[] = [];
+  const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+  const phoneRegex = /\b\d{3}[-.]?\d{3}[-.]?\d{4}\b/g;
+  const ipRegex = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/g;
+  const jwtRegex = /eyJ[A-Za-z0-9_-]+\.eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/gi;
+  const apiKeyRegex = /(?:api[_-]?key|secret|password|token|bearer)\s*[:=]\s*["']?[a-zA-Z0-9_\-]{20,}/gi;
+  const connStrRegex = /(postgres|mysql|mongodb)(\+srv)?:\/\/[^\s'"]+/gi;
+  const stripeRegex = /sk-[a-zA-Z0-9]{20,}|pk_[a-zA-Z0-9]+/gi;
+  if (emailRegex.test(source)) risks.push({ type: 'pii', label: 'Email addresses detected' });
+  if (phoneRegex.test(source)) risks.push({ type: 'pii', label: 'Phone numbers detected' });
+  if (ipRegex.test(source)) risks.push({ type: 'pii', label: 'IP addresses detected' });
+  if (jwtRegex.test(source)) risks.push({ type: 'secret', label: 'JWT tokens detected' });
+  if (apiKeyRegex.test(source)) risks.push({ type: 'secret', label: 'API keys / secrets detected' });
+  if (connStrRegex.test(source)) risks.push({ type: 'secret', label: 'Database connection strings detected' });
+  if (stripeRegex.test(source)) risks.push({ type: 'secret', label: 'Stripe keys detected' });
+  if (/\b(FROM|JOIN|INTO|UPDATE)\s+[a-zA-Z_][a-zA-Z0-9_]*/i.test(source) && /\b(SELECT|WHERE|SET)\s+[a-zA-Z_][a-zA-Z0-9_]*/i.test(source)) risks.push({ type: 'schema', label: 'Database schema (tables/columns) detected' });
+  const score = Math.max(0, 100 - risks.length * 18);
+  return { score, risks };
+}
+
+export function detectSensitiveFile(source: string): boolean {
+  const lines = source.split(/\r?\n/).slice(0, 20);
+  const envLike = lines.filter((l) => /^\s*[A-Z_][A-Z0-9_]*\s*=\s*.+/.test(l) || /^\s*["']?[a-z_]+["']?\s*:\s*["']?.+["']?\s*,?\s*$/.test(l)).length;
+  return envLike >= 2 || /\b(api_key|secret|password|token)\s*[:=]/i.test(source.slice(0, 500));
 }
 
 function restoreCode(maskedCode: string, mapping: CodeShieldMapping): string {
@@ -178,6 +241,11 @@ export default function CodePromptShieldClient() {
   const [aiResponse, setAiResponse] = useState('');
   const [restoredCode, setRestoredCode] = useState('');
   const [showMapping, setShowMapping] = useState(false);
+  const [diffView, setDiffView] = useState<'original' | 'masked'>('masked');
+  const [addTemplate, setAddTemplate] = useState(false);
+  const [riskResult, setRiskResult] = useState<{ score: number; risks: RiskItem[] } | null>(null);
+
+  const sensitiveWarning = detectSensitiveFile(sourceCode);
 
   const handleMask = useCallback(() => {
     if (!sourceCode.trim()) {
@@ -192,6 +260,7 @@ export default function CodePromptShieldClient() {
     setMaskedCode(masked);
     setMapping(m);
     setShowMapping(true);
+    setRiskResult(analyzePromptRisk(sourceCode));
     toast.success(`Masked ${Object.keys(m.map).length} tokens`);
   }, [sourceCode, language, maskIdentifiers, maskSecrets, maskPII]);
 
@@ -205,6 +274,8 @@ export default function CodePromptShieldClient() {
     toast.success('Code restored');
   }, [mapping, aiResponse]);
 
+  const PROMPT_TEMPLATE = 'I am sharing masked code where identifiers are replaced with placeholders. Please provide logic improvements without renaming variables. Use the same placeholder names in your response.\n\n';
+
   const copyMasked = async () => {
     if (!maskedCode) return;
     try {
@@ -215,17 +286,28 @@ export default function CodePromptShieldClient() {
     }
   };
 
-  const downloadMapping = () => {
+  const copyForAI = async (tool: 'chatgpt' | 'claude' | 'copilot') => {
+    if (!maskedCode) return;
+    const text = addTemplate ? PROMPT_TEMPLATE + maskedCode : maskedCode;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success(`Copied for ${tool === 'chatgpt' ? 'ChatGPT' : tool === 'claude' ? 'Claude' : 'Copilot'}`);
+    } catch {
+      toast.error('Copy failed');
+    }
+  };
+
+  const downloadMapping = (ext: 'json' | 'maskmap' = 'json') => {
     if (!mapping) return;
     try {
       const blob = new Blob([JSON.stringify(mapping, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `code-shield-mapping-${Date.now()}.json`;
+      a.download = ext === 'maskmap' ? `code-shield.maskmap` : `code-shield-mapping-${Date.now()}.json`;
       a.click();
       URL.revokeObjectURL(url);
-      toast.success('Mapping downloaded');
+      toast.success(ext === 'maskmap' ? 'Downloaded .maskmap' : 'Mapping downloaded');
     } catch {
       toast.error('Download failed');
     }
@@ -278,6 +360,16 @@ export default function CodePromptShieldClient() {
       </header>
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+        {sensitiveWarning && (
+          <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-50 border border-amber-200">
+            <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" aria-hidden />
+            <div>
+              <p className="text-sm font-semibold text-amber-900">Sensitive config detected</p>
+              <p className="text-sm text-amber-800 mt-0.5">This looks like .env or config with secrets. Mask before sending to AI.</p>
+            </div>
+          </div>
+        )}
+
         <section className="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 ring-1 ring-slate-900/5">
           <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2 mb-4">
             <Code2 className="w-5 h-5 text-slate-500" aria-hidden />
@@ -359,38 +451,64 @@ export default function CodePromptShieldClient() {
 
         {maskedCode && (
           <section className="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 ring-1 ring-slate-900/5">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-slate-800">Masked code</h2>
-              <div className="flex items-center gap-2">
+            {riskResult && (
+              <div className={`mb-4 p-4 rounded-xl border ${riskResult.risks.length > 0 ? 'bg-amber-50 border-amber-200' : 'bg-emerald-50 border-emerald-200'}`}>
+                <p className="text-sm font-semibold text-slate-800">
+                  Prompt safety score: <span className={riskResult.risks.length > 0 ? 'text-amber-700' : 'text-emerald-700'}>{riskResult.score}%</span>
+                </p>
+                {riskResult.risks.length > 0 && (
+                  <ul className="mt-2 text-sm text-slate-700 list-disc list-inside space-y-0.5">
+                    {riskResult.risks.map((r) => (
+                      <li key={r.label}>{r.label}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )}
+
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+              <h2 className="text-lg font-semibold text-slate-800">What AI sees</h2>
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="text-xs font-medium text-slate-500">{mapCount} tokens masked</span>
-                <button
-                  type="button"
-                  onClick={copyMasked}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
-                >
-                  <Copy className="w-4 h-4" aria-hidden />
-                  Copy
+                <div className="flex gap-1">
+                  <button type="button" onClick={() => copyForAI('chatgpt')} className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium bg-slate-100 hover:bg-slate-200 rounded-lg" title="Copy safe prompt for ChatGPT">ChatGPT</button>
+                  <button type="button" onClick={() => copyForAI('claude')} className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium bg-slate-100 hover:bg-slate-200 rounded-lg" title="Copy for Claude">Claude</button>
+                  <button type="button" onClick={() => copyForAI('copilot')} className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium bg-slate-100 hover:bg-slate-200 rounded-lg" title="Copy for Copilot">Copilot</button>
+                </div>
+                <button type="button" onClick={copyMasked} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg">
+                  <Copy className="w-4 h-4" aria-hidden /> Copy
                 </button>
-                <button
-                  type="button"
-                  onClick={downloadMapping}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
-                >
-                  <Download className="w-4 h-4" aria-hidden />
-                  Download mapping
+                <button type="button" onClick={() => downloadMapping('maskmap')} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg" title="Download .maskmap (open mapping format)">
+                  <FileJson className="w-4 h-4" aria-hidden /> .maskmap
                 </button>
-                <label className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors cursor-pointer">
-                  <Upload className="w-4 h-4" aria-hidden />
-                  Load mapping
-                  <input type="file" accept=".json" onChange={loadMappingFile} className="sr-only" />
+                <button type="button" onClick={() => downloadMapping('json')} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg">
+                  <Download className="w-4 h-4" aria-hidden /> Mapping
+                </button>
+                <label className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg cursor-pointer">
+                  <Upload className="w-4 h-4" aria-hidden /> Load mapping
+                  <input type="file" accept=".json,.maskmap" onChange={loadMappingFile} className="sr-only" />
                 </label>
               </div>
             </div>
+
+            <label className="flex items-center gap-2 text-sm text-slate-600 mb-3">
+              <input type="checkbox" checked={addTemplate} onChange={(e) => setAddTemplate(e.target.checked)} className="rounded border-slate-300 text-primary-600" />
+              Add instruction: &quot;I am sharing masked code...&quot; when copying for AI
+            </label>
+
+            <div className="mb-3 flex gap-2 border-b border-slate-200">
+              <button type="button" onClick={() => setDiffView('original')} className={`px-3 py-2 text-sm font-medium rounded-t-lg transition-colors ${diffView === 'original' ? 'bg-slate-100 text-slate-900 border border-slate-200 border-b-0 -mb-px' : 'text-slate-500 hover:text-slate-700'}`}>
+                Original code
+              </button>
+              <button type="button" onClick={() => setDiffView('masked')} className={`px-3 py-2 text-sm font-medium rounded-t-lg transition-colors ${diffView === 'masked' ? 'bg-slate-100 text-slate-900 border border-slate-200 border-b-0 -mb-px' : 'text-slate-500 hover:text-slate-700'}`}>
+                Masked (what AI sees)
+              </button>
+            </div>
             <textarea
               readOnly
-              value={maskedCode}
+              value={diffView === 'original' ? sourceCode : maskedCode}
               className="w-full h-40 p-4 font-mono text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl resize-y"
-              aria-label="Masked code"
+              aria-label={diffView === 'original' ? 'Original code' : 'Masked code'}
             />
             {mapping && (
               <div className="mt-4">

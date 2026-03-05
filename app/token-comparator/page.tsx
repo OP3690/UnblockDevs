@@ -3,25 +3,24 @@ import Link from 'next/link';
 import TokenComparatorLandingClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Free Token Comparator – Compare JWT, API Keys & Tokens | UnblockDevs',
-  description: 'UnblockDevs Token Comparator: Compare JWT tokens, API keys, and authentication tokens character by character. Free online token comparator with visual diff highlighting. No signup, 100% private, works in your browser.',
+  title: 'Token Comparator & JWT Debugger – Compare, Decode, Analyze Tokens | UnblockDevs',
+  description: 'Compare JWT tokens character-by-character, decode header and payload, run security audit, view token lifetime and entropy. JWT debugger, token analyzer, API key checker. 100% client-side.',
   keywords: [
-    'unblock devs token',
-    'unblockdevs token',
-    'token comparator',
-    'jwt token comparator',
-    'compare tokens',
-    'api key comparator',
-    'token diff',
+    'jwt debugger',
+    'jwt decoder',
+    'jwt token analyzer',
+    'jwt security checker',
     'compare jwt tokens',
-    'authentication token comparator',
-    'token verification',
-    'token comparison tool',
-    'compare api keys'
+    'token comparator',
+    'api token checker',
+    'jwt expiration checker',
+    'decode jwt',
+    'token analyzer',
+    'jwt decoder online',
   ],
   openGraph: {
-    title: 'UnblockDevs Token Comparator – Compare JWT, API Keys & Tokens',
-    description: 'UnblockDevs Token Comparator: Compare JWT tokens, API keys, and authentication tokens character by character. Free online token comparator with visual diff highlighting.',
+    title: 'Token Comparator & JWT Security Analyzer | UnblockDevs',
+    description: 'Compare, decode, and analyze JWT and auth tokens. Smart detection, security audit, lifetime view. 100% client-side.',
     type: 'website',
     url: 'https://unblockdevs.com/token-comparator',
   },
@@ -67,13 +66,13 @@ export default function TokenComparatorLanding() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4" aria-labelledby="token-comp-heading">
         <h1 id="token-comp-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
-          JWT Decoder & Token Comparator — Compare and Inspect Tokens in Your Browser
+          Token Comparator & JWT Security Analyzer
         </h1>
         <p className="text-gray-700 text-base leading-relaxed mb-3">
-          Decode JWTs and compare tokens, API keys, or any authentication strings side by side with a visual diff. All processing happens in your browser—nothing is sent to our servers. Free, no signup, 100% private.
+          Compare, decode, and analyze authentication tokens in your browser. Smart token detection (JWT, API key, UUID, Base64), JWT debugger, security audit, token lifetime, and entropy analysis. All processing is client-side—nothing is sent to our servers.
         </p>
         <p className="text-gray-600 text-sm leading-relaxed mb-4">
-          How it works: Paste one or two tokens (JWT, API key, or generic string). View decoded payloads and a character-by-character comparison. Use it to verify tokens or debug auth issues without exposing secrets.
+          Paste one token to decode and analyze; paste two to compare character-by-character with visual diff. Perfect for jwt debugger, jwt decoder, token comparison, and jwt expiration check.
         </p>
         <Link href="#tool" className="inline-block text-sm font-semibold text-blue-600 hover:text-blue-700">
           Use the tool →

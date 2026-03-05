@@ -538,24 +538,26 @@ function HomeClient() {
                     <span className="text-lg sm:text-xl font-bold tracking-tight text-gray-900 group-hover:text-primary-700 transition-colors leading-tight" style={{ letterSpacing: '-0.02em' }}>UnblockDevs</span>
                   </Link>
                   <span className="text-gray-300 font-medium shrink-0 hidden sm:inline" aria-hidden>|</span>
-                  <div className="flex items-center gap-2 flex-shrink-0 dev-mode-toggle-container">
-                    <span className="text-xs font-medium text-gray-600 whitespace-nowrap">Mode</span>
+                  <div className="flex items-center gap-2 flex-shrink-0 dev-mode-toggle-container px-2 py-1 rounded-md bg-gray-100/80 border border-gray-200/80">
+                    <span className="text-[11px] font-medium text-gray-500 whitespace-nowrap">Mode</span>
                     <button
                       type="button"
                       onClick={() => setDevMode(!devMode)}
-                      className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-1 ${
-                        devMode ? 'bg-emerald-500' : 'bg-gray-200'
+                      className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-1 focus:ring-offset-gray-100 ${
+                        devMode
+                          ? 'bg-emerald-500 hover:bg-emerald-600'
+                          : 'bg-gray-300 hover:bg-gray-400'
                       }`}
                       aria-label={devMode ? 'Switch to Light mode' : 'Switch to Dev mode'}
                       aria-pressed={devMode}
                     >
                       <span
-                        className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition ${
-                          devMode ? 'translate-x-4' : 'translate-x-0.5'
+                        className={`absolute top-0.5 left-0.5 inline-block h-4 w-4 rounded-full bg-white shadow transform transition-transform duration-200 ${
+                          devMode ? 'translate-x-4' : 'translate-x-0'
                         }`}
                       />
                     </button>
-                    <span className={`min-w-[3.25rem] text-xs font-semibold whitespace-nowrap ${devMode ? 'text-emerald-600' : 'text-gray-600'}`}>
+                    <span className={`min-w-[2.5rem] text-[11px] font-semibold whitespace-nowrap tabular-nums ${devMode ? 'text-emerald-700' : 'text-gray-700'}`}>
                       {devMode ? 'Dev' : 'Light'}
                     </span>
                   </div>
@@ -602,7 +604,6 @@ function HomeClient() {
             </div>
             <div id="ezoic-pub-ad-placeholder-100" className="hidden lg:block flex-1 min-w-0" />
             <nav className="flex items-center justify-end gap-2 sm:gap-3 flex-shrink-0" aria-label="Main navigation">
-              <div className="hidden"><ins className="adsbygoogle" style={{ display: 'block', minWidth: '300px', minHeight: '100px' }} data-ad-client="ca-pub-6349841658473646" data-ad-slot="HEADER_AD_SLOT" data-ad-format="auto" data-full-width-responsive="false" /></div>
               <Link href="/blog" className="px-4 py-2.5 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-lg shadow-pro hover:shadow-pro-md transition-all duration-200" aria-label="Developer's Study Materials">
                 <FileText className="h-4 w-4 sm:hidden" aria-hidden />
                 <span className="hidden sm:inline">Developer's Study Materials 📚</span>

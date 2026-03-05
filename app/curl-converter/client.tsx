@@ -10,19 +10,19 @@ const CurlConverter = dynamic(() => import('@/components/tools/CurlConverter'), 
 
 export default function CurlConverterClient() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
+    <div className="curl-converter-root min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
       <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="curl-converter-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <Link href="/" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
             <ArrowLeft className="w-4 h-4" />
             Back to Tools
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">cURL Converter - Convert cURL to Code Instantly</h1>
-          <p className="text-sm text-gray-500 mt-1">Transform cURL commands into JavaScript, Python, Java, and more</p>
+          <h1 className="text-3xl font-bold text-gray-900">cURL Converter – Convert cURL to Production-Ready Code</h1>
+          <p className="text-sm text-gray-500 mt-1">JavaScript (Fetch/Axios), Python (Requests/HTTPX), Go, Java, PHP, C#, Rust. Export to Postman & OpenAPI. 100% local.</p>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="curl-converter-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Tool Component */}
         <div className="mb-8">
           <CurlConverter />

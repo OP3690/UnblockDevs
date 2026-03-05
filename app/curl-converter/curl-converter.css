@@ -1,0 +1,67 @@
+/* Safety net so curl-converter page has base styles even if Tailwind fails to apply */
+.curl-converter-root {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #f8fafc, #eff6ff, #eef2ff);
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+.curl-converter-root header {
+  background: #fff;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+  border-bottom: 1px solid #e5e7eb;
+}
+.curl-converter-root .curl-converter-container {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1.5rem 1rem;
+}
+@media (min-width: 640px) {
+  .curl-converter-root .curl-converter-container {
+    padding: 2rem 1.5rem;
+  }
+}
+.curl-converter-root .curl-converter-card {
+  background: #fff;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+}
+.curl-converter-root .curl-converter-card-header {
+  background: linear-gradient(to right, #334155, #1e293b);
+  padding: 1.25rem 1.5rem;
+  color: #fff;
+}
+.curl-converter-root input,
+.curl-converter-root select,
+.curl-converter-root textarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+}
+.curl-converter-root button.curl-converter-btn-primary {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: #334155;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+}
+.curl-converter-root button.curl-converter-btn-primary:hover:not(:disabled) {
+  background: #1e293b;
+}
+.curl-converter-root button.curl-converter-btn-primary:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+}
+.curl-converter-root a.curl-converter-link {
+  color: #0369a1;
+  text-decoration: none;
+}
+.curl-converter-root a.curl-converter-link:hover {
+  text-decoration: underline;
+}

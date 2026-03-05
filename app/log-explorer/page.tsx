@@ -2,22 +2,24 @@ import type { Metadata } from 'next';
 import LogExplorerClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Free Log Explorer Online - Analyze & Explore Logs Instantly | UnblockDevs',
-  description: 'Explore and analyze log files instantly. Free online log explorer tool to parse, filter, search, and analyze structured and unstructured logs. No signup required.',
+  title: 'Log Explorer — Advanced Log Analysis Workbench | JSON, Kubernetes, CloudWatch | UnblockDevs',
+  description: 'Analyze, search, decode, and visualize logs in the browser. JSON logs, Kubernetes, CloudWatch, stack traces. Timeline, error analyzer, JWT detection, AI-safe sanitizer. 100% client-side.',
   keywords: [
-    'log explorer',
     'log analyzer',
-    'log parser',
+    'json log viewer',
+    'log parser online',
+    'debug log viewer',
     'analyze logs online',
-    'log file explorer',
+    'cloudwatch log parser',
+    'kubernetes log viewer',
+    'log explorer',
     'structured log analysis',
-    'log viewer',
-    'log search tool'
   ],
   openGraph: {
-    title: 'Free Log Explorer Online - Analyze & Explore Logs Instantly',
-    description: 'Explore and analyze log files instantly. Free online log explorer tool.',
+    title: 'Log Explorer — Advanced Log Analysis Workbench | UnblockDevs',
+    description: 'Analyze, search, and visualize logs 100% client-side. Timeline, filters, error analyzer, JWT detection, AI-safe export.',
     type: 'website',
+    url: 'https://unblockdevs.com/log-explorer',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/log-explorer',

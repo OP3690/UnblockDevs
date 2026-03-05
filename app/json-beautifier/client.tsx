@@ -15,8 +15,8 @@ export default function JsonBeautifierClient() {
             <ArrowLeft className="w-4 h-4" />
             Back to Tools
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">JSON Beautifier - Free Online Formatting Tool</h1>
-          <p className="text-sm text-gray-500 mt-1">Beautify, format, and visualize JSON structure instantly</p>
+          <h1 className="text-3xl font-bold text-gray-900">Developer JSON Workbench</h1>
+          <p className="text-sm text-gray-500 mt-1">Format, validate, fix, explore paths, generate TypeScript &amp; SQL — all in one</p>
         </div>
       </header>
 

@@ -19,8 +19,8 @@ export default function TokenComparatorLandingClient() {
               <Key className="w-6 h-6 text-purple-600" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Token Comparator</h1>
-              <p className="text-sm text-gray-500 mt-1">Compare Tokens Character by Character - 100% Client-Side</p>
+              <h1 className="text-3xl font-bold text-gray-900">Token Comparator & JWT Security Analyzer</h1>
+              <p className="text-sm text-gray-500 mt-1">Compare, decode, and analyze JWT tokens, API keys, and auth tokens. Smart detection, security audit, lifetime view. 100% client-side.</p>
             </div>
           </div>
         </div>
