@@ -454,6 +454,7 @@ export default function JsonBeautifier() {
               </span>
             )}
             <button
+              type="button"
               onClick={handleClear}
               className="px-3 py-1.5 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-colors"
               title="Clear all"
@@ -575,6 +576,7 @@ export default function JsonBeautifier() {
 
         <div className="flex flex-col sm:flex-row gap-3">
           <button
+            type="button"
             onClick={() => beautifyJson(jsonText, indentSize)}
             disabled={!jsonText.trim()}
             className="flex-1 py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors shadow-md hover:shadow-lg"
@@ -741,6 +743,7 @@ export default function JsonBeautifier() {
             <div className="flex items-center justify-between px-6 pt-4">
               <div className="flex gap-2">
                 <button
+                  type="button"
                   onClick={() => setActiveTab('beautified')}
                   className={`px-4 py-2 font-medium rounded-t-lg transition-colors ${
                     activeTab === 'beautified'
@@ -751,6 +754,7 @@ export default function JsonBeautifier() {
                   Beautified
                 </button>
                 <button
+                  type="button"
                   onClick={() => setActiveTab('minified')}
                   className={`px-4 py-2 font-medium rounded-t-lg transition-colors ${
                     activeTab === 'minified'
@@ -762,6 +766,7 @@ export default function JsonBeautifier() {
                   Minified
                 </button>
                 <button
+                  type="button"
                   onClick={() => setActiveTab('structure')}
                   className={`px-4 py-2 font-medium rounded-t-lg transition-colors ${
                     activeTab === 'structure'
@@ -772,6 +777,7 @@ export default function JsonBeautifier() {
                   Structure
                 </button>
                 <button
+                  type="button"
                   onClick={() => setActiveTab('generate')}
                   className={`px-4 py-2 font-medium rounded-t-lg transition-colors ${
                     activeTab === 'generate'
@@ -787,6 +793,7 @@ export default function JsonBeautifier() {
                 {activeTab === 'beautified' && beautifiedJson && (
                   <>
                     <button
+                      type="button"
                       onClick={() => handleCopy(beautifiedJson)}
                       className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
                     >
@@ -803,6 +810,7 @@ export default function JsonBeautifier() {
                       )}
                     </button>
                     <button
+                      type="button"
                       onClick={() => handleDownload(beautifiedJson, 'beautified')}
                       className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
                     >
@@ -814,6 +822,7 @@ export default function JsonBeautifier() {
                 {activeTab === 'minified' && minifiedJson && (
                   <>
                     <button
+                      type="button"
                       onClick={() => handleCopy(minifiedJson)}
                       className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
                     >
@@ -830,6 +839,7 @@ export default function JsonBeautifier() {
                       )}
                     </button>
                     <button
+                      type="button"
                       onClick={() => handleDownload(minifiedJson, 'minified')}
                       className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
                     >
@@ -840,6 +850,7 @@ export default function JsonBeautifier() {
                 )}
                 {activeTab === 'generate' && generatedCode && (
                   <button
+                    type="button"
                     onClick={() => { handleCopy(generatedCode); }}
                     className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
                   >
@@ -916,6 +927,7 @@ export default function JsonBeautifier() {
                   {(['ts', 'sql', 'model', 'schema'] as const).map((tab) => (
                     <button
                       key={tab}
+                      type="button"
                       onClick={() => setGenerateTab(tab)}
                       className={`px-3 py-1.5 text-sm font-medium rounded-lg ${
                         generateTab === tab ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'

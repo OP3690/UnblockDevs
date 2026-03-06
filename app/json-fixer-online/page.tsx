@@ -2,17 +2,17 @@ import type { Metadata } from 'next';
 import JsonFixerOnlineClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Free JSON Fixer & Repair Tool – Fix Broken JSON Instantly | UnblockDevs',
-  description: 'Fix broken JSON and repair syntax errors automatically. Free online JSON fixer with smart error detection. No signup, no login, 100% private. Works entirely in your browser.',
+  title: 'Advanced JSON Fixer & Repair Tool – Recover Truncated, Logs, AI Output | UnblockDevs',
+  description: 'Repair malformed JSON, recover truncated payloads, extract JSON from logs, fix AI/API output. Smart error detection, duplicate key fix, stats. 100% client-side.',
   keywords: [
     'json fixer online',
-    'json fixer online free',
-    'fix json online',
+    'advanced json fixer',
+    'repair json',
+    'fix invalid json',
     'json repair tool',
-    'fix broken json',
-    'json error fixer',
     'json syntax fixer',
-    'repair json online'
+    'fix json from api error',
+    'extract json from logs',
   ],
 };
 

@@ -65,7 +65,7 @@ export default function CurlConverter() {
     const p = parseCurl(curlCommand);
     if (!p || !p.url) {
       toast.error('Could not parse cURL command. Check the URL.');
-      return;
+        return;
     }
     setParsed(p);
     const code = convertToLanguage(p, targetLanguage);
@@ -132,7 +132,7 @@ export default function CurlConverter() {
       {/* Privacy banner */}
       <div className="rounded-lg border border-emerald-200 bg-emerald-50/80 px-4 py-3 flex items-start gap-3">
         <Lock className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-        <div>
+          <div>
           <p className="font-medium text-emerald-900">All processing happens locally in your browser.</p>
           <p className="text-sm text-emerald-800 mt-0.5">Your API keys or requests are never sent to any server.</p>
         </div>
@@ -143,34 +143,34 @@ export default function CurlConverter() {
           <h2 className="text-2xl font-bold flex items-center gap-2">
             <Code className="w-7 h-7" />
             cURL to Code Converter
-          </h2>
+            </h2>
           <p className="text-slate-200 text-sm mt-1">
             Convert cURL to production-ready code in JavaScript (Fetch/Axios), Python (Requests/HTTPX), Go, Java, PHP, C#, Rust. Export to Postman & OpenAPI.
           </p>
         </div>
 
         <div className="p-6 space-y-6">
-          {showExamples && (
+        {showExamples && (
             <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
               <h3 className="font-semibold text-gray-900 mb-2">Example cURL commands</h3>
-              <div className="space-y-2">
+            <div className="space-y-2">
                 {EXAMPLE_CURLS.map((ex, i) => (
-                  <button
+                <button
                     key={i}
                     type="button"
-                    onClick={() => {
+                  onClick={() => {
                       setCurlCommand(ex.command);
-                      setShowExamples(false);
-                    }}
+                    setShowExamples(false);
+                  }}
                     className="block w-full text-left p-2 bg-white rounded border border-slate-200 hover:border-slate-400 hover:bg-slate-50 text-sm"
-                  >
+                >
                     <span className="font-medium text-gray-700">{ex.name}</span>
                     <code className="block text-xs text-gray-600 mt-1 truncate">{ex.command}</code>
-                  </button>
-                ))}
-              </div>
+                </button>
+              ))}
             </div>
-          )}
+          </div>
+        )}
 
           <div>
             <div className="flex items-center justify-between mb-2">
@@ -193,19 +193,19 @@ export default function CurlConverter() {
                 </button>
               </div>
             </div>
-            <textarea
-              value={curlCommand}
-              onChange={(e) => setCurlCommand(e.target.value)}
+          <textarea
+            value={curlCommand}
+            onChange={(e) => setCurlCommand(e.target.value)}
               placeholder={'curl -X POST https://api.example.com/data -H "Content-Type: application/json" -d \'{"key":"value"}\''}
               rows={6}
               className="w-full p-4 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 resize-y"
-            />
-          </div>
+          />
+        </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Target language</label>
-            <select
-              value={targetLanguage}
+          <select
+            value={targetLanguage}
               onChange={(e) => {
                 setTargetLanguage(e.target.value as CurlTarget);
                 if (parsed) setConvertedCode(convertToLanguage(parsed, e.target.value as CurlTarget));
@@ -215,18 +215,18 @@ export default function CurlConverter() {
               {TARGETS.map((t) => (
                 <option key={t.value} value={t.value}>{t.label}</option>
               ))}
-            </select>
-          </div>
-
-          <button
-            type="button"
-            onClick={convert}
-            disabled={!curlCommand.trim()}
-            className="w-full py-3 bg-slate-700 text-white font-semibold rounded-lg hover:bg-slate-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-          >
-            Convert cURL to Code
-          </button>
+          </select>
         </div>
+
+        <button
+            type="button"
+          onClick={convert}
+          disabled={!curlCommand.trim()}
+            className="w-full py-3 bg-slate-700 text-white font-semibold rounded-lg hover:bg-slate-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+        >
+          Convert cURL to Code
+        </button>
+      </div>
       </div>
 
       {parsed && (
@@ -288,25 +288,25 @@ export default function CurlConverter() {
             <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex flex-wrap items-center justify-between gap-3">
               <h3 className="font-semibold text-gray-900">Generated code ({TARGETS.find((t) => t.value === targetLanguage)?.label})</h3>
               <div className="flex flex-wrap gap-2">
-                <button
+              <button
                   type="button"
                   onClick={() => handleCopy(convertedCode)}
                   className="inline-flex items-center gap-1.5 px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+              >
+                {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                   Copy
-                </button>
-                <button
+              </button>
+              <button
                   type="button"
                   onClick={() => {
                     const ext: Record<string, string> = { python_requests: 'py', python_httpx: 'py', php: 'php', go: 'go', java: 'java', csharp: 'cs', rust: 'rs' };
                     handleDownload(convertedCode, `request.${ext[targetLanguage] || 'js'}`);
                   }}
                   className="inline-flex items-center gap-1.5 px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  <Download className="w-4 h-4" />
-                  Download
-                </button>
+              >
+                <Download className="w-4 h-4" />
+                Download
+              </button>
                 <button
                   type="button"
                   onClick={runTest}
@@ -355,11 +355,11 @@ export default function CurlConverter() {
                     </pre>
                   </>
                 )}
-              </div>
+          </div>
             )}
             <pre className="p-6 bg-gray-900 text-gray-100 overflow-x-auto text-sm font-mono whitespace-pre-wrap">
-              <code>{convertedCode}</code>
-            </pre>
+            <code>{convertedCode}</code>
+          </pre>
           </div>
         </div>
       )}

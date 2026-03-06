@@ -20,13 +20,12 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
+     * Match all request paths except:
+     * - api, _next/static, _next/image (Next.js internals)
+     * - favicon.ico, icon.png, apple-icon.png (icons / PWA)
+     * - manifest.json, robots.txt, ads.txt (static metadata)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    '/((?!api|_next/static|_next/image|favicon\\.ico|icon\\.png|apple-icon\\.png|manifest\\.json|robots\\.txt|ads\\.txt).*)',
   ],
 }
 

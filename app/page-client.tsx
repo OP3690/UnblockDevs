@@ -80,7 +80,7 @@ interface Section {
   columnIds: string[];
 }
 
-// Mapping of tool tabs to their page URLs (except 'converter' which stays on homepage)
+// Mapping of tool tabs to their dedicated page URLs
 const toolPageUrls: Record<Exclude<ToolTab, 'converter'>, string> = {
   beautifier: '/json-beautifier',
   fixer: '/json-fixer-online',
@@ -182,7 +182,11 @@ function HomeClient() {
     setActiveUsers(min + Math.floor(Math.random() * (max - min + 1)));
     const urlParams = new URLSearchParams(window.location.search);
       const tabParam = urlParams.get('tab');
-      if (tabParam && ['converter', 'beautifier', 'fixer', 'comparator', 'jsoncompare', 'schema', 'logs', 'payload', 'curl', 'mock', 'testdata', 'config', 'sql', 'builder', 'promptchunk', 'schemamasker', 'jsonpromptshield', 'tokencompare', 'timezone', 'hartocurl', 'curlfailure'].includes(tabParam)) {
+      if (tabParam === 'converter') {
+      window.location.replace('/json-to-excel');
+      return;
+    }
+      if (tabParam && ['beautifier', 'fixer', 'comparator', 'jsoncompare', 'schema', 'logs', 'payload', 'curl', 'mock', 'testdata', 'config', 'sql', 'builder', 'promptchunk', 'schemamasker', 'jsonpromptshield', 'tokencompare', 'timezone', 'hartocurl', 'curlfailure'].includes(tabParam)) {
       setActiveTab(tabParam as ToolTab);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -670,17 +674,10 @@ function HomeClient() {
               <span className="text-xs font-medium break-words min-w-0">Smart JSON Diff</span>
               <Star className="w-3.5 h-3.5 flex-shrink-0 fill-emerald-500 text-emerald-500" aria-hidden />
             </Link>
-            <button
-              onClick={() => handleTabChange('converter')}
-              className={`group tab-card w-full px-2.5 py-2 rounded-xl border text-left transition-all duration-200 flex items-center gap-2 min-h-[2.75rem] ${
-                activeTab === 'converter'
-                  ? 'bg-primary-50 border-primary-300 text-primary-800 shadow-md ring-1 ring-primary-200/50'
-                  : 'bg-white border-gray-200 text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100'
-              }`}
-            >
-              <FileSpreadsheet className="w-4 h-4 flex-shrink-0 text-primary-600" />
+            <Link href="/json-to-excel" className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+              <FileSpreadsheet className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">Json to Excel</span>
-            </button>
+            </Link>
             <Link href={toolPageUrls.fixer} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <Wrench className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">JSON Fixer</span>
@@ -1241,7 +1238,7 @@ function HomeClient() {
                 <Link href="/json-beautifier" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Beautifier</Link>
                 <Link href="/json-fixer-online" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Fixer</Link>
                 <Link href="/json-schema-generation" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Schema Generator</Link>
-                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON to Excel</Link>
+                <Link href="/json-to-excel" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON to Excel</Link>
                 <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Comparator</Link>
                 <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ API Comparator</Link>
                 <Link href="/har-to-curl" className="text-blue-600 hover:text-blue-700 hover:underline">✓ HAR to cURL</Link>

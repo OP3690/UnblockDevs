@@ -93,6 +93,7 @@ export default function JsonInput({ onJsonSubmit }: JsonInputProps) {
             </span>
           )}
           <button
+            type="button"
             onClick={handleClear}
             className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
             aria-label="Clear input"
@@ -150,6 +151,7 @@ export default function JsonInput({ onJsonSubmit }: JsonInputProps) {
       </div>
 
       <button
+        type="button"
         onClick={handleSubmit}
         disabled={!jsonText.trim()}
         className="w-full py-3.5 sm:py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:transform-none text-base"

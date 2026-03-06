@@ -38,7 +38,7 @@ const jsonTools = [
     anchor: 'JSON parser online',
   },
   {
-    href: '/',
+    href: '/json-to-excel',
     title: 'JSON to Excel / CSV / Table',
     description: 'Convert JSON to Excel, JSON to CSV, or JSON to Table. Export and analyze JSON data instantly.',
     icon: Table,

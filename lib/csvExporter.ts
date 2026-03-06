@@ -49,3 +49,38 @@ export function exportToCSV(
   URL.revokeObjectURL(url);
 }
 
+function escapeCell(value: any, separator: string): string {
+  if (value === undefined || value === null) return '';
+  if (typeof value === 'object') return `"${JSON.stringify(value).replace(/"/g, '""')}"`;
+  const stringValue = String(value);
+  if (stringValue.includes(separator) || stringValue.includes('\n') || stringValue.includes('"')) {
+    return `"${stringValue.replace(/"/g, '""')}"`;
+  }
+  return stringValue;
+}
+
+/**
+ * Exports data to TSV (tab-separated) file
+ */
+export function exportToTSV(
+  rows: FlattenedRow[],
+  columns: string[],
+  fileName: string = 'export.tsv'
+): void {
+  const header = columns.join('\t');
+  const tsvRows = rows.map((row) =>
+    columns.map((col) => escapeCell(row[col], '\t')).join('\t')
+  );
+  const content = [header, ...tsvRows].join('\n');
+  const blob = new Blob([content], { type: 'text/tab-separated-values;charset=utf-8;' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  link.href = url;
+  link.download = fileName;
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+

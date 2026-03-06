@@ -1,5 +1,5 @@
 import * as XLSX from 'xlsx';
-import { FlattenedRow } from './jsonParser';
+import { FlattenedRow, jsonToRows, extractColumns } from './jsonParser';
 
 export interface Section {
   id: string;
@@ -122,7 +122,48 @@ function createWorksheet(
   });
   
   ws['!cols'] = colWidths;
-  
+
   return ws;
+}
+
+/**
+ * Detects if data is a root object with multiple arrays of objects (multi-sheet candidate).
+ */
+export function getMultiSheetCandidates(
+  data: any,
+  delimiter: string = '_'
+): { sheetName: string; rows: FlattenedRow[]; columns: string[] }[] {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return [];
+  const result: { sheetName: string; rows: FlattenedRow[]; columns: string[] }[] = [];
+  for (const key of Object.keys(data)) {
+    const value = data[key];
+    if (Array.isArray(value) && value.length > 0 && typeof value[0] === 'object' && value[0] !== null) {
+      const rows = jsonToRows(value, delimiter);
+      const columns = rows.length > 0 ? extractColumns(rows).map((c) => c.id) : [];
+      if (columns.length > 0 || rows.length > 0)
+        result.push({ sheetName: key, rows, columns: columns.length > 0 ? columns : (rows[0] ? Object.keys(rows[0]) : []) });
+    }
+  }
+  return result;
+}
+
+/**
+ * Export root-level arrays as separate Excel sheets (relational export).
+ */
+export function exportMultiSheetFromRoot(
+  data: any,
+  options: { fileName?: string; delimiter?: string } = {}
+): void {
+  const { fileName = 'export.xlsx', delimiter = '_' } = options;
+  const candidates = getMultiSheetCandidates(data, delimiter);
+  if (candidates.length === 0) return;
+  const wb = XLSX.utils.book_new();
+  candidates.forEach(({ sheetName, rows, columns }) => {
+    const cols = columns.length > 0 ? columns : (rows[0] ? Object.keys(rows[0]) : []);
+    if (cols.length === 0) return;
+    const ws = createWorksheet(rows, cols);
+    XLSX.utils.book_append_sheet(wb, ws, sanitizeSheetName(sheetName));
+  });
+  if (wb.SheetNames.length > 0) downloadWorkbook(wb, fileName);
 }
 

@@ -1,9 +1,25 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Upload, FileText, X, Copy, Check, Download, AlertCircle, CheckCircle, Wrench, Zap, Eye, ExternalLink } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { Upload, FileText, X, Copy, Check, Download, AlertCircle, CheckCircle, Wrench, Zap, Eye, ExternalLink, BarChart3, Sparkles, ListChecks, Shield } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import {
+  extractJsonFromLogs,
+  wrapMissingRootObject,
+  repairTruncatedJson,
+  repairUnquotedKeys,
+  repairMissingQuotes,
+  repairMissingCommas,
+  repairMissingColons,
+  multipleObjectsToArray,
+  detectDuplicateKeys,
+  fixDuplicateKeysKeepLast,
+  getJsonStats,
+  parsePositionFromError,
+  positionToLineColumn,
+  type JsonStats,
+} from '@/lib/jsonFixerEngine';
 
 interface JsonError {
   line: number;
@@ -19,6 +35,23 @@ export default function JsonFixer() {
   const [errors, setErrors] = useState<JsonError[]>([]);
   const [copied, setCopied] = useState(false);
   const [showErrors, setShowErrors] = useState(true);
+  const [repairSteps, setRepairSteps] = useState<string[]>([]);
+  const [options, setOptions] = useState({
+    extractFromLogs: false,
+    repairTruncated: true,
+    unquotedKeys: true,
+    missingQuotes: true,
+    missingColons: true,
+    multipleObjectsToArray: false,
+    aiMode: false,
+  });
+  const [apiErrorInput, setApiErrorInput] = useState('');
+  const [jsonStats, setJsonStats] = useState<JsonStats | null>(null);
+  const [duplicateKeys, setDuplicateKeys] = useState<{ key: string; count: number }[]>([]);
+  const [fixedKeys, setFixedKeys] = useState<string[]>([]);
+  const [addedRootObject, setAddedRootObject] = useState(false);
+  const [addedBrackets, setAddedBrackets] = useState(0);
+  const [addedBraces, setAddedBraces] = useState(0);
 
   // Detect errors in JSON
   const detectErrors = (text: string): JsonError[] => {
@@ -150,8 +183,10 @@ export default function JsonFixer() {
       JSON.parse(text);
       return { fixed: JSON.stringify(JSON.parse(text), null, 2), errors: [] };
     } catch {
-      // Apply fixes in order
-      
+      // Fix 0: Wrap missing root object — valid JSON must start with { or [
+      const rootWrap = wrapMissingRootObject(fixed);
+      if (rootWrap.applied) fixed = rootWrap.text;
+
       // Fix 1: Remove comments
       fixed = fixed.replace(/\/\/.*$/gm, '');
       fixed = fixed.replace(/\/\*[\s\S]*?\*\//g, '');
@@ -162,6 +197,25 @@ export default function JsonFixer() {
       // Fix 3: Single quotes to double quotes (only for string values)
       fixed = fixed.replace(/(:\s*)'([^']*)'(\s*[,}])/g, '$1"$2"$3');
       fixed = fixed.replace(/(\[\s*)'([^']*)'(\s*[,,\]])/g, '$1"$2"$3');
+
+      // Fix 3.3: Missing quotes around keys (e.g. data": → "data":)
+      const quoteResult = repairMissingQuotes(fixed);
+      if (quoteResult.count > 0) {
+        fixed = quoteResult.text;
+      }
+
+      // Fix 3.4: Missing commas between values (e.g. "value""key": → "value","key":)
+      // MUST run before missing colons fix!
+      const commaResult = repairMissingCommas(fixed);
+      if (commaResult.count > 0) {
+        fixed = commaResult.text;
+      }
+
+      // Fix 3.5: Missing colons between key and value (e.g. "key"value → "key":value)
+      const colonResult = repairMissingColons(fixed);
+      if (colonResult.count > 0) {
+        fixed = colonResult.text;
+      }
 
       // Fix 4: Add missing opening brace after key: when next line is a key
       const lines = fixed.split('\n');
@@ -246,38 +300,135 @@ export default function JsonFixer() {
     }
   };
 
-  // Detect and analyze JSON errors
+  // Preprocess then detect and fix
   useEffect(() => {
     if (!jsonText.trim()) {
       setErrors([]);
       setFixedJson('');
+      setRepairSteps([]);
+      setJsonStats(null);
+      setDuplicateKeys([]);
+      setFixedKeys([]);
+      setAddedRootObject(false);
+      setAddedBrackets(0);
+      setAddedBraces(0);
       return;
     }
 
-    // Check if original JSON is valid
+    let workingText = jsonText;
+    const steps: string[] = [];
+    let localFixedKeys: string[] = [];
+    let localAddedRootObject = false;
+    let localAddedBrackets = 0;
+    let localAddedBraces = 0;
+
+    if (options.extractFromLogs) {
+      workingText = extractJsonFromLogs(workingText);
+      steps.push('Extracted JSON from logs');
+    }
+    const rootWrap = wrapMissingRootObject(workingText);
+    if (rootWrap.applied) {
+      workingText = rootWrap.text;
+      steps.push('Added missing root object {}');
+      localAddedRootObject = true;
+    }
+    if (options.repairTruncated) {
+      const truncatedResult = repairTruncatedJson(workingText);
+      workingText = truncatedResult.text;
+      if (truncatedResult.addedBrackets + truncatedResult.addedBraces > 0) {
+        steps.push(`Balanced ${truncatedResult.addedBrackets ? truncatedResult.addedBrackets + ' missing ]' : ''} ${truncatedResult.addedBraces ? truncatedResult.addedBraces + ' missing }' : ''}`.trim());
+        localAddedBrackets = truncatedResult.addedBrackets;
+        localAddedBraces = truncatedResult.addedBraces;
+      }
+    }
+    if (options.unquotedKeys) {
+      workingText = repairUnquotedKeys(workingText);
+      steps.push('Converted unquoted keys to JSON');
+    }
+    if (options.missingQuotes) {
+      const quoteResult = repairMissingQuotes(workingText);
+      if (quoteResult.count > 0) {
+        workingText = quoteResult.text;
+        steps.push(`Added ${quoteResult.count} missing quote${quoteResult.count > 1 ? 's' : ''} to key${quoteResult.count > 1 ? 's' : ''}`);
+        localFixedKeys = [...localFixedKeys, ...quoteResult.fixedKeys];
+      }
+    }
+    // Fix missing commas BEFORE missing colons (important order!)
+    if (options.missingColons) {
+      const commaResult = repairMissingCommas(workingText);
+      if (commaResult.count > 0) {
+        workingText = commaResult.text;
+        steps.push(`Added ${commaResult.count} missing comma${commaResult.count > 1 ? 's' : ''} between values`);
+      }
+    }
+    if (options.missingColons) {
+      const colonResult = repairMissingColons(workingText);
+      if (colonResult.count > 0) {
+        workingText = colonResult.text;
+        steps.push(`Added ${colonResult.count} missing colon${colonResult.count > 1 ? 's' : ''} between key and value`);
+        localFixedKeys = colonResult.fixedKeys;
+      }
+    }
+    if (options.multipleObjectsToArray) {
+      const before = workingText;
+      workingText = multipleObjectsToArray(workingText);
+      if (workingText !== before) steps.push('Combined multiple objects into array');
+    }
+
+    // Update tracking state
+    setFixedKeys(localFixedKeys);
+    setAddedRootObject(localAddedRootObject);
+    setAddedBrackets(localAddedBrackets);
+    setAddedBraces(localAddedBraces);
+
     let originalIsValid = false;
     try {
-      JSON.parse(jsonText);
+      JSON.parse(workingText);
       originalIsValid = true;
     } catch {
       originalIsValid = false;
     }
 
     if (originalIsValid) {
-      // JSON is already valid
       setErrors([]);
-      setFixedJson(JSON.stringify(JSON.parse(jsonText), null, 2));
+      const formatted = JSON.stringify(JSON.parse(workingText), null, 2);
+      setFixedJson(formatted);
+      setRepairSteps(steps.length > 0 ? [...steps, 'JSON parsed successfully'] : []);
+      try {
+        setJsonStats(getJsonStats(JSON.parse(formatted)));
+        setDuplicateKeys(detectDuplicateKeys(formatted));
+      } catch {
+        setJsonStats(null);
+        setDuplicateKeys([]);
+      }
       return;
     }
 
-    // JSON is invalid, detect errors and try to fix it
-    const detectedErrors = detectErrors(jsonText);
-    const result = fixJson(jsonText);
-    
-    // Merge detected errors with any additional errors from fix process
+    const detectedErrors = detectErrors(workingText);
+    const result = fixJson(workingText);
     setErrors(detectedErrors);
     setFixedJson(result.fixed || '');
-  }, [jsonText]);
+    const finalSteps = [...steps];
+    try {
+      if (result.fixed && JSON.parse(result.fixed)) finalSteps.push('JSON parsed successfully');
+    } catch {
+      //
+    }
+    setRepairSteps(finalSteps);
+    if (result.fixed) {
+      try {
+        const parsed = JSON.parse(result.fixed);
+        setJsonStats(getJsonStats(parsed));
+        setDuplicateKeys(detectDuplicateKeys(result.fixed));
+      } catch {
+        setJsonStats(null);
+        setDuplicateKeys([]);
+      }
+    } else {
+      setJsonStats(null);
+      setDuplicateKeys([]);
+    }
+  }, [jsonText, options.extractFromLogs, options.repairTruncated, options.unquotedKeys, options.missingQuotes, options.missingColons, options.multipleObjectsToArray]);
 
   const handleCopy = () => {
     if (fixedJson) {
@@ -317,25 +468,100 @@ export default function JsonFixer() {
   };
 
   const getLineErrors = (lineNum: number): JsonError[] => {
-    return errors.filter(e => e.line === lineNum);
+    return displayErrors.filter(e => e.line === lineNum);
   };
 
-  // Check if original JSON is valid (before any fixes)
-  let originalIsValid = false;
+  let fixedJsonValid = false;
   try {
-    if (jsonText.trim()) {
-      JSON.parse(jsonText);
-      originalIsValid = true;
-    }
+    if (fixedJson.trim()) JSON.parse(fixedJson);
+    fixedJsonValid = true;
   } catch {
-    originalIsValid = false;
+    fixedJsonValid = false;
   }
 
-  const isValid = originalIsValid && errors.length === 0 && jsonText.trim() !== '';
+  const isValid = fixedJson !== '' && errors.length === 0 && fixedJsonValid;
   const isFixed = fixedJson !== '' && fixedJson !== jsonText;
   const safeFixErrors = errors.filter(e => e.severity === 'safe-fix').length;
   const heuristicFixErrors = errors.filter(e => e.severity === 'heuristic-fix').length;
   const nonFixableErrors = errors.filter(e => e.severity === 'non-fixable').length;
+
+  const apiErrorPosition = useMemo(() => parsePositionFromError(apiErrorInput), [apiErrorInput]);
+  const apiErrorLineCol = apiErrorPosition != null ? positionToLineColumn(jsonText, apiErrorPosition) : null;
+  const displayErrors = useMemo(() => {
+    const list = [...errors];
+    if (apiErrorLineCol && !list.some(e => e.line === apiErrorLineCol.line && e.column === apiErrorLineCol.column)) {
+      list.push({ line: apiErrorLineCol.line, column: apiErrorLineCol.column, message: 'Error position from API/log', type: 'parse', severity: 'heuristic-fix' });
+    }
+    return list;
+  }, [errors, apiErrorLineCol]);
+
+  const confidence = useMemo(() => {
+    if (!fixedJson) return 0;
+    try {
+      JSON.parse(fixedJson);
+      if (errors.length === 0 && !isFixed) return 100;
+      if (repairSteps.length > 0 || isFixed) return Math.min(98, 70 + repairSteps.length * 6 + (isFixed ? 15 : 0));
+      return 85;
+    } catch {
+      return Math.max(0, 50 - errors.length * 5);
+    }
+  }, [fixedJson, errors.length, isFixed, repairSteps.length]);
+
+  const handleExtractFromLogs = () => {
+    const extracted = extractJsonFromLogs(jsonText);
+    if (extracted !== jsonText.trim()) {
+      setJsonText(extracted);
+      setOptions(o => ({ ...o, extractFromLogs: true }));
+      toast.success('JSON extracted from logs');
+    } else {
+      toast.error('No JSON found in the text');
+    }
+  };
+
+  const handleFixDuplicateKeys = () => {
+    if (!fixedJson) return;
+    const fixed = fixDuplicateKeysKeepLast(fixedJson);
+    setFixedJson(fixed);
+    setJsonText(fixed);
+    setDuplicateKeys([]);
+    toast.success('Duplicate keys resolved (kept last value)');
+  };
+
+  // Compute which lines in fixedJson contain actual repairs (not just reformatting)
+  const changedLines = useMemo(() => {
+    if (!fixedJson) return new Set<number>();
+    const lines = fixedJson.split('\n');
+    const changed = new Set<number>();
+    
+    // Highlight lines containing keys that had missing colons fixed
+    if (fixedKeys.length > 0) {
+      lines.forEach((line, index) => {
+        for (const key of fixedKeys) {
+          // Check if this line contains the fixed key
+          if (line.includes(`"${key}":`)) {
+            changed.add(index + 1); // 1-indexed
+            break;
+          }
+        }
+      });
+    }
+    
+    // Highlight first and last lines if root object was added
+    if (addedRootObject && lines.length > 0) {
+      changed.add(1); // First line with opening {
+      changed.add(lines.length); // Last line with closing }
+    }
+    
+    // Highlight last lines if brackets/braces were added
+    if (addedBrackets > 0 || addedBraces > 0) {
+      // The closing brackets/braces are typically at the end
+      for (let i = 0; i < addedBrackets + addedBraces && i < lines.length; i++) {
+        changed.add(lines.length - i);
+      }
+    }
+    
+    return changed;
+  }, [fixedJson, fixedKeys, addedRootObject, addedBrackets, addedBraces]);
 
   return (
     <div className="space-y-6">
@@ -346,11 +572,93 @@ export default function JsonFixer() {
             <Wrench className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold">JSON Fixer & Repair Tool</h2>
+            <h2 className="text-2xl font-bold">Advanced JSON Fixer & Recovery Engine</h2>
             <p className="text-purple-100 text-sm mt-1">
-              Fix malformed JSON, repair syntax errors, and validate JSON structure
+              Repair malformed JSON, recover truncated payloads, extract from logs, and fix AI/API output — 100% client-side
             </p>
           </div>
+        </div>
+        {/* One-click workflow buttons */}
+        <div className="flex flex-wrap gap-2 mt-4">
+          <button
+            type="button"
+            onClick={() => { setOptions(o => ({ ...o, repairTruncated: true, unquotedKeys: true })); toast.success('Fix options applied'); }}
+            className="px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium"
+          >
+            Fix JSON
+          </button>
+          <button
+            type="button"
+            onClick={() => { setOptions(o => ({ ...o, repairTruncated: true, unquotedKeys: true, extractFromLogs: false })); toast.success('Optimized for ChatGPT/Claude output'); }}
+            className="px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium flex items-center gap-1"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            Fix from ChatGPT / LLM
+          </button>
+          <button
+            type="button"
+            onClick={handleExtractFromLogs}
+            className="px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium"
+          >
+            Extract from logs
+          </button>
+          <button
+            type="button"
+            onClick={() => { if (fixedJson) { setJsonText(JSON.stringify(JSON.parse(fixedJson), null, 2)); toast.success('Repaired & beautified'); } }}
+            disabled={!fixedJson}
+            className="px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium disabled:opacity-50"
+          >
+            Repair & Beautify
+          </button>
+        </div>
+      </div>
+
+      {/* Options */}
+      <div className="bg-white rounded-xl shadow-lg p-4 border-2 border-gray-200">
+        <h3 className="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
+          <ListChecks className="w-4 h-4 text-indigo-600" />
+          Repair options
+        </h3>
+        <div className="flex flex-wrap gap-4">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked={options.repairTruncated} onChange={e => setOptions(o => ({ ...o, repairTruncated: e.target.checked }))} className="rounded" />
+            <span className="text-sm">Repair truncated JSON</span>
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked={options.unquotedKeys} onChange={e => setOptions(o => ({ ...o, unquotedKeys: e.target.checked }))} className="rounded" />
+            <span className="text-sm">Fix unquoted keys (JS → JSON)</span>
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked={options.missingQuotes} onChange={e => setOptions(o => ({ ...o, missingQuotes: e.target.checked }))} className="rounded" />
+            <span className="text-sm">Fix missing quotes (data": → "data":)</span>
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked={options.missingColons} onChange={e => setOptions(o => ({ ...o, missingColons: e.target.checked }))} className="rounded" />
+            <span className="text-sm">Fix missing colons ("key"value → "key":value)</span>
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked={options.multipleObjectsToArray} onChange={e => setOptions(o => ({ ...o, multipleObjectsToArray: e.target.checked }))} className="rounded" />
+            <span className="text-sm">Multiple objects → array</span>
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked={options.extractFromLogs} onChange={e => setOptions(o => ({ ...o, extractFromLogs: e.target.checked }))} className="rounded" />
+            <span className="text-sm">Extract JSON from logs</span>
+          </label>
+        </div>
+      </div>
+
+      {/* Fix from API error */}
+      <div className="bg-white rounded-xl shadow p-4 border border-gray-200">
+        <h3 className="text-sm font-bold text-gray-800 mb-2">Fix from API error</h3>
+        <p className="text-xs text-gray-500 mb-2">Paste an error like &quot;Unexpected token } in JSON at position 245&quot; to highlight the position.</p>
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={apiErrorInput}
+            onChange={e => setApiErrorInput(e.target.value)}
+            placeholder="e.g. Unexpected token at position 245"
+            className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm"
+          />
         </div>
       </div>
 
@@ -384,6 +692,7 @@ export default function JsonFixer() {
               JSON Input
             </h3>
             <button
+              type="button"
               onClick={() => setJsonText('')}
               className="px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
               aria-label="Clear JSON input"
@@ -449,12 +758,12 @@ export default function JsonFixer() {
           </div>
 
           {/* Error Summary */}
-          {errors.length > 0 && (
+          {displayErrors.length > 0 && (
             <div className="mt-4 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <AlertCircle className="w-5 h-5 text-red-600" />
                 <span className="font-semibold text-red-800">
-                  {errors.length} Error{errors.length !== 1 ? 's' : ''} Detected
+                  {displayErrors.length} Error{displayErrors.length !== 1 ? 's' : ''} Detected
                 </span>
               </div>
               <div className="flex flex-wrap gap-2 text-xs mt-2">
@@ -469,11 +778,37 @@ export default function JsonFixer() {
                 )}
               </div>
               <button
+                type="button"
                 onClick={() => setShowErrors(!showErrors)}
                 className="text-sm text-red-600 hover:text-red-800 underline mt-2"
               >
                 {showErrors ? 'Hide' : 'Show'} Error Details
               </button>
+            </div>
+          )}
+
+          {/* Repair steps & confidence */}
+          {(repairSteps.length > 0 || (fixedJson && confidence > 0)) && (
+            <div className="mt-4 p-4 bg-indigo-50 border-l-4 border-indigo-500 rounded-lg">
+              {fixedJson && (
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="font-semibold text-indigo-800">Repair confidence</span>
+                  <span className="px-2 py-0.5 bg-indigo-200 text-indigo-800 rounded text-sm font-bold">{confidence}%</span>
+                </div>
+              )}
+              {repairSteps.length > 0 && (
+                <div className="text-sm text-indigo-700">
+                  <strong>Repair steps</strong>
+                  <ul className="mt-1 list-none space-y-0.5">
+                    {repairSteps.map((step, i) => (
+                      <li key={i} className="flex items-center gap-2">
+                        <span className="text-green-600" aria-hidden>✓</span>
+                        {step}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           )}
 
@@ -501,6 +836,7 @@ export default function JsonFixer() {
                 </span>
               )}
               <button
+                type="button"
                 onClick={handleCopy}
                 disabled={!fixedJson}
                 className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
@@ -509,6 +845,7 @@ export default function JsonFixer() {
                 Copy
               </button>
               <button
+                type="button"
                 onClick={handleDownload}
                 disabled={!fixedJson}
                 className="px-3 py-1.5 text-sm bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
@@ -519,9 +856,62 @@ export default function JsonFixer() {
             </div>
           </div>
           
-          <pre className="w-full h-96 p-4 font-mono text-sm bg-gray-900 text-gray-100 rounded-lg overflow-auto border-2 border-gray-700">
-            <code>{fixedJson || (jsonText ? 'Fixing JSON...' : 'Fixed JSON will appear here...')}</code>
-          </pre>
+          <div className="w-full h-96 bg-gray-900 rounded-lg overflow-auto border-2 border-gray-700">
+            {fixedJson ? (
+              <div className="flex font-mono text-sm">
+                {/* Line numbers */}
+                <div className="flex-shrink-0 bg-gray-800 border-r border-gray-700 select-none">
+                  {fixedJson.split('\n').map((_, index) => {
+                    const lineNum = index + 1;
+                    const isChanged = changedLines.has(lineNum);
+                    return (
+                      <div
+                        key={index}
+                        className={`px-3 py-0 h-6 flex items-center justify-end text-xs ${
+                          isChanged ? 'bg-green-900/50 text-green-400' : 'text-gray-500'
+                        }`}
+                      >
+                        {lineNum}
+                      </div>
+                    );
+                  })}
+                </div>
+                {/* Code content */}
+                <pre className="flex-1 p-0 m-0 overflow-visible">
+                  <code>
+                    {fixedJson.split('\n').map((line, index) => {
+                      const lineNum = index + 1;
+                      const isChanged = changedLines.has(lineNum);
+                      return (
+                        <div
+                          key={index}
+                          className={`px-4 h-6 flex items-center ${
+                            isChanged ? 'bg-green-900/30 text-green-300' : 'text-gray-100'
+                          }`}
+                        >
+                          {line || ' '}
+                        </div>
+                      );
+                    })}
+                  </code>
+                </pre>
+              </div>
+            ) : (
+              <div className="p-4 text-gray-400 font-mono text-sm">
+                {jsonText ? 'Fixing JSON...' : 'Fixed JSON will appear here...'}
+              </div>
+            )}
+          </div>
+          
+          {/* Legend for highlighting */}
+          {fixedJson && changedLines.size > 0 && (
+            <div className="mt-2 flex items-center gap-2 text-xs text-gray-600">
+              <span className="inline-flex items-center gap-1">
+                <span className="w-3 h-3 bg-green-500/30 border border-green-500 rounded"></span>
+                Fixed/changed lines ({changedLines.size})
+              </span>
+            </div>
+          )}
 
           {isFixed && (
             <div className="mt-4 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-lg">
@@ -531,11 +921,47 @@ export default function JsonFixer() {
               </div>
             </div>
           )}
+
+          {/* JSON Statistics */}
+          {jsonStats && (
+            <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <h4 className="text-sm font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                <BarChart3 className="w-4 h-4" />
+                JSON statistics
+              </h4>
+              <div className="flex flex-wrap gap-4 text-sm text-gray-600">
+                <span>Objects: {jsonStats.objects}</span>
+                <span>Arrays: {jsonStats.arrays}</span>
+                <span>Keys: {jsonStats.keys}</span>
+                <span>Max depth: {jsonStats.maxDepth}</span>
+                <span>Size: {jsonStats.sizeFormatted}</span>
+              </div>
+            </div>
+          )}
+
+          {/* Duplicate keys */}
+          {duplicateKeys.length > 0 && (
+            <div className="mt-4 p-4 bg-amber-50 border-l-4 border-amber-500 rounded-lg">
+              <h4 className="text-sm font-semibold text-amber-800 mb-2">Duplicate keys</h4>
+              <ul className="text-sm text-amber-700 mb-2">
+                {duplicateKeys.map((d, i) => (
+                  <li key={i}>{d.key} ({d.count} occurrences)</li>
+                ))}
+              </ul>
+              <button
+                type="button"
+                onClick={handleFixDuplicateKeys}
+                className="px-3 py-1.5 bg-amber-600 text-white rounded-lg text-sm font-medium hover:bg-amber-700"
+              >
+                Keep last value
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Error Details Panel */}
-      {showErrors && errors.length > 0 && (
+      {showErrors && displayErrors.length > 0 && (
         <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-gray-200">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
@@ -543,7 +969,7 @@ export default function JsonFixer() {
               Error Detection & Review
             </h3>
             <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-semibold">
-              {errors.length} Error{errors.length !== 1 ? 's' : ''}
+              {displayErrors.length} Error{displayErrors.length !== 1 ? 's' : ''}
             </span>
           </div>
           
@@ -552,7 +978,7 @@ export default function JsonFixer() {
           </p>
 
           <div className="space-y-3">
-            {errors.map((error, index) => (
+            {displayErrors.map((error, index) => (
               <div
                 key={index}
                 className={`p-4 border-l-4 rounded-lg ${

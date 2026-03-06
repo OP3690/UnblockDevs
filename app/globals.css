@@ -26,15 +26,22 @@ button, input, select, textarea {
   font-family: inherit;
   font-size: inherit;
 }
+/* Base button: ensure clickable and no tap delay. Let Tailwind utilities override appearance. */
 button {
   cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+/* Default look only when button has no Tailwind background (fallback for unstyled buttons) */
+button:not([class*="bg-"]):not([class*="from-"]) {
   padding: 0.5rem 1rem;
   border-radius: 0.375rem;
   border: 1px solid #d1d5db;
   background: #f9fafb;
   color: #111827;
 }
-button:hover:not(:disabled) {
+button:not([class*="bg-"]):not([class*="from-"]):hover:not(:disabled) {
   background: #f3f4f6;
 }
 input, select, textarea {

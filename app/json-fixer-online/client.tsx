@@ -19,8 +19,8 @@ export default function JsonFixerOnlineClient() {
             <ArrowLeft className="w-4 h-4" />
             Back to Tools
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">JSON Fixer - Free JSON Repair Tool</h1>
-          <p className="text-sm text-gray-500 mt-1">Automatically detect and repair broken JSON instantly</p>
+          <h1 className="text-3xl font-bold text-gray-900">Advanced JSON Fixer & Recovery Engine</h1>
+          <p className="text-sm text-gray-500 mt-1">Repair malformed JSON, recover truncated payloads, extract from logs, fix AI/API output — 100% client-side</p>
         </div>
       </header>
 
