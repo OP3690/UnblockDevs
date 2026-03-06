@@ -429,16 +429,24 @@ export default function JsonBeautifier() {
   return (
     <div className="space-y-6">
       {/* Input Section */}
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <div className="flex items-center justify-between mb-4">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sm:p-8">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
           <div>
-            <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-              <Code2 className="w-6 h-6 text-primary-600" />
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-3">
+              <Code2 className="w-7 h-7 sm:w-8 sm:h-8 text-primary-600" />
               Developer JSON Workbench
             </h2>
-            <p className="text-sm text-gray-500 mt-0.5">Format, validate, fix, explore paths, generate TypeScript &amp; SQL — all in one</p>
+            <p className="text-sm sm:text-base text-gray-500 mt-1.5">Format, validate, fix, explore paths, generate TypeScript &amp; SQL — all in one</p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <button
+              type="button"
+              onClick={handleGenerateSample}
+              className="animate-btn-glow inline-flex items-center gap-2 px-5 py-3 text-sm font-bold text-white bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 rounded-xl shadow-lg shadow-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/50 hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 border border-white/20 ring-2 ring-emerald-400/50 hover:ring-emerald-300/60"
+            >
+              <Sparkles className="w-5 h-5 drop-shadow-sm" />
+              Generate sample JSON
+            </button>
             {fileName && (
               <span className="text-sm text-gray-600 flex items-center gap-1">
                 <FileText className="w-4 h-4" />
@@ -507,7 +515,7 @@ export default function JsonBeautifier() {
 
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            JSON Text
+            Paste Your JSON Here:
           </label>
           <div className="relative">
             <textarea
@@ -553,14 +561,6 @@ export default function JsonBeautifier() {
         )}
 
         <div className="flex flex-wrap gap-2 mb-4">
-          <button
-            type="button"
-            onClick={handleGenerateSample}
-            className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg"
-          >
-            <Sparkles className="w-4 h-4" />
-            Generate sample JSON
-          </button>
           {beautifiedJson && (
             <button
               type="button"

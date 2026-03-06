@@ -522,23 +522,23 @@ function HomeClient() {
         </div>
       )}
 
-      {/* Header - Professional layout */}
-      <header className={`bg-white/95 backdrop-blur-sm border-b border-gray-200/80 ${showBookmarkPrompt ? 'sticky top-[73px]' : 'sticky top-0'} z-40 shadow-[0_1px_3px_0_rgba(0,0,0,0.06)]`}>
+      {/* Header - Professional layout, desktop-optimized, trust-first */}
+      <header className={`bg-white/98 backdrop-blur-md border-b border-gray-200 ${showBookmarkPrompt ? 'sticky top-[73px]' : 'sticky top-0'} z-40 shadow-[0_1px_0_0_rgba(0,0,0,0.05),0_2px_8px_-2px_rgba(0,0,0,0.06)]`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Top bar: logo left, nav right */}
-          <div className="flex items-center justify-between gap-4 py-3 sm:py-4">
+          <div className="flex items-center justify-between gap-4 py-3 sm:py-4 lg:py-4">
             <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0 group min-w-0">
-              <Link href="/" className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-primary-700 text-white shadow-md hover:shadow-lg transition-all duration-200" aria-label="UnblockDevs home">
+              <Link href="/" className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-primary-700 text-white shadow-lg shadow-primary-900/20 hover:shadow-xl hover:shadow-primary-900/25 transition-all duration-200 ring-2 ring-primary-500/10" aria-label="UnblockDevs home">
                 <Wrench className="h-5 w-5" aria-hidden />
               </Link>
               <div className="flex flex-col gap-1 min-w-0 justify-center py-0.5">
-                {/* Line 1: UnblockDevs | Mode | Active Users | Total Visits */}
+                {/* Line 1: UnblockDevs | Mode | Stats */}
                 <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                   <Link href="/" className="shrink-0">
                     <span className="text-lg sm:text-xl font-bold tracking-tight text-gray-900 group-hover:text-primary-700 transition-colors leading-tight" style={{ letterSpacing: '-0.02em' }}>UnblockDevs</span>
                   </Link>
                   <span className="text-gray-300 font-medium shrink-0 hidden sm:inline" aria-hidden>|</span>
-                  <div className="flex items-center gap-2 flex-shrink-0 dev-mode-toggle-container px-2 py-1 rounded-md bg-gray-100/80 border border-gray-200/80">
+                  <div className="flex items-center gap-2 flex-shrink-0 dev-mode-toggle-container px-2.5 py-1.5 rounded-lg bg-gray-100/90 border border-gray-200">
                     <span className="text-[11px] font-medium text-gray-500 whitespace-nowrap">Mode</span>
                     <button
                       type="button"
@@ -562,64 +562,61 @@ function HomeClient() {
                     </span>
                   </div>
                   <span className="text-gray-300 font-medium shrink-0 hidden md:inline" aria-hidden>|</span>
-                  <div className="hidden md:flex items-center gap-4 flex-shrink-0">
-                    <span className="flex items-center gap-1.5 text-xs">
+                  <div className="hidden md:flex items-center gap-2 flex-shrink-0">
+                    <span className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg bg-blue-50/80 border border-blue-100">
                       <span className="text-gray-600 font-medium">Active Users:</span>
-                      <span className="font-bold text-blue-600">{activeUsers}</span>
+                      <span className="font-bold text-blue-600 tabular-nums">{activeUsers}</span>
                     </span>
-                    <span className="text-gray-300 font-medium" aria-hidden>·</span>
-                    <span className="flex items-center gap-1.5 text-xs">
+                    <span className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg bg-purple-50/80 border border-purple-100">
                       <span className="text-gray-600 font-medium">Total Visits:</span>
-                      <span className="font-bold text-purple-600">{totalVisits.toLocaleString()}</span>
+                      <span className="font-bold text-purple-600 tabular-nums">{totalVisits.toLocaleString()}</span>
                     </span>
-                    <span className="text-gray-300 font-medium" aria-hidden>·</span>
-                    <span className="flex items-center gap-1.5 text-xs">
+                    <span className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg bg-gray-50 border border-gray-100" title="USA, UK, India">
                       <span className="text-gray-600 font-medium">Top 3:</span>
-                      <span className="inline-flex items-center gap-1" title="USA, UK, India">
-                        <span aria-hidden>🇺🇸</span>
-                        <span className="font-medium text-gray-700">USA</span>
-                        <span className="text-gray-400">·</span>
-                        <span aria-hidden>🇬🇧</span>
-                        <span className="font-medium text-gray-700">UK</span>
-                        <span className="text-gray-400">·</span>
-                        <span aria-hidden>🇮🇳</span>
-                        <span className="font-medium text-gray-700">IND</span>
+                      <span className="inline-flex items-center gap-1 font-medium text-gray-700">
+                        <span aria-hidden>🇺🇸</span> USA <span className="text-gray-400">·</span> <span aria-hidden>🇬🇧</span> UK <span className="text-gray-400">·</span> <span aria-hidden>🇮🇳</span> IND
                       </span>
                     </span>
                   </div>
                 </div>
                 <p className="hidden sm:block text-sm text-gray-600 group-hover:text-gray-700 transition-colors">Developer tools for daily use</p>
-                <div className="hidden sm:flex flex-wrap items-center gap-1.5 mt-1">
-                  <span className="inline-flex items-center gap-1 rounded-md bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-800 border border-emerald-200 shadow-sm">🔒 No data stored</span>
-                  <span className="text-gray-300 font-medium" aria-hidden>·</span>
-                  <span className="inline-flex items-center gap-1 rounded-md bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-800 border border-blue-200 shadow-sm">💻 100% in-browser</span>
-                  <span className="text-gray-300 font-medium" aria-hidden>·</span>
-                  <Link href={toolPageUrls.schemamasker} className="inline-flex items-center gap-1 rounded-md bg-violet-100 px-2.5 py-1 text-xs font-semibold text-violet-800 border border-violet-200 shadow-sm hover:bg-violet-200/80 transition-colors">🛡️ AI Data Masker</Link>
-                  <span className="text-gray-300 font-medium" aria-hidden>·</span>
-                  <span className="inline-flex items-center gap-1 rounded-md bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-800 border border-amber-200 shadow-sm">✓ No signup</span>
-                  <span className="text-gray-300 font-medium hidden md:inline" aria-hidden>·</span>
-                  <Link href={toolPageUrls.schemamasker} className="hidden md:inline-flex items-center rounded-md bg-primary-100 px-2.5 py-1 text-xs font-semibold text-primary-800 border border-primary-200 shadow-sm hover:bg-primary-200/80 transition-colors">Use AI without leaking your data</Link>
+                <div className="hidden sm:flex flex-wrap items-center gap-2 mt-1.5">
+                  <span className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800 border border-emerald-200/80 shadow-sm">
+                    <Lock className="w-3.5 h-3.5 text-emerald-600" aria-hidden /> No data stored
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-800 border border-blue-200/80 shadow-sm">
+                    <Shield className="w-3.5 h-3.5 text-blue-600" aria-hidden /> 100% in-browser
+                  </span>
+                  <Link href={toolPageUrls.schemamasker} className="inline-flex items-center gap-1.5 rounded-lg bg-violet-50 px-3 py-1.5 text-xs font-semibold text-violet-800 border border-violet-200/80 shadow-sm hover:bg-violet-100/80 hover:border-violet-300 transition-colors">
+                    <ShieldCheck className="w-3.5 h-3.5 text-violet-600" aria-hidden /> AI Data Masker
+                  </Link>
+                  <span className="inline-flex items-center gap-1.5 rounded-lg bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-800 border border-amber-200/80 shadow-sm">✓ No signup</span>
+                  <Link href={toolPageUrls.schemamasker} className="hidden md:inline-flex items-center gap-1.5 rounded-lg bg-primary-50 px-3 py-1.5 text-xs font-semibold text-primary-800 border border-primary-200/80 shadow-sm hover:bg-primary-100 hover:border-primary-300 transition-colors">
+                    Use AI without leaking your data
+                  </Link>
                 </div>
               </div>
             </div>
             <div id="ezoic-pub-ad-placeholder-100" className="hidden lg:block flex-1 min-w-0" />
             <nav className="flex items-center justify-end gap-2 sm:gap-3 flex-shrink-0" aria-label="Main navigation">
-              <Link href="/blog" className="px-4 py-2.5 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-lg shadow-pro hover:shadow-pro-md transition-all duration-200" aria-label="Developer's Study Materials">
+              <Link href="/blog" className="px-4 py-2.5 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-xl shadow-lg shadow-primary-900/20 hover:shadow-xl hover:shadow-primary-900/25 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2" aria-label="Developer's Study Materials">
                 <FileText className="h-4 w-4 sm:hidden" aria-hidden />
-                <span className="hidden sm:inline">Developer's Study Materials 📚</span>
+                <span className="hidden sm:inline">Developer&apos;s Study Materials 📚</span>
               </Link>
-              <Link href="/about" className="px-4 py-2.5 text-sm font-medium text-gray-600 hover:text-primary-700 hover:bg-primary-50 rounded-lg border border-transparent hover:border-primary-200/80 transition-all duration-200">About</Link>
+              <Link href="/about" className="px-4 py-2.5 text-sm font-medium text-gray-600 hover:text-primary-700 hover:bg-primary-50 rounded-xl border border-gray-200 hover:border-primary-200 transition-all duration-200">About</Link>
             </nav>
           </div>
 
-          {/* Tool tabs — compact grid, clear labels, small badges */}
-          <div className="border-t border-gray-200/80 bg-gray-50/70 px-4 sm:px-6 lg:px-8 py-3">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3 mb-2">
-              <p className="text-xs font-semibold text-gray-600 uppercase tracking-wider sm:shrink-0">Developer&apos;s Daily Tools</p>
+          {/* Tool tabs — compact grid, trust banner */}
+          <div className="border-t border-gray-200 bg-gradient-to-b from-gray-50/90 to-gray-50/70 px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3">
+              <p className="text-xs font-bold text-gray-600 uppercase tracking-widest sm:shrink-0">Developer&apos;s Daily Tools</p>
               <div className="flex justify-center sm:flex-1">
-                <p className="text-sm text-emerald-700 font-bold bg-emerald-50 border border-emerald-200/80 rounded-md px-3 py-1.5 inline-flex items-center">
-                  <Lock className="w-4 h-4 mr-2 shrink-0" aria-hidden />
-                  100% client-side — your data never leaves your device.
+                <p className="text-sm text-emerald-800 font-semibold bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-2.5 inline-flex items-center gap-2.5 shadow-sm ring-1 ring-emerald-100/50">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-100">
+                    <Lock className="w-4 h-4 text-emerald-700" aria-hidden />
+                  </span>
+                  <span>100% client-side — your data never leaves your device.</span>
                 </p>
               </div>
             </div>
@@ -628,48 +625,48 @@ function HomeClient() {
               onClick={() => handleTabChange('beautifier')}
               className={`group tab-card w-full px-2.5 py-2 rounded-xl border text-left transition-all duration-200 flex items-center gap-2 min-h-[2.75rem] ${
                 activeTab === 'beautifier'
-                  ? 'bg-primary-50 border-primary-300 text-primary-800 shadow-sm'
-                  : 'bg-white/90 border-gray-200/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm'
+                  ? 'bg-primary-50 border-primary-300 text-primary-800 shadow-md ring-1 ring-primary-200/50'
+                  : 'bg-white border-gray-200 text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100'
               }`}
             >
               <Code2 className="w-4 h-4 flex-shrink-0 text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">JSON Beautifier</span>
             </button>
-            <Link href={toolPageUrls.sql} className="group tab-card relative w-full px-2.5 py-2 pr-8 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+            <Link href={toolPageUrls.sql} className="group tab-card relative w-full px-2.5 py-2 pr-8 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <Database className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0 flex-1">SQL Formatter</span>
               <span className="absolute top-1.5 right-1.5 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-red-100 text-red-600">Hot</span>
             </Link>
-            <Link href={toolPageUrls.schemamasker} className="group tab-card relative w-full px-2.5 py-2 pr-8 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+            <Link href={toolPageUrls.schemamasker} className="group tab-card relative w-full px-2.5 py-2 pr-8 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <ShieldCheck className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0 flex-1">Schema Masker</span>
               <span className="absolute top-1.5 right-1.5 text-xs font-semibold px-2 py-0.5 rounded bg-violet-100 text-violet-600">AI</span>
             </Link>
-            <Link href={toolPageUrls.jsonpromptshield} className="group tab-card relative w-full px-2.5 py-2 pr-8 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+            <Link href={toolPageUrls.jsonpromptshield} className="group tab-card relative w-full px-2.5 py-2 pr-8 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <Shield className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0 flex-1">JSON Shield</span>
               <span className="absolute top-1.5 right-1.5 text-xs font-semibold px-2 py-0.5 rounded bg-violet-100 text-violet-600">AI</span>
             </Link>
-            <Link href={toolPageUrls.codemasker} className="group tab-card relative w-full px-2.5 py-2 pr-8 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+            <Link href={toolPageUrls.codemasker} className="group tab-card relative w-full px-2.5 py-2 pr-8 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <Shield className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0 flex-1">Code Shield</span>
               <span className="absolute top-1.5 right-1.5 text-xs font-semibold px-2 py-0.5 rounded bg-violet-100 text-violet-600">AI</span>
             </Link>
-            <Link href={toolPageUrls.promptchunk} className="group tab-card relative w-full px-2.5 py-2 pr-8 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+            <Link href={toolPageUrls.promptchunk} className="group tab-card relative w-full px-2.5 py-2 pr-8 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <Scissors className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0 flex-1">Prompt Chunker</span>
               <span className="absolute top-1.5 right-1.5 text-xs font-semibold px-2 py-0.5 rounded bg-violet-100 text-violet-600">AI</span>
             </Link>
-            <Link href={toolPageUrls.builder} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+            <Link href={toolPageUrls.builder} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <FileSpreadsheet className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">Log Unpacker</span>
               <Star className="w-3.5 h-3.5 flex-shrink-0 fill-emerald-500 text-emerald-500" aria-hidden />
             </Link>
-            <Link href="/svg-to-image" className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+            <Link href="/svg-to-image" className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <Image className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">SVG to JPEG/PNG</span>
             </Link>
-            <Link href={toolPageUrls.jsoncompare} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+            <Link href={toolPageUrls.jsoncompare} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <GitCompare className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">Smart JSON Diff</span>
               <Star className="w-3.5 h-3.5 flex-shrink-0 fill-emerald-500 text-emerald-500" aria-hidden />
@@ -678,66 +675,66 @@ function HomeClient() {
               onClick={() => handleTabChange('converter')}
               className={`group tab-card w-full px-2.5 py-2 rounded-xl border text-left transition-all duration-200 flex items-center gap-2 min-h-[2.75rem] ${
                 activeTab === 'converter'
-                  ? 'bg-primary-50 border-primary-300 text-primary-800 shadow-sm'
-                  : 'bg-white/90 border-gray-200/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm'
+                  ? 'bg-primary-50 border-primary-300 text-primary-800 shadow-md ring-1 ring-primary-200/50'
+                  : 'bg-white border-gray-200 text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100'
               }`}
             >
               <FileSpreadsheet className="w-4 h-4 flex-shrink-0 text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">Json to Excel</span>
             </button>
-            <Link href={toolPageUrls.fixer} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+            <Link href={toolPageUrls.fixer} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <Wrench className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">JSON Fixer</span>
             </Link>
-            <Link href={toolPageUrls.tokencompare} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+            <Link href={toolPageUrls.tokencompare} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <Key className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">Token Compare</span>
             </Link>
-            <Link href={toolPageUrls.comparator} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+            <Link href={toolPageUrls.comparator} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <GitCompare className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">API Compare</span>
             </Link>
-            <Link href={toolPageUrls.regextester} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+            <Link href={toolPageUrls.regextester} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <Code2 className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">Regex Tester</span>
             </Link>
-            <Link href={toolPageUrls.schema} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+            <Link href={toolPageUrls.schema} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <FileCode className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">Schema</span>
             </Link>
-            <Link href={toolPageUrls.logs} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+            <Link href={toolPageUrls.logs} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <FileSearch className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">Logs Analyzer</span>
             </Link>
-            <Link href={toolPageUrls.payload} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+            <Link href={toolPageUrls.payload} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <BarChart3 className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">Payload</span>
             </Link>
-            <Link href={toolPageUrls.curl} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+            <Link href={toolPageUrls.curl} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <Code className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">Convert Curl</span>
             </Link>
-            <Link href={toolPageUrls.mock} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+            <Link href={toolPageUrls.mock} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <Server className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">Mock API</span>
             </Link>
-            <Link href={toolPageUrls.testdata} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+            <Link href={toolPageUrls.testdata} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <Database className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">Test Data</span>
             </Link>
-            <Link href={toolPageUrls.config} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+            <Link href={toolPageUrls.config} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <Settings className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">Config</span>
             </Link>
-            <Link href={toolPageUrls.timezone} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+            <Link href={toolPageUrls.timezone} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <Clock className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">Timezone</span>
             </Link>
-            <Link href={toolPageUrls.hartocurl} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+            <Link href={toolPageUrls.hartocurl} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <Network className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">HAR to cURL</span>
             </Link>
-            <Link href={toolPageUrls.curlfailure} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200/90 bg-white/90 text-gray-700 hover:border-gray-300 hover:bg-white hover:shadow-sm transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+            <Link href={toolPageUrls.curlfailure} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <AlertTriangle className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">cURL Analyzer</span>
             </Link>
@@ -746,18 +743,24 @@ function HomeClient() {
         </div>
       </header>
 
-      {/* Ad strip — single row, minimal gap before main content */}
-      <div key={activeTab} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-1.5 border-b border-gray-100 bg-white/50">
-        <div id="ezoic-pub-ad-placeholder-101" className="min-h-[50px] flex items-center justify-center" />
-        <div id="ezoic-pub-ad-placeholder-111" className="min-h-[90px] flex items-center justify-center" aria-label="Advertisement" />
+      {/* Ad strip — collapsed when Beautifier active so workbench sits right under tools */}
+      <div key={activeTab} className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-0 border-b border-gray-100 bg-white/50 ${activeTab === 'beautifier' ? 'min-h-0 overflow-hidden' : ''}`}>
+        <div id="ezoic-pub-ad-placeholder-101" className={activeTab === 'beautifier' ? 'min-h-0 h-0 overflow-hidden' : 'min-h-[50px] flex items-center justify-center'} />
+        <div id="ezoic-pub-ad-placeholder-111" className={activeTab === 'beautifier' ? 'min-h-0 h-0 overflow-hidden' : 'min-h-[90px] flex items-center justify-center'} aria-label="Advertisement" />
       </div>
 
       {/* Main Content */}
-      <main id="main-content" className={`flex-1 w-full animate-fade-in ${activeTab === 'beautifier' ? 'pt-4 sm:pt-6 pb-10 sm:pb-12 lg:pb-14' : 'py-8 sm:py-10 lg:py-12'}`}>
+      <main id="main-content" className={`flex-1 w-full animate-fade-in ${activeTab === 'beautifier' ? 'pt-0 pb-10 sm:pb-12 lg:pb-14' : 'py-8 sm:py-10 lg:py-12'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {activeTab === 'beautifier' && (
-          <div className="max-w-4xl mx-auto">
-            <div className="rounded-2xl bg-white shadow-md border border-gray-200 p-5 sm:p-6 lg:p-8">
+          <div className="w-full max-w-7xl mx-auto">
+            <div className="rounded-2xl bg-white shadow-lg border border-gray-200 overflow-hidden ring-1 ring-gray-100/80 p-6 sm:p-8 lg:p-10">
+              <div className="flex items-center justify-between gap-2 mb-5 pb-4 border-b border-gray-100">
+                <p className="text-sm font-medium text-gray-500 flex items-center gap-2">
+                  <Lock className="w-4 h-4 text-emerald-600" aria-hidden />
+                  Runs in your browser — nothing is sent to servers
+                </p>
+              </div>
               <JsonBeautifier />
             </div>
           </div>
@@ -797,8 +800,10 @@ function HomeClient() {
               </section>
 
               {/* How it works — E-E-A-T / trust */}
-              <section className="rounded-2xl border border-emerald-200/80 bg-emerald-50/60 p-5 sm:p-6" aria-labelledby="how-it-works-heading">
-                <h2 id="how-it-works-heading" className="text-sm font-semibold text-gray-800 uppercase tracking-wider mb-3">How it works</h2>
+              <section className="rounded-2xl border border-emerald-200 bg-emerald-50/80 p-5 sm:p-6 shadow-sm ring-1 ring-emerald-100/50" aria-labelledby="how-it-works-heading">
+                <h2 id="how-it-works-heading" className="text-sm font-semibold text-emerald-900 uppercase tracking-wider mb-3 flex items-center gap-2">
+                  <Lock className="w-4 h-4 text-emerald-600" aria-hidden /> How it works
+                </h2>
                 <p className="text-gray-700 text-sm leading-relaxed mb-3">
                   All tools run <strong>entirely in your browser</strong>. Your JSON, SQL, and logs never leave your device — nothing is sent to our servers or stored. Paste your data, mask or format it, then copy the result. Use the output safely with ChatGPT or any AI without exposing real schemas or PII.
                 </p>

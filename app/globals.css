@@ -146,6 +146,16 @@ input, select, textarea {
   animation: badge-flash 1.5s ease-in-out infinite;
 }
 
+/* Soft glow pulse for CTA buttons (emerald/teal) */
+@keyframes btn-glow-pulse {
+  0%, 100% { box-shadow: 0 4px 14px 0 rgb(16 185 129 / 0.45), 0 0 0 1px rgb(255 255 255 / 0.2) inset; }
+  50% { box-shadow: 0 6px 20px 2px rgb(16 185 129 / 0.5), 0 0 0 1px rgb(255 255 255 / 0.3) inset; }
+}
+
+.animate-btn-glow {
+  animation: btn-glow-pulse 2s ease-in-out infinite;
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 248, 250, 252;
