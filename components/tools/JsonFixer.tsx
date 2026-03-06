@@ -650,7 +650,7 @@ export default function JsonFixer() {
       {/* Fix from API error */}
       <div className="bg-white rounded-xl shadow p-4 border border-gray-200">
         <h3 className="text-sm font-bold text-gray-800 mb-2">Fix from API error</h3>
-        <p className="text-xs text-gray-500 mb-2">Paste an error like &quot;Unexpected token } in JSON at position 245&quot; to highlight the position.</p>
+        <p className="text-xs text-gray-500 mb-2">Paste an error like &quot;Unexpected token {'}'} in JSON at position 245&quot; to highlight the position.</p>
         <div className="flex gap-2">
           <input
             type="text"
