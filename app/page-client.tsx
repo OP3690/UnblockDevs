@@ -209,14 +209,13 @@ function HomeClient() {
         }
       } catch (_) {}
     };
-    initAdSense();
-    const t1 = setTimeout(initAdSense, 800);
-    const t2 = setTimeout(initAdSense, 2500);
-    const t3 = setTimeout(initAdSense, 5000);
+    const t0 = setTimeout(initAdSense, 9000);
+    const t1 = setTimeout(initAdSense, 9500);
+    const t2 = setTimeout(initAdSense, 10000);
     return () => {
+      clearTimeout(t0);
       clearTimeout(t1);
       clearTimeout(t2);
-      clearTimeout(t3);
     };
   }, [mounted]);
 
@@ -252,8 +251,8 @@ function HomeClient() {
         }
       };
       
-      // Try after a delay to ensure script is loaded
-      const timer = setTimeout(initEzoicAds, 2000);
+      // Show ads only after 9 seconds
+      const timer = setTimeout(initEzoicAds, 9000);
       return () => clearTimeout(timer);
     }
   }, [mounted]);
