@@ -435,10 +435,10 @@ export default function AiSchemaMaskerClient() {
           </nav>
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
             <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
                 <ShieldCheck className="w-6 h-6 text-emerald-600 flex-shrink-0" aria-hidden />
                 AI Schema Masker
-              </h1>
+              </h2>
               <p className="mt-1 text-slate-600 text-sm max-w-2xl">
                 World&apos;s first fully client-side SQL identifier masker. Mask tables and columns for AI prompts, then restore the response—all in your browser. No data ever leaves your device.
               </p>

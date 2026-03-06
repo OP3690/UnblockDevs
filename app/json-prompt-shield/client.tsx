@@ -161,10 +161,10 @@ export default function JsonPromptShieldClient() {
           </nav>
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
             <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
                 <ShieldCheck className="w-6 h-6 text-violet-600 flex-shrink-0" aria-hidden />
                 Secure AI JSON Prompt Shield
-              </h1>
+              </h2>
               <p className="mt-1 text-slate-600 text-sm max-w-2xl">
                 High-performance JSON payload masking: keys → K_00001, string values → S_00001. Numbers unchanged. Structure preserved. 100% client-side, fully reversible.
               </p>

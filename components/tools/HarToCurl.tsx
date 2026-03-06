@@ -203,9 +203,9 @@ export default function HarToCurl() {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
+        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
           HAR to cURL Converter
-        </h1>
+        </h2>
         <p className="text-lg text-gray-600 mb-4">
           Convert network HAR files into reproducible API requests. Paste or upload a HAR file; get clean cURL, multi-language code, timeline, and AI-ready debug prompts. Everything runs 100% client-side.
         </p>

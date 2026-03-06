@@ -19,7 +19,7 @@ export default function JsonComparatorClient() {
             <ArrowLeft className="w-4 h-4" />
             Back to Tools
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Smart JSON Data Diff</h1>
+          <h2 className="text-3xl font-bold text-gray-900">Smart JSON Data Diff</h2>
           <p className="text-sm text-gray-500 mt-1">Semantic comparison for API payloads — normalizes dynamic noise so only real logic changes appear</p>
         </div>
       </header>

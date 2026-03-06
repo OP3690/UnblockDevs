@@ -33,7 +33,7 @@ export default function LogUnpackerClient() {
             <ArrowLeft className="h-4 w-4" />
             Back to Tools
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Log Unpacker & Sanitizer</h1>
+          <h2 className="text-3xl font-bold text-gray-900">Log Unpacker & Sanitizer</h2>
           <p className="mt-1 text-sm text-gray-500">
             Recursively unescape JSON, decode JWTs, detect timestamps, scrub paths. 100% client-side.
           </p>

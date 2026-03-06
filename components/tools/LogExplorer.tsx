@@ -253,10 +253,12 @@ export default function LogExplorer() {
         </div>
         <div className="p-6">
           <textarea
+            id="log-explorer-paste"
             value={logText}
             onChange={(e) => setLogText(e.target.value)}
             placeholder="Paste your logs here..."
             className="w-full min-h-[220px] p-4 border border-gray-200 rounded-xl font-mono text-sm resize-y focus:ring-2 focus:ring-primary-500 focus:border-primary-400"
+            aria-label="Paste logs to analyze"
           />
           <div className="mt-4 flex flex-wrap gap-3 items-center">
             <button
@@ -408,16 +410,20 @@ export default function LogExplorer() {
             </div>
             <div className="flex flex-wrap gap-3 mb-3">
               <input
+                id="log-explorer-search"
                 type="text"
                 placeholder="Search... level:ERROR, service:auth, /regex/"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="flex-1 min-w-[200px] px-3 py-2 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-400"
+                aria-label="Search logs"
               />
               <select
+                id="log-explorer-level"
                 value={filterLevel}
                 onChange={(e) => setFilterLevel(e.target.value)}
                 className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                aria-label="Filter by log level"
               >
                 <option value="all">All levels</option>
                 <option value="ERROR">Error</option>
@@ -427,38 +433,44 @@ export default function LogExplorer() {
               </select>
             </div>
             <div className="flex flex-wrap gap-4 text-sm">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={errorsOnly} onChange={(e) => setErrorsOnly(e.target.checked)} className="rounded" />
+              <label htmlFor="log-explorer-errors-only" className="flex items-center gap-2 cursor-pointer">
+                <input id="log-explorer-errors-only" type="checkbox" checked={errorsOnly} onChange={(e) => setErrorsOnly(e.target.checked)} className="rounded" />
                 Errors only
               </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={warningsOnly} onChange={(e) => setWarningsOnly(e.target.checked)} className="rounded" />
+              <label htmlFor="log-explorer-warnings" className="flex items-center gap-2 cursor-pointer">
+                <input id="log-explorer-warnings" type="checkbox" checked={warningsOnly} onChange={(e) => setWarningsOnly(e.target.checked)} className="rounded" />
                 Warnings
               </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={hideDebug} onChange={(e) => setHideDebug(e.target.checked)} className="rounded" />
+              <label htmlFor="log-explorer-hide-debug" className="flex items-center gap-2 cursor-pointer">
+                <input id="log-explorer-hide-debug" type="checkbox" checked={hideDebug} onChange={(e) => setHideDebug(e.target.checked)} className="rounded" />
                 Hide debug
               </label>
               <input
+                id="log-explorer-service"
                 type="text"
                 placeholder="Service"
                 value={filterService}
                 onChange={(e) => setFilterService(e.target.value)}
                 className="w-32 px-2 py-1 border border-gray-300 rounded text-sm"
+                aria-label="Filter by service"
               />
               <input
+                id="log-explorer-trace-id"
                 type="text"
                 placeholder="Trace ID"
                 value={filterTraceId}
                 onChange={(e) => setFilterTraceId(e.target.value)}
                 className="w-32 px-2 py-1 border border-gray-300 rounded text-sm"
+                aria-label="Filter by Trace ID"
               />
               <input
+                id="log-explorer-request-id"
                 type="text"
                 placeholder="Request ID"
                 value={filterRequestId}
                 onChange={(e) => setFilterRequestId(e.target.value)}
                 className="w-32 px-2 py-1 border border-gray-300 rounded text-sm"
+                aria-label="Filter by Request ID"
               />
             </div>
           </div>
@@ -616,16 +628,16 @@ export default function LogExplorer() {
           <div className="bg-white rounded-xl shadow border border-gray-200 p-4">
             <h3 className="text-sm font-bold text-gray-900 mb-3">Log noise cleaner</h3>
             <div className="flex flex-wrap gap-4 text-sm">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={noiseDebug} onChange={(e) => setNoiseDebug(e.target.checked)} className="rounded" />
+              <label htmlFor="log-explorer-noise-debug" className="flex items-center gap-2 cursor-pointer">
+                <input id="log-explorer-noise-debug" type="checkbox" checked={noiseDebug} onChange={(e) => setNoiseDebug(e.target.checked)} className="rounded" />
                 Remove debug
               </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={noiseHealth} onChange={(e) => setNoiseHealth(e.target.checked)} className="rounded" />
+              <label htmlFor="log-explorer-noise-health" className="flex items-center gap-2 cursor-pointer">
+                <input id="log-explorer-noise-health" type="checkbox" checked={noiseHealth} onChange={(e) => setNoiseHealth(e.target.checked)} className="rounded" />
                 Remove health checks
               </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={noiseStatic} onChange={(e) => setNoiseStatic(e.target.checked)} className="rounded" />
+              <label htmlFor="log-explorer-noise-static" className="flex items-center gap-2 cursor-pointer">
+                <input id="log-explorer-noise-static" type="checkbox" checked={noiseStatic} onChange={(e) => setNoiseStatic(e.target.checked)} className="rounded" />
                 Remove static asset logs
               </label>
             </div>
@@ -636,10 +648,12 @@ export default function LogExplorer() {
             <h3 className="text-sm font-bold text-gray-900 mb-3">Stack trace cleaner</h3>
             <p className="text-xs text-gray-500 mb-2">Paste a stack trace to remove local paths and usernames.</p>
             <textarea
+              id="log-explorer-stack-cleaner"
               value={stackCleanerInput}
               onChange={(e) => setStackCleanerInput(e.target.value)}
               placeholder="Paste stack trace..."
               className="w-full h-24 p-3 border border-gray-300 rounded-lg font-mono text-xs resize-none"
+              aria-label="Paste stack trace to clean"
             />
             {stackCleanerInput && (
               <pre className="mt-2 p-3 bg-gray-50 rounded-lg text-xs overflow-x-auto whitespace-pre-wrap">
