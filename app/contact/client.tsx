@@ -1,9 +1,42 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Mail, MessageSquare, HelpCircle, FileText, Heart } from 'lucide-react';
+import { ArrowLeft, Mail, MessageSquare, HelpCircle, FileText, Heart, Send } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function ContactClient() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [feedback, setFeedback] = useState('');
+  const [sending, setSending] = useState(false);
+
+  const handleFeedbackSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!feedback.trim()) {
+      toast.error('Please enter your feedback');
+      return;
+    }
+    setSending(true);
+    try {
+      const res = await fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, message: feedback, type: 'feedback', toolName: 'Contact' }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to send');
+      setName('');
+      setEmail('');
+      setFeedback('');
+      toast.success('Thank you! Your feedback has been sent.');
+    } catch {
+      toast.error('Could not send. You can email us at support@unblockdevs.com');
+    } finally {
+      setSending(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
       <header className="bg-white shadow-md border-b border-gray-200">
@@ -28,6 +61,69 @@ export default function ContactClient() {
               Your feedback helps us improve our tools and create better experiences for developers worldwide. 
               We read every message and appreciate your input.
             </p>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Share Your Feedback</h2>
+            <p className="text-gray-600 mb-6">Help us improve! Share your thoughts, report bugs, or suggest new features.</p>
+            <form onSubmit={handleFeedbackSubmit} className="space-y-4 max-w-xl">
+              <div>
+                <label htmlFor="contact-name" className="block text-sm font-medium text-gray-700 mb-1">Your name (optional)</label>
+                <input
+                  id="contact-name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Your name"
+                />
+              </div>
+              <div>
+                <label htmlFor="contact-email" className="block text-sm font-medium text-gray-700 mb-1">Your email (optional)</label>
+                <input
+                  id="contact-email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="your@email.com"
+                />
+              </div>
+              <div>
+                <label htmlFor="contact-feedback" className="block text-sm font-medium text-gray-700 mb-1">Your feedback, bug report, or feature request...</label>
+                <textarea
+                  id="contact-feedback"
+                  required
+                  rows={5}
+                  value={feedback}
+                  onChange={(e) => setFeedback(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
+                  placeholder="Tell us what's on your mind..."
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={sending}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:opacity-70 transition-colors"
+              >
+                {sending ? 'Sending...' : (
+                  <>
+                    <Send className="w-4 h-4" />
+                    Send Feedback
+                  </>
+                )}
+              </button>
+            </form>
+          </section>
+
+          <section className="mb-12 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Get in Touch</h2>
+            <p className="text-gray-700 mb-4">We&apos;d love to hear from you! Write us for any additional feature request, issues, query or appreciation.</p>
+            <a href="mailto:support@unblockdevs.com" className="inline-flex items-center gap-2 text-lg font-semibold text-blue-600 hover:text-blue-700 hover:underline">
+              <Mail className="w-5 h-5" />
+              support@unblockdevs.com
+            </a>
+            <p className="text-gray-600 text-sm mt-4">Your feedback helps us improve and build better tools for the developer community.</p>
           </section>
 
           <section className="mb-12">
