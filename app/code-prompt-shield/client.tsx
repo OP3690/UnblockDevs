@@ -497,10 +497,22 @@ export default function CodePromptShieldClient() {
             </label>
 
             <div className="mb-3 flex gap-2 border-b border-slate-200">
-              <button type="button" onClick={() => setDiffView('original')} className={`px-3 py-2 text-sm font-medium rounded-t-lg transition-colors ${diffView === 'original' ? 'bg-slate-100 text-slate-900 border border-slate-200 border-b-0 -mb-px' : 'text-slate-500 hover:text-slate-700'}`}>
+              <button
+                type="button"
+                onClick={() => setDiffView('original')}
+                className={`cta-tab-original px-4 py-2.5 text-sm font-semibold rounded-t-lg transition-all border-b-2 -mb-px ${diffView === 'original' ? 'bg-emerald-50 text-emerald-800 border-emerald-500 border-b-0 mb-0 pb-[calc(0.5rem+2px)]' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}
+                aria-pressed={diffView === 'original'}
+                aria-label="View original code"
+              >
                 Original code
               </button>
-              <button type="button" onClick={() => setDiffView('masked')} className={`px-3 py-2 text-sm font-medium rounded-t-lg transition-colors ${diffView === 'masked' ? 'bg-slate-100 text-slate-900 border border-slate-200 border-b-0 -mb-px' : 'text-slate-500 hover:text-slate-700'}`}>
+              <button
+                type="button"
+                onClick={() => setDiffView('masked')}
+                className={`cta-tab-masked px-4 py-2.5 text-sm font-semibold rounded-t-lg transition-all border-b-2 -mb-px ${diffView === 'masked' ? 'bg-violet-50 text-violet-800 border-violet-500 border-b-0 mb-0 pb-[calc(0.5rem+2px)]' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}
+                aria-pressed={diffView === 'masked'}
+                aria-label="View masked code"
+              >
                 Masked (what AI sees)
               </button>
             </div>
@@ -515,7 +527,7 @@ export default function CodePromptShieldClient() {
                 <button
                   type="button"
                   onClick={() => setShowMapping(!showMapping)}
-                  className="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-800"
+                  className="cta-mapping-toggle flex items-center gap-2 px-3 py-2 text-sm font-semibold rounded-lg border-2 border-indigo-200 bg-indigo-50 text-indigo-800 hover:bg-indigo-100 hover:border-indigo-300 transition-colors"
                 >
                   {showMapping ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   Mapping table

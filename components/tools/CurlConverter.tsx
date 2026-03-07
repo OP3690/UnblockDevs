@@ -179,7 +179,7 @@ export default function CurlConverter() {
                 <button
                   type="button"
                   onClick={() => setShowExamples(!showExamples)}
-                  className="text-sm text-slate-600 hover:text-slate-800 flex items-center gap-1"
+                  className="cta-curl-examples inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold rounded-lg border border-slate-300 bg-slate-50 text-slate-700 hover:bg-slate-100 hover:border-slate-400"
                 >
                   <Sparkles className="w-4 h-4" /> Examples
                 </button>
@@ -187,7 +187,7 @@ export default function CurlConverter() {
                   type="button"
                   onClick={handleBeautify}
                   disabled={!curlCommand.trim()}
-                  className="text-sm text-slate-600 hover:text-slate-800 disabled:opacity-50"
+                  className="cta-curl-beautify inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold rounded-lg border border-slate-300 bg-slate-50 text-slate-700 hover:bg-slate-100 hover:border-slate-400 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Beautify
                 </button>
@@ -222,7 +222,7 @@ export default function CurlConverter() {
             type="button"
           onClick={convert}
           disabled={!curlCommand.trim()}
-            className="w-full py-3 bg-slate-700 text-white font-semibold rounded-lg hover:bg-slate-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+            className="cta-curl-convert w-full py-3 bg-slate-700 text-white font-semibold rounded-lg hover:bg-slate-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
         >
           Convert cURL to Code
         </button>

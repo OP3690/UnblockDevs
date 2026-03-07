@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import { useDevMode } from '@/components/DevModeWrapper';
 import {
   parseInput,
   cleanIds,
@@ -76,6 +77,29 @@ export default function SqlFormatter() {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [ids, setIds] = useState<string[]>([]);
   const resultsSectionRef = useRef<HTMLDivElement>(null);
+  const contextDevMode = useDevMode().devMode;
+  const [isDarkFromDOM, setIsDarkFromDOM] = useState(false);
+
+  useEffect(() => {
+    const el = document.documentElement;
+    const check = () => setIsDarkFromDOM(el.classList.contains('dev-mode'));
+    check();
+    const observer = new MutationObserver(check);
+    observer.observe(el, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
+  const devMode = contextDevMode || isDarkFromDOM;
+
+  /* Inline styles when dark mode is on so CTAs are guaranteed visible */
+  const dark = devMode ? {
+    formatBtn: { background: '#38bdf8', color: '#0f172a', border: '1px solid #38bdf8', boxShadow: '0 4px 20px rgba(56,189,248,0.5)' } as React.CSSProperties,
+    formatBtnDisabled: { background: 'rgba(56,189,248,0.25)', color: '#94a3b8', border: '1px solid rgba(56,189,248,0.5)' } as React.CSSProperties,
+    examplesBtn: { background: 'rgba(56,189,248,0.25)', color: '#38bdf8', border: '1px solid #38bdf8', boxShadow: '0 2px 10px rgba(56,189,248,0.3)' } as React.CSSProperties,
+    moreOptionsBtn: { color: '#22d3ee', fontWeight: 600 } as React.CSSProperties,
+    moreOptionsIcon: { color: '#22d3ee', stroke: '#22d3ee' } as React.CSSProperties,
+    clearBtn: { background: 'rgba(251,191,36,0.2)', color: '#fbbf24', border: '1px solid #fbbf24' } as React.CSSProperties,
+  } : null;
 
   const quote = quoteType;
 
@@ -265,7 +289,9 @@ export default function SqlFormatter() {
                 setInput(SAMPLE_50_IDS.join('\n'));
                 toast.success('Loaded 50 sample IDs (15-char alphanumeric with hyphen)');
               }}
-              className="inline-flex items-center px-4 py-2 rounded-lg border border-primary-300 bg-primary-50 text-primary-700 text-sm font-semibold hover:bg-primary-100 transition-colors"
+              className="cta-examples inline-flex items-center px-4 py-2 rounded-lg border border-primary-300 bg-primary-50 text-primary-700 text-sm font-semibold hover:bg-primary-100 transition-colors"
+              style={dark?.examplesBtn}
+              aria-label="Load sample data"
             >
               Load Sample
             </button>
@@ -391,10 +417,12 @@ export default function SqlFormatter() {
               <button
                 type="button"
                 onClick={() => setShowAdvanced(!showAdvanced)}
-                className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors"
+                className="cta-more-options flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors"
+                style={dark?.moreOptionsBtn}
                 aria-expanded={showAdvanced}
+                aria-label={showAdvanced ? 'Hide more options' : 'Show more options'}
               >
-                {showAdvanced ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                {showAdvanced ? <ChevronUp className="w-4 h-4" style={dark?.moreOptionsIcon} /> : <ChevronDown className="w-4 h-4" style={dark?.moreOptionsIcon} />}
                 More options
               </button>
               {showAdvanced && (
@@ -508,16 +536,19 @@ export default function SqlFormatter() {
             <button
               onClick={formatInput}
               disabled={!input.trim()}
-              className="flex-1 min-w-[140px] py-3 px-5 bg-primary-600 text-white rounded-xl font-semibold hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+              className="cta-format-primary flex-1 min-w-[140px] py-3 px-5 bg-primary-600 text-white rounded-xl font-semibold hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+              style={dark ? (!input.trim() ? dark.formatBtnDisabled : dark.formatBtn) : undefined}
             >
-              <Database className="w-5 h-5" aria-hidden />
+              <Database className="w-5 h-5" aria-hidden style={dark ? (!input.trim() ? { color: 'var(--dev-text-muted)', fill: 'var(--dev-text-muted)' } : { color: '#0f172a', fill: '#0f172a', stroke: '#0f172a' }) : undefined} />
               Format
             </button>
             <button
               onClick={handleClear}
-              className="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors flex items-center gap-2"
+              className="cta-clear px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors flex items-center gap-2"
+              style={dark?.clearBtn}
+              aria-label="Clear input and output"
             >
-              <RefreshCw className="w-5 h-5" aria-hidden />
+              <RefreshCw className="w-5 h-5" aria-hidden style={dark?.clearBtn ? { color: '#fbbf24', fill: '#fbbf24' } : undefined} />
               Clear
             </button>
           </div>
@@ -539,14 +570,14 @@ export default function SqlFormatter() {
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={handleCopy}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-colors"
+                className="cta-icon-copy inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-colors"
               >
                 {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                 {copied ? 'Copied!' : 'Copy'}
               </button>
               <button
                 onClick={handleShare}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+                className="cta-icon-share inline-flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition-colors"
               >
                 <Share2 className="w-4 h-4" aria-hidden />
                 Share URL

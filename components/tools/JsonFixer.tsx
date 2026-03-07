@@ -650,7 +650,7 @@ export default function JsonFixer() {
       {/* Fix from API error */}
       <div className="bg-white rounded-xl shadow p-4 border border-gray-200">
         <h3 className="text-sm font-bold text-gray-800 mb-2">Fix from API error</h3>
-        <p className="text-xs text-gray-500 mb-2">Paste an error like &quot;Unexpected token {'}'} in JSON at position 245&quot; to highlight the position.</p>
+        <p className="text-xs text-gray-500 mb-2">Paste an error like &quot;Unexpected token <code className="inline px-1 rounded bg-gray-100">&#125;</code> in JSON at position 245&quot; to highlight the position.</p>
         <div className="flex gap-2">
           <input
             type="text"
@@ -839,7 +839,7 @@ export default function JsonFixer() {
                 type="button"
                 onClick={handleCopy}
                 disabled={!fixedJson}
-                className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+                className="cta-json-fixer-copy px-3 py-1.5 text-sm font-semibold bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
               >
                 {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                 Copy
@@ -848,7 +848,7 @@ export default function JsonFixer() {
                 type="button"
                 onClick={handleDownload}
                 disabled={!fixedJson}
-                className="px-3 py-1.5 text-sm bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+                className="cta-json-fixer-download px-3 py-1.5 text-sm font-semibold bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
               >
                 <Download className="w-4 h-4" />
                 Download

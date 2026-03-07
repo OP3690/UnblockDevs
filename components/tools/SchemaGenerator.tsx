@@ -359,7 +359,7 @@ export default function SchemaGenerator() {
             <button
               onClick={validateJsonAgainstSchema}
               disabled={!jsonToValidate.trim()}
-              className="w-full py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+              className="cta-validate-json w-full py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
             >
               Validate JSON
             </button>

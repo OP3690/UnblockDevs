@@ -567,12 +567,12 @@ export default function TokenComparator() {
           </div>
           <div className="flex flex-wrap gap-4 pt-4 border-t border-gray-200">
             <div className="flex items-center gap-2">
-              <span className="w-4 h-4 bg-green-100 border border-green-300 rounded" />
-              <span className="text-sm">Match</span>
+              <span className="w-4 h-4 bg-green-300 border border-green-500 rounded flex-shrink-0" />
+              <span className="token-comparator-legend-match px-2.5 py-1 rounded-md text-sm font-bold bg-green-600 text-white">Match</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-4 h-4 bg-red-100 border-2 border-red-300 rounded" />
-              <span className="text-sm">Mismatch</span>
+              <span className="w-4 h-4 bg-red-500 border-2 border-red-600 rounded flex-shrink-0" />
+              <span className="token-comparator-legend-mismatch px-2.5 py-1 rounded-md text-sm font-bold bg-red-600 text-white">Mismatch</span>
             </div>
           </div>
         </div>

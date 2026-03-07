@@ -483,18 +483,26 @@ iframe[src*="buymeacoffee.com"] {
   /* The widget loads in an iframe, so CSS cannot override the minimum amount */
 }
 
-/* ========== Dev Mode — Green hacker / terminal theme (dark bg, high-contrast text) ========== */
+/* ========== Dark Mode — Colorful, symmetrical, great visibility ========== */
 html.dev-mode {
-  --dev-bg: #0a0e14;
-  --dev-bg-card: #0c1016;
-  --dev-bg-elevated: #0f1419;
-  --dev-text: #d4ffb8;
-  --dev-text-dim: #9ee69a;
-  --dev-text-muted: #7ee787;
-  --dev-border: #238636;
-  --dev-border-strong: #2ea043;
-  --dev-accent: #00ff41;
-  font-family: var(--font-fira-code), 'Fira Code', 'Consolas', 'Monaco', monospace !important;
+  /* Background hierarchy (dark → lighter for symmetry) */
+  --dev-bg: #1e293b;
+  --dev-bg-card: #334155;
+  --dev-bg-elevated: #475569;
+  --dev-bg-input: #2d3a4a;
+  /* Text hierarchy (bright → dim for symmetry) */
+  --dev-text: #f1f5f9;
+  --dev-text-dim: #e2e8f0;
+  --dev-text-muted: #94a3b8;
+  /* Borders — visible, slight accent tint */
+  --dev-border: #475569;
+  --dev-border-strong: #64748b;
+  /* Colorful accents */
+  --dev-accent: #38bdf8;
+  --dev-accent-green: #34d399;
+  --dev-accent-amber: #fbbf24;
+  --dev-accent-violet: #a78bfa;
+  --dev-accent-cyan: #22d3ee;
 }
 
 html.dev-mode,
@@ -512,15 +520,46 @@ html.dev-mode .dev-mode-toggle-container {
   padding: 0.25rem 0.5rem !important;
 }
 
-html.dev-mode a {
+/* Dark mode: toggle track when "Dark" is active uses theme accent */
+html.dev-mode .dev-mode-toggle-container button.dark-mode-on {
+  background: var(--dev-accent) !important;
+  border-color: var(--dev-accent) !important;
+}
+html.dev-mode .dev-mode-toggle-container button.dark-mode-on:hover {
+  filter: brightness(1.1);
+}
+html.dev-mode .dev-mode-toggle-container span {
+  color: var(--dev-text) !important;
+}
+
+/* Tagline highlight: soothing in dark mode (no bright amber) */
+html.dev-mode .tagline-highlight {
+  background: rgba(125, 211, 252, 0.15) !important;
+  border-bottom-color: var(--dev-accent) !important;
+  color: var(--dev-text) !important;
+}
+
+/* Stats badges in header (Active Users, Total Visits, Top 3) — consistent borders in dark mode */
+html.dev-mode [class*="bg-blue-50/80"],
+html.dev-mode [class*="bg-purple-50/80"] {
+  background: var(--dev-bg-elevated) !important;
+  border-color: var(--dev-border) !important;
   color: var(--dev-text-dim) !important;
+}
+html.dev-mode [class*="bg-blue-50/80"] .font-bold,
+html.dev-mode [class*="bg-purple-50/80"] .font-bold {
+  color: var(--dev-accent) !important;
+}
+
+html.dev-mode a {
+  color: var(--dev-accent-violet) !important;
 }
 
 html.dev-mode a:hover {
   color: var(--dev-accent) !important;
 }
 
-/* Force all text to be readable green (no gray on dark) */
+/* Text hierarchy — all readable, symmetrical */
 html.dev-mode p,
 html.dev-mode li,
 html.dev-mode span,
@@ -535,18 +574,89 @@ html.dev-mode h5,
 html.dev-mode h6 {
   color: var(--dev-text) !important;
 }
+/* Section headings — clear hierarchy */
+html.dev-mode h3 {
+  color: var(--dev-text-dim) !important;
+}
 
+/* Secondary text — visible, symmetrical with primary */
 html.dev-mode [class*="text-gray-"],
 html.dev-mode .text-gray-500,
 html.dev-mode .text-gray-600,
-html.dev-mode .text-gray-700,
-html.dev-mode .text-gray-900,
 html.dev-mode .text-slate-500,
 html.dev-mode .text-slate-600 {
   color: var(--dev-text-dim) !important;
 }
+html.dev-mode .text-gray-700,
+html.dev-mode .text-gray-900 {
+  color: var(--dev-text) !important;
+}
+/* Section labels (uppercase, tracking) — colorful for visibility */
+html.dev-mode [class*="uppercase"][class*="tracking"],
+html.dev-mode label.text-gray-500,
+html.dev-mode label.text-gray-700,
+html.dev-mode .text-xs.font-semibold.uppercase {
+  color: var(--dev-accent-cyan) !important;
+}
 
-/* Borders in dev mode: visible green */
+/* Semantic text colors — symmetric with light mode, clearly visible in dark */
+html.dev-mode [class*="text-primary-"],
+html.dev-mode .text-primary-600,
+html.dev-mode .text-primary-700,
+html.dev-mode .text-primary-800 {
+  color: var(--dev-accent) !important;
+}
+html.dev-mode [class*="text-blue-"]:not(.text-blue-50) {
+  color: var(--dev-accent) !important;
+}
+html.dev-mode [class*="text-green-"],
+html.dev-mode [class*="text-emerald-"] {
+  color: var(--dev-accent-green) !important;
+}
+html.dev-mode [class*="text-purple-"],
+html.dev-mode [class*="text-violet-"] {
+  color: var(--dev-accent-violet) !important;
+}
+html.dev-mode [class*="text-amber-"],
+html.dev-mode [class*="text-orange-"] {
+  color: var(--dev-accent-amber) !important;
+}
+html.dev-mode [class*="text-red-"] {
+  color: #f87171 !important;
+}
+html.dev-mode [class*="text-indigo-"] {
+  color: var(--dev-accent-violet) !important;
+}
+/* Read Guide → and CTA link text — bright and visible in dark mode */
+html.dev-mode span.text-blue-600,
+html.dev-mode span[class*="text-blue-600"] { color: var(--dev-accent) !important; }
+html.dev-mode span.text-green-600,
+html.dev-mode span[class*="text-green-600"],
+html.dev-mode span.text-emerald-600,
+html.dev-mode span[class*="text-emerald-600"] { color: var(--dev-accent-green) !important; }
+html.dev-mode span.text-purple-600,
+html.dev-mode span[class*="text-purple-600"],
+html.dev-mode span.text-violet-600,
+html.dev-mode span[class*="text-violet-600"],
+html.dev-mode span.text-indigo-600 { color: var(--dev-accent-violet) !important; }
+html.dev-mode span.text-amber-600,
+html.dev-mode span[class*="text-amber-600"],
+html.dev-mode span.text-orange-600,
+html.dev-mode span[class*="text-orange-600"] { color: var(--dev-accent-amber) !important; }
+html.dev-mode span.text-red-600,
+html.dev-mode span[class*="text-red-600"] { color: #f87171 !important; }
+/* Star / favorite icon — keep visible (accent) */
+html.dev-mode .text-yellow-500,
+html.dev-mode .fill-yellow-500 {
+  color: var(--dev-accent) !important;
+  fill: var(--dev-accent) !important;
+}
+html.dev-mode .fill-emerald-500 {
+  fill: var(--dev-accent) !important;
+  color: var(--dev-accent) !important;
+}
+
+/* Borders in dark mode */
 html.dev-mode input,
 html.dev-mode textarea,
 html.dev-mode pre {
@@ -557,41 +667,73 @@ html.dev-mode [class*="border-gray"],
 html.dev-mode [class*="border-emerald"],
 html.dev-mode [class*="border-blue"],
 html.dev-mode [class*="border-violet"],
-html.dev-mode [class*="border-slate"] {
+html.dev-mode [class*="border-slate"],
+html.dev-mode [class*="border-primary"],
+html.dev-mode [class*="border-amber"],
+html.dev-mode [class*="border-indigo"],
+html.dev-mode [class*="border-teal"] {
   border-color: var(--dev-border) !important;
 }
 
-/* Force ALL light backgrounds to dark — catch every common pattern */
+/* Force ALL light backgrounds to dark — symmetrical hierarchy */
 html.dev-mode [class*="bg-white"],
 html.dev-mode .bg-white,
-html.dev-mode [class*="bg-gray-50"],
-html.dev-mode [class*="bg-gray-100"],
 html.dev-mode [class*="bg-gray-200"],
 html.dev-mode [class*="bg-slate-50"],
 html.dev-mode [class*="bg-slate-100"],
-html.dev-mode .bg-gray-50,
-html.dev-mode .bg-gray-100,
 html.dev-mode .bg-slate-50,
-html.dev-mode .bg-slate-100 {
+html.dev-mode .bg-slate-100,
+html.dev-mode [class*="bg-amber-50"],
+html.dev-mode [class*="bg-amber-100"],
+html.dev-mode [class*="bg-indigo-50"],
+html.dev-mode [class*="bg-indigo-100"],
+html.dev-mode [class*="bg-teal-50"],
+html.dev-mode [class*="bg-cyan-50"] {
   background: var(--dev-bg-card) !important;
   color: var(--dev-text) !important;
 }
+/* Option panels (gray-50) — subtle accent tint for symmetry & color */
+html.dev-mode [class*="bg-gray-50"],
+html.dev-mode .bg-gray-50 {
+  background: linear-gradient(135deg, var(--dev-bg-card) 0%, rgba(56, 189, 248, 0.06) 100%) !important;
+  color: var(--dev-text) !important;
+  border-color: var(--dev-border-strong) !important;
+}
+html.dev-mode [class*="bg-gray-100"],
+html.dev-mode .bg-gray-100 {
+  background: var(--dev-bg-elevated) !important;
+  color: var(--dev-text) !important;
+  border-color: var(--dev-border-strong) !important;
+}
 
-/* Cards and rounded content blocks — always dark background + readable text */
-html.dev-mode .rounded-xl,
-html.dev-mode .rounded-2xl,
-html.dev-mode .rounded-lg,
-html.dev-mode [class*="rounded-"][class*="border"],
+/* Cards and rounded content blocks — symmetrical dark background (exclude JSON comparator side-by-side so it keeps one flat background) */
+html.dev-mode .rounded-xl:not(button):not(a):not(.json-comparator-sidebyside),
+html.dev-mode .rounded-2xl:not(button):not(a),
+html.dev-mode .rounded-lg:not(button):not(a):not(.json-comparator-sidebyside),
+html.dev-mode [class*="rounded-"][class*="border"]:not(button):not(a):not(.json-comparator-sidebyside),
 html.dev-mode section[class*="bg-"],
-html.dev-mode div[class*="rounded-"][class*="border"] {
+html.dev-mode div[class*="rounded-"][class*="border"]:not(button):not(a):not(.json-comparator-sidebyside) {
   background: var(--dev-bg-card) !important;
-  border-color: var(--dev-border) !important;
+  border-color: var(--dev-border-strong) !important;
+  color: var(--dev-text) !important;
+}
+/* Unselected option toggles (white + border) — visible border, subtle tint */
+html.dev-mode button.bg-white,
+html.dev-mode button[class*="bg-white"] {
+  background: var(--dev-bg-input) !important;
+  color: var(--dev-text) !important;
+  border: 1px solid var(--dev-border-strong) !important;
+}
+html.dev-mode button.bg-white:hover,
+html.dev-mode button[class*="bg-white"]:hover {
+  background: var(--dev-bg-elevated) !important;
+  border-color: var(--dev-accent-violet) !important;
   color: var(--dev-text) !important;
 }
 
-html.dev-mode .rounded-xl *,
+html.dev-mode .rounded-xl *:not(.json-comparator-sidebyside *):not(.log-explorer-table *),
 html.dev-mode .rounded-2xl *,
-html.dev-mode .rounded-lg * {
+html.dev-mode .rounded-lg *:not(.json-comparator-sidebyside *) {
   color: inherit;
 }
 
@@ -613,15 +755,26 @@ html.dev-mode [role="banner"] {
   border-bottom: 1px solid var(--dev-border) !important;
 }
 
-/* Inputs, textareas, pre, code — clear box and readable text */
+/* Inputs, textareas, select — symmetrical: distinct background, visible text & border */
 html.dev-mode input,
 html.dev-mode textarea,
+html.dev-mode select,
 html.dev-mode pre,
 html.dev-mode [class*="font-mono"] {
-  background: var(--dev-bg) !important;
+  background: var(--dev-bg-input) !important;
   color: var(--dev-text) !important;
-  border: 1px solid var(--dev-border) !important;
+  border: 1px solid var(--dev-border-strong) !important;
   caret-color: var(--dev-accent);
+}
+html.dev-mode input:focus,
+html.dev-mode textarea:focus,
+html.dev-mode select:focus {
+  border-color: var(--dev-accent) !important;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2) !important;
+}
+html.dev-mode input::placeholder,
+html.dev-mode textarea::placeholder {
+  color: var(--dev-text-muted) !important;
 }
 
 html.dev-mode pre {
@@ -633,7 +786,7 @@ html.dev-mode pre {
 html.dev-mode code:not(pre code),
 html.dev-mode kbd {
   color: var(--dev-text-dim) !important;
-  background: rgba(46, 160, 67, 0.15) !important;
+  background: rgba(100, 116, 139, 0.2) !important;
   border: 1px solid var(--dev-border) !important;
   padding: 0.125rem 0.375rem !important;
   border-radius: 0.25rem !important;
@@ -650,27 +803,487 @@ html.dev-mode kbd {
   font-family: inherit !important;
 }
 
-/* Buttons: visible border */
-html.dev-mode button:not(.dev-mode-toggle-container button),
-html.dev-mode [type="button"]:not(.dev-mode-toggle-container [type="button"]) {
+/* Buttons: visible border (exclude named CTAs so their color/font stay visible) */
+html.dev-mode button:not(.dev-mode-toggle-container button):not(.cta-format-primary):not(.cta-primary):not(.cta-more-options):not(.cta-clear):not(.cta-examples):not(.cta-add):not(.cta-template):not(.cta-chunking-settings):not(.cta-tab-chunk):not(.cta-tab-simplify):not(.cta-tab-original):not(.cta-tab-masked):not(.cta-mapping-toggle):not(.cta-view-structured):not(.cta-view-sidebyside):not(.cta-json-fixer-copy):not(.cta-json-fixer-download):not(.cta-regex-copy):not(.cta-regex-copy-matches):not(.cta-validate-json):not(.cta-curl-examples):not(.cta-curl-beautify):not(.cta-curl-convert):not(.cta-icon-close):not(.cta-icon-remove):not(.cta-icon-copy):not(.cta-icon-copy-all):not(.cta-icon-share),
+html.dev-mode [type="button"]:not(.dev-mode-toggle-container [type="button"]):not(.cta-format-primary):not(.cta-primary):not(.cta-more-options):not(.cta-clear):not(.cta-examples):not(.cta-add):not(.cta-template):not(.cta-chunking-settings):not(.cta-tab-chunk):not(.cta-tab-simplify):not(.cta-tab-original):not(.cta-tab-masked):not(.cta-mapping-toggle):not(.cta-view-structured):not(.cta-view-sidebyside):not(.cta-json-fixer-copy):not(.cta-json-fixer-download):not(.cta-regex-copy):not(.cta-regex-copy-matches):not(.cta-validate-json):not(.cta-curl-examples):not(.cta-curl-beautify):not(.cta-curl-convert):not(.cta-icon-close):not(.cta-icon-remove):not(.cta-icon-copy):not(.cta-icon-copy-all):not(.cta-icon-share) {
   border: 1px solid var(--dev-border) !important;
   color: var(--dev-text) !important;
 }
+/* Secondary action buttons (e.g. Clear) — amber/warm border so they're visible */
+html.dev-mode button.bg-gray-100,
+html.dev-mode button[class*="bg-gray-100"] {
+  background: rgba(251, 191, 36, 0.12) !important;
+  color: var(--dev-accent-amber) !important;
+  border: 1px solid var(--dev-accent-amber) !important;
+}
+html.dev-mode button.bg-gray-100:hover,
+html.dev-mode button[class*="bg-gray-100"]:hover {
+  background: rgba(251, 191, 36, 0.22) !important;
+  border-color: var(--dev-accent-amber) !important;
+  color: var(--dev-text) !important;
+}
 
-/* Primary-style buttons in dev mode */
+/* Primary-style surfaces (cards, etc.) in dark mode */
 html.dev-mode .bg-primary-50,
-html.dev-mode .bg-primary-600,
-html.dev-mode [class*="bg-primary-"] {
+html.dev-mode .bg-primary-100,
+html.dev-mode .bg-primary-200 {
   background: var(--dev-bg-elevated) !important;
-  color: var(--dev-text-dim) !important;
+  color: var(--dev-text) !important;
   border: 1px solid var(--dev-border-strong) !important;
 }
 
-/* Gradient overlays and any from-/via-/to- (Tailwind) — solid dark + border */
-html.dev-mode [class*="gradient"],
-html.dev-mode [class*="from-"],
-html.dev-mode [class*="via-"],
-html.dev-mode [class*="to-"] {
+/* CTAs: primary action buttons stand out with accent in dark mode */
+html.dev-mode button.bg-primary-600,
+html.dev-mode button[class*="bg-primary-600"],
+html.dev-mode a.bg-primary-600,
+html.dev-mode a[class*="bg-primary-600"] {
+  background: var(--dev-accent) !important;
+  color: #0f172a !important;
+  border: 1px solid var(--dev-accent) !important;
+  box-shadow: 0 2px 12px rgba(56, 189, 248, 0.45) !important;
+}
+html.dev-mode button.bg-primary-600:hover:not(:disabled),
+html.dev-mode button[class*="bg-primary-600"]:hover:not(:disabled),
+html.dev-mode a.bg-primary-600:hover,
+html.dev-mode a[class*="bg-primary-600"]:hover {
+  filter: brightness(1.15) !important;
+  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.5) !important;
+}
+html.dev-mode button.bg-primary-600:disabled,
+html.dev-mode button[class*="bg-primary-600"]:disabled {
+  background: var(--dev-bg-elevated) !important;
+  color: var(--dev-text-muted) !important;
+  border-color: var(--dev-border) !important;
+  box-shadow: none !important;
+}
+html.dev-mode button.bg-primary-600 svg,
+html.dev-mode button[class*="bg-primary-600"] svg,
+html.dev-mode a.bg-primary-600 svg,
+html.dev-mode a[class*="bg-primary-600"] svg {
+  color: #0f172a !important;
+  fill: #0f172a !important;
+}
+
+/* Named CTAs — theme variables + consistent font; works with dark/light theme */
+html.dev-mode button.cta-format-primary {
+  background: var(--dev-accent) !important;
+  color: #0f172a !important;
+  border: 1px solid var(--dev-accent) !important;
+  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.35) !important;
+  font-weight: 600 !important;
+  font-size: 0.9375rem !important;
+  letter-spacing: 0.025em !important;
+}
+html.dev-mode button.cta-format-primary:hover:not(:disabled) {
+  filter: brightness(1.1) !important;
+  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.45) !important;
+}
+html.dev-mode button.cta-format-primary:disabled {
+  background: var(--dev-bg-elevated) !important;
+  color: var(--dev-text-muted) !important;
+  border: 1px solid var(--dev-border) !important;
+  box-shadow: none !important;
+}
+html.dev-mode button.cta-format-primary svg {
+  color: #0f172a !important;
+  fill: #0f172a !important;
+  stroke: #0f172a !important;
+  stroke-width: 2.25 !important;
+}
+html.dev-mode button.cta-format-primary:disabled svg {
+  color: var(--dev-text-muted) !important;
+  fill: var(--dev-text-muted) !important;
+  stroke: var(--dev-text-muted) !important;
+}
+html.dev-mode button.cta-examples {
+  background: rgba(56, 189, 248, 0.18) !important;
+  color: var(--dev-accent) !important;
+  border: 1px solid var(--dev-accent) !important;
+  box-shadow: 0 2px 8px rgba(56, 189, 248, 0.2) !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  letter-spacing: 0.02em !important;
+}
+html.dev-mode button.cta-examples:hover {
+  background: rgba(56, 189, 248, 0.28) !important;
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25) !important;
+  color: var(--dev-text) !important;
+}
+html.dev-mode button.cta-more-options {
+  color: var(--dev-accent-cyan) !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  letter-spacing: 0.02em !important;
+  background: rgba(34, 211, 238, 0.14) !important;
+  border: 1px solid rgba(34, 211, 238, 0.55) !important;
+  border-radius: 0.5rem !important;
+  padding: 0.375rem 0.5rem !important;
+}
+html.dev-mode button.cta-more-options:hover {
+  color: var(--dev-text) !important;
+  background: rgba(34, 211, 238, 0.24) !important;
+  border-color: var(--dev-accent-cyan) !important;
+  text-decoration: underline !important;
+}
+html.dev-mode button.cta-more-options svg {
+  color: var(--dev-accent-cyan) !important;
+  fill: var(--dev-accent-cyan) !important;
+  stroke: var(--dev-accent-cyan) !important;
+}
+html.dev-mode button.cta-clear {
+  background: rgba(251, 191, 36, 0.18) !important;
+  color: var(--dev-accent-amber) !important;
+  border: 1px solid var(--dev-accent-amber) !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  letter-spacing: 0.02em !important;
+}
+html.dev-mode button.cta-clear:hover {
+  background: rgba(251, 191, 36, 0.28) !important;
+  color: var(--dev-text) !important;
+}
+html.dev-mode button.cta-clear svg {
+  color: var(--dev-accent-amber) !important;
+  fill: var(--dev-accent-amber) !important;
+}
+
+/* Primary CTA (e.g. Convert Time) — visible like Format */
+html.dev-mode button.cta-primary {
+  background: var(--dev-accent-green) !important;
+  color: #0f172a !important;
+  border: 1px solid var(--dev-accent-green) !important;
+  box-shadow: 0 4px 16px rgba(52, 211, 153, 0.4) !important;
+  font-weight: 600 !important;
+}
+html.dev-mode button.cta-primary:hover:not(:disabled) {
+  filter: brightness(1.1) !important;
+}
+html.dev-mode button.cta-primary svg {
+  color: #0f172a !important;
+  fill: #0f172a !important;
+  stroke: #0f172a !important;
+}
+
+/* Add buttons (+ Column, + Add table, + Add JOIN) — visible and colorful */
+html.dev-mode button.cta-add {
+  background: rgba(167, 139, 250, 0.2) !important;
+  color: var(--dev-accent-violet) !important;
+  border: 1px solid var(--dev-accent-violet) !important;
+  font-weight: 600 !important;
+}
+html.dev-mode button.cta-add:hover {
+  background: rgba(167, 139, 250, 0.35) !important;
+  color: var(--dev-text) !important;
+}
+html.dev-mode button.cta-add svg {
+  color: var(--dev-accent-violet) !important;
+  fill: var(--dev-accent-violet) !important;
+  stroke: var(--dev-accent-violet) !important;
+}
+
+/* Prompt templates (Debug code, Explain concept, Write email, etc.) — visible and colorful */
+html.dev-mode button.cta-template {
+  background: rgba(167, 139, 250, 0.25) !important;
+  color: #e9d5ff !important;
+  border: 1px solid var(--dev-accent-violet) !important;
+  font-weight: 600 !important;
+}
+html.dev-mode button.cta-template:hover {
+  background: rgba(167, 139, 250, 0.4) !important;
+  color: var(--dev-text) !important;
+}
+
+/* Chunk / Simplify tab buttons — distinct colors, clear selected state */
+html.dev-mode button.cta-tab-chunk[aria-pressed="true"] {
+  background: var(--dev-accent-cyan) !important;
+  color: #0f172a !important;
+  box-shadow: 0 4px 14px rgba(34, 211, 238, 0.4) !important;
+  border: 1px solid rgba(34, 211, 238, 0.8) !important;
+}
+html.dev-mode button.cta-tab-chunk[aria-pressed="true"] svg {
+  color: #0f172a !important;
+  fill: #0f172a !important;
+  stroke: #0f172a !important;
+}
+html.dev-mode button.cta-tab-chunk[aria-pressed="false"] {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: var(--dev-text-dim) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+html.dev-mode button.cta-tab-chunk[aria-pressed="false"]:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+  color: var(--dev-text) !important;
+}
+html.dev-mode button.cta-tab-simplify[aria-pressed="true"] {
+  background: var(--dev-accent-amber) !important;
+  color: #0f172a !important;
+  box-shadow: 0 4px 14px rgba(251, 191, 36, 0.4) !important;
+  border: 1px solid rgba(251, 191, 36, 0.8) !important;
+}
+html.dev-mode button.cta-tab-simplify[aria-pressed="true"] svg {
+  color: #0f172a !important;
+  fill: #0f172a !important;
+  stroke: #0f172a !important;
+}
+html.dev-mode button.cta-tab-simplify[aria-pressed="false"] {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: var(--dev-text-dim) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+html.dev-mode button.cta-tab-simplify[aria-pressed="false"]:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+  color: var(--dev-text) !important;
+}
+
+/* Original code / Masked code tabs (Code Prompt Shield) — distinct colors, clear selected state */
+html.dev-mode button.cta-tab-original[aria-pressed="true"] {
+  background: rgba(52, 211, 153, 0.25) !important;
+  color: var(--dev-accent-green) !important;
+  border-color: var(--dev-accent-green) !important;
+  border-bottom-color: var(--dev-bg-card) !important;
+}
+html.dev-mode button.cta-tab-original[aria-pressed="false"] {
+  color: var(--dev-text-dim) !important;
+}
+html.dev-mode button.cta-tab-original[aria-pressed="false"]:hover {
+  background: var(--dev-bg-elevated) !important;
+  color: var(--dev-text) !important;
+}
+html.dev-mode button.cta-tab-masked[aria-pressed="true"] {
+  background: rgba(167, 139, 250, 0.25) !important;
+  color: var(--dev-accent-violet) !important;
+  border-color: var(--dev-accent-violet) !important;
+  border-bottom-color: var(--dev-bg-card) !important;
+}
+html.dev-mode button.cta-tab-masked[aria-pressed="false"] {
+  color: var(--dev-text-dim) !important;
+}
+html.dev-mode button.cta-tab-masked[aria-pressed="false"]:hover {
+  background: var(--dev-bg-elevated) !important;
+  color: var(--dev-text) !important;
+}
+
+/* JSON Comparator view toggle (Structured / Side-by-side) — distinct colors, clear selected state */
+html.dev-mode button.cta-view-structured[aria-pressed="true"] {
+  background: #6366f1 !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: 0 2px 12px rgba(99, 102, 241, 0.45) !important;
+}
+html.dev-mode button.cta-view-structured[aria-pressed="true"] svg {
+  color: #fff !important;
+  fill: #fff !important;
+  stroke: #fff !important;
+}
+html.dev-mode button.cta-view-structured[aria-pressed="false"] {
+  color: var(--dev-text-dim) !important;
+  background: transparent !important;
+}
+html.dev-mode button.cta-view-structured[aria-pressed="false"]:hover {
+  background: var(--dev-bg-elevated) !important;
+  color: var(--dev-text) !important;
+}
+html.dev-mode button.cta-view-sidebyside[aria-pressed="true"] {
+  background: var(--dev-accent-green) !important;
+  color: #0f172a !important;
+  border: none !important;
+  box-shadow: 0 2px 12px rgba(52, 211, 153, 0.45) !important;
+}
+html.dev-mode button.cta-view-sidebyside[aria-pressed="true"] svg {
+  color: #0f172a !important;
+  fill: #0f172a !important;
+  stroke: #0f172a !important;
+}
+html.dev-mode button.cta-view-sidebyside[aria-pressed="false"] {
+  color: var(--dev-text-dim) !important;
+  background: transparent !important;
+}
+html.dev-mode button.cta-view-sidebyside[aria-pressed="false"]:hover {
+  background: var(--dev-bg-elevated) !important;
+  color: var(--dev-text) !important;
+}
+
+/* Mapping table toggle — visible and colorful */
+html.dev-mode button.cta-mapping-toggle {
+  background: rgba(99, 102, 241, 0.2) !important;
+  color: #a5b4fc !important;
+  border: 1px solid rgba(99, 102, 241, 0.6) !important;
+  font-weight: 600 !important;
+}
+html.dev-mode button.cta-mapping-toggle:hover {
+  background: rgba(99, 102, 241, 0.35) !important;
+  color: var(--dev-text) !important;
+  border-color: #818cf8 !important;
+}
+html.dev-mode button.cta-mapping-toggle svg {
+  color: #a5b4fc !important;
+  fill: #a5b4fc !important;
+  stroke: #a5b4fc !important;
+}
+html.dev-mode button.cta-mapping-toggle:hover svg {
+  color: var(--dev-text) !important;
+  fill: var(--dev-text) !important;
+  stroke: var(--dev-text) !important;
+}
+
+/* Chunking Settings toggle — visible and colorful */
+html.dev-mode button.cta-chunking-settings {
+  color: var(--dev-accent-cyan) !important;
+  font-weight: 600 !important;
+  background: rgba(34, 211, 238, 0.12) !important;
+  border: 1px solid rgba(34, 211, 238, 0.5) !important;
+  border-radius: 0.5rem !important;
+  padding: 0.375rem 0.5rem !important;
+}
+html.dev-mode button.cta-chunking-settings:hover {
+  background: rgba(34, 211, 238, 0.22) !important;
+  color: var(--dev-text) !important;
+}
+html.dev-mode button.cta-chunking-settings svg {
+  color: var(--dev-accent-cyan) !important;
+  fill: var(--dev-accent-cyan) !important;
+  stroke: var(--dev-accent-cyan) !important;
+}
+
+/* Secondary CTA buttons (e.g. Load Sample) — accent border + accent text so they’re visible */
+html.dev-mode button.bg-primary-50,
+html.dev-mode button[class*="bg-primary-50"] {
+  background: transparent !important;
+  color: var(--dev-accent) !important;
+  border: 1px solid var(--dev-accent) !important;
+}
+html.dev-mode button.bg-primary-50:hover,
+html.dev-mode button[class*="bg-primary-50"]:hover {
+  background: rgba(125, 211, 252, 0.15) !important;
+}
+
+/* Text-style buttons (e.g. More options) — accent so they’re visible */
+html.dev-mode button.text-gray-700,
+html.dev-mode button[class*="text-gray-700"],
+html.dev-mode button.font-medium.text-sm {
+  color: var(--dev-accent-cyan) !important;
+}
+html.dev-mode button.text-gray-700:hover,
+html.dev-mode button[class*="text-gray-700"]:hover,
+html.dev-mode button.font-medium.text-sm:hover {
+  color: var(--dev-text) !important;
+  text-decoration: underline !important;
+}
+html.dev-mode button.text-gray-700 svg,
+html.dev-mode button[class*="text-gray-700"] svg,
+html.dev-mode button.font-medium.text-sm svg {
+  color: var(--dev-accent-cyan) !important;
+  fill: var(--dev-accent-cyan) !important;
+}
+
+/* Surfaces that are primary-600/700 but not buttons (e.g. option pills when selected) — keep accent for selected state */
+html.dev-mode .bg-primary-600:not(button):not(a),
+html.dev-mode .bg-primary-700:not(button):not(a),
+html.dev-mode [class*="bg-primary-600"]:not(button):not(a),
+html.dev-mode [class*="bg-primary-700"]:not(button):not(a) {
+  background: var(--dev-bg-elevated) !important;
+  color: var(--dev-text) !important;
+  border: 1px solid var(--dev-border-strong) !important;
+}
+
+/* Nav CTA and logo — clearly visible (accent) in dark mode */
+html.dev-mode a[class*="bg-primary-600"],
+html.dev-mode a[class*="from-primary-600"] {
+  background: var(--dev-accent) !important;
+  color: var(--dev-bg) !important;
+  border: 1px solid var(--dev-accent) !important;
+  box-shadow: 0 4px 14px 0 rgba(125, 211, 252, 0.25) !important;
+}
+html.dev-mode a[class*="bg-primary-600"]:hover,
+html.dev-mode a[class*="from-primary-600"]:hover {
+  filter: brightness(1.1);
+}
+html.dev-mode a[class*="bg-primary-600"] svg,
+html.dev-mode a[class*="from-primary-600"] svg {
+  color: var(--dev-bg) !important;
+  fill: var(--dev-bg) !important;
+}
+
+/* Tab cards — active state: accent border + elevated bg; all tabs symmetric */
+html.dev-mode .tab-card {
+  background: var(--dev-bg-card) !important;
+  border: 1px solid var(--dev-border) !important;
+  color: var(--dev-text) !important;
+}
+html.dev-mode .tab-card:hover {
+  border-color: var(--dev-border-strong) !important;
+  background: var(--dev-bg-elevated) !important;
+}
+html.dev-mode .tab-card[class*="border-primary-300"],
+html.dev-mode .tab-card.bg-primary-50 {
+  background: var(--dev-bg-elevated) !important;
+  border-color: var(--dev-accent) !important;
+  color: var(--dev-text) !important;
+  box-shadow: 0 0 0 1px var(--dev-accent) !important;
+}
+html.dev-mode .tab-card .text-primary-600,
+html.dev-mode .tab-card svg {
+  color: var(--dev-accent) !important;
+  fill: var(--dev-accent) !important;
+}
+html.dev-mode .tab-card .text-gray-500 {
+  color: var(--dev-text-muted) !important;
+}
+
+/* Tool grid section background */
+html.dev-mode .border-t.border-gray-200 {
+  border-color: var(--dev-border) !important;
+}
+
+/* .card and .card-hover — symmetric in dark mode */
+html.dev-mode .card {
+  background: var(--dev-bg-card) !important;
+  border-color: var(--dev-border) !important;
+  color: var(--dev-text) !important;
+}
+html.dev-mode .card-hover:hover {
+  border-color: var(--dev-border-strong) !important;
+  box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.2) !important;
+}
+html.dev-mode .card .text-gray-900 {
+  color: var(--dev-text) !important;
+}
+html.dev-mode .card .text-gray-600 {
+  color: var(--dev-text-dim) !important;
+}
+html.dev-mode .card .text-blue-600 {
+  color: var(--dev-accent) !important;
+}
+html.dev-mode .card button:hover {
+  background: var(--dev-bg-elevated) !important;
+}
+
+/* Rings — visible in dark mode */
+html.dev-mode [class*="ring-primary-"],
+html.dev-mode [class*="ring-emerald-"],
+html.dev-mode [class*="ring-blue-"],
+html.dev-mode [class*="ring-gray-"] {
+  --tw-ring-color: var(--dev-border-strong) !important;
+}
+html.dev-mode .tab-card[class*="ring-primary-"] {
+  --tw-ring-color: var(--dev-accent) !important;
+}
+
+/* Focus — clearly visible in dark mode */
+html.dev-mode a:focus-visible,
+html.dev-mode button:focus-visible,
+html.dev-mode input:focus-visible,
+html.dev-mode select:focus-visible,
+html.dev-mode textarea:focus-visible {
+  outline: 2px solid var(--dev-accent) !important;
+  outline-offset: 2px !important;
+}
+
+/* Gradient overlays (exclude buttons/links so CTAs keep accent) */
+html.dev-mode [class*="gradient"]:not(button):not(a),
+html.dev-mode [class*="from-"]:not(button):not(a),
+html.dev-mode [class*="via-"]:not(button):not(a),
+html.dev-mode [class*="to-"]:not(button):not(a) {
   background: var(--dev-bg-card) !important;
   border: 1px solid var(--dev-border) !important;
   color: var(--dev-text) !important;
@@ -698,17 +1311,17 @@ html.dev-mode [class*="shadow-md"][class*="rounded"] span {
 /* Badges — readable with border */
 html.dev-mode .bg-emerald-50,
 html.dev-mode .bg-emerald-100 {
-  background: rgba(46, 160, 67, 0.2) !important;
+  background: rgba(100, 116, 139, 0.25) !important;
   border: 1px solid var(--dev-border) !important;
   color: var(--dev-text-dim) !important;
 }
 
-/* AI tags and violet badges — always visible in dev mode (bright green on tinted background) */
+/* AI tags and violet badges — visible in dark mode */
 html.dev-mode .bg-violet-100,
 html.dev-mode .text-violet-600,
 html.dev-mode span.rounded.bg-violet-100,
 html.dev-mode [class*="bg-violet-100"] {
-  background: rgba(0, 255, 65, 0.25) !important;
+  background: rgba(125, 211, 252, 0.2) !important;
   color: var(--dev-accent) !important;
   border: 1px solid var(--dev-border-strong) !important;
 }
@@ -716,7 +1329,7 @@ html.dev-mode [class*="bg-violet-100"] {
 html.dev-mode .bg-red-100,
 html.dev-mode .text-red-600 {
   color: var(--dev-text-dim) !important;
-  background: rgba(46, 160, 67, 0.2) !important;
+  background: rgba(100, 116, 139, 0.25) !important;
   border: 1px solid var(--dev-border) !important;
 }
 
@@ -728,10 +1341,669 @@ html.dev-mode [class*="rounded-xl"][class*="border"] {
   color: var(--dev-text) !important;
 }
 
+/* Tab card icons (Scissors, Shield, etc.) — visible and colorful on hover */
+html.dev-mode .tab-card svg {
+  color: var(--dev-text-dim) !important;
+  fill: var(--dev-text-dim) !important;
+  stroke: var(--dev-text-dim) !important;
+}
+html.dev-mode .tab-card:hover svg,
+html.dev-mode .tab-card.group:hover svg {
+  color: var(--dev-accent) !important;
+  fill: var(--dev-accent) !important;
+  stroke: var(--dev-accent) !important;
+}
+
+/* Read Guide → links — chip-style, colorful and clearly clickable */
+html.dev-mode a:has(> span[class*="text-blue-600"]) {
+  background: rgba(56, 189, 248, 0.18) !important;
+  border: 1px solid var(--dev-accent) !important;
+  border-radius: 0.5rem !important;
+  padding: 0.25rem 0.5rem !important;
+  font-weight: 600 !important;
+}
+html.dev-mode a:has(> span[class*="text-blue-600"]) > span { color: var(--dev-accent) !important; }
+html.dev-mode a:has(> span[class*="text-green-600"]):not([class*="text-blue"]),
+html.dev-mode a:has(> span[class*="text-emerald-600"]) {
+  background: rgba(52, 211, 153, 0.18) !important;
+  border: 1px solid var(--dev-accent-green) !important;
+  border-radius: 0.5rem !important;
+  padding: 0.25rem 0.5rem !important;
+  font-weight: 600 !important;
+}
+html.dev-mode a:has(> span[class*="text-green-600"]) > span,
+html.dev-mode a:has(> span[class*="text-emerald-600"]) > span { color: var(--dev-accent-green) !important; }
+html.dev-mode a:has(> span[class*="text-purple-600"]):not([class*="text-blue"]):not([class*="text-green"]),
+html.dev-mode a:has(> span[class*="text-violet-600"]),
+html.dev-mode a:has(> span[class*="text-indigo-600"]) {
+  background: rgba(167, 139, 250, 0.18) !important;
+  border: 1px solid var(--dev-accent-violet) !important;
+  border-radius: 0.5rem !important;
+  padding: 0.25rem 0.5rem !important;
+  font-weight: 600 !important;
+}
+html.dev-mode a:has(> span[class*="text-purple-600"]) > span,
+html.dev-mode a:has(> span[class*="text-violet-600"]) > span,
+html.dev-mode a:has(> span[class*="text-indigo-600"]) > span { color: var(--dev-accent-violet) !important; }
+html.dev-mode a:has(> span[class*="text-amber-600"]),
+html.dev-mode a:has(> span[class*="text-orange-600"]) {
+  background: rgba(251, 191, 36, 0.18) !important;
+  border: 1px solid var(--dev-accent-amber) !important;
+  border-radius: 0.5rem !important;
+  padding: 0.25rem 0.5rem !important;
+  font-weight: 600 !important;
+}
+html.dev-mode a:has(> span[class*="text-amber-600"]) > span,
+html.dev-mode a:has(> span[class*="text-orange-600"]) > span { color: var(--dev-accent-amber) !important; }
+html.dev-mode a:has(> span[class*="text-red-600"]) {
+  background: rgba(248, 113, 113, 0.18) !important;
+  border: 1px solid #f87171 !important;
+  border-radius: 0.5rem !important;
+  padding: 0.25rem 0.5rem !important;
+  font-weight: 600 !important;
+}
+html.dev-mode a:has(> span[class*="text-red-600"]) > span { color: #f87171 !important; }
+
+/* Close / Dismiss / Clear (X) icon buttons — visible and colorful */
+html.dev-mode button[aria-label*="Close"] svg,
+html.dev-mode button[aria-label*="close"] svg,
+html.dev-mode button[aria-label*="Dismiss"] svg,
+html.dev-mode button.cta-icon-close svg {
+  color: var(--dev-accent-amber) !important;
+  fill: var(--dev-accent-amber) !important;
+  stroke: var(--dev-accent-amber) !important;
+}
+html.dev-mode button[aria-label*="Close"],
+html.dev-mode button[aria-label*="close"],
+html.dev-mode button[aria-label*="Dismiss"],
+html.dev-mode button.cta-icon-close {
+  background: rgba(251, 191, 36, 0.12) !important;
+  border: 1px solid rgba(251, 191, 36, 0.5) !important;
+  border-radius: 0.5rem !important;
+}
+html.dev-mode button[aria-label*="Close"]:hover svg,
+html.dev-mode button[aria-label*="close"]:hover svg,
+html.dev-mode button[aria-label*="Dismiss"]:hover svg,
+html.dev-mode button.cta-icon-close:hover svg {
+  color: var(--dev-text) !important;
+  fill: var(--dev-text) !important;
+  stroke: var(--dev-text) !important;
+}
+
+/* Remove (Trash / delete variable) icons — bright red, clearly visible */
+html.dev-mode button[aria-label*="Remove"] svg,
+html.dev-mode button.cta-icon-remove svg {
+  color: #f87171 !important;
+  fill: #f87171 !important;
+  stroke: #f87171 !important;
+  stroke-width: 2.5 !important;
+}
+html.dev-mode button[aria-label*="Remove"],
+html.dev-mode button.cta-icon-remove {
+  background: rgba(248, 113, 113, 0.22) !important;
+  border: 1px solid rgba(248, 113, 113, 0.7) !important;
+  border-radius: 0.375rem !important;
+  color: #f87171 !important;
+  min-width: 1.75rem !important;
+  min-height: 1.75rem !important;
+}
+html.dev-mode button[aria-label*="Remove"]:hover svg,
+html.dev-mode button.cta-icon-remove:hover svg {
+  color: #fca5a5 !important;
+  fill: #fca5a5 !important;
+  stroke: #fca5a5 !important;
+}
+
+/* Copy and Copy All — bright cyan, clearly visible */
+html.dev-mode button.cta-icon-copy svg,
+html.dev-mode button.cta-icon-copy-all svg {
+  color: #22d3ee !important;
+  fill: #22d3ee !important;
+  stroke: #22d3ee !important;
+  stroke-width: 2.25 !important;
+}
+html.dev-mode button.cta-icon-copy,
+html.dev-mode button.cta-icon-copy-all {
+  background: rgba(34, 211, 238, 0.22) !important;
+  border: 1px solid rgba(34, 211, 238, 0.7) !important;
+  border-radius: 0.5rem !important;
+  color: #22d3ee !important;
+  font-weight: 600 !important;
+}
+html.dev-mode button.cta-icon-copy:hover:not(:disabled),
+html.dev-mode button.cta-icon-copy-all:hover:not(:disabled) {
+  background: rgba(34, 211, 238, 0.24) !important;
+  border-color: var(--dev-accent-cyan) !important;
+  color: var(--dev-text) !important;
+}
+html.dev-mode button.cta-icon-copy:hover:not(:disabled) svg,
+html.dev-mode button.cta-icon-copy-all:hover:not(:disabled) svg {
+  color: var(--dev-text) !important;
+  fill: var(--dev-text) !important;
+  stroke: var(--dev-text) !important;
+}
+
+/* Share icon — bright violet, clearly visible */
+html.dev-mode button.cta-icon-share svg {
+  color: #a78bfa !important;
+  fill: #a78bfa !important;
+  stroke: #a78bfa !important;
+  stroke-width: 2.25 !important;
+}
+html.dev-mode button.cta-icon-share {
+  background: rgba(167, 139, 250, 0.22) !important;
+  border: 1px solid rgba(167, 139, 250, 0.7) !important;
+  border-radius: 0.5rem !important;
+  color: #a78bfa !important;
+  font-weight: 600 !important;
+}
+html.dev-mode button.cta-icon-share:hover {
+  background: rgba(167, 139, 250, 0.24) !important;
+  border-color: var(--dev-accent-violet) !important;
+  color: var(--dev-text) !important;
+}
+html.dev-mode button.cta-icon-share:hover svg {
+  color: var(--dev-text) !important;
+  fill: var(--dev-text) !important;
+  stroke: var(--dev-text) !important;
+}
+
+/* JSON Fixer: Copy & Download — visible in dark mode */
+html.dev-mode button.cta-json-fixer-copy {
+  background: #0ea5e9 !important;
+  color: #fff !important;
+  border: 1px solid #38bdf8 !important;
+  font-weight: 600 !important;
+}
+html.dev-mode button.cta-json-fixer-copy:hover:not(:disabled) {
+  background: #0284c7 !important;
+  border-color: #7dd3fc !important;
+  color: #fff !important;
+}
+html.dev-mode button.cta-json-fixer-copy svg {
+  color: #fff !important;
+  fill: #fff !important;
+  stroke: #fff !important;
+}
+html.dev-mode button.cta-json-fixer-download {
+  background: #8b5cf6 !important;
+  color: #fff !important;
+  border: 1px solid #a78bfa !important;
+  font-weight: 600 !important;
+}
+html.dev-mode button.cta-json-fixer-download:hover:not(:disabled) {
+  background: #7c3aed !important;
+  border-color: #c4b5fd !important;
+  color: #fff !important;
+}
+html.dev-mode button.cta-json-fixer-download svg {
+  color: #fff !important;
+  fill: #fff !important;
+  stroke: #fff !important;
+}
+
+/* Regex tester: Copy & Copy matches — visible in light and dark mode */
+html.dev-mode button.cta-regex-copy,
+html.dev-mode button.cta-regex-copy-matches {
+  background: rgba(56, 189, 248, 0.2) !important;
+  color: #38bdf8 !important;
+  border: 1px solid rgba(56, 189, 248, 0.6) !important;
+  font-weight: 600 !important;
+}
+html.dev-mode button.cta-regex-copy:hover:not(:disabled),
+html.dev-mode button.cta-regex-copy-matches:hover:not(:disabled) {
+  background: rgba(56, 189, 248, 0.3) !important;
+  border-color: #38bdf8 !important;
+  color: #7dd3fc !important;
+}
+html.dev-mode button.cta-regex-copy svg,
+html.dev-mode button.cta-regex-copy-matches svg {
+  color: #38bdf8 !important;
+  fill: #38bdf8 !important;
+  stroke: #38bdf8 !important;
+}
+html.dev-mode button.cta-regex-copy:hover:not(:disabled) svg,
+html.dev-mode button.cta-regex-copy-matches:hover:not(:disabled) svg {
+  color: #7dd3fc !important;
+  fill: #7dd3fc !important;
+  stroke: #7dd3fc !important;
+}
+
+/* Log Explorer: format badge (JSON structured logs) and table (timestamp, message) — visible in light and dark */
+html.dev-mode .log-explorer-format {
+  background: var(--dev-bg-card) !important;
+  border-color: var(--dev-border-strong) !important;
+}
+html.dev-mode .log-explorer-format-title {
+  color: var(--dev-text) !important;
+}
+html.dev-mode .log-explorer-format-badge {
+  background: rgba(34, 197, 94, 0.25) !important;
+  color: #86efac !important;
+  font-weight: 600 !important;
+}
+html.dev-mode .log-explorer-format-fields {
+  color: var(--dev-text-dim) !important;
+}
+html.dev-mode .log-explorer-table {
+  background: var(--dev-bg-card) !important;
+  border-color: var(--dev-border-strong) !important;
+  color: var(--dev-text) !important;
+}
+html.dev-mode .log-explorer-table table,
+html.dev-mode .log-explorer-table td,
+html.dev-mode .log-explorer-table th {
+  color: inherit;
+}
+html.dev-mode .log-explorer-table-title {
+  color: #f1f5f9 !important;
+}
+html.dev-mode .log-explorer-thead {
+  background: var(--dev-bg-elevated) !important;
+}
+html.dev-mode .log-explorer-th {
+  color: #f1f5f9 !important;
+  font-weight: 700 !important;
+}
+html.dev-mode .log-explorer-th:hover {
+  background: var(--dev-bg-input) !important;
+  color: #f1f5f9 !important;
+}
+/* Dark row backgrounds so timestamp & message text are always readable (no light yellow/red/white rows) */
+html.dev-mode .log-explorer-table .log-explorer-tbody .log-explorer-row {
+  background: var(--dev-bg-input) !important;
+  border-color: var(--dev-border) !important;
+}
+html.dev-mode .log-explorer-table .log-explorer-tbody .log-explorer-row:nth-child(odd) {
+  background: var(--dev-bg-input) !important;
+}
+html.dev-mode .log-explorer-table .log-explorer-tbody .log-explorer-row:nth-child(even) {
+  background: var(--dev-bg-elevated) !important;
+}
+html.dev-mode .log-explorer-table .log-explorer-tbody .log-explorer-row:hover {
+  filter: brightness(1.08);
+}
+html.dev-mode .log-explorer-cell-timestamp {
+  color: #e2e8f0 !important;
+  font-weight: 500 !important;
+}
+html.dev-mode .log-explorer-cell-message {
+  color: #f1f5f9 !important;
+  font-weight: 500 !important;
+}
+
+/* cURL Converter: Examples, Beautify, Convert cURL to Code — visible in light and dark */
+html.dev-mode button.cta-curl-examples,
+html.dev-mode button.cta-curl-beautify {
+  background: rgba(56, 189, 248, 0.18) !important;
+  color: #38bdf8 !important;
+  border: 1px solid rgba(56, 189, 248, 0.5) !important;
+  font-weight: 600 !important;
+}
+html.dev-mode button.cta-curl-examples:hover:not(:disabled),
+html.dev-mode button.cta-curl-beautify:hover:not(:disabled) {
+  background: rgba(56, 189, 248, 0.28) !important;
+  border-color: #38bdf8 !important;
+  color: #7dd3fc !important;
+}
+html.dev-mode button.cta-curl-examples svg,
+html.dev-mode button.cta-curl-beautify svg {
+  color: inherit !important;
+  fill: inherit !important;
+  stroke: inherit !important;
+}
+html.dev-mode button.cta-curl-beautify:disabled {
+  opacity: 0.5 !important;
+  color: var(--dev-text-muted) !important;
+  border-color: var(--dev-border) !important;
+  background: var(--dev-bg-elevated) !important;
+}
+html.dev-mode button.cta-curl-convert {
+  background: #0f766e !important;
+  color: #fff !important;
+  border: 1px solid #14b8a6 !important;
+  font-weight: 600 !important;
+}
+html.dev-mode button.cta-curl-convert:hover:not(:disabled) {
+  background: #0d9488 !important;
+  border-color: #2dd4bf !important;
+  color: #fff !important;
+}
+html.dev-mode button.cta-curl-convert:disabled {
+  background: var(--dev-bg-elevated) !important;
+  color: var(--dev-text-muted) !important;
+  border-color: var(--dev-border) !important;
+}
+
+/* JSON Schema: Validate JSON CTA — visible in light and dark mode */
+html.dev-mode button.cta-validate-json {
+  background: #16a34a !important;
+  color: #fff !important;
+  border: 1px solid #22c55e !important;
+  font-weight: 600 !important;
+}
+html.dev-mode button.cta-validate-json:hover:not(:disabled) {
+  background: #15803d !important;
+  border-color: #4ade80 !important;
+  color: #fff !important;
+}
+html.dev-mode button.cta-validate-json:disabled {
+  background: var(--dev-bg-elevated) !important;
+  color: var(--dev-text-muted) !important;
+  border-color: var(--dev-border) !important;
+}
+
+/* Regex tester: test string textarea — text and placeholder visible in dark mode */
+html.dev-mode .regex-tester-textarea {
+  color: var(--dev-text) !important;
+  background: var(--dev-bg-input) !important;
+  border-color: var(--dev-border-strong) !important;
+}
+html.dev-mode .regex-tester-textarea::placeholder {
+  color: var(--dev-text-muted) !important;
+}
+
+/* Regex tester: highlighted match mark — readable in light (amber) and dark (cyan tint) */
+.regex-highlight-mark {
+  background: #fde68a;
+  color: #78350f;
+  border-radius: 0.125rem;
+  padding-left: 0.125rem;
+  padding-right: 0.125rem;
+}
+html.dev-mode .regex-highlighted-text {
+  background: var(--dev-bg-input) !important;
+  color: var(--dev-text) !important;
+  border-color: var(--dev-border-strong) !important;
+}
+html.dev-mode .regex-highlighted-text .regex-highlight-mark {
+  background: rgba(34, 211, 238, 0.35) !important;
+  color: #e0f2fe !important;
+}
+
+/* Best Guides / Related Tools cards — colorful, visible in dark mode */
+html.dev-mode a[class*="bg-blue-50"],
+html.dev-mode a[class*="bg-blue-100"] {
+  background: rgba(56, 189, 248, 0.15) !important;
+  border: 1px solid var(--dev-accent) !important;
+  color: var(--dev-text) !important;
+}
+html.dev-mode a[class*="bg-blue-50"]:hover,
+html.dev-mode a[class*="bg-blue-100"]:hover {
+  background: rgba(56, 189, 248, 0.25) !important;
+  border-color: var(--dev-accent) !important;
+}
+html.dev-mode a[class*="bg-green-50"],
+html.dev-mode a[class*="bg-green-100"] {
+  background: rgba(52, 211, 153, 0.15) !important;
+  border: 1px solid var(--dev-accent-green) !important;
+  color: var(--dev-text) !important;
+}
+html.dev-mode a[class*="bg-green-50"]:hover,
+html.dev-mode a[class*="bg-green-100"]:hover {
+  background: rgba(52, 211, 153, 0.25) !important;
+  border-color: var(--dev-accent-green) !important;
+}
+html.dev-mode a[class*="bg-purple-50"],
+html.dev-mode a[class*="bg-purple-100"] {
+  background: rgba(167, 139, 250, 0.15) !important;
+  border: 1px solid var(--dev-accent-violet) !important;
+  color: var(--dev-text) !important;
+}
+html.dev-mode a[class*="bg-purple-50"]:hover,
+html.dev-mode a[class*="bg-purple-100"]:hover {
+  background: rgba(167, 139, 250, 0.25) !important;
+  border-color: var(--dev-accent-violet) !important;
+}
+html.dev-mode a[class*="bg-orange-50"],
+html.dev-mode a[class*="bg-orange-100"] {
+  background: rgba(251, 191, 36, 0.15) !important;
+  border: 1px solid var(--dev-accent-amber) !important;
+  color: var(--dev-text) !important;
+}
+html.dev-mode a[class*="bg-orange-50"]:hover,
+html.dev-mode a[class*="bg-orange-100"]:hover {
+  background: rgba(251, 191, 36, 0.25) !important;
+  border-color: var(--dev-accent-amber) !important;
+}
+/* Card titles and links inside guide/tool cards — bright and visible */
+html.dev-mode a[class*="bg-blue-50"] h3,
+html.dev-mode a[class*="bg-green-50"] h3,
+html.dev-mode a[class*="bg-purple-50"] h3,
+html.dev-mode a[class*="bg-orange-50"] h3 {
+  color: var(--dev-text) !important;
+}
+/* Related Tools card titles (tool name) — accent color so they pop as CTAs */
+html.dev-mode a[class*="bg-blue-50"] h3,
+html.dev-mode a[class*="bg-blue-100"] h3 { color: var(--dev-accent) !important; }
+html.dev-mode a[class*="bg-green-50"] h3,
+html.dev-mode a[class*="bg-green-100"] h3 { color: var(--dev-accent-green) !important; }
+html.dev-mode a[class*="bg-purple-50"] h3,
+html.dev-mode a[class*="bg-purple-100"] h3 { color: var(--dev-accent-violet) !important; }
+html.dev-mode a[class*="bg-orange-50"] h3,
+html.dev-mode a[class*="bg-orange-100"] h3 { color: var(--dev-accent-amber) !important; }
+/* Guide section: link inside div card (Best Guides title link) — bright accent */
+html.dev-mode div[class*="bg-blue-50"] a[class*="text-blue-"],
+html.dev-mode div[class*="bg-blue-50"] a:hover { color: var(--dev-accent) !important; }
+html.dev-mode div[class*="bg-green-50"] a[class*="text-green-"],
+html.dev-mode div[class*="bg-green-50"] a:hover { color: var(--dev-accent-green) !important; }
+html.dev-mode div[class*="bg-purple-50"] a[class*="text-purple-"],
+html.dev-mode div[class*="bg-purple-50"] a[class*="text-violet-"],
+html.dev-mode div[class*="bg-purple-50"] a:hover { color: var(--dev-accent-violet) !important; }
+html.dev-mode div[class*="bg-orange-50"] a[class*="text-orange-"],
+html.dev-mode div[class*="bg-orange-50"] a:hover { color: var(--dev-accent-amber) !important; }
+/* Guide section cards (div wrapper) — subtle tint so they stand out */
+html.dev-mode div[class*="bg-blue-50"].rounded-lg,
+html.dev-mode div[class*="bg-blue-50"].rounded-xl {
+  background: rgba(56, 189, 248, 0.12) !important;
+  border: 1px solid var(--dev-accent) !important;
+}
+html.dev-mode div[class*="bg-green-50"].rounded-lg,
+html.dev-mode div[class*="bg-green-50"].rounded-xl {
+  background: rgba(52, 211, 153, 0.12) !important;
+  border: 1px solid var(--dev-accent-green) !important;
+}
+
+/* Blog and article pages — links, headings and graphical areas visible */
+html.dev-mode article a {
+  color: var(--dev-accent-violet) !important;
+}
+html.dev-mode article a:hover {
+  color: var(--dev-accent) !important;
+}
+html.dev-mode article h1,
+html.dev-mode article h2,
+html.dev-mode article h3,
+html.dev-mode article h4 {
+  color: var(--dev-text) !important;
+}
+/* Blog card links (Featured Guides, Explore Our Developer Tools) */
+html.dev-mode article a.rounded-lg h3,
+html.dev-mode article a[class*="rounded-lg"] h3 {
+  color: var(--dev-accent) !important;
+}
+html.dev-mode article a.rounded-lg:hover h3,
+html.dev-mode article a[class*="rounded-lg"]:hover h3 {
+  color: var(--dev-accent-cyan) !important;
+}
+/* Blog gradient sections (from-blue-50 to-indigo-50) — readable in dark */
+html.dev-mode article [class*="from-blue-50"],
+html.dev-mode article [class*="from-primary-50"] {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.12) 0%, rgba(129, 140, 248, 0.1) 100%) !important;
+  border-color: var(--dev-border-strong) !important;
+  color: var(--dev-text) !important;
+}
+/* Prose (blog body, graphical representation) — text and links visible */
+html.dev-mode .prose,
+html.dev-mode .prose-lg {
+  color: var(--dev-text) !important;
+}
+html.dev-mode .prose h1,
+html.dev-mode .prose h2,
+html.dev-mode .prose h3,
+html.dev-mode .prose h4,
+html.dev-mode .prose-headings\:text-slate-900 {
+  color: var(--dev-text) !important;
+}
+html.dev-mode .prose p,
+html.dev-mode .prose li,
+html.dev-mode .prose-p\:text-slate-700 {
+  color: var(--dev-text-dim) !important;
+}
+html.dev-mode .prose a {
+  color: var(--dev-accent-violet) !important;
+}
+html.dev-mode .prose a:hover {
+  color: var(--dev-accent) !important;
+}
+html.dev-mode .prose code {
+  color: var(--dev-text-dim) !important;
+  background: var(--dev-bg-elevated) !important;
+  border-color: var(--dev-border) !important;
+}
+
 /* Ensure hr and dividers visible */
 html.dev-mode hr {
   border-color: var(--dev-border) !important;
   border-width: 1px !important;
+}
+
+/* Utility classes — symmetric in dark mode */
+html.dev-mode .gradient-text {
+  color: var(--dev-accent) !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+}
+html.dev-mode .glass {
+  background: rgba(30, 41, 59, 0.8) !important;
+  border-color: var(--dev-border) !important;
+}
+html.dev-mode .btn-primary {
+  background: var(--dev-accent) !important;
+  color: var(--dev-bg) !important;
+  border: 1px solid var(--dev-accent) !important;
+}
+html.dev-mode .btn-secondary {
+  background: var(--dev-bg-card) !important;
+  color: var(--dev-text) !important;
+  border-color: var(--dev-border) !important;
+}
+html.dev-mode .btn-secondary:hover {
+  background: var(--dev-bg-elevated) !important;
+  border-color: var(--dev-border-strong) !important;
+}
+html.dev-mode .tab-active {
+  border-color: var(--dev-accent) !important;
+  color: var(--dev-accent) !important;
+}
+html.dev-mode .tab-inactive {
+  color: var(--dev-text-dim) !important;
+}
+html.dev-mode .tab-inactive:hover {
+  color: var(--dev-text) !important;
+  border-color: var(--dev-border) !important;
+}
+
+/* Main content panel (rounded-2xl with ring) */
+html.dev-mode .rounded-2xl.ring-1 {
+  box-shadow: 0 0 0 1px var(--dev-border) !important;
+}
+
+/* About link (secondary nav) — visible in dark */
+html.dev-mode a.border-gray-200.text-gray-600 {
+  color: var(--dev-text-dim) !important;
+  border-color: var(--dev-border) !important;
+}
+html.dev-mode a.border-gray-200.text-gray-600:hover {
+  color: var(--dev-accent) !important;
+  background: var(--dev-bg-elevated) !important;
+  border-color: var(--dev-border-strong) !important;
+}
+
+/* UnblockDevs logo text in header */
+html.dev-mode .group .text-gray-900 {
+  color: var(--dev-text) !important;
+}
+html.dev-mode .group:hover .text-primary-700 {
+  color: var(--dev-accent) !important;
+}
+
+/* JSON comparator side-by-side: one flat background, no horizontal borders — removes border line at line 19 when scrolling */
+html.dev-mode .json-comparator-sidebyside,
+html.dev-mode .json-comparator-sidebyside .json-comparator-sidebyside-linenums,
+html.dev-mode .json-comparator-sidebyside .json-comparator-sidebyside-code {
+  background: #2d3a4a !important;
+  box-shadow: none !important;
+}
+html.dev-mode .json-comparator-sidebyside {
+  border-color: var(--dev-border-strong) !important;
+}
+/* No top/bottom/left on inner pre so scrolling doesn’t show a horizontal line */
+html.dev-mode .json-comparator-sidebyside .json-comparator-sidebyside-linenums,
+html.dev-mode .json-comparator-sidebyside .json-comparator-sidebyside-code {
+  border: none !important;
+  border-right: 1px solid var(--dev-border-strong) !important;
+}
+html.dev-mode .json-comparator-sidebyside .json-comparator-sidebyside-code {
+  border-right: none !important;
+  color: var(--dev-text) !important;
+}
+html.dev-mode .json-comparator-sidebyside .json-comparator-sidebyside-linenums {
+  color: var(--dev-text-dim) !important;
+}
+
+/* JSON syntax highlight (inside pre) — keep readable in dark */
+html.dev-mode .json-highlight .null { color: #f87171; }
+html.dev-mode .json-highlight .string { color: #86efac; }
+html.dev-mode .json-highlight .number { color: #93c5fd; }
+html.dev-mode .json-highlight .boolean { color: #c4b5fd; }
+html.dev-mode .json-highlight .key { color: #fca5a5; }
+html.dev-mode .json-highlight { color: var(--dev-text); }
+
+/* Scrollbar in dark mode (use existing .custom-scrollbar-dark where applied) */
+html.dev-mode .custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--dev-bg);
+}
+html.dev-mode .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--dev-border-strong);
+}
+html.dev-mode .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--dev-accent);
+}
+
+/* Token comparator: Match / Mismatch legend — Match = light green, pill with white text */
+html.dev-mode .token-comparator-legend-match {
+  background: #16a34a !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  border: 1px solid #4ade80 !important;
+}
+html.dev-mode .token-comparator-legend-mismatch {
+  background: #dc2626 !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  border: 1px solid #f87171 !important;
+}
+
+/* Generate sample JSON CTA: soothing accent in dark mode (no green glow) */
+html.dev-mode .generate-sample-json-btn {
+  background: var(--dev-bg-elevated) !important;
+  color: var(--dev-accent) !important;
+  border: 1px solid var(--dev-accent) !important;
+  box-shadow: 0 4px 14px 0 rgba(125, 211, 252, 0.2), 0 0 0 1px var(--dev-accent) !important;
+}
+html.dev-mode .generate-sample-json-btn:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 0 0 1px var(--dev-accent), 0 6px 20px 2px rgba(125, 211, 252, 0.25) !important;
+}
+/* Dark mode: soft glow pulse uses accent instead of green */
+html.dev-mode .generate-sample-json-btn.animate-btn-glow {
+  animation: btn-glow-pulse-dark 2s ease-in-out infinite;
+}
+@keyframes btn-glow-pulse-dark {
+  0%, 100% { box-shadow: 0 4px 14px 0 rgba(125, 211, 252, 0.25), 0 0 0 1px var(--dev-accent); }
+  50% { box-shadow: 0 6px 20px 2px rgba(125, 211, 252, 0.35), 0 0 0 1px var(--dev-accent); }
 }
 
 /* 1M celebration popup – confetti */

@@ -442,7 +442,7 @@ export default function JsonBeautifier() {
             <button
               type="button"
               onClick={handleGenerateSample}
-              className="animate-btn-glow inline-flex items-center gap-2 px-5 py-3 text-sm font-bold text-white bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 rounded-xl shadow-lg shadow-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/50 hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 border border-white/20 ring-2 ring-emerald-400/50 hover:ring-emerald-300/60"
+              className="generate-sample-json-btn animate-btn-glow inline-flex items-center gap-2 px-5 py-3 text-sm font-bold text-white bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 rounded-xl shadow-lg shadow-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/50 hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 border border-white/20 ring-2 ring-emerald-400/50 hover:ring-emerald-300/60"
             >
               <Sparkles className="w-5 h-5 drop-shadow-sm" />
               Generate sample JSON
@@ -456,7 +456,7 @@ export default function JsonBeautifier() {
             <button
               type="button"
               onClick={handleClear}
-              className="px-3 py-1.5 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-colors"
+              className="cta-icon-close px-3 py-1.5 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-colors"
               title="Clear all"
               aria-label="Clear all"
             >

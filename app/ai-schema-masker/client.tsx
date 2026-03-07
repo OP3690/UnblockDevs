@@ -550,7 +550,7 @@ export default function AiSchemaMaskerClient() {
                 type="button"
                 onClick={handleCopyMasked}
                 disabled={!maskedOutput}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-200 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex-shrink-0"
+                className="cta-icon-copy inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-200 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex-shrink-0"
               >
                 <Clipboard className="w-3.5 h-3.5" />
                 Copy
@@ -628,7 +628,7 @@ export default function AiSchemaMaskerClient() {
                 <button
                   type="button"
                   onClick={addTable}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-indigo-200 text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100"
+                  className="cta-add inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-indigo-200 text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   Add table
@@ -645,7 +645,7 @@ export default function AiSchemaMaskerClient() {
                         placeholder="Table name"
                         className="flex-1 min-w-[120px] px-2.5 py-1.5 text-sm font-mono rounded border border-slate-200 bg-white"
                       />
-                      <button type="button" onClick={() => removeTable(t.id)} className="p-1.5 rounded text-slate-500 hover:bg-red-50 hover:text-red-600" aria-label="Remove table">
+                      <button type="button" onClick={() => removeTable(t.id)} className="cta-icon-remove p-1.5 rounded text-slate-500 hover:bg-red-50 hover:text-red-600" aria-label="Remove table">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -659,12 +659,12 @@ export default function AiSchemaMaskerClient() {
                             placeholder="Column"
                             className="w-28 px-2 py-1 text-xs font-mono rounded border border-slate-200 bg-white"
                           />
-                          <button type="button" onClick={() => removeColumn(t.id, idx)} className="p-1 text-slate-400 hover:text-red-600 rounded" aria-label="Remove column">
+                          <button type="button" onClick={() => removeColumn(t.id, idx)} className="cta-icon-remove p-1 text-slate-400 hover:text-red-600 rounded" aria-label="Remove column">
                             <Trash2 className="w-3 h-3" />
                           </button>
                         </span>
                       ))}
-                      <button type="button" onClick={() => addColumn(t.id)} className="inline-flex items-center gap-1 px-2 py-1 text-xs text-indigo-600 rounded border border-dashed border-indigo-200 hover:bg-indigo-50">
+                      <button type="button" onClick={() => addColumn(t.id)} className="cta-add inline-flex items-center gap-1 px-2 py-1 text-xs text-indigo-600 rounded border border-dashed border-indigo-200 hover:bg-indigo-50">
                         <Plus className="w-3 h-3" /> Column
                       </button>
                     </div>
@@ -679,7 +679,7 @@ export default function AiSchemaMaskerClient() {
                   <button
                     type="button"
                     onClick={addJoin}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-indigo-200 text-xs font-medium text-indigo-700 bg-white hover:bg-indigo-50"
+                    className="cta-add inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-indigo-200 text-xs font-medium text-indigo-700 bg-white hover:bg-indigo-50"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     Add JOIN
@@ -750,7 +750,7 @@ export default function AiSchemaMaskerClient() {
                             <option key={c} value={c}>{c}</option>
                           ))}
                         </select>
-                        <button type="button" onClick={() => removeJoin(j.id)} className="p-1.5 rounded text-slate-500 hover:bg-red-50 hover:text-red-600" aria-label="Remove JOIN">
+                        <button type="button" onClick={() => removeJoin(j.id)} className="cta-icon-remove p-1.5 rounded text-slate-500 hover:bg-red-50 hover:text-red-600" aria-label="Remove JOIN">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -789,7 +789,7 @@ export default function AiSchemaMaskerClient() {
             <div className="rounded-xl border border-indigo-100 bg-white overflow-hidden">
               <div className="flex items-center justify-between px-4 py-2 border-b border-indigo-50">
                 <span className="text-xs font-medium text-slate-700">Generated prompt (copy and send to AI)</span>
-                <button type="button" onClick={handleCopyGeneratedPrompt} disabled={!generatedPrompt} className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium text-indigo-600 hover:bg-indigo-50 disabled:opacity-40">
+                <button type="button" onClick={handleCopyGeneratedPrompt} disabled={!generatedPrompt} className="cta-icon-copy inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium text-indigo-600 hover:bg-indigo-50 disabled:opacity-40" aria-label="Copy generated prompt">
                   <Clipboard className="w-3.5 h-3.5" /> Copy
                 </button>
               </div>

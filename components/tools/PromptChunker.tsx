@@ -225,17 +225,25 @@ export default function PromptChunker() {
           <button
             type="button"
             onClick={() => setTabMode('chunk')}
-            className={`px-4 py-2 rounded-lg font-semibold transition-colors ${tabMode === 'chunk' ? 'bg-white text-purple-600' : 'bg-white/20 text-white hover:bg-white/30'}`}
+            className={`cta-tab-chunk px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 ${tabMode === 'chunk'
+              ? 'bg-cyan-400 text-slate-900 shadow-lg ring-2 ring-white/50'
+              : 'bg-white/20 text-white hover:bg-white/30'}`}
+            aria-pressed={tabMode === 'chunk'}
+            aria-label="Chunk mode"
           >
-            <Scissors className="w-4 h-4 inline-block mr-2 align-middle" />
+            <Scissors className="w-4 h-4 flex-shrink-0" />
             Chunk
           </button>
           <button
             type="button"
             onClick={() => setTabMode('simplify')}
-            className={`px-4 py-2 rounded-lg font-semibold transition-colors ${tabMode === 'simplify' ? 'bg-white text-purple-600' : 'bg-white/20 text-white hover:bg-white/30'}`}
+            className={`cta-tab-simplify px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 ${tabMode === 'simplify'
+              ? 'bg-amber-400 text-slate-900 shadow-lg ring-2 ring-white/50'
+              : 'bg-white/20 text-white hover:bg-white/30'}`}
+            aria-pressed={tabMode === 'simplify'}
+            aria-label="Simplify mode"
           >
-            <Sparkles className="w-4 h-4 inline-block mr-2 align-middle" />
+            <Sparkles className="w-4 h-4 flex-shrink-0" />
             Simplify
           </button>
         </div>
@@ -253,7 +261,7 @@ export default function PromptChunker() {
               key={t.id}
               type="button"
               onClick={() => applyTemplate(t.id)}
-              className="px-3 py-1.5 bg-purple-50 text-purple-700 rounded-lg text-sm font-medium hover:bg-purple-100"
+              className="cta-template px-3 py-1.5 bg-purple-50 text-purple-700 rounded-lg text-sm font-medium hover:bg-purple-100"
             >
               {t.name}
             </button>
@@ -268,7 +276,7 @@ export default function PromptChunker() {
             <button
               type="button"
               onClick={() => setShowSettings(!showSettings)}
-              className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors"
+              className="cta-chunking-settings flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors"
             >
               <Settings className="w-5 h-5" />
               <span className="font-semibold">Chunking Settings</span>

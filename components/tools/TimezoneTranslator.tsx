@@ -750,7 +750,7 @@ export default function TimezoneTranslator() {
 
               <button
                 onClick={convertTime}
-                className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-green-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg"
+                className="cta-primary w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-green-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg"
               >
                 Convert Time
               </button>
@@ -763,7 +763,7 @@ export default function TimezoneTranslator() {
               <h3 className="text-lg font-semibold text-gray-900">Selected Cities</h3>
               <button
                 onClick={generateShareableLink}
-                className="px-4 py-2 bg-green-100 text-green-700 rounded-lg text-sm font-semibold hover:bg-green-200 transition-colors flex items-center gap-2"
+                className="cta-icon-share px-4 py-2 bg-green-100 text-green-700 rounded-lg text-sm font-semibold hover:bg-green-200 transition-colors flex items-center gap-2"
               >
                 <Share2 className="w-4 h-4" />
                 Share Link
@@ -779,7 +779,8 @@ export default function TimezoneTranslator() {
                   <span className="text-sm font-medium text-gray-900">{city.name}</span>
                   <button
                     onClick={() => removeCity(city.id)}
-                    className="text-gray-400 hover:text-red-600 transition-colors"
+                    className="cta-icon-remove text-gray-400 hover:text-red-600 transition-colors"
+                    aria-label="Remove city"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -818,7 +819,7 @@ export default function TimezoneTranslator() {
                     timeResults.map(r => `${r.city.name}: ${r.time} on ${r.date}`).join('\n'),
                     'all-times'
                   )}
-                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 transition-colors flex items-center gap-2"
+                  className="cta-icon-copy-all px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 transition-colors flex items-center gap-2"
                 >
                   {copied === 'all-times' ? (
                     <>
@@ -847,7 +848,8 @@ export default function TimezoneTranslator() {
                       </div>
                       <button
                         onClick={() => copyToClipboard(`${result.city.name}: ${result.time} on ${result.date}`, `time-${idx}`)}
-                        className="p-1 text-gray-400 hover:text-green-600 transition-colors"
+                        className="cta-icon-copy p-1 text-gray-400 hover:text-green-600 transition-colors"
+                        aria-label="Copy result"
                       >
                         {copied === `time-${idx}` ? (
                           <Check className="w-4 h-4 text-green-600" />
@@ -892,7 +894,7 @@ export default function TimezoneTranslator() {
             </div>
             <button
               onClick={convertEpoch}
-              className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-green-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg"
+              className="cta-primary w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-green-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg"
             >
               Convert Epoch
             </button>
@@ -1031,7 +1033,7 @@ export default function TimezoneTranslator() {
             </div>
             <button
               onClick={convertUTC}
-              className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-green-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg"
+              className="cta-primary w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-green-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg"
             >
               Convert UTC to Timezone
             </button>
@@ -1104,7 +1106,7 @@ export default function TimezoneTranslator() {
 
             <button
               onClick={convertTimestamp}
-              className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-green-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg"
+              className="cta-primary w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-green-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg"
             >
               Convert Timestamp
             </button>

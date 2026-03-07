@@ -96,7 +96,7 @@ function buildHighlightedHtml(text: string, matches: MatchResult[]): string {
     if (p.start > last) {
       out.push('<span>', escapeHtml(text.slice(last, p.start)), '</span>');
     }
-    out.push('<mark class="bg-amber-200 dark:bg-amber-600/40 rounded px-0.5">', escapeHtml(text.slice(p.start, p.end)), '</mark>');
+    out.push('<mark class="regex-highlight-mark">', escapeHtml(text.slice(p.start, p.end)), '</mark>');
     last = p.end;
   }
   if (last < text.length) {
@@ -260,7 +260,7 @@ export default function RegexTesterClient() {
             <button
               type="button"
               onClick={copyPattern}
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-slate-800"
+              className="cta-regex-copy inline-flex items-center gap-1.5 text-sm font-semibold text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100"
             >
               <Copy className="w-4 h-4" aria-hidden />
               Copy
@@ -307,7 +307,7 @@ export default function RegexTesterClient() {
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Enter or paste text to test against..."
-            className="w-full h-40 px-4 py-3 font-mono text-sm border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 resize-y"
+            className="regex-tester-textarea w-full h-40 px-4 py-3 font-mono text-sm border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 resize-y text-slate-900 placeholder:text-slate-500"
             spellCheck={false}
           />
         </section>
@@ -336,7 +336,7 @@ export default function RegexTesterClient() {
                     <button
                       type="button"
                       onClick={copyMatches}
-                      className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-slate-800"
+                      className="cta-regex-copy-matches inline-flex items-center gap-1.5 text-sm font-semibold text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100"
                     >
                       <Copy className="w-4 h-4" aria-hidden />
                       Copy matches
@@ -348,7 +348,7 @@ export default function RegexTesterClient() {
                 <div className="mb-6">
                   <p className="text-xs font-medium text-slate-500 mb-2">Highlighted in test string</p>
                   <div
-                    className="w-full min-h-[80px] p-4 font-mono text-sm border border-slate-200 rounded-xl bg-slate-50/50 whitespace-pre-wrap break-words"
+                    className="regex-highlighted-text w-full min-h-[80px] p-4 font-mono text-sm border border-slate-200 rounded-xl bg-slate-50/50 whitespace-pre-wrap break-words text-slate-900"
                     dangerouslySetInnerHTML={{ __html: highlightedHtml }}
                   />
                 </div>

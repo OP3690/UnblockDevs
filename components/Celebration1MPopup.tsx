@@ -72,7 +72,7 @@ export default function Celebration1MPopup() {
             <button
               type="button"
               onClick={dismiss}
-              className="absolute right-3 top-3 p-1.5 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+              className="cta-icon-close absolute right-3 top-3 p-1.5 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
               aria-label="Close celebration"
             >
               <X className="w-5 h-5" />

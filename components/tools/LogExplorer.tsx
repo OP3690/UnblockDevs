@@ -287,14 +287,14 @@ export default function LogExplorer() {
         <>
           {/* Format detection */}
           {formatDetection && (
-            <div className="bg-white rounded-xl shadow border border-gray-200 p-4">
-              <h3 className="text-sm font-bold text-gray-900 mb-2">Log format detected</h3>
+            <div className="log-explorer-format bg-white rounded-xl shadow border border-gray-200 p-4">
+              <h3 className="log-explorer-format-title text-sm font-bold text-gray-900 mb-2">Log format detected</h3>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-sm font-medium">
+                <span className="log-explorer-format-badge px-2 py-1 bg-green-100 text-green-800 rounded text-sm font-medium">
                   {formatDetection.format === 'json' ? 'JSON structured logs' : 'Text logs'}
                 </span>
                 {formatDetection.fields.length > 0 && (
-                  <span className="text-sm text-gray-600">
+                  <span className="log-explorer-format-fields text-sm text-gray-600">
                     Fields: {formatDetection.fields.slice(0, 12).join(', ')}
                     {formatDetection.fields.length > 12 ? '…' : ''}
                   </span>
@@ -663,16 +663,16 @@ export default function LogExplorer() {
           </div>
 
           {/* Log table */}
-          <div className="bg-white rounded-xl shadow border border-gray-200 p-4 overflow-x-auto">
-            <h3 className="text-sm font-bold text-gray-900 mb-3">Logs ({sortedLogs.length})</h3>
+          <div className="log-explorer-table bg-white rounded-xl shadow border border-gray-200 p-4 overflow-x-auto">
+            <h3 className="log-explorer-table-title text-sm font-bold text-gray-900 mb-3">Logs ({sortedLogs.length})</h3>
             <div className="max-h-[400px] overflow-y-auto">
               <table className="w-full text-sm">
-                <thead className="bg-gray-50 sticky top-0">
+                <thead className="log-explorer-thead bg-gray-50 sticky top-0">
                   <tr>
                     {['timestamp', 'level', 'message'].map((k) => (
                       <th
                         key={k}
-                        className="text-left py-2 px-2 font-medium text-gray-700 cursor-pointer hover:bg-gray-100"
+                        className="log-explorer-th text-left py-2 px-2 font-medium text-slate-800 cursor-pointer hover:bg-gray-100"
                         onClick={() => {
                           setSortKey(k);
                           setSortDir(sortKey === k && sortDir === 'desc' ? 'asc' : 'desc');
@@ -683,22 +683,22 @@ export default function LogExplorer() {
                     ))}
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="log-explorer-tbody">
                   {sortedLogs.slice(0, 200).map((log, idx) => {
                     const level = getLevel(log);
                     return (
                       <tr
                         key={idx}
-                        className={`border-t border-gray-100 ${getLevelColor(level)} hover:brightness-[0.97] ${idx % 2 === 1 ? 'bg-black/[0.02]' : ''}`}
+                        className={`log-explorer-row border-t border-gray-100 ${getLevelColor(level)} hover:brightness-[0.97] ${idx % 2 === 1 ? 'bg-black/[0.02]' : ''}`}
                       >
-                        <td className="py-2 px-3 text-gray-600 whitespace-nowrap text-xs">{(log.timestamp ?? log['@timestamp'] ?? '') as string}</td>
+                        <td className="log-explorer-cell-timestamp py-2 px-3 text-slate-700 whitespace-nowrap text-xs font-medium">{(log.timestamp ?? log['@timestamp'] ?? '') as string}</td>
                         <td className="py-2 px-3 whitespace-nowrap">
                           <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium border ${getLevelBadgeClass(level)}`}>
                             {getLevelIcon(getLevel(log))}
                             {level}
                           </span>
                         </td>
-                        <td className="py-2 px-3 text-gray-800 text-sm break-words whitespace-pre-wrap min-w-[24ch] max-w-[75ch]">{getMessage(log)}</td>
+                        <td className="log-explorer-cell-message py-2 px-3 text-slate-900 text-sm break-words whitespace-pre-wrap min-w-[24ch] max-w-[75ch] font-medium">{getMessage(log)}</td>
                       </tr>
                     );
                   })}

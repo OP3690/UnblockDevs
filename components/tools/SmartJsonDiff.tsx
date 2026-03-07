@@ -12,6 +12,7 @@ import {
   ChevronDown,
   ChevronRight,
   FileCode2,
+  Columns,
   BarChart3,
   Shield,
   BookOpen,
@@ -267,23 +268,22 @@ export default function SmartJsonDiff() {
 
   const formatBytes = (n: number) => (n < 1024 ? `${n} B` : `${(n / 1024).toFixed(1)} KB`);
 
-  /** Side-by-side code block with line numbers; line numbers scroll with content */
+  /** Side-by-side code block with line numbers; line numbers scroll with content. Flat background, no inner shadow, to avoid horizontal band at line 19 when scrolling. */
   const CodeWithLineNumbers = useCallback(
     ({ text, label }: { text: string; label: string }) => {
       const lines = text.split('\n');
+      const lineNumbersText = lines.map((_, i) => i + 1).join('\n');
       return (
         <div className="flex flex-col">
           <div className="mb-2 text-xs font-medium text-gray-500">{label}</div>
-          <div className="flex max-h-[420px] overflow-auto rounded-lg border border-gray-700 bg-gray-900 shadow-inner">
-            <div
-              className="flex-shrink-0 select-none border-r border-gray-700 bg-gray-800 py-4 pl-3 pr-2 text-right font-mono text-[13px] leading-relaxed text-gray-500"
+          <div className="json-comparator-sidebyside flex max-h-[420px] overflow-auto rounded-lg border border-gray-700 bg-gray-900">
+            <pre
+              className="json-comparator-sidebyside-linenums flex-shrink-0 select-none border-r border-gray-700 bg-gray-800 py-4 pl-3 pr-2 text-right font-mono text-[13px] leading-relaxed text-gray-500"
               aria-hidden
             >
-              {lines.map((_, i) => (
-                <div key={i}>{i + 1}</div>
-              ))}
-            </div>
-            <pre className="min-w-0 flex-1 py-4 pl-3 pr-4 font-mono text-[13px] leading-relaxed text-gray-100">
+              {lineNumbersText}
+            </pre>
+            <pre className="json-comparator-sidebyside-code min-w-0 flex-1 py-4 pl-3 pr-4 font-mono text-[13px] leading-relaxed text-gray-100">
               {text}
             </pre>
           </div>
@@ -499,24 +499,33 @@ export default function SmartJsonDiff() {
           </div>
 
           {/* View toggle */}
-          <div className="flex gap-1 rounded-xl border border-gray-200 bg-gray-50/50 p-1.5">
+          <div className="flex gap-1 rounded-xl border-2 border-gray-200 bg-gray-100/80 p-1.5">
             <button
               type="button"
               onClick={() => setViewMode('structured')}
-              className={`flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
-                viewMode === 'structured' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'
+              className={`cta-view-structured flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all ${
+                viewMode === 'structured'
+                  ? 'bg-indigo-500 text-white shadow-md ring-2 ring-indigo-400/50'
+                  : 'text-gray-600 hover:bg-gray-200/80 hover:text-gray-900'
               }`}
+              aria-pressed={viewMode === 'structured'}
+              aria-label="Structured view"
             >
-              <FileCode2 className="h-4 w-4" />
+              <FileCode2 className="h-4 w-4 flex-shrink-0" />
               Structured view
             </button>
             <button
               type="button"
               onClick={() => setViewMode('sidebyside')}
-              className={`flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
-                viewMode === 'sidebyside' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'
+              className={`cta-view-sidebyside flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all ${
+                viewMode === 'sidebyside'
+                  ? 'bg-emerald-500 text-white shadow-md ring-2 ring-emerald-400/50'
+                  : 'text-gray-600 hover:bg-gray-200/80 hover:text-gray-900'
               }`}
+              aria-pressed={viewMode === 'sidebyside'}
+              aria-label="Side-by-side view"
             >
+              <Columns className="h-4 w-4 flex-shrink-0" />
               Side-by-side
             </button>
           </div>
@@ -525,8 +534,8 @@ export default function SmartJsonDiff() {
             <>
               {/* Meaningful changes */}
               <div className="rounded-2xl border border-gray-200/80 bg-white overflow-hidden shadow-md shadow-gray-200/30">
-                <div className="border-b border-gray-100 bg-gray-50/80 px-5 py-3">
-                  <span className="text-sm font-semibold text-gray-800">
+                <div className="border-b border-indigo-100 bg-gradient-to-r from-indigo-50 to-violet-50 px-5 py-3.5">
+                  <span className="text-sm font-bold text-indigo-900">
                     {result.changes.length} Meaningful Change{result.changes.length !== 1 ? 's' : ''}
                   </span>
                 </div>
@@ -539,59 +548,75 @@ export default function SmartJsonDiff() {
                       <span className="text-sm font-medium">Both payloads are semantically equal after normalization.</span>
                     </div>
                   ) : (
-                    result.changes.map((d, i) => (
-                      <div
-                        key={`${d.path}-${i}`}
-                        className={`px-5 py-4 ${
-                          d.type === 'added'
-                            ? 'bg-emerald-50/70'
-                            : d.type === 'removed'
-                              ? 'bg-red-50/70'
-                              : d.type === 'type_changed'
-                                ? 'bg-amber-50/70'
-                                : 'bg-amber-50/50'
-                        }`}
-                      >
-                        <div className="flex items-start gap-3">
-                          <span
-                            className={`mt-1 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full ${
-                              d.type === 'added'
-                                ? 'bg-emerald-100 text-emerald-700'
-                                : d.type === 'removed'
-                                  ? 'bg-red-100 text-red-700'
-                                  : d.type === 'type_changed'
-                                    ? 'bg-amber-200 text-amber-800'
-                                    : 'bg-amber-100 text-amber-700'
-                            }`}
-                          >
-                            {d.type === 'added' && <Plus className="h-3.5 w-3.5" />}
-                            {d.type === 'removed' && <Minus className="h-3.5 w-3.5" />}
-                            {(d.type === 'value_changed' || d.type === 'changed') && <Edit className="h-3.5 w-3.5" />}
-                            {d.type === 'type_changed' && <Edit className="h-3.5 w-3.5" />}
-                          </span>
-                          <div className="min-w-0 flex-1">
-                            <div className="font-mono text-sm font-semibold text-gray-900">{d.path || 'root'}</div>
-                            <div className="mt-1 text-xs text-gray-500">
-                              Type: <span className="font-medium text-gray-700">{changeTypeLabel(d.type)}</span>
-                            </div>
-                            <div className="mt-2 flex flex-wrap gap-x-6 gap-y-1">
-                              {d.before !== undefined && (
-                                <div className="rounded bg-white/80 px-2.5 py-1.5 font-mono text-xs">
-                                  <span className="text-gray-400">Before </span>
-                                  <span className="text-gray-800">{formatValue(d.before)}</span>
-                                </div>
-                              )}
-                              {d.after !== undefined && (
-                                <div className="rounded bg-white/80 px-2.5 py-1.5 font-mono text-xs">
-                                  <span className="text-gray-400">After </span>
-                                  <span className="text-gray-800">{formatValue(d.after)}</span>
-                                </div>
-                              )}
+                    result.changes.map((d, i) => {
+                      const isAdded = d.type === 'added';
+                      const isRemoved = d.type === 'removed';
+                      const isTypeChanged = d.type === 'type_changed';
+                      const isValueChanged = d.type === 'value_changed' || d.type === 'changed';
+                      const rowBg = isAdded
+                        ? 'bg-emerald-50/90 border-l-4 border-emerald-500'
+                        : isRemoved
+                          ? 'bg-red-50/90 border-l-4 border-red-500'
+                          : isTypeChanged
+                            ? 'bg-amber-50/90 border-l-4 border-amber-500'
+                            : 'bg-indigo-50/90 border-l-4 border-indigo-500';
+                      const iconBg = isAdded
+                        ? 'bg-emerald-500 text-white'
+                        : isRemoved
+                          ? 'bg-red-500 text-white'
+                          : isTypeChanged
+                            ? 'bg-amber-500 text-white'
+                            : 'bg-indigo-500 text-white';
+                      const pathColor = isAdded
+                        ? 'text-emerald-800'
+                        : isRemoved
+                          ? 'text-red-800'
+                          : isTypeChanged
+                            ? 'text-amber-800'
+                            : 'text-indigo-800';
+                      const typePill = isAdded
+                        ? 'bg-emerald-200/80 text-emerald-800'
+                        : isRemoved
+                          ? 'bg-red-200/80 text-red-800'
+                          : isTypeChanged
+                            ? 'bg-amber-200/80 text-amber-800'
+                            : 'bg-indigo-200/80 text-indigo-800';
+                      return (
+                        <div key={`${d.path}-${i}`} className={`px-5 py-4 ${rowBg}`}>
+                          <div className="flex items-start gap-3">
+                            <span
+                              className={`mt-1 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg ${iconBg}`}
+                            >
+                              {isAdded && <Plus className="h-4 w-4" />}
+                              {isRemoved && <Minus className="h-4 w-4" />}
+                              {(isValueChanged || isTypeChanged) && <Edit className="h-4 w-4" />}
+                            </span>
+                            <div className="min-w-0 flex-1">
+                              <div className={`font-mono text-sm font-bold ${pathColor}`}>{d.path || 'root'}</div>
+                              <div className="mt-1.5">
+                                <span className={`inline-flex rounded-md px-2 py-0.5 text-xs font-semibold ${typePill}`}>
+                                  {changeTypeLabel(d.type)}
+                                </span>
+                              </div>
+                              <div className="mt-3 flex flex-wrap gap-3">
+                                {d.before !== undefined && (
+                                  <div className="rounded-lg border-2 border-rose-200 bg-rose-50/90 px-3 py-2 font-mono text-xs shadow-sm">
+                                    <span className="font-semibold text-rose-600">Before</span>
+                                    <span className="ml-2 font-medium text-rose-900">{formatValue(d.before)}</span>
+                                  </div>
+                                )}
+                                {d.after !== undefined && (
+                                  <div className="rounded-lg border-2 border-emerald-200 bg-emerald-50/90 px-3 py-2 font-mono text-xs shadow-sm">
+                                    <span className="font-semibold text-emerald-600">After</span>
+                                    <span className="ml-2 font-medium text-emerald-900">{formatValue(d.after)}</span>
+                                  </div>
+                                )}
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ))
+                      );
+                    })
                   )}
                 </div>
               </div>

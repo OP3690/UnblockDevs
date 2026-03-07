@@ -335,7 +335,7 @@ export default function MockApiGenerator() {
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <label className="text-xs font-medium text-gray-500">Conditional responses (e.g. IF body contains "blocked" → 403)</label>
-                    <button type="button" onClick={addConditionalRule} className="text-xs text-indigo-600 hover:text-indigo-700 font-medium">
+                    <button type="button" onClick={addConditionalRule} className="cta-add inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-indigo-300 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 hover:border-indigo-400">
                       + Add rule
                     </button>
                   </div>
