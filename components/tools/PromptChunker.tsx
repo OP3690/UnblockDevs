@@ -1,9 +1,19 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { Copy, Scissors, Download, Settings, Info, ChevronDown, ChevronUp, CheckCircle2 } from 'lucide-react';
+import { Copy, Scissors, Download, Settings, Info, ChevronDown, ChevronUp, CheckCircle2, Sparkles, BarChart3, Shield, FileText } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import {
+  simplifyPrompt,
+  detectIntent,
+  detectDomain,
+  scorePrompt,
+  PROMPT_TEMPLATES,
+  type Intent,
+  type Tone,
+  type ModelStyle,
+} from '@/lib/promptSimplifierEngine';
 
 interface Chunk {
   id: number;
@@ -14,7 +24,10 @@ interface Chunk {
   isLast: boolean;
 }
 
+type TabMode = 'chunk' | 'simplify';
+
 export default function PromptChunker() {
+  const [tabMode, setTabMode] = useState<TabMode>('chunk');
   const [prompt, setPrompt] = useState('');
   const [chunks, setChunks] = useState<Chunk[]>([]);
   const [chunkSize, setChunkSize] = useState<number>(500);
@@ -24,6 +37,13 @@ export default function PromptChunker() {
   const [expandedChunks, setExpandedChunks] = useState<Set<number>>(new Set());
   const [copiedChunks, setCopiedChunks] = useState<Set<number>>(new Set());
   const resultsSectionRef = useRef<HTMLDivElement>(null);
+
+  // Simplifier state
+  const [simplifiedResult, setSimplifiedResult] = useState<ReturnType<typeof simplifyPrompt> | null>(null);
+  const [simplifierTone, setSimplifierTone] = useState<Tone>('professional');
+  const [simplifierModel, setSimplifierModel] = useState<ModelStyle>('neutral');
+  const [simplifierSafety, setSimplifierSafety] = useState(true);
+  const [simplifiedCopied, setSimplifiedCopied] = useState(false);
 
   const splitIntoChunks = () => {
     if (!prompt.trim()) {
@@ -151,7 +171,41 @@ export default function PromptChunker() {
     setChunks([]);
     setExpandedChunks(new Set());
     setCopiedChunks(new Set());
+    setSimplifiedResult(null);
     toast.success('Cleared');
+  };
+
+  const runSimplify = () => {
+    if (!prompt.trim()) {
+      toast.error('Please enter a prompt to simplify');
+      return;
+    }
+    const result = simplifyPrompt(prompt, {
+      tone: simplifierTone,
+      modelStyle: simplifierModel,
+      scanSafety: simplifierSafety,
+    });
+    setSimplifiedResult(result);
+    toast.success('Prompt simplified');
+    resultsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const copySimplified = () => {
+    if (simplifiedResult?.optimized) {
+      navigator.clipboard.writeText(simplifiedResult.optimized);
+      setSimplifiedCopied(true);
+      toast.success('Optimized prompt copied');
+      setTimeout(() => setSimplifiedCopied(false), 2000);
+    }
+  };
+
+  const applyTemplate = (templateId: string) => {
+    const t = PROMPT_TEMPLATES.find((x) => x.id === templateId);
+    if (t) {
+      setPrompt(t.template);
+      setTabMode('simplify');
+      toast.success(`Template "${t.name}" applied`);
+    }
   };
 
   const totalWords = prompt.split(/\s+/).filter(w => w.length > 0).length;
@@ -162,96 +216,177 @@ export default function PromptChunker() {
       <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-6 text-white">
         <div className="flex items-center gap-3 mb-2">
           <Scissors className="w-6 h-6" />
-          <h2 className="text-2xl font-bold">AI Prompt Chunker</h2>
+          <h2 className="text-2xl font-bold">AI Prompt Chunker & Simplifier</h2>
         </div>
-        <p className="text-purple-100">
-          Split long AI prompts into manageable chunks with overlap for better context preservation. 
-          Perfect for tools with token limits or when organizing complex prompts.
+        <p className="text-purple-100 mb-4">
+          Split long prompts into chunks with overlap, or simplify messy prompts into optimized, structured prompts for AI models.
         </p>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => setTabMode('chunk')}
+            className={`px-4 py-2 rounded-lg font-semibold transition-colors ${tabMode === 'chunk' ? 'bg-white text-purple-600' : 'bg-white/20 text-white hover:bg-white/30'}`}
+          >
+            <Scissors className="w-4 h-4 inline-block mr-2 align-middle" />
+            Chunk
+          </button>
+          <button
+            type="button"
+            onClick={() => setTabMode('simplify')}
+            className={`px-4 py-2 rounded-lg font-semibold transition-colors ${tabMode === 'simplify' ? 'bg-white text-purple-600' : 'bg-white/20 text-white hover:bg-white/30'}`}
+          >
+            <Sparkles className="w-4 h-4 inline-block mr-2 align-middle" />
+            Simplify
+          </button>
+        </div>
       </div>
 
-      {/* Settings Panel */}
+      {/* Template library */}
       <div className="bg-white rounded-lg border border-gray-200 p-4">
-        <div className="flex items-center justify-between mb-4">
-          <button
-            onClick={() => setShowSettings(!showSettings)}
-            className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors"
-          >
-            <Settings className="w-5 h-5" />
-            <span className="font-semibold">Chunking Settings</span>
-          </button>
-          <button
-            onClick={() => {
-              setChunkSize(500);
-              setChunkType('words');
-              setOverlap(50);
-              toast.success('Reset to default settings');
-            }}
-            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition-colors text-sm"
-          >
-            Default
-          </button>
+        <h3 className="text-sm font-semibold text-gray-800 mb-2 flex items-center gap-2">
+          <FileText className="w-4 h-4 text-purple-600" />
+          Prompt templates
+        </h3>
+        <div className="flex flex-wrap gap-2">
+          {PROMPT_TEMPLATES.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => applyTemplate(t.id)}
+              className="px-3 py-1.5 bg-purple-50 text-purple-700 rounded-lg text-sm font-medium hover:bg-purple-100"
+            >
+              {t.name}
+            </button>
+          ))}
         </div>
-        
-        {showSettings && (
-          <div className="grid md:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
+      </div>
+
+      {/* Chunk settings (only when Chunk tab) */}
+      {tabMode === 'chunk' && (
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center justify-between mb-4">
+            <button
+              type="button"
+              onClick={() => setShowSettings(!showSettings)}
+              className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors"
+            >
+              <Settings className="w-5 h-5" />
+              <span className="font-semibold">Chunking Settings</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setChunkSize(500);
+                setChunkType('words');
+                setOverlap(50);
+                toast.success('Reset to default settings');
+              }}
+              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition-colors text-sm"
+            >
+              Default
+            </button>
+          </div>
+          {showSettings && (
+            <div className="grid md:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Chunk Type</label>
+                <select
+                  value={chunkType}
+                  onChange={(e) => setChunkType(e.target.value as 'words' | 'chars')}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                >
+                  <option value="words">Words</option>
+                  <option value="chars">Characters</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Chunk Size: {chunkSize} {chunkType === 'words' ? 'words' : 'characters'}
+                </label>
+                <input
+                  type="range"
+                  min="100"
+                  max={chunkType === 'words' ? '2000' : '5000'}
+                  step="50"
+                  value={chunkSize}
+                  onChange={(e) => setChunkSize(Number(e.target.value))}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                  <span>100</span>
+                  <span>{chunkType === 'words' ? '2000' : '5000'}</span>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Overlap: {overlap}%</label>
+                <input
+                  type="range"
+                  min="0"
+                  max="50"
+                  step="5"
+                  value={overlap}
+                  onChange={(e) => setOverlap(Number(e.target.value))}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                  <span>0%</span>
+                  <span>50%</span>
+                </div>
+                <p className="text-xs text-gray-600 mt-1">Overlap helps preserve context between chunks</p>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Simplifier options (only when Simplify tab) */}
+      {tabMode === 'simplify' && (
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <h3 className="text-sm font-semibold text-gray-800 mb-3">Simplify options</h3>
+          <div className="grid md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Chunk Type
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Tone</label>
               <select
-                value={chunkType}
-                onChange={(e) => setChunkType(e.target.value as 'words' | 'chars')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                value={simplifierTone}
+                onChange={(e) => setSimplifierTone(e.target.value as Tone)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
               >
-                <option value="words">Words</option>
-                <option value="chars">Characters</option>
+                <option value="professional">Professional</option>
+                <option value="concise">Concise</option>
+                <option value="detailed">Detailed</option>
+                <option value="beginner">Beginner friendly</option>
+                <option value="technical">Technical</option>
               </select>
             </div>
-            
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Chunk Size: {chunkSize} {chunkType === 'words' ? 'words' : 'characters'}
-              </label>
-              <input
-                type="range"
-                min="100"
-                max={chunkType === 'words' ? '2000' : '5000'}
-                step="50"
-                value={chunkSize}
-                onChange={(e) => setChunkSize(Number(e.target.value))}
-                className="w-full"
-              />
-              <div className="flex justify-between text-xs text-gray-500 mt-1">
-                <span>100</span>
-                <span>{chunkType === 'words' ? '2000' : '5000'}</span>
-              </div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Model style</label>
+              <select
+                value={simplifierModel}
+                onChange={(e) => setSimplifierModel(e.target.value as ModelStyle)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+              >
+                <option value="neutral">Neutral</option>
+                <option value="chatgpt">ChatGPT</option>
+                <option value="claude">Claude</option>
+                <option value="gemini">Gemini</option>
+              </select>
             </div>
-            
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Overlap: {overlap}%
-              </label>
+            <div className="flex items-center gap-2 pt-8">
               <input
-                type="range"
-                min="0"
-                max="50"
-                step="5"
-                value={overlap}
-                onChange={(e) => setOverlap(Number(e.target.value))}
-                className="w-full"
+                type="checkbox"
+                id="simplifier-safety"
+                checked={simplifierSafety}
+                onChange={(e) => setSimplifierSafety(e.target.checked)}
+                className="rounded"
               />
-              <div className="flex justify-between text-xs text-gray-500 mt-1">
-                <span>0%</span>
-                <span>50%</span>
-              </div>
-              <p className="text-xs text-gray-600 mt-1">
-                Overlap helps preserve context between chunks
-              </p>
+              <label htmlFor="simplifier-safety" className="text-sm text-gray-700 flex items-center gap-1">
+                <Shield className="w-4 h-4 text-green-600" />
+                Scan & mask secrets (API keys, tokens)
+              </label>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Input Section */}
       <div className="bg-white rounded-lg border border-gray-200 p-6">
@@ -272,14 +407,27 @@ export default function PromptChunker() {
         />
         
         <div className="flex gap-3 mt-4">
+          {tabMode === 'chunk' ? (
+            <button
+              type="button"
+              onClick={splitIntoChunks}
+              className="flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+            >
+              <Scissors className="w-5 h-5" />
+              Split into Chunks
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={runSimplify}
+              className="flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+            >
+              <Sparkles className="w-5 h-5" />
+              Simplify prompt
+            </button>
+          )}
           <button
-            onClick={splitIntoChunks}
-            className="flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors"
-          >
-            <Scissors className="w-5 h-5" />
-            Split into Chunks
-          </button>
-          <button
+            type="button"
             onClick={clearAll}
             className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
           >
@@ -288,8 +436,101 @@ export default function PromptChunker() {
         </div>
       </div>
 
-      {/* Chunks Display */}
-      {chunks.length > 0 && (
+      {/* Simplifier result: analysis + optimized output + diff */}
+      {tabMode === 'simplify' && simplifiedResult && (
+        <div ref={resultsSectionRef} className="space-y-4">
+          <div className="bg-white rounded-lg border-2 border-purple-200 p-5">
+            <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
+              <BarChart3 className="w-5 h-5 text-purple-600" />
+              Analysis
+            </h3>
+            <div className="grid md:grid-cols-2 gap-4 mb-4">
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <span className="text-xs font-medium text-gray-500 uppercase">Intent</span>
+                <p className="font-semibold text-gray-800 capitalize">{simplifiedResult.intent}</p>
+              </div>
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <span className="text-xs font-medium text-gray-500 uppercase">Domain</span>
+                <p className="font-semibold text-gray-800 capitalize">{simplifiedResult.domain}</p>
+              </div>
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <span className="text-xs font-medium text-gray-500 uppercase">Prompt quality score</span>
+                <p className="font-semibold text-gray-800">{simplifiedResult.score}/100</p>
+                {simplifiedResult.scoreSuggestions.length > 0 && (
+                  <ul className="text-xs text-gray-600 mt-1 list-disc list-inside">
+                    {simplifiedResult.scoreSuggestions.map((s, i) => (
+                      <li key={i}>{s}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <span className="text-xs font-medium text-gray-500 uppercase">Suggested output format</span>
+                <p className="text-sm text-gray-700">{simplifiedResult.outputFormat}</p>
+              </div>
+            </div>
+            {simplifiedResult.masked.length > 0 && (
+              <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-2">
+                <Shield className="w-4 h-4 text-amber-600" />
+                <span className="text-sm text-amber-800">
+                  Masked: {simplifiedResult.masked.map((m) => `${m.label} (${m.count})`).join(', ')}
+                </span>
+              </div>
+            )}
+            {simplifiedResult.suggestions.length > 0 && (
+              <div className="mt-3">
+                <span className="text-xs font-medium text-gray-500 uppercase">Suggestions</span>
+                <ul className="text-sm text-gray-700 list-disc list-inside mt-1">
+                  {simplifiedResult.suggestions.map((s, i) => (
+                    <li key={i}>{s}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+
+          <div className="bg-white rounded-lg border-2 border-green-200 p-5">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-lg font-semibold text-gray-900">Optimized prompt</h3>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gray-500">~{simplifiedResult.tokenEstimate} tokens</span>
+                <button
+                  type="button"
+                  onClick={copySimplified}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition-colors ${
+                    simplifiedCopied ? 'bg-green-100 text-green-700' : 'bg-green-600 text-white hover:bg-green-700'
+                  }`}
+                >
+                  {simplifiedCopied ? <CheckCircle2 className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  {simplifiedCopied ? 'Copied' : 'Copy'}
+                </button>
+              </div>
+            </div>
+            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <pre className="whitespace-pre-wrap text-sm text-gray-800 font-mono">{simplifiedResult.optimized}</pre>
+            </div>
+          </div>
+
+          <details className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <summary className="p-4 cursor-pointer font-semibold text-gray-800 hover:bg-gray-50">
+              View diff (original vs optimized)
+            </summary>
+            <div className="grid md:grid-cols-2 gap-0 border-t border-gray-200">
+              <div className="p-4 bg-red-50/50 border-r border-gray-200">
+                <p className="text-xs font-semibold text-red-700 uppercase mb-2">Original</p>
+                <pre className="whitespace-pre-wrap text-sm text-gray-700 font-mono">{prompt}</pre>
+              </div>
+              <div className="p-4 bg-green-50/50">
+                <p className="text-xs font-semibold text-green-700 uppercase mb-2">Optimized</p>
+                <pre className="whitespace-pre-wrap text-sm text-gray-700 font-mono">{simplifiedResult.optimized}</pre>
+              </div>
+            </div>
+          </details>
+        </div>
+      )}
+
+      {/* Chunks Display (only when Chunk tab) */}
+      {tabMode === 'chunk' && chunks.length > 0 && (
         <div ref={resultsSectionRef} className="space-y-4 scroll-mt-4">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-gray-900">
@@ -297,6 +538,7 @@ export default function PromptChunker() {
             </h3>
             <div className="flex gap-2">
               <button
+                type="button"
                 onClick={copyAllChunks}
                 className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors text-sm"
               >
@@ -304,6 +546,7 @@ export default function PromptChunker() {
                 Copy All
               </button>
               <button
+                type="button"
                 onClick={downloadChunks}
                 className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors text-sm"
               >
@@ -357,6 +600,7 @@ export default function PromptChunker() {
                     <div className="flex items-center gap-2">
                       {canExpand && (
                         <button
+                          type="button"
                           onClick={() => toggleChunkExpansion(chunk.id)}
                           className="flex items-center gap-1 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
                         >
@@ -374,6 +618,7 @@ export default function PromptChunker() {
                         </button>
                       )}
                       <button
+                        type="button"
                         onClick={() => copyChunk(chunk)}
                         className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors text-sm font-semibold ${
                           isCopied
@@ -417,18 +662,34 @@ export default function PromptChunker() {
       )}
 
       {/* Info Section */}
-      {chunks.length === 0 && (
+      {tabMode === 'chunk' && chunks.length === 0 && (
         <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
           <div className="flex items-start gap-3">
             <Info className="w-5 h-5 text-blue-600 mt-0.5" />
             <div className="text-sm text-gray-700">
-              <p className="font-semibold mb-2">How to use:</p>
+              <p className="font-semibold mb-2">How to use (Chunk):</p>
               <ul className="list-disc list-inside space-y-1">
                 <li>Paste your long AI prompt in the text area above</li>
                 <li>Configure chunk size and overlap in settings</li>
-                <li>Click "Split into Chunks" to generate manageable pieces</li>
+                <li>Click &quot;Split into Chunks&quot; to generate manageable pieces</li>
                 <li>Copy individual chunks or download all chunks as a file</li>
                 <li>Overlap helps preserve context between chunks for better AI understanding</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
+      {tabMode === 'simplify' && !simplifiedResult && (
+        <div className="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-r-lg">
+          <div className="flex items-start gap-3">
+            <Sparkles className="w-5 h-5 text-purple-600 mt-0.5" />
+            <div className="text-sm text-gray-700">
+              <p className="font-semibold mb-2">How to use (Simplify):</p>
+              <ul className="list-disc list-inside space-y-1">
+                <li>Paste a messy or informal prompt (e.g. &quot;hey can you explain this code and find bugs&quot;)</li>
+                <li>Choose tone and model style if desired</li>
+                <li>Click &quot;Simplify prompt&quot; to get a structured, optimized prompt</li>
+                <li>Copy the optimized prompt and use it in ChatGPT, Claude, or Gemini</li>
               </ul>
             </div>
           </div>

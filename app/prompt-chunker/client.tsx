@@ -19,8 +19,8 @@ export default function PromptChunkerLandingClient() {
               <Scissors className="w-6 h-6 text-purple-600" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">AI Prompt Chunker - Split Long Prompts</h1>
-              <p className="text-sm text-gray-500 mt-1">Split long AI prompts into manageable chunks with overlap</p>
+              <h1 className="text-3xl font-bold text-gray-900">AI Prompt Chunker & Simplifier</h1>
+              <p className="text-sm text-gray-500 mt-1">Split long prompts into chunks or simplify messy prompts into optimized, structured prompts</p>
             </div>
           </div>
         </div>
