@@ -734,3 +734,39 @@ html.dev-mode hr {
   border-width: 1px !important;
 }
 
+/* 1M celebration popup – confetti */
+@keyframes celebration-confetti-fall {
+  0% {
+    transform: translateY(-20px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+.celebration-confetti {
+  animation: celebration-confetti-fall 3s linear forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+.celebration-backdrop {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+@keyframes celebration-modal-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+.celebration-modal {
+  animation: celebration-modal-in 0.35s ease-out forwards;
+}
+
