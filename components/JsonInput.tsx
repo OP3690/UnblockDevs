@@ -95,9 +95,8 @@ export default function JsonInput({ onJsonSubmit }: JsonInputProps) {
           <button
             type="button"
             onClick={handleClear}
-            className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
+            className="cta-icon-close p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
             aria-label="Clear input"
-            className="cta-icon-close"
           >
             <X className="w-5 h-5" />
           </button>
