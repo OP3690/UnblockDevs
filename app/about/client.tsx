@@ -498,6 +498,12 @@ export default function AboutClient() {
                 <BookOpen className="w-4 h-4" />
                 Read Our Blog
               </Link>
+              <Link
+                href="/badges"
+                className="inline-flex items-center gap-2 bg-white/20 text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/30 transition-colors border border-white/30"
+              >
+                Developer Badges
+              </Link>
             </div>
           </section>
 
@@ -533,6 +539,8 @@ export default function AboutClient() {
               <h3 className="font-semibold text-gray-900 mb-3">Related Pages</h3>
               <div className="flex flex-wrap gap-3">
                 <Link href="/contact" className="text-blue-600 hover:underline text-sm">Contact Us</Link>
+                <span className="text-gray-300">•</span>
+                <Link href="/badges" className="text-blue-600 hover:underline text-sm">Developer Badges</Link>
                 <span className="text-gray-300">•</span>
                 <Link href="/blog" className="text-blue-600 hover:underline text-sm">Developer Blog</Link>
                 <span className="text-gray-300">•</span>

@@ -21,7 +21,7 @@ export default function SqlFormatterClient() {
             Back to Tools
           </Link>
           <h1 className="text-2xl font-bold text-gray-900">SQL Formatter</h1>
-          <p className="text-sm text-gray-500 mt-0.5">Format SQL IN clause lists — MySQL, PostgreSQL, Oracle, Trino & more</p>
+          <p className="text-sm text-gray-500 mt-0.5">Paste → Instant fix. Format messy SQL query — clean SQL queries instantly. MySQL, PostgreSQL, Oracle, Trino & more</p>
         </div>
       </header>
 

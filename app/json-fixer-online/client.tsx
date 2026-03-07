@@ -20,7 +20,8 @@ export default function JsonFixerOnlineClient() {
             Back to Tools
           </Link>
           <h1 className="text-3xl font-bold text-gray-900">Advanced JSON Fixer & Recovery Engine</h1>
-          <p className="text-sm text-gray-500 mt-1">Repair malformed JSON, recover truncated payloads, extract from logs, fix AI/API output — 100% client-side</p>
+          <p className="text-sm text-gray-500 mt-1">Paste → Instant fix. Repair malformed JSON, recover truncated payloads, extract from logs, fix AI/API output — 100% client-side</p>
+          <p className="text-xs text-gray-500 mt-1">Fix trailing commas, missing quotes, broken arrays, AI-generated JSON</p>
         </div>
       </header>
 

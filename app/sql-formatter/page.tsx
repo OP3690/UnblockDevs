@@ -2,11 +2,11 @@ import type { Metadata } from 'next';
 import SqlFormatterClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Free SQL Formatter Online - Format SQL Queries Instantly | UnblockDevs',
-  description: 'UnblockDevs SQL Formatter: Format SQL queries instantly. Free online SQL formatter tool to beautify, format, and prettify SQL code with proper indentation and syntax highlighting. Supports MySQL, PostgreSQL, Oracle, and more. No signup required.',
+  title: 'Format Messy SQL Query – Clean SQL Queries Instantly | UnblockDevs',
+  description: 'Format messy SQL query instantly. Clean SQL queries with proper indentation and syntax highlighting. Free online SQL formatter for MySQL, PostgreSQL, Oracle. Paste → instant fix. No signup.',
   keywords: [
-    'unblock devs mysql',
-    'unblockdevs mysql',
+    'format messy sql query',
+    'clean sql queries instantly',
     'sql formatter',
     'format sql online',
     'sql beautifier',
@@ -14,13 +14,12 @@ export const metadata: Metadata = {
     'sql formatter online',
     'format sql query',
     'sql code formatter',
-    'sql prettifier',
     'mysql formatter',
-    'mysql query formatter'
+    'mysql query formatter',
   ],
   openGraph: {
-    title: 'UnblockDevs SQL Formatter - Format SQL Queries Instantly',
-    description: 'UnblockDevs SQL Formatter: Format SQL queries instantly. Free online SQL formatter tool for MySQL, PostgreSQL, Oracle, and more.',
+    title: 'Format Messy SQL Query – Clean SQL Queries Instantly | UnblockDevs',
+    description: 'Format messy SQL query and clean SQL queries instantly. Free online SQL formatter for MySQL, PostgreSQL, Oracle.',
     type: 'website',
   },
   alternates: {

@@ -574,7 +574,7 @@ export default function JsonFixer() {
           <div>
             <h2 className="text-2xl font-bold">Advanced JSON Fixer & Recovery Engine</h2>
             <p className="text-purple-100 text-sm mt-1">
-              Repair malformed JSON, recover truncated payloads, extract from logs, and fix AI/API output — 100% client-side
+              Paste → Instant fix. Repair malformed JSON: trailing commas, missing quotes, broken arrays, AI-generated JSON — 100% client-side
             </p>
           </div>
         </div>

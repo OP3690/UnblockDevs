@@ -41,6 +41,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changefreq: 'monthly' as const,
     },
     {
+      url: 'badges',
+      priority: 0.6,
+      changefreq: 'monthly' as const,
+    },
+    {
       url: 'contact',
       priority: 0.6,
       changefreq: 'monthly' as const,

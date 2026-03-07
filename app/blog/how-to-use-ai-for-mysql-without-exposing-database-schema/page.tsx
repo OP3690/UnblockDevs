@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   description:
     'Use ChatGPT with MySQL safely: anonymize MySQL schema, hide column names and table names before AI. Client-side reversible masking, no server storage. Step-by-step with MySQL example.',
   keywords: [
+    'clean sql queries instantly',
+    'format messy sql query',
     'secure MySQL AI queries',
     'anonymize MySQL schema',
     'use ChatGPT with MySQL safely',

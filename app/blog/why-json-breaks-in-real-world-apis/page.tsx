@@ -2,18 +2,17 @@ import type { Metadata } from 'next';
 import WhyJsonBreaksInApisClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Why JSON Breaks in Real-World APIs (And How to Fix It) | UnblockDevs',
-  description: 'Learn why JSON breaks in real-world APIs: trailing commas, unescaped characters, partial responses, backend logging. Real examples and how to fix malformed API JSON instantly.',
+  title: 'Why JSON Breaks in Real-World APIs – How to Fix Invalid JSON & Resolve Errors | UnblockDevs',
+  description: 'Why JSON breaks in real-world APIs and how to fix invalid JSON: trailing commas, partial responses, clean API response. Resolve malformed API JSON instantly. Paste to instant fix.',
   keywords: [
+    'how to fix invalid json',
+    'clean api response',
     'why json breaks in apis',
     'broken json from api',
-    'malformed api json',
     'fix api json response',
-    'api json error',
-    'broken json api',
+    'resolve json errors',
     'fix malformed api json',
     'api response json error',
-    'json api error fix'
   ],
   openGraph: {
     title: 'Why JSON Breaks in Real-World APIs (And How to Fix It)',

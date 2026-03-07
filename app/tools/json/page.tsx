@@ -4,7 +4,7 @@ import { FileCode, FileJson, CheckCircle, Table, Wrench, GitCompare, Layers, Cod
 
 export const metadata: Metadata = {
   title: 'JSON Tools Hub | Viewer, Formatter, Parser, Validator & More | UnblockDevs',
-  description: 'Free JSON viewer online, JSON formatter online, JSON parser online, JSON validator, JSON to Excel/CSV/Table tools. One hub for all JSON tools—no signup.',
+  description: 'Free JSON viewer, formatter, fix invalid JSON, remove trailing comma JSON, convert JSON to Excel, clean API response, split long AI prompt. One hub for all JSON tools—no signup.',
   openGraph: {
     title: 'JSON Tools Hub | Viewer, Formatter, Parser, Validator | UnblockDevs',
     description: 'Free JSON viewer, formatter, parser, validator, and JSON to CSV/Excel/Table tools. No signup, in-browser.',
@@ -40,14 +40,14 @@ const jsonTools = [
   {
     href: '/json-to-excel',
     title: 'JSON to Excel / CSV / Table',
-    description: 'Convert JSON to Excel, JSON to CSV, or JSON to Table. Export and analyze JSON data instantly.',
+    description: 'Convert JSON to Excel, JSON to CSV, or JSON to Table. Paste, upload, or fetch from API → export to XLSX/CSV instantly.',
     icon: Table,
     anchor: 'JSON to CSV/Excel/Table tools',
   },
   {
     href: '/json-fixer-online',
     title: 'JSON fixer & validator',
-    description: 'Fix malformed JSON and validate syntax. JSON validator online—repair errors and get valid JSON.',
+    description: 'Paste → Instant fix. Fix invalid JSON, remove trailing comma JSON, fix AI-generated JSON. Repair trailing commas, missing quotes, broken arrays.',
     icon: CheckCircle,
     anchor: 'JSON validator',
   },

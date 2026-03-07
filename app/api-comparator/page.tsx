@@ -2,11 +2,10 @@ import type { Metadata } from 'next';
 import ApiComparatorClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Free API Comparator Online - Compare API Responses Instantly | UnblockDevs',
-  description: 'UnblockDevs API Comparator: Compare two API responses side-by-side instantly. Free online API comparator tool for debugging API changes, detecting breaking changes, and analyzing response differences. No signup required.',
+  title: 'Clean API Response – Compare & Debug API Responses Instantly | UnblockDevs',
+  description: 'Clean API response and compare two API responses side-by-side. Debug API changes, detect breaking changes, analyze differences. Paste → instant compare. No signup.',
   keywords: [
-    'unblock devs api',
-    'unblockdevs api',
+    'clean api response',
     'api comparator',
     'api response comparator',
     'compare api responses',
@@ -14,11 +13,11 @@ export const metadata: Metadata = {
     'compare two api responses',
     'api response comparison',
     'api testing tool',
-    'debug api changes'
+    'debug api changes',
   ],
   openGraph: {
-    title: 'UnblockDevs API Comparator - Compare API Responses Instantly',
-    description: 'UnblockDevs API Comparator: Compare two API responses side-by-side instantly. Free online API comparator tool.',
+    title: 'Clean API Response – Compare API Responses Instantly | UnblockDevs',
+    description: 'Clean API response and compare two API responses side-by-side. Debug API changes, detect breaking changes.',
     type: 'website',
   },
   alternates: {

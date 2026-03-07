@@ -7,21 +7,18 @@ const canonicalUrl = 'https://unblockdevs.com/ai-schema-masker';
 export const metadata: Metadata = {
   title: "World's First AI Schema Masker – 100% Data Security, Client-Side Only | UnblockDevs",
   description:
-    "World's first fully client-side AI schema masker. 100% data security—your SQL and schemas never leave your browser. Mask tables & columns for AI prompts, restore AI output with deterministic mapping. No server, no signup, zero data transfer.",
+    "Stop leaking secrets to AI tools. World's first fully client-side AI schema masker. 100% data security—your SQL and schemas never leave your browser. Mask tables & columns for AI. No server, no signup.",
   keywords: [
+    'stop leaking secrets to ai tools',
     'AI schema masker',
-    'world first AI schema masker',
     'client-side SQL masking',
     '100% data security SQL',
     'SQL identifier masking',
-    'client-side SQL anonymizer',
     'mask database schema for AI',
     'secure SQL prompt generator',
     'AI safe SQL prompts',
     'private SQL masking tool',
-    'browser-only SQL masker',
     'DITE deterministic masking',
-    'no server SQL tool',
   ],
   openGraph: {
     title: "World's First AI Schema Masker – 100% Data Security, Client-Side Only",

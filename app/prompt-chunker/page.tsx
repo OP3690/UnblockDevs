@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: 'Free AI Prompt Chunker & Simplifier – Split & Optimize Prompts | UnblockDevs',
   description: 'Split long AI prompts into chunks with overlap, or simplify messy prompts into optimized, structured prompts. Intent detection, quality scoring, safety scan. Free for ChatGPT, Claude, Gemini.',
   keywords: [
+    'split long ai prompt',
     'ai prompt chunker',
     'prompt simplifier',
     'prompt optimizer',
