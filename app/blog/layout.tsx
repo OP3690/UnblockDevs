@@ -1,9 +1,6 @@
 /**
  * Blog layout: wraps all /blog and /blog/[...] routes with an ad-friendly structure
- * so Google AdSense/Ezoic can show ads. Includes:
- * - Top banner (200), bottom banner (201)
- * - Left sidebar (203) and right sidebar (204) on xl screens for skyscraper/rectangle ads
- * - Main content in center for clear content vs ad separation (AdSense policy).
+ * for Google AdSense. Includes top banner (200), bottom banner (201), left/right sidebars (203, 204) on xl.
  */
 export default function BlogLayout({
   children,
@@ -20,7 +17,7 @@ export default function BlogLayout({
       />
       <div className="max-w-7xl xl:max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
         <div className="flex flex-col xl:flex-row xl:gap-8">
-          {/* Left sidebar ad - xl and up. Map ezoic-pub-ad-placeholder-203 in your ad dashboard (e.g. 160x600). */}
+          {/* Left sidebar ad - xl and up (160x600). */}
           <aside
             id="ezoic-pub-ad-placeholder-203"
             aria-label="Advertisement"
@@ -30,7 +27,7 @@ export default function BlogLayout({
           <main className="flex-1 min-w-0 max-w-4xl xl:mx-0 mx-auto overflow-x-hidden">
             {children}
           </main>
-          {/* Right sidebar ad - xl and up. Map ezoic-pub-ad-placeholder-204 in your ad dashboard (e.g. 300x250). */}
+          {/* Right sidebar ad - xl and up (300x250). */}
           <aside
             id="ezoic-pub-ad-placeholder-204"
             aria-label="Advertisement"

@@ -2,10 +2,7 @@ import { NextResponse } from 'next/server';
 
 // Google AdSense ads.txt content
 // Format: <DOMAIN>, <PUBLISHER_ID>, <RELATIONSHIP>, <CERTIFICATION_AUTHORITY_ID>
-const ADS_TXT_CONTENT = `google.com, pub-6349841658473646, DIRECT, f08c47fec0942fa0
-# Ezoic ads.txt (if using Ezoic)
-# Uncomment the line below if you want to include Ezoic
-# ezoic.com, 19390, RESELLER, e1ed5c632a6fc570`;
+const ADS_TXT_CONTENT = `google.com, pub-6349841658473646, DIRECT, f08c47fec0942fa0`;
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';

@@ -2,10 +2,10 @@
 
 /**
  * In-content ad slot for blog posts. Use between sections for ad-friendly placement.
- * Ezoic/AdSense can target the placeholder by id (e.g. ezoic-pub-ad-placeholder-202).
+ * AdSense can target the placeholder by id.
  */
 export default function BlogAdSlot({
-  id = 'ezoic-pub-ad-placeholder-202',
+  id = 'ad-placeholder-inline',
   className = '',
 }: {
   id?: string;

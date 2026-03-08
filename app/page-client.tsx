@@ -231,60 +231,6 @@ function HomeClient() {
     return () => clearTimeout(t);
   }, [mounted]);
 
-  // Initialize Ezoic ads with error handling
-  useEffect(() => {
-    if (mounted && typeof window !== 'undefined') {
-      const initEzoicAds = () => {
-        try {
-          // Check if Ezoic is available and site is approved
-          if ((window as any).ezstandalone && (window as any).ezstandalone.cmd) {
-            (window as any).ezstandalone.cmd.push(function() {
-              try {
-                if (typeof (window as any).ezstandalone.showAds === 'function') {
-                  (window as any).ezstandalone.showAds();
-                }
-              } catch (e: any) {
-                // Silently handle Ezoic errors (site may not be approved yet)
-                const errorMsg = e?.message || String(e);
-                if (!errorMsg.includes('Monetization not allowed') && 
-                    !errorMsg.includes('visit_uuid')) {
-                console.debug('Ezoic ads initialization skipped:', e);
-                }
-              }
-            });
-          }
-        } catch (e: any) {
-          // Silently handle Ezoic errors
-          const errorMsg = e?.message || String(e);
-          if (!errorMsg.includes('Monetization not allowed') && 
-              !errorMsg.includes('visit_uuid')) {
-          console.debug('Ezoic ads not available:', e);
-          }
-        }
-      };
-      
-      const timer = setTimeout(initEzoicAds, 0);
-      return () => clearTimeout(timer);
-    }
-  }, [mounted]);
-
-  // Refresh Ezoic ads when tab changes (for dynamic content).
-  // Do not call adsbygoogle.push() on tab change — existing ins slots are already filled; pushing again causes TagError.
-  useEffect(() => {
-    if (!mounted || typeof window === 'undefined') return;
-    try {
-      if ((window as any).ezstandalone?.cmd) {
-        (window as any).ezstandalone.cmd.push(function() {
-          try {
-            if (typeof (window as any).ezstandalone.showAds === 'function') {
-              (window as any).ezstandalone.showAds();
-            }
-          } catch (_) {}
-        });
-      }
-    } catch (_) {}
-  }, [activeTab, mounted]);
-
   // Track visits and active users using API
   useEffect(() => {
     if (!mounted) return;

@@ -201,7 +201,7 @@ export default function HTMLTagsGuideClient() {
               </div>
             </section>
 
-            <BlogAdSlot id="ezoic-pub-ad-placeholder-202" />
+            <BlogAdSlot />
 
             <section className="mb-12">
               <h2 className="text-2xl font-semibold text-slate-900 mb-6 flex items-center gap-3">
