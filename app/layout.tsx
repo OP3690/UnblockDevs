@@ -172,11 +172,6 @@ export default function RootLayout({
     },
     description: 'Mask JSON and SQL before sending to AI. Sanitize data before ChatGPT—JSON masking, schema masking, log unpacker, JWT decoder. 100% browser-based. Free formatter, parser, validator.',
     url: 'https://unblockdevs.com',
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.9',
-      ratingCount: '2500',
-    },
     featureList: [
       'Mask JSON before sending to AI',
       'JSON masking tool online',
@@ -211,12 +206,6 @@ export default function RootLayout({
     description: 'Free online tools to mask JSON and SQL before sending to AI, sanitize data before ChatGPT, fix stringified JSON, and unpack logs. GDPR-friendly; 100% client-side.',
     url: 'https://unblockdevs.com',
     featureList: ['JSON masking', 'AI schema masking', 'Log unpacker', 'JWT decoder', 'JSON formatter', 'No signup required'],
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.9',
-      ratingCount: '2500',
-      bestRating: '5',
-    },
   };
 
   return (
