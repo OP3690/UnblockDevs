@@ -77,6 +77,7 @@ export default function UuidGeneratorClient() {
   const [namespaceName, setNamespaceName] = useState('example.com');
   const [dbTipsOpen, setDbTipsOpen] = useState(false);
   const [benchmarkResult, setBenchmarkResult] = useState<number | null>(null);
+  const [namespaceAlgo, setNamespaceAlgo] = useState<'v3' | 'v5'>('v5');
 
   const formatOne = (uuid: string) =>
     formatUUIDWithOptions(uuid, { uppercase, hyphens, urn });
@@ -163,7 +164,10 @@ export default function UuidGeneratorClient() {
                   <button
                     key={v}
                     type="button"
-                    onClick={() => setVersion(v)}
+                    onClick={() => {
+                      setVersion(v);
+                      if (v === 3 || v === 5) setNamespaceAlgo(v === 3 ? 'v3' : 'v5');
+                    }}
                     className={`rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${
                       version === v ? 'bg-primary-600 text-white shadow-md shadow-primary-200/50' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
@@ -243,7 +247,11 @@ export default function UuidGeneratorClient() {
                     <span className="text-xs text-gray-500 block mb-1">Algorithm</span>
                     <select
                       value={namespaceAlgo}
-                      onChange={(e) => setNamespaceAlgo(e.target.value as 'v3' | 'v5')}
+                      onChange={(e) => {
+                      const val = e.target.value as 'v3' | 'v5';
+                      setNamespaceAlgo(val);
+                      setVersion(val === 'v3' ? 3 : 5);
+                    }}
                       className="rounded-lg border border-gray-200 px-3 py-2 text-sm bg-white"
                     >
                       <option value="v3">v3 (MD5)</option>

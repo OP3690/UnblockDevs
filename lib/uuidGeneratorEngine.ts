@@ -451,8 +451,8 @@ export function collisionProbability(count: number): number {
   if (count <= 0) return 0;
   const n = BigInt(count);
   const space = BigInt('0x100000000000000000000000000000000');
-  let p = 1n;
-  for (let i = 0n; i < n; i++) {
+  let p = BigInt(1);
+  for (let i = BigInt(0); i < n; i++) {
     p = (p * (space - i)) / space;
   }
   const prob = 1 - Number(p);
