@@ -24,6 +24,11 @@
     "recharts": "^3.6.0",
     "xlsx": "^0.18.5"
   },
+  "browserslist": [
+    "defaults",
+    "not dead",
+    "supports es6-module"
+  ],
   "devDependencies": {
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.0.0",

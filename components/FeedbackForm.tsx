@@ -81,10 +81,15 @@ export default function FeedbackForm({ toolName, className = '', variant = 'defa
       <div className={`bg-white border border-gray-200 rounded-lg p-4 shadow-lg ${className}`}>
         <form onSubmit={handleSubmit} className="space-y-3">
           <div>
+            <label htmlFor="feedback-type-compact" className="sr-only">
+              Feedback type
+            </label>
             <select
+              id="feedback-type-compact"
               value={formData.type}
               onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              aria-label="Feedback type"
             >
               <option value="feedback">General Feedback</option>
               <option value="bug">Report a Bug</option>
@@ -150,10 +155,15 @@ export default function FeedbackForm({ toolName, className = '', variant = 'defa
       
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
+          <label htmlFor="feedback-type" className="block text-sm font-medium text-gray-700 mb-1">
+            Type
+          </label>
           <select
+            id="feedback-type"
             value={formData.type}
             onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-label="Feedback type"
           >
             <option value="feedback">General Feedback</option>
             <option value="bug">Report a Bug</option>

@@ -964,11 +964,11 @@ export default function JsonBeautifier() {
 
       {/* Related tools */}
       <div className="mt-6 flex flex-wrap gap-4 text-sm">
-        <Link href="/json-comparator" className="inline-flex items-center gap-1.5 text-primary-600 hover:text-primary-700 font-medium">
+        <Link href="/json-comparator" className="inline-flex items-center gap-1.5 text-primary-700 hover:text-primary-800 font-medium">
           <GitCompare className="w-4 h-4" />
           Compare two JSONs
         </Link>
-        <Link href="/ai-schema-masker" className="inline-flex items-center gap-1.5 text-primary-600 hover:text-primary-700 font-medium">
+        <Link href="/ai-schema-masker" className="inline-flex items-center gap-1.5 text-primary-700 hover:text-primary-800 font-medium">
           <Shield className="w-4 h-4" />
           Mask JSON before sending to AI
         </Link>
@@ -1000,7 +1000,7 @@ export default function JsonBeautifier() {
           >
             <h3 className="font-semibold text-gray-900 mb-1">How to Use AI for MySQL Without Exposing Your Database Schema</h3>
             <p className="text-sm text-gray-600 mb-2">Anonymize MySQL table and column names before ChatGPT or any AI. Reversible, client-side schema abstraction—compliance and security first.</p>
-            <span className="text-amber-600 text-sm font-medium hover:underline">Read Guide →</span>
+            <span className="text-amber-700 text-sm font-medium hover:underline">Read Guide →</span>
           </Link>
         </div>
       </div>

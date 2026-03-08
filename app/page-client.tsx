@@ -648,7 +648,7 @@ function HomeClient() {
             <Link href={toolPageUrls.sql} className="group tab-card relative w-full px-2 sm:px-2.5 py-2 pr-6 sm:pr-8 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-[0.98]">
               <Database className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0 flex-1">SQL Formatter</span>
-              <span className="absolute top-1.5 right-1.5 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-red-100 text-red-600">Hot</span>
+              <span className="absolute top-1.5 right-1.5 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-red-200 text-red-800">Hot</span>
             </Link>
             <Link href={toolPageUrls.schemamasker} className="group tab-card relative w-full px-2.5 py-2 pr-8 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
               <ShieldCheck className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
@@ -751,8 +751,8 @@ function HomeClient() {
 
       {/* Ad strip — mobile-friendly heights for 320x50 / 300x250; collapsed when Beautifier active */}
       <div key={activeTab} className={`max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-0 border-b border-gray-100 bg-white/50 ${activeTab === 'beautifier' ? 'min-h-0 overflow-hidden' : ''}`}>
-        <div id="ezoic-pub-ad-placeholder-101" className={activeTab === 'beautifier' ? 'min-h-0 h-0 overflow-hidden' : 'min-h-[50px] sm:min-h-[50px] flex items-center justify-center'} aria-label="Advertisement" />
-        <div id="ezoic-pub-ad-placeholder-111" className={activeTab === 'beautifier' ? 'min-h-0 h-0 overflow-hidden' : 'min-h-[250px] sm:min-h-[90px] flex items-center justify-center'} aria-label="Advertisement" />
+        <div id="ezoic-pub-ad-placeholder-101" role="region" aria-label="Advertisement" className={activeTab === 'beautifier' ? 'min-h-0 h-0 overflow-hidden' : 'min-h-[50px] sm:min-h-[50px] flex items-center justify-center'} />
+        <div id="ezoic-pub-ad-placeholder-111" role="region" aria-label="Advertisement" className={activeTab === 'beautifier' ? 'min-h-0 h-0 overflow-hidden' : 'min-h-[250px] sm:min-h-[90px] flex items-center justify-center'} />
       </div>
 
       {/* Main Content - min-height to reduce CLS; overflow-x-hidden on mobile for AdSense-friendly layout */}
@@ -1038,7 +1038,7 @@ function HomeClient() {
                     <li>• Client-side only; no server, no logging</li>
                     <li>• Handles procedures, CTEs, complex SQL</li>
                   </ul>
-                  <Link href="/ai-schema-masker" className="mt-3 inline-block text-sm font-semibold text-emerald-600 hover:text-emerald-700">Try AI Schema Masker →</Link>
+                  <Link href="/ai-schema-masker" className="mt-3 inline-block text-sm font-semibold text-emerald-700 hover:text-emerald-800">Try AI Schema Masker →</Link>
                 </div>
 
                 {/* MySQL Mask */}
@@ -1056,7 +1056,7 @@ function HomeClient() {
                     <li>• No server storage; no schema logging</li>
                     <li>• FinTech, healthcare, banking friendly</li>
                   </ul>
-                  <Link href="/ai-schema-masker" className="mt-3 inline-block text-sm font-semibold text-amber-600 hover:text-amber-700">Try AI Schema Masker →</Link>
+                  <Link href="/ai-schema-masker" className="mt-3 inline-block text-sm font-semibold text-amber-700 hover:text-amber-800">Try AI Schema Masker →</Link>
                 </div>
               </div>
 
@@ -1178,7 +1178,7 @@ function HomeClient() {
           </div>
 
           {/* Ezoic Ad Placement - Middle of Content (102) - mobile 300x250 / desktop responsive */}
-          <div id="ezoic-pub-ad-placeholder-102" className="min-h-[250px] sm:min-h-[250px]" aria-label="Advertisement" />
+          <div id="ezoic-pub-ad-placeholder-102" role="region" aria-label="Advertisement" className="min-h-[250px] sm:min-h-[250px]" />
 
           <div className="mt-10 sm:mt-12">
             <div className="text-center mb-6">
@@ -1229,7 +1229,7 @@ function HomeClient() {
       )}
 
       {/* Ezoic Ad Placement - Before Footer (103) - mobile leaderboard / desktop banner */}
-      <div id="ezoic-pub-ad-placeholder-103" className="min-h-[50px] sm:min-h-[90px]" aria-label="Advertisement" />
+      <div id="ezoic-pub-ad-placeholder-103" role="region" aria-label="Advertisement" className="min-h-[50px] sm:min-h-[90px]" />
 
       {/* Footer — mobile: larger tap targets for links (AdSense-friendly engagement) */}
       <footer className="mt-auto pt-8 pb-6 sm:pt-16 sm:pb-10 border-t border-gray-200/80 bg-white/90 backdrop-blur-md shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
