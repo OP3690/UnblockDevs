@@ -5,7 +5,7 @@ const canonicalUrl = 'https://unblockdevs.com/convert-curl-to-http-request';
 
 export const metadata: Metadata = {
   title: 'Free cURL to HTTP Request Converter – Instant Conversion | UnblockDevs',
-  description: 'Convert cURL commands to HTTP request format instantly. Free online converter supporting all HTTP methods, headers, and authentication. No signup, no login, works in your browser.',
+  description: 'Convert cURL to HTTP request format. All methods, headers, auth. Free, in-browser.',
   keywords: [
     'convert curl to http request',
     'curl to http request',
@@ -15,7 +15,13 @@ export const metadata: Metadata = {
     'transform curl to http'
   ],
   alternates: { canonical: canonicalUrl },
-  openGraph: { url: canonicalUrl },
+  openGraph: {
+    title: 'Free cURL to HTTP Request Converter – Instant Conversion | UnblockDevs',
+    description: 'Convert cURL commands to HTTP request format instantly. Free online converter supporting all HTTP methods, headers, and authentication. No signup, no login, works in your browser.',
+    type: 'website',
+    url: canonicalUrl,
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+  },
 };
 
 export default function ConvertCurlToHttpRequest() {

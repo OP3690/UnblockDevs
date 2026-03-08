@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import MysqlJsonCompleteGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Working with JSON in MySQL: Complete Guide to Extract & Manipulate Data | UnblockDevs',
-  description: 'UnblockDevs MySQL Guide: Complete guide to working with JSON in MySQL: JSON data types, structure, extracting data from JSON columns, nested JSON queries, 10 practical examples, and tips & tricks for efficient JSON manipulation.',
+  title: 'JSON in MySQL: Complete Guide | UnblockDevs',
+  description: 'JSON in MySQL: data types, extract from columns, nested queries, 10 examples. Tips for efficient JSON.',
   keywords: [
     'unblock devs mysql',
     'unblockdevs mysql',
@@ -17,6 +17,8 @@ export const metadata: Metadata = {
     'mysql json examples',
     'mysql json best practices'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/mysql-json-complete-guide' },
+
 };
 
 export default function MysqlJsonCompleteGuide() {

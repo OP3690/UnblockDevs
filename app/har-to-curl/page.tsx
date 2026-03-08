@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import HarToCurlClient from './client';
 
 export const metadata: Metadata = {
-  title: 'HAR to cURL Converter – Reproducible API Requests from HAR Files | UnblockDevs',
-  description: 'Convert HAR files into clean cURL, Python, Go, Java, PHP, Ruby & more. Multi-request extraction, secret masking, timeline analyzer, batch script, AI debug prompt. 100% client-side.',
+  title: 'HAR to cURL Converter | UnblockDevs',
+  description: 'Convert HAR to cURL, Python, Go, Java, PHP, Ruby. Multi-request extraction, secret masking, timeline, batch script. 100% client-side.',
   keywords: [
     'har to curl',
     'har to curl converter',
@@ -24,10 +24,11 @@ export const metadata: Metadata = {
     'devtools har export',
   ],
   openGraph: {
-    title: 'HAR to cURL Converter – Reproducible API Requests | UnblockDevs',
+    title: 'HAR to cURL Converter | UnblockDevs',
     description: 'Convert HAR files to cURL and multiple languages. Clean headers, mask secrets, timeline, batch script, AI debug prompt. 100% client-side.',
     type: 'website',
     url: 'https://unblockdevs.com/har-to-curl',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
   alternates: {
     canonical: 'https://unblockdevs.com/har-to-curl',

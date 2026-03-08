@@ -3,7 +3,7 @@ import HowToValidateApiResponseUsingJsonSchemaClient from './client';
 
 export const metadata: Metadata = {
   title: 'How to Validate API Response Using JSON Schema | Complete Guide 2026',
-  description: 'Learn how to validate API responses using JSON Schema. Complete guide with code examples for JavaScript, Python, Node.js, and automated testing. Includes validation libraries, best practices, and error handling.',
+  description: 'Validate API responses with JSON Schema. JavaScript, Python, Node.js. Libraries, best practices.',
   keywords: [
     'validate api response json schema',
     'json schema validation',
@@ -23,14 +23,18 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'How to Validate API Response Using JSON Schema | Complete Guide 2026',
-    description: 'Learn how to validate API responses using JSON Schema. Complete guide with code examples for JavaScript, Python, Node.js, and automated testing.',
+    description: 'Validate API responses with JSON Schema. JS, Python, Node. Code examples.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/how-to-validate-api-response-using-json-schema',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
     title: 'How to Validate API Response Using JSON Schema | Complete Guide 2026',
-    description: 'Learn how to validate API responses using JSON Schema. Complete guide with code examples for JavaScript, Python, Node.js, and automated testing.',
-  },
+    description: 'Validate API responses with JSON Schema. JS, Python, Node. Code examples.',
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-validate-api-response-using-json-schema' },
+
 };
 
 export default function HowToValidateApiResponseUsingJsonSchemaPage() {

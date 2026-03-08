@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Benford\'s Law Explained: Complete Guide with Examples 2026 | UnblockDevs',
-  description: 'Learn what Benford\'s Law is, how it works, and why it matters. Complete guide to Benford\'s Law with real-world examples, applications in fraud detection, data analysis, and mathematical explanations. Perfect for data scientists and analysts.',
+  title: 'Benford\'s Law Explained 2026 | UnblockDevs',
+  description: 'What Benford\'s Law is, how it works, why it matters. Examples, fraud detection, data analysis. For data scientists and analysts.',
   keywords: [
     'benfords law',
     'benford law',
@@ -29,6 +29,9 @@ export const metadata: Metadata = {
     title: 'Benford\'s Law Explained: Complete Guide with Examples 2026',
     description: 'Learn what Benford\'s Law is, how it works, and why it matters. Complete guide with real-world examples and applications.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/benfords-law-explained-complete-guide',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',

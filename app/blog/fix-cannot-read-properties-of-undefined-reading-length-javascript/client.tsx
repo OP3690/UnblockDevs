@@ -469,6 +469,19 @@ function processData(data) {
               </div>
             </div>
           </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Related guides &amp; tools</h2>
+            <p className="text-gray-700 mb-4">More developer guides and free tools:</p>
+            <div className="flex flex-wrap gap-3 text-sm">
+              <Link href="/blog" className="text-primary-600 hover:underline font-medium">Developer&apos;s Study Materials</Link>
+              <Link href="/blog/fix-uncaught-in-promise-error-javascript-explained" className="text-primary-600 hover:underline">Fix Uncaught (in promise) error</Link>
+              <Link href="/blog/why-async-await-is-not-working-javascript-common-mistakes" className="text-primary-600 hover:underline">async/await not working</Link>
+              <Link href="/blog/fix-error-listen-eaddrinuse-nodejs-port-already-in-use" className="text-primary-600 hover:underline">Fix EADDRINUSE port in use</Link>
+              <Link href="/json-beautifier" className="text-primary-600 hover:underline">JSON Beautifier</Link>
+              <Link href="/config-comparator" className="text-primary-600 hover:underline">Config Comparator</Link>
+            </div>
+          </section>
         </article>
 
                 {/* Social Share Section */}

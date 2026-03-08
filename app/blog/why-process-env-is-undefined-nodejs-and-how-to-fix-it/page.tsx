@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
+import WhyProcessEnvIsUndefinedNodejsAndHowToFixItClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Why process.env Is Undefined in Node.js (And How to Fix It) | Complete Guide 2026',
-  description: 'Learn why process.env is undefined in Node.js and how to fix it. Complete guide to environment variables, dotenv configuration, .env files, and process.env access. Includes troubleshooting and code examples.',
+  title: 'Why process.env Is Undefined in Node.js – Fix | UnblockDevs',
+  description: 'Why process.env is undefined in Node.js and how to fix. dotenv, .env, troubleshooting.',
   keywords: [
     'process.env undefined nodejs',
     'fix process.env undefined',
@@ -21,17 +22,21 @@ export const metadata: Metadata = {
     'nodejs environment variables setup'
   ],
   openGraph: {
-    title: 'Why process.env Is Undefined in Node.js (And How to Fix It) | Complete Guide 2026',
-    description: 'Learn why process.env is undefined in Node.js and how to fix it. Complete guide to environment variables, dotenv configuration, and troubleshooting.',
+    title: 'Why process.env Is Undefined in Node.js – Fix | UnblockDevs',
+    description: 'Why process.env undefined in Node.js. dotenv, .env, fix and troubleshoot.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/why-process-env-is-undefined-nodejs-and-how-to-fix-it',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Why process.env Is Undefined in Node.js (And How to Fix It) | Complete Guide 2026',
-    description: 'Learn why process.env is undefined in Node.js and how to fix it. Complete guide to environment variables, dotenv configuration, and troubleshooting.',
-  },
+    title: 'Why process.env Is Undefined in Node.js – Fix | UnblockDevs',
+    description: 'Why process.env undefined in Node.js. dotenv, .env, fix and troubleshoot.',
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/why-process-env-is-undefined-nodejs-and-how-to-fix-it' },
+
 };
 
 export default function WhyProcessEnvIsUndefinedNodejsAndHowToFixItPage() {
-  return null;
+  return <WhyProcessEnvIsUndefinedNodejsAndHowToFixItClient />;
 }

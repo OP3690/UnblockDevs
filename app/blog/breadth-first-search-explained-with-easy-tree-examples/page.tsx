@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Breadth-First Search Explained with Easy Tree Examples (Complete Guide)',
-  description: 'Learn Breadth-First Search (BFS) algorithm with simple tree examples, step-by-step visualizations, code examples, and real-world use cases. Perfect for coding interviews and graph traversal.',
+  title: 'Breadth-First Search Explained | UnblockDevs',
+  description: 'Breadth-First Search (BFS) with tree examples, visualizations, code. Use cases. For coding interviews.',
   keywords: [
     'breadth first search',
     'bfs algorithm',
@@ -19,9 +19,12 @@ export const metadata: Metadata = {
     'bfs algorithm step by step'
   ],
   openGraph: {
-    title: 'Breadth-First Search Explained with Easy Tree Examples (Complete Guide)',
+    title: 'Breadth-First Search Explained | UnblockDevs',
     description: 'Learn Breadth-First Search (BFS) algorithm with simple tree examples, step-by-step visualizations, and code examples.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/breadth-first-search-explained-with-easy-tree-examples',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/breadth-first-search-explained-with-easy-tree-examples',

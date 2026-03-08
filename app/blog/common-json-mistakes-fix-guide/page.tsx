@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import CommonJsonMistakesGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Fix Invalid JSON From AI – 10 Common Mistakes & Resolve Instantly | UnblockDevs',
-  description: 'How to fix invalid JSON from AI and resolve common mistakes: trailing commas, missing quotes, broken arrays. Fix broken JSON instantly with our free JSON Fixer. Paste to instant fix.',
+  title: '10 Common JSON Mistakes & How to Fix | UnblockDevs',
+  description: 'Fix common JSON mistakes: trailing commas, missing quotes, broken arrays. Free JSON Fixer. Paste to fix.',
   keywords: [
     'how to fix invalid json from ai',
     'fix invalid json',
@@ -25,17 +25,21 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: '10 Most Common JSON Mistakes Developers Make (And How to Fix Them Instantly)',
-    description: 'Learn the 10 most common JSON mistakes and how to fix them instantly with our free JSON Fixer tool.',
+    description: '10 common JSON mistakes and how to fix them. Free JSON Fixer.',
     type: 'article',
     publishedTime: '2025-01-15T00:00:00.000Z',
     authors: ['UnblockDevs'],
     tags: ['JSON', 'JSON Errors', 'JSON Fixing', 'Web Development', 'Programming'],
+    url: 'https://unblockdevs.com/blog/common-json-mistakes-fix-guide',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
     title: '10 Most Common JSON Mistakes Developers Make',
-    description: 'Learn how to fix the most common JSON errors instantly with our free JSON Fixer tool.',
-  },
+    description: 'Fix common JSON errors instantly. Free JSON Fixer.',
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/common-json-mistakes-fix-guide' },
+
 };
 
 export default function CommonJsonMistakesGuide() {

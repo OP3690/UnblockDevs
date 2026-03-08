@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import HowJsonFixersWorkClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Fix Invalid JSON From AI – How JSON Fixers Work Internally | UnblockDevs',
-  description: 'How to fix invalid JSON from AI: learn how JSON fixers work internally—tokenization, error recovery, trailing comma and missing quote fixes. Resolve broken AI-generated JSON instantly.',
+  title: 'How JSON Fixers Work Internally | UnblockDevs',
+  description: 'How JSON fixers work: tokenization, error recovery, trailing comma and quote fixes. Fix AI JSON.',
   keywords: [
     'how to fix invalid json from ai',
     'fix invalid json',
@@ -13,6 +13,8 @@ export const metadata: Metadata = {
     'resolve json errors',
     'json tokenization',
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/how-json-fixers-work-internally' },
+
 };
 
 export default function HowJsonFixersWork() {

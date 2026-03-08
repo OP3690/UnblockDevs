@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import TestDataGeneratorClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Free Test Data Generator Online - Generate Fake Data Instantly | UnblockDevs',
-  description: 'Generate test data instantly. Free online test data generator tool to create fake data for testing, development, and demos. Generate JSON, CSV, and structured test data. No signup required.',
+  title: 'Test Data Generator – Fake Data | UnblockDevs',
+  description: 'Generate test data instantly. Fake data for testing: JSON, CSV. Free, no signup.',
   keywords: [
     'test data generator',
     'fake data generator',
@@ -15,9 +15,11 @@ export const metadata: Metadata = {
     'sample data generator'
   ],
   openGraph: {
-    title: 'Free Test Data Generator Online - Generate Fake Data Instantly',
+    title: 'Test Data Generator | UnblockDevs',
     description: 'Generate test data instantly. Free online test data generator tool.',
     type: 'website',
+    url: 'https://unblockdevs.com/test-data-generator',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
   alternates: {
     canonical: 'https://unblockdevs.com/test-data-generator',

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import {
   Database,
   Copy,
@@ -450,6 +451,29 @@ export default function SqlInGeneratorClient() {
           Response: <code className="bg-blue-100 px-1 rounded">{`{ "sql": "IN (?, ?, ?)", "count": 3 }`}</code>
         </p>
       </div>
+
+      <section className="mt-8 pt-6 border-t border-gray-200">
+        <h2 className="text-lg font-bold text-gray-900 mb-3">Related tools</h2>
+        <p className="text-sm text-gray-600 mb-3">
+          More developer tools: <Link href="/" className="text-primary-600 hover:underline">JSON viewer & tools</Link>,{' '}
+          <Link href="/blog" className="text-primary-600 hover:underline">blog</Link>,{' '}
+          <Link href="/tools/json" className="text-primary-600 hover:underline">JSON tools hub</Link>.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <Link href="/sql-formatter" className="px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
+            SQL Formatter
+          </Link>
+          <Link href="/json-beautifier" className="px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
+            JSON Beautifier
+          </Link>
+          <Link href="/json-schema-generation" className="px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
+            JSON Schema Generator
+          </Link>
+          <Link href="/config-comparator" className="px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
+            Config Comparator
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }

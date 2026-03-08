@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import XboxGamePassGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Xbox Game Pass Games: Complete Guide to Best Games, Value & Membership | UnblockDevs',
-  description: 'Complete guide to Xbox Game Pass games: best games library, membership tiers, value analysis, what games are included, how to get the most value, and tips for choosing the right subscription. Discover must-play games on Game Pass.',
+  title: 'Xbox Game Pass Games – Guide | UnblockDevs',
+  description: 'Xbox Game Pass: best games, tiers, value. What\'s included, how to get most value. Must-play list.',
   keywords: [
     'xbox game pass games',
     'xbox game pass',
@@ -26,6 +26,8 @@ export const metadata: Metadata = {
     'game pass best games 2026',
     'xbox game pass guide'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/xbox-game-pass-games-complete-guide' },
+
 };
 
 export default function XboxGamePassGuide() {

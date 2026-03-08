@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import CopyAsCurlFromBrowserGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Copy as cURL from Browser: Network Request to cURL Converter Tutorial | UnblockDevs',
-  description: 'Learn how to copy browser network requests as cURL commands. Step-by-step guide for Chrome, Firefox, and Edge. Convert network requests to cURL instantly with our free online tool. Perfect for API testing and debugging.',
+  title: 'Copy as cURL from Browser – Tutorial | UnblockDevs',
+  description: 'Copy browser network requests as cURL. Chrome, Firefox, Edge. Free tool for API testing.',
   keywords: [
     'copy as curl online',
     'copy as curl from browser',
@@ -33,12 +33,16 @@ export const metadata: Metadata = {
     publishedTime: '2025-01-15T00:00:00Z',
     authors: ['UnblockDevs'],
     tags: ['cURL', 'Browser DevTools', 'Network Requests', 'API Testing', 'Web Development'],
+    url: 'https://unblockdevs.com/blog/copy-as-curl-from-browser-guide',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Copy as cURL from Browser: Complete Tutorial',
-    description: 'Learn how to copy browser network requests as cURL commands with step-by-step instructions.',
-  },
+    description: 'Copy browser requests as cURL. Step-by-step for Chrome, Firefox, Edge.',
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/copy-as-curl-from-browser-guide' },
+
 };
 
 export default function CopyAsCurlFromBrowserGuide() {

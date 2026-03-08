@@ -3,7 +3,7 @@ import HowToReadJsonFilePythonClient from './client';
 
 export const metadata: Metadata = {
   title: 'How to Read JSON File in Python (3 Ways) | Complete Guide 2026',
-  description: 'Learn 3 methods to read JSON files in Python: json.load(), json.loads(), and pandas.read_json(). Includes examples, error handling, and best practices for parsing JSON data in Python.',
+  description: 'Read JSON in Python: json.load(), json.loads(), pandas.read_json(). Examples, error handling.',
   keywords: [
     'read JSON file Python',
     'Python JSON parser',
@@ -23,14 +23,18 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'How to Read JSON File in Python (3 Ways) | Complete Guide 2026',
-    description: 'Learn 3 methods to read JSON files in Python with examples, error handling, and best practices.',
+    description: '3 ways to read JSON in Python. Examples and error handling.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/how-to-read-json-file-python-3-ways',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
     title: 'How to Read JSON File in Python (3 Ways) | Complete Guide 2026',
-    description: 'Learn 3 methods to read JSON files in Python with examples, error handling, and best practices.',
-  },
+    description: '3 ways to read JSON in Python. Examples and error handling.',
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-read-json-file-python-3-ways' },
+
 };
 
 export default function HowToReadJsonFilePythonPage() {

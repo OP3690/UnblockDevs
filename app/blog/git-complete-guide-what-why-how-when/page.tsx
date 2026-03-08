@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import GitCompleteGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Git Complete Guide: What, Why, How & When with Best Practices | UnblockDevs',
-  description: 'Complete guide to Git version control: what is Git, why use it, how it works, when to use it, and best practices. Learn Git fundamentals, workflow, branching strategies, and collaboration techniques for developers.',
+  title: 'Git Complete Guide: What, Why, How & When | UnblockDevs',
+  description: 'Git version control: what it is, why use it, how it works. Fundamentals, workflow, branching, collaboration. Best practices.',
   keywords: [
     'git guide',
     'git tutorial',
@@ -41,6 +41,13 @@ export const metadata: Metadata = {
     'git commit best practices',
     'git repository management'
   ],
+  openGraph: {
+    title: 'Git Complete Guide: What, Why, How & When | UnblockDevs',
+    description: 'Git version control: what it is, why use it, how it works. Fundamentals, workflow, branching, collaboration. Best practices.',
+    type: 'article',
+    url: 'https://unblockdevs.com/blog/git-complete-guide-what-why-how-when',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/git-complete-guide-what-why-how-when' },
 };
 

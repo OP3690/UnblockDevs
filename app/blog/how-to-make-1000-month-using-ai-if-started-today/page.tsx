@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: "How I Would Make $1,000/Month Using AI (If I Started Today) | UnblockDevs",
+  title: "Make $1,000/Month Using AI | UnblockDevs",
   description: "Step-by-step plan to make $1,000/month with AI: pick niche, use AI to produce X, monetize through Y, plus timeline breakdown. Realistic plan with flow.",
   keywords: [
     "make $1000 month AI",
@@ -17,7 +17,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "How I Would Make $1,000/Month Using AI (If I Started Today)",
     description: "Pick niche, use AI to produce X, monetize through Y, timeline breakdown. Realistic plan.",
-    type: "article",
+    type: "article",    url: 'https://unblockdevs.com/blog/how-to-make-1000-month-using-ai-if-started-today',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   alternates: {
     canonical: "https://unblockdevs.com/blog/how-to-make-1000-month-using-ai-if-started-today",

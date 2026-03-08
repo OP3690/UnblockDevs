@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'What Is Recursion? Explained with Simple Real-Life Examples | Complete Guide 2026',
-  description: 'Learn what recursion is with simple real-life examples. Complete beginner-friendly guide to recursion with visual diagrams, flow charts, code examples, and step-by-step explanations. Perfect for coding interviews.',
+  title: 'Recursion Explained – Real-Life Examples | UnblockDevs',
+  description: 'Recursion: simple real-life examples, diagrams, code. Beginner-friendly. For coding interviews.',
   keywords: [
     'what is recursion',
     'recursion explained',
@@ -21,14 +21,17 @@ export const metadata: Metadata = {
     'recursion javascript'
   ],
   openGraph: {
-    title: 'What Is Recursion? Explained with Simple Real-Life Examples | Complete Guide 2026',
-    description: 'Learn what recursion is with simple real-life examples. Complete beginner-friendly guide with visual diagrams and code examples.',
+    title: 'Recursion Explained – Real-Life Examples | UnblockDevs',
+    description: 'Recursion: examples, diagrams, code. For interviews.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/what-is-recursion-explained-with-simple-real-life-examples',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'What Is Recursion? Explained with Simple Real-Life Examples | Complete Guide 2026',
-    description: 'Learn what recursion is with simple real-life examples. Complete beginner-friendly guide with visual diagrams and code examples.',
+    title: 'Recursion Explained – Real-Life Examples | UnblockDevs',
+    description: 'Recursion: examples, diagrams, code. For interviews.',
   },
 };
 

@@ -12,6 +12,7 @@ export const metadata: Metadata = {
     'json escape characters',
     'invalid control character fix'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/fix-invalid-control-character-json' },
 };
 
 export default function FixInvalidControlCharacter() {

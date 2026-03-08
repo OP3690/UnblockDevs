@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import FixPythonKeyerrorClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Fix: Python KeyError Explained with Examples: Complete Guide 2026 | UnblockDevs',
-  description: 'Complete guide to fixing Python KeyError exceptions. Learn what causes KeyError, how to fix it, and see practical code examples. Step-by-step troubleshooting for dictionaries and data structures in 2026.',
+  title: 'Fix Python KeyError – Examples & Guide 2026 | UnblockDevs',
+  description: 'Fix Python KeyError: causes, solutions, code examples. Dictionaries and data structures. 2026.',
   keywords: [
     'python keyerror',
     'fix python keyerror',
@@ -23,11 +23,15 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'Fix: Python KeyError Explained with Examples: Complete Guide 2026',
-    description: 'Complete guide to fixing Python KeyError exceptions. Learn causes, solutions, and see practical code examples.',
+    description: 'Fix Python KeyError: causes, solutions, code examples.',
     type: 'article',
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/fix-python-keyerror-explained-examples',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/fix-python-keyerror-explained-examples' },
+
 };
 
 export default function FixPythonKeyerrorGuide() {

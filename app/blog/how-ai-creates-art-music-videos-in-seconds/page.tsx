@@ -19,7 +19,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "How AI Creates Art, Music, and Videos in Seconds",
     description: "Generative AI basics, how AI learns patterns, ethical concerns, and the future of creativity.",
-    type: "article",
+    type: "article",    url: 'https://unblockdevs.com/blog/how-ai-creates-art-music-videos-in-seconds',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   alternates: {
     canonical: "https://unblockdevs.com/blog/how-ai-creates-art-music-videos-in-seconds",

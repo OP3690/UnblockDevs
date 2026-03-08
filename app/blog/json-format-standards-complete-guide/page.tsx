@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import JsonFormatStandardsGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'JSON Format & Standards: Complete Guide to RFC 8259, Syntax Rules & Best Practices | UnblockDevs',
-  description: 'Master JSON format and standards with this comprehensive guide. Learn RFC 8259 rules, syntax violations, fixing strategies, error classification, and production-grade JSON validation. Perfect for developers, API designers, and data engineers.',
+  title: 'JSON Format & RFC 8259 Guide | UnblockDevs',
+  description: 'JSON format & RFC 8259: syntax rules, fixing strategies, error classification, production-grade validation. For developers & API designers.',
   keywords: [
     'JSON format',
     'JSON standards',
@@ -25,18 +25,22 @@ export const metadata: Metadata = {
     'JSON production guide'
   ],
   openGraph: {
-    title: 'JSON Format & Standards: Complete Guide to RFC 8259 | UnblockDevs',
-    description: 'Master JSON format and standards with this comprehensive guide. Learn RFC 8259 rules, syntax violations, fixing strategies, and production-grade JSON validation.',
+    title: 'JSON Format & RFC 8259 Guide | UnblockDevs',
+    description: 'JSON format & RFC 8259: syntax rules, fixing strategies, production-grade validation. For developers & API designers.',
     type: 'article',
     publishedTime: '2025-01-31T00:00:00.000Z',
     authors: ['UnblockDevs'],
     tags: ['JSON', 'RFC 8259', 'JSON Format', 'JSON Standards', 'Web Development'],
+    url: 'https://unblockdevs.com/blog/json-format-standards-complete-guide',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'JSON Format & Standards: Complete Guide to RFC 8259',
-    description: 'Master JSON format and standards with this comprehensive guide. Learn RFC 8259 rules, syntax violations, fixing strategies, and production-grade JSON validation.',
-  },
+    title: 'JSON Format & RFC 8259 Guide',
+    description: 'JSON format & RFC 8259: syntax rules, fixing strategies, production-grade validation. For developers & API designers.',
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/json-format-standards-complete-guide' },
+
 };
 
 export default function JsonFormatStandardsGuide() {

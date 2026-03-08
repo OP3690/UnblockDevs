@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import HowToCancelNetflixSubscriptionClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Cancel Netflix Subscription Without Losing Watch History: Complete Guide 2026 | UnblockDevs',
-  description: 'Complete guide to canceling your Netflix subscription without losing watch history, recommendations, or account data. Step-by-step instructions for mobile, desktop, and TV. Learn how to cancel Netflix and preserve your viewing history in 2026.',
+  title: 'Cancel Netflix Without Losing Watch History 2026 | UnblockDevs',
+  description: 'Cancel Netflix without losing watch history. Step-by-step for mobile, desktop, TV. Preserve history. 2026.',
   keywords: [
     'cancel netflix subscription',
     'how to cancel netflix',
@@ -23,11 +23,15 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'How to Cancel Netflix Subscription Without Losing Watch History: Complete Guide 2026',
-    description: 'Complete guide to canceling Netflix without losing watch history. Step-by-step instructions for all devices.',
+    description: 'Cancel Netflix without losing watch history. Step-by-step for all devices.',
     type: 'article',
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/how-to-cancel-netflix-subscription-without-losing-watch-history',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-cancel-netflix-subscription-without-losing-watch-history' },
+
 };
 
 export default function HowToCancelNetflixSubscriptionGuide() {

@@ -19,7 +19,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Can AI Read Your Mind? The Science Behind AI Predictions",
     description: "Pattern recognition, data analysis, behavioral prediction, and why it feels magical but isn't.",
-    type: "article",
+    type: "article",    url: 'https://unblockdevs.com/blog/can-ai-read-your-mind-science-behind-ai-predictions',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   alternates: {
     canonical: "https://unblockdevs.com/blog/can-ai-read-your-mind-science-behind-ai-predictions",

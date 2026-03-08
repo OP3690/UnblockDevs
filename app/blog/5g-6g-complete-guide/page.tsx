@@ -3,7 +3,7 @@ import FiveGSixGCompleteGuideClient from './client';
 
 export const metadata: Metadata = {
   title: '5G/6G Networks: Complete Guide to Next-Gen Connectivity | UnblockDevs',
-  description: 'Comprehensive guide to 5G and 6G networks: architecture, technologies, use cases, and future of wireless connectivity. Learn about network slicing, edge computing, and IoT.',
+  description: '5G and 6G: architecture, use cases, network slicing, edge computing, IoT. Guide to next-gen wireless.',
   keywords: [
     '5g networks',
     '6g technology',
@@ -13,6 +13,8 @@ export const metadata: Metadata = {
     'iot connectivity',
     'wireless networks'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/5g-6g-complete-guide' },
+
 };
 
 export default function FiveGSixGCompleteGuide() {

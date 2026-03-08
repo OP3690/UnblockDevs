@@ -5,8 +5,7 @@ const canonicalUrl = 'https://unblockdevs.com/code-prompt-shield';
 
 export const metadata: Metadata = {
   title: 'Stop Leaking Secrets to AI Tools – Code Prompt Shield | UnblockDevs',
-  description:
-    'Stop leaking secrets to AI tools. Anonymize code for ChatGPT, Claude, Copilot: mask variables, secrets, schema, PII. Clean API response before AI. Deterministic mapping, 100% client-side.',
+  description: 'Stop leaking secrets to AI. Mask variables, secrets, schema, PII for ChatGPT, Claude, Copilot. 100% client-side.',
   keywords: [
     'stop leaking secrets to ai tools',
     'anonymize code for ChatGPT',
@@ -22,6 +21,7 @@ export const metadata: Metadata = {
     description: 'Stop leaking secrets to AI. Mask identifiers, secrets, schema, PII. Copy safe prompts for ChatGPT, Claude, Copilot. Client-side only.',
     type: 'website',
     url: canonicalUrl,
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
   alternates: { canonical: canonicalUrl },
 };

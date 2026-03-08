@@ -27,7 +27,7 @@ export default function CommissionDisclosure({ variant = 'default' }: Commission
             src="https://www.lduhtrp.net/image-101640091-15836247"
             width={1}
             height={1}
-            alt=""
+            alt="Affiliate tracking pixel"
             className="inline-block border-0"
           />
         </p>
@@ -44,7 +44,7 @@ export default function CommissionDisclosure({ variant = 'default' }: Commission
             src="https://www.ftjcfx.com/image-101640091-15836248"
             width={1}
             height={1}
-            alt=""
+            alt="Affiliate tracking pixel"
             className="inline-block border-0"
           />
         </p>
@@ -58,7 +58,7 @@ export default function CommissionDisclosure({ variant = 'default' }: Commission
               src="https://www.tqlkg.com/image-101640091-15836241"
               width={300}
               height={250}
-              alt=""
+              alt="Sponsored offer: Run functions on demand, scale automatically"
               className="border-0"
             />
           </a>

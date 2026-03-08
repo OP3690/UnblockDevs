@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import MostUsefulTechSkills2026Client from './client';
 
 export const metadata: Metadata = {
-  title: 'Most Useful Tech Skills for 2026: AI, GPU Programming & More | UnblockDevs',
-  description: 'Discover the most useful tech skills for 2026: artificial general intelligence (AGI), GPU programming, semiconductor design, AI/ML, cloud computing, and cybersecurity. Learn what skills to prioritize for career growth.',
+  title: 'Most Useful Tech Skills 2026 | UnblockDevs',
+  description: 'Most useful tech skills 2026: AGI, GPU, semiconductors, AI/ML, cloud, security. Prioritize for growth.',
   keywords: [
     'tech skills 2026',
     'most useful tech skills',
@@ -16,6 +16,8 @@ export const metadata: Metadata = {
     'chip design',
     'gpu computing'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/most-useful-tech-skills-2026' },
+
 };
 
 export default function MostUsefulTechSkills2026() {

@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import HowToFixNullpointerexceptionClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Fix "NullPointerException" in Java (Beginner-Friendly): Complete Guide 2026 | UnblockDevs',
-  description: 'Complete beginner-friendly guide to fixing NullPointerException in Java. Learn what causes NPE, how to prevent it, and see practical code examples. Step-by-step troubleshooting guide for Java developers in 2026.',
+  title: 'Fix NullPointerException in Java 2026 | UnblockDevs',
+  description: 'Fix NullPointerException in Java. Causes, prevention, code examples. Beginner-friendly. 2026.',
   keywords: [
     'nullpointerexception java',
     'fix nullpointerexception',
@@ -23,11 +23,15 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'How to Fix "NullPointerException" in Java (Beginner-Friendly): Complete Guide 2026',
-    description: 'Complete beginner-friendly guide to fixing NullPointerException in Java. Learn causes, solutions, and see practical examples.',
+    description: 'Fix NullPointerException in Java. Causes, solutions, examples.',
     type: 'article',
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/how-to-fix-nullpointerexception-java-beginner-friendly',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-fix-nullpointerexception-java-beginner-friendly' },
+
 };
 
 export default function HowToFixNullpointerexceptionGuide() {

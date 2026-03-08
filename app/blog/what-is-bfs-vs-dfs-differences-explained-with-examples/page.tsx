@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'What Is BFS vs DFS? Differences Explained with Examples | Complete Guide 2026',
-  description: 'Learn the differences between BFS (Breadth-First Search) and DFS (Depth-First Search) with simple examples. Complete beginner-friendly guide to graph traversal algorithms with visual diagrams. Perfect for coding interviews.',
+  title: 'BFS vs DFS Explained with Examples | UnblockDevs',
+  description: 'BFS vs DFS: differences, simple examples, graph traversal. Visual diagrams. For coding interviews.',
   keywords: [
     'bfs vs dfs',
     'breadth first search',
@@ -21,14 +21,17 @@ export const metadata: Metadata = {
     'dfs python'
   ],
   openGraph: {
-    title: 'What Is BFS vs DFS? Differences Explained with Examples | Complete Guide 2026',
-    description: 'Learn the differences between BFS and DFS with simple examples. Complete beginner-friendly guide with visual diagrams and code examples.',
+    title: 'BFS vs DFS Explained with Examples | UnblockDevs',
+    description: 'BFS vs DFS: differences, examples, diagrams. For interviews.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/what-is-bfs-vs-dfs-differences-explained-with-examples',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'What Is BFS vs DFS? Differences Explained with Examples | Complete Guide 2026',
-    description: 'Learn the differences between BFS and DFS with simple examples. Complete beginner-friendly guide with visual diagrams and code examples.',
+    title: 'BFS vs DFS Explained with Examples | UnblockDevs',
+    description: 'BFS vs DFS: differences, examples, diagrams. For interviews.',
   },
 };
 

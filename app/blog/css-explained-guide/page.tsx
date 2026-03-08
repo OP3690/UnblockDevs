@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import CSSExplainedClient from './client';
 
 export const metadata: Metadata = {
-  title: 'CSS Explained: Must-Do Practices, Hidden Facts & Pro Tips | UnblockDevs Blog',
-  description: 'Master CSS with this comprehensive guide. Learn CSS fundamentals, best practices, lesser-known features, and pro tips to write cleaner, smarter CSS code. Interactive CSS simulator included.',
+  title: 'CSS Explained – Practices & Pro Tips | UnblockDevs',
+  description: 'CSS guide: fundamentals, best practices, pro tips. Interactive simulator included.',
   keywords: [
     'CSS guide',
     'CSS tutorial',
@@ -22,11 +22,15 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'CSS Explained: Must-Do Practices, Hidden Facts & Pro Tips',
-    description: 'Master CSS with this comprehensive guide. Learn CSS fundamentals, best practices, and pro tips.',
+    description: 'CSS guide: fundamentals, best practices, pro tips.',
     type: 'article',
     publishedTime: '2024-01-28T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/css-explained-guide',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/css-explained-guide' },
+
 };
 
 export default function CSSExplainedGuide() {

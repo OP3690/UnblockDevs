@@ -3,7 +3,7 @@ import BlogPostClient from './client';
 
 export const metadata: Metadata = {
   title: 'What Is a Data Pipeline? Explained for Beginners (Complete Guide)',
-  description: 'Learn what a data pipeline is with simple examples. Understand ETL, data processing, data flow, and how data pipelines work in real-world applications. Beginner-friendly guide with visualizations.',
+  description: 'What a data pipeline is. ETL, data flow, how pipelines work. Beginner-friendly with examples.',
   keywords: [
     'data pipeline',
     'what is data pipeline',
@@ -22,6 +22,9 @@ export const metadata: Metadata = {
     title: 'What Is a Data Pipeline? Explained for Beginners (Complete Guide)',
     description: 'Learn what a data pipeline is with simple examples. Understand ETL, data processing, and how data pipelines work.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/what-is-a-data-pipeline-explained-for-beginners',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/what-is-a-data-pipeline-explained-for-beginners',

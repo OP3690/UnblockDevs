@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'How to Post JSON Data Using cURL: Complete Guide 2026 | UnblockDevs',
-  description: 'Learn how to post JSON data using cURL with complete examples. Step-by-step guide for POST requests with JSON payloads, headers, authentication, and error handling. Perfect for API testing and integration.',
+  description: 'Post JSON with cURL. POST examples, headers, auth, error handling. For API testing and integration.',
   keywords: [
     'how to post json data using curl',
     'curl post json',
@@ -29,6 +29,9 @@ export const metadata: Metadata = {
     title: 'How to Post JSON Data Using cURL: Complete Guide 2026',
     description: 'Learn how to post JSON data using cURL with complete examples. Step-by-step guide for POST requests with JSON payloads.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/how-to-post-json-data-using-curl-complete-guide',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',

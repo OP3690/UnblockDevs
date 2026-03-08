@@ -3,7 +3,7 @@ import HowToConvertJsonToCsvPythonClient from './client';
 
 export const metadata: Metadata = {
   title: 'How to Convert JSON to CSV in Python | Complete Guide 2026',
-  description: 'Learn how to convert JSON to CSV in Python using pandas, csv module, and json_normalize. Includes examples for nested JSON, arrays, and handling different JSON structures.',
+  description: 'Convert JSON to CSV in Python with pandas, csv module, json_normalize. Nested JSON, arrays, examples.',
   keywords: [
     'convert JSON to CSV Python',
     'JSON to CSV Python',
@@ -25,12 +25,16 @@ export const metadata: Metadata = {
     title: 'How to Convert JSON to CSV in Python | Complete Guide 2026',
     description: 'Learn how to convert JSON to CSV in Python with examples for nested JSON and arrays.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/how-to-convert-json-to-csv-python',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
     title: 'How to Convert JSON to CSV in Python | Complete Guide 2026',
     description: 'Learn how to convert JSON to CSV in Python with examples for nested JSON and arrays.',
-  },
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-convert-json-to-csv-python' },
+
 };
 
 export default function HowToConvertJsonToCsvPythonPage() {

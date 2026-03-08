@@ -3,7 +3,7 @@ import BrokenJsonExamplesClient from './client';
 
 export const metadata: Metadata = {
   title: '25 Broken JSON Examples and How to Fix Them | UnblockDevs',
-  description: 'Learn from 25 real broken JSON examples and how to fix them. Common JSON mistakes with before/after examples. Fix broken JSON instantly with free JSON Fixer tool.',
+  description: '25 broken JSON examples and how to fix them. Before/after. Free JSON Fixer tool.',
   keywords: [
     'broken json examples',
     'invalid json examples',
@@ -13,6 +13,8 @@ export const metadata: Metadata = {
     'common json errors',
     'json mistakes'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/25-broken-json-examples-fix' },
+
 };
 
 export default function BrokenJsonExamples() {

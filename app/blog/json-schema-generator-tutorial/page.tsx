@@ -3,7 +3,7 @@ import JsonSchemaGeneratorTutorialClient from './client';
 
 export const metadata: Metadata = {
   title: 'JSON Schema Generator Tutorial: Create Schemas from JSON | UnblockDevs',
-  description: 'Complete tutorial on generating JSON Schema from sample JSON. Learn how to create schemas, validate JSON, use Draft 7 and OpenAPI formats. Free generator tool with examples.',
+  description: 'Generate JSON Schema from sample JSON. Draft 7, OpenAPI. Validate JSON. Free tool, examples.',
   keywords: [
     'json schema generator tutorial',
     'how to create json schema',
@@ -15,9 +15,13 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'JSON Schema Generator Tutorial: Create Schemas from JSON',
-    description: 'Step-by-step tutorial on generating and validating JSON Schema with real examples.',
+    description: 'Generate and validate JSON Schema. Step-by-step with examples.',
     type: 'article',
-  },
+    url: 'https://unblockdevs.com/blog/json-schema-generator-tutorial',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/json-schema-generator-tutorial' },
+
 };
 
 export default function JsonSchemaGeneratorTutorial() {

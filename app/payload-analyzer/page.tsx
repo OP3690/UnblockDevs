@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import PayloadAnalyzerClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Free Payload Analyzer Online - Analyze API Payloads Instantly | UnblockDevs',
-  description: 'Analyze API payloads and responses instantly. Free online payload analyzer tool to inspect request/response data, identify issues, and optimize payload size. No signup required.',
+  title: 'Payload Analyzer – Analyze API Payloads | UnblockDevs',
+  description: 'Analyze API payloads and responses. Inspect data, identify issues, optimize size. No signup.',
   keywords: [
     'payload analyzer',
     'api payload analyzer',
@@ -15,9 +15,11 @@ export const metadata: Metadata = {
     'api payload tool'
   ],
   openGraph: {
-    title: 'Free Payload Analyzer Online - Analyze API Payloads Instantly',
+    title: 'Payload Analyzer | UnblockDevs',
     description: 'Analyze API payloads and responses instantly. Free online payload analyzer tool.',
     type: 'website',
+    url: 'https://unblockdevs.com/payload-analyzer',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
   alternates: {
     canonical: 'https://unblockdevs.com/payload-analyzer',

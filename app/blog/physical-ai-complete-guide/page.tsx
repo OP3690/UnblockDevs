@@ -3,7 +3,7 @@ import PhysicalAiCompleteGuideClient from './client';
 
 export const metadata: Metadata = {
   title: 'Physical AI: Complete Guide to AI in Physical World | UnblockDevs',
-  description: 'Comprehensive guide to Physical AI: robotics, autonomous systems, IoT integration, and AI-powered physical devices. Learn how AI interacts with the physical world.',
+  description: 'Physical AI: robotics, autonomous systems, IoT. How AI interacts with the physical world.',
   keywords: [
     'physical ai',
     'ai robotics',
@@ -13,6 +13,8 @@ export const metadata: Metadata = {
     'embodied ai',
     'ai hardware'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/physical-ai-complete-guide' },
+
 };
 
 export default function PhysicalAiCompleteGuide() {

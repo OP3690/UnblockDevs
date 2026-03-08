@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Consuming Web API JSON Data Using curl and jq: Complete Guide 2026 | UnblockDevs',
+  title: 'Web API JSON with curl and jq 2026 | UnblockDevs',
   description: 'Learn how to consume Web API JSON data using curl and jq. Complete guide with examples, best practices, and step-by-step tutorials for API testing and data processing.',
   keywords: [
     'consuming web api json data using curl and jq',
@@ -29,6 +29,9 @@ export const metadata: Metadata = {
     title: 'Consuming Web API JSON Data Using curl and jq: Complete Guide 2026',
     description: 'Learn how to consume Web API JSON data using curl and jq. Complete guide with examples, best practices, and step-by-step tutorials.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/consuming-web-api-json-data-using-curl-and-jq-complete-guide',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',

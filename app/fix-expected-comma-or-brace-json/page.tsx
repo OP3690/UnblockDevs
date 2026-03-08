@@ -12,6 +12,7 @@ export const metadata: Metadata = {
     'json syntax error comma',
     'expected comma json fix'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/fix-expected-comma-or-brace-json' },
 };
 
 export default function FixExpectedCommaOrBrace() {

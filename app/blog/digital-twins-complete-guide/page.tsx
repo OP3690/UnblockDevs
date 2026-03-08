@@ -3,7 +3,7 @@ import DigitalTwinsCompleteGuideClient from './client';
 
 export const metadata: Metadata = {
   title: 'Digital Twins: Complete Guide to Virtual Replicas | UnblockDevs',
-  description: 'Comprehensive guide to Digital Twins: IoT integration, real-time simulation, predictive maintenance, and Industry 4.0. Learn how digital twins work and their applications.',
+  description: 'Digital Twins: IoT, real-time simulation, predictive maintenance, Industry 4.0. How they work and applications.',
   keywords: [
     'digital twins',
     'iot digital twins',
@@ -13,6 +13,8 @@ export const metadata: Metadata = {
     'smart manufacturing',
     'simulation technology'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/digital-twins-complete-guide' },
+
 };
 
 export default function DigitalTwinsCompleteGuide() {

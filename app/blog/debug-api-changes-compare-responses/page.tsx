@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import DebugApiChangesClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Debug API Changes Faster: How to Compare Two API Responses Visually | UnblockDevs',
-  description: 'Learn how to compare two API responses visually to debug API changes, detect breaking changes, and identify response drift. Step-by-step guide with real-world examples using our free API Response Comparator tool.',
+  title: 'Compare Two API Responses Visually | UnblockDevs',
+  description: 'Compare two API responses visually. Debug changes, detect breaking changes. Free comparator tool.',
   keywords: [
     'compare two JSON API responses',
     'API payload diff tool',
@@ -20,17 +20,21 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'Debug API Changes Faster: How to Compare Two API Responses Visually',
-    description: 'Learn how to compare two API responses visually to debug API changes and detect breaking changes.',
+    description: 'Compare API responses visually. Debug changes, detect breaking changes.',
     type: 'article',
     publishedTime: '2025-01-15T00:00:00.000Z',
     authors: ['UnblockDevs'],
     tags: ['API', 'Debugging', 'API Testing', 'Web Development'],
+    url: 'https://unblockdevs.com/blog/debug-api-changes-compare-responses',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Debug API Changes Faster: Compare Two API Responses',
-    description: 'Compare two API responses visually to debug changes and detect breaking changes.',
-  },
+    description: 'Compare API responses. Debug and detect breaking changes.',
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/debug-api-changes-compare-responses' },
+
 };
 
 export default function DebugApiChanges() {

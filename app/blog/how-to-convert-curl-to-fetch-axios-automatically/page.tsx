@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import HowToConvertCurlToFetchAxiosAutomaticallyClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Convert cURL to Fetch / Axios Automatically | Complete Guide 2026',
-  description: 'Learn how to convert cURL commands to JavaScript Fetch and Axios automatically. Includes online tools, manual conversion methods, and code examples for all HTTP methods and authentication types.',
+  title: 'Convert cURL to Fetch / Axios 2026 | UnblockDevs',
+  description: 'Convert cURL to JavaScript Fetch and Axios. Tools, manual methods, code for all HTTP and auth.',
   keywords: [
     'convert curl to fetch',
     'convert curl to axios',
@@ -22,15 +22,19 @@ export const metadata: Metadata = {
     'curl converter javascript'
   ],
   openGraph: {
-    title: 'How to Convert cURL to Fetch / Axios Automatically | Complete Guide 2026',
-    description: 'Learn how to convert cURL commands to JavaScript Fetch and Axios automatically with tools and code examples.',
+    title: 'Convert cURL to Fetch / Axios 2026 | UnblockDevs',
+    description: 'Convert cURL to Fetch and Axios. Tools and code examples.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/how-to-convert-curl-to-fetch-axios-automatically',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'How to Convert cURL to Fetch / Axios Automatically | Complete Guide 2026',
-    description: 'Learn how to convert cURL commands to JavaScript Fetch and Axios automatically with tools and code examples.',
-  },
+    title: 'Convert cURL to Fetch / Axios 2026 | UnblockDevs',
+    description: 'Convert cURL to Fetch and Axios. Tools and code examples.',
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-convert-curl-to-fetch-axios-automatically' },
+
 };
 
 export default function HowToConvertCurlToFetchAxiosAutomaticallyPage() {

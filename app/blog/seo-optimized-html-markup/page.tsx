@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import SEOOptimizedHTMLClient from './client';
 
 export const metadata: Metadata = {
-  title: 'SEO-Optimized HTML Markup: Complete Guide for Better Rankings | UnblockDevs Blog',
+  title: 'SEO-Optimized HTML Markup Guide | UnblockDevs',
   description: 'Master SEO-optimized HTML markup. Learn semantic HTML, meta tags, structured data, and best practices to improve your website\'s search engine rankings.',
   keywords: [
     'SEO HTML',
@@ -24,7 +24,11 @@ export const metadata: Metadata = {
     type: 'article',
     publishedTime: '2024-01-24T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/seo-optimized-html-markup',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/seo-optimized-html-markup' },
+
 };
 
 export default function SEOOptimizedHTMLGuide() {

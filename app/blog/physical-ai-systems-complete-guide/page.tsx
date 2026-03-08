@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import PhysicalAiSystemsClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Physical AI Systems: Complete Guide 2026 | What, How, Why & Applications',
-  description: 'Complete guide to Physical AI systems: definition, what they are, when to use them, how they work, and why they matter. Learn about AI-powered physical systems, robotics, autonomous vehicles, smart manufacturing, and edge AI.',
+  title: 'Physical AI Systems: Complete Guide 2026 | UnblockDevs',
+  description: 'Physical AI systems: robotics, autonomous vehicles, smart manufacturing, edge AI. What, when, how.',
   keywords: [
     'physical ai systems',
     'physical ai',
@@ -26,6 +26,8 @@ export const metadata: Metadata = {
     'physical ai technology',
     'ai hardware systems'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/physical-ai-systems-complete-guide' },
+
 };
 
 export default function PhysicalAiSystems() {

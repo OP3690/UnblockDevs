@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { ArrowLeft, FileText, Code, Eye, CheckCircle } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Complete Guide to JSON Viewer, Parser, and Beautifier Tools | UnblockDevs Blog',
-  description: 'Learn everything about JSON Viewer, JSON Parser, and JSON Beautifier tools. Discover how to visualize, parse, and format JSON data effectively for better development workflow.',
+  title: 'JSON Viewer, Parser & Beautifier Guide | UnblockDevs',
+  description: 'JSON Viewer, Parser, Beautifier: visualize, parse, format JSON. Better dev workflow.',
   keywords: [
     'JSON Viewer',
     'JSON Parser',
@@ -24,11 +24,15 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'Complete Guide to JSON Viewer, Parser, and Beautifier Tools',
-    description: 'Learn everything about JSON Viewer, JSON Parser, and JSON Beautifier tools. Discover how to visualize, parse, and format JSON data effectively.',
+    description: 'JSON Viewer, Parser, Beautifier: visualize, parse, format JSON.',
     type: 'article',
     publishedTime: '2024-01-15T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/complete-guide-json-viewer-parser-beautifier',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/complete-guide-json-viewer-parser-beautifier' },
+
 };
 
 export default function BlogPost() {

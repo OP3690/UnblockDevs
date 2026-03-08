@@ -17,7 +17,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "How Students Can Make Money Using AI in 2026",
     description: "AI assignment help, freelancing, selling notes, YouTube shorts, small AI tools. Step-by-step.",
-    type: "article",
+    type: "article",    url: 'https://unblockdevs.com/blog/how-students-can-make-money-using-ai-2026',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   alternates: {
     canonical: "https://unblockdevs.com/blog/how-students-can-make-money-using-ai-2026",

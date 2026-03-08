@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import PhysicalAiEdgeComputingClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Physical AI Edge Computing: Complete Guide 2026 | Edge AI & Real-Time Processing',
-  description: 'Complete guide to Physical AI edge computing: definition, what it is, when to use it, how it works, and why it matters. Learn about edge AI, real-time processing, edge devices, IoT AI, and distributed physical AI systems.',
+  title: 'Physical AI Edge Computing 2026 | UnblockDevs',
+  description: 'Guide to Physical AI edge computing: what it is, when to use it, how it works. Edge AI, real-time processing, IoT AI.',
   keywords: [
     'physical ai edge computing',
     'edge ai',
@@ -26,6 +26,13 @@ export const metadata: Metadata = {
     'edge ai infrastructure',
     'edge ai deployment'
   ],
+  openGraph: {
+    title: 'Physical AI Edge Computing: Complete Guide 2026 | Edge AI & Real-Time Processing',
+    description: 'Guide to Physical AI edge computing: what it is, when to use it, how it works. Edge AI, real-time processing, IoT AI.',
+    type: 'article',
+    url: 'https://unblockdevs.com/blog/physical-ai-edge-computing-complete-guide',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/physical-ai-edge-computing-complete-guide' },
 };
 

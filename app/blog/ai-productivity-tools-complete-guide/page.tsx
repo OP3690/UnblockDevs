@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import AiProductivityToolsCompleteGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'AI Productivity Tools: Complete Guide to Cursor, Claude, and More | UnblockDevs',
-  description: 'UnblockDevs AI Tools Guide: Complete guide to AI productivity tools: Cursor AI, Claude, Perplexity, and other AI assistants. Learn how to use them effectively, best prompts, and real-world applications.',
+  title: 'AI Productivity Tools: Cursor, Claude & More | UnblockDevs',
+  description: 'AI productivity tools: Cursor, Claude, Perplexity. Best prompts and real-world use. Get more done.',
   keywords: [
     'unblock devs ai',
     'unblockdevs ai',
@@ -15,6 +15,8 @@ export const metadata: Metadata = {
     'best ai tools',
     'ai assistant tools'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/ai-productivity-tools-complete-guide' },
+
 };
 
 export default function AiProductivityToolsCompleteGuide() {

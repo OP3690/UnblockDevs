@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import HowToHideOnlineStatusOnWhatsappClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Hide Online Status on WhatsApp: Complete Guide 2026 | UnblockDevs',
-  description: 'Complete guide to hiding your online status on WhatsApp. Learn how to appear offline, disable last seen, and control your privacy settings. Step-by-step instructions for Android, iPhone, and desktop in 2026.',
+  title: 'Hide Online Status on WhatsApp 2026 | UnblockDevs',
+  description: 'Hide online status on WhatsApp. Appear offline, disable last seen. Android, iPhone, desktop. 2026.',
   keywords: [
     'hide online status whatsapp',
     'how to hide online status on whatsapp',
@@ -23,11 +23,15 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'How to Hide Online Status on WhatsApp: Complete Guide 2026',
-    description: 'Complete guide to hiding your online status on WhatsApp. Learn how to appear offline and control privacy settings.',
+    description: 'Hide online status on WhatsApp. Appear offline, control privacy.',
     type: 'article',
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/how-to-hide-online-status-on-whatsapp',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-hide-online-status-on-whatsapp' },
+
 };
 
 export default function HowToHideOnlineStatusOnWhatsappGuide() {

@@ -309,7 +309,7 @@ export default function JsonSchemaGenerationClient() {
 
               <div className="p-5 bg-purple-50 rounded-lg border border-purple-200">
                 <h3 className="font-semibold text-gray-900 mb-2">
-                  <Link href="/blog/json-schema-generation-complete-guide" className="text-purple-600 hover:text-purple-700 underline">
+                  <Link href="/blog/json-schema-generator-tutorial" className="text-purple-600 hover:text-purple-700 underline">
                     JSON Schema Generation: Complete Guide
                   </Link>
                 </h3>

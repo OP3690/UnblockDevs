@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import Mysql10MostUsedFunctionsClient from './client';
 
 export const metadata: Metadata = {
-  title: 'MySQL 10 Most Used Functions: Complete Guide with Examples | UnblockDevs',
-  description: 'UnblockDevs MySQL Guide: Complete guide to MySQL 10 most used functions: COUNT, SUM, AVG, MAX, MIN, CONCAT, SUBSTRING, DATE_FORMAT, IF, and CASE. Learn syntax, examples, and best practices for each function.',
+  title: 'MySQL 10 Most Used Functions Guide | UnblockDevs',
+  description: 'MySQL 10 most used functions: COUNT, SUM, AVG, MAX, MIN, CONCAT, SUBSTRING, DATE_FORMAT, IF, CASE. Syntax & examples.',
   keywords: [
     'unblock devs mysql',
     'unblockdevs mysql',
@@ -17,6 +17,8 @@ export const metadata: Metadata = {
     'mysql functions guide',
     'mysql examples'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/mysql-10-most-used-functions' },
+
 };
 
 export default function Mysql10MostUsedFunctions() {

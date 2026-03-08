@@ -3,7 +3,7 @@ import HowToValidateJsonSchemaJavaScriptClient from './client';
 
 export const metadata: Metadata = {
   title: 'How to Validate JSON Schema in JavaScript | Complete Guide 2026',
-  description: 'Learn how to validate JSON data against JSON Schema in JavaScript using ajv, jsonschema, and custom validation. Includes examples, error handling, and best practices for JSON Schema validation.',
+  description: 'Validate JSON against JSON Schema in JavaScript: ajv, jsonschema, custom validation. Examples and best practices.',
   keywords: [
     'validate JSON schema JavaScript',
     'JSON schema validation',
@@ -23,14 +23,18 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'How to Validate JSON Schema in JavaScript | Complete Guide 2026',
-    description: 'Learn how to validate JSON data against JSON Schema in JavaScript with examples and best practices.',
+    description: 'Validate JSON with JSON Schema in JavaScript. Examples and best practices.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/how-to-validate-json-schema-javascript',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
     title: 'How to Validate JSON Schema in JavaScript | Complete Guide 2026',
-    description: 'Learn how to validate JSON data against JSON Schema in JavaScript with examples and best practices.',
-  },
+    description: 'Validate JSON with JSON Schema in JavaScript. Examples and best practices.',
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-validate-json-schema-javascript' },
+
 };
 
 export default function HowToValidateJsonSchemaJavaScriptPage() {

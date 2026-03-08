@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Why My Code Works Locally but Fails on Submission (Common Reasons) | Complete Guide 2026',
-  description: 'Learn why your code works locally but fails on submission. Complete troubleshooting guide for environment differences, dependencies, paths, time zones, and submission platform issues. Beginner-friendly explanations with solutions.',
+  title: 'Code Works Locally but Fails on Submission | UnblockDevs',
+  description: 'Why code works locally but fails on submission. Environment, dependencies, paths, time zones. Beginner-friendly solutions.',
   keywords: [
     'code works locally but fails on submission',
     'code works locally but not on server',
@@ -21,9 +21,12 @@ export const metadata: Metadata = {
     'code environment differences'
   ],
   openGraph: {
-    title: 'Why My Code Works Locally but Fails on Submission (Common Reasons) | Complete Guide 2026',
+    title: 'Code Works Locally but Fails on Submission | UnblockDevs',
     description: 'Learn why your code works locally but fails on submission. Complete troubleshooting guide for environment differences, dependencies, and submission platform issues.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/why-my-code-works-locally-but-fails-on-submission-common-reasons',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',

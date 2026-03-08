@@ -9,6 +9,8 @@ export const metadata: Metadata = {
     title: 'Developer Tool Badges – Powered by UnblockDevs',
     description: 'Embed a Powered by UnblockDevs badge on your site. Copy HTML or Markdown.',
     type: 'website',
+    url: 'https://unblockdevs.com/badges',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
   alternates: {
     canonical: 'https://unblockdevs.com/badges',

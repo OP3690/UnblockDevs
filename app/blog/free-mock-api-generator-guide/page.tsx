@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import FreeMockApiGeneratorClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Free Mock API in Seconds: Generate Fake Endpoints for Frontend Development (No Backend Needed) | UnblockDevs',
-  description: 'Learn how to generate free mock APIs instantly for frontend development. Create realistic endpoints with delay, status codes, pagination, and more. No backend needed. Perfect for students and indie developers.',
+  title: 'Free Mock API for Frontend (No Backend) | UnblockDevs',
+  description: 'Generate free mock APIs for frontend dev. Delay, status codes, pagination. No backend. For students and indies.',
   keywords: [
     'free mock API generator',
     'mock REST API online',
@@ -20,17 +20,21 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'Free Mock API in Seconds: Generate Fake Endpoints for Frontend Development',
-    description: 'Generate free mock APIs instantly for frontend development. No backend needed. Perfect for students and indie developers.',
+    description: 'Free mock APIs for frontend. No backend. For students and indies.',
     type: 'article',
     publishedTime: '2025-01-15T00:00:00.000Z',
     authors: ['UnblockDevs'],
     tags: ['Mock API', 'Frontend Development', 'API Testing', 'Web Development'],
+    url: 'https://unblockdevs.com/blog/free-mock-api-generator-guide',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Free Mock API in Seconds: Generate Fake Endpoints',
-    description: 'Generate free mock APIs instantly for frontend development. No backend needed.',
-  },
+    description: 'Free mock APIs for frontend. No backend.',
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/free-mock-api-generator-guide' },
+
 };
 
 export default function FreeMockApiGenerator() {

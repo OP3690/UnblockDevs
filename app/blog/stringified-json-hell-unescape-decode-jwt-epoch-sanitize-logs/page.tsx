@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Stringified JSON Hell: Unescape, Decode JWTs, Convert Epoch & Sanitize Logs in Seconds | UnblockDevs',
+  title: 'Stringified JSON: Unescape, Decode JWTs, Epoch | UnblockDevs',
   description:
     'Escape stringified JSON hell: unescape nested JSON, decode JWTs, convert epoch time, and sanitize logs in seconds—one tool, client-side.',
   keywords: [
@@ -34,7 +34,11 @@ export const metadata: Metadata = {
     type: 'article',
     publishedTime: '2025-03-02T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/stringified-json-hell-unescape-decode-jwt-epoch-sanitize-logs',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/stringified-json-hell-unescape-decode-jwt-epoch-sanitize-logs' },
+
 };
 
 export default function StringifiedJsonHellUnescapeDecodeJwtEpochSanitizeLogsPage() {

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'What Is Time Complexity? Explained with Simple Examples | Complete Guide 2026',
-  description: 'Learn what time complexity is with simple examples. Complete guide to Big O notation, O(1), O(n), O(log n), O(n²) with visual graphs, charts, and beginner-friendly explanations. Perfect for coding interviews.',
+  title: 'Time Complexity Explained – Simple Examples | UnblockDevs',
+  description: 'Time complexity: Big O, O(1), O(n), O(log n), O(n²). Simple examples, graphs. For interviews.',
   keywords: [
     'what is time complexity',
     'time complexity explained',
@@ -21,14 +21,17 @@ export const metadata: Metadata = {
     'big o notation tutorial'
   ],
   openGraph: {
-    title: 'What Is Time Complexity? Explained with Simple Examples | Complete Guide 2026',
-    description: 'Learn what time complexity is with simple examples. Complete guide to Big O notation with visual graphs and beginner-friendly explanations.',
+    title: 'Time Complexity Explained – Simple Examples | UnblockDevs',
+    description: 'Time complexity: Big O with examples and graphs. For interviews.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/what-is-time-complexity-explained-with-simple-examples',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'What Is Time Complexity? Explained with Simple Examples | Complete Guide 2026',
-    description: 'Learn what time complexity is with simple examples. Complete guide to Big O notation with visual graphs and beginner-friendly explanations.',
+    title: 'Time Complexity Explained – Simple Examples | UnblockDevs',
+    description: 'Time complexity: Big O with examples and graphs. For interviews.',
   },
 };
 

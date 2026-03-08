@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Claude AI for Collaborative Work: Complete Guide 2026 | UnblockDevs',
-  description: 'Learn how to use Claude AI for collaborative work and team productivity. Complete guide to Claude AI features, best practices, use cases, and tips for effective team collaboration with AI assistance.',
+  description: 'Use Claude AI for collaborative work and team productivity. Features, best practices, use cases. Team collaboration with AI.',
   keywords: [
     'claude ai collaborative work',
     'claude ai teamwork',
@@ -29,6 +29,9 @@ export const metadata: Metadata = {
     title: 'Claude AI for Collaborative Work: Complete Guide 2026',
     description: 'Learn how to use Claude AI for collaborative work and team productivity. Complete guide with features, best practices, and use cases.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/claude-ai-collaborative-work-complete-guide',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',

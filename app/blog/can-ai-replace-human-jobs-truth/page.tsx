@@ -21,7 +21,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Can AI Replace Human Jobs? The Truth No One Tells You",
     description: "Jobs AI is replacing vs cannot replace, future-proof skills, and what students should learn in 2026.",
-    type: "article",
+    type: "article",    url: 'https://unblockdevs.com/blog/can-ai-replace-human-jobs-truth',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   alternates: {
     canonical: "https://unblockdevs.com/blog/can-ai-replace-human-jobs-truth",

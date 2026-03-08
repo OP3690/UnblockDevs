@@ -12,6 +12,8 @@ export const metadata: Metadata = {
     'curl vs requests library',
     'curl python requests comparison'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/curl-vs-python-requests-comparison' },
+
 };
 
 export default function CurlVsPythonRequestsComparison() {

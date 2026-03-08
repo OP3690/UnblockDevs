@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'What Is HashMap / HashTable? Explained Simply (With Examples) | Complete Guide 2026',
-  description: 'Learn what HashMap and HashTable are with simple examples. Complete beginner-friendly guide to hash maps, hash tables, hash functions, collision handling, and O(1) lookup. Perfect for coding interviews.',
+  title: 'HashMap / HashTable Explained – Examples | UnblockDevs',
+  description: 'HashMap and HashTable: simple examples, hash functions, collision handling, O(1) lookup. For interviews.',
   keywords: [
     'what is hashmap',
     'what is hashtable',
@@ -21,14 +21,17 @@ export const metadata: Metadata = {
     'hashmap interview'
   ],
   openGraph: {
-    title: 'What Is HashMap / HashTable? Explained Simply (With Examples) | Complete Guide 2026',
-    description: 'Learn what HashMap and HashTable are with simple examples. Complete beginner-friendly guide with visual diagrams and code examples.',
+    title: 'HashMap / HashTable Explained – Examples | UnblockDevs',
+    description: 'HashMap and HashTable: simple examples, diagrams, code. For interviews.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/what-is-hashmap-hashtable-explained-simply-with-examples',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'What Is HashMap / HashTable? Explained Simply (With Examples) | Complete Guide 2026',
-    description: 'Learn what HashMap and HashTable are with simple examples. Complete beginner-friendly guide with visual diagrams and code examples.',
+    title: 'HashMap / HashTable Explained – Examples | UnblockDevs',
+    description: 'HashMap and HashTable: simple examples, diagrams, code. For interviews.',
   },
 };
 

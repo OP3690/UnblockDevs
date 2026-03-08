@@ -3,7 +3,7 @@ import HowToParseNestedJsonJavaClient from './client';
 
 export const metadata: Metadata = {
   title: 'How to Parse Nested JSON in Java | Complete Guide 2026',
-  description: 'Learn how to parse nested JSON in Java using Jackson, Gson, and org.json. Includes examples for deeply nested objects, arrays, and handling complex JSON structures in Java applications.',
+  description: 'Parse nested JSON in Java: Jackson, Gson, org.json. Deep objects, arrays. Examples.',
   keywords: [
     'parse nested JSON Java',
     'Java JSON parser',
@@ -23,14 +23,18 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'How to Parse Nested JSON in Java | Complete Guide 2026',
-    description: 'Learn how to parse nested JSON in Java with examples for deeply nested objects and arrays.',
+    description: 'Parse nested JSON in Java. Jackson, Gson. Examples for deep objects and arrays.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/how-to-parse-nested-json-java',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
     title: 'How to Parse Nested JSON in Java | Complete Guide 2026',
-    description: 'Learn how to parse nested JSON in Java with examples for deeply nested objects and arrays.',
-  },
+    description: 'Parse nested JSON in Java. Jackson, Gson. Examples for deep objects and arrays.',
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-parse-nested-json-java' },
+
 };
 
 export default function HowToParseNestedJsonJavaPage() {

@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import JsonBestPracticesGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'JSON Best Practices: Production-Ready Guide for Developers | UnblockDevs',
-  description: 'Master JSON best practices for production environments. Learn how to structure JSON data, handle errors, optimize performance, ensure security, and follow industry standards. Complete guide with real-world examples.',
+  title: 'JSON Best Practices for Production | UnblockDevs',
+  description: 'JSON best practices for production: structure, error handling, performance, security. Real-world examples.',
   keywords: [
     'JSON best practices',
     'JSON production guide',
@@ -22,17 +22,21 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'JSON Best Practices: Production-Ready Guide for Developers',
-    description: 'Master JSON best practices for production environments. Learn how to structure JSON data, handle errors, optimize performance, and ensure security.',
+    description: 'JSON best practices for production: structure, errors, performance, security.',
     type: 'article',
     publishedTime: '2025-01-31T00:00:00.000Z',
     authors: ['UnblockDevs'],
     tags: ['JSON', 'Best Practices', 'Production', 'Web Development'],
+    url: 'https://unblockdevs.com/blog/json-best-practices-production-guide',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
     title: 'JSON Best Practices: Production-Ready Guide',
-    description: 'Master JSON best practices for production environments with this comprehensive guide.',
-  },
+    description: 'JSON best practices for production: structure, errors, performance, security.',
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/json-best-practices-production-guide' },
+
 };
 
 export default function JsonBestPracticesGuide() {

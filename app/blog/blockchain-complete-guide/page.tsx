@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import BlockchainCompleteGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Blockchain Technology: Complete Guide to Distributed Ledgers | UnblockDevs',
-  description: 'Comprehensive guide to Blockchain: how it works, smart contracts, consensus mechanisms, use cases, and future of distributed ledger technology. Learn about DeFi, NFTs, and Web3.',
+  title: 'Blockchain: Complete Guide | UnblockDevs',
+  description: 'Blockchain: how it works, smart contracts, consensus, use cases. DeFi, NFTs, Web3. Distributed ledgers.',
   keywords: [
     'blockchain technology',
     'distributed ledger',
@@ -13,6 +13,8 @@ export const metadata: Metadata = {
     'nft',
     'web3'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/blockchain-complete-guide' },
+
 };
 
 export default function BlockchainCompleteGuide() {

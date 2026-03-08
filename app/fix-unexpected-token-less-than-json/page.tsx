@@ -13,6 +13,7 @@ export const metadata: Metadata = {
     'api returned html not json',
     'unexpected token < fix'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/fix-unexpected-token-less-than-json' },
 };
 
 export default function FixUnexpectedTokenLessThan() {

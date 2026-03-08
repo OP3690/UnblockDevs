@@ -13,6 +13,8 @@ export const metadata: Metadata = {
     'copy request curl chrome',
     'chrome curl command'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-get-curl-from-chrome' },
+
 };
 
 export default function HowToGetCurlFromChrome() {

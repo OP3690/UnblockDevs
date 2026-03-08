@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { ArrowLeft, FileSpreadsheet, Download, CheckCircle } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'JSON to Excel Converter: Best Practices and Use Cases | UnblockDevs Blog',
+  title: 'JSON to Excel: Best Practices | UnblockDevs',
   description: 'Master the art of converting JSON data to Excel format. Learn best practices, common pitfalls, and real-world use cases for JSON to Excel conversion.',
   keywords: [
     'JSON to Excel',
@@ -23,6 +23,9 @@ export const metadata: Metadata = {
     type: 'article',
     publishedTime: '2024-01-12T00:00:00Z',
     authors: ['UnblockDevs'],
+    url: 'https://unblockdevs.com/blog/json-to-excel-converter-best-practices',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/json-to-excel-converter-best-practices' },
 };

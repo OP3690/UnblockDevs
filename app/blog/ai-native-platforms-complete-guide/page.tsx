@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import AiNativePlatformsCompleteGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'AI-Native Platforms: Complete Guide to Next-Gen Development | UnblockDevs',
-  description: 'UnblockDevs AI Guide: Comprehensive guide to AI-Native Platforms: architecture, implementation, real-world use cases, and future trends. Learn how to build AI-first applications with practical examples.',
+  title: 'AI-Native Platforms: Complete Guide | UnblockDevs',
+  description: 'AI-Native Platforms: architecture, implementation, use cases. Build AI-first apps. Practical examples.',
   keywords: [
     'unblock devs ai',
     'unblockdevs ai',
@@ -15,6 +15,8 @@ export const metadata: Metadata = {
     'ai-native software',
     'ai platform development'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/ai-native-platforms-complete-guide' },
+
 };
 
 export default function AiNativePlatformsCompleteGuide() {

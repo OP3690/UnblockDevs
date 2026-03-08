@@ -17,6 +17,7 @@ export const metadata: Metadata = {
     description: 'Get in touch with UnblockDevs team for support, feedback, or partnerships.',
     type: 'website',
   },
+  alternates: { canonical: 'https://unblockdevs.com/contact' },
 };
 
 export default function Contact() {

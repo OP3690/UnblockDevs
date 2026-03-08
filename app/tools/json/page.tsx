@@ -3,12 +3,14 @@ import Link from 'next/link';
 import { FileCode, FileJson, CheckCircle, Table, Wrench, GitCompare, Layers, Code } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'JSON Tools Hub | Viewer, Formatter, Parser, Validator & More | UnblockDevs',
-  description: 'Free JSON viewer, formatter, fix invalid JSON, remove trailing comma JSON, convert JSON to Excel, clean API response, split long AI prompt. One hub for all JSON tools—no signup.',
+  title: 'JSON Tools Hub | UnblockDevs',
+  description: 'Free JSON viewer, formatter, fix invalid JSON, convert to Excel, clean API response. One hub for all JSON tools—no signup.',
   openGraph: {
-    title: 'JSON Tools Hub | Viewer, Formatter, Parser, Validator | UnblockDevs',
+    title: 'JSON Tools Hub | UnblockDevs',
     description: 'Free JSON viewer, formatter, parser, validator, and JSON to CSV/Excel/Table tools. No signup, in-browser.',
     type: 'website',
+    url: 'https://unblockdevs.com/tools/json',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
   alternates: {
     canonical: 'https://unblockdevs.com/tools/json',
@@ -78,6 +80,13 @@ const jsonTools = [
     description: 'Unescape nested JSON, decode JWTs, scrub paths. Client-side log unpacker and sanitizer.',
     icon: Wrench,
     anchor: 'Log Unpacker',
+  },
+  {
+    href: '/sql-in-generator',
+    title: 'SQL IN Clause Generator',
+    description: 'Convert list to SQL IN, JSON, MongoDB. Paste IDs or values → generate parameterized or literal SQL IN, INSERT, CSV.',
+    icon: FileCode,
+    anchor: 'SQL IN generator',
   },
 ];
 

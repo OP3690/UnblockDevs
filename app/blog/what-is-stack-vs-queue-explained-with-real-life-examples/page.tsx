@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'What Is Stack vs Queue? Explained with Real-Life Examples | Complete Guide 2026',
-  description: 'Learn the difference between stack and queue data structures with real-life examples. Complete guide with visual diagrams, LIFO vs FIFO, use cases, and code examples. Perfect for coding interviews.',
+  title: 'Stack vs Queue Explained | UnblockDevs',
+  description: 'Stack vs queue: LIFO vs FIFO, real-life examples, diagrams, code. For coding interviews.',
   keywords: [
     'stack vs queue',
     'what is stack',
@@ -21,14 +21,17 @@ export const metadata: Metadata = {
     'stack queue beginner'
   ],
   openGraph: {
-    title: 'What Is Stack vs Queue? Explained with Real-Life Examples | Complete Guide 2026',
-    description: 'Learn the difference between stack and queue data structures with real-life examples. Complete guide with visual diagrams and code examples.',
+    title: 'Stack vs Queue Explained | UnblockDevs',
+    description: 'Stack vs queue: examples, diagrams, code. For interviews.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/what-is-stack-vs-queue-explained-with-real-life-examples',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'What Is Stack vs Queue? Explained with Real-Life Examples | Complete Guide 2026',
-    description: 'Learn the difference between stack and queue data structures with real-life examples. Complete guide with visual diagrams and code examples.',
+    title: 'Stack vs Queue Explained | UnblockDevs',
+    description: 'Stack vs queue: examples, diagrams, code. For interviews.',
   },
 };
 

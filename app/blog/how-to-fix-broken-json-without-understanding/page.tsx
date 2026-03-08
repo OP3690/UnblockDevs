@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import HowToFixBrokenJsonWithoutUnderstandingClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Fix Broken JSON Without Understanding JSON (Beginner Guide) | UnblockDevs',
-  description: 'Fix broken JSON without coding knowledge. Simple step-by-step guide for non-developers, students, and analysts. No JSON understanding required. Free JSON Fixer tool.',
+  title: 'Fix Broken JSON Without Understanding It | UnblockDevs',
+  description: 'Fix broken JSON without coding. Step-by-step for non-devs, students. Free JSON Fixer tool.',
   keywords: [
     'fix broken json without coding',
     'fix json for beginners',
@@ -13,6 +13,8 @@ export const metadata: Metadata = {
     'fix json without understanding',
     'simple json fixer'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-fix-broken-json-without-understanding' },
+
 };
 
 export default function HowToFixBrokenJsonWithoutUnderstanding() {

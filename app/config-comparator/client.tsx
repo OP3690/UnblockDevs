@@ -181,7 +181,7 @@ export default function ConfigComparatorClient() {
 
               <div className="p-5 bg-green-50 rounded-lg border border-green-200">
                 <h3 className="font-semibold text-gray-900 mb-2">
-                  <Link href="/blog/json-comparator" className="text-green-600 hover:text-green-700 underline">
+                  <Link href="/json-comparator" className="text-green-600 hover:text-green-700 underline">
                     JSON Comparator Guide
                   </Link>
                 </h3>

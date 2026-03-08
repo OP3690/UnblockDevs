@@ -17,7 +17,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: 'Use AI Safely — JSON Masking & Log Unpacker | UnblockDevs',
-  description: 'Mask JSON and SQL before sending to AI. Fix stringified JSON, unpack logs, decode JWTs. AI Schema Masking, JSON masking, formatter, parser—100% in-browser, no signup.',
+  description: 'Mask JSON and SQL before sending to AI. Fix stringified JSON, unpack logs, decode JWTs. Schema masking, formatter, parser—100% in-browser, no signup.',
   keywords: [
     // JSON Viewer Tools
     'json viewer',
@@ -106,7 +106,7 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://unblockdevs.com',
     title: 'Use AI Safely — JSON Masking & Log Unpacker | UnblockDevs',
-    description: 'Mask JSON and SQL before sending to AI. Fix stringified JSON, unpack logs. AI Schema Masking, JSON masking, formatter, parser—100% in-browser, no signup.',
+    description: 'Mask JSON and SQL before sending to AI. Fix stringified JSON, unpack logs. Schema masking, formatter, parser—100% in-browser, no signup.',
     siteName: 'UnblockDevs',
       images: [
         {
@@ -120,13 +120,10 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Use AI Safely — JSON Masking & Log Unpacker | UnblockDevs',
-    description: 'Mask JSON and SQL before sending to AI. Fix stringified JSON, unpack logs. AI Schema Masking, JSON masking—100% in-browser, no signup.',
+    description: 'Mask JSON and SQL before sending to AI. Fix stringified JSON, unpack logs. Schema masking—100% in-browser, no signup.',
     images: ['/og-image.png'],
   },
   metadataBase: new URL('https://unblockdevs.com'),
-  alternates: {
-    canonical: 'https://unblockdevs.com/',
-  },
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
@@ -172,7 +169,7 @@ export default function RootLayout({
       price: '0',
       priceCurrency: 'USD',
     },
-    description: 'Mask JSON and SQL before sending to AI. Sanitize data before ChatGPT—JSON masking, AI schema masking, log unpacker, JWT decoder. Fix stringified JSON, unescape logs. 100% browser-based; your data never reaches our servers. Free JSON formatter, parser, validator.',
+    description: 'Mask JSON and SQL before sending to AI. Sanitize data before ChatGPT—JSON masking, schema masking, log unpacker, JWT decoder. 100% browser-based. Free formatter, parser, validator.',
     url: 'https://unblockdevs.com',
     aggregateRating: {
       '@type': 'AggregateRating',
@@ -213,6 +210,12 @@ export default function RootLayout({
     description: 'Free online tools to mask JSON and SQL before sending to AI, sanitize data before ChatGPT, fix stringified JSON, and unpack logs. GDPR-friendly; 100% client-side.',
     url: 'https://unblockdevs.com',
     featureList: ['JSON masking', 'AI schema masking', 'Log unpacker', 'JWT decoder', 'JSON formatter', 'No signup required'],
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.9',
+      ratingCount: '2500',
+      bestRating: '5',
+    },
   };
 
   return (

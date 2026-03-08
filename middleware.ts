@@ -1,19 +1,21 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
+const PERMANENT = 301
+
 export function middleware(request: NextRequest) {
   const hostname = request.headers.get('host') || ''
-  
-  // Redirect www to non-www while preserving all query parameters (including UTM)
-  if (hostname.startsWith('www.')) {
-    const url = request.nextUrl.clone()
-    url.hostname = hostname.replace('www.', '')
-    // Preserve all query parameters (UTM parameters, etc.)
-    // Next.js automatically preserves query params when cloning, but we ensure it explicitly
-    url.search = request.nextUrl.search
-    return NextResponse.redirect(url, 301)
+  const isWww = hostname.startsWith('www.')
+  const isHttp = request.url.startsWith('http://')
+
+  // Single-hop redirect to canonical https + non-www (avoids chains like http→https→www→non-www)
+  if (isWww || isHttp) {
+    const canonicalHost = hostname.replace(/^www\./, '')
+    const path = request.nextUrl.pathname + request.nextUrl.search
+    const canonicalUrl = new URL(path, `https://${canonicalHost}`)
+    return NextResponse.redirect(canonicalUrl, PERMANENT)
   }
-  
+
   return NextResponse.next()
 }
 

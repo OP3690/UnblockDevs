@@ -3,7 +3,7 @@ import WhyMyApiWorksInPostmanButNotInBrowserClient from './client';
 
 export const metadata: Metadata = {
   title: 'Why My API Works in Postman but Not in Browser | Fix Guide 2026',
-  description: 'Learn why your API works in Postman but fails in browsers. Complete troubleshooting guide for CORS errors, authentication issues, preflight requests, and browser security restrictions. Includes solutions and code examples.',
+  description: 'Why API works in Postman but fails in browser. CORS, auth, preflight, browser security. Solutions and code examples.',
   keywords: [
     'api works in postman but not browser',
     'cors error browser',
@@ -25,6 +25,9 @@ export const metadata: Metadata = {
     title: 'Why My API Works in Postman but Not in Browser | Fix Guide 2026',
     description: 'Learn why your API works in Postman but fails in browsers. Complete troubleshooting guide for CORS errors, authentication issues, and browser security restrictions.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/why-my-api-works-in-postman-but-not-in-browser',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',

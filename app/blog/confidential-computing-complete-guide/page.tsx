@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import ConfidentialComputingCompleteGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Confidential Computing: Complete Guide to Secure Data Processing | UnblockDevs',
-  description: 'Comprehensive guide to Confidential Computing: TEE, secure enclaves, data protection, privacy-preserving computation. Learn how confidential computing works and its applications.',
+  title: 'Confidential Computing: Complete Guide | UnblockDevs',
+  description: 'Confidential Computing: TEE, secure enclaves, data protection. How it works and applications.',
   keywords: [
     'confidential computing',
     'trusted execution environment',
@@ -13,6 +13,8 @@ export const metadata: Metadata = {
     'tee technology',
     'confidential cloud'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/confidential-computing-complete-guide' },
+
 };
 
 export default function ConfidentialComputingCompleteGuide() {

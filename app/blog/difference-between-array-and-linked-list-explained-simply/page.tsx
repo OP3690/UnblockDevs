@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Difference Between Array and Linked List Explained Simply (Complete Guide)',
-  description: 'Learn the difference between arrays and linked lists with simple examples. Understand when to use arrays vs linked lists, time complexity, memory usage, and real-world use cases. Perfect for coding interviews.',
+  title: 'Array vs Linked List Explained | UnblockDevs',
+  description: 'Arrays vs linked lists: when to use each, time complexity, memory. Simple examples and use cases. For coding interviews.',
   keywords: [
     'array vs linked list',
     'difference between array and linked list',
@@ -17,9 +17,12 @@ export const metadata: Metadata = {
     'coding interview array linked list'
   ],
   openGraph: {
-    title: 'Difference Between Array and Linked List Explained Simply (Complete Guide)',
+    title: 'Array vs Linked List Explained | UnblockDevs',
     description: 'Learn the difference between arrays and linked lists with simple examples. Understand when to use each data structure.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/difference-between-array-and-linked-list-explained-simply',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/difference-between-array-and-linked-list-explained-simply',

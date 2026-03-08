@@ -4,7 +4,7 @@ import { ArrowLeft, FileCode, CheckCircle, AlertTriangle } from 'lucide-react';
 import CommissionDisclosure from '@/components/CommissionDisclosure';
 
 export const metadata: Metadata = {
-  title: 'JSON Schema Generator and Validation: Complete Guide | UnblockDevs Blog',
+  title: 'JSON Schema Generator & Validation Guide | UnblockDevs',
   description: 'Learn how to generate JSON schemas automatically and validate JSON data against schemas. Understand schema generation best practices and validation techniques.',
   keywords: [
     'JSON schema',
@@ -24,7 +24,11 @@ export const metadata: Metadata = {
     type: 'article',
     publishedTime: '2024-01-08T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/json-schema-generator-validation-guide',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/json-schema-generator-validation-guide' },
+
 };
 
 export default function BlogPost() {

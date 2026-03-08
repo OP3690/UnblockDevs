@@ -3,8 +3,9 @@ import Link from 'next/link';
 import { FileText, Calendar, Clock, ArrowRight } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: "Developer's Study Materials - Articles, Tutorials & Best Practices | UnblockDevs",
-  description: 'Developer study materials: technical articles, tutorials, and best practices on JSON tools, API testing, web development, and more. Learn with guides and examples.',
+  title: "Developer Articles & Tutorials | UnblockDevs",
+  description: 'Technical articles, tutorials, best practices on JSON, API testing, web dev. Learn with guides and examples.',
+  alternates: { canonical: 'https://unblockdevs.com/blog' },
   keywords: [
     'developer study materials',
     'JSON tutorial',
@@ -1125,7 +1126,7 @@ export const metadata: Metadata = {
       keywords: ['can AI read your mind', 'AI predictions science', 'pattern recognition AI', 'data analysis AI', 'behavioral prediction', 'why AI feels magical']
     },
     {
-      slug: 'will-ai-take-over-world-movies-vs-reality',
+      slug: 'will-ai-take-over-the-world-movies-vs-reality',
       title: "Will AI Take Over the World? Movies vs Reality",
       excerpt: "Will AI take over the world? Hollywood myths vs real AI capabilities, what AI actually can't do, and expert opinions. Honest guide with comparison table.",
       date: '2026-02-24',
@@ -1231,6 +1232,15 @@ export const metadata: Metadata = {
       readTime: '16 min read',
       category: 'Developer Tools',
       keywords: ['cursor ai', 'cursor code editor', 'cursor ai tutorial', 'how to use cursor', 'cursor vs vs code', 'ai code editor']
+    },
+    {
+      slug: 'ai-productivity-tools-complete-guide',
+      title: 'AI Productivity Tools: Complete Guide to Cursor, Claude, and More',
+      excerpt: 'Complete guide to AI productivity tools: Cursor AI, Claude, Perplexity, and other AI assistants. Learn how to use them effectively, best prompts, and real-world applications.',
+      date: '2025-01-28',
+      readTime: '12 min read',
+      category: 'Developer Tools',
+      keywords: ['ai productivity tools', 'cursor ai', 'claude ai', 'ai coding assistant', 'ai tools comparison', 'best ai tools']
     },
     {
       slug: 'ai-tools-developers-guide',

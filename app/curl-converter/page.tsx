@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import CurlConverterClient from './client';
 
 export const metadata: Metadata = {
-  title: 'cURL Converter – Convert cURL to Python, JavaScript, Go, Postman, OpenAPI | UnblockDevs',
-  description: 'Convert cURL to production-ready code: JavaScript (Fetch/Axios), Python (Requests/HTTPX), Go, Java, PHP, C#, Rust. Export to Postman & OpenAPI. Parse headers, auth, JSON. 100% local.',
+  title: 'cURL Converter – To Python, JS, Go, Postman | UnblockDevs',
+  description: 'Convert cURL to JavaScript, Python, Go, Java, PHP, C#, Rust. Export Postman & OpenAPI. Headers, auth, JSON. 100% local.',
   keywords: [
     'curl to python',
     'curl to javascript',
@@ -20,6 +20,8 @@ export const metadata: Metadata = {
     title: 'cURL Converter – Convert cURL to Code, Postman, OpenAPI',
     description: 'Convert cURL to JavaScript, Python, Go, Java, PHP, C#, Rust. Export Postman & OpenAPI. Local only.',
     type: 'website',
+    url: 'https://unblockdevs.com/curl-converter',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
   alternates: {
     canonical: 'https://unblockdevs.com/curl-converter',

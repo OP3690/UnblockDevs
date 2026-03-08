@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import HowToChangeAppleIdPhoneNumberClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Change Apple ID Phone Number Without Losing Data: Complete Guide 2026 | UnblockDevs',
-  description: 'Complete guide to changing your Apple ID phone number without losing data, photos, or iCloud content. Step-by-step instructions for iPhone, iPad, and Mac. Learn how to update Apple ID phone number safely in 2026.',
+  title: 'Change Apple ID Phone Number Without Losing Data 2026 | UnblockDevs',
+  description: 'Change Apple ID phone number without losing data. iPhone, iPad, Mac. Step-by-step. 2026.',
   keywords: [
     'change apple id phone number',
     'change apple id phone number without losing data',
@@ -23,11 +23,15 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'How to Change Apple ID Phone Number Without Losing Data: Complete Guide 2026',
-    description: 'Complete guide to changing your Apple ID phone number without losing data. Step-by-step instructions for all Apple devices.',
+    description: 'Change Apple ID phone number without losing data. Step-by-step for all devices.',
     type: 'article',
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/how-to-change-apple-id-phone-number-without-losing-data',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-change-apple-id-phone-number-without-losing-data' },
+
 };
 
 export default function HowToChangeAppleIdPhoneNumberGuide() {

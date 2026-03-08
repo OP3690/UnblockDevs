@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Ultimate Guide to Fixing Escaped JSON, JWTs, Epoch Timestamps & Stack Traces in Logs | UnblockDevs',
+  title: 'Fix Escaped JSON, JWTs, Epoch in Logs | UnblockDevs',
   description:
     'Fix escaped JSON, decode JWTs, convert epoch timestamps, and clean stack traces in logs. One guide for all embedded log problems—with flow and examples.',
   keywords: [
@@ -34,7 +34,11 @@ export const metadata: Metadata = {
     type: 'article',
     publishedTime: '2025-03-02T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/ultimate-guide-fixing-escaped-json-jwt-epoch-stack-traces-logs',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/ultimate-guide-fixing-escaped-json-jwt-epoch-stack-traces-logs' },
+
 };
 
 export default function UltimateGuideFixingEscapedJsonJwtEpochStackTracesPage() {

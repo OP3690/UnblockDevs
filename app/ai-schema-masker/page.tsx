@@ -5,9 +5,8 @@ import AiSchemaMaskerClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/ai-schema-masker';
 
 export const metadata: Metadata = {
-  title: "World's First AI Schema Masker – 100% Data Security, Client-Side Only | UnblockDevs",
-  description:
-    "Stop leaking secrets to AI tools. World's first fully client-side AI schema masker. 100% data security—your SQL and schemas never leave your browser. Mask tables & columns for AI. No server, no signup.",
+  title: "AI Schema Masker – Client-Side Only | UnblockDevs",
+  description: "Client-side AI schema masker. Your SQL never leaves the browser. Mask tables & columns for AI. No server, no signup.",
   keywords: [
     'stop leaking secrets to ai tools',
     'AI schema masker',
@@ -21,15 +20,16 @@ export const metadata: Metadata = {
     'DITE deterministic masking',
   ],
   openGraph: {
-    title: "World's First AI Schema Masker – 100% Data Security, Client-Side Only",
+    title: "AI Schema Masker | UnblockDevs",
     description:
       "Fully client-side. 100% data security. Your SQL and schemas never leave your browser. Mask identifiers for AI, restore with one click. No server, no signup.",
     type: 'website',
     url: canonicalUrl,
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: "World's First AI Schema Masker – 100% Data Security, Client-Side Only",
+    title: "AI Schema Masker | UnblockDevs",
     description: "100% client-side. Your data never leaves your browser. Mask SQL for AI, restore securely.",
   },
   alternates: {
@@ -57,6 +57,12 @@ const jsonLd = {
     '@type': 'Offer',
     price: '0',
     priceCurrency: 'USD',
+  },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.9',
+    ratingCount: '2500',
+    bestRating: '5',
   },
   featureList: [
     '100% data security – all processing in your browser',

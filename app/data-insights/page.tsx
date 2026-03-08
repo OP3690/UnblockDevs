@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import DataInsightsClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Free Data Insights Tool Online - Analyze JSON Data Instantly | UnblockDevs',
-  description: 'Get insights from JSON data instantly. Free online data insights tool to analyze data structures, statistics, patterns, and trends in JSON datasets. No signup required.',
+  title: 'Data Insights – Analyze JSON | UnblockDevs',
+  description: 'Get insights from JSON instantly. Analyze structure, statistics, patterns. Free, no signup.',
   keywords: [
     'data insights',
     'json data analysis',
@@ -15,9 +15,11 @@ export const metadata: Metadata = {
     'json analytics'
   ],
   openGraph: {
-    title: 'Free Data Insights Tool Online - Analyze JSON Data Instantly',
+    title: 'Data Insights | UnblockDevs',
     description: 'Get insights from JSON data instantly. Free online data insights tool.',
     type: 'website',
+    url: 'https://unblockdevs.com/data-insights',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
   alternates: {
     canonical: 'https://unblockdevs.com/data-insights',

@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import BestFreeDeveloperTools2026Client from './client';
 
 export const metadata: Metadata = {
-  title: 'Best Free Online Developer Tools in 2026 (Privacy-Focused & No Signup Required) | UnblockDevs',
-  description: 'Discover the best free online developer tools in 2026. Privacy-focused tools with no signup required. JSON tools, API testing, code converters, and more. All processing happens in your browser.',
+  title: 'Best Free Developer Tools 2026 | UnblockDevs',
+  description: 'Best free developer tools 2026. JSON, API testing, code converters. Privacy-focused, in-browser.',
   keywords: [
     'best free developer tools 2026',
     'privacy focused online dev tools',
@@ -20,17 +20,21 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'Best Free Online Developer Tools in 2026 (Privacy-Focused & No Signup Required)',
-    description: 'Discover the best free online developer tools in 2026. Privacy-focused tools with no signup required.',
+    description: 'Best free developer tools 2026. Privacy-focused, no signup.',
     type: 'article',
     publishedTime: '2025-01-15T00:00:00.000Z',
     authors: ['UnblockDevs'],
     tags: ['Developer Tools', 'Free Tools', 'Privacy', 'Web Development'],
+    url: 'https://unblockdevs.com/blog/best-free-developer-tools-2026',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Best Free Online Developer Tools in 2026',
-    description: 'Discover the best free online developer tools. Privacy-focused, no signup required.',
-  },
+    description: 'Best free developer tools. Privacy-focused, no signup.',
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/best-free-developer-tools-2026' },
+
 };
 
 export default function BestFreeDeveloperTools2026() {

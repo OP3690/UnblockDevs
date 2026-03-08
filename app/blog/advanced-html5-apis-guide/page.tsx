@@ -25,7 +25,11 @@ export const metadata: Metadata = {
     type: 'article',
     publishedTime: '2024-01-22T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/advanced-html5-apis-guide',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/advanced-html5-apis-guide' },
+
 };
 
 export default function AdvancedHTML5APIsGuide() {

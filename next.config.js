@@ -17,7 +17,7 @@ const nextConfig = {
       exclude: ['error', 'warn'],
     } : false,
   },
-  // Redirects configuration (keyword URLs → tool pages for SEO)
+  // Redirects configuration (keyword URLs → tool pages for SEO; fix 404 blog URLs)
   async redirects() {
     return [
       {
@@ -30,6 +30,14 @@ const nextConfig = {
       { source: '/jwt-decoder', destination: '/token-comparator', permanent: true },
       { source: '/convert-list-to-sql-in', destination: '/sql-in-generator', permanent: true },
       { source: '/comma-separated-list-to-sql', destination: '/sql-in-generator', permanent: true },
+      // Blog 404 fixes: old/mismatched slugs → correct blog or tool
+      { source: '/blog/json-comparator', destination: '/json-comparator', permanent: true },
+      { source: '/blog/json-schema-generation-complete-guide', destination: '/blog/json-schema-generator-tutorial', permanent: true },
+      { source: '/blog/fix-json-parse-error-javascript', destination: '/blog/fix-json-parse-error-unexpected-token', permanent: true },
+      { source: '/blog/how-to-fix-broken-json-online', destination: '/blog/how-to-fix-broken-json-without-understanding', permanent: true },
+      // Orphan blog slugs → canonical (so blog index can link to one URL)
+      { source: '/blog/how-ai-creates-art-music-videos-seconds', destination: '/blog/how-ai-creates-art-music-videos-in-seconds', permanent: true },
+      { source: '/blog/will-ai-take-over-world-movies-vs-reality', destination: '/blog/will-ai-take-over-the-world-movies-vs-reality', permanent: true },
     ]
   },
   // Headers for better caching

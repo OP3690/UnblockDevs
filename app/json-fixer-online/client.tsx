@@ -163,11 +163,22 @@ export default function JsonFixerOnlineClient() {
           </section>
 
           <section className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">Best Guides and Resources</h2>
-            <p className="text-gray-700 leading-relaxed mb-6">
-              Learn more about JSON errors, fixing techniques, and best practices with these comprehensive guides:
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Free JSON Error Guides</h2>
+            <p className="text-gray-700 leading-relaxed mb-3">
+              Step-by-step guides for specific errors (no signup):
             </p>
-            
+            <ul className="flex flex-wrap gap-2 mb-6 text-sm">
+              <li><Link href="/blog/fix-json-parse-error-unexpected-token" className="text-primary-600 hover:underline">Fix JSON.parse() errors in JavaScript</Link></li>
+              <li><Link href="/fix-unexpected-end-of-json-input" className="text-primary-600 hover:underline">Fix &quot;Unexpected end of JSON input&quot;</Link></li>
+              <li><Link href="/fix-unexpected-token-in-json" className="text-primary-600 hover:underline">Fix &quot;Unexpected token } in JSON&quot;</Link></li>
+              <li><Link href="/fix-expected-comma-or-brace-json" className="text-primary-600 hover:underline">Fix &quot;Expected comma or brace&quot;</Link></li>
+              <li><Link href="/fix-unexpected-token-less-than-json" className="text-primary-600 hover:underline">Fix &quot;Unexpected token &lt; in JSON&quot;</Link></li>
+              <li><Link href="/fix-invalid-control-character-json" className="text-primary-600 hover:underline">Fix &quot;Invalid control character&quot;</Link></li>
+              <li><Link href="/blog/how-to-fix-broken-json-without-understanding" className="text-primary-600 hover:underline">How to fix broken JSON online</Link></li>
+            </ul>
+            <p className="text-gray-700 leading-relaxed mb-6">
+              Deeper guides and best practices:
+            </p>
             <div className="space-y-4">
               <div className="p-5 bg-blue-50 rounded-lg border border-blue-200">
                 <h3 className="font-semibold text-gray-900 mb-2">
@@ -197,7 +208,7 @@ export default function JsonFixerOnlineClient() {
 
               <div className="p-5 bg-purple-50 rounded-lg border border-purple-200">
                 <h3 className="font-semibold text-gray-900 mb-2">
-                  <Link href="/blog/how-to-fix-broken-json-online" className="text-purple-600 hover:text-purple-700 underline">
+                  <Link href="/blog/how-to-fix-broken-json-without-understanding" className="text-purple-600 hover:text-purple-700 underline">
                     How to Fix Broken JSON Online: Complete Guide
                   </Link>
                 </h3>
@@ -210,7 +221,7 @@ export default function JsonFixerOnlineClient() {
 
               <div className="p-5 bg-orange-50 rounded-lg border border-orange-200">
                 <h3 className="font-semibold text-gray-900 mb-2">
-                  <Link href="/blog/fix-json-parse-error-javascript" className="text-orange-600 hover:text-orange-700 underline">
+                  <Link href="/blog/fix-json-parse-error-unexpected-token" className="text-orange-600 hover:text-orange-700 underline">
                     Fix: JSON Parse Error in JavaScript - Complete Guide
                   </Link>
                 </h3>

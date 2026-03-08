@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import HowToConvertHarFilesToCurlClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Convert HAR Files to cURL: Export Browser Network Requests to cURL Commands | UnblockDevs',
-  description: 'Complete guide on how to convert HAR files to cURL commands. Learn step-by-step methods to export browser network requests, convert HTTP archives, and generate cURL commands. Free HAR to cURL converter tool included.',
+  title: 'Convert HAR Files to cURL Commands | UnblockDevs',
+  description: 'Convert HAR files to cURL. Export browser requests, step-by-step. Free converter tool.',
   keywords: [
     'how to convert har files to curl',
     'convert har file to curl',
@@ -28,17 +28,21 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'How to Convert HAR Files to cURL: Complete Guide',
-    description: 'Learn how to convert HAR files to cURL commands. Step-by-step guide with examples and free converter tool.',
+    description: 'Convert HAR to cURL. Step-by-step, free tool.',
     type: 'article',
     publishedTime: '2025-01-15T00:00:00Z',
     authors: ['UnblockDevs'],
     tags: ['HAR', 'cURL', 'Network Requests', 'Browser DevTools', 'API Development'],
+    url: 'https://unblockdevs.com/blog/how-to-convert-har-files-to-curl',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
     title: 'How to Convert HAR Files to cURL: Complete Guide',
-    description: 'Step-by-step guide to convert HAR files to cURL commands with examples and best practices.',
-  },
+    description: 'Convert HAR to cURL. Step-by-step, free tool.',
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-convert-har-files-to-curl' },
+
 };
 
 export default function HowToConvertHarFilesToCurl() {

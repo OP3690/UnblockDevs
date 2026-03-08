@@ -17,6 +17,7 @@ export const metadata: Metadata = {
     description: 'Terms and Conditions for UnblockDevs - Free developer tools.',
     type: 'website',
   },
+  alternates: { canonical: 'https://unblockdevs.com/terms' },
 };
 
 export default function Terms() {

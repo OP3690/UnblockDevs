@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import HowToCancelAudibleSubscriptionClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Cancel Audible Subscription on Mobile & Desktop: Complete Guide 2026 | UnblockDevs',
-  description: 'Complete guide to canceling your Audible subscription on mobile (Android, iPhone) and desktop. Step-by-step instructions to cancel Audible membership, keep your credits, and preserve your audiobook library. Learn how to cancel Audible without losing access in 2026.',
+  title: 'Cancel Audible on Mobile & Desktop 2026 | UnblockDevs',
+  description: 'Cancel Audible on mobile (Android, iPhone) and desktop. Step-by-step: keep credits, preserve library. Guide 2026.',
   keywords: [
     'cancel audible subscription',
     'how to cancel audible',
@@ -27,6 +27,9 @@ export const metadata: Metadata = {
     type: 'article',
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
+    url: 'https://unblockdevs.com/blog/how-to-cancel-audible-subscription-mobile-desktop',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-cancel-audible-subscription-mobile-desktop' },
 };

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'What Is Linked List? Singly vs Doubly Explained Simply | Complete Guide 2026',
-  description: 'Learn what linked list is with simple examples. Complete beginner-friendly guide to singly linked list vs doubly linked list, differences, advantages, and when to use each. Perfect for coding interviews.',
+  title: 'Linked List: Singly vs Doubly Explained | UnblockDevs',
+  description: 'Linked list: singly vs doubly, differences, when to use each. Simple examples. For coding interviews.',
   keywords: [
     'what is linked list',
     'linked list explained',
@@ -21,14 +21,17 @@ export const metadata: Metadata = {
     'linked list advantages'
   ],
   openGraph: {
-    title: 'What Is Linked List? Singly vs Doubly Explained Simply | Complete Guide 2026',
-    description: 'Learn what linked list is with simple examples. Complete beginner-friendly guide with visual diagrams and code examples.',
+    title: 'Linked List: Singly vs Doubly Explained | UnblockDevs',
+    description: 'Linked list: singly vs doubly. Examples, diagrams, code. For interviews.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/what-is-linked-list-singly-vs-doubly-explained-simply',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'What Is Linked List? Singly vs Doubly Explained Simply | Complete Guide 2026',
-    description: 'Learn what linked list is with simple examples. Complete beginner-friendly guide with visual diagrams and code examples.',
+    title: 'Linked List: Singly vs Doubly Explained | UnblockDevs',
+    description: 'Linked list: singly vs doubly. Examples, diagrams, code. For interviews.',
   },
 };
 

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'How to Read Error Messages Properly as a Beginner Programmer | Complete Guide 2026',
-  description: 'Learn how to read and understand error messages as a beginner programmer. Complete guide to interpreting error types, stack traces, line numbers, and fixing common errors. Beginner-friendly explanations with examples.',
+  title: 'Read Error Messages as a Beginner 2026 | UnblockDevs',
+  description: 'Read error messages as a beginner. Error types, stack traces, line numbers, fixing common errors.',
   keywords: [
     'how to read error messages',
     'understand error messages beginner',
@@ -21,14 +21,17 @@ export const metadata: Metadata = {
     'debug error messages'
   ],
   openGraph: {
-    title: 'How to Read Error Messages Properly as a Beginner Programmer | Complete Guide 2026',
-    description: 'Learn how to read and understand error messages as a beginner programmer. Complete guide to interpreting error types, stack traces, and fixing common errors.',
+    title: 'Read Error Messages as a Beginner 2026 | UnblockDevs',
+    description: 'Read error messages as a beginner. Error types, stack traces, fixing common errors.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/how-to-read-error-messages-properly-as-beginner-programmer',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'How to Read Error Messages Properly as a Beginner Programmer | Complete Guide 2026',
-    description: 'Learn how to read and understand error messages as a beginner programmer. Complete guide to interpreting error types, stack traces, and fixing common errors.',
+    title: 'Read Error Messages as a Beginner 2026 | UnblockDevs',
+    description: 'Read error messages as a beginner. Error types, stack traces, fixing common errors.',
   },
 };
 

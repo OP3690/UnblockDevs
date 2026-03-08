@@ -3,8 +3,8 @@ import Link from 'next/link';
 import TokenComparatorLandingClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Token Comparator & JWT Debugger – Compare, Decode, Analyze Tokens | UnblockDevs',
-  description: 'Compare JWT tokens character-by-character, decode header and payload, run security audit, view token lifetime and entropy. JWT debugger, token analyzer, API key checker. 100% client-side.',
+  title: 'Token Comparator & JWT Debugger | UnblockDevs',
+  description: 'Compare, decode, analyze JWT and auth tokens. Security audit, lifetime view. JWT debugger, token analyzer. 100% client-side.',
   keywords: [
     'jwt debugger',
     'jwt decoder',
@@ -23,6 +23,7 @@ export const metadata: Metadata = {
     description: 'Compare, decode, and analyze JWT and auth tokens. Smart detection, security audit, lifetime view. 100% client-side.',
     type: 'website',
     url: 'https://unblockdevs.com/token-comparator',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
   alternates: {
     canonical: 'https://unblockdevs.com/token-comparator',

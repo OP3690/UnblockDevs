@@ -29,6 +29,9 @@ export const metadata: Metadata = {
     title: 'POST JSON Data with cURL: Examples & Complete Guide 2026',
     description: 'Learn POST JSON data with cURL through practical examples. Complete guide with real-world examples and best practices.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/post-json-data-with-curl-examples-complete-guide',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',

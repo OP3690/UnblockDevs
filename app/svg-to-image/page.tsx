@@ -16,6 +16,8 @@ export const metadata: Metadata = {
     title: 'Convert SVG to JPEG or PNG - Free Online | UnblockDevs',
     description: 'Convert SVG to JPEG or PNG in your browser. No uploads, no signup.',
     type: 'website',
+    url: 'https://unblockdevs.com/svg-to-image',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
   alternates: {
     canonical: 'https://unblockdevs.com/svg-to-image',

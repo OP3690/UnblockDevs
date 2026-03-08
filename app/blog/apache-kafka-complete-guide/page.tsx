@@ -3,7 +3,7 @@ import ApacheKafkaCompleteGuideClient from './client';
 
 export const metadata: Metadata = {
   title: 'Apache Kafka: Complete Guide - What, How, Why | UnblockDevs',
-  description: 'Comprehensive guide to Apache Kafka: architecture, how it works, why it matters, real-world applications, and best practices. Learn about event streaming, topics, partitions, and producers/consumers.',
+  description: 'Apache Kafka: architecture, event streaming, topics, partitions, producers/consumers. How it works, best practices.',
   keywords: [
     'apache kafka',
     'kafka tutorial',
@@ -13,6 +13,8 @@ export const metadata: Metadata = {
     'kafka topics partitions',
     'distributed messaging'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/apache-kafka-complete-guide' },
+
 };
 
 export default function ApacheKafkaCompleteGuide() {

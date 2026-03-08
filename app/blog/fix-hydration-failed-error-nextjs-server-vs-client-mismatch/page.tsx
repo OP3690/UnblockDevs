@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
+import FixHydrationFailedErrorNextjsServerVsClientMismatchClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Fix: "Hydration Failed" Error in Next.js (Server vs Client Mismatch) | Complete Guide 2026',
-  description: 'Learn how to fix "Hydration Failed" error in Next.js caused by server vs client mismatch. Complete troubleshooting guide with solutions for HTML mismatch, useEffect, suppressHydrationWarning, and dynamic imports. Includes code examples.',
+  title: 'Fix Hydration Failed Error in Next.js 2026 | UnblockDevs',
+  description: 'Fix "Hydration Failed" in Next.js: server vs client mismatch. HTML, useEffect, suppressHydrationWarning. With code.',
   keywords: [
     'hydration failed nextjs',
     'fix hydration error nextjs',
@@ -21,17 +22,21 @@ export const metadata: Metadata = {
     'nextjs ssr hydration'
   ],
   openGraph: {
-    title: 'Fix: "Hydration Failed" Error in Next.js (Server vs Client Mismatch) | Complete Guide 2026',
-    description: 'Learn how to fix "Hydration Failed" error in Next.js caused by server vs client mismatch. Complete troubleshooting guide with solutions.',
+    title: 'Fix Hydration Failed Error in Next.js 2026 | UnblockDevs',
+    description: 'Fix "Hydration Failed" in Next.js: server vs client mismatch. Solutions and code.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/fix-hydration-failed-error-nextjs-server-vs-client-mismatch',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Fix: "Hydration Failed" Error in Next.js (Server vs Client Mismatch) | Complete Guide 2026',
-    description: 'Learn how to fix "Hydration Failed" error in Next.js caused by server vs client mismatch. Complete troubleshooting guide with solutions.',
-  },
+    title: 'Fix Hydration Failed Error in Next.js 2026 | UnblockDevs',
+    description: 'Fix "Hydration Failed" in Next.js: server vs client mismatch. Solutions and code.',
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/fix-hydration-failed-error-nextjs-server-vs-client-mismatch' },
+
 };
 
 export default function FixHydrationFailedErrorNextjsServerVsClientMismatchPage() {
-  return null;
+  return <FixHydrationFailedErrorNextjsServerVsClientMismatchClient />;
 }

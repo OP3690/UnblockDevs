@@ -3,7 +3,7 @@ import BlogPostClient from './client';
 
 export const metadata: Metadata = {
   title: 'How to Debug JavaScript Errors Using Browser DevTools (Complete Guide)',
-  description: 'Master JavaScript debugging with Chrome DevTools, Firefox DevTools, and Edge DevTools. Learn to fix errors, use breakpoints, inspect variables, and debug production issues. Step-by-step guide with examples.',
+  description: 'Debug JavaScript with Chrome, Firefox, Edge DevTools. Fix errors, breakpoints, inspect variables. Step-by-step guide.',
   keywords: [
     'debug javascript errors',
     'browser devtools',
@@ -25,6 +25,9 @@ export const metadata: Metadata = {
     title: 'How to Debug JavaScript Errors Using Browser DevTools (Complete Guide)',
     description: 'Master JavaScript debugging with browser DevTools. Learn to fix errors, use breakpoints, and debug production issues.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/how-to-debug-javascript-errors-using-browser-devtools',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/how-to-debug-javascript-errors-using-browser-devtools',

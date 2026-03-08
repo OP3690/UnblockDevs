@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import FixUnexpectedEndOfJsonInputErrorExplainedClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Fix: "Unexpected End of JSON Input" Error Explained | Complete Guide 2026',
-  description: 'Learn how to fix "Unexpected end of JSON input" error in JavaScript, Node.js, and all browsers. Includes common causes, solutions, and code examples for handling incomplete JSON data and parsing errors.',
+  title: 'Fix Unexpected End of JSON Input 2026 | UnblockDevs',
+  description: 'Fix "Unexpected end of JSON input" in JS, Node, browsers. Causes, solutions, code examples.',
   keywords: [
     'unexpected end of json input',
     'fix json parse error',
@@ -22,15 +22,19 @@ export const metadata: Metadata = {
     'fix json input error'
   ],
   openGraph: {
-    title: 'Fix: "Unexpected End of JSON Input" Error Explained | Complete Guide 2026',
-    description: 'Learn how to fix "Unexpected end of JSON input" error with common causes, solutions, and code examples.',
+    title: 'Fix Unexpected End of JSON Input 2026 | UnblockDevs',
+    description: 'Fix "Unexpected end of JSON input". Causes, solutions, code.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/fix-unexpected-end-of-json-input-error-explained',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Fix: "Unexpected End of JSON Input" Error Explained | Complete Guide 2026',
-    description: 'Learn how to fix "Unexpected end of JSON input" error with common causes, solutions, and code examples.',
-  },
+    title: 'Fix Unexpected End of JSON Input 2026 | UnblockDevs',
+    description: 'Fix "Unexpected end of JSON input". Causes, solutions, code.',
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/fix-unexpected-end-of-json-input-error-explained' },
+
 };
 
 export default function FixUnexpectedEndOfJsonInputErrorExplainedPage() {

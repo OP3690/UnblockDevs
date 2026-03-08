@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import HowToChangeInstagramPhoneEmailClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Change Instagram Phone Number or Email: Complete Guide 2026 | UnblockDevs',
-  description: 'Complete guide to changing your Instagram phone number or email address in 2026. Step-by-step instructions for Android, iPhone, and web. Learn how to update Instagram contact info safely without losing account access.',
+  title: 'Change Instagram Phone or Email 2026 | UnblockDevs',
+  description: 'Change Instagram phone or email in 2026. Step-by-step for Android, iPhone, web. Update safely.',
   keywords: [
     'change instagram phone number',
     'change instagram email',
@@ -23,11 +23,15 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'How to Change Instagram Phone Number or Email: Complete Guide 2026',
-    description: 'Complete guide to changing your Instagram phone number or email address. Step-by-step instructions for all devices.',
+    description: 'Change Instagram phone or email. Step-by-step for all devices.',
     type: 'article',
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/how-to-change-instagram-phone-number-email-2026',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-change-instagram-phone-number-email-2026' },
+
 };
 
 export default function HowToChangeInstagramPhoneEmailGuide() {

@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import ChatgptRealLifeUsageGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'ChatGPT Real-Life Usage Guide: How, What, When & Best Prompts | UnblockDevs',
-  description: 'Complete guide to using ChatGPT in real life: practical use cases, best prompts, when to use it, and how to get great results. Learn prompt engineering techniques for developers, writers, and professionals.',
+  title: 'ChatGPT Usage Guide: Best Prompts | UnblockDevs',
+  description: 'ChatGPT in real life: use cases, best prompts, when to use. Prompt engineering for developers and pros.',
   keywords: [
     'chatgpt real life usage',
     'chatgpt prompts',
@@ -13,6 +13,8 @@ export const metadata: Metadata = {
     'chatgpt examples',
     'prompt engineering chatgpt'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/chatgpt-real-life-usage-guide' },
+
 };
 
 export default function ChatgptRealLifeUsageGuide() {

@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import FixFailedToFetchErrorJavaScriptCorsHttpsNetworkClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Fix: "Failed to Fetch" Error in JavaScript (CORS, HTTPS, Network) | Complete Guide 2026',
-  description: 'Learn how to fix "Failed to fetch" error in JavaScript. Complete troubleshooting guide for CORS errors, HTTPS issues, network problems, and fetch API failures. Includes solutions and code examples.',
+  title: 'Fix Failed to Fetch Error in JavaScript 2026 | UnblockDevs',
+  description: 'Fix "Failed to fetch" in JavaScript. CORS, HTTPS, network. Solutions and code.',
   keywords: [
     'failed to fetch error',
     'fix failed to fetch',
@@ -22,15 +22,19 @@ export const metadata: Metadata = {
     'fix fetch api error'
   ],
   openGraph: {
-    title: 'Fix: "Failed to Fetch" Error in JavaScript (CORS, HTTPS, Network) | Complete Guide 2026',
-    description: 'Learn how to fix "Failed to fetch" error in JavaScript. Complete troubleshooting guide for CORS errors, HTTPS issues, and network problems.',
+    title: 'Fix Failed to Fetch Error in JavaScript 2026 | UnblockDevs',
+    description: 'Fix "Failed to fetch" in JavaScript. CORS, HTTPS, network. Solutions.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/fix-failed-to-fetch-error-javascript-cors-https-network',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Fix: "Failed to Fetch" Error in JavaScript (CORS, HTTPS, Network) | Complete Guide 2026',
-    description: 'Learn how to fix "Failed to fetch" error in JavaScript. Complete troubleshooting guide for CORS errors, HTTPS issues, and network problems.',
-  },
+    title: 'Fix Failed to Fetch Error in JavaScript 2026 | UnblockDevs',
+    description: 'Fix "Failed to fetch" in JavaScript. CORS, HTTPS, network. Solutions.',
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/fix-failed-to-fetch-error-javascript-cors-https-network' },
+
 };
 
 export default function FixFailedToFetchErrorJavaScriptCorsHttpsNetworkPage() {

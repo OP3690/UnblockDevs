@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Apple Creator Studio: Complete Guide 2026 | UnblockDevs',
-  description: 'Learn everything about Apple Creator Studio - features, how to use it, benefits for content creators, and best practices. Complete guide to Apple\'s content creation platform for iOS, macOS, and Apple ecosystem.',
+  description: 'Apple Creator Studio: features, how to use, benefits for creators. Guide to Apple\'s content platform for iOS, macOS.',
   keywords: [
     'apple creator studio',
     'apple creator studio guide',
@@ -29,6 +29,9 @@ export const metadata: Metadata = {
     title: 'Apple Creator Studio: Complete Guide 2026',
     description: 'Learn everything about Apple Creator Studio - features, how to use it, benefits for content creators, and best practices.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/apple-creator-studio-complete-guide',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',

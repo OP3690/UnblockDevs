@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import HowToCancelSpotifyPremiumClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Cancel Spotify Premium and Get Refund (If Eligible): Complete Guide 2026 | UnblockDevs',
-  description: 'Complete guide to canceling Spotify Premium subscription and getting refunds if eligible. Step-by-step instructions for mobile, desktop, and web. Learn how to cancel Spotify Premium, downgrade to free, and request refunds in 2026.',
+  title: 'Cancel Spotify Premium & Get Refund 2026 | UnblockDevs',
+  description: 'Cancel Spotify Premium and get refund if eligible. Step-by-step for mobile, desktop, web. 2026.',
   keywords: [
     'cancel spotify premium',
     'how to cancel spotify premium',
@@ -23,11 +23,15 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'How to Cancel Spotify Premium and Get Refund (If Eligible): Complete Guide 2026',
-    description: 'Complete guide to canceling Spotify Premium and getting refunds. Step-by-step instructions for all devices.',
+    description: 'Cancel Spotify Premium and get refund. Step-by-step for all devices.',
     type: 'article',
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/how-to-cancel-spotify-premium-and-get-refund',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-cancel-spotify-premium-and-get-refund' },
+
 };
 
 export default function HowToCancelSpotifyPremiumGuide() {

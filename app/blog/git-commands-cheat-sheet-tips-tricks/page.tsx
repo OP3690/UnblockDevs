@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import GitCommandsCheatSheetClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Git Commands Cheat Sheet: Most Useful Commands, Tips & Tricks | UnblockDevs',
-  description: 'Complete Git commands cheat sheet with most useful commands, tips, tricks, and shortcuts. Learn essential Git commands for daily development, advanced techniques, and productivity hacks for Git workflows.',
+  title: 'Git Commands Cheat Sheet | UnblockDevs',
+  description: 'Git commands cheat sheet: useful commands, tips, tricks. Essential Git for daily dev and productivity.',
   keywords: [
     'git commands',
     'git cheat sheet',
@@ -36,6 +36,13 @@ export const metadata: Metadata = {
     'git daily commands',
     'git essential commands'
   ],
+  openGraph: {
+    title: 'Git Commands Cheat Sheet: Most Useful Commands, Tips & Tricks | UnblockDevs',
+    description: 'Git commands cheat sheet: useful commands, tips, tricks. Essential Git for daily dev and productivity.',
+    type: 'article',
+    url: 'https://unblockdevs.com/blog/git-commands-cheat-sheet-tips-tricks',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/git-commands-cheat-sheet-tips-tricks' },
 };
 

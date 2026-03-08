@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import Ces2026FireTvStickProjectAvaClient from './client';
 
 export const metadata: Metadata = {
-  title: 'CES 2026: Amazon Fire TV Stick 4K Max & Project AVA - Complete Guide | UnblockDevs',
-  description: 'Complete guide to CES 2026 highlights: Amazon Fire TV Stick 4K Max features, specs, and Project AVA AI assistant. Learn about the latest streaming technology, AI integration, and smart home innovations.',
+  title: 'CES 2026: Fire TV Stick 4K Max & Project AVA | UnblockDevs',
+  description: 'CES 2026: Fire TV Stick 4K Max, Project AVA AI. Streaming, AI, smart home. Features and specs.',
   keywords: [
     'CES 2026',
     'Amazon Fire TV Stick 4K Max',
@@ -21,6 +21,8 @@ export const metadata: Metadata = {
     'CES 2026 announcements',
     'Amazon Fire TV features'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/ces-2026-fire-tv-stick-4k-max-project-ava' },
+
 };
 
 export default function Ces2026FireTvStickProjectAva() {

@@ -3,7 +3,7 @@ import TokenSecurityPrivacyBestPracticesClient from './client';
 
 export const metadata: Metadata = {
   title: 'Token Security & Privacy: Best Practices, Dos & Don\'ts | UnblockDevs',
-  description: 'Complete guide to token security and privacy: best practices, dos and don\'ts, common vulnerabilities, secure storage, token rotation, and privacy considerations. Learn how to secure authentication tokens.',
+  description: 'Token security & privacy: best practices, vulnerabilities, secure storage, rotation. Secure auth tokens.',
   keywords: [
     'token security',
     'token privacy',
@@ -16,6 +16,8 @@ export const metadata: Metadata = {
     'secure tokens',
     'token dos and donts'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/token-security-privacy-best-practices' },
+
 };
 
 export default function TokenSecurityPrivacyBestPractices() {

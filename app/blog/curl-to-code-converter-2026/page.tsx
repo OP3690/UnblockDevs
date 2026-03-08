@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import CurlToCodeConverter2026Client from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Convert cURL Commands to Code in 2026 (JavaScript, Python, Go, PHP & More) | UnblockDevs',
-  description: 'Step-by-step guide to convert cURL commands to code in JavaScript (Fetch), Python (Requests), Go, PHP, Java, and more. Real examples with GET, POST, headers, auth, and multipart. Free online cURL to code converter.',
+  title: 'Convert cURL to Code in 2026 – JS, Python, Go, PHP | UnblockDevs',
+  description: 'Convert cURL to code: JavaScript, Python, Go, PHP, Java. GET, POST, headers, auth. Free converter.',
   keywords: [
     'curl to javascript fetch',
     'curl to python requests',
@@ -27,12 +27,16 @@ export const metadata: Metadata = {
     publishedTime: '2025-01-15T00:00:00.000Z',
     authors: ['UnblockDevs'],
     tags: ['cURL', 'API', 'HTTP Requests', 'Code Generation', 'Web Development'],
+    url: 'https://unblockdevs.com/blog/curl-to-code-converter-2026',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
     title: 'How to Convert cURL Commands to Code in 2026',
     description: 'Convert cURL commands to code in JavaScript, Python, Go, PHP, and more with our free converter.',
-  },
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/curl-to-code-converter-2026' },
+
 };
 
 export default function CurlToCodeConverter2026() {

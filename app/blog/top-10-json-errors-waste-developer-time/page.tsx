@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import Top10JsonErrorsClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Top 10 JSON Errors That Waste Developer Time (And How to Avoid Them) | UnblockDevs',
-  description: 'Discover the top 10 JSON errors that waste developer time: unexpected token, unexpected end of JSON input, invalid control character. Quick fixes and prevention tips.',
+  title: 'Top 10 JSON Errors That Waste Dev Time | UnblockDevs',
+  description: 'Top 10 JSON errors that waste time: unexpected token, end of input, invalid control char. Quick fixes.',
   keywords: [
     'json errors waste time',
     'common json errors',
@@ -13,6 +13,8 @@ export const metadata: Metadata = {
     'json debugging',
     'json errors list'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/top-10-json-errors-waste-developer-time' },
+
 };
 
 export default function Top10JsonErrors() {

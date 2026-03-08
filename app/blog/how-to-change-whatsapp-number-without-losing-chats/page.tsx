@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import HowToChangeWhatsappNumberClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Change WhatsApp Number Without Losing Chats: Step-by-Step Guide 2026 | UnblockDevs',
-  description: 'Complete guide to changing your WhatsApp number without losing chats, messages, or data. Step-by-step instructions for Android, iPhone, and desktop. Learn how to migrate WhatsApp account safely in 2026.',
+  title: 'Change WhatsApp Number Without Losing Chats 2026 | UnblockDevs',
+  description: 'Change WhatsApp number without losing chats. Android, iPhone, desktop. Migrate safely. 2026.',
   keywords: [
     'how to change whatsapp number',
     'change whatsapp number without losing chats',
@@ -23,11 +23,15 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'How to Change WhatsApp Number Without Losing Chats: Step-by-Step Guide 2026',
-    description: 'Complete guide to changing your WhatsApp number without losing chats, messages, or data. Step-by-step instructions for all devices.',
+    description: 'Change WhatsApp number without losing chats. Step-by-step for all devices.',
     type: 'article',
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/how-to-change-whatsapp-number-without-losing-chats',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-change-whatsapp-number-without-losing-chats' },
+
 };
 
 export default function HowToChangeWhatsappNumberGuide() {

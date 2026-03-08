@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'What Is Two Pointer Technique? Explained for Beginners | Complete Guide 2026',
-  description: 'Learn what the two pointer technique is with simple examples. Complete beginner-friendly guide to two pointers, sliding window, fast and slow pointers, and O(n) solutions. Perfect for coding interviews.',
+  title: 'Two Pointer Technique Explained | UnblockDevs',
+  description: 'Two pointer technique: sliding window, fast/slow pointers, O(n). Simple examples. For interviews.',
   keywords: [
     'two pointer technique',
     'two pointers',
@@ -21,14 +21,17 @@ export const metadata: Metadata = {
     'two pointer leetcode'
   ],
   openGraph: {
-    title: 'What Is Two Pointer Technique? Explained for Beginners | Complete Guide 2026',
-    description: 'Learn what the two pointer technique is with simple examples. Complete beginner-friendly guide with visual diagrams and code examples.',
+    title: 'Two Pointer Technique Explained | UnblockDevs',
+    description: 'Two pointer technique: examples, diagrams, code. For interviews.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/what-is-two-pointer-technique-explained-for-beginners',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'What Is Two Pointer Technique? Explained for Beginners | Complete Guide 2026',
-    description: 'Learn what the two pointer technique is with simple examples. Complete beginner-friendly guide with visual diagrams and code examples.',
+    title: 'Two Pointer Technique Explained | UnblockDevs',
+    description: 'Two pointer technique: examples, diagrams, code. For interviews.',
   },
 };
 

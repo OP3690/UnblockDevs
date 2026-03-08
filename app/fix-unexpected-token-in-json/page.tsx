@@ -14,6 +14,7 @@ export const metadata: Metadata = {
     'json error fixer',
     'fix broken json'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/fix-unexpected-token-in-json' },
 };
 
 export default function FixUnexpectedToken() {

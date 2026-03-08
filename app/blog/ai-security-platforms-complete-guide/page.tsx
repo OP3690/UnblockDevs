@@ -3,7 +3,7 @@ import AiSecurityPlatformsClient from './client';
 
 export const metadata: Metadata = {
   title: 'AI Security Platforms: Complete Guide 2026 | UnblockDevs',
-  description: 'UnblockDevs AI Guide: Complete guide to AI security platforms: definition, what they are, when to use them, how they work, and why they matter. Learn about AI security, model protection, adversarial defense, data privacy, and AI threat detection platforms.',
+  description: 'Complete guide to AI security platforms: what they are, when to use them, how they work. AI security, model protection, data privacy.',
   keywords: [
     'unblock devs ai',
     'unblockdevs ai',
@@ -28,6 +28,13 @@ export const metadata: Metadata = {
     'ai security governance',
     'ai security platform features'
   ],
+  openGraph: {
+    title: 'AI Security Platforms: Complete Guide 2026 | UnblockDevs',
+    description: 'Complete guide to AI security platforms: what they are, when to use them, how they work. AI security, model protection, data privacy.',
+    type: 'article',
+    url: 'https://unblockdevs.com/blog/ai-security-platforms-complete-guide',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/ai-security-platforms-complete-guide' },
 };
 

@@ -4,7 +4,7 @@ import JsonComparatorClient from './client';
 
 export const metadata: Metadata = {
   title: 'Smart JSON Data Diff - Semantic API Payload Comparison | UnblockDevs',
-  description: 'Compare JSON by meaning, not text. Smart JSON Data Diff normalizes UUIDs, timestamps, JWTs, and hashes so only real logic changes appear. Client-side, private, no signup.',
+  description: 'Compare JSON by meaning. Normalizes UUIDs, timestamps, JWTs so only real logic changes appear. Client-side, private, no signup.',
   keywords: [
     'smart json diff',
     'json data diff',
@@ -19,6 +19,8 @@ export const metadata: Metadata = {
     title: 'Smart JSON Data Diff - Semantic API Payload Comparison',
     description: 'Compare JSON by meaning. Normalizes dynamic noise so only real logic changes appear. Client-side and private.',
     type: 'website',
+    url: 'https://unblockdevs.com/json-comparator',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
   alternates: {
     canonical: 'https://unblockdevs.com/json-comparator',

@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import JsonStringifyVsJsonParseDifferenceClient from './client';
 
 export const metadata: Metadata = {
-  title: 'JSON.stringify() vs JSON.parse(): Complete Difference Guide | UnblockDevs',
-  description: 'Learn the difference between JSON.stringify() and JSON.parse(). When to use each, examples, and how they work together. Includes json parse online and json serialize online examples.',
+  title: 'JSON.stringify() vs JSON.parse() Guide | UnblockDevs',
+  description: 'JSON.stringify() vs JSON.parse(): when to use each, examples, how they work together.',
   keywords: [
     'json stringify vs json parse',
     'json parse online',
@@ -13,6 +13,8 @@ export const metadata: Metadata = {
     'json stringify example',
     'json parse vs stringify'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/json-stringify-vs-json-parse-difference' },
+
 };
 
 export default function JsonStringifyVsJsonParseDifference() {

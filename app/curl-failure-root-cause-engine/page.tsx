@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Free cURL Failure Root-Cause Engine – Diagnose API Call Failures | UnblockDevs',
-  description: 'Diagnose why your API call is failing. Get ranked root causes, confidence scores, fix suggestions, and corrected cURL commands. Free online tool for debugging 401, 400, 404, and other HTTP errors.',
+  title: 'cURL Failure Root-Cause Engine | UnblockDevs',
+  description: 'Diagnose why your API call is failing. Ranked root causes, confidence scores, fix suggestions. Debug 401, 400, 404. Free, no signup.',
   keywords: [
     'curl failure root cause',
     'api call failure diagnosis',
@@ -26,10 +26,11 @@ export const metadata: Metadata = {
     'debug api calls'
   ],
   openGraph: {
-    title: 'Free cURL Failure Root-Cause Engine – Diagnose API Call Failures',
+    title: 'cURL Failure Root-Cause Engine | UnblockDevs',
     description: 'Diagnose why your API call is failing. Get ranked root causes, confidence scores, and fix suggestions.',
     type: 'website',
     url: 'https://unblockdevs.com/curl-failure-root-cause-engine',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
   alternates: {
     canonical: 'https://unblockdevs.com/curl-failure-root-cause-engine',

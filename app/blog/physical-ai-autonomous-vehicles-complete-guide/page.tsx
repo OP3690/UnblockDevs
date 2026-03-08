@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import PhysicalAiAutonomousVehiclesClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Physical AI in Autonomous Vehicles: Complete Guide 2026 | Self-Driving Cars & AI',
-  description: 'Complete guide to Physical AI in autonomous vehicles: definition, what it is, when to use it, how it works, and why it matters. Learn about self-driving cars, autonomous vehicle AI, sensor fusion, perception, planning, and control systems.',
+  title: 'Physical AI in Autonomous Vehicles 2026 | UnblockDevs',
+  description: 'Physical AI in self-driving cars: sensor fusion, perception, planning, control. What it is, how it works.',
   keywords: [
     'physical ai autonomous vehicles',
     'autonomous vehicles ai',
@@ -26,6 +26,8 @@ export const metadata: Metadata = {
     'ai-powered vehicles',
     'autonomous vehicle sensors ai'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/physical-ai-autonomous-vehicles-complete-guide' },
+
 };
 
 export default function PhysicalAiAutonomousVehicles() {

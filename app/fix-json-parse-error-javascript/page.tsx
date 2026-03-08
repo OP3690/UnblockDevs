@@ -13,6 +13,7 @@ export const metadata: Metadata = {
     'fix json parse error',
     'javascript json error'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/fix-json-parse-error-javascript' },
 };
 
 export default function FixJsonParseErrorJavascript() {

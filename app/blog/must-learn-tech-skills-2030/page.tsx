@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import MustLearnTechSkills2030Client from './client';
 
 export const metadata: Metadata = {
-  title: 'Must-Learn Tech Skills for 2030: AGI, Quantum Computing & Future Tech | UnblockDevs',
-  description: 'Discover the must-learn tech skills for 2030: artificial general intelligence (AGI), quantum computing, advanced semiconductor design, neuromorphic chips, and future technologies. Prepare for the next decade.',
+  title: 'Must-Learn Tech Skills for 2030 | UnblockDevs',
+  description: 'Must-learn tech skills for 2030: AGI, quantum computing, semiconductors, neuromorphic chips. Prepare now.',
   keywords: [
     'tech skills 2030',
     'must learn tech skills',
@@ -15,6 +15,8 @@ export const metadata: Metadata = {
     'future programming',
     '2030 technology'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/must-learn-tech-skills-2030' },
+
 };
 
 export default function MustLearnTechSkills2030() {

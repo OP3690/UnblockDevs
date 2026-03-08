@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { ArrowLeft, BarChart3, CheckCircle } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'API Payload Size Optimization: Performance Best Practices | UnblockDevs Blog',
+  title: 'API Payload Size Optimization | UnblockDevs',
   description: 'Learn how to analyze and optimize API payload sizes. Discover techniques to reduce payload size, improve performance, and enhance mobile API efficiency.',
   keywords: [
     'payload analyzer',
@@ -23,7 +23,11 @@ export const metadata: Metadata = {
     type: 'article',
     publishedTime: '2024-01-03T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/api-payload-size-optimization',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/api-payload-size-optimization' },
+
 };
 
 export default function BlogPost() {

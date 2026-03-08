@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import HowToChangeTelegramNumberClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Change Phone Number in Telegram Without Notifying Contacts: Complete Guide 2026 | UnblockDevs',
-  description: 'Complete guide to changing your Telegram phone number without notifying contacts. Step-by-step instructions for Android, iPhone, and desktop. Learn how to change Telegram number privately in 2026.',
+  title: 'Change Telegram Number Without Notifying 2026 | UnblockDevs',
+  description: 'Change Telegram phone number without notifying contacts. Android, iPhone, desktop. Private. 2026.',
   keywords: [
     'change telegram phone number',
     'change telegram number without notifying',
@@ -23,11 +23,15 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'How to Change Phone Number in Telegram Without Notifying Contacts: Complete Guide 2026',
-    description: 'Complete guide to changing your Telegram phone number without notifying contacts. Step-by-step instructions for all devices.',
+    description: 'Change Telegram number without notifying contacts. Step-by-step for all devices.',
     type: 'article',
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/how-to-change-phone-number-telegram-without-notifying',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-change-phone-number-telegram-without-notifying' },
+
 };
 
 export default function HowToChangeTelegramNumberGuide() {

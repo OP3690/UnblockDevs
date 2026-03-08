@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Handle API Rate Limits Gracefully in Production (Complete Guide)',
+  title: 'Handle API Rate Limits in Production | UnblockDevs',
   description: 'Learn how to handle API rate limits: exponential backoff, retry strategies, rate limit headers, circuit breakers, and best practices for production applications. Complete guide with code examples.',
   keywords: [
     'api rate limits',
@@ -21,9 +21,12 @@ export const metadata: Metadata = {
     'throttling api calls'
   ],
   openGraph: {
-    title: 'How to Handle API Rate Limits Gracefully in Production (Complete Guide)',
+    title: 'Handle API Rate Limits in Production | UnblockDevs',
     description: 'Learn how to handle API rate limits with exponential backoff, retry strategies, and best practices.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/how-to-handle-api-rate-limits-gracefully-in-production',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/how-to-handle-api-rate-limits-gracefully-in-production',

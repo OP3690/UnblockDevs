@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import FixCannotReadPropertyMapOfUndefinedJavaScriptClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Fix: "Cannot Read Property \'map\' of Undefined" in JavaScript | Complete Guide 2026',
-  description: 'Learn how to fix "Cannot read property \'map\' of undefined" error in JavaScript and React. Includes solutions, best practices, and code examples for handling undefined arrays and preventing this common error.',
+  title: 'Fix Cannot Read Property map of Undefined in JS | UnblockDevs',
+  description: 'Fix "Cannot read property \'map\' of undefined" in JavaScript/React. Solutions and code examples.',
   keywords: [
     'cannot read property map of undefined',
     'fix map undefined error',
@@ -22,15 +22,19 @@ export const metadata: Metadata = {
     'react map error fix'
   ],
   openGraph: {
-    title: 'Fix: "Cannot Read Property \'map\' of Undefined" in JavaScript | Complete Guide 2026',
-    description: 'Learn how to fix "Cannot read property \'map\' of undefined" error in JavaScript and React with solutions and code examples.',
+    title: 'Fix Cannot Read Property map of Undefined in JS | UnblockDevs',
+    description: 'Fix "Cannot read property \'map\' of undefined" in JavaScript/React. Solutions and examples.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/fix-cannot-read-property-map-of-undefined-javascript',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Fix: "Cannot Read Property \'map\' of Undefined" in JavaScript | Complete Guide 2026',
-    description: 'Learn how to fix "Cannot read property \'map\' of undefined" error in JavaScript and React with solutions and code examples.',
-  },
+    title: 'Fix Cannot Read Property map of Undefined in JS | UnblockDevs',
+    description: 'Fix "Cannot read property \'map\' of undefined" in JavaScript/React. Solutions and examples.',
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/fix-cannot-read-property-map-of-undefined-javascript' },
+
 };
 
 export default function FixCannotReadPropertyMapOfUndefinedJavaScriptPage() {

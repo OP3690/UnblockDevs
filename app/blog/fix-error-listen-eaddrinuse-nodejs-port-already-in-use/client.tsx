@@ -424,6 +424,19 @@ pm2 kill
               </div>
             </div>
           </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Related guides &amp; tools</h2>
+            <p className="text-gray-700 mb-4">More developer guides and free tools:</p>
+            <div className="flex flex-wrap gap-3 text-sm">
+              <Link href="/blog" className="text-primary-600 hover:underline font-medium">Developer&apos;s Study Materials</Link>
+              <Link href="/blog/why-process-env-is-undefined-nodejs-and-how-to-fix-it" className="text-primary-600 hover:underline">process.env undefined in Node.js</Link>
+              <Link href="/blog/fix-cannot-read-properties-of-undefined-reading-length-javascript" className="text-primary-600 hover:underline">Fix undefined &quot;length&quot; error</Link>
+              <Link href="/blog/fix-uncaught-in-promise-error-javascript-explained" className="text-primary-600 hover:underline">Fix Uncaught (in promise) error</Link>
+              <Link href="/json-beautifier" className="text-primary-600 hover:underline">JSON Beautifier</Link>
+              <Link href="/config-comparator" className="text-primary-600 hover:underline">Config Comparator</Link>
+            </div>
+          </section>
         </article>
 
                 {/* Social Share Section */}

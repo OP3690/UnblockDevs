@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Binary Search Explained Like You\'re 5 (With Code Example) | Complete Guide 2026',
-  description: 'Learn binary search explained in simple terms with visual examples. Complete beginner-friendly guide to binary search algorithm with step-by-step diagrams, code examples, and real-world analogies. Perfect for coding interviews.',
+  title: 'Binary Search Explained Like You\'re 5 | UnblockDevs',
+  description: 'Binary search explained simply: diagrams, code, examples. Beginner-friendly. For coding interviews.',
   keywords: [
     'binary search explained',
     'binary search like you\'re 5',
@@ -21,14 +21,17 @@ export const metadata: Metadata = {
     'binary search javascript'
   ],
   openGraph: {
-    title: 'Binary Search Explained Like You\'re 5 (With Code Example) | Complete Guide 2026',
-    description: 'Learn binary search explained in simple terms with visual examples. Complete beginner-friendly guide with step-by-step diagrams and code examples.',
+    title: 'Binary Search Explained Like You\'re 5 | UnblockDevs',
+    description: 'Binary search explained simply: diagrams, code. For interviews.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/binary-search-explained-like-youre-5-with-code-example',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Binary Search Explained Like You\'re 5 (With Code Example) | Complete Guide 2026',
-    description: 'Learn binary search explained in simple terms with visual examples. Complete beginner-friendly guide with step-by-step diagrams and code examples.',
+    title: 'Binary Search Explained Like You\'re 5 | UnblockDevs',
+    description: 'Binary search explained simply: diagrams, code. For interviews.',
   },
 };
 

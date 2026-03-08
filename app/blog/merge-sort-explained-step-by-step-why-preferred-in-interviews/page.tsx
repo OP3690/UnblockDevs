@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Merge Sort Explained Step-by-Step (Why It\'s Preferred in Interviews) | Complete Guide 2026',
-  description: 'Learn merge sort algorithm step-by-step with visual examples. Complete beginner-friendly guide to merge sort, divide and conquer, time complexity O(n log n), and why it\'s preferred in coding interviews. Perfect for coding interviews.',
+  title: 'Merge Sort Explained – Step-by-Step | UnblockDevs',
+  description: 'Merge sort step-by-step: divide and conquer, O(n log n). Visual examples. Why preferred in interviews.',
   keywords: [
     'merge sort',
     'merge sort explained',
@@ -21,14 +21,17 @@ export const metadata: Metadata = {
     'merge sort stable'
   ],
   openGraph: {
-    title: 'Merge Sort Explained Step-by-Step (Why It\'s Preferred in Interviews) | Complete Guide 2026',
-    description: 'Learn merge sort algorithm step-by-step with visual examples. Complete beginner-friendly guide with visual diagrams and code examples.',
+    title: 'Merge Sort Explained – Step-by-Step | UnblockDevs',
+    description: 'Merge sort step-by-step: diagrams, code. For interviews.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/merge-sort-explained-step-by-step-why-preferred-in-interviews',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Merge Sort Explained Step-by-Step (Why It\'s Preferred in Interviews) | Complete Guide 2026',
-    description: 'Learn merge sort algorithm step-by-step with visual examples. Complete beginner-friendly guide with visual diagrams and code examples.',
+    title: 'Merge Sort Explained – Step-by-Step | UnblockDevs',
+    description: 'Merge sort step-by-step: diagrams, code. For interviews.',
   },
 };
 

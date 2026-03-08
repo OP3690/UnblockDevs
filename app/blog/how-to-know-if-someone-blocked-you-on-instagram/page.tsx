@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import HowToKnowIfSomeoneBlockedYouOnInstagramClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Know If Someone Blocked You on Instagram: Complete Guide 2026 | UnblockDevs',
-  description: 'Complete guide to detecting if someone blocked you on Instagram. Learn the signs, methods to check, and what happens when you\'re blocked. Step-by-step instructions to determine if you\'ve been blocked on Instagram in 2026.',
+  title: 'Know If Someone Blocked You on Instagram 2026 | UnblockDevs',
+  description: 'How to tell if someone blocked you on Instagram. Signs, how to check, what happens. Step-by-step. 2026.',
   keywords: [
     'how to know if someone blocked you on instagram',
     'check if blocked on instagram',
@@ -23,11 +23,15 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'How to Know If Someone Blocked You on Instagram: Complete Guide 2026',
-    description: 'Complete guide to detecting if someone blocked you on Instagram. Learn the signs and methods to check.',
+    description: 'How to tell if someone blocked you on Instagram. Signs and how to check.',
     type: 'article',
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/how-to-know-if-someone-blocked-you-on-instagram',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-know-if-someone-blocked-you-on-instagram' },
+
 };
 
 export default function HowToKnowIfSomeoneBlockedYouOnInstagramGuide() {

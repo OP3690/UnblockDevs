@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import HTMLTagsGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'HTML Tags Explained: Must‑Do Practices, Hidden Facts & Pro Tips | UnblockDevs Blog',
-  description: 'Master HTML tags with this comprehensive guide. Learn essential HTML tags, best practices, lesser-known facts, and pro tips to write cleaner, smarter HTML code. Interactive HTML simulator included.',
+  title: 'HTML Tags Explained – Practices & Pro Tips | UnblockDevs',
+  description: 'HTML tags guide: essentials, best practices, pro tips. Interactive simulator included.',
   keywords: [
     'HTML tags',
     'HTML guide',
@@ -24,11 +24,15 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'HTML Tags Explained: Must‑Do Practices, Hidden Facts & Pro Tips',
-    description: 'Master HTML tags with this comprehensive guide. Learn essential HTML tags, best practices, and pro tips.',
+    description: 'HTML tags guide: essentials, best practices, pro tips. Interactive simulator included.',
     type: 'article',
     publishedTime: '2024-01-20T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/html-tags-explained-guide',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/html-tags-explained-guide' },
+
 };
 
 export default function HTMLTagsGuide() {

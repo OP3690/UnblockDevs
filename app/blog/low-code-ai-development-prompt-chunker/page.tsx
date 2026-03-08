@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import LowCodeAiDevelopmentClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Low-Code AI Development: Empowering Non-Technical Users with Tools Like Prompt Chunker | UnblockDevs',
-  description: 'Complete guide to low-code AI development. Learn what it is, when to use it, how to get started, and why tools like Prompt Chunker empower non-technical users to build AI solutions without coding.',
+  title: 'Low-Code AI & Prompt Chunker Guide | UnblockDevs',
+  description: 'Low-code AI development: what it is, when to use. Tools like Prompt Chunker for non-devs. No coding.',
   keywords: [
     'low-code AI development',
     'no-code AI',
@@ -22,12 +22,16 @@ export const metadata: Metadata = {
     'low-code platform'
   ],
   openGraph: {
-    title: 'Low-Code AI Development: Empowering Non-Technical Users with Tools Like Prompt Chunker',
-    description: 'Complete guide to low-code AI development. Learn how tools like Prompt Chunker empower non-technical users to build AI solutions without coding.',
+    title: 'Low-Code AI & Prompt Chunker Guide',
+    description: 'Low-code AI: Prompt Chunker and tools for non-devs. Build AI solutions without coding.',
     type: 'article',
     publishedTime: '2024-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/low-code-ai-development-prompt-chunker',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/low-code-ai-development-prompt-chunker' },
+
 };
 
 export default function LowCodeAiDevelopmentGuide() {

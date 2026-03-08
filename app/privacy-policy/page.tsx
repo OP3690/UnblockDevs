@@ -19,6 +19,7 @@ export const metadata: Metadata = {
     description: 'Privacy Policy for UnblockDevs - Learn how we collect, use, and protect your data.',
     type: 'website',
   },
+  alternates: { canonical: 'https://unblockdevs.com/privacy-policy' },
 };
 
 export default function PrivacyPolicy() {

@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import TimezoneTranslatorClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Free Timezone Translator Online - Convert Times Across Timezones | UnblockDevs',
-  description: 'Convert times across timezones instantly. Free online timezone translator tool to translate times between different timezones, calculate time differences, and handle daylight saving time. No signup required.',
+  title: 'Timezone Translator – Convert Times | UnblockDevs',
+  description: 'Convert times across timezones. Free timezone translator—time differences, daylight saving. No signup.',
   keywords: [
     'timezone translator',
     'timezone converter',
@@ -15,9 +15,11 @@ export const metadata: Metadata = {
     'world clock converter'
   ],
   openGraph: {
-    title: 'Free Timezone Translator Online - Convert Times Across Timezones',
+    title: 'Timezone Translator | UnblockDevs',
     description: 'Convert times across timezones instantly. Free online timezone translator tool.',
     type: 'website',
+    url: 'https://unblockdevs.com/timezone-translator',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
   alternates: {
     canonical: 'https://unblockdevs.com/timezone-translator',

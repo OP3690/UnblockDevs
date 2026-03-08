@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Common Data Quality Issues and How Data Engineers Fix Them (Complete Guide)',
-  description: 'Learn common data quality issues: missing values, duplicates, inconsistencies, format errors. Understand how data engineers identify, fix, and prevent data quality problems. Complete guide with solutions.',
+  title: 'Data Quality Issues & How Engineers Fix Them | UnblockDevs',
+  description: 'Common data quality issues: missing values, duplicates, inconsistencies. How data engineers identify, fix, and prevent them.',
   keywords: [
     'data quality issues',
     'data quality problems',
@@ -19,9 +19,12 @@ export const metadata: Metadata = {
     'how to fix data quality'
   ],
   openGraph: {
-    title: 'Common Data Quality Issues and How Data Engineers Fix Them (Complete Guide)',
+    title: 'Data Quality Issues & How Engineers Fix Them | UnblockDevs',
     description: 'Learn common data quality issues and how data engineers identify, fix, and prevent data quality problems.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/common-data-quality-issues-and-how-data-engineers-fix-them',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/common-data-quality-issues-and-how-data-engineers-fix-them',

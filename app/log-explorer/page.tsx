@@ -20,6 +20,7 @@ export const metadata: Metadata = {
     description: 'Analyze, search, and visualize logs 100% client-side. Timeline, filters, error analyzer, JWT detection.',
     type: 'website',
     url: 'https://unblockdevs.com/log-explorer',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
   alternates: {
     canonical: 'https://unblockdevs.com/log-explorer',

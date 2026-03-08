@@ -87,6 +87,7 @@ export default function Celebration1MPopup() {
             <p className="text-amber-600 font-bold text-sm uppercase tracking-widest mb-2">
               We hit a milestone
             </p>
+            <p className="text-amber-600 font-semibold text-base mb-1">We hit it in 3 months</p>
             <h2 id="celebration-title" className="text-4xl sm:text-5xl font-black text-gray-900 mb-1">
               1,000,000
             </h2>

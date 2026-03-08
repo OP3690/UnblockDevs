@@ -23,7 +23,11 @@ export const metadata: Metadata = {
     type: 'article',
     publishedTime: '2024-01-10T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/api-response-comparator-testing-guide',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/api-response-comparator-testing-guide' },
+
 };
 
 export default function BlogPost() {

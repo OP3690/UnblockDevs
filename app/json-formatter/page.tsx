@@ -3,7 +3,7 @@ import JsonFormatterClient from './client';
 
 export const metadata: Metadata = {
   title: 'Free JSON Formatter & Validator – No Login Required | UnblockDevs',
-  description: 'Format, beautify, and validate JSON instantly. Free online JSON formatter with customizable indentation. No signup, no login, 100% private. Works in your browser – no data sent to servers.',
+  description: 'Format and validate JSON instantly. Free formatter, custom indentation. No signup, 100% in-browser.',
   keywords: [
     'json formatter',
     'json formatter online',
@@ -14,6 +14,7 @@ export const metadata: Metadata = {
     'json beautifier',
     'format json tool'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/json-formatter' },
 };
 
 export default function JsonFormatter() {

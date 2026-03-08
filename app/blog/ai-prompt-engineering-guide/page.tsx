@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import AiPromptEngineeringGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'AI Prompt Engineering Guide: Best Prompts for Great Results | UnblockDevs',
-  description: 'UnblockDevs AI Guide: Complete guide to AI prompt engineering: how to write effective prompts, best practices, techniques, and templates. Learn how to get great results from ChatGPT, Cursor, and other AI tools.',
+  title: 'AI Prompt Engineering Guide | UnblockDevs',
+  description: 'AI prompt engineering: effective prompts, best practices, techniques, templates. ChatGPT, Cursor, and more.',
   keywords: [
     'unblock devs ai',
     'unblockdevs ai',
@@ -15,6 +15,8 @@ export const metadata: Metadata = {
     'ai prompt templates',
     'effective ai prompts'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/ai-prompt-engineering-guide' },
+
 };
 
 export default function AiPromptEngineeringGuide() {

@@ -16,7 +16,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Passive Income with AI: Is It Really Possible?",
     description: "AI blog automation, YouTube automation, print-on-demand, affiliate marketing, and the truth about automation myths.",
-    type: "article",
+    type: "article",    url: 'https://unblockdevs.com/blog/passive-income-with-ai-is-it-really-possible',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   alternates: {
     canonical: "https://unblockdevs.com/blog/passive-income-with-ai-is-it-really-possible",

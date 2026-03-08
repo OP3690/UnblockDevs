@@ -4,7 +4,7 @@ import { ArrowLeft, Code, CheckCircle } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Curl to Code Converter: From Command Line to Code | UnblockDevs Blog',
-  description: 'Transform curl commands into code snippets for JavaScript, Python, Java, and more. Learn how to convert API requests efficiently across different programming languages.',
+  description: 'Transform cURL to code: JavaScript, Python, Java. Convert API requests efficiently.',
   keywords: [
     'curl converter',
     'API requests',
@@ -19,11 +19,15 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'Curl to Code Converter: From Command Line to Code',
-    description: 'Transform curl commands into code snippets for JavaScript, Python, Java, and more.',
+    description: 'Transform cURL to code: JavaScript, Python, Java.',
     type: 'article',
     publishedTime: '2024-01-01T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/curl-to-code-converter-guide',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/curl-to-code-converter-guide' },
+
 };
 
 export default function BlogPost() {

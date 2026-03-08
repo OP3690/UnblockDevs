@@ -3,7 +3,7 @@ import HighImpactTechStocksClient from './client';
 
 export const metadata: Metadata = {
   title: 'High Impact Tech Stocks: Complete Investment Guide 2026 | UnblockDevs',
-  description: 'Complete guide to high impact tech stocks: what are high impact tech stocks, why invest, how to identify them, top tech stocks 2026, investment strategies, risks, and best practices. Learn about AI, semiconductor, cloud, and emerging tech stocks.',
+  description: 'High impact tech stocks 2026: what they are, how to identify, top picks, strategies, risks. AI, semiconductor, cloud, emerging tech.',
   keywords: [
     'high impact tech stocks',
     'tech stocks 2026',
@@ -26,6 +26,8 @@ export const metadata: Metadata = {
     'tech stock portfolio',
     'tech stock strategy'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/high-impact-tech-stocks-investment-guide' },
+
 };
 
 export default function HighImpactTechStocks() {

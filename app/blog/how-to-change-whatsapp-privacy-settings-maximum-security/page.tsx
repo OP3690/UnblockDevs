@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import HowToChangeWhatsappPrivacySettingsClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Change WhatsApp Privacy Settings for Maximum Security: Complete Guide 2026 | UnblockDevs',
-  description: 'Complete guide to configuring WhatsApp privacy settings for maximum security. Learn how to protect your profile, last seen, status, and messages. Step-by-step security settings for Android, iPhone, and desktop in 2026.',
+  title: 'WhatsApp Privacy Settings for Max Security 2026 | UnblockDevs',
+  description: 'WhatsApp privacy for max security. Protect profile, last seen, status, messages. Android, iPhone, web. 2026.',
   keywords: [
     'whatsapp privacy settings',
     'whatsapp security settings',
@@ -23,11 +23,15 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'How to Change WhatsApp Privacy Settings for Maximum Security: Complete Guide 2026',
-    description: 'Complete guide to configuring WhatsApp privacy settings for maximum security. Learn how to protect your profile and messages.',
+    description: 'WhatsApp privacy for max security. Protect profile and messages.',
     type: 'article',
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/how-to-change-whatsapp-privacy-settings-maximum-security',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-change-whatsapp-privacy-settings-maximum-security' },
+
 };
 
 export default function HowToChangeWhatsappPrivacySettingsGuide() {

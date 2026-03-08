@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import HowToSeeInstagramStoryWithoutBeingSeenClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to See Instagram Story Without Being Seen: Complete Guide 2026 | UnblockDevs',
-  description: 'Complete guide to viewing Instagram stories anonymously without being seen. Learn how to see Instagram stories without showing up in viewers list. Step-by-step methods for viewing stories privately in 2026.',
+  title: 'See Instagram Story Without Being Seen 2026 | UnblockDevs',
+  description: 'View Instagram stories anonymously. Don\'t show in viewers list. Step-by-step. 2026.',
   keywords: [
     'see instagram story without being seen',
     'view instagram story anonymously',
@@ -23,11 +23,15 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'How to See Instagram Story Without Being Seen: Complete Guide 2026',
-    description: 'Complete guide to viewing Instagram stories anonymously without being seen. Learn methods for viewing stories privately.',
+    description: 'View Instagram stories anonymously. Methods for viewing privately.',
     type: 'article',
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/how-to-see-instagram-story-without-being-seen',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-see-instagram-story-without-being-seen' },
+
 };
 
 export default function HowToSeeInstagramStoryWithoutBeingSeenGuide() {

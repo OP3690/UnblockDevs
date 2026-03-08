@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import NotebooklmCompleteGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'NotebookLM Complete Guide: How to Use Google\'s AI Notebook | UnblockDevs',
-  description: 'Complete guide to NotebookLM: what it is, how to use it, best practices, tips, and tricks. Learn how to leverage Google\'s AI-powered notebook for research, writing, and knowledge management.',
+  title: 'NotebookLM Complete Guide | UnblockDevs',
+  description: 'NotebookLM guide: what it is, how to use, tips. Google\'s AI notebook for research and writing.',
   keywords: [
     'notebooklm',
     'notebooklm guide',
@@ -14,6 +14,8 @@ export const metadata: Metadata = {
     'notebooklm best practices',
     'ai research tool'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/notebooklm-complete-guide' },
+
 };
 
 export default function NotebooklmCompleteGuide() {

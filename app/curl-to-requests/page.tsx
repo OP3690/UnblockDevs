@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import CurlToRequestsClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Free cURL to Code Converter – Python, JavaScript, PHP & More | UnblockDevs',
-  description: 'Convert cURL commands to Python, JavaScript, PHP, Ruby, Java, Go, and C# code instantly. Free online converter with full auth & header support. No signup, no login, instant results.',
+  title: 'cURL to Code – Python, JS, PHP & More | UnblockDevs',
+  description: 'Convert cURL to Python, JS, PHP, Ruby, Java, Go, C#. Full auth & headers. No signup, instant.',
   keywords: [
     'curl to requests',
     'convert curl to requests',
@@ -13,6 +13,7 @@ export const metadata: Metadata = {
     'curl converter online',
     'convert curl command'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/curl-to-requests' },
 };
 
 export default function CurlToRequests() {

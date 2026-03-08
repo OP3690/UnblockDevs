@@ -5,9 +5,8 @@ import SqlInGeneratorClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/sql-in-generator';
 
 export const metadata: Metadata = {
-  title: 'SQL IN Clause Generator — Convert List to SQL IN, JSON, MongoDB | UnblockDevs',
-  description:
-    'Convert CSV, JSON, or newline-separated IDs to SQL IN clause. Auto-detect input, chunk for Oracle/MySQL, parameterized queries, range compression, INSERT generator. MySQL, PostgreSQL, SQL Server, Oracle, SQLite. Free online tool.',
+  title: 'SQL IN Clause Generator | UnblockDevs',
+  description: 'Convert CSV, JSON, or IDs to SQL IN. Chunking, parameterized, range compression, INSERT. MySQL, PostgreSQL, Oracle, SQLite. Free.',
   keywords: [
     'SQL IN clause generator',
     'convert list to SQL IN',
@@ -21,10 +20,11 @@ export const metadata: Metadata = {
     'parameterized SQL IN',
   ],
   openGraph: {
-    title: 'SQL IN Clause Generator — Convert List to SQL IN | UnblockDevs',
+    title: 'SQL IN Clause Generator | UnblockDevs',
     description: 'Convert any list to SQL IN clause. Auto-detect format, chunking, multi-database, parameterized, range compression. Free and client-side.',
     type: 'website',
     url: canonicalUrl,
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
   alternates: { canonical: canonicalUrl },
 };

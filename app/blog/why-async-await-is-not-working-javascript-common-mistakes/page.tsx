@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
+import WhyAsyncAwaitIsNotWorkingJavaScriptCommonMistakesClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Why async/await Is Not Working in JavaScript (Common Mistakes) | Complete Guide 2026',
-  description: 'Learn why async/await is not working in JavaScript. Complete troubleshooting guide for common mistakes, missing await keywords, promise handling, error catching, and async function issues. Includes solutions and code examples.',
+  title: 'Why async/await Not Working in JavaScript 2026 | UnblockDevs',
+  description: 'Why async/await not working in JavaScript. Missing await, promise handling, error catch. Fixes and code.',
   keywords: [
     'async await not working',
     'why async await not working',
@@ -21,17 +22,21 @@ export const metadata: Metadata = {
     'async await debugging'
   ],
   openGraph: {
-    title: 'Why async/await Is Not Working in JavaScript (Common Mistakes) | Complete Guide 2026',
-    description: 'Learn why async/await is not working in JavaScript. Complete troubleshooting guide for common mistakes, missing await keywords, and promise handling.',
+    title: 'Why async/await Not Working in JavaScript 2026 | UnblockDevs',
+    description: 'Why async/await not working in JS. Common mistakes, missing await. Fixes and code.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/why-async-await-is-not-working-javascript-common-mistakes',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Why async/await Is Not Working in JavaScript (Common Mistakes) | Complete Guide 2026',
-    description: 'Learn why async/await is not working in JavaScript. Complete troubleshooting guide for common mistakes, missing await keywords, and promise handling.',
-  },
+    title: 'Why async/await Not Working in JavaScript 2026 | UnblockDevs',
+    description: 'Why async/await not working in JS. Common mistakes, missing await. Fixes and code.',
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/why-async-await-is-not-working-javascript-common-mistakes' },
+
 };
 
 export default function WhyAsyncAwaitIsNotWorkingJavaScriptCommonMistakesPage() {
-  return null;
+  return <WhyAsyncAwaitIsNotWorkingJavaScriptCommonMistakesClient />;
 }

@@ -19,7 +19,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "How AI Makes Money (And Who Is Getting Rich From It?)",
     description: "AI startups, AI SaaS, big tech profits, and how individuals can monetize AI.",
-    type: "article",
+    type: "article",    url: 'https://unblockdevs.com/blog/how-ai-makes-money-who-getting-rich',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   alternates: {
     canonical: "https://unblockdevs.com/blog/how-ai-makes-money-who-getting-rich",

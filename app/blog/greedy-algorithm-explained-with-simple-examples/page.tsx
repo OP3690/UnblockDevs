@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Greedy Algorithm Explained with Simple Examples | Complete Guide 2026',
-  description: 'Learn what greedy algorithm is with simple examples. Complete beginner-friendly guide to greedy algorithms, when to use them, and step-by-step examples. Perfect for coding interviews.',
+  description: 'Greedy algorithm: simple examples, when to use, step-by-step. For coding interviews.',
   keywords: [
     'greedy algorithm',
     'greedy algorithm explained',
@@ -22,13 +22,16 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'Greedy Algorithm Explained with Simple Examples | Complete Guide 2026',
-    description: 'Learn what greedy algorithm is with simple examples. Complete beginner-friendly guide with visual diagrams and code examples.',
+    description: 'Greedy algorithm: examples, diagrams, code. For interviews.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/greedy-algorithm-explained-with-simple-examples',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Greedy Algorithm Explained with Simple Examples | Complete Guide 2026',
-    description: 'Learn what greedy algorithm is with simple examples. Complete beginner-friendly guide with visual diagrams and code examples.',
+    description: 'Greedy algorithm: examples, diagrams, code. For interviews.',
   },
 };
 

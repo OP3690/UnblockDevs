@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import TokensCompleteGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Tokens Complete Guide: What, How, Why & When to Use Tokens | UnblockDevs',
-  description: 'Complete guide to tokens: what are tokens, how they work, why they\'re used, and when to use them. Learn about JWT tokens, API keys, authentication tokens, and access tokens with examples.',
+  title: 'Tokens Guide: What, How, When to Use | UnblockDevs',
+  description: 'Tokens: what they are, how they work, when to use. JWT, API keys, auth tokens. With examples.',
   keywords: [
     'what are tokens',
     'how tokens work',
@@ -16,6 +16,8 @@ export const metadata: Metadata = {
     'when to use tokens',
     'why use tokens'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/tokens-complete-guide' },
+
 };
 
 export default function TokensCompleteGuide() {

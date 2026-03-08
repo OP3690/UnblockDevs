@@ -3,7 +3,7 @@ import AgenticAiCompleteGuideClient from './client';
 
 export const metadata: Metadata = {
   title: 'Agentic AI: Complete Guide to Autonomous AI Agents | UnblockDevs',
-  description: 'Comprehensive guide to Agentic AI: autonomous agents, multi-agent systems, real-world applications, and future of AI agents. Learn how AI agents work and their impact.',
+  description: 'Agentic AI: autonomous agents, multi-agent systems, real-world apps. How AI agents work and their impact.',
   keywords: [
     'agentic ai',
     'ai agents',
@@ -13,6 +13,8 @@ export const metadata: Metadata = {
     'intelligent agents',
     'ai agent architecture'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/agentic-ai-complete-guide' },
+
 };
 
 export default function AgenticAiCompleteGuide() {

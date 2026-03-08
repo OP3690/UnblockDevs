@@ -16,6 +16,7 @@ export const metadata: Metadata = {
     description: 'Disclaimer for UnblockDevs - Free developer tools.',
     type: 'website',
   },
+  alternates: { canonical: 'https://unblockdevs.com/disclaimer' },
 };
 
 export default function Disclaimer() {

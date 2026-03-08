@@ -3,7 +3,7 @@ import NotebooklmCheatSheetTipsClient from './client';
 
 export const metadata: Metadata = {
   title: 'NotebookLM Cheat Sheet: Tips, Tricks & Quick Reference | UnblockDevs',
-  description: 'Complete NotebookLM cheat sheet with tips, tricks, shortcuts, and best practices. Quick reference guide for power users of Google\'s AI notebook tool.',
+  description: 'NotebookLM cheat sheet: tips, shortcuts, best practices. Quick reference for power users.',
   keywords: [
     'notebooklm cheat sheet',
     'notebooklm tips',
@@ -13,6 +13,8 @@ export const metadata: Metadata = {
     'notebooklm best practices',
     'notebooklm guide'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/notebooklm-cheat-sheet-tips' },
+
 };
 
 export default function NotebooklmCheatSheetTips() {

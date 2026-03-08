@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import JsonStringifyOnlineClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Free JSON.stringify() Tool – Convert Objects to JSON Online | UnblockDevs',
-  description: 'Convert JavaScript objects to JSON strings instantly. Free online JSON.stringify() tool with pretty print and custom formatting. No signup, no login, works in your browser.',
+  title: 'JSON.stringify() Tool – Objects to JSON | UnblockDevs',
+  description: 'Convert JS objects to JSON strings. Free JSON.stringify() tool, pretty print. No signup, in-browser.',
   keywords: [
     'json stringify online',
     'json stringify',
@@ -18,6 +18,7 @@ export const metadata: Metadata = {
     'json stringify example',
     'json serialize online'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/json-stringify-online' },
 };
 
 export default function JsonStringifyOnline() {

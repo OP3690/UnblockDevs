@@ -19,7 +19,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Will AI Take Over the World? Movies vs Reality",
     description: "Hollywood myths vs real AI capabilities, what AI can't do, and expert opinions.",
-    type: "article",
+    type: "article",    url: 'https://unblockdevs.com/blog/will-ai-take-over-the-world-movies-vs-reality',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   alternates: {
     canonical: "https://unblockdevs.com/blog/will-ai-take-over-the-world-movies-vs-reality",

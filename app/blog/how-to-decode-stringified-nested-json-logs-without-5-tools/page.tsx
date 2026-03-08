@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'How to Decode Stringified Nested JSON Logs (Without Using 5 Different Tools) | UnblockDevs',
+  title: 'Decode Stringified JSON Logs – One Tool | UnblockDevs',
   description:
     'Decode stringified JSON logs in one place. Learn what nested stringified JSON is, when it happens, and how to unescape and parse it without juggling multiple tools.',
   keywords: [
@@ -33,7 +33,11 @@ export const metadata: Metadata = {
     type: 'article',
     publishedTime: '2025-03-02T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/how-to-decode-stringified-nested-json-logs-without-5-tools',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-decode-stringified-nested-json-logs-without-5-tools' },
+
 };
 
 export default function DecodeStringifiedNestedJsonLogsPage() {

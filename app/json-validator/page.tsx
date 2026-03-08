@@ -3,7 +3,7 @@ import JsonValidatorClient from './client';
 
 export const metadata: Metadata = {
   title: 'Free JSON Validator & Syntax Checker – Instant Results | UnblockDevs',
-  description: 'Validate JSON syntax and check for errors instantly. Free online JSON validator with detailed error messages. No signup, no login, 100% private. Works entirely in your browser.',
+  description: 'Validate JSON syntax instantly. Free JSON validator, detailed errors. No signup, 100% in-browser.',
   keywords: [
     'json validator',
     'json validator online',
@@ -14,6 +14,7 @@ export const metadata: Metadata = {
     'json validation tool',
     'validate json syntax'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/json-validator' },
 };
 
 export default function JsonValidator() {

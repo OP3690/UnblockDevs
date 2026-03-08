@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import NintendoSwitchGamecubeGamesClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Nintendo Switch Online GameCube Games: Complete Guide - What, When, How & Why | UnblockDevs',
-  description: 'Complete guide to Nintendo Switch Online GameCube games. Learn what GameCube games are available, when they were added, how to access them, and why they matter for retro gaming. Full list and instructions included.',
+  title: 'Switch Online GameCube Games Guide | UnblockDevs',
+  description: 'Nintendo Switch Online GameCube games: what\'s available, how to access. Full list. Retro gaming.',
   keywords: [
     'Nintendo Switch Online GameCube games',
     'GameCube games Switch',
@@ -22,12 +22,16 @@ export const metadata: Metadata = {
     'GameCube Switch Online'
   ],
   openGraph: {
-    title: 'Nintendo Switch Online GameCube Games: Complete Guide - What, When, How & Why',
-    description: 'Complete guide to Nintendo Switch Online GameCube games. Learn what games are available, when they were added, how to access them, and why they matter.',
+    title: 'Switch Online GameCube Games Guide',
+    description: 'Switch Online GameCube games: list, how to access.',
     type: 'article',
     publishedTime: '2024-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/nintendo-switch-online-gamecube-games',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/nintendo-switch-online-gamecube-games' },
+
 };
 
 export default function NintendoSwitchGamecubeGamesGuide() {

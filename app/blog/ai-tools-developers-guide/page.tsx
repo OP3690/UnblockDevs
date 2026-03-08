@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import AiToolsDevelopersGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'AI Tools for Developers: Complete Guide to Cursor, GitHub Copilot & More | UnblockDevs',
-  description: 'UnblockDevs AI Tools Guide: Complete guide to AI tools for developers: Cursor, GitHub Copilot, ChatGPT, and more. Learn how, what, when to use each tool, and best practices for maximum productivity.',
+  title: 'AI Tools for Developers: Cursor, Copilot & More | UnblockDevs',
+  description: 'AI tools for developers: Cursor, Copilot, ChatGPT. When to use each, best practices.',
   keywords: [
     'unblock devs ai',
     'unblockdevs ai',
@@ -15,6 +15,8 @@ export const metadata: Metadata = {
     'ai code editor',
     'best ai tools developers'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/ai-tools-developers-guide' },
+
 };
 
 export default function AiToolsDevelopersGuide() {

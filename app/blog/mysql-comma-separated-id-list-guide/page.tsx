@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import MysqlCommaSeparatedIdListGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Create Comma Separated ID List for MySQL IN Clause - Complete Guide | UnblockDevs',
-  description: 'UnblockDevs MySQL Guide: Learn how to create comma separated ID lists for MySQL IN clause. Convert multiple IDs, arrays, and values into MySQL-friendly format. Complete guide with examples, best practices, and free SQL formatter tool.',
+  title: 'MySQL Comma Separated ID List for IN Clause | UnblockDevs',
+  description: 'Create comma separated ID lists for MySQL IN clause. Convert IDs, arrays. Examples, free formatter.',
   keywords: [
     'unblock devs mysql',
     'unblockdevs mysql',
@@ -24,18 +24,22 @@ export const metadata: Metadata = {
     'comma separated values formatter'
   ],
   openGraph: {
-    title: 'How to Create Comma Separated ID List for MySQL IN Clause - Complete Guide',
+    title: 'MySQL Comma Separated ID List for IN Clause',
     description: 'Learn how to create comma separated ID lists for MySQL IN clause. Complete guide with examples and free SQL formatter tool.',
     type: 'article',
     publishedTime: '2025-01-31T00:00:00.000Z',
     authors: ['UnblockDevs'],
     tags: ['MySQL', 'SQL', 'Database', 'SQL Formatter'],
+    url: 'https://unblockdevs.com/blog/mysql-comma-separated-id-list-guide',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'How to Create Comma Separated ID List for MySQL IN Clause',
-    description: 'Complete guide to creating comma separated ID lists for MySQL IN clause with free SQL formatter tool.',
-  },
+    title: 'MySQL Comma Separated ID List for IN Clause',
+    description: 'Comma separated ID lists for MySQL IN. Free SQL formatter.',
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/mysql-comma-separated-id-list-guide' },
+
 };
 
 export default function MysqlCommaSeparatedIdListGuide() {

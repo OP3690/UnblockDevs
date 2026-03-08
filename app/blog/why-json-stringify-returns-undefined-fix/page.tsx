@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import WhyJsonStringifyReturnsUndefinedFixClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Why JSON.stringify() Returns Undefined (And How to Fix It) | Complete Guide 2026',
-  description: 'Learn why JSON.stringify() returns undefined and how to fix it. Includes common causes, solutions, and best practices for handling undefined values, circular references, and special values in JSON.stringify().',
+  title: 'Why JSON.stringify() Returns Undefined – Fix | UnblockDevs',
+  description: 'Why JSON.stringify() returns undefined and how to fix it. Undefined, circular refs, special values.',
   keywords: [
     'json.stringify returns undefined',
     'json.stringify undefined fix',
@@ -22,15 +22,19 @@ export const metadata: Metadata = {
     'json.stringify undefined filter'
   ],
   openGraph: {
-    title: 'Why JSON.stringify() Returns Undefined (And How to Fix It) | Complete Guide 2026',
-    description: 'Learn why JSON.stringify() returns undefined and how to fix it with common causes and solutions.',
+    title: 'Why JSON.stringify() Returns Undefined – Fix | UnblockDevs',
+    description: 'Why JSON.stringify() returns undefined and how to fix it.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/why-json-stringify-returns-undefined-fix',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Why JSON.stringify() Returns Undefined (And How to Fix It) | Complete Guide 2026',
-    description: 'Learn why JSON.stringify() returns undefined and how to fix it with common causes and solutions.',
-  },
+    title: 'Why JSON.stringify() Returns Undefined – Fix | UnblockDevs',
+    description: 'Why JSON.stringify() returns undefined and how to fix it.',
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/why-json-stringify-returns-undefined-fix' },
+
 };
 
 export default function WhyJsonStringifyReturnsUndefinedFixPage() {

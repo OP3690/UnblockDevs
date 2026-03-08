@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Common HTTP Status Codes Every Developer Should Understand (Complete Guide)',
-  description: 'Learn all HTTP status codes: 200, 201, 400, 401, 403, 404, 500, 502, 503. Understand what each code means, when to use them, and how to handle them in your applications. Complete reference guide.',
+  title: 'HTTP Status Codes Every Developer Should Know | UnblockDevs',
+  description: 'HTTP status codes: 200, 201, 400, 401, 403, 404, 500, 502, 503. What each means, when to use, how to handle.',
   keywords: [
     'http status codes',
     'http status code',
@@ -21,9 +21,12 @@ export const metadata: Metadata = {
     'developer guide http codes'
   ],
   openGraph: {
-    title: 'Common HTTP Status Codes Every Developer Should Understand (Complete Guide)',
+    title: 'HTTP Status Codes Every Developer Should Know | UnblockDevs',
     description: 'Learn all HTTP status codes: 200, 400, 404, 500. Understand what each code means and when to use them.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/common-http-status-codes-every-developer-should-understand',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/common-http-status-codes-every-developer-should-understand',

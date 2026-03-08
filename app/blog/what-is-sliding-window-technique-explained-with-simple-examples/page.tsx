@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'What Is Sliding Window Technique? Explained with Simple Examples | Complete Guide 2026',
-  description: 'Learn what the sliding window technique is with simple examples. Complete beginner-friendly guide to sliding window algorithm, fixed vs variable window, and O(n) solutions. Perfect for coding interviews.',
+  title: 'Sliding Window Technique Explained | UnblockDevs',
+  description: 'Sliding window technique: fixed vs variable window, O(n). Simple examples. For interviews.',
   keywords: [
     'sliding window technique',
     'sliding window algorithm',
@@ -21,14 +21,17 @@ export const metadata: Metadata = {
     'window sliding technique'
   ],
   openGraph: {
-    title: 'What Is Sliding Window Technique? Explained with Simple Examples | Complete Guide 2026',
-    description: 'Learn what the sliding window technique is with simple examples. Complete beginner-friendly guide with visual diagrams and code examples.',
+    title: 'Sliding Window Technique Explained | UnblockDevs',
+    description: 'Sliding window: examples, diagrams, code. For interviews.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/what-is-sliding-window-technique-explained-with-simple-examples',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'What Is Sliding Window Technique? Explained with Simple Examples | Complete Guide 2026',
-    description: 'Learn what the sliding window technique is with simple examples. Complete beginner-friendly guide with visual diagrams and code examples.',
+    title: 'Sliding Window Technique Explained | UnblockDevs',
+    description: 'Sliding window: examples, diagrams, code. For interviews.',
   },
 };
 

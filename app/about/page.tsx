@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import AboutClient from './client';
 
 export const metadata: Metadata = {
-  title: 'About UnblockDevs - Free Developer Tools | Privacy-Focused & No Signup Required',
-  description: 'Learn about UnblockDevs - free online developer tools for JSON, API testing, and code conversion. Privacy-focused, no signup required, all processing in your browser.',
+  title: 'About UnblockDevs – Free Dev Tools, No Signup | UnblockDevs',
+  description: 'Free developer tools for JSON, API testing, code conversion. Privacy-focused, no signup, in-browser.',
   keywords: [
     'about unblockdevs',
     'free developer tools',
@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     'json tools',
     'developer utilities'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/about' },
 };
 
 export default function About() {

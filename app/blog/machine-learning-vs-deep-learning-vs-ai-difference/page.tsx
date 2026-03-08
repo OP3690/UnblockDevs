@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: "Machine Learning vs Deep Learning vs AI: What's the Difference? | UnblockDevs",
+  title: "ML vs Deep Learning vs AI | UnblockDevs",
   description: "Understand the difference between AI, machine learning, and deep learning. Simple definitions, visual comparison table, when to use each, and real-world use cases. Complete guide with examples.",
   keywords: [
     "machine learning vs deep learning",
@@ -22,7 +22,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Machine Learning vs Deep Learning vs AI: What's the Difference?",
     description: "Simple definitions, comparison table, when to use each, and real-world use cases for AI, ML, and DL.",
-    type: "article",
+    type: "article",    url: 'https://unblockdevs.com/blog/machine-learning-vs-deep-learning-vs-ai-difference',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   alternates: {
     canonical: "https://unblockdevs.com/blog/machine-learning-vs-deep-learning-vs-ai-difference",

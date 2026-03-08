@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import HowToFixCorsPolicyErrorClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Fix "CORS Policy Error" in JavaScript (All Browsers): Complete Guide 2026 | UnblockDevs',
-  description: 'Complete guide to fixing CORS policy errors in JavaScript for all browsers. Learn CORS solutions, server-side fixes, proxy methods, and browser workarounds. Step-by-step troubleshooting guide with code examples in 2026.',
+  title: 'Fix CORS Policy Error in JavaScript 2026 | UnblockDevs',
+  description: 'Fix CORS policy errors in JavaScript. Server-side fixes, proxy, workarounds. Step-by-step with code.',
   keywords: [
     'cors policy error',
     'fix cors error javascript',
@@ -23,11 +23,15 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'How to Fix "CORS Policy Error" in JavaScript (All Browsers): Complete Guide 2026',
-    description: 'Complete guide to fixing CORS policy errors in JavaScript. Learn solutions for Chrome, Firefox, Safari, and Edge.',
+    description: 'Fix CORS policy errors in JavaScript. Solutions for Chrome, Firefox, Safari, Edge.',
     type: 'article',
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/how-to-fix-cors-policy-error-javascript',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-fix-cors-policy-error-javascript' },
+
 };
 
 export default function HowToFixCorsPolicyErrorGuide() {

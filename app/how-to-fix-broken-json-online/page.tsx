@@ -14,6 +14,7 @@ export const metadata: Metadata = {
     'json repair tool',
     'fix json syntax errors'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/how-to-fix-broken-json-online' },
 };
 
 export default function HowToFixBrokenJson() {

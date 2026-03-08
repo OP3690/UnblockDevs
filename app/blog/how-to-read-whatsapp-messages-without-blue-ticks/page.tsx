@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import HowToReadWhatsappMessagesWithoutBlueTicksClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Read WhatsApp Messages Without Blue Ticks: Complete Guide 2026 | UnblockDevs',
-  description: 'Complete guide to reading WhatsApp messages without showing blue ticks (read receipts). Learn how to read messages without the sender knowing. Step-by-step methods for Android, iPhone, and desktop in 2026.',
+  title: 'Read WhatsApp Without Blue Ticks 2026 | UnblockDevs',
+  description: 'Read WhatsApp without blue ticks (read receipts). Android, iPhone, desktop. 2026.',
   keywords: [
     'read whatsapp messages without blue ticks',
     'how to read whatsapp without blue ticks',
@@ -23,11 +23,15 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'How to Read WhatsApp Messages Without Blue Ticks: Complete Guide 2026',
-    description: 'Complete guide to reading WhatsApp messages without showing blue ticks. Learn methods to read messages privately.',
+    description: 'Read WhatsApp without blue ticks. Methods to read privately.',
     type: 'article',
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
-  },
+    url: 'https://unblockdevs.com/blog/how-to-read-whatsapp-messages-without-blue-ticks',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
+  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-read-whatsapp-messages-without-blue-ticks' },
+
 };
 
 export default function HowToReadWhatsappMessagesWithoutBlueTicksGuide() {

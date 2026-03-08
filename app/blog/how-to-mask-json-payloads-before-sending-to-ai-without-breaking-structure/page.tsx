@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Mask JSON Payloads Before Sending Data to AI (Without Breaking Structure) | UnblockDevs',
+  title: 'Mask JSON Payloads Before Sending to AI | UnblockDevs',
   description:
     'Learn how to mask JSON before ChatGPT: anonymize API payloads, hide sensitive JSON data, secure API logs. Preserve structure, keep numbers, restore exactly. Step-by-step with examples.',
   keywords: [
@@ -17,6 +17,8 @@ export const metadata: Metadata = {
     title: 'How to Mask JSON Payloads Before Sending Data to AI (Without Breaking Structure)',
     description: 'Anonymize API payloads and JSON for AI. Preserve structure and numbers; restore exactly. Client-side only.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/how-to-mask-json-payloads-before-sending-to-ai-without-breaking-structure',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/how-to-mask-json-payloads-before-sending-to-ai-without-breaking-structure',

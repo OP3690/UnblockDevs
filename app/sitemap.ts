@@ -173,12 +173,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changefreq: 'weekly' as const,
     },
     {
+      url: 'json-to-excel',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
       url: 'log-explorer',
       priority: 0.9,
       changefreq: 'weekly' as const,
     },
     {
       url: 'payload-analyzer',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'data-insights',
       priority: 0.9,
       changefreq: 'weekly' as const,
     },

@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Why Sorting Is Important and How Different Sorting Algorithms Work (Complete Guide)',
-  description: 'Learn why sorting is important in programming. Understand how different sorting algorithms work: Bubble Sort, Quick Sort, Merge Sort, Heap Sort with examples, time complexity, and when to use each. Perfect for coding interviews.',
+  title: 'Sorting Algorithms Explained | UnblockDevs',
+  description: 'Why sorting matters. How Bubble, Quick, Merge, Heap Sort work. Examples, time complexity, when to use each. For coding interviews.',
   keywords: [
     'sorting algorithms',
     'why sorting is important',
@@ -19,9 +19,12 @@ export const metadata: Metadata = {
     'sorting algorithms tutorial'
   ],
   openGraph: {
-    title: 'Why Sorting Is Important and How Different Sorting Algorithms Work (Complete Guide)',
+    title: 'Sorting Algorithms Explained | UnblockDevs',
     description: 'Learn why sorting is important and understand how different sorting algorithms work with examples and comparisons.',
     type: 'article',
+    url: 'https://unblockdevs.com/blog/why-sorting-is-important-and-how-different-sorting-algorithms-work',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/why-sorting-is-important-and-how-different-sorting-algorithms-work',

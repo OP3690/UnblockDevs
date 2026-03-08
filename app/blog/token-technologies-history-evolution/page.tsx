@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import TokenTechnologiesHistoryEvolutionClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Token Technologies: History & Evolution of Authentication Tokens | UnblockDevs',
-  description: 'Complete history and evolution of token technologies: from session cookies to JWT, OAuth, API keys, and modern token standards. Learn about different token technologies and their development over time.',
+  title: 'Token Technologies: History & Evolution | UnblockDevs',
+  description: 'Token technologies: from session cookies to JWT, OAuth, API keys. History and evolution of auth tokens.',
   keywords: [
     'token history',
     'token evolution',
@@ -16,6 +16,8 @@ export const metadata: Metadata = {
     'api key history',
     'token development'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/token-technologies-history-evolution' },
+
 };
 
 export default function TokenTechnologiesHistoryEvolution() {

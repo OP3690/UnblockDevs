@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import ApacheKafkaCheatSheetClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Apache Kafka Cheat Sheet: Commands, Configuration & Best Practices | UnblockDevs',
-  description: 'Complete Apache Kafka cheat sheet: CLI commands, configuration, producer/consumer examples, troubleshooting, and best practices. Quick reference for Kafka developers.',
+  title: 'Apache Kafka Cheat Sheet | UnblockDevs',
+  description: 'Apache Kafka cheat sheet: CLI commands, config, producer/consumer examples, troubleshooting. Quick reference.',
   keywords: [
     'kafka cheat sheet',
     'kafka commands',
@@ -13,6 +13,8 @@ export const metadata: Metadata = {
     'kafka tutorial',
     'kafka best practices'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/apache-kafka-cheat-sheet' },
+
 };
 
 export default function ApacheKafkaCheatSheet() {

@@ -3,7 +3,7 @@ import SqlFormatterClient from './client';
 
 export const metadata: Metadata = {
   title: 'Format Messy SQL Query – Clean SQL Queries Instantly | UnblockDevs',
-  description: 'Format messy SQL query instantly. Clean SQL queries with proper indentation and syntax highlighting. Free online SQL formatter for MySQL, PostgreSQL, Oracle. Paste → instant fix. No signup.',
+  description: 'Format messy SQL instantly. Indentation, syntax highlighting. MySQL, PostgreSQL, Oracle. No signup.',
   keywords: [
     'format messy sql query',
     'clean sql queries instantly',
@@ -21,6 +21,8 @@ export const metadata: Metadata = {
     title: 'Format Messy SQL Query – Clean SQL Queries Instantly | UnblockDevs',
     description: 'Format messy SQL query and clean SQL queries instantly. Free online SQL formatter for MySQL, PostgreSQL, Oracle.',
     type: 'website',
+    url: 'https://unblockdevs.com/sql-formatter',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
   alternates: {
     canonical: 'https://unblockdevs.com/sql-formatter',

@@ -5,9 +5,8 @@ import JsonPromptShieldClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/json-prompt-shield';
 
 export const metadata: Metadata = {
-  title: 'Secure AI JSON Prompt Shield – Mask Keys & Values, 100% Client-Side | UnblockDevs',
-  description:
-    'High-performance JSON payload masking: mask keys (K_00001), string values (S_00001), keep numbers unchanged. Preserves structure, supports MBs, fully reversible. 100% data security, client-side only.',
+  title: 'JSON Prompt Shield – Mask for AI, Client-Side | UnblockDevs',
+  description: 'Mask JSON keys and string values for AI. Numbers unchanged, structure preserved, fully reversible. 100% client-side.',
   keywords: [
     'JSON masker',
     'AI JSON shield',
@@ -19,10 +18,11 @@ export const metadata: Metadata = {
     'privacy preserving JSON',
   ],
   openGraph: {
-    title: 'Secure AI JSON Prompt Shield – Mask Keys & Values, 100% Client-Side',
+    title: 'JSON Prompt Shield | UnblockDevs',
     description: 'Mask JSON keys and string values for AI prompts. Numbers unchanged. Fully reversible. No data leaves your browser.',
     type: 'website',
     url: canonicalUrl,
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
   alternates: { canonical: canonicalUrl },
 };

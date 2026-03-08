@@ -21,6 +21,7 @@ export const metadata: Metadata = {
     description: 'Learn how to fix "Unexpected end of JSON input" error instantly with examples and free tools.',
     type: 'article',
   },
+  alternates: { canonical: 'https://unblockdevs.com/fix-unexpected-end-of-json-input' },
 };
 
 export default function FixUnexpectedEndOfJsonInput() {

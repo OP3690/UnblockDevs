@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import JsonFixerOnlineClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Fix Invalid JSON Online – Remove Trailing Comma, Repair AI JSON | UnblockDevs',
-  description: 'Paste → Instant fix. Fix invalid JSON: remove trailing comma JSON, fix missing quotes, broken arrays, and AI-generated JSON. Resolve trailing commas, fix API responses. 100% client-side.',
+  title: 'Fix Invalid JSON Online – Trailing Comma, AI JSON | UnblockDevs',
+  description: 'Paste → instant fix. Remove trailing commas, fix quotes, broken arrays, AI JSON. 100% client-side.',
   keywords: [
     'fix invalid json',
     'remove trailing comma json',
@@ -18,6 +18,7 @@ export const metadata: Metadata = {
     'fix ai generated json',
     'broken json fixer',
   ],
+  alternates: { canonical: 'https://unblockdevs.com/json-fixer-online' },
 };
 
 export default function JsonFixerOnline() {

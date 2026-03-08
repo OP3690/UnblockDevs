@@ -3,7 +3,7 @@ import DomainSpecificLanguageModelsClient from './client';
 
 export const metadata: Metadata = {
   title: 'Domain-Specific Language Models: Complete Guide 2026 | UnblockDevs',
-  description: 'Complete guide to domain-specific language models: definition, what they are, when to use them, how they work, and why they matter. Learn about specialized LLMs, fine-tuning, domain adaptation, and industry-specific AI models.',
+  description: 'Domain-specific LLMs: what they are, when to use, fine-tuning, domain adaptation. Industry AI.',
   keywords: [
     'domain-specific language models',
     'domain-specific llm',
@@ -26,6 +26,8 @@ export const metadata: Metadata = {
     'industry ai models',
     'domain-specific model training'
   ],
+  alternates: { canonical: 'https://unblockdevs.com/blog/domain-specific-language-models-complete-guide' },
+
 };
 
 export default function DomainSpecificLanguageModels() {

@@ -612,6 +612,7 @@ function HomeClient() {
 
           {/* Tool tabs — compact grid, trust banner */}
           <div className="border-t border-gray-200 bg-gradient-to-b from-gray-50/90 to-gray-50/70 px-4 sm:px-6 lg:px-8 py-4">
+            <h1 className="text-xl font-bold text-gray-900 mb-0 mt-0">Use AI Safely — JSON Masking &amp; Log Unpacker</h1>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3">
               <p className="text-xs font-bold text-gray-600 uppercase tracking-widest sm:shrink-0">Developer&apos;s Daily Tools</p>
               <div className="flex justify-center sm:flex-1">
@@ -766,7 +767,7 @@ function HomeClient() {
             <div className="max-w-4xl mx-auto space-y-8 sm:space-y-10">
               {/* Hero: title + input */}
               <header className="pt-2 sm:pt-4">
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2" style={{ letterSpacing: '-0.02em' }}>Use AI Safely — Schema Masking, JSON Masking & Log Unpacker</h1>
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2" style={{ letterSpacing: '-0.02em' }}>Use AI Safely — Schema Masking, JSON Masking &amp; Log Unpacker</h2>
                 <p className="text-gray-600 text-sm sm:text-base mb-6 max-w-2xl leading-relaxed">Mask JSON and SQL before sending to AI. Fix stringified JSON, unpack logs, decode JWTs. Format, parse, validate — 100% in-browser, no signup.</p>
                 <div id="json-input-section" className="scroll-mt-6">
                   <JsonInput onJsonSubmit={handleJsonSubmit} />
@@ -913,6 +914,7 @@ function HomeClient() {
                   <li><Link href="/json-beautifier" className="text-blue-600 hover:underline">JSON beautifier</Link></li>
                   <li><Link href="/json-schema-generation" className="text-blue-600 hover:underline">JSON schema generator</Link></li>
                   <li><Link href="/json-comparator" className="text-blue-600 hover:underline">JSON comparator</Link></li>
+                  <li><Link href="/sql-in-generator" className="text-blue-600 hover:underline">SQL IN generator</Link></li>
                   </ul>
                 </nav>
               </div>
@@ -1288,24 +1290,102 @@ function HomeClient() {
               </div>
             </div>
             
-            {/* Popular Blog Posts Section - Internal Links for SEO */}
+            {/* Popular Blog Posts Section - Internal Links for SEO (more links = more dofollow inlinks per post) */}
             <div className="mt-8 pt-8 border-t border-gray-200">
               <h3 className="text-sm font-semibold text-gray-900 mb-4 text-center">Popular Developer Guides</h3>
               <div className="flex flex-wrap justify-center gap-3 text-xs">
-                <Link href="/blog/chatgpt-real-life-usage-guide" className="text-blue-600 hover:text-blue-700 hover:underline">ChatGPT Usage Guide</Link>
+                <Link href="/blog/chatgpt-real-life-usage-guide" className="text-blue-600 hover:text-blue-700 hover:underline">ChatGPT Usage</Link>
                 <Link href="/blog/ai-prompt-engineering-guide" className="text-blue-600 hover:text-blue-700 hover:underline">AI Prompt Engineering</Link>
-                <Link href="/blog/blockchain-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Blockchain Guide</Link>
+                <Link href="/blog/blockchain-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Blockchain</Link>
                 <Link href="/blog/mysql-10-most-used-functions" className="text-blue-600 hover:text-blue-700 hover:underline">MySQL Functions</Link>
                 <Link href="/blog/token-security-privacy-best-practices" className="text-blue-600 hover:text-blue-700 hover:underline">Token Security</Link>
-                <Link href="/blog/5g-6g-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">5G & 6G Guide</Link>
+                <Link href="/blog/5g-6g-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">5G & 6G</Link>
                 <Link href="/blog/tokens-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Tokens Guide</Link>
                 <Link href="/blog/token-technologies-history-evolution" className="text-blue-600 hover:text-blue-700 hover:underline">Token History</Link>
                 <Link href="/blog/agentic-ai-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Agentic AI</Link>
                 <Link href="/blog/apache-kafka-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Apache Kafka</Link>
                 <Link href="/blog/confidential-computing-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Confidential Computing</Link>
-                <Link href="/blog/cursor-ai-code-editor-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Cursor AI Editor</Link>
+                <Link href="/blog/cursor-ai-code-editor-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Cursor AI</Link>
+                <Link href="/blog/ai-productivity-tools-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">AI Productivity</Link>
                 <Link href="/blog/digital-twins-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Digital Twins</Link>
                 <Link href="/blog/apache-kafka-cheat-sheet" className="text-blue-600 hover:text-blue-700 hover:underline">Kafka Cheat Sheet</Link>
+                <Link href="/blog/why-my-api-returns-200-ok-but-data-is-empty" className="text-blue-600 hover:text-blue-700 hover:underline">API Returns 200 but Empty</Link>
+                <Link href="/blog/how-to-change-whatsapp-privacy-settings-maximum-security" className="text-blue-600 hover:text-blue-700 hover:underline">WhatsApp Privacy</Link>
+                <Link href="/blog/json-format-standards-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">JSON Format Standards</Link>
+                <Link href="/blog/fix-python-keyerror-explained-examples" className="text-blue-600 hover:text-blue-700 hover:underline">Python KeyError</Link>
+                <Link href="/blog/digital-provenance-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Digital Provenance</Link>
+                <Link href="/blog/notebooklm-cheat-sheet-tips" className="text-blue-600 hover:text-blue-700 hover:underline">NotebookLM Cheat Sheet</Link>
+                <Link href="/blog/how-to-know-if-someone-blocked-you-on-instagram" className="text-blue-600 hover:text-blue-700 hover:underline">Instagram Blocked</Link>
+                <Link href="/blog/ces-2026-fire-tv-stick-4k-max-project-ava" className="text-blue-600 hover:text-blue-700 hover:underline">Fire TV Stick 4K Max</Link>
+                <Link href="/blog/prefix-sum-technique-explained-simply" className="text-blue-600 hover:text-blue-700 hover:underline">Prefix Sum</Link>
+                <Link href="/blog/how-to-fix-broken-json-without-understanding" className="text-blue-600 hover:text-blue-700 hover:underline">Fix Broken JSON</Link>
+                <Link href="/blog/ai-native-platforms-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">AI-Native Platforms</Link>
+                <Link href="/blog/high-impact-tech-stocks-investment-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Tech Stocks</Link>
+                <Link href="/blog/must-learn-tech-skills-2030" className="text-blue-600 hover:text-blue-700 hover:underline">Tech Skills 2030</Link>
+                <Link href="/blog/instagram-password-reset-email-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Instagram Password Reset</Link>
+                <Link href="/blog/how-to-change-instagram-phone-number-email-2026" className="text-blue-600 hover:text-blue-700 hover:underline">Instagram Phone/Email</Link>
+                <Link href="/blog/top-10-json-errors-waste-developer-time" className="text-blue-600 hover:text-blue-700 hover:underline">Top 10 JSON Errors</Link>
+                <Link href="/blog/what-is-hashmap-hashtable-explained-simply-with-examples" className="text-blue-600 hover:text-blue-700 hover:underline">HashMap/HashTable</Link>
+                <Link href="/blog/invalid-json-vs-valid-json-examples" className="text-blue-600 hover:text-blue-700 hover:underline">Invalid vs Valid JSON</Link>
+                <Link href="/blog/how-to-read-error-messages-properly-as-beginner-programmer" className="text-blue-600 hover:text-blue-700 hover:underline">Read Error Messages</Link>
+                <Link href="/blog/how-to-change-phone-number-telegram-without-notifying" className="text-blue-600 hover:text-blue-700 hover:underline">Telegram Phone Change</Link>
+                <Link href="/blog/what-is-linked-list-singly-vs-doubly-explained-simply" className="text-blue-600 hover:text-blue-700 hover:underline">Linked List</Link>
+                <Link href="/blog/how-to-hide-online-status-on-whatsapp" className="text-blue-600 hover:text-blue-700 hover:underline">WhatsApp Hide Status</Link>
+                <Link href="/blog/fix-error-listen-eaddrinuse-nodejs-port-already-in-use" className="text-blue-600 hover:text-blue-700 hover:underline">EADDRINUSE Node.js</Link>
+                <Link href="/blog/how-to-parse-nested-json-java" className="text-blue-600 hover:text-blue-700 hover:underline">Parse Nested JSON Java</Link>
+                <Link href="/blog/css-explained-guide" className="text-blue-600 hover:text-blue-700 hover:underline">CSS Explained</Link>
+                <Link href="/blog/how-to-fix-cors-policy-error-javascript" className="text-blue-600 hover:text-blue-700 hover:underline">CORS Policy Error</Link>
+                <Link href="/blog/binary-search-explained-like-youre-5-with-code-example" className="text-blue-600 hover:text-blue-700 hover:underline">Binary Search</Link>
+                <Link href="/blog/json-stringify-vs-json-parse-difference" className="text-blue-600 hover:text-blue-700 hover:underline">stringify vs parse</Link>
+                <Link href="/blog/notebooklm-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">NotebookLM Guide</Link>
+                <Link href="/blog/how-to-cancel-amazon-prime-membership-instantly" className="text-blue-600 hover:text-blue-700 hover:underline">Cancel Amazon Prime</Link>
+                <Link href="/blog/json-api-design-patterns" className="text-blue-600 hover:text-blue-700 hover:underline">JSON API Design</Link>
+                <Link href="/blog/how-to-see-deleted-instagram-messages-without-third-party-apps" className="text-blue-600 hover:text-blue-700 hover:underline">See Deleted Instagram</Link>
+                <Link href="/blog/json-best-practices-production-guide" className="text-blue-600 hover:text-blue-700 hover:underline">JSON Best Practices</Link>
+                <Link href="/blog/how-to-fix-nullpointerexception-java-beginner-friendly" className="text-blue-600 hover:text-blue-700 hover:underline">NullPointerException Java</Link>
+                <Link href="/blog/fix-cannot-read-properties-of-undefined-reading-length-javascript" className="text-blue-600 hover:text-blue-700 hover:underline">Undefined length JS</Link>
+                <Link href="/blog/how-to-see-instagram-story-without-being-seen" className="text-blue-600 hover:text-blue-700 hover:underline">Instagram Story Unseen</Link>
+                <Link href="/blog/physical-ai-systems-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Physical AI Systems</Link>
+                <Link href="/blog/physical-ai-autonomous-vehicles-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Physical AI Vehicles</Link>
+                <Link href="/blog/physical-ai-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Physical AI</Link>
+                <Link href="/blog/nintendo-switch-online-gamecube-games" className="text-blue-600 hover:text-blue-700 hover:underline">Switch GameCube</Link>
+                <Link href="/blog/what-is-two-pointer-technique-explained-for-beginners" className="text-blue-600 hover:text-blue-700 hover:underline">Two Pointer</Link>
+                <Link href="/blog/curl-vs-python-requests-comparison" className="text-blue-600 hover:text-blue-700 hover:underline">cURL vs Requests</Link>
+                <Link href="/blog/best-free-developer-tools-2026" className="text-blue-600 hover:text-blue-700 hover:underline">Free Dev Tools 2026</Link>
+                <Link href="/blog/what-is-sliding-window-technique-explained-with-simple-examples" className="text-blue-600 hover:text-blue-700 hover:underline">Sliding Window</Link>
+                <Link href="/blog/stringified-json-hell-unescape-decode-jwt-epoch-sanitize-logs" className="text-blue-600 hover:text-blue-700 hover:underline">Stringified JSON Logs</Link>
+                <Link href="/blog/how-to-decode-stringified-nested-json-logs-without-5-tools" className="text-blue-600 hover:text-blue-700 hover:underline">Decode Stringified JSON</Link>
+                <Link href="/blog/ultimate-guide-fixing-escaped-json-jwt-epoch-stack-traces-logs" className="text-blue-600 hover:text-blue-700 hover:underline">Escaped JSON JWTs</Link>
+                <Link href="/blog/greedy-algorithm-explained-with-simple-examples" className="text-blue-600 hover:text-blue-700 hover:underline">Greedy Algorithm</Link>
+                <Link href="/blog/how-to-change-email-address-google-account-safely" className="text-blue-600 hover:text-blue-700 hover:underline">Change Google Email</Link>
+                <Link href="/blog/complete-guide-json-viewer-parser-beautifier" className="text-blue-600 hover:text-blue-700 hover:underline">JSON Viewer Guide</Link>
+                <Link href="/blog/how-to-cancel-spotify-premium-and-get-refund" className="text-blue-600 hover:text-blue-700 hover:underline">Cancel Spotify</Link>
+                <Link href="/blog/what-is-stack-vs-queue-explained-with-real-life-examples" className="text-blue-600 hover:text-blue-700 hover:underline">Stack vs Queue</Link>
+                <Link href="/blog/why-async-await-is-not-working-javascript-common-mistakes" className="text-blue-600 hover:text-blue-700 hover:underline">async/await Not Working</Link>
+                <Link href="/blog/merge-sort-explained-step-by-step-why-preferred-in-interviews" className="text-blue-600 hover:text-blue-700 hover:underline">Merge Sort</Link>
+                <Link href="/blog/advanced-html5-apis-guide" className="text-blue-600 hover:text-blue-700 hover:underline">HTML5 APIs</Link>
+                <Link href="/blog/ai-supercomputing-platforms-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">AI Supercomputing</Link>
+                <Link href="/blog/domain-specific-language-models-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Domain Language Models</Link>
+                <Link href="/blog/mysql-comma-separated-id-list-guide" className="text-blue-600 hover:text-blue-700 hover:underline">MySQL IN List</Link>
+                <Link href="/blog/fix-hydration-failed-error-nextjs-server-vs-client-mismatch" className="text-blue-600 hover:text-blue-700 hover:underline">Hydration Failed Next.js</Link>
+                <Link href="/blog/what-is-time-complexity-explained-with-simple-examples" className="text-blue-600 hover:text-blue-700 hover:underline">Time Complexity</Link>
+                <Link href="/blog/how-to-read-whatsapp-messages-without-blue-ticks" className="text-blue-600 hover:text-blue-700 hover:underline">WhatsApp No Blue Ticks</Link>
+                <Link href="/blog/xbox-game-pass-games-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Xbox Game Pass</Link>
+                <Link href="/blog/how-to-fix-module-not-found-error-nodejs" className="text-blue-600 hover:text-blue-700 hover:underline">Module Not Found Node</Link>
+                <Link href="/blog/what-is-bfs-vs-dfs-differences-explained-with-examples" className="text-blue-600 hover:text-blue-700 hover:underline">BFS vs DFS</Link>
+                <Link href="/blog/fix-maximum-call-stack-size-exceeded-javascript" className="text-blue-600 hover:text-blue-700 hover:underline">Stack Size Exceeded</Link>
+                <Link href="/blog/fix-cannot-read-property-map-of-undefined-javascript" className="text-blue-600 hover:text-blue-700 hover:underline">map of Undefined</Link>
+                <Link href="/blog/how-to-change-whatsapp-number-without-losing-chats" className="text-blue-600 hover:text-blue-700 hover:underline">WhatsApp Number Change</Link>
+                <Link href="/blog/html-interview-questions" className="text-blue-600 hover:text-blue-700 hover:underline">HTML Interview</Link>
+                <Link href="/blog/how-to-cancel-netflix-subscription-without-losing-watch-history" className="text-blue-600 hover:text-blue-700 hover:underline">Cancel Netflix</Link>
+                <Link href="/blog/seo-optimized-html-markup" className="text-blue-600 hover:text-blue-700 hover:underline">SEO HTML Markup</Link>
+                <Link href="/blog/fix-access-control-allow-origin-missing-header-error" className="text-blue-600 hover:text-blue-700 hover:underline">CORS Missing Header</Link>
+                <Link href="/blog/fix-unexpected-token-less-than-in-json-api-returns-html" className="text-blue-600 hover:text-blue-700 hover:underline">Unexpected token &lt; JSON</Link>
+                <Link href="/blog/what-is-recursion-explained-with-simple-real-life-examples" className="text-blue-600 hover:text-blue-700 hover:underline">Recursion</Link>
+                <Link href="/blog/fix-uncaught-in-promise-error-javascript-explained" className="text-blue-600 hover:text-blue-700 hover:underline">Uncaught in Promise</Link>
+                <Link href="/blog/how-to-change-apple-id-phone-number-without-losing-data" className="text-blue-600 hover:text-blue-700 hover:underline">Apple ID Phone</Link>
+                <Link href="/blog/how-to-get-curl-from-chrome" className="text-blue-600 hover:text-blue-700 hover:underline">cURL from Chrome</Link>
+                <Link href="/blog/most-useful-tech-skills-2026" className="text-blue-600 hover:text-blue-700 hover:underline">Tech Skills 2026</Link>
               </div>
             </div>
             
