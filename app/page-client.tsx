@@ -118,6 +118,7 @@ function HomeClient() {
   const [activeUsers, setActiveUsers] = useState<number>(400);
   const [mounted, setMounted] = useState<boolean>(false);
   const [showBookmarkPrompt, setShowBookmarkPrompt] = useState<boolean>(false);
+  const [reserveBannerSpace, setReserveBannerSpace] = useState<boolean>(true);
   const [samplePanelOpen, setSamplePanelOpen] = useState<boolean>(true);
   const { devMode, setDevMode } = useDevMode();
 
@@ -157,11 +158,15 @@ function HomeClient() {
     }, 50);
   }, []);
 
-  // Handle tab change with message - memoized to prevent unnecessary re-renders
+  // Handle tab change with message - memoized; toast deferred to improve INP
   const handleTabChange = useCallback((tab: ToolTab) => {
     if (tab !== activeTab) {
       setActiveTab(tab);
-      showBuyMeACoffeeMessage();
+      if (typeof requestIdleCallback !== 'undefined') {
+        requestIdleCallback(() => showBuyMeACoffeeMessage(), { timeout: 100 });
+      } else {
+        setTimeout(showBuyMeACoffeeMessage, 0);
+      }
     } else {
       setActiveTab(tab);
     }
@@ -191,7 +196,8 @@ function HomeClient() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     const dismissed = localStorage.getItem('bookmarkPromptDismissed');
-    if (!dismissed) {
+    if (dismissed) setReserveBannerSpace(false);
+    else {
       const timer = setTimeout(() => setShowBookmarkPrompt(true), 10000);
       return () => clearTimeout(timer);
     }
@@ -199,6 +205,7 @@ function HomeClient() {
 
   const handleDismissBookmarkPrompt = () => {
     setShowBookmarkPrompt(false);
+    setReserveBannerSpace(false);
     localStorage.setItem('bookmarkPromptDismissed', 'true');
   };
 
@@ -495,43 +502,45 @@ function HomeClient() {
       >
         Skip to main content
       </a>
-      {/* Bookmark Prompt Banner */}
+      {/* Bookmark Prompt Banner - slot reserved from start to avoid CLS when banner appears */}
+      <div className={reserveBannerSpace ? 'min-h-[73px]' : 'min-h-0 overflow-hidden'}>
       {showBookmarkPrompt && (
         <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-md border-b border-blue-500/30 animate-slide-down">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
-            <div className="flex items-center justify-between gap-4 sm:gap-6">
-              <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
-                <div className="p-2.5 bg-white/20 rounded-xl backdrop-blur-sm flex-shrink-0">
-                  <Bookmark className="w-5 h-5 sm:w-6 sm:h-6" />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-5">
+            <div className="flex items-center justify-between gap-3 sm:gap-6">
+              <div className="flex items-center gap-2.5 sm:gap-4 flex-1 min-w-0">
+                <div className="p-2 sm:p-2.5 bg-white/20 rounded-xl backdrop-blur-sm flex-shrink-0">
+                  <Bookmark className="w-5 h-5 sm:w-6 sm:h-6" aria-hidden />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-sm sm:text-base leading-tight">
-                    📌 Bookmark this page for quick access to all developer tools!
+                  <p className="font-semibold text-xs sm:text-base leading-tight">
+                    📌 Bookmark for quick access to all tools
                   </p>
-                  <p className="text-xs sm:text-sm text-blue-100 mt-1.5 leading-relaxed">
-                    Press <kbd className="px-2 py-1 bg-white/20 rounded-md text-xs font-mono font-semibold">Ctrl+D</kbd> (Windows/Linux) or <kbd className="px-2 py-1 bg-white/20 rounded-md text-xs font-mono font-semibold">Cmd+D</kbd> (Mac) to bookmark
+                  <p className="text-[11px] sm:text-sm text-blue-100 mt-1 sm:mt-1.5 leading-relaxed hidden sm:block">
+                    <kbd className="px-1.5 py-0.5 bg-white/20 rounded text-[10px] sm:text-xs font-mono font-semibold">Ctrl+D</kbd> / <kbd className="px-1.5 py-0.5 bg-white/20 rounded text-[10px] sm:text-xs font-mono font-semibold">Cmd+D</kbd>
                   </p>
                 </div>
               </div>
               <button
                 onClick={handleDismissBookmarkPrompt}
-                className="cta-icon-close p-2 hover:bg-white/20 rounded-lg transition-all duration-200 hover:scale-110 flex-shrink-0"
+                className="cta-icon-close min-w-[44px] min-h-[44px] flex items-center justify-center p-2 hover:bg-white/20 rounded-lg transition-all duration-200 active:scale-95 flex-shrink-0 touch-manipulation"
                 aria-label="Dismiss bookmark prompt"
               >
-                <X className="w-5 h-5" />
+                <X className="w-5 h-5" aria-hidden />
               </button>
             </div>
           </div>
         </div>
       )}
+      </div>
 
       {/* Header - Professional layout, desktop-optimized, trust-first */}
-      <header className={`bg-white/98 backdrop-blur-md border-b border-gray-200 ${showBookmarkPrompt ? 'sticky top-[73px]' : 'sticky top-0'} z-40 shadow-[0_1px_0_0_rgba(0,0,0,0.05),0_2px_8px_-2px_rgba(0,0,0,0.06)]`}>
+      <header className={`bg-white/98 backdrop-blur-md border-b border-gray-200 ${reserveBannerSpace ? 'sticky top-[73px]' : 'sticky top-0'} z-40 shadow-[0_1px_0_0_rgba(0,0,0,0.05),0_2px_8px_-2px_rgba(0,0,0,0.06)]`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Top bar: logo left, nav right */}
-          <div className="flex items-center justify-between gap-4 py-3 sm:py-4 lg:py-4">
-            <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0 group min-w-0">
-              <Link href="/" className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-primary-700 text-white shadow-lg shadow-primary-900/20 hover:shadow-xl hover:shadow-primary-900/25 transition-all duration-200 ring-2 ring-primary-500/10" aria-label="UnblockDevs home">
+          {/* Top bar: logo left, nav right — touch targets min 44px on mobile */}
+          <div className="flex items-center justify-between gap-2 sm:gap-4 py-2.5 sm:py-4 lg:py-4">
+            <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0 group min-w-0">
+              <Link href="/" className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-primary-700 text-white shadow-lg shadow-primary-900/20 hover:shadow-xl hover:shadow-primary-900/25 transition-all duration-200 ring-2 ring-primary-500/10 active:scale-95 touch-manipulation" aria-label="UnblockDevs home">
                 <Wrench className="h-5 w-5" aria-hidden />
               </Link>
               <div className="flex flex-col gap-1 min-w-0 justify-center py-0.5">
@@ -541,12 +550,12 @@ function HomeClient() {
                     <span className="text-lg sm:text-xl font-bold tracking-tight text-gray-900 group-hover:text-primary-700 transition-colors leading-tight" style={{ letterSpacing: '-0.02em' }}>UnblockDevs</span>
                   </Link>
                   <span className="text-gray-300 font-medium shrink-0 hidden sm:inline" aria-hidden>|</span>
-                  <div className="flex items-center gap-2 flex-shrink-0 dev-mode-toggle-container px-2.5 py-1.5 rounded-lg bg-gray-100/90 border border-gray-200">
-                    <span className="text-[11px] font-medium text-gray-500 whitespace-nowrap">Mode</span>
+                  <div className="flex items-center gap-2 flex-shrink-0 dev-mode-toggle-container px-2 py-1.5 sm:px-2.5 rounded-lg bg-gray-100/90 border border-gray-200">
+                    <span className="text-[10px] sm:text-[11px] font-medium text-gray-500 whitespace-nowrap">Mode</span>
                     <button
                       type="button"
                       onClick={() => setDevMode(!devMode)}
-                      className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-1 focus:ring-offset-gray-100 ${devMode ? 'dark-mode-on' : ''} ${
+                      className={`relative inline-flex h-6 w-10 sm:h-5 sm:w-9 flex-shrink-0 cursor-pointer rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-1 touch-manipulation ${devMode ? 'dark-mode-on' : ''} ${
                         devMode
                           ? 'bg-slate-600 hover:bg-slate-700'
                           : 'bg-gray-300 hover:bg-gray-400'
@@ -568,11 +577,11 @@ function HomeClient() {
                   <div className="hidden md:flex items-center gap-2 flex-shrink-0">
                     <span className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg bg-blue-50/80 border border-blue-100">
                       <span className="text-gray-600 font-medium">Active Users:</span>
-                      <span className="font-bold text-blue-600 tabular-nums">{activeUsers}</span>
+                      <span className="font-bold text-blue-600 tabular-nums min-w-[2.5rem] inline-block text-right">{activeUsers}</span>
                     </span>
                     <span className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg bg-purple-50/80 border border-purple-100">
                       <span className="text-gray-600 font-medium">Total Visits:</span>
-                      <span className="font-bold text-purple-600 tabular-nums">{totalVisits.toLocaleString()}</span>
+                      <span className="font-bold text-purple-600 tabular-nums min-w-[4rem] inline-block text-right">{totalVisits.toLocaleString()}</span>
                     </span>
                     <span className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg bg-gray-50 border border-gray-100" title="USA, UK, Philippines">
                       <span className="text-gray-600 font-medium">Top 3:</span>
@@ -601,33 +610,33 @@ function HomeClient() {
               </div>
             </div>
             <div id="ezoic-pub-ad-placeholder-100" className="hidden lg:block flex-1 min-w-0" />
-            <nav className="flex items-center justify-end gap-2 sm:gap-3 flex-shrink-0" aria-label="Main navigation">
-              <Link href="/blog" className="px-4 py-2.5 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-xl shadow-lg shadow-primary-900/20 hover:shadow-xl hover:shadow-primary-900/25 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2" aria-label="Developer's Study Materials">
+            <nav className="flex items-center justify-end gap-1.5 sm:gap-3 flex-shrink-0" aria-label="Main navigation">
+              <Link href="/blog" className="min-h-[44px] min-w-[44px] sm:min-w-0 flex items-center justify-center px-3 sm:px-4 py-2.5 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-xl shadow-lg shadow-primary-900/20 hover:shadow-xl hover:shadow-primary-900/25 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 active:scale-95 touch-manipulation" aria-label="Developer's Study Materials">
                 <FileText className="h-4 w-4 sm:hidden" aria-hidden />
                 <span className="hidden sm:inline">Developer&apos;s Study Materials 📚</span>
               </Link>
-              <Link href="/about" className="px-4 py-2.5 text-sm font-medium text-gray-600 hover:text-primary-700 hover:bg-primary-50 rounded-xl border border-gray-200 hover:border-primary-200 transition-all duration-200">About</Link>
+              <Link href="/about" className="min-h-[44px] flex items-center px-3 sm:px-4 py-2.5 text-sm font-medium text-gray-600 hover:text-primary-700 hover:bg-primary-50 rounded-xl border border-gray-200 hover:border-primary-200 transition-all duration-200 active:scale-95 touch-manipulation">About</Link>
             </nav>
           </div>
 
-          {/* Tool tabs — compact grid, trust banner */}
-          <div className="border-t border-gray-200 bg-gradient-to-b from-gray-50/90 to-gray-50/70 px-4 sm:px-6 lg:px-8 py-4">
-            <h1 className="text-xl font-bold text-gray-900 mb-0 mt-0">Use AI Safely — JSON Masking &amp; Log Unpacker</h1>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3">
-              <p className="text-xs font-bold text-gray-600 uppercase tracking-widest sm:shrink-0">Developer&apos;s Daily Tools</p>
+          {/* Tool tabs — compact grid, trust banner; mobile-first for AdSense viewability */}
+          <div className="border-t border-gray-200 bg-gradient-to-b from-gray-50/90 to-gray-50/70 px-3 sm:px-6 lg:px-8 py-3 sm:py-4">
+            <h1 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-0 mt-0 leading-tight">Use AI Safely — JSON Masking &amp; Log Unpacker</h1>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4 mb-2 sm:mb-3">
+              <p className="text-[10px] sm:text-xs font-bold text-gray-600 uppercase tracking-widest sm:shrink-0">Developer&apos;s Daily Tools</p>
               <div className="flex justify-center sm:flex-1">
-                <p className="text-sm text-emerald-800 font-semibold bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-2.5 inline-flex items-center gap-2.5 shadow-sm ring-1 ring-emerald-100/50">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-100">
-                    <Lock className="w-4 h-4 text-emerald-700" aria-hidden />
+                <p className="text-xs sm:text-sm text-emerald-800 font-semibold bg-emerald-50 border border-emerald-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 inline-flex items-center gap-2 sm:gap-2.5 shadow-sm ring-1 ring-emerald-100/50">
+                  <span className="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-100">
+                    <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-700" aria-hidden />
                   </span>
-                  <span>100% client-side — your data never leaves your device.</span>
+                  <span>100% client-side — data never leaves your device.</span>
                 </p>
               </div>
             </div>
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-2 content-stretch">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-2 sm:gap-2 content-stretch [&>*]:min-h-[44px] [&>*]:touch-manipulation [&>*]:active:scale-[0.98]">
             <button
               onClick={() => handleTabChange('beautifier')}
-              className={`group tab-card w-full px-2.5 py-2 rounded-xl border text-left transition-all duration-200 flex items-center gap-2 min-h-[2.75rem] ${
+              className={`group tab-card w-full px-2 sm:px-2.5 py-2 rounded-xl border text-left transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-[0.98] ${
                 activeTab === 'beautifier'
                   ? 'bg-primary-50 border-primary-300 text-primary-800 shadow-md ring-1 ring-primary-200/50'
                   : 'bg-white border-gray-200 text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100'
@@ -636,7 +645,7 @@ function HomeClient() {
               <Code2 className="w-4 h-4 flex-shrink-0 text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">JSON Beautifier</span>
             </button>
-            <Link href={toolPageUrls.sql} className="group tab-card relative w-full px-2.5 py-2 pr-8 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+            <Link href={toolPageUrls.sql} className="group tab-card relative w-full px-2 sm:px-2.5 py-2 pr-6 sm:pr-8 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-[0.98]">
               <Database className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0 flex-1">SQL Formatter</span>
               <span className="absolute top-1.5 right-1.5 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-red-100 text-red-600">Hot</span>
@@ -740,15 +749,15 @@ function HomeClient() {
         </div>
       </header>
 
-      {/* Ad strip — collapsed when Beautifier active so workbench sits right under tools */}
-      <div key={activeTab} className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-0 border-b border-gray-100 bg-white/50 ${activeTab === 'beautifier' ? 'min-h-0 overflow-hidden' : ''}`}>
-        <div id="ezoic-pub-ad-placeholder-101" className={activeTab === 'beautifier' ? 'min-h-0 h-0 overflow-hidden' : 'min-h-[50px] flex items-center justify-center'} />
-        <div id="ezoic-pub-ad-placeholder-111" className={activeTab === 'beautifier' ? 'min-h-0 h-0 overflow-hidden' : 'min-h-[90px] flex items-center justify-center'} aria-label="Advertisement" />
+      {/* Ad strip — mobile-friendly heights for 320x50 / 300x250; collapsed when Beautifier active */}
+      <div key={activeTab} className={`max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-0 border-b border-gray-100 bg-white/50 ${activeTab === 'beautifier' ? 'min-h-0 overflow-hidden' : ''}`}>
+        <div id="ezoic-pub-ad-placeholder-101" className={activeTab === 'beautifier' ? 'min-h-0 h-0 overflow-hidden' : 'min-h-[50px] sm:min-h-[50px] flex items-center justify-center'} aria-label="Advertisement" />
+        <div id="ezoic-pub-ad-placeholder-111" className={activeTab === 'beautifier' ? 'min-h-0 h-0 overflow-hidden' : 'min-h-[250px] sm:min-h-[90px] flex items-center justify-center'} aria-label="Advertisement" />
       </div>
 
-      {/* Main Content */}
-      <main id="main-content" className={`flex-1 w-full animate-fade-in ${activeTab === 'beautifier' ? 'pt-0 pb-10 sm:pb-12 lg:pb-14' : 'py-8 sm:py-10 lg:py-12'}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Main Content - min-height to reduce CLS; overflow-x-hidden on mobile for AdSense-friendly layout */}
+      <main id="main-content" className={`flex-1 w-full min-h-[320px] animate-fade-in overflow-x-hidden ${activeTab === 'beautifier' ? 'pt-0 pb-8 sm:pb-12 lg:pb-14' : 'py-6 sm:py-10 lg:py-12'}`}>
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         {activeTab === 'beautifier' && (
           <div className="w-full max-w-7xl mx-auto">
             <div className="rounded-2xl bg-white shadow-lg border border-gray-200 overflow-hidden ring-1 ring-gray-100/80 p-6 sm:p-8 lg:p-10">
@@ -1168,8 +1177,8 @@ function HomeClient() {
             </div>
           </div>
 
-          {/* Ezoic Ad Placement - Middle of Content (Placement ID: 102) */}
-          <div id="ezoic-pub-ad-placeholder-102"></div>
+          {/* Ezoic Ad Placement - Middle of Content (102) - mobile 300x250 / desktop responsive */}
+          <div id="ezoic-pub-ad-placeholder-102" className="min-h-[250px] sm:min-h-[250px]" aria-label="Advertisement" />
 
           <div className="mt-10 sm:mt-12">
             <div className="text-center mb-6">
@@ -1219,26 +1228,28 @@ function HomeClient() {
         </section>
       )}
 
-      {/* Ezoic Ad Placement - Before Footer (Placement ID: 103) */}
-      <div id="ezoic-pub-ad-placeholder-103"></div>
+      {/* Ezoic Ad Placement - Before Footer (103) - mobile leaderboard / desktop banner */}
+      <div id="ezoic-pub-ad-placeholder-103" className="min-h-[50px] sm:min-h-[90px]" aria-label="Advertisement" />
 
-      {/* Footer */}
-      <footer className="mt-auto pt-12 pb-8 sm:pt-16 sm:pb-10 border-t border-gray-200/80 bg-white/90 backdrop-blur-md shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+      {/* Footer — mobile: larger tap targets for links (AdSense-friendly engagement) */}
+      <footer className="mt-auto pt-8 pb-6 sm:pt-16 sm:pb-10 border-t border-gray-200/80 bg-white/90 backdrop-blur-md shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
         <div className="max-w-7xl mx-auto container-padding">
           {/* Main Footer Content */}
           <div className="text-center space-y-3">
             <div className="space-y-2">
-              <p className="text-sm font-medium text-gray-700">
+              <p className="text-sm font-medium text-gray-700 px-1">
                 <strong className="text-gray-900">UnblockDevs</strong> — Free Online Developer Tools Suite
               </p>
-              <p className="text-xs text-gray-500 leading-relaxed mt-1">
+              <p className="text-xs text-gray-500 leading-relaxed mt-1 px-1">
                 JSON Viewer, Formatter, Parser, Beautifier, Fixer, JSON to Excel/CSV, API testing, schema generation, SQL formatting, log analysis, and more. All tools are free and run in your browser.
               </p>
-              <div className="flex flex-wrap justify-center gap-4 mt-3 text-xs text-gray-600">
+              <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 sm:gap-4 mt-3 text-xs text-gray-600 [&_a]:py-2 [&_a]:min-h-[44px] [&_a]:inline-flex [&_a]:items-center [&_a]:touch-manipulation">
                 <Link href="/json-formatter" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Formatter</Link>
                 <Link href="/json-validator" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Validator</Link>
                 <Link href="/json-beautifier" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Beautifier</Link>
                 <Link href="/json-fixer-online" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Fixer</Link>
+                <Link href="/fix-json-parse-error-javascript" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Fix JSON.parse() Guide</Link>
+                <Link href="/how-to-fix-broken-json-online" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Fix Broken JSON Online</Link>
                 <Link href="/json-schema-generation" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Schema Generator</Link>
                 <Link href="/json-to-excel" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON to Excel</Link>
                 <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Comparator</Link>
@@ -1256,9 +1267,9 @@ function HomeClient() {
                 <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ SQL Formatter</Link>
                 <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Builder</Link>
               </div>
-              <div className="mt-4 pt-4 border-t border-gray-200">
+                <div className="mt-4 pt-4 border-t border-gray-200">
                 <p className="text-xs text-gray-500 mb-2 text-center">Learn more about JSON:</p>
-                <div className="flex flex-wrap justify-center gap-4 text-xs">
+                <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-xs [&_a]:py-2 [&_a]:inline-flex [&_a]:items-center [&_a]:touch-manipulation">
                   <a
                     href="https://www.json.org/json-en.html"
                     target="_blank"
@@ -1282,10 +1293,10 @@ function HomeClient() {
               <div className="mt-4">
                 <Link
                   href="/blog"
-                  className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+                  className="inline-flex items-center justify-center gap-2 min-h-[44px] px-4 py-3 sm:py-2 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors touch-manipulation active:scale-[0.98]"
                 >
-                  <FileText className="w-4 h-4" />
-                  Developer's Study Materials 📚
+                  <FileText className="w-4 h-4" aria-hidden />
+                  Developer&apos;s Study Materials 📚
                 </Link>
               </div>
             </div>
@@ -1293,7 +1304,7 @@ function HomeClient() {
             {/* Popular Blog Posts Section - Internal Links for SEO (more links = more dofollow inlinks per post) */}
             <div className="mt-8 pt-8 border-t border-gray-200">
               <h3 className="text-sm font-semibold text-gray-900 mb-4 text-center">Popular Developer Guides</h3>
-              <div className="flex flex-wrap justify-center gap-3 text-xs">
+              <div className="flex flex-wrap justify-center gap-x-3 gap-y-2 text-xs [&_a]:py-2 [&_a]:inline-flex [&_a]:items-center [&_a]:touch-manipulation">
                 <Link href="/blog/chatgpt-real-life-usage-guide" className="text-blue-600 hover:text-blue-700 hover:underline">ChatGPT Usage</Link>
                 <Link href="/blog/ai-prompt-engineering-guide" className="text-blue-600 hover:text-blue-700 hover:underline">AI Prompt Engineering</Link>
                 <Link href="/blog/blockchain-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Blockchain</Link>

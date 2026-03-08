@@ -7,11 +7,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const currentDate = new Date().toISOString().split('T')[0]
 
   // Blog slugs from filesystem: every app/blog/<slug>/ with page.tsx is in sitemap (includes all 18+ new AI blogs)
+  // Exclude slugs that 308 redirect to another URL (sitemap should only list canonical URLs)
+  const redirectOnlyBlogSlugs = [
+    'how-ai-creates-art-music-videos-seconds',
+    'will-ai-take-over-world-movies-vs-reality',
+  ]
   const blogDir = path.join(process.cwd(), 'app/blog')
   const blogSlugs = fs
     .readdirSync(blogDir, { withFileTypes: true })
     .filter((d) => d.isDirectory() && fs.existsSync(path.join(blogDir, d.name, 'page.tsx')))
     .map((d) => d.name)
+    .filter((slug) => !redirectOnlyBlogSlugs.includes(slug))
 
   // Main pages
   const mainPages = [

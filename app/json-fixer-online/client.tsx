@@ -168,13 +168,14 @@ export default function JsonFixerOnlineClient() {
               Step-by-step guides for specific errors (no signup):
             </p>
             <ul className="flex flex-wrap gap-2 mb-6 text-sm">
-              <li><Link href="/blog/fix-json-parse-error-unexpected-token" className="text-primary-600 hover:underline">Fix JSON.parse() errors in JavaScript</Link></li>
+              <li><Link href="/fix-json-parse-error-javascript" className="text-primary-600 hover:underline">Fix JSON.parse() errors in JavaScript</Link></li>
+              <li><Link href="/how-to-fix-broken-json-online" className="text-primary-600 hover:underline">How to fix broken JSON online</Link></li>
               <li><Link href="/fix-unexpected-end-of-json-input" className="text-primary-600 hover:underline">Fix &quot;Unexpected end of JSON input&quot;</Link></li>
               <li><Link href="/fix-unexpected-token-in-json" className="text-primary-600 hover:underline">Fix &quot;Unexpected token {'}'} in JSON&quot;</Link></li>
               <li><Link href="/fix-expected-comma-or-brace-json" className="text-primary-600 hover:underline">Fix &quot;Expected comma or brace&quot;</Link></li>
               <li><Link href="/fix-unexpected-token-less-than-json" className="text-primary-600 hover:underline">Fix &quot;Unexpected token &lt; in JSON&quot;</Link></li>
               <li><Link href="/fix-invalid-control-character-json" className="text-primary-600 hover:underline">Fix &quot;Invalid control character&quot;</Link></li>
-              <li><Link href="/blog/how-to-fix-broken-json-without-understanding" className="text-primary-600 hover:underline">How to fix broken JSON online</Link></li>
+              <li><Link href="/blog/how-to-fix-broken-json-without-understanding" className="text-primary-600 hover:underline">Deeper guide: fix broken JSON without understanding</Link></li>
             </ul>
             <p className="text-gray-700 leading-relaxed mb-6">
               Deeper guides and best practices:

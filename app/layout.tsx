@@ -13,6 +13,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
+  viewportFit: 'cover',
 }
 
 export const metadata: Metadata = {
@@ -238,12 +239,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://cdnjs.buymeacoffee.com" />
         <link rel="dns-prefetch" href="https://www.ezojs.com" />
         <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
-        {/* Google AdSense - load in head on every page for automatic ad placement */}
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6349841658473646"
-          crossOrigin="anonymous"
-        ></script>
+        {/* AdSense loaded deferred (see bottom script) to improve LCP */}
         <link rel="dns-prefetch" href="https://lb.eu-1-id5-sync.com" />
         <link rel="dns-prefetch" href="https://cdn.id5-sync.com" />
         

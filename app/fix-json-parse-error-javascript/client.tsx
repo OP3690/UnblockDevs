@@ -46,8 +46,14 @@ export default function FixJsonParseErrorJavascriptClient() {
                 <p className="text-red-800 text-sm">Usually caused by trailing commas or syntax errors.</p>
               </div>
               <div className="p-4 bg-orange-50 rounded-lg border-l-4 border-orange-500">
-                <h3 className="font-semibold text-orange-900 mb-2">SyntaxError: Unexpected end of JSON input</h3>
-                <p className="text-orange-800 text-sm">JSON is incomplete or missing closing braces.</p>
+                <h3 className="font-semibold text-orange-900 mb-2">
+                  <Link href="/blog/fix-unexpected-end-of-json-input-error-explained" className="text-orange-900 hover:text-orange-700 hover:underline">
+                    SyntaxError: Unexpected end of JSON input
+                  </Link>
+                </h3>
+                <p className="text-orange-800 text-sm">
+                  JSON is incomplete or missing closing braces. <Link href="/blog/fix-unexpected-end-of-json-input-error-explained" className="font-medium underline hover:no-underline">See the full guide</Link>.
+                </p>
               </div>
               <div className="p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
                 <h3 className="font-semibold text-yellow-900 mb-2">SyntaxError: Unexpected token &lt; in JSON</h3>
