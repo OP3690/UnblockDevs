@@ -1673,7 +1673,7 @@ export default function BlogPage() {
 
       {/* Main Content - Post Grid */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-        <div className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:gap-8 md:grid-cols-2">
           {blogPosts.map((post) => (
             <article
               key={post.slug}
@@ -1745,7 +1745,7 @@ export default function BlogPage() {
         {/* Featured - Internal Links for SEO */}
         <section className="mt-14 sm:mt-16 bg-gradient-to-r from-primary-50/80 to-indigo-50/80 rounded-xl border border-gray-100 shadow-sm p-6 sm:p-8">
           <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-5">Featured Guides</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-2 gap-4">
             <Link href="/blog/chatgpt-real-life-usage-guide" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
               <h3 className="font-semibold text-gray-900 mb-2">ChatGPT Real-Life Usage Guide</h3>
               <p className="text-sm text-gray-600">Complete guide to using ChatGPT in real life with practical use cases and best prompts.</p>
