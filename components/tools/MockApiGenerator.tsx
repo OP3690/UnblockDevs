@@ -49,7 +49,7 @@ export default function MockApiGenerator() {
   const generateMockApi = () => {
     if (config.responseMode === 'static') {
       const validation = validateJson(config.responseJson);
-      if (!validation.valid) {
+    if (!validation.valid) {
         toast.error('Invalid JSON for static response');
         return;
       }
@@ -58,7 +58,7 @@ export default function MockApiGenerator() {
         JSON.parse(config.responseJson);
       } catch {
         toast.error('Invalid JSON template');
-        return;
+      return;
       }
     }
 
@@ -137,8 +137,8 @@ export default function MockApiGenerator() {
         <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-5 text-white">
           <h2 className="text-2xl font-bold flex items-center gap-2">
             <Server className="w-7 h-7" />
-            Mock API Generator
-          </h2>
+          Mock API Generator
+        </h2>
           <p className="text-indigo-100 text-sm mt-1">
             Create REST endpoints with dynamic responses, auth simulation, latency, and error scenarios. Export to Postman or OpenAPI.
           </p>
@@ -151,15 +151,15 @@ export default function MockApiGenerator() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="lg:col-span-2">
                 <label className="block text-xs font-medium text-gray-500 mb-1">Path</label>
-                <input
-                  type="text"
+            <input
+              type="text"
                   value={config.endpoint}
                   onChange={(e) => updateConfig({ endpoint: e.target.value || '/api/data' })}
                   placeholder="/api/users"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-mono text-sm"
-                />
-              </div>
-              <div>
+            />
+          </div>
+          <div>
                 <label className="block text-xs font-medium text-gray-500 mb-1">Method</label>
                 <select
                   value={config.method}
@@ -201,7 +201,7 @@ export default function MockApiGenerator() {
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500 mb-1">Authentication</label>
-              <select
+            <select
                 value={config.authType}
                 onChange={(e) => updateConfig({ authType: e.target.value as AuthType })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm"
@@ -209,7 +209,7 @@ export default function MockApiGenerator() {
                 {AUTH_TYPES.map((a) => (
                   <option key={a.value} value={a.value}>{a.label}</option>
                 ))}
-              </select>
+            </select>
               {(config.authType === 'bearer' || config.authType === 'api_key') && (
                 <input
                   type="text"
@@ -237,7 +237,7 @@ export default function MockApiGenerator() {
                 <span className="text-sm">Static JSON</span>
               </label>
               <label className="inline-flex items-center gap-2 cursor-pointer">
-                <input
+            <input
                   type="radio"
                   name="responseMode"
                   checked={config.responseMode === 'template'}
@@ -318,7 +318,7 @@ export default function MockApiGenerator() {
                       onChange={(e) => updateConfig({ rateLimitPerMinute: e.target.value ? parseInt(e.target.value, 10) : undefined })}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
                     />
-                  </div>
+        </div>
                   <div>
                     <label className="block text-xs font-medium text-gray-500 mb-1">Failure rate (%) – random 500/429</label>
                     <input
@@ -387,16 +387,16 @@ export default function MockApiGenerator() {
                 </label>
               </div>
             )}
-          </div>
+        </div>
 
-          <button
+        <button
             type="button"
-            onClick={generateMockApi}
+          onClick={generateMockApi}
             className="w-full py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors flex items-center justify-center gap-2"
-          >
+        >
             <Zap className="w-5 h-5" />
-            Generate Mock API
-          </button>
+          Generate Mock API
+        </button>
         </div>
       </div>
 
@@ -476,7 +476,7 @@ export default function MockApiGenerator() {
           <div className="p-6">
             <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm font-mono whitespace-pre-wrap">
               <code>{getExportContent()}</code>
-            </pre>
+          </pre>
           </div>
         </div>
       )}
@@ -484,14 +484,14 @@ export default function MockApiGenerator() {
       {/* Blog */}
       <div className="mt-12 bg-white rounded-xl shadow-lg p-8 border border-gray-200">
         <h2 className="text-2xl font-bold text-gray-900 mb-4">Learn more</h2>
-        <Link
-          href="/blog/free-mock-api-generator-guide"
-          className="block p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 hover:border-blue-400 hover:shadow-md transition-all"
-        >
+          <Link
+            href="/blog/free-mock-api-generator-guide"
+            className="block p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 hover:border-blue-400 hover:shadow-md transition-all"
+          >
           <h3 className="font-semibold text-gray-900 mb-1">Free Mock API in Seconds</h3>
           <p className="text-sm text-gray-600 mb-2">Generate fake endpoints with delay, status codes, and pagination for frontend development.</p>
           <span className="text-blue-600 text-sm font-medium hover:underline">Read guide →</span>
-        </Link>
+          </Link>
       </div>
     </div>
   );

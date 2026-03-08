@@ -159,6 +159,46 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changefreq: 'weekly' as const,
     },
     {
+      url: 'jwt-decoder',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'base64-encoder',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'password-generator',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'cors-tester',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'truth-table-generator',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'hash-generator',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'url-encoder',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'uuid-generator',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
       url: 'har-to-curl',
       priority: 0.9,
       changefreq: 'weekly' as const,

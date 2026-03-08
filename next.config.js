@@ -27,7 +27,6 @@ const nextConfig = {
       },
       { source: '/json-masking', destination: '/json-prompt-shield', permanent: true },
       { source: '/sql-schema-masking', destination: '/ai-schema-masker', permanent: true },
-      { source: '/jwt-decoder', destination: '/token-comparator', permanent: true },
       { source: '/convert-list-to-sql-in', destination: '/sql-in-generator', permanent: true },
       { source: '/comma-separated-list-to-sql', destination: '/sql-in-generator', permanent: true },
       // Blog 404 fixes: old/mismatched slugs → correct blog or tool

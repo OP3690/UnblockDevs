@@ -261,9 +261,9 @@ export default function LogExplorer() {
             aria-label="Paste logs to analyze"
           />
           <div className="mt-4 flex flex-wrap gap-3 items-center">
-            <button
+        <button
               onClick={parseLogsHandler}
-              disabled={!logText.trim()}
+          disabled={!logText.trim()}
               className="min-w-[200px] px-10 py-3 bg-primary-600 text-white rounded-xl font-semibold hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
             >
               Parse logs
@@ -278,7 +278,7 @@ export default function LogExplorer() {
               className="px-4 py-2.5 border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50"
             >
               Clear
-            </button>
+        </button>
           </div>
         </div>
       </div>
@@ -409,15 +409,15 @@ export default function LogExplorer() {
               </span>
             </div>
             <div className="flex flex-wrap gap-3 mb-3">
-              <input
+                <input
                 id="log-explorer-search"
-                type="text"
+                  type="text"
                 placeholder="Search... level:ERROR, service:auth, /regex/"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 className="flex-1 min-w-[200px] px-3 py-2 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-400"
                 aria-label="Search logs"
-              />
+                />
               <select
                 id="log-explorer-level"
                 value={filterLevel}
@@ -493,7 +493,7 @@ export default function LogExplorer() {
             ) : (
               <p className="text-sm text-gray-500">No errors in this set. Adjust filters or paste more logs.</p>
             )}
-          </div>
+            </div>
 
           {/* Extracted IDs */}
           {extractedFieldsList.length > 0 && (
@@ -531,7 +531,7 @@ export default function LogExplorer() {
                     <span key={i} className="text-xs font-mono text-gray-600 truncate max-w-[200px]" title={j.raw}>
                       {j.raw}
                       {j.exp != null && <span className="text-gray-400"> exp: {epochToUtc(j.exp * 1000)}</span>}
-                    </span>
+                        </span>
                   ))}
                 </div>
                 <Link href="/token-comparator" className="text-xs text-primary-600 hover:underline mt-2 inline-block">
@@ -603,8 +603,8 @@ export default function LogExplorer() {
               </ul>
             ) : (
               <p className="text-sm text-gray-500">No repeated patterns detected.</p>
-            )}
-          </div>
+                      )}
+                    </div>
 
           {/* Latency stats */}
           {latencyStats.length > 0 && (
@@ -620,8 +620,8 @@ export default function LogExplorer() {
                     <div>Avg: {l.avg} ms · Max: {l.max} · Min: {l.min} (n={l.count})</div>
                   </div>
                 ))}
-              </div>
-            </div>
+                  </div>
+                </div>
           )}
 
           {/* Noise cleaner */}
@@ -771,14 +771,14 @@ export default function LogExplorer() {
 
       <div className="bg-white rounded-xl shadow border border-gray-200 p-6">
         <h2 className="text-xl font-bold text-gray-900 mb-4">Learn more</h2>
-        <Link
-          href="/blog/structured-log-analysis-tools"
+          <Link
+            href="/blog/structured-log-analysis-tools"
           className="block p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 hover:border-blue-400 transition-all"
         >
           <h3 className="font-semibold text-gray-900 mb-1">Structured log analysis</h3>
           <p className="text-sm text-gray-600">Tools and techniques for parsing and analyzing logs.</p>
           <span className="text-blue-600 text-sm font-medium hover:underline">Read →</span>
-        </Link>
+          </Link>
       </div>
     </div>
   );

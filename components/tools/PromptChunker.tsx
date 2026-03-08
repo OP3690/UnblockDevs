@@ -271,75 +271,75 @@ export default function PromptChunker() {
 
       {/* Chunk settings (only when Chunk tab) */}
       {tabMode === 'chunk' && (
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
-          <div className="flex items-center justify-between mb-4">
-            <button
+      <div className="bg-white rounded-lg border border-gray-200 p-4">
+        <div className="flex items-center justify-between mb-4">
+          <button
               type="button"
-              onClick={() => setShowSettings(!showSettings)}
+            onClick={() => setShowSettings(!showSettings)}
               className="cta-chunking-settings flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors"
-            >
-              <Settings className="w-5 h-5" />
-              <span className="font-semibold">Chunking Settings</span>
-            </button>
-            <button
+          >
+            <Settings className="w-5 h-5" />
+            <span className="font-semibold">Chunking Settings</span>
+          </button>
+          <button
               type="button"
-              onClick={() => {
-                setChunkSize(500);
-                setChunkType('words');
-                setOverlap(50);
-                toast.success('Reset to default settings');
-              }}
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition-colors text-sm"
-            >
-              Default
-            </button>
-          </div>
-          {showSettings && (
-            <div className="grid md:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
-              <div>
+            onClick={() => {
+              setChunkSize(500);
+              setChunkType('words');
+              setOverlap(50);
+              toast.success('Reset to default settings');
+            }}
+            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition-colors text-sm"
+          >
+            Default
+          </button>
+        </div>
+        {showSettings && (
+          <div className="grid md:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
+            <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Chunk Type</label>
-                <select
-                  value={chunkType}
-                  onChange={(e) => setChunkType(e.target.value as 'words' | 'chars')}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                >
-                  <option value="words">Words</option>
-                  <option value="chars">Characters</option>
-                </select>
+              <select
+                value={chunkType}
+                onChange={(e) => setChunkType(e.target.value as 'words' | 'chars')}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              >
+                <option value="words">Words</option>
+                <option value="chars">Characters</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Chunk Size: {chunkSize} {chunkType === 'words' ? 'words' : 'characters'}
+              </label>
+              <input
+                type="range"
+                min="100"
+                max={chunkType === 'words' ? '2000' : '5000'}
+                step="50"
+                value={chunkSize}
+                onChange={(e) => setChunkSize(Number(e.target.value))}
+                className="w-full"
+              />
+              <div className="flex justify-between text-xs text-gray-500 mt-1">
+                <span>100</span>
+                <span>{chunkType === 'words' ? '2000' : '5000'}</span>
               </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Chunk Size: {chunkSize} {chunkType === 'words' ? 'words' : 'characters'}
-                </label>
-                <input
-                  type="range"
-                  min="100"
-                  max={chunkType === 'words' ? '2000' : '5000'}
-                  step="50"
-                  value={chunkSize}
-                  onChange={(e) => setChunkSize(Number(e.target.value))}
-                  className="w-full"
-                />
-                <div className="flex justify-between text-xs text-gray-500 mt-1">
-                  <span>100</span>
-                  <span>{chunkType === 'words' ? '2000' : '5000'}</span>
-                </div>
-              </div>
-              <div>
+            </div>
+            <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Overlap: {overlap}%</label>
-                <input
-                  type="range"
-                  min="0"
-                  max="50"
-                  step="5"
-                  value={overlap}
-                  onChange={(e) => setOverlap(Number(e.target.value))}
-                  className="w-full"
-                />
-                <div className="flex justify-between text-xs text-gray-500 mt-1">
-                  <span>0%</span>
-                  <span>50%</span>
-                </div>
+              <input
+                type="range"
+                min="0"
+                max="50"
+                step="5"
+                value={overlap}
+                onChange={(e) => setOverlap(Number(e.target.value))}
+                className="w-full"
+              />
+              <div className="flex justify-between text-xs text-gray-500 mt-1">
+                <span>0%</span>
+                <span>50%</span>
+              </div>
                 <p className="text-xs text-gray-600 mt-1">Overlap helps preserve context between chunks</p>
               </div>
             </div>
@@ -392,9 +392,9 @@ export default function PromptChunker() {
                 Scan & mask secrets (API keys, tokens)
               </label>
             </div>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
       {/* Input Section */}
       <div className="bg-white rounded-lg border border-gray-200 p-6">
@@ -416,14 +416,14 @@ export default function PromptChunker() {
         
         <div className="flex gap-3 mt-4">
           {tabMode === 'chunk' ? (
-            <button
+          <button
               type="button"
-              onClick={splitIntoChunks}
-              className="flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors"
-            >
-              <Scissors className="w-5 h-5" />
-              Split into Chunks
-            </button>
+            onClick={splitIntoChunks}
+            className="flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+          >
+            <Scissors className="w-5 h-5" />
+            Split into Chunks
+          </button>
           ) : (
             <button
               type="button"

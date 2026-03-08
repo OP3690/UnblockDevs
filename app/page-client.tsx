@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect, useMemo, Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, TrendingUp, Mail, Scissors, Key, Clock, Network, AlertTriangle, Copy, ChevronDown, ChevronUp, Play, ShieldCheck, Shield, Lock, Image, Star } from 'lucide-react';
+import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, TrendingUp, Mail, Scissors, Key, Clock, Network, AlertTriangle, Copy, ChevronDown, ChevronUp, Play, ShieldCheck, Shield, Lock, Image, Star, Link2 } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { PersonalizationManager, ToolTab } from '@/lib/personalization';
@@ -209,25 +209,23 @@ function HomeClient() {
     localStorage.setItem('bookmarkPromptDismissed', 'true');
   };
 
-  // Initialize Google AdSense (script loads deferred after LCP; retry until it's ready)
+  // Initialize Google AdSense once (script loads deferred after LCP).
+  // Push only once — calling push() when all ins slots already have ads throws TagError.
   useEffect(() => {
     if (!mounted || typeof window === 'undefined') return;
+    const w = window as any;
     const initAdSense = () => {
       try {
-        (window as any).adsbygoogle = (window as any).adsbygoogle || [];
-        if ((window as any).adsbygoogle.loaded !== true) {
-          ((window as any).adsbygoogle as any[]).push({});
+        if (w.__adsbygooglePushed === true) return;
+        w.adsbygoogle = w.adsbygoogle || [];
+        if (w.adsbygoogle.loaded !== true) {
+          (w.adsbygoogle as any[]).push({});
+          w.__adsbygooglePushed = true;
         }
       } catch (_) {}
     };
-    const t0 = setTimeout(initAdSense, 9000);
-    const t1 = setTimeout(initAdSense, 9500);
-    const t2 = setTimeout(initAdSense, 10000);
-    return () => {
-      clearTimeout(t0);
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
+    const t = setTimeout(initAdSense, 9000);
+    return () => clearTimeout(t);
   }, [mounted]);
 
   // Initialize Ezoic ads with error handling
@@ -268,8 +266,8 @@ function HomeClient() {
     }
   }, [mounted]);
 
-  // Refresh Ezoic ads when tab changes (for dynamic content)
-  // Refresh ads when user switches tabs (Ezoic + AdSense)
+  // Refresh Ezoic ads when tab changes (for dynamic content).
+  // Do not call adsbygoogle.push() on tab change — existing ins slots are already filled; pushing again causes TagError.
   useEffect(() => {
     if (!mounted || typeof window === 'undefined') return;
     try {
@@ -281,9 +279,6 @@ function HomeClient() {
             }
           } catch (_) {}
         });
-      }
-      if ((window as any).adsbygoogle) {
-        ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
       }
     } catch (_) {}
   }, [activeTab, mounted]);
@@ -692,7 +687,39 @@ function HomeClient() {
               <Wrench className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">JSON Fixer</span>
             </Link>
-            <Link href={toolPageUrls.tokencompare} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
+            <Link href="/jwt-decoder" className="group tab-card w-full px-2 sm:px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-[0.98]">
+              <Key className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
+              <span className="text-xs font-medium break-words min-w-0">JWT Decoder</span>
+            </Link>
+            <Link href="/base64-encoder" className="group tab-card w-full px-2 sm:px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-[0.98]">
+              <FileCode className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
+              <span className="text-xs font-medium break-words min-w-0">Base64 Encoder</span>
+            </Link>
+            <Link href="/password-generator" className="group tab-card w-full px-2 sm:px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-[0.98]">
+              <Lock className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
+              <span className="text-xs font-medium break-words min-w-0">Password Generator</span>
+            </Link>
+            <Link href="/uuid-generator" className="group tab-card w-full px-2 sm:px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-[0.98]">
+              <FileCode className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
+              <span className="text-xs font-medium break-words min-w-0">UUID Generator</span>
+            </Link>
+            <Link href="/cors-tester" className="group tab-card w-full px-2 sm:px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-[0.98]">
+              <Network className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
+              <span className="text-xs font-medium break-words min-w-0">CORS Tester</span>
+            </Link>
+            <Link href="/truth-table-generator" className="group tab-card w-full px-2 sm:px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-[0.98]">
+              <Code2 className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
+              <span className="text-xs font-medium break-words min-w-0">Truth Table</span>
+            </Link>
+            <Link href="/hash-generator" className="group tab-card w-full px-2 sm:px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-[0.98]">
+              <Key className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
+              <span className="text-xs font-medium break-words min-w-0">Hash Generator</span>
+            </Link>
+            <Link href="/url-encoder" className="group tab-card w-full px-2 sm:px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-[0.98]">
+              <Link2 className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
+              <span className="text-xs font-medium break-words min-w-0">URL Encoder</span>
+            </Link>
+            <Link href={toolPageUrls.tokencompare} className="group tab-card w-full px-2 sm:px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-[0.98]">
               <Key className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
               <span className="text-xs font-medium break-words min-w-0">Token Compare</span>
             </Link>
@@ -1260,6 +1287,14 @@ function HomeClient() {
                 <Link href="/convert-curl-to-http-request" className="text-blue-600 hover:text-blue-700 hover:underline">✓ cURL to HTTP</Link>
                 <Link href="/json-stringify-online" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON.stringify()</Link>
                 <Link href="/token-comparator" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Token Comparator</Link>
+                <Link href="/jwt-decoder" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JWT Decoder</Link>
+                <Link href="/base64-encoder" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Base64 Encoder</Link>
+                <Link href="/password-generator" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Password Generator</Link>
+                <Link href="/uuid-generator" className="text-blue-600 hover:text-blue-700 hover:underline">✓ UUID Generator</Link>
+                <Link href="/cors-tester" className="text-blue-600 hover:text-blue-700 hover:underline">✓ CORS Tester</Link>
+                <Link href="/truth-table-generator" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Truth Table Generator</Link>
+                <Link href="/hash-generator" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Hash Generator</Link>
+                <Link href="/url-encoder" className="text-blue-600 hover:text-blue-700 hover:underline">✓ URL Encoder</Link>
                 <Link href="/prompt-chunker" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Prompt Chunker</Link>
                 <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Log Explorer</Link>
                 <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Payload Analyzer</Link>

@@ -105,7 +105,7 @@ export default function HarToCurl() {
     const reader = new FileReader();
     reader.onload = (ev) => {
       const content = (ev.target?.result as string) ?? '';
-      setHarContent(content);
+        setHarContent(content);
       parseHar(content);
     };
     reader.readAsText(file);
@@ -225,18 +225,18 @@ export default function HarToCurl() {
             <label className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors text-sm font-medium">
               <Upload className="w-4 h-4" />
               Upload .har
-              <input
+                <input
                 ref={fileInputRef}
-                type="file"
+                  type="file"
                 accept=".har,application/json"
                 onChange={handleFileUpload}
-                className="hidden"
-              />
-            </label>
+                  className="hidden"
+                />
+              </label>
             <span className="text-sm text-gray-500">or paste JSON below</span>
-          </div>
-          <textarea
-            value={harContent}
+            </div>
+            <textarea
+              value={harContent}
             onChange={handlePaste}
             placeholder='Paste HAR JSON (from DevTools → Save all as HAR)'
             className="w-full min-h-[320px] h-[360px] p-4 border border-gray-300 rounded-lg font-mono text-sm resize-y focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -317,7 +317,7 @@ export default function HarToCurl() {
               <div className="p-3 bg-gray-50 rounded-lg space-y-2 text-sm">
                 <div>
                   <span className="text-gray-600">Domain</span>
-                  <select
+              <select
                     value={filters.domain ?? ''}
                     onChange={(e) => setFilters((f) => ({ ...f, domain: e.target.value || undefined }))}
                     className="ml-2 px-2 py-1 border border-gray-300 rounded"
@@ -326,8 +326,8 @@ export default function HarToCurl() {
                     {uniqueDomains.map((d) => (
                       <option key={d} value={d}>{d}</option>
                     ))}
-                  </select>
-                </div>
+              </select>
+            </div>
                 <div>
                   <span className="text-gray-600">Method</span>
                   <select
@@ -375,12 +375,12 @@ export default function HarToCurl() {
                       placeholder="e.g. 1000"
                       className="ml-2 w-24 px-2 py-1 border border-gray-300 rounded [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
-                  </div>
+                </div>
               </div>
             </div>
           )}
         </div>
-      </div>
+        </div>
 
       {normalizedEntries.length > 0 && (
         <>
@@ -423,7 +423,7 @@ export default function HarToCurl() {
               </table>
             </div>
           </div>
-
+          
           {selectedEntry && (
             <div ref={resultsRef} className="space-y-6 scroll-mt-4">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -471,13 +471,13 @@ export default function HarToCurl() {
                     <p className="text-gray-500 text-sm">No request body</p>
                   )}
                 </div>
-              </div>
+          </div>
 
               <div className="bg-white rounded-xl shadow border border-gray-200 p-6">
                 <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
                   <div className="flex items-center gap-3 flex-wrap">
                     <label className="text-sm font-medium text-gray-700">Output</label>
-                    <select
+              <select
                       value={outputLang}
                       onChange={(e) => setOutputLang(e.target.value as CurlTarget | 'ruby' | 'curl')}
                       className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
@@ -486,8 +486,8 @@ export default function HarToCurl() {
                       {LANGUAGE_OPTIONS.map((opt) => (
                         <option key={opt.value} value={opt.value}>{opt.label}</option>
                       ))}
-                    </select>
-                  </div>
+              </select>
+            </div>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
@@ -497,22 +497,22 @@ export default function HarToCurl() {
                     >
                       {copied ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4 text-gray-600" />}
                     </button>
-                    <button
+            <button
                       type="button"
                       onClick={handleDownload}
                       className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50"
                       title="Download"
                     >
                       <Download className="w-4 h-4 text-gray-600" />
-                    </button>
-                    <button
+            </button>
+                  <button
                       type="button"
                       onClick={handleCopyAIPrompt}
                       className="flex items-center gap-1.5 px-3 py-1.5 border border-amber-300 bg-amber-50 text-amber-800 rounded-lg hover:bg-amber-100 text-sm font-medium"
                     >
                       <MessageSquare className="w-4 h-4" />
                       AI debug prompt
-                    </button>
+                  </button>
                   </div>
                 </div>
                 <pre className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg font-mono text-sm overflow-x-auto max-h-96 overflow-y-auto whitespace-pre-wrap">
@@ -570,8 +570,8 @@ export default function HarToCurl() {
                     </>
                   );
                 })()}
-              </div>
-            </div>
+          </div>
+        </div>
           )}
         </>
       )}
