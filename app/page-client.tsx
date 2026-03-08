@@ -227,7 +227,7 @@ function HomeClient() {
         }
       } catch (_) {}
     };
-    const t = setTimeout(initAdSense, 9000);
+    const t = setTimeout(initAdSense, 0);
     return () => clearTimeout(t);
   }, [mounted]);
 
@@ -263,8 +263,7 @@ function HomeClient() {
         }
       };
       
-      // Show ads only after 9 seconds
-      const timer = setTimeout(initEzoicAds, 9000);
+      const timer = setTimeout(initEzoicAds, 0);
       return () => clearTimeout(timer);
     }
   }, [mounted]);
