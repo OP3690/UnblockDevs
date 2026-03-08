@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   description:
     'Escape stringified JSON hell: unescape nested JSON, decode JWTs, convert epoch time, and sanitize logs in seconds—one tool, client-side.',
   keywords: [
+    'sanitize data before chatgpt',
+    'mask json before sending to ai',
+    'safe json for chatgpt',
     'stringified JSON',
     'unescape JSON',
     'decode JWT',

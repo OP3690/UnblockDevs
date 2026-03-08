@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   title: 'JSON Viewer, Parser & Beautifier Guide | UnblockDevs',
   description: 'JSON Viewer, Parser, Beautifier: visualize, parse, format JSON. Better dev workflow.',
   keywords: [
+    'json formatter online free',
+    'json diff tool online',
     'JSON Viewer',
     'JSON Parser',
     'JSON Beautifier',
@@ -20,7 +22,7 @@ export const metadata: Metadata = {
     'how to view JSON',
     'how to parse JSON',
     'how to beautify JSON',
-    'JSON best practices'
+    'JSON best practices',
   ],
   openGraph: {
     title: 'Complete Guide to JSON Viewer, Parser, and Beautifier Tools',

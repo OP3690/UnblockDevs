@@ -61,7 +61,12 @@ export const metadata: Metadata = {
     'sanitize data before chatgpt',
     'json masking tool online',
     'sql schema masking ai',
-    'hide sensitive data from chatgpt',
+    'hide sensitive data before chatgpt',
+    'mask api response before ai',
+    'safe json for chatgpt',
+    'base64 encode decode online',
+    'json formatter online free',
+    'json diff tool online',
     // Secondary — developer tools
     'online json formatter',
     'jwt decoder online',

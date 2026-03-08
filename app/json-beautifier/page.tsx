@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: 'JSON Beautifier Online – Format, Validate, Fix | UnblockDevs',
   description: 'Format, validate, fix JSON. Tree view, JSONPath, TypeScript & SQL generator. JSON beautifier and workbench for developers. Free, no signup.',
   keywords: [
+    'json formatter online free',
     'json beautifier online',
     'format json',
     'json formatter tool',

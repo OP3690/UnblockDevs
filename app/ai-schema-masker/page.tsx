@@ -8,6 +8,13 @@ export const metadata: Metadata = {
   title: "AI Schema Masker – Client-Side Only | UnblockDevs",
   description: "Client-side AI schema masker. Your SQL never leaves the browser. Mask tables & columns for AI. No server, no signup.",
   keywords: [
+    'mask json before sending to ai',
+    'sanitize data before chatgpt',
+    'json masking tool online',
+    'sql schema masking ai',
+    'hide sensitive data before chatgpt',
+    'mask api response before ai',
+    'safe json for chatgpt',
     'stop leaking secrets to ai tools',
     'AI schema masker',
     'client-side SQL masking',

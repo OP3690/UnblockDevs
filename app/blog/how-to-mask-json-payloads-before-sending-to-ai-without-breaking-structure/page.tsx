@@ -6,6 +6,13 @@ export const metadata: Metadata = {
   description:
     'Learn how to mask JSON before ChatGPT: anonymize API payloads, hide sensitive JSON data, secure API logs. Preserve structure, keep numbers, restore exactly. Step-by-step with examples.',
   keywords: [
+    'mask json before sending to ai',
+    'sanitize data before chatgpt',
+    'json masking tool online',
+    'sql schema masking ai',
+    'hide sensitive data before chatgpt',
+    'mask api response before ai',
+    'safe json for chatgpt',
     'mask JSON before ChatGPT',
     'anonymize API payload',
     'hide sensitive JSON data',

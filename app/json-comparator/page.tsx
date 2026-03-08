@@ -8,12 +8,13 @@ export const metadata: Metadata = {
   keywords: [
     'smart json diff',
     'json data diff',
+    'json diff tool online',
     'semantic json comparison',
     'compare json api',
     'json diff tool',
     'compare json payloads',
     'json normalization',
-    'api payload diff'
+    'api payload diff',
   ],
   openGraph: {
     title: 'Smart JSON Data Diff - Semantic API Payload Comparison',

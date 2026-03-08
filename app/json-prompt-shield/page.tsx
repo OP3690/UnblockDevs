@@ -8,6 +8,12 @@ export const metadata: Metadata = {
   title: 'JSON Prompt Shield – Mask for AI, Client-Side | UnblockDevs',
   description: 'Mask JSON keys and string values for AI. Numbers unchanged, structure preserved, fully reversible. 100% client-side.',
   keywords: [
+    'mask json before sending to ai',
+    'sanitize data before chatgpt',
+    'json masking tool online',
+    'hide sensitive data before chatgpt',
+    'mask api response before ai',
+    'safe json for chatgpt',
     'JSON masker',
     'AI JSON shield',
     'mask JSON for AI',

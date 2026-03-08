@@ -7,12 +7,13 @@ export const metadata: Metadata = {
   keywords: [
     'json formatter',
     'json formatter online',
+    'json formatter online free',
     'json formatter free',
     'format json online',
     'beautify json',
     'prettify json',
     'json beautifier',
-    'format json tool'
+    'format json tool',
   ],
   openGraph: {
     title: 'Free JSON Formatter & Validator | UnblockDevs',
