@@ -125,7 +125,8 @@ export default function Base64EncoderClient() {
           else if (isSvg) mime = 'image/svg+xml';
           if (isPng || isJpeg || isGif || isWebP || isSvg) {
             const bytes = result.bytes!;
-            const blob = new Blob([bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength)], { type: mime });
+            const bufferSlice = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer;
+            const blob = new Blob([bufferSlice], { type: mime });
             const url = URL.createObjectURL(blob);
             setImagePreviewUrl((prev) => {
               if (prev) URL.revokeObjectURL(prev);
