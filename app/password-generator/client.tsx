@@ -306,7 +306,7 @@ export default function PasswordGeneratorClient() {
                       <label key={key} className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer rounded-lg border border-gray-200 bg-white px-3 py-2 hover:bg-gray-50 transition-colors has-[:checked]:border-primary-300 has-[:checked]:bg-primary-50/50">
                         <input
                           type="checkbox"
-                          checked={(charset as Record<string, boolean>)[key]}
+                          checked={(charset as unknown as Record<string, boolean>)[key]}
                           onChange={(e) => setCharset((c) => ({ ...c, [key]: e.target.checked }))}
                           className="rounded border-gray-300 text-primary-600"
                         />
