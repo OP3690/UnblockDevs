@@ -174,8 +174,11 @@ function HomeClient() {
 
 
   // Mark as mounted and set client-only state (avoids hydration mismatch with SSR)
+  // Hide server-rendered LCP shell once client has mounted so only one h1 is visible
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    const el = document.getElementById('server-lcp');
+    if (el) el.style.display = 'none';
     setMounted(true);
     const ref = new Date('2026-03-01T00:00:00Z');
     const now = new Date();
@@ -778,8 +781,8 @@ function HomeClient() {
 
       {/* Ad strip — mobile-friendly heights for 320x50 / 300x250; collapsed when Beautifier active */}
       <div key={activeTab} className={`max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-0 border-b border-gray-100 bg-white/50 ${activeTab === 'beautifier' ? 'min-h-0 overflow-hidden' : ''}`}>
-        <div id="ezoic-pub-ad-placeholder-101" role="region" aria-label="Advertisement" className={activeTab === 'beautifier' ? 'min-h-0 h-0 overflow-hidden' : 'min-h-[50px] sm:min-h-[50px] flex items-center justify-center'} />
-        <div id="ezoic-pub-ad-placeholder-111" role="region" aria-label="Advertisement" className={activeTab === 'beautifier' ? 'min-h-0 h-0 overflow-hidden' : 'min-h-[250px] sm:min-h-[90px] flex items-center justify-center'} />
+        <div id="ezoic-pub-ad-placeholder-101" role="region" aria-label="Advertisement" className={activeTab === 'beautifier' ? 'min-h-0 h-0 overflow-hidden' : 'min-h-[50px] sm:min-h-[50px] w-full flex items-center justify-center'} style={activeTab !== 'beautifier' ? { contain: 'layout' } : undefined} />
+        <div id="ezoic-pub-ad-placeholder-111" role="region" aria-label="Advertisement" className={activeTab === 'beautifier' ? 'min-h-0 h-0 overflow-hidden' : 'min-h-[250px] sm:min-h-[90px] w-full flex items-center justify-center'} style={activeTab !== 'beautifier' ? { contain: 'layout' } : undefined} />
       </div>
 
       {/* Main Content - min-height to reduce CLS; overflow-x-hidden on mobile for AdSense-friendly layout */}
@@ -1205,7 +1208,7 @@ function HomeClient() {
           </div>
 
           {/* Ezoic Ad Placement - Middle of Content (102) - mobile 300x250 / desktop responsive */}
-          <div id="ezoic-pub-ad-placeholder-102" role="region" aria-label="Advertisement" className="min-h-[250px] sm:min-h-[250px]" />
+          <div id="ezoic-pub-ad-placeholder-102" role="region" aria-label="Advertisement" className="min-h-[250px] sm:min-h-[250px] w-full" style={{ contain: 'layout' }} />
 
           <div className="mt-10 sm:mt-12">
             <div className="text-center mb-6">
@@ -1256,7 +1259,7 @@ function HomeClient() {
       )}
 
       {/* Ezoic Ad Placement - Before Footer (103) - mobile leaderboard / desktop banner */}
-      <div id="ezoic-pub-ad-placeholder-103" role="region" aria-label="Advertisement" className="min-h-[50px] sm:min-h-[90px]" />
+      <div id="ezoic-pub-ad-placeholder-103" role="region" aria-label="Advertisement" className="min-h-[50px] sm:min-h-[90px] w-full" style={{ contain: 'layout' }} />
 
       {/* Footer — mobile: larger tap targets for links (AdSense-friendly engagement) */}
       <footer className="mt-auto pt-8 pb-6 sm:pt-16 sm:pb-10 border-t border-gray-200/80 bg-white/90 backdrop-blur-md shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">

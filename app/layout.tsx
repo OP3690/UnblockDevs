@@ -231,9 +231,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }}
         />
-        {/* Preconnect: only 2 origins to avoid "too many preconnect" (Lighthouse). Fonts for LCP. */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        {/* Fonts are self-hosted via next/font; no preconnect to Google Fonts (Lighthouse: unused preconnect) */}
         <link rel="dns-prefetch" href="https://g.ezoic.net" />
         <link rel="dns-prefetch" href="https://privacy.gatekeeperconsent.com" />
         <link rel="dns-prefetch" href="https://cdnjs.buymeacoffee.com" />

@@ -19,7 +19,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
     .map((d) => d.name)
     .filter((slug) => !redirectOnlyBlogSlugs.includes(slug))
 
-  // Main pages
+  // Discover all non-blog app routes from filesystem so no page is ever missing
+  function discoverAppRoutes(dir: string, prefix: string): string[] {
+    const routes: string[] = []
+    const fullPath = path.join(process.cwd(), 'app', dir)
+    if (!fs.existsSync(fullPath)) return routes
+    const entries = fs.readdirSync(fullPath, { withFileTypes: true })
+    for (const e of entries) {
+      const rel = prefix ? `${prefix}/${e.name}` : e.name
+      if (e.isDirectory()) {
+        if (fs.existsSync(path.join(fullPath, e.name, 'page.tsx'))) routes.push(rel)
+        routes.push(...discoverAppRoutes(path.join(dir, e.name), rel))
+      }
+    }
+    return routes
+  }
+  const discoveredRoutes = new Set(discoverAppRoutes('', '').filter((r) => !r.startsWith('blog')))
+
+  // Main pages (explicit list with priorities; discovered routes not in this list get defaults below)
   const mainPages = [
     {
       url: '',
@@ -305,16 +322,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ]
 
-  // Generate sitemap entries
+  const mainUrls = new Set(mainPages.map((p) => p.url))
+
+  // Generate sitemap entries: explicit main pages + any discovered route not in mainPages + blog
   const entries: MetadataRoute.Sitemap = [
-    // Main pages
+    // Main pages (explicit list)
     ...mainPages.map((page) => ({
       url: `${baseUrl}/${page.url}`,
       lastModified: currentDate,
       changeFrequency: page.changefreq,
       priority: page.priority,
     })),
-    // Blog posts (all posts from blog listing, including 18+ new AI blogs)
+    // Any app route discovered from filesystem but not in mainPages (catch-all so no page is missed)
+    ...[...discoveredRoutes]
+      .filter((url) => !mainUrls.has(url))
+      .map((url) => ({
+        url: `${baseUrl}/${url}`,
+        lastModified: currentDate,
+        changeFrequency: 'monthly' as const,
+        priority: 0.7,
+      })),
+    // Blog posts (all posts from blog listing)
     ...blogSlugs.map((slug) => ({
       url: `${baseUrl}/blog/${slug}`,
       lastModified: currentDate,
