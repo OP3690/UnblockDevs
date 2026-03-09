@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useTransition } from 'react';
 import {
   GitCompare,
   Copy,
@@ -150,6 +150,7 @@ export default function SmartJsonDiff() {
   const [viewMode, setViewMode] = useState<'structured' | 'sidebyside'>('structured');
   const [entropyOpen, setEntropyOpen] = useState(false);
   const [metricsOpen, setMetricsOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const runDiff = useCallback(() => {
     setError(null);
@@ -158,20 +159,22 @@ export default function SmartJsonDiff() {
       setError('Paste JSON in both panels.');
       return;
     }
-    try {
-      const r = smartDiff(jsonA, jsonB, config);
-      setResult(r);
-      setEntropyOpen(false);
-      setMetricsOpen(false);
-      toast.success(
-        r.changes.length === 0 ? 'No semantic differences.' : `${r.changes.length} meaningful change(s).`
-      );
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : 'Invalid JSON or diff failed';
-      setError(msg);
-      setResult(null);
-      toast.error(msg);
-    }
+    startTransition(() => {
+      try {
+        const r = smartDiff(jsonA, jsonB, config);
+        setResult(r);
+        setEntropyOpen(false);
+        setMetricsOpen(false);
+        toast.success(
+          r.changes.length === 0 ? 'No semantic differences.' : `${r.changes.length} meaningful change(s).`
+        );
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : 'Invalid JSON or diff failed';
+        setError(msg);
+        setResult(null);
+        toast.error(msg);
+      }
+    });
   }, [jsonA, jsonB, config]);
 
   const applyPreset = useCallback((name: string, presetConfig: NormalizationConfig) => {
@@ -301,7 +304,7 @@ export default function SmartJsonDiff() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 tool-panel-contain">
       {/* Header + Input card */}
       <div className="rounded-2xl border border-gray-200/80 bg-white p-6 shadow-md shadow-gray-200/50">
         <div className="flex flex-wrap items-start justify-between gap-4">
@@ -452,10 +455,11 @@ export default function SmartJsonDiff() {
           <button
             type="button"
             onClick={runDiff}
-            className="inline-flex items-center gap-2 rounded-xl bg-primary-600 px-5 py-2.5 text-sm font-medium text-white shadow-md shadow-primary-500/25 hover:bg-primary-700"
+            disabled={isPending}
+            className="inline-flex items-center gap-2 rounded-xl bg-primary-600 px-5 py-2.5 text-sm font-medium text-white shadow-md shadow-primary-500/25 hover:bg-primary-700 disabled:opacity-70 disabled:cursor-wait"
           >
             <GitCompare className="h-4 w-4" />
-            Compare
+            {isPending ? 'Comparing…' : 'Compare'}
           </button>
         </div>
       </div>

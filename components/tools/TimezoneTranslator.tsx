@@ -569,7 +569,7 @@ export default function TimezoneTranslator() {
   }, [isTimezoneDropdownOpen]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 tool-panel-contain">
       {/* Header */}
       <div className="bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 rounded-xl p-6 text-white shadow-lg">
         <div className="flex items-center gap-3 mb-2">

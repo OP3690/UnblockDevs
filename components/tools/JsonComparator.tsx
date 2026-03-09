@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useDeferredValue } from 'react';
 import { GitCompare, Copy, Check, AlertCircle, Plus, Minus, Edit, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy } from '@/lib/analytics';
@@ -20,8 +20,10 @@ export default function JsonComparator() {
   const [json2, setJson2] = useState('');
   const [viewMode, setViewMode] = useState<'side-by-side' | 'unified' | 'tree'>('side-by-side');
   const [copied, setCopied] = useState(false);
-  const [error1, setError1] = useState<string | null>(null);
-  const [error2, setError2] = useState<string | null>(null);
+
+  // Defer parse/diff so typing stays responsive (INP)
+  const deferredJson1 = useDeferredValue(json1);
+  const deferredJson2 = useDeferredValue(json2);
 
   const parseJson = (text: string): { data: any; error: string | null } => {
     if (!text.trim()) {
@@ -205,45 +207,35 @@ export default function JsonComparator() {
     return diffs;
   };
 
-  const calculateDiff = (): DiffResult[] => {
-    const parsed1 = parseJson(json1);
-    const parsed2 = parseJson(json2);
+  const { diffs, error1, error2, parsed1, parsed2 } = useMemo(() => {
+    const p1 = parseJson(deferredJson1);
+    const p2 = parseJson(deferredJson2);
 
-    if (parsed1.error || parsed2.error) {
-      return [];
+    if (p1.error || p2.error) {
+      return { diffs: [] as DiffResult[], error1: p1.error, error2: p2.error, parsed1: p1, parsed2: p2 };
+    }
+    if (p1.data === null || p2.data === null) {
+      return { diffs: [] as DiffResult[], error1: p1.error, error2: p2.error, parsed1: p1, parsed2: p2 };
     }
 
-    if (parsed1.data === null || parsed2.data === null) {
-      return [];
-    }
-
-    const data1 = parsed1.data;
-    const data2 = parsed2.data;
+    const data1 = p1.data;
+    const data2 = p2.data;
+    let diffsResult: DiffResult[];
 
     if (Array.isArray(data1) && Array.isArray(data2)) {
-      return compareArrays(data1, data2, '', true);
+      diffsResult = compareArrays(data1, data2, '', true);
     } else if (typeof data1 === 'object' && typeof data2 === 'object') {
-      return compareObjects(data1, data2, '', true);
+      diffsResult = compareObjects(data1, data2, '', true);
     } else {
-      // Primitive comparison
       if (data1 !== data2) {
-        return [
-          {
-            type: 'modified',
-            path: '',
-            oldValue: data1,
-            newValue: data2,
-            key: 'root',
-          },
-        ];
+        diffsResult = [{ type: 'modified', path: '', oldValue: data1, newValue: data2, key: 'root' }];
+      } else {
+        diffsResult = [];
       }
-      return [];
     }
-  };
 
-  const diffs = useMemo(() => calculateDiff(), [json1, json2]);
-  const parsed1 = parseJson(json1);
-  const parsed2 = parseJson(json2);
+    return { diffs: diffsResult, error1: null, error2: null, parsed1: p1, parsed2: p2 };
+  }, [deferredJson1, deferredJson2]);
 
   const stats = useMemo(() => {
     const added = diffs.filter((d) => d.type === 'added').length;
@@ -298,7 +290,7 @@ export default function JsonComparator() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 tool-panel-contain">
       <div className="bg-white rounded-lg shadow-lg p-6">
         <div className="flex items-center gap-3 mb-6">
           <GitCompare className="w-6 h-6 text-blue-600" />
@@ -313,11 +305,7 @@ export default function JsonComparator() {
             </label>
             <textarea
               value={json1}
-              onChange={(e) => {
-                setJson1(e.target.value);
-                const parsed = parseJson(e.target.value);
-                setError1(parsed.error);
-              }}
+              onChange={(e) => setJson1(e.target.value)}
               placeholder="Paste first JSON here..."
               className={`w-full h-64 p-4 font-mono text-sm border-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none ${
                 error1 ? 'border-red-300' : 'border-gray-300'
@@ -338,11 +326,7 @@ export default function JsonComparator() {
             </label>
             <textarea
               value={json2}
-              onChange={(e) => {
-                setJson2(e.target.value);
-                const parsed = parseJson(e.target.value);
-                setError2(parsed.error);
-              }}
+              onChange={(e) => setJson2(e.target.value)}
               placeholder="Paste second JSON here..."
               className={`w-full h-64 p-4 font-mono text-sm border-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none ${
                 error2 ? 'border-red-300' : 'border-gray-300'

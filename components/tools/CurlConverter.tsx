@@ -130,7 +130,7 @@ export default function CurlConverter() {
   const secrets = parsed ? detectSecrets(parsed) : [];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 tool-panel-contain">
       {/* Privacy banner */}
       <div className="rounded-lg border border-emerald-200 bg-emerald-50/80 px-4 py-3 flex items-start gap-3">
         <Lock className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />

@@ -163,7 +163,7 @@ export default function ApiComparator() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 tool-panel-contain">
       <div className="bg-white rounded-lg shadow-lg p-6">
         <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
           <GitCompare className="w-6 h-6 text-primary-600" />

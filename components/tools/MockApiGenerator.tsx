@@ -133,7 +133,7 @@ export default function MockApiGenerator() {
   const localUrl = `http://localhost:3001${config.endpoint}`;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 tool-panel-contain">
       {/* Header */}
       <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
         <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-5 text-white">

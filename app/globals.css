@@ -84,6 +84,11 @@ input, select, textarea {
 .inline-flex { display: inline-flex; }
 .items-center { align-items: center; }
 
+/* INP: limit layout scope so interactions don't trigger full-page reflow */
+.tool-panel-contain {
+  contain: layout;
+}
+
 /* Custom scrollbar for JSON Builder */
 .custom-scrollbar::-webkit-scrollbar {
   width: 8px;

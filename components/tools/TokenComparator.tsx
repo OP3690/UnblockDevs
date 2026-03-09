@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo, useDeferredValue } from 'react';
 import {
   Key,
   Copy,
@@ -63,14 +63,17 @@ export default function TokenComparator() {
   } | null>(null);
   const resultsSectionRef = useRef<HTMLDivElement>(null);
 
-  // Single-token analysis (from Token 1)
+  // Defer analysis so typing stays responsive (INP)
+  const deferredToken1 = useDeferredValue(token1);
+
+  // Single-token analysis (from Token 1) — runs on deferred value
   const detection: TokenDetection | null = useMemo(
-    () => (token1.trim() ? detectTokenType(token1) : null),
-    [token1]
+    () => (deferredToken1.trim() ? detectTokenType(deferredToken1) : null),
+    [deferredToken1]
   );
   const decoded: JwtDecoded | null = useMemo(
-    () => (token1.trim() ? decodeJwt(token1) : null),
-    [token1]
+    () => (deferredToken1.trim() ? decodeJwt(deferredToken1) : null),
+    [deferredToken1]
   );
   const audit: SecurityAuditType | null = useMemo(
     () => (decoded ? securityAudit(decoded) : null),
@@ -81,12 +84,12 @@ export default function TokenComparator() {
     [decoded]
   );
   const entropySingle: EntropyResult | null = useMemo(
-    () => (token1.trim() ? getEntropy(token1) : null),
-    [token1]
+    () => (deferredToken1.trim() ? getEntropy(deferredToken1) : null),
+    [deferredToken1]
   );
   const metadata: TokenMetadata | null = useMemo(
-    () => (token1.trim() ? getTokenMetadata(token1) : null),
-    [token1]
+    () => (deferredToken1.trim() ? getTokenMetadata(deferredToken1) : null),
+    [deferredToken1]
   );
 
   const normalizeToken = (token: string) => token.replace(/\s+/g, '');
@@ -262,7 +265,7 @@ export default function TokenComparator() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 tool-panel-contain">
       {/* Header */}
       <div className="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 rounded-xl p-6 text-white shadow-lg">
         <div className="flex items-center gap-3 mb-2">

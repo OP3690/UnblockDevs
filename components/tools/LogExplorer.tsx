@@ -233,7 +233,7 @@ export default function LogExplorer() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 tool-panel-contain">
       <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex flex-wrap items-center justify-between gap-3">
           <div>
