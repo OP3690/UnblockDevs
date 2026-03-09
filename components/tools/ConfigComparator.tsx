@@ -59,8 +59,8 @@ export default function ConfigComparator() {
       const flat1 = flattenObject(validation1.data);
       const flat2 = flattenObject(validation2.data);
       const allKeys = new Set<string>();
-      flat1.keys().forEach(key => allKeys.add(key));
-      flat2.keys().forEach(key => allKeys.add(key));
+      for (const key of flat1.keys()) allKeys.add(key);
+      for (const key of flat2.keys()) allKeys.add(key);
 
       const results: DiffItem[] = [];
 
