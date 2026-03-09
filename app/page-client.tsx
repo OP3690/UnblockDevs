@@ -13,7 +13,6 @@ import JsonInput from '@/components/JsonInput';
 // Below-fold / non-critical: lazy load to reduce initial JS (LCP)
 const NewsletterSignup = dynamic(() => import('@/components/NewsletterSignup'), { ssr: false, loading: () => null });
 const FeedbackForm = dynamic(() => import('@/components/FeedbackForm'), { ssr: false, loading: () => null });
-const CommissionDisclosure = dynamic(() => import('@/components/CommissionDisclosure'), { ssr: false, loading: () => null });
 import DataTable from '@/components/DataTable';
 import SectionManager from '@/components/SectionManager';
 import JsonBeautifier from '@/components/JsonBeautifier';
@@ -114,9 +113,6 @@ function HomeClient() {
   const [sections, setSections] = useState<Section[]>([]);
   const [removedColumns, setRemovedColumns] = useState<Set<string>>(new Set());
   const [historyManager] = useState(() => new HistoryManager(10));
-  const [totalVisits, setTotalVisits] = useState<number>(0);
-  // Deterministic initial value for SSR/hydration; real value set in useEffect
-  const [activeUsers, setActiveUsers] = useState<number>(400);
   const [mounted, setMounted] = useState<boolean>(false);
   const [showBookmarkPrompt, setShowBookmarkPrompt] = useState<boolean>(false);
   const [reserveBannerSpace, setReserveBannerSpace] = useState<boolean>(true);
@@ -185,14 +181,6 @@ function HomeClient() {
     const el = document.getElementById('server-lcp');
     if (el) el.style.display = 'none';
     setMounted(true);
-    const ref = new Date('2026-03-01T00:00:00Z');
-    const now = new Date();
-    const monthsSince = (now.getFullYear() - ref.getFullYear()) * 12 + (now.getMonth() - ref.getMonth());
-    const threeMonthPeriods = Math.max(0, Math.floor(monthsSince / 3));
-    const increment = threeMonthPeriods * 100;
-    const min = 300 + increment;
-    const max = 500 + increment;
-    setActiveUsers(min + Math.floor(Math.random() * (max - min + 1)));
     const urlParams = new URLSearchParams(window.location.search);
       const tabParam = urlParams.get('tab');
       if (tabParam === 'converter') {
@@ -236,45 +224,14 @@ function HomeClient() {
     return () => clearTimeout(t);
   }, [mounted]);
 
-  // Track visits and active users using API
+  // Stats widget removed (was showing Active Users / Total Visits with broken data). Re-add when /api/stats is reliable.
+  // Optional: keep a lightweight heartbeat for future analytics if desired.
   useEffect(() => {
     if (!mounted) return;
-    
-    const fetchStats = async () => {
-      try {
-        const response = await fetch('/api/stats', {
-          method: 'GET',
-          credentials: 'include',
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setTotalVisits(data.totalVisits || 0);
-        }
-      } catch (error) {
-        console.error('Failed to fetch stats:', error);
-      }
-    };
-
-    fetchStats();
-
-    const heartbeatInterval = setInterval(async () => {
-      try {
-        await fetch('/api/stats', {
-          method: 'POST',
-          credentials: 'include',
-        });
-        fetchStats();
-      } catch (error) {
-        console.error('Failed to send heartbeat:', error);
-      }
+    const heartbeatInterval = setInterval(() => {
+      fetch('/api/stats', { method: 'POST', credentials: 'include' }).catch(() => {});
     }, 30000);
-
-    const statsInterval = setInterval(fetchStats, 10000);
-
-    return () => {
-      clearInterval(heartbeatInterval);
-      clearInterval(statsInterval);
-    };
+    return () => clearInterval(heartbeatInterval);
   }, [mounted]);
 
   const saveToHistory = useCallback(() => {
@@ -519,23 +476,6 @@ function HomeClient() {
                     </button>
                     <span className={`min-w-[2.5rem] text-[11px] font-semibold whitespace-nowrap tabular-nums ${devMode ? 'text-slate-600' : 'text-gray-700'}`}>
                       {devMode ? 'Dark' : 'Light'}
-                    </span>
-                  </div>
-                  <span className="text-gray-300 font-medium shrink-0 hidden md:inline" aria-hidden>|</span>
-                  <div className="hidden md:flex items-center gap-2 flex-shrink-0">
-                    <span className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg bg-blue-50/80 border border-blue-100">
-                      <span className="text-gray-600 font-medium">Active Users:</span>
-                      <span className="font-bold text-blue-600 tabular-nums min-w-[2.5rem] inline-block text-right">{activeUsers}</span>
-                    </span>
-                    <span className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg bg-purple-50/80 border border-purple-100">
-                      <span className="text-gray-600 font-medium">Total Visits:</span>
-                      <span className="font-bold text-purple-600 tabular-nums min-w-[4rem] inline-block text-right">{totalVisits.toLocaleString()}</span>
-                    </span>
-                    <span className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg bg-gray-50 border border-gray-100" title="USA, UK, Philippines">
-                      <span className="text-gray-600 font-medium">Top 3:</span>
-                      <span className="inline-flex items-center gap-1 font-medium text-gray-700">
-                        <span aria-hidden>🇺🇸</span> USA <span className="text-gray-400">·</span> <span aria-hidden>🇬🇧</span> UK <span className="text-gray-400">·</span> <span aria-hidden>🇵🇭</span> PH
-                      </span>
                     </span>
                   </div>
                 </div>
@@ -907,7 +847,6 @@ function HomeClient() {
                   </ul>
                 </nav>
               </div>
-              <CommissionDisclosure variant="belowInput" />
             </div>
           ) : (
             <>

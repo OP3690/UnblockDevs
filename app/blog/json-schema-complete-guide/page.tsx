@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, FileCode, CheckCircle } from 'lucide-react';
-import CommissionDisclosure from '@/components/CommissionDisclosure';
 
 export const metadata: Metadata = {
   title: 'JSON Schema & Stringify Complete Guide – Generate, Validate, Format | UnblockDevs',
@@ -48,7 +47,6 @@ export default function JsonSchemaCompleteGuidePage() {
       </header>
 
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <CommissionDisclosure />
         <header className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">JSON Schema & Stringify: Complete Guide</h1>
           <p className="text-xl text-gray-600 leading-relaxed">
