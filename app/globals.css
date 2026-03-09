@@ -169,10 +169,10 @@ input, select, textarea {
   animation: badge-flash 1.5s ease-in-out infinite;
 }
 
-/* Soft glow pulse — opacity only to avoid CLS from box-shadow reflow */
+/* GPU-composited pulse (opacity + transform only — no box-shadow repaint) */
 @keyframes btn-glow-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.85; }
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.01); }
 }
 
 .animate-btn-glow {
@@ -2018,8 +2018,8 @@ html.dev-mode .generate-sample-json-btn.animate-btn-glow {
   animation: btn-glow-pulse-dark 2s ease-in-out infinite;
 }
 @keyframes btn-glow-pulse-dark {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.85; }
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.01); }
 }
 
 /* 1M celebration popup – confetti */

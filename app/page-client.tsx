@@ -9,13 +9,14 @@ import { PersonalizationManager, ToolTab } from '@/lib/personalization';
 import { trackToolUsed, trackCopy } from '@/lib/analytics';
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget';
 import { useDevMode } from '@/components/DevModeWrapper';
-import JsonInput from '@/components/JsonInput';
+// Below-fold / non-critical: lazy load to reduce initial JS (mobile LCP)
+const JsonInput = dynamic(() => import('@/components/JsonInput'), {
+  ssr: false,
+  loading: () => <div className="w-full rounded-lg bg-gray-50 border border-gray-200 animate-pulse" style={{ minHeight: '200px' }} aria-hidden />,
+});
 // Below-fold / non-critical: lazy load to reduce initial JS (LCP)
 const NewsletterSignup = dynamic(() => import('@/components/NewsletterSignup'), { ssr: false, loading: () => null });
 const FeedbackForm = dynamic(() => import('@/components/FeedbackForm'), { ssr: false, loading: () => null });
-import DataTable from '@/components/DataTable';
-import SectionManager from '@/components/SectionManager';
-
 const toolLoading = () => (
   <div className="w-full bg-gray-50 border border-gray-200 rounded-lg animate-pulse" style={{ height: '300px' }} aria-hidden />
 );
@@ -68,6 +69,12 @@ const TimezoneTranslator = dynamic(() => import('@/components/tools/TimezoneTran
 });
 const HarToCurl = dynamic(() => import('@/components/tools/HarToCurl'), {
   loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+});
+const SectionManager = dynamic(() => import('@/components/SectionManager'), {
+  loading: () => <div className="min-h-[120px] rounded-lg bg-gray-50 animate-pulse" aria-hidden />,
+});
+const DataTable = dynamic(() => import('@/components/DataTable'), {
+  loading: () => <div className="min-h-[200px] rounded-lg bg-gray-50 animate-pulse" aria-hidden />,
 });
 import {
   jsonToRows,

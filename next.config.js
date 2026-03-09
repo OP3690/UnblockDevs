@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+// Note: experimental.optimizeCss (critters) is not supported with App Router — use other LCP fixes instead.
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,

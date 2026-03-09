@@ -9,8 +9,8 @@ import Celebration1MPopup from '@/components/Celebration1MPopup'
 import GA4RouteTracker from '@/components/GA4RouteTracker'
 import GlobalAdSlot from '@/components/GlobalAdSlot'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' })
-const firaCode = Fira_Code({ subsets: ['latin'], variable: '--font-fira-code', display: 'swap' })
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap', preload: true })
+const firaCode = Fira_Code({ subsets: ['latin'], variable: '--font-fira-code', display: 'swap', preload: true })
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -228,9 +228,8 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }}
         />
-        {/* Preconnects only for AdSense/ads (no Gatekeeper/BMC to save ~400ms) */}
+        {/* Only 2 preconnects — no gatekeeper, no BMC, no adtrafficquality (~400ms saved on mobile) */}
         <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
-        <link rel="preconnect" href="https://ep1.adtrafficquality.google" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://fundingchoicesmessages.google.com" />
         
         {/* Favicon for Google Search Results - Multiple formats for better compatibility */}
