@@ -1,6 +1,9 @@
 import { MetadataRoute } from 'next'
 import path from 'path'
 import fs from 'fs'
+import { blogPosts } from '@/lib/blog-posts-data'
+
+const BLOG_PER_PAGE = 6
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://unblockdevs.com'
@@ -379,6 +382,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: currentDate,
       changeFrequency: 'monthly' as const,
       priority: 0.7,
+    })),
+    // Blog listing pagination (page 1 is main /blog; page 2+ for crawlability and discovery)
+    ...Array.from(
+      { length: Math.max(0, Math.ceil(blogPosts.length / BLOG_PER_PAGE) - 1) },
+      (_, i) => i + 2
+    ).map((page) => ({
+      url: `${baseUrl}/blog?page=${page}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly' as const,
+      priority: 0.75,
     })),
   ].filter((e) => isPageUrl(e.url))
 
