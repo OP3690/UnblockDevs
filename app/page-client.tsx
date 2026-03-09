@@ -559,9 +559,9 @@ function HomeClient() {
             </div>
             <div id="ezoic-pub-ad-placeholder-100" className="hidden lg:block flex-1 min-w-0" />
             <nav className="flex items-center justify-end gap-1.5 sm:gap-3 flex-shrink-0" aria-label="Main navigation">
-              <Link href="/blog" className="min-h-[44px] min-w-[44px] sm:min-w-0 flex items-center justify-center px-3 sm:px-4 py-2.5 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-xl shadow-lg shadow-primary-900/20 hover:shadow-xl hover:shadow-primary-900/25 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 active:scale-95 touch-manipulation" aria-label="Developer's Study Materials">
-                <FileText className="h-4 w-4 sm:hidden" aria-hidden />
-                <span className="hidden sm:inline">Developer&apos;s Study Materials 📚</span>
+              <Link href="/blog" className="min-h-[44px] min-w-[44px] sm:min-w-0 flex items-center justify-center px-3 sm:px-4 py-2.5 text-sm font-semibold rounded-xl shadow-lg shadow-primary-900/20 hover:shadow-xl hover:shadow-primary-900/25 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 active:scale-95 touch-manipulation bg-[#1d4ed8] text-[#fff] hover:bg-[#1e40af] focus-visible:ring-2 focus-visible:ring-primary-500" aria-label="Developer's Study Materials">
+                <FileText className="h-4 w-4 sm:hidden shrink-0 text-[#fff]" aria-hidden />
+                <span className="hidden sm:inline text-[#fff]">Developer&apos;s Study Materials 📚</span>
               </Link>
               <Link href="/about" className="min-h-[44px] flex items-center px-3 sm:px-4 py-2.5 text-sm font-medium text-gray-600 hover:text-primary-700 hover:bg-primary-50 rounded-xl border border-gray-200 hover:border-primary-200 transition-all duration-200 active:scale-95 touch-manipulation">About</Link>
             </nav>
@@ -1281,10 +1281,10 @@ function HomeClient() {
               <div className="mt-4">
                 <Link
                   href="/blog"
-                  className="inline-flex items-center justify-center gap-2 min-h-[44px] px-4 py-3 sm:py-2 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors touch-manipulation active:scale-[0.98]"
+                  className="inline-flex items-center justify-center gap-2 min-h-[44px] px-4 py-3 sm:py-2 text-sm font-medium rounded-lg transition-colors touch-manipulation active:scale-[0.98] text-[#1d4ed8] hover:text-[#1e40af] hover:bg-blue-50 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                 >
-                  <FileText className="w-4 h-4" aria-hidden />
-                  Developer&apos;s Study Materials 📚
+                  <FileText className="w-4 h-4 text-[#1d4ed8]" aria-hidden />
+                  <span className="text-[#1d4ed8]">Developer&apos;s Study Materials 📚</span>
                 </Link>
               </div>
             </div>

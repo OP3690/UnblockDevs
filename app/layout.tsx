@@ -228,8 +228,12 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }}
         />
         {/* Fonts are self-hosted via next/font; no preconnect to Google Fonts (Lighthouse: unused preconnect) */}
-        <link rel="dns-prefetch" href="https://privacy.gatekeeperconsent.com" />
-        <link rel="dns-prefetch" href="https://cdnjs.buymeacoffee.com" />
+        {/* Preconnect to LCP-critical third parties (saves ~100–110 ms when they load) */}
+        <link rel="preconnect" href="https://cdn.buymeacoffee.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://cdnjs.buymeacoffee.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://privacy.gatekeeperconsent.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://the.gatekeeperconsent.com" />
+        <link rel="dns-prefetch" href="https://cmp.gatekeeperconsent.com" />
         <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
         {/* AdSense loaded deferred (see bottom script) to improve LCP */}
         <link rel="dns-prefetch" href="https://lb.eu-1-id5-sync.com" />
