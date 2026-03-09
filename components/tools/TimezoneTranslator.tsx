@@ -100,7 +100,8 @@ const getAllTimezonesGrouped = (): TimezoneGroup[] => {
   let allTimezones: string[] = [];
   
   try {
-    allTimezones = Intl.supportedValuesOf('timeZone').sort();
+    // supportedValuesOf is ES2022; TypeScript lib is ES2020. Cast for compile; runtime has try/catch.
+    allTimezones = (Intl as unknown as { supportedValuesOf(key: 'timeZone'): string[] }).supportedValuesOf('timeZone').sort();
   } catch {
     // Fallback: comprehensive list
     allTimezones = [
