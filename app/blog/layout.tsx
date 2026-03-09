@@ -25,8 +25,9 @@ export default function BlogLayout({
     <>
       <div
         key={`${key}-top`}
-        className="min-h-[50px] flex items-center justify-center bg-gray-50/50 border-b border-gray-100 py-2 px-2 sm:px-0"
+        role="region"
         aria-label="Advertisement"
+        className="min-h-[50px] flex items-center justify-center bg-gray-50/50 border-b border-gray-100 py-2 px-2 sm:px-0"
       >
         <AdUnit slot={SLOT_TOP} format="auto" minHeight={50} className="w-full max-w-full" />
       </div>
@@ -34,6 +35,7 @@ export default function BlogLayout({
         <div className="flex flex-col xl:flex-row xl:gap-8">
           <aside
             key={`${key}-left`}
+            role="region"
             aria-label="Advertisement"
             className="hidden xl:block flex-shrink-0 w-[160px] sticky top-24 self-start"
           >
@@ -44,6 +46,7 @@ export default function BlogLayout({
           </main>
           <aside
             key={`${key}-right`}
+            role="region"
             aria-label="Advertisement"
             className="hidden xl:block flex-shrink-0 w-[300px] sticky top-24 self-start"
           >
@@ -53,8 +56,9 @@ export default function BlogLayout({
       </div>
       <div
         key={`${key}-bottom`}
-        className="min-h-[250px] sm:min-h-[90px] flex items-center justify-center bg-gray-50/50 border-t border-gray-100 py-4 sm:py-6 px-2 sm:px-0"
+        role="region"
         aria-label="Advertisement"
+        className="min-h-[250px] sm:min-h-[90px] flex items-center justify-center bg-gray-50/50 border-t border-gray-100 py-4 sm:py-6 px-2 sm:px-0"
       >
         <AdUnit slot={SLOT_BOTTOM} format="autorelaxed" minHeight={90} className="w-full max-w-full" />
       </div>

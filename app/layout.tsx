@@ -233,6 +233,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://cdn.buymeacoffee.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://cdnjs.buymeacoffee.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://privacy.gatekeeperconsent.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://fundingchoicesmessages.google.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://the.gatekeeperconsent.com" />
         <link rel="dns-prefetch" href="https://cmp.gatekeeperconsent.com" />
         <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />

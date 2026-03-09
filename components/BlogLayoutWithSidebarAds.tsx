@@ -46,7 +46,7 @@ export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSid
         </div>
       </main>
       {/* Ad 4 — sidebar (vertical) */}
-      <div className="hidden xl:block flex-shrink-0 sticky top-24 self-start w-[300px]" aria-label="Advertisement">
+      <div role="region" aria-label="Advertisement" className="hidden xl:block flex-shrink-0 sticky top-24 self-start w-[300px]">
         <AdUnit slot={SLOT_SIDEBAR} format="auto" minHeight={250} className="rounded-lg overflow-hidden" />
       </div>
     </div>

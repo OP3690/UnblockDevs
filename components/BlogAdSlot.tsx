@@ -14,8 +14,9 @@ export default function BlogAdSlot({
   return (
     <div
       id={id}
-      className={`min-h-[90px] flex items-center justify-center bg-gray-50/60 rounded-lg border border-gray-100 py-6 my-8 ${className}`}
+      role="region"
       aria-label="Advertisement"
+      className={`min-h-[90px] flex items-center justify-center bg-gray-50/60 rounded-lg border border-gray-100 py-6 my-8 ${className}`}
     />
   );
 }
