@@ -37,6 +37,25 @@ const nextConfig = {
       // Orphan blog slugs → canonical (so blog index can link to one URL)
       { source: '/blog/how-ai-creates-art-music-videos-seconds', destination: '/blog/how-ai-creates-art-music-videos-in-seconds', permanent: true },
       { source: '/blog/will-ai-take-over-world-movies-vs-reality', destination: '/blog/will-ai-take-over-the-world-movies-vs-reality', permanent: true },
+      // Off-topic posts (topical dilution): 301 to homepage so Google drops them and domain focus improves
+      { source: '/blog/how-to-cancel-audible-subscription-mobile-desktop', destination: '/', permanent: true },
+      { source: '/blog/how-to-see-deleted-instagram-messages-without-third-party-apps', destination: '/', permanent: true },
+      { source: '/blog/instagram-password-reset-email-guide', destination: '/', permanent: true },
+      { source: '/blog/how-to-invest-consistently-usa-tech-stocks', destination: '/', permanent: true },
+      { source: '/blog/apple-creator-studio-complete-guide', destination: '/', permanent: true },
+      { source: '/blog/how-to-cancel-amazon-prime-membership-instantly', destination: '/', permanent: true },
+      { source: '/blog/how-to-cancel-netflix-subscription-without-losing-watch-history', destination: '/', permanent: true },
+      { source: '/blog/how-to-cancel-spotify-premium-and-get-refund', destination: '/', permanent: true },
+      { source: '/blog/xbox-game-pass-games-complete-guide', destination: '/', permanent: true },
+      { source: '/blog/ces-2026-fire-tv-stick-4k-max-project-ava', destination: '/', permanent: true },
+      // Duplicate JSON articles → consolidated guides (fix keyword cannibalization)
+      { source: '/blog/fix-json-parse-error-unexpected-token', destination: '/blog/fix-json-errors-complete-guide', permanent: true },
+      { source: '/blog/fix-unexpected-token-less-than-in-json-api-returns-html', destination: '/blog/fix-json-errors-complete-guide', permanent: true },
+      { source: '/blog/why-json-stringify-returns-undefined-fix', destination: '/blog/fix-json-errors-complete-guide', permanent: true },
+      { source: '/blog/json-stringify-complete-guide', destination: '/blog/json-schema-complete-guide', permanent: true },
+      { source: '/blog/json-format-standards-complete-guide', destination: '/blog/json-schema-complete-guide', permanent: true },
+      { source: '/blog/json-schema-generator-validation-guide', destination: '/blog/json-schema-complete-guide', permanent: true },
+      { source: '/blog/how-to-validate-json-schema-javascript', destination: '/blog/json-schema-complete-guide', permanent: true },
     ]
   },
   // Headers for better caching

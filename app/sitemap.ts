@@ -6,18 +6,47 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://unblockdevs.com'
   const currentDate = new Date().toISOString().split('T')[0]
 
-  // Blog slugs from filesystem: every app/blog/<slug>/ with page.tsx is in sitemap (includes all 18+ new AI blogs)
-  // Exclude slugs that 308 redirect to another URL (sitemap should only list canonical URLs)
+  // Blog slugs from filesystem: every app/blog/<slug>/ with page.tsx is in sitemap
+  // Exclude slugs that redirect (canonical or off-topic 301 to homepage)
   const redirectOnlyBlogSlugs = [
     'how-ai-creates-art-music-videos-seconds',
     'will-ai-take-over-world-movies-vs-reality',
+    'fix-json-parse-error-unexpected-token',
+    'fix-unexpected-token-less-than-in-json-api-returns-html',
+    'why-json-stringify-returns-undefined-fix',
+    'json-stringify-complete-guide',
+    'json-format-standards-complete-guide',
+    'json-schema-generator-validation-guide',
+    'how-to-validate-json-schema-javascript',
+  ]
+  const offTopicBlogSlugs = [
+    'how-to-cancel-audible-subscription-mobile-desktop',
+    'how-to-see-deleted-instagram-messages-without-third-party-apps',
+    'instagram-password-reset-email-guide',
+    'how-to-invest-consistently-usa-tech-stocks',
+    'apple-creator-studio-complete-guide',
+    'how-to-cancel-amazon-prime-membership-instantly',
+    'how-to-cancel-netflix-subscription-without-losing-watch-history',
+    'how-to-cancel-spotify-premium-and-get-refund',
+    'xbox-game-pass-games-complete-guide',
+    'ces-2026-fire-tv-stick-4k-max-project-ava',
+  ]
+  // Old duplicate JSON article slugs (301 to consolidated guides; exclude from sitemap)
+  const duplicateJsonRedirectSlugs = [
+    'fix-json-parse-error-unexpected-token',
+    'fix-unexpected-token-less-than-in-json-api-returns-html',
+    'why-json-stringify-returns-undefined-fix',
+    'json-stringify-complete-guide',
+    'json-format-standards-complete-guide',
+    'json-schema-generator-validation-guide',
+    'how-to-validate-json-schema-javascript',
   ]
   const blogDir = path.join(process.cwd(), 'app/blog')
   const blogSlugs = fs
     .readdirSync(blogDir, { withFileTypes: true })
     .filter((d) => d.isDirectory() && fs.existsSync(path.join(blogDir, d.name, 'page.tsx')))
     .map((d) => d.name)
-    .filter((slug) => !redirectOnlyBlogSlugs.includes(slug))
+    .filter((slug) => !redirectOnlyBlogSlugs.includes(slug) && !offTopicBlogSlugs.includes(slug) && !duplicateJsonRedirectSlugs.includes(slug))
 
   // Discover all non-blog app routes from filesystem so no page is ever missing
   function discoverAppRoutes(dir: string, prefix: string): string[] {
@@ -325,6 +354,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const mainUrls = new Set(mainPages.map((p) => p.url))
 
   // Generate sitemap entries: explicit main pages + any discovered route not in mainPages + blog
+  // Exclude non-pages (e.g. favicon.ico) so they never appear in sitemap
+  const isPageUrl = (url: string) => !url.endsWith('.ico') && !url.endsWith('/favicon.ico')
   const entries: MetadataRoute.Sitemap = [
     // Main pages (explicit list)
     ...mainPages.map((page) => ({
@@ -349,7 +380,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     })),
-  ]
+  ].filter((e) => isPageUrl(e.url))
 
   return entries
 }

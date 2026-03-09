@@ -145,15 +145,6 @@ export const metadata: Metadata = {
       keywords: ['benfords law', 'benford law', 'benfords law explained', 'what is benfords law', 'benfords law examples', 'benfords law fraud detection']
     },
     {
-      slug: 'apple-creator-studio-complete-guide',
-      title: 'Apple Creator Studio: Complete Guide 2026',
-      excerpt: 'Learn everything about Apple Creator Studio - features, how to use it, benefits for content creators, and best practices. Complete guide to Apple\'s content creation platform for iOS, macOS, and Apple ecosystem.',
-      date: '2026-02-09',
-      readTime: '13 min read',
-      category: 'Tools & Software',
-      keywords: ['apple creator studio', 'apple creator studio guide', 'apple creator studio tutorial', 'apple content creation', 'apple creator tools', 'apple studio app']
-    },
-    {
       slug: 'consuming-web-api-json-data-using-curl-and-jq-complete-guide',
       title: 'Consuming Web API JSON Data Using curl and jq: Complete Guide 2026',
       excerpt: 'Learn how to consume Web API JSON data using curl and jq. Complete guide with examples, best practices, and step-by-step tutorials for API testing and data processing.',
@@ -397,42 +388,6 @@ export const metadata: Metadata = {
       keywords: ['greedy algorithm', 'greedy algorithm explained', 'greedy algorithm tutorial', 'greedy algorithm examples', 'greedy algorithm interview', 'greedy approach', 'greedy strategy']
     },
     {
-      slug: 'how-to-cancel-audible-subscription-mobile-desktop',
-      title: 'How to Cancel Audible Subscription on Mobile & Desktop: Complete Guide 2026',
-      excerpt: 'Complete guide to canceling your Audible subscription on mobile (Android, iPhone) and desktop. Step-by-step instructions to cancel Audible membership, keep your credits, and preserve your audiobook library. Learn how to cancel Audible without losing access in 2026.',
-      date: '2026-01-25',
-      readTime: '12 min read',
-      category: 'Subscriptions & Services',
-      keywords: ['cancel audible subscription', 'how to cancel audible', 'cancel audible membership', 'audible cancellation guide']
-    },
-    {
-      slug: 'how-to-cancel-netflix-subscription-without-losing-watch-history',
-      title: 'How to Cancel Netflix Subscription Without Losing Watch History: Complete Guide 2026',
-      excerpt: 'Complete guide to canceling your Netflix subscription without losing watch history, recommendations, or account data. Step-by-step instructions for mobile, desktop, and TV. Learn how to cancel Netflix and preserve your viewing history in 2026.',
-      date: '2026-01-25',
-      readTime: '11 min read',
-      category: 'Subscriptions & Services',
-      keywords: ['cancel netflix subscription', 'how to cancel netflix', 'cancel netflix without losing history', 'netflix cancellation guide']
-    },
-    {
-      slug: 'how-to-cancel-amazon-prime-membership-instantly',
-      title: 'How to Cancel Amazon Prime Membership Instantly: Complete Guide 2026',
-      excerpt: 'Complete guide to canceling your Amazon Prime membership instantly. Step-by-step instructions for mobile, desktop, and app. Learn how to cancel Amazon Prime, get refunds, and end membership immediately in 2026.',
-      date: '2026-01-25',
-      readTime: '13 min read',
-      category: 'Subscriptions & Services',
-      keywords: ['cancel amazon prime', 'how to cancel amazon prime', 'cancel amazon prime membership', 'amazon prime cancellation guide']
-    },
-    {
-      slug: 'how-to-cancel-spotify-premium-and-get-refund',
-      title: 'How to Cancel Spotify Premium and Get Refund (If Eligible): Complete Guide 2026',
-      excerpt: 'Complete guide to canceling Spotify Premium subscription and getting refunds if eligible. Step-by-step instructions for mobile, desktop, and web. Learn how to cancel Spotify Premium, downgrade to free, and request refunds in 2026.',
-      date: '2026-01-25',
-      readTime: '12 min read',
-      category: 'Subscriptions & Services',
-      keywords: ['cancel spotify premium', 'how to cancel spotify premium', 'spotify premium cancellation', 'cancel spotify premium refund']
-    },
-    {
       slug: 'how-to-see-instagram-story-without-being-seen',
       title: 'How to See Instagram Story Without Being Seen: Complete Guide 2026',
       excerpt: 'Complete guide to viewing Instagram stories anonymously without being seen. Learn how to see Instagram stories without showing up in viewers list. Step-by-step methods for viewing stories privately in 2026.',
@@ -478,15 +433,6 @@ export const metadata: Metadata = {
       keywords: ['read whatsapp messages without blue ticks', 'how to read whatsapp without blue ticks', 'whatsapp read without blue checkmarks', 'disable blue ticks whatsapp']
     },
     {
-      slug: 'how-to-see-deleted-instagram-messages-without-third-party-apps',
-      title: 'How to See Deleted Instagram Messages Without Third-Party Apps: Complete Guide 2026',
-      excerpt: 'Complete guide to viewing deleted Instagram messages without third-party apps. Learn native methods, limitations, and what happens when messages are deleted. Step-by-step guide for Android, iPhone, and desktop in 2026.',
-      date: '2026-01-25',
-      readTime: '12 min read',
-      category: 'Social Media Privacy',
-      keywords: ['see deleted instagram messages', 'view deleted instagram messages', 'recover deleted instagram messages', 'how to see deleted instagram messages']
-    },
-    {
       slug: 'how-to-fix-cors-policy-error-javascript',
       title: 'How to Fix "CORS Policy Error" in JavaScript (All Browsers): Complete Guide 2026',
       excerpt: 'Complete guide to fixing CORS policy errors in JavaScript for all browsers. Learn CORS solutions, server-side fixes, proxy methods, and browser workarounds. Step-by-step troubleshooting guide with code examples in 2026.',
@@ -496,13 +442,22 @@ export const metadata: Metadata = {
       keywords: ['cors policy error', 'fix cors error javascript', 'cors policy error fix', 'how to fix cors error']
     },
     {
-      slug: 'fix-json-parse-error-unexpected-token',
-      title: 'Fix: JSON Parse Error – Unexpected Token (With Examples): Complete Guide 2026',
-      excerpt: 'Complete guide to fixing JSON parse errors with unexpected token. Learn common causes, solutions, and code examples. Step-by-step troubleshooting for JavaScript, Node.js, and all browsers in 2026.',
-      date: '2026-01-25',
-      readTime: '13 min read',
+      slug: 'fix-json-errors-complete-guide',
+      title: 'Fix JSON Errors: Complete Guide (Parse, Unexpected Token, Stringify)',
+      excerpt: 'One guide for JSON parse errors, unexpected token, API returns HTML, and JSON.stringify returns undefined. Causes, solutions, and code for JavaScript and Node.',
+      date: '2026-03-02',
+      readTime: '14 min read',
       category: 'JavaScript & Development',
-      keywords: ['json parse error', 'json parse error unexpected token', 'fix json parse error', 'json parse error javascript']
+      keywords: ['fix json errors', 'json parse error', 'unexpected token json', 'json api returns html', 'json.stringify returns undefined']
+    },
+    {
+      slug: 'json-schema-complete-guide',
+      title: 'JSON Schema, Stringify & Validation: Complete Guide',
+      excerpt: 'JSON Schema generation and validation, JSON.stringify best practices, and JSON format standards. One guide with examples and links to our free tools.',
+      date: '2026-03-02',
+      readTime: '12 min read',
+      category: 'JSON Tools',
+      keywords: ['json schema', 'json schema generator', 'json schema validation', 'json.stringify', 'json format standards']
     },
     {
       slug: 'how-to-fix-module-not-found-error-nodejs',
@@ -550,15 +505,6 @@ export const metadata: Metadata = {
       keywords: ['read json file python', 'python json parser', 'json.load python', 'pandas read json', 'parse json file python']
     },
     {
-      slug: 'how-to-validate-json-schema-javascript',
-      title: 'How to Validate JSON Schema in JavaScript: Complete Guide 2026',
-      excerpt: 'Learn how to validate JSON data against JSON Schema in JavaScript using ajv, jsonschema, and custom validation. Includes examples, error handling, and best practices for JSON Schema validation in JavaScript applications.',
-      date: '2026-01-26',
-      readTime: '15 min read',
-      category: 'JavaScript & Development',
-      keywords: ['validate json schema javascript', 'json schema validation', 'ajv json schema', 'jsonschema library', 'json schema validator']
-    },
-    {
       slug: 'how-to-convert-json-to-csv-python',
       title: 'How to Convert JSON to CSV in Python: Complete Guide 2026',
       excerpt: 'Learn how to convert JSON to CSV in Python using pandas, csv module, and json_normalize. Includes examples for nested JSON, arrays, and handling different JSON structures. Step-by-step guide with code examples.',
@@ -584,15 +530,6 @@ export const metadata: Metadata = {
       readTime: '14 min read',
       category: 'JavaScript & Development',
       keywords: ['access-control-allow-origin missing', 'cors error fix', 'cors header missing', 'fix cors error', 'access-control-allow-origin error']
-    },
-    {
-      slug: 'why-json-stringify-returns-undefined-fix',
-      title: 'Why JSON.stringify() Returns Undefined (And How to Fix It): Complete Guide 2026',
-      excerpt: 'Learn why JSON.stringify() returns undefined and how to fix it. Includes common causes, solutions, and best practices for handling undefined values, circular references, and special values in JSON.stringify() with code examples.',
-      date: '2026-01-27',
-      readTime: '13 min read',
-      category: 'JavaScript & Development',
-      keywords: ['json.stringify returns undefined', 'json.stringify undefined fix', 'why json.stringify undefined', 'json.stringify undefined value', 'fix json.stringify undefined']
     },
     {
       slug: 'fix-cannot-read-property-map-of-undefined-javascript',
@@ -647,15 +584,6 @@ export const metadata: Metadata = {
       readTime: '14 min read',
       category: 'JavaScript & Development',
       keywords: ['maximum call stack size exceeded', 'javascript stack overflow', 'infinite recursion javascript', 'fix call stack exceeded', 'javascript recursion error']
-    },
-    {
-      slug: 'fix-unexpected-token-less-than-in-json-api-returns-html',
-      title: 'Fix: "Unexpected token &lt; in JSON at position 0" (API Returns HTML) | Complete Guide 2026',
-      excerpt: 'Learn how to fix "Unexpected token &lt; in JSON at position 0" error when API returns HTML instead of JSON. Complete troubleshooting guide with solutions for wrong Content-Type, error pages, redirects, and CORS issues.',
-      date: '2026-01-30',
-      readTime: '14 min read',
-      category: 'API Development & Testing',
-      keywords: ['unexpected token in json at position 0', 'api returns html instead of json', 'json parse error unexpected token', 'fix unexpected token json', 'api returns html error']
     },
     {
       slug: 'why-my-api-returns-200-ok-but-data-is-empty',
@@ -773,15 +701,6 @@ export const metadata: Metadata = {
       readTime: '13 min read',
       category: 'Account Management',
       keywords: ['change apple id phone number', 'change apple id phone number without losing data', 'apple id phone number change 2026', 'update apple id phone number']
-    },
-    {
-      slug: 'instagram-password-reset-email-guide',
-      title: 'Instagram Password Reset Email: Complete Guide - What, When, How & Why',
-      excerpt: 'Complete guide to Instagram password reset emails. Learn what they are, when to use them, how to reset your password, and why they\'re important for account security. Step-by-step instructions included.',
-      date: '2025-01-25',
-      readTime: '8 min read',
-      category: 'Security & Privacy',
-      keywords: ['Instagram password reset email', 'Instagram password reset', 'reset Instagram password', 'Instagram forgot password', 'Instagram account recovery']
     },
     {
       slug: 'nintendo-switch-online-gamecube-games',
@@ -910,15 +829,6 @@ export const metadata: Metadata = {
       keywords: ['ai-native development platforms', 'ai-native platforms', 'ai development platforms', 'ai-first development', 'ai-powered development tools']
     },
     {
-      slug: 'how-to-invest-consistently-usa-tech-stocks',
-      title: 'How to Invest Consistently in USA Tech Stocks: Complete Strategy Guide 2026',
-      excerpt: 'Complete guide to consistent investing in USA tech stocks: dollar-cost averaging, long-term strategy, portfolio allocation, best practices, automation, tax strategies, and how to build wealth through systematic tech stock investing.',
-      date: '2026-02-02',
-      readTime: '28 min read',
-      category: 'Finance & Investing',
-      keywords: ['consistent tech investing', 'dollar cost averaging', 'tech stock strategy', 'systematic investing', 'long term tech investing']
-    },
-    {
       slug: 'high-impact-tech-stocks-investment-guide',
       title: 'High Impact Tech Stocks: Complete Investment Guide 2026',
       excerpt: 'Complete guide to high impact tech stocks: what are high impact tech stocks, why invest, how to identify them, top tech stocks 2026, investment strategies, risks, and best practices. Learn about AI, semiconductor, cloud, and emerging tech stocks.',
@@ -926,15 +836,6 @@ export const metadata: Metadata = {
       readTime: '25 min read',
       category: 'Finance & Investing',
       keywords: ['high impact tech stocks', 'tech stocks 2026', 'best tech stocks', 'ai stocks', 'tech stock investment']
-    },
-    {
-      slug: 'xbox-game-pass-games-complete-guide',
-      title: 'Xbox Game Pass Games: Complete Guide to Best Games, Value & Membership',
-      excerpt: 'Complete guide to Xbox Game Pass games: best games library, membership tiers, value analysis, what games are included, how to get the most value, and tips for choosing the right subscription. Discover must-play games on Game Pass.',
-      date: '2026-02-02',
-      readTime: '22 min read',
-      category: 'Gaming & Entertainment',
-      keywords: ['xbox game pass games', 'xbox game pass', 'game pass games list', 'best xbox game pass games', 'game pass membership']
     },
     {
       slug: 'git-commands-cheat-sheet-tips-tricks',
@@ -953,15 +854,6 @@ export const metadata: Metadata = {
       readTime: '25 min read',
       category: 'Developer Tools & Git',
       keywords: ['git guide', 'git tutorial', 'what is git', 'why use git', 'how git works', 'git best practices', 'git workflow']
-    },
-    {
-      slug: 'ces-2026-fire-tv-stick-4k-max-project-ava',
-      title: 'CES 2026: Amazon Fire TV Stick 4K Max & Project AVA - Complete Guide',
-      excerpt: 'Complete guide to CES 2026 highlights: Amazon Fire TV Stick 4K Max features, specs, and Project AVA AI assistant. Learn about the latest streaming technology, AI integration, and smart home innovations.',
-      date: '2026-01-31',
-      readTime: '20 min read',
-      category: 'Technology & Reviews',
-      keywords: ['CES 2026', 'Amazon Fire TV Stick 4K Max', 'Project AVA', 'Fire TV Stick 2026', 'streaming device', 'AI assistant TV']
     },
     {
       slug: 'token-security-privacy-best-practices',
@@ -1360,15 +1252,6 @@ export const metadata: Metadata = {
       keywords: ['json stringify vs json parse', 'json parse online', 'json serialize online', 'json parser online', 'unstringify json']
     },
     {
-      slug: 'json-stringify-complete-guide',
-      title: 'JSON.stringify() Complete Guide: Examples, Syntax & Best Practices',
-      excerpt: 'Complete guide to JSON.stringify() in JavaScript. Learn syntax, examples, replacer function, space parameter, and common use cases. Includes interactive examples and best practices.',
-      date: '2025-01-15',
-      readTime: '12 min read',
-      category: 'JavaScript',
-      keywords: ['json stringify', 'json stringify javascript', 'json stringify examples', 'json stringify tutorial']
-    },
-    {
       slug: 'how-to-get-curl-from-chrome',
       title: 'How to Get cURL from Chrome: Copy Request as cURL',
       excerpt: 'Learn how to copy HTTP requests as cURL commands from Chrome DevTools. Step-by-step guide to export network requests as cURL for testing and debugging.',
@@ -1513,15 +1396,6 @@ export const metadata: Metadata = {
       keywords: ['comma separated ID list MySQL', 'MySQL IN clause', 'comma separated values MySQL', 'convert IDs to comma separated list', 'MySQL IN query', 'SQL formatter', 'comma separated IDs MySQL', 'MySQL WHERE IN clause']
     },
     {
-      slug: 'json-format-standards-complete-guide',
-      title: 'JSON Format & Standards: Complete Guide to RFC 8259, Syntax Rules & Best Practices',
-      excerpt: 'Master JSON format and standards with this comprehensive guide. Learn RFC 8259 rules, syntax violations, fixing strategies, error classification, and production-grade JSON validation. Perfect for developers, API designers, and data engineers.',
-      date: '2025-01-31',
-      readTime: '25 min read',
-      category: 'Web Development',
-      keywords: ['JSON format', 'JSON standards', 'RFC 8259', 'JSON syntax rules', 'JSON validation', 'JSON fixing', 'JSON parser', 'JSON best practices', 'JSON structure', 'JSON syntax errors']
-    },
-    {
       slug: 'json-best-practices-production-guide',
       title: 'JSON Best Practices: Production-Ready Guide for Developers',
       excerpt: 'Master JSON best practices for production environments. Learn how to structure JSON data, handle errors, optimize performance, ensure security, and follow industry standards. Complete guide with real-world examples and code snippets.',
@@ -1610,15 +1484,6 @@ export const metadata: Metadata = {
     readTime: '7 min read',
     category: 'API Testing',
     keywords: ['API comparator', 'API testing', 'API diff', 'API validation']
-  },
-  {
-    slug: 'json-schema-generator-validation-guide',
-    title: 'JSON Schema Generator and Validation: Complete Guide',
-    excerpt: 'Learn how to generate JSON schemas automatically and validate JSON data against schemas. Understand schema generation best practices and validation techniques.',
-    date: '2024-01-08',
-    readTime: '9 min read',
-    category: 'JSON Tools',
-    keywords: ['JSON schema', 'schema generator', 'JSON validation', 'OpenAPI schema']
   },
   {
     slug: 'structured-log-analysis-tools',

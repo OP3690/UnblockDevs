@@ -45,8 +45,9 @@ export default function BlogPostClient() {
             <div className="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg mt-6">
               <p className="font-semibold text-blue-900 mb-2">💡 Quick Tip</p>
               <p className="text-blue-800">
-                Use our free <Link href="/json-validator" className="font-semibold underline">JSON Validator</Link> to validate API responses 
-                and our <Link href="/json-formatter" className="font-semibold underline">JSON Formatter</Link> to format response data.
+                Use our free <Link href="/json-validator" className="font-semibold underline">JSON Validator</Link> to validate API responses, 
+                our <Link href="/json-formatter" className="font-semibold underline">JSON Formatter</Link> to format response data, 
+                and our <Link href="/cors-tester" className="font-semibold underline">CORS Tester</Link> to debug cross-origin and status responses.
               </p>
             </div>
           </section>
