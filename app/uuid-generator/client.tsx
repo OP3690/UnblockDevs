@@ -17,6 +17,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 import {
   NAMESPACES,
   validateUUID,
@@ -98,6 +99,7 @@ export default function UuidGeneratorClient() {
   const copyOne = (uuid: string) => {
     const formatted = formatOne(uuid);
     navigator.clipboard.writeText(formatted).then(() => {
+      trackCopy('uuid_generator');
       setCopied(formatted);
       toast.success('Copied');
       setTimeout(() => setCopied(null), 2000);
@@ -106,7 +108,7 @@ export default function UuidGeneratorClient() {
 
   const copyAll = () => {
     const text = uuids.map(formatOne).join('\n');
-    navigator.clipboard.writeText(text).then(() => toast.success('All copied'));
+    navigator.clipboard.writeText(text).then(() => { trackCopy('uuid_generator'); toast.success('All copied'); });
   };
 
   const download = () => {
@@ -410,6 +412,7 @@ export default function UuidGeneratorClient() {
                 onClick={() => {
                   const text = JSON.stringify({ uuids: uuids.map(formatOne), generated: new Date().toISOString() }, null, 2);
                   navigator.clipboard.writeText(text);
+                  trackCopy('uuid_generator');
                   toast.success('JSON copied');
                 }}
                 className="rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50"
@@ -421,6 +424,7 @@ export default function UuidGeneratorClient() {
                 onClick={() => {
                   const text = uuids.map(formatOne).map((u) => `"${u}"`).join('\n');
                   navigator.clipboard.writeText(text);
+                  trackCopy('uuid_generator');
                   toast.success('CSV-style copied');
                 }}
                 className="rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50"
@@ -432,6 +436,7 @@ export default function UuidGeneratorClient() {
                 onClick={() => {
                   const text = toSqlInsert(uuids.map(formatOne), 'items', 'id');
                   navigator.clipboard.writeText(text);
+                  trackCopy('uuid_generator');
                   toast.success('SQL copied');
                 }}
                 className="rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50"
@@ -453,6 +458,7 @@ export default function UuidGeneratorClient() {
                       type="button"
                       onClick={() => {
                         navigator.clipboard.writeText(s.code);
+                        trackCopy('uuid_generator');
                         toast.success('Copied');
                       }}
                       className="rounded-lg border border-gray-200 px-2 py-1 text-xs font-medium text-primary-600 hover:bg-primary-50"

@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { GitCompare, Copy, Check, AlertCircle, Plus, Minus, Edit, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 import { validateJson } from '@/lib/jsonParser';
 import Link from 'next/link';
 
@@ -264,6 +265,7 @@ export default function JsonComparator() {
       2
     );
     navigator.clipboard.writeText(diffText);
+    trackCopy('json_comparator');
     setCopied(true);
     toast.success('Diff copied to clipboard!');
     setTimeout(() => setCopied(false), 2000);

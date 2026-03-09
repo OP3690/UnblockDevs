@@ -20,6 +20,7 @@ import {
   X,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 import {
   encodeBase64,
   decodeBase64,
@@ -267,6 +268,7 @@ export default function Base64EncoderClient() {
     if (!output) return;
     navigator.clipboard.writeText(output).then(
       () => {
+        trackCopy('base64_encoder');
         setCopied('output');
         toast.success('Copied to clipboard');
         setTimeout(() => setCopied(null), 2000);
@@ -326,7 +328,7 @@ export default function Base64EncoderClient() {
     url.searchParams.set('mode', mode);
     url.searchParams.set('variant', variant);
     navigator.clipboard.writeText(url.toString()).then(
-      () => toast.success('Share link copied'),
+      () => { trackCopy('base64_encoder'); toast.success('Share link copied'); },
       () => toast.error('Copy failed')
     );
   };
@@ -801,7 +803,7 @@ export default function Base64EncoderClient() {
                   type="button"
                   onClick={() => {
                     const dataUri = imagePreviewUrl.startsWith('data:') ? imagePreviewUrl : `data:image/png;base64,${output}`;
-                    navigator.clipboard.writeText(dataUri).then(() => toast.success('Data URI copied'));
+                    navigator.clipboard.writeText(dataUri).then(() => { trackCopy('base64_encoder'); toast.success('Data URI copied'); });
                   }}
                   className="inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors"
                 >
@@ -828,7 +830,7 @@ export default function Base64EncoderClient() {
                     <span className="font-semibold text-gray-700 w-44 shrink-0">{row.name}</span>
                     <code className="flex-1 min-w-0 truncate text-gray-600" title={row.value}>{row.value.slice(0, 80)}{row.value.length > 80 ? '…' : ''}</code>
                     <span className="text-gray-500 shrink-0">{row.byteLength} B</span>
-                    <button type="button" onClick={() => { navigator.clipboard.writeText(row.value); toast.success('Copied'); }} className="shrink-0 rounded-lg bg-white border border-gray-200 px-2 py-1 text-primary-600 hover:bg-primary-50 transition-colors">Copy</button>
+                    <button type="button" onClick={() => { navigator.clipboard.writeText(row.value); trackCopy('base64_encoder'); toast.success('Copied'); }} className="shrink-0 rounded-lg bg-white border border-gray-200 px-2 py-1 text-primary-600 hover:bg-primary-50 transition-colors">Copy</button>
                   </div>
                 ))}
               </div>

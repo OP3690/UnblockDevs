@@ -13,6 +13,7 @@ import {
   Lock,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 import { processLog, getAiSafeCopy, type AnnotationMode } from '@/lib/logUnpackerEngine';
 
 const PLACEHOLDER = `Paste log or stringified JSON here...
@@ -85,6 +86,7 @@ export default function LogUnpacker() {
     if (!output) return;
     navigator.clipboard.writeText(output).then(
       () => {
+        trackCopy('log_unpacker');
         setCopiedWhich('output');
         setTimeout(() => setCopiedWhich(null), 2000);
         toast.success('Output copied.');

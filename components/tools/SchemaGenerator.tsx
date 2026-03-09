@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { FileCode, Copy, Check, Download, Sparkles, CheckCircle, XCircle, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 import { validateJson } from '@/lib/jsonParser';
 import Link from 'next/link';
 
@@ -210,6 +211,7 @@ export default function SchemaGenerator() {
   const handleCopy = () => {
     if (schema) {
       navigator.clipboard.writeText(JSON.stringify(schema, null, 2));
+      trackCopy('schema_generator');
       setCopied(true);
       toast.success('Schema copied to clipboard!');
       setTimeout(() => setCopied(false), 2000);

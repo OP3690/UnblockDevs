@@ -14,6 +14,7 @@ import {
   ListOrdered,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 import {
   parseInput,
   cleanIds,
@@ -135,6 +136,7 @@ export default function SqlInGeneratorClient() {
       return;
     }
     navigator.clipboard.writeText(output);
+    trackCopy('sql_in_generator');
     setCopied(true);
     toast.success('Copied to clipboard');
     setTimeout(() => setCopied(false), 2000);
@@ -166,6 +168,7 @@ export default function SqlInGeneratorClient() {
     url.searchParams.set('ids', ids.join(','));
     window.history.replaceState({}, '', url.toString());
     navigator.clipboard.writeText(url.toString());
+    trackCopy('sql_in_generator');
     toast.success('Share link copied to clipboard');
   };
 

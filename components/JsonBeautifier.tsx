@@ -4,6 +4,7 @@ import { useState, useRef, useMemo, useEffect } from 'react';
 import { Upload, FileText, X, Copy, Check, Download, ChevronRight, ChevronDown, Minus, Search, BarChart3, Code2, Eye, ExternalLink, AlertTriangle, Wrench, Shield, GitCompare, Sparkles, Database, FileCode } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { validateJson } from '@/lib/jsonParser';
+import { trackCopy } from '@/lib/analytics';
 import Link from 'next/link';
 import {
   detectJsonErrorsAndFix,
@@ -305,6 +306,7 @@ export default function JsonBeautifier() {
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
+    trackCopy('json_beautifier');
     setCopied(true);
     toast.success('Copied to clipboard!');
     setTimeout(() => setCopied(false), 2000);

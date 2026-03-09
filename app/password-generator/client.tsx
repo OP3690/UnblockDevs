@@ -16,6 +16,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 import {
   generateRandom,
   generatePassphrase,
@@ -143,6 +144,7 @@ export default function PasswordGeneratorClient() {
   const copyPassword = (p: string) => {
     navigator.clipboard.writeText(p).then(
       () => {
+        trackCopy('password_generator');
         setCopied(true);
         toast.success('Copied. Clipboard will clear in 30s.');
         addToHistory(p);
@@ -220,7 +222,7 @@ export default function PasswordGeneratorClient() {
       text = data.join('\n');
     }
     navigator.clipboard.writeText(text).then(
-      () => toast.success('Copied to clipboard'),
+      () => { trackCopy('password_generator'); toast.success('Copied to clipboard'); },
       () => toast.error('Copy failed')
     );
   };
@@ -522,6 +524,7 @@ export default function PasswordGeneratorClient() {
                   onClick={() => {
                     const text = passwords.join('\n');
                     navigator.clipboard.writeText(text);
+                    trackCopy('password_generator');
                     toast.success('All copied');
                   }}
                   className="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors"

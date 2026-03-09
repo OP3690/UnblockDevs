@@ -19,6 +19,7 @@ import {
   X,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 import {
   smartDiff,
   defaultNormalizationConfig,
@@ -253,7 +254,10 @@ export default function SmartJsonDiff() {
       }),
     ];
     navigator.clipboard.writeText(lines.join('\n')).then(
-      () => toast.success('Markdown copied.'),
+      () => {
+        trackCopy('smart_json_diff');
+        toast.success('Markdown copied.');
+      },
       () => toast.error('Copy failed.')
     );
   }, [result]);
@@ -261,7 +265,10 @@ export default function SmartJsonDiff() {
   const copyJsonPatch = useCallback(() => {
     if (!result || result.changes.length === 0) return;
     navigator.clipboard.writeText(changesToJsonPatch(result.changes)).then(
-      () => toast.success('JSON Patch copied.'),
+      () => {
+        trackCopy('smart_json_diff');
+        toast.success('JSON Patch copied.');
+      },
       () => toast.error('Copy failed.')
     );
   }, [result]);

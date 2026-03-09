@@ -18,6 +18,7 @@ import {
   Code,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 import {
   parseJWT,
   JWTError,
@@ -176,6 +177,7 @@ export default function JWTDecoderClient() {
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text).then(
       () => {
+        trackCopy('jwt_decoder');
         setCopied(label);
         toast.success('Copied to clipboard');
         setTimeout(() => setCopied(null), 2000);

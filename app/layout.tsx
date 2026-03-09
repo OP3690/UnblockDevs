@@ -1,10 +1,12 @@
 import type { Metadata, Viewport } from 'next'
+import Script from 'next/script'
 import { Inter, Fira_Code } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget'
 import DevModeWrapper from '@/components/DevModeWrapper'
 import Celebration1MPopup from '@/components/Celebration1MPopup'
+import GA4RouteTracker from '@/components/GA4RouteTracker'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' })
 const firaCode = Fira_Code({ subsets: ['latin'], variable: '--font-fira-code', display: 'swap' })
@@ -250,6 +252,7 @@ export default function RootLayout({
             __html: '<amp-auto-ads type="adsense" data-ad-client="ca-pub-6349841658473646"></amp-auto-ads>',
           }}
         />
+        <GA4RouteTracker />
         <DevModeWrapper>
           <div suppressHydrationWarning>
             {children}
@@ -284,8 +287,11 @@ export default function RootLayout({
         />
         {/* Canonical URL */}
         <script dangerouslySetInnerHTML={{ __html: `(function(){var p=window.location.pathname||'';var r=p==='/'||p==='';var q=(window.location.search||'').length>0;var h=r||q?'https://unblockdevs.com/':'https://unblockdevs.com'+p.replace(/\\/$/,'')||'/';var all=document.querySelectorAll('link[rel="canonical"]');for(var i=0;i<all.length;i++)all[i].remove();var l=document.createElement('link');l.rel='canonical';l.href=h;document.head.appendChild(l);})();` }} />
-        {/* GA4 – loads independently of ads */}
-        <script dangerouslySetInnerHTML={{ __html: `(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-N6DF8NPHY8';document.head.appendChild(s);window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config','G-N6DF8NPHY8',{allow_enhanced_conversions:true});})();` }} />
+        {/* GA4 – loads immediately (afterInteractive), independent of ads; needs ≥2 events for session duration */}
+        <Script id="ga4-js" strategy="afterInteractive" src="https://www.googletagmanager.com/gtag/js?id=G-N6DF8NPHY8" />
+        <Script id="ga4-config" strategy="afterInteractive">
+          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config','G-N6DF8NPHY8',{allow_enhanced_conversions:true});`}
+        </Script>
         {/* Ads: AdSense + Gatekeeper (error suppression + deferred load) */}
         <script dangerouslySetInnerHTML={{ __html: `if(typeof window!=='undefined'){var oe=console.error,ow=console.warn;console.error=function(){var m=Array.prototype.join.call(arguments,' ');if(/TagError|No slot size for availableWidth|adsbygoogle\\.push/.test(m)){console.debug('AdSense error suppressed:',m);return;}oe.apply(console,arguments);};console.warn=function(){var m=Array.prototype.join.call(arguments,' ');if(/Unload event listeners are deprecated|pagead2\\.googlesyndication|lidar\\.js|unload.*deprecated/.test(m)){console.debug('AdSense warning suppressed:',m);return;}ow.apply(console,arguments);};window.addEventListener('error',function(e){if(e.message&&/gatekeeperconsent\\.com|TagError|No slot size for availableWidth|adsbygoogle\\.push/.test(e.message)){e.preventDefault();e.stopPropagation();return false;}},true);window.addEventListener('unhandledrejection',function(e){var r=(e.reason&&e.reason.message)||(e.reason&&e.reason.toString())||'';if(/TagError|No slot size for availableWidth|adsbygoogle/.test(r))e.preventDefault();});}var def=false;function loadAds(){if(def)return;def=true;var a=document.createElement('script');a.async=true;a.crossOrigin='anonymous';a.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6349841658473646';document.head.appendChild(a);var g1=document.createElement('script');g1.setAttribute('data-cfasync','false');g1.src='https://cmp.gatekeeperconsent.com/min.js';g1.async=true;document.head.appendChild(g1);var g2=document.createElement('script');g2.setAttribute('data-cfasync','false');g2.src='https://the.gatekeeperconsent.com/cmp.min.js';g2.async=true;document.head.appendChild(g2);}function go(){if(window.requestIdleCallback)requestIdleCallback(loadAds,{timeout:200});else loadAds();}setTimeout(go,0);` }} />
       </body>

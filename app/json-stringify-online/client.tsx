@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Code, CheckCircle, Copy, Download, ExternalLink, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 import FAQSchema from '@/components/FAQSchema';
 
 export default function JsonStringifyOnlineClient() {
@@ -36,6 +37,7 @@ export default function JsonStringifyOnlineClient() {
 
   const handleCopy = () => {
     navigator.clipboard.writeText(output);
+    trackCopy('json_stringify_online');
     toast.success('Copied to clipboard!');
   };
 

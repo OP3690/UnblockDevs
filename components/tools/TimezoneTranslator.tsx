@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Clock, Globe, Copy, Check, Share2, Plus, X, MapPin, Calendar, Zap, Hash, Search, ChevronDown, Timer } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 import Link from 'next/link';
 
 interface City {
@@ -503,6 +504,7 @@ export default function TimezoneTranslator() {
 
   const copyToClipboard = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
+    trackCopy('timezone_translator');
     setCopied(id);
     toast.success('Copied!');
     setTimeout(() => setCopied(null), 2000);

@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import { Copy, Scissors, Download, Settings, Info, ChevronDown, ChevronUp, CheckCircle2, Sparkles, BarChart3, Shield, FileText } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 import {
   simplifyPrompt,
   detectIntent,
@@ -123,6 +124,7 @@ export default function PromptChunker() {
 
   const copyChunk = (chunk: Chunk) => {
     navigator.clipboard.writeText(chunk.content);
+    trackCopy('prompt_chunker');
     setCopiedChunks(prev => new Set(prev).add(chunk.id));
     toast.success(`Chunk ${chunk.id} copied to clipboard!`);
   };
@@ -145,6 +147,7 @@ export default function PromptChunker() {
     ).join('\n');
     
     navigator.clipboard.writeText(allChunks);
+    trackCopy('prompt_chunker');
     setCopiedChunks(new Set(chunks.map(c => c.id)));
     toast.success('All chunks copied to clipboard!');
   };
@@ -193,6 +196,7 @@ export default function PromptChunker() {
   const copySimplified = () => {
     if (simplifiedResult?.optimized) {
       navigator.clipboard.writeText(simplifiedResult.optimized);
+      trackCopy('prompt_chunker');
       setSimplifiedCopied(true);
       toast.success('Optimized prompt copied');
       setTimeout(() => setSimplifiedCopied(false), 2000);

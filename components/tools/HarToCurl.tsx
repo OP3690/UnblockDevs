@@ -18,6 +18,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 import {
   parseHarFile,
   filterHarEntries,
@@ -151,6 +152,7 @@ export default function HarToCurl() {
   const handleCopy = () => {
     if (!outputText) return;
     navigator.clipboard.writeText(outputText);
+    trackCopy('har_to_curl');
     setCopied(true);
     toast.success('Copied to clipboard');
     setTimeout(() => setCopied(false), 2000);
@@ -186,6 +188,7 @@ export default function HarToCurl() {
     if (!selectedEntry) return;
     const prompt = generateHarAIDebugPrompt(selectedEntry, convertOptions);
     navigator.clipboard.writeText(prompt);
+    trackCopy('har_to_curl');
     toast.success('AI debug prompt copied');
   };
 

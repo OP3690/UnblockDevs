@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { AlertTriangle, CheckCircle, Copy, RefreshCw, Code, Info, TrendingUp, Lightbulb, XCircle, Shield, Clock, FileText } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 
 interface RootCause {
   cause: string;
@@ -401,6 +402,7 @@ export default function CurlFailureRootCause() {
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
+    trackCopy('curl_failure_root_cause');
     setCopied(true);
     toast.success('Copied to clipboard!');
     setTimeout(() => setCopied(false), 2000);

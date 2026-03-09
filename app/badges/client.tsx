@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Copy, Check, Code, BadgeCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 
 const BADGES = [
   {
@@ -62,6 +63,7 @@ function CopyButton({ text, label }: { text: string; label: string }) {
   const [copied, setCopied] = useState(false);
   const copy = () => {
     navigator.clipboard.writeText(text);
+    trackCopy('badges');
     setCopied(true);
     toast.success(`${label} copied`);
     setTimeout(() => setCopied(false), 2000);

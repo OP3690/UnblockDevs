@@ -20,6 +20,7 @@ import {
   ScanSearch,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 import {
   ALL_HASH_ALGORITHMS,
   CLASSIC_ALGORITHMS,
@@ -208,8 +209,8 @@ export default function HashGeneratorClient() {
       toast.error('Enter a password');
       return;
     }
-    const salt = pwSalt.trim() || generateSalt(16);
-    if (!pwSalt.trim()) setPwSalt(salt);
+      const salt = pwSalt.trim() || generateSalt(16);
+      if (!pwSalt.trim()) setPwSalt(salt);
     setPwLoading(true);
     try {
       if (pwMethod === 'bcrypt') {
@@ -246,6 +247,7 @@ export default function HashGeneratorClient() {
   const copyToClipboard = (text: string, id: string) => {
     navigator.clipboard.writeText(text).then(
       () => {
+        trackCopy('hash_generator');
         setCopiedId(id);
         toast.success('Copied');
         setTimeout(() => setCopiedId(null), 2000);
@@ -347,15 +349,15 @@ export default function HashGeneratorClient() {
               </span>
               No hashes stored
             </span>
-          </div>
+      </div>
 
           {/* Tabs — pill style with shadow when active */}
           <div className="px-6 md:px-8 pt-4 pb-2">
             <nav className="flex flex-wrap gap-2" aria-label="Hash tool mode">
               {tabs.map((t) => (
-                <button
+          <button
                   key={t.id}
-                  type="button"
+            type="button"
                   onClick={() => setActiveTab(t.id)}
                   className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${
                     activeTab === t.id
@@ -365,10 +367,10 @@ export default function HashGeneratorClient() {
                 >
                   {t.icon}
                   {t.label}
-                </button>
-              ))}
+          </button>
+        ))}
             </nav>
-          </div>
+      </div>
 
           {/* Main content */}
           <div className="px-6 md:px-8 py-6 space-y-6">
@@ -382,7 +384,7 @@ export default function HashGeneratorClient() {
                 <label key={a.id} className="inline-flex items-center gap-2 cursor-pointer rounded-lg px-2 py-1 hover:bg-gray-50">
                   <input type="checkbox" checked={selectedAlgs.has(a.id)} onChange={() => toggleAlg(a.id)} className="rounded border-gray-300 text-primary-600 focus:ring-primary-500" />
                   <span className="text-sm text-gray-700">{a.name}</span>
-                </label>
+          </label>
               ))}
               {MODERN_ALGORITHMS.map((a) => (
                 <label key={a.id} className="inline-flex items-center gap-2 cursor-pointer rounded-lg px-2 py-1 hover:bg-gray-50">
@@ -420,9 +422,9 @@ export default function HashGeneratorClient() {
                 Try Example
               </button>
             </div>
-            <textarea
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
               placeholder="Enter text to hash..."
               className="w-full min-h-[120px] rounded-xl border border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 font-mono text-sm transition-shadow"
               spellCheck={false}
@@ -456,7 +458,7 @@ export default function HashGeneratorClient() {
                     </button>
                   </div>
                 ))}
-              </div>
+        </div>
             )}
           </div>
         </>
@@ -469,15 +471,15 @@ export default function HashGeneratorClient() {
             <label className="block text-sm font-semibold text-gray-800 mb-2">File — drag & drop or click</label>
             <div
               className="border-2 border-dashed border-gray-200 rounded-xl p-10 text-center hover:border-primary-300 hover:bg-primary-50/30 transition-all cursor-pointer"
-              onClick={() => fileInputRef.current?.click()}
+            onClick={() => fileInputRef.current?.click()}
               onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('border-primary-400', 'bg-primary-50/50'); }}
               onDragLeave={(e) => { e.currentTarget.classList.remove('border-primary-400', 'bg-primary-50/50'); }}
-              onDrop={(e) => {
-                e.preventDefault();
+            onDrop={(e) => {
+              e.preventDefault();
                 e.currentTarget.classList.remove('border-primary-400', 'bg-primary-50/50');
-                const f = e.dataTransfer.files[0];
-                if (f) setFile(f);
-              }}
+              const f = e.dataTransfer.files[0];
+              if (f) setFile(f);
+            }}
             >
               <input ref={fileInputRef} type="file" className="hidden" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
               {file ? (
@@ -493,8 +495,8 @@ export default function HashGeneratorClient() {
                   <p className="text-gray-500 font-medium">Drop a file or click to browse</p>
                   <p className="text-xs text-gray-400 mt-1">Any file size</p>
                 </>
-              )}
-            </div>
+            )}
+          </div>
           </div>
           {Object.keys(fileHashes).length > 0 && (
             <div className="rounded-xl border border-gray-200 bg-gray-50/80 p-4 space-y-2">
@@ -504,10 +506,10 @@ export default function HashGeneratorClient() {
                   <code className="flex-1 min-w-0 break-all text-sm font-mono">{hash}</code>
                   <button type="button" onClick={() => copyToClipboard(hash, `file-${alg}`)} className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
                     {copiedId === `file-${alg}` ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4 text-gray-400" />}
-                  </button>
+            </button>
                 </div>
               ))}
-            </div>
+        </div>
           )}
         </>
       )}
@@ -536,15 +538,15 @@ export default function HashGeneratorClient() {
             <div>
               <label className="block text-sm font-semibold text-gray-800 mb-2">Algorithm</label>
               <select value={verifyAlg} onChange={(e) => setVerifyAlg(e.target.value as HashAlgId)} className="w-full rounded-xl border border-gray-200 px-4 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
-                {ALL_HASH_ALGORITHMS.map((a) => (
-                  <option key={a.id} value={a.id}>{a.name}</option>
-                ))}
-              </select>
-            </div>
-            <div>
+              {ALL_HASH_ALGORITHMS.map((a) => (
+                <option key={a.id} value={a.id}>{a.name}</option>
+              ))}
+            </select>
+          </div>
+          <div>
               <label className="block text-sm font-semibold text-gray-800 mb-2">Expected hash</label>
               <input type="text" value={verifyExpected} onChange={(e) => setVerifyExpected(e.target.value)} placeholder="Paste expected hash..." className="w-full rounded-xl border border-gray-200 px-4 py-2 font-mono text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500" />
-            </div>
+          </div>
           </div>
           {verifyResult !== null && (
             <div className={`rounded-xl border-2 p-4 flex items-center gap-3 ${verifyResult ? 'border-emerald-200 bg-emerald-50' : 'border-red-200 bg-red-50'}`}>
@@ -574,14 +576,14 @@ export default function HashGeneratorClient() {
             </button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
+          <div>
               <label className="block text-sm font-semibold text-gray-800 mb-2">Hash A</label>
               <textarea value={compareA} onChange={(e) => setCompareA(e.target.value)} placeholder="Paste first hash..." className="w-full min-h-[100px] rounded-xl border border-gray-200 px-4 py-3 font-mono text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500" />
-            </div>
-            <div>
+          </div>
+          <div>
               <label className="block text-sm font-semibold text-gray-800 mb-2">Hash B</label>
               <textarea value={compareB} onChange={(e) => setCompareB(e.target.value)} placeholder="Paste second hash..." className="w-full min-h-[100px] rounded-xl border border-gray-200 px-4 py-3 font-mono text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500" />
-            </div>
+          </div>
           </div>
           {compareResult !== null && (
             <div className={`rounded-xl border-2 p-4 ${compareResult.match ? 'border-emerald-200 bg-emerald-50' : 'border-amber-200 bg-amber-50'}`}>
@@ -596,7 +598,7 @@ export default function HashGeneratorClient() {
       {/* Password */}
       {activeTab === 'password' && (
         <div className="space-y-4">
-          <div>
+            <div>
             <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
               <label className="text-sm font-medium text-gray-700">Password</label>
               <button
@@ -624,7 +626,7 @@ export default function HashGeneratorClient() {
                 <option value="scrypt">scrypt</option>
                 <option value="argon2">Argon2</option>
               </select>
-            </label>
+                </label>
             {pwMethod === 'bcrypt' && (
               <label className="inline-flex items-center gap-2">
                 <span className="text-sm">Rounds:</span>
@@ -650,8 +652,8 @@ export default function HashGeneratorClient() {
               />
             </div>
           )}
-          <button
-            type="button"
+              <button
+                type="button"
             onClick={generatePasswordHash}
             disabled={pwLoading}
             className="px-4 py-2 rounded-lg bg-primary-600 text-white font-medium hover:bg-primary-700 disabled:opacity-50"
@@ -665,7 +667,7 @@ export default function HashGeneratorClient() {
                 <code className="break-all text-sm flex-1">{pwHash}</code>
                 <button type="button" onClick={() => copyToClipboard(pwHash, 'pw')} className="p-2 rounded hover:bg-gray-200">
                   {copiedId === 'pw' ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
-                </button>
+              </button>
               </div>
             </div>
           )}
@@ -716,13 +718,13 @@ export default function HashGeneratorClient() {
               ))}
             </select>
           </div>
-          <button
-            type="button"
+                <button
+                  type="button"
             onClick={() => setHmacOutput(hmacKey && input ? hmacHash(hmacAlg, hmacKey, input, encoding) : '')}
             className="px-4 py-2 rounded-lg bg-primary-600 text-white font-medium hover:bg-primary-700"
-          >
+                >
             Generate HMAC
-          </button>
+                </button>
           {hmacOutput && (
             <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 flex items-center gap-2 flex-wrap">
               <code className="break-all text-sm flex-1">{hmacOutput}</code>
@@ -746,16 +748,16 @@ export default function HashGeneratorClient() {
               <input type="number" min={8} max={64} value={saltBytes} onChange={(e) => setSaltBytes(Number(e.target.value))} className="w-16 rounded border border-gray-300 px-2 py-1 text-sm" />
               <button type="button" onClick={() => setGeneratedSalt(generateSalt(saltBytes))} className="px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-sm font-medium">
                 Generate
-              </button>
-            </div>
+            </button>
+          </div>
             {generatedSalt && (
               <div className="flex items-center gap-2 flex-wrap bg-gray-50 rounded-lg px-3 py-2">
                 <code className="break-all text-sm flex-1">{generatedSalt}</code>
                 <button type="button" onClick={() => copyToClipboard(generatedSalt, 'salt')} className="p-1.5 rounded hover:bg-gray-200">
                   {copiedId === 'salt' ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
                 </button>
-              </div>
-            )}
+        </div>
+      )}
           </section>
 
           {/* Security analyzer */}
@@ -763,7 +765,7 @@ export default function HashGeneratorClient() {
             <button type="button" onClick={() => setSecOpen(!secOpen)} className="w-full flex items-center justify-between p-4 text-left font-semibold text-gray-900 hover:bg-gray-50">
               Security strength analyzer
               {secOpen ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
-            </button>
+                  </button>
             {secOpen && (
               <div className="border-t border-gray-200 p-4 bg-gray-50">
                 <table className="w-full text-sm">
@@ -778,7 +780,7 @@ export default function HashGeneratorClient() {
                   <tbody>
                     {ALL_HASH_ALGORITHMS.map((a) => {
                       const s = SECURITY_ANALYSIS[a.id];
-                      return (
+              return (
                         <tr key={a.id} className="border-t border-gray-200">
                           <td className="py-2 font-mono">{a.name}</td>
                           <td className="py-2">
@@ -787,12 +789,12 @@ export default function HashGeneratorClient() {
                           <td className="py-2 text-gray-600">{s?.short ?? '—'}</td>
                           <td className="py-2 text-gray-600">{s?.risk ?? '—'}</td>
                         </tr>
-                      );
-                    })}
+              );
+            })}
                   </tbody>
                 </table>
-              </div>
-            )}
+        </div>
+      )}
           </section>
 
           {/* Batch */}
@@ -812,27 +814,27 @@ export default function HashGeneratorClient() {
             />
             <button type="button" onClick={runBatch} className="px-4 py-2 rounded-lg bg-primary-600 text-white font-medium hover:bg-primary-700 mb-4">
               Hash all
-            </button>
+        </button>
             {batchResults.length > 0 && (
               <div className="overflow-x-auto rounded-lg border border-gray-200">
-                <table className="w-full text-sm">
-                  <thead>
+              <table className="w-full text-sm">
+                <thead>
                     <tr className="bg-gray-50 text-left">
                       <th className="px-3 py-2">Input</th>
                       <th className="px-3 py-2">Hash</th>
-                    </tr>
-                  </thead>
-                  <tbody>
+                  </tr>
+                </thead>
+                <tbody>
                     {batchResults.map((r, i) => (
                       <tr key={i} className="border-t border-gray-100">
                         <td className="px-3 py-2 font-mono break-all">{r.input}</td>
                         <td className="px-3 py-2 font-mono break-all">{r.hash}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+          </div>
+        )}
           </section>
 
           {/* API request hash */}
@@ -842,7 +844,7 @@ export default function HashGeneratorClient() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-2">
               <input type="text" value={apiMethod} onChange={(e) => setApiMethod(e.target.value)} placeholder="GET" className="rounded border border-gray-300 px-3 py-2 text-sm" />
               <input type="text" value={apiUrl} onChange={(e) => setApiUrl(e.target.value)} placeholder="https://api.example.com/..." className="rounded border border-gray-300 px-3 py-2 text-sm sm:col-span-2" />
-            </div>
+      </div>
             <textarea value={apiBody} onChange={(e) => setApiBody(e.target.value)} placeholder="Request body (optional)" className="w-full min-h-[60px] rounded border border-gray-300 px-3 py-2 text-sm font-mono mb-2" />
             <button type="button" onClick={runApiHash} className="px-4 py-2 rounded-lg bg-primary-600 text-white font-medium hover:bg-primary-700 mb-2">
               Hash request
@@ -854,8 +856,8 @@ export default function HashGeneratorClient() {
           <section className="rounded-xl border border-gray-200 overflow-hidden">
             <button type="button" onClick={() => setCrackOpen(!crackOpen)} className="w-full flex items-center justify-between p-4 text-left font-semibold text-gray-900 hover:bg-gray-50">
               Hash cracking difficulty estimator
-              {crackOpen ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
-            </button>
+          {crackOpen ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+        </button>
             {crackOpen && crackEstimate && (
               <div className="border-t border-gray-200 p-4 bg-gray-50 space-y-2">
                 <p className="text-sm text-gray-600">Rough estimate for a GPU cluster (~1e9 hashes/sec). Use strong passwords and slow KDFs (bcrypt, Argon2).</p>
@@ -867,27 +869,27 @@ export default function HashGeneratorClient() {
                   <label className="flex items-center gap-2">
                     <span className="text-sm">Charset:</span>
                     <select value={crackCharset} onChange={(e) => setCrackCharset(Number(e.target.value))} className="rounded border border-gray-300 px-2 py-1 text-sm">
-                      {CHARSET_SIZES.map((c) => (
-                        <option key={c.id} value={c.id}>{c.label}</option>
-                      ))}
-                    </select>
+                  {CHARSET_SIZES.map((c) => (
+                    <option key={c.id} value={c.id}>{c.label}</option>
+                  ))}
+                </select>
                   </label>
-                </div>
-                <p className="font-medium text-gray-900">Combinations: {crackEstimate.combinations} → ~{crackEstimate.label}</p>
               </div>
-            )}
+                <p className="font-medium text-gray-900">Combinations: {crackEstimate.combinations} → ~{crackEstimate.label}</p>
+          </div>
+        )}
           </section>
 
-          {/* Code examples */}
+      {/* Code examples */}
           <section className="rounded-xl border border-gray-200 overflow-hidden">
             <button type="button" onClick={() => setCodeOpen(!codeOpen)} className="w-full flex items-center justify-between p-4 text-left font-semibold text-gray-900 hover:bg-gray-50">
-              Code examples
-              {codeOpen ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
-            </button>
-            {codeOpen && (
+            Code examples
+          {codeOpen ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+        </button>
+        {codeOpen && (
               <div className="border-t border-gray-200 p-4 bg-gray-50 space-y-4">
                 <div className="flex gap-2">
-                  {(['js', 'py', 'go'] as const).map((lang) => (
+            {(['js', 'py', 'go'] as const).map((lang) => (
                     <button key={lang} type="button" onClick={() => setCodeLang(lang)} className={`px-3 py-1.5 rounded text-sm font-medium ${codeLang === lang ? 'bg-primary-600 text-white' : 'bg-gray-200 text-gray-700'}`}>
                       {lang === 'js' ? 'JavaScript' : lang === 'py' ? 'Python' : 'Go'}
                     </button>
@@ -902,11 +904,11 @@ export default function HashGeneratorClient() {
               </div>
             )}
           </section>
-        </div>
-      )}
+          </div>
+        )}
 
           </div>
-        </div>
+      </div>
 
       {/* History */}
       {history.length > 0 && (
@@ -945,7 +947,7 @@ export default function HashGeneratorClient() {
             <div className="min-w-0">
               <span className="font-semibold text-gray-900 group-hover:text-primary-700 block">Base64 Encoder</span>
               <span className="text-sm text-gray-500 mt-0.5 block">Encode and decode Base64 text or files. MIME, URL-safe, image preview.</span>
-            </div>
+        </div>
           </Link>
           <Link
             href="/jwt-decoder"

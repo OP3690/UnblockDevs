@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { Shield, RefreshCw, Clipboard, Download, Upload, Lock, Cpu, ShieldCheck } from 'lucide-react';
+import { trackCopy } from '@/lib/analytics';
 
 type JsonShieldMapping = {
   version: string;
@@ -110,6 +111,7 @@ export default function JsonPromptShieldClient() {
     if (!maskedOutput) return;
     try {
       await navigator.clipboard.writeText(maskedOutput);
+      trackCopy('json_prompt_shield');
     } catch {}
   };
 

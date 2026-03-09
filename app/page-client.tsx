@@ -6,6 +6,7 @@ import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, F
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { PersonalizationManager, ToolTab } from '@/lib/personalization';
+import { trackToolUsed, trackCopy } from '@/lib/analytics';
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget';
 import { useDevMode } from '@/components/DevModeWrapper';
 import JsonInput from '@/components/JsonInput';
@@ -132,7 +133,10 @@ function HomeClient() {
 }`;
 
   const copySampleJson = useCallback(() => {
-    navigator.clipboard.writeText(SAMPLE_JSON_FORMATTED).then(() => toast.success('Copied to clipboard')).catch(() => toast.error('Copy failed'));
+    navigator.clipboard.writeText(SAMPLE_JSON_FORMATTED).then(() => {
+      trackCopy('home');
+      toast.success('Copied to clipboard');
+    }).catch(() => toast.error('Copy failed'));
   }, []);
   const downloadSampleJson = useCallback(() => {
     const blob = new Blob([SAMPLE_JSON_FORMATTED], { type: 'application/json' });
@@ -162,6 +166,7 @@ function HomeClient() {
   const handleTabChange = useCallback((tab: ToolTab) => {
     if (tab !== activeTab) {
       setActiveTab(tab);
+      trackToolUsed('home', { tab });
       if (typeof requestIdleCallback !== 'undefined') {
         requestIdleCallback(() => showBuyMeACoffeeMessage(), { timeout: 100 });
       } else {

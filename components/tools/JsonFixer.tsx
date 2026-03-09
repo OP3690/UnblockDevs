@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Upload, FileText, X, Copy, Check, Download, AlertCircle, CheckCircle, Wrench, Zap, Eye, ExternalLink, BarChart3, Sparkles, ListChecks, Shield } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 import Link from 'next/link';
 import {
   extractJsonFromLogs,
@@ -433,6 +434,7 @@ export default function JsonFixer() {
   const handleCopy = () => {
     if (fixedJson) {
       navigator.clipboard.writeText(fixedJson);
+      trackCopy('json_fixer');
       setCopied(true);
       toast.success('Fixed JSON copied to clipboard!');
       setTimeout(() => setCopied(false), 2000);

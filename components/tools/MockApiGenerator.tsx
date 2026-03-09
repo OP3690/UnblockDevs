@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { Server, Copy, Check, Download, Play, ChevronDown, ChevronUp, Zap } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 import { validateJson } from '@/lib/jsonParser';
 import Link from 'next/link';
 import {
@@ -75,6 +76,7 @@ export default function MockApiGenerator() {
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
+    trackCopy('mock_api_generator');
     setCopied(true);
     toast.success('Copied to clipboard');
     setTimeout(() => setCopied(false), 2000);

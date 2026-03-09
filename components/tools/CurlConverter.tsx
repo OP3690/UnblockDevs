@@ -15,6 +15,7 @@ import {
   Lock,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 import Link from 'next/link';
 import {
   parseCurl,
@@ -83,6 +84,7 @@ export default function CurlConverter() {
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
+    trackCopy('curl_converter');
     setCopied(true);
     toast.success('Copied to clipboard');
     setTimeout(() => setCopied(false), 2000);

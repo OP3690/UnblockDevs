@@ -17,6 +17,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 import {
   parseCorsHeaders,
   analyzeCors,
@@ -109,6 +110,7 @@ export default function CorsTesterClient() {
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text).then(
       () => {
+        trackCopy('cors_tester');
         setCopied(label);
         toast.success('Copied');
         setTimeout(() => setCopied(null), 2000);

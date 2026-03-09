@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ShieldCheck, Cpu, RefreshCw, Clipboard, Download, Upload, Shield, Plus, Trash2, FileCode, Lock, Award } from 'lucide-react';
+import { trackCopy } from '@/lib/analytics';
 
 type TableSchema = { id: string; name: string; columns: string[] };
 
@@ -268,6 +269,7 @@ export default function AiSchemaMaskerClient() {
     if (!maskedOutput) return;
     try {
       await navigator.clipboard.writeText(maskedOutput);
+      trackCopy('ai_schema_masker');
     } catch {
       // ignore
     }
@@ -277,6 +279,7 @@ export default function AiSchemaMaskerClient() {
     if (!generatedPrompt) return;
     try {
       await navigator.clipboard.writeText(generatedPrompt);
+      trackCopy('ai_schema_masker');
     } catch {
       // ignore
     }

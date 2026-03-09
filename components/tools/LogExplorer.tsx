@@ -16,6 +16,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 import Link from 'next/link';
 import {
   parseLogs,
@@ -190,6 +191,7 @@ export default function LogExplorer() {
   const copySanitized = () => {
     const sanitized = filteredLogs.map((e) => sanitizeForAI((e.raw as string) || JSON.stringify(e))).join('\n');
     navigator.clipboard.writeText(sanitized);
+    trackCopy('log_explorer');
     toast.success('Sanitized logs copied (safe for AI/Stack Overflow)');
   };
 

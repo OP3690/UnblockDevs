@@ -16,6 +16,7 @@ import {
   FileJson,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 import Link from 'next/link';
 import {
   detectTokenType,
@@ -155,6 +156,7 @@ export default function TokenComparator() {
 
   const copyToken = (token: string, tokenNum: number) => {
     navigator.clipboard.writeText(token);
+    trackCopy('token_comparator');
     setCopied(`token${tokenNum}`);
     toast.success(`Token ${tokenNum} copied!`);
     setTimeout(() => setCopied(null), 2000);
@@ -162,6 +164,7 @@ export default function TokenComparator() {
 
   const copyDecoded = (label: string, text: string) => {
     navigator.clipboard.writeText(text);
+    trackCopy('token_comparator');
     toast.success(`${label} copied`);
   };
 

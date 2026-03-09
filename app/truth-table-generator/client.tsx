@@ -15,6 +15,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 import {
   OPERATORS,
   EXAMPLES,
@@ -98,7 +99,10 @@ export default function TruthTableGeneratorClient() {
     if (!result) return;
     const hdr = [...result.vars, 'Result'].join('\t');
     const body = result.rows.map((r) => [...result.vars.map((v) => (r.asgn[v] ? '1' : '0')), r.res ? '1' : '0'].join('\t')).join('\n');
-    navigator.clipboard.writeText(hdr + '\n' + body).then(() => toast.success('Table copied'));
+    navigator.clipboard.writeText(hdr + '\n' + body).then(() => {
+      trackCopy('truth_table_generator');
+      toast.success('Table copied');
+    });
   };
 
   const exportCSV = () => {
@@ -456,7 +460,7 @@ export default function TruthTableGeneratorClient() {
                             type="button"
                             onClick={() => {
                               const code = result ? generateCode(codeLang, result.expr, result.vars, result.ast, result) : '';
-                              navigator.clipboard.writeText(code).then(() => { setCopied(codeLang); toast.success('Copied'); setTimeout(() => setCopied(null), 2000); });
+                              navigator.clipboard.writeText(code).then(() => { trackCopy('truth_table_generator'); setCopied(codeLang); toast.success('Copied'); setTimeout(() => setCopied(null), 2000); });
                             }}
                             className="inline-flex items-center gap-1 rounded-lg border border-gray-200 bg-white px-2 py-1 text-xs font-medium text-gray-600 hover:bg-gray-50"
                           >

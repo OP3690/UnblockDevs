@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { Database, Copy, Check, Download, Users, FileText, CreditCard, ShoppingBag, Newspaper, Sparkles, Server, Shield, Brain, Activity, AlertTriangle, TrendingUp } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 import { validateJson } from '@/lib/jsonParser';
 
 type PredefinedDataType = 'user' | 'invoice' | 'banking' | 'accessories' | 'news' | 'apiLogs' | 'securityEvents' | 'aiTraining' | 'systemLogs' | 'vulnerabilities' | 'aiMetrics' | 'custom';
@@ -583,6 +584,7 @@ export default function TestDataGenerator() {
 
   const handleCopy = () => {
     navigator.clipboard.writeText(generatedData);
+    trackCopy('test_data_generator');
     setCopied(true);
     toast.success('Copied to clipboard!');
     setTimeout(() => setCopied(false), 2000);

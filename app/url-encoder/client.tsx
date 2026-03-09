@@ -16,6 +16,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 import {
   type EncodeMode,
   type EncodingStandard,
@@ -146,6 +147,7 @@ export default function UrlEncoderClient() {
   const copyToClipboard = (text: string, id: string) => {
     navigator.clipboard.writeText(text).then(
       () => {
+        trackCopy('url_encoder');
         setCopiedId(id);
         toast.success('Copied');
         setTimeout(() => setCopiedId(null), 2000);

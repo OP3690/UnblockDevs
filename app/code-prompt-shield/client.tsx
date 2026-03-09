@@ -18,6 +18,7 @@ import {
   FileJson,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 
 const LANGUAGES = [
   { id: 'javascript', name: 'JavaScript' },
@@ -280,6 +281,7 @@ export default function CodePromptShieldClient() {
     if (!maskedCode) return;
     try {
       await navigator.clipboard.writeText(maskedCode);
+      trackCopy('code_prompt_shield');
       toast.success('Masked code copied');
     } catch {
       toast.error('Copy failed');
@@ -291,6 +293,7 @@ export default function CodePromptShieldClient() {
     const text = addTemplate ? PROMPT_TEMPLATE + maskedCode : maskedCode;
     try {
       await navigator.clipboard.writeText(text);
+      trackCopy('code_prompt_shield');
       toast.success(`Copied for ${tool === 'chatgpt' ? 'ChatGPT' : tool === 'claude' ? 'Claude' : 'Copilot'}`);
     } catch {
       toast.error('Copy failed');

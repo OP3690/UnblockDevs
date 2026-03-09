@@ -15,6 +15,7 @@ import {
   FileCode,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 import Link from 'next/link';
 import { useDevMode } from '@/components/DevModeWrapper';
 import {
@@ -188,6 +189,7 @@ export default function SqlFormatter() {
       return;
     }
     navigator.clipboard.writeText(formattedOutput);
+    trackCopy('sql_formatter');
     setCopied(true);
     toast.success('Copied to clipboard!');
     setTimeout(() => setCopied(false), 2000);
@@ -203,6 +205,7 @@ export default function SqlFormatter() {
     url.searchParams.set('ids', ids.join(','));
     window.history.replaceState({}, '', url.toString());
     navigator.clipboard.writeText(url.toString());
+    trackCopy('sql_formatter');
     toast.success('Share link copied!');
   };
 

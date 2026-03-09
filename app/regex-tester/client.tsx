@@ -14,6 +14,7 @@ import {
   Replace,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCopy } from '@/lib/analytics';
 
 const FLAGS = [
   { id: 'g', label: 'Global', title: 'All matches' },
@@ -163,6 +164,7 @@ export default function RegexTesterClient() {
   const copyPattern = async () => {
     try {
       await navigator.clipboard.writeText(pattern);
+      trackCopy('regex_tester');
       toast.success('Pattern copied');
     } catch {
       toast.error('Copy failed');
@@ -173,6 +175,7 @@ export default function RegexTesterClient() {
     const lines = matches.map((m) => `[${m.index}] ${m.match}${m.groups.length ? ' | Groups: ' + m.groups.join(', ') : ''}`);
     try {
       await navigator.clipboard.writeText(lines.join('\n'));
+      trackCopy('regex_tester');
       toast.success('Matches copied');
     } catch {
       toast.error('Copy failed');
@@ -183,6 +186,7 @@ export default function RegexTesterClient() {
     if (!replaceResult) return;
     try {
       await navigator.clipboard.writeText(replaceResult);
+      trackCopy('regex_tester');
       toast.success('Result copied');
     } catch {
       toast.error('Copy failed');
