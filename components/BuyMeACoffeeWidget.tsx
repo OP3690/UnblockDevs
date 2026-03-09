@@ -11,22 +11,41 @@ export default function BuyMeACoffeeWidget() {
     if (typeof window === 'undefined' || typeof document === 'undefined') return;
     if (document.querySelector('script[data-name="BMC-Widget"]')) return;
 
-    const script = document.createElement('script');
-    script.setAttribute('data-name', 'BMC-Widget');
-    script.setAttribute('data-cfasync', 'false');
-    script.src = BMC_SCRIPT_URL;
-    script.setAttribute('data-id', 'WKbStURip');
-    script.setAttribute('data-description', 'Support me on Buy me a coffee!');
-    script.setAttribute('data-message', '');
-    script.setAttribute('data-color', '#5F7FFF');
-    script.setAttribute('data-position', 'Right');
-    script.setAttribute('data-x_margin', '18');
-    script.setAttribute('data-y_margin', '18');
-    script.async = true;
-    script.onload = () => {
-      window.dispatchEvent(new Event('DOMContentLoaded'));
+    const inject = () => {
+      const script = document.createElement('script');
+      script.setAttribute('data-name', 'BMC-Widget');
+      script.setAttribute('data-cfasync', 'false');
+      script.src = BMC_SCRIPT_URL;
+      script.setAttribute('data-id', 'WKbStURip');
+      script.setAttribute('data-description', 'Support me on Buy me a coffee!');
+      script.setAttribute('data-message', '');
+      script.setAttribute('data-color', '#5F7FFF');
+      script.setAttribute('data-position', 'Right');
+      script.setAttribute('data-x_margin', '18');
+      script.setAttribute('data-y_margin', '18');
+      script.async = true;
+      script.onload = () => {
+        window.dispatchEvent(new Event('DOMContentLoaded'));
+      };
+      document.head.appendChild(script);
     };
-    document.head.appendChild(script);
+
+    let cancelled = false;
+    const run = () => {
+      if (!cancelled) inject();
+    };
+    let cleanup: () => void;
+    if (typeof window.requestIdleCallback !== 'undefined') {
+      const id = window.requestIdleCallback(run, { timeout: 3000 });
+      cleanup = () => window.cancelIdleCallback(id);
+    } else {
+      const id = window.setTimeout(run, 2500);
+      cleanup = () => window.clearTimeout(id);
+    }
+    return () => {
+      cancelled = true;
+      cleanup();
+    };
   }, []);
 
   return null;
