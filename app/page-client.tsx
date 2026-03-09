@@ -15,8 +15,13 @@ const NewsletterSignup = dynamic(() => import('@/components/NewsletterSignup'), 
 const FeedbackForm = dynamic(() => import('@/components/FeedbackForm'), { ssr: false, loading: () => null });
 import DataTable from '@/components/DataTable';
 import SectionManager from '@/components/SectionManager';
-import JsonBeautifier from '@/components/JsonBeautifier';
-import JsonFixer from '@/components/tools/JsonFixer';
+
+const toolLoading = () => (
+  <div className="w-full bg-gray-50 border border-gray-200 rounded-lg animate-pulse" style={{ height: '300px' }} aria-hidden />
+);
+
+const JsonBeautifier = dynamic(() => import('@/components/JsonBeautifier'), { ssr: false, loading: toolLoading });
+const JsonFixer = dynamic(() => import('@/components/tools/JsonFixer'), { ssr: false, loading: toolLoading });
 
 // Lazy load tool components for better performance
 const ApiComparator = dynamic(() => import('@/components/tools/ApiComparator'), {
@@ -106,6 +111,103 @@ const toolPageUrls: Record<Exclude<ToolTab, 'converter'>, string> = {
   curlfailure: '/curl-failure-root-cause-engine',
 };
 
+const POPULAR_BLOG_LINKS: { href: string; label: string }[] = [
+  { href: '/blog/chatgpt-real-life-usage-guide', label: 'ChatGPT Usage' },
+  { href: '/blog/ai-prompt-engineering-guide', label: 'AI Prompt Engineering' },
+  { href: '/blog/blockchain-complete-guide', label: 'Blockchain' },
+  { href: '/blog/mysql-10-most-used-functions', label: 'MySQL Functions' },
+  { href: '/blog/token-security-privacy-best-practices', label: 'Token Security' },
+  { href: '/blog/5g-6g-complete-guide', label: '5G & 6G' },
+  { href: '/blog/tokens-complete-guide', label: 'Tokens Guide' },
+  { href: '/blog/token-technologies-history-evolution', label: 'Token History' },
+  { href: '/blog/agentic-ai-complete-guide', label: 'Agentic AI' },
+  { href: '/blog/apache-kafka-complete-guide', label: 'Apache Kafka' },
+  { href: '/blog/confidential-computing-complete-guide', label: 'Confidential Computing' },
+  { href: '/blog/cursor-ai-code-editor-guide', label: 'Cursor AI' },
+  { href: '/blog/ai-productivity-tools-complete-guide', label: 'AI Productivity' },
+  { href: '/blog/digital-twins-complete-guide', label: 'Digital Twins' },
+  { href: '/blog/apache-kafka-cheat-sheet', label: 'Kafka Cheat Sheet' },
+  { href: '/blog/why-my-api-returns-200-ok-but-data-is-empty', label: 'API Returns 200 but Empty' },
+  { href: '/blog/how-to-change-whatsapp-privacy-settings-maximum-security', label: 'WhatsApp Privacy' },
+  { href: '/blog/json-format-standards-complete-guide', label: 'JSON Format Standards' },
+  { href: '/blog/fix-python-keyerror-explained-examples', label: 'Python KeyError' },
+  { href: '/blog/digital-provenance-complete-guide', label: 'Digital Provenance' },
+  { href: '/blog/notebooklm-cheat-sheet-tips', label: 'NotebookLM Cheat Sheet' },
+  { href: '/blog/how-to-know-if-someone-blocked-you-on-instagram', label: 'Instagram Blocked' },
+  { href: '/blog/ces-2026-fire-tv-stick-4k-max-project-ava', label: 'Fire TV Stick 4K Max' },
+  { href: '/blog/prefix-sum-technique-explained-simply', label: 'Prefix Sum' },
+  { href: '/blog/how-to-fix-broken-json-without-understanding', label: 'Fix Broken JSON' },
+  { href: '/blog/ai-native-platforms-complete-guide', label: 'AI-Native Platforms' },
+  { href: '/blog/high-impact-tech-stocks-investment-guide', label: 'Tech Stocks' },
+  { href: '/blog/must-learn-tech-skills-2030', label: 'Tech Skills 2030' },
+  { href: '/blog/instagram-password-reset-email-guide', label: 'Instagram Password Reset' },
+  { href: '/blog/how-to-change-instagram-phone-number-email-2026', label: 'Instagram Phone/Email' },
+  { href: '/blog/top-10-json-errors-waste-developer-time', label: 'Top 10 JSON Errors' },
+  { href: '/blog/what-is-hashmap-hashtable-explained-simply-with-examples', label: 'HashMap/HashTable' },
+  { href: '/blog/invalid-json-vs-valid-json-examples', label: 'Invalid vs Valid JSON' },
+  { href: '/blog/how-to-read-error-messages-properly-as-beginner-programmer', label: 'Read Error Messages' },
+  { href: '/blog/how-to-change-phone-number-telegram-without-notifying', label: 'Telegram Phone Change' },
+  { href: '/blog/what-is-linked-list-singly-vs-doubly-explained-simply', label: 'Linked List' },
+  { href: '/blog/how-to-hide-online-status-on-whatsapp', label: 'WhatsApp Hide Status' },
+  { href: '/blog/fix-error-listen-eaddrinuse-nodejs-port-already-in-use', label: 'EADDRINUSE Node.js' },
+  { href: '/blog/how-to-parse-nested-json-java', label: 'Parse Nested JSON Java' },
+  { href: '/blog/css-explained-guide', label: 'CSS Explained' },
+  { href: '/blog/how-to-fix-cors-policy-error-javascript', label: 'CORS Policy Error' },
+  { href: '/blog/binary-search-explained-like-youre-5-with-code-example', label: 'Binary Search' },
+  { href: '/blog/json-stringify-vs-json-parse-difference', label: 'stringify vs parse' },
+  { href: '/blog/notebooklm-complete-guide', label: 'NotebookLM Guide' },
+  { href: '/blog/how-to-cancel-amazon-prime-membership-instantly', label: 'Cancel Amazon Prime' },
+  { href: '/blog/json-api-design-patterns', label: 'JSON API Design' },
+  { href: '/blog/how-to-see-deleted-instagram-messages-without-third-party-apps', label: 'See Deleted Instagram' },
+  { href: '/blog/json-best-practices-production-guide', label: 'JSON Best Practices' },
+  { href: '/blog/how-to-fix-nullpointerexception-java-beginner-friendly', label: 'NullPointerException Java' },
+  { href: '/blog/fix-cannot-read-properties-of-undefined-reading-length-javascript', label: 'Undefined length JS' },
+  { href: '/blog/how-to-see-instagram-story-without-being-seen', label: 'Instagram Story Unseen' },
+  { href: '/blog/physical-ai-systems-complete-guide', label: 'Physical AI Systems' },
+  { href: '/blog/physical-ai-autonomous-vehicles-complete-guide', label: 'Physical AI Vehicles' },
+  { href: '/blog/physical-ai-complete-guide', label: 'Physical AI' },
+  { href: '/blog/nintendo-switch-online-gamecube-games', label: 'Switch GameCube' },
+  { href: '/blog/what-is-two-pointer-technique-explained-for-beginners', label: 'Two Pointer' },
+  { href: '/blog/curl-vs-python-requests-comparison', label: 'cURL vs Requests' },
+  { href: '/blog/best-free-developer-tools-2026', label: 'Free Dev Tools 2026' },
+  { href: '/blog/what-is-sliding-window-technique-explained-with-simple-examples', label: 'Sliding Window' },
+  { href: '/blog/stringified-json-hell-unescape-decode-jwt-epoch-sanitize-logs', label: 'Stringified JSON Logs' },
+  { href: '/blog/how-to-decode-stringified-nested-json-logs-without-5-tools', label: 'Decode Stringified JSON' },
+  { href: '/blog/ultimate-guide-fixing-escaped-json-jwt-epoch-stack-traces-logs', label: 'Escaped JSON JWTs' },
+  { href: '/blog/greedy-algorithm-explained-with-simple-examples', label: 'Greedy Algorithm' },
+  { href: '/blog/how-to-change-email-address-google-account-safely', label: 'Change Google Email' },
+  { href: '/blog/complete-guide-json-viewer-parser-beautifier', label: 'JSON Viewer Guide' },
+  { href: '/blog/how-to-cancel-spotify-premium-and-get-refund', label: 'Cancel Spotify' },
+  { href: '/blog/what-is-stack-vs-queue-explained-with-real-life-examples', label: 'Stack vs Queue' },
+  { href: '/blog/why-async-await-is-not-working-javascript-common-mistakes', label: 'async/await Not Working' },
+  { href: '/blog/merge-sort-explained-step-by-step-why-preferred-in-interviews', label: 'Merge Sort' },
+  { href: '/blog/advanced-html5-apis-guide', label: 'HTML5 APIs' },
+  { href: '/blog/ai-supercomputing-platforms-complete-guide', label: 'AI Supercomputing' },
+  { href: '/blog/domain-specific-language-models-complete-guide', label: 'Domain Language Models' },
+  { href: '/blog/mysql-comma-separated-id-list-guide', label: 'MySQL IN List' },
+  { href: '/blog/fix-hydration-failed-error-nextjs-server-vs-client-mismatch', label: 'Hydration Failed Next.js' },
+  { href: '/blog/what-is-time-complexity-explained-with-simple-examples', label: 'Time Complexity' },
+  { href: '/blog/how-to-read-whatsapp-messages-without-blue-ticks', label: 'WhatsApp No Blue Ticks' },
+  { href: '/blog/xbox-game-pass-games-complete-guide', label: 'Xbox Game Pass' },
+  { href: '/blog/how-to-fix-module-not-found-error-nodejs', label: 'Module Not Found Node' },
+  { href: '/blog/what-is-bfs-vs-dfs-differences-explained-with-examples', label: 'BFS vs DFS' },
+  { href: '/blog/fix-maximum-call-stack-size-exceeded-javascript', label: 'Stack Size Exceeded' },
+  { href: '/blog/fix-cannot-read-property-map-of-undefined-javascript', label: 'map of Undefined' },
+  { href: '/blog/how-to-change-whatsapp-number-without-losing-chats', label: 'WhatsApp Number Change' },
+  { href: '/blog/html-interview-questions', label: 'HTML Interview' },
+  { href: '/blog/how-to-cancel-netflix-subscription-without-losing-watch-history', label: 'Cancel Netflix' },
+  { href: '/blog/seo-optimized-html-markup', label: 'SEO HTML Markup' },
+  { href: '/blog/fix-access-control-allow-origin-missing-header-error', label: 'CORS Missing Header' },
+  { href: '/blog/fix-unexpected-token-less-than-in-json-api-returns-html', label: 'Unexpected token < JSON' },
+  { href: '/blog/what-is-recursion-explained-with-simple-real-life-examples', label: 'Recursion' },
+  { href: '/blog/fix-uncaught-in-promise-error-javascript-explained', label: 'Uncaught in Promise' },
+  { href: '/blog/how-to-change-apple-id-phone-number-without-losing-data', label: 'Apple ID Phone' },
+  { href: '/blog/how-to-get-curl-from-chrome', label: 'cURL from Chrome' },
+  { href: '/blog/most-useful-tech-skills-2026', label: 'Tech Skills 2026' },
+];
+
+const INITIAL_BLOG_LINKS = 20;
+
 function HomeClient() {
   const [activeTab, setActiveTab] = useState<ToolTab>('beautifier');
   const [rows, setRows] = useState<FlattenedRow[]>([]);
@@ -117,6 +219,7 @@ function HomeClient() {
   const [showBookmarkPrompt, setShowBookmarkPrompt] = useState<boolean>(false);
   const [reserveBannerSpace, setReserveBannerSpace] = useState<boolean>(true);
   const [samplePanelOpen, setSamplePanelOpen] = useState<boolean>(true);
+  const [showAllBlogLinks, setShowAllBlogLinks] = useState<boolean>(false);
   const { devMode, setDevMode } = useDevMode();
 
   // Sample JSON for engagement: live demo snippet and interactive panel
@@ -398,7 +501,7 @@ function HomeClient() {
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col bg-gradient-to-b from-slate-50 via-white to-slate-50/80">
+    <div className="relative min-h-screen flex flex-col bg-gradient-to-b from-slate-50 via-white to-slate-50/80" style={{ contain: 'layout' }}>
       <BuyMeACoffeeWidget />
       {/* Skip to main content for keyboard and screen reader users */}
       <a
@@ -1228,103 +1331,25 @@ function HomeClient() {
               </div>
             </div>
             
-            {/* Popular Blog Posts Section - Internal Links for SEO (more links = more dofollow inlinks per post) */}
+            {/* Popular Blog Posts — show 20 initially to reduce DOM/INP, expand on click */}
             <div className="mt-8 pt-8 border-t border-gray-200">
               <h3 className="text-sm font-semibold text-gray-900 mb-4 text-center">Popular Developer Guides</h3>
               <div className="flex flex-wrap justify-center gap-x-3 gap-y-2 text-xs [&_a]:py-2 [&_a]:inline-flex [&_a]:items-center [&_a]:touch-manipulation">
-                <Link href="/blog/chatgpt-real-life-usage-guide" className="text-blue-600 hover:text-blue-700 hover:underline">ChatGPT Usage</Link>
-                <Link href="/blog/ai-prompt-engineering-guide" className="text-blue-600 hover:text-blue-700 hover:underline">AI Prompt Engineering</Link>
-                <Link href="/blog/blockchain-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Blockchain</Link>
-                <Link href="/blog/mysql-10-most-used-functions" className="text-blue-600 hover:text-blue-700 hover:underline">MySQL Functions</Link>
-                <Link href="/blog/token-security-privacy-best-practices" className="text-blue-600 hover:text-blue-700 hover:underline">Token Security</Link>
-                <Link href="/blog/5g-6g-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">5G & 6G</Link>
-                <Link href="/blog/tokens-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Tokens Guide</Link>
-                <Link href="/blog/token-technologies-history-evolution" className="text-blue-600 hover:text-blue-700 hover:underline">Token History</Link>
-                <Link href="/blog/agentic-ai-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Agentic AI</Link>
-                <Link href="/blog/apache-kafka-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Apache Kafka</Link>
-                <Link href="/blog/confidential-computing-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Confidential Computing</Link>
-                <Link href="/blog/cursor-ai-code-editor-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Cursor AI</Link>
-                <Link href="/blog/ai-productivity-tools-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">AI Productivity</Link>
-                <Link href="/blog/digital-twins-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Digital Twins</Link>
-                <Link href="/blog/apache-kafka-cheat-sheet" className="text-blue-600 hover:text-blue-700 hover:underline">Kafka Cheat Sheet</Link>
-                <Link href="/blog/why-my-api-returns-200-ok-but-data-is-empty" className="text-blue-600 hover:text-blue-700 hover:underline">API Returns 200 but Empty</Link>
-                <Link href="/blog/how-to-change-whatsapp-privacy-settings-maximum-security" className="text-blue-600 hover:text-blue-700 hover:underline">WhatsApp Privacy</Link>
-                <Link href="/blog/json-format-standards-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">JSON Format Standards</Link>
-                <Link href="/blog/fix-python-keyerror-explained-examples" className="text-blue-600 hover:text-blue-700 hover:underline">Python KeyError</Link>
-                <Link href="/blog/digital-provenance-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Digital Provenance</Link>
-                <Link href="/blog/notebooklm-cheat-sheet-tips" className="text-blue-600 hover:text-blue-700 hover:underline">NotebookLM Cheat Sheet</Link>
-                <Link href="/blog/how-to-know-if-someone-blocked-you-on-instagram" className="text-blue-600 hover:text-blue-700 hover:underline">Instagram Blocked</Link>
-                <Link href="/blog/ces-2026-fire-tv-stick-4k-max-project-ava" className="text-blue-600 hover:text-blue-700 hover:underline">Fire TV Stick 4K Max</Link>
-                <Link href="/blog/prefix-sum-technique-explained-simply" className="text-blue-600 hover:text-blue-700 hover:underline">Prefix Sum</Link>
-                <Link href="/blog/how-to-fix-broken-json-without-understanding" className="text-blue-600 hover:text-blue-700 hover:underline">Fix Broken JSON</Link>
-                <Link href="/blog/ai-native-platforms-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">AI-Native Platforms</Link>
-                <Link href="/blog/high-impact-tech-stocks-investment-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Tech Stocks</Link>
-                <Link href="/blog/must-learn-tech-skills-2030" className="text-blue-600 hover:text-blue-700 hover:underline">Tech Skills 2030</Link>
-                <Link href="/blog/instagram-password-reset-email-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Instagram Password Reset</Link>
-                <Link href="/blog/how-to-change-instagram-phone-number-email-2026" className="text-blue-600 hover:text-blue-700 hover:underline">Instagram Phone/Email</Link>
-                <Link href="/blog/top-10-json-errors-waste-developer-time" className="text-blue-600 hover:text-blue-700 hover:underline">Top 10 JSON Errors</Link>
-                <Link href="/blog/what-is-hashmap-hashtable-explained-simply-with-examples" className="text-blue-600 hover:text-blue-700 hover:underline">HashMap/HashTable</Link>
-                <Link href="/blog/invalid-json-vs-valid-json-examples" className="text-blue-600 hover:text-blue-700 hover:underline">Invalid vs Valid JSON</Link>
-                <Link href="/blog/how-to-read-error-messages-properly-as-beginner-programmer" className="text-blue-600 hover:text-blue-700 hover:underline">Read Error Messages</Link>
-                <Link href="/blog/how-to-change-phone-number-telegram-without-notifying" className="text-blue-600 hover:text-blue-700 hover:underline">Telegram Phone Change</Link>
-                <Link href="/blog/what-is-linked-list-singly-vs-doubly-explained-simply" className="text-blue-600 hover:text-blue-700 hover:underline">Linked List</Link>
-                <Link href="/blog/how-to-hide-online-status-on-whatsapp" className="text-blue-600 hover:text-blue-700 hover:underline">WhatsApp Hide Status</Link>
-                <Link href="/blog/fix-error-listen-eaddrinuse-nodejs-port-already-in-use" className="text-blue-600 hover:text-blue-700 hover:underline">EADDRINUSE Node.js</Link>
-                <Link href="/blog/how-to-parse-nested-json-java" className="text-blue-600 hover:text-blue-700 hover:underline">Parse Nested JSON Java</Link>
-                <Link href="/blog/css-explained-guide" className="text-blue-600 hover:text-blue-700 hover:underline">CSS Explained</Link>
-                <Link href="/blog/how-to-fix-cors-policy-error-javascript" className="text-blue-600 hover:text-blue-700 hover:underline">CORS Policy Error</Link>
-                <Link href="/blog/binary-search-explained-like-youre-5-with-code-example" className="text-blue-600 hover:text-blue-700 hover:underline">Binary Search</Link>
-                <Link href="/blog/json-stringify-vs-json-parse-difference" className="text-blue-600 hover:text-blue-700 hover:underline">stringify vs parse</Link>
-                <Link href="/blog/notebooklm-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">NotebookLM Guide</Link>
-                <Link href="/blog/how-to-cancel-amazon-prime-membership-instantly" className="text-blue-600 hover:text-blue-700 hover:underline">Cancel Amazon Prime</Link>
-                <Link href="/blog/json-api-design-patterns" className="text-blue-600 hover:text-blue-700 hover:underline">JSON API Design</Link>
-                <Link href="/blog/how-to-see-deleted-instagram-messages-without-third-party-apps" className="text-blue-600 hover:text-blue-700 hover:underline">See Deleted Instagram</Link>
-                <Link href="/blog/json-best-practices-production-guide" className="text-blue-600 hover:text-blue-700 hover:underline">JSON Best Practices</Link>
-                <Link href="/blog/how-to-fix-nullpointerexception-java-beginner-friendly" className="text-blue-600 hover:text-blue-700 hover:underline">NullPointerException Java</Link>
-                <Link href="/blog/fix-cannot-read-properties-of-undefined-reading-length-javascript" className="text-blue-600 hover:text-blue-700 hover:underline">Undefined length JS</Link>
-                <Link href="/blog/how-to-see-instagram-story-without-being-seen" className="text-blue-600 hover:text-blue-700 hover:underline">Instagram Story Unseen</Link>
-                <Link href="/blog/physical-ai-systems-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Physical AI Systems</Link>
-                <Link href="/blog/physical-ai-autonomous-vehicles-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Physical AI Vehicles</Link>
-                <Link href="/blog/physical-ai-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Physical AI</Link>
-                <Link href="/blog/nintendo-switch-online-gamecube-games" className="text-blue-600 hover:text-blue-700 hover:underline">Switch GameCube</Link>
-                <Link href="/blog/what-is-two-pointer-technique-explained-for-beginners" className="text-blue-600 hover:text-blue-700 hover:underline">Two Pointer</Link>
-                <Link href="/blog/curl-vs-python-requests-comparison" className="text-blue-600 hover:text-blue-700 hover:underline">cURL vs Requests</Link>
-                <Link href="/blog/best-free-developer-tools-2026" className="text-blue-600 hover:text-blue-700 hover:underline">Free Dev Tools 2026</Link>
-                <Link href="/blog/what-is-sliding-window-technique-explained-with-simple-examples" className="text-blue-600 hover:text-blue-700 hover:underline">Sliding Window</Link>
-                <Link href="/blog/stringified-json-hell-unescape-decode-jwt-epoch-sanitize-logs" className="text-blue-600 hover:text-blue-700 hover:underline">Stringified JSON Logs</Link>
-                <Link href="/blog/how-to-decode-stringified-nested-json-logs-without-5-tools" className="text-blue-600 hover:text-blue-700 hover:underline">Decode Stringified JSON</Link>
-                <Link href="/blog/ultimate-guide-fixing-escaped-json-jwt-epoch-stack-traces-logs" className="text-blue-600 hover:text-blue-700 hover:underline">Escaped JSON JWTs</Link>
-                <Link href="/blog/greedy-algorithm-explained-with-simple-examples" className="text-blue-600 hover:text-blue-700 hover:underline">Greedy Algorithm</Link>
-                <Link href="/blog/how-to-change-email-address-google-account-safely" className="text-blue-600 hover:text-blue-700 hover:underline">Change Google Email</Link>
-                <Link href="/blog/complete-guide-json-viewer-parser-beautifier" className="text-blue-600 hover:text-blue-700 hover:underline">JSON Viewer Guide</Link>
-                <Link href="/blog/how-to-cancel-spotify-premium-and-get-refund" className="text-blue-600 hover:text-blue-700 hover:underline">Cancel Spotify</Link>
-                <Link href="/blog/what-is-stack-vs-queue-explained-with-real-life-examples" className="text-blue-600 hover:text-blue-700 hover:underline">Stack vs Queue</Link>
-                <Link href="/blog/why-async-await-is-not-working-javascript-common-mistakes" className="text-blue-600 hover:text-blue-700 hover:underline">async/await Not Working</Link>
-                <Link href="/blog/merge-sort-explained-step-by-step-why-preferred-in-interviews" className="text-blue-600 hover:text-blue-700 hover:underline">Merge Sort</Link>
-                <Link href="/blog/advanced-html5-apis-guide" className="text-blue-600 hover:text-blue-700 hover:underline">HTML5 APIs</Link>
-                <Link href="/blog/ai-supercomputing-platforms-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">AI Supercomputing</Link>
-                <Link href="/blog/domain-specific-language-models-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Domain Language Models</Link>
-                <Link href="/blog/mysql-comma-separated-id-list-guide" className="text-blue-600 hover:text-blue-700 hover:underline">MySQL IN List</Link>
-                <Link href="/blog/fix-hydration-failed-error-nextjs-server-vs-client-mismatch" className="text-blue-600 hover:text-blue-700 hover:underline">Hydration Failed Next.js</Link>
-                <Link href="/blog/what-is-time-complexity-explained-with-simple-examples" className="text-blue-600 hover:text-blue-700 hover:underline">Time Complexity</Link>
-                <Link href="/blog/how-to-read-whatsapp-messages-without-blue-ticks" className="text-blue-600 hover:text-blue-700 hover:underline">WhatsApp No Blue Ticks</Link>
-                <Link href="/blog/xbox-game-pass-games-complete-guide" className="text-blue-600 hover:text-blue-700 hover:underline">Xbox Game Pass</Link>
-                <Link href="/blog/how-to-fix-module-not-found-error-nodejs" className="text-blue-600 hover:text-blue-700 hover:underline">Module Not Found Node</Link>
-                <Link href="/blog/what-is-bfs-vs-dfs-differences-explained-with-examples" className="text-blue-600 hover:text-blue-700 hover:underline">BFS vs DFS</Link>
-                <Link href="/blog/fix-maximum-call-stack-size-exceeded-javascript" className="text-blue-600 hover:text-blue-700 hover:underline">Stack Size Exceeded</Link>
-                <Link href="/blog/fix-cannot-read-property-map-of-undefined-javascript" className="text-blue-600 hover:text-blue-700 hover:underline">map of Undefined</Link>
-                <Link href="/blog/how-to-change-whatsapp-number-without-losing-chats" className="text-blue-600 hover:text-blue-700 hover:underline">WhatsApp Number Change</Link>
-                <Link href="/blog/html-interview-questions" className="text-blue-600 hover:text-blue-700 hover:underline">HTML Interview</Link>
-                <Link href="/blog/how-to-cancel-netflix-subscription-without-losing-watch-history" className="text-blue-600 hover:text-blue-700 hover:underline">Cancel Netflix</Link>
-                <Link href="/blog/seo-optimized-html-markup" className="text-blue-600 hover:text-blue-700 hover:underline">SEO HTML Markup</Link>
-                <Link href="/blog/fix-access-control-allow-origin-missing-header-error" className="text-blue-600 hover:text-blue-700 hover:underline">CORS Missing Header</Link>
-                <Link href="/blog/fix-unexpected-token-less-than-in-json-api-returns-html" className="text-blue-600 hover:text-blue-700 hover:underline">Unexpected token &lt; JSON</Link>
-                <Link href="/blog/what-is-recursion-explained-with-simple-real-life-examples" className="text-blue-600 hover:text-blue-700 hover:underline">Recursion</Link>
-                <Link href="/blog/fix-uncaught-in-promise-error-javascript-explained" className="text-blue-600 hover:text-blue-700 hover:underline">Uncaught in Promise</Link>
-                <Link href="/blog/how-to-change-apple-id-phone-number-without-losing-data" className="text-blue-600 hover:text-blue-700 hover:underline">Apple ID Phone</Link>
-                <Link href="/blog/how-to-get-curl-from-chrome" className="text-blue-600 hover:text-blue-700 hover:underline">cURL from Chrome</Link>
-                <Link href="/blog/most-useful-tech-skills-2026" className="text-blue-600 hover:text-blue-700 hover:underline">Tech Skills 2026</Link>
+                {(showAllBlogLinks ? POPULAR_BLOG_LINKS : POPULAR_BLOG_LINKS.slice(0, INITIAL_BLOG_LINKS)).map(({ href, label }) => (
+                  <Link key={href} href={href} className="text-blue-600 hover:text-blue-700 hover:underline">{label}</Link>
+                ))}
               </div>
+              {!showAllBlogLinks && POPULAR_BLOG_LINKS.length > INITIAL_BLOG_LINKS && (
+                <div className="text-center mt-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowAllBlogLinks(true)}
+                    className="text-blue-600 hover:text-blue-700 text-sm font-medium hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
+                  >
+                    Show all {POPULAR_BLOG_LINKS.length} guides →
+                  </button>
+                </div>
+              )}
             </div>
             
             {/* Footer Links */}

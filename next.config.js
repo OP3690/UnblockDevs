@@ -1,21 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // Optimize production builds
-  ...(process.env.NODE_ENV === 'production' && {
-    swcMinify: true,
-    compress: true,
-  }),
+  swcMinify: true,
+  experimental: {
+    optimizePackageImports: ['lucide-react'],
+  },
   // Optimize images
   images: {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 60,
   },
-  // Compiler optimizations
   compiler: {
-    removeConsole: process.env.NODE_ENV === 'production' ? {
-      exclude: ['error', 'warn'],
-    } : false,
+    removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error', 'warn'] } : false,
   },
   // Redirects configuration (keyword URLs → tool pages for SEO; fix 404 blog URLs)
   async redirects() {
@@ -90,12 +86,11 @@ const nextConfig = {
       },
       {
         source: '/manifest.json',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=86400',
-          },
-        ],
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=86400' }],
+      },
+      {
+        source: '/_next/static/(.*)',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
       },
     ]
   },

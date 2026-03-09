@@ -228,18 +228,10 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }}
         />
-        {/* Fonts are self-hosted via next/font; no preconnect to Google Fonts (Lighthouse: unused preconnect) */}
-        {/* Preconnect to LCP-critical third parties (saves ~100–110 ms when they load) */}
-        <link rel="preconnect" href="https://cdn.buymeacoffee.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://cdnjs.buymeacoffee.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://privacy.gatekeeperconsent.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://fundingchoicesmessages.google.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://the.gatekeeperconsent.com" />
-        <link rel="dns-prefetch" href="https://cmp.gatekeeperconsent.com" />
-        <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
-        {/* AdSense loaded deferred (see bottom script) to improve LCP */}
-        <link rel="dns-prefetch" href="https://lb.eu-1-id5-sync.com" />
-        <link rel="dns-prefetch" href="https://cdn.id5-sync.com" />
+        {/* Preconnects only for AdSense/ads (no Gatekeeper/BMC to save ~400ms) */}
+        <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
+        <link rel="preconnect" href="https://ep1.adtrafficquality.google" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://fundingchoicesmessages.google.com" />
         
         {/* Favicon for Google Search Results - Multiple formats for better compatibility */}
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
@@ -295,13 +287,11 @@ export default function RootLayout({
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
-        {/* GA4 – lazyOnload to keep main thread free during LCP/TBT window */}
-        <Script id="ga4-js" strategy="lazyOnload" src="https://www.googletagmanager.com/gtag/js?id=G-N6DF8NPHY8" />
-        <Script id="ga4-config" strategy="lazyOnload">
-          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config','G-N6DF8NPHY8',{allow_enhanced_conversions:true});`}
+        {/* GA4 — afterInteractive so page_path works on first paint */}
+        <Script id="ga4-js" strategy="afterInteractive" src="https://www.googletagmanager.com/gtag/js?id=G-N6DF8NPHY8" />
+        <Script id="ga4-config" strategy="afterInteractive">
+          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config','G-N6DF8NPHY8',{page_path:window.location.pathname,allow_enhanced_conversions:true});`}
         </Script>
-        {/* Gatekeeper consent: load after page load (error suppression kept) */}
-        <script dangerouslySetInnerHTML={{ __html: `if(typeof window!=='undefined'){var oe=console.error,ow=console.warn;console.error=function(){var m=Array.prototype.join.call(arguments,' ');if(/TagError|No slot size for availableWidth|adsbygoogle\\.push/.test(m)){console.debug('AdSense error suppressed:',m);return;}oe.apply(console,arguments);};console.warn=function(){var m=Array.prototype.join.call(arguments,' ');if(/Unload event listeners are deprecated|pagead2\\.googlesyndication|lidar\\.js|unload.*deprecated/.test(m)){console.debug('AdSense warning suppressed:',m);return;}ow.apply(console,arguments);};window.addEventListener('error',function(e){if(e.message&&/gatekeeperconsent\\.com|TagError|No slot size for availableWidth|adsbygoogle\\.push/.test(e.message)){e.preventDefault();e.stopPropagation();return false;}},true);window.addEventListener('unhandledrejection',function(e){var r=(e.reason&&e.reason.message)||(e.reason&&e.reason.toString())||'';if(/TagError|No slot size for availableWidth|adsbygoogle/.test(r))e.preventDefault();});}var def=false;function loadConsent(){if(def)return;def=true;var g1=document.createElement('script');g1.setAttribute('data-cfasync','false');g1.src='https://cmp.gatekeeperconsent.com/min.js';g1.async=true;document.head.appendChild(g1);var g2=document.createElement('script');g2.setAttribute('data-cfasync','false');g2.src='https://the.gatekeeperconsent.com/cmp.min.js';g2.async=true;document.head.appendChild(g2);}function go(){if(window.requestIdleCallback)requestIdleCallback(loadConsent,{timeout:2500});else setTimeout(loadConsent,100);}if(document.readyState==='complete')go();else window.addEventListener('load',go);` }} />
       </body>
     </html>
   )

@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { FileText, Calendar, Clock, ArrowRight } from 'lucide-react';
 
+export const dynamic = 'force-static';
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Developer Articles & Tutorials | UnblockDevs",
   description: 'Technical articles, tutorials, best practices on JSON, API testing, web dev. Learn with guides and examples.',
