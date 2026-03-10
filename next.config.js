@@ -22,6 +22,7 @@ const nextConfig = {
         destination: '/',
         permanent: true,
       },
+      // /curl-to-python is now a real page (dedicated SEO for "convert curl to python")
       { source: '/json-masking', destination: '/json-prompt-shield', permanent: true },
       { source: '/sql-schema-masking', destination: '/ai-schema-masker', permanent: true },
       { source: '/convert-list-to-sql-in', destination: '/sql-in-generator', permanent: true },
@@ -49,7 +50,7 @@ const nextConfig = {
       { source: '/blog/fix-json-parse-error-unexpected-token', destination: '/blog/fix-json-errors-complete-guide', permanent: true },
       { source: '/blog/fix-unexpected-token-less-than-in-json-api-returns-html', destination: '/blog/fix-json-errors-complete-guide', permanent: true },
       { source: '/blog/why-json-stringify-returns-undefined-fix', destination: '/blog/fix-json-errors-complete-guide', permanent: true },
-      { source: '/blog/json-stringify-complete-guide', destination: '/blog/json-schema-complete-guide', permanent: true },
+      // Removed: json-stringify-complete-guide → json-schema (was killing position-9 ranking for json.stringify undefined)
       { source: '/blog/json-format-standards-complete-guide', destination: '/blog/json-schema-complete-guide', permanent: true },
       { source: '/blog/json-schema-generator-validation-guide', destination: '/blog/json-schema-complete-guide', permanent: true },
       { source: '/blog/how-to-validate-json-schema-javascript', destination: '/blog/json-schema-complete-guide', permanent: true },

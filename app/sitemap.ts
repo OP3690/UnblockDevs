@@ -193,6 +193,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changefreq: 'weekly' as const,
     },
     {
+      url: 'curl-to-python',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
       url: 'json-stringify-online',
       priority: 0.9,
       changefreq: 'weekly' as const,

@@ -104,6 +104,22 @@ console.log(jsonString);
               answer: 'Functions, undefined, symbols, and circular references cannot be stringified. Functions and undefined are omitted, symbols are converted to null, and circular references throw an error.',
             },
             {
+              question: 'Does JSON.stringify omit undefined properties?',
+              answer: 'Yes. In objects, properties with value undefined are omitted from the output. In arrays, undefined elements become null. JSON.stringify(undefined) returns undefined (the value), not a string.',
+            },
+            {
+              question: 'Why does JSON.stringify(undefined) return undefined?',
+              answer: 'JSON has no undefined type. When you pass undefined directly to JSON.stringify(), the return value is the JavaScript value undefined, not the string "undefined". Object properties that are undefined are omitted; array slots that are undefined become null.',
+            },
+            {
+              question: 'Does JSON.stringify omit undefined in nested objects?',
+              answer: 'Yes. At every level, object properties whose value is undefined are omitted. So { a: 1, b: { x: undefined, y: 2 } } becomes \'{"a":1,"b":{"y":2}}\'. Nested objects are stringified recursively with the same rule.',
+            },
+            {
+              question: 'What happens to undefined in a JSON array?',
+              answer: 'In arrays, undefined elements are serialized as null. So JSON.stringify([1, undefined, 3]) returns \'[1,null,3]\'. This is because JSON has no undefined type; null is the JSON way to represent "missing" or empty values in arrays.',
+            },
+            {
               question: 'What\'s the difference between JSON.stringify() and JSON.parse()?',
               answer: 'JSON.stringify() converts JavaScript objects to JSON strings, while JSON.parse() converts JSON strings back to JavaScript objects. They are inverse operations of each other.',
             },
@@ -146,6 +162,21 @@ console.log(jsonString);
           </section>
 
           <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">JSON.stringify() and undefined: omitted in objects, null in arrays</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              <strong>Object properties</strong> whose value is <code className="bg-gray-100 px-1 rounded">undefined</code> are <strong>omitted</strong> from the JSON string. <strong>Array elements</strong> that are <code className="bg-gray-100 px-1 rounded">undefined</code> are serialized as <code className="bg-gray-100 px-1 rounded">null</code>. If you pass <code className="bg-gray-100 px-1 rounded">undefined</code> itself to <code className="bg-gray-100 px-1 rounded">JSON.stringify()</code>, it returns <code className="bg-gray-100 px-1 rounded">undefined</code> (not a string). This follows the JSON spec (RFC 8259): JSON has no <code className="bg-gray-100 px-1 rounded">undefined</code> type.
+            </p>
+            <pre className="bg-gray-50 p-4 rounded border border-gray-200 text-sm overflow-x-auto mb-4">
+              <code>{`JSON.stringify({ a: 1, b: undefined, c: 2 });  // "{\\"a\\":1,\\"c\\":2}"
+JSON.stringify([1, undefined, 3]);           // "[1,null,3]"
+JSON.stringify(undefined);                  // undefined`}</code>
+            </pre>
+            <p className="text-gray-700 leading-relaxed">
+              Use the <strong>replacer</strong> function to exclude or replace other values (see the replacer example above). Try this in our <Link href="/json-stringify-online" className="text-blue-600 hover:underline font-semibold">JSON stringify online tool</Link>.
+            </p>
+          </section>
+
+          <section className="mb-12">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Interactive Examples</h2>
             <div className="space-y-6">
               {examples.map((example) => (
@@ -169,6 +200,45 @@ console.log(jsonString);
                 </div>
               ))}
             </div>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">JSON.stringify() replacer — filter undefined manually</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              The <strong>replacer</strong> (second argument) can be a function that runs for each key and value. Returning <code className="bg-gray-100 px-1 rounded">undefined</code> from the replacer <strong>omits that property</strong> from the output. So you can filter out undefined, secrets, or any key you don’t want in the JSON string.
+            </p>
+            <pre className="bg-gray-50 p-4 rounded border border-gray-200 text-sm overflow-x-auto mb-4">
+              <code>{`const obj = { name: 'Jane', age: undefined, token: 'secret' };
+const safe = JSON.stringify(obj, (key, value) => {
+  if (value === undefined || key === 'token') return undefined;
+  return value;
+});
+// "{\\"name\\":\\"Jane\\"}"`}</code>
+            </pre>
+            <p className="text-gray-700 leading-relaxed">
+              Replacer runs recursively, so you can omit undefined (or other values) at any depth. Try it in our <Link href="/json-stringify-online" className="text-blue-600 hover:underline font-semibold">JSON stringify online</Link> tool.
+            </p>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">JSON.stringify() vs JSON.parse() — round-trip behavior</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              <code className="bg-gray-100 px-1 rounded">JSON.stringify()</code> turns a JavaScript value into a JSON string; <code className="bg-gray-100 px-1 rounded">JSON.parse()</code> turns a JSON string back into a JavaScript value. For a round-trip: <code className="bg-gray-100 px-1 rounded">JSON.parse(JSON.stringify(obj))</code> — properties that are <code className="bg-gray-100 px-1 rounded">undefined</code> are lost (omitted by stringify), and array slots that were <code className="bg-gray-100 px-1 rounded">undefined</code> become <code className="bg-gray-100 px-1 rounded">null</code>. Dates become strings. So the result is not always a deep clone; use a proper clone if you need to preserve undefined and other non-JSON types.
+            </p>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">RFC 8259 — why undefined isn’t a valid JSON value</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              JSON (RFC 8259) only has six value types: object, array, string, number, boolean, and null. There is no <code className="bg-gray-100 px-1 rounded">undefined</code> in JSON. So <code className="bg-gray-100 px-1 rounded">JSON.stringify()</code> must either omit object properties whose value is undefined, or represent “missing” in arrays as <code className="bg-gray-100 px-1 rounded">null</code>. That’s why you see omitted keys and nulls instead of undefined in the serialized string.
+            </p>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Real-world examples — API responses, localStorage, logging</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              In APIs you often send payloads with <code className="bg-gray-100 px-1 rounded">JSON.stringify()</code>; undefined properties are dropped, so the server never sees them. In <code className="bg-gray-100 px-1 rounded">localStorage</code> you can only store strings, so you stringify objects — again, undefined is omitted. When logging, <code className="bg-gray-100 px-1 rounded">console.log(JSON.stringify(obj))</code> gives a compact string; undefined keys won’t appear. In all cases, be aware that undefined is never present in the resulting JSON string.
+            </p>
           </section>
 
           <section className="mb-12">

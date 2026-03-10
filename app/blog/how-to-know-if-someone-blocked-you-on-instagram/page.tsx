@@ -30,8 +30,9 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/how-to-know-if-someone-blocked-you-on-instagram',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-know-if-someone-blocked-you-on-instagram' },
-
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-know-if-someone-blocked-you-on-instagram' },
+  robots: { index: false, follow: false },
 };
 
 export default function HowToKnowIfSomeoneBlockedYouOnInstagramGuide() {

@@ -30,8 +30,9 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/how-to-see-instagram-story-without-being-seen',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-see-instagram-story-without-being-seen' },
-
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-see-instagram-story-without-being-seen' },
+  robots: { index: false, follow: false },
 };
 
 export default function HowToSeeInstagramStoryWithoutBeingSeenGuide() {

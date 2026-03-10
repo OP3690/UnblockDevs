@@ -30,8 +30,9 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/how-to-change-whatsapp-privacy-settings-maximum-security',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-change-whatsapp-privacy-settings-maximum-security' },
-
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-change-whatsapp-privacy-settings-maximum-security' },
+  robots: { index: false, follow: false },
 };
 
 export default function HowToChangeWhatsappPrivacySettingsGuide() {

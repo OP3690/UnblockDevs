@@ -38,6 +38,14 @@ export default function HarToCurlClient() {
               answer: 'Upload your HAR file or paste the HAR JSON content into our converter. The tool automatically detects all requests and generates cURL commands with all headers, authentication, and data preserved.',
             },
             {
+              question: 'How do I export HAR from Chrome?',
+              answer: 'In Chrome DevTools (F12), open the Network tab, reload the page or trigger the requests, then right-click in the request list and choose "Save all as HAR with content". Upload the .har file or paste its JSON here.',
+            },
+            {
+              question: 'What is in a HAR file?',
+              answer: 'A HAR file is a JSON log of browser network activity: URLs, methods, headers, cookies, request and response bodies, and timing. It is the same data DevTools shows in the Network tab, saved to a file.',
+            },
+            {
               question: 'Is HAR to cURL conversion free?',
               answer: 'Yes! Our HAR to cURL converter is completely free to use. No signup required, and all processing happens in your browser for maximum privacy and security.',
             },
@@ -59,8 +67,51 @@ export default function HarToCurlClient() {
               Our free <strong>HAR to cURL converter</strong> makes this process simple. Upload your HAR file or paste HAR JSON content, and instantly get executable cURL commands with all headers, authentication, and request data preserved. Perfect for <strong>copy as curl online</strong>, <strong>network request to curl</strong>, and <strong>export curl from browser</strong> workflows.
             </p>
             <p className="text-gray-700 leading-relaxed">
-              Once you have your cURL commands, you can execute them directly, test APIs in different environments, or use our <Link href="/curl-to-requests" className="text-blue-600 hover:underline font-semibold">cURL to Code Converter</Link> to transform them into Python, JavaScript, PHP, and other programming languages.
+              Once you have your cURL commands, you can execute them directly, test APIs in different environments, or use our <Link href="/curl-converter" className="text-blue-600 hover:underline font-semibold">cURL to Code Converter</Link> to transform them into Python, JavaScript, PHP, and other programming languages.
             </p>
+          </section>
+
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">What is a HAR file?</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              A <strong>HAR (HTTP Archive)</strong> file is a JSON-formatted log of all network requests and responses captured by a browser. It includes URLs, methods (GET, POST, etc.), headers, cookies, request bodies, response status codes, and timing. HAR is a standard format supported by Chrome, Firefox, Safari, and Edge, making it ideal for <strong>copy as curl</strong> workflows and sharing reproducible API requests.
+            </p>
+          </section>
+
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">How to export HAR from Chrome, Firefox, and Safari</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Export a HAR file from DevTools in any major browser, then paste or upload it above to get cURL commands.
+            </p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2 mt-4">Chrome / Edge</h3>
+            <p className="text-gray-700 leading-relaxed mb-2">
+              Open DevTools (F12 or Right-click → Inspect), go to the <strong>Network</strong> tab, reload the page or trigger the requests you need, then right-click in the request list → <strong>Save all as HAR with content</strong>. Open the saved .har file in a text editor and copy the JSON, or upload it directly to this tool.
+            </p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2 mt-4">Firefox</h3>
+            <p className="text-gray-700 leading-relaxed mb-2">
+              Open Developer Tools (F12), go to the <strong>Network</strong> tab, reload or perform the actions that generate the requests, then right-click in the list → <strong>Save All As HAR</strong>. Use the downloaded .har file here.
+            </p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2 mt-4">Safari</h3>
+            <p className="text-gray-700 leading-relaxed mb-2">
+              Enable the Develop menu (Preferences → Advanced → Show Develop menu), open <strong>Develop → Show Web Inspector</strong>, go to the <strong>Network</strong> tab, then use the export option to save as HAR (or copy the request as cURL if available). You can also paste HAR JSON exported from Safari into this converter.
+            </p>
+          </section>
+
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">What the cURL command contains</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              The cURL command we generate includes the full URL, HTTP method, all headers (including <code className="bg-gray-100 px-1 rounded">Authorization</code>, <code className="bg-gray-100 px-1 rounded">Content-Type</code>, cookies), and the request body when present. You can run it in the terminal as-is or use our <Link href="/curl-converter" className="text-blue-600 hover:underline font-semibold">cURL to Code Converter</Link> to turn it into Python Requests, JavaScript fetch, or other languages.
+            </p>
+          </section>
+
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Common use cases</h2>
+            <ul className="list-disc list-inside space-y-2 text-gray-700 mb-4">
+              <li><strong>API debugging:</strong> Capture a failing request in the browser and replay it as cURL or code to reproduce the issue.</li>
+              <li><strong>Automated tests:</strong> Export HAR from a real session, convert to cURL or Python/JS, and use in test scripts.</li>
+              <li><strong>Documentation:</strong> Share exact request examples with your team or in docs.</li>
+              <li><strong>Replaying in CI:</strong> Run the same request from scripts or CI without opening a browser.</li>
+            </ul>
           </section>
 
           <section className="mb-8">

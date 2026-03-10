@@ -30,8 +30,9 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/how-to-read-whatsapp-messages-without-blue-ticks',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-read-whatsapp-messages-without-blue-ticks' },
-
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-read-whatsapp-messages-without-blue-ticks' },
+  robots: { index: false, follow: false },
 };
 
 export default function HowToReadWhatsappMessagesWithoutBlueTicksGuide() {

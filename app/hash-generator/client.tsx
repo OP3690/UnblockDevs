@@ -248,9 +248,9 @@ export default function HashGeneratorClient() {
     navigator.clipboard.writeText(text).then(
       () => {
         trackCopy('hash_generator');
-        setCopiedId(id);
-        toast.success('Copied');
-        setTimeout(() => setCopiedId(null), 2000);
+    setCopiedId(id);
+    toast.success('Copied');
+    setTimeout(() => setCopiedId(null), 2000);
       },
       () => toast.error('Copy failed')
     );

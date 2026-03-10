@@ -30,8 +30,9 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/how-to-change-instagram-phone-number-email-2026',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-change-instagram-phone-number-email-2026' },
-
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-change-instagram-phone-number-email-2026' },
+  robots: { index: false, follow: false },
 };
 
 export default function HowToChangeInstagramPhoneEmailGuide() {
