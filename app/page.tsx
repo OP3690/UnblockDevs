@@ -20,24 +20,6 @@ function ServerLCPShell() {
       <h1 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-0 mt-0 leading-tight">
         Use AI Safely — JSON Masking &amp; Log Unpacker
       </h1>
-      {/* Fazier badge in initial HTML so their crawler can detect it (homepage requirement) */}
-      {SHOW_FAZIER_BADGE && (
-        <div className="flex justify-center mt-3">
-          <a
-            href="https://fazier.com/launches/unblockdevs.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block"
-          >
-            <img
-              src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=featured&theme=light"
-              width={250}
-              height={50}
-              alt="Featured on Fazier"
-            />
-          </a>
-        </div>
-      )}
     </div>
   );
 }
@@ -46,6 +28,22 @@ export default function Home() {
   return (
     <>
       <ServerLCPShell />
+      {/* Fazier badge: outside server-lcp so it is never hidden (client hides #server-lcp). Exact markup for crawler. */}
+      {SHOW_FAZIER_BADGE && (
+        <div className="flex justify-center py-3 px-4 bg-gray-50/80 border-b border-gray-200">
+          <a
+            href="https://fazier.com/launches/unblockdevs.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=featured&theme=neutral"
+              width={250}
+              alt="Fazier badge"
+            />
+          </a>
+        </div>
+      )}
       <HomeClient />
     </>
   );
