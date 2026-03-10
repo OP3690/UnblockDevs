@@ -92,6 +92,9 @@ interface Section {
   columnIds: string[];
 }
 
+// Fazier launch badge: show for 30 days from 2025-03-02, then remove (no redeploy needed)
+const FAZIER_BADGE_END_DATE = new Date('2025-04-01T23:59:59Z');
+
 // Mapping of tool tabs to their dedicated page URLs
 const toolPageUrls: Record<Exclude<ToolTab, 'converter'>, string> = {
   beautifier: '/json-beautifier',
@@ -1359,6 +1362,25 @@ function HomeClient() {
               )}
             </div>
             
+            {/* Fazier launch badge — visible until FAZIER_BADGE_END_DATE, then auto-hidden (client-only to avoid hydration mismatch) */}
+            {mounted && new Date() < FAZIER_BADGE_END_DATE && (
+              <div className="flex justify-center mt-4">
+                <a
+                  href="https://fazier.com/launches/unblockdevs.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block"
+                >
+                  <img
+                    src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=featured&theme=light"
+                    width={250}
+                    height={50}
+                    alt="Featured on Fazier"
+                  />
+                </a>
+              </div>
+            )}
+
             {/* Footer Links */}
             <div className="pt-4 border-t border-gray-200">
               <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-600 mb-3">
