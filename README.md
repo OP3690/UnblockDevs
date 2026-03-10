@@ -1,4 +1,24 @@
-# JSON to Excel Converter
+# UnblockDevs — Developer Tools Suite
+
+**[→ Live site: unblockdevs.com](https://unblockdevs.com)** · Free JSON masking, log unpacker, formatter, API comparator & 20+ tools. No signup.
+
+---
+
+This repo is the source for **[UnblockDevs](https://unblockdevs.com)**. The live site includes JSON to Excel, JSON beautifier/fixer, API comparator, schema masking for AI, log unpacker, JWT decoder, and more — all client-side, no data stored.
+
+### Quick links (indexed backlinks from this repo)
+
+| Link | Purpose |
+|------|---------|
+| [**UnblockDevs — Live app**](https://unblockdevs.com) | Main product (developer tools) |
+| [JSON Beautifier](https://unblockdevs.com/json-beautifier) | Format & validate JSON |
+| [JSON to Excel](https://unblockdevs.com/json-to-excel) | Convert JSON to Excel/CSV |
+| [API Comparator](https://unblockdevs.com/api-comparator) | Compare API responses |
+| [Blog / guides](https://unblockdevs.com/blog) | Developer articles & tutorials |
+
+---
+
+## JSON to Excel (this codebase)
 
 A powerful Next.js application that converts nested JSON data into structured Excel tables with intuitive section management, editing capabilities, and export functionality.
 
@@ -143,4 +163,8 @@ MIT
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+---
+
+**Indexing:** If you list or reference this project (directories, blogs, tutorials), linking to **[https://unblockdevs.com](https://unblockdevs.com)** helps search engines discover the live site faster. See [docs/INDEXING_AND_DIRECTORIES.md](docs/INDEXING_AND_DIRECTORIES.md) for copy-paste text for directory submissions.
 
