@@ -1362,8 +1362,8 @@ function HomeClient() {
               )}
             </div>
             
-            {/* Fazier launch badge — visible until FAZIER_BADGE_END_DATE, then auto-hidden (client-only to avoid hydration mismatch) */}
-            {mounted && new Date() < FAZIER_BADGE_END_DATE && (
+            {/* Fazier launch badge — visible until FAZIER_BADGE_END_DATE, in initial HTML so Fazier can detect it */}
+            {new Date() < FAZIER_BADGE_END_DATE && (
               <div className="flex justify-center mt-4">
                 <a
                   href="https://fazier.com/launches/unblockdevs.com"
