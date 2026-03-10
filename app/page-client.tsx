@@ -559,12 +559,12 @@ function HomeClient() {
                 <Wrench className="h-5 w-5" aria-hidden />
               </Link>
               <div className="flex flex-col gap-1 min-w-0 justify-center py-0.5">
-                {/* Line 1: UnblockDevs | Mode | Stats */}
-                <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+                {/* Line 1: UnblockDevs | Mode Light — keep inline, no wrap */}
+                <div className="flex items-center gap-2 sm:gap-3 flex-nowrap">
                   <Link href="/" className="shrink-0">
                     <span className="text-lg sm:text-xl font-bold tracking-tight text-gray-900 group-hover:text-primary-700 transition-colors leading-tight" style={{ letterSpacing: '-0.02em' }}>UnblockDevs</span>
                   </Link>
-                  <span className="text-gray-300 font-medium shrink-0 hidden sm:inline" aria-hidden>|</span>
+                  <span className="text-gray-300 font-medium shrink-0" aria-hidden>|</span>
                   <div className="flex items-center gap-2 flex-shrink-0 dev-mode-toggle-container px-2 py-1.5 sm:px-2.5 rounded-lg bg-gray-100/90 border border-gray-200">
                     <span className="text-[10px] sm:text-[11px] font-medium text-gray-500 whitespace-nowrap">Mode</span>
                     <button
@@ -1236,6 +1236,21 @@ function HomeClient() {
                 <h4 className="font-semibold text-gray-900 mb-1.5">No install, no setup</h4>
                 <p className="text-sm text-gray-600 leading-relaxed">Open the page and start. No npm install, no API keys, no config. Works on any device with a modern browser.</p>
               </div>
+            </div>
+            {/* Startup Fame badge — below Why Choose UnblockDevs? */}
+            <div className="flex justify-center mt-8">
+              <a
+                href="https://startupfa.me/s/unblockdevs?utm_source=unblockdevs.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src="https://startupfa.me/badges/featured-badge-small.webp"
+                  alt="UnblockDevs - Featured on Startup Fame"
+                  width={224}
+                  height={36}
+                />
+              </a>
             </div>
           </div>
         </section>
