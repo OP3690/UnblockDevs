@@ -27,39 +27,7 @@ setInterval(() => {
   }
 }, CLEANUP_INTERVAL);
 
-// Get today's date in YYYY-MM-DD format
-function getTodayDate(): string {
-  const now = new Date();
-  return now.toISOString().split('T')[0];
-}
-
-// Get or create today's visit record and increment
-async function incrementDailyVisit(): Promise<number> {
-  try {
-    await connectDB();
-    const today = getTodayDate();
-    
-    const visitRecord = await Visit.findOneAndUpdate(
-      { date: today },
-      { 
-        $inc: { dailyVisits: 1 },
-        lastUpdated: new Date(),
-      },
-      { 
-        upsert: true, 
-        new: true,
-        setDefaultsOnInsert: true,
-      }
-    );
-
-    return visitRecord.dailyVisits;
-  } catch (error) {
-    console.error('Error incrementing daily visit:', error);
-    return 0;
-  }
-}
-
-// Get total visits (base + sum of all daily visits)
+// Get total visits (base + sum of all daily visits). Increment is done in POST /api/track-visit only.
 async function getTotalVisits(): Promise<number> {
   try {
     await connectDB();
@@ -110,10 +78,7 @@ export async function GET(request: NextRequest) {
   // Count active users (sessions active in last 5 minutes)
   const activeUsers = activeSessions.size;
   
-  // Increment daily visit in MongoDB
-  await incrementDailyVisit();
-  
-  // Get total visits (base + daily visits)
+  // Do NOT increment here — blocks TTFB. Visit count is updated by POST /api/track-visit (VisitTracker client).
   const totalVisits = await getTotalVisits();
   
   const response = NextResponse.json({

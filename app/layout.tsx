@@ -8,6 +8,7 @@ import DevModeWrapper from '@/components/DevModeWrapper'
 import Celebration1MPopup from '@/components/Celebration1MPopup'
 import GA4RouteTracker from '@/components/GA4RouteTracker'
 import GlobalAdSlot from '@/components/GlobalAdSlot'
+import VisitTracker from '@/components/VisitTracker'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap', preload: true })
 const firaCode = Fira_Code({ subsets: ['latin'], variable: '--font-fira-code', display: 'swap', preload: true })
@@ -155,9 +156,9 @@ export const metadata: Metadata = {
   category: 'Developer Tools',
   classification: 'Web Application',
   verification: {
-    google: 'your-google-verification-code', // Replace with actual verification code
+    google: 'Y5HAW7dJrOgoSP6ycSbnbNWeKIeHH-fwCM4p5Fgh11I',
     other: {
-      'msvalidate.01': 'your-bing-verification-code', // Replace with actual verification code
+      'msvalidate.01': 'your-bing-verification-code', // Replace with actual Bing code when you have it
     },
   },
 }
@@ -277,8 +278,7 @@ export default function RootLayout({
             },
           }}
         />
-        {/* Canonical URL */}
-        <script dangerouslySetInnerHTML={{ __html: `(function(){var p=window.location.pathname||'';var r=p==='/'||p==='';var q=(window.location.search||'').length>0;var h=r||q?'https://unblockdevs.com/':'https://unblockdevs.com'+p.replace(/\\/$/,'')||'/';var all=document.querySelectorAll('link[rel="canonical"]');for(var i=0;i<all.length;i++)all[i].remove();var l=document.createElement('link');l.rel='canonical';l.href=h;document.head.appendChild(l);})();` }} />
+        {/* Canonical: use metadata alternates.canonical per page (initial HTML). No client script — Google reads from server response. */}
         {/* AdSense — in layout so it loads on every page; manual ad units need this before they can fill */}
         <Script
           id="adsense-script"

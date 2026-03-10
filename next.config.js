@@ -1,15 +1,15 @@
 /** @type {import('next').NextConfig} */
-// Note: experimental.optimizeCss (critters) is not supported with App Router — use other LCP fixes instead.
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   experimental: {
+    optimizeCss: true,
     optimizePackageImports: ['lucide-react'],
   },
   // Optimize images
   images: {
     formats: ['image/avif', 'image/webp'],
-    minimumCacheTTL: 60,
+    minimumCacheTTL: 86400, // 24 hours (was 60s — reduced unnecessary reloads)
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error', 'warn'] } : false,
