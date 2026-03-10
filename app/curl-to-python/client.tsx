@@ -1,13 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Code2, CheckCircle } from 'lucide-react';
-import dynamic from 'next/dynamic';
+import { ArrowLeft, Code2 } from 'lucide-react';
+import CurlConverter from '@/components/tools/CurlConverter';
 import FAQSchema from '@/components/FAQSchema';
-
-const CurlConverter = dynamic(() => import('@/components/tools/CurlConverter'), {
-  loading: () => <div className="flex items-center justify-center py-16 rounded-lg bg-gray-50 border border-gray-200"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div></div>,
-});
 
 export default function CurlToPythonClient() {
   return (
@@ -79,7 +75,7 @@ export default function CurlToPythonClient() {
           <section className="mb-10">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">cURL vs Python requests — syntax comparison</h2>
             <p className="text-gray-700 leading-relaxed mb-4">
-              cURL uses flags and positional args; Python requests uses method calls and keyword arguments. The converter handles the mapping so you don’t have to.
+              cURL uses flags and positional args; Python requests uses method calls and keyword arguments. The converter handles the mapping so you don&apos;t have to.
             </p>
             <div className="overflow-x-auto rounded-lg border border-gray-200 mb-6">
               <table className="min-w-full text-sm">
@@ -91,10 +87,10 @@ export default function CurlToPythonClient() {
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   <tr><td className="px-4 py-3 text-gray-700"><code>-X POST</code></td><td className="px-4 py-3 text-gray-700"><code>requests.post(url, ...)</code></td></tr>
-                  <tr><td className="px-4 py-3 text-gray-700"><code>-H "Content-Type: application/json"</code></td><td className="px-4 py-3 text-gray-700"><code>headers={&#39;Content-Type&#39;: &#39;application/json&#39;}</code></td></tr>
-                  <tr><td className="px-4 py-3 text-gray-700"><code>-d &#39;{`{"key":"val"}`}&#39;</code></td><td className="px-4 py-3 text-gray-700"><code>json={&#39;key&#39;: &#39;val&#39;}</code></td></tr>
+                  <tr><td className="px-4 py-3 text-gray-700"><code>-H &quot;Content-Type: application/json&quot;</code></td><td className="px-4 py-3 text-gray-700"><code>headers=&#123;&#39;Content-Type&#39;: &#39;application/json&#39;&#125;</code></td></tr>
+                  <tr><td className="px-4 py-3 text-gray-700"><code>-d &apos;&#123;&quot;key&quot;:&quot;val&quot;&#125;&apos;</code></td><td className="px-4 py-3 text-gray-700"><code>json=&#123;&#39;key&#39;: &#39;val&#39;&#125;</code></td></tr>
                   <tr><td className="px-4 py-3 text-gray-700"><code>-u user:pass</code></td><td className="px-4 py-3 text-gray-700"><code>auth=(&#39;user&#39;, &#39;pass&#39;)</code></td></tr>
-                  <tr><td className="px-4 py-3 text-gray-700"><code>-H "Authorization: Bearer TOKEN"</code></td><td className="px-4 py-3 text-gray-700"><code>headers={&#39;Authorization&#39;: &#39;Bearer TOKEN&#39;}</code></td></tr>
+                  <tr><td className="px-4 py-3 text-gray-700"><code>-H &quot;Authorization: Bearer TOKEN&quot;</code></td><td className="px-4 py-3 text-gray-700"><code>headers=&#123;&#39;Authorization&#39;: &#39;Bearer TOKEN&#39;&#125;</code></td></tr>
                 </tbody>
               </table>
             </div>
@@ -104,8 +100,8 @@ export default function CurlToPythonClient() {
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Common cURL flags and their Python equivalent</h2>
             <ul className="space-y-2 text-gray-700">
               <li><strong><code className="bg-gray-100 px-1 rounded">-X METHOD</code></strong> → <code className="bg-gray-100 px-1 rounded">requests.get/post/put/delete/patch(url, ...)</code></li>
-              <li><strong><code className="bg-gray-100 px-1 rounded">-H "Name: value"</code></strong> → <code className="bg-gray-100 px-1 rounded">headers={&#39;Name&#39;: &#39;value&#39;}</code></li>
-              <li><strong><code className="bg-gray-100 px-1 rounded">-d &#39;...&#39;</code></strong> → <code className="bg-gray-100 px-1 rounded">data=...</code> or <code className="bg-gray-100 px-1 rounded">json=...</code> for JSON</li>
+              <li><strong><code className="bg-gray-100 px-1 rounded">-H &quot;Name: value&quot;</code></strong> → <code className="bg-gray-100 px-1 rounded">headers=&#123;&#39;Name&#39;: &#39;value&#39;&#125;</code></li>
+              <li><strong><code className="bg-gray-100 px-1 rounded">-d &apos;...&apos;</code></strong> → <code className="bg-gray-100 px-1 rounded">data=...</code> or <code className="bg-gray-100 px-1 rounded">json=...</code> for JSON</li>
               <li><strong><code className="bg-gray-100 px-1 rounded">-u user:pass</code></strong> → <code className="bg-gray-100 px-1 rounded">auth=(&#39;user&#39;, &#39;pass&#39;)</code></li>
               <li><strong><code className="bg-gray-100 px-1 rounded">--connect-timeout N</code></strong> → <code className="bg-gray-100 px-1 rounded">timeout=N</code></li>
             </ul>
@@ -145,7 +141,7 @@ print(r.status_code)`}
               cURL is ideal for one-off tests in the terminal. Python with <code className="bg-gray-100 px-1 rounded">requests</code> is better for scripts, automation, and production code: you get loops, error handling, and integration with the rest of your app. Converting cURL to Python lets you keep the exact request (URL, headers, body) while moving from the command line into code.
             </p>
             <p className="text-gray-700 leading-relaxed">
-              This converter is free, runs in your browser, and doesn’t store your commands. For HAR-based conversion (browser network export to cURL then to code), use our <Link href="/har-to-curl" className="text-blue-600 hover:underline font-semibold">HAR to cURL</Link> tool first, then paste the generated cURL here.
+              This converter is free, runs in your browser, and doesn&apos;t store your commands. For HAR-based conversion (browser network export to cURL then to code), use our <Link href="/har-to-curl" className="text-blue-600 hover:underline font-semibold">HAR to cURL</Link> tool first, then paste the generated cURL here.
             </p>
           </section>
         </article>
