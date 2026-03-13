@@ -225,12 +225,16 @@ export default function JsonPromptShieldClient() {
             </div>
 
             <div className="grid gap-4 lg:grid-cols-2">
-              <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col min-h-[220px]">
+              <div id="json-shield-input" className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col min-h-[220px]">
                 <div className="flex items-center justify-between px-4 py-2 border-b border-slate-100 bg-slate-50/50">
                   <span className="text-sm font-semibold text-slate-900">Original JSON</span>
                   <button
                     type="button"
-                    onClick={() => (input.trim() ? setInput('') : setInput(DEFAULT_EXAMPLE))}
+                    onClick={() => {
+                      if (input.trim()) setInput('');
+                      else setInput(DEFAULT_EXAMPLE);
+                      document.getElementById('json-shield-input')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }}
                     className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50"
                   >
                     <RefreshCw className="w-3.5 h-3.5" />
@@ -245,7 +249,7 @@ export default function JsonPromptShieldClient() {
                   spellCheck={false}
                 />
               </div>
-              <div className="rounded-xl border border-violet-100 bg-white shadow-sm overflow-hidden flex flex-col min-h-[220px]">
+              <div id="json-shield-output" className="rounded-xl border border-violet-100 bg-white shadow-sm overflow-hidden flex flex-col min-h-[220px]">
                 <div className="flex items-center justify-between px-4 py-2 border-b border-violet-50 bg-violet-50/50">
                   <span className="text-sm font-semibold text-slate-900">Masked output</span>
                   <div className="flex items-center gap-2">

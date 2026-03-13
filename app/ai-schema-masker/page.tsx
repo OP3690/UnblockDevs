@@ -5,39 +5,49 @@ import AiSchemaMaskerClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/ai-schema-masker';
 
 export const metadata: Metadata = {
-  title: "AI Schema Masker – Client-Side Only | UnblockDevs",
-  description: "Client-side AI schema masker. Your SQL never leaves the browser. Mask tables & columns for AI. No server, no signup.",
+  title: "AI SQL Schema Masker — Hide Table & Column Names Before Sending to ChatGPT | UnblockDevs",
+  description:
+    "Mask SQL identifiers before sending to AI. Tables become T_001, columns C_001 — fully reversible. Free, 100% browser-based, nothing sent to servers.",
   keywords: [
-    'mask json before sending to ai',
-    'sanitize data before chatgpt',
-    'json masking tool online',
-    'sql schema masking ai',
-    'hide sensitive data before chatgpt',
-    'mask api response before ai',
-    'safe json for chatgpt',
-    'stop leaking secrets to ai tools',
+    'mask sql before chatgpt',
+    'hide table names from chatgpt',
+    'sql schema privacy chatgpt',
+    'safe way to use chatgpt with database',
+    'chatgpt sql without exposing schema',
+    'mask database schema ai',
+    'anonymize sql for ai',
+    'sql identifier masking tool',
+    'hide column names from ai',
+    'chatgpt database security',
+    'is it safe to paste sql into chatgpt',
+    'chatgpt data privacy sql',
+    'sql chatgpt privacy risk',
+    'gdpr compliant ai sql tool',
+    'hipaa safe ai coding assistant',
+    'sql masking compliance ai',
+    'anonymize database schema before ai',
+    'data masking tool for ai prompts',
+    'mask pii before sending to llm',
+    'how to use chatgpt for sql without leaking schema',
+    'mask table names before sending to chatgpt',
+    'sql column name masking for ai prompts',
+    'sql schema anonymizer for chatgpt',
     'AI schema masker',
     'client-side SQL masking',
-    '100% data security SQL',
-    'SQL identifier masking',
-    'mask database schema for AI',
-    'secure SQL prompt generator',
-    'AI safe SQL prompts',
-    'private SQL masking tool',
     'DITE deterministic masking',
   ],
   openGraph: {
-    title: "AI Schema Masker | UnblockDevs",
+    title: "AI SQL Schema Masker — Hide Table & Column Names Before ChatGPT | UnblockDevs",
     description:
-      "Fully client-side. 100% data security. Your SQL and schemas never leave your browser. Mask identifiers for AI, restore with one click. No server, no signup.",
+      "Mask SQL identifiers before sending to AI. Tables → T_001, columns → C_001. Fully reversible, 100% in your browser. No server, no signup.",
     type: 'website',
     url: canonicalUrl,
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: "AI Schema Masker | UnblockDevs",
-    description: "100% client-side. Your data never leaves your browser. Mask SQL for AI, restore securely.",
+    title: "AI SQL Schema Masker — Hide Schema Before ChatGPT | UnblockDevs",
+    description: "Mask SQL before sending to AI. Fully reversible. 100% browser-based, nothing sent to servers.",
   },
   alternates: {
     canonical: canonicalUrl,
@@ -54,9 +64,9 @@ export const metadata: Metadata = {
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
-  name: "AI Schema Masker – World's First 100% Client-Side SQL Masker",
+  name: "AI SQL Schema Masker — Hide Table & Column Names Before ChatGPT",
   description:
-    "World's first fully client-side AI schema masker. 100% data security—SQL and schemas never leave your browser. Mask tables and columns for AI prompts, restore AI output with deterministic mapping. No server, no signup.",
+    "Mask SQL identifiers before sending to AI. Tables become T_001, columns C_001 — fully reversible. Free, 100% browser-based. Nothing sent to servers. Safe for GDPR, HIPAA, and PCI-DSS workflows.",
   url: canonicalUrl,
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
@@ -108,6 +118,46 @@ const faqSchema = {
         text: 'SQL schema masking replaces real table and column names with anonymous placeholders before you paste code or schema into an AI. This lets you get help without exposing your real database structure. You can restore AI output to your names using a mapping.',
       },
     },
+    {
+      '@type': 'Question' as const,
+      name: 'Can ChatGPT see my real table names?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Yes. When you paste SQL into ChatGPT, the model and OpenAI see every identifier—table names, column names, and aliases. To hide them, mask your SQL first with a client-side tool so only placeholders (e.g. T_001, C_001) are sent. Then restore AI output using the mapping.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'Does OpenAI store the SQL I paste?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'OpenAI may retain inputs for abuse detection and product improvement. Their policy states that API data is not used to train models by default, but pasting raw SQL still exposes your schema. Mask identifiers before sending so no real table or column names leave your control.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I mask SQL before sending to AI?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Use a client-side SQL schema masker: paste your SQL, run the masker to replace table and column names with placeholders (e.g. T_001, C_001), then paste the masked version into ChatGPT or any AI. Keep the mapping to restore AI-generated SQL to your real identifiers.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What is SQL identifier masking?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'SQL identifier masking replaces real table names, column names, and aliases with anonymous placeholders (e.g. T_001, C_001) so you can share SQL with AI or others without exposing your database structure. A mapping lets you reverse the process and restore original names.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'Is this tool safe for enterprise use?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Yes. The AI Schema Masker runs entirely in your browser—no SQL or schema is sent to any server. That makes it suitable for teams under GDPR, HIPAA, or PCI-DSS who need to use AI for SQL without exposing real identifiers or PII.',
+      },
+    },
   ],
 };
 
@@ -119,19 +169,56 @@ export default function AiSchemaMaskerPage() {
       <div id="tool">
         <AiSchemaMaskerClient />
       </div>
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12" aria-labelledby="schema-masker-heading">
-        <h2 id="schema-masker-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
-          SQL Schema Masking for AI — Sanitize Data Before ChatGPT
-        </h2>
-        <p className="text-gray-700 text-base leading-relaxed mb-3">
-          The AI Schema Masker lets you mask table and column names in SQL and schema definitions before sending them to AI. Your database structure never leaves your browser. Deterministic mapping lets you restore AI-generated SQL to your real identifiers in one click.
-        </p>
-        <p className="text-gray-600 text-sm leading-relaxed mb-4">
-          How it works: Paste SQL or build a prompt from your schema. Mask identifiers (e.g. tables → T_001, columns → C_001). Send the masked version to AI. Use the mapping to convert AI output back to your real names. 100% client-side, no server, no signup.
-        </p>
-        <Link href="#schema-masker-output" className="inline-block text-sm font-semibold text-teal-600 hover:text-teal-700">
-          Use the tool →
-        </Link>
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12 space-y-8" aria-labelledby="schema-masker-heading">
+        <header>
+          <h2 id="schema-masker-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
+            SQL Schema Masker for AI — Mask Before ChatGPT, Restore After
+          </h2>
+          <p className="text-gray-700 text-base leading-relaxed mb-3">
+            Before sending your SQL to ChatGPT, mask the table and column names so your real database schema stays private. The AI Schema Masker replaces identifiers with placeholders (T_001, C_001), so you get AI help without exposing your schema. Use the mapping to convert AI output back to your real names in one click.
+          </p>
+          <p className="text-gray-600 text-sm leading-relaxed mb-4">
+            Paste SQL or build a prompt from your schema. Mask identifiers, send the masked version to AI, then restore the response. 100% client-side, no server, no signup.
+          </p>
+          <Link href="#schema-masker-output" className="inline-block text-sm font-semibold text-teal-600 hover:text-teal-700">
+            Use the tool →
+          </Link>
+        </header>
+
+        <section>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">Is it safe to paste SQL into ChatGPT?</h3>
+          <p className="text-gray-700 leading-relaxed">
+            Not if you need to keep your database structure private. When you paste SQL into ChatGPT, your real table names, column names, and aliases are sent to OpenAI. Many developers don&apos;t realize that pasting SQL into AI tools exposes their real identifier names to third-party servers. Use the tool above to mask identifiers first—then paste the masked SQL so only placeholders are sent.
+          </p>
+        </section>
+
+        <section>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">What data does ChatGPT see in your SQL queries?</h3>
+          <p className="text-gray-700 leading-relaxed">
+            ChatGPT sees everything in the text you paste: every table name, column name, alias, and literal. That can reveal your schema, naming conventions, and sometimes data shape. To use AI for SQL securely, mask identifiers with a client-side tool so only generic placeholders (e.g. T_001, C_001) are sent. You keep the mapping to restore AI-generated SQL to your real names.
+          </p>
+        </section>
+
+        <section>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">How to use AI for SQL without exposing your schema</h3>
+          <p className="text-gray-700 leading-relaxed">
+            Paste your SQL into the AI Schema Masker above and click Mask. Copy the masked output (real names replaced with T_001, C_001, etc.) and paste that into ChatGPT or any AI. Get help with queries, optimization, or debugging. When the AI returns SQL, paste it into the Restore section with your mapping to get back your real table and column names. Your schema never leaves your browser.
+          </p>
+        </section>
+
+        <section>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">SQL masking for GDPR, HIPAA, and PCI-DSS compliance</h3>
+          <p className="text-gray-700 leading-relaxed">
+            For teams working under GDPR, HIPAA, or PCI-DSS, sending raw SQL to AI assistants may violate data handling policies because identifier names can be personal or sensitive. Anonymize database schema before AI: mask table and column names with a client-side tool so no real identifiers are sent. Use the mapping only in your environment to restore AI output. This keeps schema and PII under your control.
+          </p>
+        </section>
+
+        <section>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">How AI Schema Masker works — the DITE engine explained</h3>
+          <p className="text-gray-700 leading-relaxed">
+            The tool uses a deterministic identifier-masking engine (DITE): each distinct table name maps to the same placeholder every time (e.g. <code className="bg-gray-100 px-1 rounded">users</code> → T_001), and the same for columns and aliases. That way, when ChatGPT returns SQL using T_001, you can reverse the mapping reliably. All processing runs in your browser; nothing is sent to our servers. You can download the mapping to restore AI output later or in another session.
+          </p>
+        </section>
       </article>
     </>
   );

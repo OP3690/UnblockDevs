@@ -68,23 +68,23 @@ export default function JsonPromptShieldPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4" aria-labelledby="json-shield-heading">
-        <h1 id="json-shield-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
+      <div id="tool">
+        <JsonPromptShieldClient />
+      </div>
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12" aria-labelledby="json-shield-heading">
+        <h2 id="json-shield-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
           Mask JSON Before Sending to AI — 100% in Your Browser
-        </h1>
+        </h2>
         <p className="text-gray-700 text-base leading-relaxed mb-3">
           Use the JSON Prompt Shield to mask keys and string values in any JSON payload before pasting into ChatGPT or other AI tools. Numbers stay unchanged; structure is preserved. Fully reversible with a mapping file—no data is ever sent to our servers.
         </p>
         <p className="text-gray-600 text-sm leading-relaxed mb-4">
           How it works: Paste your JSON, choose what to mask (keys, strings, or both), copy the masked output. Send that to AI. Use the mapping to restore AI responses to your real field names. No signup, no tracking.
         </p>
-        <Link href="#tool" className="inline-block text-sm font-semibold text-violet-600 hover:text-violet-700">
+        <Link href="#json-shield-output" className="inline-block text-sm font-semibold text-violet-600 hover:text-violet-700">
           Use the tool →
         </Link>
       </article>
-      <div id="tool">
-        <JsonPromptShieldClient />
-      </div>
     </>
   );
 }
