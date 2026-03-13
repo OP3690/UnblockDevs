@@ -507,7 +507,7 @@ export default function AiSchemaMaskerClient() {
           </div>
 
           <div className="grid gap-4 lg:grid-cols-2">
-          <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col min-h-[300px]">
+          <div id="schema-masker-input" className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col min-h-[300px]">
             <div className="flex flex-wrap items-start justify-between gap-3 px-4 py-3 border-b border-slate-100 bg-slate-50/50">
               <div className="min-w-0">
                 <h3 className="text-sm font-semibold text-slate-900">Original input</h3>
@@ -516,7 +516,11 @@ export default function AiSchemaMaskerClient() {
               <div className="flex items-center justify-end gap-2 ml-auto flex-shrink-0">
                 <button
                   type="button"
-                  onClick={() => (input.trim() ? setInput('') : setInput(DEFAULT_EXAMPLE))}
+                  onClick={() => {
+                    if (input.trim()) setInput('');
+                    else setInput(DEFAULT_EXAMPLE);
+                    document.getElementById('schema-masker-input')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }}
                   className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-200 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 hover:border-slate-300 transition-colors"
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
@@ -543,7 +547,7 @@ export default function AiSchemaMaskerClient() {
             )}
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col min-h-[260px]">
+          <div id="schema-masker-output" className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col min-h-[260px]">
             <div className="flex flex-wrap items-start justify-between gap-3 px-4 py-3 border-b border-slate-100 bg-slate-50/50">
               <div className="min-w-0">
                 <h3 className="text-sm font-semibold text-slate-900">Masked output</h3>

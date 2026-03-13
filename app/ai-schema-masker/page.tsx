@@ -116,23 +116,23 @@ export default function AiSchemaMaskerPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4" aria-labelledby="schema-masker-heading">
-        <h1 id="schema-masker-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
+      <div id="tool">
+        <AiSchemaMaskerClient />
+      </div>
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12" aria-labelledby="schema-masker-heading">
+        <h2 id="schema-masker-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
           SQL Schema Masking for AI — Sanitize Data Before ChatGPT
-        </h1>
+        </h2>
         <p className="text-gray-700 text-base leading-relaxed mb-3">
           The AI Schema Masker lets you mask table and column names in SQL and schema definitions before sending them to AI. Your database structure never leaves your browser. Deterministic mapping lets you restore AI-generated SQL to your real identifiers in one click.
         </p>
         <p className="text-gray-600 text-sm leading-relaxed mb-4">
           How it works: Paste SQL or build a prompt from your schema. Mask identifiers (e.g. tables → T_001, columns → C_001). Send the masked version to AI. Use the mapping to convert AI output back to your real names. 100% client-side, no server, no signup.
         </p>
-        <Link href="#tool" className="inline-block text-sm font-semibold text-teal-600 hover:text-teal-700">
+        <Link href="#schema-masker-output" className="inline-block text-sm font-semibold text-teal-600 hover:text-teal-700">
           Use the tool →
         </Link>
       </article>
-      <div id="tool">
-        <AiSchemaMaskerClient />
-      </div>
     </>
   );
 }
