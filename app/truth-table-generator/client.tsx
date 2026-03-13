@@ -9,6 +9,7 @@ import {
   Shield,
   Lock,
   ChevronDown,
+  ChevronRight,
   FileCode,
   Download,
   AlertCircle,

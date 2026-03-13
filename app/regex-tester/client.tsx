@@ -507,27 +507,27 @@ export default function RegexTesterClient() {
             <ul className="space-y-3 text-sm">
               <li>
                 <strong className="text-slate-800">Email:</strong>{' '}
-                <code className="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs break-all">^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$</code>
+                <code className="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs break-all">{'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'}</code>
               </li>
               <li>
                 <strong className="text-slate-800">URL:</strong>{' '}
-                <code className="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs break-all">https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}</code>
+                <code className="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs break-all">{'https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}'}</code>
               </li>
               <li>
                 <strong className="text-slate-800">Phone (US):</strong>{' '}
-                <code className="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs">^\+?1?\s?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$</code>
+                <code className="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs">{'^\\+?1?\\s?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$'}</code>
               </li>
               <li>
                 <strong className="text-slate-800">Date (YYYY-MM-DD):</strong>{' '}
-                <code className="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs break-all">^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$</code>
+                <code className="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs break-all">{'^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$'}</code>
               </li>
               <li>
                 <strong className="text-slate-800">IPv4:</strong>{' '}
-                <code className="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs">^(\d{1,3}\.){3}\d{1,3}$</code>
+                <code className="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs">{'^(\\d{1,3}\\.){3}\\d{1,3}$'}</code>
               </li>
               <li>
                 <strong className="text-slate-800">Password (min 8 chars, upper, lower, number):</strong>{' '}
-                <code className="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs break-all">^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$</code>
+                <code className="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs break-all">{'^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$'}</code>
               </li>
             </ul>
           </section>
