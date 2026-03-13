@@ -3,15 +3,18 @@
 import { usePathname } from 'next/navigation';
 import AdUnit from '@/components/AdUnit';
 
-/** AdSense slot IDs for blog shell (top, bottom, left sidebar, right sidebar). */
+/** AdSense slot IDs for blog shell (top, bottom, left sidebar, right sidebar, in-content). */
 const SLOT_TOP = '1550643245'; // HOR
 const SLOT_BOTTOM = '4987800735'; // autorelaxed
 const SLOT_LEFT = '4176806584'; // VER
 const SLOT_RIGHT = '1255275563'; // SQ
+const SLOT_INCONTENT_TOP = '6611398233'; // in-article / fluid
+const SLOT_INCONTENT_MID = '4987800735'; // reuse autorelaxed for mid
+const SLOT_INCONTENT_BOTTOM = '4987800735'; // reuse for bottom of article
 
 /**
  * Blog layout: wraps all /blog and /blog/[...] routes with AdSense units.
- * Keys ads by pathname so they remount and refresh on client-side navigation.
+ * Multiple sections so ads appear across top, above article, mid, after article, sidebars, and footer.
  */
 export default function BlogLayout({
   children,
@@ -23,6 +26,7 @@ export default function BlogLayout({
 
   return (
     <>
+      {/* Section 1: Top banner */}
       <div
         key={`${key}-top`}
         role="region"
@@ -31,6 +35,14 @@ export default function BlogLayout({
       >
         <AdUnit slot={SLOT_TOP} format="auto" minHeight={50} className="w-full max-w-full" />
       </div>
+      {/* Ezoic: top of content (assign in Ezoic dashboard to this ID) */}
+      <div
+        id="ezoic-pub-ad-placeholder-104"
+        role="region"
+        aria-label="Advertisement"
+        className="min-h-[90px] sm:min-h-[50px] w-full"
+        style={{ contain: 'layout' }}
+      />
       <div className="max-w-7xl xl:max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
         <div className="flex flex-col xl:flex-row xl:gap-8">
           <aside
@@ -42,7 +54,25 @@ export default function BlogLayout({
             <AdUnit slot={SLOT_LEFT} format="auto" minHeight={600} className="rounded-lg overflow-hidden" />
           </aside>
           <main className="flex-1 min-w-0 max-w-4xl xl:mx-0 mx-auto overflow-x-hidden">
+            {/* Section 2: Above article (in-content top) */}
+            <div
+              key={`${key}-in-top`}
+              role="region"
+              aria-label="Advertisement"
+              className="min-h-[90px] sm:min-h-[50px] flex items-center justify-center bg-gray-50/40 rounded-lg mb-6"
+            >
+              <AdUnit slot={SLOT_INCONTENT_TOP} format="fluid" layout="in-article" minHeight={50} className="w-full rounded-lg overflow-hidden" />
+            </div>
             {children}
+            {/* Section 3: Mid / after article */}
+            <div
+              key={`${key}-in-mid`}
+              role="region"
+              aria-label="Advertisement"
+              className="min-h-[90px] sm:min-h-[90px] flex items-center justify-center bg-gray-50/40 rounded-lg my-6"
+            >
+              <AdUnit slot={SLOT_INCONTENT_MID} format="autorelaxed" minHeight={90} className="w-full rounded-lg overflow-hidden" />
+            </div>
           </main>
           <aside
             key={`${key}-right`}
@@ -54,6 +84,16 @@ export default function BlogLayout({
           </aside>
         </div>
       </div>
+      {/* AdSense: above footer banner */}
+      <div
+        key={`${key}-above-bottom`}
+        role="region"
+        aria-label="Advertisement"
+        className="min-h-[90px] sm:min-h-[90px] flex items-center justify-center bg-gray-50/40 py-4 px-2"
+      >
+        <AdUnit slot={SLOT_INCONTENT_BOTTOM} format="autorelaxed" minHeight={90} className="w-full max-w-full" />
+      </div>
+      {/* Section 4: Bottom banner */}
       <div
         key={`${key}-bottom`}
         role="region"
