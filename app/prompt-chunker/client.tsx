@@ -19,8 +19,12 @@ export default function PromptChunkerLandingClient() {
               <Scissors className="w-6 h-6 text-purple-600" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">AI Prompt Chunker & Simplifier</h1>
-              <p className="text-sm text-gray-500 mt-1">Split long prompts into chunks or simplify messy prompts into optimized, structured prompts</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                AI Prompt Chunker — Split Long Prompts for ChatGPT, Claude &amp; Gemini, Bypass Token Limits &amp; Optimize Prompts
+              </h1>
+              <p className="text-sm text-gray-500 mt-1">
+                Chunk by words/characters with overlap + consolidation instructions, or simplify messy prompts into clean structured prompts. 100% browser-based.
+              </p>
             </div>
           </div>
         </div>
@@ -30,28 +34,24 @@ export default function PromptChunkerLandingClient() {
         <FAQSchema
           faqs={[
             {
-              question: 'What is an AI Prompt Chunker?',
-              answer: 'An AI Prompt Chunker is a tool that splits long AI prompts into smaller, manageable chunks. This is essential for AI tools like ChatGPT, Claude, and others that have token limits. The tool adds instructions to help AI understand the chunking process and consolidate chunks in memory.',
+              question: "What is ChatGPT's token limit?",
+              answer: 'When prompts exceed a model’s context window, content is truncated or rejected. Prompt Chunker splits long prompts into model-safe chunks for ChatGPT, Claude, and Gemini and adds consolidation instructions so the model can combine everything at the end.',
             },
             {
-              question: 'Why do I need to chunk AI prompts?',
-              answer: 'AI tools have token limits (e.g., ChatGPT has context windows). Long prompts may exceed these limits. Chunking allows you to send prompts in parts, with the AI storing each chunk in memory and consolidating them for the final output.',
+              question: 'What is prompt chunking?',
+              answer: 'Prompt chunking splits a long prompt or document into smaller pieces that fit within an AI model’s token limit. Each chunk can include overlap to preserve context, and the final chunk asks the AI to consolidate all chunks into one coherent response.',
             },
             {
-              question: 'How does the Prompt Chunker work?',
-              answer: 'The Prompt Chunker splits your long prompt into smaller chunks by words or characters. The first chunk includes instructions for the AI to store chunks in memory. The final chunk includes instructions to consolidate all stored chunks and generate output. Overlap between chunks preserves context.',
+              question: 'How do I send a long document to ChatGPT?',
+              answer: 'Paste your document, choose chunk size and overlap (often 30–50% for narrative text), then click Split. Send the numbered chunks to ChatGPT in order. The tool auto-adds “store chunks” and final consolidation instructions.',
             },
             {
-              question: 'Is the Prompt Chunker free?',
-              answer: 'Yes, 100% free. No signup required, no usage limits. All processing happens in your browser for maximum privacy. You can chunk unlimited prompts without any restrictions.',
+              question: 'What is the difference between chunking and simplifying?',
+              answer: 'Chunking solves length problems by splitting content into multiple parts. Simplifying solves clarity problems by rewriting one messy prompt into a clean structured prompt — without splitting it. Use chunking for token limits, simplifying for better results.',
             },
             {
-              question: 'Which AI tools work with chunked prompts?',
-              answer: 'The Prompt Chunker works with any AI tool that accepts text input, including ChatGPT, Claude, Gemini, Perplexity, and other conversational AI models. The chunking instructions are designed to work with most modern AI systems.',
-            },
-            {
-              question: 'What is overlap in prompt chunking?',
-              answer: 'Overlap is the percentage of content that repeats between consecutive chunks. For example, 50% overlap means half of each chunk\'s content appears in the next chunk. This helps preserve context and ensures the AI understands the relationship between chunks.',
+              question: 'Does the AI understand that I’m sending chunks?',
+              answer: 'Yes. Prompt Chunker adds instructions at the start of each chunk telling the AI to hold chunks in memory and wait for the next one. The final chunk includes a consolidation instruction so the AI synthesizes everything into one response.',
             },
           ]}
         />
@@ -109,6 +109,48 @@ export default function PromptChunkerLandingClient() {
                 <p className="text-sm text-gray-700">No signup, no limits, all processing in your browser</p>
               </div>
             </div>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">What Is ChatGPT&apos;s Token Limit and How Does It Affect You?</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              AI models have a maximum context window (“token limit”). If your prompt or document is too long, the model may truncate content or refuse the request.
+              Prompt Chunker helps you work around token limits by splitting long text into numbered chunks designed to be sent sequentially, with consolidation instructions at the end.
+            </p>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">How Prompt Chunking Preserves Context With Overlap</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Overlap repeats a portion of the previous chunk at the start of the next chunk so the model keeps continuity. A good default is <strong>30–50%</strong> overlap for narrative or research text.
+              Use lower overlap (10–20%) for self-contained sections like code blocks or lists.
+            </p>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Prompt Chunker vs Prompt Simplifier — When to Use Each</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Use <strong>Chunker</strong> when you hit length/token limits. Use <strong>Simplifier</strong> when the prompt is confusing, repetitive, or unstructured.
+              Many workflows use both: simplify first for clarity, then chunk if the result is still too long.
+            </p>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">How to Send a Large Document to ChatGPT</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Paste your document into Prompt Chunker, choose a chunk size that fits your model, set overlap for context preservation, and split. Send each chunk in order.
+              On the final chunk, the tool instructs the model to consolidate all stored chunks into one coherent answer (summary, analysis, or rewrite).
+            </p>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Prompt Chunking for Developers — Large Codebase Analysis</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              For long code files or codebases, chunk by characters or by logical sections, keep overlap modest, and ask the model to wait until all chunks arrive.
+              For sensitive repos, mask secrets first with{' '}
+              <Link href="/code-prompt-shield" className="text-purple-600 hover:underline font-semibold">Code Prompt Shield</Link>
+              , then chunk the masked code.
+            </p>
           </section>
 
           <section className="mb-12">

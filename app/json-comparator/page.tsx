@@ -2,30 +2,64 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import JsonComparatorClient from './client';
 
+const canonicalUrl = 'https://unblockdevs.com/json-comparator';
+
 export const metadata: Metadata = {
-  title: 'Smart JSON Data Diff - Semantic API Payload Comparison | UnblockDevs',
-  description: 'Compare JSON by meaning. Normalizes UUIDs, timestamps, JWTs so only real logic changes appear. Client-side, private, no signup.',
+  title:
+    'JSON Comparator — Compare Two JSON Objects, Diff API Responses & Detect Semantic Changes Online Free | UnblockDevs',
+  description:
+    'Compare two JSON objects or API responses side-by-side. Semantic diff normalizes UUIDs, timestamps, JWTs, and hashes so only real logic changes show. Free, 100% browser-based, no data sent to servers.',
   keywords: [
-    'smart json diff',
-    'json data diff',
-    'json diff tool online',
-    'semantic json comparison',
-    'compare json api',
+    'json comparator online',
+    'compare json online',
     'json diff tool',
-    'compare json payloads',
-    'json normalization',
-    'api payload diff',
+    'json compare tool',
+    'json diff online',
+    'compare two json objects',
+    'semantic json diff',
+    'json diff ignore timestamps',
+    'json compare ignore uuids',
+    'compare api responses online',
+    'api response diff tool',
+    'compare json dev vs production',
+    'compare expected actual json',
+    'how to compare two json objects online',
+    'how to compare api responses',
+    'JSON Comparator',
   ],
   openGraph: {
-    title: 'Smart JSON Data Diff - Semantic API Payload Comparison',
-    description: 'Compare JSON by meaning. Normalizes dynamic noise so only real logic changes appear. Client-side and private.',
+    title: 'JSON Comparator — Compare JSON, Diff API Responses & Semantic Changes Online Free | UnblockDevs',
+    description:
+      'Compare two JSON objects or API responses. Semantic diff normalizes UUIDs, timestamps, JWTs so only real logic changes show. 100% browser-based.',
     type: 'website',
-    url: 'https://unblockdevs.com/json-comparator',
+    url: canonicalUrl,
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
-  alternates: {
-    canonical: 'https://unblockdevs.com/json-comparator',
+  twitter: {
+    card: 'summary_large_image',
+    title: 'JSON Comparator — Compare JSON & Diff API Responses Online Free | UnblockDevs',
+    description: 'Semantic diff: normalizes UUIDs, timestamps, JWTs. Only real logic changes show. 100% in your browser.',
   },
+  alternates: { canonical: canonicalUrl },
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'JSON Comparator — Compare Two JSON Objects, Diff API Responses & Semantic Changes',
+  description:
+    'Compare two JSON objects or API responses side-by-side. Semantic diff normalizes UUIDs, timestamps, JWTs, and hashes so only real logic changes appear. Free, 100% browser-based. No data sent to servers.',
+  url: canonicalUrl,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  featureList: [
+    'Semantic JSON diff — normalizes UUIDs, timestamps, JWTs, hashes',
+    'Side-by-side comparison with line numbers',
+    'Unordered array comparison',
+    'API response and config comparison',
+    '100% client-side — no data sent to any server',
+  ],
 };
 
 const faqSchema = {
@@ -34,26 +68,34 @@ const faqSchema = {
   mainEntity: [
     {
       '@type': 'Question' as const,
-      name: 'What is a semantic JSON diff?',
+      name: 'How do I compare two JSON objects online?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'A semantic diff compares two JSON payloads by meaning, not raw text. It normalizes dynamic values (UUIDs, timestamps, JWTs, hashes) so only real logic or structure changes are highlighted.',
+        text: 'Paste your first JSON into the left panel and your second JSON into the right panel at unblockdevs.com/json-comparator, then click Compare. Added fields show in green, removed in red, modified in yellow — with full nested object and array support.',
       },
     },
     {
       '@type': 'Question' as const,
-      name: 'How do I compare two API responses?',
+      name: 'What is semantic JSON diff?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'Paste or load two JSON documents into the Smart JSON Data Diff. Enable normalization for UUIDs, dates, and JWTs so noise is ignored. Use the side-by-side view with line numbers to see what actually changed.',
+        text: 'Semantic diff normalizes auto-generated dynamic values like UUIDs, timestamps, JWTs, and hashes before comparing. This filters out noise so only real logic and structure changes appear — unlike raw text diff which flags every changed character.',
       },
     },
     {
       '@type': 'Question' as const,
-      name: 'Is my JSON sent to a server?',
+      name: 'How do I compare JSON and ignore timestamps and UUIDs?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'No. Comparison runs entirely in your browser. Your data never leaves your device.',
+        text: 'Enable UUID, ISO date, Epoch, JWT, and Hash normalization options in JSON Comparator before clicking Compare. Dynamic fields are replaced with placeholders so they don\'t appear as false differences in the result.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I detect breaking API changes with JSON comparison?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Paste your old API response in JSON A and new response in JSON B at unblockdevs.com/json-comparator. Enable semantic normalization to filter dynamic noise. Any remaining differences represent real structural or logic changes that may be breaking changes.',
       },
     },
   ],
@@ -62,16 +104,17 @@ const faqSchema = {
 export default function JsonComparatorPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4" aria-labelledby="json-diff-heading">
         <h1 id="json-diff-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
-          Smart JSON Data Diff — Semantic API Payload Comparison
+          JSON Comparator — Compare Two JSON Objects, Diff API Responses &amp; Detect Semantic Changes Online Free
         </h1>
         <p className="text-gray-700 text-base leading-relaxed mb-3">
-          Compare two JSON payloads by meaning, not raw text. The tool normalizes UUIDs, timestamps, JWTs, and hashes so only real logic and structure changes stand out. All processing is client-side—your data never leaves your browser.
+          <strong>Every JSON diff tool shows you what changed. Only this one shows you what actually matters.</strong> Compare two JSON payloads by meaning, not raw text. The tool normalizes UUIDs, timestamps, JWTs, and hashes so only real logic and structure changes stand out. All processing is client-side—your data never leaves your browser.
         </p>
         <p className="text-gray-600 text-sm leading-relaxed mb-4">
-          How it works: Paste or load two JSON documents. Enable normalization for dynamic fields. See a side-by-side diff with line numbers. Use it to validate API changes or spot semantic differences. No signup, no server upload.
+          Paste or load two JSON documents. Enable normalization for dynamic fields. See a side-by-side diff with line numbers. Use it to validate API changes or spot semantic differences. No signup, no server upload.
         </p>
         <Link href="#tool" className="inline-block text-sm font-semibold text-indigo-600 hover:text-indigo-700">
           Use the tool →

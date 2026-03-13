@@ -22,8 +22,10 @@ export default function CurlFailureRootCauseClient() {
               <AlertTriangle className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">cURL Failure Root-Cause Engine</h1>
-              <p className="text-sm text-gray-500 mt-1">Diagnose why your API call is failing with ranked root causes and fix suggestions</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                cURL Failure Root-Cause Engine — Debug API Errors, Fix 401 403 400 404 &amp; Diagnose Why Your cURL Request Is Failing
+              </h1>
+              <p className="text-sm text-gray-500 mt-1">Paste your failed cURL and status code. Get ranked root causes, confidence scores, and corrected cURL commands. Free, 100% in your browser.</p>
             </div>
           </div>
         </div>
@@ -39,6 +41,10 @@ export default function CurlFailureRootCauseClient() {
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
         <FAQSchema
           faqs={[
+            {
+              question: 'Why does my API work in Postman but not in cURL?',
+              answer: 'Postman automatically adds headers like Content-Type, Authorization, and Accept that cURL does not add by default. Paste your cURL command into the Root-Cause Engine — it identifies exactly which headers are missing and generates a corrected cURL command with them added.',
+            },
             {
               question: 'What is the cURL Failure Root-Cause Engine?',
               answer: 'The cURL Failure Root-Cause Engine is an intelligent diagnostic tool that analyzes failed API calls to identify why they\'re failing. It takes your cURL command, HTTP status code, and response body, then provides ranked root causes with confidence scores, fix suggestions, and corrected cURL commands.',
@@ -560,6 +566,10 @@ export default function CurlFailureRootCauseClient() {
               <Link href="/api-comparator" className="p-4 bg-orange-50 rounded-lg border border-orange-200 hover:shadow-md transition-shadow">
                 <h3 className="font-semibold text-gray-900 mb-2">API Comparator</h3>
                 <p className="text-sm text-gray-700">Compare working vs failing API responses to identify differences.</p>
+              </Link>
+              <Link href="/code-prompt-shield" className="p-4 bg-violet-50 rounded-lg border border-violet-200 hover:shadow-md transition-shadow">
+                <h3 className="font-semibold text-gray-900 mb-2">Code Prompt Shield</h3>
+                <p className="text-sm text-gray-700">Mask API keys and secrets in code before sharing cURL or snippets with AI or teammates.</p>
               </Link>
             </div>
           </section>

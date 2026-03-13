@@ -19,8 +19,8 @@ export default function TokenComparatorLandingClient() {
               <Key className="w-6 h-6 text-purple-600" />
             </div>
             <div>
-              <h2 className="text-3xl font-bold text-gray-900">Token Comparator & JWT Security Analyzer</h2>
-              <p className="text-sm text-gray-500 mt-1">Compare, decode, and analyze JWT tokens, API keys, and auth tokens. Smart detection, security audit, lifetime view. 100% client-side.</p>
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">JWT Debugger &amp; Token Comparator — Decode, Compare, Security Audit &amp; Expiry Check</h2>
+              <p className="text-sm text-gray-500 mt-1">Decode JWT, compare tokens character-by-character, run security audits, check expiration, analyze entropy. 100% client-side.</p>
             </div>
           </div>
         </div>
@@ -143,6 +143,87 @@ export default function TokenComparatorLandingClient() {
                 </p>
               </div>
             </div>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">How to Debug JWT Authentication Failures</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              When auth fails, the issue is often an invalid or expired token, wrong claims, or a signature mismatch. Paste your JWT into Token Comparator: it decodes the header and payload, shows <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">exp</code> and <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">iat</code>, and runs a security audit (e.g. none algorithm, weak secrets). Compare two tokens (e.g. one that works vs one that doesn&apos;t) with the visual diff to see exactly what differs.
+            </p>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">JWT Security Vulnerabilities to Check Before Production</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              The security audit in Token Comparator flags common JWT misconfigurations: <strong>none algorithm</strong> (signature can be stripped so the server accepts any payload), weak or missing signing keys, missing expiration, and algorithm confusion. Run your tokens through the tool before production to catch these issues. No other free online decoder combines decode + comparison + security audit in one place, all client-side.
+            </p>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">How to Compare Tokens Across Dev, Staging &amp; Production</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Paste your dev token in Token 1 and your staging or production token in Token 2. Click Compare for an instant character-by-character visual diff with match percentage. You&apos;ll see exactly where they differ — useful for debugging environment mismatches, verifying key rotation, or ensuring the same secret/claims are used across environments.
+            </p>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">What Is Token Entropy and Why Does It Matter?</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Entropy measures how random and unpredictable a token is. Low entropy means the token could be guessed or brute-forced. Token Comparator analyzes entropy and flags tokens that may be cryptographically weak. Use it to check API keys, session IDs, or any secret string before relying on it for security.
+            </p>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">JWT vs API Key vs UUID — How This Tool Detects Each</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              The tool auto-detects token type: <strong>JWT</strong> (three base64url parts separated by dots), <strong>API key</strong> (common prefixes or formats), <strong>UUID</strong> (8-4-4-4-12 hex pattern), and <strong>Base64</strong>. Each type gets the right decoding and analysis — e.g. JWTs get header/payload/exp, API keys get entropy, UUIDs get format validation. Paste any token and the tool adapts.
+            </p>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+            <dl className="space-y-4">
+              <div>
+                <dt className="font-semibold text-gray-900">How do I decode a JWT token?</dt>
+                <dd className="text-gray-700 mt-1">
+                  Paste your JWT into Token Comparator. It auto-detects the JWT format, decodes the header, payload, and signature, and displays all claims including expiration time — entirely in your browser, nothing sent to servers.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900">How do I check if a JWT token is expired?</dt>
+                <dd className="text-gray-700 mt-1">
+                  Paste your JWT into Token Comparator. It reads the <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">exp</code> claim and shows the exact expiration datetime, whether the token is currently valid, and how much lifetime remains or how long ago it expired.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900">What is the JWT &quot;none&quot; algorithm vulnerability?</dt>
+                <dd className="text-gray-700 mt-1">
+                  The &quot;none&quot; algorithm attack allows a malicious actor to strip the JWT signature so the server accepts any payload without verification. Token Comparator&apos;s security audit detects this and other JWT misconfigurations.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900">How do I compare tokens across environments?</dt>
+                <dd className="text-gray-700 mt-1">
+                  Paste your dev token in Token 1 and your production token in Token 2. Click Compare for an instant character-by-character visual diff showing exactly where they differ — useful for debugging environment mismatch issues.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900">What is token entropy and why does it matter?</dt>
+                <dd className="text-gray-700 mt-1">
+                  Entropy measures how random and unpredictable a token is. Low entropy means the token could be guessed or brute-forced. Token Comparator analyzes entropy and flags tokens that may be cryptographically weak.
+                </dd>
+              </div>
+            </dl>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Related Tools</h2>
+            <p className="text-gray-700 leading-relaxed mb-3">
+              For deeper JWT decoding and signature verification: <Link href="/jwt-decoder" className="text-primary-600 hover:underline font-medium">JWT Decoder</Link>.
+              To decode JWT parts manually (Base64): <Link href="/base64-encoder" className="text-primary-600 hover:underline font-medium">Base64 Encoder</Link>.
+              Debugging 401 or auth errors from API calls: <Link href="/curl-failure-root-cause-engine" className="text-primary-600 hover:underline font-medium">cURL Failure Root-Cause Engine</Link>.
+              Before sharing tokens or code with AI: <Link href="/code-prompt-shield" className="text-primary-600 hover:underline font-medium">Code Prompt Shield</Link>.
+            </p>
           </section>
 
           <section className="mb-12 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl p-8 text-white">

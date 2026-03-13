@@ -135,6 +135,13 @@ export default function UuidGeneratorClient() {
           <span className="text-gray-700 font-medium" aria-current="page">UUID Generator</span>
         </nav>
 
+        <div className="mb-4">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">UUID / GUID Generator — Generate v1, v4, v7 UUIDs, Validate, Analyze &amp; Bulk Export</h2>
+          <p className="text-sm text-gray-600 mt-1 max-w-3xl">
+            v1–v8 support, validator + analyzer, compare two UUIDs, collision probability, and exports (JSON/CSV/SQL). 100% client-side — no UUID data sent to servers.
+          </p>
+        </div>
+
         <div className="rounded-2xl bg-white shadow-xl shadow-gray-200/50 border border-gray-200/80 overflow-hidden">
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 px-6 md:px-8 py-4 bg-gradient-to-r from-indigo-50/80 to-transparent border-b border-gray-100">
             <span className="text-sm text-gray-700 flex items-center gap-2">

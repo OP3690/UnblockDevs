@@ -349,7 +349,7 @@ export default function CodePromptShieldClient() {
           <div className="flex flex-wrap items-baseline gap-3">
             <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
               <Shield className="w-8 h-8 text-primary-600" aria-hidden />
-              Code Prompt Shield
+              Code Prompt Shield — Mask API Keys, Variables &amp; Secrets Before Sending Code to ChatGPT
             </h1>
             <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700 ring-1 ring-emerald-600/20">
               <Lock className="w-3 h-3" aria-hidden />

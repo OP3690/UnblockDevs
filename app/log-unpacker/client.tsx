@@ -33,9 +33,11 @@ export default function LogUnpackerClient() {
             <ArrowLeft className="h-4 w-4" />
             Back to Tools
           </Link>
-          <h2 className="text-3xl font-bold text-gray-900">Log Unpacker & Sanitizer</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            Log Unpacker — Unescape Stringified JSON, Decode JWTs, Epoch Timestamps &amp; Sanitize for AI
+          </h2>
           <p className="mt-1 text-sm text-gray-500">
-            Recursively unescape JSON, decode JWTs, detect timestamps, scrub paths. 100% client-side.
+            Recursively unescape nested JSON, decode JWTs, convert epoch timestamps, scrub paths. 100% client-side. AI-safe output.
           </p>
         </div>
       </header>
@@ -69,6 +71,15 @@ export default function LogUnpackerClient() {
                 sensitive logs.
               </p>
             </div>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="mb-3 text-xl font-bold text-gray-900">Sanitize before AI</h2>
+            <p className="mb-4 text-sm text-gray-600">
+              Mask or sanitize data before pasting into ChatGPT: <Link href="/code-prompt-shield" className="text-primary-600 hover:text-primary-700 font-medium">Code Prompt Shield</Link> (code),{' '}
+              <Link href="/json-prompt-shield" className="text-primary-600 hover:text-primary-700 font-medium">JSON Prompt Shield</Link> (JSON payloads),{' '}
+              <Link href="/ai-schema-masker" className="text-primary-600 hover:text-primary-700 font-medium">AI Schema Masker</Link> (SQL/schemas).
+            </p>
           </section>
 
           <section className="mb-12">

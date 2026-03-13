@@ -14,13 +14,13 @@ export default function JsonComparatorClient() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
       <header className="bg-white shadow-md border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Tools', href: '/tools/json' }, { label: 'JSON', href: '/tools/json' }, { label: 'Smart JSON Data Diff' }]} />
+          <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Tools', href: '/tools/json' }, { label: 'JSON', href: '/tools/json' }, { label: 'JSON Comparator' }]} />
           <Link href="/" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
             <ArrowLeft className="w-4 h-4" />
             Back to Tools
           </Link>
-          <h2 className="text-3xl font-bold text-gray-900">Smart JSON Data Diff</h2>
-          <p className="text-sm text-gray-500 mt-1">Semantic comparison for API payloads — normalizes dynamic noise so only real logic changes appear</p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">JSON Comparator — Compare Two JSON Objects, Diff API Responses &amp; Semantic Changes</h2>
+          <p className="text-sm text-gray-500 mt-1">Semantic diff: normalizes UUIDs, timestamps, JWTs, hashes so only real logic changes appear. 100% client-side.</p>
         </div>
       </header>
 
@@ -162,6 +162,77 @@ export default function JsonComparatorClient() {
           </section>
 
           <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Why Semantic JSON Diff Is Better Than Raw Text Diff</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Raw text diff flags every character change — including UUIDs, timestamps, JWTs, and hashes that differ between responses but don&apos;t represent real logic changes. You get dozens of false positives and waste time chasing noise. Semantic diff normalizes these dynamic fields first, so only meaningful structure and value changes appear. That&apos;s why it&apos;s better for API payloads, configs, and any JSON with generated or environment-specific values.
+            </p>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">How to Compare API Responses Between Environments</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Paste your dev (or staging) response in JSON A and production in JSON B. Enable normalization for UUID, ISO date, Epoch, JWT, and Hash so IDs and timestamps don&apos;t clutter the diff. Click Compare — any remaining differences are real changes between environments (new fields, removed fields, or value changes). Use this to validate deployments or debug environment-specific behavior.
+            </p>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">JSON Diff for QA — Compare Expected vs Actual Output</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Put your expected JSON in one panel and the actual API or test output in the other. Enable semantic normalization so dynamic fields (e.g. <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">request_id</code>, <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">created_at</code>) don&apos;t cause false failures. The side-by-side view and color-coded diff (green added, red removed, yellow modified) make it easy to see exactly what failed and document regressions.
+            </p>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">How UUID and Timestamp Normalization Works</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              When you enable <strong>UUID</strong>, <strong>ISO date</strong>, <strong>Epoch</strong>, <strong>JWT</strong>, <strong>Hash</strong>, or <strong>Prefixed ID</strong>, the tool detects values matching those patterns and replaces them with placeholders (e.g. a single token) before comparing. So two responses with different <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">id</code> or <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">timestamp</code> values are treated as equal for the purpose of the diff. Only structural or non-normalized value differences are shown.
+            </p>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Detecting Breaking API Changes With JSON Comparator</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Paste the old API response in JSON A and the new response in JSON B. Turn on semantic normalization to filter out dynamic noise. Any differences that remain — new required fields, removed fields, or changed types/values — are candidates for breaking changes. Use the diff to update client code, docs, or tests, and to communicate breaking changes to consumers.
+            </p>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+            <dl className="space-y-4">
+              <div>
+                <dt className="font-semibold text-gray-900">How do I compare two JSON objects online?</dt>
+                <dd className="text-gray-700 mt-1">
+                  Paste your first JSON into the left panel and your second JSON into the right panel, then click Compare. The tool shows added fields in green, removed in red, and modified values in yellow — with full nested object and array support.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900">What is the difference between semantic and raw JSON diff?</dt>
+                <dd className="text-gray-700 mt-1">
+                  Raw JSON diff flags every difference including auto-generated values like UUIDs, timestamps, and hashes that change between responses but don&apos;t represent real logic changes. Semantic diff normalizes these dynamic fields so only meaningful structure and logic changes surface in the result.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900">How do I compare JSON and ignore timestamps and UUIDs?</dt>
+                <dd className="text-gray-700 mt-1">
+                  Enable the normalization options — UUID, ISO date, Epoch, JWT, Hash, and Prefixed ID normalization — before clicking Compare. Dynamic fields are replaced with placeholders so they don&apos;t appear as false differences.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900">How do I detect breaking changes in an API response?</dt>
+                <dd className="text-gray-700 mt-1">
+                  Paste the old API response in JSON A and the new response in JSON B. Enable semantic normalization to filter out noise. Any remaining differences represent real structural or logic changes — potential breaking changes.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900">Is it safe to paste sensitive API payloads online?</dt>
+                <dd className="text-gray-700 mt-1">
+                  Yes — this tool runs 100% in your browser. No JSON data is sent to any server, logged, or stored. Safe for production API responses, sensitive payloads, and confidential data.
+                </dd>
+              </div>
+            </dl>
+          </section>
+
+          <section className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Best Guides and Resources</h2>
             <p className="text-gray-700 leading-relaxed mb-6">
               Learn more about JSON comparison, data analysis, and related tools with these comprehensive guides:
@@ -243,6 +314,10 @@ export default function JsonComparatorClient() {
               <Link href="/config-comparator" className="p-4 bg-orange-50 rounded-lg border border-orange-200 hover:bg-orange-100 transition-colors">
                 <h3 className="font-semibold text-gray-900 mb-1">Config Comparator</h3>
                 <p className="text-sm text-gray-700">Compare configuration files</p>
+              </Link>
+              <Link href="/log-unpacker" className="p-4 bg-amber-50 rounded-lg border border-amber-200 hover:bg-amber-100 transition-colors">
+                <h3 className="font-semibold text-gray-900 mb-1">Log Unpacker</h3>
+                <p className="text-sm text-gray-700">Unescape JSON from logs before comparing</p>
               </Link>
             </div>
           </section>

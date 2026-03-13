@@ -218,16 +218,16 @@ export default function RegexTesterClient() {
           <div className="flex flex-wrap items-baseline gap-3">
             <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
               <Code2 className="w-8 h-8 text-primary-600" aria-hidden />
-              Regex Tester
+              Regex Tester — Test JavaScript Regular Expressions Online, Capture Groups, Replace &amp; Flags Real-Time Free
             </h1>
           </div>
           <p className="text-sm text-slate-500 mt-2 max-w-2xl">
-            Test regular expressions in real time. See all matches and capture groups, highlight in text, and try replace. Uses JavaScript RegExp (ECMAScript).
+            Test regex in real time. See all matches, capture groups, and match indexes highlighted. Test replace with $1 $2. JavaScript RegExp, all flags (g i m s u y). Free, 100% browser-based.
           </p>
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+      <main id="tool" className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
         {/* Sample patterns */}
         <section className="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden ring-1 ring-slate-900/5">
           <button
@@ -437,6 +437,167 @@ export default function RegexTesterClient() {
           )}
         </section>
       </main>
+
+      {/* SEO: educational content for developers */}
+      <article className="max-w-5xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden p-8 md:p-10 space-y-10">
+          <section>
+            <h2 className="text-2xl font-bold text-slate-900 mb-4">What Is a Regular Expression?</h2>
+            <p className="text-slate-700 leading-relaxed">
+              A regular expression (regex) is a sequence of characters that defines a search pattern. It&apos;s used to find, match, validate, and replace text in strings. Regex is supported in virtually every programming language — JavaScript, Python, Java, Go, PHP, Ruby — making it one of the most universally useful developer skills. This tester uses the JavaScript RegExp engine (ECMAScript) and runs entirely in your browser; nothing is sent to any server.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-bold text-slate-900 mb-4">Regex Quick Reference</h2>
+            <div className="grid sm:grid-cols-2 gap-6 text-sm text-slate-700">
+              <div>
+                <h3 className="font-semibold text-slate-800 mb-2">Character classes</h3>
+                <ul className="space-y-1 font-mono">
+                  <li><code className="bg-slate-100 px-1 rounded">.</code> — any character except newline</li>
+                  <li><code className="bg-slate-100 px-1 rounded">\d</code> — digit [0-9]</li>
+                  <li><code className="bg-slate-100 px-1 rounded">\D</code> — non-digit</li>
+                  <li><code className="bg-slate-100 px-1 rounded">\w</code> — word character [a-zA-Z0-9_]</li>
+                  <li><code className="bg-slate-100 px-1 rounded">\W</code> — non-word character</li>
+                  <li><code className="bg-slate-100 px-1 rounded">\s</code> — whitespace</li>
+                  <li><code className="bg-slate-100 px-1 rounded">\S</code> — non-whitespace</li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="font-semibold text-slate-800 mb-2">Quantifiers</h3>
+                <ul className="space-y-1 font-mono">
+                  <li><code className="bg-slate-100 px-1 rounded">*</code> — 0 or more</li>
+                  <li><code className="bg-slate-100 px-1 rounded">+</code> — 1 or more</li>
+                  <li><code className="bg-slate-100 px-1 rounded">?</code> — 0 or 1</li>
+                  <li><code className="bg-slate-100 px-1 rounded">{'{n}'}</code> — exactly n</li>
+                  <li><code className="bg-slate-100 px-1 rounded">{'{n,}'}</code> — n or more</li>
+                  <li><code className="bg-slate-100 px-1 rounded">{'{n,m}'}</code> — between n and m</li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="font-semibold text-slate-800 mb-2">Anchors &amp; groups</h3>
+                <ul className="space-y-1 font-mono">
+                  <li><code className="bg-slate-100 px-1 rounded">^</code> — start of string/line</li>
+                  <li><code className="bg-slate-100 px-1 rounded">$</code> — end of string/line</li>
+                  <li><code className="bg-slate-100 px-1 rounded">\b</code> — word boundary</li>
+                  <li><code className="bg-slate-100 px-1 rounded">(abc)</code> — capture group</li>
+                  <li><code className="bg-slate-100 px-1 rounded">(?:abc)</code> — non-capturing</li>
+                  <li><code className="bg-slate-100 px-1 rounded">(?&lt;name&gt;abc)</code> — named group</li>
+                  <li><code className="bg-slate-100 px-1 rounded">(?=abc)</code> — positive lookahead</li>
+                  <li><code className="bg-slate-100 px-1 rounded">(?!abc)</code> — negative lookahead</li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="font-semibold text-slate-800 mb-2">JavaScript flags</h3>
+                <ul className="space-y-1 font-mono">
+                  <li><code className="bg-slate-100 px-1 rounded">g</code> — global (find all matches)</li>
+                  <li><code className="bg-slate-100 px-1 rounded">i</code> — case insensitive</li>
+                  <li><code className="bg-slate-100 px-1 rounded">m</code> — multiline (^ $ per line)</li>
+                  <li><code className="bg-slate-100 px-1 rounded">s</code> — dotAll (. matches newline)</li>
+                  <li><code className="bg-slate-100 px-1 rounded">u</code> — unicode</li>
+                  <li><code className="bg-slate-100 px-1 rounded">y</code> — sticky</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-bold text-slate-900 mb-4">Common Regex Patterns</h2>
+            <p className="text-slate-700 text-sm mb-4">Try these in the tester above — use the Sample patterns dropdown to load them.</p>
+            <ul className="space-y-3 text-sm">
+              <li>
+                <strong className="text-slate-800">Email:</strong>{' '}
+                <code className="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs break-all">^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$</code>
+              </li>
+              <li>
+                <strong className="text-slate-800">URL:</strong>{' '}
+                <code className="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs break-all">https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}</code>
+              </li>
+              <li>
+                <strong className="text-slate-800">Phone (US):</strong>{' '}
+                <code className="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs">^\+?1?\s?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$</code>
+              </li>
+              <li>
+                <strong className="text-slate-800">Date (YYYY-MM-DD):</strong>{' '}
+                <code className="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs break-all">^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$</code>
+              </li>
+              <li>
+                <strong className="text-slate-800">IPv4:</strong>{' '}
+                <code className="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs">^(\d{1,3}\.){3}\d{1,3}$</code>
+              </li>
+              <li>
+                <strong className="text-slate-800">Password (min 8 chars, upper, lower, number):</strong>{' '}
+                <code className="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs break-all">^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$</code>
+              </li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-bold text-slate-900 mb-6">Frequently Asked Questions</h2>
+            <dl className="space-y-6">
+              <div>
+                <dt className="font-semibold text-slate-900 mb-2">How do I test a regex pattern online?</dt>
+                <dd className="text-slate-700 pl-4 border-l-2 border-slate-200">
+                  Paste your regular expression in the pattern field and your test string below it. Matches highlight instantly in real time. The results table shows every match, its position index, and any capture groups. No clicking required — results update as you type.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-slate-900 mb-2">What is the g flag in JavaScript regex?</dt>
+                <dd className="text-slate-700 pl-4 border-l-2 border-slate-200">
+                  The g (global) flag makes the regex find ALL matches in the string instead of stopping after the first one. Without g, only the first match is returned. Most use cases require the g flag when searching or replacing in strings.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-slate-900 mb-2">How do I use capture groups in regex replace?</dt>
+                <dd className="text-slate-700 pl-4 border-l-2 border-slate-200">
+                  Wrap the part you want to capture in parentheses in your pattern. In the replacement field, reference it with $1 (first group), $2 (second group), and so on. For example: pattern <code className="bg-slate-100 px-1 rounded">(\w+)\s(\w+)</code> with replacement <code className="bg-slate-100 px-1 rounded">$2 $1</code> swaps the first two words.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-slate-900 mb-2">What is the difference between + and * in regex?</dt>
+                <dd className="text-slate-700 pl-4 border-l-2 border-slate-200">
+                  * matches 0 or more occurrences — it can match nothing. + matches 1 or more — it requires at least one match. Use + when the character must appear at least once. Use * when it&apos;s optional.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-slate-900 mb-2">What does \d mean in regex?</dt>
+                <dd className="text-slate-700 pl-4 border-l-2 border-slate-200">
+                  \d matches any digit character — equivalent to the character class [0-9]. Use \d+ to match one or more digits, \d{4} to match exactly 4 digits. Use \D (uppercase) for the opposite — any non-digit character.
+                </dd>
+              </div>
+            </dl>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-bold text-slate-900 mb-4">Related Tools</h2>
+            <p className="text-slate-700 text-sm mb-4">
+              Pair regex with these developer tools:
+            </p>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <Link href="/url-encoder" className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 hover:border-primary-300 hover:bg-primary-50/20 transition-colors">
+                <h3 className="font-semibold text-slate-900 mb-1">URL Encoder</h3>
+                <p className="text-sm text-slate-600">Encode special regex characters for sharing</p>
+              </Link>
+              <Link href="/json-comparator" className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 hover:border-primary-300 hover:bg-primary-50/20 transition-colors">
+                <h3 className="font-semibold text-slate-900 mb-1">JSON Comparator</h3>
+                <p className="text-sm text-slate-600">Compare JSON; use regex to match or extract fields</p>
+              </Link>
+              <Link href="/hash-generator" className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 hover:border-primary-300 hover:bg-primary-50/20 transition-colors">
+                <h3 className="font-semibold text-slate-900 mb-1">Hash Generator</h3>
+                <p className="text-sm text-slate-600">Validate hash formats with regex</p>
+              </Link>
+              <Link href="/base64-encoder" className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 hover:border-primary-300 hover:bg-primary-50/20 transition-colors">
+                <h3 className="font-semibold text-slate-900 mb-1">Base64 Encoder</h3>
+                <p className="text-sm text-slate-600">Validate base64 patterns with regex</p>
+              </Link>
+              <Link href="/test-data-generator" className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 hover:border-primary-300 hover:bg-primary-50/20 transition-colors">
+                <h3 className="font-semibold text-slate-900 mb-1">Test Data Generator</h3>
+                <p className="text-sm text-slate-600">Generate data to test your regex against</p>
+              </Link>
+            </div>
+          </section>
+        </div>
+      </article>
     </div>
   );
 }

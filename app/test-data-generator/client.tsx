@@ -17,8 +17,8 @@ export default function TestDataGeneratorClient() {
             <ArrowLeft className="w-4 h-4" />
             Back to Tools
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Test Data Generator - Generate Fake Data Instantly</h1>
-          <p className="text-sm text-gray-500 mt-1">Create test data for development, testing, and demos</p>
+          <h1 className="text-3xl font-bold text-gray-900">Test Data Generator — Generate Fake User, Invoice, Banking &amp; API Log Test Data from JSON Schema Online Free</h1>
+          <p className="text-sm text-gray-500 mt-1">Create realistic test data for development, testing, and demos — 11 templates or custom JSON Schema, up to 50 records, 100% browser-based</p>
         </div>
       </header>
 
@@ -30,6 +30,13 @@ export default function TestDataGeneratorClient() {
 
         {/* SEO Content Section - 1000-1200 words */}
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
+          <section className="mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">What Is Test Data and Why Do Developers Need It?</h2>
+            <p className="text-lg text-gray-700 leading-relaxed mb-4">
+              Test data is synthetic or fake data used for development, testing, and demos instead of real production data. Developers need it to build features safely, run unit and integration tests, seed local or staging databases, mock APIs, and create realistic demos without exposing real user information. A test data generator produces this data quickly and in the right structure — whether from predefined templates (users, invoices, API logs) or from your own JSON Schema.
+            </p>
+          </section>
+
           <section className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">What Problem Does Test Data Generator Solve?</h2>
             <p className="text-lg text-gray-700 leading-relaxed mb-4">
@@ -160,6 +167,70 @@ export default function TestDataGeneratorClient() {
           </section>
 
           <section className="mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">How to Generate Data From Your Own JSON Schema</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Select the <strong>Custom Schema</strong> option, paste your JSON Schema into the schema field (defining your object properties and types), set the record count (1–50), and click Generate. The tool creates realistic data that matches your exact schema structure — strings, numbers, booleans, nested objects, and arrays. Use it to generate test fixtures, seed databases, or feed mock APIs without writing data by hand.
+            </p>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Using Fake Data for API Testing and Development</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Fake or mock data is ideal for API testing: you get consistent, repeatable payloads without hitting production. Use our <strong>API Logs</strong> template for request/response-style data, or generate custom JSON from your API response schema. Pair the output with a mock API generator to serve realistic responses, or use it in unit tests and contract tests. All generation runs in the browser, so no sensitive data leaves your machine.
+            </p>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Test Data for AI and Machine Learning Projects</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              The <strong>AI Training Data</strong> template produces realistic ML training records: model names, dataset sizes, epoch counts, accuracy, precision, recall, latency, and cost metrics — structured like real experiment tracking logs. Use it to test ML dashboards, pipeline tooling, or any app that consumes training or inference metadata. It’s synthetic data only, so it’s safe for demos and development.
+            </p>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Security Testing Data — CVE, Vulnerabilities, Events</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              The <strong>Security Events</strong> and <strong>Vulnerabilities</strong> templates generate security-focused test data: CVE IDs, CVSS scores, severity levels, threat types, and remediation actions. Use it to test SIEM dashboards, vulnerability management UIs, or DevSecOps workflows without real security data. The structure matches what security tools expect, so your tests stay realistic and repeatable.
+            </p>
+          </section>
+
+          <section className="mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
+            <dl className="space-y-6">
+              <div>
+                <dt className="font-semibold text-gray-900 mb-2">What is the difference between test data, mock data, and fake data?</dt>
+                <dd className="text-gray-700 pl-4 border-l-2 border-gray-200">
+                  They mean the same thing in practice — data generated specifically for development and testing rather than from real production sources. &quot;Test data&quot; is the technical term, &quot;mock data&quot; is common in API testing, and &quot;fake data&quot; is used colloquially. All refer to realistic synthetic data safe to use in development.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900 mb-2">How do I generate data from my own JSON Schema?</dt>
+                <dd className="text-gray-700 pl-4 border-l-2 border-gray-200">
+                  Select the Custom Schema option, paste your JSON Schema into the schema field defining your object properties and types, set the record count, and click Generate. The tool creates realistic data matching your exact schema structure.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900 mb-2">Can I use this for database seeding?</dt>
+                <dd className="text-gray-700 pl-4 border-l-2 border-gray-200">
+                  Yes. Generate up to 50 records in JSON or CSV format and use the output to seed your development or staging database. The JSON output can be imported directly into most databases and ORMs.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900 mb-2">Is the generated data safe to use in demos?</dt>
+                <dd className="text-gray-700 pl-4 border-l-2 border-gray-200">
+                  Yes — all data is completely synthetic. No real names, emails, account numbers, or personal information are used. Safe for client demos, screenshots, presentations, and public-facing prototypes.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900 mb-2">What makes the AI training data template unique?</dt>
+                <dd className="text-gray-700 pl-4 border-l-2 border-gray-200">
+                  It generates realistic ML training records with model names, dataset sizes, epoch counts, accuracy metrics, precision, recall, latency, and cost data — structured exactly like real ML experiment tracking logs. Useful for testing AI dashboards and ML pipeline tooling.
+                </dd>
+              </div>
+            </dl>
+          </section>
+
+          <section className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Best Guides and Resources</h2>
             <p className="text-gray-700 leading-relaxed mb-6">
               Learn more about test data, data generation, and testing best practices with these comprehensive guides:
@@ -200,21 +271,29 @@ export default function TestDataGeneratorClient() {
               Enhance your development and testing workflow with these complementary tools:
             </p>
             <div className="grid md:grid-cols-2 gap-4">
-              <Link href="/mock-api-generator" className="p-4 bg-blue-50 rounded-lg border border-blue-200 hover:bg-blue-100 transition-colors">
+              <Link href="/json-formatter" className="p-4 bg-blue-50 rounded-lg border border-blue-200 hover:bg-blue-100 transition-colors">
+                <h3 className="font-semibold text-gray-900 mb-1">JSON Formatter</h3>
+                <p className="text-sm text-gray-700">Format and validate generated JSON</p>
+              </Link>
+              <Link href="/json-schema-generation" className="p-4 bg-green-50 rounded-lg border border-green-200 hover:bg-green-100 transition-colors">
+                <h3 className="font-semibold text-gray-900 mb-1">JSON Schema Generator</h3>
+                <p className="text-sm text-gray-700">Create a schema first, then generate test data from it</p>
+              </Link>
+              <Link href="/json-comparator" className="p-4 bg-purple-50 rounded-lg border border-purple-200 hover:bg-purple-100 transition-colors">
+                <h3 className="font-semibold text-gray-900 mb-1">JSON Comparator</h3>
+                <p className="text-sm text-gray-700">Compare generated vs expected test data</p>
+              </Link>
+              <Link href="/mock-api-generator" className="p-4 bg-orange-50 rounded-lg border border-orange-200 hover:bg-orange-100 transition-colors">
                 <h3 className="font-semibold text-gray-900 mb-1">Mock API Generator</h3>
-                <p className="text-sm text-gray-700">Generate mock APIs with test data</p>
+                <p className="text-sm text-gray-700">Use test data in mock APIs</p>
               </Link>
-              <Link href="/log-unpacker" className="p-4 bg-green-50 rounded-lg border border-green-200 hover:bg-green-100 transition-colors">
-                <h3 className="font-semibold text-gray-900 mb-1">Log Unpacker</h3>
-                <p className="text-sm text-gray-700">Unescape JSON, decode JWTs, scrub paths</p>
+              <Link href="/json-prompt-shield" className="p-4 bg-red-50 rounded-lg border border-red-200 hover:bg-red-100 transition-colors">
+                <h3 className="font-semibold text-gray-900 mb-1">JSON Prompt Shield</h3>
+                <p className="text-sm text-gray-700">Mask sensitive data before sending to AI</p>
               </Link>
-              <Link href="/json-beautifier" className="p-4 bg-purple-50 rounded-lg border border-purple-200 hover:bg-purple-100 transition-colors">
-                <h3 className="font-semibold text-gray-900 mb-1">JSON Beautifier</h3>
-                <p className="text-sm text-gray-700">Format generated test data</p>
-              </Link>
-              <Link href="/data-insights" className="p-4 bg-orange-50 rounded-lg border border-orange-200 hover:bg-orange-100 transition-colors">
-                <h3 className="font-semibold text-gray-900 mb-1">Data Insights</h3>
-                <p className="text-sm text-gray-700">Analyze generated test data</p>
+              <Link href="/ai-schema-masker" className="p-4 bg-indigo-50 rounded-lg border border-indigo-200 hover:bg-indigo-100 transition-colors">
+                <h3 className="font-semibold text-gray-900 mb-1">AI Schema Masker</h3>
+                <p className="text-sm text-gray-700">Using AI to analyze test data? Mask first</p>
               </Link>
             </div>
           </section>

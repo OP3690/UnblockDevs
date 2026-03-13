@@ -388,17 +388,17 @@ export default function JsonToExcelClient() {
             </div>
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
-                Advanced JSON to Excel
+                JSON to Excel Converter — XLSX, CSV, Multi-Sheet, Flatten Nested JSON Online Free
               </h1>
               <p className="text-gray-500 text-sm sm:text-base mt-1 max-w-xl">
-                Convert JSON to spreadsheets with schema detection, filters, and multi-sheet export. Paste, upload, or fetch from API — runs in your browser.
+                Convert JSON to Excel or CSV. Paste, upload, or fetch from API URL. Flatten nested JSON, export to multiple sheets, apply filters. Free, 100% browser-based, no data sent to servers.
               </p>
             </div>
           </div>
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+      <main id="tool" className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
         {rows.length === 0 ? (
           <div className="space-y-6 sm:space-y-8">
             {/* Input source */}
@@ -751,6 +751,109 @@ export default function JsonToExcelClient() {
           </div>
         )}
       </main>
+
+      {/* SEO: educational content for business analysts and non-developers */}
+      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16">
+        <div className="bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden p-8 md:p-10">
+          <section className="mb-10">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">What Is JSON to Excel Conversion?</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              JSON (JavaScript Object Notation) is the standard format for data exchanged by APIs, web services, and modern applications. Excel is where most business users analyze and report on data.
+            </p>
+            <p className="text-gray-700 leading-relaxed">
+              JSON to Excel conversion bridges these two worlds — transforming structured JSON data into spreadsheet rows and columns without writing code. Paste your JSON, upload a file, or fetch from an API URL; the tool detects the schema and exports a downloadable XLSX or CSV file.
+            </p>
+          </section>
+
+          <section className="mb-10">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">What Is Nested JSON Flattening?</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              JSON often contains nested objects and arrays, for example: <code className="bg-gray-100 px-1.5 py-0.5 rounded text-sm">{'{"user": {"name": "Alice", "address": {"city": "London"}}}'}</code>
+            </p>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Spreadsheets can&apos;t represent nesting — each row must be flat. Flattening converts nested keys into combined column names, e.g. <strong>user_name</strong> and <strong>user_address_city</strong>. This tool handles unlimited nesting depth automatically, with your choice of dot or underscore separator.
+            </p>
+          </section>
+
+          <section className="mb-10">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Multi-Sheet Export Explained</h2>
+            <p className="text-gray-700 leading-relaxed">
+              When your JSON contains multiple arrays — for example <strong>users</strong> and <strong>orders</strong> — a single sheet loses the relationship structure. Multi-sheet export puts each array on its own worksheet tab in the same XLSX file, preserving the logical separation exactly as it exists in the JSON. Use the &quot;Multi-sheet (users + orders)&quot; example above to try it.
+            </p>
+          </section>
+
+          <section className="mb-10">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
+            <dl className="space-y-6">
+              <div>
+                <dt className="font-semibold text-gray-900 mb-2">How do I convert JSON to Excel online?</dt>
+                <dd className="text-gray-700 pl-4 border-l-2 border-gray-200">
+                  Paste your JSON, upload a file, or enter an API URL to fetch live data. The tool detects the schema, flattens nested objects, and exports a downloadable XLSX or CSV file — entirely in your browser, nothing sent to servers.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900 mb-2">How do I open a JSON file in Excel?</dt>
+                <dd className="text-gray-700 pl-4 border-l-2 border-gray-200">
+                  Excel doesn&apos;t natively open JSON files cleanly. The easiest method is to paste your JSON into this converter, click Parse, then download the XLSX file and open it directly in Excel or Google Sheets.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900 mb-2">How does nested JSON flattening work?</dt>
+                <dd className="text-gray-700 pl-4 border-l-2 border-gray-200">
+                  Nested JSON keys are combined into column headers using a separator. For example <code className="bg-gray-100 px-1 rounded text-sm">{'{"user":{"name":"Alice"}}'}</code> becomes a column called <strong>user_name</strong> (underscore) or <strong>user.name</strong> (dot). Choose your preferred separator before exporting.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900 mb-2">What is multi-sheet JSON export?</dt>
+                <dd className="text-gray-700 pl-4 border-l-2 border-gray-200">
+                  When your JSON contains multiple arrays — such as users and orders — multi-sheet export places each array on a separate worksheet tab in the same XLSX file. This preserves the logical structure of your data in a single organized workbook.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900 mb-2">Can I fetch live API data and convert it to Excel?</dt>
+                <dd className="text-gray-700 pl-4 border-l-2 border-gray-200">
+                  Yes. Enter any public API URL in the Fetch from URL input. The tool fetches the JSON response and converts it to Excel instantly — no need to copy-paste API output manually.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900 mb-2">Is my data safe when using this converter?</dt>
+                <dd className="text-gray-700 pl-4 border-l-2 border-gray-200">
+                  Yes. All conversion runs in your browser using JavaScript — no JSON data is sent to any server, logged, or stored. Safe for sensitive API responses, financial data, and confidential business records.
+                </dd>
+              </div>
+            </dl>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Related Tools</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Format, validate, or prepare JSON before converting to Excel:
+            </p>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <Link href="/json-beautifier" className="p-4 rounded-xl border border-gray-200 bg-gray-50/50 hover:border-emerald-300 hover:bg-emerald-50/30 transition-colors">
+                <h3 className="font-semibold text-gray-900 mb-1">JSON Beautifier</h3>
+                <p className="text-sm text-gray-600">Format JSON before converting to Excel</p>
+              </Link>
+              <Link href="/json-validator" className="p-4 rounded-xl border border-gray-200 bg-gray-50/50 hover:border-emerald-300 hover:bg-emerald-50/30 transition-colors">
+                <h3 className="font-semibold text-gray-900 mb-1">JSON Validator</h3>
+                <p className="text-sm text-gray-600">Validate JSON before converting</p>
+              </Link>
+              <Link href="/json-comparator" className="p-4 rounded-xl border border-gray-200 bg-gray-50/50 hover:border-emerald-300 hover:bg-emerald-50/30 transition-colors">
+                <h3 className="font-semibold text-gray-900 mb-1">JSON Comparator</h3>
+                <p className="text-sm text-gray-600">Compare JSON before exporting</p>
+              </Link>
+              <Link href="/test-data-generator" className="p-4 rounded-xl border border-gray-200 bg-gray-50/50 hover:border-emerald-300 hover:bg-emerald-50/30 transition-colors">
+                <h3 className="font-semibold text-gray-900 mb-1">Test Data Generator</h3>
+                <p className="text-sm text-gray-600">Generate test JSON, then export to Excel</p>
+              </Link>
+              <Link href="/json-prompt-shield" className="p-4 rounded-xl border border-gray-200 bg-gray-50/50 hover:border-emerald-300 hover:bg-emerald-50/30 transition-colors">
+                <h3 className="font-semibold text-gray-900 mb-1">JSON Prompt Shield</h3>
+                <p className="text-sm text-gray-600">Mask sensitive data before sharing or AI analysis</p>
+              </Link>
+            </div>
+          </section>
+        </div>
+      </article>
     </div>
   );
 }

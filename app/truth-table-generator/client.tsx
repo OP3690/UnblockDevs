@@ -8,7 +8,6 @@ import {
   Play,
   Shield,
   Lock,
-  ChevronRight,
   ChevronDown,
   FileCode,
   Download,
@@ -480,21 +479,112 @@ export default function TruthTableGeneratorClient() {
           </div>
         </div>
 
+        {/* SEO: educational content for students and CS audience */}
+        <article className="mt-12 rounded-2xl bg-white shadow-xl shadow-gray-200/50 border border-gray-200/80 overflow-hidden p-8 md:p-10">
+          <section className="mb-10">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">What Is a Truth Table?</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              A truth table is a mathematical table used to determine whether a boolean expression is true or false for all possible combinations of its input variables.
+            </p>
+            <p className="text-gray-700 leading-relaxed">
+              For <em>n</em> variables, a truth table has 2<sup>n</sup> rows. A 2-variable expression has 4 rows, a 3-variable expression has 8 rows, and an 8-variable expression has 256 rows. This tool generates the full table for any expression with up to 8 variables.
+            </p>
+          </section>
+
+          <section className="mb-10">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Boolean Operators Reference</h2>
+            <ul className="space-y-2 text-gray-700">
+              <li><strong>AND (∧)</strong> — true only when both inputs are true</li>
+              <li><strong>OR (∨)</strong> — true when at least one input is true</li>
+              <li><strong>NOT (¬)</strong> — inverts the value (true → false)</li>
+              <li><strong>XOR (⊕)</strong> — true when inputs are different</li>
+              <li><strong>NAND</strong> — NOT AND (opposite of AND)</li>
+              <li><strong>NOR</strong> — NOT OR (opposite of OR)</li>
+              <li><strong>→</strong> — implication (if A then B)</li>
+              <li><strong>↔</strong> — biconditional (A if and only if B)</li>
+            </ul>
+          </section>
+
+          <section className="mb-10">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">What Is a Karnaugh Map?</h2>
+            <p className="text-gray-700 leading-relaxed">
+              A Karnaugh map (K-Map) is a visual method for simplifying boolean expressions. It arranges truth table rows in a grid where adjacent cells differ by only one variable — allowing you to identify and eliminate redundant terms visually. K-Maps are used in digital circuit design to minimize logic gates. This tool generates the K-Map automatically from your expression.
+            </p>
+          </section>
+
+          <section className="mb-10">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">What Are Minterms and Maxterms?</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              A <strong>minterm</strong> is a product (AND) term where the expression equals 1. A <strong>maxterm</strong> is a sum (OR) term where the expression equals 0.
+            </p>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              <strong>SOP (Sum of Products)</strong> is the sum of all minterms. <strong>POS (Product of Sums)</strong> is the product of all maxterms. Both are canonical forms that represent any boolean function completely and unambiguously.
+            </p>
+          </section>
+
+          <section className="mb-10">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
+            <dl className="space-y-6">
+              <div>
+                <dt className="font-semibold text-gray-900 mb-2">How do I generate a truth table online?</dt>
+                <dd className="text-gray-700 pl-4 border-l-2 border-gray-200">
+                  Type or paste your boolean expression using the operator buttons — AND (∧), OR (∨), NOT (¬), XOR (⊕), NAND, NOR — then click Generate. The tool produces the complete truth table for all variable combinations, plus Karnaugh map, minterms, maxterms, and SOP/POS forms.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900 mb-2">What is the difference between SOP and POS forms?</dt>
+                <dd className="text-gray-700 pl-4 border-l-2 border-gray-200">
+                  SOP (Sum of Products) expresses a boolean function as an OR of AND terms — one AND term for each row where the output is 1 (minterms). POS (Product of Sums) expresses it as an AND of OR terms — one OR term for each row where the output is 0 (maxterms). Both are complete canonical representations of the same function.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900 mb-2">How do I use a Karnaugh map to simplify a boolean expression?</dt>
+                <dd className="text-gray-700 pl-4 border-l-2 border-gray-200">
+                  The K-Map groups adjacent cells where the output is 1 into rectangles of size 1, 2, 4, or 8. Each group eliminates one variable. The simplified expression is the OR of all group terms. This tool generates the K-Map automatically from your expression.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900 mb-2">What is De Morgan&apos;s law?</dt>
+                <dd className="text-gray-700 pl-4 border-l-2 border-gray-200">
+                  De Morgan&apos;s laws state that NOT(A AND B) equals (NOT A) OR (NOT B), and NOT(A OR B) equals (NOT A) AND (NOT B). They allow conversion between AND and OR forms and are fundamental to digital circuit design and boolean simplification. Try the &quot;De Morgan&quot; example in the tool to see them in action.
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900 mb-2">How many variables can this truth table generator handle?</dt>
+                <dd className="text-gray-700 pl-4 border-l-2 border-gray-200">
+                  Up to 8 variables, producing truth tables with up to 256 rows. Most classroom problems use 2–4 variables (4–16 rows). The tool handles everything from simple 2-variable expressions to complex 8-variable digital logic circuits.
+                </dd>
+              </div>
+            </dl>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Related Tools</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Other developer and CS tools that pair well with boolean logic and truth tables:
+            </p>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <Link href="/hash-generator" className="p-4 rounded-xl border border-gray-200 bg-gray-50/50 hover:border-primary-300 hover:bg-primary-50/50 transition-colors">
+                <h3 className="font-semibold text-gray-900 mb-1">Hash Generator</h3>
+                <p className="text-sm text-gray-600">Bitwise and hashing utilities — same AND/OR logic mindset</p>
+              </Link>
+              <Link href="/uuid-generator" className="p-4 rounded-xl border border-gray-200 bg-gray-50/50 hover:border-primary-300 hover:bg-primary-50/50 transition-colors">
+                <h3 className="font-semibold text-gray-900 mb-1">UUID Generator</h3>
+                <p className="text-sm text-gray-600">Generate unique identifiers — popular with CS and dev audiences</p>
+              </Link>
+              <Link href="/jwt-decoder" className="p-4 rounded-xl border border-gray-200 bg-gray-50/50 hover:border-primary-300 hover:bg-primary-50/50 transition-colors">
+                <h3 className="font-semibold text-gray-900 mb-1">JWT Decoder</h3>
+                <p className="text-sm text-gray-600">Decode and inspect JWTs — useful for API and security work</p>
+              </Link>
+            </div>
+          </section>
+        </article>
+
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-gray-500">
           <p className="text-center flex items-center gap-2">
             <Lock className="w-3.5 h-3.5 text-slate-400" aria-hidden />
             All parsing and generation runs in your browser.
           </p>
-          <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/uuid-generator" className="inline-flex items-center gap-1.5 font-medium text-primary-600 hover:text-primary-700">
-              UUID Generator
-              <ChevronRight className="w-4 h-4" />
-            </Link>
-            <Link href="/jwt-decoder" className="inline-flex items-center gap-1.5 font-medium text-primary-600 hover:text-primary-700">
-              JWT Decoder
-              <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
         </div>
       </div>
     </div>
