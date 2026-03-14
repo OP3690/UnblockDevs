@@ -1,6 +1,7 @@
 /**
  * GA4 event helpers. Use these so GA4 gets multiple events per session
  * and can compute session duration (needs ≥2 events).
+ * User properties (e.g. last_active) are set on engagement for "Active users" segmentation.
  */
 
 declare global {
@@ -9,12 +10,28 @@ declare global {
   }
 }
 
+/** Set a GA4 user property for segmentation (e.g. Active users by last_active). */
+export function setUserProperty(
+  key: string,
+  value: string | number | boolean
+): void {
+  if (typeof window === 'undefined') return;
+  if (typeof window.gtag !== 'function') return;
+  window.gtag('set', 'user_properties', { [key]: value });
+}
+
+/** Mark user as active (sets last_active user property). Call on engagement so GA4 can segment Active users. */
+function setActiveUserTimestamp(): void {
+  setUserProperty('last_active', new Date().toISOString());
+}
+
 export function trackEvent(
   action: string,
   params?: Record<string, unknown>
 ): void {
   if (typeof window === 'undefined') return;
   if (typeof window.gtag !== 'function') return;
+  setActiveUserTimestamp();
   window.gtag('event', action, {
     ...params,
     timestamp: Date.now(),
