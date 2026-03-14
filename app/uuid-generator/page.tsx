@@ -115,7 +115,10 @@ export default function UuidGeneratorPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4" aria-labelledby="uuid-heading">
+      <div id="tool">
+        <UuidGeneratorClient />
+      </div>
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="uuid-heading">
         <h1 id="uuid-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
           UUID / GUID Generator — Generate v1, v4, v7 UUIDs, Validate, Analyze &amp; Bulk Export Online Free
         </h1>
@@ -127,11 +130,8 @@ export default function UuidGeneratorPage() {
           Use the tool →
         </Link>
       </article>
-      <div id="tool">
-        <UuidGeneratorClient />
-      </div>
 
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12 border-t border-gray-200" aria-labelledby="uuid-learn-heading">
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12" aria-labelledby="uuid-learn-heading">
         <h2 id="uuid-learn-heading" className="text-2xl font-bold text-gray-900 mb-4">
           What Is a UUID?
         </h2>

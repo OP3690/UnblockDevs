@@ -111,7 +111,10 @@ export default function HashGeneratorPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4" aria-labelledby="hash-heading">
+      <div id="tool">
+        <HashGeneratorClient />
+      </div>
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="hash-heading">
         <h1 id="hash-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
           Hash Generator — MD5, SHA-256, SHA3, BLAKE2, File Hash Checker, HMAC &amp; Password Hashing (bcrypt, Argon2) Online Free
         </h1>
@@ -129,9 +132,6 @@ export default function HashGeneratorPage() {
           </Link>
         </p>
       </article>
-      <div id="tool">
-        <HashGeneratorClient />
-      </div>
 
       {/* SEO content — detailed guide to rank for hash-related queries */}
       <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 border-t border-gray-200">

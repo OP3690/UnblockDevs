@@ -127,7 +127,10 @@ export default function LogUnpackerPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4" aria-labelledby="log-unpacker-heading">
+      <div id="tool">
+        <LogUnpackerClient />
+      </div>
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="log-unpacker-heading">
         <h1 id="log-unpacker-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
           Log Unpacker — Unescape Stringified JSON, Decode JWTs, Convert Epoch Timestamps &amp; Sanitize Logs for AI
         </h1>
@@ -141,9 +144,6 @@ export default function LogUnpackerPage() {
           Use the tool →
         </Link>
       </article>
-      <div id="tool">
-        <LogUnpackerClient />
-      </div>
       <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12" aria-labelledby="log-unpacker-faq-heading">
         <h2 id="log-unpacker-faq-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">
           Log Unpacker — FAQs &amp; How-To

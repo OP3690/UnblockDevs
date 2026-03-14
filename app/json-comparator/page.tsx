@@ -106,7 +106,10 @@ export default function JsonComparatorPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4" aria-labelledby="json-diff-heading">
+      <div id="tool">
+        <JsonComparatorClient />
+      </div>
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="json-diff-heading">
         <h1 id="json-diff-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
           JSON Comparator — Compare Two JSON Objects, Diff API Responses &amp; Detect Semantic Changes Online Free
         </h1>
@@ -120,9 +123,6 @@ export default function JsonComparatorPage() {
           Use the tool →
         </Link>
       </article>
-      <div id="tool">
-        <JsonComparatorClient />
-      </div>
     </>
   );
 }

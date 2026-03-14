@@ -121,7 +121,10 @@ export default function JWTDecoderPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4" aria-labelledby="jwt-decoder-heading">
+      <div id="tool">
+        <JWTDecoderClient />
+      </div>
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="jwt-decoder-heading">
         <h1 id="jwt-decoder-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
           JWT Decoder — Decode JWT Tokens, Verify Signatures, Check Expiry &amp; Security Audit Online Free
         </h1>
@@ -135,9 +138,6 @@ export default function JWTDecoderPage() {
           Use the tool →
         </Link>
       </article>
-      <div id="tool">
-        <JWTDecoderClient />
-      </div>
 
       <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12" aria-labelledby="jwt-content-heading">
         <h2 id="jwt-content-heading" className="text-2xl font-bold text-gray-900 mb-6">

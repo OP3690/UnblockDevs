@@ -64,7 +64,10 @@ export default function SqlInGeneratorPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4" aria-labelledby="sql-in-heading">
+      <div id="tool">
+        <SqlInGeneratorClient />
+      </div>
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="sql-in-heading">
         <h1 id="sql-in-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
           SQL IN Clause Generator — Convert List to SQL IN, JSON, MongoDB
         </h1>
@@ -78,9 +81,6 @@ export default function SqlInGeneratorPage() {
           Use the tool →
         </Link>
       </article>
-      <div id="tool">
-        <SqlInGeneratorClient />
-      </div>
     </>
   );
 }

@@ -99,7 +99,10 @@ export default function Base64EncoderPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4" aria-labelledby="base64-heading">
+      <div id="tool">
+        <Base64EncoderClient />
+      </div>
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="base64-heading">
         <h1 id="base64-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
           Base64 Encoder Decoder — Encode &amp; Decode Standard, Base64URL, MIME &amp; No-Padding Online Free
         </h1>
@@ -114,9 +117,6 @@ export default function Base64EncoderPage() {
           Use the tool →
         </Link>
       </article>
-      <div id="tool">
-        <Base64EncoderClient />
-      </div>
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
         <section>

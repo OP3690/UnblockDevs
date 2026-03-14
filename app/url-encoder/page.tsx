@@ -117,7 +117,10 @@ export default function UrlEncoderPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4" aria-labelledby="url-enc-heading">
+      <div id="tool">
+        <UrlEncoderClient />
+      </div>
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="url-enc-heading">
         <h1 id="url-enc-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
           URL Encoder Decoder — Percent Encode &amp; Decode URLs, Parse Query Parameters, Fix Double Encoding Free Online
         </h1>
@@ -133,9 +136,6 @@ export default function UrlEncoderPage() {
           </Link>
         </p>
       </article>
-      <div id="tool">
-        <UrlEncoderClient />
-      </div>
       <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 border-t border-gray-200">
         <h2 id="what-is-url-encoding" className="text-xl font-bold text-gray-900 mt-0 mb-4">
           What is URL encoding?

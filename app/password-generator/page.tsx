@@ -68,7 +68,10 @@ export default function PasswordGeneratorPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4" aria-labelledby="pw-gen-heading">
+      <div id="tool">
+        <PasswordGeneratorClient />
+      </div>
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="pw-gen-heading">
         <h1 id="pw-gen-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
           Password Generator
         </h1>
@@ -79,9 +82,6 @@ export default function PasswordGeneratorPage() {
           Use the tool →
         </Link>
       </article>
-      <div id="tool">
-        <PasswordGeneratorClient />
-      </div>
       <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="faq-heading">
         <h2 id="faq-heading" className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
         <dl className="space-y-4">

@@ -128,7 +128,10 @@ export default function CorsTesterPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4" aria-labelledby="cors-heading">
+      <div id="tool">
+        <CorsTesterClient />
+      </div>
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="cors-heading">
         <h1 id="cors-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
           CORS Tester — Test &amp; Debug CORS Headers, Preflight Requests &amp; Security Misconfigurations Online Free
         </h1>
@@ -139,9 +142,6 @@ export default function CorsTesterPage() {
           Use the tool →
         </Link>
       </article>
-      <div id="tool">
-        <CorsTesterClient />
-      </div>
       <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12" aria-labelledby="cors-faq-heading">
         <h2 id="cors-faq-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">
           CORS Tester — FAQs &amp; How-To
