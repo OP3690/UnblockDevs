@@ -44,16 +44,17 @@ export default function BlogLayout({
         style={{ contain: 'layout' }}
       />
       <div className="max-w-7xl xl:max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
-        <div className="flex flex-col xl:flex-row xl:gap-8">
+        <div className="flex flex-col lg:flex-row lg:gap-6 xl:gap-8">
+          {/* Left sidebar ad — visible from lg (1024px) */}
           <aside
             key={`${key}-left`}
             role="region"
             aria-label="Advertisement"
-            className="hidden xl:block flex-shrink-0 w-[160px] sticky top-24 self-start"
+            className="hidden lg:block flex-shrink-0 w-[160px] xl:w-[160px] sticky top-24 self-start min-h-[250px]"
           >
-            <AdUnit slot={SLOT_LEFT} format="auto" minHeight={600} className="rounded-lg overflow-hidden" />
+            <AdUnit slot={SLOT_LEFT} format="auto" minHeight={250} className="rounded-lg overflow-hidden w-full" />
           </aside>
-          <main className="flex-1 min-w-0 max-w-4xl xl:mx-0 mx-auto overflow-x-hidden">
+          <main className="flex-1 min-w-0 max-w-4xl lg:mx-0 mx-auto overflow-x-hidden">
             {/* Section 2: Above article (in-content top) */}
             <div
               key={`${key}-in-top`}
@@ -74,13 +75,14 @@ export default function BlogLayout({
               <AdUnit slot={SLOT_INCONTENT_MID} format="autorelaxed" minHeight={90} className="w-full rounded-lg overflow-hidden" />
             </div>
           </main>
+          {/* Right sidebar ad — visible from lg (1024px) */}
           <aside
             key={`${key}-right`}
             role="region"
             aria-label="Advertisement"
-            className="hidden xl:block flex-shrink-0 w-[300px] sticky top-24 self-start"
+            className="hidden lg:block flex-shrink-0 w-[300px] sticky top-24 self-start min-h-[250px]"
           >
-            <AdUnit slot={SLOT_RIGHT} format="auto" minHeight={250} className="rounded-lg overflow-hidden" />
+            <AdUnit slot={SLOT_RIGHT} format="auto" minHeight={250} className="rounded-lg overflow-hidden w-full" />
           </aside>
         </div>
       </div>
