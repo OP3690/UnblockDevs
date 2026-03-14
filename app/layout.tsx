@@ -8,6 +8,7 @@ import DevModeWrapper from '@/components/DevModeWrapper'
 import Celebration1MPopup from '@/components/Celebration1MPopup'
 import GA4RouteTracker from '@/components/GA4RouteTracker'
 import GlobalAdSlot from '@/components/GlobalAdSlot'
+import ToolPagesAdWrap from '@/components/ToolPagesAdWrap'
 import VisitTracker from '@/components/VisitTracker'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap', preload: true })
@@ -247,7 +248,7 @@ export default function RootLayout({
         <GA4RouteTracker />
         <DevModeWrapper>
           <div suppressHydrationWarning>
-            {children}
+            <ToolPagesAdWrap>{children}</ToolPagesAdWrap>
           </div>
           <GlobalAdSlot />
           <BuyMeACoffeeWidget />
