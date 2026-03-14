@@ -60,3 +60,13 @@ export function trackError(toolName: string, errorType: string): void {
     error_type: errorType,
   });
 }
+
+/**
+ * Track when the site tab becomes visible (user switched back to the tab).
+ * Uses Page Visibility API; only fires on hidden → visible transition, not on initial load.
+ */
+export function trackTabVisible(metadata?: Record<string, unknown>): void {
+  trackEvent('tab_visible', {
+    ...metadata,
+  });
+}

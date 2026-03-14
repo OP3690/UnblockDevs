@@ -7,6 +7,7 @@ import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget'
 import DevModeWrapper from '@/components/DevModeWrapper'
 import Celebration1MPopup from '@/components/Celebration1MPopup'
 import GA4RouteTracker from '@/components/GA4RouteTracker'
+import TabVisibilityTracker from '@/components/TabVisibilityTracker'
 import GlobalAdSlot from '@/components/GlobalAdSlot'
 import ToolPagesAdWrap from '@/components/ToolPagesAdWrap'
 import VisitTracker from '@/components/VisitTracker'
@@ -246,6 +247,7 @@ export default function RootLayout({
       </head>
       <body className="font-sans antialiased" suppressHydrationWarning>
         <GA4RouteTracker />
+        <TabVisibilityTracker />
         <DevModeWrapper>
           <div suppressHydrationWarning>
             <ToolPagesAdWrap>{children}</ToolPagesAdWrap>
