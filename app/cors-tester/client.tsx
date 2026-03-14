@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import {
   Copy,
@@ -52,6 +52,15 @@ export default function CorsTesterClient() {
   const [copied, setCopied] = useState<string | null>(null);
   const [snippetsOpen, setSnippetsOpen] = useState(false);
   const [multiOriginOpen, setMultiOriginOpen] = useState(false);
+
+  // Expand Code snippets and Multi-origin sections on desktop and tablet (md+)
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)');
+    if (mq.matches) {
+      setSnippetsOpen(true);
+      setMultiOriginOpen(true);
+    }
+  }, []);
 
   const effectiveOrigin = origin.trim() || (typeof window !== 'undefined' ? window.location.origin : 'https://example.com');
   const headerRecord = headers.reduce<Record<string, string>>((acc, { key, value }) => {

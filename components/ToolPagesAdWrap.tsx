@@ -55,14 +55,14 @@ export default function ToolPagesAdWrap({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="max-w-7xl xl:max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8 py-0 flex flex-col lg:flex-row lg:gap-6 xl:gap-8">
-      {/* Left sidebar ad — visible from lg; collapses if ad not filled */}
+    <div className="max-w-7xl xl:max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8 py-0 flex flex-col xl:flex-row xl:gap-8">
+      {/* Left sidebar ad — visible from xl only; collapses if ad not filled. Tool content expanded on tablet/desktop (lg) by default. */}
       {leftShow && (
         <aside
           ref={leftRef}
           role="region"
           aria-label="Advertisement"
-          className="hidden lg:block flex-shrink-0 w-[160px] sticky top-24 self-start min-h-[250px] order-first"
+          className="hidden xl:block flex-shrink-0 w-[160px] sticky top-24 self-start min-h-[250px] order-first"
         >
           <AdUnit slot={SLOT_LEFT} format="auto" minHeight={250} className="rounded-lg overflow-hidden w-full" />
         </aside>
@@ -70,13 +70,13 @@ export default function ToolPagesAdWrap({ children }: { children: React.ReactNod
       <main className="flex-1 min-w-0 overflow-x-hidden order-2">
         {children}
       </main>
-      {/* Right sidebar ad — visible from lg; collapses if ad not filled */}
+      {/* Right sidebar ad — visible from xl only; collapses if ad not filled */}
       {rightShow && (
         <aside
           ref={rightRef}
           role="region"
           aria-label="Advertisement"
-          className="hidden lg:block flex-shrink-0 w-[300px] sticky top-24 self-start min-h-[250px] order-3"
+          className="hidden xl:block flex-shrink-0 w-[300px] sticky top-24 self-start min-h-[250px] order-3"
         >
           <AdUnit slot={SLOT_RIGHT} format="auto" minHeight={250} className="rounded-lg overflow-hidden w-full" />
         </aside>
