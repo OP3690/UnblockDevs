@@ -162,7 +162,8 @@ export default function CurlConverter() {
                     key={i}
                     type="button"
                   onClick={() => {
-                      setCurlCommand(ex.command);
+                    trackCtaClick('curl_converter', 'load_example', { example_name: ex.name });
+                    setCurlCommand(ex.command);
                     setShowExamples(false);
                   }}
                     className="block w-full text-left p-2 bg-white rounded border border-slate-200 hover:border-slate-400 hover:bg-slate-50 text-sm"
@@ -181,7 +182,10 @@ export default function CurlConverter() {
               <div className="flex gap-2">
                 <button
                   type="button"
-                  onClick={() => setShowExamples(!showExamples)}
+                  onClick={() => {
+                    if (!showExamples) trackCtaClick('curl_converter', 'show_examples');
+                    setShowExamples(!showExamples);
+                  }}
                   className="cta-curl-examples inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold rounded-lg border border-slate-300 bg-slate-50 text-slate-700 hover:bg-slate-100 hover:border-slate-400"
                 >
                   <Sparkles className="w-4 h-4" /> Examples

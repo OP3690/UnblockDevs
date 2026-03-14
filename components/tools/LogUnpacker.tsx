@@ -13,7 +13,7 @@ import {
   Lock,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { trackCopy } from '@/lib/analytics';
+import { trackCopy, trackCtaClick } from '@/lib/analytics';
 import { processLog, getAiSafeCopy, type AnnotationMode } from '@/lib/logUnpackerEngine';
 
 const PLACEHOLDER = `Paste log or stringified JSON here...
@@ -96,6 +96,7 @@ export default function LogUnpacker() {
   }, [output]);
 
   const loadSample = useCallback(() => {
+    trackCtaClick('log_unpacker', 'load_sample');
     setInput(SAMPLE_LOG);
     setError(null);
     setOutput(null);

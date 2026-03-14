@@ -6,7 +6,7 @@ import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, F
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { PersonalizationManager, ToolTab } from '@/lib/personalization';
-import { trackToolUsed, trackCopy } from '@/lib/analytics';
+import { trackToolUsed, trackCopy, trackCtaClick } from '@/lib/analytics';
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget';
 import { useDevMode } from '@/components/DevModeWrapper';
 // Below-fold / non-critical: lazy load to reduce initial JS (mobile LCP)
@@ -245,6 +245,7 @@ function HomeClient() {
     }).catch(() => toast.error('Copy failed'));
   }, []);
   const downloadSampleJson = useCallback(() => {
+    trackCtaClick('home', 'download_sample');
     const blob = new Blob([SAMPLE_JSON_FORMATTED], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);

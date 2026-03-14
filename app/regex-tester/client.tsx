@@ -14,7 +14,7 @@ import {
   Replace,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { trackCopy } from '@/lib/analytics';
+import { trackCopy, trackCtaClick } from '@/lib/analytics';
 
 const FLAGS = [
   { id: 'g', label: 'Global', title: 'All matches' },
@@ -247,7 +247,10 @@ export default function RegexTesterClient() {
                 <button
                   key={s.name}
                   type="button"
-                  onClick={() => setSample(s)}
+                  onClick={() => {
+                    trackCtaClick('regex_tester', 'load_sample', { sample_name: s.name });
+                    setSample(s);
+                  }}
                   className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
                 >
                   {s.name}

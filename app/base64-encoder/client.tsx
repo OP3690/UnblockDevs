@@ -20,7 +20,7 @@ import {
   X,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { trackCopy } from '@/lib/analytics';
+import { trackCopy, trackCtaClick } from '@/lib/analytics';
 import {
   encodeBase64,
   decodeBase64,
@@ -294,6 +294,7 @@ export default function Base64EncoderClient() {
   };
 
   const loadSample = () => {
+    trackCtaClick('base64_encoder', 'load_sample');
     if (mode === 'encode') {
       setInput(SAMPLE_PLAIN);
       toast.success('Sample loaded');

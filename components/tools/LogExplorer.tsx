@@ -16,7 +16,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { trackCopy } from '@/lib/analytics';
+import { trackCopy, trackCtaClick } from '@/lib/analytics';
 import Link from 'next/link';
 import {
   parseLogs,
@@ -245,6 +245,7 @@ export default function LogExplorer() {
           <button
             type="button"
             onClick={() => {
+              trackCtaClick('log_explorer', 'load_sample');
               setLogText(SAMPLE_LOGS);
               toast.success('Sample logs loaded');
             }}

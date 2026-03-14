@@ -184,6 +184,7 @@ export default function SmartJsonDiff() {
   }, []);
 
   const loadExample = useCallback(() => {
+    trackCtaClick('json_comparator', 'load_example');
     setJsonA(EXAMPLE_JSON_A);
     setJsonB(EXAMPLE_JSON_B);
     setError(null);

@@ -162,6 +162,7 @@ export default function PasswordGeneratorClient() {
   };
 
   const applyPreset = (presetId: string) => {
+    trackCtaClick('password_generator', 'load_preset', { preset_id: presetId });
     const p = PRESETS.find((x) => x.id === presetId);
     if (p) {
       setLength(p.length);

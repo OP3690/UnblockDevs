@@ -83,6 +83,7 @@ export default function TruthTableGeneratorClient() {
   }, [expr]);
 
   const loadExample = (exampleExpr: string) => {
+    trackCtaClick('truth_table_generator', 'load_example');
     setExpr(exampleExpr);
     setError(null);
     setResult(null);

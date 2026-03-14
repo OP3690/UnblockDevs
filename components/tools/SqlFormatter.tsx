@@ -15,7 +15,7 @@ import {
   FileCode,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { trackCopy } from '@/lib/analytics';
+import { trackCopy, trackCtaClick } from '@/lib/analytics';
 import Link from 'next/link';
 import { useDevMode } from '@/components/DevModeWrapper';
 import {
@@ -289,6 +289,7 @@ export default function SqlFormatter() {
             <button
               type="button"
               onClick={() => {
+                trackCtaClick('sql_formatter', 'load_sample');
                 setInput(SAMPLE_50_IDS.join('\n'));
                 toast.success('Loaded 50 sample IDs (15-char alphanumeric with hyphen)');
               }}

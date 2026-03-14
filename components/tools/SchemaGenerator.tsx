@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react';
 import { FileCode, Copy, Check, Download, Sparkles, CheckCircle, XCircle, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { trackCopy } from '@/lib/analytics';
+import { trackCopy, trackCtaClick } from '@/lib/analytics';
 import { validateJson } from '@/lib/jsonParser';
 import Link from 'next/link';
 
@@ -260,7 +260,10 @@ export default function SchemaGenerator() {
             <p className="text-gray-600 text-sm">Generate JSON Schema from sample JSON. Supports Draft 7 and OpenAPI formats. Validate JSON against schemas.</p>
           </div>
           <button
-            onClick={() => setShowExamples(!showExamples)}
+            onClick={() => {
+              if (!showExamples) trackCtaClick('schema_generator', 'show_examples');
+              setShowExamples(!showExamples);
+            }}
             className="flex items-center gap-2 px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
           >
             <Sparkles className="w-4 h-4" />
@@ -276,6 +279,7 @@ export default function SchemaGenerator() {
                 <button
                   key={idx}
                   onClick={() => {
+                    trackCtaClick('schema_generator', 'load_example', { example_name: example.name });
                     setJsonText(example.json);
                     setShowExamples(false);
                   }}
