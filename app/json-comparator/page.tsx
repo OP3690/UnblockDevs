@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import TrackedCtaLink from '@/components/TrackedCtaLink';
 import JsonComparatorClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/json-comparator';
@@ -119,9 +120,9 @@ export default function JsonComparatorPage() {
         <p className="text-gray-600 text-sm leading-relaxed mb-4">
           Paste or load two JSON documents. Enable normalization for dynamic fields. See a side-by-side diff with line numbers. Use it to validate API changes or spot semantic differences. No signup, no server upload.
         </p>
-        <Link href="#tool" className="inline-block text-sm font-semibold text-indigo-600 hover:text-indigo-700">
+        <TrackedCtaLink href="#tool" toolName="json_comparator" className="inline-block text-sm font-semibold text-indigo-600 hover:text-indigo-700">
           Use the tool →
-        </Link>
+        </TrackedCtaLink>
       </article>
     </>
   );

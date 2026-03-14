@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import TrackedCtaLink from '@/components/TrackedCtaLink';
 import HashGeneratorClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/hash-generator';
@@ -124,9 +125,9 @@ export default function HashGeneratorPage() {
           All processing runs in your browser — no data leaves your device.
         </p>
         <p className="flex flex-wrap gap-3">
-          <Link href="#tool" className="inline-block text-sm font-semibold text-primary-600 hover:text-primary-700">
+          <TrackedCtaLink href="#tool" toolName="hash_generator" className="inline-block text-sm font-semibold text-primary-600 hover:text-primary-700">
             Use the tool →
-          </Link>
+          </TrackedCtaLink>
           <Link href="#what-is-hash" className="inline-block text-sm text-gray-600 hover:text-gray-900">
             Learn more about hashes
           </Link>

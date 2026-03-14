@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import TrackedCtaLink from '@/components/TrackedCtaLink';
 import CorsTesterClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/cors-tester';
@@ -138,9 +139,9 @@ export default function CorsTesterPage() {
         <p className="text-gray-700 text-base leading-relaxed mb-3">
           Test and debug Cross-Origin Resource Sharing (CORS) for any API. Simulate preflight requests, analyze response headers, and detect security misconfigurations. Runs entirely in your browser — no request data is stored or sent to our servers.
         </p>
-        <Link href="#tool" className="inline-block text-sm font-semibold text-primary-600 hover:text-primary-700">
+        <TrackedCtaLink href="#tool" toolName="cors_tester" className="inline-block text-sm font-semibold text-primary-600 hover:text-primary-700">
           Use the tool →
-        </Link>
+        </TrackedCtaLink>
       </article>
       <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12" aria-labelledby="cors-faq-heading">
         <h2 id="cors-faq-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">

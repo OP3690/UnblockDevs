@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import TrackedCtaLink from '@/components/TrackedCtaLink';
 import CodePromptShieldClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/code-prompt-shield';
@@ -147,9 +148,9 @@ export default function CodePromptShieldPage() {
         <p className="text-gray-600 text-sm leading-relaxed mb-6">
           How it works: Paste code, choose what to mask (identifiers, secrets, PII), copy the masked version. Send that to the AI. After you get a response, paste it back and restore with your mapping. No signup, no server — everything runs in your browser.
         </p>
-        <Link href="#tool" className="inline-block text-sm font-semibold text-violet-600 hover:text-violet-700 mb-10">
+        <TrackedCtaLink href="#tool" toolName="code_prompt_shield" className="inline-block text-sm font-semibold text-violet-600 hover:text-violet-700 mb-10">
           Use the tool →
-        </Link>
+        </TrackedCtaLink>
 
         <h2 className="text-xl font-bold text-gray-900 mt-8 mb-2">Is it safe to paste code into ChatGPT?</h2>
         <p className="text-gray-700 text-base leading-relaxed mb-4">

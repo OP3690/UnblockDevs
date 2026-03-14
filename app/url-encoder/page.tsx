@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import TrackedCtaLink from '@/components/TrackedCtaLink';
 import UrlEncoderClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/url-encoder';
@@ -128,9 +129,9 @@ export default function UrlEncoderPage() {
           Encode and decode URLs and query strings in RFC 3986, form-urlencoded, encodeURI, or encodeURIComponent. Parse URLs into protocol, host, path, and parameters. Edit query params, detect double encoding, run security checks, and export results. All processing runs in your browser — no URLs are sent to any server.
         </p>
         <p className="flex flex-wrap gap-3">
-          <Link href="#tool" className="inline-block text-sm font-semibold text-primary-600 hover:text-primary-700">
+          <TrackedCtaLink href="#tool" toolName="url_encoder" className="inline-block text-sm font-semibold text-primary-600 hover:text-primary-700">
             Use the tool →
-          </Link>
+          </TrackedCtaLink>
           <Link href="#what-is-url-encoding" className="inline-block text-sm text-gray-600 hover:text-gray-900">
             Learn more
           </Link>

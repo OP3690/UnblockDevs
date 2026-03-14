@@ -19,7 +19,7 @@ import {
   X,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { trackCopy } from '@/lib/analytics';
+import { trackCopy, trackCtaClick } from '@/lib/analytics';
 import {
   smartDiff,
   defaultNormalizationConfig,
@@ -159,6 +159,7 @@ export default function SmartJsonDiff() {
       setError('Paste JSON in both panels.');
       return;
     }
+    trackCtaClick('json_comparator', 'compare');
     startTransition(() => {
       try {
         const r = smartDiff(jsonA, jsonB, config);

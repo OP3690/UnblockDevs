@@ -17,7 +17,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { trackCopy } from '@/lib/analytics';
+import { trackCopy, trackCtaClick } from '@/lib/analytics';
 import {
   NAMESPACES,
   validateUUID,
@@ -85,6 +85,7 @@ export default function UuidGeneratorClient() {
 
   const generate = useCallback(async () => {
     const needNamespace = (version === 3 || version === 5) && namespaceName.trim();
+    trackCtaClick('uuid_generator', 'generate');
     const list: string[] = [];
     const start = performance.now();
     for (let i = 0; i < quantity; i++) {

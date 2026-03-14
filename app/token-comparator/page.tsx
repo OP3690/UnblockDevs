@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import TrackedCtaLink from '@/components/TrackedCtaLink';
 import TokenComparatorLandingClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/token-comparator';
@@ -130,9 +131,9 @@ export default function TokenComparatorLanding() {
         <p className="text-gray-600 text-sm leading-relaxed mb-4">
           Paste one token to decode and analyze; paste two to compare with visual diff. Unlike basic JWT decoders, this tool also runs a security audit, checks expiration, analyzes entropy, and compares two tokens — all without sending anything to a server.
         </p>
-        <Link href="#tool" className="inline-block text-sm font-semibold text-blue-600 hover:text-blue-700">
+        <TrackedCtaLink href="#tool" toolName="token_comparator" className="inline-block text-sm font-semibold text-blue-600 hover:text-blue-700">
           Use the tool →
-        </Link>
+        </TrackedCtaLink>
       </article>
     </>
   );

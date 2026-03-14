@@ -17,7 +17,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { trackCopy } from '@/lib/analytics';
+import { trackCopy, trackCtaClick } from '@/lib/analytics';
 import {
   parseCorsHeaders,
   analyzeCors,
@@ -75,6 +75,7 @@ export default function CorsTesterClient() {
       toast.error('Enter a target URL');
       return;
     }
+    trackCtaClick('cors_tester', 'run_test');
     setLoading(true);
     setResult(null);
     const start = performance.now();

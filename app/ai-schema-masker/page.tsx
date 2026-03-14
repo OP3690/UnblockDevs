@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import TrackedCtaLink from '@/components/TrackedCtaLink';
 import AiSchemaMaskerClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/ai-schema-masker';
@@ -180,9 +181,9 @@ export default function AiSchemaMaskerPage() {
           <p className="text-gray-600 text-sm leading-relaxed mb-4">
             Paste SQL or build a prompt from your schema. Mask identifiers, send the masked version to AI, then restore the response. 100% client-side, no server, no signup.
           </p>
-          <Link href="#schema-masker-output" className="inline-block text-sm font-semibold text-teal-600 hover:text-teal-700">
+          <TrackedCtaLink href="#schema-masker-output" toolName="ai_schema_masker" className="inline-block text-sm font-semibold text-teal-600 hover:text-teal-700">
             Use the tool →
-          </Link>
+          </TrackedCtaLink>
         </header>
 
         <section>

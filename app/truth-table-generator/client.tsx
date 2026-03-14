@@ -15,7 +15,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { trackCopy } from '@/lib/analytics';
+import { trackCopy, trackCtaClick } from '@/lib/analytics';
 import {
   OPERATORS,
   EXAMPLES,
@@ -63,6 +63,7 @@ export default function TruthTableGeneratorClient() {
       setError('Enter a boolean expression.');
       return;
     }
+    trackCtaClick('truth_table_generator', 'generate');
     try {
       const res = generateTable(trimmed);
       setResult(res);

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import TrackedCtaLink from '@/components/TrackedCtaLink';
 import JsonPromptShieldClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/json-prompt-shield';
@@ -158,9 +159,9 @@ export default function JsonPromptShieldPage() {
         <p className="text-gray-600 text-sm leading-relaxed mb-6">
           How it works: Paste your JSON, choose what to mask (keys, strings, or both), copy the masked output. Send that to AI. Use the mapping to restore AI responses to your real field names. No signup, no tracking.
         </p>
-        <Link href="#json-shield-output" className="inline-block text-sm font-semibold text-violet-600 hover:text-violet-700 mb-10">
+        <TrackedCtaLink href="#json-shield-output" toolName="json_prompt_shield" className="inline-block text-sm font-semibold text-violet-600 hover:text-violet-700 mb-10">
           Use the tool →
-        </Link>
+        </TrackedCtaLink>
 
         <h2 className="text-xl font-bold text-gray-900 mt-8 mb-2">Is it safe to paste JSON into ChatGPT?</h2>
         <p className="text-gray-700 text-base leading-relaxed mb-4">

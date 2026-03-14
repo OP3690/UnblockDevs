@@ -16,7 +16,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { trackCopy } from '@/lib/analytics';
+import { trackCopy, trackCtaClick } from '@/lib/analytics';
 import {
   generateRandom,
   generatePassphrase,
@@ -89,6 +89,7 @@ export default function PasswordGeneratorClient() {
   const crackTime = password ? crackTimeSeconds(ent, CRACK_SPEED) : 0;
 
   const generate = useCallback(() => {
+    trackCtaClick('password_generator', 'generate');
     if (mode === 'random') {
       const p = generateRandom(length, charset, {
         minLength: length,

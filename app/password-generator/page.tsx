@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import TrackedCtaLink from '@/components/TrackedCtaLink';
 import PasswordGeneratorClient from './client';
 
 export const metadata: Metadata = {
@@ -78,9 +79,9 @@ export default function PasswordGeneratorPage() {
         <p className="text-gray-700 text-base leading-relaxed mb-3">
           Create cryptographically secure passwords and memorable passphrases. Choose length, character sets, and see entropy and crack-time estimates. All generation runs in your browser; no password is ever stored or sent.
         </p>
-        <Link href="#tool" className="inline-block text-sm font-semibold text-primary-600 hover:text-primary-700">
+        <TrackedCtaLink href="#tool" toolName="password_generator" className="inline-block text-sm font-semibold text-primary-600 hover:text-primary-700">
           Use the tool →
-        </Link>
+        </TrackedCtaLink>
       </article>
       <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="faq-heading">
         <h2 id="faq-heading" className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>

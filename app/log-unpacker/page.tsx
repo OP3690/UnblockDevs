@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import TrackedCtaLink from '@/components/TrackedCtaLink';
 import LogUnpackerClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/log-unpacker';
@@ -140,9 +141,9 @@ export default function LogUnpackerPage() {
         <p className="text-gray-600 text-sm leading-relaxed mb-4">
           How it works: Paste a log line or blob of escaped JSON. The tool recursively unescapes nested JSON, decodes JWTs, humanizes epochs, and optionally redacts paths. Copy the AI-safe output. No signup, no tracking.
         </p>
-        <Link href="#tool" className="inline-block text-sm font-semibold text-amber-600 hover:text-amber-700">
+        <TrackedCtaLink href="#tool" toolName="log_unpacker" className="inline-block text-sm font-semibold text-amber-600 hover:text-amber-700">
           Use the tool →
-        </Link>
+        </TrackedCtaLink>
       </article>
       <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12" aria-labelledby="log-unpacker-faq-heading">
         <h2 id="log-unpacker-faq-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">

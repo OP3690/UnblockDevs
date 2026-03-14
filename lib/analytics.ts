@@ -39,6 +39,21 @@ export function trackCopy(toolName: string): void {
   trackEvent('result_copied', { tool_name: toolName });
 }
 
+/**
+ * Track CTA (call-to-action) clicks on tool pages: "Use the tool", "Run test", "Generate", etc.
+ */
+export function trackCtaClick(
+  toolName: string,
+  ctaLabel: string,
+  metadata?: Record<string, unknown>
+): void {
+  trackEvent('cta_click', {
+    tool_name: toolName,
+    cta_label: ctaLabel,
+    ...metadata,
+  });
+}
+
 export function trackError(toolName: string, errorType: string): void {
   trackEvent('tool_error', {
     tool_name: toolName,

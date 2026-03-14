@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import TrackedCtaLink from '@/components/TrackedCtaLink';
 import UuidGeneratorClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/uuid-generator';
@@ -126,9 +127,9 @@ export default function UuidGeneratorPage() {
           Generate UUIDs for all versions (v1 timestamp, v3 MD5 namespace, v4 random, v5 SHA-1 namespace, v6/v7 time-ordered, v8 custom).
           Validate, analyze, compare, and export. Runs entirely in your browser — no UUID data is sent to any server.
         </p>
-        <Link href="#tool" className="inline-block text-sm font-semibold text-primary-600 hover:text-primary-700">
+        <TrackedCtaLink href="#tool" toolName="uuid_generator" className="inline-block text-sm font-semibold text-primary-600 hover:text-primary-700">
           Use the tool →
-        </Link>
+        </TrackedCtaLink>
       </article>
 
       <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12" aria-labelledby="uuid-learn-heading">

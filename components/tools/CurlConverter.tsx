@@ -15,7 +15,7 @@ import {
   Lock,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { trackCopy } from '@/lib/analytics';
+import { trackCopy, trackCtaClick } from '@/lib/analytics';
 import Link from 'next/link';
 import {
   parseCurl,
@@ -68,6 +68,7 @@ export default function CurlConverter() {
       toast.error('Could not parse cURL command. Check the URL.');
         return;
     }
+    trackCtaClick('curl_converter', 'convert');
     setParsed(p);
     const code = convertToLanguage(p, targetLanguage);
     setConvertedCode(code);

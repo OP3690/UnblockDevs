@@ -14,7 +14,7 @@ import {
   ListOrdered,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { trackCopy } from '@/lib/analytics';
+import { trackCopy, trackCtaClick } from '@/lib/analytics';
 import {
   parseInput,
   cleanIds,
@@ -118,6 +118,7 @@ export default function SqlInGeneratorClient() {
   );
 
   const handleGenerate = useCallback(() => {
+    trackCtaClick('sql_in_generator', 'generate');
     const parsed = parseInput(input);
     const cleaned = cleanIds(parsed);
     generateOutput(cleaned);

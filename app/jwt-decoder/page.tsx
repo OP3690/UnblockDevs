@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import TrackedCtaLink from '@/components/TrackedCtaLink';
 import JWTDecoderClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/jwt-decoder';
@@ -134,9 +135,9 @@ export default function JWTDecoderPage() {
         <p className="text-gray-600 text-sm leading-relaxed mb-4">
           Paste a JWT or use <code className="bg-gray-100 px-1 rounded">?token=...</code> in the URL. Supports Bearer prefix and auto-sanitization.
         </p>
-        <Link href="#tool" className="inline-block text-sm font-semibold text-blue-600 hover:text-blue-700">
+        <TrackedCtaLink href="#tool" toolName="jwt_decoder" className="inline-block text-sm font-semibold text-blue-600 hover:text-blue-700">
           Use the tool →
-        </Link>
+        </TrackedCtaLink>
       </article>
 
       <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12" aria-labelledby="jwt-content-heading">

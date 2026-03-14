@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import TrackedCtaLink from '@/components/TrackedCtaLink';
 import Base64EncoderClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/base64-encoder';
@@ -113,9 +114,9 @@ export default function Base64EncoderPage() {
         <p className="text-gray-600 text-sm leading-relaxed mb-4">
           Paste text or Base64, use <code className="bg-gray-100 px-1 rounded">?data=...</code> in the URL to load, or drag a file in File mode. Runs fully in your browser.
         </p>
-        <Link href="#tool" className="inline-block text-sm font-semibold text-primary-600 hover:text-primary-700">
+        <TrackedCtaLink href="#tool" toolName="base64_encoder" className="inline-block text-sm font-semibold text-primary-600 hover:text-primary-700">
           Use the tool →
-        </Link>
+        </TrackedCtaLink>
       </article>
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">

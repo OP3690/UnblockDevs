@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import TrackedCtaLink from '@/components/TrackedCtaLink';
 import SqlInGeneratorClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/sql-in-generator';
@@ -77,9 +78,9 @@ export default function SqlInGeneratorPage() {
         <p className="text-gray-600 text-sm leading-relaxed mb-4">
           All processing runs in your browser. No data is sent to our servers. You can also export as JSON, CSV, GraphQL, or MongoDB <code className="text-sm bg-gray-100 px-1 rounded">$in</code> and share a link with your IDs.
         </p>
-        <Link href="#tool" className="inline-block text-sm font-semibold text-primary-600 hover:text-primary-700">
+        <TrackedCtaLink href="#tool" toolName="sql_in_generator" className="inline-block text-sm font-semibold text-primary-600 hover:text-primary-700">
           Use the tool →
-        </Link>
+        </TrackedCtaLink>
       </article>
     </>
   );

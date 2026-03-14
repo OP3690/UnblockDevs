@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import TrackedCtaLink from '@/components/TrackedCtaLink';
 import TruthTableGeneratorClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/truth-table-generator';
@@ -130,9 +131,9 @@ export default function TruthTableGeneratorPage() {
         <p className="text-gray-700 text-base leading-relaxed mb-3">
           Parse any boolean expression and generate the full truth table, Karnaugh map, minterms, maxterms, and SOP/POS forms. Export working code in JavaScript, Python, Java, and Go. Up to 8 variables. Runs entirely in your browser.
         </p>
-        <Link href="#tool" className="inline-block text-sm font-semibold text-primary-600 hover:text-primary-700">
+        <TrackedCtaLink href="#tool" toolName="truth_table_generator" className="inline-block text-sm font-semibold text-primary-600 hover:text-primary-700">
           Use the tool →
-        </Link>
+        </TrackedCtaLink>
       </article>
     </>
   );

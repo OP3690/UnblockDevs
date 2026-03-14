@@ -16,7 +16,7 @@ import {
   FileJson,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { trackCopy } from '@/lib/analytics';
+import { trackCopy, trackCtaClick } from '@/lib/analytics';
 import Link from 'next/link';
 import {
   detectTokenType,
@@ -98,6 +98,7 @@ export default function TokenComparator() {
       toast.error('Please enter both tokens to compare');
       return;
     }
+    trackCtaClick('token_comparator', 'compare');
     const t1Normalized = normalizeToken(token1);
     const t2Normalized = normalizeToken(token2);
     const t1Original = token1.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
