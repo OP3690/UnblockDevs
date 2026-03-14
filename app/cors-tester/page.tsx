@@ -40,6 +40,13 @@ export const metadata: Metadata = {
     'cors checker no install',
     'CORS Tester',
     'test CORS',
+    'cors error react create react app',
+    'cors aws api gateway',
+    'cors cloudflare worker',
+    'cors netlify fix',
+    'cors vercel deployment',
+    'cors nextjs',
+    'cors vercel',
   ],
   openGraph: {
     title: 'CORS Tester — Test CORS Headers, Preflight & Security Online Free | UnblockDevs',

@@ -26,6 +26,10 @@ export const metadata: Metadata = {
     'how to test a regex pattern online',
     'what does \\d mean in regex',
     'regex cheat sheet',
+    'javascript regex tester chrome',
+    'regex tester node.js',
+    'regex tester react',
+    'regex eslint rule tester',
   ],
   openGraph: {
     title:

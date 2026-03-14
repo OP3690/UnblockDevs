@@ -43,6 +43,10 @@ export const metadata: Metadata = {
     'how to convert image to base64',
     'is base64 the same as encryption',
     'Base64 Encoder Decoder',
+    'base64 encode aws lambda',
+    'base64 decode github actions',
+    'base64 encode nodejs',
+    'base64 jwt auth0',
   ],
   openGraph: {
     title: 'Base64 Encoder Decoder — Standard, Base64URL, MIME & No-Padding Online Free | UnblockDevs',

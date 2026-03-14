@@ -39,6 +39,12 @@ export const metadata: Metadata = {
     'how to use ai for coding without exposing secrets',
     'Code Prompt Shield',
     'mask code for AI',
+    'hipaa compliant developer tools',
+    'hipaa safe coding assistant',
+    'soc 2 compliant developer tools',
+    'pci compliant developer tools',
+    'mask credit card data before ai',
+    'ccpa compliance developer',
   ],
   openGraph: {
     title: 'Code Prompt Shield — Mask API Keys & Secrets Before ChatGPT | UnblockDevs',
@@ -145,8 +151,11 @@ export default function CodePromptShieldPage() {
         <p className="text-gray-700 text-base leading-relaxed mb-3">
           Use Code Prompt Shield to mask variables, function names, API keys, and PII in your source code before pasting into ChatGPT, Claude, or GitHub Copilot. Your real identifiers become generic tokens; get AI help with logic, then restore your original code with one click. No data leaves your device.
         </p>
-        <p className="text-gray-600 text-sm leading-relaxed mb-6">
+        <p className="text-gray-600 text-sm leading-relaxed mb-2">
           How it works: Paste code, choose what to mask (identifiers, secrets, PII), copy the masked version. Send that to the AI. After you get a response, paste it back and restore with your mapping. No signup, no server — everything runs in your browser.
+        </p>
+        <p className="text-gray-600 text-sm italic mb-6">
+          Used by healthcare and enterprise developers building HIPAA-compliant applications.
         </p>
         <TrackedCtaLink href="#tool" toolName="code_prompt_shield" className="inline-block text-sm font-semibold text-violet-600 hover:text-violet-700 mb-10">
           Use the tool →

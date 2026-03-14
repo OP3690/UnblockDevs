@@ -30,6 +30,12 @@ export const metadata: Metadata = {
     'bcrypt vs argon2',
     'is md5 safe to use',
     'Hash Generator',
+    'federal information processing standard sha256',
+    'nist approved hash algorithm',
+    'fips 180-4 sha256 generator',
+    'sha256 nodejs',
+    'sha256 aws lambda',
+    'sha256 github actions',
   ],
   openGraph: {
     title: 'Hash Generator — MD5, SHA-256, File Hash, HMAC & Password Hashing Online Free | UnblockDevs',

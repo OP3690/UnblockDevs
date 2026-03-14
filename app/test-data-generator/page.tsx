@@ -29,6 +29,10 @@ export const metadata: Metadata = {
     'generate test data for development',
     'mock data for api testing',
     'seed database test data',
+    'faker.js alternative',
+    'generate test data jest',
+    'mock data react testing library',
+    'test fixtures node.js',
   ],
   openGraph: {
     title:

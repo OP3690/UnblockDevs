@@ -35,6 +35,12 @@ export const metadata: Metadata = {
     'client side json masking browser',
     'JSON Prompt Shield',
     'mask JSON for AI',
+    'hipaa compliant json masking',
+    'mask patient data before ai',
+    'hipaa chatgpt sql',
+    'soc 2 data masking',
+    'pci dss chatgpt policy',
+    'ccpa data masking',
   ],
   openGraph: {
     title: 'JSON Prompt Shield — Mask JSON Keys & Values Before ChatGPT | UnblockDevs',
@@ -156,8 +162,11 @@ export default function JsonPromptShieldPage() {
         <p className="text-gray-700 text-base leading-relaxed mb-3">
           Use the JSON Prompt Shield to mask keys and string values in any JSON payload before pasting into ChatGPT or other AI tools. Numbers stay unchanged; structure is preserved. Fully reversible with a mapping file—no data is ever sent to our servers.
         </p>
-        <p className="text-gray-600 text-sm leading-relaxed mb-6">
+        <p className="text-gray-600 text-sm leading-relaxed mb-2">
           How it works: Paste your JSON, choose what to mask (keys, strings, or both), copy the masked output. Send that to AI. Use the mapping to restore AI responses to your real field names. No signup, no tracking.
+        </p>
+        <p className="text-gray-600 text-sm italic mb-6">
+          Used by healthcare and enterprise developers building HIPAA-compliant applications.
         </p>
         <TrackedCtaLink href="#json-shield-output" toolName="json_prompt_shield" className="inline-block text-sm font-semibold text-violet-600 hover:text-violet-700 mb-10">
           Use the tool →

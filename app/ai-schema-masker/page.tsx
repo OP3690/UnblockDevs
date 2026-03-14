@@ -36,6 +36,15 @@ export const metadata: Metadata = {
     'AI schema masker',
     'client-side SQL masking',
     'DITE deterministic masking',
+    'hipaa compliant developer tools',
+    'hipaa safe api testing',
+    'hipaa compliant json masking',
+    'mask phi before chatgpt',
+    'phi masking tool developer',
+    'soc 2 compliant developer tools',
+    'soc 2 data masking',
+    'pci dss compliant api testing',
+    'ccpa compliant tools',
   ],
   openGraph: {
     title: "AI SQL Schema Masker — Hide Table & Column Names Before ChatGPT | UnblockDevs",
@@ -178,8 +187,11 @@ export default function AiSchemaMaskerPage() {
           <p className="text-gray-700 text-base leading-relaxed mb-3">
             Before sending your SQL to ChatGPT, mask the table and column names so your real database schema stays private. The AI Schema Masker replaces identifiers with placeholders (T_001, C_001), so you get AI help without exposing your schema. Use the mapping to convert AI output back to your real names in one click.
           </p>
-          <p className="text-gray-600 text-sm leading-relaxed mb-4">
+          <p className="text-gray-600 text-sm leading-relaxed mb-2">
             Paste SQL or build a prompt from your schema. Mask identifiers, send the masked version to AI, then restore the response. 100% client-side, no server, no signup.
+          </p>
+          <p className="text-gray-600 text-sm italic mb-4">
+            Used by healthcare and enterprise developers building HIPAA-compliant applications.
           </p>
           <TrackedCtaLink href="#schema-masker-output" toolName="ai_schema_masker" className="inline-block text-sm font-semibold text-teal-600 hover:text-teal-700">
             Use the tool →

@@ -41,6 +41,11 @@ export const metadata: Metadata = {
     'jwt token invalid fix',
     'debug jwt authentication',
     'JWT Decoder',
+    'aws cognito jwt decoder',
+    'auth0 jwt decoder',
+    'firebase jwt decoder',
+    'okta jwt decoder',
+    'auth0 jwt',
   ],
   openGraph: {
     title: 'JWT Decoder — Decode, Verify, Check Expiry & Security Audit Online Free | UnblockDevs',

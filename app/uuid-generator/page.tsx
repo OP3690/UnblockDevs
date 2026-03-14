@@ -32,6 +32,11 @@ export const metadata: Metadata = {
     'uuid primary key database',
     'generate uuid for sql insert',
     'UUID / GUID Generator',
+    'uuid generator postgresql',
+    'uuid generator aws dynamodb',
+    'uuid v7 nodejs',
+    'uuid react application',
+    'supabase uuid',
   ],
   openGraph: {
     title: 'UUID / GUID Generator — Generate v1, v4, v7 UUIDs, Validate & Bulk Export | UnblockDevs',
