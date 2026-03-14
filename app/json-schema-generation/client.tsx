@@ -323,6 +323,28 @@ export default function JsonSchemaGenerationClient() {
           </section>
 
           <section className="mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
+            <dl className="space-y-4">
+              <div>
+                <dt className="font-semibold text-gray-900">What is JSON Schema?</dt>
+                <dd className="text-gray-700 mt-1 pl-4 border-l-2 border-gray-200">JSON Schema is a vocabulary for annotating and validating JSON documents. It describes the structure, types, and constraints of your JSON so tools and APIs can validate data automatically. Draft 7 and OpenAPI-style schemas are widely supported.</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900">How do I generate a JSON Schema from sample JSON?</dt>
+                <dd className="text-gray-700 mt-1 pl-4 border-l-2 border-gray-200">Paste your sample JSON into the generator. The tool infers types (string, number, boolean, array, object) and optional vs required fields, then outputs a Draft 7 or OpenAPI-compatible schema you can edit or use in validation.</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900">Is the generated schema free to use?</dt>
+                <dd className="text-gray-700 mt-1 pl-4 border-l-2 border-gray-200">Yes. The JSON Schema Generator is free with no signup. All processing runs in your browser—your data is never sent to any server. You can copy the schema and use it in your projects, APIs, or validation tools.</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900">Can I use the schema with OpenAPI or API validation?</dt>
+                <dd className="text-gray-700 mt-1 pl-4 border-l-2 border-gray-200">Yes. The generator can output schemas compatible with OpenAPI 3.0. Use the generated schema in your OpenAPI spec, or with validators like Ajv (JavaScript) or jsonschema (Python) to validate request/response bodies.</dd>
+              </div>
+            </dl>
+          </section>
+
+          <section className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Related Tools</h2>
             <p className="text-gray-700 leading-relaxed mb-4">
               Enhance your JSON workflow with these complementary tools:

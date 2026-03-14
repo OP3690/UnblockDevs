@@ -236,6 +236,28 @@ export default function JsonFixerOnlineClient() {
           </section>
 
           <section className="mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
+            <dl className="space-y-4">
+              <div>
+                <dt className="font-semibold text-gray-900">What does a JSON fixer do?</dt>
+                <dd className="text-gray-700 mt-1 pl-4 border-l-2 border-gray-200">A JSON fixer automatically detects and repairs common JSON syntax errors such as trailing commas, missing or extra quotes, unclosed brackets or braces, and unquoted keys. Paste broken JSON and get valid, parseable JSON without editing by hand.</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900">Can it fix JSON from AI or API errors?</dt>
+                <dd className="text-gray-700 mt-1 pl-4 border-l-2 border-gray-200">Yes. The fixer handles typical issues from AI-generated JSON (e.g. trailing commas, single quotes, comments) and malformed API responses. It can also extract JSON from log lines or mixed text when the structure is recoverable.</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900">Is my JSON sent to a server?</dt>
+                <dd className="text-gray-700 mt-1 pl-4 border-l-2 border-gray-200">No. All fixing runs in your browser. Your JSON is never uploaded or stored. Safe for sensitive data, API keys, and production payloads.</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900">What is the difference between JSON fixer and JSON validator?</dt>
+                <dd className="text-gray-700 mt-1 pl-4 border-l-2 border-gray-200">A validator only checks if JSON is valid and reports errors. A fixer attempts to repair invalid JSON automatically. Use the fixer when you have broken JSON to recover; use the validator when you want to check without changing the content.</dd>
+              </div>
+            </dl>
+          </section>
+
+          <section className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Related Tools</h2>
             <p className="text-gray-700 leading-relaxed mb-4">
               Enhance your JSON workflow with these complementary tools:

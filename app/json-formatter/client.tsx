@@ -42,6 +42,28 @@ export default function JsonFormatterClient() {
           </section>
 
           <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+            <dl className="space-y-4">
+              <div>
+                <dt className="font-semibold text-gray-900">What is a JSON formatter?</dt>
+                <dd className="text-gray-700 mt-1 pl-4 border-l-2 border-gray-200">A JSON formatter (or beautifier) takes minified or messy JSON and adds indentation, line breaks, and spacing so it is readable. It does not change the data—only the formatting. Use it to inspect API responses, config files, or any JSON string.</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900">Is this JSON formatter free and safe to use?</dt>
+                <dd className="text-gray-700 mt-1 pl-4 border-l-2 border-gray-200">Yes. The formatter is free with no signup. All processing runs in your browser—your JSON is never sent to any server, so it is safe for sensitive or private data.</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900">What is the difference between JSON formatter and JSON validator?</dt>
+                <dd className="text-gray-700 mt-1 pl-4 border-l-2 border-gray-200">A JSON formatter makes valid JSON readable by adding indentation and line breaks. A JSON validator checks whether a string is valid JSON and reports syntax errors. Often you validate first, then format.</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900">Can I format JSON with custom indentation?</dt>
+                <dd className="text-gray-700 mt-1 pl-4 border-l-2 border-gray-200">Yes. Use the formatter options to choose 2, 4, or a custom number of spaces for indentation. The tool preserves your data and only changes whitespace.</dd>
+              </div>
+            </dl>
+          </section>
+
+          <section className="mb-12">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Related Tools</h2>
             <div className="flex flex-wrap gap-3 mb-6">
               <Link href="/json-validator" className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors text-sm font-medium">

@@ -208,6 +208,28 @@ export default function MockApiGeneratorClient() {
           </section>
 
           <section className="mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
+            <dl className="space-y-4">
+              <div>
+                <dt className="font-semibold text-gray-900">What is a mock API generator?</dt>
+                <dd className="text-gray-700 mt-1 pl-4 border-l-2 border-gray-200">A mock API generator creates fake REST API endpoints that return configurable responses. You define routes, status codes, delays, and optional auth or rate limits so frontends and tests can run without a real backend. Many tools also export to Postman or OpenAPI.</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900">Is it free and do I need to sign up?</dt>
+                <dd className="text-gray-700 mt-1 pl-4 border-l-2 border-gray-200">Yes. The Mock API Generator at UnblockDevs is free with no signup. You create endpoints in your browser; you can export collections for Postman or OpenAPI and use them locally or in your CI pipeline.</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900">Can I simulate auth, latency, or rate limits?</dt>
+                <dd className="text-gray-700 mt-1 pl-4 border-l-2 border-gray-200">Yes. You can add optional auth (e.g. API key or Bearer), set response delay/latency, and configure rate limits or conditional responses so your mock behaves like a real API during development and testing.</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-gray-900">How do I use the mock with Postman or OpenAPI?</dt>
+                <dd className="text-gray-700 mt-1 pl-4 border-l-2 border-gray-200">Use the export options to download a Postman collection or OpenAPI (Swagger) spec. Import the file into Postman or any OpenAPI-compatible client to call your mock endpoints. You can also share the collection with your team.</dd>
+              </div>
+            </dl>
+          </section>
+
+          <section className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Related Tools</h2>
             <p className="text-gray-700 leading-relaxed mb-4">
               Enhance your API development workflow with these complementary tools:

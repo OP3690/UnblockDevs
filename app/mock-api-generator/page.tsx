@@ -26,6 +26,50 @@ export const metadata: Metadata = {
   },
 };
 
+const faqSchema = {
+  '@context': 'https://schema.org' as const,
+  '@type': 'FAQPage' as const,
+  mainEntity: [
+    {
+      '@type': 'Question' as const,
+      name: 'What is a mock API generator?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'A mock API generator creates fake REST API endpoints that return configurable responses. You define routes, status codes, delays, and optional auth or rate limits so frontends and tests can run without a real backend. Many tools also export to Postman or OpenAPI.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'Is it free and do I need to sign up?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Yes. The Mock API Generator at UnblockDevs is free with no signup. You create endpoints in your browser; you can export collections for Postman or OpenAPI and use them locally or in your CI pipeline.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'Can I simulate auth, latency, or rate limits?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Yes. You can add optional auth (e.g. API key or Bearer), set response delay/latency, and configure rate limits or conditional responses so your mock behaves like a real API during development and testing.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I use the mock with Postman or OpenAPI?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Use the export options to download a Postman collection or OpenAPI (Swagger) spec. Import the file into Postman or any OpenAPI-compatible client to call your mock endpoints. You can also share the collection with your team.',
+      },
+    },
+  ],
+};
+
 export default function MockApiGeneratorPage() {
-  return <MockApiGeneratorClient />;
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <MockApiGeneratorClient />
+    </>
+  );
 }

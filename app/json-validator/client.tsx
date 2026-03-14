@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { ArrowLeft, CheckCircle, AlertTriangle, ExternalLink, Shield } from 'lucide-react';
-import FAQSchema from '@/components/FAQSchema';
 
 export default function JsonValidatorClient() {
   return (
@@ -19,22 +18,6 @@ export default function JsonValidatorClient() {
       </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <FAQSchema
-          faqs={[
-            {
-              question: 'What is JSON validation?',
-              answer: 'JSON validation checks if a JSON string follows the correct syntax rules and structure according to the JSON specification.',
-            },
-            {
-              question: 'Why should I validate JSON?',
-              answer: 'Validating JSON before using it prevents runtime errors in your application. It\'s essential when working with APIs or user input.',
-            },
-            {
-              question: 'Is the JSON Validator free?',
-              answer: 'Yes, 100% free. No signup required, no usage limits. All processing happens in your browser for maximum privacy.',
-            },
-          ]}
-        />
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
           <section className="mb-12">
             <p className="text-lg text-gray-700 leading-relaxed mb-4">
@@ -126,27 +109,25 @@ export default function JsonValidatorClient() {
           </section>
 
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">FAQ</h2>
-            <div className="space-y-4">
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <h3 className="font-semibold text-gray-900 mb-2">What is JSON validation?</h3>
-                <p className="text-gray-700 text-sm">
-                  JSON validation checks if a JSON string follows the correct syntax rules and structure according to the JSON specification.
-                </p>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+            <dl className="space-y-4">
+              <div>
+                <dt className="font-semibold text-gray-900">What is JSON validation?</dt>
+                <dd className="text-gray-700 mt-1 pl-4 border-l-2 border-gray-200">JSON validation checks if a JSON string follows the correct syntax rules and structure according to the JSON specification. Invalid keys, missing commas, trailing commas, or wrong brackets cause validation to fail.</dd>
               </div>
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <h3 className="font-semibold text-gray-900 mb-2">Why should I validate JSON?</h3>
-                <p className="text-gray-700 text-sm">
-                  Validating JSON before using it prevents runtime errors in your application. It's essential when working with APIs or user input.
-                </p>
+              <div>
+                <dt className="font-semibold text-gray-900">Why should I validate JSON?</dt>
+                <dd className="text-gray-700 mt-1 pl-4 border-l-2 border-gray-200">Validating JSON before using it prevents runtime errors in your application. It is essential when working with APIs, config files, or user input. Catching errors early saves debugging time.</dd>
               </div>
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <h3 className="font-semibold text-gray-900 mb-2">Is the JSON Validator free?</h3>
-                <p className="text-gray-700 text-sm">
-                  Yes, 100% free. No signup required, no usage limits. All processing happens in your browser for maximum privacy.
-                </p>
+              <div>
+                <dt className="font-semibold text-gray-900">Is the JSON Validator free and private?</dt>
+                <dd className="text-gray-700 mt-1 pl-4 border-l-2 border-gray-200">Yes. The validator is 100% free with no signup. All processing happens in your browser, so your JSON is never sent to any server—safe for sensitive data.</dd>
               </div>
-            </div>
+              <div>
+                <dt className="font-semibold text-gray-900">What does “Unexpected token” mean in JSON?</dt>
+                <dd className="text-gray-700 mt-1 pl-4 border-l-2 border-gray-200">An “Unexpected token” error means the parser found a character or symbol where it did not expect one—for example a comma after the last item, a missing comma between properties, or an unquoted key. The validator will point to the line and position so you can fix it.</dd>
+              </div>
+            </dl>
           </section>
 
           <section className="mb-12 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl p-8 text-white">
