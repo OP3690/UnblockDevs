@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import AdUnit from '@/components/AdUnit';
 
 /** Slot for site-wide ad (shows on every page; remounts on navigation so ad refreshes). */
-const SLOT_SITEWIDE = '5569779301'; // autorelaxed
+const SLOT_SITEWIDE = '5569779301'; // VER_MULTI (Multiplex)
 
 /**
  * One ad unit that appears on every page (home, tools, blog). Uses pathname as key

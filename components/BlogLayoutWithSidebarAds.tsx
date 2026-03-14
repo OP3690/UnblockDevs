@@ -2,23 +2,23 @@
 
 import AdUnit from '@/components/AdUnit';
 
-/** AdSense slot IDs (from AdSense → Ads → By ad unit). Env vars override for different environments. */
+/** AdSense slot IDs (Ads → By ad unit). Env vars override for different environments. */
 const SLOT_HEADER =
   typeof process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_HEADER === 'string' && process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_HEADER
     ? process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_HEADER
-    : '1550643245'; // HOR
+    : '1550643245'; // HOR (Display)
 const SLOT_INARTICLE =
   typeof process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_INARTICLE === 'string' && process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_INARTICLE
     ? process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_INARTICLE
-    : '6611398233'; // fluid in-article
+    : '6611398233'; // ART (In-article)
 const SLOT_FOOTER =
   typeof process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_FOOTER === 'string' && process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_FOOTER
     ? process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_FOOTER
-    : '4987800735'; // autorelaxed
+    : '4987800735'; // HOR_MULTI (Multiplex)
 const SLOT_SIDEBAR =
   typeof process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_SIDEBAR === 'string' && process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_SIDEBAR
     ? process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_SIDEBAR
-    : '4176806584'; // VER
+    : '4176806584'; // VER (Display)
 
 interface BlogLayoutWithSidebarAdsProps {
   children: React.ReactNode;

@@ -3,14 +3,14 @@
 import { usePathname } from 'next/navigation';
 import AdUnit from '@/components/AdUnit';
 
-/** AdSense slot IDs for blog shell (top, bottom, left sidebar, right sidebar, in-content). */
-const SLOT_TOP = '1550643245'; // HOR
-const SLOT_BOTTOM = '4987800735'; // autorelaxed
-const SLOT_LEFT = '4176806584'; // VER
-const SLOT_RIGHT = '1255275563'; // SQ
-const SLOT_INCONTENT_TOP = '6611398233'; // in-article / fluid
-const SLOT_INCONTENT_MID = '4987800735'; // reuse autorelaxed for mid
-const SLOT_INCONTENT_BOTTOM = '4987800735'; // reuse for bottom of article
+/** AdSense slot IDs — must match Ads → By ad unit in AdSense dashboard. */
+const SLOT_TOP = '1550643245'; // HOR (Display)
+const SLOT_BOTTOM = '4987800735'; // HOR_MULTI (Multiplex)
+const SLOT_LEFT = '4176806584'; // VER (Display)
+const SLOT_RIGHT = '1255275563'; // SQ (Display)
+const SLOT_INCONTENT_TOP = '6611398233'; // ART (In-article)
+const SLOT_INCONTENT_MID = '4987800735'; // HOR_MULTI (Multiplex)
+const SLOT_INCONTENT_BOTTOM = '4987800735'; // HOR_MULTI (Multiplex)
 
 /**
  * Blog layout: wraps all /blog and /blog/[...] routes with AdSense units.
