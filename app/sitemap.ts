@@ -228,6 +228,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changefreq: 'weekly' as const,
     },
     {
+      url: 'password-audit',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
       url: 'cors-tester',
       priority: 0.9,
       changefreq: 'weekly' as const,

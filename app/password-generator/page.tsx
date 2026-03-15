@@ -79,9 +79,14 @@ export default function PasswordGeneratorPage() {
         <p className="text-gray-700 text-base leading-relaxed mb-3">
           Create cryptographically secure passwords and memorable passphrases. Choose length, character sets, and see entropy and crack-time estimates. All generation runs in your browser; no password is ever stored or sent.
         </p>
-        <TrackedCtaLink href="#tool" toolName="password_generator" className="inline-block text-sm font-semibold text-primary-600 hover:text-primary-700">
-          Use the tool →
-        </TrackedCtaLink>
+        <p className="mb-2">
+          <TrackedCtaLink href="#tool" toolName="password_generator" className="inline-block text-sm font-semibold text-primary-600 hover:text-primary-700">
+            Use the tool →
+          </TrackedCtaLink>
+        </p>
+        <p className="text-sm text-gray-600">
+          Check strength or build a policy: <Link href="/password-audit" className="text-primary-600 hover:text-primary-700 font-medium">Password Audit &amp; Policy Generator</Link> (entropy, crack time, pattern detection, regex + code export).
+        </p>
       </article>
       <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="faq-heading">
         <h2 id="faq-heading" className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>

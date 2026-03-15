@@ -660,6 +660,10 @@ export default function PasswordGeneratorClient() {
               Base64 Encoder
               <ChevronRight className="w-4 h-4" />
             </Link>
+            <Link href="/password-audit" className="inline-flex items-center gap-1.5 font-medium text-primary-600 hover:text-primary-700">
+              Password Audit &amp; Policy
+              <ChevronRight className="w-4 h-4" />
+            </Link>
           </div>
         </div>
       </div>
