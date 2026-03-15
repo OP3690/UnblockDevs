@@ -10,6 +10,9 @@ const nextConfig = {
   images: {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 86400, // 24 hours (was 60s — reduced unnecessary reloads)
+    remotePatterns: [
+      { protocol: 'https', hostname: 'startupfa.me', pathname: '/badges/**' },
+    ],
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error', 'warn'] } : false,

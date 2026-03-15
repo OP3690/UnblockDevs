@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect, useMemo, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, TrendingUp, Mail, Scissors, Key, Clock, Network, AlertTriangle, Copy, ChevronDown, ChevronUp, Play, ShieldCheck, Shield, Lock, Image, Star, Link2 } from 'lucide-react';
 import Link from 'next/link';
+import NextImage from 'next/image';
 import toast from 'react-hot-toast';
 import { PersonalizationManager, ToolTab } from '@/lib/personalization';
 import { trackToolUsed, trackCopy, trackCtaClick } from '@/lib/analytics';
@@ -145,6 +146,7 @@ const POPULAR_BLOG_LINKS: { href: string; label: string }[] = [
   { href: '/blog/prefix-sum-technique-explained-simply', label: 'Prefix Sum' },
   { href: '/blog/how-to-fix-broken-json-without-understanding', label: 'Fix Broken JSON' },
   { href: '/blog/ai-native-platforms-complete-guide', label: 'AI-Native Platforms' },
+  { href: '/blog/hipaa-compliant-ai-development', label: 'HIPAA-Compliant AI' },
   { href: '/blog/high-impact-tech-stocks-investment-guide', label: 'Tech Stocks' },
   { href: '/blog/must-learn-tech-skills-2030', label: 'Tech Skills 2030' },
   { href: '/blog/instagram-password-reset-email-guide', label: 'Instagram Password Reset' },
@@ -316,24 +318,8 @@ function HomeClient() {
     localStorage.setItem('bookmarkPromptDismissed', 'true');
   };
 
-  // Initialize Google AdSense once (script loads deferred after LCP).
-  // Push only once — calling push() when all ins slots already have ads throws TagError.
-  useEffect(() => {
-    if (!mounted || typeof window === 'undefined') return;
-    const w = window as any;
-    const initAdSense = () => {
-      try {
-        if (w.__adsbygooglePushed === true) return;
-        w.adsbygoogle = w.adsbygoogle || [];
-        if (w.adsbygoogle.loaded !== true) {
-          (w.adsbygoogle as any[]).push({});
-          w.__adsbygooglePushed = true;
-        }
-      } catch (_) {}
-    };
-    const t = setTimeout(initAdSense, 0);
-    return () => clearTimeout(t);
-  }, [mounted]);
+  // AdSense: do NOT push() here. Each AdUnit pushes only when its container has non-zero width,
+  // which avoids "Invalid responsive width from Matched Content slot: 0" and layout shifts.
 
   // Stats widget removed (was showing Active Users / Total Visits with broken data). Re-add when /api/stats is reliable.
   // Optional: keep a lightweight heartbeat for future analytics if desired.
@@ -511,10 +497,10 @@ function HomeClient() {
   return (
     <div className="relative min-h-screen flex flex-col bg-gradient-to-b from-slate-50 via-white to-slate-50/80" style={{ contain: 'layout' }}>
       <BuyMeACoffeeWidget />
-      {/* Skip to main content for keyboard and screen reader users */}
+      {/* Skip to main content — fixed position so it never causes layout shift (CLS) */}
       <a
         href="#main-content"
-        className="absolute left-[-9999px] w-px h-px overflow-hidden focus:left-4 focus:top-4 focus:z-[100] focus:w-auto focus:h-auto focus:overflow-visible focus:px-4 focus:py-3 focus:bg-white focus:text-gray-900 focus:font-semibold focus:rounded-lg focus:shadow-lg focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
+        className="fixed left-4 top-4 z-[9999] px-4 py-3 bg-white text-gray-900 font-semibold rounded-lg shadow-lg ring-2 ring-blue-600 ring-offset-2 opacity-0 pointer-events-none focus:opacity-100 focus:pointer-events-auto"
       >
         Skip to main content
       </a>
@@ -798,8 +784,8 @@ function HomeClient() {
         <div id="ezoic-pub-ad-placeholder-111" role="region" aria-label="Advertisement" className={activeTab === 'beautifier' ? 'min-h-0 h-0 overflow-hidden' : 'min-h-[250px] sm:min-h-[90px] w-full flex items-center justify-center'} style={activeTab !== 'beautifier' ? { contain: 'layout' } : undefined} />
       </div>
 
-      {/* Main Content - min-height to reduce CLS; overflow-x-hidden on mobile for AdSense-friendly layout */}
-      <main id="main-content" className={`flex-1 w-full min-h-[320px] animate-fade-in overflow-x-hidden ${activeTab === 'beautifier' ? 'pt-0 pb-8 sm:pb-12 lg:pb-14' : 'py-6 sm:py-10 lg:py-12'}`}>
+      {/* Main Content - min-height to reduce CLS; no opacity animation to avoid CLS from paint */}
+      <main id="main-content" className={`flex-1 w-full min-h-[320px] overflow-x-hidden ${activeTab === 'beautifier' ? 'pt-0 pb-8 sm:pb-12 lg:pb-14' : 'py-6 sm:py-10 lg:py-12'}`}>
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         {activeTab === 'beautifier' && (
           <div className="w-full max-w-7xl mx-auto">
@@ -1250,18 +1236,20 @@ function HomeClient() {
                 <p className="text-sm text-gray-600 leading-relaxed">Open the page and start. No npm install, no API keys, no config. Works on any device with a modern browser.</p>
               </div>
             </div>
-            {/* Startup Fame badge — below Why Choose UnblockDevs? */}
+            {/* Startup Fame badge — next/image for correct size (224x36), avoids PageSpeed oversized image */}
             <div className="flex justify-center mt-8">
               <a
                 href="https://startupfa.me/s/unblockdevs?utm_source=unblockdevs.com"
                 target="_blank"
                 rel="noopener noreferrer"
+                className="block"
               >
-                <img
+                <NextImage
                   src="https://startupfa.me/badges/featured-badge-small.webp"
                   alt="UnblockDevs - Featured on Startup Fame"
                   width={224}
                   height={36}
+                  sizes="224px"
                 />
               </a>
             </div>
@@ -1313,7 +1301,8 @@ function HomeClient() {
                 <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ API Comparator</Link>
                 <Link href="/har-to-curl" className="text-blue-600 hover:text-blue-700 hover:underline">✓ HAR to cURL</Link>
                 <Link href="/curl-to-requests" className="text-blue-600 hover:text-blue-700 hover:underline">✓ cURL to Code</Link>
-                <Link href="/curl-to-python-requests" className="text-blue-600 hover:text-blue-700 hover:underline">✓ cURL to Python</Link>
+                <Link href="/curl-to-python" className="text-blue-600 hover:text-blue-700 hover:underline">✓ cURL to Python (converter)</Link>
+                <Link href="/curl-to-python-requests" className="text-blue-600 hover:text-blue-700 hover:underline">✓ cURL to Python Requests</Link>
                 <Link href="/convert-curl-to-http-request" className="text-blue-600 hover:text-blue-700 hover:underline">✓ cURL to HTTP</Link>
                 <Link href="/json-stringify-online" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON.stringify()</Link>
                 <Link href="/token-comparator" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Token Comparator</Link>

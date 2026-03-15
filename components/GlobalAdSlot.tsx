@@ -11,8 +11,8 @@ const SLOT_SITEWIDE = '5569779301';
  */
 export default function GlobalAdSlot() {
   return (
-    <div className="w-full py-4" style={{ minWidth: 320, minHeight: 90 }}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" style={{ width: '100%' }}>
+    <div className="w-full py-4" style={{ minWidth: 320, minHeight: 90, width: '100%' }}>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" style={{ width: '100%', minWidth: 0 }}>
         <AdUnit slot={SLOT_SITEWIDE} format="autorelaxed" minHeight={90} />
       </div>
     </div>
