@@ -54,6 +54,9 @@ const CARD_ACCENTS = {
   jitter: { border: 'border-violet-500/40', bg: 'bg-violet-500/5', text: 'text-violet-400' },
 } as const;
 
+type ResultCardPhase = 'pending' | 'active' | 'done';
+type ResultCardAccent = keyof typeof CARD_ACCENTS;
+
 function ResultCard({
   label,
   value,
@@ -66,8 +69,8 @@ function ResultCard({
   value: number | null;
   unit: string;
   icon: string;
-  phase: 'pending' | 'active' | 'done';
-  accent: keyof typeof CARD_ACCENTS;
+  phase: ResultCardPhase;
+  accent: ResultCardAccent;
 }) {
   const styles = CARD_ACCENTS[accent];
   return (
@@ -290,12 +293,12 @@ export default function SpeedTestClient() {
       {(download !== null || upload !== null || ping !== null) && (
         <section className="max-w-4xl mx-auto px-4 pb-16">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            {[
-              { label: 'Download', value: download, unit: 'Mbps', icon: '⬇️', phase: phase === 'download' ? 'active' : download !== null ? 'done' : 'pending', accent: 'download' as const },
-              { label: 'Upload', value: upload, unit: 'Mbps', icon: '⬆️', phase: phase === 'upload' ? 'active' : upload !== null ? 'done' : 'pending', accent: 'upload' as const },
-              { label: 'Ping', value: ping, unit: 'ms', icon: '📡', phase: ping !== null ? 'done' : 'pending', accent: 'ping' as const },
-              { label: 'Jitter', value: jitter, unit: 'ms', icon: '〰️', phase: jitter !== null ? 'done' : 'pending', accent: 'jitter' as const },
-            ].map((card, i) => (
+            {([
+              { label: 'Download', value: download, unit: 'Mbps', icon: '⬇️', phase: (phase === 'download' ? 'active' : download !== null ? 'done' : 'pending') as ResultCardPhase, accent: 'download' },
+              { label: 'Upload', value: upload, unit: 'Mbps', icon: '⬆️', phase: (phase === 'upload' ? 'active' : upload !== null ? 'done' : 'pending') as ResultCardPhase, accent: 'upload' },
+              { label: 'Ping', value: ping, unit: 'ms', icon: '📡', phase: (ping !== null ? 'done' : 'pending') as ResultCardPhase, accent: 'ping' },
+              { label: 'Jitter', value: jitter, unit: 'ms', icon: '〰️', phase: (jitter !== null ? 'done' : 'pending') as ResultCardPhase, accent: 'jitter' },
+            ] as const).map((card, i) => (
               <div
                 key={card.label}
                 className="animate-speed-fade-in-up opacity-0"
