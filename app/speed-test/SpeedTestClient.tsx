@@ -1,19 +1,63 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import {
   measureDownloadSpeed,
   measureUploadSpeed,
   measurePing,
   getSpeedRating,
+  getSpeedGrade,
+  getSpeedScore,
+  getPercentileRank,
   getCapabilities,
   getConnectionSummary,
 } from '@/lib/speedTest';
 import { SpeedGauge } from '@/components/SpeedGauge';
-import { ArrowLeft, ChevronDown, Copy, Check, Shield, Zap, Lock, AlertCircle, X } from 'lucide-react';
+import { ArrowLeft, ChevronDown, Copy, Check, Shield, Zap, Lock, AlertCircle, X, History } from 'lucide-react';
 
 type Phase = 'idle' | 'ping' | 'download' | 'upload' | 'complete';
+
+const HISTORY_KEY = 'speed-test-history';
+const HISTORY_MAX = 5;
+
+type HistoryEntry = { download: number; upload: number; ping: number; jitter: number; at: number };
+
+function formatTimeAgo(ms: number): string {
+  const sec = Math.floor(ms / 1000);
+  if (sec < 60) return 'just now';
+  const min = Math.floor(sec / 60);
+  if (min < 60) return `${min} min ago`;
+  const hr = Math.floor(min / 60);
+  if (hr < 24) return `${hr} hr ago`;
+  return `${Math.floor(hr / 24)} day${hr >= 48 ? 's' : ''} ago`;
+}
+
+function LiveSparkline({ samples, max = 200 }: { samples: number[]; max?: number }) {
+  if (samples.length < 2) return null;
+  const w = 120;
+  const h = 28;
+  const pad = 2;
+  const range = max;
+  const points = samples.map((v, i) => {
+    const x = pad + (i / (samples.length - 1)) * (w - pad * 2);
+    const y = h - pad - (Math.min(v, range) / range) * (h - pad * 2);
+    return `${x},${y}`;
+  }).join(' ');
+  return (
+    <svg width={w} height={h} className="rounded overflow-hidden bg-gray-800/50" aria-hidden>
+      <polyline
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="text-emerald-400"
+        points={points}
+      />
+    </svg>
+  );
+}
 
 const FAQ_ITEMS = [
   {
@@ -142,7 +186,46 @@ export default function SpeedTestClient() {
   const [progress, setProgress] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [estimatedSecsLeft, setEstimatedSecsLeft] = useState<number | null>(null);
+  const [speedSamples, setSpeedSamples] = useState<number[]>([]);
   const abortRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(HISTORY_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw) as HistoryEntry[];
+        setHistory(Array.isArray(parsed) ? parsed.slice(0, HISTORY_MAX) : []);
+      }
+    } catch {
+      setHistory([]);
+    }
+  }, []);
+
+  const saveToHistory = useCallback((entry: HistoryEntry) => {
+    setHistory((prev) => {
+      const next = [entry, ...prev.filter((e) => e.at !== entry.at)].slice(0, HISTORY_MAX);
+      try {
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(next));
+      } catch {
+        // ignore
+      }
+      return next;
+    });
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (phase !== 'idle') return;
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        runTest();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [phase]);
 
   async function runTest() {
     setError(null);
@@ -152,6 +235,8 @@ export default function SpeedTestClient() {
     setPing(null);
     setJitter(null);
     setProgress(0);
+    setEstimatedSecsLeft(28);
+    setSpeedSamples([]);
     abortRef.current = new AbortController();
     const signal = abortRef.current.signal;
 
@@ -160,33 +245,48 @@ export default function SpeedTestClient() {
       setPing(pingResult.ping);
       setJitter(pingResult.jitter);
       setProgress(20);
+      setEstimatedSecsLeft(22);
 
       setPhase('download');
       const dl = await measureDownloadSpeed(
         (speed) => {
           setLiveSpeed(speed);
+          setSpeedSamples((prev) => [...prev.slice(-24), speed].slice(-30));
           setProgress((prev) => Math.min(prev + 15, 65));
+          setEstimatedSecsLeft((s) => (s != null ? Math.max(0, s - 2) : null));
         },
         signal
       );
       setDownload(dl);
       setProgress(65);
+      setEstimatedSecsLeft(12);
 
       setPhase('upload');
       const ul = await measureUploadSpeed(
         (speed) => {
           setLiveSpeed(speed);
+          setSpeedSamples((prev) => [...prev.slice(-24), speed].slice(-30));
           setProgress((prev) => Math.min(prev + 10, 95));
+          setEstimatedSecsLeft((s) => (s != null ? Math.max(0, s - 3) : null));
         },
         signal
       );
       setUpload(ul);
       setProgress(100);
+      setEstimatedSecsLeft(null);
       setPhase('complete');
+      saveToHistory({
+        download: dl,
+        upload: ul,
+        ping: pingResult.ping,
+        jitter: pingResult.jitter,
+        at: Date.now(),
+      });
     } catch (err) {
       if (err instanceof DOMException && err.name === 'AbortError') return;
       setError(err instanceof Error ? err.message : 'Speed test failed. Try again.');
       setPhase('idle');
+      setEstimatedSecsLeft(null);
     } finally {
       abortRef.current = null;
     }
@@ -197,6 +297,8 @@ export default function SpeedTestClient() {
       abortRef.current.abort();
       setPhase('idle');
       setError(null);
+      setEstimatedSecsLeft(null);
+      setSpeedSamples([]);
     }
   }
 
@@ -218,11 +320,13 @@ export default function SpeedTestClient() {
     { key: 'upload', label: 'Upload', active: phase === 'upload', done: upload !== null },
   ];
 
+  const contentWidth = 'max-w-3xl mx-auto';
+
   return (
     <div className="min-h-screen bg-gray-950 text-white">
       {/* Header */}
       <header className="sticky top-0 z-10 bg-gray-950/95 backdrop-blur-md border-b border-gray-800/80">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className={`${contentWidth} px-4 sm:px-6 py-4`}>
           <Link
             href="/"
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800/80 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950"
@@ -233,374 +337,352 @@ export default function SpeedTestClient() {
         </div>
       </header>
 
-      {/* Hero */}
-      <section className="relative flex flex-col items-center justify-center pt-14 sm:pt-20 pb-16 px-4 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/30 via-transparent to-transparent pointer-events-none" aria-hidden />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-15%,rgba(34,197,94,0.12),transparent)] pointer-events-none" aria-hidden />
-        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '28px 28px' }} aria-hidden />
-        <div className="text-center mb-10 max-w-xl animate-speed-fade-in-up">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 tracking-tight text-white">
-            Internet Speed Test
-          </h1>
-          <p className="text-gray-400 text-lg sm:text-xl leading-relaxed">
-            Check download, upload, ping, and jitter in seconds. No account, no data stored.
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-3 mt-7">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-800/90 text-gray-300 text-xs font-medium border border-gray-700/50">
-              <Zap className="w-3.5 h-3.5 text-emerald-400" />
-              Instant
-            </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-800/90 text-gray-300 text-xs font-medium border border-gray-700/50">
-              <Lock className="w-3.5 h-3.5 text-emerald-400" />
-              No data stored
-            </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-800/90 text-gray-300 text-xs font-medium border border-gray-700/50">
-              <Shield className="w-3.5 h-3.5 text-emerald-400" />
-              100% in browser
-            </span>
+      <main className={`${contentWidth} px-4 sm:px-6 pb-20`}>
+        {/* Hero: title + badges */}
+        <section className="pt-10 sm:pt-14 pb-8">
+          <div className="text-center">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white mb-3">
+              Internet Speed Test
+            </h1>
+            <p className="text-gray-400 text-base sm:text-lg max-w-md mx-auto mb-6">
+              Check download, upload, ping, and jitter. No account, no data stored.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-800/80 text-gray-400 text-xs font-medium border border-gray-700/50">
+                <Zap className="w-3 h-3 text-emerald-400" />
+                Instant
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-800/80 text-gray-400 text-xs font-medium border border-gray-700/50">
+                <Lock className="w-3 h-3 text-emerald-400" />
+                No data stored
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-800/80 text-gray-400 text-xs font-medium border border-gray-700/50">
+                <Shield className="w-3 h-3 text-emerald-400" />
+                In browser
+              </span>
+            </div>
           </div>
-        </div>
+        </section>
 
-        <div
-          className={`relative mb-10 p-4 rounded-[2rem] transition-all duration-500 animate-speed-scale-in opacity-0 ${
-            phase === 'download' || phase === 'upload'
-              ? 'ring-2 ring-emerald-500/50 bg-gray-900/60 shadow-[0_0_48px_-8px_rgba(34,197,94,0.35),inset_0_1px_0_rgba(255,255,255,0.05)]'
-              : 'ring-1 ring-gray-700/80 bg-gray-900/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]'
-          }`}
-          style={{ animationDelay: '80ms', animationFillMode: 'forwards' }}
-        >
-          <SpeedGauge
-            value={phase === 'complete' ? download ?? 0 : liveSpeed}
-            phase={phase}
-          />
-        </div>
-
-        {error && (
-          <div className="mb-4 px-5 py-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm text-left max-w-lg flex items-start gap-3 shadow-lg shadow-red-500/5">
-            <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-red-400" aria-hidden />
-            <span>{error}</span>
-          </div>
-        )}
-
-        {phase === 'idle' && (
-          <button
-            type="button"
-            onClick={runTest}
-            className="px-12 py-4 bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold text-lg rounded-full transition-all duration-200 shadow-xl shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 animate-btn-glow border border-emerald-400/20"
-          >
-            Start Speed Test
-          </button>
-        )}
-
-        {(phase === 'ping' || phase === 'download' || phase === 'upload') && (
-          <div className="text-center w-full max-w-sm">
-            <div className="flex justify-center gap-2 mb-3">
-              {steps.map((s) => (
-                <span
-                  key={s.key}
-                  className={`h-1.5 flex-1 max-w-16 rounded-full transition-colors ${
-                    s.done ? 'bg-emerald-500' : s.active ? 'bg-emerald-500/80' : 'bg-gray-700'
-                  }`}
-                  title={s.label}
+        {/* Test area: one card for gauge + controls + result */}
+        <section className="rounded-3xl border border-gray-800 bg-gray-900/50 overflow-hidden shadow-2xl shadow-black/30">
+          <div className="relative p-6 sm:p-8 md:p-10">
+            <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/20 via-transparent to-transparent pointer-events-none" aria-hidden />
+            <div className="relative flex flex-col items-center">
+              <div
+                className={`w-full flex justify-center p-4 sm:p-6 rounded-2xl transition-all duration-500 ${
+                  phase === 'download' || phase === 'upload'
+                    ? 'bg-emerald-500/5 ring-1 ring-emerald-500/30'
+                    : 'bg-gray-800/30'
+                }`}
+              >
+                <SpeedGauge
+                  value={phase === 'complete' ? download ?? 0 : liveSpeed}
+                  phase={phase}
                 />
+              </div>
+
+              {error && (
+                <div className="mt-4 w-full max-w-md px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm flex items-start gap-3">
+                  <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" aria-hidden />
+                  <span>{error}</span>
+                </div>
+              )}
+
+              {phase === 'idle' && (
+                <div className="mt-6 flex flex-col items-center gap-3">
+                  {history.length > 0 && (
+                    <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-800/50 border border-gray-700/50 text-gray-400 text-xs">
+                      <History className="w-4 h-4 text-emerald-400/80" />
+                      <span>
+                        Last test: <strong className="text-gray-300">{Math.round(history[0].download)} Mbps</strong> down · {formatTimeAgo(Date.now() - history[0].at)}
+                      </span>
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    onClick={runTest}
+                    className="px-10 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold text-base rounded-full transition-all shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 border border-emerald-400/20"
+                  >
+                    Start Speed Test
+                  </button>
+                  <p className="text-gray-500 text-xs">One tap · ~30 sec · or press Enter</p>
+                </div>
+              )}
+
+              {(phase === 'ping' || phase === 'download' || phase === 'upload') && (
+                <div className="mt-6 w-full max-w-sm">
+                  <div className="flex items-center justify-center gap-3 mb-3">
+                    {steps.map((s) => (
+                      <span
+                        key={s.key}
+                        className={`inline-flex items-center gap-1 text-xs font-medium ${
+                          s.done ? 'text-emerald-400' : s.active ? 'text-emerald-300' : 'text-gray-500'
+                        }`}
+                      >
+                        <span
+                          className={`inline-flex h-5 w-5 items-center justify-center rounded-full border text-[10px] ${
+                            s.done ? 'border-emerald-500 bg-emerald-500/20' : s.active ? 'border-emerald-500 bg-emerald-500/10' : 'border-gray-600'
+                          }`}
+                        >
+                          {s.done ? '✓' : s.active ? '●' : '○'}
+                        </span>
+                        {s.label}
+                      </span>
+                    ))}
+                  </div>
+                  <p className="text-center text-emerald-400 text-sm font-medium mb-2">
+                    {phase === 'ping' && 'Measuring latency…'}
+                    {phase === 'download' && 'Testing download…'}
+                    {phase === 'upload' && 'Testing upload…'}
+                  </p>
+                  {(phase === 'download' || phase === 'upload') && speedSamples.length > 1 && (
+                    <div className="flex justify-center mb-2">
+                      <LiveSparkline samples={speedSamples} max={Math.max(200, Math.max(...speedSamples) * 1.2)} />
+                    </div>
+                  )}
+                  <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-500"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                  <div className="flex items-center justify-center gap-4 mt-3">
+                    {estimatedSecsLeft != null && estimatedSecsLeft > 0 && (
+                      <span className="text-gray-500 text-xs">~{estimatedSecsLeft} sec left</span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={cancelTest}
+                      className="text-gray-400 hover:text-white text-sm font-medium inline-flex items-center gap-1.5"
+                    >
+                      <X className="w-4 h-4" />
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {phase === 'complete' && download !== null && (
+                <div className="mt-6 w-full animate-speed-fade-in-up">
+                  {rating && (() => {
+                    const grade = getSpeedGrade(download);
+                    const score = getSpeedScore(download);
+                    return (
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 pb-6 border-b border-gray-700/80">
+                        <div className="flex items-center gap-3">
+                          <div
+                            className="flex h-14 w-14 items-center justify-center rounded-xl border-2 font-black text-xl"
+                            style={{ borderColor: grade.color, color: grade.color }}
+                          >
+                            {grade.grade}
+                          </div>
+                          <div>
+                            <p className="font-bold text-white">{rating.label}</p>
+                            <p className="text-gray-400 text-sm">{rating.description}</p>
+                          </div>
+                        </div>
+                        <div className="flex-1 sm:max-w-[180px]">
+                          <div className="flex justify-between text-xs text-gray-500 mb-1">
+                            <span>Score</span>
+                            <span className="text-gray-400">{score}/100</span>
+                          </div>
+                          <div className="h-2 rounded-full bg-gray-800 overflow-hidden">
+                            <div
+                              className="h-full rounded-full transition-all duration-500"
+                              style={{
+                                width: `${score}%`,
+                                background: 'linear-gradient(90deg, #ef4444, #f59e0b, #22c55e)',
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div className="text-center py-4 rounded-xl bg-gray-800/50">
+                      <div className="text-2xl sm:text-3xl font-black text-emerald-400 tabular-nums">{download.toFixed(1)}</div>
+                      <div className="text-gray-400 text-xs font-medium mt-0.5">Mbps download</div>
+                    </div>
+                    <div className="text-center py-4 rounded-xl bg-gray-800/50 border-l border-gray-700/50">
+                      <div className="text-2xl sm:text-3xl font-black text-blue-400 tabular-nums">{upload !== null ? upload.toFixed(1) : '—'}</div>
+                      <div className="text-gray-400 text-xs font-medium mt-0.5">Mbps upload</div>
+                    </div>
+                  </div>
+                  {ping !== null && (
+                    <p className="text-gray-400 text-sm mb-4">
+                      Latency <span className="text-amber-400 font-semibold">{ping} ms</span>
+                      {jitter !== null && <span className="text-gray-500"> · Jitter {jitter} ms</span>}
+                    </p>
+                  )}
+                  {rating && download !== null && ping !== null && (
+                    <p className="text-gray-400 text-sm leading-relaxed mb-2">
+                      {getConnectionSummary(download, ping)}
+                    </p>
+                  )}
+                  {download !== null && (
+                    <p className="text-emerald-400/90 text-sm font-medium mb-5">
+                      Faster than {getPercentileRank(download)}% of typical home connections
+                    </p>
+                  )}
+                  <div className="flex flex-wrap items-center justify-center gap-2" aria-live="polite">
+                    <button
+                      type="button"
+                      onClick={runTest}
+                      className="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold text-sm rounded-full transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950"
+                    >
+                      Test Again
+                    </button>
+                    <button
+                      type="button"
+                      onClick={copyResults}
+                      className={`inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full border text-sm font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 ${
+                        copied ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-400' : 'border-gray-600 bg-gray-800/80 text-gray-300 hover:text-white hover:border-gray-500'
+                      }`}
+                    >
+                      {copied ? <><Check className="w-4 h-4" /> Copied!</> : <><Copy className="w-4 h-4" /> Copy</>}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* Results grid (when we have results) */}
+        {(download !== null || upload !== null || ping !== null) && (
+          <section className="mt-10">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+              {([
+                { label: 'Download', value: download, unit: 'Mbps', icon: '⬇️', phase: (phase === 'download' ? 'active' : download !== null ? 'done' : 'pending') as ResultCardPhase, accent: 'download' },
+                { label: 'Upload', value: upload, unit: 'Mbps', icon: '⬆️', phase: (phase === 'upload' ? 'active' : upload !== null ? 'done' : 'pending') as ResultCardPhase, accent: 'upload' },
+                { label: 'Ping', value: ping, unit: 'ms', icon: '📡', phase: (ping !== null ? 'done' : 'pending') as ResultCardPhase, accent: 'ping' },
+                { label: 'Jitter', value: jitter, unit: 'ms', icon: '〰️', phase: (jitter !== null ? 'done' : 'pending') as ResultCardPhase, accent: 'jitter' },
+              ] as const).map((card, i) => (
+                <div key={card.label} className="animate-speed-fade-in-up opacity-0" style={{ animationDelay: `${i * 50}ms`, animationFillMode: 'forwards' }}>
+                  <ResultCard {...card} />
+                </div>
               ))}
             </div>
-            <p className="text-emerald-400 text-sm font-medium">
-              {phase === 'ping' && 'Measuring latency…'}
-              {phase === 'download' && 'Testing download…'}
-              {phase === 'upload' && 'Testing upload…'}
-            </p>
-            <div className="mt-2 w-full bg-gray-800 rounded-full h-2.5 overflow-hidden shadow-inner">
-              <div
-                className="h-full rounded-full transition-all duration-500 ease-out bg-gradient-to-r from-emerald-500 to-emerald-400"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-            <button
-              type="button"
-              onClick={cancelTest}
-              className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-gray-600 text-gray-300 hover:text-white hover:border-gray-500 hover:bg-gray-800/80 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950"
-            >
-              <X className="w-4 h-4" />
-              Cancel
-            </button>
-          </div>
-        )}
 
-        {phase === 'complete' && download !== null && (
-          <div className="w-full max-w-xl animate-speed-fade-in-up">
-            <div className="rounded-2xl border border-gray-700/80 bg-gray-900/60 p-6 sm:p-8 shadow-xl shadow-black/20">
-              <div className="grid grid-cols-2 gap-6 sm:gap-8 mb-6">
-                <div className="text-center">
-                  <div className="text-3xl sm:text-4xl font-black text-emerald-400 tabular-nums">
-                    {download.toFixed(1)}
-                  </div>
-                  <div className="text-gray-400 text-sm font-medium mt-1">Mbps download</div>
-                </div>
-                <div className="text-center border-l border-gray-700/80">
-                  <div className="text-3xl sm:text-4xl font-black text-blue-400 tabular-nums">
-                    {upload !== null ? upload.toFixed(1) : '—'}
-                  </div>
-                  <div className="text-gray-400 text-sm font-medium mt-1">Mbps upload</div>
+            {capabilities.length > 0 && (
+              <div className="rounded-2xl border border-gray-800 bg-gray-900/40 p-5 mb-6 animate-speed-fade-in-up opacity-0" style={{ animationDelay: '200ms', animationFillMode: 'forwards' }}>
+                <h2 className="text-sm font-bold text-gray-300 uppercase tracking-wider mb-3">What you can do</h2>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {capabilities.map((cap, i) => (
+                    <div
+                      key={cap.activity}
+                      className={`p-3 rounded-xl text-center text-xs animate-speed-fade-in-up opacity-0 ${
+                        cap.supported ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-300' : 'bg-gray-800/60 border border-gray-700/50 text-gray-500'
+                      }`}
+                      style={{ animationDelay: `${260 + i * 30}ms`, animationFillMode: 'forwards' }}
+                    >
+                      <span className="mr-1" aria-hidden>{cap.icon}</span>
+                      {cap.activity.replace(/ \d+K| \(.*\)/g, '')}
+                      <span className="block mt-0.5 font-semibold">{cap.supported ? '✓' : '—'}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
-              {ping !== null && (
-                <p className="text-gray-400 text-sm mb-4">
-                  Latency: <span className="text-amber-400 font-semibold">{ping} ms</span>
-                  {jitter !== null && (
-                    <span className="text-gray-500"> · Jitter: {jitter} ms</span>
-                  )}
-                </p>
-              )}
-              {rating && (
-                <>
-                  <p
-                    className="text-lg sm:text-xl font-bold mb-1"
-                    style={{ color: rating.color }}
-                  >
-                    Your connection is {rating.label.toLowerCase()}.
-                  </p>
-                  <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                    {download !== null && ping !== null && getConnectionSummary(download, ping)}
-                  </p>
-                </>
-              )}
-              <div className="flex flex-wrap items-center justify-center gap-3">
-                <button
-                  type="button"
-                  onClick={runTest}
-                  className="px-8 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold rounded-full transition-all duration-200 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950"
-                >
-                  Test Again
-                </button>
-                <button
-                  type="button"
-                  onClick={copyResults}
-                  className={`inline-flex items-center gap-2 px-6 py-3 rounded-full border text-sm font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 ${
-                    copied
-                      ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-400'
-                      : 'border-gray-600 bg-gray-800/80 text-gray-300 hover:text-white hover:border-gray-500 hover:bg-gray-800'
-                  }`}
-                >
-                  {copied ? (
-                    <>
-                      <Check className="w-4 h-4 text-emerald-400" />
-                      Copied!
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-4 h-4" />
-                      Copy results
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-      </section>
+            )}
 
-      {/* Results */}
-      {(download !== null || upload !== null || ping !== null) && (
-        <section className="max-w-4xl mx-auto px-4 pb-16">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            {([
-              { label: 'Download', value: download, unit: 'Mbps', icon: '⬇️', phase: (phase === 'download' ? 'active' : download !== null ? 'done' : 'pending') as ResultCardPhase, accent: 'download' },
-              { label: 'Upload', value: upload, unit: 'Mbps', icon: '⬆️', phase: (phase === 'upload' ? 'active' : upload !== null ? 'done' : 'pending') as ResultCardPhase, accent: 'upload' },
-              { label: 'Ping', value: ping, unit: 'ms', icon: '📡', phase: (ping !== null ? 'done' : 'pending') as ResultCardPhase, accent: 'ping' },
-              { label: 'Jitter', value: jitter, unit: 'ms', icon: '〰️', phase: (jitter !== null ? 'done' : 'pending') as ResultCardPhase, accent: 'jitter' },
-            ] as const).map((card, i) => (
-              <div
-                key={card.label}
-                className="animate-speed-fade-in-up opacity-0"
-                style={{ animationDelay: `${i * 60}ms`, animationFillMode: 'forwards' }}
-              >
-                <ResultCard {...card} />
+            {history.length > 1 && (
+              <div className="rounded-2xl border border-gray-800 bg-gray-900/40 p-4 animate-speed-fade-in-up opacity-0" style={{ animationDelay: '350ms', animationFillMode: 'forwards' }}>
+                <h2 className="text-sm font-bold text-gray-300 uppercase tracking-wider mb-3 flex items-center gap-2">
+                  <History className="w-4 h-4" />
+                  Recent tests
+                </h2>
+                <ul className="space-y-2">
+                  {history.slice(0, 4).map((entry, i) => (
+                    <li
+                      key={entry.at}
+                      className={`flex items-center justify-between py-2 px-3 rounded-lg text-sm ${i === 0 ? 'bg-emerald-500/10 border border-emerald-500/20' : 'bg-gray-800/40'}`}
+                    >
+                      <span className="text-gray-400">{formatTimeAgo(Date.now() - entry.at)}</span>
+                      <span className="font-mono text-emerald-400">{Math.round(entry.download)} ↓</span>
+                      <span className="font-mono text-blue-400">{Math.round(entry.upload)} ↑</span>
+                      <span className="text-amber-400/90">{entry.ping} ms</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* How it works */}
+        <section className="mt-14 pt-10 border-t border-gray-800">
+          <h2 className="text-lg font-bold text-gray-200 mb-6">How it works</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {[
+              { step: '1', icon: '📡', title: 'Ping', desc: 'Latency & jitter' },
+              { step: '2', icon: '⬇️', title: 'Download', desc: 'Median speed' },
+              { step: '3', icon: '⬆️', title: 'Upload', desc: 'Median speed' },
+              { step: '4', icon: '📊', title: 'Result', desc: 'No data stored' },
+            ].map((item) => (
+              <div key={item.step} className="p-4 rounded-xl bg-gray-900/60 border border-gray-800">
+                <div className="text-lg mb-1" aria-hidden>{item.icon}</div>
+                <div className="font-semibold text-sm text-white">{item.title}</div>
+                <div className="text-gray-500 text-xs">{item.desc}</div>
               </div>
             ))}
           </div>
-
-          {rating && (
-            <div
-              className="text-center p-6 rounded-2xl border border-gray-700 bg-gray-900/80 mb-8 animate-speed-scale-in opacity-0"
-              style={{ borderLeftWidth: 4, borderLeftColor: rating.color, animationDelay: '240ms', animationFillMode: 'forwards' }}
-            >
-              <div className="text-3xl sm:text-4xl font-black mb-1" style={{ color: rating.color }}>
-                {rating.label}
-              </div>
-              <div className="text-gray-400 text-sm">{rating.description}</div>
-            </div>
-          )}
-
-          {capabilities.length > 0 && (
-            <div className="p-6 rounded-2xl border border-gray-800 bg-gray-900/50 mb-8 animate-speed-fade-in-up opacity-0" style={{ animationDelay: '320ms', animationFillMode: 'forwards' }}>
-              <h2 className="text-xl font-bold mb-4">
-                What you can do with this speed
-              </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {capabilities.map((cap, i) => (
-                  <div
-                    key={cap.activity}
-                    className={`p-4 rounded-xl text-center transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-black/20 animate-speed-fade-in-up opacity-0 ${
-                      cap.supported
-                        ? 'bg-emerald-500/10 border border-emerald-500/30'
-                        : 'bg-gray-800/80 border border-gray-700'
-                    }`}
-                    style={{ animationDelay: `${380 + i * 40}ms`, animationFillMode: 'forwards' }}
-                  >
-                    <div className="text-2xl mb-2" aria-hidden>{cap.icon}</div>
-                    <div className="text-xs font-medium text-gray-300">{cap.activity}</div>
-                    <div
-                      className={`text-xs mt-1 font-semibold ${
-                        cap.supported ? 'text-emerald-400' : 'text-gray-500'
-                      }`}
-                    >
-                      {cap.supported ? '✓ Yes' : '—'}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {phase === 'complete' && (
-            <div className="text-center">
-              <button
-                type="button"
-                onClick={copyResults}
-                className={`inline-flex items-center gap-2 px-6 py-3 rounded-full border text-sm font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 ${
-                  copied
-                    ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-400'
-                    : 'border-gray-600 bg-gray-800/80 text-gray-300 hover:text-white hover:border-gray-500 hover:bg-gray-800'
-                }`}
-              >
-                {copied ? (
-                  <>
-                    <Check className="w-4 h-4 text-emerald-400" />
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4" />
-                    Copy results
-                  </>
-                )}
-              </button>
-            </div>
-          )}
         </section>
-      )}
 
-      {/* How it works */}
-      <section className="max-w-4xl mx-auto px-4 py-14 border-t border-gray-800">
-        <h2 className="text-2xl font-bold text-center mb-10 flex flex-col items-center gap-2">
-          How this speed test works
-          <span className="w-12 h-0.5 rounded-full bg-emerald-500/60" aria-hidden />
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {[
-            { step: '01', icon: '📡', title: 'Ping', desc: '10 requests to measure latency and jitter.' },
-            { step: '02', icon: '⬇️', title: 'Download', desc: 'Downloads data at increasing sizes; we take the median.' },
-            { step: '03', icon: '⬆️', title: 'Upload', desc: 'Sends data to the server; median upload speed.' },
-            { step: '04', icon: '📊', title: 'Result', desc: 'Download, upload, ping, and jitter — no data stored.' },
-          ].map((item) => (
-            <div
-              key={item.step}
-              className="p-5 rounded-2xl bg-gray-900/80 border border-gray-800 hover:border-gray-700 hover:shadow-xl hover:shadow-black/20 transition-all duration-200"
-            >
-              <div className="text-xs text-gray-500 font-mono mb-2">Step {item.step}</div>
-              <div className="text-2xl mb-2" aria-hidden>{item.icon}</div>
-              <div className="font-bold mb-2">{item.title}</div>
-              <div className="text-gray-400 text-sm leading-relaxed">{item.desc}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Speed guide */}
-      <section className="max-w-4xl mx-auto px-4 py-14 border-t border-gray-800">
-        <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-          What’s a good internet speed?
-          <span className="w-8 h-0.5 rounded-full bg-emerald-500/50" aria-hidden />
-        </h2>
-        <div className="overflow-hidden rounded-xl border border-gray-800 shadow-lg shadow-black/10">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-gray-800 bg-gray-900/80">
-                <th className="text-left py-4 px-4 text-gray-400 font-medium w-10" />
-                <th className="text-left py-4 px-4 text-gray-400 font-medium">Speed</th>
-                <th className="text-left py-4 px-4 text-gray-400 font-medium">Rating</th>
-                <th className="text-left py-4 px-4 text-gray-400 font-medium">Best for</th>
-              </tr>
-            </thead>
-            <tbody>
+        {/* Speed guide + Ping in one row on desktop */}
+        <section className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h2 className="text-lg font-bold text-gray-200 mb-3">Good speeds</h2>
+            <div className="rounded-xl border border-gray-800 overflow-hidden">
               {[
-                ['1–10 Mbps', 'Slow', 'Basic browsing, email', 'bg-red-500/70'],
-                ['10–25 Mbps', 'Average', 'HD streaming, video calls', 'bg-amber-500/70'],
-                ['25–100 Mbps', 'Good', '4K, remote work, gaming', 'bg-emerald-500/70'],
-                ['100–500 Mbps', 'Very good', 'Multiple devices, cloud dev', 'bg-blue-500/70'],
-                ['500+ Mbps', 'Excellent', 'Heavy use, future‑proof', 'bg-emerald-400'],
-              ].map(([speed, rating, use, dotClass]) => (
-                <tr
-                  key={speed}
-                  className="border-b border-gray-800/80 hover:bg-gray-900/50 transition-colors"
-                >
-                  <td className="py-4 pl-4 pr-0">
-                    <span className={`inline-block w-2 h-2 rounded-full ${dotClass}`} aria-hidden />
-                  </td>
-                  <td className="py-4 px-4 font-mono text-emerald-400">{speed}</td>
-                  <td className="py-4 px-4 font-medium">{rating}</td>
-                  <td className="py-4 px-4 text-gray-400">{use}</td>
-                </tr>
+                ['1–10', 'Slow', 'Basic'],
+                ['10–25', 'Average', 'HD streaming'],
+                ['25–100', 'Good', '4K, gaming'],
+                ['100+', 'Great', 'Heavy use'],
+              ].map(([speed, rating, use]) => (
+                <div key={speed} className="flex items-center gap-3 py-2.5 px-3 border-b border-gray-800/80 last:border-0 text-sm">
+                  <span className="font-mono text-emerald-400 w-14">{speed} Mbps</span>
+                  <span className="font-medium text-gray-300 w-20">{rating}</span>
+                  <span className="text-gray-500 text-xs">{use}</span>
+                </div>
               ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      {/* Ping & jitter */}
-      <section className="max-w-4xl mx-auto px-4 py-14 border-t border-gray-800">
-        <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-          Ping and jitter
-          <span className="w-8 h-0.5 rounded-full bg-amber-500/50" aria-hidden />
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {[
-            { range: 'Under 20ms', label: 'Excellent', color: 'text-emerald-400', desc: 'Ideal for gaming, trading, real-time apps' },
-            { range: '20–50ms', label: 'Good', color: 'text-amber-400', desc: 'Video calls, streaming, casual gaming' },
-            { range: 'Over 100ms', label: 'High latency', color: 'text-red-400', desc: 'Noticeable lag in games and calls' },
-          ].map((item) => (
-            <div
-              key={item.range}
-              className="p-5 rounded-2xl bg-gray-900/80 border border-gray-800 hover:border-gray-700 transition-colors"
-            >
-              <div className={`text-lg font-mono font-bold mb-1 ${item.color}`}>{item.range}</div>
-              <div className="font-bold mb-2">{item.label}</div>
-              <div className="text-gray-400 text-sm">{item.desc}</div>
             </div>
-          ))}
-        </div>
-      </section>
+          </div>
+          <div>
+            <h2 className="text-lg font-bold text-gray-200 mb-3">Ping</h2>
+            <div className="space-y-2">
+              {[
+                { range: 'Under 20 ms', label: 'Excellent', color: 'text-emerald-400' },
+                { range: '20–50 ms', label: 'Good', color: 'text-amber-400' },
+                { range: 'Over 100 ms', label: 'High latency', color: 'text-red-400' },
+              ].map((item) => (
+                <div key={item.range} className="flex items-center justify-between py-2.5 px-3 rounded-lg bg-gray-900/60 border border-gray-800 text-sm">
+                  <span className={`font-mono font-semibold ${item.color}`}>{item.range}</span>
+                  <span className="text-gray-400">{item.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
-      {/* FAQ */}
-      <section className="max-w-4xl mx-auto px-4 py-14 border-t border-gray-800">
-        <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
-          Frequently asked questions
-          <span className="w-8 h-0.5 rounded-full bg-violet-500/50" aria-hidden />
-        </h2>
-        <div className="space-y-3">
-          {FAQ_ITEMS.map((faq) => (
-            <FAQItem key={faq.question} question={faq.question} answer={faq.answer} />
-          ))}
-        </div>
-      </section>
+        {/* FAQ */}
+        <section className="mt-14 pt-10 border-t border-gray-800">
+          <h2 className="text-lg font-bold text-gray-200 mb-4">FAQ</h2>
+          <div className="space-y-2">
+            {FAQ_ITEMS.map((faq) => (
+              <FAQItem key={faq.question} question={faq.question} answer={faq.answer} />
+            ))}
+          </div>
+        </section>
 
-      {/* Disclaimer */}
-      <section className="max-w-4xl mx-auto px-4 py-10 border-t border-gray-800">
-        <p className="text-gray-500 text-xs leading-relaxed text-center max-w-2xl mx-auto">
-          <strong className="text-gray-400">Disclaimer:</strong> This test measures your connection to our servers (same origin) and is for information only. Results can vary with load, congestion, device, and WiFi. We don’t store or transmit your IP, location, or results. For official verification, contact your provider.
-        </p>
-      </section>
+        {/* Disclaimer */}
+        <section className="mt-10 pt-8 border-t border-gray-800">
+          <p className="text-gray-500 text-xs leading-relaxed">
+            <strong className="text-gray-400">Disclaimer:</strong> This test measures your connection to our servers. Results vary with load and device. We don’t store your IP, location, or results.
+          </p>
+        </section>
+      </main>
     </div>
   );
 }

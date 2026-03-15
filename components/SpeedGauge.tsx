@@ -3,7 +3,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { ArrowDown, ArrowUp, Radio } from 'lucide-react';
 
-const MAX_SPEED = 1000;
+/** Scale max so the needle sits in a meaningful range (not 0–1G for 100 Mbps). */
+function getScaleMax(value: number): number {
+  if (value <= 0) return 100;
+  const nice = [50, 100, 150, 200, 250, 300, 400, 500, 600, 750, 1000];
+  for (const n of nice) {
+    if (value <= n) return n;
+  }
+  return 1000;
+}
 
 function polarToCartesian(cx: number, cy: number, r: number, deg: number) {
   const rad = (deg * Math.PI) / 180;
@@ -19,7 +27,8 @@ export function SpeedGauge({
 }) {
   const [displayValue, setDisplayValue] = useState(0);
   const prevPhaseRef = useRef(phase);
-  const percentage = Math.min(value / MAX_SPEED, 1);
+  const scaleMax = getScaleMax(phase === 'download' || phase === 'upload' ? value : Math.max(value, displayValue));
+  const percentage = Math.min((phase === 'download' || phase === 'upload' ? value : displayValue) / scaleMax, 1);
   const arcLength = Math.PI * 85;
   const strokeDashoffset = arcLength - arcLength * percentage;
 
@@ -70,8 +79,8 @@ export function SpeedGauge({
   const PhaseIcon =
     phase === 'download' ? ArrowDown : phase === 'upload' ? ArrowUp : phase === 'ping' ? Radio : null;
 
-  const scaleMarks = [0, 250, 500, 750, 1000];
-  const minorTicks = [125, 375, 625, 875];
+  const scaleMarks = [0, scaleMax / 4, scaleMax / 2, (3 * scaleMax) / 4, scaleMax].map((n) => Math.round(n));
+  const minorTicks = [scaleMax / 8, (3 * scaleMax) / 8, (5 * scaleMax) / 8, (7 * scaleMax) / 8];
   const cx = 100;
   const cy = 100;
   const r = 98;
@@ -93,7 +102,14 @@ export function SpeedGauge({
           <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#6ee7b7" />
             <stop offset="40%" stopColor="#34d399" />
-            <stop offset="70%" stopColor="#22c55e" />
+            <stop offset="100%" stopColor="#16a34a" />
+          </linearGradient>
+          {/* Progress arc: red (slow) → amber → green (fast) by position */}
+          <linearGradient id="speedZoneGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#ef4444" />
+            <stop offset="25%" stopColor="#f59e0b" />
+            <stop offset="50%" stopColor="#eab308" />
+            <stop offset="75%" stopColor="#22c55e" />
             <stop offset="100%" stopColor="#16a34a" />
           </linearGradient>
           <linearGradient id="trackGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -120,6 +136,7 @@ export function SpeedGauge({
           </filter>
         </defs>
         {/* Track with subtle gradient */}
+        {/* Track */}
         <path
           d="M 30 150 A 85 85 0 1 1 170 150"
           fill="none"
@@ -131,7 +148,7 @@ export function SpeedGauge({
           <path
             d="M 30 150 A 85 85 0 1 1 170 150"
             fill="none"
-            stroke="url(#gaugeGradient)"
+            stroke="url(#speedZoneGradient)"
             strokeWidth="13"
             strokeLinecap="round"
             strokeDasharray={arcLength}
@@ -142,7 +159,7 @@ export function SpeedGauge({
         )}
         {/* Minor ticks */}
         {minorTicks.map((mark) => {
-          const angle = -135 + (mark / MAX_SPEED) * 270;
+          const angle = -135 + (mark / scaleMax) * 270;
           const inner = polarToCartesian(cx, cy, r - 6, angle);
           const outer = polarToCartesian(cx, cy, r, angle);
           return (
@@ -160,8 +177,9 @@ export function SpeedGauge({
           );
         })}
         {scaleMarks.map((mark) => {
-          const angle = -135 + (mark / MAX_SPEED) * 270;
+          const angle = -135 + (mark / scaleMax) * 270;
           const pos = polarToCartesian(cx, cy, r + 2, angle);
+          const label = mark >= 1000 ? '1G' : String(mark);
           return (
             <text
               key={mark}
@@ -169,9 +187,9 @@ export function SpeedGauge({
               y={pos.y}
               textAnchor="middle"
               className="fill-gray-400 font-semibold tabular-nums"
-              style={{ fontSize: 11 }}
+              style={{ fontSize: mark === scaleMax || mark === 0 ? 11 : 10 }}
             >
-              {mark === 1000 ? '1G' : mark}
+              {label}
             </text>
           );
         })}
@@ -191,11 +209,17 @@ export function SpeedGauge({
         <circle cx="100" cy="100" r="11" fill="url(#gaugeHub)" stroke="#22c55e" strokeWidth="2.5" className="drop-shadow-lg" />
       </svg>
 
-      {/* Center readout — glass-style */}
+      {/* Center readout */}
       <div className="absolute inset-0 flex flex-col items-center justify-center pt-14 pointer-events-none">
-        <div className="rounded-2xl bg-gray-900/40 backdrop-blur-sm px-6 py-4 border border-gray-700/30 shadow-xl shadow-black/30 min-w-[140px]">
+        <div className="rounded-2xl bg-gray-900/50 backdrop-blur-md px-6 py-4 border border-gray-600/40 shadow-2xl shadow-black/40 min-w-[140px]">
           <span className="text-5xl sm:text-6xl font-black text-white tabular-nums tracking-tight drop-shadow-lg min-h-[3rem] flex items-center justify-center">
-            {showValue > 0 ? Math.round(showValue) : (phase === 'idle' ? '0' : '—')}
+            {showValue > 0
+              ? showValue < 100
+                ? showValue.toFixed(1)
+                : Math.round(showValue)
+              : phase === 'idle'
+                ? '0'
+                : '—'}
           </span>
           <span className="text-emerald-400 text-sm font-semibold mt-1.5 block text-center">
             {showMbpsSubtitle ? 'Megabits per second' : 'Mbps'}
@@ -206,6 +230,9 @@ export function SpeedGauge({
               {phaseLabel}
             </span>
           </div>
+          <p className="text-gray-600 text-[10px] font-medium mt-2 text-center">
+            Scale 0–{scaleMax >= 1000 ? '1G' : scaleMax} Mbps
+          </p>
         </div>
       </div>
     </div>

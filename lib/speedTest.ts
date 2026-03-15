@@ -159,6 +159,26 @@ export function getSpeedRating(mbps: number): {
   };
 }
 
+/** Letter grade for quick scan (A+ to D). */
+export function getSpeedGrade(mbps: number): { grade: string; color: string } {
+  if (mbps >= 500) return { grade: 'A+', color: '#00ff88' };
+  if (mbps >= 200) return { grade: 'A', color: '#00cc66' };
+  if (mbps >= 100) return { grade: 'A−', color: '#66ff66' };
+  if (mbps >= 50) return { grade: 'B', color: '#ffcc00' };
+  if (mbps >= 25) return { grade: 'C', color: '#ff9900' };
+  if (mbps >= 10) return { grade: 'D', color: '#ff6600' };
+  return { grade: 'F', color: '#ff3300' };
+}
+
+/** Score 0–100 for quality bar. */
+export function getSpeedScore(mbps: number): number {
+  if (mbps >= 1000) return 100;
+  if (mbps <= 0) return 0;
+  const log = Math.log10(mbps + 1);
+  const maxLog = Math.log10(1001);
+  return Math.min(100, Math.round((log / maxLog) * 100));
+}
+
 export function getCapabilities(
   downloadMbps: number,
   ping: number
@@ -218,6 +238,30 @@ export function getCapabilities(
       requirement: '100 Mbps+',
     },
   ];
+}
+
+/** Percentile rank (0–100): "Faster than X% of typical home connections" — based on common speed tiers. */
+export function getPercentileRank(downloadMbps: number): number {
+  if (downloadMbps <= 0) return 0;
+  const tiers = [
+    [5, 10],
+    [10, 25],
+    [25, 40],
+    [50, 55],
+    [100, 70],
+    [200, 85],
+    [500, 95],
+    [1000, 99],
+  ];
+  for (let i = 0; i < tiers.length; i++) {
+    const [speed, pct] = tiers[i];
+    if (downloadMbps <= speed) {
+      const prev = i === 0 ? [0, 0] : tiers[i - 1];
+      const t = (downloadMbps - prev[0]) / (speed - prev[0]);
+      return Math.round(prev[1] + t * (pct - prev[1]));
+    }
+  }
+  return 99;
 }
 
 /** Short sentence for hero: "Your connection should handle …" */

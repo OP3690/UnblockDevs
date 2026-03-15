@@ -10,6 +10,24 @@ export type BlogPost = {
 
 export const blogPosts: BlogPost[] = [
     {
+      slug: 'why-does-my-json-have-backslashes',
+      title: 'Why Does My JSON Have Backslashes? (Explained Simply)',
+      excerpt: 'JSON uses backslashes to escape special characters like quotes inside strings. Learn why you see double backslashes, how to fix confusion, and when to use a JSON beautifier.',
+      date: '2026-03-02',
+      readTime: '4 min read',
+      category: 'JSON & Logs',
+      keywords: ['why does my json have backslashes', 'json backslashes', 'escaped json', 'json escape characters', 'json beautifier']
+    },
+    {
+      slug: 'is-it-safe-to-paste-sql-into-chatgpt',
+      title: 'Is It Safe to Paste SQL Into ChatGPT? (Risks & How to Stay Safe)',
+      excerpt: 'Pasting raw SQL or database schema into ChatGPT can leak table names, column names, and business logic. Learn the risks and how to mask schema and data before sending to AI—with reversible, client-side tools.',
+      date: '2026-03-02',
+      readTime: '6 min read',
+      category: 'AI & Security',
+      keywords: ['is it safe to paste sql into chatgpt', 'mask database table before chatgpt', 'hide schema from AI', 'SQL ChatGPT safety', 'AI schema masker']
+    },
+    {
       slug: 'how-to-decode-stringified-nested-json-logs-without-5-tools',
       title: 'How to Decode Stringified Nested JSON Logs (Without Using 5 Different Tools)',
       excerpt: 'Stop switching between unescapers, jwt.io, and epoch converters. Learn what stringified nested JSON is, when it happens, and how to unescape and parse it in one place.',
