@@ -101,7 +101,7 @@ export default function WhyDoesMyJsonHaveBackslashesClient() {
           <section className="mb-10">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">When Backslashes Cause Confusion</h2>
             <p className="text-gray-700 leading-relaxed mb-4">
-              <strong>Double-escaped JSON</strong>: Sometimes you get JSON that was stringified twice (e.g. stored in a database or log as a string). You might see <code className="bg-gray-100 px-1 rounded">\"{\\\"key\\\": \\\"value\\\"}\"</code>. In that case, parse once to get the inner JSON string, then parse again to get the object.
+              <strong>Double-escaped JSON</strong>: Sometimes you get JSON that was stringified twice (e.g. stored in a database or log as a string). You might see <code className="bg-gray-100 px-1 rounded">{'"{\\"key\\": \\"value\\"}"'}</code>. In that case, parse once to get the inner JSON string, then parse again to get the object.
             </p>
             <p className="text-gray-700 leading-relaxed">
               <strong>Copy-paste from logs or UIs</strong>: If you copy “JSON” from a log or a UI that already escaped it for display, you might get extra backslashes. Paste it into a <strong>JSON validator or beautifier</strong> to see the real structure and fix any double-escaping.
