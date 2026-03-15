@@ -262,10 +262,10 @@ export default function SpeedTestClient() {
         </div>
 
         <div
-          className={`relative mb-10 p-3 rounded-full transition-all duration-500 animate-speed-scale-in opacity-0 ${
+          className={`relative mb-10 p-4 rounded-[2rem] transition-all duration-500 animate-speed-scale-in opacity-0 ${
             phase === 'download' || phase === 'upload'
-              ? 'ring-2 ring-emerald-500/40 bg-gray-900/50 shadow-[0_0_40px_-8px_rgba(34,197,94,0.3)]'
-              : 'ring-1 ring-gray-800/80 bg-gray-900/30'
+              ? 'ring-2 ring-emerald-500/50 bg-gray-900/60 shadow-[0_0_48px_-8px_rgba(34,197,94,0.35),inset_0_1px_0_rgba(255,255,255,0.05)]'
+              : 'ring-1 ring-gray-700/80 bg-gray-900/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]'
           }`}
           style={{ animationDelay: '80ms', animationFillMode: 'forwards' }}
         >
@@ -286,7 +286,7 @@ export default function SpeedTestClient() {
           <button
             type="button"
             onClick={runTest}
-            className="px-10 py-4 bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold text-lg rounded-full transition-all duration-200 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 animate-btn-glow"
+            className="px-12 py-4 bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold text-lg rounded-full transition-all duration-200 shadow-xl shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 animate-btn-glow border border-emerald-400/20"
           >
             Start Speed Test
           </button>
@@ -310,9 +310,9 @@ export default function SpeedTestClient() {
               {phase === 'download' && 'Testing download…'}
               {phase === 'upload' && 'Testing upload…'}
             </p>
-            <div className="mt-2 w-full bg-gray-800 rounded-full h-2 overflow-hidden">
+            <div className="mt-2 w-full bg-gray-800 rounded-full h-2.5 overflow-hidden shadow-inner">
               <div
-                className="bg-emerald-500 h-full rounded-full transition-all duration-500 ease-out"
+                className="h-full rounded-full transition-all duration-500 ease-out bg-gradient-to-r from-emerald-500 to-emerald-400"
                 style={{ width: `${progress}%` }}
               />
             </div>

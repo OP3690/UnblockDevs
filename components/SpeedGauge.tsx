@@ -71,17 +71,19 @@ export function SpeedGauge({
     phase === 'download' ? ArrowDown : phase === 'upload' ? ArrowUp : phase === 'ping' ? Radio : null;
 
   const scaleMarks = [0, 250, 500, 750, 1000];
+  const minorTicks = [125, 375, 625, 875];
   const cx = 100;
   const cy = 100;
   const r = 98;
+  const needleAngle = -135 + percentage * 270;
 
   return (
-    <div className="relative w-72 h-72 sm:w-80 sm:h-80">
+    <div className="relative w-72 h-72 sm:w-[22rem] sm:h-[22rem]">
       {isActive && (
         <div
           className="absolute inset-0 rounded-full pointer-events-none animate-speed-gauge-pulse"
           style={{
-            boxShadow: '0 0 56px 16px rgba(34, 197, 94, 0.22)',
+            boxShadow: '0 0 64px 20px rgba(34, 197, 94, 0.18)',
           }}
           aria-hidden
         />
@@ -94,12 +96,16 @@ export function SpeedGauge({
             <stop offset="70%" stopColor="#22c55e" />
             <stop offset="100%" stopColor="#16a34a" />
           </linearGradient>
+          <linearGradient id="trackGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#1f2937" />
+            <stop offset="100%" stopColor="#111827" />
+          </linearGradient>
           <linearGradient id="needleGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#86efac" />
+            <stop offset="0%" stopColor="#a7f3d0" />
             <stop offset="100%" stopColor="#16a34a" />
           </linearGradient>
           <linearGradient id="gaugeHub" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#1e293b" />
+            <stop offset="0%" stopColor="#334155" />
             <stop offset="100%" stopColor="#0f172a" />
           </linearGradient>
           <filter id="gaugeGlow">
@@ -110,41 +116,60 @@ export function SpeedGauge({
             </feMerge>
           </filter>
           <filter id="needleShadow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="1" stdDeviation="2" floodColor="#0f172a" floodOpacity="0.6" />
+            <feDropShadow dx="0" dy="1" stdDeviation="2" floodColor="#0f172a" floodOpacity="0.5" />
           </filter>
         </defs>
+        {/* Track with subtle gradient */}
         <path
           d="M 30 150 A 85 85 0 1 1 170 150"
           fill="none"
-          stroke="currentColor"
-          strokeWidth="14"
+          stroke="url(#trackGradient)"
+          strokeWidth="16"
           strokeLinecap="round"
-          className="text-gray-800"
         />
         {percentage > 0 && (
           <path
             d="M 30 150 A 85 85 0 1 1 170 150"
             fill="none"
             stroke="url(#gaugeGradient)"
-            strokeWidth="12"
+            strokeWidth="13"
             strokeLinecap="round"
             strokeDasharray={arcLength}
             strokeDashoffset={strokeDashoffset}
-            className={`transition-all duration-500 ease-out ${isActive ? 'opacity-100' : 'opacity-95'}`}
+            className={`transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${isActive ? 'opacity-100' : 'opacity-95'}`}
             style={isActive ? { filter: 'url(#gaugeGlow)' } : undefined}
           />
         )}
+        {/* Minor ticks */}
+        {minorTicks.map((mark) => {
+          const angle = -135 + (mark / MAX_SPEED) * 270;
+          const inner = polarToCartesian(cx, cy, r - 6, angle);
+          const outer = polarToCartesian(cx, cy, r, angle);
+          return (
+            <line
+              key={mark}
+              x1={inner.x}
+              y1={inner.y}
+              x2={outer.x}
+              y2={outer.y}
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              className="text-gray-700"
+            />
+          );
+        })}
         {scaleMarks.map((mark) => {
           const angle = -135 + (mark / MAX_SPEED) * 270;
-          const pos = polarToCartesian(cx, cy, r, angle);
+          const pos = polarToCartesian(cx, cy, r + 2, angle);
           return (
             <text
               key={mark}
               x={pos.x}
               y={pos.y}
               textAnchor="middle"
-              className="fill-gray-500 font-semibold tabular-nums"
-              style={{ fontSize: 10 }}
+              className="fill-gray-400 font-semibold tabular-nums"
+              style={{ fontSize: 11 }}
             >
               {mark === 1000 ? '1G' : mark}
             </text>
@@ -154,30 +179,33 @@ export function SpeedGauge({
           x1="100"
           y1="100"
           x2="100"
-          y2="26"
+          y2="24"
           stroke="url(#needleGradient)"
-          strokeWidth="3"
+          strokeWidth="3.5"
           strokeLinecap="round"
-          transform={`rotate(${-135 + percentage * 270} 100 100)`}
-          className="transition-all duration-500 ease-out"
+          transform={`rotate(${needleAngle} 100 100)`}
+          className="transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
           style={{ filter: 'url(#needleShadow)' }}
         />
-        <circle cx="100" cy="100" r="18" fill="none" stroke="currentColor" strokeWidth="1" className="text-gray-800/80" />
-        <circle cx="100" cy="100" r="10" fill="url(#gaugeHub)" stroke="#22c55e" strokeWidth="2.5" className="drop-shadow-md" />
+        <circle cx="100" cy="100" r="20" fill="none" stroke="rgba(34,197,94,0.2)" strokeWidth="1" />
+        <circle cx="100" cy="100" r="11" fill="url(#gaugeHub)" stroke="#22c55e" strokeWidth="2.5" className="drop-shadow-lg" />
       </svg>
 
-      <div className="absolute inset-0 flex flex-col items-center justify-center pt-12 pointer-events-none">
-        <span className="text-4xl sm:text-5xl font-black text-white tabular-nums tracking-tight drop-shadow-md min-h-[2.5rem] flex items-center justify-center">
-          {showValue > 0 ? Math.round(showValue) : (phase === 'idle' ? '0' : '—')}
-        </span>
-        <span className="text-emerald-400/90 text-sm font-semibold mt-1">
-          {showMbpsSubtitle ? 'Megabits per second' : 'Mbps'}
-        </span>
-        <div className="flex items-center justify-center gap-2 mt-2.5 max-w-[160px]">
-          {PhaseIcon && <PhaseIcon className="w-4 h-4 text-emerald-400 shrink-0" aria-hidden />}
-          <span className="text-gray-500 text-xs font-medium text-center leading-tight">
-            {phaseLabel}
+      {/* Center readout — glass-style */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center pt-14 pointer-events-none">
+        <div className="rounded-2xl bg-gray-900/40 backdrop-blur-sm px-6 py-4 border border-gray-700/30 shadow-xl shadow-black/30 min-w-[140px]">
+          <span className="text-5xl sm:text-6xl font-black text-white tabular-nums tracking-tight drop-shadow-lg min-h-[3rem] flex items-center justify-center">
+            {showValue > 0 ? Math.round(showValue) : (phase === 'idle' ? '0' : '—')}
           </span>
+          <span className="text-emerald-400 text-sm font-semibold mt-1.5 block text-center">
+            {showMbpsSubtitle ? 'Megabits per second' : 'Mbps'}
+          </span>
+          <div className="flex items-center justify-center gap-2 mt-3 max-w-[160px]">
+            {PhaseIcon && <PhaseIcon className="w-4 h-4 text-emerald-400 shrink-0" aria-hidden />}
+            <span className="text-gray-400 text-xs font-medium text-center leading-tight">
+              {phaseLabel}
+            </span>
+          </div>
         </div>
       </div>
     </div>
