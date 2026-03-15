@@ -287,4 +287,4 @@ function isValidPassword(string $password): bool {
   }
 }
 
-export { DEFAULT_POLICY, type PasswordPolicy };
+export { DEFAULT_POLICY };
