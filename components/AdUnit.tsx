@@ -41,6 +41,7 @@ export default function AdUnit({
 
     function tryPush() {
       if (cancelled) return;
+      if (!el) return;
       const width = el.offsetWidth || 0;
       if (width > 0) {
         try {
