@@ -109,27 +109,29 @@ export function SpeedGauge({
             <feDropShadow dx="0" dy="1" stdDeviation="2" floodColor="#0f172a" floodOpacity="0.6" />
           </filter>
         </defs>
-        {/* Background arc — track */}
+        {/* Background arc — track (single neutral arc when idle) */}
         <path
           d="M 30 150 A 85 85 0 1 1 170 150"
           fill="none"
           stroke="currentColor"
-          strokeWidth="16"
-          strokeLinecap="round"
-          className="text-gray-800/90"
-        />
-        {/* Progress arc */}
-        <path
-          d="M 30 150 A 85 85 0 1 1 170 150"
-          fill="none"
-          stroke="url(#gaugeGradient)"
           strokeWidth="14"
           strokeLinecap="round"
-          strokeDasharray={arcLength}
-          strokeDashoffset={strokeDashoffset}
-          className={`transition-all duration-500 ease-out ${isActive ? 'opacity-100' : 'opacity-95'}`}
-          style={isActive ? { filter: 'url(#gaugeGlow)' } : undefined}
+          className="text-gray-800"
         />
+        {/* Progress arc — only visible when value > 0 */}
+        {percentage > 0 && (
+          <path
+            d="M 30 150 A 85 85 0 1 1 170 150"
+            fill="none"
+            stroke="url(#gaugeGradient)"
+            strokeWidth="12"
+            strokeLinecap="round"
+            strokeDasharray={arcLength}
+            strokeDashoffset={strokeDashoffset}
+            className={`transition-all duration-500 ease-out ${isActive ? 'opacity-100' : 'opacity-95'}`}
+            style={isActive ? { filter: 'url(#gaugeGlow)' } : undefined}
+          />
+        )}
         {/* Scale labels: 0, 250, 500, 750, 1000 */}
         {scaleMarks.map((mark) => {
           const angle = -135 + (mark / MAX_SPEED) * 270;
@@ -160,15 +162,16 @@ export function SpeedGauge({
           className="transition-all duration-500 ease-out"
           style={{ filter: 'url(#needleShadow)' }}
         />
+        <circle cx="100" cy="100" r="18" fill="none" stroke="currentColor" strokeWidth="1" className="text-gray-800/80" />
         <circle cx="100" cy="100" r="10" fill="url(#gaugeHub)" stroke="#22c55e" strokeWidth="2.5" className="drop-shadow-md" />
       </svg>
 
-      <div className="absolute inset-0 flex flex-col items-center justify-center pt-12">
-        <span className="text-4xl sm:text-5xl font-black text-white tabular-nums tracking-tight drop-shadow-md">
-          {showValue > 0 ? Math.round(showValue) : '—'}
+      <div className="absolute inset-0 flex flex-col items-center justify-center pt-12 pointer-events-none">
+        <span className="text-4xl sm:text-5xl font-black text-white tabular-nums tracking-tight drop-shadow-md min-h-[2.5rem] flex items-center justify-center">
+          {showValue > 0 ? Math.round(showValue) : (phase === 'idle' ? '0' : '—')}
         </span>
         <span className="text-emerald-400/90 text-sm font-semibold mt-1">Mbps</span>
-        <span className="text-gray-500 text-xs mt-2.5 font-medium max-w-[140px] text-center">
+        <span className="text-gray-500 text-xs mt-2.5 font-medium max-w-[140px] text-center leading-tight">
           {phaseLabel}
         </span>
       </div>

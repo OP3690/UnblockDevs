@@ -10,7 +10,7 @@ import {
   getCapabilities,
 } from '@/lib/speedTest';
 import { SpeedGauge } from '@/components/SpeedGauge';
-import { ArrowLeft, ChevronDown, Copy, Check, Shield, Zap, Lock } from 'lucide-react';
+import { ArrowLeft, ChevronDown, Copy, Check, Shield, Zap, Lock, AlertCircle } from 'lucide-react';
 
 type Phase = 'idle' | 'ping' | 'download' | 'upload' | 'complete';
 
@@ -255,8 +255,9 @@ export default function SpeedTestClient() {
         </div>
 
         {error && (
-          <div className="mb-4 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm text-center max-w-md">
-            {error}
+          <div className="mb-4 px-5 py-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm text-left max-w-lg flex items-start gap-3 shadow-lg shadow-red-500/5">
+            <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-red-400" aria-hidden />
+            <span>{error}</span>
           </div>
         )}
 

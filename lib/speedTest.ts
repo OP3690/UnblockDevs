@@ -40,6 +40,15 @@ export async function measureDownloadSpeed(
   return speeds[Math.floor(speeds.length / 2)];
 }
 
+/** Browser Crypto API allows max 65536 bytes per getRandomValues call. Fill in chunks. */
+function fillRandom(buffer: Uint8Array): void {
+  const chunk = 65536;
+  for (let i = 0; i < buffer.length; i += chunk) {
+    const slice = buffer.subarray(i, Math.min(i + chunk, buffer.length));
+    crypto.getRandomValues(slice);
+  }
+}
+
 export async function measureUploadSpeed(
   onProgress: (speed: number) => void
 ): Promise<number> {
@@ -50,7 +59,7 @@ export async function measureUploadSpeed(
 
   for (const bytes of testSizes) {
     const data = new Uint8Array(bytes);
-    crypto.getRandomValues(data);
+    fillRandom(data);
 
     const start = performance.now();
 
