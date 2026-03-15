@@ -353,6 +353,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changefreq: 'weekly' as const,
     },
     {
+      url: 'speed-test',
+      priority: 0.9,
+      changefreq: 'monthly' as const,
+    },
+    {
       url: 'svg-to-image',
       priority: 0.85,
       changefreq: 'weekly' as const,

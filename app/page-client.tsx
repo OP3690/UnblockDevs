@@ -589,6 +589,18 @@ function HomeClient() {
                       {devMode ? 'Dark' : 'Light'}
                     </span>
                   </div>
+                  <Link
+                    href="/speed-test"
+                    title="Test Your Internet Speed"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-green-500/30 bg-green-500/10 hover:bg-green-500/20 text-green-600 hover:text-green-700 text-xs font-medium transition-all duration-200 ml-1 sm:ml-2 shrink-0"
+                  >
+                    <span className="relative flex h-2 w-2 shrink-0">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+                    </span>
+                    <span className="hidden sm:inline">Speed Test</span>
+                    <span className="sm:hidden">Speed</span>
+                  </Link>
                 </div>
                 <p className="hidden sm:block text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors"><span className="text-primary-600 font-semibold">Developer Tools for Daily Use</span><span className="text-gray-500 mx-1.5">—</span><span className="tagline-highlight font-semibold text-gray-800 bg-amber-200/70 px-1.5 py-0.5 rounded border-b-2 border-amber-400">Privacy-First Tools That Run in Your Browser</span> <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary-100 text-primary-600 ml-1.5 align-middle" aria-hidden><Shield className="w-3.5 h-3.5" /></span></p>
                 <div className="hidden sm:flex flex-wrap items-center gap-2 mt-1.5">

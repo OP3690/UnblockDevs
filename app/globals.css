@@ -179,6 +179,56 @@ input, select, textarea {
   animation: btn-glow-pulse 2s ease-in-out infinite;
 }
 
+/* Speed test page: entrance and polish */
+@keyframes speed-fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes speed-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes speed-gauge-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+
+.animate-speed-fade-in-up {
+  animation: speed-fade-in-up 0.45s ease-out forwards;
+}
+
+.animate-speed-scale-in {
+  animation: speed-scale-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-speed-gauge-pulse {
+  animation: speed-gauge-pulse 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-speed-fade-in-up,
+  .animate-speed-scale-in,
+  .animate-speed-gauge-pulse {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 248, 250, 252;
