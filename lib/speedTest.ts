@@ -11,7 +11,8 @@ export interface SpeedTestResult {
 const getBase = () => (typeof window !== 'undefined' ? '' : 'https://unblockdevs.com');
 
 export async function measureDownloadSpeed(
-  onProgress: (speed: number) => void
+  onProgress: (speed: number) => void,
+  signal?: AbortSignal
 ): Promise<number> {
   const base = getBase();
   const testSizes = [
@@ -24,10 +25,11 @@ export async function measureDownloadSpeed(
   const speeds: number[] = [];
 
   for (const test of testSizes) {
+    if (signal?.aborted) throw new DOMException('Aborted', 'AbortError');
     const url = `${base}/api/speed-test/download?bytes=${test.bytes}&_=${Date.now()}`;
     const start = performance.now();
 
-    const response = await fetch(url, { cache: 'no-store' });
+    const response = await fetch(url, { cache: 'no-store', signal });
     await response.arrayBuffer();
 
     const duration = (performance.now() - start) / 1000;
@@ -50,7 +52,8 @@ function fillRandom(buffer: Uint8Array): void {
 }
 
 export async function measureUploadSpeed(
-  onProgress: (speed: number) => void
+  onProgress: (speed: number) => void,
+  signal?: AbortSignal
 ): Promise<number> {
   const base = getBase();
   const testSizes = [1_000_000, 5_000_000, 10_000_000];
@@ -58,6 +61,7 @@ export async function measureUploadSpeed(
   const speeds: number[] = [];
 
   for (const bytes of testSizes) {
+    if (signal?.aborted) throw new DOMException('Aborted', 'AbortError');
     const data = new Uint8Array(bytes);
     fillRandom(data);
 
@@ -67,6 +71,7 @@ export async function measureUploadSpeed(
       method: 'POST',
       body: data,
       cache: 'no-store',
+      signal,
     });
 
     const duration = (performance.now() - start) / 1000;
@@ -79,7 +84,7 @@ export async function measureUploadSpeed(
   return speeds[Math.floor(speeds.length / 2)];
 }
 
-export async function measurePing(): Promise<{
+export async function measurePing(signal?: AbortSignal): Promise<{
   ping: number;
   jitter: number;
 }> {
@@ -87,8 +92,9 @@ export async function measurePing(): Promise<{
   const pings: number[] = [];
 
   for (let i = 0; i < 10; i++) {
+    if (signal?.aborted) throw new DOMException('Aborted', 'AbortError');
     const start = performance.now();
-    await fetch(`${base}/api/speed-test/ping?_=${Date.now()}`, { cache: 'no-store' });
+    await fetch(`${base}/api/speed-test/ping?_=${Date.now()}`, { cache: 'no-store', signal });
     pings.push(performance.now() - start);
     await new Promise((r) => setTimeout(r, 100));
   }
@@ -212,4 +218,22 @@ export function getCapabilities(
       requirement: '100 Mbps+',
     },
   ];
+}
+
+/** Short sentence for hero: "Your connection should handle …" */
+export function getConnectionSummary(
+  downloadMbps: number,
+  ping: number
+): string {
+  const caps = getCapabilities(downloadMbps, ping);
+  const supported = caps.filter((c) => c.supported);
+  if (supported.length >= 4)
+    return 'Your connection should handle multiple devices streaming HD, video calls, and gaming at the same time.';
+  if (supported.length >= 2) {
+    const names = supported.slice(0, 3).map((c) => c.activity.replace(/ \d+K| \(.*\)/g, '').toLowerCase());
+    return `Your connection can handle ${names.join(', ')}.`;
+  }
+  if (supported.length === 1)
+    return `Suitable for ${supported[0].activity.toLowerCase()}.`;
+  return 'Best for basic browsing and email.';
 }

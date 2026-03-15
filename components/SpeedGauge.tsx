@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { ArrowDown, ArrowUp, Radio } from 'lucide-react';
 
 const MAX_SPEED = 1000;
 
@@ -53,6 +54,7 @@ export function SpeedGauge({
   const showValue =
     phase === 'download' || phase === 'upload' ? value : displayValue;
   const isActive = phase === 'download' || phase === 'upload' || phase === 'ping';
+  const showMbpsSubtitle = showValue > 0 && (phase === 'download' || phase === 'upload' || phase === 'complete');
 
   const phaseLabel =
     phase === 'idle'
@@ -60,10 +62,13 @@ export function SpeedGauge({
       : phase === 'complete'
         ? 'Complete'
         : phase === 'ping'
-          ? 'Testing ping…'
+          ? 'Measuring latency…'
           : phase === 'download'
-            ? 'Download…'
-            : 'Upload…';
+            ? 'Testing download…'
+            : 'Testing upload…';
+
+  const PhaseIcon =
+    phase === 'download' ? ArrowDown : phase === 'upload' ? ArrowUp : phase === 'ping' ? Radio : null;
 
   const scaleMarks = [0, 250, 500, 750, 1000];
   const cx = 100;
@@ -72,7 +77,6 @@ export function SpeedGauge({
 
   return (
     <div className="relative w-72 h-72 sm:w-80 sm:h-80">
-      {/* Outer glow when testing — subtle pulse */}
       {isActive && (
         <div
           className="absolute inset-0 rounded-full pointer-events-none animate-speed-gauge-pulse"
@@ -109,7 +113,6 @@ export function SpeedGauge({
             <feDropShadow dx="0" dy="1" stdDeviation="2" floodColor="#0f172a" floodOpacity="0.6" />
           </filter>
         </defs>
-        {/* Background arc — track (single neutral arc when idle) */}
         <path
           d="M 30 150 A 85 85 0 1 1 170 150"
           fill="none"
@@ -118,7 +121,6 @@ export function SpeedGauge({
           strokeLinecap="round"
           className="text-gray-800"
         />
-        {/* Progress arc — only visible when value > 0 */}
         {percentage > 0 && (
           <path
             d="M 30 150 A 85 85 0 1 1 170 150"
@@ -132,7 +134,6 @@ export function SpeedGauge({
             style={isActive ? { filter: 'url(#gaugeGlow)' } : undefined}
           />
         )}
-        {/* Scale labels: 0, 250, 500, 750, 1000 */}
         {scaleMarks.map((mark) => {
           const angle = -135 + (mark / MAX_SPEED) * 270;
           const pos = polarToCartesian(cx, cy, r, angle);
@@ -149,7 +150,6 @@ export function SpeedGauge({
             </text>
           );
         })}
-        {/* Needle */}
         <line
           x1="100"
           y1="100"
@@ -170,10 +170,15 @@ export function SpeedGauge({
         <span className="text-4xl sm:text-5xl font-black text-white tabular-nums tracking-tight drop-shadow-md min-h-[2.5rem] flex items-center justify-center">
           {showValue > 0 ? Math.round(showValue) : (phase === 'idle' ? '0' : '—')}
         </span>
-        <span className="text-emerald-400/90 text-sm font-semibold mt-1">Mbps</span>
-        <span className="text-gray-500 text-xs mt-2.5 font-medium max-w-[140px] text-center leading-tight">
-          {phaseLabel}
+        <span className="text-emerald-400/90 text-sm font-semibold mt-1">
+          {showMbpsSubtitle ? 'Megabits per second' : 'Mbps'}
         </span>
+        <div className="flex items-center justify-center gap-2 mt-2.5 max-w-[160px]">
+          {PhaseIcon && <PhaseIcon className="w-4 h-4 text-emerald-400 shrink-0" aria-hidden />}
+          <span className="text-gray-500 text-xs font-medium text-center leading-tight">
+            {phaseLabel}
+          </span>
+        </div>
       </div>
     </div>
   );

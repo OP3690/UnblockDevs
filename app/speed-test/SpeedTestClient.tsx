@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Link from 'next/link';
 import {
   measureDownloadSpeed,
@@ -8,9 +8,10 @@ import {
   measurePing,
   getSpeedRating,
   getCapabilities,
+  getConnectionSummary,
 } from '@/lib/speedTest';
 import { SpeedGauge } from '@/components/SpeedGauge';
-import { ArrowLeft, ChevronDown, Copy, Check, Shield, Zap, Lock, AlertCircle } from 'lucide-react';
+import { ArrowLeft, ChevronDown, Copy, Check, Shield, Zap, Lock, AlertCircle, X } from 'lucide-react';
 
 type Phase = 'idle' | 'ping' | 'download' | 'upload' | 'complete';
 
@@ -141,6 +142,7 @@ export default function SpeedTestClient() {
   const [progress, setProgress] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const abortRef = useRef<AbortController | null>(null);
 
   async function runTest() {
     setError(null);
@@ -150,32 +152,51 @@ export default function SpeedTestClient() {
     setPing(null);
     setJitter(null);
     setProgress(0);
+    abortRef.current = new AbortController();
+    const signal = abortRef.current.signal;
 
     try {
-      const pingResult = await measurePing();
+      const pingResult = await measurePing(signal);
       setPing(pingResult.ping);
       setJitter(pingResult.jitter);
       setProgress(20);
 
       setPhase('download');
-      const dl = await measureDownloadSpeed((speed) => {
-        setLiveSpeed(speed);
-        setProgress((prev) => Math.min(prev + 15, 65));
-      });
+      const dl = await measureDownloadSpeed(
+        (speed) => {
+          setLiveSpeed(speed);
+          setProgress((prev) => Math.min(prev + 15, 65));
+        },
+        signal
+      );
       setDownload(dl);
       setProgress(65);
 
       setPhase('upload');
-      const ul = await measureUploadSpeed((speed) => {
-        setLiveSpeed(speed);
-        setProgress((prev) => Math.min(prev + 10, 95));
-      });
+      const ul = await measureUploadSpeed(
+        (speed) => {
+          setLiveSpeed(speed);
+          setProgress((prev) => Math.min(prev + 10, 95));
+        },
+        signal
+      );
       setUpload(ul);
       setProgress(100);
       setPhase('complete');
     } catch (err) {
+      if (err instanceof DOMException && err.name === 'AbortError') return;
       setError(err instanceof Error ? err.message : 'Speed test failed. Try again.');
       setPhase('idle');
+    } finally {
+      abortRef.current = null;
+    }
+  }
+
+  function cancelTest() {
+    if (abortRef.current) {
+      abortRef.current.abort();
+      setPhase('idle');
+      setError(null);
     }
   }
 
@@ -261,15 +282,17 @@ export default function SpeedTestClient() {
           </div>
         )}
 
-        {phase === 'idle' || phase === 'complete' ? (
+        {phase === 'idle' && (
           <button
             type="button"
             onClick={runTest}
-            className={`px-10 py-4 bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold text-lg rounded-full transition-all duration-200 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 ${phase === 'idle' ? 'animate-btn-glow' : ''}`}
+            className="px-10 py-4 bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold text-lg rounded-full transition-all duration-200 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 animate-btn-glow"
           >
-            {phase === 'complete' ? 'Test Again' : 'Start Speed Test'}
+            Start Speed Test
           </button>
-        ) : (
+        )}
+
+        {(phase === 'ping' || phase === 'download' || phase === 'upload') && (
           <div className="text-center w-full max-w-sm">
             <div className="flex justify-center gap-2 mb-3">
               {steps.map((s) => (
@@ -292,6 +315,86 @@ export default function SpeedTestClient() {
                 className="bg-emerald-500 h-full rounded-full transition-all duration-500 ease-out"
                 style={{ width: `${progress}%` }}
               />
+            </div>
+            <button
+              type="button"
+              onClick={cancelTest}
+              className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-gray-600 text-gray-300 hover:text-white hover:border-gray-500 hover:bg-gray-800/80 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950"
+            >
+              <X className="w-4 h-4" />
+              Cancel
+            </button>
+          </div>
+        )}
+
+        {phase === 'complete' && download !== null && (
+          <div className="w-full max-w-xl animate-speed-fade-in-up">
+            <div className="rounded-2xl border border-gray-700/80 bg-gray-900/60 p-6 sm:p-8 shadow-xl shadow-black/20">
+              <div className="grid grid-cols-2 gap-6 sm:gap-8 mb-6">
+                <div className="text-center">
+                  <div className="text-3xl sm:text-4xl font-black text-emerald-400 tabular-nums">
+                    {download.toFixed(1)}
+                  </div>
+                  <div className="text-gray-400 text-sm font-medium mt-1">Mbps download</div>
+                </div>
+                <div className="text-center border-l border-gray-700/80">
+                  <div className="text-3xl sm:text-4xl font-black text-blue-400 tabular-nums">
+                    {upload !== null ? upload.toFixed(1) : '—'}
+                  </div>
+                  <div className="text-gray-400 text-sm font-medium mt-1">Mbps upload</div>
+                </div>
+              </div>
+              {ping !== null && (
+                <p className="text-gray-400 text-sm mb-4">
+                  Latency: <span className="text-amber-400 font-semibold">{ping} ms</span>
+                  {jitter !== null && (
+                    <span className="text-gray-500"> · Jitter: {jitter} ms</span>
+                  )}
+                </p>
+              )}
+              {rating && (
+                <>
+                  <p
+                    className="text-lg sm:text-xl font-bold mb-1"
+                    style={{ color: rating.color }}
+                  >
+                    Your connection is {rating.label.toLowerCase()}.
+                  </p>
+                  <p className="text-gray-400 text-sm leading-relaxed mb-6">
+                    {download !== null && ping !== null && getConnectionSummary(download, ping)}
+                  </p>
+                </>
+              )}
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                <button
+                  type="button"
+                  onClick={runTest}
+                  className="px-8 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold rounded-full transition-all duration-200 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950"
+                >
+                  Test Again
+                </button>
+                <button
+                  type="button"
+                  onClick={copyResults}
+                  className={`inline-flex items-center gap-2 px-6 py-3 rounded-full border text-sm font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 ${
+                    copied
+                      ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-400'
+                      : 'border-gray-600 bg-gray-800/80 text-gray-300 hover:text-white hover:border-gray-500 hover:bg-gray-800'
+                  }`}
+                >
+                  {copied ? (
+                    <>
+                      <Check className="w-4 h-4 text-emerald-400" />
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4" />
+                      Copy results
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         )}
