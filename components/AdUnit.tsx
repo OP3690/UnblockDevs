@@ -57,7 +57,7 @@ export default function AdUnit({
       role="region"
       aria-label="Advertisement"
       className={`ad-unit flex items-center justify-center text-center ${className}`}
-      style={{ minHeight: `${minHeight}px` }}
+      style={{ minHeight: `${minHeight}px`, minWidth: 1 }}
     >
       <ins
         className="adsbygoogle"

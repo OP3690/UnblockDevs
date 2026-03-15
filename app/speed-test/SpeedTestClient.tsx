@@ -18,7 +18,7 @@ const FAQ_ITEMS = [
   {
     question: 'How accurate is this speed test?',
     answer:
-      "This speed test measures your connection speed to Cloudflare's nearest server. Results reflect real-world performance for most internet activities. Results may differ slightly from other speed tests depending on which server location they use.",
+      "This speed test measures your connection speed to our servers (same origin). Results reflect real-world performance for typical web traffic to this site. Results may differ from other speed tests depending on which server location they use.",
   },
   {
     question: 'Why is my speed test result lower than my plan speed?',
@@ -487,7 +487,7 @@ export default function SpeedTestClient() {
       {/* Disclaimer */}
       <section className="max-w-4xl mx-auto px-4 py-10 border-t border-gray-800">
         <p className="text-gray-500 text-xs leading-relaxed text-center max-w-2xl mx-auto">
-          <strong className="text-gray-400">Disclaimer:</strong> This test measures your connection to Cloudflare’s nearest server and is for information only. Results can vary with load, congestion, device, and WiFi. We don’t store or transmit your IP, location, or results. UnblockDevs is not affiliated with Cloudflare, Ookla, or any ISP. For official verification, contact your provider.
+          <strong className="text-gray-400">Disclaimer:</strong> This test measures your connection to our servers (same origin) and is for information only. Results can vary with load, congestion, device, and WiFi. We don’t store or transmit your IP, location, or results. For official verification, contact your provider.
         </p>
       </section>
     </div>

@@ -9,6 +9,7 @@ import Celebration1MPopup from '@/components/Celebration1MPopup'
 import GA4RouteTracker from '@/components/GA4RouteTracker'
 import TabVisibilityTracker from '@/components/TabVisibilityTracker'
 import GlobalAdSlot from '@/components/GlobalAdSlot'
+import AdSenseScriptLoader from '@/components/AdSenseScriptLoader'
 import ToolPagesAdWrap from '@/components/ToolPagesAdWrap'
 import VisitTracker from '@/components/VisitTracker'
 
@@ -282,13 +283,8 @@ export default function RootLayout({
           }}
         />
         {/* Canonical: use metadata alternates.canonical per page (initial HTML). No client script — Google reads from server response. */}
-        {/* AdSense — in layout so it loads on every page; manual ad units need this before they can fill */}
-        <Script
-          id="adsense-script"
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6349841658473646"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        {/* AdSense — loaded via client component so the tag has no data-nscript (AdSense requirement) */}
+        <AdSenseScriptLoader />
         {/* GA4 — afterInteractive so page_path works on first paint */}
         <Script id="ga4-js" strategy="afterInteractive" src="https://www.googletagmanager.com/gtag/js?id=G-N6DF8NPHY8" />
         <Script id="ga4-config" strategy="afterInteractive">

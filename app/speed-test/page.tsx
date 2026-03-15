@@ -38,7 +38,7 @@ const faqSchema = {
       name: 'How accurate is this speed test?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: "This speed test measures your connection speed to Cloudflare's nearest server. Results reflect real-world performance for most internet activities. Results may differ slightly from other speed tests depending on which server location they use.",
+        text: "This speed test measures your connection speed to our servers (same origin). Results reflect real-world performance for typical web traffic. Results may differ from other speed tests depending on which server location they use.",
       },
     },
     {
@@ -78,7 +78,7 @@ const faqSchema = {
       name: 'WiFi vs ethernet — which gives better speed?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Ethernet almost always gives faster and more stable results than WiFi. WiFi speed is affected by distance from router, interference from other devices, and walls. For the most accurate speed test, connect your device directly to your router via ethernet cable.',
+        text: 'Ethernet almost always gives faster and more stable results than WiFi. WiFi speed is affected by distance from router, interference, and walls. For the most accurate result, connect via ethernet cable.',
       },
     },
   ],

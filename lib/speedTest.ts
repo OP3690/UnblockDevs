@@ -7,11 +7,13 @@ export interface SpeedTestResult {
   timestamp: Date;
 }
 
-const CLOUDFLARE_BASE = 'https://speed.cloudflare.com';
+// Use same-origin API routes to avoid CORS (Cloudflare speed endpoints block cross-origin from other domains).
+const getBase = () => (typeof window !== 'undefined' ? '' : 'https://unblockdevs.com');
 
 export async function measureDownloadSpeed(
   onProgress: (speed: number) => void
 ): Promise<number> {
+  const base = getBase();
   const testSizes = [
     { bytes: 1_000_000, label: '1MB' },
     { bytes: 5_000_000, label: '5MB' },
@@ -22,7 +24,7 @@ export async function measureDownloadSpeed(
   const speeds: number[] = [];
 
   for (const test of testSizes) {
-    const url = `${CLOUDFLARE_BASE}/__down?bytes=${test.bytes}&_=${Date.now()}`;
+    const url = `${base}/api/speed-test/download?bytes=${test.bytes}&_=${Date.now()}`;
     const start = performance.now();
 
     const response = await fetch(url, { cache: 'no-store' });
@@ -41,6 +43,7 @@ export async function measureDownloadSpeed(
 export async function measureUploadSpeed(
   onProgress: (speed: number) => void
 ): Promise<number> {
+  const base = getBase();
   const testSizes = [1_000_000, 5_000_000, 10_000_000];
 
   const speeds: number[] = [];
@@ -51,7 +54,7 @@ export async function measureUploadSpeed(
 
     const start = performance.now();
 
-    await fetch(`${CLOUDFLARE_BASE}/__up`, {
+    await fetch(`${base}/api/speed-test/upload`, {
       method: 'POST',
       body: data,
       cache: 'no-store',
@@ -71,11 +74,12 @@ export async function measurePing(): Promise<{
   ping: number;
   jitter: number;
 }> {
+  const base = getBase();
   const pings: number[] = [];
 
   for (let i = 0; i < 10; i++) {
     const start = performance.now();
-    await fetch(`${CLOUDFLARE_BASE}/__ping?_=${Date.now()}`, { cache: 'no-store' });
+    await fetch(`${base}/api/speed-test/ping?_=${Date.now()}`, { cache: 'no-store' });
     pings.push(performance.now() - start);
     await new Promise((r) => setTimeout(r, 100));
   }

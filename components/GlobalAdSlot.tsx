@@ -15,8 +15,8 @@ export default function GlobalAdSlot() {
   const key = pathname ?? '/';
 
   return (
-    <div key={key} className="w-full flex justify-center py-4">
-      <AdUnit slot={SLOT_SITEWIDE} format="autorelaxed" className="max-w-full" minHeight={90} />
+    <div key={key} className="w-full min-w-[320px] flex justify-center py-4" style={{ minHeight: 90 }}>
+      <AdUnit slot={SLOT_SITEWIDE} format="autorelaxed" className="max-w-full min-w-[300px]" minHeight={90} />
     </div>
   );
 }
