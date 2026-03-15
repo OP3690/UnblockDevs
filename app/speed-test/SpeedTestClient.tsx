@@ -213,18 +213,18 @@ export default function SpeedTestClient() {
       </header>
 
       {/* Hero */}
-      <section className="relative flex flex-col items-center justify-center pt-12 sm:pt-16 pb-14 px-4 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/25 via-transparent to-transparent pointer-events-none" aria-hidden />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,197,94,0.08),transparent)] pointer-events-none" aria-hidden />
-        <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '32px 32px' }} aria-hidden />
-        <div className="text-center mb-8 max-w-xl">
-          <h1 className="text-4xl sm:text-5xl font-bold mb-3 tracking-tight text-white">
+      <section className="relative flex flex-col items-center justify-center pt-14 sm:pt-20 pb-16 px-4 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/30 via-transparent to-transparent pointer-events-none" aria-hidden />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-15%,rgba(34,197,94,0.12),transparent)] pointer-events-none" aria-hidden />
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '28px 28px' }} aria-hidden />
+        <div className="text-center mb-10 max-w-xl animate-speed-fade-in-up">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 tracking-tight text-white">
             Internet Speed Test
           </h1>
-          <p className="text-gray-400 text-lg leading-relaxed">
+          <p className="text-gray-400 text-lg sm:text-xl leading-relaxed">
             Check download, upload, ping, and jitter in seconds. No account, no data stored.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-7">
             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-800/90 text-gray-300 text-xs font-medium border border-gray-700/50">
               <Zap className="w-3.5 h-3.5 text-emerald-400" />
               Instant
@@ -240,7 +240,14 @@ export default function SpeedTestClient() {
           </div>
         </div>
 
-        <div className="relative mb-10 p-2 rounded-full ring-1 ring-gray-800/80 bg-gray-900/30">
+        <div
+          className={`relative mb-10 p-3 rounded-full transition-all duration-500 animate-speed-scale-in opacity-0 ${
+            phase === 'download' || phase === 'upload'
+              ? 'ring-2 ring-emerald-500/40 bg-gray-900/50 shadow-[0_0_40px_-8px_rgba(34,197,94,0.3)]'
+              : 'ring-1 ring-gray-800/80 bg-gray-900/30'
+          }`}
+          style={{ animationDelay: '80ms', animationFillMode: 'forwards' }}
+        >
           <SpeedGauge
             value={phase === 'complete' ? download ?? 0 : liveSpeed}
             phase={phase}

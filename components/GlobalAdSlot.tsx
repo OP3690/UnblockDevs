@@ -1,22 +1,20 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
 import AdUnit from '@/components/AdUnit';
 
-/** Slot for site-wide ad (shows on every page; remounts on navigation so ad refreshes). */
-const SLOT_SITEWIDE = '5569779301'; // VER_MULTI (Multiplex)
+/** Slot for site-wide ad (Matched Content / Multiplex). */
+const SLOT_SITEWIDE = '5569779301';
 
 /**
- * One ad unit that appears on every page (home, tools, blog). Uses pathname as key
- * so on client-side navigation the component remounts and AdSense push() runs again for the new page.
+ * One ad unit that appears on every page. Wrapper has explicit width so Matched Content never gets 0 width.
+ * No pathname key to avoid remounts and double push() that trigger "already have ads".
  */
 export default function GlobalAdSlot() {
-  const pathname = usePathname();
-  const key = pathname ?? '/';
-
   return (
-    <div key={key} className="w-full min-w-[320px] flex justify-center py-4" style={{ minHeight: 90 }}>
-      <AdUnit slot={SLOT_SITEWIDE} format="autorelaxed" className="max-w-full min-w-[300px]" minHeight={90} />
+    <div className="w-full py-4" style={{ minWidth: 320, minHeight: 90 }}>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" style={{ width: '100%' }}>
+        <AdUnit slot={SLOT_SITEWIDE} format="autorelaxed" minHeight={90} />
+      </div>
     </div>
   );
 }

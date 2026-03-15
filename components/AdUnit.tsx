@@ -4,23 +4,22 @@ import { useEffect, useRef } from 'react';
 
 const AD_CLIENT = 'ca-pub-6349841658473646';
 
+/** Slots we've already pushed — avoid "already have ads" from remounts or double effects. */
+const pushedSlots = new Set<string>();
+
 export type AdFormat = 'auto' | 'fluid' | 'rectangle' | 'horizontal' | 'vertical' | 'autorelaxed';
 
 interface AdUnitProps {
-  /** AdSense slot ID (10-digit). Set in AdSense → Ads → By ad unit. */
   slot: string;
   format?: AdFormat;
-  /** For in-article: data-ad-layout="in-article" (use with format="fluid"). */
   layout?: 'in-article' | 'in-feed' | '';
   className?: string;
-  /** Minimum height in px so layout doesn't jump; default 90 */
   minHeight?: number;
 }
 
 /**
- * Manual AdSense display unit. Renders <ins class="adsbygoogle"> and pushes once when mounted.
- * Requires adsbygoogle.js to be loaded (root layout loads it after window load).
- * Create ad units in AdSense → Ads → By ad unit → Display ads, then pass slot IDs here or via env.
+ * Manual AdSense display unit. Pushes only when container has non-zero width (fixes Matched Content 0 width error)
+ * and only once per slot globally (fixes "already have ads").
  */
 export default function AdUnit({
   slot,
@@ -29,18 +28,43 @@ export default function AdUnit({
   className = '',
   minHeight = 90,
 }: AdUnitProps) {
-  const pushed = useRef(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!slot || pushed.current) return;
-    try {
-      const w = window as unknown as { adsbygoogle?: unknown[] };
-      w.adsbygoogle = w.adsbygoogle || [];
-      w.adsbygoogle.push({});
-      pushed.current = true;
-    } catch {
-      // ignore
+    if (!slot || pushedSlots.has(slot)) return;
+    const el = containerRef.current;
+    if (!el) return;
+
+    let cancelled = false;
+    let attempts = 0;
+    const maxAttempts = 50; // ~2.5s max wait
+
+    function tryPush() {
+      if (cancelled) return;
+      const width = el.offsetWidth || 0;
+      if (width > 0) {
+        try {
+          const w = window as unknown as { adsbygoogle?: unknown[] };
+          if (!w.adsbygoogle) return;
+          w.adsbygoogle = w.adsbygoogle || [];
+          w.adsbygoogle.push({});
+          pushedSlots.add(slot);
+        } catch {
+          // ignore
+        }
+        return;
+      }
+      attempts++;
+      if (attempts < maxAttempts) {
+        requestAnimationFrame(tryPush);
+      }
     }
+
+    const t = setTimeout(() => requestAnimationFrame(tryPush), 100);
+    return () => {
+      cancelled = true;
+      clearTimeout(t);
+    };
   }, [slot]);
 
   if (!slot) return null;
@@ -54,10 +78,11 @@ export default function AdUnit({
 
   return (
     <div
+      ref={containerRef}
       role="region"
       aria-label="Advertisement"
       className={`ad-unit flex items-center justify-center text-center ${className}`}
-      style={{ minHeight: `${minHeight}px`, minWidth: 1 }}
+      style={{ minHeight: `${minHeight}px`, minWidth: 320, width: '100%' }}
     >
       <ins
         className="adsbygoogle"
