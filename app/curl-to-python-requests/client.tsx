@@ -172,6 +172,10 @@ print(response.json())`}
                 <h3 className="font-semibold text-gray-900 mb-1">How to Convert cURL to Python Requests: Complete Guide</h3>
                 <p className="text-sm text-gray-600">Step-by-step tutorial with real examples and best practices</p>
               </Link>
+              <Link href="/curl-to-python" className="p-4 border border-gray-200 rounded-lg hover:border-yellow-500 hover:shadow-md transition-all">
+                <h3 className="font-semibold text-gray-900 mb-1">Convert cURL to Python (quick)</h3>
+                <p className="text-sm text-gray-600">Dedicated converter for cURL → Python Requests only</p>
+              </Link>
               <Link href="/curl-to-requests" className="p-4 border border-gray-200 rounded-lg hover:border-yellow-500 hover:shadow-md transition-all">
                 <h3 className="font-semibold text-gray-900 mb-1">cURL to Requests Converter Tool</h3>
                 <p className="text-sm text-gray-600">Free online converter for 7+ programming languages</p>

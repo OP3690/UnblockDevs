@@ -26,6 +26,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://unblockdevs.com/blog/how-ai-makes-money-who-getting-rich",
   },
+  robots: { index: false, follow: false },
 };
 
 export default function HowAIMakesMoneyBlog() {

@@ -126,7 +126,7 @@ export default function IsItSafeToPasteSqlIntoChatgptClient() {
               <ExternalLink className="w-4 h-4" />
             </Link>
             <p className="text-emerald-200 text-xs mt-3">
-              For JSON payloads use <Link href="/json-prompt-shield" className="underline">JSON Prompt Shield</Link>; for code with secrets use <Link href="/code-prompt-shield" className="underline">Code Prompt Shield</Link>.
+              For JSON payloads use <Link href="/json-prompt-shield" className="underline">JSON Prompt Shield</Link>; for code with secrets use <Link href="/code-prompt-shield" className="underline">Code Prompt Shield</Link>. In healthcare or regulated contexts, see <Link href="/blog/hipaa-compliant-ai-development" className="underline">HIPAA-Compliant AI Development</Link>.
             </p>
           </section>
         </article>

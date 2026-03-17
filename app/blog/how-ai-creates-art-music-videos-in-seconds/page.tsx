@@ -26,6 +26,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://unblockdevs.com/blog/how-ai-creates-art-music-videos-in-seconds",
   },
+  robots: { index: false, follow: false },
 };
 
 export default function HowAICreatesArtMusicVideosBlog() {

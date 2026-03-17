@@ -374,6 +374,7 @@ export default function CurlConverter() {
       {/* Cross-links */}
       <div className="flex flex-wrap gap-4 text-sm">
         <Link href="/" className="text-slate-600 hover:text-slate-800 font-medium">Home</Link>
+        <Link href="/curl-to-python" className="text-slate-600 hover:text-slate-800 font-medium">cURL to Python</Link>
         <Link href="/ai-schema-masker" className="text-slate-600 hover:text-slate-800 font-medium">AI Schema Masker</Link>
         <Link href="/code-prompt-shield" className="text-slate-600 hover:text-slate-800 font-medium">Code Prompt Shield</Link>
         <Link href="/json-comparator" className="text-slate-600 hover:text-slate-800 font-medium">JSON Comparator</Link>

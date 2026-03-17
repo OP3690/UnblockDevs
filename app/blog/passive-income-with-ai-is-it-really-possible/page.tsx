@@ -23,6 +23,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://unblockdevs.com/blog/passive-income-with-ai-is-it-really-possible",
   },
+  robots: { index: false, follow: false },
 };
 
 export default function PassiveIncomeAIBlog() {

@@ -24,6 +24,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://unblockdevs.com/blog/how-students-can-make-money-using-ai-2026",
   },
+  robots: { index: false, follow: false },
 };
 
 export default function HowStudentsMakeMoneyAIBlog() {

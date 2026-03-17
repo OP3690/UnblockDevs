@@ -26,6 +26,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://unblockdevs.com/blog/can-ai-fall-in-love-understanding-ai-emotions",
   },
+  robots: { index: false, follow: false },
 };
 
 export default function CanAIFallInLoveBlog() {

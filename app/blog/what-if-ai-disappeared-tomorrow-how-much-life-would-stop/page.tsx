@@ -26,6 +26,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://unblockdevs.com/blog/what-if-ai-disappeared-tomorrow-how-much-life-would-stop",
   },
+  robots: { index: false, follow: false },
 };
 
 export default function WhatIfAIDisappearedBlog() {

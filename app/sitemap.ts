@@ -34,6 +34,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'xbox-game-pass-games-complete-guide',
     'ces-2026-fire-tv-stick-4k-max-project-ava',
   ]
+  // Noindex + exclude from sitemap: off-topic "make money with AI" etc. (saves crawl budget, keeps topical authority)
+  const noindexBlogSlugs = [
+    'can-ai-fall-in-love-understanding-ai-emotions',
+    'will-ai-take-over-the-world-movies-vs-reality',
+    'what-if-ai-disappeared-tomorrow-how-much-life-would-stop',
+    'how-ai-creates-art-music-videos-in-seconds',
+    'how-ai-makes-money-who-getting-rich',
+    '10-real-ways-make-money-with-ai-2026',
+    'how-to-make-1000-month-using-ai-if-started-today',
+    'passive-income-with-ai-is-it-really-possible',
+    'how-students-can-make-money-using-ai-2026',
+  ]
   // Old duplicate JSON article slugs (301 to consolidated guides; exclude from sitemap)
   const duplicateJsonRedirectSlugs = [
     'fix-json-parse-error-unexpected-token',
@@ -49,7 +61,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     .readdirSync(blogDir, { withFileTypes: true })
     .filter((d) => d.isDirectory() && fs.existsSync(path.join(blogDir, d.name, 'page.tsx')))
     .map((d) => d.name)
-    .filter((slug) => !redirectOnlyBlogSlugs.includes(slug) && !offTopicBlogSlugs.includes(slug) && !duplicateJsonRedirectSlugs.includes(slug))
+    .filter((slug) => !redirectOnlyBlogSlugs.includes(slug) && !offTopicBlogSlugs.includes(slug) && !noindexBlogSlugs.includes(slug) && !duplicateJsonRedirectSlugs.includes(slug))
 
   // Discover all non-blog app routes from filesystem so no page is ever missing
   function discoverAppRoutes(dir: string, prefix: string): string[] {
@@ -344,12 +356,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: 'json-prompt-shield',
-      priority: 0.85,
+      priority: 0.9,
       changefreq: 'weekly' as const,
     },
     {
       url: 'code-prompt-shield',
-      priority: 0.85,
+      priority: 0.9,
       changefreq: 'weekly' as const,
     },
     {
@@ -398,16 +410,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     })),
-    // Blog listing pagination (page 1 is main /blog; page 2+ for crawlability and discovery)
-    ...Array.from(
-      { length: Math.max(0, Math.ceil(blogPosts.length / BLOG_PER_PAGE) - 1) },
-      (_, i) => i + 2
-    ).map((page) => ({
-      url: `${baseUrl}/blog?page=${page}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly' as const,
-      priority: 0.75,
-    })),
+    // Omit blog?page=2+ from sitemap (those URLs are noindex); keep crawl budget for /blog and post URLs
   ].filter((e) => isPageUrl(e.url))
 
   return entries

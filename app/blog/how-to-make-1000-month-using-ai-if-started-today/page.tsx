@@ -24,6 +24,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://unblockdevs.com/blog/how-to-make-1000-month-using-ai-if-started-today",
   },
+  robots: { index: false, follow: false },
 };
 
 export default function HowToMake1000MonthAIBlog() {

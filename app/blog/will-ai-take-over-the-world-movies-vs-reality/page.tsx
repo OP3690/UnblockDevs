@@ -26,6 +26,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://unblockdevs.com/blog/will-ai-take-over-the-world-movies-vs-reality",
   },
+  robots: { index: false, follow: false },
 };
 
 export default function WillAITakeOverWorldBlog() {

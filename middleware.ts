@@ -16,6 +16,15 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(canonicalUrl, PERMANENT)
   }
 
+  // Blog pagination: noindex via header so crawl budget goes to /blog and post URLs (belt-and-suspenders with metadata)
+  const pathname = request.nextUrl.pathname
+  const page = request.nextUrl.searchParams.get('page')
+  if (pathname === '/blog' && page && parseInt(page, 10) > 1) {
+    const res = NextResponse.next()
+    res.headers.set('X-Robots-Tag', 'noindex, follow')
+    return res
+  }
+
   return NextResponse.next()
 }
 

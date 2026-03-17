@@ -15,10 +15,13 @@ export async function generateMetadata({
   const totalPages = Math.ceil(blogPosts.length / PER_PAGE);
   const page = Math.max(1, Math.min(Number.parseInt(searchParams?.page ?? '1', 10) || 1, totalPages || 1));
   const canonical = page <= 1 ? 'https://unblockdevs.com/blog' : `https://unblockdevs.com/blog?page=${page}`;
+  const isPagination = page > 1;
   return {
     title: "Developer Articles & Tutorials | UnblockDevs",
     description: 'Technical articles, tutorials, best practices on JSON, API testing, web dev. Learn with guides and examples.',
     alternates: { canonical },
+    // Noindex pagination (page 2+) so crawl budget goes to /blog and individual posts
+    ...(isPagination ? { robots: { index: false, follow: true } } : {}),
     keywords: [
       'developer study materials',
       'JSON tutorial',
@@ -117,6 +120,10 @@ export default function BlogPage({
             <Link href="/blog/ai-prompt-engineering-guide" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
               <h3 className="font-semibold text-gray-900 mb-2">AI Prompt Engineering Guide</h3>
               <p className="text-sm text-gray-600">Learn how to write effective AI prompts with best practices and techniques.</p>
+            </Link>
+            <Link href="/blog/hipaa-compliant-ai-development" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
+              <h3 className="font-semibold text-gray-900 mb-2">HIPAA-Compliant AI Development</h3>
+              <p className="text-sm text-gray-600">Use ChatGPT without exposing patient data. Mask SQL, JSON, and code in your browser—client-side only.</p>
             </Link>
             <Link href="/blog/blockchain-complete-guide" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
               <h3 className="font-semibold text-gray-900 mb-2">Blockchain Complete Guide</h3>

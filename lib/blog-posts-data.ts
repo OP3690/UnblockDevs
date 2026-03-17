@@ -28,6 +28,15 @@ export const blogPosts: BlogPost[] = [
       keywords: ['is it safe to paste sql into chatgpt', 'mask database table before chatgpt', 'hide schema from AI', 'SQL ChatGPT safety', 'AI schema masker']
     },
     {
+      slug: 'hipaa-compliant-ai-development',
+      title: 'HIPAA-Compliant AI Development — Use ChatGPT Without Exposing Patient Data',
+      excerpt: 'How healthcare developers can use ChatGPT and AI coding assistants without exposing PHI. Mask SQL, JSON, and code in your browser before sending. Client-side only, HIPAA-safe workflow.',
+      date: '2026-02-28',
+      readTime: '8 min read',
+      category: 'AI & Security',
+      keywords: ['hipaa compliant developer tools', 'hipaa chatgpt sql', 'mask phi before chatgpt', 'hipaa compliant json masking', 'chatgpt without exposing patient data']
+    },
+    {
       slug: 'how-to-decode-stringified-nested-json-logs-without-5-tools',
       title: 'How to Decode Stringified Nested JSON Logs (Without Using 5 Different Tools)',
       excerpt: 'Stop switching between unescapers, jwt.io, and epoch converters. Learn what stringified nested JSON is, when it happens, and how to unescape and parse it in one place.',
