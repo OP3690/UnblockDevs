@@ -32,6 +32,7 @@ export const metadata: Metadata = {
 
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-cancel-audible-subscription-mobile-desktop' },
+  robots: { index: false, follow: false },
 };
 
 export default function HowToCancelAudibleSubscriptionGuide() {

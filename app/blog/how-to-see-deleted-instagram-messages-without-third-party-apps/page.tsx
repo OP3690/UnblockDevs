@@ -30,8 +30,9 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/how-to-see-deleted-instagram-messages-without-third-party-apps',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-see-deleted-instagram-messages-without-third-party-apps' },
-
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-see-deleted-instagram-messages-without-third-party-apps' },
+  robots: { index: false, follow: false },
 };
 
 export default function HowToSeeDeletedInstagramMessagesGuide() {

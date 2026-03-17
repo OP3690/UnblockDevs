@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     'provenance verification'
   ],
   alternates: { canonical: 'https://unblockdevs.com/blog/digital-provenance-complete-guide' },
-
+  robots: { index: false, follow: false },
 };
 
 export default function DigitalProvenance() {

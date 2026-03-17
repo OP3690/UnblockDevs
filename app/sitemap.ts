@@ -34,7 +34,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'xbox-game-pass-games-complete-guide',
     'ces-2026-fire-tv-stick-4k-max-project-ava',
   ]
-  // Noindex + exclude from sitemap: off-topic "make money with AI" etc. (saves crawl budget, keeps topical authority)
+  // Noindex + exclude from sitemap: off-topic (saves crawl budget, keeps topical authority)
   const noindexBlogSlugs = [
     'can-ai-fall-in-love-understanding-ai-emotions',
     'will-ai-take-over-the-world-movies-vs-reality',
@@ -45,6 +45,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'how-to-make-1000-month-using-ai-if-started-today',
     'passive-income-with-ai-is-it-really-possible',
     'how-students-can-make-money-using-ai-2026',
+    // Off-topic (audible, instagram, whatsapp, finance, CES, tech skills, physical AI, etc.)
+    'how-to-cancel-audible-subscription-mobile-desktop',
+    'how-to-see-deleted-instagram-messages-without-third-party-apps',
+    'how-to-change-whatsapp-privacy-settings-maximum-security',
+    'instagram-password-reset-email-guide',
+    'high-impact-tech-stocks-investment-guide',
+    'how-to-invest-consistently-usa-tech-stocks',
+    'apple-creator-studio-complete-guide',
+    'ces-2026-fire-tv-stick-4k-max-project-ava',
+    'most-useful-tech-skills-2026',
+    'must-learn-tech-skills-2030',
+    'physical-ai-complete-guide',
+    'physical-ai-edge-computing-complete-guide',
+    'physical-ai-systems-complete-guide',
+    'ai-supercomputing-platforms-complete-guide',
+    'ai-security-platforms-complete-guide',
+    'digital-provenance-complete-guide',
+    'domain-specific-language-models-complete-guide',
+    'multiagent-systems-complete-guide',
   ]
   // Old duplicate JSON article slugs (301 to consolidated guides; exclude from sitemap)
   const duplicateJsonRedirectSlugs = [

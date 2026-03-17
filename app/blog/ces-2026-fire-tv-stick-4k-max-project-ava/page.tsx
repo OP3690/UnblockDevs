@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     'Amazon Fire TV features'
   ],
   alternates: { canonical: 'https://unblockdevs.com/blog/ces-2026-fire-tv-stick-4k-max-project-ava' },
-
+  robots: { index: false, follow: false },
 };
 
 export default function Ces2026FireTvStickProjectAva() {

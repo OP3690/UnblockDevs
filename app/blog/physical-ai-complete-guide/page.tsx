@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     'ai hardware'
   ],
   alternates: { canonical: 'https://unblockdevs.com/blog/physical-ai-complete-guide' },
-
+  robots: { index: false, follow: false },
 };
 
 export default function PhysicalAiCompleteGuide() {

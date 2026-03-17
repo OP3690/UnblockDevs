@@ -38,6 +38,7 @@ export const metadata: Metadata = {
     title: 'Apple Creator Studio: Complete Guide 2026',
     description: 'Learn everything about Apple Creator Studio - features, how to use it, benefits for content creators, and best practices.',
   },
+  robots: { index: false, follow: false },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/apple-creator-studio-complete-guide',
   },

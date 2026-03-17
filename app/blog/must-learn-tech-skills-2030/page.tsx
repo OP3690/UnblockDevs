@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     '2030 technology'
   ],
   alternates: { canonical: 'https://unblockdevs.com/blog/must-learn-tech-skills-2030' },
-
+  robots: { index: false, follow: false },
 };
 
 export default function MustLearnTechSkills2030() {

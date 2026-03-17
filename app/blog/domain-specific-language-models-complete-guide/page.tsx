@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     'domain-specific model training'
   ],
   alternates: { canonical: 'https://unblockdevs.com/blog/domain-specific-language-models-complete-guide' },
-
+  robots: { index: false, follow: false },
 };
 
 export default function DomainSpecificLanguageModels() {

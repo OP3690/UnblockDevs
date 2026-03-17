@@ -36,6 +36,7 @@ export const metadata: Metadata = {
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/ai-security-platforms-complete-guide' },
+  robots: { index: false, follow: false },
 };
 
 export default function AiSecurityPlatforms() {

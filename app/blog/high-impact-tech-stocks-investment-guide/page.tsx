@@ -26,6 +26,7 @@ export const metadata: Metadata = {
     'tech stock portfolio',
     'tech stock strategy'
   ],
+  robots: { index: false, follow: false },
   alternates: { canonical: 'https://unblockdevs.com/blog/high-impact-tech-stocks-investment-guide' },
 
 };

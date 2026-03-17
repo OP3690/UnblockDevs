@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     'gpu computing'
   ],
   alternates: { canonical: 'https://unblockdevs.com/blog/most-useful-tech-skills-2026' },
-
+  robots: { index: false, follow: false },
 };
 
 export default function MostUsefulTechSkills2026() {
