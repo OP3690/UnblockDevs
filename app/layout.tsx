@@ -5,7 +5,6 @@ import './globals.css'
 import { Toaster } from 'react-hot-toast'
 import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget'
 import DevModeWrapper from '@/components/DevModeWrapper'
-import Celebration1MPopup from '@/components/Celebration1MPopup'
 import GA4RouteTracker from '@/components/GA4RouteTracker'
 import TabVisibilityTracker from '@/components/TabVisibilityTracker'
 import GlobalAdSlot from '@/components/GlobalAdSlot'
@@ -274,7 +273,6 @@ export default function RootLayout({
           </div>
           <GlobalAdSlot />
           <BuyMeACoffeeWidget />
-          <Celebration1MPopup />
         </DevModeWrapper>
         <Toaster 
           position="bottom-right"
