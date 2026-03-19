@@ -1,6 +1,8 @@
 'use client';
 
 import AdUnit from '@/components/AdUnit';
+import AutoBlogArticleSchema from '@/components/AutoBlogArticleSchema';
+import AutoRelatedBlogPosts from '@/components/AutoRelatedBlogPosts';
 
 /** AdSense slot IDs (Ads → By ad unit). Env vars override for different environments. */
 const SLOT_HEADER =
@@ -31,6 +33,7 @@ export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSid
   return (
     <div className="max-w-7xl xl:max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-12 pt-12 sm:pt-16 flex flex-col xl:flex-row gap-6 xl:gap-8">
       <main className="flex-1 min-w-0 max-w-4xl mx-auto xl:mx-0 w-full overflow-x-hidden">
+        <AutoBlogArticleSchema />
         {/* Ad 1 — below title (horizontal) */}
         <div className="my-6">
           <AdUnit slot={SLOT_HEADER} format="auto" className="rounded-lg overflow-hidden" />
@@ -40,6 +43,7 @@ export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSid
           <AdUnit slot={SLOT_INARTICLE} format="fluid" layout="in-article" className="rounded-lg overflow-hidden" />
         </div>
         {children}
+        <AutoRelatedBlogPosts />
         {/* Ad 3 — below article (autorelaxed) */}
         <div className="my-8">
           <AdUnit slot={SLOT_FOOTER} format="autorelaxed" className="rounded-lg overflow-hidden" />

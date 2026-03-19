@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Script from 'next/script';
 import { blogPosts } from '@/lib/blog-posts-data';
 import { BlogListClient } from './BlogListClient';
 
@@ -17,19 +18,37 @@ export async function generateMetadata({
   const canonical = page <= 1 ? 'https://unblockdevs.com/blog' : `https://unblockdevs.com/blog?page=${page}`;
   const isPagination = page > 1;
   return {
-    title: "Developer Articles & Tutorials | UnblockDevs",
-    description: 'Technical articles, tutorials, best practices on JSON, API testing, web dev. Learn with guides and examples.',
+    title: page <= 1
+      ? 'Developer Debugging Guides, JSON Fixes & API Tutorials | UnblockDevs'
+      : `Developer Debugging Guides - Page ${page} | UnblockDevs`,
+    description: 'Natural, practical developer guides for JSON errors, API debugging, curl, schema validation, and security-safe AI workflows.',
     alternates: { canonical },
     // Noindex pagination (page 2+) so crawl budget goes to /blog and individual posts
     ...(isPagination ? { robots: { index: false, follow: true } } : {}),
+    openGraph: {
+      title: 'Developer Debugging Guides, JSON Fixes & API Tutorials | UnblockDevs',
+      description: 'Natural, practical developer guides for JSON errors, API debugging, curl, schema validation, and security-safe AI workflows.',
+      url: canonical,
+      type: 'website',
+      images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Developer Guides' }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'Developer Debugging Guides, JSON Fixes & API Tutorials | UnblockDevs',
+      description: 'Natural, practical developer guides for JSON errors, API debugging, curl, schema validation, and security-safe AI workflows.',
+      images: ['/og-image.png'],
+    },
     keywords: [
-      'developer study materials',
-      'JSON tutorial',
-      'API testing',
-      'web development blog',
-      'developer guides',
-      'technical articles',
-      'programming tutorials'
+      'fix json parse error',
+      'unexpected token in json',
+      'json syntax error checker',
+      'json formatter with error highlight',
+      'how to validate json online',
+      'decode jwt token',
+      'verify jwt signature',
+      'post json data with curl',
+      'api debugging guides',
+      'developer troubleshooting tutorials',
     ],
   };
 }
@@ -49,6 +68,27 @@ export default function BlogPage({
   );
   const start = (currentPage - 1) * PER_PAGE;
   const initialPosts = blogPosts.slice(start, start + PER_PAGE);
+  const canonical = currentPage <= 1 ? 'https://unblockdevs.com/blog' : `https://unblockdevs.com/blog?page=${currentPage}`;
+  const breadcrumbsSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://unblockdevs.com/' },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: canonical },
+    ],
+  };
+  const itemListSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListOrder: 'https://schema.org/ItemListOrderDescending',
+    numberOfItems: initialPosts.length,
+    itemListElement: initialPosts.map((post, index) => ({
+      '@type': 'ListItem',
+      position: start + index + 1,
+      url: `https://unblockdevs.com/blog/${post.slug}`,
+      name: post.title,
+    })),
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-blue-50/30">
@@ -83,6 +123,16 @@ export default function BlogPage({
 
       {/* Main Content - Post Grid */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+        <Script
+          id={`blog-breadcrumb-schema-${currentPage}`}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsSchema) }}
+        />
+        <Script
+          id={`blog-itemlist-schema-${currentPage}`}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
+        />
         <BlogListClient initialPosts={initialPosts} totalPages={totalPages} currentPage={currentPage} />
 
         {/* SEO Content Section */}
@@ -173,6 +223,64 @@ export default function BlogPage({
               <h3 className="font-semibold text-gray-900 mb-2">Apache Kafka Cheat Sheet</h3>
               <p className="text-sm text-gray-600">Quick reference guide for Apache Kafka commands and concepts.</p>
             </Link>
+          </div>
+        </section>
+
+        {/* Intent-focused links that match natural developer searches */}
+        <section className="mt-10 bg-white rounded-xl border border-gray-100 shadow-sm p-6 sm:p-8">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-5">Popular Developer Search Paths</h2>
+          <div className="grid md:grid-cols-2 gap-4">
+            <Link href="/blog/fix-unexpected-end-of-json-input-error-explained" className="p-4 rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
+              <h3 className="font-semibold text-gray-900 mb-2">Fix JSON Parse Errors</h3>
+              <p className="text-sm text-gray-600">Unexpected token, invalid JSON format, and parsing edge cases with reproducible fixes.</p>
+            </Link>
+            <Link href="/blog/why-my-api-works-in-postman-but-not-in-browser" className="p-4 rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
+              <h3 className="font-semibold text-gray-900 mb-2">API Works in Postman, Not Browser</h3>
+              <p className="text-sm text-gray-600">High-intent debugging flow for CORS, auth headers, cookies, and browser-specific request behavior.</p>
+            </Link>
+            <Link href="/json-validator" className="p-4 rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
+              <h3 className="font-semibold text-gray-900 mb-2">Validate JSON Online</h3>
+              <p className="text-sm text-gray-600">Check syntax and structure fast before deploying payloads or sharing examples.</p>
+            </Link>
+            <Link href="/jwt-decoder" className="p-4 rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
+              <h3 className="font-semibold text-gray-900 mb-2">Decode JWT Tokens</h3>
+              <p className="text-sm text-gray-600">Inspect claims, expiration, and token payloads during auth debugging workflows.</p>
+            </Link>
+          </div>
+        </section>
+
+        <section className="mt-10 grid gap-6 lg:grid-cols-3">
+          <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
+            <h2 className="text-lg font-bold text-gray-900">JSON Error Hub</h2>
+            <p className="mt-2 text-sm text-gray-600">Most searched debugging paths for malformed payloads and parse failures.</p>
+            <div className="mt-4 space-y-2 text-sm">
+              <Link href="/blog/fix-unexpected-end-of-json-input-error-explained" className="block text-primary-700 hover:underline">Unexpected end of JSON input</Link>
+              <Link href="/blog/fix-unexpected-token-less-than-in-json-api-returns-html" className="block text-primary-700 hover:underline">Unexpected token &lt; in JSON</Link>
+              <Link href="/fix-json-parse-error-javascript" className="block text-primary-700 hover:underline">JSON parse error: unexpected token</Link>
+              <Link href="/json-validator" className="block text-primary-700 hover:underline">Open JSON Validator Tool</Link>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
+            <h2 className="text-lg font-bold text-gray-900">JWT & Auth Hub</h2>
+            <p className="mt-2 text-sm text-gray-600">High-intent auth troubleshooting for token inspection and verification.</p>
+            <div className="mt-4 space-y-2 text-sm">
+              <Link href="/jwt-decoder" className="block text-primary-700 hover:underline">Decode JWT Token Online</Link>
+              <Link href="/hash-generator" className="block text-primary-700 hover:underline">Generate SHA / MD5 / HMAC Hash</Link>
+              <Link href="/url-encoder" className="block text-primary-700 hover:underline">URL Encode/Decode Tool</Link>
+              <Link href="/blog/token-security-privacy-best-practices" className="block text-primary-700 hover:underline">Token security best practices</Link>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
+            <h2 className="text-lg font-bold text-gray-900">API Debugging Hub</h2>
+            <p className="mt-2 text-sm text-gray-600">Natural search patterns developers use when APIs fail in production.</p>
+            <div className="mt-4 space-y-2 text-sm">
+              <Link href="/blog/why-my-api-works-in-postman-but-not-in-browser" className="block text-primary-700 hover:underline">API works in Postman, not browser</Link>
+              <Link href="/blog/post-json-data-with-curl-examples-complete-guide" className="block text-primary-700 hover:underline">Post JSON data with curl</Link>
+              <Link href="/curl-failure-root-cause-engine" className="block text-primary-700 hover:underline">Curl failure root-cause engine</Link>
+              <Link href="/cors-tester" className="block text-primary-700 hover:underline">CORS tester tool</Link>
+            </div>
           </div>
         </section>
       </main>

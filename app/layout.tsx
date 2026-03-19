@@ -24,6 +24,10 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://unblockdevs.com'),
+  alternates: {
+    canonical: 'https://unblockdevs.com',
+  },
   title: 'Use AI Safely — JSON Masking & Log Unpacker | UnblockDevs',
   description: 'Mask JSON and SQL before sending to AI. Fix stringified JSON, unpack logs, decode JWTs. Schema masking, formatter, parser—100% in-browser, no signup.',
   keywords: [
@@ -136,7 +140,6 @@ export const metadata: Metadata = {
     description: 'Mask JSON and SQL before sending to AI. Fix stringified JSON, unpack logs. Schema masking—100% in-browser, no signup.',
     images: ['/og-image.png'],
   },
-  metadataBase: new URL('https://unblockdevs.com'),
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
@@ -219,6 +222,18 @@ export default function RootLayout({
     url: 'https://unblockdevs.com',
     featureList: ['JSON masking', 'AI schema masking', 'Log unpacker', 'JWT decoder', 'JSON formatter', 'No signup required'],
   };
+  const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'UnblockDevs',
+    url: 'https://unblockdevs.com',
+    inLanguage: 'en-US',
+    publisher: {
+      '@type': 'Organization',
+      name: 'UnblockDevs',
+      url: 'https://unblockdevs.com',
+    },
+  };
 
   return (
     <html lang="en" className={`${inter.variable} ${firaCode.variable}`}>
@@ -231,6 +246,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
         {/* Only 2 preconnects — no gatekeeper, no BMC, no adtrafficquality (~400ms saved on mobile) */}
         <link rel="preconnect" href="https://pagead2.googlesyndication.com" />

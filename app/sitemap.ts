@@ -427,11 +427,41 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/blog/${slug}`,
       lastModified: currentDate,
       changeFrequency: 'monthly' as const,
-      priority: 0.7,
+      priority: getBlogPriority(slug),
     })),
     // Omit blog?page=2+ from sitemap (those URLs are noindex); keep crawl budget for /blog and post URLs
   ].filter((e) => isPageUrl(e.url))
 
   return entries
+}
+
+function getBlogPriority(slug: string): number {
+  const highIntentPrefixes = [
+    'fix-',
+    'why-my-api-works-in-postman-but-not-in-browser',
+    'how-to-validate-json-schema',
+    'json-schema',
+    'post-json-data-with-curl',
+    'decode-jwt',
+    'jwt-',
+    'unexpected-token',
+  ]
+  const highIntentContains = [
+    'json',
+    'api',
+    'curl',
+    'jwt',
+    'schema',
+    'error',
+    'debug',
+    'mask',
+    'pii',
+    'security',
+  ]
+
+  if (highIntentPrefixes.some((prefix) => slug.startsWith(prefix))) return 0.85
+  if (highIntentContains.some((token) => slug.includes(token))) return 0.8
+  if (slug.includes('guide') || slug.includes('explained')) return 0.7
+  return 0.65
 }
 

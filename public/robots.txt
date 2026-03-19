@@ -3,5 +3,6 @@ User-agent: *
 Allow: /
 Disallow: /api/
 Disallow: /_next/
+Disallow: /favicon.ico
 
 Sitemap: https://unblockdevs.com/sitemap.xml
