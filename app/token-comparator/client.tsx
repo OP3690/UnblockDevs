@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { ArrowLeft, Key, Shield, CheckCircle, ExternalLink } from 'lucide-react';
-import FAQSchema from '@/components/FAQSchema';
 import TokenComparator from '@/components/tools/TokenComparator';
 
 export default function TokenComparatorLandingClient() {
@@ -27,27 +26,7 @@ export default function TokenComparatorLandingClient() {
       </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <FAQSchema
-          faqs={[
-            {
-              question: 'What is a token comparator?',
-              answer: 'A token comparator is a tool that compares two tokens (like JWT tokens, API keys, or authentication tokens) character by character to identify differences. It highlights mismatches visually, making it easy to spot where tokens differ.',
-            },
-            {
-              question: 'Is my token data stored or logged?',
-              answer: 'No. The Token Comparator is 100% client-side. All comparison happens entirely in your browser. Your tokens never leave your device, are never stored, logged, or transmitted to any server. Your sensitive data remains completely private.',
-            },
-            {
-              question: 'What types of tokens can I compare?',
-              answer: 'You can compare any type of token: JWT tokens, API keys, OAuth tokens, session tokens, authentication tokens, hashes, checksums, or any string-based tokens. The tool works with any text-based token format.',
-            },
-            {
-              question: 'How does the token comparison work?',
-              answer: 'The tool compares tokens character by character, highlighting matching characters in green and mismatches in red. It provides statistics including total characters, matches, mismatches, and match percentage. All processing happens instantly in your browser.',
-            },
-          ]}
-        />
-        
+        {/* FAQ JSON-LD is emitted once in page.tsx (server) to avoid duplicate FAQPage */}
         {/* Tool Component - Moved to top */}
         <div className="mb-8">
           <TokenComparator />

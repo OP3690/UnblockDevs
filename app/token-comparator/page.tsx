@@ -110,6 +110,38 @@ const faqSchema = {
         text: 'Paste your first token in Token 1 and your second token in Token 2 at unblockdevs.com/token-comparator. Click Compare for an instant character-by-character visual diff with match percentage and mismatch highlighting.',
       },
     },
+    {
+      '@type': 'Question' as const,
+      name: 'What is a token comparator?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'A token comparator compares two tokens (JWT, API keys, auth tokens, etc.) character by character, highlights mismatches visually, and shows match statistics—all in your browser.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'Is my token data stored or logged?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'No. Token Comparator is 100% client-side. Your tokens never leave your device and are not stored, logged, or sent to any server.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What types of tokens can I compare?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'You can compare JWTs, API keys, OAuth tokens, session tokens, hashes, checksums, and other text-based tokens.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How does the token comparison work?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'The tool compares character by character with green for matches and red for mismatches, plus totals and match percentage—all processed instantly in your browser.',
+      },
+    },
   ],
 };
 
