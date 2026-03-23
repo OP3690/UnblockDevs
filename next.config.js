@@ -2,11 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  experimental: {
-    optimizeCss: true,
-    optimizePackageImports: ['lucide-react'],
-  },
-  // Optimize images
+  // experimental.optimizeCss was removed: it caused full-page unstyled HTML (Tailwind not applied).
   images: {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 86400, // 24 hours (was 60s — reduced unnecessary reloads)

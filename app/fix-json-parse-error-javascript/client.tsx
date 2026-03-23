@@ -1,31 +1,23 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Code, AlertTriangle, CheckCircle, Wrench, ExternalLink } from 'lucide-react';
+import { Code, AlertTriangle, CheckCircle, Wrench, ExternalLink } from 'lucide-react';
+import ToolPageShell from '@/components/tools/ToolPageShell';
 
 export default function FixJsonParseErrorJavascriptClient() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
-      <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Tools
-          </Link>
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <Code className="w-6 h-6 text-blue-600" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Fix JSON.parse() Error in JavaScript</h1>
-              <p className="text-sm text-gray-500 mt-1">Complete guide with error handling examples</p>
-            </div>
-          </div>
+    <ToolPageShell
+      title="Fix JSON.parse() Error in JavaScript"
+      subtitle="Complete guide with error handling examples"
+      toolName="fix_json_parse_error_javascript"
+      badges={
+        <div className="flex items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-700">
+          <Code className="h-5 w-5 shrink-0 text-emerald-600" aria-hidden />
+          <span>JavaScript · JSON.parse</span>
         </div>
-      </header>
-
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
+      }
+      belowCard={
+        <article className="max-w-none">
           <section className="mb-12">
             <p className="text-lg text-gray-700 leading-relaxed mb-4">
               <code className="bg-gray-100 px-1 rounded">JSON.parse()</code> is one of the most commonly used JavaScript functions, 
@@ -119,8 +111,8 @@ export default function FixJsonParseErrorJavascriptClient() {
             </Link>
           </section>
         </article>
-      </main>
-    </div>
+      }
+    />
   );
 }
 

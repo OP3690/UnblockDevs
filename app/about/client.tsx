@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Shield, Zap, CheckCircle, Code, Heart, Mail, Users, Target, Globe, Lock, Rocket, Award, TrendingUp, BookOpen, Lightbulb, ArrowLeft } from 'lucide-react';
+import AboutMarketingSections from '@/components/about/AboutMarketingSections';
 
 export default function AboutClient() {
   return (
@@ -553,6 +554,11 @@ export default function AboutClient() {
             </div>
           </section>
         </article>
+
+        {/* AI-safety & product marketing (same narrative as former home below-fold; zinc/emerald layout) */}
+        <div className="mt-12 border-t border-zinc-200/80 pt-12 sm:mt-16 sm:pt-16">
+          <AboutMarketingSections />
+        </div>
       </main>
     </div>
   );

@@ -1,38 +1,36 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Wrench, CheckCircle, Shield, Zap, ExternalLink } from 'lucide-react';
-import Breadcrumb from '@/components/Breadcrumb';
+import { Wrench, CheckCircle, Shield, Zap, ExternalLink } from 'lucide-react';
+import ToolPageShell from '@/components/tools/ToolPageShell';
+import type { BreadcrumbItem } from '@/components/Breadcrumb';
 import dynamic from 'next/dynamic';
 
 const JsonFixer = dynamic(() => import('@/components/tools/JsonFixer'), {
-  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+  loading: () => (
+    <div className="flex items-center justify-center py-12">
+      <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-emerald-700" />
+    </div>
+  ),
 });
+
+const JSON_BREADCRUMB: BreadcrumbItem[] = [
+  { label: 'Home', href: '/' },
+  { label: 'Tools', href: '/tools/json' },
+  { label: 'JSON', href: '/tools/json' },
+  { label: 'JSON fixer' },
+];
 
 export default function JsonFixerOnlineClient() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
-      <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Tools', href: '/tools/json' }, { label: 'JSON', href: '/tools/json' }, { label: 'JSON validator' }]} />
-          <Link href="/" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Tools
-          </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Advanced JSON Fixer & Recovery Engine</h1>
-          <p className="text-sm text-gray-500 mt-1">Paste → Instant fix. Repair malformed JSON, recover truncated payloads, extract from logs, fix AI/API output — 100% client-side</p>
-          <p className="text-xs text-gray-500 mt-1">Fix trailing commas, missing quotes, broken arrays, AI-generated JSON</p>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Tool Component */}
-        <div className="mb-8">
-          <JsonFixer />
-        </div>
-
-        {/* SEO Content Section - 1000-1200 words */}
-        <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
+    <ToolPageShell
+      breadcrumbItems={JSON_BREADCRUMB}
+      title="Advanced JSON Fixer & Recovery Engine"
+      subtitle="Paste → Instant fix. Repair malformed JSON, recover truncated payloads, extract from logs, fix AI/API output — 100% client-side. Fix trailing commas, missing quotes, broken arrays, AI-generated JSON."
+      toolName="json_fixer"
+      tool={<JsonFixer />}
+      belowCard={
+        <article className="max-w-none">
           <section className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">What Problem Does JSON Fixer Solve?</h2>
             <p className="text-lg text-gray-700 leading-relaxed mb-4">
@@ -282,8 +280,8 @@ export default function JsonFixerOnlineClient() {
             </div>
           </section>
         </article>
-      </main>
-    </div>
+      }
+    />
   );
 }
 

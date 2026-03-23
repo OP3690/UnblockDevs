@@ -15,6 +15,11 @@ interface AdUnitProps {
   layout?: 'in-article' | 'in-feed' | '';
   className?: string;
   minHeight?: number;
+  /**
+   * Default 320 avoids Matched Content / wide units collapsing to 0 width.
+   * Use `0` in narrow sidebars so the slot does not overflow and block clicks on adjacent content.
+   */
+  minWidth?: number;
 }
 
 /**
@@ -27,6 +32,7 @@ export default function AdUnit({
   layout = '',
   className = '',
   minHeight = 90,
+  minWidth = 320,
 }: AdUnitProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -77,13 +83,19 @@ export default function AdUnit({
     ...(isInArticle ? { textAlign: 'center' as const } : {}),
   };
 
+  const containerStyle: React.CSSProperties = {
+    minHeight: `${minHeight}px`,
+    width: '100%',
+    ...(minWidth > 0 ? { minWidth } : { minWidth: 0 }),
+  };
+
   return (
     <div
       ref={containerRef}
       role="region"
       aria-label="Advertisement"
       className={`ad-unit flex items-center justify-center text-center ${className}`}
-      style={{ minHeight: `${minHeight}px`, minWidth: 320, width: '100%' }}
+      style={containerStyle}
     >
       <ins
         className="adsbygoogle"

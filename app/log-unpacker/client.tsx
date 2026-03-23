@@ -1,53 +1,35 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
-import Breadcrumb from '@/components/Breadcrumb';
+import ToolPageShell from '@/components/tools/ToolPageShell';
+import type { BreadcrumbItem } from '@/components/Breadcrumb';
 import dynamic from 'next/dynamic';
 
 const LogUnpacker = dynamic(() => import('@/components/tools/LogUnpacker'), {
   loading: () => (
     <div className="flex items-center justify-center py-12">
-      <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-primary-600" />
+      <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-emerald-700" />
     </div>
   ),
 });
 
+const JSON_BREADCRUMB: BreadcrumbItem[] = [
+  { label: 'Home', href: '/' },
+  { label: 'Tools', href: '/tools/json' },
+  { label: 'JSON', href: '/tools/json' },
+  { label: 'Log Unpacker' },
+];
+
 export default function LogUnpackerClient() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
-      <header className="border-b border-gray-200 bg-white shadow-md">
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          <Breadcrumb
-            items={[
-              { label: 'Home', href: '/' },
-              { label: 'Tools', href: '/tools/json' },
-              { label: 'JSON', href: '/tools/json' },
-              { label: 'Log Unpacker' },
-            ]}
-          />
-          <Link
-            href="/"
-            className="mb-4 inline-flex items-center gap-2 rounded-lg border-2 border-primary-200 bg-primary-50 px-4 py-2 text-sm font-medium text-primary-700 transition-colors hover:border-primary-300 hover:bg-primary-100"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Tools
-          </Link>
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
-            Log Unpacker — Unescape Stringified JSON, Decode JWTs, Epoch Timestamps &amp; Sanitize for AI
-          </h2>
-          <p className="mt-1 text-sm text-gray-500">
-            Recursively unescape nested JSON, decode JWTs, convert epoch timestamps, scrub paths. 100% client-side. AI-safe output.
-          </p>
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <LogUnpacker />
-        </div>
-
-        <article className="rounded-xl bg-white p-8 shadow-lg md:p-12">
+    <ToolPageShell
+      breadcrumbItems={JSON_BREADCRUMB}
+      title="Log Unpacker — Unescape Stringified JSON, Decode JWTs, Epoch Timestamps & Sanitize for AI"
+      subtitle="Recursively unescape nested JSON, decode JWTs, convert epoch timestamps, scrub paths. 100% client-side. AI-safe output."
+      toolName="log_unpacker"
+      tool={<LogUnpacker />}
+      belowCard={
+        <article className="max-w-none">
           <section className="mb-12">
             <h2 className="mb-6 text-3xl font-bold text-gray-900">What This Tool Does</h2>
             <p className="mb-4 leading-relaxed text-gray-700">
@@ -116,7 +98,7 @@ export default function LogUnpackerClient() {
             </div>
           </section>
         </article>
-      </main>
-    </div>
+      }
+    />
   );
 }

@@ -109,6 +109,7 @@ function ResultCard({
   icon,
   phase,
   accent,
+  compact,
 }: {
   label: string;
   value: number | null;
@@ -116,21 +117,26 @@ function ResultCard({
   icon: string;
   phase: ResultCardPhase;
   accent: ResultCardAccent;
+  compact?: boolean;
 }) {
   const styles = CARD_ACCENTS[accent];
   return (
     <div
-      className={`p-5 rounded-2xl border text-center transition-all duration-300 ease-out ${
+      className={`${compact ? 'p-3.5 sm:p-4' : 'p-5'} rounded-2xl border text-center transition-all duration-300 ease-out motion-reduce:transition-none ${
         phase === 'active'
-          ? `${styles.border} ${styles.bg} scale-[1.02] shadow-lg`
+          ? `${styles.border} ${styles.bg} scale-[1.02] shadow-lg ring-1 ring-white/5`
           : phase === 'done'
             ? `border-gray-700/80 bg-gray-900/80 hover:border-gray-600 ${styles.text}`
             : 'border-gray-800 bg-gray-900/40 opacity-60'
       }`}
     >
-      <div className="text-2xl mb-2" aria-hidden>{icon}</div>
-      <div className="text-gray-400 text-xs font-medium uppercase tracking-wider mb-1">{label}</div>
-      <div className={`text-2xl sm:text-3xl font-black tabular-nums ${phase === 'done' ? styles.text : 'text-white'}`}>
+      <div className={`${compact ? 'text-xl mb-1' : 'text-2xl mb-2'}`} aria-hidden>
+        {icon}
+      </div>
+      <div className="text-gray-400 text-[10px] sm:text-xs font-medium uppercase tracking-wider mb-0.5">{label}</div>
+      <div
+        className={`font-black tabular-nums ${compact ? 'text-lg sm:text-xl' : 'text-2xl sm:text-3xl'} ${phase === 'done' ? styles.text : 'text-white'}`}
+      >
         {value !== null
           ? value < 1
             ? value.toFixed(2)
@@ -320,294 +326,362 @@ export default function SpeedTestClient() {
     { key: 'upload', label: 'Upload', active: phase === 'upload', done: upload !== null },
   ];
 
-  const contentWidth = 'max-w-3xl mx-auto';
+  const shell = 'max-w-6xl mx-auto px-4 sm:px-6';
+
+  const sidebarMetrics = [
+    {
+      label: 'Download',
+      value: download,
+      unit: 'Mbps',
+      icon: '⬇️',
+      phase: (phase === 'download' ? 'active' : download !== null ? 'done' : 'pending') as ResultCardPhase,
+      accent: 'download' as ResultCardAccent,
+    },
+    {
+      label: 'Upload',
+      value: upload,
+      unit: 'Mbps',
+      icon: '⬆️',
+      phase: (phase === 'upload' ? 'active' : upload !== null ? 'done' : 'pending') as ResultCardPhase,
+      accent: 'upload',
+    },
+    {
+      label: 'Ping',
+      value: ping,
+      unit: 'ms',
+      icon: '📡',
+      phase: (phase === 'ping' ? 'active' : ping !== null ? 'done' : 'pending') as ResultCardPhase,
+      accent: 'ping',
+    },
+    {
+      label: 'Jitter',
+      value: jitter,
+      unit: 'ms',
+      icon: '〰️',
+      phase: (phase === 'ping' ? 'active' : jitter !== null ? 'done' : 'pending') as ResultCardPhase,
+      accent: 'jitter',
+    },
+  ] as const;
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
-      {/* Header */}
-      <header className="sticky top-0 z-10 bg-gray-950/95 backdrop-blur-md border-b border-gray-800/80">
-        <div className={`${contentWidth} px-4 sm:px-6 py-4`}>
+    <div className="relative min-h-screen overflow-hidden bg-zinc-950 text-white">
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.4]"
+        style={{
+          backgroundImage: `radial-gradient(ellipse 100% 70% at 15% 0%, rgba(16,185,129,0.22), transparent 55%),
+            radial-gradient(ellipse 80% 60% at 95% 20%, rgba(99,102,241,0.18), transparent 50%),
+            radial-gradient(ellipse 60% 50% at 50% 100%, rgba(14,165,233,0.12), transparent 45%)`,
+        }}
+        aria-hidden
+      />
+
+      <header className="relative z-10 border-b border-white/5 bg-zinc-950/80 backdrop-blur-xl">
+        <div className={`${shell} py-3.5 sm:py-4`}>
           <Link
-            href="/"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800/80 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950"
+            href="/tools/json"
+            className="inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-zinc-400 transition-colors hover:bg-white/5 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
           >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Tools
+            <ArrowLeft className="h-4 w-4" />
+            Back to tools
           </Link>
         </div>
       </header>
 
-      <main className={`${contentWidth} px-4 sm:px-6 pb-20`}>
-        {/* Hero: title + badges */}
-        <section className="pt-10 sm:pt-14 pb-8">
-          <div className="text-center">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white mb-3">
+      <main className={`relative z-[1] ${shell} pb-24`}>
+        <section className="pt-8 pb-8 sm:pt-10 sm:pb-10">
+          <div className="max-w-3xl">
+            <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl">
               Internet Speed Test
             </h1>
-            <p className="text-gray-400 text-base sm:text-lg max-w-md mx-auto mb-6">
+            <p className="mt-3 text-base text-zinc-400 sm:text-lg">
               Check download, upload, ping, and jitter. No account, no data stored.
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-2">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-800/80 text-gray-400 text-xs font-medium border border-gray-700/50">
-                <Zap className="w-3 h-3 text-emerald-400" />
+            <div className="mt-5 flex flex-wrap gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-200/90">
+                <Zap className="h-3.5 w-3.5 text-emerald-400" />
                 Instant
               </span>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-800/80 text-gray-400 text-xs font-medium border border-gray-700/50">
-                <Lock className="w-3 h-3 text-emerald-400" />
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-zinc-300">
+                <Lock className="h-3.5 w-3.5 text-emerald-400/90" />
                 No data stored
               </span>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-800/80 text-gray-400 text-xs font-medium border border-gray-700/50">
-                <Shield className="w-3 h-3 text-emerald-400" />
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-zinc-300">
+                <Shield className="h-3.5 w-3.5 text-violet-300/90" />
                 In browser
               </span>
             </div>
           </div>
         </section>
 
-        {/* Test area: one card for gauge + controls + result */}
-        <section className="rounded-3xl border border-gray-800 bg-gray-900/50 overflow-hidden shadow-2xl shadow-black/30">
-          <div className="relative p-6 sm:p-8 md:p-10">
-            <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/20 via-transparent to-transparent pointer-events-none" aria-hidden />
-            <div className="relative flex flex-col items-center">
-              <div
-                className={`w-full flex justify-center p-4 sm:p-6 rounded-2xl transition-all duration-500 ${
-                  phase === 'download' || phase === 'upload'
-                    ? 'bg-emerald-500/5 ring-1 ring-emerald-500/30'
-                    : 'bg-gray-800/30'
-                }`}
-              >
-                <SpeedGauge
-                  value={phase === 'complete' ? download ?? 0 : liveSpeed}
-                  phase={phase}
+        <div className="grid items-start gap-8 lg:grid-cols-12 lg:gap-10">
+          {/* Primary: gauge + flow */}
+          <div className="lg:col-span-7">
+            <section className="animate-speed-scale-in motion-reduce:animate-none overflow-visible rounded-[1.75rem] border border-white/10 bg-gradient-to-b from-zinc-900/90 to-zinc-950/95 shadow-2xl shadow-black/40 ring-1 ring-white/5">
+              <div className="relative p-6 sm:p-8 md:p-10">
+                <div
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-b from-emerald-500/[0.07] via-transparent to-violet-500/[0.04]"
+                  aria-hidden
                 />
-              </div>
-
-              {error && (
-                <div className="mt-4 w-full max-w-md px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm flex items-start gap-3">
-                  <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" aria-hidden />
-                  <span>{error}</span>
-                </div>
-              )}
-
-              {phase === 'idle' && (
-                <div className="mt-6 flex flex-col items-center gap-3">
-                  {history.length > 0 && (
-                    <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-800/50 border border-gray-700/50 text-gray-400 text-xs">
-                      <History className="w-4 h-4 text-emerald-400/80" />
-                      <span>
-                        Last test: <strong className="text-gray-300">{Math.round(history[0].download)} Mbps</strong> down · {formatTimeAgo(Date.now() - history[0].at)}
-                      </span>
-                    </div>
-                  )}
-                  <button
-                    type="button"
-                    onClick={runTest}
-                    className="px-10 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold text-base rounded-full transition-all shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 border border-emerald-400/20"
+                <div className="relative flex flex-col items-center">
+                  <div
+                    className={`flex w-full justify-center rounded-2xl p-4 transition-all duration-500 sm:p-6 ${
+                      phase === 'download' || phase === 'upload'
+                        ? 'bg-emerald-500/5 ring-1 ring-emerald-500/30'
+                        : 'bg-gray-800/30'
+                    }`}
                   >
-                    Start Speed Test
-                  </button>
-                  <p className="text-gray-500 text-xs">One tap · ~30 sec · or press Enter</p>
-                </div>
-              )}
-
-              {(phase === 'ping' || phase === 'download' || phase === 'upload') && (
-                <div className="mt-6 w-full max-w-sm">
-                  <div className="flex items-center justify-center gap-3 mb-3">
-                    {steps.map((s) => (
-                      <span
-                        key={s.key}
-                        className={`inline-flex items-center gap-1 text-xs font-medium ${
-                          s.done ? 'text-emerald-400' : s.active ? 'text-emerald-300' : 'text-gray-500'
-                        }`}
-                      >
-                        <span
-                          className={`inline-flex h-5 w-5 items-center justify-center rounded-full border text-[10px] ${
-                            s.done ? 'border-emerald-500 bg-emerald-500/20' : s.active ? 'border-emerald-500 bg-emerald-500/10' : 'border-gray-600'
-                          }`}
-                        >
-                          {s.done ? '✓' : s.active ? '●' : '○'}
-                        </span>
-                        {s.label}
-                      </span>
-                    ))}
-                  </div>
-                  <p className="text-center text-emerald-400 text-sm font-medium mb-2">
-                    {phase === 'ping' && 'Measuring latency…'}
-                    {phase === 'download' && 'Testing download…'}
-                    {phase === 'upload' && 'Testing upload…'}
-                  </p>
-                  {(phase === 'download' || phase === 'upload') && speedSamples.length > 1 && (
-                    <div className="flex justify-center mb-2">
-                      <LiveSparkline samples={speedSamples} max={Math.max(200, Math.max(...speedSamples) * 1.2)} />
-                    </div>
-                  )}
-                  <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-500"
-                      style={{ width: `${progress}%` }}
+                    <SpeedGauge
+                      value={phase === 'complete' ? download ?? 0 : liveSpeed}
+                      phase={phase}
                     />
                   </div>
-                  <div className="flex items-center justify-center gap-4 mt-3">
-                    {estimatedSecsLeft != null && estimatedSecsLeft > 0 && (
-                      <span className="text-gray-500 text-xs">~{estimatedSecsLeft} sec left</span>
-                    )}
-                    <button
-                      type="button"
-                      onClick={cancelTest}
-                      className="text-gray-400 hover:text-white text-sm font-medium inline-flex items-center gap-1.5"
-                    >
-                      <X className="w-4 h-4" />
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              )}
 
-              {phase === 'complete' && download !== null && (
-                <div className="mt-6 w-full animate-speed-fade-in-up">
-                  {rating && (() => {
-                    const grade = getSpeedGrade(download);
-                    const score = getSpeedScore(download);
-                    return (
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 pb-6 border-b border-gray-700/80">
-                        <div className="flex items-center gap-3">
-                          <div
-                            className="flex h-14 w-14 items-center justify-center rounded-xl border-2 font-black text-xl"
-                            style={{ borderColor: grade.color, color: grade.color }}
-                          >
-                            {grade.grade}
-                          </div>
-                          <div>
-                            <p className="font-bold text-white">{rating.label}</p>
-                            <p className="text-gray-400 text-sm">{rating.description}</p>
-                          </div>
+                  {error && (
+                    <div className="mt-4 flex w-full max-w-md items-start gap-3 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+                      <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" aria-hidden />
+                      <span>{error}</span>
+                    </div>
+                  )}
+
+                  {phase === 'idle' && (
+                    <div className="mt-6 flex flex-col items-center gap-3">
+                      {history.length > 0 && (
+                        <div className="flex items-center gap-2 rounded-xl border border-gray-700/50 bg-gray-800/50 px-3 py-2 text-xs text-gray-400">
+                          <History className="h-4 w-4 text-emerald-400/80" />
+                          <span>
+                            Last test:{' '}
+                            <strong className="text-gray-300">{Math.round(history[0].download)} Mbps</strong> down ·{' '}
+                            {formatTimeAgo(Date.now() - history[0].at)}
+                          </span>
                         </div>
-                        <div className="flex-1 sm:max-w-[180px]">
-                          <div className="flex justify-between text-xs text-gray-500 mb-1">
-                            <span>Score</span>
-                            <span className="text-gray-400">{score}/100</span>
+                      )}
+                      <button
+                        type="button"
+                        onClick={runTest}
+                        className="rounded-full border border-emerald-400/20 bg-emerald-500 px-10 py-3.5 text-base font-bold text-gray-950 shadow-lg shadow-emerald-500/25 transition-all hover:scale-[1.02] hover:bg-emerald-400 hover:shadow-emerald-500/40 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950"
+                      >
+                        Start Speed Test
+                      </button>
+                      <p className="text-xs text-gray-500">One tap · ~30 sec · or press Enter</p>
+                    </div>
+                  )}
+
+                  {phase === 'complete' && download !== null && (
+                    <div className="mt-6 w-full animate-speed-fade-in-up">
+                      {rating && (() => {
+                        const grade = getSpeedGrade(download);
+                        const score = getSpeedScore(download);
+                        return (
+                          <div className="mb-6 flex flex-col gap-4 border-b border-gray-700/80 pb-6 sm:flex-row sm:items-center sm:justify-between">
+                            <div className="flex items-center gap-3">
+                              <div
+                                className="flex h-14 w-14 items-center justify-center rounded-xl border-2 font-black text-xl"
+                                style={{ borderColor: grade.color, color: grade.color }}
+                              >
+                                {grade.grade}
+                              </div>
+                              <div>
+                                <p className="font-bold text-white">{rating.label}</p>
+                                <p className="text-sm text-gray-400">{rating.description}</p>
+                              </div>
+                            </div>
+                            <div className="flex-1 sm:max-w-[180px]">
+                              <div className="mb-1 flex justify-between text-xs text-gray-500">
+                                <span>Score</span>
+                                <span className="text-gray-400">{score}/100</span>
+                              </div>
+                              <div className="h-2 overflow-hidden rounded-full bg-gray-800">
+                                <div
+                                  className="h-full rounded-full transition-all duration-500"
+                                  style={{
+                                    width: `${score}%`,
+                                    background: 'linear-gradient(90deg, #ef4444, #f59e0b, #22c55e)',
+                                  }}
+                                />
+                              </div>
+                            </div>
                           </div>
-                          <div className="h-2 rounded-full bg-gray-800 overflow-hidden">
-                            <div
-                              className="h-full rounded-full transition-all duration-500"
-                              style={{
-                                width: `${score}%`,
-                                background: 'linear-gradient(90deg, #ef4444, #f59e0b, #22c55e)',
-                              }}
-                            />
-                          </div>
-                        </div>
+                        );
+                      })()}
+                      {ping !== null && (
+                        <p className="mb-4 text-sm text-gray-400">
+                          Latency <span className="font-semibold text-amber-400">{ping} ms</span>
+                          {jitter !== null && <span className="text-gray-500"> · Jitter {jitter} ms</span>}
+                        </p>
+                      )}
+                      {rating && download !== null && ping !== null && (
+                        <p className="mb-2 text-sm leading-relaxed text-gray-400">{getConnectionSummary(download, ping)}</p>
+                      )}
+                      {download !== null && (
+                        <p className="mb-5 text-sm font-medium text-emerald-400/90">
+                          Faster than {getPercentileRank(download)}% of typical home connections
+                        </p>
+                      )}
+                      <div className="flex flex-wrap items-center justify-center gap-2" aria-live="polite">
+                        <button
+                          type="button"
+                          onClick={runTest}
+                          className="rounded-full bg-emerald-500 px-6 py-2.5 text-sm font-bold text-gray-950 transition-all hover:bg-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950"
+                        >
+                          Test Again
+                        </button>
+                        <button
+                          type="button"
+                          onClick={copyResults}
+                          className={`inline-flex items-center gap-1.5 rounded-full border px-5 py-2.5 text-sm font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 ${
+                            copied
+                              ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-400'
+                              : 'border-gray-600 bg-gray-800/80 text-gray-300 hover:border-gray-500 hover:text-white'
+                          }`}
+                        >
+                          {copied ? (
+                            <>
+                              <Check className="h-4 w-4" /> Copied!
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="h-4 w-4" /> Copy
+                            </>
+                          )}
+                        </button>
                       </div>
-                    );
-                  })()}
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div className="text-center py-4 rounded-xl bg-gray-800/50">
-                      <div className="text-2xl sm:text-3xl font-black text-emerald-400 tabular-nums">{download.toFixed(1)}</div>
-                      <div className="text-gray-400 text-xs font-medium mt-0.5">Mbps download</div>
                     </div>
-                    <div className="text-center py-4 rounded-xl bg-gray-800/50 border-l border-gray-700/50">
-                      <div className="text-2xl sm:text-3xl font-black text-blue-400 tabular-nums">{upload !== null ? upload.toFixed(1) : '—'}</div>
-                      <div className="text-gray-400 text-xs font-medium mt-0.5">Mbps upload</div>
-                    </div>
-                  </div>
-                  {ping !== null && (
-                    <p className="text-gray-400 text-sm mb-4">
-                      Latency <span className="text-amber-400 font-semibold">{ping} ms</span>
-                      {jitter !== null && <span className="text-gray-500"> · Jitter {jitter} ms</span>}
-                    </p>
                   )}
-                  {rating && download !== null && ping !== null && (
-                    <p className="text-gray-400 text-sm leading-relaxed mb-2">
-                      {getConnectionSummary(download, ping)}
-                    </p>
-                  )}
-                  {download !== null && (
-                    <p className="text-emerald-400/90 text-sm font-medium mb-5">
-                      Faster than {getPercentileRank(download)}% of typical home connections
-                    </p>
-                  )}
-                  <div className="flex flex-wrap items-center justify-center gap-2" aria-live="polite">
-                    <button
-                      type="button"
-                      onClick={runTest}
-                      className="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold text-sm rounded-full transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950"
-                    >
-                      Test Again
-                    </button>
-                    <button
-                      type="button"
-                      onClick={copyResults}
-                      className={`inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full border text-sm font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 ${
-                        copied ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-400' : 'border-gray-600 bg-gray-800/80 text-gray-300 hover:text-white hover:border-gray-500'
-                      }`}
-                    >
-                      {copied ? <><Check className="w-4 h-4" /> Copied!</> : <><Copy className="w-4 h-4" /> Copy</>}
-                    </button>
-                  </div>
                 </div>
-              )}
-            </div>
+              </div>
+            </section>
           </div>
-        </section>
 
-        {/* Results grid (when we have results) */}
-        {(download !== null || upload !== null || ping !== null) && (
-          <section className="mt-10">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-              {([
-                { label: 'Download', value: download, unit: 'Mbps', icon: '⬇️', phase: (phase === 'download' ? 'active' : download !== null ? 'done' : 'pending') as ResultCardPhase, accent: 'download' },
-                { label: 'Upload', value: upload, unit: 'Mbps', icon: '⬆️', phase: (phase === 'upload' ? 'active' : upload !== null ? 'done' : 'pending') as ResultCardPhase, accent: 'upload' },
-                { label: 'Ping', value: ping, unit: 'ms', icon: '📡', phase: (ping !== null ? 'done' : 'pending') as ResultCardPhase, accent: 'ping' },
-                { label: 'Jitter', value: jitter, unit: 'ms', icon: '〰️', phase: (jitter !== null ? 'done' : 'pending') as ResultCardPhase, accent: 'jitter' },
-              ] as const).map((card, i) => (
-                <div key={card.label} className="animate-speed-fade-in-up opacity-0" style={{ animationDelay: `${i * 50}ms`, animationFillMode: 'forwards' }}>
-                  <ResultCard {...card} />
-                </div>
-              ))}
+          {/* Live metrics + test progress (dashboard column) */}
+          <aside className="flex flex-col gap-4 lg:col-span-5 lg:sticky lg:top-24 lg:self-start">
+            <div className="rounded-2xl border border-white/10 bg-zinc-900/60 p-4 shadow-lg shadow-black/20 backdrop-blur-sm ring-1 ring-white/5">
+              <p className="mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-500">
+                Live metrics
+              </p>
+              <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
+                {sidebarMetrics.map((card) => (
+                  <ResultCard key={card.label} {...card} compact />
+                ))}
+              </div>
             </div>
 
             {capabilities.length > 0 && (
-              <div className="rounded-2xl border border-gray-800 bg-gray-900/40 p-5 mb-6 animate-speed-fade-in-up opacity-0" style={{ animationDelay: '200ms', animationFillMode: 'forwards' }}>
-                <h2 className="text-sm font-bold text-gray-300 uppercase tracking-wider mb-3">What you can do</h2>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {capabilities.map((cap, i) => (
+              <div className="rounded-2xl border border-white/10 bg-zinc-900/50 p-4 shadow-lg shadow-black/15 ring-1 ring-white/5 backdrop-blur-sm">
+                <h2 className="mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-500">
+                  What you can do
+                </h2>
+                <div className="grid grid-cols-2 gap-2">
+                  {capabilities.map((cap) => (
                     <div
                       key={cap.activity}
-                      className={`p-3 rounded-xl text-center text-xs animate-speed-fade-in-up opacity-0 ${
-                        cap.supported ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-300' : 'bg-gray-800/60 border border-gray-700/50 text-gray-500'
+                      className={`rounded-xl border p-2.5 text-center text-[11px] leading-snug ${
+                        cap.supported
+                          ? 'border-emerald-500/25 bg-emerald-500/10 text-emerald-200'
+                          : 'border-zinc-700/60 bg-zinc-900/50 text-zinc-500'
                       }`}
-                      style={{ animationDelay: `${260 + i * 30}ms`, animationFillMode: 'forwards' }}
                     >
-                      <span className="mr-1" aria-hidden>{cap.icon}</span>
-                      {cap.activity.replace(/ \d+K| \(.*\)/g, '')}
-                      <span className="block mt-0.5 font-semibold">{cap.supported ? '✓' : '—'}</span>
+                      <span className="mr-0.5" aria-hidden>
+                        {cap.icon}
+                      </span>
+                      <span className="font-medium">{cap.activity.replace(/ \d+K| \(.*\)/g, '')}</span>
+                      <span className="mt-1 block text-xs font-semibold tabular-nums">
+                        {cap.supported ? '✓' : '—'}
+                      </span>
                     </div>
                   ))}
                 </div>
               </div>
             )}
 
-            {history.length > 1 && (
-              <div className="rounded-2xl border border-gray-800 bg-gray-900/40 p-4 animate-speed-fade-in-up opacity-0" style={{ animationDelay: '350ms', animationFillMode: 'forwards' }}>
-                <h2 className="text-sm font-bold text-gray-300 uppercase tracking-wider mb-3 flex items-center gap-2">
-                  <History className="w-4 h-4" />
-                  Recent tests
-                </h2>
-                <ul className="space-y-2">
-                  {history.slice(0, 4).map((entry, i) => (
-                    <li
-                      key={entry.at}
-                      className={`flex items-center justify-between py-2 px-3 rounded-lg text-sm ${i === 0 ? 'bg-emerald-500/10 border border-emerald-500/20' : 'bg-gray-800/40'}`}
+            {(phase === 'ping' || phase === 'download' || phase === 'upload') && (
+              <div className="animate-speed-fade-in-up rounded-2xl border border-emerald-500/20 bg-emerald-950/20 p-4 ring-1 ring-emerald-500/10 motion-reduce:animate-none">
+                <p className="mb-3 text-center text-sm font-semibold text-emerald-300">
+                  {phase === 'ping' && 'Measuring latency…'}
+                  {phase === 'download' && 'Testing download…'}
+                  {phase === 'upload' && 'Testing upload…'}
+                </p>
+                <div className="mb-4 flex flex-col gap-2">
+                  {steps.map((s) => (
+                    <div
+                      key={s.key}
+                      className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition-colors ${
+                        s.done
+                          ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300'
+                          : s.active
+                            ? 'border-emerald-400/50 bg-emerald-500/15 text-emerald-200'
+                            : 'border-zinc-700/80 bg-zinc-900/40 text-zinc-500'
+                      }`}
                     >
-                      <span className="text-gray-400">{formatTimeAgo(Date.now() - entry.at)}</span>
-                      <span className="font-mono text-emerald-400">{Math.round(entry.download)} ↓</span>
-                      <span className="font-mono text-blue-400">{Math.round(entry.upload)} ↑</span>
-                      <span className="text-amber-400/90">{entry.ping} ms</span>
-                    </li>
+                      <span
+                        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-[10px] ${
+                          s.done
+                            ? 'border-emerald-500 bg-emerald-500/25'
+                            : s.active
+                              ? 'motion-safe:animate-pulse border-emerald-400 bg-emerald-500/20'
+                              : 'border-zinc-600'
+                        }`}
+                      >
+                        {s.done ? '✓' : s.active ? '●' : '○'}
+                      </span>
+                      {s.label}
+                    </div>
                   ))}
-                </ul>
+                </div>
+                {(phase === 'download' || phase === 'upload') && speedSamples.length > 1 && (
+                  <div className="mb-3 flex justify-center">
+                    <LiveSparkline samples={speedSamples} max={Math.max(200, Math.max(...speedSamples) * 1.2)} />
+                  </div>
+                )}
+                <div className="h-2 overflow-hidden rounded-full bg-zinc-800">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-[width] duration-500 ease-out motion-reduce:transition-none"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+                <div className="mt-3 flex flex-wrap items-center justify-center gap-3">
+                  {estimatedSecsLeft != null && estimatedSecsLeft > 0 && (
+                    <span className="text-xs text-zinc-500">~{estimatedSecsLeft} sec left</span>
+                  )}
+                  <button
+                    type="button"
+                    onClick={cancelTest}
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-400 transition-colors hover:text-white"
+                  >
+                    <X className="h-4 w-4" />
+                    Cancel
+                  </button>
+                </div>
               </div>
             )}
+          </aside>
+        </div>
+
+        {history.length > 1 && (
+          <section className="mt-12 sm:mt-14">
+            <div
+              className="animate-speed-fade-in-up rounded-2xl border border-gray-800 bg-gray-900/40 p-4 opacity-0"
+              style={{ animationDelay: '350ms', animationFillMode: 'forwards' }}
+            >
+              <h2 className="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-gray-300">
+                <History className="h-4 w-4" />
+                Recent tests
+              </h2>
+              <ul className="space-y-2">
+                {history.slice(0, 4).map((entry, i) => (
+                  <li
+                    key={entry.at}
+                    className={`flex items-center justify-between rounded-lg py-2 px-3 text-sm ${
+                      i === 0 ? 'border border-emerald-500/20 bg-emerald-500/10' : 'bg-gray-800/40'
+                    }`}
+                  >
+                    <span className="text-gray-400">{formatTimeAgo(Date.now() - entry.at)}</span>
+                    <span className="font-mono text-emerald-400">{Math.round(entry.download)} ↓</span>
+                    <span className="font-mono text-blue-400">{Math.round(entry.upload)} ↑</span>
+                    <span className="text-amber-400/90">{entry.ping} ms</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </section>
         )}
 

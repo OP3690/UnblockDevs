@@ -7,8 +7,65 @@ module.exports = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        'hero-code-before': {
+          '0%, 30%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+          '34%': { opacity: '0', transform: 'translateY(-6px) scale(0.99)' },
+          '34.01%, 72%': { opacity: '0', transform: 'translateY(-6px)' },
+          '76%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+          '76.01%, 100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+        },
+        'hero-code-after': {
+          '0%, 30%': { opacity: '0', transform: 'translateY(8px) scale(0.99)' },
+          '34%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+          '34.01%, 68%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+          '72%': { opacity: '0', transform: 'translateY(-6px) scale(0.99)' },
+          '72.01%, 100%': { opacity: '0', transform: 'translateY(8px)' },
+        },
+        'hero-title-shimmer': {
+          '0%': { backgroundPosition: '200% 0' },
+          '100%': { backgroundPosition: '-200% 0' },
+        },
+        'hero-cursor-blink': {
+          '0%, 45%': { opacity: '1' },
+          '50%, 100%': { opacity: '0' },
+        },
+        'hero-sensitive-pulse': {
+          '0%, 100%': { boxShadow: '0 0 0 0 rgba(244, 63, 94, 0.35)' },
+          '50%': { boxShadow: '0 0 0 6px rgba(244, 63, 94, 0)' },
+        },
+        'hero-after-sql-in': {
+          '0%': { opacity: '0', transform: 'translateY(8px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'hub-shield-pop': {
+          '0%': { transform: 'scale(0.82)', opacity: '0.5' },
+          '45%': { transform: 'scale(1.08)' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+        'hub-all-tools-chevron': {
+          '0%, 100%': { transform: 'translateY(0)', opacity: '0.5' },
+          '50%': { transform: 'translateY(5px)', opacity: '1' },
+        },
+        'hub-all-tools-hint': {
+          '0%, 100%': { opacity: '0.72' },
+          '50%': { opacity: '1' },
+        },
+      },
+      animation: {
+        'hero-code-before': 'hero-code-before 14s ease-in-out infinite',
+        'hero-code-after': 'hero-code-after 14s ease-in-out infinite',
+        'hero-title-shimmer': 'hero-title-shimmer 4s linear infinite',
+        'hero-cursor-blink': 'hero-cursor-blink 1.1s steps(1, end) infinite',
+        'hero-sensitive-pulse': 'hero-sensitive-pulse 2s ease-in-out infinite',
+        'hero-after-sql-in': 'hero-after-sql-in 0.5s ease-out forwards',
+        'hub-shield-pop': 'hub-shield-pop 0.55s ease-out forwards',
+        'hub-all-tools-chevron': 'hub-all-tools-chevron 1.4s ease-in-out infinite',
+        'hub-all-tools-hint': 'hub-all-tools-hint 2.2s ease-in-out infinite',
+      },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        mono: ['var(--font-fira-code)', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
       },
       fontSize: {
         'display': ['2.5rem', { lineHeight: '1.2', letterSpacing: '-0.02em' }],

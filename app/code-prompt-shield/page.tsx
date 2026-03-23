@@ -144,7 +144,7 @@ export default function CodePromptShieldPage() {
       <div id="tool">
         <CodePromptShieldClient />
       </div>
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12" aria-labelledby="code-shield-heading">
+      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12" aria-labelledby="code-shield-heading">
         <h2 id="code-shield-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
           Mask Code Before Sending to ChatGPT or Copilot — 100% in Your Browser
         </h2>

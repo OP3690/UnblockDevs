@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import TrackedCtaLink from '@/components/TrackedCtaLink';
+import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import HashGeneratorClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/hash-generator';
@@ -118,10 +119,8 @@ export default function HashGeneratorPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <div id="tool">
-        <HashGeneratorClient />
-      </div>
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="hash-heading">
+      <HashGeneratorClient />
+      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="hash-heading">
         <h1 id="hash-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
           Hash Generator — MD5, SHA-256, SHA3, BLAKE2, File Hash Checker, HMAC &amp; Password Hashing (bcrypt, Argon2) Online Free
         </h1>
@@ -141,7 +140,7 @@ export default function HashGeneratorPage() {
       </article>
 
       {/* SEO content — detailed guide to rank for hash-related queries */}
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 border-t border-gray-200">
+      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 border-t border-gray-200">
         <h2 id="what-is-hash" className="text-xl font-bold text-gray-900 mt-0 mb-4">
           What is a Hash Generator?
         </h2>
@@ -283,6 +282,7 @@ export default function HashGeneratorPage() {
           <Link href="/token-comparator" className="text-primary-600 hover:underline font-medium">Token Comparator</Link> — compare hash values character-by-character.
         </p>
       </article>
+      <ToolPageFooterBand toolName="hash_generator" />
     </>
   );
 }

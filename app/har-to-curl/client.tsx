@@ -1,32 +1,26 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Code, Network, FileText, CheckCircle, ExternalLink } from 'lucide-react';
+import { Code, Network, FileText, CheckCircle, ExternalLink } from 'lucide-react';
 import HarToCurl from '@/components/tools/HarToCurl';
 import FAQSchema from '@/components/FAQSchema';
+import ToolPageShell from '@/components/tools/ToolPageShell';
 
 export default function HarToCurlClient() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
-      <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Tools
-          </Link>
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <Network className="w-6 h-6 text-blue-600" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">HAR to cURL Converter</h1>
-              <p className="text-sm text-gray-500 mt-1">Convert network HAR files into reproducible API requests: cURL, Python, Go, Java, PHP, Ruby. Clean headers, mask secrets, timeline, batch script, AI debug prompt. 100% client-side.</p>
-            </div>
-          </div>
+    <ToolPageShell
+      title="HAR to cURL Converter"
+      subtitle="Convert network HAR files into reproducible API requests: cURL, Python, Go, Java, PHP, Ruby. Clean headers, mask secrets, timeline, batch script, AI debug prompt. 100% client-side."
+      toolName="har_to_curl"
+      tool={<HarToCurl />}
+      badges={
+        <div className="flex items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-700">
+          <Network className="h-5 w-5 shrink-0 text-emerald-600" aria-hidden />
+          <span>Browser HAR → terminal-ready cURL</span>
         </div>
-      </header>
-
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      }
+      belowCard={
+        <>
         <FAQSchema
           faqs={[
             {
@@ -347,7 +341,8 @@ export default function HarToCurlClient() {
             </div>
           </section>
         </article>
-      </main>
-    </div>
+        </>
+      }
+    />
   );
 }

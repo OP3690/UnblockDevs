@@ -233,7 +233,7 @@ export default function PasswordGeneratorClient() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="ud-content-tool py-6">
         {/* Breadcrumb — outside container */}
         <nav className="flex items-center gap-2 text-sm text-gray-500 mb-3" aria-label="Breadcrumb">
           <Link href="/" className="text-primary-600 hover:text-primary-700 hover:underline">Home</Link>

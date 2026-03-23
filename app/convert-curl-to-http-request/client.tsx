@@ -2,40 +2,27 @@
 
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { ArrowLeft, Code, CheckCircle, ExternalLink, Globe, Zap, Shield } from 'lucide-react';
+import { Code, CheckCircle, ExternalLink, Globe, Zap, Shield } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import ToolPageShell from '@/components/tools/ToolPageShell';
 
 const CurlConverter = dynamic(() => import('@/components/tools/CurlConverter'), { ssr: false });
 
 export default function ConvertCurlToHttpRequestClient() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
-      <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Tools
-          </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Convert cURL to HTTP Request</h1>
-          <p className="text-sm text-gray-500 mt-1">Free online converter — paste cURL, get HTTP request format or code in 10+ languages</p>
+    <ToolPageShell
+      title="Convert cURL to HTTP Request"
+      subtitle="Free online converter — paste cURL, get HTTP request format or code in 10+ languages"
+      toolName="convert_curl_to_http"
+      tool={<CurlConverter />}
+      badges={
+        <div className="flex items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-700">
+          <Zap className="h-5 w-5 shrink-0 text-emerald-600" aria-hidden />
+          <span>cURL → HTTP view &amp; multi-language code</span>
         </div>
-      </header>
-
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Embedded tool */}
-        <div className="mb-12 rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden">
-          <div className="px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-            <h2 className="text-lg font-semibold flex items-center gap-2">
-              <Zap className="w-5 h-5" />
-              cURL to HTTP Request &amp; Code Converter
-            </h2>
-            <p className="text-sm text-blue-100 mt-1">Paste your cURL command below — convert to HTTP request view or to Python, JavaScript, Go, and more.</p>
-          </div>
-          <div className="p-4">
-            <CurlConverter />
-          </div>
-        </div>
-
+      }
+      belowCard={
+        <>
         <FAQSchema
           faqs={[
             {
@@ -52,7 +39,7 @@ export default function ConvertCurlToHttpRequestClient() {
             },
           ]}
         />
-        <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
+        <article className="max-w-none">
           <section className="mb-12">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">What This Tool Does</h2>
             <p className="text-lg text-gray-700 leading-relaxed mb-4">
@@ -150,8 +137,9 @@ Authorization: Bearer token123
             </Link>
           </section>
         </article>
-      </main>
-    </div>
+        </>
+      }
+    />
   );
 }
 

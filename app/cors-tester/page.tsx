@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import TrackedCtaLink from '@/components/TrackedCtaLink';
+import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import CorsTesterClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/cors-tester';
@@ -136,10 +137,8 @@ export default function CorsTesterPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <div id="tool">
-        <CorsTesterClient />
-      </div>
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="cors-heading">
+      <CorsTesterClient />
+      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="cors-heading">
         <h1 id="cors-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
           CORS Tester — Test &amp; Debug CORS Headers, Preflight Requests &amp; Security Misconfigurations Online Free
         </h1>
@@ -150,7 +149,7 @@ export default function CorsTesterPage() {
           Use the tool →
         </TrackedCtaLink>
       </article>
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12" aria-labelledby="cors-faq-heading">
+      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12" aria-labelledby="cors-faq-heading">
         <h2 id="cors-faq-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">
           CORS Tester — FAQs &amp; How-To
         </h2>
@@ -210,6 +209,7 @@ export default function CorsTesterPage() {
           .
         </p>
       </article>
+      <ToolPageFooterBand toolName="cors_tester" />
     </>
   );
 }

@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "dev:https": "next dev --experimental-https --experimental-https-key ./certificates/localhost-key.pem --experimental-https-cert ./certificates/localhost.pem",
+    "dev": "next dev --experimental-https",
+    "dev:http": "next dev",
+    "dev:https": "next dev --experimental-https",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -25,6 +26,7 @@
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
     "recharts": "^3.6.0",
+    "sharp": "^0.33.5",
     "xlsx": "^0.18.5"
   },
   "browserslist": [

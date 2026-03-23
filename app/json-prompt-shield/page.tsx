@@ -155,7 +155,7 @@ export default function JsonPromptShieldPage() {
       <div id="tool">
         <JsonPromptShieldClient />
       </div>
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12" aria-labelledby="json-shield-heading">
+      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12" aria-labelledby="json-shield-heading">
         <h2 id="json-shield-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
           Mask JSON Before Sending to AI — 100% in Your Browser
         </h2>

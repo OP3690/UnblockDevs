@@ -72,7 +72,7 @@ export default function PasswordGeneratorPage() {
       <div id="tool">
         <PasswordGeneratorClient />
       </div>
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="pw-gen-heading">
+      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="pw-gen-heading">
         <h1 id="pw-gen-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
           Password Generator
         </h1>
@@ -88,7 +88,7 @@ export default function PasswordGeneratorPage() {
           Check strength or build a policy: <Link href="/password-audit" className="text-primary-600 hover:text-primary-700 font-medium">Password Audit &amp; Policy Generator</Link> (entropy, crack time, pattern detection, regex + code export).
         </p>
       </article>
-      <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="faq-heading">
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="faq-heading">
         <h2 id="faq-heading" className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
         <dl className="space-y-4">
           <div>

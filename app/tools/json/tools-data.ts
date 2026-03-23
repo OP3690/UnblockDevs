@@ -1,0 +1,329 @@
+/**
+ * Canonical list for /tools/json hub — keep in sync when adding routes.
+ * Used for SEO ItemList + hub UI.
+ */
+export type ToolCategory = 'json' | 'ai' | 'api' | 'encode' | 'dev';
+
+export type ToolBadge = 'popular' | 'ai' | 'new';
+
+export interface DirectoryTool {
+  href: string;
+  name: string;
+  description: string;
+  category: ToolCategory;
+  /** Lucide icon name — mapped in hub-client */
+  icon: string;
+  badge?: ToolBadge;
+}
+
+export const CATEGORY_LABELS: Record<ToolCategory | 'all', string> = {
+  all: 'All tools',
+  json: 'JSON & data',
+  ai: 'AI safety',
+  api: 'API & HTTP',
+  encode: 'Encode & crypto',
+  dev: 'Dev utilities',
+};
+
+export const TOOLS_DIRECTORY: DirectoryTool[] = [
+  // —— JSON & data ——
+  {
+    href: '/',
+    name: 'JSON workbench',
+    description: 'Viewer, tree, formatter, and JSON → Excel/CSV/Table on one page.',
+    category: 'json',
+    icon: 'FileJson',
+    badge: 'popular',
+  },
+  {
+    href: '/json-beautifier',
+    name: 'JSON formatter & beautifier',
+    description: 'Format, minify, validate, and prettify JSON with one click.',
+    category: 'json',
+    icon: 'Code',
+    badge: 'popular',
+  },
+  {
+    href: '/json-validator',
+    name: 'JSON validator',
+    description: 'Validate syntax and catch errors before production.',
+    category: 'json',
+    icon: 'CheckCircle',
+  },
+  {
+    href: '/json-fixer-online',
+    name: 'JSON fixer & recovery',
+    description: 'Repair malformed JSON, trailing commas, and AI-broken payloads.',
+    category: 'json',
+    icon: 'Wrench',
+    badge: 'popular',
+  },
+  {
+    href: '/json-to-excel',
+    name: 'JSON to Excel / CSV / Table',
+    description: 'Convert nested JSON to spreadsheets — export XLSX or CSV in-browser.',
+    category: 'json',
+    icon: 'Table',
+    badge: 'popular',
+  },
+  {
+    href: '/json-schema-generation',
+    name: 'JSON Schema generator',
+    description: 'Generate JSON Schema from sample data; validate structure.',
+    category: 'json',
+    icon: 'Layers',
+  },
+  {
+    href: '/json-comparator',
+    name: 'Smart JSON diff',
+    description: 'Semantic compare — normalizes UUIDs, JWTs, and timestamps.',
+    category: 'json',
+    icon: 'GitCompare',
+  },
+  {
+    href: '/json-stringify-online',
+    name: 'JSON.stringify() online',
+    description: 'Turn objects into JSON strings with pretty-print options.',
+    category: 'json',
+    icon: 'Braces',
+  },
+  {
+    href: '/log-unpacker',
+    name: 'Log unpacker & sanitizer',
+    description: 'Unescape nested JSON in logs, decode JWTs, scrub paths — client-side.',
+    category: 'json',
+    icon: 'ScrollText',
+    badge: 'popular',
+  },
+  {
+    href: '/log-explorer',
+    name: 'Log explorer',
+    description: 'Explore and navigate structured logs in the browser.',
+    category: 'json',
+    icon: 'FileSearch',
+  },
+  {
+    href: '/payload-analyzer',
+    name: 'Payload analyzer',
+    description: 'Inspect API payloads and structure without sending data to a server.',
+    category: 'json',
+    icon: 'Package',
+  },
+  {
+    href: '/data-insights',
+    name: 'Data insights',
+    description: 'Stats and patterns from JSON datasets — instant analysis.',
+    category: 'json',
+    icon: 'BarChart3',
+  },
+  {
+    href: '/sql-in-generator',
+    name: 'SQL IN clause generator',
+    description: 'Paste IDs or values → SQL IN, JSON, MongoDB $in, CSV.',
+    category: 'json',
+    icon: 'Database',
+  },
+  {
+    href: '/api-comparator',
+    name: 'API response comparator',
+    description: 'Diff two API JSON responses side by side.',
+    category: 'json',
+    icon: 'ArrowRightLeft',
+  },
+  {
+    href: '/config-comparator',
+    name: 'Config comparator',
+    description: 'Compare YAML/JSON configs and env-style files.',
+    category: 'json',
+    icon: 'Settings2',
+  },
+  // —— AI safety ——
+  {
+    href: '/ai-schema-masker',
+    name: 'AI schema masker',
+    description: 'Mask SQL table & column names before ChatGPT — reversible.',
+    category: 'ai',
+    icon: 'Shield',
+    badge: 'ai',
+  },
+  {
+    href: '/json-prompt-shield',
+    name: 'JSON prompt shield',
+    description: 'Mask JSON keys and values before sending to any LLM.',
+    category: 'ai',
+    icon: 'Lock',
+    badge: 'ai',
+  },
+  {
+    href: '/code-prompt-shield',
+    name: 'Code prompt shield',
+    description: 'Redact secrets and identifiers in code before Copilot / ChatGPT.',
+    category: 'ai',
+    icon: 'FileCode2',
+    badge: 'ai',
+  },
+  {
+    href: '/prompt-chunker',
+    name: 'Prompt chunker',
+    description: 'Split long prompts for token limits — keep context clean.',
+    category: 'ai',
+    icon: 'Scissors',
+  },
+  // —— API & HTTP ——
+  {
+    href: '/curl-converter',
+    name: 'cURL converter',
+    description: 'Convert cURL to JavaScript, Python, fetch, and more.',
+    category: 'api',
+    icon: 'Terminal',
+    badge: 'popular',
+  },
+  {
+    href: '/curl-to-python',
+    name: 'cURL → Python',
+    description: 'Turn cURL commands into Python requests code.',
+    category: 'api',
+    icon: 'FileCode',
+  },
+  {
+    href: '/curl-to-python-requests',
+    name: 'cURL → Python requests',
+    description: 'Generate requests.get/post from raw cURL — copy-paste ready.',
+    category: 'api',
+    icon: 'Code2',
+  },
+  {
+    href: '/har-to-curl',
+    name: 'HAR → cURL',
+    description: 'Extract cURL from browser HAR exports.',
+    category: 'api',
+    icon: 'Download',
+  },
+  {
+    href: '/curl-failure-root-cause-engine',
+    name: 'cURL failure analyzer',
+    description: 'Diagnose TLS, DNS, proxy, and HTTP errors from cURL output.',
+    category: 'api',
+    icon: 'AlertCircle',
+  },
+  {
+    href: '/mock-api-generator',
+    name: 'Mock API generator',
+    description: 'Generate mock JSON APIs for front-end development.',
+    category: 'api',
+    icon: 'Webhook',
+  },
+  {
+    href: '/test-data-generator',
+    name: 'Test data generator',
+    description: 'Fake users, emails, UUIDs, and structured test fixtures.',
+    category: 'api',
+    icon: 'TestTube2',
+  },
+  {
+    href: '/cors-tester',
+    name: 'CORS tester',
+    description: 'Simulate preflight and real requests; read CORS headers.',
+    category: 'api',
+    icon: 'Globe',
+  },
+  // —— Encode & crypto ——
+  {
+    href: '/jwt-decoder',
+    name: 'JWT decoder',
+    description: 'Decode and verify JWTs; audit claims in-browser.',
+    category: 'encode',
+    icon: 'KeyRound',
+    badge: 'popular',
+  },
+  {
+    href: '/base64-encoder',
+    name: 'Base64 encoder / decoder',
+    description: 'Standard, Base64URL, MIME; auto-detect JWT and images.',
+    category: 'encode',
+    icon: 'Binary',
+  },
+  {
+    href: '/uuid-generator',
+    name: 'UUID / GUID generator',
+    description: 'v1–v8, bulk generate, validate, export JSON/CSV/SQL.',
+    category: 'encode',
+    icon: 'Fingerprint',
+    badge: 'popular',
+  },
+  {
+    href: '/hash-generator',
+    name: 'Hash generator',
+    description: 'MD5, SHA-256, SHA3, HMAC, bcrypt, Argon2, file checksums.',
+    category: 'encode',
+    icon: 'Hash',
+  },
+  {
+    href: '/url-encoder',
+    name: 'URL encoder / decoder',
+    description: 'Encode query strings and path segments safely.',
+    category: 'encode',
+    icon: 'Link2',
+  },
+  {
+    href: '/password-generator',
+    name: 'Password generator',
+    description: 'Random, passphrase, pattern modes; entropy and crack-time hints.',
+    category: 'encode',
+    icon: 'Key',
+    badge: 'popular',
+  },
+  {
+    href: '/password-audit',
+    name: 'Password audit',
+    description: 'Strength checks and breach-aware guidance — locally.',
+    category: 'encode',
+    icon: 'ShieldCheck',
+  },
+  {
+    href: '/token-comparator',
+    name: 'Token comparator',
+    description: 'Visual diff for JWTs, API tokens, and long strings.',
+    category: 'encode',
+    icon: 'SplitSquareHorizontal',
+  },
+  // —— Dev utilities ——
+  {
+    href: '/sql-formatter',
+    name: 'SQL formatter',
+    description: 'Pretty-print and minify SQL for readability.',
+    category: 'dev',
+    icon: 'AlignLeft',
+    badge: 'popular',
+  },
+  {
+    href: '/regex-tester',
+    name: 'Regex tester',
+    description: 'Live match highlights, flags, and replace preview.',
+    category: 'dev',
+    icon: 'Regex',
+  },
+  {
+    href: '/truth-table-generator',
+    name: 'Truth table generator',
+    description: 'Boolean logic tables from expressions — export or copy.',
+    category: 'dev',
+    icon: 'Grid3x3',
+  },
+  {
+    href: '/speed-test',
+    name: 'Speed test',
+    description: 'Quick network latency and throughput checks in the browser.',
+    category: 'dev',
+    icon: 'Gauge',
+  },
+  {
+    href: '/timezone-translator',
+    name: 'Timezone translator',
+    description: 'Convert timestamps across zones for debugging and deploys.',
+    category: 'dev',
+    icon: 'Clock',
+  },
+];
+
+export const TOOL_COUNT = TOOLS_DIRECTORY.length;

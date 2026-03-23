@@ -1,24 +1,18 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Code, CheckCircle, ExternalLink, Sparkles } from 'lucide-react';
+import { Code, CheckCircle, ExternalLink } from 'lucide-react';
 import FAQSchema from '@/components/FAQSchema';
+import ToolPageShell from '@/components/tools/ToolPageShell';
 
 export default function CurlToRequestsClient() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
-      <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Tools
-          </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Convert cURL to Requests - Free Online Tool</h1>
-          <p className="text-sm text-gray-500 mt-1">Convert cURL commands to Python Requests, JavaScript Fetch, PHP, Ruby, Java, Go, and C#</p>
-        </div>
-      </header>
-
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <ToolPageShell
+      title="Convert cURL to Requests - Free Online Tool"
+      subtitle="Convert cURL commands to Python Requests, JavaScript Fetch, PHP, Ruby, Java, Go, and C#"
+      toolName="curl_to_requests"
+      belowCard={
+        <>
         <FAQSchema
           faqs={[
             {
@@ -156,8 +150,9 @@ print(response.json())`}
             </div>
           </section>
         </article>
-      </main>
-    </div>
+        </>
+      }
+    />
   );
 }
 

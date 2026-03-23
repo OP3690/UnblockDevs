@@ -19,6 +19,8 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy } from '@/lib/analytics';
+import ToolPageShell from '@/components/tools/ToolPageShell';
+import type { BreadcrumbItem } from '@/components/Breadcrumb';
 import {
   parseJWT,
   JWTError,
@@ -197,16 +199,23 @@ export default function JWTDecoderClient() {
     window.history.replaceState({}, '', url.toString());
   };
 
+  const jwtBreadcrumb: BreadcrumbItem[] = [
+    { label: 'Home', href: '/' },
+    { label: 'Tools', href: '/tools/json' },
+    { label: 'JWT Decoder' },
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Breadcrumb — outside container */}
-        <nav className="flex items-center gap-2 text-sm text-gray-500 mb-3" aria-label="Breadcrumb">
-          <Link href="/" className="text-primary-600 hover:text-primary-700 hover:underline">Home</Link>
-          <span aria-hidden>/</span>
-          <span className="text-gray-700 font-medium" aria-current="page">JWT Decoder</span>
-        </nav>
-        <div className="rounded-2xl bg-white shadow-xl shadow-gray-200/50 border border-gray-200/80 overflow-hidden">
+    <ToolPageShell
+      embedTool
+      showFooterBand={false}
+      breadcrumbItems={jwtBreadcrumb}
+      title="JWT Decoder"
+      subtitle="Decode JWTs, verify HMAC signatures, check expiry, and run a security audit — 100% in your browser. Your token never leaves your device."
+      toolName="jwt_decoder"
+      tool={
+        <>
+        <div className="rounded-2xl border border-zinc-200/80 bg-white shadow-lg shadow-zinc-200/40 overflow-hidden">
           {/* Privacy badge */}
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 px-6 md:px-8 py-4 bg-gradient-to-r from-emerald-50/80 to-transparent border-b border-gray-100">
             <span className="text-sm text-gray-700 flex items-center gap-2">
@@ -808,27 +817,28 @@ export default function JWTDecoderClient() {
           )}
         </div>
 
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-gray-500">
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-zinc-500">
           <p className="text-center flex items-center gap-2">
-            <Lock className="w-3.5 h-3.5 text-slate-400" aria-hidden />
+            <Lock className="w-3.5 h-3.5 text-zinc-400" aria-hidden />
             Decoding and verification run in your browser. Token and secret never leave your device.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
-            <Link href="/base64-encoder" className="inline-flex items-center gap-1.5 font-medium text-primary-600 hover:text-primary-700">
+            <Link href="/base64-encoder" className="inline-flex items-center gap-1.5 font-medium text-emerald-700 hover:text-emerald-800">
               Base64 Encoder
               <ChevronRight className="w-4 h-4" />
             </Link>
-            <Link href="/password-generator" className="inline-flex items-center gap-1.5 font-medium text-primary-600 hover:text-primary-700">
+            <Link href="/password-generator" className="inline-flex items-center gap-1.5 font-medium text-emerald-700 hover:text-emerald-800">
               Password Generator
               <ChevronRight className="w-4 h-4" />
             </Link>
-            <Link href="/token-comparator" className="inline-flex items-center gap-1.5 font-medium text-primary-600 hover:text-primary-700">
+            <Link href="/token-comparator" className="inline-flex items-center gap-1.5 font-medium text-emerald-700 hover:text-emerald-800">
               Compare two JWTs
               <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
-      </div>
-    </div>
+        </>
+      }
+    />
   );
 }

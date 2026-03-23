@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import TrackedCtaLink from '@/components/TrackedCtaLink';
+import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import UuidGeneratorClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/uuid-generator';
@@ -121,10 +122,8 @@ export default function UuidGeneratorPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <div id="tool">
-        <UuidGeneratorClient />
-      </div>
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="uuid-heading">
+      <UuidGeneratorClient />
+      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="uuid-heading">
         <h1 id="uuid-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
           UUID / GUID Generator — Generate v1, v4, v7 UUIDs, Validate, Analyze &amp; Bulk Export Online Free
         </h1>
@@ -137,7 +136,7 @@ export default function UuidGeneratorPage() {
         </TrackedCtaLink>
       </article>
 
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12" aria-labelledby="uuid-learn-heading">
+      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12" aria-labelledby="uuid-learn-heading">
         <h2 id="uuid-learn-heading" className="text-2xl font-bold text-gray-900 mb-4">
           What Is a UUID?
         </h2>
@@ -215,6 +214,7 @@ export default function UuidGeneratorPage() {
           <Link href="/base64-encoder" className="text-primary-600 hover:underline font-medium">Base64 Encoder</Link> — encode UUIDs as Base64 (or decode values).
         </p>
       </article>
+      <ToolPageFooterBand toolName="uuid_generator" />
     </>
   );
 }

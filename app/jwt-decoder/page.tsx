@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import TrackedCtaLink from '@/components/TrackedCtaLink';
+import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import JWTDecoderClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/jwt-decoder';
@@ -127,10 +128,8 @@ export default function JWTDecoderPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <div id="tool">
-        <JWTDecoderClient />
-      </div>
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="jwt-decoder-heading">
+      <JWTDecoderClient />
+      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="jwt-decoder-heading">
         <h1 id="jwt-decoder-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
           JWT Decoder — Decode JWT Tokens, Verify Signatures, Check Expiry &amp; Security Audit Online Free
         </h1>
@@ -145,7 +144,7 @@ export default function JWTDecoderPage() {
         </TrackedCtaLink>
       </article>
 
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12" aria-labelledby="jwt-content-heading">
+      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12" aria-labelledby="jwt-content-heading">
         <h2 id="jwt-content-heading" className="text-2xl font-bold text-gray-900 mb-6">
           What Is a JWT Token?
         </h2>
@@ -231,6 +230,7 @@ export default function JWTDecoderPage() {
           <Link href="/code-prompt-shield" className="text-blue-600 hover:underline font-medium">Code Prompt Shield</Link> — mask tokens and secrets before sharing code with AI.
         </p>
       </article>
+      <ToolPageFooterBand toolName="jwt_decoder" />
     </>
   );
 }

@@ -21,6 +21,8 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy } from '@/lib/analytics';
+import ToolPageShell from '@/components/tools/ToolPageShell';
+import type { BreadcrumbItem } from '@/components/Breadcrumb';
 import {
   ALL_HASH_ALGORITHMS,
   CLASSIC_ALGORITHMS,
@@ -318,17 +320,23 @@ export default function HashGeneratorClient() {
     { id: 'tools', label: 'Tools', icon: <Code2 className="w-4 h-4" /> },
   ];
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/20">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-12">
-        {/* Breadcrumb — same as JWT, UUID, CORS, Truth Table */}
-        <nav className="flex items-center gap-2 text-sm text-gray-500 mb-3" aria-label="Breadcrumb">
-          <Link href="/" className="text-primary-600 hover:text-primary-700 hover:underline transition-colors">Home</Link>
-          <span aria-hidden className="text-gray-300">/</span>
-          <span className="text-gray-700 font-medium" aria-current="page">Hash Generator</span>
-        </nav>
+  const hashBreadcrumb: BreadcrumbItem[] = [
+    { label: 'Home', href: '/' },
+    { label: 'Tools', href: '/tools/json' },
+    { label: 'Hash Generator' },
+  ];
 
-        <div className="rounded-2xl bg-white shadow-xl shadow-gray-200/50 border border-gray-200/80 overflow-hidden">
+  return (
+    <ToolPageShell
+      embedTool
+      showFooterBand={false}
+      breadcrumbItems={hashBreadcrumb}
+      title="Hash Generator"
+      subtitle="MD5, SHA-256, SHA3, BLAKE2, file checksums, HMAC, bcrypt, Argon2, and more — all in your browser. No data leaves your device."
+      toolName="hash_generator"
+      tool={
+        <>
+        <div className="rounded-2xl border border-zinc-200/80 bg-white shadow-lg shadow-zinc-200/40 overflow-hidden">
           {/* Privacy strip — pill style like Base64/JWT */}
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 px-6 md:px-8 py-4 bg-gradient-to-r from-emerald-50/80 to-transparent border-b border-gray-100">
             <span className="text-sm text-gray-700 flex items-center gap-2">
@@ -947,7 +955,7 @@ export default function HashGeneratorClient() {
             <div className="min-w-0">
               <span className="font-semibold text-gray-900 group-hover:text-primary-700 block">Base64 Encoder</span>
               <span className="text-sm text-gray-500 mt-0.5 block">Encode and decode Base64 text or files. MIME, URL-safe, image preview.</span>
-        </div>
+            </div>
           </Link>
           <Link
             href="/jwt-decoder"
@@ -975,7 +983,8 @@ export default function HashGeneratorClient() {
           </Link>
         </div>
       </section>
-      </div>
-    </div>
+        </>
+      }
+    />
   );
 }

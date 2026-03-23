@@ -179,7 +179,7 @@ export default function AiSchemaMaskerPage() {
       <div id="tool">
         <AiSchemaMaskerClient />
       </div>
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12 space-y-8" aria-labelledby="schema-masker-heading">
+      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12 space-y-8" aria-labelledby="schema-masker-heading">
         <header>
           <h2 id="schema-masker-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
             SQL Schema Masker for AI — Mask Before ChatGPT, Restore After

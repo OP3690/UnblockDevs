@@ -91,38 +91,38 @@ export default function BlogPage({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-blue-50/30">
-      {/* Header */}
-      <header className="bg-white/90 backdrop-blur-sm shadow-sm border-b border-gray-200/80">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div className="min-h-0 bg-[#FAFAFA]">
+      {/* Page hero — global SiteHeader is above; keep width aligned with redesign */}
+      <div className="border-b border-zinc-200 bg-white/80">
+        <div className="mx-auto max-w-[1100px] px-6 py-8 sm:py-10">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-1.5 tracking-tight">
-                Developer's Study Materials <span className="text-primary-600">📚</span>
+              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl lg:text-4xl">
+                Developer guides <span className="text-emerald-700" aria-hidden>📚</span>
               </h1>
-              <p className="text-base sm:text-lg text-gray-600">
-                Articles, tutorials, and best practices for developers
+              <p className="mt-2 max-w-xl text-sm leading-relaxed text-zinc-600 sm:text-base">
+                JSON, APIs, debugging, and workflows — free to read, no signup.
               </p>
             </div>
             <Link
               href="/"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 transition-colors shrink-0 w-fit"
+              className="inline-flex w-fit shrink-0 items-center justify-center gap-2 rounded-lg border border-zinc-300 bg-white px-5 py-2.5 text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-50"
             >
-              ← Back to Tools
+              ← All tools
             </Link>
           </div>
         </div>
-      </header>
+      </div>
 
       {/* Intro */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-2">
-        <p className="text-gray-600 text-center max-w-2xl mx-auto text-sm sm:text-base">
-          Browse guides on JSON, APIs, data engineering, AI, and more. All free to read—no signup required.
+      <div className="mx-auto max-w-[1100px] px-6 pt-8 pb-4">
+        <p className="text-slate-600 text-center max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
+          Browse guides on JSON, APIs, data engineering, AI, and more.
         </p>
       </div>
 
       {/* Main Content - Post Grid */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+      <main className="mx-auto max-w-[1100px] px-6 pb-12 sm:pb-16">
         <Script
           id={`blog-breadcrumb-schema-${currentPage}`}
           type="application/ld+json"
@@ -136,8 +136,8 @@ export default function BlogPage({
         <BlogListClient initialPosts={initialPosts} totalPages={totalPages} currentPage={currentPage} />
 
         {/* SEO Content Section */}
-        <section className="mt-14 sm:mt-16 bg-white rounded-xl shadow-md border border-gray-100 p-6 sm:p-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-5">About Developer's Study Materials</h2>
+        <section className="mt-12 sm:mt-14 ud-surface p-6 sm:p-8 lg:p-10">
+          <h2 className="text-xl sm:text-2xl font-semibold text-slate-900 mb-5 tracking-tight">About this blog</h2>
           <div className="prose prose-lg max-w-none text-gray-700">
             <p className="mb-4">
               Welcome to <strong>Developer's Study Materials</strong> by UnblockDevs—your go-to resource for articles, tutorials, and best practices on <strong>JSON Viewer</strong>, <strong>JSON Parser</strong>, <strong>JSON Beautifier</strong>, API testing, web development, and more.
@@ -160,66 +160,66 @@ export default function BlogPage({
         </section>
 
         {/* Featured - Internal Links for SEO */}
-        <section className="mt-14 sm:mt-16 bg-gradient-to-r from-primary-50/80 to-indigo-50/80 rounded-xl border border-gray-100 shadow-sm p-6 sm:p-8">
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-5">Featured Guides</h2>
+        <section className="mt-10 sm:mt-12 ud-surface-soft p-6 sm:p-8 lg:p-10 bg-gradient-to-br from-primary-50/40 via-white to-indigo-50/30">
+          <h2 className="text-xl sm:text-2xl font-semibold text-slate-900 mb-6 tracking-tight">Featured guides</h2>
           <div className="grid md:grid-cols-2 gap-4">
-            <Link href="/blog/chatgpt-real-life-usage-guide" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
+            <Link href="/blog/chatgpt-real-life-usage-guide" className="ud-link-card p-4 sm:p-5">
               <h3 className="font-semibold text-gray-900 mb-2">ChatGPT Real-Life Usage Guide</h3>
               <p className="text-sm text-gray-600">Complete guide to using ChatGPT in real life with practical use cases and best prompts.</p>
             </Link>
-            <Link href="/blog/ai-prompt-engineering-guide" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
+            <Link href="/blog/ai-prompt-engineering-guide" className="ud-link-card p-4 sm:p-5">
               <h3 className="font-semibold text-gray-900 mb-2">AI Prompt Engineering Guide</h3>
               <p className="text-sm text-gray-600">Learn how to write effective AI prompts with best practices and techniques.</p>
             </Link>
-            <Link href="/blog/hipaa-compliant-ai-development" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
+            <Link href="/blog/hipaa-compliant-ai-development" className="ud-link-card p-4 sm:p-5">
               <h3 className="font-semibold text-gray-900 mb-2">HIPAA-Compliant AI Development</h3>
               <p className="text-sm text-gray-600">Use ChatGPT without exposing patient data. Mask SQL, JSON, and code in your browser—client-side only.</p>
             </Link>
-            <Link href="/blog/blockchain-complete-guide" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
+            <Link href="/blog/blockchain-complete-guide" className="ud-link-card p-4 sm:p-5">
               <h3 className="font-semibold text-gray-900 mb-2">Blockchain Complete Guide</h3>
               <p className="text-sm text-gray-600">Comprehensive guide to Blockchain technology, smart contracts, and Web3.</p>
             </Link>
-            <Link href="/blog/mysql-10-most-used-functions" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
+            <Link href="/blog/mysql-10-most-used-functions" className="ud-link-card p-4 sm:p-5">
               <h3 className="font-semibold text-gray-900 mb-2">MySQL 10 Most Used Functions</h3>
               <p className="text-sm text-gray-600">Essential MySQL functions every developer should know with examples.</p>
             </Link>
-            <Link href="/blog/token-security-privacy-best-practices" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
+            <Link href="/blog/token-security-privacy-best-practices" className="ud-link-card p-4 sm:p-5">
               <h3 className="font-semibold text-gray-900 mb-2">Token Security Best Practices</h3>
               <p className="text-sm text-gray-600">Learn how to secure tokens and implement privacy best practices.</p>
             </Link>
-            <Link href="/blog/5g-6g-complete-guide" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
+            <Link href="/blog/5g-6g-complete-guide" className="ud-link-card p-4 sm:p-5">
               <h3 className="font-semibold text-gray-900 mb-2">5G & 6G Complete Guide</h3>
               <p className="text-sm text-gray-600">Comprehensive guide to 5G and 6G technologies and their impact.</p>
             </Link>
-            <Link href="/blog/tokens-complete-guide" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
+            <Link href="/blog/tokens-complete-guide" className="ud-link-card p-4 sm:p-5">
               <h3 className="font-semibold text-gray-900 mb-2">Tokens Complete Guide</h3>
               <p className="text-sm text-gray-600">Everything you need to know about tokens in modern applications.</p>
             </Link>
-            <Link href="/blog/token-technologies-history-evolution" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
+            <Link href="/blog/token-technologies-history-evolution" className="ud-link-card p-4 sm:p-5">
               <h3 className="font-semibold text-gray-900 mb-2">Token Technologies History</h3>
               <p className="text-sm text-gray-600">The evolution and history of token technologies in computing.</p>
             </Link>
-            <Link href="/blog/agentic-ai-complete-guide" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
+            <Link href="/blog/agentic-ai-complete-guide" className="ud-link-card p-4 sm:p-5">
               <h3 className="font-semibold text-gray-900 mb-2">Agentic AI Complete Guide</h3>
               <p className="text-sm text-gray-600">Learn about agentic AI systems and autonomous AI agents.</p>
             </Link>
-            <Link href="/blog/apache-kafka-complete-guide" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
+            <Link href="/blog/apache-kafka-complete-guide" className="ud-link-card p-4 sm:p-5">
               <h3 className="font-semibold text-gray-900 mb-2">Apache Kafka Complete Guide</h3>
               <p className="text-sm text-gray-600">Master Apache Kafka for distributed streaming and event processing.</p>
             </Link>
-            <Link href="/blog/confidential-computing-complete-guide" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
+            <Link href="/blog/confidential-computing-complete-guide" className="ud-link-card p-4 sm:p-5">
               <h3 className="font-semibold text-gray-900 mb-2">Confidential Computing Guide</h3>
               <p className="text-sm text-gray-600">Learn about confidential computing and data protection technologies.</p>
             </Link>
-            <Link href="/blog/cursor-ai-code-editor-guide" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
+            <Link href="/blog/cursor-ai-code-editor-guide" className="ud-link-card p-4 sm:p-5">
               <h3 className="font-semibold text-gray-900 mb-2">Cursor AI Code Editor Guide</h3>
               <p className="text-sm text-gray-600">Complete guide to using Cursor AI-powered code editor effectively.</p>
             </Link>
-            <Link href="/blog/digital-twins-complete-guide" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
+            <Link href="/blog/digital-twins-complete-guide" className="ud-link-card p-4 sm:p-5">
               <h3 className="font-semibold text-gray-900 mb-2">Digital Twins Complete Guide</h3>
               <p className="text-sm text-gray-600">Understanding digital twins and their applications in IoT and industry.</p>
             </Link>
-            <Link href="/blog/apache-kafka-cheat-sheet" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
+            <Link href="/blog/apache-kafka-cheat-sheet" className="ud-link-card p-4 sm:p-5">
               <h3 className="font-semibold text-gray-900 mb-2">Apache Kafka Cheat Sheet</h3>
               <p className="text-sm text-gray-600">Quick reference guide for Apache Kafka commands and concepts.</p>
             </Link>
@@ -227,30 +227,30 @@ export default function BlogPage({
         </section>
 
         {/* Intent-focused links that match natural developer searches */}
-        <section className="mt-10 bg-white rounded-xl border border-gray-100 shadow-sm p-6 sm:p-8">
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-5">Popular Developer Search Paths</h2>
+        <section className="mt-10 ud-surface p-6 sm:p-8">
+          <h2 className="text-xl sm:text-2xl font-semibold text-slate-900 mb-6 tracking-tight">Popular developer searches</h2>
           <div className="grid md:grid-cols-2 gap-4">
-            <Link href="/blog/fix-unexpected-end-of-json-input-error-explained" className="p-4 rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
+            <Link href="/blog/fix-unexpected-end-of-json-input-error-explained" className="ud-link-card p-4 sm:p-5">
               <h3 className="font-semibold text-gray-900 mb-2">Fix JSON Parse Errors</h3>
               <p className="text-sm text-gray-600">Unexpected token, invalid JSON format, and parsing edge cases with reproducible fixes.</p>
             </Link>
-            <Link href="/blog/why-my-api-works-in-postman-but-not-in-browser" className="p-4 rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
+            <Link href="/blog/why-my-api-works-in-postman-but-not-in-browser" className="ud-link-card p-4 sm:p-5">
               <h3 className="font-semibold text-gray-900 mb-2">API Works in Postman, Not Browser</h3>
               <p className="text-sm text-gray-600">High-intent debugging flow for CORS, auth headers, cookies, and browser-specific request behavior.</p>
             </Link>
-            <Link href="/json-validator" className="p-4 rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
+            <Link href="/json-validator" className="ud-link-card p-4 sm:p-5">
               <h3 className="font-semibold text-gray-900 mb-2">Validate JSON Online</h3>
               <p className="text-sm text-gray-600">Check syntax and structure fast before deploying payloads or sharing examples.</p>
             </Link>
-            <Link href="/jwt-decoder" className="p-4 rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all">
+            <Link href="/jwt-decoder" className="ud-link-card p-4 sm:p-5">
               <h3 className="font-semibold text-gray-900 mb-2">Decode JWT Tokens</h3>
               <p className="text-sm text-gray-600">Inspect claims, expiration, and token payloads during auth debugging workflows.</p>
             </Link>
           </div>
         </section>
 
-        <section className="mt-10 grid gap-6 lg:grid-cols-3">
-          <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
+        <section className="mt-10 grid gap-5 lg:grid-cols-3">
+          <div className="ud-surface p-5 sm:p-6">
             <h2 className="text-lg font-bold text-gray-900">JSON Error Hub</h2>
             <p className="mt-2 text-sm text-gray-600">Most searched debugging paths for malformed payloads and parse failures.</p>
             <div className="mt-4 space-y-2 text-sm">
@@ -261,7 +261,7 @@ export default function BlogPage({
             </div>
           </div>
 
-          <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
+          <div className="ud-surface p-5 sm:p-6">
             <h2 className="text-lg font-bold text-gray-900">JWT & Auth Hub</h2>
             <p className="mt-2 text-sm text-gray-600">High-intent auth troubleshooting for token inspection and verification.</p>
             <div className="mt-4 space-y-2 text-sm">
@@ -272,7 +272,7 @@ export default function BlogPage({
             </div>
           </div>
 
-          <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
+          <div className="ud-surface p-5 sm:p-6">
             <h2 className="text-lg font-bold text-gray-900">API Debugging Hub</h2>
             <p className="mt-2 text-sm text-gray-600">Natural search patterns developers use when APIs fail in production.</p>
             <div className="mt-4 space-y-2 text-sm">

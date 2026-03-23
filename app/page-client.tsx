@@ -1,75 +1,75 @@
 'use client';
 
-import { useState, useCallback, useEffect, useMemo, Suspense } from 'react';
+import { useState, useCallback, useEffect, useMemo, Suspense, type ReactNode } from 'react';
 import dynamic from 'next/dynamic';
-import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Code, Server, Database, Settings, FileText, Bookmark, X, Wrench, TrendingUp, Mail, Scissors, Key, Clock, Network, AlertTriangle, Copy, ChevronDown, ChevronUp, Play, ShieldCheck, Shield, Lock, Image, Star, Link2 } from 'lucide-react';
+import { Download, Undo2, Redo2, FileSpreadsheet, Code2, GitCompare, FileCode, FileSearch, BarChart3, Server, Database, Settings, FileText, Wrench, TrendingUp, Mail, Scissors, Key, Clock, Network, AlertTriangle, Copy, ChevronDown, ChevronUp, Play, Lock } from 'lucide-react';
 import Link from 'next/link';
-import NextImage from 'next/image';
 import toast from 'react-hot-toast';
 import { PersonalizationManager, ToolTab } from '@/lib/personalization';
+import HomePrivacyFirstSections from '@/components/home/HomePrivacyFirstSections';
 import { trackToolUsed, trackCopy, trackCtaClick } from '@/lib/analytics';
-import BuyMeACoffeeWidget from '@/components/BuyMeACoffeeWidget';
-import { useDevMode } from '@/components/DevModeWrapper';
+import JsonBeautifier from '@/components/JsonBeautifier';
 // Below-fold / non-critical: lazy load to reduce initial JS (mobile LCP)
 const JsonInput = dynamic(() => import('@/components/JsonInput'), {
   ssr: false,
   loading: () => <div className="w-full rounded-lg bg-gray-50 border border-gray-200 animate-pulse" style={{ minHeight: '200px' }} aria-hidden />,
 });
-// Below-fold / non-critical: lazy load to reduce initial JS (LCP)
-const NewsletterSignup = dynamic(() => import('@/components/NewsletterSignup'), { ssr: false, loading: () => null });
-const FeedbackForm = dynamic(() => import('@/components/FeedbackForm'), { ssr: false, loading: () => null });
+/* Feedback + newsletter: static import avoids stale HMR chunks showing old UI (blue buttons / Get in Touch layout) */
+import NewsletterSignup from '@/components/NewsletterSignup';
+import FeedbackForm from '@/components/FeedbackForm';
+import FeedbackNewsletterSplit from '@/components/home/FeedbackNewsletterSplit';
 const toolLoading = () => (
   <div className="w-full bg-gray-50 border border-gray-200 rounded-lg animate-pulse" style={{ height: '300px' }} aria-hidden />
 );
 
-const JsonBeautifier = dynamic(() => import('@/components/JsonBeautifier'), { ssr: false, loading: toolLoading });
+/* JsonBeautifier: static import avoids broken webpack async chunks (factory undefined) with next/dynamic + dev/HMR */
 const JsonFixer = dynamic(() => import('@/components/tools/JsonFixer'), { ssr: false, loading: toolLoading });
 
 // Lazy load tool components for better performance
 const ApiComparator = dynamic(() => import('@/components/tools/ApiComparator'), {
-  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-700"></div></div>,
 });
 const JsonComparator = dynamic(() => import('@/components/tools/JsonComparator'), {
-  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-700"></div></div>,
 });
 const SchemaGenerator = dynamic(() => import('@/components/tools/SchemaGenerator'), {
-  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-700"></div></div>,
 });
 const LogExplorer = dynamic(() => import('@/components/tools/LogExplorer'), {
-  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-700"></div></div>,
 });
 const PayloadAnalyzer = dynamic(() => import('@/components/tools/PayloadAnalyzer'), {
-  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-700"></div></div>,
 });
 const CurlConverter = dynamic(() => import('@/components/tools/CurlConverter'), {
-  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-700"></div></div>,
 });
 const MockApiGenerator = dynamic(() => import('@/components/tools/MockApiGenerator'), {
-  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-700"></div></div>,
 });
 const TestDataGenerator = dynamic(() => import('@/components/tools/TestDataGenerator'), {
-  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-700"></div></div>,
 });
 const ConfigComparator = dynamic(() => import('@/components/tools/ConfigComparator'), {
-  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-700"></div></div>,
 });
 const SqlFormatter = dynamic(() => import('@/components/tools/SqlFormatter'), {
-  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-700"></div></div>,
 });
 const DataInsights = dynamic(() => import('@/components/tools/DataInsights'), {
-  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-700"></div></div>,
 });
 const PromptChunker = dynamic(() => import('@/components/tools/PromptChunker'), {
-  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-700"></div></div>,
 });
 const TokenComparator = dynamic(() => import('@/components/tools/TokenComparator'), {
-  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-700"></div></div>,
 });
 const TimezoneTranslator = dynamic(() => import('@/components/tools/TimezoneTranslator'), {
-  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-700"></div></div>,
 });
 const HarToCurl = dynamic(() => import('@/components/tools/HarToCurl'), {
-  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-700"></div></div>,
 });
 const SectionManager = dynamic(() => import('@/components/SectionManager'), {
   loading: () => <div className="min-h-[120px] rounded-lg bg-gray-50 animate-pulse" aria-hidden />,
@@ -217,7 +217,7 @@ const POPULAR_BLOG_LINKS: { href: string; label: string }[] = [
 
 const INITIAL_BLOG_LINKS = 20;
 
-function HomeClient() {
+function HomeClient({ hero }: { hero: ReactNode }) {
   const [activeTab, setActiveTab] = useState<ToolTab>('beautifier');
   const [rows, setRows] = useState<FlattenedRow[]>([]);
   const [columns, setColumns] = useState<Column[]>([]);
@@ -225,11 +225,8 @@ function HomeClient() {
   const [removedColumns, setRemovedColumns] = useState<Set<string>>(new Set());
   const [historyManager] = useState(() => new HistoryManager(10));
   const [mounted, setMounted] = useState<boolean>(false);
-  const [showBookmarkPrompt, setShowBookmarkPrompt] = useState<boolean>(false);
-  const [reserveBannerSpace, setReserveBannerSpace] = useState<boolean>(true);
   const [samplePanelOpen, setSamplePanelOpen] = useState<boolean>(true);
   const [showAllBlogLinks, setShowAllBlogLinks] = useState<boolean>(false);
-  const { devMode, setDevMode } = useDevMode();
 
   // Sample JSON for engagement: live demo snippet and interactive panel
   const SAMPLE_JSON_FORMATTED = `{
@@ -257,42 +254,25 @@ function HomeClient() {
     toast.success('Downloaded sample.json');
   }, []);
 
-  // Function to show Buy Me a Coffee message (dismisses previous toast first)
-  const showBuyMeACoffeeMessage = useCallback(() => {
-    // Dismiss any existing toast first
-    toast.dismiss();
-    // Show new toast after a small delay to ensure previous one is dismissed
-    setTimeout(() => {
-      toast.success('You have a wonderful day!!!', {
-        duration: 3000,
-        icon: '☕',
-        id: 'buy-me-coffee-message', // Use same ID so it replaces previous toast
-      });
-    }, 50);
-  }, []);
-
-  // Handle tab change with message - memoized; toast deferred to improve INP
+  // Handle tab change — no promotional toasts; scroll to in-page tool when switching to Beautifier
   const handleTabChange = useCallback((tab: ToolTab) => {
     if (tab !== activeTab) {
       setActiveTab(tab);
       trackToolUsed('home', { tab });
-      if (typeof requestIdleCallback !== 'undefined') {
-        requestIdleCallback(() => showBuyMeACoffeeMessage(), { timeout: 100 });
-      } else {
-        setTimeout(showBuyMeACoffeeMessage, 0);
+      if (tab === 'beautifier' && typeof document !== 'undefined') {
+        requestAnimationFrame(() => {
+          document.getElementById('active-tool')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
       }
     } else {
       setActiveTab(tab);
     }
-  }, [activeTab, showBuyMeACoffeeMessage]);
+  }, [activeTab]);
 
 
   // Mark as mounted and set client-only state (avoids hydration mismatch with SSR)
-  // Hide server-rendered LCP shell once client has mounted so only one h1 is visible
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const el = document.getElementById('server-lcp');
-    if (el) el.style.display = 'none';
     setMounted(true);
     const urlParams = new URLSearchParams(window.location.search);
       const tabParam = urlParams.get('tab');
@@ -304,19 +284,7 @@ function HomeClient() {
       setActiveTab(tabParam as ToolTab);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    const dismissed = localStorage.getItem('bookmarkPromptDismissed');
-    if (dismissed) setReserveBannerSpace(false);
-    else {
-      const timer = setTimeout(() => setShowBookmarkPrompt(true), 10000);
-      return () => clearTimeout(timer);
-    }
   }, []);
-
-  const handleDismissBookmarkPrompt = () => {
-    setShowBookmarkPrompt(false);
-    setReserveBannerSpace(false);
-    localStorage.setItem('bookmarkPromptDismissed', 'true');
-  };
 
   // AdSense: do NOT push() here. Each AdUnit pushes only when its container has non-zero width,
   // which avoids "Invalid responsive width from Matched Content slot: 0" and layout shifts.
@@ -494,309 +462,50 @@ function HomeClient() {
     toast.success('Column restored to table and export');
   };
 
+  // No flex-1 on root — avoids stretching the page shell when the flex parent is taller than content
   return (
-    <div className="relative min-h-screen flex flex-col bg-gradient-to-b from-slate-50 via-white to-slate-50/80" style={{ contain: 'layout' }}>
-      <BuyMeACoffeeWidget />
+    <div className="relative flex w-full min-w-0 flex-col" style={{ contain: 'layout' }}>
       {/* Skip to main content — fixed position so it never causes layout shift (CLS) */}
       <a
         href="#main-content"
-        className="fixed left-4 top-4 z-[9999] px-4 py-3 bg-white text-gray-900 font-semibold rounded-lg shadow-lg ring-2 ring-blue-600 ring-offset-2 opacity-0 pointer-events-none focus:opacity-100 focus:pointer-events-auto"
+        className="fixed left-4 top-4 z-[9999] px-4 py-3 bg-white text-gray-900 font-semibold rounded-lg shadow-lg ring-2 ring-emerald-600 ring-offset-2 opacity-0 pointer-events-none focus:opacity-100 focus:pointer-events-auto"
       >
         Skip to main content
       </a>
-      {/* Bookmark Prompt Banner - slot reserved from start to avoid CLS when banner appears */}
-      <div className={reserveBannerSpace ? 'min-h-[73px]' : 'min-h-0 overflow-hidden'}>
-      {showBookmarkPrompt && (
-        <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-md border-b border-blue-500/30 animate-slide-down">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-5">
-            <div className="flex items-center justify-between gap-3 sm:gap-6">
-              <div className="flex items-center gap-2.5 sm:gap-4 flex-1 min-w-0">
-                <div className="p-2 sm:p-2.5 bg-white/20 rounded-xl backdrop-blur-sm flex-shrink-0">
-                  <Bookmark className="w-5 h-5 sm:w-6 sm:h-6" aria-hidden />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-xs sm:text-base leading-tight">
-                    📌 Bookmark for quick access to all tools
-                  </p>
-                  <p className="text-[11px] sm:text-sm text-blue-100 mt-1 sm:mt-1.5 leading-relaxed hidden sm:block">
-                    <kbd className="px-1.5 py-0.5 bg-white/20 rounded text-[10px] sm:text-xs font-mono font-semibold">Ctrl+D</kbd> / <kbd className="px-1.5 py-0.5 bg-white/20 rounded text-[10px] sm:text-xs font-mono font-semibold">Cmd+D</kbd>
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={handleDismissBookmarkPrompt}
-                className="cta-icon-close min-w-[44px] min-h-[44px] flex items-center justify-center p-2 hover:bg-white/20 rounded-lg transition-all duration-200 active:scale-95 flex-shrink-0 touch-manipulation"
-                aria-label="Dismiss bookmark prompt"
-              >
-                <X className="w-5 h-5" aria-hidden />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      </div>
+      {hero}
 
-      {/* Header - Professional layout, desktop-optimized, trust-first */}
-      <header className={`bg-white/98 backdrop-blur-md border-b border-gray-200 ${reserveBannerSpace ? 'sticky top-[73px]' : 'sticky top-0'} z-40 shadow-[0_1px_0_0_rgba(0,0,0,0.05),0_2px_8px_-2px_rgba(0,0,0,0.06)]`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Top bar: logo left, nav right — touch targets min 44px on mobile */}
-          <div className="flex items-center justify-between gap-2 sm:gap-4 py-2.5 sm:py-4 lg:py-4">
-            <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0 group min-w-0">
-              <Link href="/" className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-primary-700 text-white shadow-lg shadow-primary-900/20 hover:shadow-xl hover:shadow-primary-900/25 transition-all duration-200 ring-2 ring-primary-500/10 active:scale-95 touch-manipulation" aria-label="UnblockDevs home">
-                <Wrench className="h-5 w-5" aria-hidden />
-              </Link>
-              <div className="flex flex-col gap-1 min-w-0 justify-center py-0.5">
-                {/* Line 1: UnblockDevs | Mode Light — keep inline, no wrap */}
-                <div className="flex items-center gap-2 sm:gap-3 flex-nowrap">
-                  <Link href="/" className="shrink-0">
-                    <span className="text-lg sm:text-xl font-bold tracking-tight text-gray-900 group-hover:text-primary-700 transition-colors leading-tight" style={{ letterSpacing: '-0.02em' }}>UnblockDevs</span>
-                  </Link>
-                  <span className="text-gray-300 font-medium shrink-0" aria-hidden>|</span>
-                  <div className="flex items-center gap-2 flex-shrink-0 dev-mode-toggle-container px-2 py-1.5 sm:px-2.5 rounded-lg bg-gray-100/90 border border-gray-200">
-                    <span className="text-[10px] sm:text-[11px] font-medium text-gray-500 whitespace-nowrap">Mode</span>
-                    <button
-                      type="button"
-                      onClick={() => setDevMode(!devMode)}
-                      className={`relative inline-flex h-6 w-10 sm:h-5 sm:w-9 flex-shrink-0 cursor-pointer rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-1 touch-manipulation ${devMode ? 'dark-mode-on' : ''} ${
-                        devMode
-                          ? 'bg-slate-600 hover:bg-slate-700'
-                          : 'bg-gray-300 hover:bg-gray-400'
-                      }`}
-                      aria-label={devMode ? 'Switch to Light mode' : 'Switch to Dark mode'}
-                      aria-pressed={devMode}
-                    >
-                      <span
-                        className={`absolute top-0.5 left-0.5 inline-block h-4 w-4 rounded-full bg-white shadow transform transition-transform duration-200 ${
-                          devMode ? 'translate-x-4' : 'translate-x-0'
-                        }`}
-                      />
-                    </button>
-                    <span className={`min-w-[2.5rem] text-[11px] font-semibold whitespace-nowrap tabular-nums ${devMode ? 'text-slate-600' : 'text-gray-700'}`}>
-                      {devMode ? 'Dark' : 'Light'}
-                    </span>
-                  </div>
-                  <Link
-                    href="/speed-test"
-                    title="Test Your Internet Speed"
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-green-500/30 bg-green-500/10 hover:bg-green-500/20 text-green-600 hover:text-green-700 text-xs font-medium transition-all duration-200 ml-1 sm:ml-2 shrink-0"
-                  >
-                    <span className="relative flex h-2 w-2 shrink-0">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
-                    </span>
-                    <span className="hidden sm:inline">Speed Test</span>
-                    <span className="sm:hidden">Speed</span>
-                  </Link>
-                </div>
-                <p className="hidden sm:block text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors"><span className="text-primary-600 font-semibold">Developer Tools for Daily Use</span><span className="text-gray-500 mx-1.5">—</span><span className="tagline-highlight font-semibold text-gray-800 bg-amber-200/70 px-1.5 py-0.5 rounded border-b-2 border-amber-400">Privacy-First Tools That Run in Your Browser</span> <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary-100 text-primary-600 ml-1.5 align-middle" aria-hidden><Shield className="w-3.5 h-3.5" /></span></p>
-                <div className="hidden sm:flex flex-wrap items-center gap-2 mt-1.5">
-                  <span className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800 border border-emerald-200/80 shadow-sm">
-                    <Lock className="w-3.5 h-3.5 text-emerald-600" aria-hidden /> No data stored
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-800 border border-blue-200/80 shadow-sm">
-                    <Shield className="w-3.5 h-3.5 text-blue-600" aria-hidden /> 100% in-browser
-                  </span>
-                  <Link href={toolPageUrls.schemamasker} className="inline-flex items-center gap-1.5 rounded-lg bg-violet-50 px-3 py-1.5 text-xs font-semibold text-violet-800 border border-violet-200/80 shadow-sm hover:bg-violet-100/80 hover:border-violet-300 transition-colors">
-                    <ShieldCheck className="w-3.5 h-3.5 text-violet-600" aria-hidden /> AI Data Masker
-                  </Link>
-                  <span className="inline-flex items-center gap-1.5 rounded-lg bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-800 border border-amber-200/80 shadow-sm">✓ No signup</span>
-                  <Link href={toolPageUrls.schemamasker} className="hidden md:inline-flex items-center gap-1.5 rounded-lg bg-primary-50 px-3 py-1.5 text-xs font-semibold text-primary-800 border border-primary-200/80 shadow-sm hover:bg-primary-100 hover:border-primary-300 transition-colors">
-                    Use AI without leaking your data
-                  </Link>
-                </div>
-              </div>
-            </div>
-            <div id="ezoic-pub-ad-placeholder-100" className="hidden lg:block flex-1 min-w-0" />
-            <nav className="flex items-center justify-end gap-1.5 sm:gap-3 flex-shrink-0" aria-label="Main navigation">
-              <Link href="/blog" className="min-h-[44px] min-w-[44px] sm:min-w-0 flex items-center justify-center px-3 sm:px-4 py-2.5 text-sm font-semibold rounded-xl shadow-lg shadow-primary-900/20 hover:shadow-xl hover:shadow-primary-900/25 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 active:scale-95 touch-manipulation bg-[#1d4ed8] text-[#fff] hover:bg-[#1e40af] focus-visible:ring-2 focus-visible:ring-primary-500" aria-label="Developer's Study Materials">
-                <FileText className="h-4 w-4 sm:hidden shrink-0 text-[#fff]" aria-hidden />
-                <span className="hidden sm:inline text-[#fff]">Developer&apos;s Study Materials 📚</span>
-              </Link>
-              <Link href="/about" className="min-h-[44px] flex items-center px-3 sm:px-4 py-2.5 text-sm font-medium text-gray-600 hover:text-primary-700 hover:bg-primary-50 rounded-xl border border-gray-200 hover:border-primary-200 transition-all duration-200 active:scale-95 touch-manipulation">About</Link>
-            </nav>
-          </div>
-
-          {/* Tool tabs — compact grid, trust banner; mobile-first for AdSense viewability */}
-          <div className="border-t border-gray-200 bg-gradient-to-b from-gray-50/90 to-gray-50/70 px-3 sm:px-6 lg:px-8 py-3 sm:py-4">
-            <h1 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-0 mt-0 leading-tight">Use AI Safely — JSON Masking &amp; Log Unpacker</h1>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4 mb-2 sm:mb-3">
-              <p className="text-[10px] sm:text-xs font-bold text-gray-600 uppercase tracking-widest sm:shrink-0">Developer&apos;s Daily Tools</p>
-              <div className="flex justify-center sm:flex-1">
-                <p className="text-xs sm:text-sm text-emerald-800 font-semibold bg-emerald-50 border border-emerald-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 inline-flex items-center gap-2 sm:gap-2.5 shadow-sm ring-1 ring-emerald-100/50">
-                  <span className="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-100">
-                    <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-700" aria-hidden />
-                  </span>
-                  <span>100% client-side — data never leaves your device.</span>
-                </p>
-              </div>
-            </div>
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-2 sm:gap-2 content-stretch [&>*]:min-h-[44px] [&>*]:touch-manipulation [&>*]:active:scale-[0.98]">
-            <button
-              onClick={() => handleTabChange('beautifier')}
-              className={`group tab-card w-full px-2 sm:px-2.5 py-2 rounded-xl border text-left transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-[0.98] ${
-                activeTab === 'beautifier'
-                  ? 'bg-primary-50 border-primary-300 text-primary-800 shadow-md ring-1 ring-primary-200/50'
-                  : 'bg-white border-gray-200 text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100'
-              }`}
-            >
-              <Code2 className="w-4 h-4 flex-shrink-0 text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">JSON Beautifier</span>
-            </button>
-            <Link href={toolPageUrls.sql} className="group tab-card relative w-full px-2 sm:px-2.5 py-2 pr-6 sm:pr-8 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-[0.98]">
-              <Database className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0 flex-1">SQL Formatter</span>
-              <span className="absolute top-1.5 right-1.5 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-red-200 text-red-800">Hot</span>
-            </Link>
-            <Link href={toolPageUrls.schemamasker} className="group tab-card relative w-full px-2.5 py-2 pr-8 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <ShieldCheck className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0 flex-1">Schema Masker</span>
-              <span className="absolute top-1.5 right-1.5 text-xs font-semibold px-2 py-0.5 rounded bg-violet-100 text-violet-600">AI</span>
-            </Link>
-            <Link href={toolPageUrls.jsonpromptshield} className="group tab-card relative w-full px-2.5 py-2 pr-8 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <Shield className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0 flex-1">JSON Shield</span>
-              <span className="absolute top-1.5 right-1.5 text-xs font-semibold px-2 py-0.5 rounded bg-violet-100 text-violet-600">AI</span>
-            </Link>
-            <Link href={toolPageUrls.codemasker} className="group tab-card relative w-full px-2.5 py-2 pr-8 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <Shield className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0 flex-1">Code Shield</span>
-              <span className="absolute top-1.5 right-1.5 text-xs font-semibold px-2 py-0.5 rounded bg-violet-100 text-violet-600">AI</span>
-            </Link>
-            <Link href={toolPageUrls.promptchunk} className="group tab-card relative w-full px-2.5 py-2 pr-8 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <Scissors className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0 flex-1">Prompt Chunker</span>
-              <span className="absolute top-1.5 right-1.5 text-xs font-semibold px-2 py-0.5 rounded bg-violet-100 text-violet-600">AI</span>
-            </Link>
-            <Link href={toolPageUrls.builder} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <FileSpreadsheet className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">Log Unpacker</span>
-              <Star className="w-3.5 h-3.5 flex-shrink-0 fill-emerald-500 text-emerald-500" aria-hidden />
-            </Link>
-            <Link href="/svg-to-image" className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <Image className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">SVG to JPEG/PNG</span>
-            </Link>
-            <Link href={toolPageUrls.jsoncompare} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <GitCompare className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">Smart JSON Diff</span>
-              <Star className="w-3.5 h-3.5 flex-shrink-0 fill-emerald-500 text-emerald-500" aria-hidden />
-            </Link>
-            <Link href="/json-to-excel" className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <FileSpreadsheet className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">Json to Excel</span>
-            </Link>
-            <Link href={toolPageUrls.fixer} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <Wrench className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">JSON Fixer</span>
-            </Link>
-            <Link href="/jwt-decoder" className="group tab-card w-full px-2 sm:px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-[0.98]">
-              <Key className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">JWT Decoder</span>
-            </Link>
-            <Link href="/base64-encoder" className="group tab-card w-full px-2 sm:px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-[0.98]">
-              <FileCode className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">Base64 Encoder</span>
-            </Link>
-            <Link href="/password-generator" className="group tab-card w-full px-2 sm:px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-[0.98]">
-              <Lock className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">Password Generator</span>
-            </Link>
-            <Link href="/uuid-generator" className="group tab-card w-full px-2 sm:px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-[0.98]">
-              <FileCode className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">UUID Generator</span>
-            </Link>
-            <Link href="/cors-tester" className="group tab-card w-full px-2 sm:px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-[0.98]">
-              <Network className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">CORS Tester</span>
-            </Link>
-            <Link href="/truth-table-generator" className="group tab-card w-full px-2 sm:px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-[0.98]">
-              <Code2 className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">Truth Table</span>
-            </Link>
-            <Link href="/hash-generator" className="group tab-card w-full px-2 sm:px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-[0.98]">
-              <Key className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">Hash Generator</span>
-            </Link>
-            <Link href="/url-encoder" className="group tab-card w-full px-2 sm:px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-[0.98]">
-              <Link2 className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">URL Encoder</span>
-            </Link>
-            <Link href={toolPageUrls.tokencompare} className="group tab-card w-full px-2 sm:px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-[0.98]">
-              <Key className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">Token Compare</span>
-            </Link>
-            <Link href={toolPageUrls.comparator} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <GitCompare className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">API Compare</span>
-            </Link>
-            <Link href={toolPageUrls.regextester} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <Code2 className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">Regex Tester</span>
-            </Link>
-            <Link href={toolPageUrls.schema} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <FileCode className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">Schema</span>
-            </Link>
-            <Link href={toolPageUrls.logs} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <FileSearch className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">Logs Analyzer</span>
-            </Link>
-            <Link href={toolPageUrls.payload} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <BarChart3 className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">Payload</span>
-            </Link>
-            <Link href={toolPageUrls.curl} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <Code className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">Convert Curl</span>
-            </Link>
-            <Link href={toolPageUrls.mock} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <Server className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">Mock API</span>
-            </Link>
-            <Link href={toolPageUrls.testdata} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <Database className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">Test Data</span>
-            </Link>
-            <Link href={toolPageUrls.config} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <Settings className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">Config</span>
-            </Link>
-            <Link href={toolPageUrls.timezone} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <Clock className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">Timezone</span>
-            </Link>
-            <Link href={toolPageUrls.hartocurl} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <Network className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">HAR to cURL</span>
-            </Link>
-            <Link href={toolPageUrls.curlfailure} className="group tab-card w-full px-2.5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 hover:border-primary-200 hover:bg-white hover:shadow-md hover:ring-1 hover:ring-primary-100 transition-all duration-200 flex items-center gap-2 min-h-[2.75rem]">
-              <AlertTriangle className="w-4 h-4 flex-shrink-0 text-gray-500 group-hover:text-primary-600" />
-              <span className="text-xs font-medium break-words min-w-0">cURL Analyzer</span>
-            </Link>
-            </div>
-          </div>
-        </div>
-      </header>
+      <HomePrivacyFirstSections
+        toolPageUrls={toolPageUrls}
+        onBeautifierClick={() => handleTabChange('beautifier')}
+      />
 
       {/* Ad strip — mobile-friendly heights for 320x50 / 300x250; collapsed when Beautifier active */}
-      <div key={activeTab} className={`max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-0 border-b border-gray-100 bg-white/50 ${activeTab === 'beautifier' ? 'min-h-0 overflow-hidden' : ''}`}>
+      <div key={activeTab} className={`ud-content py-0 border-b border-zinc-200/80 bg-white/60 ${activeTab === 'beautifier' ? 'min-h-0 overflow-hidden' : ''}`}>
         <div id="ezoic-pub-ad-placeholder-101" role="region" aria-label="Advertisement" className={activeTab === 'beautifier' ? 'min-h-0 h-0 overflow-hidden' : 'min-h-[50px] sm:min-h-[50px] w-full flex items-center justify-center'} style={activeTab !== 'beautifier' ? { contain: 'layout' } : undefined} />
         <div id="ezoic-pub-ad-placeholder-111" role="region" aria-label="Advertisement" className={activeTab === 'beautifier' ? 'min-h-0 h-0 overflow-hidden' : 'min-h-[250px] sm:min-h-[90px] w-full flex items-center justify-center'} style={activeTab !== 'beautifier' ? { contain: 'layout' } : undefined} />
       </div>
 
       {/* Main Content - min-height to reduce CLS; no opacity animation to avoid CLS from paint */}
-      <main id="main-content" className={`flex-1 w-full min-h-[320px] overflow-x-hidden ${activeTab === 'beautifier' ? 'pt-0 pb-8 sm:pb-12 lg:pb-14' : 'py-6 sm:py-10 lg:py-12'}`}>
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+      {/* No flex-1 here — flex-1 made <main> eat all remaining viewport height and left a huge white gap above the feedback band */}
+      <main id="main-content" className={`w-full min-h-[320px] overflow-x-hidden ${activeTab === 'beautifier' ? 'pt-6 sm:pt-8 pb-4 sm:pb-6' : 'py-6 sm:py-10 lg:py-12'}`}>
+        <div className="ud-content">
         {activeTab === 'beautifier' && (
-          <div className="w-full max-w-7xl mx-auto">
-            <div className="rounded-2xl bg-white shadow-lg border border-gray-200 overflow-hidden ring-1 ring-gray-100/80 p-6 sm:p-8 lg:p-10">
-              <div className="flex items-center justify-between gap-2 mb-5 pb-4 border-b border-gray-100">
-                <p className="text-sm font-medium text-gray-500 flex items-center gap-2">
-                  <Lock className="w-4 h-4 text-emerald-600" aria-hidden />
-                  Runs in your browser — nothing is sent to servers
-                </p>
+          <div className="w-full scroll-mt-28 sm:scroll-mt-32" id="active-tool">
+            <div className="ud-card-redesign overflow-hidden shadow-md">
+              <div className="h-1 w-full bg-gradient-to-r from-emerald-600 to-emerald-500" aria-hidden />
+              <div className="p-6 sm:p-10 lg:p-12">
+                <div className="mb-8 sm:mb-10 pb-6 sm:pb-8 border-b border-zinc-100">
+                  <div className="flex flex-wrap items-center gap-2 mb-3">
+                    <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-900">Live on this page</span>
+                    <span className="rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 text-xs font-medium text-zinc-600">100% client-side</span>
+                  </div>
+                  <h2 className="text-2xl sm:text-3xl font-semibold text-zinc-900 tracking-tight">JSON Beautifier</h2>
+                  <p className="mt-2 text-sm sm:text-base text-zinc-600 max-w-2xl leading-relaxed">
+                    Paste or type JSON — format, minify, and explore the tree. Everything stays in your browser.
+                  </p>
+                </div>
+                <JsonBeautifier />
               </div>
-              <JsonBeautifier />
             </div>
           </div>
         )}
@@ -867,7 +576,7 @@ function HomeClient() {
                         <button
                           type="button"
                           onClick={copySampleJson}
-                          className="inline-flex items-center gap-2 px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                          className="inline-flex items-center gap-2 px-3 py-2 bg-zinc-900 text-white text-sm font-medium rounded-lg hover:bg-zinc-800 transition-colors"
                         >
                           <Copy className="w-4 h-4" />
                           Copy
@@ -943,16 +652,16 @@ function HomeClient() {
                 <nav className="pt-5 border-t border-gray-200" aria-label="JSON tools navigation">
                   <p className="text-xs font-medium text-gray-600 uppercase tracking-wider mb-2">Related tools</p>
                   <ul className="flex flex-wrap justify-center gap-x-3 gap-y-1.5 text-sm">
-                  <li><Link href="/tools/json" className="text-blue-600 hover:underline font-medium">All JSON tools</Link></li>
-                  <li><Link href="/#json-input-section" className="text-blue-600 hover:underline">JSON viewer online</Link></li>
-                  <li><Link href="/json-beautifier" className="text-blue-600 hover:underline">JSON formatter online</Link></li>
-                  <li><Link href="/#json-input-section" className="text-blue-600 hover:underline">JSON parser online</Link></li>
-                  <li><Link href="/#json-input-section" className="text-blue-600 hover:underline">JSON to CSV/Excel/Table</Link></li>
-                  <li><Link href="/json-fixer-online" className="text-blue-600 hover:underline">JSON validator</Link></li>
-                  <li><Link href="/json-beautifier" className="text-blue-600 hover:underline">JSON beautifier</Link></li>
-                  <li><Link href="/json-schema-generation" className="text-blue-600 hover:underline">JSON schema generator</Link></li>
-                  <li><Link href="/json-comparator" className="text-blue-600 hover:underline">JSON comparator</Link></li>
-                  <li><Link href="/sql-in-generator" className="text-blue-600 hover:underline">SQL IN generator</Link></li>
+                  <li><Link href="/tools/json" className="text-emerald-800 hover:text-emerald-950 hover:underline font-medium">All JSON tools</Link></li>
+                  <li><Link href="/#json-input-section" className="text-emerald-800 hover:text-emerald-950 hover:underline">JSON viewer online</Link></li>
+                  <li><Link href="/json-beautifier" className="text-emerald-800 hover:text-emerald-950 hover:underline">JSON formatter online</Link></li>
+                  <li><Link href="/#json-input-section" className="text-emerald-800 hover:text-emerald-950 hover:underline">JSON parser online</Link></li>
+                  <li><Link href="/#json-input-section" className="text-emerald-800 hover:text-emerald-950 hover:underline">JSON to CSV/Excel/Table</Link></li>
+                  <li><Link href="/json-fixer-online" className="text-emerald-800 hover:text-emerald-950 hover:underline">JSON validator</Link></li>
+                  <li><Link href="/json-beautifier" className="text-emerald-800 hover:text-emerald-950 hover:underline">JSON beautifier</Link></li>
+                  <li><Link href="/json-schema-generation" className="text-emerald-800 hover:text-emerald-950 hover:underline">JSON schema generator</Link></li>
+                  <li><Link href="/json-comparator" className="text-emerald-800 hover:text-emerald-950 hover:underline">JSON comparator</Link></li>
+                  <li><Link href="/sql-in-generator" className="text-emerald-800 hover:text-emerald-950 hover:underline">SQL IN generator</Link></li>
                   </ul>
                 </nav>
               </div>
@@ -1001,284 +710,27 @@ function HomeClient() {
         </div>
       </main>
 
-      {/* Services Section — show on home (Beautifier only) */}
+      {/* Mid-page ad — Beautifier tab only */}
       {activeTab === 'beautifier' && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12">
-          {/* Hero Section */}
-          <div className="text-center mb-10 sm:mb-12 bg-gradient-to-br from-emerald-50/90 via-indigo-50/70 to-violet-50/70 rounded-2xl p-6 sm:p-8 lg:p-10 border border-emerald-100/60 shadow-md">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight" style={{ letterSpacing: '-0.02em' }}>
-              AI-Safe Tools — Data Security &amp; Privacy First
-            </h2>
-            <p className="text-base sm:text-lg text-gray-700 max-w-3xl mx-auto mb-6 sm:mb-8 leading-relaxed">
-              <strong>UnblockDevs</strong> lets you use <strong>AI</strong> for SQL and JSON without exposing real schemas or sensitive data. <strong>Data masking</strong>, <strong>client-side only</strong>, <strong>no server storage</strong>. Mask before you send to ChatGPT—restore after. Plus JSON, API, and 19+ tools. No signup, no install.
-            </p>
-            <div className="flex flex-wrap justify-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-600">
-              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ AI Schema Masker (SQL)</span>
-              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ JSON Shield (Payload Masking)</span>
-              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ 100% Data Security</span>
-              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ No Data Storage</span>
-              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ Client-Side Only</span>
-              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ Compliance-Friendly</span>
-              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ Reversible Masking</span>
-              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-lg shadow-sm font-medium">✓ JSON &amp; API Tools</span>
-            </div>
-          </div>
-          
-          {/* AI Safety, Privacy & Secure Masking Tools Section */}
-          <div className="mb-8 sm:mb-10 bg-gradient-to-br from-emerald-50 via-violet-50/50 to-indigo-50 rounded-2xl p-5 sm:p-6 lg:p-8 border border-emerald-100 shadow-sm">
-            <div className="max-w-4xl mx-auto space-y-8">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 text-center">AI Safety, Privacy &amp; Secure Data Masking</h2>
-              <p className="text-gray-700 text-center text-sm sm:text-base max-w-2xl mx-auto">
-                Use <strong>AI</strong> for SQL and JSON without exposing real schemas or sensitive data. Our tools run <strong>100% client-side</strong>—nothing leaves your browser. <strong>AI safety</strong> and <strong>privacy</strong> first: mask before you send, restore after you get AI help.
-              </p>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* JSON Shield */}
-                <div className="bg-white rounded-xl p-6 border border-violet-200 shadow-sm">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
-                    <Shield className="w-5 h-5 text-violet-600 flex-shrink-0" />
-                    JSON Shield
-                  </h3>
-                  <p className="text-gray-700 text-sm leading-relaxed mb-3">
-                    Mask <strong>JSON payloads</strong> before sending to ChatGPT or any AI. Keys become <strong>K_00001</strong>, string values become <strong>S_00001</strong>; numbers stay unchanged. Preserve structure, restore exactly. Perfect for <strong>API payloads</strong>, logs, and configs—<strong>no data leaves your browser</strong>.
-                  </p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• Mask keys &amp; string values; keep numbers</li>
-                    <li>• Deterministic, fully reversible mapping</li>
-                    <li>• Client-side only; enterprise-safe</li>
-                    <li>• Handles large payloads (MBs)</li>
-                  </ul>
-                  <Link href="/json-prompt-shield" className="mt-3 inline-block text-sm font-semibold text-violet-600 hover:text-violet-700">Try JSON Shield →</Link>
-                </div>
-
-                {/* SQL Mask / AI Schema Masker */}
-                <div className="bg-white rounded-xl p-6 border border-emerald-200 shadow-sm">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
-                    <ShieldCheck className="w-5 h-5 text-emerald-600 flex-shrink-0" />
-                    SQL Mask
-                  </h3>
-                  <p className="text-gray-700 text-sm leading-relaxed mb-3">
-                    Mask <strong>table and column names</strong> in raw SQL before sending to AI. Tables → <strong>T_00001</strong>, columns → <strong>C_00001</strong>. Compiler-level, token-aware masking—no regex, no broken strings. Send masked SQL to AI, paste the response, <strong>restore</strong> to real names in one click.
-                  </p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• Hide database schema from AI</li>
-                    <li>• Deterministic reversible mapping</li>
-                    <li>• Client-side only; no server, no logging</li>
-                    <li>• Handles procedures, CTEs, complex SQL</li>
-                  </ul>
-                  <Link href="/ai-schema-masker" className="mt-3 inline-block text-sm font-semibold text-emerald-700 hover:text-emerald-800">Try AI Schema Masker →</Link>
-                </div>
-
-                {/* MySQL Mask */}
-                <div className="bg-white rounded-xl p-6 border border-amber-200 shadow-sm">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
-                    <ShieldCheck className="w-5 h-5 text-amber-600 flex-shrink-0" />
-                    MySQL Mask
-                  </h3>
-                  <p className="text-gray-700 text-sm leading-relaxed mb-3">
-                    Use <strong>AI for MySQL</strong> without exposing your schema. Same engine as SQL Mask: define tables and columns (or paste MySQL), get masked prompts. Build <strong>AI-safe prompts</strong> with optional <strong>JOIN</strong> definitions. Restore AI output to run in your MySQL database—<strong>privacy</strong> and <strong>compliance</strong> preserved.
-                  </p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• Anonymize MySQL schema for AI</li>
-                    <li>• Prompt compiler with JOIN support</li>
-                    <li>• No server storage; no schema logging</li>
-                    <li>• FinTech, healthcare, banking friendly</li>
-                  </ul>
-                  <Link href="/ai-schema-masker" className="mt-3 inline-block text-sm font-semibold text-amber-700 hover:text-amber-800">Try AI Schema Masker →</Link>
-                </div>
-              </div>
-
-              <div className="bg-white/80 rounded-xl p-5 border border-emerald-200">
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Why AI safety and privacy matter</h3>
-                <p className="text-gray-700 text-sm leading-relaxed">
-                  Sending raw <strong>SQL</strong> or <strong>JSON</strong> to AI can leak business logic, table names, and sensitive identifiers. Many policies forbid sharing schema with third parties. Our masking tools let you get <strong>AI help</strong> while keeping data on your device: mask → send only placeholders → restore. <strong>100% data security</strong>, client-side only.
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          {/* AI, JSON, Safety & Client-Side Tools Section */}
-          <div className="mb-8 sm:mb-10 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-5 sm:p-6 lg:p-8 border border-blue-100 shadow-sm">
-            <div className="max-w-4xl mx-auto space-y-6">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">AI-Safe JSON &amp; SQL Tools — Security First, Client-Side Only</h2>
-              <p className="text-gray-700 text-sm sm:text-base mb-6">
-                All tools run <strong>100% in your browser</strong>. <strong>No data storage</strong> on our servers—no uploads, no logging. Your <strong>JSON</strong>, SQL, and schemas stay on your device. <strong>AI safety</strong> and <strong>security</strong> by design: mask before AI, format and validate locally.
-              </p>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-white rounded-xl p-5 border border-emerald-100">
-                  <h3 className="text-lg font-bold text-gray-900 mb-3">AI Safety &amp; No Data Storage</h3>
-                  <ul className="text-sm text-gray-700 space-y-2">
-                    <li>• <strong>AI-safe JSON</strong> masking — keys &amp; values masked client-side</li>
-                    <li>• <strong>AI-safe SQL</strong> — table &amp; column names masked before AI</li>
-                    <li>• <strong>No server storage</strong> — nothing sent, nothing saved</li>
-                    <li>• <strong>Client-side only</strong> — all operations in your browser</li>
-                  </ul>
-                </div>
-
-                <div className="bg-white rounded-xl p-5 border border-blue-100">
-                  <h3 className="text-lg font-bold text-gray-900 mb-3">Security &amp; Privacy</h3>
-                  <ul className="text-sm text-gray-700 space-y-2">
-                    <li>• <strong>JSON</strong> and SQL never leave your device</li>
-                    <li>• <strong>No logging</strong> of schemas, payloads, or identifiers</li>
-                    <li>• <strong>Reversible masking</strong> — restore after AI, run locally</li>
-                    <li>• <strong>Enterprise-safe</strong> — FinTech, healthcare, banking friendly</li>
-                  </ul>
-                </div>
-
-                <div className="bg-white rounded-xl p-5 border border-gray-200">
-                  <h3 className="text-lg font-bold text-gray-900 mb-3">JSON Utilities — All Client-Side</h3>
-                  <ul className="text-sm text-gray-700 space-y-2">
-                    <li>• <strong>JSON formatter</strong> &amp; <strong>JSON minifier</strong> — in-browser</li>
-                    <li>• <strong>JSON validator</strong> &amp; <strong>JSON viewer</strong> — no upload</li>
-                    <li>• <strong>JSON compare</strong> &amp; <strong>JSON diff</strong> — local only</li>
-                    <li>• <strong>JSON to CSV/Excel</strong> — conversion in your browser</li>
-                  </ul>
-                </div>
-
-                <div className="bg-white rounded-xl p-5 border border-gray-200">
-                  <h3 className="text-lg font-bold text-gray-900 mb-3">API &amp; Debugging — Zero Server</h3>
-                  <ul className="text-sm text-gray-700 space-y-2">
-                    <li>• <strong>API JSON tester</strong> — validate responses client-side</li>
-                    <li>• <strong>JSON pretty print</strong> &amp; structure view — local</li>
-                    <li>• <strong>JSON debugging</strong> — no data sent to any server</li>
-                    <li>• <strong>REST API tools</strong> — all operations client-side only</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* About UnblockDevs Platform Section */}
-          <div className="mb-8 sm:mb-10 bg-gradient-to-br from-gray-50/90 via-blue-50/80 to-indigo-50/80 rounded-2xl p-6 sm:p-8 lg:p-10 border border-gray-200/80 shadow-sm">
-            <div className="max-w-4xl mx-auto space-y-6">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 text-center">About UnblockDevs — AI Safety, Data Security &amp; Compliance-First Tools</h2>
-              
-              <div className="space-y-4 text-gray-700 leading-relaxed">
-                <p>
-                  <strong>UnblockDevs</strong> is built for developers who need to use <strong>AI</strong> without risking <strong>data security</strong> or <strong>compliance</strong>. We provide free, client-side tools so your JSON, SQL, and schemas never leave your device. <strong>Data masking for AI</strong> is at the core: mask table names, column names, and JSON keys before sending anything to ChatGPT or other AI—then restore the AI&apos;s output locally. No server storage, no logging, no signups. <strong>Safety</strong> and <strong>privacy</strong> by design.
-                </p>
-                
-                <p>
-                  Our mission is to make <strong>AI-safe workflows</strong> accessible: use AI for SQL and JSON while staying within <strong>compliance</strong> (FinTech, healthcare, banking). We believe you shouldn&apos;t have to choose between AI productivity and data security. All processing runs in your browser—<strong>100% client-side</strong>—so your code, API payloads, and database identifiers never touch our servers. No account creation, no data sharing, no storage of your sensitive information.
-                </p>
-                
-                <div className="grid md:grid-cols-3 gap-4 mt-6">
-                  <div className="bg-white rounded-lg p-4 border border-gray-200 text-center">
-                    <div className="text-2xl font-bold text-blue-600 mb-1">19+</div>
-                    <div className="text-sm text-gray-700">Tools incl. AI Masking</div>
-                  </div>
-                  <div className="bg-white rounded-lg p-4 border border-gray-200 text-center">
-                    <div className="text-2xl font-bold text-blue-600 mb-1">100%</div>
-                    <div className="text-sm text-gray-700">Client-Side, No Storage</div>
-                  </div>
-                  <div className="bg-white rounded-lg p-4 border border-gray-200 text-center">
-                    <div className="text-2xl font-bold text-blue-600 mb-1">Free</div>
-                    <div className="text-sm text-gray-700">Forever, No Signup</div>
-                  </div>
-                </div>
-                
-                <p className="mt-6">
-                  <strong>AI Safety &amp; Data Masking:</strong> Use our <strong>JSON Shield</strong> and <strong>AI Schema Masker</strong> to anonymize payloads and SQL before AI. Deterministic, reversible mapping—restore AI output to real names in one click. <strong>Data Security:</strong> No uploads, no server processing. Your data stays in your browser. <strong>Compliance:</strong> No logging of schemas or identifiers; suitable for regulated industries. <strong>No Barriers:</strong> Start immediately—no accounts, no credit cards.
-                </p>
-                
-                <p>
-                  <strong>Tool Suite:</strong> Beyond <strong>data masking for AI</strong>, we offer JSON formatters, validators, API comparators, cURL converters, and more—all client-side. <strong>Educational Content:</strong> 100+ blog posts on JSON, API testing, data engineering, and <strong>how to safely use AI</strong> with MySQL and JSON (masking, privacy, compliance).
-                </p>
-                
-                <p>
-                  <strong>Architecture:</strong> Built with Next.js, TypeScript, and Tailwind. Every tool runs in your browser—fast, secure, private. <strong>Community-Driven:</strong> Tools and features (including AI masking) were shaped by developers who need <strong>AI safety</strong> and <strong>data security</strong> without sacrificing productivity.
-                </p>
-                
-                <div className="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg mt-6">
-                  <p className="font-semibold text-blue-900 mb-2">Why Choose UnblockDevs?</p>
-                  <ul className="text-sm text-blue-800 space-y-1">
-                    <li>✓ <strong>AI safety</strong> — data masking for AI; schema never sent to servers</li>
-                    <li>✓ <strong>Data security</strong> — 100% client-side; no storage, no logging</li>
-                    <li>✓ <strong>Compliance-friendly</strong> — FinTech, healthcare, banking safe</li>
-                    <li>✓ No signup — use tools immediately, no account or email</li>
-                    <li>✓ Free forever — no usage limits, no credit cards</li>
-                    <li>✓ JSON Shield &amp; SQL/MySQL mask — restore AI output locally</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Ezoic Ad Placement - Middle of Content (102) - mobile 300x250 / desktop responsive */}
-          <div id="ezoic-pub-ad-placeholder-102" role="region" aria-label="Advertisement" className="min-h-[250px] sm:min-h-[250px] w-full" style={{ contain: 'layout' }} />
-
-          <div className="mt-10 sm:mt-12">
-            <div className="text-center mb-6">
-              <h3 className="heading-section mb-2">Why Choose UnblockDevs?</h3>
-              <p className="text-gray-600 text-sm sm:text-base max-w-xl mx-auto">We built this for developers who care where their data goes. No upsells, no lock-in—just tools that work.</p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 max-w-4xl mx-auto">
-              <div className="bg-white rounded-xl p-5 sm:p-6 border border-gray-200 shadow-sm text-center md:text-left">
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 mb-3">
-                  <span className="text-lg font-bold">∞</span>
-                </div>
-                <h4 className="font-semibold text-gray-900 mb-1.5">Always free</h4>
-                <p className="text-sm text-gray-600 leading-relaxed">No trials, no “pro” tier, no credit card. Use every tool as much as you need. We don’t gate features behind signup.</p>
-              </div>
-              <div className="bg-white rounded-xl p-5 sm:p-6 border border-gray-200 shadow-sm text-center md:text-left">
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 text-blue-600 mb-3">
-                  <Lock className="w-5 h-5" aria-hidden />
-                </div>
-                <h4 className="font-semibold text-gray-900 mb-1.5">Your data stays yours</h4>
-                <p className="text-sm text-gray-600 leading-relaxed">Everything runs in your browser. We don’t send your JSON, SQL, or schemas to our servers—there are no servers for your data. No tracking, no logging.</p>
-              </div>
-              <div className="bg-white rounded-xl p-5 sm:p-6 border border-gray-200 shadow-sm text-center md:text-left">
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-violet-100 text-violet-600 mb-3">
-                  <Code className="w-5 h-5" aria-hidden />
-                </div>
-                <h4 className="font-semibold text-gray-900 mb-1.5">No install, no setup</h4>
-                <p className="text-sm text-gray-600 leading-relaxed">Open the page and start. No npm install, no API keys, no config. Works on any device with a modern browser.</p>
-              </div>
-            </div>
-            {/* Startup Fame badge — next/image for correct size (224x36), avoids PageSpeed oversized image */}
-            <div className="flex justify-center mt-8">
-              <a
-                href="https://startupfa.me/s/unblockdevs?utm_source=unblockdevs.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block"
-              >
-                <NextImage
-                  src="https://startupfa.me/badges/featured-badge-small.webp"
-                  alt="UnblockDevs - Featured on Startup Fame"
-                  width={224}
-                  height={36}
-                  sizes="224px"
-                />
-              </a>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Feedback Section */}
-      <section className="mt-12 sm:mt-14 py-10 sm:py-12 bg-gradient-to-r from-green-50/90 via-blue-50/80 to-indigo-50/90 border-y border-gray-100/80">
-        <div className="max-w-4xl mx-auto container-padding">
-          <FeedbackForm />
+        <div className="ud-content border-t border-zinc-200/80 py-2 sm:py-2">
+          <div
+            id="ezoic-pub-ad-placeholder-102"
+            role="region"
+            aria-label="Advertisement"
+            className="flex min-h-0 w-full items-center justify-center sm:min-h-[50px]"
+            style={{ contain: 'layout' }}
+          />
         </div>
-      </section>
-
-      {/* Newsletter Signup Section — show on home (Beautifier only) */}
-      {activeTab === 'beautifier' && (
-        <section className="mt-8 py-8 sm:py-10 bg-gradient-to-r from-green-50/80 via-blue-50/70 to-indigo-50/80">
-          <div className="max-w-4xl mx-auto container-padding">
-            <NewsletterSignup />
-          </div>
-        </section>
       )}
+
+      <FeedbackNewsletterSplit layout={activeTab === 'beautifier' ? 'split' : 'feedback-only'} />
 
       {/* Ezoic Ad Placement - Before Footer (103) - mobile leaderboard / desktop banner */}
       <div id="ezoic-pub-ad-placeholder-103" role="region" aria-label="Advertisement" className="min-h-[50px] sm:min-h-[90px] w-full" style={{ contain: 'layout' }} />
 
-      {/* Footer — mobile: larger tap targets for links (AdSense-friendly engagement) */}
-      <footer className="mt-auto pt-8 pb-6 sm:pt-16 sm:pb-10 border-t border-gray-200/80 bg-white/90 backdrop-blur-md shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-        <div className="max-w-7xl mx-auto container-padding">
+      {/* Home-only SEO link hub (global dark footer is in AppShell) */}
+      <section className="border-t border-zinc-200 bg-white py-8 sm:py-12">
+        <div className="ud-content container-padding">
           {/* Main Footer Content */}
           <div className="text-center space-y-3">
             <div className="space-y-2">
@@ -1289,37 +741,37 @@ function HomeClient() {
                 JSON Viewer, Formatter, Parser, Beautifier, Fixer, JSON to Excel/CSV, API testing, schema generation, SQL formatting, log analysis, and more. All tools are free and run in your browser.
               </p>
               <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 sm:gap-4 mt-3 text-xs text-gray-600 [&_a]:py-2 [&_a]:min-h-[44px] [&_a]:inline-flex [&_a]:items-center [&_a]:touch-manipulation">
-                <Link href="/json-formatter" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Formatter</Link>
-                <Link href="/json-validator" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Validator</Link>
-                <Link href="/json-beautifier" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Beautifier</Link>
-                <Link href="/json-fixer-online" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Fixer</Link>
-                <Link href="/fix-json-parse-error-javascript" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Fix JSON.parse() Guide</Link>
-                <Link href="/how-to-fix-broken-json-online" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Fix Broken JSON Online</Link>
-                <Link href="/json-schema-generation" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Schema Generator</Link>
-                <Link href="/json-to-excel" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON to Excel</Link>
-                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Comparator</Link>
-                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ API Comparator</Link>
-                <Link href="/har-to-curl" className="text-blue-600 hover:text-blue-700 hover:underline">✓ HAR to cURL</Link>
-                <Link href="/curl-to-requests" className="text-blue-600 hover:text-blue-700 hover:underline">✓ cURL to Code</Link>
-                <Link href="/curl-to-python" className="text-blue-600 hover:text-blue-700 hover:underline">✓ cURL to Python (converter)</Link>
-                <Link href="/curl-to-python-requests" className="text-blue-600 hover:text-blue-700 hover:underline">✓ cURL to Python Requests</Link>
-                <Link href="/convert-curl-to-http-request" className="text-blue-600 hover:text-blue-700 hover:underline">✓ cURL to HTTP</Link>
-                <Link href="/json-stringify-online" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON.stringify()</Link>
-                <Link href="/token-comparator" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Token Comparator</Link>
-                <Link href="/jwt-decoder" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JWT Decoder</Link>
-                <Link href="/base64-encoder" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Base64 Encoder</Link>
-                <Link href="/password-generator" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Password Generator</Link>
-                <Link href="/uuid-generator" className="text-blue-600 hover:text-blue-700 hover:underline">✓ UUID Generator</Link>
-                <Link href="/cors-tester" className="text-blue-600 hover:text-blue-700 hover:underline">✓ CORS Tester</Link>
-                <Link href="/truth-table-generator" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Truth Table Generator</Link>
-                <Link href="/hash-generator" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Hash Generator</Link>
-                <Link href="/url-encoder" className="text-blue-600 hover:text-blue-700 hover:underline">✓ URL Encoder</Link>
-                <Link href="/prompt-chunker" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Prompt Chunker</Link>
-                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Log Explorer</Link>
-                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Payload Analyzer</Link>
-                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ Mock API Generator</Link>
-                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ SQL Formatter</Link>
-                <Link href="/" className="text-blue-600 hover:text-blue-700 hover:underline">✓ JSON Builder</Link>
+                <Link href="/json-formatter" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ JSON Formatter</Link>
+                <Link href="/json-validator" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ JSON Validator</Link>
+                <Link href="/json-beautifier" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ JSON Beautifier</Link>
+                <Link href="/json-fixer-online" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ JSON Fixer</Link>
+                <Link href="/fix-json-parse-error-javascript" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ Fix JSON.parse() Guide</Link>
+                <Link href="/how-to-fix-broken-json-online" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ Fix Broken JSON Online</Link>
+                <Link href="/json-schema-generation" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ JSON Schema Generator</Link>
+                <Link href="/json-to-excel" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ JSON to Excel</Link>
+                <Link href="/" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ JSON Comparator</Link>
+                <Link href="/" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ API Comparator</Link>
+                <Link href="/har-to-curl" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ HAR to cURL</Link>
+                <Link href="/curl-to-requests" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ cURL to Code</Link>
+                <Link href="/curl-to-python" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ cURL to Python (converter)</Link>
+                <Link href="/curl-to-python-requests" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ cURL to Python Requests</Link>
+                <Link href="/convert-curl-to-http-request" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ cURL to HTTP</Link>
+                <Link href="/json-stringify-online" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ JSON.stringify()</Link>
+                <Link href="/token-comparator" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ Token Comparator</Link>
+                <Link href="/jwt-decoder" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ JWT Decoder</Link>
+                <Link href="/base64-encoder" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ Base64 Encoder</Link>
+                <Link href="/password-generator" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ Password Generator</Link>
+                <Link href="/uuid-generator" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ UUID Generator</Link>
+                <Link href="/cors-tester" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ CORS Tester</Link>
+                <Link href="/truth-table-generator" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ Truth Table Generator</Link>
+                <Link href="/hash-generator" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ Hash Generator</Link>
+                <Link href="/url-encoder" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ URL Encoder</Link>
+                <Link href="/prompt-chunker" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ Prompt Chunker</Link>
+                <Link href="/" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ Log Explorer</Link>
+                <Link href="/" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ Payload Analyzer</Link>
+                <Link href="/" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ Mock API Generator</Link>
+                <Link href="/" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ SQL Formatter</Link>
+                <Link href="/" className="text-emerald-800 hover:text-emerald-950 hover:underline">✓ JSON Builder</Link>
               </div>
                 <div className="mt-4 pt-4 border-t border-gray-200">
                 <p className="text-xs text-gray-500 mb-2 text-center">Learn more about JSON:</p>
@@ -1328,7 +780,7 @@ function HomeClient() {
                     href="https://www.json.org/json-en.html"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-700 hover:underline flex items-center gap-1 transition-colors"
+                    className="text-emerald-800 hover:text-emerald-950 hover:underline flex items-center gap-1 transition-colors"
                   >
                     <span>📘</span>
                     <span>JSON.org</span>
@@ -1337,7 +789,7 @@ function HomeClient() {
                     href="https://en.wikipedia.org/wiki/JSON"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-700 hover:underline flex items-center gap-1 transition-colors"
+                    className="text-emerald-800 hover:text-emerald-950 hover:underline flex items-center gap-1 transition-colors"
                   >
                     <span>📚</span>
                     <span>JSON on Wikipedia</span>
@@ -1347,10 +799,10 @@ function HomeClient() {
               <div className="mt-4">
                 <Link
                   href="/blog"
-                  className="inline-flex items-center justify-center gap-2 min-h-[44px] px-4 py-3 sm:py-2 text-sm font-medium rounded-lg transition-colors touch-manipulation active:scale-[0.98] text-[#1d4ed8] hover:text-[#1e40af] hover:bg-blue-50 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  className="inline-flex items-center justify-center gap-2 min-h-[44px] px-4 py-3 sm:py-2 text-sm font-medium rounded-lg transition-colors touch-manipulation active:scale-[0.98] text-emerald-800 hover:text-emerald-950 hover:bg-emerald-50 focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
                 >
-                  <FileText className="w-4 h-4 text-[#1d4ed8]" aria-hidden />
-                  <span className="text-[#1d4ed8]">Developer&apos;s Study Materials 📚</span>
+                  <FileText className="w-4 h-4 text-emerald-800" aria-hidden />
+                  <span>Developer&apos;s Study Materials 📚</span>
                 </Link>
               </div>
             </div>
@@ -1360,7 +812,7 @@ function HomeClient() {
               <h3 className="text-sm font-semibold text-gray-900 mb-4 text-center">Popular Developer Guides</h3>
               <div className="flex flex-wrap justify-center gap-x-3 gap-y-2 text-xs [&_a]:py-2 [&_a]:inline-flex [&_a]:items-center [&_a]:touch-manipulation">
                 {(showAllBlogLinks ? POPULAR_BLOG_LINKS : POPULAR_BLOG_LINKS.slice(0, INITIAL_BLOG_LINKS)).map(({ href, label }) => (
-                  <Link key={href} href={href} className="text-blue-600 hover:text-blue-700 hover:underline">{label}</Link>
+                  <Link key={href} href={href} className="text-emerald-800 hover:text-emerald-950 hover:underline">{label}</Link>
                 ))}
               </div>
               {!showAllBlogLinks && POPULAR_BLOG_LINKS.length > INITIAL_BLOG_LINKS && (
@@ -1368,7 +820,7 @@ function HomeClient() {
                   <button
                     type="button"
                     onClick={() => setShowAllBlogLinks(true)}
-                    className="text-blue-600 hover:text-blue-700 text-sm font-medium hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
+                    className="text-emerald-800 hover:text-emerald-950 text-sm font-medium hover:underline focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2 rounded px-2 py-1"
                   >
                     Show all {POPULAR_BLOG_LINKS.length} guides →
                   </button>
@@ -1381,49 +833,49 @@ function HomeClient() {
               <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-600 mb-3">
                 <Link
                   href="/about"
-                  className="hover:text-blue-600 hover:underline transition-colors"
+                  className="hover:text-emerald-900 hover:underline transition-colors"
                 >
                   About Us
                 </Link>
                 <span className="text-gray-300">•</span>
                 <Link
                   href="/badges"
-                  className="hover:text-blue-600 hover:underline transition-colors"
+                  className="hover:text-emerald-900 hover:underline transition-colors"
                 >
                   Badges
                 </Link>
                 <span className="text-gray-300">•</span>
                 <Link
                   href="/contact"
-                  className="hover:text-blue-600 hover:underline transition-colors"
+                  className="hover:text-emerald-900 hover:underline transition-colors"
                 >
                   Contact
                 </Link>
                 <span className="text-gray-300">•</span>
                 <Link
                   href="/blog"
-                  className="hover:text-blue-600 hover:underline transition-colors"
+                  className="hover:text-emerald-900 hover:underline transition-colors"
                 >
                   Blog
                 </Link>
                 <span className="text-gray-300">•</span>
                 <Link
                   href="/privacy-policy"
-                  className="hover:text-blue-600 hover:underline transition-colors"
+                  className="hover:text-emerald-900 hover:underline transition-colors"
                 >
                   Privacy Policy
                 </Link>
                 <span className="text-gray-300">•</span>
                 <Link
                   href="/terms"
-                  className="hover:text-blue-600 hover:underline transition-colors"
+                  className="hover:text-emerald-900 hover:underline transition-colors"
                 >
                   Terms & Conditions
                 </Link>
                 <span className="text-gray-300">•</span>
                 <Link
                   href="/disclaimer"
-                  className="hover:text-blue-600 hover:underline transition-colors"
+                  className="hover:text-emerald-900 hover:underline transition-colors"
                 >
                   Disclaimer
                 </Link>
@@ -1434,7 +886,7 @@ function HomeClient() {
             </div>
           </div>
         </div>
-      </footer>
+      </section>
     </div>
   );
 }

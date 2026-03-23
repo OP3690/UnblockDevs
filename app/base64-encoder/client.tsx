@@ -21,6 +21,8 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy, trackCtaClick } from '@/lib/analytics';
+import ToolPageShell from '@/components/tools/ToolPageShell';
+import type { BreadcrumbItem } from '@/components/Breadcrumb';
 import {
   encodeBase64,
   decodeBase64,
@@ -404,21 +406,24 @@ export default function Base64EncoderClient() {
   const allVariants: EncodingVariantRow[] = input.trim() ? getAllEncodingVariants(sanitizeInput(input)) : [];
   const usedChars = output.trim() ? getUsedBase64Chars(output) : { used: new Set<string>(), paddingCount: 0 };
 
-  return (
-    <div
-      className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/40"
-      onKeyDown={handleKeyDown}
-      tabIndex={0}
-    >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Breadcrumb — outside container */}
-        <nav className="flex items-center gap-2 text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
-          <Link href="/" className="text-primary-600 hover:text-primary-700 hover:underline transition-colors">Home</Link>
-          <span aria-hidden className="text-gray-300">/</span>
-          <span className="text-gray-700 font-medium" aria-current="page">Base64 Encoder</span>
-        </nav>
+  const b64Breadcrumb: BreadcrumbItem[] = [
+    { label: 'Home', href: '/' },
+    { label: 'Tools', href: '/tools/json' },
+    { label: 'Base64 Encoder' },
+  ];
 
-        <div className="rounded-2xl bg-white shadow-xl shadow-gray-200/50 border border-gray-200/80 overflow-hidden">
+  return (
+    <div className="outline-none" onKeyDown={handleKeyDown} tabIndex={0}>
+      <ToolPageShell
+        embedTool
+        showFooterBand={false}
+        breadcrumbItems={b64Breadcrumb}
+        title="Base64 Encoder"
+        subtitle="Encode and decode Standard, Base64URL, MIME, and No-Padding. Auto-detect JWT, images, and JSON. Files stay in your browser — nothing is uploaded."
+        toolName="base64_encoder"
+        tool={
+          <>
+        <div className="rounded-2xl border border-zinc-200/80 bg-white shadow-lg shadow-zinc-200/40 overflow-hidden">
           {/* Privacy badge */}
           <div className="flex flex-wrap items-center gap-x-8 gap-y-3 px-6 py-4 bg-gradient-to-r from-emerald-50/80 to-transparent border-b border-gray-100">
             <span className="text-sm text-gray-600 flex items-center gap-2">
@@ -902,18 +907,20 @@ export default function Base64EncoderClient() {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-gray-500">
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-zinc-500">
           <p className="text-center">⌘Enter process · ⌘⇧C copy · ⌘⇧X swap · ⌘K clear</p>
-          <Link href="/jwt-decoder" className="inline-flex items-center gap-1.5 font-medium text-primary-600 hover:text-primary-700">
+          <Link href="/jwt-decoder" className="inline-flex items-center gap-1.5 font-medium text-emerald-700 hover:text-emerald-800">
             JWT Decoder
             <ChevronRight className="w-4 h-4" />
           </Link>
-          <Link href="/password-generator" className="inline-flex items-center gap-1.5 font-medium text-primary-600 hover:text-primary-700">
+          <Link href="/password-generator" className="inline-flex items-center gap-1.5 font-medium text-emerald-700 hover:text-emerald-800">
             Password Generator
             <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
-      </div>
+          </>
+        }
+      />
 
       {/* Shortcuts modal */}
       {shortcutsOpen && (

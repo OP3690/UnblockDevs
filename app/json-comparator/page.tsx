@@ -1,6 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import TrackedCtaLink from '@/components/TrackedCtaLink';
 import JsonComparatorClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/json-comparator';
@@ -107,23 +105,7 @@ export default function JsonComparatorPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <div id="tool">
-        <JsonComparatorClient />
-      </div>
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="json-diff-heading">
-        <h1 id="json-diff-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
-          JSON Comparator — Compare Two JSON Objects, Diff API Responses &amp; Detect Semantic Changes Online Free
-        </h1>
-        <p className="text-gray-700 text-base leading-relaxed mb-3">
-          <strong>Every JSON diff tool shows you what changed. Only this one shows you what actually matters.</strong> Compare two JSON payloads by meaning, not raw text. The tool normalizes UUIDs, timestamps, JWTs, and hashes so only real logic and structure changes stand out. All processing is client-side—your data never leaves your browser.
-        </p>
-        <p className="text-gray-600 text-sm leading-relaxed mb-4">
-          Paste or load two JSON documents. Enable normalization for dynamic fields. See a side-by-side diff with line numbers. Use it to validate API changes or spot semantic differences. No signup, no server upload.
-        </p>
-        <TrackedCtaLink href="#tool" toolName="json_comparator" className="inline-block text-sm font-semibold text-indigo-600 hover:text-indigo-700">
-          Use the tool →
-        </TrackedCtaLink>
-      </article>
+      <JsonComparatorClient />
     </>
   );
 }

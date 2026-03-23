@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Code, CheckCircle, Copy, Download, ExternalLink, AlertCircle } from 'lucide-react';
+import { Code, Copy, Download, ExternalLink, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy } from '@/lib/analytics';
 import FAQSchema from '@/components/FAQSchema';
+import ToolPageShell from '@/components/tools/ToolPageShell';
 
 export default function JsonStringifyOnlineClient() {
   const [input, setInput] = useState('');
@@ -70,48 +71,19 @@ export default function JsonStringifyOnlineClient() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
-      <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Tools
-          </Link>
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <Code className="w-6 h-6 text-blue-600" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">JSON.stringify() Online</h1>
-              <p className="text-sm text-gray-500 mt-1">Convert JavaScript objects to JSON strings instantly</p>
-            </div>
-          </div>
+    <ToolPageShell
+      title="JSON.stringify() Online"
+      subtitle="Convert JavaScript objects to JSON strings instantly"
+      toolName="json_stringify_online"
+      badges={
+        <div className="flex items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-700">
+          <Code className="h-5 w-5 shrink-0 text-emerald-600" aria-hidden />
+          <span>Object → JSON string</span>
         </div>
-      </header>
-
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <FAQSchema
-          faqs={[
-            {
-              question: 'What is JSON.stringify()?',
-              answer: 'JSON.stringify() is a JavaScript method that converts JavaScript objects or values into JSON strings. It\'s useful for sending data to servers, storing data, or converting objects to strings.',
-            },
-            {
-              question: 'How do I use JSON.stringify() online?',
-              answer: 'Paste your JavaScript object or array into the input box, set the spacing (for pretty printing), and click "Stringify". The tool will convert it to a JSON string instantly.',
-            },
-            {
-              question: 'Can I pretty print JSON with stringify?',
-              answer: 'Yes! Use the spacing parameter (default is 2) to add indentation to the JSON string. Higher values add more spaces for better readability.',
-            },
-            {
-              question: 'What\'s the difference between JSON.stringify() and JSON.parse()?',
-              answer: 'JSON.stringify() converts JavaScript objects to JSON strings, while JSON.parse() converts JSON strings back to JavaScript objects. They are inverse operations.',
-            },
-          ]}
-        />
-
-        <div className="bg-white rounded-xl shadow-lg p-6 md:p-8 mb-8">
+      }
+      tool={
+        <>
+        <div className="space-y-6">
           <div className="grid md:grid-cols-2 gap-6 mb-6">
             <div>
               <div className="flex items-center justify-between mb-2">
@@ -184,7 +156,7 @@ export default function JsonStringifyOnlineClient() {
           </button>
         </div>
 
-        <div className="bg-white rounded-xl shadow-lg p-6 md:p-8 mb-8">
+        <div className="border-t border-zinc-200 pt-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Quick Examples</h2>
           <div className="grid md:grid-cols-3 gap-4">
             {examples.map((example, idx) => (
@@ -202,8 +174,32 @@ export default function JsonStringifyOnlineClient() {
             ))}
           </div>
         </div>
+        </>
+      }
+      belowCard={
+        <>
+        <FAQSchema
+          faqs={[
+            {
+              question: 'What is JSON.stringify()?',
+              answer: 'JSON.stringify() is a JavaScript method that converts JavaScript objects or values into JSON strings. It\'s useful for sending data to servers, storing data, or converting objects to strings.',
+            },
+            {
+              question: 'How do I use JSON.stringify() online?',
+              answer: 'Paste your JavaScript object or array into the input box, set the spacing (for pretty printing), and click "Stringify". The tool will convert it to a JSON string instantly.',
+            },
+            {
+              question: 'Can I pretty print JSON with stringify?',
+              answer: 'Yes! Use the spacing parameter (default is 2) to add indentation to the JSON string. Higher values add more spaces for better readability.',
+            },
+            {
+              question: 'What\'s the difference between JSON.stringify() and JSON.parse()?',
+              answer: 'JSON.stringify() converts JavaScript objects to JSON strings, while JSON.parse() converts JSON strings back to JavaScript objects. They are inverse operations.',
+            },
+          ]}
+        />
 
-        <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
+        <article className="max-w-none">
           <section className="mb-12">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">What is JSON.stringify()?</h2>
             <p className="text-gray-700 leading-relaxed mb-4">
@@ -299,8 +295,9 @@ JSON.stringify(obj);
             </div>
           </section>
         </article>
-      </main>
-    </div>
+        </>
+      }
+    />
   );
 }
 

@@ -1,23 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Code2, ExternalLink, CheckCircle } from 'lucide-react';
+import { Code2, ExternalLink, CheckCircle } from 'lucide-react';
+import ToolPageShell from '@/components/tools/ToolPageShell';
 
 export default function JsonFormatterClient() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
-      <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Tools
-          </Link>
-          <h1 className="text-3xl font-bold text-gray-900">JSON Formatter - Free Online Formatting Tool</h1>
-        </div>
-      </header>
-
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
+    <ToolPageShell
+      title="JSON Formatter - Free Online Formatting Tool"
+      subtitle="Format, beautify, and prettify JSON with customizable indentation — use the JSON Beautifier on the home page."
+      toolName="json_formatter"
+      belowCard={
+        <article className="max-w-none">
           <section className="mb-12">
             <p className="text-lg text-gray-700 leading-relaxed mb-4">
               Our <strong>JSON Formatter</strong> is a free online tool that formats, beautifies, and prettifies JSON with 
@@ -104,8 +98,8 @@ export default function JsonFormatterClient() {
             </Link>
           </section>
         </article>
-      </main>
-    </div>
+      }
+    />
   );
 }
 

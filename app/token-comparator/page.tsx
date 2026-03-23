@@ -153,7 +153,7 @@ export default function TokenComparatorLanding() {
       <div id="tool">
         <TokenComparatorLandingClient />
       </div>
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="token-comp-heading">
+      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="token-comp-heading">
         <h1 id="token-comp-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
           JWT Debugger &amp; Token Comparator — Decode, Compare, Security Audit &amp; Expiry Check Online Free
         </h1>

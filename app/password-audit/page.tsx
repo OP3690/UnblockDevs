@@ -73,7 +73,7 @@ export default function PasswordAuditPage() {
       <div id="tool">
         <PasswordAuditClient />
       </div>
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="audit-heading">
+      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="audit-heading">
         <h1 id="audit-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
           Password Audit &amp; Policy Generator
         </h1>
@@ -84,7 +84,7 @@ export default function PasswordAuditPage() {
           Generate strong passwords →
         </Link>
       </article>
-      <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="faq-heading">
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="faq-heading">
         <h2 id="faq-heading" className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
         <dl className="space-y-4">
           <div>

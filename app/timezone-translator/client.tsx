@@ -1,35 +1,27 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Clock, ExternalLink } from 'lucide-react';
+import { Clock, ExternalLink } from 'lucide-react';
+import ToolPageShell from '@/components/tools/ToolPageShell';
 import dynamic from 'next/dynamic';
 
 const TimezoneTranslator = dynamic(() => import('@/components/tools/TimezoneTranslator'), {
-  loading: () => <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>,
+  loading: () => (
+    <div className="flex items-center justify-center py-12">
+      <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-emerald-700" />
+    </div>
+  ),
 });
 
 export default function TimezoneTranslatorClient() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
-      <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Tools
-          </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Timezone Translator - Convert Times Across Timezones</h1>
-          <p className="text-sm text-gray-500 mt-1">Translate times between different timezones and calculate time differences</p>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Tool Component */}
-        <div className="mb-8">
-          <TimezoneTranslator />
-        </div>
-
-        {/* SEO Content Section - 1000-1200 words */}
-        <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
+    <ToolPageShell
+      title="Timezone Translator - Convert Times Across Timezones"
+      subtitle="Translate times between different timezones and calculate time differences"
+      toolName="timezone_translator"
+      tool={<TimezoneTranslator />}
+      belowCard={
+        <article className="max-w-none">
           <section className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">What Problem Does Timezone Translator Solve?</h2>
             <p className="text-lg text-gray-700 leading-relaxed mb-4">
@@ -198,7 +190,7 @@ export default function TimezoneTranslatorClient() {
             </div>
           </section>
         </article>
-      </main>
-    </div>
+      }
+    />
   );
 }

@@ -18,6 +18,8 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy, trackCtaClick } from '@/lib/analytics';
+import ToolPageShell from '@/components/tools/ToolPageShell';
+import type { BreadcrumbItem } from '@/components/Breadcrumb';
 import {
   parseCorsHeaders,
   analyzeCors,
@@ -138,16 +140,23 @@ export default function CorsTesterClient() {
   const preflightCurl = buildPreflightCurl(url.trim(), method, effectiveOrigin, customHeaderNames);
   const actualCurl = buildActualCurl(url.trim(), method, effectiveOrigin, headerRecord, withCredentials);
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50/30">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <nav className="flex items-center gap-2 text-sm text-gray-500 mb-3" aria-label="Breadcrumb">
-          <Link href="/" className="text-primary-600 hover:text-primary-700 hover:underline">Home</Link>
-          <span aria-hidden>/</span>
-          <span className="text-gray-700 font-medium" aria-current="page">CORS Tester</span>
-        </nav>
+  const corsBreadcrumb: BreadcrumbItem[] = [
+    { label: 'Home', href: '/' },
+    { label: 'Tools', href: '/tools/json' },
+    { label: 'CORS Tester' },
+  ];
 
-        <div className="rounded-2xl bg-white shadow-xl shadow-gray-200/50 border border-gray-200/80 overflow-hidden">
+  return (
+    <ToolPageShell
+      embedTool
+      showFooterBand={false}
+      breadcrumbItems={corsBreadcrumb}
+      title="CORS Tester"
+      subtitle="Simulate preflight OPTIONS and real requests, inspect CORS headers, and catch misconfigurations — in your browser. No request data stored."
+      toolName="cors_tester"
+      tool={
+        <>
+        <div className="rounded-2xl border border-zinc-200/80 bg-white shadow-lg shadow-zinc-200/40 overflow-hidden">
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 px-6 md:px-8 py-4 bg-gradient-to-r from-sky-50/80 to-transparent border-b border-gray-100">
             <span className="text-sm text-gray-700 flex items-center gap-2">
               <span className="flex h-6 w-6 items-center justify-center rounded-full bg-sky-100">
@@ -502,23 +511,24 @@ export default function CorsTesterClient() {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-gray-500">
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-zinc-500">
           <p className="text-center flex items-center gap-2">
-            <Lock className="w-3.5 h-3.5 text-slate-400" aria-hidden />
+            <Lock className="w-3.5 h-3.5 text-zinc-400" aria-hidden />
             Requests run from your browser. No data is stored or sent to our servers.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/curl-converter" className="inline-flex items-center gap-1.5 font-medium text-primary-600 hover:text-primary-700">
+            <Link href="/curl-converter" className="inline-flex items-center gap-1.5 font-medium text-emerald-700 hover:text-emerald-800">
               cURL Converter
               <ChevronRight className="w-4 h-4" />
             </Link>
-            <Link href="/jwt-decoder" className="inline-flex items-center gap-1.5 font-medium text-primary-600 hover:text-primary-700">
+            <Link href="/jwt-decoder" className="inline-flex items-center gap-1.5 font-medium text-emerald-700 hover:text-emerald-800">
               JWT Decoder
               <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
-      </div>
-    </div>
+        </>
+      }
+    />
   );
 }

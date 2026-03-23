@@ -1,153 +1,180 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { FileCode, FileJson, CheckCircle, Table, Wrench, GitCompare, Layers, Code } from 'lucide-react';
+import ToolsJsonHubClient from './hub-client';
+import { TOOLS_DIRECTORY, TOOL_COUNT } from './tools-data';
+
+const canonicalUrl = 'https://unblockdevs.com/tools/json';
+const siteOrigin = 'https://unblockdevs.com';
+
+const hubTitle = `Developer Tools Directory — AI Schema Masker, Code & JSON Prompt Shield + ${TOOL_COUNT}+ Tools | UnblockDevs`;
+const hubDescription = `Mask SQL for ChatGPT, scrub secrets in code, and abstract JSON before AI — plus ${TOOL_COUNT}+ tools: JSON formatter, diff, APIs, JWT, cURL, encoding & more. 100% in your browser; no signup.`;
 
 export const metadata: Metadata = {
-  title: 'JSON Tools Hub | UnblockDevs',
-  description: 'Free JSON viewer, formatter, fix invalid JSON, convert to Excel, clean API response. One hub for all JSON tools—no signup.',
+  title: hubTitle,
+  description: hubDescription,
+  keywords: [
+    'free developer tools',
+    'online json tools',
+    'json formatter online free',
+    'json viewer online',
+    'api tools online',
+    'jwt decoder online',
+    'curl to python online',
+    'mask json for chatgpt',
+    'ai schema masking tool',
+    'base64 encode decode online',
+    'uuid generator online',
+    'developer tools directory',
+    'browser based tools no signup',
+    'json to excel online',
+    'smart json diff',
+    'cors tester online',
+    'hash generator online',
+    'password generator developer',
+  ],
   openGraph: {
-    title: 'JSON Tools Hub | UnblockDevs',
-    description: 'Free JSON viewer, formatter, parser, validator, and JSON to CSV/Excel/Table tools. No signup, in-browser.',
+    title: `Free Developer Tools — ${TOOL_COUNT}+ JSON, API & AI Utilities | UnblockDevs`,
+    description: `Directory of ${TOOL_COUNT}+ free tools: JSON, APIs, AI-safe masking, crypto, and dev utilities. All client-side.`,
     type: 'website',
-    url: 'https://unblockdevs.com/tools/json',
+    url: canonicalUrl,
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: `Free dev tools directory — ${TOOL_COUNT}+ tools`,
+    description: `JSON, API, AI masking, JWT, cURL, hashes & more. Runs in your browser.`,
+  },
   alternates: {
-    canonical: 'https://unblockdevs.com/tools/json',
+    canonical: canonicalUrl,
   },
 };
 
-const jsonTools = [
-  {
-    href: '/',
-    title: 'JSON viewer online',
-    description: 'View and explore JSON in a tree. Paste JSON, convert to Excel/CSV/Table. Primary JSON Viewer Tools experience.',
-    icon: FileJson,
-    anchor: 'JSON viewer online',
+function toolAbsoluteUrl(href: string) {
+  if (href === '/') return siteOrigin;
+  return `${siteOrigin}${href.startsWith('/') ? href : `/${href}`}`;
+}
+
+const itemListJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'UnblockDevs free developer tools directory',
+  description: 'JSON, API, AI safety, encoding, and developer utilities that run in the browser.',
+  numberOfItems: TOOL_COUNT,
+  itemListElement: TOOLS_DIRECTORY.map((tool, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: tool.name,
+    description: tool.description,
+    url: toolAbsoluteUrl(tool.href),
+  })),
+};
+
+const webPageJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: hubTitle,
+  description: hubDescription,
+  url: canonicalUrl,
+  isPartOf: { '@type': 'WebSite', name: 'UnblockDevs', url: siteOrigin },
+  about: {
+    '@type': 'Thing',
+    name: 'Developer tools and JSON utilities',
   },
-  {
-    href: '/json-beautifier',
-    title: 'JSON formatter online',
-    description: 'Format, beautify, and prettify JSON. JSON formatter online with syntax highlighting and validation.',
-    icon: Code,
-    anchor: 'JSON formatter online',
-  },
-  {
-    href: '/',
-    title: 'JSON parser online',
-    description: 'Parse JSON and convert to table, CSV, or Excel. Validate and view structure in-browser.',
-    icon: FileCode,
-    anchor: 'JSON parser online',
-  },
-  {
-    href: '/json-to-excel',
-    title: 'JSON to Excel / CSV / Table',
-    description: 'Convert JSON to Excel, JSON to CSV, or JSON to Table. Paste, upload, or fetch from API → export to XLSX/CSV instantly.',
-    icon: Table,
-    anchor: 'JSON to CSV/Excel/Table tools',
-  },
-  {
-    href: '/json-fixer-online',
-    title: 'JSON fixer & validator',
-    description: 'Paste → Instant fix. Fix invalid JSON, remove trailing comma JSON, fix AI-generated JSON. Repair trailing commas, missing quotes, broken arrays.',
-    icon: CheckCircle,
-    anchor: 'JSON validator',
-  },
-  {
-    href: '/json-beautifier',
-    title: 'JSON beautifier',
-    description: 'Beautify and minify JSON. JSON beautifier online with indentation and formatting options.',
-    icon: Code,
-    anchor: 'JSON beautifier',
-  },
-  {
-    href: '/json-schema-generation',
-    title: 'JSON schema generator',
-    description: 'Generate JSON schema from JSON data. Validate JSON against schema. Schema generator from JSON.',
-    icon: Layers,
-    anchor: 'JSON schema generator',
-  },
-  {
-    href: '/json-comparator',
-    title: 'Smart JSON Data Diff',
-    description: 'Semantic JSON comparison. Normalizes UUIDs, timestamps, JWTs so only real logic changes appear.',
-    icon: GitCompare,
-    anchor: 'Smart JSON Diff',
-  },
-  {
-    href: '/log-unpacker',
-    title: 'Log Unpacker & Sanitizer',
-    description: 'Unescape nested JSON, decode JWTs, scrub paths. Client-side log unpacker and sanitizer.',
-    icon: Wrench,
-    anchor: 'Log Unpacker',
-  },
-  {
-    href: '/sql-in-generator',
-    title: 'SQL IN Clause Generator',
-    description: 'Convert list to SQL IN, JSON, MongoDB. Paste IDs or values → generate parameterized or literal SQL IN, INSERT, CSV.',
-    icon: FileCode,
-    anchor: 'SQL IN generator',
-  },
-];
+};
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Are UnblockDevs tools free?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. Every tool in this directory is free to use with no signup. There are no paywalls for core features.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Is my JSON or API data sent to your servers?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'No. Tools run entirely in your browser. Your JSON, tokens, passwords, and API responses are not uploaded or stored on UnblockDevs servers for processing.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I safely use ChatGPT with production JSON?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Use the AI Schema Masker or JSON Prompt Shield to replace real table names, keys, and sensitive strings with reversible placeholders before pasting into ChatGPT or other LLMs.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is the best tool to fix broken JSON from an API?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Use the JSON fixer and recovery tool for malformed JSON, trailing commas, and AI-generated errors. Pair it with the log unpacker if JSON is nested inside log lines.',
+      },
+    },
+  ],
+};
 
 export default function JsonToolsHubPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
-        {/* Breadcrumb */}
-        <nav className="text-sm text-gray-600 mb-8" aria-label="Breadcrumb">
-          <ol className="flex flex-wrap items-center gap-1">
-            <li><Link href="/" className="hover:text-blue-600">Home</Link></li>
-            <li aria-hidden="true">/</li>
-            <li><Link href="/tools/json" className="hover:text-blue-600 font-medium text-gray-900">Tools</Link></li>
-            <li aria-hidden="true">/</li>
-            <li className="font-medium text-gray-900">JSON</li>
-          </ol>
-        </nav>
-
-        <header className="mb-10 sm:mb-12">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
-            JSON Viewer Tools, Formatter, Parser & More
-          </h1>
-          <p className="text-lg text-gray-700 max-w-2xl">
-            Free <strong>JSON viewer online</strong>, <strong>JSON formatter online</strong>, <strong>JSON parser online</strong>, 
-            <strong> JSON validator</strong>, and <strong>JSON to CSV/Excel/Table</strong> tools. No signup, private, in-browser.
-          </p>
-        </header>
-
-        <section className="space-y-4">
-          <h2 className="sr-only">JSON tools list</h2>
-          {jsonTools.map((tool) => {
-            const Icon = tool.icon;
-            return (
-              <Link
-                key={tool.href + tool.title}
-                href={tool.href}
-                className="block bg-white rounded-xl p-5 sm:p-6 border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all group"
-              >
-                <div className="flex items-start gap-4">
-                  <div className="p-2 rounded-lg bg-blue-50 text-blue-600 group-hover:bg-blue-100 flex-shrink-0">
-                    <Icon className="w-6 h-6" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
-                      {tool.anchor}
-                    </h3>
-                    <p className="text-gray-600 text-sm mt-1">{tool.description}</p>
-                  </div>
-                  <span className="text-blue-600 text-sm font-medium flex-shrink-0 group-hover:underline">
-                    Open →
-                  </span>
-                </div>
-              </Link>
-            );
-          })}
-        </section>
-
-        <p className="mt-10 text-center text-gray-500 text-sm">
-          <Link href="/" className="text-blue-600 hover:underline">← Back to UnblockDevs home</Link>
-        </p>
-      </div>
-    </div>
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      <ToolsJsonHubClient />
+      <article
+        className="border-t border-zinc-200 bg-white"
+        aria-labelledby="tools-hub-faq-heading"
+      >
+        <div className="ud-content-tool py-12 sm:py-16">
+          <h2 id="tools-hub-faq-heading" className="text-xl font-bold tracking-tight text-zinc-900 sm:text-2xl">
+            Frequently asked questions
+          </h2>
+          <dl className="mt-8 space-y-8">
+            <div>
+              <dt className="text-base font-semibold text-zinc-900">Are these developer tools free?</dt>
+              <dd className="mt-2 text-sm leading-relaxed text-zinc-600 sm:text-base">
+                Yes. The full directory of {TOOL_COUNT}+ utilities is free and does not require an account.
+              </dd>
+            </div>
+            <div>
+              <dt className="text-base font-semibold text-zinc-900">Does my data leave my device?</dt>
+              <dd className="mt-2 text-sm leading-relaxed text-zinc-600 sm:text-base">
+                Core tools process input in your browser. Do not paste truly secret production credentials into any online
+                tool if your security policy forbids it — but UnblockDevs does not receive your payloads for those
+                client-side tools.
+              </dd>
+            </div>
+            <div>
+              <dt className="text-base font-semibold text-zinc-900">Which tool should I use for ChatGPT and JSON?</dt>
+              <dd className="mt-2 text-sm leading-relaxed text-zinc-600 sm:text-base">
+                For SQL schemas use <strong className="text-zinc-800">AI Schema Masker</strong>. For arbitrary JSON use{' '}
+                <strong className="text-zinc-800">JSON Prompt Shield</strong>. Both support reversible masking so you can
+                map answers back to real names later.
+              </dd>
+            </div>
+            <div>
+              <dt className="text-base font-semibold text-zinc-900">Where can I learn more about JSON best practices?</dt>
+              <dd className="mt-2 text-sm leading-relaxed text-zinc-600 sm:text-base">
+                See our{' '}
+                <a href="/blog/json-best-practices-production-guide" className="font-medium text-emerald-800 underline-offset-2 hover:underline">
+                  JSON best practices guide
+                </a>{' '}
+                and{' '}
+                <a href="/blog/complete-guide-json-viewer-parser-beautifier" className="font-medium text-emerald-800 underline-offset-2 hover:underline">
+                  JSON viewer &amp; formatter guide
+                </a>
+                .
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+    </>
   );
 }

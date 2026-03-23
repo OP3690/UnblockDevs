@@ -1,19 +1,24 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
 import AdUnit from '@/components/AdUnit';
 
 /** AdSense slot IDs — same as blog sidebars (VER left, SQ right). */
-const SLOT_LEFT = '4176806584';  // VER (Display)
+const SLOT_LEFT = '4176806584'; // VER (Display)
 const SLOT_RIGHT = '1255275563'; // SQ (Display)
-
-/** Delay before checking if ad slots are filled (ms). */
-const AD_FILL_CHECK_MS = 2800;
 
 /** First path segment that should NOT get left/right sidebar ads. */
 const NO_SIDEBAR_SEGMENTS = new Set([
-  '', 'blog', 'about', 'contact', 'terms', 'privacy-policy', 'disclaimer', 'badges', 'tools', 'api',
+  '',
+  'blog',
+  'about',
+  'contact',
+  'terms',
+  'privacy-policy',
+  'disclaimer',
+  'badges',
+  'tools',
+  'api',
 ]);
 
 function useIsToolPage(): boolean {
@@ -23,64 +28,46 @@ function useIsToolPage(): boolean {
   return !NO_SIDEBAR_SEGMENTS.has(segment);
 }
 
-/** Returns true if the element contains a Google ad iframe (ad was filled). */
-function hasAdIframe(container: HTMLElement | null): boolean {
-  if (!container) return false;
-  const iframe = container.querySelector('iframe');
-  return !!iframe && (iframe.src?.includes('googlesyndication.com') ?? false);
-}
-
 /**
- * Wraps children with left and right sidebar ad slots on tool pages only.
- * If ads don't fill after a short delay, sidebars collapse so the tool content expands to full width.
+ * Wraps children with left and right sidebar ad slots on tool pages only (xl breakpoint).
  */
 export default function ToolPagesAdWrap({ children }: { children: React.ReactNode }) {
   const isToolPage = useIsToolPage();
-  const leftRef = useRef<HTMLElement>(null);
-  const rightRef = useRef<HTMLElement>(null);
-  const [leftShow, setLeftShow] = useState(true);
-  const [rightShow, setRightShow] = useState(true);
-
-  useEffect(() => {
-    if (!isToolPage) return;
-    const t = setTimeout(() => {
-      setLeftShow((prev) => (prev ? hasAdIframe(leftRef.current) : false));
-      setRightShow((prev) => (prev ? hasAdIframe(rightRef.current) : false));
-    }, AD_FILL_CHECK_MS);
-    return () => clearTimeout(t);
-  }, [isToolPage]);
 
   if (!isToolPage) {
     return <>{children}</>;
   }
 
+  /* Sidebars only at 2xl+ so typical laptop (xl) gets full-width tool column; outer cap raised for wide screens */
   return (
-    <div className="max-w-7xl xl:max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8 py-0 flex flex-col xl:flex-row xl:gap-8">
-      {/* Left sidebar ad — visible from xl only; collapses if ad not filled. Tool content expanded on tablet/desktop (lg) by default. */}
-      {leftShow && (
-        <aside
-          ref={leftRef}
-          role="region"
-          aria-label="Advertisement"
-          className="hidden xl:block flex-shrink-0 w-[160px] sticky top-24 self-start min-h-[250px] order-first"
-        >
-          <AdUnit slot={SLOT_LEFT} format="auto" minHeight={250} className="rounded-lg overflow-hidden w-full" />
-        </aside>
-      )}
-      <main className="flex-1 min-w-0 overflow-x-hidden order-2">
-        {children}
-      </main>
-      {/* Right sidebar ad — visible from xl only; collapses if ad not filled */}
-      {rightShow && (
-        <aside
-          ref={rightRef}
-          role="region"
-          aria-label="Advertisement"
-          className="hidden xl:block flex-shrink-0 w-[300px] sticky top-24 self-start min-h-[250px] order-3"
-        >
-          <AdUnit slot={SLOT_RIGHT} format="auto" minHeight={250} className="rounded-lg overflow-hidden w-full" />
-        </aside>
-      )}
+    <div className="mx-auto flex w-full max-w-[min(100%,90rem)] flex-col px-3 py-2 sm:py-4 sm:px-5 lg:px-6 2xl:max-w-[min(100%,100rem)] 2xl:flex-row 2xl:items-start 2xl:gap-6 2xl:px-8">
+      <aside
+        role="region"
+        aria-label="Advertisement"
+        className="sticky top-[4.75rem] order-first hidden min-h-[250px] w-[160px] min-w-0 max-w-[160px] flex-shrink-0 overflow-hidden self-start 2xl:block"
+      >
+        <AdUnit
+          slot={SLOT_LEFT}
+          format="auto"
+          minHeight={250}
+          minWidth={0}
+          className="w-full max-w-full overflow-hidden rounded-lg"
+        />
+      </aside>
+      <main className="relative z-[1] order-2 min-w-0 flex-1 overflow-x-hidden">{children}</main>
+      <aside
+        role="region"
+        aria-label="Advertisement"
+        className="sticky top-[4.75rem] order-3 hidden min-h-[250px] w-[300px] min-w-0 max-w-[300px] flex-shrink-0 overflow-hidden self-start 2xl:block"
+      >
+        <AdUnit
+          slot={SLOT_RIGHT}
+          format="auto"
+          minHeight={250}
+          minWidth={0}
+          className="w-full max-w-full overflow-hidden rounded-lg"
+        />
+      </aside>
     </div>
   );
 }

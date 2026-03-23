@@ -396,7 +396,7 @@ export default function JsonBeautifier() {
             </span>
           )}
           {!hasChildren && <span className="w-4 flex-shrink-0" />}
-          <span className="font-semibold text-blue-600 flex-shrink-0">{node.key}</span>
+          <span className="font-semibold text-emerald-800 flex-shrink-0">{node.key}</span>
           <span className="text-gray-400 flex-shrink-0">:</span>
           <span className="text-purple-600 font-medium text-sm flex-shrink-0">{node.type}</span>
           {!hasChildren && (
@@ -431,20 +431,20 @@ export default function JsonBeautifier() {
   return (
     <div className="space-y-6">
       {/* Input Section */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sm:p-8">
+      <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
           <div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-3">
-              <Code2 className="w-7 h-7 sm:w-8 sm:h-8 text-primary-600" />
+            <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900 flex items-center gap-3">
+              <Code2 className="w-7 h-7 sm:w-8 sm:h-8 text-emerald-700" />
               Developer JSON Workbench
             </h2>
-            <p className="text-sm sm:text-base text-gray-500 mt-1.5">Format, validate, fix, explore paths, generate TypeScript &amp; SQL — all in one</p>
+            <p className="text-sm sm:text-base text-zinc-500 mt-1.5">Format, validate, fix, explore paths, generate TypeScript &amp; SQL — all in one</p>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
             <button
               type="button"
               onClick={handleGenerateSample}
-              className="generate-sample-json-btn animate-btn-glow inline-flex items-center gap-2 px-5 py-3 text-sm font-bold text-white bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 rounded-xl shadow-lg shadow-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/50 hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 border border-white/20 ring-2 ring-emerald-400/50 hover:ring-emerald-300/60"
+              className="generate-sample-json-btn inline-flex items-center gap-2 rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-800 focus-visible:outline focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
             >
               <Sparkles className="w-5 h-5 drop-shadow-sm" />
               Generate sample JSON
@@ -472,7 +472,7 @@ export default function JsonBeautifier() {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Upload JSON File
             </label>
-            <label className="flex items-center gap-2 px-4 py-2 bg-primary-50 text-primary-700 rounded-lg cursor-pointer hover:bg-primary-100 transition-colors w-fit">
+            <label className="flex w-fit cursor-pointer items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-4 py-2 text-zinc-800 transition-colors hover:bg-zinc-100">
               <Upload className="w-5 h-5" />
               <span className="text-sm font-medium">Choose File</span>
               <input
@@ -496,7 +496,7 @@ export default function JsonBeautifier() {
                 setIndentSize(size);
                 if (jsonText) beautifyJson(jsonText, size);
               }}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full rounded-lg border border-zinc-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-600"
             >
               <option value="2">2 spaces</option>
               <option value="4">4 spaces</option>
@@ -509,7 +509,7 @@ export default function JsonBeautifier() {
                 type="checkbox"
                 checked={highlightNulls}
                 onChange={(e) => setHighlightNulls(e.target.checked)}
-                className="w-4 h-4 text-primary-600 rounded focus:ring-primary-500"
+                className="h-4 w-4 rounded text-emerald-700 focus:ring-emerald-600"
               />
               <span className="text-sm text-gray-700">Highlight nulls</span>
             </label>
@@ -525,10 +525,10 @@ export default function JsonBeautifier() {
               value={jsonText}
               onChange={handleTextChange}
               placeholder='Paste your JSON here, e.g., {"name": "John", "age": 30}'
-              className={`w-full h-48 p-4 border-2 rounded-lg font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary-500 scrollbar-thin ${
+              className={`scrollbar-thin h-48 w-full resize-none rounded-lg border-2 p-4 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600 ${
                 error
                   ? 'border-red-300 focus:ring-red-500'
-                  : 'border-gray-300 focus:border-primary-500'
+                  : 'border-zinc-300 focus:border-emerald-600'
               }`}
             />
             {error && (
@@ -581,7 +581,7 @@ export default function JsonBeautifier() {
             type="button"
             onClick={() => beautifyJson(jsonText, indentSize)}
             disabled={!jsonText.trim()}
-            className="flex-1 py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors shadow-md hover:shadow-lg"
+            className="flex-1 rounded-lg bg-zinc-900 py-3 font-semibold text-white shadow-sm transition-colors hover:bg-zinc-800 disabled:cursor-not-allowed disabled:bg-zinc-300"
           >
             Beautify JSON
           </button>
@@ -589,11 +589,11 @@ export default function JsonBeautifier() {
             type="button"
             onClick={handleClear}
             disabled={!jsonText.trim() && !beautifiedJson}
-            className={`py-3 px-6 rounded-lg font-semibold border-2 transition-colors ${
+            className={`rounded-lg border-2 px-6 py-3 font-semibold transition-colors ${
               beautifiedJson
-                ? 'border-primary-500 bg-primary-50 text-primary-700 hover:bg-primary-100 hover:border-primary-600 ring-2 ring-primary-200 ring-offset-2'
-                : 'border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400'
-            } disabled:bg-gray-100 disabled:border-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed disabled:ring-0 disabled:ring-offset-0`}
+                ? 'border-zinc-600 bg-zinc-50 text-zinc-900 ring-2 ring-zinc-200 ring-offset-2 hover:border-zinc-700 hover:bg-zinc-100'
+                : 'border-zinc-300 text-zinc-700 hover:border-zinc-400 hover:bg-zinc-50'
+            } disabled:cursor-not-allowed disabled:border-zinc-200 disabled:bg-zinc-100 disabled:text-zinc-400 disabled:ring-0 disabled:ring-offset-0`}
           >
             Clear
           </button>
@@ -602,7 +602,7 @@ export default function JsonBeautifier() {
 
       {/* Duplicate key warning */}
       {duplicateKeys.length > 0 && (
-        <div className="rounded-xl border border-amber-200/80 bg-gradient-to-br from-amber-50 to-orange-50/50 shadow-sm overflow-hidden">
+        <div className="overflow-hidden rounded-xl border border-amber-200 bg-amber-50/80 shadow-sm">
           <div className="flex items-start justify-between gap-4 p-4 sm:p-5">
             <div className="flex items-start gap-3 min-w-0">
               <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center">
@@ -695,31 +695,31 @@ export default function JsonBeautifier() {
 
       {/* Statistics */}
       {jsonStats && (
-        <div ref={resultsSectionRef} className="bg-white rounded-lg shadow-lg p-6 scroll-mt-4">
-          <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-            <BarChart3 className="w-5 h-5 text-primary-600" />
+        <div ref={resultsSectionRef} className="scroll-mt-4 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
+          <h3 className="mb-4 flex items-center gap-2 text-lg font-bold text-zinc-900">
+            <BarChart3 className="h-5 w-5 text-emerald-700" />
             JSON key statistics
           </h3>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <div className="text-sm text-gray-600">Keys</div>
-              <div className="text-2xl font-bold text-blue-600">{jsonStats.totalKeys}</div>
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
+            <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
+              <div className="text-sm text-zinc-600">Keys</div>
+              <div className="text-2xl font-bold text-emerald-800">{jsonStats.totalKeys}</div>
             </div>
-            <div className="bg-green-50 p-4 rounded-lg">
-              <div className="text-sm text-gray-600">Values</div>
-              <div className="text-2xl font-bold text-green-600">{jsonStats.totalValues}</div>
+            <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
+              <div className="text-sm text-zinc-600">Values</div>
+              <div className="text-2xl font-bold text-emerald-800">{jsonStats.totalValues}</div>
             </div>
-            <div className="bg-indigo-50 p-4 rounded-lg">
-              <div className="text-sm text-gray-600">Objects</div>
-              <div className="text-2xl font-bold text-indigo-600">{jsonStats.types['object'] ?? 0}</div>
+            <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
+              <div className="text-sm text-zinc-600">Objects</div>
+              <div className="text-2xl font-bold text-emerald-800">{jsonStats.types['object'] ?? 0}</div>
             </div>
-            <div className="bg-purple-50 p-4 rounded-lg">
-              <div className="text-sm text-gray-600">Arrays</div>
-              <div className="text-2xl font-bold text-purple-600">{jsonStats.types['array'] ?? 0}</div>
+            <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
+              <div className="text-sm text-zinc-600">Arrays</div>
+              <div className="text-2xl font-bold text-emerald-800">{jsonStats.types['array'] ?? 0}</div>
             </div>
-            <div className="bg-orange-50 p-4 rounded-lg">
-              <div className="text-sm text-gray-600">Depth / Size</div>
-              <div className="text-xl font-bold text-orange-600">{jsonStats.depth} / {(jsonStats.size / 1024).toFixed(2)} KB</div>
+            <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
+              <div className="text-sm text-zinc-600">Depth / Size</div>
+              <div className="text-xl font-bold text-zinc-900">{jsonStats.depth} / {(jsonStats.size / 1024).toFixed(2)} KB</div>
             </div>
           </div>
           <div className="mt-4">
@@ -740,17 +740,17 @@ export default function JsonBeautifier() {
 
       {/* Output Tabs */}
       {(beautifiedJson || minifiedJson || jsonStructure.length > 0) && (
-        <div className="bg-white rounded-lg shadow-lg">
-          <div className="border-b border-gray-200">
+        <div className="rounded-xl border border-zinc-200 bg-white shadow-sm">
+          <div className="border-b border-zinc-200">
             <div className="flex items-center justify-between px-6 pt-4">
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={() => setActiveTab('beautified')}
-                  className={`px-4 py-2 font-medium rounded-t-lg transition-colors ${
+                  className={`rounded-t-lg px-4 py-2 font-medium transition-colors ${
                     activeTab === 'beautified'
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-zinc-900 text-white'
+                      : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
                   }`}
                 >
                   Beautified
@@ -758,10 +758,10 @@ export default function JsonBeautifier() {
                 <button
                   type="button"
                   onClick={() => setActiveTab('minified')}
-                  className={`px-4 py-2 font-medium rounded-t-lg transition-colors ${
+                  className={`rounded-t-lg px-4 py-2 font-medium transition-colors ${
                     activeTab === 'minified'
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-zinc-900 text-white'
+                      : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
                   }`}
                 >
                   <Minus className="w-4 h-4 inline mr-1" />
@@ -770,10 +770,10 @@ export default function JsonBeautifier() {
                 <button
                   type="button"
                   onClick={() => setActiveTab('structure')}
-                  className={`px-4 py-2 font-medium rounded-t-lg transition-colors ${
+                  className={`rounded-t-lg px-4 py-2 font-medium transition-colors ${
                     activeTab === 'structure'
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-zinc-900 text-white'
+                      : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
                   }`}
                 >
                   Structure
@@ -781,10 +781,10 @@ export default function JsonBeautifier() {
                 <button
                   type="button"
                   onClick={() => setActiveTab('generate')}
-                  className={`px-4 py-2 font-medium rounded-t-lg transition-colors ${
+                  className={`rounded-t-lg px-4 py-2 font-medium transition-colors ${
                     activeTab === 'generate'
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-zinc-900 text-white'
+                      : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
                   }`}
                 >
                   <FileCode className="w-4 h-4 inline mr-1" />
@@ -797,7 +797,7 @@ export default function JsonBeautifier() {
                     <button
                       type="button"
                       onClick={() => handleCopy(beautifiedJson)}
-                      className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                      className="flex items-center gap-2 rounded-lg bg-zinc-100 px-4 py-2 text-zinc-700 transition-colors hover:bg-zinc-200"
                     >
                       {copied ? (
                         <>
@@ -814,7 +814,7 @@ export default function JsonBeautifier() {
                     <button
                       type="button"
                       onClick={() => handleDownload(beautifiedJson, 'beautified')}
-                      className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                      className="flex items-center gap-2 rounded-lg bg-zinc-900 px-4 py-2 text-white transition-colors hover:bg-zinc-800"
                     >
                       <Download className="w-4 h-4" />
                       Download
@@ -826,7 +826,7 @@ export default function JsonBeautifier() {
                     <button
                       type="button"
                       onClick={() => handleCopy(minifiedJson)}
-                      className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                      className="flex items-center gap-2 rounded-lg bg-zinc-100 px-4 py-2 text-zinc-700 transition-colors hover:bg-zinc-200"
                     >
                       {copied ? (
                         <>
@@ -843,7 +843,7 @@ export default function JsonBeautifier() {
                     <button
                       type="button"
                       onClick={() => handleDownload(minifiedJson, 'minified')}
-                      className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                      className="flex items-center gap-2 rounded-lg bg-zinc-900 px-4 py-2 text-white transition-colors hover:bg-zinc-800"
                     >
                       <Download className="w-4 h-4" />
                       Download
@@ -874,7 +874,7 @@ export default function JsonBeautifier() {
                       value={json2}
                       onChange={(e) => setJson2(e.target.value)}
                       placeholder="Paste second JSON for comparison..."
-                      className="w-full h-32 p-4 border-2 border-gray-300 rounded-lg font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="h-32 w-full resize-none rounded-lg border-2 border-zinc-300 p-4 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600"
                     />
                   </div>
                 )}
@@ -900,7 +900,7 @@ export default function JsonBeautifier() {
                       placeholder="Search in structure..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="w-full rounded-lg border border-zinc-300 py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-emerald-600"
                     />
                   </div>
                 </div>
@@ -909,15 +909,15 @@ export default function JsonBeautifier() {
                     {filteredStructure.map((node) => renderNode(node))}
                   </div>
                 </div>
-                <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-                  <h4 className="font-semibold text-blue-900 mb-2">Click a field → copy JSONPath (e.g. $.user.profile.name)</h4>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
-                    <div><span className="text-purple-600 font-medium">string</span> - Text</div>
-                    <div><span className="text-purple-600 font-medium">number</span> - Number</div>
-                    <div><span className="text-purple-600 font-medium">boolean</span> - true/false</div>
-                    <div><span className="text-purple-600 font-medium">null</span> - Null</div>
-                    <div><span className="text-purple-600 font-medium">object</span> - Object</div>
-                    <div><span className="text-purple-600 font-medium">array&lt;type&gt;</span> - Array</div>
+                <div className="mt-4 rounded-lg border border-zinc-200 bg-zinc-50 p-4">
+                  <h4 className="mb-2 font-semibold text-zinc-900">Click a field → copy JSONPath (e.g. $.user.profile.name)</h4>
+                  <div className="grid grid-cols-2 gap-2 text-sm md:grid-cols-3">
+                    <div><span className="font-medium text-emerald-800">string</span> - Text</div>
+                    <div><span className="font-medium text-emerald-800">number</span> - Number</div>
+                    <div><span className="font-medium text-emerald-800">boolean</span> - true/false</div>
+                    <div><span className="font-medium text-emerald-800">null</span> - Null</div>
+                    <div><span className="font-medium text-emerald-800">object</span> - Object</div>
+                    <div><span className="font-medium text-emerald-800">array&lt;type&gt;</span> - Array</div>
                   </div>
                 </div>
               </div>
@@ -932,7 +932,7 @@ export default function JsonBeautifier() {
                       type="button"
                       onClick={() => setGenerateTab(tab)}
                       className={`px-3 py-1.5 text-sm font-medium rounded-lg ${
-                        generateTab === tab ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        generateTab === tab ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
                       }`}
                     >
                       {tab === 'ts' && 'TypeScript'}
@@ -966,43 +966,43 @@ export default function JsonBeautifier() {
 
       {/* Related tools */}
       <div className="mt-6 flex flex-wrap gap-4 text-sm">
-        <Link href="/json-comparator" className="inline-flex items-center gap-1.5 text-primary-700 hover:text-primary-800 font-medium">
-          <GitCompare className="w-4 h-4" />
+        <Link href="/json-comparator" className="inline-flex items-center gap-1.5 font-medium text-emerald-800 hover:text-emerald-950">
+          <GitCompare className="h-4 w-4" />
           Compare two JSONs
         </Link>
-        <Link href="/ai-schema-masker" className="inline-flex items-center gap-1.5 text-primary-700 hover:text-primary-800 font-medium">
+        <Link href="/ai-schema-masker" className="inline-flex items-center gap-1.5 font-medium text-emerald-800 hover:text-emerald-950">
           <Shield className="w-4 h-4" />
           Mask JSON before sending to AI
         </Link>
       </div>
 
       {/* Blog Links Section - Latest */}
-      <div className="mt-12 bg-white rounded-xl shadow-lg p-8 border border-gray-200">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Latest: AI Safety &amp; Data Masking</h2>
+      <div className="mt-8 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
+        <h2 className="mb-4 text-2xl font-bold text-zinc-900">Latest: AI Safety &amp; Data Masking</h2>
         <div className="space-y-3">
           <Link
             href="/blog/how-to-safely-mask-table-column-names-before-sending-queries-to-ai"
-            className="block p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg border border-emerald-200 hover:border-emerald-400 hover:shadow-md transition-all"
+            className="block rounded-lg border border-zinc-200 bg-zinc-50/80 p-4 transition-all hover:border-emerald-300 hover:bg-white"
           >
-            <h3 className="font-semibold text-gray-900 mb-1">How to Safely Mask Table &amp; Column Names Before Sending Queries to AI</h3>
-            <p className="text-sm text-gray-600 mb-2">Hide database schema from AI, anonymize identifiers, and restore AI output. Client-side, reversible masking—no data leaves your device.</p>
-            <span className="text-emerald-600 text-sm font-medium hover:underline">Read Guide →</span>
+            <h3 className="mb-1 font-semibold text-zinc-900">How to Safely Mask Table &amp; Column Names Before Sending Queries to AI</h3>
+            <p className="mb-2 text-sm text-zinc-600">Hide database schema from AI, anonymize identifiers, and restore AI output. Client-side, reversible masking—no data leaves your device.</p>
+            <span className="text-sm font-medium text-emerald-800 hover:underline">Read Guide →</span>
           </Link>
           <Link
             href="/blog/how-to-mask-json-payloads-before-sending-to-ai-without-breaking-structure"
-            className="block p-4 bg-gradient-to-r from-violet-50 to-indigo-50 rounded-lg border border-violet-200 hover:border-violet-400 hover:shadow-md transition-all"
+            className="block rounded-lg border border-zinc-200 bg-zinc-50/80 p-4 transition-all hover:border-emerald-300 hover:bg-white"
           >
-            <h3 className="font-semibold text-gray-900 mb-1">How to Mask JSON Payloads Before Sending Data to AI (Without Breaking Structure)</h3>
-            <p className="text-sm text-gray-600 mb-2">Anonymize API payloads and JSON for AI. Keys and string values masked; numbers unchanged. Preserve structure, restore exactly—client-side only.</p>
-            <span className="text-violet-600 text-sm font-medium hover:underline">Read Guide →</span>
+            <h3 className="mb-1 font-semibold text-zinc-900">How to Mask JSON Payloads Before Sending Data to AI (Without Breaking Structure)</h3>
+            <p className="mb-2 text-sm text-zinc-600">Anonymize API payloads and JSON for AI. Keys and string values masked; numbers unchanged. Preserve structure, restore exactly—client-side only.</p>
+            <span className="text-sm font-medium text-emerald-800 hover:underline">Read Guide →</span>
           </Link>
           <Link
             href="/blog/how-to-use-ai-for-mysql-without-exposing-database-schema"
-            className="block p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg border border-amber-200 hover:border-amber-400 hover:shadow-md transition-all"
+            className="block rounded-lg border border-zinc-200 bg-zinc-50/80 p-4 transition-all hover:border-emerald-300 hover:bg-white"
           >
-            <h3 className="font-semibold text-gray-900 mb-1">How to Use AI for MySQL Without Exposing Your Database Schema</h3>
-            <p className="text-sm text-gray-600 mb-2">Anonymize MySQL table and column names before ChatGPT or any AI. Reversible, client-side schema abstraction—compliance and security first.</p>
-            <span className="text-amber-700 text-sm font-medium hover:underline">Read Guide →</span>
+            <h3 className="mb-1 font-semibold text-zinc-900">How to Use AI for MySQL Without Exposing Your Database Schema</h3>
+            <p className="mb-2 text-sm text-zinc-600">Anonymize MySQL table and column names before ChatGPT or any AI. Reversible, client-side schema abstraction—compliance and security first.</p>
+            <span className="text-sm font-medium text-emerald-800 hover:underline">Read Guide →</span>
           </Link>
         </div>
       </div>

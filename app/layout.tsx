@@ -10,6 +10,9 @@ import TabVisibilityTracker from '@/components/TabVisibilityTracker'
 import GlobalAdSlot from '@/components/GlobalAdSlot'
 import AdSenseScriptLoader from '@/components/AdSenseScriptLoader'
 import ToolPagesAdWrap from '@/components/ToolPagesAdWrap'
+import HomeBookmarkStrip from '@/components/HomeBookmarkStrip'
+import SiteHeader from '@/components/layout/SiteHeader'
+import SiteFooter from '@/components/layout/SiteFooter'
 import VisitTracker from '@/components/VisitTracker'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap', preload: true })
@@ -264,12 +267,20 @@ export default function RootLayout({
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="manifest" href="/manifest.json" />
       </head>
-      <body className="font-sans antialiased" suppressHydrationWarning>
+      <body
+        className="font-sans antialiased text-zinc-900 bg-[#FAFAFA] selection:bg-emerald-200/50 selection:text-zinc-900"
+        suppressHydrationWarning
+      >
         <GA4RouteTracker />
         <TabVisibilityTracker />
         <DevModeWrapper>
-          <div suppressHydrationWarning>
-            <ToolPagesAdWrap>{children}</ToolPagesAdWrap>
+          <div className="flex min-h-screen flex-col bg-[#FAFAFA] font-sans text-zinc-900 antialiased">
+            <HomeBookmarkStrip />
+            <SiteHeader />
+            <div className="flex min-h-0 flex-1 flex-col min-w-0" suppressHydrationWarning>
+              <ToolPagesAdWrap>{children}</ToolPagesAdWrap>
+            </div>
+            <SiteFooter />
           </div>
           <GlobalAdSlot />
           <BuyMeACoffeeWidget />

@@ -50,7 +50,7 @@ export default function BlogLayout({
             key={`${key}-left`}
             role="region"
             aria-label="Advertisement"
-            className="hidden lg:block flex-shrink-0 w-[160px] xl:w-[160px] sticky top-24 self-start min-h-[250px]"
+            className="sticky top-[4.75rem] hidden w-[160px] flex-shrink-0 self-start min-h-[250px] lg:block xl:w-[160px]"
           >
             <AdUnit slot={SLOT_LEFT} format="auto" minHeight={250} className="rounded-lg overflow-hidden w-full" />
           </aside>
@@ -80,7 +80,7 @@ export default function BlogLayout({
             key={`${key}-right`}
             role="region"
             aria-label="Advertisement"
-            className="hidden lg:block flex-shrink-0 w-[300px] sticky top-24 self-start min-h-[250px]"
+            className="sticky top-[4.75rem] hidden w-[300px] flex-shrink-0 self-start min-h-[250px] lg:block"
           >
             <AdUnit slot={SLOT_RIGHT} format="auto" minHeight={250} className="rounded-lg overflow-hidden w-full" />
           </aside>

@@ -18,6 +18,8 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy, trackCtaClick } from '@/lib/analytics';
+import ToolPageShell from '@/components/tools/ToolPageShell';
+import type { BreadcrumbItem } from '@/components/Breadcrumb';
 import {
   NAMESPACES,
   validateUUID,
@@ -127,23 +129,24 @@ export default function UuidGeneratorClient() {
   const analysis = analyzeInput.trim() ? analyzeUUID(analyzeInput.trim()) : null;
   const comparison = compareA.trim() && compareB.trim() ? compareUUIDs(compareA.trim(), compareB.trim()) : null;
 
+  const uuidBreadcrumb: BreadcrumbItem[] = [
+    { label: 'Home', href: '/' },
+    { label: 'Tools', href: '/' },
+    { label: 'UUID Generator' },
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/30">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <nav className="flex items-center gap-2 text-sm text-gray-500 mb-3" aria-label="Breadcrumb">
-          <Link href="/" className="text-primary-600 hover:text-primary-700 hover:underline">Home</Link>
-          <span aria-hidden>/</span>
-          <span className="text-gray-700 font-medium" aria-current="page">UUID Generator</span>
-        </nav>
-
-        <div className="mb-4">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">UUID / GUID Generator — Generate v1, v4, v7 UUIDs, Validate, Analyze &amp; Bulk Export</h2>
-          <p className="text-sm text-gray-600 mt-1 max-w-3xl">
-            v1–v8 support, validator + analyzer, compare two UUIDs, collision probability, and exports (JSON/CSV/SQL). 100% client-side — no UUID data sent to servers.
-          </p>
-        </div>
-
-        <div className="rounded-2xl bg-white shadow-xl shadow-gray-200/50 border border-gray-200/80 overflow-hidden">
+    <ToolPageShell
+      embedTool
+      showFooterBand={false}
+      backHref="/"
+      breadcrumbItems={uuidBreadcrumb}
+      title="UUID / GUID Generator"
+      subtitle="Generate v1–v8, validate, analyze, compare, collision probability, and export (JSON/CSV/SQL). 100% client-side — no UUID data sent to servers."
+      toolName="uuid_generator"
+      tool={
+        <>
+        <div className="rounded-2xl border border-zinc-200/80 bg-white shadow-lg shadow-zinc-200/40 overflow-hidden">
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 px-6 md:px-8 py-4 bg-gradient-to-r from-indigo-50/80 to-transparent border-b border-gray-100">
             <span className="text-sm text-gray-700 flex items-center gap-2">
               <span className="flex h-6 w-6 items-center justify-center rounded-full bg-indigo-100">
@@ -502,17 +505,18 @@ export default function UuidGeneratorClient() {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-gray-500">
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-zinc-500">
           <p className="text-center flex items-center gap-2">
             <Lock className="w-3.5 h-3.5" /> All generation and analysis run in your browser. No UUID data is sent to any server.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/jwt-decoder" className="inline-flex items-center gap-1.5 font-medium text-primary-600 hover:text-primary-700">JWT Decoder <ChevronRight className="w-4 h-4" /></Link>
-            <Link href="/base64-encoder" className="inline-flex items-center gap-1.5 font-medium text-primary-600 hover:text-primary-700">Base64 Encoder <ChevronRight className="w-4 h-4" /></Link>
-            <Link href="/password-generator" className="inline-flex items-center gap-1.5 font-medium text-primary-600 hover:text-primary-700">Password Generator <ChevronRight className="w-4 h-4" /></Link>
+            <Link href="/jwt-decoder" className="inline-flex items-center gap-1.5 font-medium text-emerald-700 hover:text-emerald-800">JWT Decoder <ChevronRight className="w-4 h-4" /></Link>
+            <Link href="/base64-encoder" className="inline-flex items-center gap-1.5 font-medium text-emerald-700 hover:text-emerald-800">Base64 Encoder <ChevronRight className="w-4 h-4" /></Link>
+            <Link href="/password-generator" className="inline-flex items-center gap-1.5 font-medium text-emerald-700 hover:text-emerald-800">Password Generator <ChevronRight className="w-4 h-4" /></Link>
           </div>
         </div>
-      </div>
-    </div>
+        </>
+      }
+    />
   );
 }

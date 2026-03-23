@@ -124,7 +124,7 @@ export default function TruthTableGeneratorPage() {
       <div id="tool">
         <TruthTableGeneratorClient />
       </div>
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="tt-heading">
+      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="tt-heading">
         <h1 id="tt-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
           Truth Table Generator — Boolean Expression Solver, Karnaugh Map, Minterms, SOP/POS, Code Export Online Free
         </h1>
