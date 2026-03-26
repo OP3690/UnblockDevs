@@ -1,69 +1,43 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import TrackedCtaLink from '@/components/TrackedCtaLink';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
+import ToolSEOContent, {
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+} from '@/components/tools/ToolSEOContent';
 import UuidGeneratorClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/uuid-generator';
 
 export const metadata: Metadata = {
-  title: 'UUID / GUID Generator — Generate v1, v4, v7 UUIDs, Validate, Analyze & Bulk Export Online Free | UnblockDevs',
+  title: 'UUID / GUID Generator — v1, v4, v7, Validate, Bulk Export Online Free | UnblockDevs',
   description:
-    'Generate UUIDs and GUIDs for all versions — v1, v3, v4, v5, v6, v7, v8. Bulk generate up to 1,000, validate, analyze, compare, and export to JSON, CSV, or SQL. Free, 100% browser-based, cryptographically secure.',
+    'Generate UUID and GUID for all versions v1–v8. Bulk generate up to 1,000, validate, analyze, compare, export to JSON, CSV, or SQL. Free, 100% browser-based, cryptographically secure.',
   keywords: [
-    'uuid generator online',
-    'guid generator online',
-    'uuid generator free',
-    'generate uuid online',
-    'random uuid generator',
-    'uuid v4 generator',
-    'uuid v7 generator',
-    'uuid v1 generator',
-    'uuid v5 generator',
-    'namespace uuid generator',
-    'bulk uuid generator',
-    'generate multiple uuids online',
-    'uuid analyzer',
-    'decode uuid online',
-    'uuid validator online',
-    'validate uuid online',
-    'guid generator',
-    'GUID generator online',
-    'uuid collision probability calculator',
-    'uuid primary key database',
-    'generate uuid for sql insert',
-    'UUID / GUID Generator',
-    'uuid generator postgresql',
-    'uuid generator aws dynamodb',
-    'uuid v7 nodejs',
-    'uuid react application',
-    'supabase uuid',
+    'uuid generator online', 'guid generator online', 'uuid v4 generator',
+    'uuid v7 generator', 'bulk uuid generator', 'uuid validator online',
+    'uuid analyzer', 'uuid primary key database', 'uuid vs auto increment',
+    'what is the difference between uuid v4 and v7',
   ],
   openGraph: {
-    title: 'UUID / GUID Generator — Generate v1, v4, v7 UUIDs, Validate & Bulk Export | UnblockDevs',
-    description:
-      'Generate UUIDs v1–v8, validate, analyze, compare, bulk export to JSON/CSV/SQL. 100% browser-based, cryptographically secure. No UUID data sent to servers.',
+    title: 'UUID / GUID Generator — v1–v8, Validate, Bulk Export | UnblockDevs',
+    description: 'Generate UUIDs v1–v8, validate, analyze, bulk export to JSON/CSV/SQL. 100% browser-based.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs UUID Generator' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'UUID / GUID Generator — v1–v8, Bulk, Validate, Analyze | UnblockDevs',
-    description: 'Generate UUIDs v1–v8. Bulk, validate, analyze, compare, export. 100% in your browser.',
+    title: 'UUID / GUID Generator — v1–v8, Validate, Bulk | UnblockDevs',
+    description: 'Generate UUIDs v1–v8. Bulk, validate, analyze, export. 100% in your browser.',
   },
-  alternates: {
-    canonical: canonicalUrl,
-  },
+  alternates: { canonical: canonicalUrl },
 };
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
-  name: 'UUID / GUID Generator — v1–v8, Validate, Analyze & Bulk Export',
-  description:
-    'Generate UUIDs for all versions (v1–v8). Validate, analyze, compare, calculate collision probability, bulk export to JSON/CSV/SQL. 100% browser-based and cryptographically secure. No UUID data sent to any server.',
+  name: 'UUID / GUID Generator',
   url: canonicalUrl,
+  description: 'Generate UUIDs v1–v8. Validate, analyze, compare, bulk export to JSON/CSV/SQL. 100% browser-based.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
@@ -71,49 +45,20 @@ const jsonLd = {
     'Generate UUID v1, v3, v4, v5, v6, v7, v8',
     'Bulk generate up to 1,000 UUIDs',
     'UUID validator and analyzer',
-    'Compare two UUIDs',
     'Collision probability calculator',
     'Export to JSON, CSV, SQL INSERT',
-    '100% client-side — no UUID data sent to any server',
+    '100% client-side',
   ],
 };
 
 const faqSchema = {
-  '@context': 'https://schema.org' as const,
-  '@type': 'FAQPage' as const,
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
   mainEntity: [
-    {
-      '@type': 'Question' as const,
-      name: 'What is the difference between UUID and GUID?',
-      acceptedAnswer: {
-        '@type': 'Answer' as const,
-        text: "They are the same thing. GUID is Microsoft's term for UUID. Both follow the RFC 4122 standard and are completely interchangeable. GUID is common in Windows and .NET development; UUID is used everywhere else.",
-      },
-    },
-    {
-      '@type': 'Question' as const,
-      name: 'What is the difference between UUID v4 and v7?',
-      acceptedAnswer: {
-        '@type': 'Answer' as const,
-        text: 'UUID v4 is purely random. UUID v7 encodes a Unix millisecond timestamp in the first 48 bits making it time-sortable. v7 is recommended for database primary keys because records insert in chronological order, improving index performance significantly.',
-      },
-    },
-    {
-      '@type': 'Question' as const,
-      name: 'Can two UUIDs ever be the same?',
-      acceptedAnswer: {
-        '@type': 'Answer' as const,
-        text: 'In practice, virtually impossible. A v4 UUID has 2^122 possible values. To have a 50% chance of a collision you would need to generate approximately 2.7 quintillion UUIDs. Use the collision probability calculator at unblockdevs.com/uuid-generator to see exact probabilities for your use case.',
-      },
-    },
-    {
-      '@type': 'Question' as const,
-      name: 'Should I use UUID v4 or v7 for database primary keys?',
-      acceptedAnswer: {
-        '@type': 'Answer' as const,
-        text: 'UUID v7 for new applications. It is time-sortable which means records insert in chronological order, dramatically improving database index performance compared to random v4 UUIDs. v4 is still fine for non-database use cases.',
-      },
-    },
+    { '@type': 'Question', name: 'What is the difference between UUID and GUID?', acceptedAnswer: { '@type': 'Answer', text: 'They are the same thing. GUID is Microsoft\'s term for UUID. Both follow RFC 4122 and are completely interchangeable.' } },
+    { '@type': 'Question', name: 'What is the difference between UUID v4 and v7?', acceptedAnswer: { '@type': 'Answer', text: 'UUID v4 is purely random. UUID v7 encodes a Unix millisecond timestamp making it time-sortable and index-friendly for databases.' } },
+    { '@type': 'Question', name: 'Should I use UUID v4 or v7 for database primary keys?', acceptedAnswer: { '@type': 'Answer', text: 'UUID v7 for new applications. Its time-sortable design means records insert in chronological order, dramatically improving index performance vs random v4.' } },
+    { '@type': 'Question', name: 'Can two UUIDs ever be the same?', acceptedAnswer: { '@type': 'Answer', text: 'Practically impossible. A v4 UUID has 2^122 possible values. A 50% collision chance requires generating ~2.7 quintillion UUIDs.' } },
   ],
 };
 
@@ -123,97 +68,132 @@ export default function UuidGeneratorPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <UuidGeneratorClient />
-      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="uuid-heading">
-        <h1 id="uuid-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
-          UUID / GUID Generator — Generate v1, v4, v7 UUIDs, Validate, Analyze &amp; Bulk Export Online Free
-        </h1>
-        <p className="text-gray-700 text-base leading-relaxed mb-3">
-          Generate UUIDs for all versions (v1 timestamp, v3 MD5 namespace, v4 random, v5 SHA-1 namespace, v6/v7 time-ordered, v8 custom).
-          Validate, analyze, compare, and export. Runs entirely in your browser — no UUID data is sent to any server.
-        </p>
-        <TrackedCtaLink href="#tool" toolName="uuid_generator" className="inline-block text-sm font-semibold text-primary-600 hover:text-primary-700">
-          Use the tool →
-        </TrackedCtaLink>
-      </article>
 
-      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12" aria-labelledby="uuid-learn-heading">
-        <h2 id="uuid-learn-heading" className="text-2xl font-bold text-gray-900 mb-4">
-          What Is a UUID?
-        </h2>
-        <p className="text-gray-700 leading-relaxed mb-4">
-          A UUID (Universally Unique Identifier) is a 128-bit label used to uniquely identify information in computer systems. Standardized in
-          RFC 4122, a UUID is typically displayed as 32 hexadecimal digits in five groups separated by hyphens:
-        </p>
-        <p className="font-mono text-sm bg-gray-100 p-3 rounded-lg text-gray-800 mb-4">
-          xxxxxxxx-xxxx-Mxxx-Nxxx-xxxxxxxxxxxx
-        </p>
-        <p className="text-gray-700 leading-relaxed mb-6">
-          Where <strong>M</strong> indicates the UUID version and <strong>N</strong> indicates the variant. UUIDs are used as database primary
-          keys, session IDs, transaction IDs, correlation IDs, and anywhere a globally unique identifier is needed without coordination.
-        </p>
+      <ToolSEOContent>
+        {/* What */}
+        <SEOSection id="what" heading="What Is a UUID?">
+          <SEOProse>
+            A <strong>UUID</strong> (Universally Unique Identifier) is a 128-bit label used to identify
+            information in computer systems. Standardised in RFC 4122, a UUID looks like:
+          </SEOProse>
+          <div className="my-4 rounded-lg bg-zinc-100 px-4 py-3 font-mono text-[13px] text-zinc-700">
+            xxxxxxxx-xxxx-Mxxx-Nxxx-xxxxxxxxxxxx
+          </div>
+          <SEOProse>
+            <strong>M</strong> indicates the version; <strong>N</strong> indicates the variant. UUIDs are used
+            as database primary keys, session IDs, transaction IDs, and anywhere a globally unique identifier
+            is needed without coordination between systems.
+          </SEOProse>
+        </SEOSection>
 
-        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-3">UUID vs GUID</h2>
-        <p className="text-gray-700 leading-relaxed mb-6">
-          GUID (Globally Unique Identifier) is Microsoft&apos;s term for UUID. They are functionally identical — a GUID is a UUID. The term GUID is
-          common in Windows and .NET development; UUID is used everywhere else.
-        </p>
+        {/* How it works */}
+        <SEOSection id="how" eyebrow="How it works" heading="Generate and Export UUIDs in Seconds">
+          <HowItWorks steps={[
+            { n: '01', title: 'Choose a version', desc: 'Pick v4 (random), v7 (time-sorted), v5 (namespace), or any other version.' },
+            { n: '02', title: 'Set quantity', desc: 'Generate 1 or bulk-generate up to 1,000 UUIDs at once.' },
+            { n: '03', title: 'Copy or export', desc: 'Copy individual UUIDs or export all to JSON, CSV, or SQL INSERT statements.' },
+            { n: '04', title: 'Validate or analyze', desc: 'Paste any UUID to validate, inspect the version/variant, and check collision probability.' },
+          ]} />
+        </SEOSection>
 
-        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-3">UUID Versions Explained (v1–v8)</h2>
-        <ul className="list-disc list-inside text-gray-700 space-y-2 mb-6 ml-2">
-          <li><strong>v1</strong> — Timestamp-based (time + node). Unique but may leak device/network info. Sortable by time.</li>
-          <li><strong>v3</strong> — Deterministic namespace UUID using MD5 (same namespace + name → same UUID).</li>
-          <li><strong>v4</strong> — Random. Most common. 122 bits of randomness. Use for most non-time-ordered needs.</li>
-          <li><strong>v5</strong> — Deterministic namespace UUID using SHA-1. Preferred over v3 for deterministic IDs.</li>
-          <li><strong>v6</strong> — Reordered v1 (time-ordered / DB-friendly sort order).</li>
-          <li><strong>v7</strong> — Unix timestamp + random. Modern, sortable, database-optimized. Recommended for new apps.</li>
-          <li><strong>v8</strong> — Custom. Application-defined layout.</li>
-        </ul>
+        {/* Use cases */}
+        <SEOSection id="uses" eyebrow="Use cases" heading="When Developers Use UUIDs">
+          <UseCases cases={[
+            { icon: '🗄️', title: 'Database Primary Keys', desc: 'Use v7 for time-sortable, index-friendly primary keys in Postgres, MySQL, or DynamoDB.' },
+            { icon: '🔗', title: 'Distributed Systems', desc: 'Generate IDs across services without a central coordinator — no collision coordination needed.' },
+            { icon: '🔀', title: 'Idempotency Keys', desc: 'Attach a v4 UUID to API requests to make retries safe without duplicate processing.' },
+            { icon: '📂', title: 'File & Upload IDs', desc: 'Name uploaded files with UUIDs to avoid collisions and prevent enumeration attacks.' },
+            { icon: '🧪', title: 'Test Fixtures', desc: 'Generate bulk UUIDs for seeding test databases or mock API responses.' },
+            { icon: '🔁', title: 'Deterministic IDs', desc: 'Use v5 (SHA-1 namespace) for stable, repeatable IDs from a URL or email.' },
+          ]} />
+        </SEOSection>
 
-        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-3">Frequently Asked Questions</h2>
-        <dl className="space-y-4">
-          <div>
-            <dt className="font-semibold text-gray-900">What is the difference between UUID and GUID?</dt>
-            <dd className="text-gray-700 mt-1">
-              They are the same thing. GUID is Microsoft&apos;s term for UUID and both follow the same RFC 4122 format.
-            </dd>
+        {/* Version guide */}
+        <SEOSection id="versions" heading="UUID Versions Explained — v1 through v8">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[520px] border-collapse text-[13.5px]">
+              <thead>
+                <tr className="border-b border-zinc-200 text-left">
+                  <th className="pb-3 pr-4 font-semibold text-zinc-700">Version</th>
+                  <th className="pb-3 pr-4 font-semibold text-zinc-700">Source</th>
+                  <th className="pb-3 pr-4 font-semibold text-zinc-700">Sortable</th>
+                  <th className="pb-3 font-semibold text-zinc-700">Best for</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-zinc-100">
+                {[
+                  ['v1', 'Timestamp + node', '✅ Time', 'Legacy time-ordered systems'],
+                  ['v3', 'MD5 namespace', '—', 'Deterministic IDs (legacy)'],
+                  ['v4', 'Random', '—', 'Most general use cases'],
+                  ['v5', 'SHA-1 namespace', '—', 'Deterministic IDs (preferred over v3)'],
+                  ['v6', 'Reordered v1', '✅ Time', 'DB-friendly v1 replacement'],
+                  ['v7', 'Unix ms + random', '✅ Time', '⭐ New apps, database primary keys'],
+                  ['v8', 'Custom', 'App-defined', 'Application-specific layouts'],
+                ].map(([v, src, sort, use]) => (
+                  <tr key={v}>
+                    <td className="py-3 pr-4 font-mono font-semibold text-zinc-900">{v}</td>
+                    <td className="py-3 pr-4 text-zinc-600">{src}</td>
+                    <td className="py-3 pr-4 text-zinc-600">{sort}</td>
+                    <td className="py-3 text-zinc-500">{use}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-          <div>
-            <dt className="font-semibold text-gray-900">What is the difference between UUID v4 and v7?</dt>
-            <dd className="text-gray-700 mt-1">
-              v4 is purely random. v7 includes a Unix millisecond timestamp so it is time-sortable and index-friendly for databases.
-            </dd>
-          </div>
-          <div>
-            <dt className="font-semibold text-gray-900">Can two UUIDs ever be the same?</dt>
-            <dd className="text-gray-700 mt-1">
-              Theoretically yes, but for v4 UUIDs it&apos;s practically impossible. Use the collision probability calculator in the tool to see exact
-              probabilities for your scale.
-            </dd>
-          </div>
-          <div>
-            <dt className="font-semibold text-gray-900">What is a namespace UUID (v3 and v5)?</dt>
-            <dd className="text-gray-700 mt-1">
-              Namespace UUIDs are deterministic — the same namespace and name always produce the same UUID. v3 uses MD5, v5 uses SHA-1. Use them
-              when you want stable IDs for the same input (e.g. a URL or email).
-            </dd>
-          </div>
-          <div>
-            <dt className="font-semibold text-gray-900">Should I use UUID or auto-increment for database IDs?</dt>
-            <dd className="text-gray-700 mt-1">
-              Auto-increment is simpler for single-database setups. UUIDs are better for distributed systems, offline ID creation, merging
-              databases, and public APIs. UUID v7 minimizes index fragmentation compared to random v4 UUIDs.
-            </dd>
-          </div>
-        </dl>
+        </SEOSection>
 
-        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-3">Related Tools</h2>
-        <p className="text-gray-700 leading-relaxed mb-2">
-          <Link href="/hash-generator" className="text-primary-600 hover:underline font-medium">Hash Generator</Link> — UUID v3/v5 use MD5/SHA-1 namespace hashing.{' '}
-          <Link href="/token-comparator" className="text-primary-600 hover:underline font-medium">Token Comparator</Link> — compare two UUIDs/tokens with visual diff.{' '}
-          <Link href="/json-comparator" className="text-primary-600 hover:underline font-medium">JSON Comparator</Link> — semantic diff that can normalize UUID noise.{' '}
-          <Link href="/base64-encoder" className="text-primary-600 hover:underline font-medium">Base64 Encoder</Link> — encode UUIDs as Base64 (or decode values).
-        </p>
-      </article>
+        {/* v4 vs v7 */}
+        <SEOSection id="v4-vs-v7" heading="UUID v4 vs v7 — Which to Use for Database Keys?">
+          <SEOProse>
+            <strong>v7 for all new applications.</strong> UUID v7 encodes a Unix millisecond timestamp in the
+            first 48 bits, making it time-sortable. Records with v7 primary keys insert in chronological order,
+            which dramatically improves B-tree index performance compared to random v4 UUIDs (which scatter
+            inserts across the index, causing page splits). Use v4 for non-database IDs where sort order does
+            not matter.
+          </SEOProse>
+        </SEOSection>
+
+        {/* FAQ */}
+        <SEOSection id="faq" eyebrow="FAQ" heading="Frequently Asked Questions">
+          <FAQ items={[
+            {
+              q: 'What is the difference between UUID and GUID?',
+              a: 'They are the same thing. GUID is Microsoft\'s term for UUID. Both follow RFC 4122 and are completely interchangeable. GUID is common in Windows/.NET; UUID is used everywhere else.',
+            },
+            {
+              q: 'What is the difference between UUID v4 and v7?',
+              a: 'v4 is purely random — 122 bits of randomness. v7 encodes a Unix millisecond timestamp in the first 48 bits making it time-sortable, which significantly improves database index performance.',
+            },
+            {
+              q: 'Can two UUIDs ever be the same?',
+              a: 'Practically impossible. A v4 UUID has 2^122 possible values. To have a 50% collision chance you would need to generate approximately 2.7 quintillion UUIDs. Use the collision probability calculator in the tool to see exact probabilities for your scale.',
+            },
+            {
+              q: 'Should I use UUID or auto-increment for database IDs?',
+              a: 'Auto-increment is simpler for single-database setups. UUIDs are better for distributed systems, offline ID creation, merging databases, and public APIs where you don\'t want to expose sequential IDs. UUID v7 minimises index fragmentation vs random v4.',
+            },
+            {
+              q: 'What is a namespace UUID (v3 and v5)?',
+              a: 'Namespace UUIDs are deterministic — the same namespace and name always produce the same UUID. v3 uses MD5, v5 uses SHA-1. Use them when you want stable IDs from the same input (e.g. a URL or email address).',
+            },
+            {
+              q: 'Are the UUIDs generated here cryptographically secure?',
+              a: 'Yes. v4 and v7 UUIDs use the Web Crypto API\'s getRandomValues(), which is a cryptographically secure random number generator. Nothing is sent to any server.',
+            },
+          ]} />
+        </SEOSection>
+
+        {/* Related tools */}
+        <SEOSection id="related" eyebrow="Related tools" heading="Tools You Might Also Need">
+          <RelatedTools tools={[
+            { href: '/hash-generator', label: 'Hash Generator', desc: 'UUID v3/v5 use MD5/SHA-1 namespace hashing', icon: '#️⃣' },
+            { href: '/token-comparator', label: 'Token Comparator', desc: 'Compare two UUIDs or tokens with visual diff', icon: '🔍' },
+            { href: '/json-comparator', label: 'JSON Comparator', desc: 'Semantic diff that normalises UUID noise', icon: '🔀' },
+            { href: '/base64-encoder', label: 'Base64 Encoder', desc: 'Encode UUIDs as Base64 or decode values', icon: '🔤' },
+          ]} />
+        </SEOSection>
+      </ToolSEOContent>
+
       <ToolPageFooterBand toolName="uuid_generator" />
     </>
   );

@@ -1,6 +1,14 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import TrackedCtaLink from '@/components/TrackedCtaLink';
+import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
+import ToolSEOContent, {
+  SEOSection,
+  SEOProse,
+  C,
+  HowItWorks,
+  UseCases,
+  FAQ,
+  RelatedTools,
+} from '@/components/tools/ToolSEOContent';
 import TokenComparatorLandingClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/token-comparator';
@@ -150,23 +158,227 @@ export default function TokenComparatorLanding() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <div id="tool">
-        <TokenComparatorLandingClient />
-      </div>
-      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="token-comp-heading">
-        <h1 id="token-comp-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
-          JWT Debugger &amp; Token Comparator — Decode, Compare, Security Audit &amp; Expiry Check Online Free
-        </h1>
-        <p className="text-gray-700 text-base leading-relaxed mb-3">
-          Decode and debug JWT tokens, compare authentication tokens character-by-character, run security audits, check expiration, and analyze entropy. Smart detection for JWT, API key, UUID, Base64. All processing is client-side—nothing is sent to our servers.
-        </p>
-        <p className="text-gray-600 text-sm leading-relaxed mb-4">
-          Paste one token to decode and analyze; paste two to compare with visual diff. Unlike basic JWT decoders, this tool also runs a security audit, checks expiration, analyzes entropy, and compares two tokens — all without sending anything to a server.
-        </p>
-        <TrackedCtaLink href="#tool" toolName="token_comparator" className="inline-block text-sm font-semibold text-blue-600 hover:text-blue-700">
-          Use the tool →
-        </TrackedCtaLink>
-      </article>
+      <TokenComparatorLandingClient />
+
+      <ToolSEOContent>
+        {/* What */}
+        <SEOSection id="what" heading="What Is a Token Comparator?">
+          <SEOProse>
+            A <strong>token comparator</strong> lets you paste two tokens — JWTs, API keys, OAuth
+            tokens, webhook secrets, or any text-based credential — side by side and see exactly where
+            they differ. Every character is compared individually and highlighted: green for matches,
+            red for mismatches. This makes it effortless to spot a single wrong character in a 500-character
+            JWT or detect which environment has a different signing secret.
+          </SEOProse>
+          <div className="mt-4">
+            <SEOProse>
+              Beyond the character diff, the JWT Debugger &amp; Token Comparator auto-detects the token
+              type (JWT, API key, UUID, Base64) and unlocks the right analysis: JWT tokens get full
+              header/payload decode, claim inspection (<C>exp</C>, <C>iat</C>, <C>iss</C>), expiry
+              check, entropy analysis, and a security audit. Everything runs 100% in your browser —
+              your tokens never leave your device.
+            </SEOProse>
+          </div>
+        </SEOSection>
+
+        {/* How it works */}
+        <SEOSection id="how" eyebrow="How it works" heading="Compare Tokens in Seconds">
+          <HowItWorks
+            steps={[
+              {
+                n: '01',
+                title: 'Paste Token A & B',
+                desc: 'Enter your first token in the left field and your second token in the right field. The tool auto-detects the type of each.',
+              },
+              {
+                n: '02',
+                title: 'See the Character Diff',
+                desc: 'Click Compare for an instant character-by-character visual diff with match percentage and mismatch count.',
+              },
+              {
+                n: '03',
+                title: 'Check JWT Claims & Expiry',
+                desc: 'For JWTs, inspect the decoded header and payload, check expiration datetime, and see remaining or elapsed lifetime.',
+              },
+              {
+                n: '04',
+                title: 'Run Security Audit',
+                desc: 'Detect alg:none, weak or missing secrets, absent exp/nbf claims, iss mismatches, and long-lived tokens in one click.',
+              },
+            ]}
+          />
+        </SEOSection>
+
+        {/* Use cases */}
+        <SEOSection id="uses" eyebrow="Use cases" heading="When Developers Compare Tokens">
+          <UseCases
+            cases={[
+              {
+                icon: '🐛',
+                title: 'Debug Auth Failures Between Envs',
+                desc: 'Paste the working dev token and the failing production token to pinpoint the exact claim or character that differs.',
+              },
+              {
+                icon: '🛡️',
+                title: 'Detect JWT Tampering',
+                desc: 'Compare an original JWT with a suspicious one to spot header or payload modifications that could indicate a tampering attempt.',
+              },
+              {
+                icon: '🔑',
+                title: 'Compare API Key Permissions',
+                desc: 'Verify that two API keys are identical across environments — or find the one character that was miscopied.',
+              },
+              {
+                icon: '🪝',
+                title: 'Verify Webhook Secrets Match',
+                desc: 'Confirm the webhook secret configured on the provider matches the one stored in your environment variables.',
+              },
+              {
+                icon: '🔄',
+                title: 'Token Rotation Testing',
+                desc: 'After rotating a signing key, compare old and new tokens to verify the new ones have the expected claims and structure.',
+              },
+              {
+                icon: '📋',
+                title: 'Diff Bearer vs API Key',
+                desc: 'Compare a Bearer JWT against an opaque API key to understand format differences and choose the right auth scheme for your API.',
+              },
+            ]}
+          />
+        </SEOSection>
+
+        {/* Security vulnerabilities table */}
+        <SEOSection id="security" heading="JWT Security Vulnerabilities to Check">
+          <SEOProse>
+            The built-in security audit flags the most dangerous JWT misconfigurations before they
+            reach production. Run any JWT through the tool to get an instant security report.
+          </SEOProse>
+          <div className="mt-5 overflow-x-auto">
+            <table className="w-full min-w-[520px] border-collapse text-[13.5px]">
+              <thead>
+                <tr className="border-b border-zinc-200 text-left">
+                  <th className="pb-3 pr-4 font-semibold text-zinc-700">Vulnerability</th>
+                  <th className="pb-3 pr-4 font-semibold text-zinc-700">What it means</th>
+                  <th className="pb-3 font-semibold text-zinc-700">Risk</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-zinc-100">
+                {[
+                  [
+                    'alg: none',
+                    'Algorithm set to "none" — signature is stripped and any payload is accepted',
+                    'Critical',
+                  ],
+                  [
+                    'Weak secret',
+                    'Short or common signing secret that can be brute-forced offline',
+                    'High',
+                  ],
+                  [
+                    'Missing exp / nbf',
+                    'Token has no expiration or "not before" claim — valid forever',
+                    'High',
+                  ],
+                  [
+                    'iss mismatch',
+                    'Issuer claim does not match the expected value for your service',
+                    'Medium',
+                  ],
+                  [
+                    'Long-lived token',
+                    'exp is set far in the future — large window for replay attacks',
+                    'Medium',
+                  ],
+                ].map(([vuln, meaning, risk]) => (
+                  <tr key={vuln}>
+                    <td className="py-3 pr-4 font-mono font-semibold text-zinc-900">{vuln}</td>
+                    <td className="py-3 pr-4 text-zinc-600">{meaning}</td>
+                    <td className="py-3 text-zinc-500">{risk}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </SEOSection>
+
+        {/* FAQ */}
+        <SEOSection id="faq" eyebrow="FAQ" heading="Frequently Asked Questions">
+          <FAQ
+            items={[
+              {
+                q: 'How do I decode a JWT token?',
+                a: 'Paste your JWT into the tool. It auto-detects the JWT format, decodes the header and payload via Base64URL, and displays all claims in readable JSON — entirely in your browser, nothing sent to any server.',
+              },
+              {
+                q: 'How do I check if a JWT token is expired?',
+                a: (
+                  <>
+                    Paste your JWT. The tool reads the <C>exp</C> claim (a Unix timestamp) and shows
+                    the exact expiration datetime, whether the token is currently valid, and how much
+                    lifetime remains or how long ago it expired.
+                  </>
+                ),
+              },
+              {
+                q: 'What is the JWT "none" algorithm vulnerability?',
+                a: (
+                  <>
+                    The <C>alg:none</C> attack lets a malicious actor remove the JWT signature so a
+                    vulnerable server accepts any payload without verification. The security audit in
+                    Token Comparator detects this automatically alongside other misconfigurations.
+                  </>
+                ),
+              },
+              {
+                q: 'How do I compare tokens across environments?',
+                a: 'Paste your dev token in Token 1 and your staging or production token in Token 2. Click Compare for an instant character-by-character visual diff showing exactly where they differ — useful for debugging environment mismatch issues.',
+              },
+              {
+                q: 'What is token entropy and why does it matter?',
+                a: 'Entropy measures how random and unpredictable a token is. Low entropy means the token could be guessed or brute-forced offline. Token Comparator analyzes entropy and flags tokens that may be cryptographically weak.',
+              },
+              {
+                q: 'Are my tokens stored or sent to a server?',
+                a: 'No. Token Comparator is 100% client-side. All decoding, comparison, and analysis happens in your browser. Your tokens never leave your device and are not stored or logged anywhere.',
+              },
+            ]}
+          />
+        </SEOSection>
+
+        {/* Related tools */}
+        <SEOSection id="related" eyebrow="Related tools" heading="Tools You Might Also Need">
+          <RelatedTools
+            tools={[
+              {
+                href: '/jwt-decoder',
+                label: 'JWT Decoder',
+                desc: 'Decode JWT tokens, verify HMAC signatures, and inspect claims in detail',
+                icon: '🔓',
+              },
+              {
+                href: '/hash-generator',
+                label: 'Hash Generator',
+                desc: 'Generate HMAC-SHA256 and other hashes for API signing and verification',
+                icon: '#️⃣',
+              },
+              {
+                href: '/base64-encoder',
+                label: 'Base64 Encoder',
+                desc: 'Encode or decode Base64 and Base64URL strings — decode JWT parts manually',
+                icon: '🔤',
+              },
+              {
+                href: '/uuid-generator',
+                label: 'UUID Generator',
+                desc: 'Generate cryptographically random UUIDs for use as token IDs or secrets',
+                icon: '🎲',
+              },
+            ]}
+          />
+        </SEOSection>
+      </ToolSEOContent>
+
+      <ToolPageFooterBand toolName="token_comparator" />
     </>
   );
 }

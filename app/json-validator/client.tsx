@@ -1,156 +1,152 @@
 'use client';
 
-import Link from 'next/link';
-import { ArrowLeft, CheckCircle, AlertTriangle, ExternalLink, Shield } from 'lucide-react';
+import ToolPageShell from '@/components/tools/ToolPageShell';
+import type { BreadcrumbItem } from '@/components/Breadcrumb';
+import { useState, useCallback } from 'react';
+import { CheckCircle, AlertTriangle, Clipboard, ClipboardCheck } from 'lucide-react';
+import toast from 'react-hot-toast';
 
-export default function JsonValidatorClient() {
+const BREADCRUMB: BreadcrumbItem[] = [
+  { label: 'Home', href: '/' },
+  { label: 'Tools', href: '/tools/json' },
+  { label: 'JSON', href: '/tools/json' },
+  { label: 'JSON Validator' },
+];
+
+function JsonValidatorTool() {
+  const [input, setInput] = useState('');
+  const [copied, setCopied] = useState(false);
+
+  type ValidationResult =
+    | { valid: true }
+    | { valid: false; error: string; line?: number; col?: number };
+
+  const result: ValidationResult | null = (() => {
+    if (!input.trim()) return null;
+    try {
+      JSON.parse(input);
+      return { valid: true };
+    } catch (e) {
+      const msg = e instanceof SyntaxError ? e.message : String(e);
+      // Extract line/col from browser error messages like "at position 42" or "at line 3 column 5"
+      const lineColMatch = msg.match(/line (\d+) column (\d+)/);
+      if (lineColMatch) {
+        return { valid: false, error: msg, line: parseInt(lineColMatch[1]), col: parseInt(lineColMatch[2]) };
+      }
+      return { valid: false, error: msg };
+    }
+  })();
+
+  const handleCopy = useCallback(() => {
+    if (!input) return;
+    navigator.clipboard.writeText(input).then(
+      () => {
+        setCopied(true);
+        toast.success('Copied to clipboard');
+        setTimeout(() => setCopied(false), 2000);
+      },
+      () => toast.error('Copy failed'),
+    );
+  }, [input]);
+
+  const handleClear = useCallback(() => {
+    setInput('');
+  }, []);
+
+  const handlePaste = useCallback(async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      setInput(text);
+    } catch {
+      toast.error('Paste failed — use Ctrl+V in the textarea');
+    }
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50 to-emerald-50">
-      <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Tools
-          </Link>
-          <h1 className="text-3xl font-bold text-gray-900">JSON Validator - Free Online Validation Tool</h1>
-          <p className="text-sm text-gray-500 mt-1">Validate JSON syntax and structure instantly</p>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <p className="text-sm text-zinc-500">Paste JSON below. All validation runs in your browser.</p>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={handlePaste}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 bg-white text-xs font-medium text-zinc-600 hover:bg-zinc-50"
+          >
+            <Clipboard className="w-3.5 h-3.5" />
+            Paste
+          </button>
+          <button
+            type="button"
+            onClick={handleCopy}
+            disabled={!input}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 bg-white text-xs font-medium text-zinc-600 hover:bg-zinc-50 disabled:opacity-40"
+          >
+            {copied ? <ClipboardCheck className="w-3.5 h-3.5" /> : <Clipboard className="w-3.5 h-3.5" />}
+            Copy
+          </button>
+          <button
+            type="button"
+            onClick={handleClear}
+            disabled={!input}
+            className="px-3 py-1.5 rounded-lg border border-zinc-200 bg-white text-xs font-medium text-zinc-600 hover:bg-zinc-50 disabled:opacity-40"
+          >
+            Clear
+          </button>
         </div>
-      </header>
+      </div>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          <section className="mb-12">
-            <p className="text-lg text-gray-700 leading-relaxed mb-4">
-              Our <strong>JSON Validator</strong> is a free online tool that validates JSON syntax and structure instantly. 
-              Check for errors, verify JSON format, and ensure your JSON is valid before using it in your applications.
-            </p>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              No signup required, 100% privacy-focused (all processing happens in your browser). 
-              Use our <Link href="/" className="text-blue-600 hover:underline font-semibold">JSON Validator</Link> to validate JSON before parsing.
-            </p>
-            <p className="text-gray-700 leading-relaxed">
-              After validating your JSON, use our <Link href="/json-formatter" className="text-blue-600 hover:underline font-semibold">JSON Formatter</Link> to beautify it, or our <Link href="/json-fixer-online" className="text-blue-600 hover:underline font-semibold">JSON Fixer</Link> if you need to repair any syntax errors.
-            </p>
-          </section>
+      <textarea
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder={'{\n  "key": "value"\n}'}
+        rows={16}
+        spellCheck={false}
+        className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 font-mono text-sm text-zinc-800 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 resize-y"
+      />
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Features</h2>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                <CheckCircle className="w-6 h-6 text-green-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 mb-1">Instant Validation</h3>
-                <p className="text-sm text-gray-700">Validate JSON in real-time as you type</p>
-              </div>
-              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <CheckCircle className="w-6 h-6 text-blue-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 mb-1">Error Detection</h3>
-                <p className="text-sm text-gray-700">Shows exact error location and message</p>
-              </div>
-              <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-                <CheckCircle className="w-6 h-6 text-purple-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 mb-1">100% Free</h3>
-                <p className="text-sm text-gray-700">No signup, no limits, completely free</p>
-              </div>
-              <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
-                <Shield className="w-6 h-6 text-orange-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 mb-1">Privacy-Focused</h3>
-                <p className="text-sm text-gray-700">All processing happens in your browser</p>
-              </div>
-            </div>
-          </section>
-
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">How to Use JSON Validator</h2>
-            <div className="space-y-4">
-              <div className="flex items-start gap-4">
-                <div className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0">1</div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-1">Paste Your JSON</h3>
-                  <p className="text-gray-700 text-sm">Copy and paste your JSON into the validator</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0">2</div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-1">Get Instant Results</h3>
-                  <p className="text-gray-700 text-sm">See if your JSON is valid or get detailed error messages</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0">3</div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-1">Fix Errors (If Needed)</h3>
-                  <p className="text-gray-700 text-sm">If invalid, use our <Link href="/" className="text-blue-600 hover:underline">JSON Fixer</Link> to repair it automatically</p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Related Tools</h2>
-            <div className="flex flex-wrap gap-3 mb-6">
-              <Link href="/json-formatter" className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors text-sm font-medium">
-                <CheckCircle className="w-4 h-4" />
-                JSON Formatter
-              </Link>
-              <Link href="/json-beautifier" className="inline-flex items-center gap-2 px-4 py-2 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition-colors text-sm font-medium">
-                <CheckCircle className="w-4 h-4" />
-                JSON Beautifier
-              </Link>
-              <Link href="/json-fixer-online" className="inline-flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-700 rounded-lg hover:bg-orange-100 transition-colors text-sm font-medium">
-                <Shield className="w-4 h-4" />
-                JSON Fixer
-              </Link>
-              <Link href="/json-schema-generation" className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors text-sm font-medium">
-                <CheckCircle className="w-4 h-4" />
-                Schema Generator
-              </Link>
-            </div>
-          </section>
-
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
-            <dl className="space-y-4">
+      {result !== null && (
+        <div
+          className={`flex items-start gap-3 rounded-xl border px-4 py-3 text-sm ${
+            result.valid
+              ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
+              : 'border-red-200 bg-red-50 text-red-800'
+          }`}
+        >
+          {result.valid ? (
+            <>
+              <CheckCircle className="w-5 h-5 shrink-0 mt-0.5 text-emerald-600" aria-hidden />
+              <p className="font-semibold">Valid JSON</p>
+            </>
+          ) : (
+            <>
+              <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5 text-red-500" aria-hidden />
               <div>
-                <dt className="font-semibold text-gray-900">What is JSON validation?</dt>
-                <dd className="text-gray-700 mt-1 pl-4 border-l-2 border-gray-200">JSON validation checks if a JSON string follows the correct syntax rules and structure according to the JSON specification. Invalid keys, missing commas, trailing commas, or wrong brackets cause validation to fail.</dd>
+                <p className="font-semibold mb-0.5">Invalid JSON</p>
+                <p className="font-mono text-xs leading-relaxed text-red-700">{result.error}</p>
+                {result.line !== undefined && (
+                  <p className="text-xs mt-1 text-red-600">
+                    Line {result.line}{result.col !== undefined ? `, column ${result.col}` : ''}
+                  </p>
+                )}
               </div>
-              <div>
-                <dt className="font-semibold text-gray-900">Why should I validate JSON?</dt>
-                <dd className="text-gray-700 mt-1 pl-4 border-l-2 border-gray-200">Validating JSON before using it prevents runtime errors in your application. It is essential when working with APIs, config files, or user input. Catching errors early saves debugging time.</dd>
-              </div>
-              <div>
-                <dt className="font-semibold text-gray-900">Is the JSON Validator free and private?</dt>
-                <dd className="text-gray-700 mt-1 pl-4 border-l-2 border-gray-200">Yes. The validator is 100% free with no signup. All processing happens in your browser, so your JSON is never sent to any server—safe for sensitive data.</dd>
-              </div>
-              <div>
-                <dt className="font-semibold text-gray-900">What does “Unexpected token” mean in JSON?</dt>
-                <dd className="text-gray-700 mt-1 pl-4 border-l-2 border-gray-200">An “Unexpected token” error means the parser found a character or symbol where it did not expect one—for example a comma after the last item, a missing comma between properties, or an unquoted key. The validator will point to the line and position so you can fix it.</dd>
-              </div>
-            </dl>
-          </section>
-
-          <section className="mb-12 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl p-8 text-white">
-            <div className="flex items-center gap-4 mb-4">
-              <CheckCircle className="w-12 h-12" />
-              <div>
-                <h2 className="text-2xl font-bold mb-2">Validate JSON Instantly</h2>
-                <p className="text-green-100">
-                  Use our free JSON Validator to check your JSON syntax. If invalid, use our JSON Fixer to repair it automatically.
-                </p>
-              </div>
-            </div>
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 bg-white text-green-600 px-6 py-3 rounded-lg font-semibold hover:bg-green-50 transition-colors"
-            >
-              Validate JSON Now
-              <ExternalLink className="w-5 h-5" />
-            </Link>
-          </section>
-        </article>
-      </main>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 }
 
+export default function JsonValidatorClient() {
+  return (
+    <ToolPageShell
+      breadcrumbItems={BREADCRUMB}
+      title="JSON Validator"
+      subtitle="Validate JSON syntax instantly — detailed error messages, 100% in browser"
+      toolName="json_validator"
+      icon="✅"
+      features={['Syntax validation', 'Error location', 'No signup', 'Free forever']}
+      tool={<JsonValidatorTool />}
+    />
+  );
+}

@@ -1,4 +1,8 @@
 import type { Metadata } from 'next';
+import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
+import ToolSEOContent, {
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+} from '@/components/tools/ToolSEOContent';
 import JsonComparatorClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/json-comparator';
@@ -106,6 +110,89 @@ export default function JsonComparatorPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <JsonComparatorClient />
+
+      <ToolSEOContent>
+        {/* What */}
+        <SEOSection id="what" heading="What Is a JSON Comparator?">
+          <SEOProse>
+            A <strong>JSON Comparator</strong> is a tool that finds the differences between two JSON documents and
+            presents them in a readable, colour-coded view. Unlike a plain text diff, a semantic JSON diff
+            understands the structure of JSON: it compares keys and values at every level of nesting rather
+            than comparing raw character sequences line by line.
+          </SEOProse>
+          <SEOProse>
+            The key advantage over raw text diff is <strong>noise reduction</strong>. API responses often
+            contain auto-generated values — UUIDs, ISO timestamps, JWT tokens, hash digests — that change on
+            every request without reflecting any logic change. Raw diff flags all of these as differences.
+            Semantic diff normalizes them to placeholders first, so only real structural and value changes
+            surface in the result.
+          </SEOProse>
+        </SEOSection>
+
+        {/* How it works */}
+        <SEOSection id="how" eyebrow="How it works" heading="Compare JSON in Seconds">
+          <HowItWorks steps={[
+            { n: '01', title: 'Paste your JSON', desc: 'Drop JSON A into the left panel and JSON B into the right — from API responses, config files, or test fixtures.' },
+            { n: '02', title: 'Run comparison', desc: 'Click Compare. The tool parses both documents and computes a deep structural diff.' },
+            { n: '03', title: 'See the diff', desc: 'Added keys appear in green, removed in red, modified values in yellow. Array items and nested objects are handled automatically.' },
+            { n: '04', title: 'Ignore noise', desc: 'Toggle UUID, timestamp, JWT, hash, and prefixed-ID normalization to suppress dynamic fields and focus on real changes.' },
+          ]} />
+        </SEOSection>
+
+        {/* Use cases */}
+        <SEOSection id="uses" eyebrow="Use cases" heading="When Developers Compare JSON">
+          <UseCases cases={[
+            { icon: '🔀', title: 'API Response Diff', desc: 'Compare dev vs production responses to catch environment-specific regressions before they reach users.' },
+            { icon: '⚙️', title: 'Config Change Review', desc: 'Diff infrastructure or app config snapshots to audit exactly what changed between deployments.' },
+            { icon: '🧪', title: 'Test Expected vs Actual', desc: 'Put expected JSON on one side and actual test output on the other. Normalize dynamic fields to eliminate false failures.' },
+            { icon: '🗄️', title: 'DB Migration Validation', desc: 'Compare records exported before and after a migration to confirm data integrity.' },
+            { icon: '🔍', title: 'PR Review', desc: 'Paste API contract snapshots from a pull request to verify backward compatibility and catch breaking changes.' },
+            { icon: '📡', title: 'GraphQL Response Testing', desc: 'Compare GraphQL responses across schema versions to identify field additions, removals, or type changes.' },
+          ]} />
+        </SEOSection>
+
+        {/* FAQ */}
+        <SEOSection id="faq" eyebrow="FAQ" heading="Frequently Asked Questions">
+          <FAQ items={[
+            {
+              q: 'How do I compare two JSON objects online?',
+              a: 'Paste your first JSON into the left panel and your second JSON into the right panel, then click Compare. Added fields show in green, removed in red, and modified values in yellow — with full nested object and array support.',
+            },
+            {
+              q: 'What is the difference between semantic JSON diff and raw text diff?',
+              a: 'Raw diff flags every character change including auto-generated values like UUIDs, timestamps, and JWTs that change between responses but represent no logic change. Semantic diff normalizes these dynamic fields first so only meaningful structure and value differences appear.',
+            },
+            {
+              q: 'How do I compare JSON and ignore timestamps and UUIDs?',
+              a: <>Enable the normalization toggles — UUID, ISO date, Epoch, JWT, Hash, and Prefixed ID — before clicking Compare. Dynamic fields are replaced with a single placeholder token so they don&apos;t register as differences.</>,
+            },
+            {
+              q: 'How do I detect breaking API changes?',
+              a: 'Paste the old API response in JSON A and the new response in JSON B. Enable semantic normalization to filter dynamic noise. Any remaining differences represent real structural or logic changes — candidates for breaking changes to document or fix.',
+            },
+            {
+              q: 'Is it safe to paste sensitive API payloads?',
+              a: 'Yes. This tool runs 100% in your browser. No JSON data is ever sent to a server, logged, or stored. Safe for production responses, credentials in config files, and any confidential data.',
+            },
+            {
+              q: 'Does it handle arrays and deeply nested objects?',
+              a: <>Yes. The comparator recursively traverses every level of nesting. For arrays it supports both ordered comparison and unordered set comparison — useful when array item order is not significant.</>,
+            },
+          ]} />
+        </SEOSection>
+
+        {/* Related tools */}
+        <SEOSection id="related" eyebrow="Related tools" heading="Tools You Might Also Need">
+          <RelatedTools tools={[
+            { href: '/json-beautifier', label: 'JSON Beautifier', desc: 'Format and pretty-print JSON before comparing', icon: '✨' },
+            { href: '/jwt-decoder', label: 'JWT Decoder', desc: 'Inspect JWT payloads found in API responses', icon: '🔑' },
+            { href: '/token-comparator', label: 'Token Comparator', desc: 'Character-level diff for tokens and short strings', icon: '🔍' },
+            { href: '/uuid-generator', label: 'UUID Generator', desc: 'Generate UUIDs to use as test fixture IDs', icon: '🆔' },
+          ]} />
+        </SEOSection>
+      </ToolSEOContent>
+
+      <ToolPageFooterBand toolName="json_comparator" />
     </>
   );
 }

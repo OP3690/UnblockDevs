@@ -51,6 +51,18 @@ module.exports = {
           '0%, 100%': { opacity: '0.72' },
           '50%': { opacity: '1' },
         },
+        'progress': {
+          '0%': { width: '0%' },
+          '100%': { width: '100%' },
+        },
+        'float-y': {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-8px)' },
+        },
+        'glow-pulse': {
+          '0%, 100%': { opacity: '0.4' },
+          '50%': { opacity: '0.8' },
+        },
       },
       animation: {
         'hero-code-before': 'hero-code-before 14s ease-in-out infinite',
@@ -62,6 +74,9 @@ module.exports = {
         'hub-shield-pop': 'hub-shield-pop 0.55s ease-out forwards',
         'hub-all-tools-chevron': 'hub-all-tools-chevron 1.4s ease-in-out infinite',
         'hub-all-tools-hint': 'hub-all-tools-hint 2.2s ease-in-out infinite',
+        'progress': 'progress 5s linear forwards',
+        'float-y': 'float-y 4s ease-in-out infinite',
+        'glow-pulse': 'glow-pulse 2.5s ease-in-out infinite',
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],

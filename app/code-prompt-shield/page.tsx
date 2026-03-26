@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import TrackedCtaLink from '@/components/TrackedCtaLink';
+import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
+import ToolSEOContent, {
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+} from '@/components/tools/ToolSEOContent';
 import CodePromptShieldClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/code-prompt-shield';
@@ -144,65 +146,117 @@ export default function CodePromptShieldPage() {
       <div id="tool">
         <CodePromptShieldClient />
       </div>
-      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12" aria-labelledby="code-shield-heading">
-        <h2 id="code-shield-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
-          Mask Code Before Sending to ChatGPT or Copilot — 100% in Your Browser
-        </h2>
-        <p className="text-gray-700 text-base leading-relaxed mb-3">
-          Use Code Prompt Shield to mask variables, function names, API keys, and PII in your source code before pasting into ChatGPT, Claude, or GitHub Copilot. Your real identifiers become generic tokens; get AI help with logic, then restore your original code with one click. No data leaves your device.
-        </p>
-        <p className="text-gray-600 text-sm leading-relaxed mb-2">
-          How it works: Paste code, choose what to mask (identifiers, secrets, PII), copy the masked version. Send that to the AI. After you get a response, paste it back and restore with your mapping. No signup, no server — everything runs in your browser.
-        </p>
-        <p className="text-gray-600 text-sm italic mb-6">
-          Used by healthcare and enterprise developers building HIPAA-compliant applications.
-        </p>
-        <TrackedCtaLink href="#tool" toolName="code_prompt_shield" className="inline-block text-sm font-semibold text-violet-600 hover:text-violet-700 mb-10">
-          Use the tool →
-        </TrackedCtaLink>
 
-        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-2">Is it safe to paste code into ChatGPT?</h2>
-        <p className="text-gray-700 text-base leading-relaxed mb-4">
-          Pasting code into ChatGPT sends it to OpenAI&apos;s servers; your variable names, logic, and any secrets in the code are visible and may be retained. Use Code Prompt Shield to mask identifiers and secrets before sending so only generic tokens are exposed.
-        </p>
+      <ToolSEOContent>
+        {/* What */}
+        <SEOSection id="what" heading="What Is Code Prompt Shield?">
+          <SEOProse>
+            <strong>Code Prompt Shield</strong> masks sensitive values in your source code before you
+            paste it into an AI tool. Every time a developer shares code with ChatGPT, Claude, or
+            GitHub Copilot, secrets leak: API keys hardcoded in environment setup, JWT tokens in test
+            fixtures, database URLs in config files, OAuth credentials left in commented code. Even
+            if you think you removed them, pattern matching can pick up values you missed.
+          </SEOProse>
+          <SEOProse>
+            Code Prompt Shield automatically detects and replaces secrets, variable names, function
+            names, and PII with generic placeholders — <C>SECRET_ABCD</C>, <C>VAR_EFGH</C> — before
+            anything leaves your browser. You get useful AI help with logic and structure; the AI
+            never sees your real credentials or proprietary identifiers. After the AI responds, paste
+            the output back and restore everything in one click.
+          </SEOProse>
+        </SEOSection>
 
-        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-2">Can ChatGPT see my API keys?</h2>
-        <p className="text-gray-700 text-base leading-relaxed mb-4">
-          Yes. Any code you paste that contains API keys, tokens, or connection strings sends those values to OpenAI. Mask your code with Code Prompt Shield first — secrets are replaced with placeholders, and you restore the AI&apos;s response with real values after.
-        </p>
+        {/* How it works */}
+        <SEOSection id="how" eyebrow="How it works" heading="Shield Code in Seconds">
+          <HowItWorks steps={[
+            { n: '01', title: 'Paste your code', desc: 'Paste any source code — JavaScript, Python, SQL, TypeScript, Go, or other supported languages. Select the language for accurate identifier detection.' },
+            { n: '02', title: 'Auto-detect secrets', desc: 'The tool scans for API keys, JWT tokens, database URLs, OAuth tokens, private keys, IP addresses, emails, and phone numbers — no configuration needed.' },
+            { n: '03', title: 'Mask with placeholders', desc: 'Click Mask. Secrets become SECRET_XXXX, variables become VAR_XXXX, functions become VAR_XXXX. The mapping is deterministic and stored locally.' },
+            { n: '04', title: 'Copy safe version & restore', desc: 'Copy the masked code and send it to AI. Paste the AI response into the Restore section and apply the mapping to get your real identifiers back.' },
+          ]} />
+        </SEOSection>
 
-        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-2">Does ChatGPT store the code I paste?</h2>
-        <p className="text-gray-700 text-base leading-relaxed mb-4">
-          OpenAI may retain data you submit, including pasted code, per their usage policies. To avoid exposing proprietary logic or identifiers, mask your code with Code Prompt Shield before pasting — only generic tokens are sent.
-        </p>
+        {/* What it detects */}
+        <SEOSection id="detects" heading="What Code Prompt Shield Detects">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[480px] border-collapse text-[13.5px]">
+              <thead>
+                <tr className="border-b border-zinc-200 text-left">
+                  <th className="pb-3 pr-6 font-semibold text-zinc-700">Secret type</th>
+                  <th className="pb-3 font-semibold text-zinc-700">Examples detected</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-zinc-100">
+                {[
+                  ['API keys', 'STRIPE_SECRET, OPENAI_API_KEY, AWS access keys'],
+                  ['JWT tokens', 'eyJhbGciOi… bearer tokens in headers'],
+                  ['Passwords', 'password=, passwd=, pwd= assignments'],
+                  ['Database URLs', 'postgres://, mysql://, mongodb+srv:// connection strings'],
+                  ['Private keys', '-----BEGIN RSA PRIVATE KEY-----'],
+                  ['OAuth tokens', 'client_secret=, access_token=, refresh_token='],
+                  ['Webhook secrets', 'webhook_secret, HMAC signing keys'],
+                  ['IP addresses', 'IPv4 literals in string values'],
+                ].map(([type, example]) => (
+                  <tr key={type}>
+                    <td className="py-3 pr-6 font-semibold text-zinc-900">{type}</td>
+                    <td className="py-3 text-zinc-500">{example}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </SEOSection>
 
-        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-2">How do I hide secrets when using ChatGPT for coding?</h2>
-        <p className="text-gray-700 text-base leading-relaxed mb-4">
-          Paste your code into Code Prompt Shield above. Enable &quot;Secrets&quot; (and optionally &quot;Identifiers&quot; and &quot;PII&quot;). Copy the masked output and send that to ChatGPT. After the AI responds, paste its code into the Restore section and apply your mapping to get back real names and values.
-        </p>
+        {/* Use cases */}
+        <SEOSection id="uses" eyebrow="Use cases" heading="When Developers Use Code Shield">
+          <UseCases cases={[
+            { icon: '🔍', title: 'AI Code Review', desc: 'Share code with AI for review without leaking secrets, proprietary function names, or internal variable conventions.' },
+            { icon: '🐛', title: 'Bug Reports', desc: 'Paste failing code into AI for debugging. Secrets and identifiers are masked so you can share context safely.' },
+            { icon: '💬', title: 'Stack Overflow Posts', desc: 'Prepare code to post publicly. Mask credentials and PII before copying so no sensitive values appear in public forums.' },
+            { icon: '📄', title: 'Documentation', desc: 'Generate code docs with AI help. Mask real identifiers in examples before sending so documentation examples use safe placeholders.' },
+            { icon: '👥', title: 'Pair Programming', desc: 'Use AI as a pair programmer on proprietary code. Mask variables and function names to protect your architecture while getting logic help.' },
+            { icon: '🌐', title: 'Open Source Contributions', desc: 'Extract logic from private codebases for open source. Mask private identifiers before sharing snippets externally.' },
+          ]} />
+        </SEOSection>
 
-        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-2">Is GitHub Copilot safe for proprietary code?</h2>
-        <p className="text-gray-700 text-base leading-relaxed mb-4">
-          Copilot processes code in your editor; their policies describe how they use it. When you paste code into ChatGPT or other AI tools, use Code Prompt Shield to mask identifiers and secrets so you don&apos;t expose proprietary structure or credentials.
-        </p>
+        {/* FAQ */}
+        <SEOSection id="faq" eyebrow="FAQ" heading="FAQ">
+          <FAQ items={[
+            {
+              q: 'Is the masking reversible?',
+              a: 'Yes. Masking is deterministic — the same original token always produces the same placeholder. The mapping is shown in-page and can be downloaded as a JSON or .maskmap file. Paste the AI\'s response and click Restore to get your real identifiers back.',
+            },
+            {
+              q: 'What patterns are detected for secrets?',
+              a: 'The tool detects API key assignments (api_key=, secret=, token=, password=), JWT token format (eyJ…), AWS access key prefixes (AKIA…), database connection strings (postgres://, mysql://, mongodb://), RSA/EC private key headers, and common OAuth patterns. Emails, phone numbers, and IP addresses are flagged as PII.',
+            },
+            {
+              q: 'What about false positives — will it mask code I need visible?',
+              a: 'Secret detection targets known patterns, so most code logic is unaffected when only "Secrets" is enabled. Enable "Identifiers" to also mask variable and function names — that is a broader mask, useful when you want to hide your entire naming convention from AI. You can toggle each category independently.',
+            },
+            {
+              q: 'Can my team share mappings?',
+              a: 'Yes. Download the mapping as a .json or .maskmap file and share it with teammates. Anyone with the mapping file can restore AI-generated code to your real identifier names — enabling workflows where one person masks, AI assists, and another restores.',
+            },
+            {
+              q: 'How do I compare original and masked code?',
+              a: 'After masking, use the Original / Masked tab in the output panel to toggle between the two views. This lets you confirm which identifiers were replaced before you send the masked version to AI.',
+            },
+          ]} />
+        </SEOSection>
 
-        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-2">What languages does Code Prompt Shield support?</h2>
-        <p className="text-gray-700 text-base leading-relaxed mb-4">
-          JavaScript, TypeScript, Python, Java, Go, SQL, JSON, C#, PHP, and Rust. Select your language in the tool; masking rules and identifier detection adapt automatically.
-        </p>
+        {/* Related tools */}
+        <SEOSection id="related" eyebrow="Related tools" heading="Tools You Might Also Need">
+          <RelatedTools tools={[
+            { href: '/json-prompt-shield', label: 'JSON Prompt Shield', desc: 'Mask JSON keys and string values before pasting into ChatGPT', icon: '🔒' },
+            { href: '/ai-schema-masker', label: 'AI Schema Masker', desc: 'Mask SQL table and column names before sending to AI', icon: '🗄️' },
+            { href: '/hash-generator', label: 'Hash Generator', desc: 'Generate SHA-256, MD5, and other hashes for data integrity', icon: '#️⃣' },
+            { href: '/base64-encoder', label: 'Base64 Encoder', desc: 'Encode and decode Base64 strings in your browser', icon: '🔤' },
+          ]} />
+        </SEOSection>
+      </ToolSEOContent>
 
-        <p className="text-gray-600 text-sm mt-8">
-          For masking <strong>database schemas</strong> (table/column names) before sending to AI, use{' '}
-          <Link href="/ai-schema-masker" className="text-violet-600 hover:text-violet-700 font-medium">
-            AI Schema Masker
-          </Link>
-          . For masking <strong>JSON payloads</strong> (keys and string values), use{' '}
-          <Link href="/json-prompt-shield" className="text-violet-600 hover:text-violet-700 font-medium">
-            JSON Prompt Shield
-          </Link>
-          —same privacy idea, for schemas and API data.
-        </p>
-      </article>
+      <ToolPageFooterBand toolName="code_prompt_shield" />
     </>
   );
 }

@@ -1,489 +1,199 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { ArrowLeft, BookOpen, Zap, Layers, CheckCircle, AlertCircle, Target, TrendingUp, BarChart3, Network } from 'lucide-react';
-import BlogSocialShare from '@/components/BlogSocialShare';
-import NewsletterSignup from '@/components/NewsletterSignup';
-import FAQSchema from '@/components/FAQSchema';
 import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
+import {
+  AlertBox, CompareTable, CodeBlock, FAQAccordion, KeyPointsGrid,
+  StatGrid, SectionHeader, QuickFact,
+} from '@/components/blog/BlogVisuals';
 
-export default function BlogPostClient() {
+export default function BreadthFirstSearchExplainedWithEasyTreeExamplesClient() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
-      <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/blog" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Developer's Study Materials
-          </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Breadth-First Search Explained with Easy Tree Examples</h1>
-          <p className="text-sm text-gray-500 mt-1">Learn BFS algorithm with simple examples, step-by-step visualizations, and code</p>
-        </div>
-      </header>
+    <BlogLayoutWithSidebarAds>
+      <h1>Breadth-First Search (BFS) Explained With Easy Tree Examples</h1>
+      <p className="lead">
+        BFS explores all neighbors at the current depth before going deeper — like ripples spreading
+        outward from a stone dropped in water. It's the algorithm behind shortest paths in unweighted
+        graphs, level-order tree traversal, and "degrees of separation" problems.
+      </p>
 
-      {/* Floating Social Share Bar */}
-      <BlogSocialShare
-        title="Breadth-First Search Explained with Easy Tree Examples"
-        description="Learn Breadth-First Search (BFS) algorithm with simple tree examples, step-by-step visualizations, and code examples."
-        variant="floating"
+      <StatGrid stats={[
+        { value: 'O(V+E)', label: 'time — visits all vertices and edges', color: 'blue' },
+        { value: 'Queue', label: 'BFS uses a queue (FIFO)', color: 'green' },
+        { value: 'Shortest', label: 'path in unweighted graphs', color: 'purple' },
+        { value: 'Level-order', label: 'natural tree traversal', color: 'amber' },
+      ]} />
+
+      <SectionHeader number={1} title="BFS vs DFS — The Key Difference" />
+      <QuickFact>
+        BFS = queue (FIFO). DFS = stack (LIFO). BFS explores level by level — all nodes at depth 1, then depth 2, etc.
+        DFS goes as deep as possible first. BFS guarantees the shortest path in unweighted graphs; DFS does not.
+      </QuickFact>
+
+      <CompareTable
+        leftLabel="BFS"
+        rightLabel="DFS"
+        rows={[
+          { label: 'Data structure', left: 'Queue (FIFO)', right: 'Stack (LIFO) / call stack' },
+          { label: 'Traversal order', left: 'Level by level', right: 'Branch by branch' },
+          { label: 'Shortest path', left: '✅ Yes (unweighted)', right: '❌ Not guaranteed' },
+          { label: 'Memory (tree)', left: 'O(width) — worst: last level', right: 'O(depth) — worst: height' },
+          { label: 'Use cases', left: 'Shortest path, level-order, nearest neighbor', right: 'Topological sort, cycle detection, backtracking' },
+        ]}
       />
 
-      {/* Main Content */}
-      <BlogLayoutWithSidebarAds>
-        <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          {/* Introduction */}
-          <section className="mb-12">
-            <p className="text-lg text-gray-700 leading-relaxed mb-4">
-              Breadth-First Search (BFS) is a fundamental graph traversal algorithm that explores all nodes at the current depth level 
-              before moving to nodes at the next depth level. It's like exploring a building floor by floor, visiting every room on 
-              one floor before going to the next.
-            </p>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              In this comprehensive guide, you'll learn how BFS works with simple tree examples, step-by-step visualizations, 
-              code implementations, and real-world use cases. We'll make it easy to understand without complex math or jargon.
-            </p>
-            <div className="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg mt-6">
-              <p className="font-semibold text-blue-900 mb-2">💡 Quick Tip</p>
-              <p className="text-blue-800">
-                Use our free <Link href="/json-validator" className="font-semibold underline">JSON Validator</Link> to validate tree structures 
-                and our <Link href="/json-formatter" className="font-semibold underline">JSON Formatter</Link> to visualize hierarchical data.
-              </p>
-            </div>
-          </section>
+      <SectionHeader number={2} title="BFS on a Tree — Level-Order Traversal" />
 
-          {/* Definition */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <BookOpen className="w-6 h-6 text-blue-600" />
-              Definition: What Is Breadth-First Search?
-            </h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              <strong>Breadth-First Search (BFS)</strong> is a graph traversal algorithm that visits all nodes at the current level (depth) 
-              before moving to nodes at the next level. It uses a queue data structure to keep track of nodes to visit next.
-            </p>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              Key characteristics of BFS:
-            </p>
-            <div className="grid md:grid-cols-2 gap-4 mb-4">
-              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <Network className="w-6 h-6 text-blue-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 mb-1 text-sm">Level-by-Level</h3>
-                <p className="text-xs text-gray-700">Visits nodes level by level, not depth by depth</p>
-              </div>
-              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                <Layers className="w-6 h-6 text-green-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 mb-1 text-sm">Uses Queue</h3>
-                <p className="text-xs text-gray-700">FIFO (First In First Out) structure</p>
-              </div>
-              <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-                <Target className="w-6 h-6 text-purple-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 mb-1 text-sm">Finds Shortest Path</h3>
-                <p className="text-xs text-gray-700">In unweighted graphs, finds shortest path</p>
-              </div>
-              <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
-                <Zap className="w-6 h-6 text-orange-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 mb-1 text-sm">Complete Search</h3>
-                <p className="text-xs text-gray-700">Visits all reachable nodes</p>
-              </div>
-            </div>
-            <div className="bg-gradient-to-r from-blue-50 to-green-50 p-5 rounded-lg border-2 border-blue-200">
-              <h3 className="font-semibold text-gray-900 mb-2">Real-World Analogy</h3>
-              <p className="text-gray-700 text-sm">
-                Imagine you're searching for a friend in a building. BFS is like checking every room on the 1st floor first, 
-                then every room on the 2nd floor, then the 3rd floor, and so on. You explore level by level, not room by room 
-                going deep into one area first.
-              </p>
-            </div>
-          </section>
+      <CodeBlock language="javascript" filename="BFS Level-Order Traversal">
+{`function levelOrder(root) {
+  if (!root) return [];
+  const result = [];
+  const queue = [root]; // Queue — FIFO
 
-          {/* What */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">What Does BFS Do?</h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              BFS systematically explores a graph or tree by:
-            </p>
-            <div className="space-y-4">
-              <div className="p-5 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">1. Starting at the Root</h3>
-                    <p className="text-gray-700 text-sm">Begins at a starting node (usually the root in trees)</p>
-                  </div>
-                </div>
-              </div>
-              <div className="p-5 bg-green-50 rounded-lg border-l-4 border-green-500">
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">2. Visiting Level by Level</h3>
-                    <p className="text-gray-700 text-sm">Visits all nodes at distance 1, then distance 2, then distance 3, etc.</p>
-                  </div>
-                </div>
-              </div>
-              <div className="p-5 bg-purple-50 rounded-lg border-l-4 border-purple-500">
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-purple-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">3. Using a Queue</h3>
-                    <p className="text-gray-700 text-sm">Maintains a queue of nodes to visit, processing them in order</p>
-                  </div>
-                </div>
-              </div>
-              <div className="p-5 bg-orange-50 rounded-lg border-l-4 border-orange-500">
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-orange-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">4. Marking Visited Nodes</h3>
-                    <p className="text-gray-700 text-sm">Keeps track of visited nodes to avoid revisiting them</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+  while (queue.length > 0) {
+    const levelSize = queue.length; // nodes at current level
+    const level = [];
 
-          {/* When */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">When to Use BFS?</h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              Use BFS in these scenarios:
-            </p>
-            <div className="space-y-3">
-              <div className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-gray-700"><strong>Finding shortest path</strong> - In unweighted graphs, BFS finds the shortest path</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-gray-700"><strong>Level-order traversal</strong> - When you need to process nodes level by level</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-gray-700"><strong>Social network analysis</strong> - Finding connections within N degrees of separation</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-gray-700"><strong>Web crawling</strong> - Exploring websites level by level</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-gray-700"><strong>Puzzle solving</strong> - Finding minimum moves to solve puzzles</p>
-                </div>
-              </div>
-            </div>
-          </section>
+    for (let i = 0; i < levelSize; i++) {
+      const node = queue.shift(); // dequeue
+      level.push(node.val);
 
-          {/* How - Step by Step */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">How BFS Works: Step-by-Step Example</h2>
-            
-            <div className="mb-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Example Tree</h3>
-              <div className="bg-gray-50 p-6 rounded-lg border border-gray-200 mb-4">
-                <div className="text-center font-mono text-sm">
-                  <div className="mb-2">        1</div>
-                  <div className="mb-2">      /   \</div>
-                  <div className="mb-2">     2     3</div>
-                  <div className="mb-2">   / \   / \</div>
-                  <div className="mb-2">  4   5 6   7</div>
-                </div>
-              </div>
-            </div>
+      if (node.left)  queue.push(node.left);  // enqueue children
+      if (node.right) queue.push(node.right);
+    }
 
-            <div className="mb-8">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">BFS Traversal Steps</h3>
-              <div className="space-y-4">
-                <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">1</div>
-                    <h4 className="font-semibold text-gray-900">Start: Queue = [1], Visited = {}</h4>
-                  </div>
-                  <p className="text-sm text-gray-700 ml-11">Visit node 1, add its children (2, 3) to queue</p>
-                  <div className="mt-2 ml-11 text-xs text-gray-600">Queue: [2, 3] | Visited: [1]</div>
-                </div>
+    result.push(level);
+  }
 
-                <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">2</div>
-                    <h4 className="font-semibold text-gray-900">Process: Queue = [2, 3]</h4>
-                  </div>
-                  <p className="text-sm text-gray-700 ml-11">Visit node 2, add its children (4, 5) to queue</p>
-                  <div className="mt-2 ml-11 text-xs text-gray-600">Queue: [3, 4, 5] | Visited: [1, 2]</div>
-                </div>
+  return result;
+}
 
-                <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="bg-purple-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">3</div>
-                    <h4 className="font-semibold text-gray-900">Process: Queue = [3, 4, 5]</h4>
-                  </div>
-                  <p className="text-sm text-gray-700 ml-11">Visit node 3, add its children (6, 7) to queue</p>
-                  <div className="mt-2 ml-11 text-xs text-gray-600">Queue: [4, 5, 6, 7] | Visited: [1, 2, 3]</div>
-                </div>
+//       3
+//      / \\
+//     9   20
+//        / \\
+//       15   7
 
-                <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="bg-orange-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">4-7</div>
-                    <h4 className="font-semibold text-gray-900">Process: Queue = [4, 5, 6, 7]</h4>
-                  </div>
-                  <p className="text-sm text-gray-700 ml-11">Visit nodes 4, 5, 6, 7 (no children to add)</p>
-                  <div className="mt-2 ml-11 text-xs text-gray-600">Queue: [] | Visited: [1, 2, 3, 4, 5, 6, 7]</div>
-                </div>
+levelOrder(root); // → [[3], [9,20], [15,7]]`}
+      </CodeBlock>
 
-                <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="bg-gray-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">✓</div>
-                    <h4 className="font-semibold text-gray-900">Result: BFS Order = [1, 2, 3, 4, 5, 6, 7]</h4>
-                  </div>
-                  <p className="text-sm text-gray-700 ml-11">All nodes visited level by level!</p>
-                </div>
-              </div>
-            </div>
+      <SectionHeader number={3} title="BFS on a Graph — Shortest Path" />
 
-            <div className="mb-8">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">BFS Code Implementation</h3>
-              <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-4">
-                <div className="text-gray-400">// JavaScript BFS implementation</div>
-                <div className="text-blue-400">function</div> <div className="text-yellow-400">bfs</div><div className="text-white">(root) {'{'}</div>
-                <div className="text-blue-400 ml-4">if</div> <div className="text-white">(!root) </div><div className="text-blue-400">return</div><div className="text-white"> [];</div>
-                <div className="text-white ml-4"></div>
-                <div className="text-blue-400 ml-4">const</div> <div className="text-white"> queue = [root];</div>
-                <div className="text-blue-400 ml-4">const</div> <div className="text-white"> result = [];</div>
-                <div className="text-blue-400 ml-4">const</div> <div className="text-white"> visited = </div><div className="text-blue-400">new</div> <div className="text-yellow-400">Set</div><div className="text-white">();</div>
-                <div className="text-white ml-4"></div>
-                <div className="text-blue-400 ml-4">while</div> <div className="text-white">(queue.length {'>'} </div><div className="text-yellow-400">0</div><div className="text-white">) {'{'}</div>
-                <div className="text-blue-400 ml-8">const</div> <div className="text-white"> node = queue.shift(); </div><div className="text-gray-400">// Remove from front</div>
-                <div className="text-white ml-8">result.push(node.val);</div>
-                <div className="text-white ml-8">visited.add(node);</div>
-                <div className="text-white ml-8"></div>
-                <div className="text-blue-400 ml-8">for</div> <div className="text-white">(</div><div className="text-blue-400">const</div> <div className="text-white"> child of node.children) {'{'}</div>
-                <div className="text-blue-400 ml-12">if</div> <div className="text-white">(!visited.has(child)) {'{'}</div>
-                <div className="text-white ml-16">queue.push(child); </div><div className="text-gray-400">// Add to end</div>
-                <div className="text-white ml-12">{'}'}</div>
-                <div className="text-white ml-8">{'}'}</div>
-                <div className="text-white ml-4">{'}'}</div>
-                <div className="text-blue-400 ml-4">return</div> <div className="text-white"> result;</div>
-                <div className="text-white">{'}'}</div>
-              </div>
-            </div>
-          </section>
+      <CodeBlock language="javascript" filename="BFS Shortest Path — Unweighted Graph">
+{`function shortestPath(graph, start, end) {
+  const visited = new Set([start]);
+  const queue = [[start, [start]]]; // [node, path]
 
-          {/* Visual Flow Diagram */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">BFS Algorithm Flow</h2>
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border-2 border-blue-200">
-              <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <div className="bg-blue-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold flex-shrink-0">Start</div>
-                  <div className="flex-1 bg-white p-4 rounded-lg shadow">
-                    <h4 className="font-semibold text-gray-900">Initialize Queue with Root</h4>
-                    <p className="text-sm text-gray-600">Queue = [root], Visited = {}</p>
-                  </div>
-                </div>
-                <div className="flex justify-center">
-                  <div className="w-0.5 h-8 bg-blue-300"></div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="bg-blue-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold flex-shrink-0">?</div>
-                  <div className="flex-1 bg-white p-4 rounded-lg shadow">
-                    <h4 className="font-semibold text-gray-900">Is Queue Empty?</h4>
-                  </div>
-                </div>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="bg-white p-4 rounded-lg shadow">
-                    <div className="flex items-center gap-2 mb-2">
-                      <CheckCircle className="w-5 h-5 text-green-600" />
-                      <span className="text-sm font-semibold text-gray-900">Yes → Done</span>
-                    </div>
-                    <p className="text-xs text-gray-600">Return result</p>
-                  </div>
-                  <div className="bg-white p-4 rounded-lg shadow">
-                    <div className="flex items-center gap-2 mb-2">
-                      <AlertCircle className="w-5 h-5 text-blue-600" />
-                      <span className="text-sm font-semibold text-gray-900">No → Continue</span>
-                    </div>
-                    <p className="text-xs text-gray-600">Process next node</p>
-                  </div>
-                </div>
-                <div className="flex justify-center">
-                  <div className="w-0.5 h-8 bg-blue-300"></div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="bg-blue-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold flex-shrink-0">1</div>
-                  <div className="flex-1 bg-white p-4 rounded-lg shadow">
-                    <h4 className="font-semibold text-gray-900">Dequeue Node</h4>
-                    <p className="text-sm text-gray-600">Remove from front of queue</p>
-                  </div>
-                </div>
-                <div className="flex justify-center">
-                  <div className="w-0.5 h-8 bg-blue-300"></div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="bg-blue-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold flex-shrink-0">2</div>
-                  <div className="flex-1 bg-white p-4 rounded-lg shadow">
-                    <h4 className="font-semibold text-gray-900">Mark as Visited & Process</h4>
-                    <p className="text-sm text-gray-600">Add to result, mark visited</p>
-                  </div>
-                </div>
-                <div className="flex justify-center">
-                  <div className="w-0.5 h-8 bg-blue-300"></div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="bg-blue-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold flex-shrink-0">3</div>
-                  <div className="flex-1 bg-white p-4 rounded-lg shadow">
-                    <h4 className="font-semibold text-gray-900">Enqueue Children</h4>
-                    <p className="text-sm text-gray-600">Add unvisited children to end of queue</p>
-                  </div>
-                </div>
-                <div className="flex justify-center">
-                  <div className="w-0.5 h-8 bg-blue-300"></div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="bg-green-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold flex-shrink-0">Loop</div>
-                  <div className="flex-1 bg-white p-4 rounded-lg shadow">
-                    <h4 className="font-semibold text-gray-900">Repeat Until Queue Empty</h4>
-                    <p className="text-sm text-gray-600">Go back to check queue</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+  while (queue.length > 0) {
+    const [node, path] = queue.shift();
 
-          {/* Time Complexity Chart */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">BFS Time & Space Complexity</h2>
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 border-b">Metric</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 border-b">Complexity</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 border-b">Explanation</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  <tr>
-                    <td className="px-4 py-3 text-sm text-gray-900 font-medium">Time Complexity</td>
-                    <td className="px-4 py-3 text-sm text-gray-700 font-mono">O(V + E)</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">V = vertices (nodes), E = edges. Visit each node once, check each edge once</td>
-                  </tr>
-                  <tr className="bg-gray-50">
-                    <td className="px-4 py-3 text-sm text-gray-900 font-medium">Space Complexity</td>
-                    <td className="px-4 py-3 text-sm text-gray-700 font-mono">O(V)</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">Queue can hold at most all nodes at the widest level</td>
-                  </tr>
-                  <tr>
-                    <td className="px-4 py-3 text-sm text-gray-900 font-medium">For Tree (V nodes)</td>
-                    <td className="px-4 py-3 text-sm text-gray-700 font-mono">O(V)</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">In trees, E = V-1, so O(V + E) = O(V)</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
+    if (node === end) return path; // found shortest path!
 
-          {/* Why */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Why Use BFS?</h2>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="p-5 bg-blue-50 rounded-lg border border-blue-200">
-                <Target className="w-8 h-8 text-blue-600 mb-3" />
-                <h3 className="font-semibold text-gray-900 mb-2">Shortest Path</h3>
-                <p className="text-gray-700 text-sm">Finds shortest path in unweighted graphs (minimum number of edges)</p>
-              </div>
-              <div className="p-5 bg-green-50 rounded-lg border border-green-200">
-                <Layers className="w-8 h-8 text-green-600 mb-3" />
-                <h3 className="font-semibold text-gray-900 mb-2">Level Order</h3>
-                <p className="text-gray-700 text-sm">Natural for level-order traversal, perfect for tree printing</p>
-              </div>
-              <div className="p-5 bg-purple-50 rounded-lg border border-purple-200">
-                <Network className="w-8 h-8 text-purple-600 mb-3" />
-                <h3 className="font-semibold text-gray-900 mb-2">Complete Search</h3>
-                <p className="text-gray-700 text-sm">Visits all reachable nodes, guaranteed to find solution if exists</p>
-              </div>
-              <div className="p-5 bg-orange-50 rounded-lg border border-orange-200">
-                <Zap className="w-8 h-8 text-orange-600 mb-3" />
-                <h3 className="font-semibold text-gray-900 mb-2">Simple Implementation</h3>
-                <p className="text-gray-700 text-sm">Uses simple queue, easy to understand and implement</p>
-              </div>
-            </div>
-          </section>
+    for (const neighbor of graph[node] || []) {
+      if (!visited.has(neighbor)) {
+        visited.add(neighbor);
+        queue.push([neighbor, [...path, neighbor]]);
+      }
+    }
+  }
 
-          {/* Real-World Examples */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Real-World BFS Applications</h2>
-            <div className="space-y-4">
-              <div className="p-5 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-                <h3 className="font-semibold text-gray-900 mb-2">1. Shortest Path Finding</h3>
-                <p className="text-gray-700 text-sm mb-2">Finding minimum steps in unweighted graphs (maze solving, game AI)</p>
-                <p className="text-xs text-gray-600">Example: Finding shortest path in a maze, minimum moves in chess</p>
-              </div>
-              <div className="p-5 bg-green-50 rounded-lg border-l-4 border-green-500">
-                <h3 className="font-semibold text-gray-900 mb-2">2. Social Network Analysis</h3>
-                <p className="text-gray-700 text-sm mb-2">Finding connections within N degrees (LinkedIn connections, friend suggestions)</p>
-                <p className="text-xs text-gray-600">Example: "People you may know" feature, finding mutual connections</p>
-              </div>
-              <div className="p-5 bg-purple-50 rounded-lg border-l-4 border-purple-500">
-                <h3 className="font-semibold text-gray-900 mb-2">3. Web Crawling</h3>
-                <p className="text-gray-700 text-sm mb-2">Crawling websites level by level (search engine indexing)</p>
-                <p className="text-xs text-gray-600">Example: Googlebot crawling pages, exploring website structure</p>
-              </div>
-              <div className="p-5 bg-orange-50 rounded-lg border-l-4 border-orange-500">
-                <h3 className="font-semibold text-gray-900 mb-2">4. Level-Order Tree Printing</h3>
-                <p className="text-gray-700 text-sm mb-2">Printing tree nodes level by level (binary tree visualization)</p>
-                <p className="text-xs text-gray-600">Example: Displaying directory structure, printing organizational chart</p>
-              </div>
-            </div>
-          </section>
+  return null; // no path exists
+}
 
-          <FAQSchema
-            faqs={[
-              {
-                question: 'What is the difference between BFS and DFS?',
-                answer: 'BFS explores level by level (uses queue), while DFS explores depth first (uses stack/recursion). BFS finds shortest path in unweighted graphs, DFS uses less memory.',
-              },
-              {
-                question: 'Why does BFS use a queue?',
-                answer: 'Queue provides FIFO (First In First Out) behavior, ensuring nodes at the current level are processed before nodes at the next level. This gives level-by-level traversal.',
-              },
-              {
-                question: 'Can BFS find shortest path in weighted graphs?',
-                answer: 'No, BFS only finds shortest path in unweighted graphs (minimum number of edges). For weighted graphs, use Dijkstra\'s algorithm or A* search.',
-              },
-              {
-                question: 'What is the time complexity of BFS?',
-                answer: 'O(V + E) where V is number of vertices (nodes) and E is number of edges. For trees, this simplifies to O(V) since E = V-1.',
-              },
-              {
-                question: 'When should I use BFS instead of DFS?',
-                answer: 'Use BFS when you need shortest path, level-order traversal, or when solution is likely near the root. Use DFS when memory is limited or you need to explore deep paths.',
-              },
-            ]}
-          />
-        </article>
+const graph = {
+  A: ['B', 'C'],
+  B: ['A', 'D', 'E'],
+  C: ['A', 'F'],
+  D: ['B'],
+  E: ['B', 'F'],
+  F: ['C', 'E']
+};
 
-        {/* Social Share Section */}
-        <section className="mt-12">
-          <BlogSocialShare
-            title="Breadth-First Search Explained with Easy Tree Examples"
-            description="Learn Breadth-First Search (BFS) algorithm with simple tree examples, step-by-step visualizations, and code examples."
-            variant="full"
-          />
-        </section>
+shortestPath(graph, 'A', 'F'); // → ['A', 'C', 'F']`}
+      </CodeBlock>
 
-        <section className="mt-12">
-          <NewsletterSignup />
-        </section>
-      </BlogLayoutWithSidebarAds>
-    </div>
+      <SectionHeader number={4} title="BFS on a Grid — 0/1 Matrix" />
+
+      <CodeBlock language="javascript" filename="Shortest Distance from Each Cell to Nearest 0">
+{`function updateMatrix(mat) {
+  const m = mat.length, n = mat[0].length;
+  const dist = Array.from({length: m}, () => new Array(n).fill(Infinity));
+  const queue = [];
+
+  // Initialize: cells with 0 have distance 0
+  for (let r = 0; r < m; r++) {
+    for (let c = 0; c < n; c++) {
+      if (mat[r][c] === 0) {
+        dist[r][c] = 0;
+        queue.push([r, c]);
+      }
+    }
+  }
+
+  const dirs = [[1,0],[-1,0],[0,1],[0,-1]];
+
+  while (queue.length > 0) {
+    const [r, c] = queue.shift();
+    for (const [dr, dc] of dirs) {
+      const nr = r + dr, nc = c + dc;
+      if (nr >= 0 && nr < m && nc >= 0 && nc < n &&
+          dist[nr][nc] > dist[r][c] + 1) {
+        dist[nr][nc] = dist[r][c] + 1;
+        queue.push([nr, nc]);
+      }
+    }
+  }
+
+  return dist;
+}`}
+      </CodeBlock>
+
+      <SectionHeader number={5} title="Efficient Queue for BFS in JavaScript" />
+      <AlertBox type="tip" title="Array.shift() is O(n) — use a pointer instead">
+        JavaScript's array shift() moves all elements left — it's O(n). For large BFS problems, use a pointer to simulate dequeue in O(1):
+      </AlertBox>
+
+      <CodeBlock language="javascript" filename="O(1) Queue with Pointer">
+{`// Instead of queue.shift() (O(n)):
+const queue = [startNode];
+let head = 0;
+
+while (head < queue.length) {
+  const node = queue[head++]; // O(1) dequeue
+  // process node...
+  for (const neighbor of graph[node]) {
+    queue.push(neighbor);
+  }
+}`}
+      </CodeBlock>
+
+      <SectionHeader number={6} title="Classic BFS Problems" />
+      <KeyPointsGrid columns={2} items={[
+        { title: 'Level-order traversal', description: 'Process a binary tree level by level. Return [[level1], [level2], ...].' },
+        { title: 'Word ladder', description: 'Find shortest transformation from one word to another changing one letter at a time.' },
+        { title: 'Rotting oranges', description: 'Multi-source BFS from all rotten oranges simultaneously — find when all fresh rot.' },
+        { title: 'Number of islands', description: 'BFS from each unvisited "1" cell, mark all connected land. Count BFS starts.' },
+        { title: 'Clone graph', description: 'BFS + HashMap to track original→clone mapping while building the copy.' },
+        { title: 'Bipartite graph check', description: 'BFS with 2-coloring — can you color graph with 2 colors s.t. no adjacent same color?' },
+      ]} />
+
+      <FAQAccordion items={[
+        {
+          question: 'Why does BFS guarantee the shortest path but DFS doesn\'t?',
+          answer: 'BFS explores all nodes at distance d before any node at distance d+1. So the first time it reaches a target, it has used the minimum number of steps. DFS can reach a target via a long path before finding the short one.',
+        },
+        {
+          question: 'What is multi-source BFS?',
+          answer: 'Start BFS from multiple source nodes simultaneously. Add all sources to the queue initially. Used in "rotting oranges" (all rotten cells are sources), "walls and gates" (all gates are sources). Equivalent to adding a virtual super-source node connected to all real sources.',
+        },
+        {
+          question: 'Does BFS work for weighted graphs?',
+          answer: 'Standard BFS only gives shortest path in unweighted (or equal-weight) graphs. For weighted graphs use Dijkstra\'s (non-negative weights) or Bellman-Ford (negative weights allowed).',
+        },
+        {
+          question: 'When does BFS use more memory than DFS?',
+          answer: 'BFS stores an entire level at once — O(maximum width of the tree/graph). For a balanced binary tree, the last level has n/2 nodes. DFS only stores the current path — O(height). For wide shallow structures, DFS uses less memory; for deep narrow ones, BFS wins.',
+        },
+      ]} />
+    </BlogLayoutWithSidebarAds>
   );
 }

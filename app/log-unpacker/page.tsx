@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import TrackedCtaLink from '@/components/TrackedCtaLink';
+import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
+import ToolSEOContent, {
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+} from '@/components/tools/ToolSEOContent';
 import LogUnpackerClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/log-unpacker';
@@ -128,79 +130,71 @@ export default function LogUnpackerPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <div id="tool">
-        <LogUnpackerClient />
-      </div>
-      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="log-unpacker-heading">
-        <h1 id="log-unpacker-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
-          Log Unpacker — Unescape Stringified JSON, Decode JWTs, Convert Epoch Timestamps &amp; Sanitize Logs for AI
-        </h1>
-        <p className="text-gray-700 text-base leading-relaxed mb-3">
-          Recursively unescape nested JSON, decode JWTs embedded in logs, convert epoch timestamps to readable dates, and scrub file paths—all in your browser. No data is sent to our servers. Sanitize logs before pasting into ChatGPT or any AI.
-        </p>
-        <p className="text-gray-600 text-sm leading-relaxed mb-4">
-          How it works: Paste a log line or blob of escaped JSON. The tool recursively unescapes nested JSON, decodes JWTs, humanizes epochs, and optionally redacts paths. Copy the AI-safe output. No signup, no tracking.
-        </p>
-        <TrackedCtaLink href="#tool" toolName="log_unpacker" className="inline-block text-sm font-semibold text-amber-600 hover:text-amber-700">
-          Use the tool →
-        </TrackedCtaLink>
-      </article>
-      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12" aria-labelledby="log-unpacker-faq-heading">
-        <h2 id="log-unpacker-faq-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">
-          Log Unpacker — FAQs &amp; How-To
-        </h2>
+      <LogUnpackerClient />
 
-        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-2">What is stringified JSON in logs?</h2>
-        <p className="text-gray-700 text-base leading-relaxed mb-4">
-          Stringified JSON is JSON that has been turned into a string (e.g. escaped quotes and backslashes), often when logs or APIs nest one JSON payload inside another. You end up with <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">{`\"key\":\"value\"`}</code> instead of readable <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">key: value</code>. Log Unpacker recursively unescapes these strings so you get clean, readable JSON—and can safely paste the result into AI.
-        </p>
+      <ToolSEOContent>
+        <SEOSection id="what" heading="What Is Log Unpacker?">
+          <SEOProse>
+            <strong>Log Unpacker</strong> is a browser-based tool that decodes messy production log output into clean, readable data. It recursively unescapes nested stringified JSON (even multiple levels deep), automatically detects and decodes JWT tokens embedded in log lines, converts Unix epoch timestamps to human-readable dates, and scrubs Windows/Unix file paths to protect usernames. The result is AI-safe output you can paste directly into ChatGPT or any AI assistant for debugging help.
+          </SEOProse>
+        </SEOSection>
 
-        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-2">How to decode a JWT embedded in logs</h2>
-        <p className="text-gray-700 text-base leading-relaxed mb-4">
-          Paste your log line into Log Unpacker. It automatically detects JWT tokens (Bearer tokens, auth headers, or inline in the log), decodes the header and payload, and shows them in readable form. You can enable &quot;Mask PII in JWT&quot; to redact <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">sub</code>, <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">name</code>, and <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">email</code> so the output is safe to paste into ChatGPT.
-        </p>
+        <SEOSection id="how" eyebrow="How it works" heading="Unpack and Sanitize Logs in Seconds">
+          <HowItWorks steps={[
+            { n: '01', title: 'Paste your log', desc: 'Paste a log line, a blob of escaped JSON, or a full log file section containing stringified data.' },
+            { n: '02', title: 'Auto-detect & unpack', desc: 'The tool recursively unescapes nested JSON, decodes JWTs inline (header + payload), and converts epoch timestamps.' },
+            { n: '03', title: 'Sanitize for AI', desc: 'Enable path scrubbing and JWT PII masking to remove usernames and sensitive identifiers before sharing.' },
+            { n: '04', title: 'Copy AI-safe output', desc: 'Copy the sanitized, readable output and paste into ChatGPT or any AI to get debugging help safely.' },
+          ]} />
+        </SEOSection>
 
-        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-2">How to convert epoch timestamps in log files</h2>
-        <p className="text-gray-700 text-base leading-relaxed mb-4">
-          Log Unpacker detects both 10-digit (seconds) and 13-digit (milliseconds) epoch/unix timestamps in your logs and converts them to human-readable date strings automatically. No separate epoch converter tab needed—paste the log, get unpacked output with readable timestamps.
-        </p>
+        <SEOSection id="uses" eyebrow="Use cases" heading="When Developers Use Log Unpacker">
+          <UseCases cases={[
+            { icon: '📋', title: 'Unescape Stringified JSON', desc: 'Decode nested escaped JSON strings in log files — even three or four levels deep — into readable format.' },
+            { icon: '🔐', title: 'Decode JWT in Logs', desc: 'Automatically detect and decode JWT tokens embedded in log output to inspect claims without a separate tool.' },
+            { icon: '⏱️', title: 'Convert Epoch Timestamps', desc: 'Turn 10-digit and 13-digit Unix timestamps into human-readable dates without switching to a separate converter.' },
+            { icon: '🛡️', title: 'Sanitize for AI', desc: 'Scrub file paths and redact JWT PII fields before pasting production logs into ChatGPT.' },
+            { icon: '🐛', title: 'Debug Microservice Logs', desc: 'Quickly read nested JSON payloads and auth tokens in distributed system logs without writing parsing scripts.' },
+            { icon: '🔒', title: 'HIPAA/Privacy Compliance', desc: 'Remove usernames and PII from log exports before sharing with third-party tools or AI assistants.' },
+          ]} />
+        </SEOSection>
 
-        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-2">How to safely paste logs into ChatGPT</h2>
-        <p className="text-gray-700 text-base leading-relaxed mb-4">
-          Production logs often contain JWTs, file paths with usernames, and other sensitive identifiers. Use Log Unpacker first: paste your log, enable path scrubbing and optional JWT PII masking, then copy the &quot;AI-safe&quot; output. That version has paths and tokens sanitized—safe to paste into ChatGPT or any AI tool for debugging help.
-        </p>
+        <SEOSection id="faq" eyebrow="FAQ" heading="Frequently Asked Questions">
+          <FAQ items={[
+            {
+              q: 'What is stringified JSON in logs?',
+              a: <>Stringified JSON is JSON that has been serialized into a string — with escaped quotes (<C>{`\\"`}</C>) and backslashes — often when one JSON payload is nested inside another. Log Unpacker recursively unescapes these strings so you see clean, readable JSON.</>,
+            },
+            {
+              q: 'How do I decode a JWT token found in log files?',
+              a: 'Paste your log line. Log Unpacker automatically detects JWT tokens (three Base64URL parts separated by dots), decodes the header and payload, and shows them inline. Enable "Mask PII" to redact sub, name, and email fields.',
+            },
+            {
+              q: 'Is it safe to paste production logs into ChatGPT?',
+              a: 'Not without sanitizing first. Logs often contain JWTs, file paths with usernames, and sensitive data. Log Unpacker produces AI-safe output with paths and tokens scrubbed — safe to paste into any AI tool.',
+            },
+            {
+              q: 'How are epoch timestamps converted?',
+              a: 'Log Unpacker detects both 10-digit (seconds) and 13-digit (milliseconds) Unix timestamps and converts them to human-readable ISO date strings automatically as part of the unpacking process.',
+            },
+            {
+              q: 'Does Log Unpacker send my logs to a server?',
+              a: 'No. Everything runs in your browser. No network requests, no storage, no telemetry. Safe for sensitive production logs.',
+            },
+          ]} />
+        </SEOSection>
 
-        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-2">Why scrubbing file paths from logs matters</h2>
-        <p className="text-gray-700 text-base leading-relaxed mb-4">
-          Logs frequently include full Windows or Unix paths (e.g. <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">/Users/jane/project/...</code>), which expose usernames and directory structure. When you paste such logs into AI, you leak that information. Log Unpacker scrubs these paths (replacing usernames with ~) so the output is safe to share.
-        </p>
+        <SEOSection id="related" eyebrow="Related tools" heading="Tools You Might Also Need">
+          <RelatedTools tools={[
+            { href: '/jwt-decoder', label: 'JWT Decoder', desc: 'Full JWT decoder with HMAC verification and security audit', icon: '🪙' },
+            { href: '/json-prompt-shield', label: 'JSON Prompt Shield', desc: 'Mask JSON keys and values before sending to AI', icon: '🛡️' },
+            { href: '/code-prompt-shield', label: 'Code Prompt Shield', desc: 'Sanitize code files with secrets and tokens before AI prompts', icon: '🔐' },
+            { href: '/ai-schema-masker', label: 'AI Schema Masker', desc: 'Mask database schema names before sharing with AI', icon: '🔒' },
+          ]} />
+        </SEOSection>
+      </ToolSEOContent>
 
-        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-2">How do I unescape stringified JSON from logs?</h2>
-        <p className="text-gray-700 text-base leading-relaxed mb-4">
-          Paste your log line into Log Unpacker. It recursively unescapes nested JSON strings—even multiple levels deep—and outputs clean, readable JSON instantly in your browser. No server round-trip.
-        </p>
-
-        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-2">Does Log Unpacker send my logs to a server?</h2>
-        <p className="text-gray-700 text-base leading-relaxed mb-4">
-          No. Everything runs in your browser. No network requests, no storage, no telemetry. Safe for sensitive or production logs.
-        </p>
-
-        <p className="text-gray-600 text-sm mt-8">
-          For masking <strong>code</strong> (API keys, variables) before sending to AI, use{' '}
-          <Link href="/code-prompt-shield" className="text-amber-600 hover:text-amber-700 font-medium">
-            Code Prompt Shield
-          </Link>
-          . For <strong>JSON payloads</strong> (keys/values), use{' '}
-          <Link href="/json-prompt-shield" className="text-amber-600 hover:text-amber-700 font-medium">
-            JSON Prompt Shield
-          </Link>
-          . For <strong>database schemas</strong>, use{' '}
-          <Link href="/ai-schema-masker" className="text-amber-600 hover:text-amber-700 font-medium">
-            AI Schema Masker
-          </Link>
-          —same AI-safe idea for every format.
-        </p>
-      </article>
+      <ToolPageFooterBand toolName="log_unpacker" />
     </>
   );
 }

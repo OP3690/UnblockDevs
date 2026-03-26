@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Next.js Dev HTTPS",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": ["-c", "export PATH=/opt/homebrew/bin:$PATH && cd /Users/omprakashutaha/Desktop/unblockdevs/.claude/worktrees/cool-swirles && npm run dev"],
+      "port": 3000,
+      "autoPort": true
+    }
+  ]
+}

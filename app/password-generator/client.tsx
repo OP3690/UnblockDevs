@@ -646,26 +646,6 @@ export default function PasswordGeneratorClient() {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-gray-500">
-          <p className="text-center flex items-center gap-2">
-            <Lock className="w-3.5 h-3.5 text-slate-400" aria-hidden />
-            Passwords are generated locally. Nothing is sent to any server.
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <Link href="/jwt-decoder" className="inline-flex items-center gap-1.5 font-medium text-primary-600 hover:text-primary-700">
-              JWT Decoder
-              <ChevronRight className="w-4 h-4" />
-            </Link>
-            <Link href="/base64-encoder" className="inline-flex items-center gap-1.5 font-medium text-primary-600 hover:text-primary-700">
-              Base64 Encoder
-              <ChevronRight className="w-4 h-4" />
-            </Link>
-            <Link href="/password-audit" className="inline-flex items-center gap-1.5 font-medium text-primary-600 hover:text-primary-700">
-              Password Audit &amp; Policy
-              <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
       </div>
     </div>
   );

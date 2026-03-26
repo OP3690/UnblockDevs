@@ -1,452 +1,227 @@
 'use client';
 
-import Link from 'next/link';
-import { ArrowLeft, Code, ExternalLink, Network, Lock, Coins } from 'lucide-react';
-import FAQSchema from '@/components/FAQSchema';
-import BlogSocialShare from '@/components/BlogSocialShare';
+import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
+import {
+  AlertBox, FlowDiagram, CompareTable, ErrorFix, VerticalSteps,
+  CodeBlock, FAQAccordion, KeyPointsGrid, StatGrid, SectionHeader,
+  QuickFact, TimelineViz, ArchDiagram,
+} from '@/components/blog/BlogVisuals';
 
 export default function BlockchainCompleteGuideClient() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-yellow-50 to-orange-50">
-      <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/blog" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Developer's Study Materials
-          </Link>
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-yellow-100 rounded-lg">
-              <Network className="w-6 h-6 text-yellow-600" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Blockchain: Complete Guide</h1>
-              <p className="text-sm text-gray-500 mt-1">Distributed Ledger Technology & Decentralization</p>
-            </div>
-          </div>
-        </div>
-      </header>
+    <BlogLayoutWithSidebarAds>
+      <h1>Blockchain Complete Guide — How It Works, Why It Matters, When to Use It</h1>
+      <p className="lead">
+        Blockchain is one of the most misunderstood technologies in computing. Stripped of the hype, it's a
+        specific data structure with unique trust properties. This guide explains exactly how it works —
+        from cryptographic hashing to consensus mechanisms — and when it's actually the right tool.
+      </p>
 
-      {/* Floating Social Share Bar */}
-      <BlogSocialShare 
-        title="Blockchain: Complete Guide"
-        description="Distributed Ledger Technology & Decentralization"
-        variant="floating"
+      <StatGrid
+        stats={[
+          { value: '2008', label: 'Bitcoin whitepaper published', color: 'amber' },
+          { value: 'SHA-256', label: 'hashing at Bitcoin\'s core', color: 'blue' },
+          { value: '~10 min', label: 'Bitcoin block time', color: 'green' },
+          { value: '51%', label: 'attack threshold', color: 'red' },
+        ]}
       />
 
+      <SectionHeader number={1} title="What Is a Blockchain?" />
+      <p>
+        A blockchain is a <strong>linked list of records (blocks)</strong> where each block contains a
+        cryptographic hash of the previous block. This creates a chain where changing any historical record
+        would invalidate every block that follows — making tampering computationally infeasible.
+      </p>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
-        <FAQSchema
-          faqs={[
-            {
-              question: 'What is Blockchain?',
-              answer: 'Blockchain is a distributed ledger technology that maintains a continuously growing list of records (blocks) linked and secured using cryptography. Each block contains a cryptographic hash of the previous block, a timestamp, and transaction data. This creates an immutable, decentralized record of transactions that cannot be altered retroactively.',
-            },
-            {
-              question: 'How does Blockchain work?',
-              answer: 'Transactions are grouped into blocks. Each block contains a hash of the previous block, creating a chain. Blocks are validated through consensus mechanisms (Proof of Work, Proof of Stake). Once validated, blocks are added to the chain and distributed across all nodes in the network. The decentralized nature ensures no single point of failure.',
-            },
-            {
-              question: 'What are real-world applications of Blockchain?',
-              answer: 'Applications include: cryptocurrencies (Bitcoin, Ethereum), smart contracts, supply chain tracking, digital identity, voting systems, DeFi (decentralized finance), NFTs (non-fungible tokens), and cross-border payments.',
-            },
-            {
-              question: 'What is the future of Blockchain?',
-              answer: 'The future includes: Web3 (decentralized internet), enterprise blockchain adoption, interoperability between blockchains, scalability solutions (Layer 2, sharding), integration with IoT and AI, and mainstream adoption of DeFi and digital assets.',
-            },
-          ]}
-        />
-        <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          <section className="mb-12">
-            <p className="text-lg text-gray-700 leading-relaxed mb-4">
-              <strong>Blockchain</strong> is a revolutionary distributed ledger technology that enables secure, transparent, 
-              and decentralized record-keeping. Originally created for Bitcoin, blockchain has evolved into a foundational 
-              technology powering cryptocurrencies, smart contracts, DeFi, NFTs, and the emerging Web3 ecosystem.
-            </p>
-            <p className="text-gray-700 leading-relaxed">
-              This comprehensive guide explores what blockchain is, how it works, why it's transformative, real-world 
-              applications, and its future impact on industries and society.
-            </p>
-          </section>
+      <QuickFact>
+        The "block" in blockchain is just a batch of transactions. The "chain" is the hash pointer linking
+        each block to the one before it. Together they create an append-only, tamper-evident ledger.
+      </QuickFact>
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Network className="w-6 h-6 text-yellow-600" />
-              What is Blockchain?
-            </h2>
-            <div className="bg-yellow-50 border-l-4 border-yellow-500 p-5 rounded-r-lg mb-4">
-              <p className="text-gray-700 mb-3">
-                <strong>Blockchain</strong> is a distributed, immutable ledger that records transactions in blocks linked 
-                together in a chain. Key characteristics:
-              </p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700">
-                <li><strong>Decentralized:</strong> No central authority controls the network</li>
-                <li><strong>Immutable:</strong> Once recorded, data cannot be altered</li>
-                <li><strong>Transparent:</strong> All transactions are visible to network participants</li>
-                <li><strong>Cryptographically Secure:</strong> Uses advanced cryptography for security</li>
-                <li><strong>Consensus-Based:</strong> Network participants agree on transaction validity</li>
-              </ul>
-            </div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-3 mt-6">Block Structure</h3>
-            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-              <div className="space-y-2 text-sm text-gray-700">
-                <div className="bg-white p-3 rounded border border-gray-200">
-                  <strong>Block Header:</strong>
-                  <ul className="list-disc list-inside ml-4 mt-1">
-                    <li>Previous Block Hash (links to previous block)</li>
-                    <li>Merkle Root (hash of all transactions)</li>
-                    <li>Timestamp</li>
-                    <li>Nonce (for Proof of Work)</li>
-                  </ul>
-                </div>
-                <div className="bg-white p-3 rounded border border-gray-200">
-                  <strong>Block Body:</strong>
-                  <ul className="list-disc list-inside ml-4 mt-1">
-                    <li>List of transactions</li>
-                    <li>Transaction data (sender, receiver, amount)</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </section>
+      <ArchDiagram
+        boxes={[
+          { label: 'Block #1\nGenesis\nHash: 000abc', color: 'blue' },
+          { label: 'Block #2\n3 txns\nPrev: 000abc\nHash: 111def', color: 'blue' },
+          { label: 'Block #3\n5 txns\nPrev: 111def\nHash: 222ghi', color: 'blue' },
+          { label: 'Block #4\n2 txns\nPrev: 222ghi\nHash: 333jkl', color: 'green' },
+        ]}
+        arrows={['→', '→', '→']}
+      />
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Code className="w-6 h-6 text-indigo-600" />
-              How Blockchain Works
-            </h2>
-            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200 mb-4">
-              <h3 className="font-semibold text-gray-900 mb-3">Transaction Lifecycle</h3>
-              <div className="space-y-3">
-                <div className="bg-white p-4 rounded border border-gray-200">
-                  <h4 className="font-semibold text-gray-800 mb-2">1. Transaction Initiation</h4>
-                  <p className="text-sm text-gray-700">
-                    User creates a transaction (e.g., sending cryptocurrency). Transaction is signed with private key 
-                    and broadcast to the network.
-                  </p>
-                </div>
-                <div className="bg-white p-4 rounded border border-gray-200">
-                  <h4 className="font-semibold text-gray-800 mb-2">2. Validation</h4>
-                  <p className="text-sm text-gray-700">
-                    Network nodes (miners/validators) verify transaction validity: signature, balance, format. 
-                    Invalid transactions are rejected.
-                  </p>
-                </div>
-                <div className="bg-white p-4 rounded border border-gray-200">
-                  <h4 className="font-semibold text-gray-800 mb-2">3. Block Creation</h4>
-                  <p className="text-sm text-gray-700">
-                    Valid transactions are grouped into a block. Block includes hash of previous block, creating 
-                    the chain structure.
-                  </p>
-                </div>
-                <div className="bg-white p-4 rounded border border-gray-200">
-                  <h4 className="font-semibold text-gray-800 mb-2">4. Consensus</h4>
-                  <p className="text-sm text-gray-700">
-                    Network reaches consensus on block validity through consensus mechanism (Proof of Work, Proof 
-                    of Stake, etc.). Majority of nodes must agree.
-                  </p>
-                </div>
-                <div className="bg-white p-4 rounded border border-gray-200">
-                  <h4 className="font-semibold text-gray-800 mb-2">5. Block Addition</h4>
-                  <p className="text-sm text-gray-700">
-                    Once consensus is reached, block is added to the chain. All nodes update their copy of the ledger. 
-                    Transaction is now confirmed and immutable.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-yellow-50 border-l-4 border-yellow-500 p-5 rounded-r-lg">
-              <h3 className="font-semibold text-gray-900 mb-2">Consensus Mechanisms</h3>
-              <div className="grid md:grid-cols-2 gap-4 mt-3">
-                <div className="bg-white p-4 rounded border border-yellow-200">
-                  <h4 className="font-semibold text-gray-800 mb-2">Proof of Work (PoW)</h4>
-                  <p className="text-sm text-gray-700 mb-2">Miners solve cryptographic puzzles. First to solve adds block. Used by Bitcoin.</p>
-                  <p className="text-xs text-gray-600">High security, energy intensive</p>
-                </div>
-                <div className="bg-white p-4 rounded border border-yellow-200">
-                  <h4 className="font-semibold text-gray-800 mb-2">Proof of Stake (PoS)</h4>
-                  <p className="text-sm text-gray-700 mb-2">Validators stake cryptocurrency. Selected based on stake amount. Used by Ethereum 2.0.</p>
-                  <p className="text-xs text-gray-600">Energy efficient, scalable</p>
-                </div>
-                <div className="bg-white p-4 rounded border border-yellow-200">
-                  <h4 className="font-semibold text-gray-800 mb-2">Delegated Proof of Stake (DPoS)</h4>
-                  <p className="text-sm text-gray-700 mb-2">Token holders vote for delegates who validate transactions. Used by EOS, TRON.</p>
-                  <p className="text-xs text-gray-600">Fast, democratic</p>
-                </div>
-                <div className="bg-white p-4 rounded border border-yellow-200">
-                  <h4 className="font-semibold text-gray-800 mb-2">Byzantine Fault Tolerance (BFT)</h4>
-                  <p className="text-sm text-gray-700 mb-2">Nodes vote on block validity. Requires 2/3 majority. Used by Hyperledger.</p>
-                  <p className="text-xs text-gray-600">Fast finality, enterprise-focused</p>
-                </div>
-              </div>
-            </div>
-          </section>
+      <SectionHeader number={2} title="The Cryptographic Foundation" />
+      <p>
+        Two cryptographic primitives make blockchain work: <strong>hash functions</strong> and
+        <strong>digital signatures</strong>.
+      </p>
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Lock className="w-6 h-6 text-green-600" />
-              Why Blockchain Matters
-            </h2>
-            <div className="space-y-4">
-              <div className="p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
-                <h3 className="font-semibold text-gray-900 mb-2">1. Trust Without Intermediaries</h3>
-                <p className="text-gray-700 text-sm">
-                  Blockchain enables trust between parties without requiring trusted third parties (banks, governments, 
-                  corporations). Transactions are verified by the network itself.
-                </p>
-              </div>
-              <div className="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-                <h3 className="font-semibold text-gray-900 mb-2">2. Transparency & Immutability</h3>
-                <p className="text-gray-700 text-sm">
-                  All transactions are recorded permanently and transparently. Once added to the blockchain, data 
-                  cannot be altered, providing an auditable, tamper-proof record.
-                </p>
-              </div>
-              <div className="p-4 bg-purple-50 rounded-lg border-l-4 border-purple-500">
-                <h3 className="font-semibold text-gray-900 mb-2">3. Decentralization</h3>
-                <p className="text-gray-700 text-sm">
-                  No single point of failure. Network operates across thousands of nodes. Even if some nodes fail, 
-                  the network continues operating.
-                </p>
-              </div>
-              <div className="p-4 bg-orange-50 rounded-lg border-l-4 border-orange-500">
-                <h3 className="font-semibold text-gray-900 mb-2">4. Programmable Money & Contracts</h3>
-                <p className="text-gray-700 text-sm">
-                  Smart contracts enable automated execution of agreements. Code defines rules, and blockchain 
-                  enforces them automatically without intermediaries.
-                </p>
-              </div>
-            </div>
-          </section>
+      <KeyPointsGrid
+        columns={2}
+        items={[
+          {
+            title: 'Hash Functions (SHA-256)',
+            description: 'Any input → fixed-length output. Same input always gives same output. One-way: can\'t reverse a hash back to the input. Tiny input change → completely different hash.',
+          },
+          {
+            title: 'Digital Signatures (ECDSA)',
+            description: 'Your private key signs a transaction. Anyone with your public key can verify the signature. Impossible to forge without the private key. This proves you authorized a transaction.',
+          },
+          {
+            title: 'Merkle Trees',
+            description: 'Transactions in a block are hashed pairwise into a tree. The root hash summarizes all transactions. Lets you verify a single transaction belongs to a block without downloading all transactions.',
+          },
+          {
+            title: 'Public/Private Key Pairs',
+            description: 'Your blockchain "address" is derived from your public key. Your wallet is your private key. Losing your private key = losing access permanently. No password reset.',
+          },
+        ]}
+      />
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Real-World Use Cases</h2>
-            <div className="space-y-6">
-              <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">1. Cryptocurrencies</h3>
-                <p className="text-gray-700 mb-3">
-                  <strong>What:</strong> Digital currencies (Bitcoin, Ethereum) that operate on blockchain networks, 
-                  enabling peer-to-peer transactions without banks.
-                </p>
-                <p className="text-gray-700 mb-3">
-                  <strong>How:</strong> Transactions recorded on blockchain. Cryptography secures transactions. 
-                  Consensus mechanism validates and adds transactions. Wallets store private keys for signing transactions.
-                </p>
-                <p className="text-gray-700 mb-3">
-                  <strong>Impact:</strong> $2+ trillion market cap. Enables borderless payments, financial inclusion, 
-                  and store of value. Bitcoin has processed over $10 trillion in transactions.
-                </p>
-              </div>
+      <SectionHeader number={3} title="How a Transaction Gets Added" />
+      <FlowDiagram
+        steps={[
+          { label: '1. User signs transaction with private key', color: 'blue' },
+          { label: '2. Broadcast to peer-to-peer network', color: 'blue' },
+          { label: '3. Nodes validate: signature + balance', color: 'amber' },
+          { label: '4. Miners/validators compete to add block', color: 'orange' },
+          { label: '5. Winner adds block + earns reward', color: 'green' },
+          { label: '6. Other nodes verify + accept chain', color: 'green' },
+        ]}
+      />
 
-              <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">2. Smart Contracts & DeFi</h3>
-                <p className="text-gray-700 mb-3">
-                  <strong>What:</strong> Self-executing contracts with terms written in code. DeFi (Decentralized Finance) 
-                  uses smart contracts to recreate financial services (lending, trading, insurance) without intermediaries.
-                </p>
-                <p className="text-gray-700 mb-3">
-                  <strong>How:</strong> Smart contracts deployed on blockchain (Ethereum, Solana). Code defines rules 
-                  (e.g., "if collateral {'>'} loan, allow borrowing"). Blockchain executes automatically when conditions met. 
-                  No human intervention needed.
-                </p>
-                <p className="text-gray-700 mb-3">
-                  <strong>Impact:</strong> $100+ billion locked in DeFi protocols. Enables automated lending, 
-                  decentralized exchanges, yield farming, and programmable financial instruments.
-                </p>
-              </div>
+      <SectionHeader number={4} title="Consensus Mechanisms" />
+      <p>
+        The fundamental problem: in a decentralized network with no central authority, how do thousands of
+        nodes agree on the "true" version of history? Different blockchains solve this differently.
+      </p>
 
-              <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">3. Supply Chain Tracking</h3>
-                <p className="text-gray-700 mb-3">
-                  <strong>What:</strong> Tracking products from origin to consumer using blockchain to ensure authenticity, 
-                  traceability, and transparency.
-                </p>
-                <p className="text-gray-700 mb-3">
-                  <strong>How:</strong> Each product gets unique identifier recorded on blockchain. As product moves through 
-                  supply chain, each step (manufacturing, shipping, retail) recorded as transaction. Consumers can verify 
-                  authenticity and origin.
-                </p>
-                <p className="text-gray-700 mb-3">
-                  <strong>Impact:</strong> Companies like Walmart, IBM use blockchain to track food products, reducing 
-                  recall time from weeks to seconds. Prevents counterfeiting and ensures product authenticity.
-                </p>
-              </div>
+      <CompareTable
+        leftLabel="Proof of Work (PoW)"
+        rightLabel="Proof of Stake (PoS)"
+        rows={[
+          { label: 'Used by', left: 'Bitcoin, Litecoin', right: 'Ethereum (since 2022), Cardano, Solana' },
+          { label: 'How it works', left: 'Miners compete to solve a math puzzle (hashing)', right: 'Validators lock up (stake) crypto as collateral' },
+          { label: 'Energy usage', left: 'Very high (ASIC farms)', right: '~99.95% less than PoW' },
+          { label: 'Attack cost', left: 'Must own 51% of hash power', right: 'Must own 51% of staked tokens' },
+          { label: 'Block time', left: '~10 min (Bitcoin)', right: '~12 sec (Ethereum)' },
+          { label: 'Security model', left: 'Work is expensive to redo', right: 'Misbehavior destroys stake (slashing)' },
+        ]}
+      />
 
-              <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">4. Digital Identity</h3>
-                <p className="text-gray-700 mb-3">
-                  <strong>What:</strong> Self-sovereign identity systems where individuals control their digital identity 
-                  without relying on centralized authorities.
-                </p>
-                <p className="text-gray-700 mb-3">
-                  <strong>How:</strong> Identity credentials stored on blockchain. Users control private keys. Can selectively 
-                  share identity attributes (age, citizenship) without revealing full identity. Verifiable credentials prove 
-                  authenticity without exposing data.
-                </p>
-                <p className="text-gray-700 mb-3">
-                  <strong>Impact:</strong> Enables privacy-preserving identity verification. Reduces identity theft. 
-                  Governments (Estonia, Switzerland) exploring blockchain-based digital IDs.
-                </p>
-              </div>
+      <SectionHeader number={5} title="Smart Contracts" />
+      <p>
+        A smart contract is <strong>code stored on the blockchain</strong> that automatically executes when
+        conditions are met. It's like a vending machine: you put money in, the machine dispenses without
+        needing a human to process the transaction.
+      </p>
 
-              <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">5. NFTs (Non-Fungible Tokens)</h3>
-                <p className="text-gray-700 mb-3">
-                  <strong>What:</strong> Unique digital assets (art, music, collectibles) represented as tokens on blockchain, 
-                  proving ownership and authenticity.
-                </p>
-                <p className="text-gray-700 mb-3">
-                  <strong>How:</strong> Digital asset (image, video, audio) linked to unique token on blockchain. Token 
-                  ownership recorded on blockchain. Ownership transferable through blockchain transactions. Metadata stored 
-                  on-chain or in IPFS.
-                </p>
-                <p className="text-gray-700 mb-3">
-                  <strong>Impact:</strong> $25+ billion market. Enables digital art ownership, gaming assets, music 
-                  royalties, and verifiable digital collectibles. Artists can sell directly to collectors.
-                </p>
-              </div>
+      <CodeBlock language="solidity" filename="Simple Smart Contract (Solidity / Ethereum)">
+{`// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
 
-              <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">6. Cross-Border Payments</h3>
-                <p className="text-gray-700 mb-3">
-                  <strong>What:</strong> International money transfers using blockchain, reducing time and cost compared 
-                  to traditional banking systems.
-                </p>
-                <p className="text-gray-700 mb-3">
-                  <strong>How:</strong> Stablecoins (USDC, USDT) pegged to fiat currencies enable fast, low-cost transfers. 
-                  Blockchain records transactions. Settlement happens in minutes vs days for traditional systems. Lower fees 
-                  (often {'<'} 1% vs 3-5% for banks).
-                </p>
-                <p className="text-gray-700 mb-3">
-                  <strong>Impact:</strong> Remittances cost reduced by 50-80%. Enables financial inclusion for unbanked 
-                  populations. Companies like Ripple, Stellar focus on cross-border payments.
-                </p>
-              </div>
-            </div>
-          </section>
+contract SimpleStorage {
+    uint256 private storedValue;
+    address public owner;
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Coins className="w-6 h-6 text-orange-600" />
-              Blockchain Technologies
-            </h2>
-            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-              <h3 className="font-semibold text-gray-900 mb-3">Major Blockchain Platforms</h3>
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <h4 className="font-semibold text-gray-800 mb-2">Bitcoin</h4>
-                  <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
-                    <li>First blockchain, Proof of Work</li>
-                    <li>Digital gold, store of value</li>
-                    <li>Limited scripting capabilities</li>
-                    <li>$1+ trillion market cap</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-800 mb-2">Ethereum</h4>
-                  <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
-                    <li>Smart contracts, Proof of Stake</li>
-                    <li>DeFi, NFTs, Web3 platform</li>
-                    <li>Programmable blockchain</li>
-                    <li>$400+ billion market cap</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-800 mb-2">Solana</h4>
-                  <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
-                    <li>High throughput (65,000 TPS)</li>
-                    <li>Low fees, fast transactions</li>
-                    <li>Proof of History consensus</li>
-                    <li>Growing DeFi ecosystem</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-800 mb-2">Polygon</h4>
-                  <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
-                    <li>Ethereum Layer 2 scaling</li>
-                    <li>Lower fees, faster transactions</li>
-                    <li>Ethereum-compatible</li>
-                    <li>Growing adoption</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </section>
+    constructor() {
+        owner = msg.sender;  // whoever deploys = owner
+    }
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Network className="w-6 h-6 text-purple-600" />
-              The Future of Blockchain
-            </h2>
-            <div className="space-y-4">
-              <div className="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-                <h3 className="font-semibold text-gray-900 mb-2">1. Web3 & Decentralized Internet</h3>
-                <p className="text-gray-700 text-sm">
-                  Blockchain enables Web3 - decentralized internet where users own their data, content, and digital assets. 
-                  No central platforms controlling access or monetization.
-                </p>
-              </div>
-              <div className="p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
-                <h3 className="font-semibold text-gray-900 mb-2">2. Enterprise Blockchain Adoption</h3>
-                <p className="text-gray-700 text-sm">
-                  Companies adopting blockchain for supply chain, identity, payments, and data sharing. Private/permissioned 
-                  blockchains for enterprise use cases.
-                </p>
-              </div>
-              <div className="p-4 bg-purple-50 rounded-lg border-l-4 border-purple-500">
-                <h3 className="font-semibold text-gray-900 mb-2">3. Interoperability & Cross-Chain</h3>
-                <p className="text-gray-700 text-sm">
-                  Solutions enabling different blockchains to communicate and share data. Users can move assets and data 
-                  seamlessly across chains.
-                </p>
-              </div>
-              <div className="p-4 bg-orange-50 rounded-lg border-l-4 border-orange-500">
-                <h3 className="font-semibold text-gray-900 mb-2">4. Scalability Solutions</h3>
-                <p className="text-gray-700 text-sm">
-                  Layer 2 solutions (rollups, sidechains), sharding, and new consensus mechanisms will enable blockchains 
-                  to handle millions of transactions per second.
-                </p>
-              </div>
-              <div className="p-4 bg-indigo-50 rounded-lg border-l-4 border-indigo-500">
-                <h3 className="font-semibold text-gray-900 mb-2">5. Integration with AI & IoT</h3>
-                <p className="text-gray-700 text-sm">
-                  Blockchain will secure AI model training data, enable decentralized AI marketplaces, and provide 
-                  trust layer for IoT device communication and data sharing.
-                </p>
-              </div>
-            </div>
-          </section>
+    // Only owner can set value
+    function setValue(uint256 _value) public {
+        require(msg.sender == owner, "Not the owner");
+        storedValue = _value;
+    }
 
-          <section className="mb-12 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-xl p-8 text-white">
-            <div className="flex items-center gap-4 mb-4">
-              <Network className="w-12 h-12" />
-              <div>
-                <h2 className="text-2xl font-bold mb-2">Build for Blockchain</h2>
-                <p className="text-yellow-100">
-                  Prepare your APIs and data structures for blockchain integration. Validate transaction formats, 
-                  generate schemas for smart contracts, and ensure your systems are blockchain-ready.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <Link
-                href="/?tab=schema"
-                className="inline-flex items-center gap-2 bg-white text-yellow-600 px-6 py-3 rounded-lg font-semibold hover:bg-yellow-50 transition-colors"
-              >
-                Schema Generator
-                <ExternalLink className="w-5 h-5" />
-              </Link>
-              <Link
-                href="/?tab=fixer"
-                className="inline-flex items-center gap-2 bg-white text-yellow-600 px-6 py-3 rounded-lg font-semibold hover:bg-yellow-50 transition-colors"
-              >
-                JSON Validator
-                <ExternalLink className="w-5 h-5" />
-              </Link>
-            </div>
-          </section>
-        </article>
-      </main>
-    </div>
+    // Anyone can read
+    function getValue() public view returns (uint256) {
+        return storedValue;
+    }
+}`}
+      </CodeBlock>
+
+      <AlertBox type="warning" title="Smart contracts are immutable once deployed">
+        Once deployed to the Ethereum mainnet, a smart contract cannot be changed. Bugs become permanent.
+        This is why auditing and testing are critical — and why millions have been lost to smart contract exploits.
+      </AlertBox>
+
+      <SectionHeader number={6} title="Blockchain vs Traditional Database" />
+
+      <CompareTable
+        leftLabel="Traditional Database"
+        rightLabel="Blockchain"
+        rows={[
+          { label: 'Control', left: 'Centralized (one entity)', right: 'Decentralized (consensus)' },
+          { label: 'Trust model', left: 'Trust the database operator', right: 'Trust the math/code' },
+          { label: 'Mutability', left: 'Any row can be updated/deleted', right: 'Append-only (no deletes)' },
+          { label: 'Speed', left: 'Thousands of tx/sec', right: '7 (Bitcoin) to 65,000 (Solana) tx/sec' },
+          { label: 'Privacy', left: 'Private by default', right: 'Public by default (permissioned variants exist)' },
+          { label: 'Cost per write', left: 'Near-zero', right: 'Gas fees (can be $0.001 to $50+)' },
+          { label: 'Best for', left: 'Speed, privacy, complex queries', right: 'Multi-party trust without intermediary' },
+        ]}
+      />
+
+      <SectionHeader number={7} title="When to Actually Use Blockchain" />
+
+      <KeyPointsGrid
+        columns={2}
+        items={[
+          {
+            title: '✅ Good use cases',
+            description: 'Multi-party settlement without a trusted intermediary. Transparent supply chain tracking. Digital ownership (NFTs, certificates). Cross-border payments without banks.',
+          },
+          {
+            title: '❌ Bad use cases',
+            description: 'Internal company databases. Anything that needs fast writes. Applications requiring privacy (public blockchain ≠ private). When you trust a central party already.',
+          },
+          {
+            title: '✅ DeFi (Decentralized Finance)',
+            description: 'Lending, borrowing, trading without banks. Smart contracts enforce rules — no one can change them mid-game. Anyone globally can participate.',
+          },
+          {
+            title: '❌ The "just use PostgreSQL" test',
+            description: 'If removing the decentralized requirement makes the system simpler — use a regular database. Most "blockchain solutions" fail this test.',
+          },
+        ]}
+      />
+
+      <SectionHeader number={8} title="Key Blockchain History" />
+      <TimelineViz
+        events={[
+          { year: '2008', title: 'Bitcoin Whitepaper', description: 'Satoshi Nakamoto publishes "A Peer-to-Peer Electronic Cash System"', color: 'amber' },
+          { year: '2009', title: 'Genesis Block', description: 'First Bitcoin block mined. First transaction sent.', color: 'amber' },
+          { year: '2015', title: 'Ethereum Launch', description: 'Vitalik Buterin launches Ethereum — blockchain with smart contracts.', color: 'blue' },
+          { year: '2017', title: 'ICO Boom', description: 'Thousands of tokens launched. Most failed. Regulatory scrutiny began.', color: 'red' },
+          { year: '2020', title: 'DeFi Summer', description: 'Billions locked in decentralized lending and trading protocols.', color: 'green' },
+          { year: '2021', title: 'NFT Peak', description: 'NFTs hit mainstream. Bored Apes, CryptoPunks sell for millions.', color: 'purple' },
+          { year: '2022', title: 'Ethereum Merge', description: 'Ethereum switches from PoW to PoS. Energy use drops 99.95%.', color: 'blue' },
+          { year: '2024', title: 'Bitcoin ETF Approved', description: 'US SEC approves spot Bitcoin ETFs. Institutional adoption increases.', color: 'green' },
+        ]}
+      />
+
+      <FAQAccordion
+        items={[
+          {
+            question: 'Is blockchain the same as Bitcoin?',
+            answer: 'No. Bitcoin is one cryptocurrency that uses blockchain technology. Blockchain is the underlying data structure/protocol. There are thousands of blockchains — Ethereum, Solana, Cardano, Polygon, etc.',
+          },
+          {
+            question: 'Can blockchain data be hacked or deleted?',
+            answer: 'Historical data cannot be altered without redoing all the computational work for every block after it — which is economically infeasible on major chains. However, your wallet can be compromised if someone gets your private key. The protocol is secure; humans are the weak link.',
+          },
+          {
+            question: 'What is a "gas fee"?',
+            answer: 'On Ethereum, every transaction and smart contract execution requires computation from validators. Gas is the unit of computation, and you pay a fee in ETH. More complex operations = more gas = higher fee. This prevents spam and compensates validators.',
+          },
+          {
+            question: 'What is a 51% attack?',
+            answer: 'If one entity controls more than 50% of a blockchain\'s mining/staking power, they can rewrite recent history and double-spend coins. This is theoretically possible on small chains but economically prohibitive on Bitcoin or Ethereum.',
+          },
+          {
+            question: 'Should I learn Solidity as a developer?',
+            answer: 'If you\'re interested in Web3/DeFi development, yes — Solidity is the primary language for Ethereum smart contracts. The market for smart contract developers is large but competitive. Otherwise, blockchain as a backend is used via APIs (Infura, Alchemy) without needing Solidity.',
+          },
+        ]}
+      />
+    </BlogLayoutWithSidebarAds>
   );
 }
-

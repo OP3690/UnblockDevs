@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Script from 'next/script';
 import { blogPosts } from '@/lib/blog-posts-data';
 import { BlogListClient } from './BlogListClient';
+import { BookOpen, Zap, Sparkles, ArrowRight } from 'lucide-react';
 
 const PER_PAGE = 6;
 
@@ -23,7 +24,6 @@ export async function generateMetadata({
       : `Developer Debugging Guides - Page ${page} | UnblockDevs`,
     description: 'Natural, practical developer guides for JSON errors, API debugging, curl, schema validation, and security-safe AI workflows.',
     alternates: { canonical },
-    // Noindex pagination (page 2+) so crawl budget goes to /blog and individual posts
     ...(isPagination ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
       title: 'Developer Debugging Guides, JSON Fixes & API Tutorials | UnblockDevs',
@@ -39,19 +39,58 @@ export async function generateMetadata({
       images: ['/og-image.png'],
     },
     keywords: [
-      'fix json parse error',
-      'unexpected token in json',
-      'json syntax error checker',
-      'json formatter with error highlight',
-      'how to validate json online',
-      'decode jwt token',
-      'verify jwt signature',
-      'post json data with curl',
-      'api debugging guides',
+      'fix json parse error', 'unexpected token in json', 'json syntax error checker',
+      'json formatter with error highlight', 'how to validate json online', 'decode jwt token',
+      'verify jwt signature', 'post json data with curl', 'api debugging guides',
       'developer troubleshooting tutorials',
     ],
   };
 }
+
+const FEATURED_GUIDES = [
+  { href: '/blog/chatgpt-real-life-usage-guide', title: 'ChatGPT Real-Life Usage Guide', desc: 'Practical use cases and best prompts for everyday dev work.' },
+  { href: '/blog/ai-prompt-engineering-guide', title: 'AI Prompt Engineering Guide', desc: 'Write prompts that actually get the output you want.' },
+  { href: '/blog/hipaa-compliant-ai-development', title: 'HIPAA-Compliant AI Dev', desc: 'Use ChatGPT without exposing patient data. Client-side masking.' },
+  { href: '/blog/fix-unexpected-end-of-json-input-error-explained', title: 'Fix JSON Parse Errors', desc: 'Unexpected token, empty responses, and incomplete data — fixed.' },
+  { href: '/blog/why-my-api-works-in-postman-but-not-in-browser', title: 'API Works in Postman, Not Browser', desc: 'CORS, auth headers, cookies — debugged step by step.' },
+  { href: '/blog/curl-to-python-requests-complete-guide', title: 'curl → Python Requests', desc: 'Convert any curl command to Python requests in seconds.' },
+];
+
+const HUBS = [
+  {
+    title: 'JSON Error Hub',
+    desc: 'Most searched debugging paths for malformed payloads and parse failures.',
+    links: [
+      { href: '/blog/fix-unexpected-end-of-json-input-error-explained', label: 'Unexpected end of JSON input' },
+      { href: '/blog/fix-unexpected-token-less-than-in-json-api-returns-html', label: 'Unexpected token < in JSON' },
+      { href: '/fix-json-parse-error-javascript', label: 'JSON parse error: unexpected token' },
+      { href: '/json-validator', label: 'Open JSON Validator →' },
+    ],
+    accent: 'border-l-emerald-500',
+  },
+  {
+    title: 'JWT & Auth Hub',
+    desc: 'High-intent auth troubleshooting for token inspection and verification.',
+    links: [
+      { href: '/jwt-decoder', label: 'Decode JWT Token Online' },
+      { href: '/hash-generator', label: 'Generate SHA / MD5 / HMAC Hash' },
+      { href: '/url-encoder', label: 'URL Encode/Decode Tool' },
+      { href: '/blog/token-security-privacy-best-practices', label: 'Token security best practices' },
+    ],
+    accent: 'border-l-violet-500',
+  },
+  {
+    title: 'API Debugging Hub',
+    desc: 'Natural search patterns developers use when APIs fail in production.',
+    links: [
+      { href: '/blog/why-my-api-works-in-postman-but-not-in-browser', label: 'API works in Postman, not browser' },
+      { href: '/blog/post-json-data-with-curl-examples-complete-guide', label: 'Post JSON data with curl' },
+      { href: '/curl-failure-root-cause-engine', label: 'Curl failure root-cause engine' },
+      { href: '/cors-tester', label: 'CORS tester tool' },
+    ],
+    accent: 'border-l-sky-500',
+  },
+];
 
 export default function BlogPage({
   searchParams,
@@ -61,14 +100,12 @@ export default function BlogPage({
   const totalPages = Math.ceil(blogPosts.length / PER_PAGE);
   const currentPage = Math.max(
     1,
-    Math.min(
-      Number.parseInt(searchParams?.page ?? '1', 10) || 1,
-      totalPages || 1
-    )
+    Math.min(Number.parseInt(searchParams?.page ?? '1', 10) || 1, totalPages || 1)
   );
   const start = (currentPage - 1) * PER_PAGE;
   const initialPosts = blogPosts.slice(start, start + PER_PAGE);
   const canonical = currentPage <= 1 ? 'https://unblockdevs.com/blog' : `https://unblockdevs.com/blog?page=${currentPage}`;
+
   const breadcrumbsSchema = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -91,200 +128,159 @@ export default function BlogPage({
   };
 
   return (
-    <div className="min-h-0 bg-[#FAFAFA]">
-      {/* Page hero — global SiteHeader is above; keep width aligned with redesign */}
-      <div className="border-b border-zinc-200 bg-white/80">
-        <div className="mx-auto max-w-[1100px] px-6 py-8 sm:py-10">
-          <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl lg:text-4xl">
-                Developer guides <span className="text-emerald-700" aria-hidden>📚</span>
-              </h1>
-              <p className="mt-2 max-w-xl text-sm leading-relaxed text-zinc-600 sm:text-base">
-                JSON, APIs, debugging, and workflows — free to read, no signup.
-              </p>
-            </div>
-            <Link
-              href="/"
-              className="inline-flex w-fit shrink-0 items-center justify-center gap-2 rounded-lg border border-zinc-300 bg-white px-5 py-2.5 text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-50"
-            >
-              ← All tools
-            </Link>
+    <div className="min-h-screen bg-[#F8F8F8]">
+      <Script id={`blog-breadcrumb-schema-${currentPage}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsSchema) }} />
+      <Script id={`blog-itemlist-schema-${currentPage}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
+
+      {/* ── HERO ───────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden bg-zinc-950 pb-14 pt-10 sm:pb-16 sm:pt-12">
+        {/* Ambient glow */}
+        <div className="pointer-events-none absolute inset-0" aria-hidden>
+          <div className="absolute -left-20 -top-10 h-[400px] w-[500px] rounded-full bg-emerald-600/15 blur-[120px]" />
+          <div className="absolute bottom-0 right-0 h-[300px] w-[400px] rounded-full bg-violet-600/15 blur-[100px]" />
+        </div>
+
+        <div className="relative mx-auto max-w-[1100px] px-5 sm:px-6 lg:px-8">
+          {/* eyebrow */}
+          <div className="mb-5 flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-300">
+              <BookOpen className="h-3 w-3" />
+              Developer Blog
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 font-mono text-[11px] text-zinc-400">
+              <Sparkles className="h-3 w-3 text-violet-400" />
+              {blogPosts.length} articles · free to read
+            </span>
+          </div>
+
+          {/* headline */}
+          <h1 className="max-w-2xl text-[2rem] font-bold leading-[1.13] tracking-tight text-white sm:text-[2.6rem] lg:text-[3rem]">
+            Guides that{' '}
+            <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
+              unblock developers
+            </span>
+          </h1>
+          <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-zinc-400 sm:text-base">
+            JSON errors, API debugging, curl, schema validation, and safe AI workflows.
+            Practical — no fluff, no signup.
+          </p>
+
+          {/* stats */}
+          <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-3">
+            {[
+              { value: `${blogPosts.length}`, label: 'articles' },
+              { value: '100%', label: 'free' },
+              { value: 'Zero', label: 'signup required' },
+              { value: 'New', label: 'posts weekly' },
+            ].map((s) => (
+              <div key={s.label} className="flex items-baseline gap-1.5">
+                <span className="text-lg font-bold text-white sm:text-xl">{s.value}</span>
+                <span className="text-[12px] text-zinc-500">{s.label}</span>
+              </div>
+            ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Intro */}
-      <div className="mx-auto max-w-[1100px] px-6 pt-8 pb-4">
-        <p className="text-slate-600 text-center max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
-          Browse guides on JSON, APIs, data engineering, AI, and more.
-        </p>
-      </div>
+      {/* ── MAIN CONTENT ───────────────────────────────────────── */}
+      <main className="mx-auto max-w-[1100px] px-5 py-10 sm:px-6 sm:py-12 lg:px-8">
 
-      {/* Main Content - Post Grid */}
-      <main className="mx-auto max-w-[1100px] px-6 pb-12 sm:pb-16">
-        <Script
-          id={`blog-breadcrumb-schema-${currentPage}`}
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsSchema) }}
-        />
-        <Script
-          id={`blog-itemlist-schema-${currentPage}`}
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
-        />
+        {/* Page heading */}
+        {currentPage === 1 ? (
+          <div className="mb-7">
+            <h2 className="text-[1.1rem] font-semibold text-zinc-900">Latest articles</h2>
+            <p className="mt-0.5 text-[13px] text-zinc-500">Most recently published guides</p>
+          </div>
+        ) : (
+          <div className="mb-7">
+            <p className="text-[13px] text-zinc-500">Page {currentPage} of {totalPages}</p>
+          </div>
+        )}
+
+        {/* Post grid */}
         <BlogListClient initialPosts={initialPosts} totalPages={totalPages} currentPage={currentPage} />
 
-        {/* SEO Content Section */}
-        <section className="mt-12 sm:mt-14 ud-surface p-6 sm:p-8 lg:p-10">
-          <h2 className="text-xl sm:text-2xl font-semibold text-slate-900 mb-5 tracking-tight">About this blog</h2>
-          <div className="prose prose-lg max-w-none text-gray-700">
-            <p className="mb-4">
-              Welcome to <strong>Developer's Study Materials</strong> by UnblockDevs—your go-to resource for articles, tutorials, and best practices on <strong>JSON Viewer</strong>, <strong>JSON Parser</strong>, <strong>JSON Beautifier</strong>, API testing, web development, and more.
-            </p>
-            <p className="mb-4">
-              Our blog covers a wide range of topics including:
-            </p>
-            <ul className="list-disc list-inside mb-4 space-y-2">
-              <li><strong>JSON Tools:</strong> Learn about JSON Viewer, JSON Parser, JSON Beautifier, JSON Formatter, and JSON validation tools</li>
-              <li><strong>API Testing:</strong> Best practices for API response comparison, payload analysis, and API testing strategies</li>
-              <li><strong>Data Conversion:</strong> Guides on converting JSON to Excel, CSV, and other formats</li>
-              <li><strong>Developer Tools:</strong> Tutorials on using modern developer tools to improve your workflow</li>
-              <li><strong>Performance Optimization:</strong> Tips and techniques for optimizing API payloads and improving application performance</li>
-              <li><strong>Code Generation:</strong> Learn how to convert curl commands to code and generate mock APIs</li>
-            </ul>
-            <p>
-              Whether you're a beginner learning about <strong>JSON parsing</strong> or an experienced developer looking to optimize your API responses, our blog has something for everyone. Stay updated with the latest trends, tools, and best practices in web development.
-            </p>
-          </div>
-        </section>
+        {/* ── FEATURED GUIDES ──────────────────────────────────── */}
+        {currentPage === 1 && (
+          <>
+            <section className="mt-16" aria-labelledby="featured-heading">
+              <div className="mb-5 flex items-end justify-between gap-4">
+                <div>
+                  <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.13em] text-zinc-500">Handpicked</p>
+                  <h2 id="featured-heading" className="text-[1.25rem] font-semibold tracking-tight text-zinc-900">Featured guides</h2>
+                </div>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {FEATURED_GUIDES.map((g) => (
+                  <Link
+                    key={g.href}
+                    href={g.href}
+                    className="group flex flex-col rounded-2xl border border-zinc-200 bg-white p-5 shadow-[0_1px_4px_rgba(0,0,0,0.05)] transition-all duration-200 hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-[0_6px_24px_rgba(0,0,0,0.08)]"
+                  >
+                    <p className="text-[14px] font-semibold text-zinc-900 group-hover:text-zinc-700">{g.title}</p>
+                    <p className="mt-1 flex-1 text-[12.5px] leading-relaxed text-zinc-500">{g.desc}</p>
+                    <span className="mt-3 inline-flex items-center gap-1 text-[12px] font-semibold text-zinc-400 transition-colors group-hover:text-zinc-700">
+                      Read guide
+                      <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden />
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </section>
 
-        {/* Featured - Internal Links for SEO */}
-        <section className="mt-10 sm:mt-12 ud-surface-soft p-6 sm:p-8 lg:p-10 bg-gradient-to-br from-primary-50/40 via-white to-indigo-50/30">
-          <h2 className="text-xl sm:text-2xl font-semibold text-slate-900 mb-6 tracking-tight">Featured guides</h2>
-          <div className="grid md:grid-cols-2 gap-4">
-            <Link href="/blog/chatgpt-real-life-usage-guide" className="ud-link-card p-4 sm:p-5">
-              <h3 className="font-semibold text-gray-900 mb-2">ChatGPT Real-Life Usage Guide</h3>
-              <p className="text-sm text-gray-600">Complete guide to using ChatGPT in real life with practical use cases and best prompts.</p>
-            </Link>
-            <Link href="/blog/ai-prompt-engineering-guide" className="ud-link-card p-4 sm:p-5">
-              <h3 className="font-semibold text-gray-900 mb-2">AI Prompt Engineering Guide</h3>
-              <p className="text-sm text-gray-600">Learn how to write effective AI prompts with best practices and techniques.</p>
-            </Link>
-            <Link href="/blog/hipaa-compliant-ai-development" className="ud-link-card p-4 sm:p-5">
-              <h3 className="font-semibold text-gray-900 mb-2">HIPAA-Compliant AI Development</h3>
-              <p className="text-sm text-gray-600">Use ChatGPT without exposing patient data. Mask SQL, JSON, and code in your browser—client-side only.</p>
-            </Link>
-            <Link href="/blog/blockchain-complete-guide" className="ud-link-card p-4 sm:p-5">
-              <h3 className="font-semibold text-gray-900 mb-2">Blockchain Complete Guide</h3>
-              <p className="text-sm text-gray-600">Comprehensive guide to Blockchain technology, smart contracts, and Web3.</p>
-            </Link>
-            <Link href="/blog/mysql-10-most-used-functions" className="ud-link-card p-4 sm:p-5">
-              <h3 className="font-semibold text-gray-900 mb-2">MySQL 10 Most Used Functions</h3>
-              <p className="text-sm text-gray-600">Essential MySQL functions every developer should know with examples.</p>
-            </Link>
-            <Link href="/blog/token-security-privacy-best-practices" className="ud-link-card p-4 sm:p-5">
-              <h3 className="font-semibold text-gray-900 mb-2">Token Security Best Practices</h3>
-              <p className="text-sm text-gray-600">Learn how to secure tokens and implement privacy best practices.</p>
-            </Link>
-            <Link href="/blog/5g-6g-complete-guide" className="ud-link-card p-4 sm:p-5">
-              <h3 className="font-semibold text-gray-900 mb-2">5G & 6G Complete Guide</h3>
-              <p className="text-sm text-gray-600">Comprehensive guide to 5G and 6G technologies and their impact.</p>
-            </Link>
-            <Link href="/blog/tokens-complete-guide" className="ud-link-card p-4 sm:p-5">
-              <h3 className="font-semibold text-gray-900 mb-2">Tokens Complete Guide</h3>
-              <p className="text-sm text-gray-600">Everything you need to know about tokens in modern applications.</p>
-            </Link>
-            <Link href="/blog/token-technologies-history-evolution" className="ud-link-card p-4 sm:p-5">
-              <h3 className="font-semibold text-gray-900 mb-2">Token Technologies History</h3>
-              <p className="text-sm text-gray-600">The evolution and history of token technologies in computing.</p>
-            </Link>
-            <Link href="/blog/agentic-ai-complete-guide" className="ud-link-card p-4 sm:p-5">
-              <h3 className="font-semibold text-gray-900 mb-2">Agentic AI Complete Guide</h3>
-              <p className="text-sm text-gray-600">Learn about agentic AI systems and autonomous AI agents.</p>
-            </Link>
-            <Link href="/blog/apache-kafka-complete-guide" className="ud-link-card p-4 sm:p-5">
-              <h3 className="font-semibold text-gray-900 mb-2">Apache Kafka Complete Guide</h3>
-              <p className="text-sm text-gray-600">Master Apache Kafka for distributed streaming and event processing.</p>
-            </Link>
-            <Link href="/blog/confidential-computing-complete-guide" className="ud-link-card p-4 sm:p-5">
-              <h3 className="font-semibold text-gray-900 mb-2">Confidential Computing Guide</h3>
-              <p className="text-sm text-gray-600">Learn about confidential computing and data protection technologies.</p>
-            </Link>
-            <Link href="/blog/cursor-ai-code-editor-guide" className="ud-link-card p-4 sm:p-5">
-              <h3 className="font-semibold text-gray-900 mb-2">Cursor AI Code Editor Guide</h3>
-              <p className="text-sm text-gray-600">Complete guide to using Cursor AI-powered code editor effectively.</p>
-            </Link>
-            <Link href="/blog/digital-twins-complete-guide" className="ud-link-card p-4 sm:p-5">
-              <h3 className="font-semibold text-gray-900 mb-2">Digital Twins Complete Guide</h3>
-              <p className="text-sm text-gray-600">Understanding digital twins and their applications in IoT and industry.</p>
-            </Link>
-            <Link href="/blog/apache-kafka-cheat-sheet" className="ud-link-card p-4 sm:p-5">
-              <h3 className="font-semibold text-gray-900 mb-2">Apache Kafka Cheat Sheet</h3>
-              <p className="text-sm text-gray-600">Quick reference guide for Apache Kafka commands and concepts.</p>
-            </Link>
-          </div>
-        </section>
+            {/* ── QUICK-LINKS HUBS ─────────────────────────────── */}
+            <section className="mt-12 grid gap-4 lg:grid-cols-3" aria-label="Topic hubs">
+              {HUBS.map((hub) => (
+                <div key={hub.title} className={`rounded-2xl border border-zinc-200 bg-white p-5 shadow-[0_1px_4px_rgba(0,0,0,0.05)] border-l-4 ${hub.accent}`}>
+                  <h2 className="text-[15px] font-bold text-zinc-900">{hub.title}</h2>
+                  <p className="mt-1.5 text-[12.5px] leading-relaxed text-zinc-500">{hub.desc}</p>
+                  <div className="mt-4 space-y-2">
+                    {hub.links.map((l) => (
+                      <Link
+                        key={l.href}
+                        href={l.href}
+                        className="block text-[13px] font-medium text-zinc-600 underline-offset-2 hover:text-zinc-900 hover:underline"
+                      >
+                        {l.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </section>
 
-        {/* Intent-focused links that match natural developer searches */}
-        <section className="mt-10 ud-surface p-6 sm:p-8">
-          <h2 className="text-xl sm:text-2xl font-semibold text-slate-900 mb-6 tracking-tight">Popular developer searches</h2>
-          <div className="grid md:grid-cols-2 gap-4">
-            <Link href="/blog/fix-unexpected-end-of-json-input-error-explained" className="ud-link-card p-4 sm:p-5">
-              <h3 className="font-semibold text-gray-900 mb-2">Fix JSON Parse Errors</h3>
-              <p className="text-sm text-gray-600">Unexpected token, invalid JSON format, and parsing edge cases with reproducible fixes.</p>
-            </Link>
-            <Link href="/blog/why-my-api-works-in-postman-but-not-in-browser" className="ud-link-card p-4 sm:p-5">
-              <h3 className="font-semibold text-gray-900 mb-2">API Works in Postman, Not Browser</h3>
-              <p className="text-sm text-gray-600">High-intent debugging flow for CORS, auth headers, cookies, and browser-specific request behavior.</p>
-            </Link>
-            <Link href="/json-validator" className="ud-link-card p-4 sm:p-5">
-              <h3 className="font-semibold text-gray-900 mb-2">Validate JSON Online</h3>
-              <p className="text-sm text-gray-600">Check syntax and structure fast before deploying payloads or sharing examples.</p>
-            </Link>
-            <Link href="/jwt-decoder" className="ud-link-card p-4 sm:p-5">
-              <h3 className="font-semibold text-gray-900 mb-2">Decode JWT Tokens</h3>
-              <p className="text-sm text-gray-600">Inspect claims, expiration, and token payloads during auth debugging workflows.</p>
-            </Link>
-          </div>
-        </section>
+            {/* ── SEO PROSE ────────────────────────────────────── */}
+            <section className="mt-12 rounded-2xl border border-zinc-200 bg-white p-6 shadow-[0_1px_4px_rgba(0,0,0,0.04)] sm:p-8">
+              <h2 className="text-[1.1rem] font-semibold tracking-tight text-zinc-900">About this blog</h2>
+              <div className="mt-4 space-y-3 text-[14px] leading-relaxed text-zinc-600">
+                <p>
+                  <strong className="text-zinc-900">UnblockDevs Blog</strong> publishes practical guides on JSON tools, API debugging, data engineering,
+                  and security-safe AI workflows. Every article is written for working developers — no filler, no paywalls.
+                </p>
+                <p>
+                  Topics include <strong className="text-zinc-800">JSON Viewer, Beautifier, Validator</strong>, API response comparison, JWT decoding,
+                  curl-to-code conversion, schema masking before ChatGPT, and common JavaScript/Python error fixes.
+                </p>
+                <p>
+                  Whether you&apos;re debugging a JSON parse error at 2 AM or learning how to mask sensitive data before pasting into an AI assistant,
+                  these guides have the exact solution — searchable, copy-pasteable, and free forever.
+                </p>
+              </div>
+            </section>
+          </>
+        )}
 
-        <section className="mt-10 grid gap-5 lg:grid-cols-3">
-          <div className="ud-surface p-5 sm:p-6">
-            <h2 className="text-lg font-bold text-gray-900">JSON Error Hub</h2>
-            <p className="mt-2 text-sm text-gray-600">Most searched debugging paths for malformed payloads and parse failures.</p>
-            <div className="mt-4 space-y-2 text-sm">
-              <Link href="/blog/fix-unexpected-end-of-json-input-error-explained" className="block text-primary-700 hover:underline">Unexpected end of JSON input</Link>
-              <Link href="/blog/fix-unexpected-token-less-than-in-json-api-returns-html" className="block text-primary-700 hover:underline">Unexpected token &lt; in JSON</Link>
-              <Link href="/fix-json-parse-error-javascript" className="block text-primary-700 hover:underline">JSON parse error: unexpected token</Link>
-              <Link href="/json-validator" className="block text-primary-700 hover:underline">Open JSON Validator Tool</Link>
-            </div>
-          </div>
-
-          <div className="ud-surface p-5 sm:p-6">
-            <h2 className="text-lg font-bold text-gray-900">JWT & Auth Hub</h2>
-            <p className="mt-2 text-sm text-gray-600">High-intent auth troubleshooting for token inspection and verification.</p>
-            <div className="mt-4 space-y-2 text-sm">
-              <Link href="/jwt-decoder" className="block text-primary-700 hover:underline">Decode JWT Token Online</Link>
-              <Link href="/hash-generator" className="block text-primary-700 hover:underline">Generate SHA / MD5 / HMAC Hash</Link>
-              <Link href="/url-encoder" className="block text-primary-700 hover:underline">URL Encode/Decode Tool</Link>
-              <Link href="/blog/token-security-privacy-best-practices" className="block text-primary-700 hover:underline">Token security best practices</Link>
-            </div>
-          </div>
-
-          <div className="ud-surface p-5 sm:p-6">
-            <h2 className="text-lg font-bold text-gray-900">API Debugging Hub</h2>
-            <p className="mt-2 text-sm text-gray-600">Natural search patterns developers use when APIs fail in production.</p>
-            <div className="mt-4 space-y-2 text-sm">
-              <Link href="/blog/why-my-api-works-in-postman-but-not-in-browser" className="block text-primary-700 hover:underline">API works in Postman, not browser</Link>
-              <Link href="/blog/post-json-data-with-curl-examples-complete-guide" className="block text-primary-700 hover:underline">Post JSON data with curl</Link>
-              <Link href="/curl-failure-root-cause-engine" className="block text-primary-700 hover:underline">Curl failure root-cause engine</Link>
-              <Link href="/cors-tester" className="block text-primary-700 hover:underline">CORS tester tool</Link>
-            </div>
-          </div>
-        </section>
+        {/* Bottom nav */}
+        <div className="mt-12 flex flex-col items-center gap-3">
+          <Link
+            href="/tools/json"
+            className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-5 py-2.5 text-[13px] font-semibold text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 hover:text-zinc-900"
+          >
+            <Zap className="h-3.5 w-3.5 text-amber-500" />
+            Browse all {'{'}developer tools{'}'}
+          </Link>
+        </div>
       </main>
     </div>
   );
 }
-
