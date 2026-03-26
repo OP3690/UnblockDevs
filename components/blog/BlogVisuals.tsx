@@ -347,13 +347,13 @@ export function KeyPointsGrid({ points: pts, items, title, cols, columns }: {
   points?: { title: string; desc?: string; description?: string; icon?: React.ReactNode; color?: string }[];
   items?: { title: string; desc?: string; description?: string; icon?: React.ReactNode; color?: string }[];
   title?: string;
-  cols?: 2|3|4;
-  columns?: 2|3|4;
+  cols?: 1|2|3|4;
+  columns?: 1|2|3|4;
 }) {
   const points = (pts ?? items ?? []).map(p => ({ ...p, desc: p.desc ?? p.description ?? '' }));
-  const colCount: 2|3|4 = (cols ?? columns ?? 2) as 2|3|4;
+  const colCount: 1|2|3|4 = (cols ?? columns ?? 2) as 1|2|3|4;
   const { ref, inView } = useInView();
-  const GRID = { 2: 'sm:grid-cols-2', 3: 'sm:grid-cols-3', 4: 'sm:grid-cols-2 lg:grid-cols-4' };
+  const GRID = { 1: 'grid-cols-1', 2: 'sm:grid-cols-2', 3: 'sm:grid-cols-3', 4: 'sm:grid-cols-2 lg:grid-cols-4' };
   const COLORS: Record<string,string> = {
     blue: 'bg-blue-50 border-blue-200 text-blue-700',
     emerald: 'bg-emerald-50 border-emerald-200 text-emerald-700',
