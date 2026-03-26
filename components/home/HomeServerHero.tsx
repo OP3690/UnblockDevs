@@ -10,7 +10,7 @@ export default function HomeServerHero() {
     <>
       {/* Hero */}
       <section className="border-b border-zinc-200 bg-[#FAFAFA]" aria-labelledby="home-hero-heading">
-        <div className="mx-auto grid max-w-[1100px] items-center gap-10 px-6 pb-14 pt-10 sm:gap-16 sm:pb-18 sm:pt-14 lg:grid-cols-2 lg:gap-20 lg:pb-[5rem] lg:pt-16">
+        <div className="mx-auto grid max-w-[1400px] items-center gap-10 px-4 sm:px-6 lg:px-8 pb-14 pt-10 sm:gap-16 sm:pb-18 sm:pt-14 lg:grid-cols-2 lg:gap-20 lg:pb-[5rem] lg:pt-16">
 
           {/* Left: copy */}
           <div className="min-w-0">
@@ -82,7 +82,7 @@ export default function HomeServerHero() {
 
       {/* Stats bar */}
       <div className="border-b border-zinc-200 bg-white">
-        <div className="mx-auto grid max-w-[1100px] grid-cols-2 sm:grid-cols-4">
+        <div className="mx-auto grid max-w-[1400px] grid-cols-2 sm:grid-cols-4">
           {[
             { n: '30+', l: 'Developer tools' },
             { n: '100%', l: 'Client-side processing' },

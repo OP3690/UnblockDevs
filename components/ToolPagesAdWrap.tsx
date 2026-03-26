@@ -29,7 +29,8 @@ function useIsToolPage(): boolean {
 }
 
 /**
- * Wraps children with left and right sidebar ad slots on tool pages only (xl breakpoint).
+ * Wraps children with left and right sidebar ad slots on tool pages only.
+ * Sidebars appear at xl (1280px+) so desktop users get a proper 3-column layout.
  */
 export default function ToolPagesAdWrap({ children }: { children: React.ReactNode }) {
   const isToolPage = useIsToolPage();
@@ -38,13 +39,13 @@ export default function ToolPagesAdWrap({ children }: { children: React.ReactNod
     return <>{children}</>;
   }
 
-  /* Sidebars only at 2xl+ so typical laptop (xl) gets full-width tool column; outer cap raised for wide screens */
   return (
-    <div className="mx-auto flex w-full max-w-[min(100%,90rem)] flex-col px-3 py-2 sm:py-4 sm:px-5 lg:px-6 2xl:max-w-[min(100%,100rem)] 2xl:flex-row 2xl:items-start 2xl:gap-6 2xl:px-8">
+    <div className="mx-auto flex w-full max-w-[1400px] flex-col px-3 py-2 sm:py-4 sm:px-5 lg:px-6 xl:flex-row xl:items-start xl:gap-6 xl:px-8">
+      {/* Left sidebar — shows at xl (1280px+) */}
       <aside
         role="region"
         aria-label="Advertisement"
-        className="sticky top-[4.75rem] order-first hidden min-h-[250px] w-[160px] min-w-0 max-w-[160px] flex-shrink-0 overflow-hidden self-start 2xl:block"
+        className="sticky top-[4.75rem] order-first hidden min-h-[250px] w-[160px] min-w-0 max-w-[160px] flex-shrink-0 overflow-hidden self-start xl:block"
       >
         <AdUnit
           slot={SLOT_LEFT}
@@ -54,11 +55,15 @@ export default function ToolPagesAdWrap({ children }: { children: React.ReactNod
           className="w-full max-w-full overflow-hidden rounded-lg"
         />
       </aside>
+
+      {/* Main content */}
       <main className="relative z-[1] order-2 min-w-0 flex-1 overflow-x-hidden">{children}</main>
+
+      {/* Right sidebar — shows at xl (1280px+) */}
       <aside
         role="region"
         aria-label="Advertisement"
-        className="sticky top-[4.75rem] order-3 hidden min-h-[250px] w-[300px] min-w-0 max-w-[300px] flex-shrink-0 overflow-hidden self-start 2xl:block"
+        className="sticky top-[4.75rem] order-3 hidden min-h-[250px] w-[300px] min-w-0 max-w-[300px] flex-shrink-0 overflow-hidden self-start xl:block"
       >
         <AdUnit
           slot={SLOT_RIGHT}
