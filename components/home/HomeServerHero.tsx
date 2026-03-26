@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { LayoutGrid, Plus, Star, Lock, CheckCircle } from 'lucide-react';
+import { LayoutGrid, Plus, ShieldCheck, Lock, Zap } from 'lucide-react';
 import HomeHeroCodePreview from '@/components/home/HomeHeroCodePreview';
 
 /**
@@ -57,20 +57,37 @@ export default function HomeServerHero() {
             </div>
 
             {/* Trust badges */}
-            <ul className="mt-8 flex flex-wrap gap-2.5" aria-label="Trust signals">
-              <li className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3.5 py-2 text-[13px] font-medium text-zinc-700 shadow-sm">
-                <Star className="h-3.5 w-3.5 text-amber-500" aria-hidden fill="currentColor" />
-                No signup required
-              </li>
-              <li className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3.5 py-2 text-[13px] font-medium text-zinc-700 shadow-sm">
-                <Lock className="h-3.5 w-3.5 text-emerald-600" aria-hidden />
-                Zero data stored
-              </li>
-              <li className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3.5 py-2 text-[13px] font-medium text-zinc-700 shadow-sm">
-                <CheckCircle className="h-3.5 w-3.5 text-emerald-600" aria-hidden />
-                Free forever
-              </li>
-            </ul>
+            <div className="mt-8 flex flex-wrap gap-3" aria-label="Trust signals">
+              <div className="flex items-center gap-2.5 rounded-xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-white px-4 py-2.5 shadow-sm">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-100">
+                  <ShieldCheck className="h-4 w-4 text-emerald-700" aria-hidden />
+                </span>
+                <div>
+                  <p className="text-[12px] font-bold leading-tight text-emerald-900">No signup required</p>
+                  <p className="text-[10.5px] leading-tight text-emerald-600">Start using instantly</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2.5 rounded-xl border border-sky-100 bg-gradient-to-br from-sky-50 to-white px-4 py-2.5 shadow-sm">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sky-100">
+                  <Lock className="h-4 w-4 text-sky-700" aria-hidden />
+                </span>
+                <div>
+                  <p className="text-[12px] font-bold leading-tight text-sky-900">Zero data stored</p>
+                  <p className="text-[10.5px] leading-tight text-sky-600">100% runs in your browser</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2.5 rounded-xl border border-amber-100 bg-gradient-to-br from-amber-50 to-white px-4 py-2.5 shadow-sm">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-amber-100">
+                  <Zap className="h-4 w-4 text-amber-600" aria-hidden />
+                </span>
+                <div>
+                  <p className="text-[12px] font-bold leading-tight text-amber-900">Free forever</p>
+                  <p className="text-[10.5px] leading-tight text-amber-600">No hidden fees, ever</p>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Right: animated code preview — desktop only */}
