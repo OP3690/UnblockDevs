@@ -1,649 +1,430 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { ArrowLeft, Code, CheckCircle, AlertCircle, Lightbulb, Zap, BookOpen, Palette, Layout, Sparkles } from 'lucide-react';
+import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
+import {
+  AlertBox, FlowDiagram, CompareTable, ErrorFix, VerticalSteps,
+  CodeBlock, FAQAccordion, KeyPointsGrid, StatGrid, SectionHeader,
+  QuickFact, TimelineViz, ArchDiagram,
+} from '@/components/blog/BlogVisuals';
 
-import BlogSocialShare from '@/components/BlogSocialShare';
 export default function CSSExplainedClient() {
-  const [activeDemo, setActiveDemo] = useState<string | null>(null);
-
-  const CSSSimulator = ({ htmlCode, cssCode, title, description }: { htmlCode: string; cssCode: string; title: string; description?: string }) => {
-    const [html, setHtml] = useState(htmlCode);
-    const [css, setCss] = useState(cssCode);
-    const [output, setOutput] = useState('');
-
-    const runCode = () => {
-      setOutput('rendered');
-    };
-
-    return (
-      <div className="my-8 bg-white rounded-xl shadow-lg border-2 border-gray-200 overflow-hidden">
-        <div className="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4">
-          <h3 className="text-xl font-bold text-white flex items-center gap-2">
-            <Palette className="w-5 h-5" />
-            {title}
-          </h3>
-          {description && (
-            <p className="text-purple-100 text-sm mt-1">{description}</p>
-          )}
-        </div>
-        <div className="p-6 space-y-4">
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">HTML:</label>
-              <textarea
-                value={html}
-                onChange={(e) => setHtml(e.target.value)}
-                className="w-full h-32 p-4 font-mono text-sm border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 resize-none"
-                placeholder="Enter HTML..."
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">CSS:</label>
-              <textarea
-                value={css}
-                onChange={(e) => setCss(e.target.value)}
-                className="w-full h-32 p-4 font-mono text-sm border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 resize-none"
-                placeholder="Enter CSS..."
-              />
-            </div>
-          </div>
-          <button
-            onClick={runCode}
-            className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-200 shadow-md hover:shadow-lg flex items-center gap-2"
-          >
-            <Zap className="w-4 h-4" />
-            Run & Preview
-          </button>
-          {output && (
-            <div className="mt-4">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Live Preview:</label>
-              <div className="w-full min-h-[300px] border-2 border-gray-300 rounded-lg bg-white overflow-auto p-4">
-                <style dangerouslySetInnerHTML={{ __html: css }} />
-                <div dangerouslySetInnerHTML={{ __html: html }} />
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  const CodeBlock = ({ code, language = 'css' }: { code: string; language?: string }) => {
-    const [copied, setCopied] = useState(false);
-
-    const copyToClipboard = () => {
-      navigator.clipboard.writeText(code);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    };
-
-    return (
-      <div className="relative my-6">
-        <div className="bg-gray-900 rounded-lg overflow-hidden shadow-xl">
-          <div className="flex items-center justify-between bg-gray-800 px-4 py-2">
-            <span className="text-sm font-semibold text-gray-300 uppercase">{language}</span>
-            <button
-              onClick={copyToClipboard}
-              className="px-3 py-1.5 text-xs font-medium text-gray-300 hover:text-white bg-gray-700 rounded hover:bg-gray-600 transition-colors flex items-center gap-2"
-            >
-              {copied ? (
-                <>
-                  <CheckCircle className="w-3.5 h-3.5" />
-                  Copied!
-                </>
-              ) : (
-                <>
-                  <Code className="w-3.5 h-3.5" />
-                  Copy
-                </>
-              )}
-            </button>
-          </div>
-          <pre className="p-4 overflow-x-auto">
-            <code className="text-sm text-gray-100 font-mono">{code}</code>
-          </pre>
-        </div>
-      </div>
-    );
-  };
-
-  const TipBox = ({ children, type = 'tip' }: { children: React.ReactNode; type?: 'tip' | 'warning' | 'info' }) => {
-    const styles = {
-      tip: 'bg-blue-50 border-blue-500 text-blue-900',
-      warning: 'bg-yellow-50 border-yellow-500 text-yellow-900',
-      info: 'bg-purple-50 border-purple-500 text-purple-900',
-    };
-
-    const icons = {
-      tip: Lightbulb,
-      warning: AlertCircle,
-      info: BookOpen,
-    };
-
-    const Icon = icons[type];
-
-    return (
-      <div className={`border-l-4 ${styles[type]} p-5 rounded-r-lg my-6 shadow-sm`}>
-        <div className="flex items-start gap-3">
-          <Icon className={`w-6 h-6 flex-shrink-0 mt-0.5 ${type === 'tip' ? 'text-blue-600' : type === 'warning' ? 'text-yellow-600' : 'text-purple-600'}`} />
-          <div className="flex-1">{children}</div>
-        </div>
-      </div>
-    );
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-pink-50">
-      <header className="bg-white shadow-md border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link
-            href="/blog"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Developer's Study Materials
-          </Link>
-          <div className="flex items-center gap-2 mb-2">
-            <span className="px-3 py-1 text-xs font-semibold text-purple-600 bg-purple-50 rounded-full">
-              Web Development
-            </span>
-            <time className="text-sm text-gray-500" dateTime="2024-01-28">
-              January 28, 2024
-            </time>
-            <span className="text-sm text-gray-500">•</span>
-            <span className="text-sm text-gray-500">13 min read</span>
-          </div>
-        </div>
-      </header>
+    <BlogLayoutWithSidebarAds
+      title="CSS Explained: Complete Beginner to Advanced Guide 2026"
+      description="Everything you need to know about CSS — selectors, the box model, Flexbox, Grid, animations, and modern best practices."
+    >
+      <h1>CSS Explained: Complete Beginner to Advanced Guide 2026</h1>
+      <p className="lead">
+        CSS (Cascading Style Sheets) is the language that makes the web beautiful. It controls every visual aspect of a web page — colors, fonts, layouts, animations, and responsive behavior. Whether you are just starting out or want to solidify your understanding of modern CSS, this complete guide covers everything from the basics to advanced techniques used in production today.
+      </p>
 
-      {/* Floating Social Share Bar */}
-      <BlogSocialShare 
-        title="CSS Explained: Must-Do Practices, Hidden Facts & Pro Tips"
-        description="CSS Explained: Must-Do Practices, Hidden Facts & Pro Tips"
-        variant="floating"
+      <StatGrid stats={[
+        { value: '3', label: 'CSS versions (CSS1, CSS2, CSS3+)', color: 'blue' },
+        { value: '500+', label: 'CSS properties available', color: 'purple' },
+        { value: '98%', label: 'browser support for Flexbox', color: 'green' },
+        { value: '96%', label: 'browser support for CSS Grid', color: 'amber' },
+      ]} />
+
+      <SectionHeader number={1} title="What is CSS and How Does it Work?" />
+
+      <p>
+        CSS stands for <strong>Cascading Style Sheets</strong>. The word "cascading" means that styles apply in a specific order of priority, with later rules overriding earlier ones. CSS works by selecting HTML elements and applying visual rules to them.
+      </p>
+
+      <ArchDiagram
+        boxes={[
+          { label: 'HTML Structure', color: 'blue' },
+          { label: 'CSS Styles', color: 'purple' },
+          { label: 'Rendered Page', color: 'green' },
+        ]}
+        arrows={['→', '→']}
       />
 
+      <p>There are three ways to add CSS to an HTML document:</p>
 
-      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <header className="mb-12 text-center">
-          <h1 className="text-5xl font-extrabold text-gray-900 mb-6 leading-tight">
-            CSS Explained: Must-Do Practices, Hidden Facts & Pro Tips
-          </h1>
-          <p className="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
-            CSS (Cascading Style Sheets) is what turns plain HTML into beautiful, responsive, and interactive websites. Most developers use CSS—but very few truly master it.
-          </p>
-        </header>
+      <CompareTable
+        leftLabel="Method"
+        rightLabel="When to use"
+        rows={[
+          { label: 'External stylesheet', left: '<link rel="stylesheet" href="styles.css">', right: 'Always — best practice for reusability and caching.' },
+          { label: 'Internal style tag', left: '<style>body { color: red; }</style>', right: 'Quick prototypes or email HTML templates.' },
+          { label: 'Inline style', left: '<p style="color:red">...</p>', right: 'Dynamic styles from JavaScript, or single-element overrides.' },
+        ]}
+      />
 
-        <div className="bg-white rounded-xl shadow-lg p-8 md:p-12 mb-8">
-          <div className="prose prose-lg max-w-none">
-            <section className="mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <BookOpen className="w-8 h-8 text-purple-600" />
-                What You'll Learn
-              </h2>
-              <div className="grid md:grid-cols-2 gap-4">
-                {[
-                  'Must-know CSS concepts and fundamentals',
-                  'Best practices you should always follow',
-                  'Lesser-known facts that surprise even experienced devs',
-                  'Quick tricks & pro tips to write cleaner, smarter CSS',
-                ].map((item, idx) => (
-                  <div key={idx} className="flex items-start gap-3 p-4 bg-purple-50 rounded-lg">
-                    <CheckCircle className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </section>
+      <SectionHeader number={2} title="CSS Selectors" />
 
-            <section className="mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <Palette className="w-8 h-8 text-purple-600" />
-                1. What Is CSS (Really)?
-              </h2>
-              <p className="text-gray-700 mb-4 leading-relaxed text-lg">
-                CSS controls how HTML elements look and behave on screen.
-              </p>
+      <p>
+        Selectors are patterns that match HTML elements. They are the most important part of CSS to master — without the right selector, your styles will not reach the right elements.
+      </p>
 
-              <CodeBlock code={`p {
-  color: blue;
-}`} />
+      <CodeBlock language="css" filename="selectors.css">{`/* Universal selector — matches everything */
+* { box-sizing: border-box; }
 
-              <p className="text-gray-700 mb-6 leading-relaxed text-lg">
-                But CSS is more than colors and fonts—it controls layout, responsiveness, animation, accessibility, and performance.
-              </p>
+/* Type selector — matches all <p> elements */
+p { line-height: 1.6; }
 
-              <CSSSimulator
-                title="Basic CSS Example"
-                description="Try editing the CSS to see how it affects the HTML"
-                htmlCode='<p>This is a paragraph</p>\n<h1>This is a heading</h1>'
-                cssCode='p {\n  color: blue;\n  font-size: 18px;\n}\n\nh1 {\n  color: red;\n  font-size: 32px;\n}'
-              />
-            </section>
+/* Class selector — matches elements with class="card" */
+.card { border-radius: 8px; }
 
-            <section className="mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <Layout className="w-8 h-8 text-purple-600" />
-                2. Must-Know CSS Fundamentals
-              </h2>
+/* ID selector — matches element with id="header" */
+#header { background: #1a1a2e; }
 
-              <h3 className="text-2xl font-bold text-gray-800 mb-4 mt-8">🔹 Selectors (The Core of CSS)</h3>
+/* Attribute selector — matches <input type="email"> */
+input[type="email"] { border: 2px solid blue; }
 
-              <CodeBlock code={`/* Element selector */
-p { }
+/* Descendant — <a> inside .nav */
+.nav a { text-decoration: none; }
 
-/* Class selector */
-.card { }
+/* Child — direct <li> children of <ul> only */
+ul > li { padding: 8px; }
 
-/* ID selector */
-#header { }
+/* Adjacent sibling — <p> immediately after <h2> */
+h2 + p { font-size: 1.1rem; }
 
-/* Attribute selector */
-input[type="text"] { }
+/* Pseudo-class — link on hover */
+a:hover { color: royalblue; }
 
-/* Pseudo-class selector */
-a:hover { }
+/* Pseudo-element — first line of a paragraph */
+p::first-line { font-weight: bold; }`}</CodeBlock>
 
-/* Descendant selector */
-.container .item { }`} />
+      <AlertBox type="tip" title="Specificity determines which rule wins">
+        When multiple selectors target the same element, the most specific one wins. ID selectors beat class selectors; class selectors beat type selectors. Use browser DevTools to inspect which rule is overriding another.
+      </AlertBox>
 
-              <TipBox>
-                <p className="font-semibold mb-1">✅ Best practice:</p>
-                <p className="text-sm">Prefer class selectors over IDs for scalability and reusability.</p>
-              </TipBox>
+      <SectionHeader number={3} title="The CSS Box Model" />
 
-              <h3 className="text-2xl font-bold text-gray-800 mb-4 mt-8">🔹 The CSS Box Model (Non-Negotiable)</h3>
+      <QuickFact>Every HTML element is a rectangular box. Understanding the box model is the foundation of all CSS layout work.</QuickFact>
 
-              <p className="text-gray-700 mb-4 leading-relaxed text-lg">
-                Every element is a box with:
-              </p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700 mb-6">
-                <li><strong>Content</strong> - The actual content</li>
-                <li><strong>Padding</strong> - Space inside the border</li>
-                <li><strong>Border</strong> - The border around padding</li>
-                <li><strong>Margin</strong> - Space outside the border</li>
-              </ul>
+      <p>
+        The box model describes how every element is rendered as a box with four layers: Content, Padding, Border, and Margin.
+      </p>
 
-              <CodeBlock code={`* {
+      <ArchDiagram
+        boxes={[
+          { label: 'Content', color: 'blue' },
+          { label: 'Padding', color: 'green' },
+          { label: 'Border', color: 'amber' },
+          { label: 'Margin', color: 'purple' },
+        ]}
+        arrows={['→', '→', '→']}
+      />
+
+      <CodeBlock language="css" filename="box-model.css">{`.box {
+  width: 200px;
+  height: 100px;
+  padding: 16px;
+  border: 2px solid #333;
+  border-radius: 8px;
+  margin: 24px;
+}
+
+/* box-sizing: border-box makes width include padding+border */
+* {
   box-sizing: border-box;
-}`} />
+}`}</CodeBlock>
 
-              <TipBox>
-                <p className="font-semibold mb-1">👉 Pro Tip:</p>
-                <p className="text-sm">This single line saves hours of layout frustration. Always use <code className="bg-gray-200 px-1 rounded">box-sizing: border-box</code>.</p>
-              </TipBox>
+      <ErrorFix
+        bad={`/* Without border-box: element overflows its container */
+.card {
+  width: 300px;
+  padding: 20px;
+  border: 2px solid black;
+  /* Actual rendered width: 300 + 40 + 4 = 344px */
+}`}
+        good={`/* With border-box: padding and border included in width */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+.card {
+  width: 300px;
+  padding: 20px;
+  border: 2px solid black;
+  /* Actual rendered width: 300px exactly */
+}`}
+        badLabel="Without border-box (confusing)"
+        goodLabel="With border-box (predictable)"
+      />
 
-              <CSSSimulator
-                title="Box Model Demo"
-                description="See how padding, border, and margin work"
-                htmlCode='<div class="box">Content</div>'
-                cssCode='.box {\n  width: 200px;\n  padding: 20px;\n  border: 5px solid blue;\n  margin: 20px;\n  background: lightblue;\n}'
-              />
+      <SectionHeader number={4} title="CSS Flexbox" />
 
-              <h3 className="text-2xl font-bold text-gray-800 mb-4 mt-8">🔹 Display & Position</h3>
+      <p>
+        Flexbox is a one-dimensional layout system — it arranges items in a row or column. It is the best tool for navigation bars, card rows, centering content, and any layout where items need to flex and wrap.
+      </p>
 
-              <CodeBlock code={`/* Display types */
-.block { display: block; }
-.inline { display: inline; }
-.flex { display: flex; }
-.grid { display: grid; }
-
-/* Positioning */
-.element {
-  position: relative; /* or absolute, fixed, sticky */
-  top: 10px;
-  left: 20px;
-}`} />
-
-              <TipBox>
-                <p className="text-sm">Understanding display and position solves <strong>80% of layout issues</strong>.</p>
-              </TipBox>
-            </section>
-
-            <section className="mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <CheckCircle className="w-8 h-8 text-green-600" />
-                3. Must-Do CSS Best Practices
-              </h2>
-
-              <h3 className="text-2xl font-bold text-gray-800 mb-4 mt-8">✅ Use Flexbox & Grid (Stop Using Floats)</h3>
-
-              <CodeBlock code={`/* Flexbox - One-dimensional layouts */
+      <CodeBlock language="css" filename="flexbox.css">{`/* Make a container a flex container */
 .container {
+  display: flex;
+  flex-direction: row;        /* row | column */
+  flex-wrap: wrap;            /* wrap items to next line */
+  justify-content: space-between; /* main-axis alignment */
+  align-items: center;        /* cross-axis alignment */
+  gap: 16px;
+}
+
+/* Flex item properties */
+.item {
+  flex: 1 0 200px; /* grow shrink basis */
+  align-self: flex-end;
+}
+
+/* Center anything perfectly */
+.centered {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
-}
+  height: 100vh;
+}`}</CodeBlock>
 
-/* Grid - Two-dimensional layouts */
-.grid {
+      <SectionHeader number={5} title="CSS Grid" />
+
+      <p>
+        CSS Grid is a two-dimensional layout system — it manages rows AND columns simultaneously. Use Grid for page-level layouts: headers, sidebars, content areas, and complex responsive designs.
+      </p>
+
+      <CodeBlock language="css" filename="css-grid.css">{`/* Responsive grid with auto-fill */
+.card-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}`} />
-
-              <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-lg my-6 border-2 border-purple-200">
-                <p className="font-semibold text-gray-900 mb-2">Remember:</p>
-                <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
-                  <li><strong>Flexbox</strong> = one-dimensional layouts (row or column)</li>
-                  <li><strong>Grid</strong> = two-dimensional layouts (rows and columns)</li>
-                </ul>
-              </div>
-
-              <CSSSimulator
-                title="Flexbox Example"
-                description="Try changing justify-content and align-items"
-                htmlCode='<div class="container">\n  <div class="item">Item 1</div>\n  <div class="item">Item 2</div>\n  <div class="item">Item 3</div>\n</div>'
-                cssCode='.container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  gap: 20px;\n  height: 200px;\n  background: #f3f4f6;\n}\n\n.item {\n  padding: 20px;\n  background: #8b5cf6;\n  color: white;\n  border-radius: 8px;\n}'
-              />
-
-              <h3 className="text-2xl font-bold text-gray-800 mb-4 mt-8">✅ Mobile-First Responsive Design</h3>
-
-              <CodeBlock code={`/* Mobile-first approach */
-.card {
-  width: 100%;
-  padding: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
 }
 
-/* Tablet and up */
+/* Named grid areas */
+.page-layout {
+  display: grid;
+  grid-template-areas:
+    "header header header"
+    "sidebar main main"
+    "footer footer footer";
+  grid-template-columns: 250px 1fr 1fr;
+  grid-template-rows: 60px 1fr 80px;
+  min-height: 100vh;
+}
+
+.header  { grid-area: header; }
+.sidebar { grid-area: sidebar; }
+.main    { grid-area: main; }
+.footer  { grid-area: footer; }
+
+/* Span multiple cells */
+.featured-card {
+  grid-column: span 2;
+  grid-row: span 2;
+}`}</CodeBlock>
+
+      <SectionHeader number={6} title="CSS Positioning" />
+
+      <CompareTable
+        leftLabel="Position value"
+        rightLabel="Behavior"
+        rows={[
+          { label: 'static', left: 'static (default)', right: 'Normal document flow. top/left/right/bottom have no effect.' },
+          { label: 'relative', left: 'relative', right: 'Offset from its normal position. Other elements are unaffected.' },
+          { label: 'absolute', left: 'absolute', right: 'Removed from flow. Positioned relative to nearest non-static ancestor.' },
+          { label: 'fixed', left: 'fixed', right: 'Removed from flow. Positioned relative to viewport. Stays on scroll.' },
+          { label: 'sticky', left: 'sticky', right: 'Normal flow until scroll threshold, then fixed. Great for headers.' },
+        ]}
+      />
+
+      <CodeBlock language="css" filename="positioning.css">{`/* Sticky navigation bar */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Badge on a card */
+.card { position: relative; }
+.badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: red;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+}`}</CodeBlock>
+
+      <SectionHeader number={7} title="Responsive Design and Media Queries" />
+
+      <QuickFact>Mobile-first CSS means writing your base styles for small screens, then using media queries to add complexity for larger screens.</QuickFact>
+
+      <CodeBlock language="css" filename="responsive.css">{`/* Mobile-first base styles */
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+/* Tablet: 768px and up */
 @media (min-width: 768px) {
-  .card {
-    width: 50%;
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* Desktop and up */
+/* Desktop: 1024px and up */
 @media (min-width: 1024px) {
-  .card {
-    width: 33.333%;
+  .card-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
-}`} />
+}
 
-              <TipBox>
-                <p className="font-semibold mb-1">💡 Best Practice:</p>
-                <p className="text-sm">Design for mobile first, then scale up. This approach is more efficient and user-friendly.</p>
-              </TipBox>
+/* Dark mode preference */
+@media (prefers-color-scheme: dark) {
+  body { background: #0f0f0f; color: #f5f5f5; }
+}
 
-              <h3 className="text-2xl font-bold text-gray-800 mb-4 mt-8">✅ Keep CSS Maintainable</h3>
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}`}</CodeBlock>
 
-              <div className="grid md:grid-cols-2 gap-4 my-6">
-                <div className="p-4 bg-red-50 rounded-lg border-l-4 border-red-400">
-                  <p className="font-semibold text-red-900 mb-2">❌ Bad:</p>
-                  <code className="text-sm text-red-800 font-mono">
-                    .header .nav ul li a span {'{ }'}
-                  </code>
-                  <p className="text-sm text-red-700 mt-2">Too specific, hard to maintain</p>
-                </div>
-                <div className="p-4 bg-green-50 rounded-lg border-l-4 border-green-400">
-                  <p className="font-semibold text-green-900 mb-2">✅ Good:</p>
-                  <code className="text-sm text-green-800 font-mono">
-                    .nav-link {'{ }'}
-                  </code>
-                  <p className="text-sm text-green-700 mt-2">Simple, reusable, maintainable</p>
-                </div>
-              </div>
+      <SectionHeader number={8} title="CSS Custom Properties (Variables)" />
 
-              <TipBox>
-                <p className="font-semibold mb-1">Maintainability Tips:</p>
-                <ul className="list-disc list-inside space-y-1 text-sm">
-                  <li>Use meaningful class names</li>
-                  <li>Avoid deep nesting (max 2-3 levels)</li>
-                  <li>Split large files into components</li>
-                  <li>Use CSS variables for consistency</li>
-                </ul>
-              </TipBox>
-            </section>
-
-            <section className="mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <Sparkles className="w-8 h-8 text-purple-600" />
-                4. Lesser-Known & Underrated CSS Features
-              </h2>
-
-              <h3 className="text-2xl font-bold text-gray-800 mb-4 mt-8">🔹 CSS Variables (Game Changer 💎)</h3>
-
-              <CodeBlock code={`:root {
-  --primary: #2563eb;
-  --secondary: #8b5cf6;
-  --spacing: 1rem;
+      <CodeBlock language="css" filename="variables.css">{`/* Declare variables on :root for global scope */
+:root {
+  --color-primary: #3b82f6;
+  --color-text: #1f2937;
+  --spacing-md: 16px;
+  --border-radius: 8px;
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
 }
 
 .button {
-  background: var(--primary);
-  padding: var(--spacing);
+  background: var(--color-primary);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius);
 }
 
-/* Change once → update everywhere */`} />
+/* Override for dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: #60a5fa;
+    --color-text: #f9fafb;
+  }
+}`}</CodeBlock>
 
-              <TipBox>
-                <p className="text-sm">CSS Variables make theming and maintenance <strong>incredibly easy</strong>. Change a value once, and it updates everywhere.</p>
-              </TipBox>
+      <SectionHeader number={9} title="CSS Animations and Transitions" />
 
-              <CSSSimulator
-                title="CSS Variables Demo"
-                description="Change the --primary color and see it update everywhere"
-                htmlCode='<div class="card">\n  <button class="btn">Button</button>\n  <p class="text">Text with primary color</p>\n</div>'
-                cssCode=':root {\n  --primary: #2563eb;\n  --spacing: 1rem;\n}\n\n.card {\n  padding: var(--spacing);\n  border: 2px solid var(--primary);\n}\n\n.btn {\n  background: var(--primary);\n  color: white;\n  padding: 10px 20px;\n  border: none;\n  border-radius: 4px;\n}\n\n.text {\n  color: var(--primary);\n}'
-              />
-
-              <h3 className="text-2xl font-bold text-gray-800 mb-4 mt-8">🔹 clamp() for Responsive Fonts</h3>
-
-              <CodeBlock code={`h1 {
-  font-size: clamp(1.5rem, 4vw, 3rem);
+      <CodeBlock language="css" filename="animations.css">{`/* Smooth hover transition */
+.button {
+  background: #3b82f6;
+  transform: scale(1);
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.button:hover {
+  background: #1d4ed8;
+  transform: scale(1.05);
 }
 
-/* min-size, preferred-size, max-size */
-/* No media queries needed! */`} />
-
-              <TipBox>
-                <p className="text-sm">The <code className="bg-gray-200 px-1 rounded">clamp()</code> function creates fluid typography that scales smoothly between min and max values.</p>
-              </TipBox>
-
-              <h3 className="text-2xl font-bold text-gray-800 mb-4 mt-8">🔹 aspect-ratio</h3>
-
-              <CodeBlock code={`.video {
-  aspect-ratio: 16 / 9;
-  width: 100%;
+/* Keyframe animation */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-
 .card {
-  aspect-ratio: 1 / 1; /* Square */
+  animation: fadeInUp 0.4s ease forwards;
 }
 
-/* Perfect for videos, images, and cards */`} />
+/* Stagger children */
+.card:nth-child(1) { animation-delay: 0ms; }
+.card:nth-child(2) { animation-delay: 100ms; }
+.card:nth-child(3) { animation-delay: 200ms; }
 
-              <h3 className="text-2xl font-bold text-gray-800 mb-4 mt-8">🔹 :is() and :where() Selectors</h3>
+/* Spinning loader */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.loader {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}`}</CodeBlock>
 
-              <CodeBlock code={`/* Instead of this */
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 600;
+      <SectionHeader number={10} title="Modern CSS Features (2024-2026)" />
+
+      <KeyPointsGrid columns={2} items={[
+        { title: ':has() selector', description: 'Parent selector — style a parent based on its children. .card:has(img) targets cards that contain an image.' },
+        { title: 'CSS Container Queries', description: 'Style elements based on their container size instead of viewport size. Perfect for truly reusable components.' },
+        { title: 'CSS Nesting', description: 'Write nested selectors directly in CSS (like Sass), now supported natively in all modern browsers.' },
+        { title: 'color-mix()', description: 'Mix two colors in CSS: color-mix(in srgb, blue 30%, white) creates a light blue tint.' },
+        { title: 'CSS Layers (@layer)', description: 'Explicitly control cascade layers, making it easier to manage third-party styles vs. your own styles.' },
+        { title: 'Logical properties', description: 'margin-inline-start instead of margin-left — works correctly for both LTR and RTL languages.' },
+      ]} />
+
+      <CodeBlock language="css" filename="modern-css.css">{`/* :has() — parent selector */
+.form-group:has(input:invalid) { border-color: red; }
+
+/* Container queries */
+.card-wrapper { container-type: inline-size; }
+@container (min-width: 400px) {
+  .card { flex-direction: row; }
 }
 
-/* Use this */
-:is(h1, h2, h3, h4, h5, h6) {
-  font-weight: 600;
-}
-
-/* :where() has 0 specificity */
-:where(.card, .box) {
-  margin: 1rem;
-}`} />
-
-              <TipBox>
-                <p className="text-sm">These selectors make your CSS <strong>cleaner and more readable</strong>, especially for complex selectors.</p>
-              </TipBox>
-            </section>
-
-            <section className="mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <Lightbulb className="w-8 h-8 text-yellow-600" />
-                5. Unknown Facts About CSS
-              </h2>
-
-              <div className="grid md:grid-cols-2 gap-4 my-6">
-                {[
-                  { icon: '💡', fact: 'CSS is render-blocking—bad CSS can slow your site significantly.' },
-                  { icon: '💡', fact: 'Browsers read CSS top-to-bottom, last rule wins (cascade).' },
-                  { icon: '💡', fact: '!important is not evil—but overusing it creates maintenance nightmares.' },
-                  { icon: '💡', fact: 'You can create complex animations without JavaScript.' },
-                  { icon: '💡', fact: 'Modern CSS can replace many JavaScript UI features.' },
-                  { icon: '💡', fact: 'CSS Grid can create layouts that were impossible before.' },
-                ].map((item, idx) => (
-                  <div key={idx} className="flex items-start gap-3 p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-400">
-                    <span className="text-2xl">{item.icon}</span>
-                    <p className="text-gray-700 flex-1">{item.fact}</p>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            <section className="mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <Zap className="w-8 h-8 text-green-600" />
-                6. Quick CSS Tricks & Pro Tips
-              </h2>
-
-              <h3 className="text-2xl font-bold text-gray-800 mb-4 mt-8">⚡ Center Anything (The Modern Way)</h3>
-
-              <CodeBlock code={`/* Method 1: Grid (Simplest) */
-.center {
-  display: grid;
-  place-items: center;
-}
-
-/* Method 2: Flexbox */
-.center {
+/* CSS Nesting (native, no Sass needed) */
+.nav {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  gap: 16px;
+
+  & a {
+    text-decoration: none;
+    &:hover { color: royalblue; }
+  }
 }
 
-/* Method 3: Absolute positioning */
-.center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}`} />
+/* CSS @layer */
+@layer reset, base, components, utilities;
+@layer reset {
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+}`}</CodeBlock>
 
-              <h3 className="text-2xl font-bold text-gray-800 mb-4 mt-8">⚡ Smooth Hover Animations</h3>
+      <SectionHeader number={11} title="CSS Specificity and the Cascade" />
 
-              <CodeBlock code={`.card {
-  transition: transform 0.3s ease;
-}
+      <CompareTable
+        leftLabel="Selector"
+        rightLabel="Specificity score"
+        rows={[
+          { label: '*', left: '* (universal)', right: '0,0,0,0 — lowest possible' },
+          { label: 'p', left: 'p (type)', right: '0,0,0,1' },
+          { label: '.class', left: '.card (class)', right: '0,0,1,0' },
+          { label: '#id', left: '#header (ID)', right: '0,1,0,0' },
+          { label: 'inline', left: 'style="..."', right: '1,0,0,0 — highest' },
+          { label: '!important', left: '!important', right: 'Overrides everything — use sparingly' },
+        ]}
+      />
 
-.card:hover {
-  transform: translateY(-5px);
-}
+      <FAQAccordion items={[
+        {
+          question: 'What is the difference between margin and padding?',
+          answer: 'Padding is the space between the content and the border (inside the element). Margin is the space outside the border (between elements). Background color fills padding but not margin. Margins can collapse — two adjacent vertical margins merge into one (the larger value).',
+        },
+        {
+          question: 'When should I use Flexbox vs CSS Grid?',
+          answer: 'Use Flexbox for one-dimensional layouts — rows of items, navigation bars, centering content. Use Grid for two-dimensional layouts — full page layouts with rows and columns. They work well together: Grid for the page structure, Flexbox for the components inside each grid area.',
+        },
+        {
+          question: 'What does display: none vs visibility: hidden do?',
+          answer: 'display: none removes the element from the layout entirely — no space is reserved. visibility: hidden hides the element visually but preserves its space in the layout. For screen readers, both hide content. Use opacity: 0 to hide visually while keeping it accessible to screen readers and preserving layout space.',
+        },
+        {
+          question: 'Why does z-index not work on my element?',
+          answer: 'z-index only works on positioned elements (position: relative, absolute, fixed, or sticky). Elements with position: static (the default) ignore z-index. Also, z-index is scoped to stacking contexts — a child cannot appear above an element outside its parent stacking context, even with a high z-index.',
+        },
+        {
+          question: 'What is the difference between em, rem, px, and %?',
+          answer: 'px is absolute (fixed size). em is relative to the parent element font-size. rem is relative to the root element font-size (usually 16px) — more predictable than em. % is relative to the parent element dimension. For font sizes, use rem for consistency. For spacing, rem or px both work. For responsive widths, use % or viewport units (vw, vh).',
+        },
+      ]} />
 
-/* Always animate transform and opacity for performance */`} />
-
-              <CSSSimulator
-                title="Hover Animation Demo"
-                description="Hover over the card to see the animation"
-                htmlCode='<div class="card">Hover me!</div>'
-                cssCode='.card {\n  padding: 40px;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  color: white;\n  border-radius: 12px;\n  text-align: center;\n  font-size: 24px;\n  cursor: pointer;\n  transition: transform 0.3s ease, box-shadow 0.3s ease;\n}\n\n.card:hover {\n  transform: translateY(-10px);\n  box-shadow: 0 20px 40px rgba(0,0,0,0.3);\n}'
-              />
-
-              <h3 className="text-2xl font-bold text-gray-800 mb-4 mt-8">⚡ Disable Text Selection</h3>
-
-              <CodeBlock code={`.no-select {
-  user-select: none;
-}
-
-/* Useful for buttons & UI elements */`} />
-
-              <h3 className="text-2xl font-bold text-gray-800 mb-4 mt-8">⚡ Skeleton Loading Effect</h3>
-
-              <CodeBlock code={`@keyframes shimmer {
-  0% { background-position: -1000px 0; }
-  100% { background-position: 1000px 0; }
-}
-
-.loading {
-  background: linear-gradient(
-    90deg,
-    #eee 0%,
-    #f5f5f5 50%,
-    #eee 100%
-  );
-  background-size: 1000px 100%;
-  animation: shimmer 1.5s infinite;
-}`} />
-            </section>
-
-            <section className="mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <AlertCircle className="w-8 h-8 text-red-600" />
-                7. Common CSS Mistakes to Avoid
-              </h2>
-
-              <div className="grid md:grid-cols-2 gap-4 my-6">
-                {[
-                  '❌ Using fixed widths everywhere',
-                  '❌ Overusing !important',
-                  '❌ Ignoring mobile design',
-                  '❌ Writing overly complex selectors',
-                  '❌ Not using modern layout tools (Flexbox/Grid)',
-                  '❌ Not using CSS variables',
-                  '❌ Inline styles in production',
-                  '❌ Not optimizing for performance',
-                ].map((mistake, idx) => (
-                  <div key={idx} className="flex items-center gap-3 p-4 bg-red-50 rounded-lg border-l-4 border-red-400">
-                    <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-                    <p className="text-gray-700" dangerouslySetInnerHTML={{ __html: mistake }} />
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            <section className="mb-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-8 text-white">
-              <h2 className="text-3xl font-bold mb-4">Final Thoughts</h2>
-              <p className="text-lg leading-relaxed mb-4">
-                CSS isn't hard—it's misunderstood.
-              </p>
-              <p className="text-lg leading-relaxed mb-4">
-                Once you:
-              </p>
-              <ul className="list-disc list-inside space-y-2 mb-6 text-lg">
-                <li>Understand layout fundamentals</li>
-                <li>Use modern CSS features</li>
-                <li>Write clean, maintainable styles</li>
-              </ul>
-              <p className="text-lg leading-relaxed">
-                You'll build faster, more responsive, and more beautiful websites.
-              </p>
-            </section>
-
-            <div className="mt-12 pt-8 border-t-2 border-gray-200">
-              <p className="text-gray-600 text-center">
-                Want the same deep-dive for JavaScript, responsive design, or CSS interview questions? Just say the word.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-12 flex items-center justify-between">
-          <Link
-            href="/blog"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 border-2 border-gray-200 hover:border-purple-500"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Developer's Study Materials
-          </Link>
-          <Link
-            href="/blog/html-tags-explained-guide"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
-          >
-            Read HTML Tags Guide
-            <Code className="w-4 h-4" />
-          </Link>
-        </div>
-      </article>
-    </div>
+      <AlertBox type="success" title="CSS mastery comes from practice">
+        The best way to learn CSS is to build real projects. Start with a simple webpage, then add Flexbox for the navigation, Grid for the content layout, custom properties for theming, and media queries for responsiveness. Each concept reinforces the others.
+      </AlertBox>
+    </BlogLayoutWithSidebarAds>
   );
 }
-

@@ -1,420 +1,323 @@
 'use client';
 
-import Link from 'next/link';
-import { ArrowLeft, FileText, CheckCircle, ExternalLink, Upload, Code, Download, Zap, Shield, Clock } from 'lucide-react';
-import FAQSchema from '@/components/FAQSchema';
-import BlogSocialShare from '@/components/BlogSocialShare';
+import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
+import {
+  AlertBox, FlowDiagram, CompareTable, ErrorFix, VerticalSteps,
+  CodeBlock, FAQAccordion, KeyPointsGrid, StatGrid, SectionHeader,
+  QuickFact, TimelineViz, ArchDiagram,
+} from '@/components/blog/BlogVisuals';
 
 export default function HowToConvertHarFilesToCurlClient() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
-      <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/blog" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Developer's Study Materials
-          </Link>
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-purple-100 rounded-lg">
-              <FileText className="w-6 h-6 text-purple-600" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">How to Convert HAR Files to cURL</h1>
-              <p className="text-sm text-gray-500 mt-1">Export Browser Network Requests to cURL Commands</p>
-            </div>
-          </div>
-        </div>
-      </header>
+    <BlogLayoutWithSidebarAds>
+      <h1>How to Convert HAR Files to cURL Commands: Complete Guide (2026)</h1>
+      <p className="lead">
+        HAR (HTTP Archive) files capture every network request your browser makes — headers, cookies, bodies, timings. Converting them to cURL commands lets you replay, debug, share, and automate those requests. This guide covers everything: what HAR files are, how to export them, how to convert to cURL, and how to handle sensitive data.
+      </p>
 
-      {/* Floating Social Share Bar */}
-      <BlogSocialShare 
-        title="How to Convert HAR Files to cURL"
-        description="Export Browser Network Requests to cURL Commands"
-        variant="floating"
+      <StatGrid stats={[
+        { value: 'JSON', label: 'HAR file format (human-readable)', color: 'blue' },
+        { value: '100%', label: 'of browser requests captured', color: 'green' },
+        { value: '3 tools', label: 'for HAR to cURL conversion', color: 'purple' },
+        { value: '1 click', label: 'to export from Chrome/Firefox', color: 'amber' },
+      ]} />
+
+      <SectionHeader number={1} title="What is a HAR File?" />
+
+      <p>
+        A HAR (HTTP Archive) file is a JSON-formatted log of all HTTP requests and responses made by a browser session. It was standardized by the W3C Web Performance Working Group and is supported by Chrome, Firefox, Safari, and Edge.
+      </p>
+
+      <KeyPointsGrid columns={2} items={[
+        { title: 'Complete request capture', description: 'HAR files record the full request: URL, method, headers, cookies, request body, response headers, response body, and timing data.' },
+        { title: 'JSON format', description: 'HAR is plain JSON with a specific schema. You can open it in any text editor or parse it with any language.' },
+        { title: 'Cross-browser standard', description: 'All major browsers export the same HAR format, making it a universal debugging artifact.' },
+        { title: 'Security warning', description: 'HAR files contain all cookies and auth tokens from your session. Treat them like passwords — never share raw HAR files publicly.' },
+      ]} />
+
+      <AlertBox type="warning" title="HAR files contain sensitive data">
+        HAR files capture session cookies, auth tokens, API keys, and passwords. Before sharing a HAR file with support teams or colleagues, sanitize it by removing or redacting sensitive headers and cookies.
+      </AlertBox>
+
+      <SectionHeader number={2} title="How to Export a HAR File from Chrome" />
+
+      <VerticalSteps steps={[
+        {
+          title: 'Open Chrome DevTools',
+          description: 'Press F12 (or Cmd+Option+I on Mac) to open DevTools. Navigate to the Network tab.',
+        },
+        {
+          title: 'Record network traffic',
+          description: 'Make sure recording is active (the red circle button). Reload the page or perform the action you want to capture. All requests appear in the list.',
+        },
+        {
+          title: 'Export the HAR file',
+          description: 'Right-click anywhere in the request list and select "Save all as HAR with content", or click the download icon in the toolbar. Save the .har file to your computer.',
+        },
+        {
+          title: 'Verify the export',
+          description: 'Open the .har file in a text editor. You should see JSON starting with {"log": {"version": "1.2", "creator": {...}, "entries": [...]}}.',
+        },
+      ]} />
+
+      <SectionHeader number={3} title="How to Export HAR from Firefox and Safari" />
+
+      <CompareTable
+        leftLabel="Firefox"
+        rightLabel="Safari"
+        rows={[
+          { label: 'Open DevTools', left: 'F12 or Ctrl+Shift+I', right: 'Cmd+Option+I (enable Dev menu first)' },
+          { label: 'Tab to use', left: 'Network tab', right: 'Network tab' },
+          { label: 'Export button', left: 'Gear icon → Save All as HAR', right: 'Export button (down arrow icon)' },
+          { label: 'File format', left: '.har (JSON)', right: '.har (JSON)' },
+          { label: 'Response bodies', left: 'Included', right: 'May require "Record Network Content" enabled' },
+        ]}
       />
 
+      <SectionHeader number={4} title="Method 1: Convert HAR to cURL Using UnblockDevs Tool" />
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
-        <FAQSchema
-          faqs={[
-            {
-              question: 'How do I convert a HAR file to cURL?',
-              answer: 'Use our free HAR to cURL converter tool. Upload your .har file or paste the HAR JSON content, and the tool will automatically generate cURL commands for all requests. You can select which request to convert if the file contains multiple requests.',
-            },
-            {
-              question: 'What is the best way to convert HAR to cURL?',
-              answer: 'The easiest way is to use our online HAR to cURL converter. Simply upload your HAR file, select the request you want to convert, and copy the generated cURL command. No installation or coding required.',
-            },
-            {
-              question: 'Can I convert multiple requests from a HAR file?',
-              answer: 'Yes! Our HAR to cURL converter supports multiple requests. When you upload a HAR file with multiple requests, you can use a dropdown menu to select which request to convert to cURL.',
-            },
-            {
-              question: 'Is HAR to cURL conversion free?',
-              answer: 'Yes! Our HAR to cURL converter is completely free to use. No signup required, and all processing happens in your browser for maximum privacy and security.',
-            },
-            {
-              question: 'What information is included when converting HAR to cURL?',
-              answer: 'The conversion includes the HTTP method, complete URL, all request headers (including authentication), request body data, and cookies. Everything needed to replay the request exactly as it occurred in the browser.',
-            },
-          ]}
-        />
+      <p>
+        The easiest method is to use the HAR to cURL converter on this site at <code>/har-to-curl</code>. It parses the HAR file, lists all requests, and generates cURL commands for each one. No data is sent to a server — conversion happens entirely in your browser.
+      </p>
 
-        <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          {/* Introduction */}
-          <section className="mb-12">
-            <p className="text-lg text-gray-700 leading-relaxed mb-4">
-              Converting HAR files to cURL commands is a powerful technique for developers who need to <strong>export browser network requests to curl</strong>, test APIs, or generate code from browser interactions. Whether you're wondering <strong>how to convert har files to curl</strong> or need to <strong>convert har file to curl</strong> for automation, this guide covers everything you need to know.
-            </p>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              In this comprehensive guide, we'll explore multiple methods for <strong>har file to curl conversion</strong>, from using our free online tool to understanding the HAR format structure. You'll learn how to <strong>convert http archive to curl</strong>, handle multiple requests, and use the generated commands effectively in your development workflow.
-            </p>
-            <div className="bg-purple-50 border-l-4 border-purple-500 p-4 my-6">
-              <p className="text-purple-800 font-semibold mb-2">🚀 Free HAR to cURL Converter</p>
-              <p className="text-purple-700 text-sm mb-3">
-                Need to <strong>convert har file to curl</strong>? Use our free <Link href="/har-to-curl" className="font-semibold underline hover:text-purple-900">HAR to cURL Converter</Link> tool. Upload HAR files or paste HAR JSON to get instant cURL commands. Supports multiple requests and handles all edge cases!
-              </p>
-              <Link 
-                href="/har-to-curl" 
-                className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
-              >
-                <Upload className="w-4 h-4" />
-                Convert HAR to cURL Now
-              </Link>
-            </div>
-          </section>
+      <FlowDiagram steps={[
+        { label: 'Export HAR from browser', color: 'blue' },
+        { label: 'Open HAR to cURL Tool', color: 'blue' },
+        { label: 'Upload or paste HAR', color: 'green' },
+        { label: 'Select request', color: 'green' },
+        { label: 'Copy cURL command', color: 'purple' },
+        { label: 'Run or integrate', color: 'purple' },
+      ]} />
 
-          {/* What is HAR */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Understanding HAR Files</h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              Before learning <strong>how to convert har files to curl</strong>, it's important to understand what HAR files are:
-            </p>
-            <div className="bg-gray-50 rounded-lg p-6 mb-4">
-              <h3 className="font-semibold text-gray-900 mb-3">HAR File Structure:</h3>
-              <ul className="space-y-2 text-gray-700 text-sm">
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                  <div><strong>log.entries:</strong> Array of all network requests and responses</div>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                  <div><strong>request:</strong> Contains method, URL, headers, and body data</div>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                  <div><strong>response:</strong> Contains status code, headers, and response body</div>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                  <div><strong>timings:</strong> Performance metrics for each request</div>
-                </li>
-              </ul>
-            </div>
-            <p className="text-gray-700 leading-relaxed">
-              HAR files are JSON-based, making them easy to parse and <strong>convert har file to curl</strong>. They capture everything about a browser's network activity, which is why they're perfect for <strong>exporting browser network requests to curl</strong>.
-            </p>
-          </section>
+      <SectionHeader number={5} title="Method 2: Convert HAR to cURL Manually with JavaScript" />
 
-          {/* Step-by-Step Guide */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Step-by-Step: How to Convert HAR Files to cURL</h2>
-            
-            <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="bg-purple-500 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold flex-shrink-0">1</div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Export HAR File from Browser</h3>
-                  <p className="text-gray-700 text-sm mb-2">
-                    First, you need to capture network requests as a HAR file. Open browser DevTools (F12), go to Network tab, perform the actions you want to capture, then right-click and select "Save all as HAR with content" (Chrome) or "Save All As HAR" (Firefox).
-                  </p>
-                </div>
-              </div>
+      <p>
+        If you need programmatic conversion — for example, in a test suite or CI pipeline — here is how to parse HAR entries and generate cURL commands:
+      </p>
 
-              <div className="flex items-start gap-4">
-                <div className="bg-purple-500 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold flex-shrink-0">2</div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Open HAR to cURL Converter</h3>
-                  <p className="text-gray-700 text-sm mb-2">
-                    Visit our free <Link href="/har-to-curl" className="text-blue-600 hover:underline font-semibold">HAR to cURL converter</Link> tool. This is the easiest way to <strong>convert har file to curl</strong> without any coding or command-line tools.
-                  </p>
-                </div>
-              </div>
+      <CodeBlock language="js" filename="har-to-curl.js">
+{`function harEntryToCurl(entry) {
+  const { request } = entry;
+  const parts = ['curl'];
 
-              <div className="flex items-start gap-4">
-                <div className="bg-purple-500 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold flex-shrink-0">3</div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Upload or Paste HAR Content</h3>
-                  <p className="text-gray-700 text-sm mb-2">
-                    You can either upload the .har file directly or paste the HAR JSON content into the text area. Our tool automatically detects and parses the HAR format.
-                  </p>
-                </div>
-              </div>
+  // Method (skip if GET since it's the default)
+  if (request.method !== 'GET') {
+    parts.push(\`-X \${request.method}\`);
+  }
 
-              <div className="flex items-start gap-4">
-                <div className="bg-purple-500 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold flex-shrink-0">4</div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Select Request to Convert</h3>
-                  <p className="text-gray-700 text-sm mb-2">
-                    If your HAR file contains multiple requests, use the dropdown menu to select which request you want to <strong>convert to curl</strong>. The tool shows the method and URL for each request to help you choose.
-                  </p>
-                </div>
-              </div>
+  // Headers (skip pseudo-headers and some auto-managed ones)
+  const skipHeaders = new Set([
+    ':method', ':path', ':authority', ':scheme',
+    'content-length', // curl calculates this
+  ]);
 
-              <div className="flex items-start gap-4">
-                <div className="bg-purple-500 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold flex-shrink-0">5</div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Copy or Download cURL Command</h3>
-                  <p className="text-gray-700 text-sm mb-2">
-                    The tool generates a complete cURL command with all headers, authentication, and data. Click the copy button to copy to clipboard or download as a .sh file for later use.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
+  for (const header of request.headers) {
+    if (!skipHeaders.has(header.name.toLowerCase())) {
+      parts.push(\`-H \${JSON.stringify(\`\${header.name}: \${header.value}\`)}\`);
+    }
+  }
 
-          {/* Why Convert HAR to cURL */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Why Convert HAR Files to cURL?</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-5 rounded-lg">
-                <Zap className="w-8 h-8 text-blue-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 mb-2">API Testing</h3>
-                <p className="text-sm text-gray-700">
-                  <strong>Convert har file to curl</strong> to test APIs in different environments, with different parameters, or in automated test suites.
-                </p>
-              </div>
-              <div className="bg-gradient-to-br from-green-50 to-green-100 p-5 rounded-lg">
-                <Code className="w-8 h-8 text-green-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 mb-2">Code Generation</h3>
-                <p className="text-sm text-gray-700">
-                  Use <strong>har to curl conversion</strong> as the first step in generating code. Convert HAR → cURL → Python/JavaScript using our tools.
-                </p>
-              </div>
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-5 rounded-lg">
-                <Shield className="w-8 h-8 text-purple-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 mb-2">Debugging</h3>
-                <p className="text-sm text-gray-700">
-                  <strong>Export browser network requests to curl</strong> to debug API issues, test authentication, or verify request behavior.
-                </p>
-              </div>
-            </div>
-          </section>
+  // Cookies
+  if (request.cookies && request.cookies.length > 0) {
+    const cookieStr = request.cookies
+      .map(c => \`\${c.name}=\${c.value}\`)
+      .join('; ');
+    parts.push(\`-b \${JSON.stringify(cookieStr)}\`);
+  }
 
-          {/* Detailed Example */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Detailed Example: Converting HAR to cURL</h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              Let's walk through a complete example of <strong>how to convert har files to curl</strong>:
-            </p>
-            
-            <div className="space-y-4">
-              <div className="bg-gray-50 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-900 mb-2">Step 1: HAR File Content</h3>
-                <pre className="text-xs overflow-x-auto bg-white p-3 rounded border">
+  // Request body
+  if (request.postData) {
+    const body = request.postData.text;
+    parts.push(\`-d \${JSON.stringify(body)}\`);
+  }
+
+  // URL (must be last)
+  parts.push(JSON.stringify(request.url));
+
+  return parts.join(' \\\\\n  ');
+}
+
+// Usage with a HAR file:
+const fs = require('fs');
+const har = JSON.parse(fs.readFileSync('session.har', 'utf8'));
+
+har.log.entries.forEach((entry, i) => {
+  console.log(\`\\n# Request \${i + 1}: \${entry.request.method} \${entry.request.url}\`);
+  console.log(harEntryToCurl(entry));
+});`}
+      </CodeBlock>
+
+      <SectionHeader number={6} title="Method 3: Filter and Convert with Python" />
+
+      <CodeBlock language="python" filename="har_to_curl.py">
+{`import json
+import sys
+
+def har_to_curl(entry):
+    req = entry['request']
+    parts = ['curl']
+
+    if req['method'] != 'GET':
+        parts.append(f'-X {req["method"]}')
+
+    skip = {'content-length', ':method', ':path', ':authority', ':scheme'}
+    for h in req.get('headers', []):
+        if h['name'].lower() not in skip:
+            parts.append(f'-H {json.dumps(h["name"] + ": " + h["value"])}')
+
+    if req.get('cookies'):
+        cookie_str = '; '.join(f'{c["name"]}={c["value"]}' for c in req['cookies'])
+        parts.append(f'-b {json.dumps(cookie_str)}')
+
+    if req.get('postData', {}).get('text'):
+        parts.append(f'-d {json.dumps(req["postData"]["text"])}')
+
+    parts.append(json.dumps(req['url']))
+    return ' \\\\\n  '.join(parts)
+
+def main(har_path, url_filter=None):
+    with open(har_path) as f:
+        har = json.load(f)
+
+    entries = har['log']['entries']
+    if url_filter:
+        entries = [e for e in entries if url_filter in e['request']['url']]
+
+    for i, entry in enumerate(entries):
+        print(f"\\n# Request {i+1}: {entry['request']['method']} {entry['request']['url']}")
+        print(har_to_curl(entry))
+
+if __name__ == '__main__':
+    har_file = sys.argv[1]
+    filter_url = sys.argv[2] if len(sys.argv) > 2 else None
+    main(har_file, filter_url)
+
+# Usage:
+# python har_to_curl.py session.har
+# python har_to_curl.py session.har api.example.com  # filter by URL`}
+      </CodeBlock>
+
+      <SectionHeader number={7} title="Sanitizing HAR Files Before Sharing" />
+
+      <p>
+        When sharing HAR files with support teams, always redact sensitive information first. Here is a script to remove auth tokens and session cookies:
+      </p>
+
+      <CodeBlock language="js" filename="sanitize-har.js">
+{`const fs = require('fs');
+
+function sanitizeHar(har) {
+  const sensitiveHeaders = new Set([
+    'authorization', 'cookie', 'set-cookie',
+    'x-api-key', 'x-auth-token', 'x-session-id',
+  ]);
+
+  function redactHeaders(headers) {
+    return headers.map(h => ({
+      ...h,
+      value: sensitiveHeaders.has(h.name.toLowerCase()) ? '[REDACTED]' : h.value,
+    }));
+  }
+
+  return {
+    ...har,
+    log: {
+      ...har.log,
+      entries: har.log.entries.map(entry => ({
+        ...entry,
+        request: {
+          ...entry.request,
+          headers: redactHeaders(entry.request.headers || []),
+          cookies: [], // Remove all cookies
+        },
+        response: {
+          ...entry.response,
+          headers: redactHeaders(entry.response.headers || []),
+          cookies: [],
+        },
+      })),
+    },
+  };
+}
+
+const input = JSON.parse(fs.readFileSync('raw-session.har', 'utf8'));
+const sanitized = sanitizeHar(input);
+fs.writeFileSync('sanitized-session.har', JSON.stringify(sanitized, null, 2));
+console.log('Sanitized HAR written to sanitized-session.har');`}
+      </CodeBlock>
+
+      <AlertBox type="tip" title="Use the HAR sanitizer before any support ticket">
+        Tools like Google's HAR Sanitizer (available online) can automatically detect and redact common sensitive patterns. Always run your HAR through a sanitizer before attaching it to a support ticket or sharing in a public forum.
+      </AlertBox>
+
+      <SectionHeader number={8} title="HAR File Structure Reference" />
+
+      <CodeBlock language="json" filename="har-structure.json">
 {`{
   "log": {
-    "entries": [{
-      "request": {
-        "method": "POST",
-        "url": "https://api.example.com/v1/users",
-        "headers": [
-          {"name": "Content-Type", "value": "application/json"},
-          {"name": "Authorization", "value": "Bearer eyJhbGc..."},
-          {"name": "X-API-Key", "value": "abc123"}
-        ],
-        "postData": {
-          "mimeType": "application/json",
-          "text": "{\\"name\\": \\"John Doe\\", \\"email\\": \\"john@example.com\\"}"
+    "version": "1.2",
+    "creator": { "name": "Chrome", "version": "120" },
+    "entries": [
+      {
+        "startedDateTime": "2026-03-01T10:00:00.000Z",
+        "time": 245.3,
+        "request": {
+          "method": "POST",
+          "url": "https://api.example.com/login",
+          "headers": [
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Authorization", "value": "Bearer eyJhbGci..." }
+          ],
+          "cookies": [
+            { "name": "session", "value": "abc123" }
+          ],
+          "postData": {
+            "mimeType": "application/json",
+            "text": "{\"username\":\"alice\"}"
+          }
+        },
+        "response": {
+          "status": 200,
+          "statusText": "OK",
+          "headers": [...],
+          "content": {
+            "mimeType": "application/json",
+            "text": "{\"token\":\"xyz\"}"
+          }
+        },
+        "timings": {
+          "send": 0.5,
+          "wait": 220.1,
+          "receive": 24.7
         }
       }
-    }]
+    ]
   }
 }`}
-                </pre>
-              </div>
+      </CodeBlock>
 
-              <div className="bg-gray-50 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-900 mb-2">Step 2: Generated cURL Command</h3>
-                <pre className="text-xs overflow-x-auto bg-white p-3 rounded border">
-{`curl -X POST \\
-  -H "Content-Type: application/json" \\
-  -H "Authorization: Bearer eyJhbGc..." \\
-  -H "X-API-Key: abc123" \\
-  -d '{"name": "John Doe", "email": "john@example.com"}' \\
-  "https://api.example.com/v1/users"`}
-                </pre>
-              </div>
-
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <p className="text-blue-800 text-sm">
-                  <strong>✅ Result:</strong> This cURL command can now be executed in your terminal, converted to code using our <Link href="/?tab=curl" className="font-semibold underline">cURL to Code Converter</Link>, or used for API documentation.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* Advanced Features */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Advanced HAR to cURL Conversion Features</h2>
-            <div className="space-y-4">
-              <div className="border-l-4 border-blue-500 pl-4">
-                <h3 className="font-semibold text-gray-900 mb-2">Multiple Request Handling</h3>
-                <p className="text-gray-700 text-sm">
-                  Our <strong>har to curl converter</strong> can handle HAR files with hundreds of requests. Use the dropdown to select any request and convert it individually. Perfect for <strong>exporting browser network requests to curl</strong> from complex web applications.
-                </p>
-              </div>
-              <div className="border-l-4 border-green-500 pl-4">
-                <h3 className="font-semibold text-gray-900 mb-2">Complete Header Preservation</h3>
-                <p className="text-gray-700 text-sm">
-                  When you <strong>convert har file to curl</strong>, all headers are preserved including authentication tokens, custom headers, and cookies. This ensures the cURL command works exactly like the original browser request.
-                </p>
-              </div>
-              <div className="border-l-4 border-purple-500 pl-4">
-                <h3 className="font-semibold text-gray-900 mb-2">Request Body Handling</h3>
-                <p className="text-gray-700 text-sm">
-                  POST, PUT, and PATCH requests with JSON, form data, or binary content are properly converted. The tool handles escaping and formatting to ensure the cURL command is valid.
-                </p>
-              </div>
-              <div className="border-l-4 border-orange-500 pl-4">
-                <h3 className="font-semibold text-gray-900 mb-2">Download & Share</h3>
-                <p className="text-gray-700 text-sm">
-                  Download generated cURL commands as .sh files for easy sharing with team members or inclusion in documentation. Perfect for <strong>har to curl conversion</strong> workflows.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* Best Practices */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Best Practices for HAR to cURL Conversion</h2>
-            <ul className="space-y-3 text-gray-700">
-              <li className="flex items-start gap-2">
-                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <strong>Clean Your HAR Files:</strong> Before <strong>converting har file to curl</strong>, remove unnecessary requests (images, CSS, fonts) to focus on API calls. This makes the conversion faster and the output cleaner.
-                </div>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <strong>Verify Authentication:</strong> After <strong>har to curl conversion</strong>, check that authentication headers (Bearer tokens, API keys) are included. Some HAR files may not capture all authentication data.
-                </div>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <strong>Test the cURL Command:</strong> Always test the generated cURL command in your terminal before using it in production. Verify it produces the same response as the original browser request.
-                </div>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <strong>Handle Sensitive Data:</strong> When <strong>exporting browser network requests to curl</strong>, be careful with sensitive data. Consider using environment variables for API keys and tokens instead of hardcoding them.
-                </div>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <strong>Use Our Converter:</strong> Our <strong>har to curl converter</strong> handles edge cases, properly escapes special characters, formats commands for readability, and supports all HTTP methods and data types.
-                </div>
-              </li>
-            </ul>
-          </section>
-
-          {/* Common Use Cases */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Common Use Cases for HAR to cURL Conversion</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-5 rounded-lg border border-blue-200">
-                <h3 className="font-semibold text-gray-900 mb-2">🔧 API Development & Testing</h3>
-                <p className="text-sm text-gray-700 mb-2">
-                  <strong>Convert har file to curl</strong> to test API endpoints, verify authentication, and debug request/response issues outside the browser environment.
-                </p>
-              </div>
-              <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-5 rounded-lg border border-green-200">
-                <h3 className="font-semibold text-gray-900 mb-2">📝 Code Generation Workflow</h3>
-                <p className="text-sm text-gray-700 mb-2">
-                  Use <strong>har to curl conversion</strong> as step one in generating code: HAR → cURL → Python/JavaScript/PHP using our complete toolchain.
-                </p>
-              </div>
-              <div className="bg-gradient-to-br from-purple-50 to-violet-50 p-5 rounded-lg border border-purple-200">
-                <h3 className="font-semibold text-gray-900 mb-2">📚 API Documentation</h3>
-                <p className="text-sm text-gray-700 mb-2">
-                  <strong>Export browser network requests to curl</strong> to create executable examples for API documentation, README files, or developer guides.
-                </p>
-              </div>
-              <div className="bg-gradient-to-br from-orange-50 to-amber-50 p-5 rounded-lg border border-orange-200">
-                <h3 className="font-semibold text-gray-900 mb-2">🔄 Automation & CI/CD</h3>
-                <p className="text-sm text-gray-700 mb-2">
-                  Convert browser workflows to cURL commands that can be automated in shell scripts, CI/CD pipelines, or testing frameworks.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* Troubleshooting */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Troubleshooting HAR to cURL Conversion</h2>
-            <div className="space-y-4">
-              <div className="bg-yellow-50 border-l-4 border-yellow-500 pl-4 py-2">
-                <h3 className="font-semibold text-gray-900 mb-1">HAR File Won't Parse</h3>
-                <p className="text-gray-700 text-sm">
-                  Ensure your HAR file is valid JSON. Open it in a text editor and verify the JSON structure. Our converter will show an error if the file format is invalid.
-                </p>
-              </div>
-              <div className="bg-red-50 border-l-4 border-red-500 pl-4 py-2">
-                <h3 className="font-semibold text-gray-900 mb-1">cURL Command Fails</h3>
-                <p className="text-gray-700 text-sm">
-                  If the generated cURL command doesn't work, check that all required headers are present. Some HAR files may not include all headers. Verify authentication and content-type headers.
-                </p>
-              </div>
-              <div className="bg-blue-50 border-l-4 border-blue-500 pl-4 py-2">
-                <h3 className="font-semibold text-gray-900 mb-1">Multiple Requests Needed</h3>
-                <p className="text-gray-700 text-sm">
-                  For batch conversion of multiple requests, export as HAR and use our converter's dropdown to select each request individually. Each request gets its own cURL command.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* CTA Section */}
-          <section className="mb-12 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl p-8 text-white">
-            <h2 className="text-2xl font-bold mb-4">Ready to Convert HAR Files to cURL?</h2>
-            <p className="text-purple-100 mb-6 text-lg">
-              Master <strong>how to convert har files to curl</strong> with our free <strong>HAR to cURL converter</strong>. 
-              Perfect for <strong>converting har file to curl</strong>, <strong>exporting browser network requests to curl</strong>, and <strong>har to curl conversion</strong> workflows.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link 
-                href="/har-to-curl" 
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-purple-600 rounded-lg hover:bg-purple-50 transition-colors font-semibold"
-              >
-                <Upload className="w-5 h-5" />
-                Convert HAR to cURL Now
-              </Link>
-              <Link 
-                href="/?tab=curl" 
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-purple-700 text-white rounded-lg hover:bg-purple-800 transition-colors font-semibold"
-              >
-                <Code className="w-5 h-5" />
-                Convert cURL to Code
-              </Link>
-            </div>
-          </section>
-
-          {/* Conclusion */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Conclusion</h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              Learning <strong>how to convert har files to curl</strong> opens up powerful possibilities for API development, testing, and automation. Whether you're <strong>converting har file to curl</strong> for a single request or <strong>exporting browser network requests to curl</strong> for an entire workflow, our free <strong>HAR to cURL converter</strong> makes the process simple and efficient.
-            </p>
-            <p className="text-gray-700 leading-relaxed">
-              Remember: <strong>HAR to cURL conversion</strong> is just the beginning. Once you have your cURL commands, you can execute them directly, convert them to code in various programming languages using our <Link href="/?tab=curl" className="text-blue-600 hover:underline font-semibold">cURL to Code Converter</Link>, or use them for API documentation and testing. Our complete toolchain at <strong>UnblockDevs.com</strong> supports your entire development workflow.
-            </p>
-          </section>
-        </article>
-      </main>
-    </div>
+      <FAQAccordion items={[
+        {
+          question: 'How do I convert a HAR file to a cURL command?',
+          answer: 'Use the UnblockDevs HAR to cURL tool at /har-to-curl, upload your .har file, select the request you want, and copy the generated cURL command. For programmatic conversion, parse the HAR JSON and build the cURL command from the request.method, request.headers, request.cookies, and request.postData fields.',
+        },
+        {
+          question: 'What is a HAR file and why would I need one?',
+          answer: 'A HAR (HTTP Archive) file is a JSON log of all HTTP requests made during a browser session. You need one when debugging network issues, reproducing API calls, sharing a complete request sequence with support teams, or converting browser interactions to automated scripts.',
+        },
+        {
+          question: 'Is it safe to share a HAR file?',
+          answer: 'No — not without sanitizing it first. HAR files contain all session cookies, auth tokens, and request bodies from your browser session. Always redact Authorization headers, Cookie headers, and any other sensitive values before sharing. Use a HAR sanitizer tool.',
+        },
+        {
+          question: 'How do I export a HAR file from Chrome?',
+          answer: 'Open Chrome DevTools (F12), go to the Network tab, record the traffic you want to capture, then right-click anywhere in the request list and select "Save all as HAR with content". Alternatively, click the download icon in the Network toolbar.',
+        },
+        {
+          question: 'Can I convert a HAR file to Python requests or other languages?',
+          answer: 'Yes. HAR is just JSON, so you can parse it and generate any HTTP client code. The UnblockDevs HAR tool supports cURL output, which you can then run through curlconverter.com to get Python requests, Node.js, Ruby, Go, and 20+ other languages.',
+        },
+      ]} />
+    </BlogLayoutWithSidebarAds>
   );
 }

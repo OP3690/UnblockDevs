@@ -1,464 +1,233 @@
 'use client';
 
-import Link from 'next/link';
-import { ArrowLeft, Database, ExternalLink, Code, CheckCircle, Copy } from 'lucide-react';
-import { useState } from 'react';
-import toast from 'react-hot-toast';
-import FAQSchema from '@/components/FAQSchema';
-import BlogSocialShare from '@/components/BlogSocialShare';
+import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
+import {
+  AlertBox, CodeBlock, FAQAccordion,
+  StatGrid, SectionHeader,
+} from '@/components/blog/BlogVisuals';
 
 export default function Mysql25MostUsedQueriesClient() {
-  const [copiedCode, setCopiedCode] = useState<string | null>(null);
-
-  const copyToClipboard = (code: string, id: string) => {
-    navigator.clipboard.writeText(code);
-    setCopiedCode(id);
-    toast.success('Query copied!');
-    setTimeout(() => setCopiedCode(null), 2000);
-  };
-
-  const queries = [
-    {
-      id: 'select-all',
-      title: 'SELECT All Records',
-      category: 'SELECT',
-      description: 'Retrieve all columns and rows from a table',
-      query: 'SELECT * FROM users;',
-      explanation: 'Returns all columns and rows from users table. Use specific columns instead of * for better performance.',
-      useCase: 'Viewing all data, initial exploration'
-    },
-    {
-      id: 'select-specific',
-      title: 'SELECT Specific Columns',
-      category: 'SELECT',
-      description: 'Retrieve only specific columns',
-      query: 'SELECT id, name, email FROM users;',
-      explanation: 'Returns only id, name, and email columns. More efficient than SELECT *.',
-      useCase: 'Reducing data transfer, improving performance'
-    },
-    {
-      id: 'select-where',
-      title: 'SELECT with WHERE Clause',
-      category: 'SELECT',
-      description: 'Filter rows based on conditions',
-      query: 'SELECT * FROM users WHERE status = \'active\';',
-      explanation: 'Returns only users with active status. WHERE clause filters rows before retrieval.',
-      useCase: 'Filtering data, conditional retrieval'
-    },
-    {
-      id: 'select-order',
-      title: 'SELECT with ORDER BY',
-      category: 'SELECT',
-      description: 'Sort results in ascending or descending order',
-      query: 'SELECT * FROM products ORDER BY price DESC;',
-      explanation: 'Returns products sorted by price in descending order (highest first).',
-      useCase: 'Sorting results, ranking data'
-    },
-    {
-      id: 'select-limit',
-      title: 'SELECT with LIMIT',
-      category: 'SELECT',
-      description: 'Limit the number of rows returned',
-      query: 'SELECT * FROM orders ORDER BY created_at DESC LIMIT 10;',
-      explanation: 'Returns only the 10 most recent orders. Useful for pagination and top N queries.',
-      useCase: 'Pagination, top N records, performance optimization'
-    },
-    {
-      id: 'select-group',
-      title: 'SELECT with GROUP BY',
-      category: 'SELECT',
-      description: 'Group rows by one or more columns',
-      query: 'SELECT category, COUNT(*) AS count FROM products GROUP BY category;',
-      explanation: 'Groups products by category and counts items in each group.',
-      useCase: 'Aggregations, statistics, reporting'
-    },
-    {
-      id: 'select-having',
-      title: 'SELECT with HAVING',
-      category: 'SELECT',
-      description: 'Filter groups after GROUP BY',
-      query: 'SELECT category, COUNT(*) AS count FROM products GROUP BY category HAVING count > 10;',
-      explanation: 'Shows only categories with more than 10 products. HAVING filters groups, WHERE filters rows.',
-      useCase: 'Filtering aggregated results, conditional grouping'
-    },
-    {
-      id: 'select-distinct',
-      title: 'SELECT DISTINCT',
-      category: 'SELECT',
-      description: 'Return unique values',
-      query: 'SELECT DISTINCT country FROM users;',
-      explanation: 'Returns unique country values, removing duplicates.',
-      useCase: 'Finding unique values, data deduplication'
-    },
-    {
-      id: 'inner-join',
-      title: 'INNER JOIN',
-      category: 'JOIN',
-      description: 'Join tables returning only matching rows',
-      query: 'SELECT u.name, o.total FROM users u INNER JOIN orders o ON u.id = o.user_id;',
-      explanation: 'Returns users and their orders. Only shows users who have orders.',
-      useCase: 'Relating data from multiple tables, combining datasets'
-    },
-    {
-      id: 'left-join',
-      title: 'LEFT JOIN',
-      category: 'JOIN',
-      description: 'Join tables returning all rows from left table',
-      query: 'SELECT u.name, o.total FROM users u LEFT JOIN orders o ON u.id = o.user_id;',
-      explanation: 'Returns all users, even if they have no orders. Orders will be NULL for users without orders.',
-      useCase: 'Including all records from primary table, optional relationships'
-    },
-    {
-      id: 'right-join',
-      title: 'RIGHT JOIN',
-      category: 'JOIN',
-      description: 'Join tables returning all rows from right table',
-      query: 'SELECT u.name, o.total FROM users u RIGHT JOIN orders o ON u.id = o.user_id;',
-      explanation: 'Returns all orders, even if user doesn\'t exist. User will be NULL for orphaned orders.',
-      useCase: 'Including all records from secondary table, finding orphaned records'
-    },
-    {
-      id: 'insert-single',
-      title: 'INSERT Single Row',
-      category: 'INSERT',
-      description: 'Insert one row into a table',
-      query: 'INSERT INTO users (name, email, status) VALUES (\'John Doe\', \'john@example.com\', \'active\');',
-      explanation: 'Inserts a new user with specified values. Returns the auto-increment ID if id is AUTO_INCREMENT.',
-      useCase: 'Adding new records, user registration, data entry'
-    },
-    {
-      id: 'insert-multiple',
-      title: 'INSERT Multiple Rows',
-      category: 'INSERT',
-      description: 'Insert multiple rows in one statement',
-      query: 'INSERT INTO products (name, price) VALUES (\'Product A\', 10.99), (\'Product B\', 20.99), (\'Product C\', 30.99);',
-      explanation: 'Inserts three products in a single statement. More efficient than multiple INSERT statements.',
-      useCase: 'Bulk inserts, data migration, batch operations'
-    },
-    {
-      id: 'update-single',
-      title: 'UPDATE Single Column',
-      category: 'UPDATE',
-      description: 'Update values in existing rows',
-      query: 'UPDATE users SET status = \'inactive\' WHERE id = 123;',
-      explanation: 'Updates status to inactive for user with id 123. Always use WHERE to avoid updating all rows.',
-      useCase: 'Modifying records, status changes, data corrections'
-    },
-    {
-      id: 'update-multiple',
-      title: 'UPDATE Multiple Columns',
-      category: 'UPDATE',
-      description: 'Update multiple columns at once',
-      query: 'UPDATE users SET name = \'Jane Doe\', email = \'jane@example.com\' WHERE id = 123;',
-      explanation: 'Updates both name and email for the specified user.',
-      useCase: 'Updating user profiles, bulk modifications'
-    },
-    {
-      id: 'delete',
-      title: 'DELETE',
-      category: 'DELETE',
-      description: 'Delete rows from a table',
-      query: 'DELETE FROM users WHERE status = \'deleted\' AND deleted_at < DATE_SUB(NOW(), INTERVAL 30 DAY);',
-      explanation: 'Deletes users marked as deleted more than 30 days ago. Always use WHERE clause!',
-      useCase: 'Removing records, data cleanup, soft delete cleanup'
-    },
-    {
-      id: 'count',
-      title: 'COUNT Records',
-      category: 'Aggregate',
-      description: 'Count total number of rows',
-      query: 'SELECT COUNT(*) AS total_users FROM users;',
-      explanation: 'Returns total number of users. COUNT(*) counts all rows, including NULLs.',
-      useCase: 'Statistics, reporting, data validation'
-    },
-    {
-      id: 'sum',
-      title: 'SUM Values',
-      category: 'Aggregate',
-      description: 'Calculate sum of numeric column',
-      query: 'SELECT SUM(amount) AS total_revenue FROM orders WHERE status = \'completed\';',
-      explanation: 'Calculates total revenue from completed orders. SUM() ignores NULL values.',
-      useCase: 'Financial calculations, totals, aggregations'
-    },
-    {
-      id: 'avg',
-      title: 'AVG Values',
-      category: 'Aggregate',
-      description: 'Calculate average of numeric column',
-      query: 'SELECT AVG(rating) AS avg_rating FROM reviews WHERE product_id = 456;',
-      explanation: 'Calculates average rating for a specific product.',
-      useCase: 'Performance metrics, ratings, statistical analysis'
-    },
-    {
-      id: 'max-min',
-      title: 'MAX and MIN',
-      category: 'Aggregate',
-      description: 'Find maximum and minimum values',
-      query: 'SELECT MAX(price) AS max_price, MIN(price) AS min_price FROM products;',
-      explanation: 'Finds highest and lowest prices in products table.',
-      useCase: 'Finding extremes, range analysis, peak values'
-    },
-    {
-      id: 'like',
-      title: 'LIKE Pattern Matching',
-      category: 'SELECT',
-      description: 'Search for patterns in text',
-      query: 'SELECT * FROM users WHERE email LIKE \'%@gmail.com\';',
-      explanation: 'Finds all users with Gmail addresses. % matches any characters, _ matches single character.',
-      useCase: 'Text search, pattern matching, filtering'
-    },
-    {
-      id: 'in',
-      title: 'IN Clause',
-      category: 'SELECT',
-      description: 'Match values in a list',
-      query: 'SELECT * FROM products WHERE category IN (\'Electronics\', \'Books\', \'Clothing\');',
-      explanation: 'Returns products in specified categories. More readable than multiple OR conditions.',
-      useCase: 'Multiple value matching, filtering by list'
-    },
-    {
-      id: 'between',
-      title: 'BETWEEN Range',
-      category: 'SELECT',
-      description: 'Match values within a range',
-      query: 'SELECT * FROM orders WHERE total BETWEEN 100 AND 500;',
-      explanation: 'Returns orders with total between 100 and 500 (inclusive).',
-      useCase: 'Range queries, date ranges, numeric ranges'
-    },
-    {
-      id: 'subquery',
-      title: 'Subquery',
-      category: 'SELECT',
-      description: 'Use query result in another query',
-      query: 'SELECT * FROM products WHERE price > (SELECT AVG(price) FROM products);',
-      explanation: 'Returns products with price above average. Subquery calculates average first.',
-      useCase: 'Complex filtering, dynamic conditions, correlated queries'
-    },
-    {
-      id: 'union',
-      title: 'UNION',
-      category: 'SELECT',
-      description: 'Combine results from multiple queries',
-      query: 'SELECT name FROM users UNION SELECT name FROM customers;',
-      explanation: 'Combines names from users and customers tables, removing duplicates. Use UNION ALL to keep duplicates.',
-      useCase: 'Combining datasets, merging results, data consolidation'
-    }
-  ];
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50 to-emerald-50">
-      <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/blog" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Developer's Study Materials
-          </Link>
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-green-100 rounded-lg">
-              <Database className="w-6 h-6 text-green-600" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">MySQL 25 Most Used Queries</h1>
-              <p className="text-sm text-gray-500 mt-1">Complete Guide with Examples & Best Practices</p>
-            </div>
-          </div>
-        </div>
-      </header>
+    <BlogLayoutWithSidebarAds>
+      <h1>MySQL 25 Most Used Queries — Practical Examples for Every Developer</h1>
+      <p className="lead">
+        These 25 MySQL queries cover 90% of real-world database operations. From basic SELECT
+        to complex window functions, each query includes a practical example and explains
+        when to use it.
+      </p>
 
-      {/* Floating Social Share Bar */}
-      <BlogSocialShare 
-        title="MySQL 25 Most Used Queries"
-        description="Complete Guide with Examples & Best Practices"
-        variant="floating"
-      />
+      <StatGrid stats={[
+        { value: '25 queries', label: 'cover 90% of daily MySQL operations', color: 'blue' },
+        { value: 'Window functions', label: 'ROW_NUMBER, RANK, LAG/LEAD — essential for analytics', color: 'green' },
+        { value: 'CTEs', label: 'WITH clause for readable complex queries', color: 'purple' },
+        { value: 'EXPLAIN', label: 'always run EXPLAIN to check query performance', color: 'amber' },
+      ]} />
 
+      <SectionHeader number={1} title="Basic SELECT and Filtering" />
+      <CodeBlock language="sql" filename="1-5: Essential SELECT queries">
+{`-- 1. Basic SELECT with filtering and ordering
+SELECT id, name, email, created_at
+FROM users
+WHERE status = 'active' AND age > 18
+ORDER BY created_at DESC
+LIMIT 50 OFFSET 100;  -- pagination
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
-        <FAQSchema
-          faqs={[
-            {
-              question: 'What are the most used MySQL queries?',
-              answer: 'The 25 most used MySQL queries include: SELECT (with WHERE, ORDER BY, LIMIT, GROUP BY), JOIN (INNER, LEFT, RIGHT), INSERT (single and multiple rows), UPDATE, DELETE, aggregate functions (COUNT, SUM, AVG, MAX, MIN), pattern matching (LIKE), IN clause, BETWEEN, subqueries, and UNION. These cover 90% of common database operations.',
-            },
-            {
-              question: 'How do I write a SELECT query in MySQL?',
-              answer: 'Basic syntax: SELECT column1, column2 FROM table_name WHERE condition ORDER BY column LIMIT n; Example: SELECT name, email FROM users WHERE status = \'active\' ORDER BY created_at DESC LIMIT 10; Always specify columns instead of * for better performance.',
-            },
-            {
-              question: 'What is the difference between WHERE and HAVING in MySQL?',
-              answer: 'WHERE filters rows before grouping, HAVING filters groups after GROUP BY. Use WHERE for row-level conditions, HAVING for aggregate conditions. Example: WHERE price > 100 filters products, HAVING COUNT(*) > 10 filters groups with more than 10 items.',
-            },
-            {
-              question: 'How do I join tables in MySQL?',
-              answer: 'Use JOIN clauses: INNER JOIN returns matching rows, LEFT JOIN returns all left table rows, RIGHT JOIN returns all right table rows. Syntax: SELECT * FROM table1 JOIN table2 ON table1.id = table2.foreign_id; Always specify join conditions to avoid cartesian products.',
-            },
-          ]}
-        />
-        <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          <section className="mb-12">
-            <p className="text-lg text-gray-700 leading-relaxed mb-4">
-              <strong>MySQL queries</strong> are the foundation of database operations. Mastering the 
-              <strong> most used queries</strong> enables efficient data retrieval, manipulation, and analysis. 
-              This comprehensive guide covers the <strong>25 most used MySQL queries</strong> with detailed 
-              explanations, real-world examples, and best practices.
-            </p>
-            <p className="text-gray-700 leading-relaxed">
-              From basic SELECT statements to complex JOINs and subqueries, these queries will handle most of 
-              your database needs.
-            </p>
-          </section>
+-- 2. COUNT with GROUP BY
+SELECT country, COUNT(*) AS user_count, AVG(age) AS avg_age
+FROM users
+GROUP BY country
+HAVING COUNT(*) > 100  -- filter after grouping (HAVING, not WHERE)
+ORDER BY user_count DESC;
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">25 Most Used MySQL Queries</h2>
-            <div className="space-y-6">
-              {queries.map((query) => (
-                <div key={query.id} className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-lg font-semibold text-gray-900">{query.title}</h3>
-                        <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">
-                          {query.category}
-                        </span>
-                      </div>
-                      <p className="text-gray-700 mb-3">{query.description}</p>
-                    </div>
-                  </div>
+-- 3. JOIN (INNER JOIN — only matching rows)
+SELECT u.name, o.order_id, o.total, o.created_at
+FROM users u
+INNER JOIN orders o ON u.id = o.user_id
+WHERE o.total > 100
+ORDER BY o.created_at DESC;
 
-                  <div className="bg-white rounded-lg p-4 border border-gray-200 mb-3">
-                    <div className="flex items-start justify-between mb-2">
-                      <h4 className="font-semibold text-gray-800 text-sm">Query:</h4>
-                      <button
-                        onClick={() => copyToClipboard(query.query, query.id)}
-                        className="p-1 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded transition-colors"
-                        title="Copy query"
-                      >
-                        {copiedCode === query.id ? (
-                          <CheckCircle className="w-4 h-4 text-green-600" />
-                        ) : (
-                          <Copy className="w-4 h-4" />
-                        )}
-                      </button>
-                    </div>
-                    <pre className="bg-gray-900 text-green-400 p-3 rounded text-sm overflow-x-auto">
-                      <code>{query.query}</code>
-                    </pre>
-                  </div>
+-- 4. LEFT JOIN (all users, even with no orders)
+SELECT u.name, u.email, COUNT(o.id) AS order_count
+FROM users u
+LEFT JOIN orders o ON u.id = o.user_id
+GROUP BY u.id, u.name, u.email
+ORDER BY order_count DESC;
 
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="bg-blue-50 p-3 rounded border border-blue-200">
-                      <h4 className="font-semibold text-gray-800 mb-1 text-sm">Explanation:</h4>
-                      <p className="text-sm text-gray-700">{query.explanation}</p>
-                    </div>
-                    <div className="bg-green-50 p-3 rounded border border-green-200">
-                      <h4 className="font-semibold text-gray-800 mb-1 text-sm">Use Case:</h4>
-                      <p className="text-sm text-gray-700">{query.useCase}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+-- 5. Subquery in WHERE
+SELECT * FROM products
+WHERE category_id IN (
+  SELECT id FROM categories WHERE name IN ('Electronics', 'Computers')
+);`}
+      </CodeBlock>
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Query Categories</h2>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <h3 className="font-semibold text-gray-900 mb-2">SELECT Queries</h3>
-                <p className="text-sm text-gray-700 mb-2">Retrieve data from tables:</p>
-                <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
-                  <li>SELECT with WHERE, ORDER BY, LIMIT</li>
-                  <li>GROUP BY and HAVING</li>
-                  <li>DISTINCT, LIKE, IN, BETWEEN</li>
-                  <li>Subqueries and UNION</li>
-                </ul>
-              </div>
-              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                <h3 className="font-semibold text-gray-900 mb-2">JOIN Queries</h3>
-                <p className="text-sm text-gray-700 mb-2">Combine data from multiple tables:</p>
-                <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
-                  <li>INNER JOIN - matching rows</li>
-                  <li>LEFT JOIN - all left table rows</li>
-                  <li>RIGHT JOIN - all right table rows</li>
-                </ul>
-              </div>
-              <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-                <h3 className="font-semibold text-gray-900 mb-2">Data Modification</h3>
-                <p className="text-sm text-gray-700 mb-2">Insert, update, and delete data:</p>
-                <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
-                  <li>INSERT - single and multiple rows</li>
-                  <li>UPDATE - modify existing data</li>
-                  <li>DELETE - remove records</li>
-                </ul>
-              </div>
-              <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
-                <h3 className="font-semibold text-gray-900 mb-2">Aggregate Queries</h3>
-                <p className="text-sm text-gray-700 mb-2">Calculate statistics:</p>
-                <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
-                  <li>COUNT, SUM, AVG</li>
-                  <li>MAX and MIN</li>
-                  <li>Used with GROUP BY</li>
-                </ul>
-              </div>
-            </div>
-          </section>
+      <SectionHeader number={2} title="INSERT, UPDATE, DELETE" />
+      <CodeBlock language="sql" filename="6-10: Data modification queries">
+{`-- 6. INSERT single row
+INSERT INTO users (name, email, status, created_at)
+VALUES ('Alice Johnson', 'alice@example.com', 'active', NOW());
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Best Practices</h2>
-            <div className="space-y-4">
-              <div className="p-4 bg-red-50 rounded-lg border-l-4 border-red-500">
-                <h3 className="font-semibold text-gray-900 mb-2">⚠️ Always Use WHERE in UPDATE/DELETE</h3>
-                <p className="text-sm text-gray-700">
-                  Never run UPDATE or DELETE without WHERE clause. Always test with SELECT first: 
-                  SELECT * FROM table WHERE condition; then UPDATE/DELETE with same condition.
-                </p>
-              </div>
-              <div className="p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
-                <h3 className="font-semibold text-gray-900 mb-2">✅ Use Specific Columns</h3>
-                <p className="text-sm text-gray-700">
-                  Avoid SELECT * in production. Specify columns you need: SELECT id, name, email FROM users; 
-                  This improves performance and reduces data transfer.
-                </p>
-              </div>
-              <div className="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-                <h3 className="font-semibold text-gray-900 mb-2">✅ Index Frequently Queried Columns</h3>
-                <p className="text-sm text-gray-700">
-                  Add indexes on columns used in WHERE, JOIN, and ORDER BY clauses. This dramatically improves 
-                  query performance on large tables.
-                </p>
-              </div>
-              <div className="p-4 bg-purple-50 rounded-lg border-l-4 border-purple-500">
-                <h3 className="font-semibold text-gray-900 mb-2">✅ Use LIMIT for Large Result Sets</h3>
-                <p className="text-sm text-gray-700">
-                  Always use LIMIT when retrieving large datasets. For pagination, use LIMIT offset, count 
-                  or better yet, cursor-based pagination with WHERE id {'>'} last_id.
-                </p>
-              </div>
-            </div>
-          </section>
+-- 7. INSERT multiple rows
+INSERT INTO products (name, price, category_id, stock) VALUES
+  ('Laptop Pro', 1299.99, 1, 50),
+  ('Wireless Mouse', 29.99, 1, 200),
+  ('USB-C Hub', 49.99, 1, 150);
 
-          <section className="mb-12 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl p-8 text-white">
-            <div className="flex items-center gap-4 mb-4">
-              <Database className="w-12 h-12" />
-              <div>
-                <h2 className="text-2xl font-bold mb-2">Format Your MySQL Queries</h2>
-                <p className="text-green-100">
-                  Use our SQL Formatter tool to format, validate, and beautify your MySQL queries for better 
-                  readability and debugging.
-                </p>
-              </div>
-            </div>
-            <Link
-              href="/?tab=sql"
-              className="inline-flex items-center gap-2 bg-white text-green-600 px-6 py-3 rounded-lg font-semibold hover:bg-green-50 transition-colors"
-            >
-              Open SQL Formatter
-              <ExternalLink className="w-5 h-5" />
-            </Link>
-          </section>
-        </article>
-      </main>
-    </div>
+-- 8. INSERT ... ON DUPLICATE KEY UPDATE (upsert)
+INSERT INTO user_stats (user_id, login_count, last_login)
+VALUES (123, 1, NOW())
+ON DUPLICATE KEY UPDATE
+  login_count = login_count + 1,
+  last_login = NOW();
+
+-- 9. UPDATE with JOIN
+UPDATE orders o
+INNER JOIN users u ON o.user_id = u.id
+SET o.status = 'cancelled'
+WHERE u.status = 'suspended' AND o.status = 'pending';
+
+-- 10. Safe DELETE with LIMIT
+DELETE FROM sessions
+WHERE created_at < DATE_SUB(NOW(), INTERVAL 30 DAY)
+LIMIT 1000;  -- always use LIMIT for large deletes to avoid long lock`}
+      </CodeBlock>
+
+      <SectionHeader number={3} title="Date and String Functions" />
+      <CodeBlock language="sql" filename="11-15: Date and string operations">
+{`-- 11. Date filtering and formatting
+SELECT
+  DATE_FORMAT(created_at, '%Y-%m') AS month,
+  COUNT(*) AS orders,
+  SUM(total) AS revenue
+FROM orders
+WHERE created_at >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
+GROUP BY DATE_FORMAT(created_at, '%Y-%m')
+ORDER BY month;
+
+-- 12. String operations
+SELECT
+  UPPER(name) AS name_upper,
+  LOWER(email) AS email_lower,
+  LENGTH(name) AS name_length,
+  SUBSTRING(email, 1, LOCATE('@', email) - 1) AS email_username,
+  CONCAT(first_name, ' ', last_name) AS full_name
+FROM users;
+
+-- 13. NULL handling
+SELECT
+  IFNULL(phone, 'No phone') AS phone,
+  COALESCE(mobile, phone, email, 'No contact') AS primary_contact,
+  NULLIF(score, 0) AS non_zero_score  -- returns NULL if score=0
+FROM users;
+
+-- 14. Conditional logic with CASE
+SELECT
+  name,
+  total,
+  CASE
+    WHEN total > 1000 THEN 'VIP'
+    WHEN total > 500 THEN 'Premium'
+    WHEN total > 100 THEN 'Regular'
+    ELSE 'New'
+  END AS customer_tier
+FROM orders;
+
+-- 15. Search with LIKE and REGEXP
+SELECT * FROM products WHERE name LIKE '%wireless%';
+SELECT * FROM users WHERE email REGEXP '^[a-zA-Z0-9._%+-]+@gmail\.com$';`}
+      </CodeBlock>
+
+      <SectionHeader number={4} title="CTEs and Window Functions" />
+      <CodeBlock language="sql" filename="16-20: Advanced queries">
+{`-- 16. CTE (Common Table Expression) for readable complex queries
+WITH monthly_revenue AS (
+  SELECT
+    DATE_FORMAT(created_at, '%Y-%m') AS month,
+    SUM(total) AS revenue
+  FROM orders
+  WHERE status = 'completed'
+  GROUP BY DATE_FORMAT(created_at, '%Y-%m')
+),
+ranked_months AS (
+  SELECT *, RANK() OVER (ORDER BY revenue DESC) AS revenue_rank
+  FROM monthly_revenue
+)
+SELECT * FROM ranked_months WHERE revenue_rank <= 5;
+
+-- 17. ROW_NUMBER() — unique rank per group
+SELECT
+  user_id,
+  order_id,
+  total,
+  ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY created_at DESC) AS order_num
+FROM orders;
+-- Use: get only each user's most recent order (WHERE order_num = 1)
+
+-- 18. LAG/LEAD — compare to previous/next row
+SELECT
+  month,
+  revenue,
+  LAG(revenue) OVER (ORDER BY month) AS prev_month_revenue,
+  revenue - LAG(revenue) OVER (ORDER BY month) AS month_change
+FROM monthly_revenue;
+
+-- 19. Running total
+SELECT
+  created_at,
+  total,
+  SUM(total) OVER (ORDER BY created_at) AS running_total
+FROM orders;
+
+-- 20. FIND_IN_SET and JSON_CONTAINS for arrays
+SELECT * FROM users WHERE FIND_IN_SET('admin', roles);
+SELECT * FROM products WHERE JSON_CONTAINS(tags, '"sale"');`}
+      </CodeBlock>
+
+      <SectionHeader number={5} title="Performance and Utility Queries" />
+      <CodeBlock language="sql" filename="21-25: Performance and utilities">
+{`-- 21. EXPLAIN for query analysis
+EXPLAIN SELECT u.name, COUNT(o.id)
+FROM users u LEFT JOIN orders o ON u.id = o.user_id
+GROUP BY u.id;
+-- Look for: type=ALL (full scan = bad), key=NULL (no index used)
+
+-- 22. Create index for slow query
+CREATE INDEX idx_orders_user_date ON orders (user_id, created_at);
+CREATE UNIQUE INDEX idx_users_email ON users (email);
+
+-- 23. Batch insert for performance
+INSERT INTO logs (user_id, action, created_at)
+SELECT id, 'account_created', NOW()
+FROM users WHERE created_at > '2024-01-01';  -- INSERT from SELECT
+
+-- 24. Recursive CTE for hierarchy
+WITH RECURSIVE category_tree AS (
+  SELECT id, name, parent_id, 0 AS depth
+  FROM categories WHERE parent_id IS NULL  -- root
+  UNION ALL
+  SELECT c.id, c.name, c.parent_id, ct.depth + 1
+  FROM categories c
+  INNER JOIN category_tree ct ON c.parent_id = ct.id
+)
+SELECT * FROM category_tree ORDER BY depth, name;
+
+-- 25. TRANSACTION for multi-step operations
+START TRANSACTION;
+  UPDATE accounts SET balance = balance - 500 WHERE id = 1;
+  UPDATE accounts SET balance = balance + 500 WHERE id = 2;
+  INSERT INTO transfers (from_id, to_id, amount) VALUES (1, 2, 500);
+COMMIT;  -- or ROLLBACK if any step fails`}
+      </CodeBlock>
+
+      <FAQAccordion items={[
+        {
+          question: 'What is the difference between HAVING and WHERE?',
+          answer: 'WHERE filters individual rows before GROUP BY is applied. HAVING filters groups after GROUP BY. WHERE: cannot use aggregate functions (COUNT, SUM, etc.). HAVING: used with or without GROUP BY, can use aggregate functions. Example: WHERE age > 18 (filters rows), HAVING COUNT(*) > 10 (filters groups).',
+        },
+        {
+          question: 'When should I use a CTE vs a subquery?',
+          answer: 'CTEs are better for: reusing the same subquery multiple times, recursive queries (hierarchy/tree data), readability when the query is complex. Subqueries are fine for: simple one-time use in WHERE or SELECT. MySQL 8+ optimizes CTEs well. For complex reports, CTEs consistently produce more readable and maintainable SQL.',
+        },
+      ]} />
+    </BlogLayoutWithSidebarAds>
   );
 }
-

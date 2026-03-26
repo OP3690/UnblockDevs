@@ -1,452 +1,331 @@
 'use client';
 
-import Link from 'next/link';
-import { ArrowLeft, Code, ExternalLink, Sparkles, Zap, Lightbulb, CheckCircle, Copy, Target } from 'lucide-react';
-import { useState } from 'react';
-import toast from 'react-hot-toast';
-import FAQSchema from '@/components/FAQSchema';
-import BlogSocialShare from '@/components/BlogSocialShare';
+import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
+import {
+  AlertBox, FlowDiagram, CompareTable, ErrorFix, VerticalSteps,
+  CodeBlock, FAQAccordion, KeyPointsGrid, StatGrid, SectionHeader,
+  QuickFact, TimelineViz,
+} from '@/components/blog/BlogVisuals';
 
 export default function AiPromptEngineeringGuideClient() {
-  const [copiedPrompt, setCopiedPrompt] = useState<string | null>(null);
-
-  const copyToClipboard = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedPrompt(id);
-    toast.success('Prompt copied to clipboard!');
-    setTimeout(() => setCopiedPrompt(null), 2000);
-  };
-
-  const techniques = [
-    {
-      id: 'role-based',
-      title: 'Role-Based Prompting',
-      what: 'Assign AI a specific role or persona',
-      how: 'Start prompts with "You are a [role] with [expertise]"',
-      when: 'When you need expert-level, context-aware responses',
-      why: 'Helps AI understand context and provide appropriate responses',
-      example: 'You are a senior React developer with 10 years of experience building scalable applications.',
-      template: 'You are a [role] with [years] years of experience in [domain]. You specialize in [expertise].\n\n[Your question/task]',
-      before: 'How do I optimize React performance?',
-      after: 'You are a senior React performance engineer with expertise in optimization. How would you optimize this React component for maximum performance? [code]'
-    },
-    {
-      id: 'step-by-step',
-      title: 'Step-by-Step Reasoning',
-      what: 'Ask AI to break down problems into steps',
-      how: 'Request numbered steps or explicit reasoning process',
-      when: 'For complex problems requiring logical thinking',
-      why: 'Forces AI to think through problems systematically',
-      example: 'Solve this step by step: 1) Analyze, 2) Plan, 3) Implement, 4) Verify',
-      template: 'Solve this problem step by step:\n1. First, [analyze/understand]\n2. Then, [identify/plan]\n3. Next, [implement/solve]\n4. Finally, [verify/optimize]\n\n[Problem]',
-      before: 'How do I fix this bug?',
-      after: 'Fix this bug step by step:\n1. First, analyze the error message and identify the root cause\n2. Then, trace through the code to understand the flow\n3. Next, implement a fix\n4. Finally, verify the fix works and doesn\'t break anything\n\n[error and code]'
-    },
-    {
-      id: 'few-shot',
-      title: 'Few-Shot Learning',
-      what: 'Provide examples to guide AI output format',
-      how: 'Show 2-3 examples of desired output before your request',
-      when: 'When you need specific format or style',
-      why: 'AI learns from examples and replicates the pattern',
-      example: 'Here are examples of good code comments: [examples]. Now write comments for: [code]',
-      template: 'Here are examples of [what you want]:\n\nExample 1: [example]\nExample 2: [example]\n\nNow create [similar output] for: [your case]',
-      before: 'Write documentation for this function',
-      after: 'Here are examples of good function documentation:\n\nExample 1: "Calculates factorial using recursion. Handles edge cases."\nExample 2: "Validates email format using regex. Returns boolean."\n\nNow write similar documentation for: [function]'
-    },
-    {
-      id: 'chain-of-thought',
-      title: 'Chain of Thought',
-      what: 'Ask AI to show its reasoning process',
-      how: 'Request explicit explanation of thinking at each step',
-      when: 'For complex problems or when you need to understand the process',
-      why: 'Reveals AI\'s reasoning and helps catch errors',
-      example: 'Think through this problem, showing your reasoning at each step',
-      template: 'Think through this problem step by step, showing your reasoning:\n\n[Problem]\n\nExplain:\n- What you understand\n- What approach you\'ll take\n- Why you chose that approach\n- How you\'ll implement it',
-      before: 'How do I design this API?',
-      after: 'Design this REST API step by step, showing your reasoning:\n\n1. What you understand about the requirements\n2. What approach you\'ll take (REST principles)\n3. Why you chose that approach\n4. How you\'ll structure endpoints, request/response formats\n\n[requirements]'
-    },
-    {
-      id: 'constraints',
-      title: 'Constraints & Requirements',
-      what: 'Specify limitations and requirements explicitly',
-      how: 'List constraints, requirements, and preferences clearly',
-      when: 'When output must meet specific criteria',
-      why: 'Ensures AI considers all requirements',
-      example: 'Requirements: Use TypeScript, follow SOLID principles, include error handling',
-      template: 'Create [what] with these requirements:\n- [requirement 1]\n- [requirement 2]\n- [requirement 3]\n\nConstraints:\n- [constraint 1]\n- [constraint 2]\n\n[context]',
-      before: 'Create a user authentication system',
-      after: 'Create a user authentication system with these requirements:\n- Use JWT tokens\n- Include password hashing with bcrypt\n- Support email/password login\n- Return user data on success\n\nConstraints:\n- Must use TypeScript\n- Follow REST API conventions\n- Include input validation\n- Handle errors gracefully\n\n[tech stack]'
-    },
-    {
-      id: 'output-format',
-      title: 'Output Format Specification',
-      what: 'Explicitly specify desired output format',
-      how: 'Request specific format: markdown, JSON, code with comments, etc.',
-      when: 'When you need structured or formatted output',
-      why: 'Ensures output matches your needs exactly',
-      example: 'Provide code with comments, include type definitions, and format as markdown',
-      template: 'Provide [output] in this format:\n- [format requirement 1]\n- [format requirement 2]\n- [format requirement 3]\n\n[request]',
-      before: 'Write a function to sort data',
-      after: 'Write a Python function to sort data in this format:\n- Include type hints\n- Add docstring with examples\n- Include inline comments\n- Format code with proper indentation\n- Show usage example\n\n[requirements]'
-    }
-  ];
-
-  const bestPractices = [
-    {
-      title: 'Be Specific and Detailed',
-      bad: 'Write a function to sort data',
-      good: 'Write a Python function that sorts a list of dictionaries by the "price" key in descending order. Handle edge cases like empty lists and missing keys. Include type hints, docstring, and error handling.',
-      tip: 'More details = better results. Include types, edge cases, error handling, and examples.'
-    },
-    {
-      title: 'Provide Context',
-      bad: 'Fix this bug',
-      good: 'I\'m getting "Cannot read property of undefined" error in my React component. I\'m using React 18, TypeScript, and this is a functional component. Here\'s the code: [code]. The error occurs when [scenario].',
-      tip: 'Include: your experience level, what you\'ve tried, error messages, code snippets, constraints, and desired outcome.'
-    },
-    {
-      title: 'Use Clear Structure',
-      bad: 'Help me with authentication and also database queries and maybe some frontend stuff',
-      good: 'I need help with three things:\n1. User authentication (JWT tokens)\n2. Database queries (PostgreSQL)\n3. Frontend integration (React)\n\nLet\'s start with #1: [details]',
-      tip: 'Break complex requests into numbered points. Address one thing at a time or clearly separate multiple topics.'
-    },
-    {
-      title: 'Ask for Explanations',
-      bad: 'Write code to do X',
-      good: 'Write code to do X. Also explain:\n- Why this approach\n- How it works\n- Alternative approaches\n- Trade-offs\n- Best practices',
-      tip: 'Don\'t just ask for code - ask for understanding. Request explanations, alternatives, and best practices.'
-    },
-    {
-      title: 'Iterate and Refine',
-      bad: 'Expecting perfect result from one prompt',
-      good: 'Start broad: "How do I implement user authentication?"\nThen refine: "Can you show me JWT implementation?"\nThen iterate: "Add refresh token support"',
-      tip: 'Start with a broad question, then refine based on responses. Build on previous answers in the conversation.'
-    }
-  ];
-
-  const promptTemplates = [
-    {
-      id: 'code-generation',
-      title: 'Code Generation',
-      template: 'You are a [role] expert. Create [what] with these requirements:\n\nRequirements:\n- [requirement 1]\n- [requirement 2]\n\nConstraints:\n- [constraint 1]\n- [constraint 2]\n\nPlease provide:\n1. Implementation with comments\n2. Explanation of approach\n3. Usage example\n4. Edge cases handled\n\n[context/code]'
-    },
-    {
-      id: 'debugging',
-      title: 'Debugging',
-      template: 'You are a [role] debugging expert. I\'m getting this error:\n\n[error message]\n\nContext:\n- [context 1]\n- [context 2]\n\nCode:\n[code]\n\nPlease:\n1. Identify the root cause\n2. Explain why it\'s happening\n3. Provide a fix\n4. Suggest prevention strategies'
-    },
-    {
-      id: 'refactoring',
-      title: 'Refactoring',
-      template: 'You are a [role] code reviewer. Refactor this code to:\n\nGoals:\n1. Improve [aspect 1]\n2. Enhance [aspect 2]\n3. Follow [principles]\n\nCurrent code:\n[code]\n\nProvide:\n- Refactored code\n- Explanation of changes\n- Before/after comparison\n- Benefits of refactoring'
-    },
-    {
-      id: 'learning',
-      title: 'Learning',
-      template: 'I\'m a [current level] developer learning [topic]. Explain [concept] by:\n\n1. Comparing to what I know: [familiar concept]\n2. Showing practical examples\n3. Explaining when to use it\n4. Providing best practices\n5. Including common pitfalls\n\nMake it beginner-friendly and relate to [my background].'
-    }
-  ];
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-amber-50 to-orange-50">
-      <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/blog" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Developer's Study Materials
-          </Link>
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-amber-100 rounded-lg">
-              <Target className="w-6 h-6 text-amber-600" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">AI Prompt Engineering Guide</h1>
-              <p className="text-sm text-gray-500 mt-1">Best Prompts for Great Results: How, What, When & Why</p>
-            </div>
-          </div>
-        </div>
-      </header>
+    <BlogLayoutWithSidebarAds>
+      <h1>AI Prompt Engineering Guide — 6 Techniques That Actually Work</h1>
+      <p className="lead">
+        Most people use AI like a search engine — type a vague question, get a vague answer. Prompt engineering is the
+        skill of writing instructions that consistently produce high-quality, accurate, and useful responses.
+        This guide covers 6 practical techniques with real before/after examples.
+      </p>
 
-      {/* Floating Social Share Bar */}
-      <BlogSocialShare 
-        title="AI Prompt Engineering Guide"
-        description="Best Prompts for Great Results: How, What, When & Why"
-        variant="floating"
+      <StatGrid
+        stats={[
+          { value: '6', label: 'battle-tested techniques', color: 'purple' },
+          { value: '10x', label: 'better output with good prompts', color: 'green' },
+          { value: '0', label: 'cost — just better wording', color: 'blue' },
+          { value: '2026', label: 'updated for GPT-4o & Claude 3.5', color: 'amber' },
+        ]}
       />
 
+      <SectionHeader number={1} title="Why Prompts Matter More Than You Think" />
+      <p>
+        The same AI model will give wildly different outputs depending on how you phrase your request. This isn't
+        a quirk — it's by design. Language models predict the most likely continuation of your text. A precise,
+        context-rich prompt narrows down the probability space and guides the model toward exactly what you need.
+      </p>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
-        <FAQSchema
-          faqs={[
-            {
-              question: 'What is prompt engineering and why is it important?',
-              answer: 'Prompt engineering is the practice of crafting effective prompts to get the best results from AI tools. It\'s important because well-written prompts produce more accurate, relevant, and useful responses. Good prompts can mean the difference between generic output and expert-level assistance.',
-            },
-            {
-              question: 'What are the best prompt engineering techniques?',
-              answer: 'Best techniques include: role-based prompting (assign AI a role), step-by-step reasoning (break down problems), few-shot learning (provide examples), chain-of-thought (show reasoning), constraints specification (list requirements), and output format specification (define structure).',
-            },
-            {
-              question: 'How do I write effective AI prompts?',
-              answer: 'Write effective prompts by: being specific and detailed, providing context (code, errors, constraints), using clear structure, asking for explanations, iterating and refining, specifying output format, and using proven techniques like role-based or step-by-step prompting.',
-            },
-            {
-              question: 'What makes a good AI prompt?',
-              answer: 'A good prompt is: specific (not vague), contextual (includes relevant information), structured (clear organization), goal-oriented (defines desired outcome), formatted (specifies output format), and iterative (allows refinement). It should provide enough context for AI to understand and respond appropriately.',
-            },
-          ]}
-        />
-        <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          <section className="mb-12">
-            <p className="text-lg text-gray-700 leading-relaxed mb-4">
-              <strong>Prompt engineering</strong> is the art and science of crafting effective prompts to get the best 
-              results from AI tools like ChatGPT, Cursor, and Claude. Understanding <strong>how</strong> to structure 
-              prompts, <strong>what</strong> techniques work best, <strong>when</strong> to use each technique, and 
-              <strong>why</strong> they work can dramatically improve the quality of AI responses.
-            </p>
-            <p className="text-gray-700 leading-relaxed">
-              This comprehensive guide covers proven prompt engineering techniques, best practices, templates, and 
-              real-world examples to help you get great results from AI tools.
-            </p>
-          </section>
+      <CompareTable
+        leftLabel="Weak Prompt"
+        rightLabel="Strong Prompt"
+        rows={[
+          { label: 'Specificity', left: 'Fix this code', right: 'Fix the null pointer exception in this TypeScript function. Explain what caused it.' },
+          { label: 'Context', left: 'Write a function', right: 'Write a TypeScript function that validates an email address using regex. Return a boolean.' },
+          { label: 'Format', left: 'Explain CORS', right: 'Explain CORS in 3 bullet points suitable for a junior developer with no HTTP background.' },
+          { label: 'Constraints', left: 'Summarize this', right: 'Summarize this in 2 sentences. Focus on the key business impact, not technical details.' },
+        ]}
+      />
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Target className="w-6 h-6 text-amber-600" />
-              What is Prompt Engineering?
-            </h2>
-            <div className="bg-amber-50 border-l-4 border-amber-500 p-5 rounded-r-lg mb-4">
-              <p className="text-gray-700 mb-3">
-                <strong>Prompt engineering</strong> is the practice of designing and optimizing prompts to:
-              </p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700">
-                <li><strong>Get Better Results:</strong> More accurate, relevant, and useful responses</li>
-                <li><strong>Control Output:</strong> Shape AI responses to match your needs</li>
-                <li><strong>Improve Efficiency:</strong> Reduce iterations and get desired results faster</li>
-                <li><strong>Enhance Understanding:</strong> Get explanations, not just answers</li>
-                <li><strong>Maintain Consistency:</strong> Get reliable, predictable outputs</li>
-              </ul>
-            </div>
-            <p className="text-gray-700 leading-relaxed">
-              The difference between a good prompt and a bad prompt can be the difference between getting generic, 
-              unhelpful output and expert-level, actionable assistance.
-            </p>
-          </section>
+      <SectionHeader number={2} title="Technique 1 — Role-Based Prompting" />
+      <p>
+        Assigning a role or persona to the AI dramatically improves the tone, depth, and relevance of responses.
+        The model uses the role as a filter for what vocabulary, assumptions, and perspective to apply.
+      </p>
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Sparkles className="w-6 h-6 text-purple-600" />
-              Essential Prompt Engineering Techniques
-            </h2>
-            <div className="space-y-6">
-              {techniques.map((technique) => (
-                <div key={technique.id} className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">{technique.title}</h3>
-                  <div className="grid md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <h4 className="font-semibold text-gray-800 mb-2 text-sm">What:</h4>
-                      <p className="text-sm text-gray-700 mb-3">{technique.what}</p>
-                      <h4 className="font-semibold text-gray-800 mb-2 text-sm">How:</h4>
-                      <p className="text-sm text-gray-700">{technique.how}</p>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-800 mb-2 text-sm">When:</h4>
-                      <p className="text-sm text-gray-700 mb-3">{technique.when}</p>
-                      <h4 className="font-semibold text-gray-800 mb-2 text-sm">Why:</h4>
-                      <p className="text-sm text-gray-700">{technique.why}</p>
-                    </div>
-                  </div>
-                  <div className="grid md:grid-cols-2 gap-4 mb-4">
-                    <div className="bg-red-50 p-4 rounded border border-red-200">
-                      <h4 className="font-semibold text-gray-800 mb-2 text-sm">❌ Before:</h4>
-                      <p className="text-sm text-gray-700 italic">{technique.before}</p>
-                    </div>
-                    <div className="bg-green-50 p-4 rounded border border-green-200">
-                      <h4 className="font-semibold text-gray-800 mb-2 text-sm">✅ After:</h4>
-                      <p className="text-sm text-gray-700 italic">{technique.after}</p>
-                    </div>
-                  </div>
-                  <div className="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-r-lg">
-                    <div className="flex items-start justify-between mb-2">
-                      <h4 className="font-semibold text-gray-900">📝 Template:</h4>
-                      <button
-                        onClick={() => copyToClipboard(technique.template, technique.id)}
-                        className="p-1 text-gray-600 hover:text-yellow-600 hover:bg-yellow-100 rounded transition-colors"
-                        title="Copy template"
-                      >
-                        {copiedPrompt === technique.id ? (
-                          <CheckCircle className="w-5 h-5 text-yellow-600" />
-                        ) : (
-                          <Copy className="w-5 h-5" />
-                        )}
-                      </button>
-                    </div>
-                    <pre className="bg-white p-3 rounded border border-yellow-200 text-sm text-gray-700 whitespace-pre-wrap overflow-x-auto">
-                      {technique.template}
-                    </pre>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+      <ErrorFix
+        bad={`How do I optimize React performance?`}
+        good={`You are a senior React engineer who has worked on large-scale SPAs with 1M+ users.
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Lightbulb className="w-6 h-6 text-yellow-600" />
-              Best Practices: Before & After
-            </h2>
-            <div className="space-y-4">
-              {bestPractices.map((practice, idx) => (
-                <div key={idx} className="bg-gray-50 rounded-lg p-5 border border-gray-200">
-                  <h3 className="font-semibold text-gray-900 mb-3">{practice.title}</h3>
-                  <div className="grid md:grid-cols-2 gap-4 mb-3">
-                    <div className="bg-red-50 p-3 rounded border border-red-200">
-                      <h4 className="font-semibold text-red-900 mb-2 text-sm">❌ Bad:</h4>
-                      <p className="text-sm text-gray-700 italic">{practice.bad}</p>
-                    </div>
-                    <div className="bg-green-50 p-3 rounded border border-green-200">
-                      <h4 className="font-semibold text-green-900 mb-2 text-sm">✅ Good:</h4>
-                      <p className="text-sm text-gray-700 italic whitespace-pre-wrap">{practice.good}</p>
-                    </div>
-                  </div>
-                  <div className="bg-blue-50 p-3 rounded border-l-4 border-blue-500">
-                    <p className="text-sm text-gray-700">
-                      <strong>💡 Tip:</strong> {practice.tip}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+I have a dashboard that re-renders every second due to real-time data. The FPS is dropping to 20 on low-end devices.
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Code className="w-6 h-6 text-blue-600" />
-              Ready-to-Use Prompt Templates
-            </h2>
-            <div className="space-y-4">
-              {promptTemplates.map((template) => (
-                <div key={template.id} className="bg-gray-50 rounded-lg p-5 border border-gray-200">
-                  <div className="flex items-start justify-between mb-3">
-                    <h3 className="font-semibold text-gray-900">{template.title}</h3>
-                    <button
-                      onClick={() => copyToClipboard(template.template, `template-${template.id}`)}
-                      className="p-2 text-gray-600 hover:text-amber-600 hover:bg-amber-50 rounded transition-colors"
-                      title="Copy template"
-                    >
-                      {copiedPrompt === `template-${template.id}` ? (
-                        <CheckCircle className="w-5 h-5 text-amber-600" />
-                      ) : (
-                        <Copy className="w-5 h-5" />
-                      )}
-                    </button>
-                  </div>
-                  <pre className="bg-white p-3 rounded border border-gray-200 text-sm text-gray-700 whitespace-pre-wrap overflow-x-auto">
-                    {template.template}
-                  </pre>
-                </div>
-              ))}
-            </div>
-          </section>
+What are the top 3 React-specific optimizations I should apply first?`}
+        badLabel="Vague question"
+        goodLabel="Role + context + specific ask"
+      />
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Common Mistakes to Avoid</h2>
-            <div className="space-y-3">
-              <div className="p-3 bg-red-50 rounded border-l-4 border-red-500">
-                <p className="text-gray-700 text-sm">
-                  <strong>Vague Prompts:</strong> "Fix my code" without providing code, context, or error messages
-                </p>
-              </div>
-              <div className="p-3 bg-red-50 rounded border-l-4 border-red-500">
-                <p className="text-gray-700 text-sm">
-                  <strong>No Context:</strong> Asking complex questions without background information or constraints
-                </p>
-              </div>
-              <div className="p-3 bg-red-50 rounded border-l-4 border-red-500">
-                <p className="text-gray-700 text-sm">
-                  <strong>Single Shot Expectation:</strong> Expecting perfect results from one prompt instead of iterating
-                </p>
-              </div>
-              <div className="p-3 bg-red-50 rounded border-l-4 border-red-500">
-                <p className="text-gray-700 text-sm">
-                  <strong>No Format Specification:</strong> Not specifying desired output format, leading to inconsistent results
-                </p>
-              </div>
-              <div className="p-3 bg-red-50 rounded border-l-4 border-red-500">
-                <p className="text-gray-700 text-sm">
-                  <strong>Ignoring Responses:</strong> Not building on previous responses or asking follow-up questions
-                </p>
-              </div>
-            </div>
-          </section>
+      <KeyPointsGrid
+        columns={3}
+        items={[
+          { title: 'Domain Expert', description: '"You are a senior DevOps engineer specializing in Kubernetes..."' },
+          { title: 'Audience Adapter', description: '"Explain this to a non-technical product manager..."' },
+          { title: 'Style Guide', description: '"You write in the style of the React docs — precise, minimal, no hype..."' },
+        ]}
+      />
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Zap className="w-6 h-6 text-yellow-600" />
-              Quick Reference: Prompt Checklist
-            </h2>
-            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-3">✅ Include:</h3>
-                  <ul className="list-disc list-inside space-y-2 text-sm text-gray-700">
-                    <li>Specific role or expertise level</li>
-                    <li>Clear context and background</li>
-                    <li>Exact requirements and constraints</li>
-                    <li>Desired output format</li>
-                    <li>Examples or references</li>
-                    <li>Step-by-step instructions</li>
-                    <li>Request for explanations</li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-3">❌ Avoid:</h3>
-                  <ul className="list-disc list-inside space-y-2 text-sm text-gray-700">
-                    <li>Vague or ambiguous language</li>
-                    <li>Missing context or code</li>
-                    <li>Unclear requirements</li>
-                    <li>No output format specification</li>
-                    <li>Expecting perfection in one shot</li>
-                    <li>Not iterating on responses</li>
-                    <li>Ignoring AI suggestions</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </section>
+      <SectionHeader number={3} title="Technique 2 — Chain-of-Thought (CoT)" />
+      <p>
+        Telling the model to "think step by step" before giving an answer significantly improves accuracy on
+        reasoning tasks, math, logic, and debugging. It forces the model to work through intermediate steps
+        rather than jumping to a conclusion.
+      </p>
 
-          <section className="mb-12 bg-gradient-to-r from-amber-600 to-orange-600 rounded-xl p-8 text-white">
-            <div className="flex items-center gap-4 mb-4">
-              <Target className="w-12 h-12" />
-              <div>
-                <h2 className="text-2xl font-bold mb-2">Validate AI-Generated Output</h2>
-                <p className="text-amber-100">
-                  When AI generates JSON, code, or data structures, use our tools to validate, format, and ensure 
-                  correctness before using in production.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <Link
-                href="/?tab=fixer"
-                className="inline-flex items-center gap-2 bg-white text-amber-600 px-6 py-3 rounded-lg font-semibold hover:bg-amber-50 transition-colors"
-              >
-                JSON Validator
-                <ExternalLink className="w-5 h-5" />
-              </Link>
-              <Link
-                href="/?tab=schema"
-                className="inline-flex items-center gap-2 bg-white text-amber-600 px-6 py-3 rounded-lg font-semibold hover:bg-amber-50 transition-colors"
-              >
-                Schema Generator
-                <ExternalLink className="w-5 h-5" />
-              </Link>
-            </div>
-          </section>
-        </article>
-      </main>
-    </div>
+      <ErrorFix
+        bad={`Is this SQL query efficient? SELECT * FROM orders WHERE customer_id = 123 ORDER BY created_at DESC;`}
+        good={`Analyze this SQL query step by step:
+SELECT * FROM orders WHERE customer_id = 123 ORDER BY created_at DESC;
+
+1. First, identify what indexes would help
+2. Then check for any N+1 or full-table scan issues
+3. Finally, suggest the optimized version with explanation
+
+Table: orders (500,000 rows). customer_id and created_at both have individual indexes.`}
+        badLabel="Direct question"
+        goodLabel="Step-by-step analysis prompt"
+      />
+
+      <AlertBox type="tip" title="When to use Chain-of-Thought">
+        CoT is most powerful for: debugging code, math/logic problems, multi-step planning, comparing trade-offs,
+        and any task where "show your work" would help a human too.
+      </AlertBox>
+
+      <SectionHeader number={4} title="Technique 3 — Few-Shot Prompting" />
+      <p>
+        Provide 2-3 examples of the exact input→output format you want. The model uses these as a pattern
+        to follow rather than guessing your intent. This is especially powerful for formatting, classification,
+        and code generation tasks.
+      </p>
+
+      <CodeBlock language="text" filename="Few-Shot Example: Commit Message Generator">
+{`Convert these git diffs into conventional commit messages.
+
+EXAMPLE 1:
+Diff: Added user.email validation in signup form
+Output: feat(auth): add email validation to signup form
+
+EXAMPLE 2:
+Diff: Fixed null check in getUserById causing crash
+Output: fix(users): handle null return from getUserById
+
+EXAMPLE 3:
+Diff: Removed unused imports from dashboard.tsx
+Output: chore(dashboard): remove unused imports
+
+NOW DO THIS:
+Diff: Added Redis caching for product listings API endpoint
+Output:`}
+      </CodeBlock>
+
+      <QuickFact>
+        Three examples is the sweet spot for most tasks. More than 5 examples rarely adds value and uses up
+        context window space.
+      </QuickFact>
+
+      <SectionHeader number={5} title="Technique 4 — Constraint & Format Specification" />
+      <p>
+        Tell the model exactly what format you want the output in. This prevents verbose, padded responses
+        and makes the output immediately usable in your workflow.
+      </p>
+
+      <CodeBlock language="text" filename="Format Specification Examples">
+{`# Response as JSON
+Extract the key info from this job posting as JSON:
+{ "title": "...", "company": "...", "salary": "...", "remote": true/false, "stack": ["..."] }
+
+Job posting: [paste here]
+
+---
+
+# Response as Markdown table
+Compare these 3 state management libraries (Redux, Zustand, Jotai) in a markdown table.
+Columns: Library | Bundle Size | Learning Curve | Best For | Verdict
+
+---
+
+# Response as numbered list, max 5 items
+List the top 5 reasons Next.js apps are slow in production.
+Each item: one sentence, developer-focused, actionable.`}
+      </CodeBlock>
+
+      <CompareTable
+        leftLabel="Without Format Spec"
+        rightLabel="With Format Spec"
+        rows={[
+          { label: 'Length', left: 'Unpredictable — often too long', right: 'Controlled — exactly what you asked' },
+          { label: 'Structure', left: 'Paragraphs you need to parse', right: 'JSON / table / list ready to use' },
+          { label: 'Copy-paste ready?', left: 'Usually needs editing', right: 'Often paste-and-go' },
+          { label: 'Hallucination risk', left: 'Higher (more room to fill)', right: 'Lower (constrained output)' },
+        ]}
+      />
+
+      <SectionHeader number={6} title="Technique 5 — Context Injection" />
+      <p>
+        Language models have no memory between conversations and no access to your codebase, docs, or data.
+        Context injection means pasting the relevant information directly into the prompt so the model works
+        with your actual situation rather than a generic one.
+      </p>
+
+      <ErrorFix
+        bad={`Why is my Next.js app slow?`}
+        good={`Here is my Next.js app's Lighthouse report (score: 34):
+- LCP: 8.2s (image hero, no priority attribute)
+- TBT: 1,200ms (two 400KB client-side JS bundles)
+- CLS: 0.42 (dynamic content inserted above the fold)
+
+My stack: Next.js 14 App Router, Tailwind, no image optimization configured.
+
+Based on this specific data, what are the top 3 changes that will have the most impact?`}
+        badLabel="No context"
+        goodLabel="Real data injected"
+      />
+
+      <AlertBox type="warning" title="Sensitive data warning">
+        Never paste real user data, API keys, passwords, database contents, or HIPAA/PII data into AI prompts.
+        Use placeholders like [REDACTED], [USER_EMAIL], or masked values.
+        See our <a href="/blog/hipaa-compliant-ai-development" className="underline">HIPAA-compliant AI guide</a> for masking workflows.
+      </AlertBox>
+
+      <SectionHeader number={7} title="Technique 6 — Iterative Refinement" />
+      <p>
+        Treat AI conversations as a dialogue, not a one-shot query. Start broad, then narrow down with follow-up
+        instructions. This is faster than trying to write the perfect prompt on the first attempt.
+      </p>
+
+      <VerticalSteps
+        steps={[
+          {
+            title: 'Send the initial prompt',
+            description: 'Get a baseline response. Don\'t overthink the first message.',
+            code: 'Write a function to validate a credit card number.',
+          },
+          {
+            title: 'Refine with constraints',
+            description: 'Add the specifics you want changed or added.',
+            code: 'Make it TypeScript. Use the Luhn algorithm. Return { valid: boolean, error?: string }.',
+          },
+          {
+            title: 'Add edge cases',
+            description: 'Ask the model to test its own output.',
+            code: 'Now write 5 unit tests covering: valid card, expired, wrong length, non-numeric, Amex 15-digit.',
+          },
+          {
+            title: 'Request the final version',
+            description: 'Have the model produce a clean, combined final version.',
+            code: 'Output the final function + tests as a single TypeScript file.',
+          },
+        ]}
+      />
+
+      <SectionHeader number={8} title="Prompt Template Library" />
+      <p>Save these reusable templates for common developer tasks:</p>
+
+      <CodeBlock language="text" filename="Code Review Template">
+{`Review this [LANGUAGE] code for:
+1. Correctness — logic errors or edge cases
+2. Security — any injection, auth, or data exposure risks
+3. Performance — unnecessary loops, missing indexes, N+1 queries
+4. Readability — naming, comments, structure
+
+Rate each category 1-5 and explain the top issue in each.
+
+\`\`\`[LANGUAGE]
+[PASTE CODE HERE]
+\`\`\``}
+      </CodeBlock>
+
+      <CodeBlock language="text" filename="Documentation Generator">
+{`Generate JSDoc comments for this TypeScript function.
+
+Include:
+- @description: one sentence, plain English
+- @param: for each parameter with type and purpose
+- @returns: what the function returns and when
+- @throws: any errors this can throw
+- @example: one realistic usage example
+
+\`\`\`typescript
+[PASTE FUNCTION HERE]
+\`\`\``}
+      </CodeBlock>
+
+      <CodeBlock language="text" filename="Bug Explanation Template">
+{`I have a bug. Here is everything I know:
+
+ERROR MESSAGE:
+[paste error]
+
+CODE WHERE IT HAPPENS:
+\`\`\`[language]
+[paste code]
+\`\`\`
+
+WHAT I EXPECTED:
+[expected behavior]
+
+WHAT ACTUALLY HAPPENED:
+[actual behavior]
+
+WHAT I'VE TRIED:
+[list attempted fixes]
+
+Please: (1) explain the root cause, (2) give the fix, (3) explain why the fix works.`}
+      </CodeBlock>
+
+      <SectionHeader number={9} title="Model-Specific Tips" />
+
+      <KeyPointsGrid
+        columns={2}
+        items={[
+          {
+            title: 'GPT-4o',
+            description: 'Excellent at following format specs. Use JSON output mode for structured data. Handles very long context well.',
+          },
+          {
+            title: 'Claude 3.5 Sonnet',
+            description: 'Strong reasoning and nuanced writing. Responds well to "think step by step." Great for code review and analysis.',
+          },
+          {
+            title: 'Gemini 1.5 Pro',
+            description: 'Long context champion (1M tokens). Best for analyzing large codebases or long documents.',
+          },
+          {
+            title: 'Local Models (Llama, Mistral)',
+            description: 'Good for sensitive data — nothing leaves your machine. Simpler prompts work better. Less instruction-following.',
+          },
+        ]}
+      />
+
+      <FAQAccordion
+        items={[
+          {
+            question: 'How long should a prompt be?',
+            answer: 'As long as necessary, no longer. Include all the context the model needs but cut padding. A well-structured 200-word prompt often outperforms a vague 20-word one — but 2000 words of filler is worse than 50 words of clarity.',
+          },
+          {
+            question: 'What is the difference between a system prompt and a user prompt?',
+            answer: 'System prompts set persistent instructions (role, tone, format rules) that apply to the whole conversation. User prompts are individual messages. Most API-based applications use system prompts to set behavior; chat UIs just have user messages.',
+          },
+          {
+            question: 'Why does the same prompt give different results each time?',
+            answer: 'Temperature controls randomness. Most chat interfaces use temperature ~0.7-1.0 for variety. For consistent outputs (code, JSON, data extraction), use temperature=0 via the API. For creative tasks, higher temperature produces more variety.',
+          },
+          {
+            question: 'What is prompt injection and should I worry about it?',
+            answer: 'Prompt injection is when malicious user input overrides your system instructions. If you\'re building an AI app where users can provide input that gets included in prompts, yes — you should sanitize that input and test for injection. For personal use, it\'s not a concern.',
+          },
+          {
+            question: 'Do I need to use the word "please" with AI?',
+            answer: 'No effect on output quality. Use whatever feels natural. The model doesn\'t have feelings — but it also doesn\'t penalize polite language.',
+          },
+        ]}
+      />
+    </BlogLayoutWithSidebarAds>
   );
 }
-

@@ -1,477 +1,305 @@
 'use client';
 
-import Link from 'next/link';
-import { ArrowLeft, BookOpen, ExternalLink, Zap, CheckCircle, Copy, FileText, MessageSquare, Lightbulb, Target } from 'lucide-react';
-import { useState } from 'react';
-import toast from 'react-hot-toast';
-import FAQSchema from '@/components/FAQSchema';
-import BlogSocialShare from '@/components/BlogSocialShare';
+import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
+import {
+  AlertBox, FlowDiagram, CompareTable, ErrorFix, VerticalSteps,
+  CodeBlock, FAQAccordion, KeyPointsGrid, StatGrid, SectionHeader,
+  QuickFact, TimelineViz, ArchDiagram,
+} from '@/components/blog/BlogVisuals';
 
 export default function NotebooklmCheatSheetTipsClient() {
-  const [copiedText, setCopiedText] = useState<string | null>(null);
-
-  const copyToClipboard = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedText(id);
-    toast.success('Copied to clipboard!');
-    setTimeout(() => setCopiedText(null), 2000);
-  };
-
-  const quickTips = [
-    {
-      category: 'Getting Started',
-      tips: [
-        { tip: 'Start with 2-3 related documents to understand the tool', icon: '🚀' },
-        { tip: 'Use descriptive notebook names: "Research: [Topic]" or "Analysis: [Project]"', icon: '📝' },
-        { tip: 'Wait for documents to fully process before asking questions', icon: '⏳' },
-        { tip: 'Upload documents in supported formats: PDF, Google Docs, or plain text', icon: '📄' }
-      ]
-    },
-    {
-      category: 'Question Mastery',
-      tips: [
-        { tip: 'Start broad, then narrow down: "Summarize" → "Explain X in detail"', icon: '🎯' },
-        { tip: 'Use specific questions: "What are the 3 main findings?" not "Tell me about this"', icon: '❓' },
-        { tip: 'Ask follow-up questions to dive deeper into topics', icon: '🔍' },
-        { tip: 'Request structured outputs: "Create a bullet-point list" or "Make a table"', icon: '📊' },
-        { tip: 'Ask for comparisons: "Compare X and Y from the sources"', icon: '⚖️' }
-      ]
-    },
-    {
-      category: 'Content Generation',
-      tips: [
-        { tip: 'Specify format: "Create a bullet-point outline" or "Write in markdown"', icon: '📋' },
-        { tip: 'Define audience: "Write for technical audience" or "Explain for beginners"', icon: '👥' },
-        { tip: 'Request revisions: "Make this more concise" or "Add more examples"', icon: '✏️' },
-        { tip: 'Ask for multiple versions: "Create 3 different approaches"', icon: '🔄' },
-        { tip: 'Request examples: "Give me 3 examples of [concept] from the sources"', icon: '💡' }
-      ]
-    },
-    {
-      category: 'Organization',
-      tips: [
-        { tip: 'Create separate notebooks for different projects or topics', icon: '📚' },
-        { tip: 'Group related documents together in the same notebook', icon: '📁' },
-        { tip: 'Archive old notebooks instead of deleting them', icon: '🗄️' },
-        { tip: 'Use consistent naming conventions across notebooks', icon: '🏷️' }
-      ]
-    },
-    {
-      category: 'Advanced Techniques',
-      tips: [
-        { tip: 'Upload complementary sources to get comprehensive insights', icon: '🔗' },
-        { tip: 'Ask NotebookLM to find connections across multiple documents', icon: '🌐' },
-        { tip: 'Request citations: "Which sources did you use for this answer?"', icon: '📖' },
-        { tip: 'Use progressive refinement: Build on previous answers', icon: '🏗️' },
-        { tip: 'Ask for structured analysis: "Create a pros/cons table"', icon: '📈' }
-      ]
-    }
-  ];
-
-  const questionTemplates = [
-    {
-      category: 'Summaries',
-      templates: [
-        'Summarize the main points from [source/topic]',
-        'What are the key takeaways from these documents?',
-        'Create a bullet-point summary of [specific section]',
-        'What are the 5 most important points in this document?',
-        'Summarize [topic] in 3 paragraphs'
-      ]
-    },
-    {
-      category: 'Analysis',
-      templates: [
-        'What are the common themes across these sources?',
-        'Compare and contrast [topic A] and [topic B] from the sources',
-        'What are the strengths and weaknesses mentioned?',
-        'Analyze the methodology used in [source]',
-        'What patterns do you see across these documents?'
-      ]
-    },
-    {
-      category: 'Content Creation',
-      templates: [
-        'Create an outline for [topic] based on these sources',
-        'Write a summary paragraph about [topic] for [audience]',
-        'Generate 5 key questions about [topic]',
-        'Create a study guide with key concepts and examples',
-        'Write a blog post outline about [topic]'
-      ]
-    },
-    {
-      category: 'Extraction',
-      templates: [
-        'What are the action items from this meeting transcript?',
-        'Extract all dates and deadlines mentioned in these documents',
-        'List all key metrics and their values',
-        'What are the main recommendations from [source]?',
-        'Extract all technical terms and their definitions'
-      ]
-    },
-    {
-      category: 'Explanations',
-      templates: [
-        'Explain [concept] in simple terms',
-        'How does [process] work according to these sources?',
-        'What is the relationship between [A] and [B]?',
-        'Break down [complex topic] into steps',
-        'Explain [concept] with examples from the sources'
-      ]
-    }
-  ];
-
-  const powerUserTips = [
-    {
-      title: 'Multi-Source Synthesis',
-      description: 'Upload 5-10 related documents and ask NotebookLM to synthesize insights across all of them',
-      example: 'Upload 10 research papers, then ask: "What are the common findings and contradictions across all these papers?"',
-      benefit: 'Get comprehensive insights that would take hours to compile manually'
-    },
-    {
-      title: 'Progressive Learning',
-      description: 'Start with simple explanations, then request increasingly detailed information',
-      example: '1. "Explain machine learning simply"\n2. "Now explain neural networks in detail"\n3. "What are the different types of neural networks?"',
-      benefit: 'Build understanding progressively, perfect for learning complex topics'
-    },
-    {
-      title: 'Structured Output Requests',
-      description: 'Ask for specific formats: tables, lists, outlines, or structured data',
-      example: 'Ask: "Create a comparison table of [topic A] vs [topic B] with columns: Feature, Pros, Cons, Use Cases"',
-      benefit: 'Get organized, actionable outputs ready for use in reports or presentations'
-    },
-    {
-      title: 'Citation Verification',
-      description: 'Always verify which sources NotebookLM used for answers',
-      example: 'After getting an answer, ask: "Which specific sources and sections did you use for this answer?"',
-      benefit: 'Ensure accuracy and traceability to original sources'
-    },
-    {
-      title: 'Iterative Refinement',
-      description: 'Refine outputs through multiple iterations',
-      example: '1. "Create an outline"\n2. "Make it more detailed"\n3. "Add examples for each point"\n4. "Format as markdown"',
-      benefit: 'Get exactly what you need through progressive refinement'
-    }
-  ];
-
-  const commonMistakes = [
-    {
-      mistake: 'Asking vague questions',
-      fix: 'Be specific: "What are the 3 main findings?" instead of "Tell me about this"',
-      impact: 'Vague questions lead to generic answers. Specific questions get targeted insights.'
-    },
-    {
-      mistake: 'Not verifying citations',
-      fix: 'Always ask which sources were used and verify the information',
-      impact: 'Ensures accuracy and prevents using incorrect information.'
-    },
-    {
-      mistake: 'Uploading unrelated documents',
-      fix: 'Group related documents together in separate notebooks',
-      impact: 'Related documents provide better context and more accurate insights.'
-    },
-    {
-      mistake: 'Not using structured requests',
-      fix: 'Request specific formats: "Create a table" or "Make bullet points"',
-      impact: 'Structured outputs are easier to use and more actionable.'
-    },
-    {
-      mistake: 'Expecting perfect results in one shot',
-      fix: 'Use iterative refinement: ask follow-ups and request revisions',
-      impact: 'Iteration leads to better results than single-shot requests.'
-    }
-  ];
-
-  const workflowExamples = [
-    {
-      workflow: 'Research Paper Analysis',
-      steps: [
-        'Upload research paper PDF',
-        'Ask: "Summarize the main findings"',
-        'Follow-up: "Explain the methodology in detail"',
-        'Ask: "What are the limitations mentioned?"',
-        'Request: "Create a study guide with key concepts"'
-      ]
-    },
-    {
-      workflow: 'Meeting Notes Processing',
-      steps: [
-        'Upload meeting transcript',
-        'Ask: "Summarize the key decisions"',
-        'Request: "Extract all action items with owners"',
-        'Ask: "What are the next steps and deadlines?"',
-        'Generate: "Create a meeting summary email"'
-      ]
-    },
-    {
-      workflow: 'Content Creation',
-      steps: [
-        'Upload 3-5 source articles',
-        'Ask: "What are the common themes?"',
-        'Request: "Create an outline for a blog post"',
-        'Ask: "Write the introduction paragraph"',
-        'Refine: "Make it more engaging and add examples"'
-      ]
-    },
-    {
-      workflow: 'Learning & Study',
-      steps: [
-        'Upload textbook chapter or course materials',
-        'Ask: "Explain [concept] in simple terms"',
-        'Request: "Create a study guide with key points"',
-        'Ask: "Generate practice questions"',
-        'Follow-up: "Explain the answers in detail"'
-      ]
-    }
-  ];
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-pink-50">
-      <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/blog" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Developer's Study Materials
-          </Link>
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-purple-100 rounded-lg">
-              <Zap className="w-6 h-6 text-purple-600" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">NotebookLM Cheat Sheet</h1>
-              <p className="text-sm text-gray-500 mt-1">Tips, Tricks & Quick Reference Guide</p>
-            </div>
-          </div>
-        </div>
-      </header>
+    <BlogLayoutWithSidebarAds>
+      <h1>NotebookLM Cheat Sheet: Tips, Tricks &amp; Complete Quick Reference Guide</h1>
+      <p className="lead">
+        NotebookLM is Google's AI-powered research assistant that lets you upload documents and ask questions about them. This cheat sheet compiles every proven tip, question template, workflow, and power-user technique to help you get dramatically better results — whether you're analyzing research papers, processing meeting notes, or creating content.
+      </p>
 
-      {/* Floating Social Share Bar */}
-      <BlogSocialShare 
-        title="NotebookLM Cheat Sheet"
-        description="Tips, Tricks & Quick Reference Guide"
-        variant="floating"
+      <StatGrid stats={[
+        { value: '50', label: 'Sources per notebook', color: 'blue' },
+        { value: '25MB', label: 'Max file size per source', color: 'green' },
+        { value: '500K', label: 'Words per source', color: 'purple' },
+        { value: '10x', label: 'Faster research synthesis', color: 'amber' },
+      ]} />
+
+      <SectionHeader number={1} title="Getting Started: Setup Fundamentals" />
+
+      <p>
+        Before diving into tips and tricks, understanding how NotebookLM processes documents is critical. NotebookLM does not have access to the general web — it only knows what is in your uploaded sources. Every answer it gives is grounded in your specific documents, with citations pointing back to the exact passage used.
+      </p>
+
+      <AlertBox type="info" title="How NotebookLM Works">
+        NotebookLM reads your uploaded sources and creates an AI model specifically tuned to your content. It cannot hallucinate facts from outside your documents — if the information is not in your sources, it will tell you it cannot find it.
+      </AlertBox>
+
+      <VerticalSteps steps={[
+        {
+          title: 'Create a focused notebook',
+          description: 'Name your notebook descriptively: "Research: Climate Policy 2024" or "Analysis: Q3 Earnings Reports". Avoid generic names like "Notebook 1".',
+        },
+        {
+          title: 'Upload 2–5 related documents to start',
+          description: 'Start with a small, coherent set of documents. You can always add more. Uploading unrelated documents confuses the context.',
+        },
+        {
+          title: 'Wait for full processing',
+          description: 'NotebookLM shows a loading indicator while processing. Do not ask questions until all sources show as ready — partial processing gives incomplete answers.',
+        },
+        {
+          title: 'Begin with broad questions, then narrow',
+          description: 'Start with "Summarize the key themes across all sources" before drilling into specifics. This helps you map the terrain before exploring details.',
+        },
+        {
+          title: 'Verify citations on important answers',
+          description: 'NotebookLM shows inline citations. Click them to verify the exact passage. Never use AI-generated information without tracing it to the source.',
+        },
+      ]} />
+
+      <QuickFact>NotebookLM supports PDF, Google Docs, Google Slides, web URLs, YouTube videos, and plain text files as source types.</QuickFact>
+
+      <SectionHeader number={2} title="Question Templates You Can Copy and Use" />
+
+      <p>
+        The quality of your output is directly proportional to the quality of your questions. These templates have been tested across hundreds of use cases and consistently produce high-quality, actionable responses.
+      </p>
+
+      <h3>Summary Templates</h3>
+      <CodeBlock language="text" filename="Summary Prompts">
+{`Summarize the main points from [source/topic] in bullet points.
+What are the 5 most important takeaways from these documents?
+Create a one-paragraph executive summary of [topic].
+Summarize [topic] for someone with no technical background.
+What are the key findings and what evidence supports them?`}
+      </CodeBlock>
+
+      <h3>Analysis Templates</h3>
+      <CodeBlock language="text" filename="Analysis Prompts">
+{`What are the common themes across all uploaded sources?
+Compare and contrast [topic A] and [topic B] from the sources.
+What are the strengths and weaknesses of [approach/method]?
+What patterns do you see across these documents?
+What are the contradictions or disagreements between sources?`}
+      </CodeBlock>
+
+      <h3>Content Creation Templates</h3>
+      <CodeBlock language="text" filename="Content Creation Prompts">
+{`Create a detailed outline for a blog post about [topic].
+Write an introduction paragraph about [topic] for a [technical/general] audience.
+Generate 10 key questions someone would ask about [topic].
+Create a study guide with key concepts, definitions, and examples.
+Write a LinkedIn post summarizing the key insight from these sources.`}
+      </CodeBlock>
+
+      <h3>Extraction Templates</h3>
+      <CodeBlock language="text" filename="Extraction Prompts">
+{`What are all the action items and who owns them?
+Extract all dates, deadlines, and milestones mentioned.
+List all key metrics, numbers, and their context.
+What are the main recommendations from [source]?
+Extract all technical terms and provide definitions from the text.`}
+      </CodeBlock>
+
+      <SectionHeader number={3} title="Power User Techniques" />
+
+      <KeyPointsGrid columns={2} items={[
+        {
+          title: 'Multi-Source Synthesis',
+          description: 'Upload 5–10 related papers or reports, then ask: "What are the common findings and where do sources disagree?" This compresses hours of reading into minutes.',
+        },
+        {
+          title: 'Progressive Refinement',
+          description: 'Never expect a perfect output in one shot. Ask broad, get a draft, then request: "Make this more concise", "Add examples", "Format as a table".',
+        },
+        {
+          title: 'Persona-Based Prompting',
+          description: 'Specify your audience: "Explain this to a non-technical executive" or "Write for a first-year medical student." Context dramatically improves relevance.',
+        },
+        {
+          title: 'Structured Output Requests',
+          description: 'Explicitly request formats: "Create a comparison table with columns: Feature, Pros, Cons, Best Use Case." Structured requests produce structured, usable outputs.',
+        },
+        {
+          title: 'Citation Verification Workflow',
+          description: 'After any important answer, ask: "Which specific sources and page numbers did you use?" Then manually verify those passages before using the information.',
+        },
+        {
+          title: 'Contradiction Mining',
+          description: 'Ask: "Where do these sources contradict each other?" This is especially powerful for literature reviews and balanced analysis.',
+        },
+      ]} />
+
+      <AlertBox type="tip" title="The Iteration Rule">
+        Treat every NotebookLM output as a first draft. The best users get 3–5x better results by following up with refinement requests: "Make it shorter", "Add more specific examples", "Convert this to a table", "Rewrite for a business audience".
+      </AlertBox>
+
+      <SectionHeader number={4} title="Common Mistakes and How to Fix Them" />
+
+      <ErrorFix
+        bad={`Tell me about this document.
+What is this about?
+Summarize everything.`}
+        good={`What are the 3 main findings from Section 2 of this research paper?
+What methodology did the authors use and what were its limitations?
+Create a bullet-point summary of the key recommendations.`}
+        badLabel="Vague questions (bad)"
+        goodLabel="Specific questions (good)"
       />
 
+      <ErrorFix
+        bad={`Upload: 10-K filing + recipe blog + travel photos description
+Ask: "What are the key risks?"
+Result: Confused, irrelevant answers`}
+        good={`Upload: 10-K filing + analyst report + earnings call transcript
+Ask: "What are the key financial risks and how do analysts view them?"
+Result: Precise, cross-referenced financial risk analysis`}
+        badLabel="Mixing unrelated sources (bad)"
+        goodLabel="Grouping related sources (good)"
+      />
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
-        <FAQSchema
-          faqs={[
-            {
-              question: 'What are the best NotebookLM tips and tricks?',
-              answer: 'Best tips include: asking specific questions instead of vague ones, using progressive refinement (start broad then narrow), requesting structured outputs (tables, bullet points), verifying citations, grouping related documents, using descriptive notebook names, and iterating on outputs through follow-up questions.',
-            },
-            {
-              question: 'How do I get better results from NotebookLM?',
-              answer: 'Get better results by: being specific in questions, requesting structured formats, using progressive refinement, verifying citations, organizing documents by topic, asking follow-up questions, and iterating on outputs. Start with 2-3 related documents and build up as you understand the tool better.',
-            },
-            {
-              question: 'What are common NotebookLM mistakes to avoid?',
-              answer: 'Common mistakes: asking vague questions, not verifying citations, uploading unrelated documents together, not requesting structured outputs, expecting perfect results in one shot, and not using iterative refinement. Always be specific, verify sources, and iterate for best results.',
-            },
-            {
-              question: 'What are the best question templates for NotebookLM?',
-              answer: 'Best templates include: "Summarize [topic] from [source]", "Compare X and Y from the sources", "Create a bullet-point outline for [topic]", "What are the 3 main findings?", "Extract all action items from [document]", and "Explain [concept] with examples from the sources". Be specific and request structured outputs.',
-            },
-          ]}
-        />
-        <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          <section className="mb-12">
-            <p className="text-lg text-gray-700 leading-relaxed mb-4">
-              This <strong>NotebookLM Cheat Sheet</strong> provides quick reference tips, tricks, question templates, 
-              and best practices to help you master Google's AI-powered notebook tool. Bookmark this page for instant 
-              access to proven techniques and workflows.
-            </p>
-          </section>
+      <CompareTable
+        leftLabel="Mistake"
+        rightLabel="Fix"
+        rows={[
+          { label: 'Vague questions', left: '"Tell me about this"', right: '"What are the 3 main findings from section 2?"' },
+          { label: 'Unverified facts', left: 'Using answers without checking citations', right: 'Click citations and verify the source passage' },
+          { label: 'Wrong document mix', left: 'Uploading unrelated documents', right: 'One notebook per topic or project' },
+          { label: 'One-shot requests', left: 'Accepting first output as final', right: 'Iterate: refine, reformat, expand' },
+          { label: 'No format specified', left: '"Explain this topic"', right: '"Create a table with 3 columns: Concept, Definition, Example"' },
+        ]}
+      />
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Zap className="w-6 h-6 text-yellow-600" />
-              Quick Tips by Category
-            </h2>
-            <div className="space-y-6">
-              {quickTips.map((category, idx) => (
-                <div key={idx} className="bg-gray-50 rounded-lg p-5 border border-gray-200">
-                  <h3 className="font-semibold text-gray-900 mb-3 text-lg">{category.category}</h3>
-                  <div className="grid md:grid-cols-2 gap-3">
-                    {category.tips.map((item, itemIdx) => (
-                      <div key={itemIdx} className="bg-white p-3 rounded border border-gray-200 flex items-start gap-2">
-                        <span className="text-xl">{item.icon}</span>
-                        <p className="text-sm text-gray-700 flex-1">{item.tip}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+      <SectionHeader number={5} title="Complete Workflow Examples" />
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <MessageSquare className="w-6 h-6 text-blue-600" />
-              Question Templates (Copy & Use)
-            </h2>
-            <div className="space-y-6">
-              {questionTemplates.map((category, idx) => (
-                <div key={idx} className="bg-gray-50 rounded-lg p-5 border border-gray-200">
-                  <h3 className="font-semibold text-gray-900 mb-3">{category.category}</h3>
-                  <div className="space-y-2">
-                    {category.templates.map((template, templateIdx) => (
-                      <div key={templateIdx} className="flex items-start justify-between bg-white p-3 rounded border border-gray-200">
-                        <p className="text-sm text-gray-700 flex-1">{template}</p>
-                        <button
-                          onClick={() => copyToClipboard(template, `${category.category}-${templateIdx}`)}
-                          className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors ml-2"
-                          title="Copy template"
-                        >
-                          {copiedText === `${category.category}-${templateIdx}` ? (
-                            <CheckCircle className="w-4 h-4 text-blue-600" />
-                          ) : (
-                            <Copy className="w-4 h-4" />
-                          )}
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+      <h3>Research Paper Analysis Workflow</h3>
+      <VerticalSteps steps={[
+        { title: 'Upload the PDF', description: 'Use the PDF directly — not a screenshot. NotebookLM extracts text from actual PDFs.' },
+        { title: 'Get the overview', description: 'Ask: "Summarize the main findings, methodology, and limitations of this paper."' },
+        { title: 'Drill into methodology', description: 'Ask: "Explain the research methodology in detail. What were its strengths and weaknesses?"' },
+        { title: 'Extract key data', description: 'Ask: "List all statistics and data points mentioned, with their context."' },
+        { title: 'Generate study material', description: 'Ask: "Create a study guide with key concepts, definitions, and 5 practice questions with answers."' },
+      ]} />
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Lightbulb className="w-6 h-6 text-yellow-600" />
-              Power User Tips
-            </h2>
-            <div className="space-y-4">
-              {powerUserTips.map((tip, idx) => (
-                <div key={idx} className="bg-gray-50 rounded-lg p-5 border border-gray-200">
-                  <h3 className="font-semibold text-gray-900 mb-2">{tip.title}</h3>
-                  <p className="text-gray-700 text-sm mb-3">{tip.description}</p>
-                  <div className="bg-white p-3 rounded border border-gray-200 mb-3">
-                    <p className="text-sm text-gray-700 whitespace-pre-wrap italic">{tip.example}</p>
-                  </div>
-                  <div className="bg-green-50 p-2 rounded border-l-4 border-green-500">
-                    <p className="text-sm text-gray-700">
-                      <strong>💡 Benefit:</strong> {tip.benefit}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+      <h3>Meeting Notes Processing Workflow</h3>
+      <VerticalSteps steps={[
+        { title: 'Upload transcript or notes', description: 'Works with Otter.ai exports, Zoom transcripts, Google Docs meeting notes, or plain text.' },
+        { title: 'Extract decisions', description: 'Ask: "What decisions were made in this meeting? List them with context."' },
+        { title: 'Get action items', description: 'Ask: "Extract all action items, who owns them, and any deadlines mentioned."' },
+        { title: 'Identify blockers', description: 'Ask: "What concerns, blockers, or open questions were raised?"' },
+        { title: 'Draft follow-up email', description: 'Ask: "Write a concise follow-up email summarizing the key decisions and action items from this meeting."' },
+      ]} />
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Target className="w-6 h-6 text-red-600" />
-              Common Mistakes & How to Fix Them
-            </h2>
-            <div className="space-y-4">
-              {commonMistakes.map((item, idx) => (
-                <div key={idx} className="bg-gray-50 rounded-lg p-5 border border-gray-200">
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="bg-red-50 p-3 rounded border border-red-200">
-                      <h4 className="font-semibold text-red-900 mb-2 text-sm">❌ Mistake:</h4>
-                      <p className="text-sm text-gray-700">{item.mistake}</p>
-                    </div>
-                    <div className="bg-green-50 p-3 rounded border border-green-200">
-                      <h4 className="font-semibold text-green-900 mb-2 text-sm">✅ Fix:</h4>
-                      <p className="text-sm text-gray-700">{item.fix}</p>
-                    </div>
-                  </div>
-                  <div className="mt-3 bg-blue-50 p-3 rounded border-l-4 border-blue-500">
-                    <p className="text-sm text-gray-700">
-                      <strong>Impact:</strong> {item.impact}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+      <h3>Content Creation Workflow</h3>
+      <VerticalSteps steps={[
+        { title: 'Upload source material', description: 'Add 3–5 articles, reports, or research papers related to your topic.' },
+        { title: 'Find common themes', description: 'Ask: "What are the 5 most important themes across all sources?"' },
+        { title: 'Build an outline', description: 'Ask: "Create a detailed blog post outline about [topic] based on these themes."' },
+        { title: 'Draft each section', description: 'Ask: "Write the introduction section with a hook and thesis statement."' },
+        { title: 'Refine for audience', description: 'Ask: "Rewrite this for a general business audience. Make it engaging and remove jargon."' },
+      ]} />
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <FileText className="w-6 h-6 text-indigo-600" />
-              Complete Workflow Examples
-            </h2>
-            <div className="space-y-4">
-              {workflowExamples.map((workflow, idx) => (
-                <div key={idx} className="bg-gray-50 rounded-lg p-5 border border-gray-200">
-                  <h3 className="font-semibold text-gray-900 mb-3">{workflow.workflow}</h3>
-                  <ol className="list-decimal list-inside space-y-2">
-                    {workflow.steps.map((step, stepIdx) => (
-                      <li key={stepIdx} className="text-sm text-gray-700">{step}</li>
-                    ))}
-                  </ol>
-                </div>
-              ))}
-            </div>
-          </section>
+      <SectionHeader number={6} title="Supported File Types and Limits" />
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Quick Reference Checklist</h2>
-            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-3">✅ Do:</h3>
-                  <ul className="list-disc list-inside space-y-2 text-sm text-gray-700">
-                    <li>Ask specific, targeted questions</li>
-                    <li>Request structured outputs (tables, lists)</li>
-                    <li>Verify citations and sources</li>
-                    <li>Use progressive refinement</li>
-                    <li>Group related documents together</li>
-                    <li>Use descriptive notebook names</li>
-                    <li>Ask follow-up questions</li>
-                    <li>Request revisions when needed</li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-3">❌ Don't:</h3>
-                  <ul className="list-disc list-inside space-y-2 text-sm text-gray-700">
-                    <li>Ask vague or generic questions</li>
-                    <li>Upload unrelated documents together</li>
-                    <li>Skip citation verification</li>
-                    <li>Expect perfect results in one shot</li>
-                    <li>Use unclear notebook names</li>
-                    <li>Accept first output without refinement</li>
-                    <li>Ignore source references</li>
-                    <li>Mix different topics in one notebook</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </section>
+      <CompareTable
+        leftLabel="Source Type"
+        rightLabel="Best For"
+        rows={[
+          { label: 'PDF', left: 'Up to 25MB, 500K words', right: 'Research papers, reports, books' },
+          { label: 'Google Docs', left: 'Connected via Drive', right: 'Meeting notes, drafts, internal docs' },
+          { label: 'Google Slides', left: 'Connected via Drive', right: 'Presentations, pitch decks' },
+          { label: 'Web URL', left: 'Public web pages only', right: 'Articles, blog posts, documentation' },
+          { label: 'YouTube URL', left: 'Public videos with captions', right: 'Lectures, talks, tutorials' },
+          { label: 'Plain text (.txt)', left: 'Up to 500K words', right: 'Code docs, transcripts, notes' },
+        ]}
+      />
 
-          <section className="mb-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-8 text-white">
-            <div className="flex items-center gap-4 mb-4">
-              <Zap className="w-12 h-12" />
-              <div>
-                <h2 className="text-2xl font-bold mb-2">Process NotebookLM Output</h2>
-                <p className="text-purple-100">
-                  When NotebookLM generates structured data, summaries, or JSON content, use our tools to validate, 
-                  format, and organize the output for further use.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <Link
-                href="/?tab=beautifier"
-                className="inline-flex items-center gap-2 bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-purple-50 transition-colors"
-              >
-                JSON Formatter
-                <ExternalLink className="w-5 h-5" />
-              </Link>
-              <Link
-                href="/?tab=schema"
-                className="inline-flex items-center gap-2 bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-purple-50 transition-colors"
-              >
-                Schema Generator
-                <ExternalLink className="w-5 h-5" />
-              </Link>
-            </div>
-          </section>
-        </article>
-      </main>
-    </div>
+      <AlertBox type="warning" title="File Limitations to Know">
+        Scanned PDFs (image-based) may not be processed correctly. NotebookLM needs actual text content, not images of text. Use OCR tools to convert scanned documents before uploading.
+      </AlertBox>
+
+      <SectionHeader number={7} title="NotebookLM Use Cases by Profession" />
+
+      <KeyPointsGrid columns={3} items={[
+        {
+          title: 'Students & Researchers',
+          description: 'Analyze papers, create study guides, synthesize literature reviews, generate practice questions, and find contradictions across sources.',
+        },
+        {
+          title: 'Product Managers',
+          description: 'Process user research, extract themes from interview transcripts, summarize competitive analysis, and turn meeting notes into action items.',
+        },
+        {
+          title: 'Journalists & Writers',
+          description: 'Research topics from multiple sources, find contradictions, extract key quotes, and build article outlines backed by cited sources.',
+        },
+        {
+          title: 'Lawyers & Legal Teams',
+          description: 'Analyze contracts, extract key clauses, compare similar documents, and summarize case-relevant content from large document sets.',
+        },
+        {
+          title: 'Executives & Managers',
+          description: 'Digest lengthy reports quickly, extract recommendations, compare vendor proposals, and generate executive summaries from technical documents.',
+        },
+        {
+          title: 'Engineers & Developers',
+          description: 'Process API documentation, extract technical specifications, compare implementation approaches, and generate code documentation from specs.',
+        },
+      ]} />
+
+      <SectionHeader number={8} title="Advanced Audio Overview Feature" />
+
+      <p>
+        NotebookLM's Audio Overview feature generates a podcast-style conversation between two AI hosts discussing your uploaded sources. This is a breakthrough feature for learning and sharing complex material.
+      </p>
+
+      <VerticalSteps steps={[
+        { title: 'Click "Generate" in the Audio Overview panel', description: 'Available in the bottom-left of your notebook. Processing takes 1–3 minutes depending on source length.' },
+        { title: 'Customize with instructions', description: 'Click the customize button and provide focus instructions: "Focus on the methodology and key findings" or "Keep it under 10 minutes".' },
+        { title: 'Download for offline use', description: 'Downloaded audio files can be listened to during commutes, exercise, or any offline context.' },
+        { title: 'Share with colleagues', description: 'Audio Overviews are shareable — ideal for teams who need to consume long reports without reading them.' },
+      ]} />
+
+      <AlertBox type="success" title="Best Use of Audio Overview">
+        Use Audio Overview for dense academic papers or long reports that are hard to read. The conversational format makes complex information more digestible. Create one before a meeting to quickly get up to speed on a topic.
+      </AlertBox>
+
+      <SectionHeader number={9} title="Do This, Not That: Quick Reference Checklist" />
+
+      <CompareTable
+        leftLabel="Do This"
+        rightLabel="Not That"
+        rows={[
+          { label: 'Questions', left: 'Ask specific, targeted questions with desired output format', right: 'Ask vague questions like "tell me about this"' },
+          { label: 'Documents', left: 'Group topically related documents in one notebook', right: 'Mix unrelated topics in a single notebook' },
+          { label: 'Citations', left: 'Click and verify every citation on important answers', right: 'Accept answers without checking sources' },
+          { label: 'Iteration', left: 'Refine outputs through multiple follow-up requests', right: 'Use first draft output as final' },
+          { label: 'Format', left: 'Specify exact output format: table, bullet list, outline', right: 'Let the AI pick its own format' },
+          { label: 'Audience', left: 'Specify who the output is for and their technical level', right: 'Leave audience context unspecified' },
+          { label: 'Sources', left: 'Upload 3–10 high-quality, relevant sources', right: 'Upload a single document or too many irrelevant ones' },
+        ]}
+      />
+
+      <FAQAccordion items={[
+        {
+          question: 'What are the best NotebookLM tips for getting accurate answers?',
+          answer: 'The top tips for accuracy are: (1) Ask specific questions with clear scope — "What are the 3 main findings from section 2?" beats "Tell me about this". (2) Always verify citations by clicking them and reading the source passage. (3) Group topically related documents together so context is coherent. (4) Upload high-quality, text-based PDFs rather than scanned images. (5) Ask follow-up questions to drill into details rather than accepting surface-level summaries.',
+        },
+        {
+          question: 'How many sources should I add to a NotebookLM notebook?',
+          answer: 'Start with 2–5 closely related sources for your first experiment. The ideal range for most projects is 5–15 sources. You can add up to 50 sources per notebook. The key constraint is coherence: all sources should be related to the same topic or project. Mixing unrelated documents degrades answer quality significantly.',
+        },
+        {
+          question: 'What file types does NotebookLM support?',
+          answer: 'NotebookLM supports: PDF files (up to 25MB), Google Docs (via Drive), Google Slides (via Drive), web URLs (public pages only), YouTube video URLs (if the video has captions), and plain text files (.txt). Important: scanned PDFs that are image-based may not be processed correctly — NotebookLM needs actual text content. Use OCR first for scanned documents.',
+        },
+        {
+          question: 'Can NotebookLM hallucinate or make up information?',
+          answer: 'NotebookLM is specifically designed to minimize hallucination by grounding every answer in your uploaded sources. It will tell you when it cannot find information in your sources rather than making something up. However, it can still misinterpret passages, draw incorrect inferences, or misattribute information. Always verify important claims by clicking the citation links and reading the original passage.',
+        },
+        {
+          question: 'What is the best way to use NotebookLM for research papers?',
+          answer: 'The best research paper workflow: (1) Upload the PDF and any supplementary materials. (2) Start with "Summarize the key findings, methodology, and limitations." (3) Ask "What evidence supports the main claims?" to verify reasoning. (4) Ask "What are the weaknesses or criticisms of this methodology?" (5) Request "Create a structured summary table with: Finding, Evidence, Confidence Level." (6) Generate a study guide for key concepts. (7) Compare with other uploaded papers: "Where does this paper agree or disagree with [other source]?"',
+        },
+      ]} />
+    </BlogLayoutWithSidebarAds>
   );
 }
-

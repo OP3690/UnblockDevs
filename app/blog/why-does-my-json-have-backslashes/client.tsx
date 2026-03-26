@@ -1,138 +1,133 @@
 'use client';
 
-import Link from 'next/link';
-import { ArrowLeft, FileJson, HelpCircle, Code, CheckCircle } from 'lucide-react';
-import FAQSchema from '@/components/FAQSchema';
-import BlogSocialShare from '@/components/BlogSocialShare';
+import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
+import {
+  AlertBox, ErrorFix, CodeBlock, FAQAccordion,
+  StatGrid, SectionHeader, QuickFact,
+} from '@/components/blog/BlogVisuals';
 
 export default function WhyDoesMyJsonHaveBackslashesClient() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-amber-50 to-orange-50">
-      <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link
-            href="/blog"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Blog
-          </Link>
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-amber-100 rounded-lg">
-              <FileJson className="w-6 h-6 text-amber-700" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Why Does My JSON Have Backslashes?</h1>
-              <p className="text-sm text-gray-500 mt-1">Escaped quotes and backslashes in JSON — explained and fixed</p>
-            </div>
-          </div>
-        </div>
-      </header>
+    <BlogLayoutWithSidebarAds>
+      <h1>Why Does My JSON Have Backslashes? — How to Fix Double-Escaped JSON</h1>
+      <p className="lead">
+        Seeing <code>{`"{\"name\":\"Alice\"}"`}</code> instead of <code>{`{"name":"Alice"}`}</code>?
+        Your JSON is double-escaped — the JSON has been serialized twice. This is one of the most
+        common API bugs. This guide explains exactly why it happens and how to fix it.
+      </p>
 
-      <BlogSocialShare
-        title="Why Does My JSON Have Backslashes?"
-        description="Escaped quotes and backslashes in JSON — explained and fixed"
-        variant="floating"
+      <StatGrid stats={[
+        { value: 'Double-encode', label: 'JSON serialized twice — the most common cause', color: 'red' },
+        { value: 'JSON.parse()', label: 'parses the outer string to get the real object', color: 'green' },
+        { value: 'Back-end bug', label: 'usually caused by calling JSON.stringify() twice', color: 'amber' },
+        { value: 'API response', label: 'fix by removing extra serialization at source', color: 'blue' },
+      ]} />
+
+      <SectionHeader number={1} title="What Does Double-Escaped JSON Look Like?" />
+      <QuickFact>
+        Normal JSON: <code>{`{"name":"Alice","age":30}`}</code><br/>
+        Double-escaped: <code>{`"{\"name\":\"Alice\",\"age\":30}"`}</code><br/>
+        The outer quotes make it a JSON string containing escaped JSON.
+        Parsing it once gives you a string, not an object. You need to parse it again.
+      </QuickFact>
+
+      <AlertBox type="error" title="What you see vs what you expect">
+        {`Expected: {"name":"Alice","age":30}    ← object\n`}
+        {`Received: "{\"name\":\"Alice\",\"age\":30}"  ← string containing JSON`}
+      </AlertBox>
+
+      <SectionHeader number={2} title="Why This Happens — JavaScript" />
+      <ErrorFix
+        bad={`// Backend code — accidentally serializing twice
+const user = { name: "Alice", age: 30 };
+
+// First serialization
+const jsonString = JSON.stringify(user);
+// jsonString = '{"name":"Alice","age":30}'  ← string
+
+// Second serialization ❌ — serializing the string
+res.json(JSON.stringify(jsonString));
+// Client receives: '"{\\\"name\\\":\\\"Alice\\\"}"'`}
+        good={`// Option 1: Don't serialize when using res.json() — it does it automatically
+const user = { name: "Alice", age: 30 };
+res.json(user);  // ✅ Express/Fastify/etc. handle serialization
+
+// Option 2: If you must build the string manually
+const jsonString = JSON.stringify(user);
+res.send(jsonString);  // ✅ send raw string (already JSON)
+res.setHeader('Content-Type', 'application/json');`}
+        badLabel="JSON.stringify() called on already-stringified value"
+        goodLabel="Use res.json() OR build and send the string once"
       />
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
-        <FAQSchema
-          faqs={[
-            {
-              question: 'Why does my JSON have backslashes?',
-              answer: 'JSON uses backslashes to escape special characters inside strings. A backslash before a double quote (\\") means "this quote is part of the string, not the end of it." When you see \\" in JSON, it\'s one escaped quote. When you parse the JSON in code, you get a normal quote — the backslash is not in the final value.',
-            },
-            {
-              question: 'How do I remove backslashes from JSON?',
-              answer: 'You usually don’t remove them from the JSON text itself — they are required for valid JSON. If you mean "I have a string that looks like JSON but has extra backslashes," parse it once with JSON.parse() to get the real value; the backslashes are only in the serialized form. If you have double-escaped JSON (e.g. from a log or API), parse twice: JSON.parse(JSON.parse(yourString)).',
-            },
-            {
-              question: 'Why does JSON.stringify add backslashes?',
-              answer: 'JSON.stringify() adds backslashes to escape characters that have special meaning in JSON: double quotes, backslashes, and control characters (newline, tab). So a string containing a quote becomes \\" in the output. This keeps the JSON valid and unambiguous.',
-            },
-            {
-              question: 'Is it valid JSON if it has backslashes?',
-              answer: 'Yes. Backslashes are valid and required in JSON when you need to represent a quote or backslash inside a string. For example, {"message": "He said \\"Hi\\""} is valid; the backslashes escape the inner quotes so the parser knows where the string ends.',
-            },
-          ]}
-        />
+      <SectionHeader number={3} title="Why This Happens — Python" />
+      <ErrorFix
+        bad={`import json
+from flask import jsonify
 
-        <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          <section className="mb-10">
-            <p className="text-lg text-gray-700 leading-relaxed mb-4">
-              If you’ve ever opened a JSON file or API response and seen lots of <strong>backslashes</strong> (<code className="bg-gray-100 px-1 rounded">\</code>) and <strong>escaped quotes</strong> (<code className="bg-gray-100 px-1 rounded">\"</code>), you’re not alone. This is normal — and it’s how JSON stays valid and parseable. Here’s why it happens and how to work with it.
-            </p>
-          </section>
+user = {"name": "Alice", "age": 30}
 
-          <section className="mb-10">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <HelpCircle className="w-6 h-6 text-amber-600" />
-              Why JSON Uses Backslashes
-            </h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              In JSON, <strong>strings are wrapped in double quotes</strong>. So what if the string itself contains a double quote? The parser would get confused. JSON solves this with <strong>escaping</strong>: a backslash before a character means “treat this as part of the string, not as syntax.”
-            </p>
-            <ul className="list-disc list-inside text-gray-700 space-y-2 mb-4">
-              <li><code className="bg-gray-100 px-1 rounded">\"</code> — escaped quote: the quote is inside the string.</li>
-              <li><code className="bg-gray-100 px-1 rounded">\\</code> — escaped backslash: a literal backslash in the string.</li>
-              <li><code className="bg-gray-100 px-1 rounded">\n</code> <code className="bg-gray-100 px-1 rounded">\t</code> — newline and tab.</li>
-            </ul>
-            <p className="text-gray-700 leading-relaxed">
-              So when you see <code className="bg-gray-100 px-1 rounded">"He said \"Hello\""</code> in raw JSON, the backslashes are there so the parser knows the inner quotes don’t end the string. When you <code className="bg-gray-100 px-1 rounded">JSON.parse()</code> it in JavaScript (or any language), you get the actual string: <code className="bg-gray-100 px-1 rounded">He said "Hello"</code> — no backslashes in the value.
-            </p>
-          </section>
+# Serializing manually then using jsonify
+json_string = json.dumps(user)          # ← already a string
+return jsonify(json_string)             # ❌ jsonify serializes again!
+# Response: "{\"name\": \"Alice\"...}"`}
+        good={`from flask import jsonify
+import json
 
-          <section className="mb-10">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Code className="w-6 h-6 text-blue-600" />
-              Examples: What You See vs What You Get
-            </h2>
-            <div className="bg-gray-50 rounded-lg p-5 border border-gray-200 font-mono text-sm overflow-x-auto mb-4">
-              <p className="text-gray-600 mb-2">// Raw JSON (what’s in the file or response):</p>
-              <pre className="text-gray-800">{'{"quote": "He said \\"Hi\\""}'}</pre>
-              <p className="text-gray-600 mt-4 mb-2">// After JSON.parse() in JavaScript:</p>
-              <pre className="text-gray-800">{'quote: \'He said "Hi"\''}</pre>
-            </div>
-            <p className="text-gray-700 leading-relaxed">
-              The backslashes in the <em>serialized</em> JSON are there so the format is valid. The <em>parsed</em> value is a normal string; you don’t “remove” backslashes by hand — the parser does it for you.
-            </p>
-          </section>
+user = {"name": "Alice", "age": 30}
 
-          <section className="mb-10">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">When Backslashes Cause Confusion</h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              <strong>Double-escaped JSON</strong>: Sometimes you get JSON that was stringified twice (e.g. stored in a database or log as a string). You might see <code className="bg-gray-100 px-1 rounded">{'"{\\"key\\": \\"value\\"}"'}</code>. In that case, parse once to get the inner JSON string, then parse again to get the object.
-            </p>
-            <p className="text-gray-700 leading-relaxed">
-              <strong>Copy-paste from logs or UIs</strong>: If you copy “JSON” from a log or a UI that already escaped it for display, you might get extra backslashes. Paste it into a <strong>JSON validator or beautifier</strong> to see the real structure and fix any double-escaping.
-            </p>
-          </section>
+# Option 1: Pass dict directly to jsonify
+return jsonify(user)  # ✅ Flask handles serialization
 
-          <section className="mb-10">
-            <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg">
-              <p className="text-amber-900 text-sm">
-                <strong>Summary:</strong> Backslashes in JSON are there to escape quotes and other special characters inside strings. They are part of the format, not a bug. Use <code className="bg-amber-100 px-1 rounded">JSON.parse()</code> to get the real values; use a JSON formatter to inspect and validate raw JSON.
-              </p>
-            </div>
-          </section>
+# Option 2: Return raw JSON string with correct content-type
+json_string = json.dumps(user)
+from flask import Response
+return Response(json_string, mimetype='application/json')  # ✅`}
+        badLabel="json.dumps() + jsonify() = double serialized"
+        goodLabel="Use jsonify(dict) or Response with raw string"
+      />
 
-          <section className="rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 p-6 text-white">
-            <h2 className="text-xl font-bold mb-2 flex items-center gap-2">
-              <CheckCircle className="w-6 h-6" />
-              Validate and format your JSON
-            </h2>
-            <p className="text-amber-100 text-sm mb-4">
-              Use our free JSON Beautifier to see your JSON with correct escaping and pretty-printing. Paste in JSON with backslashes and get a clear, readable view.
-            </p>
-            <Link
-              href="/?tab=beautifier"
-              className="inline-flex items-center gap-2 bg-white text-amber-700 px-5 py-2.5 rounded-lg font-semibold hover:bg-amber-50 transition-colors"
-            >
-              Open JSON Beautifier
-            </Link>
-          </section>
-        </article>
-      </main>
-    </div>
+      <SectionHeader number={4} title="Client-Side Fix — Parse Twice" />
+      <CodeBlock language="javascript" filename="Fix on client when you can't fix the server">
+{`// When you receive double-escaped JSON and can't fix the server
+const response = await fetch('/api/user');
+const data = await response.json();
+
+// data might be a string instead of an object
+if (typeof data === 'string') {
+  const actualData = JSON.parse(data);  // parse again
+  console.log(actualData.name);  // "Alice"
+} else {
+  console.log(data.name);  // already an object
+}
+
+// Generic helper to handle both cases
+function safeParseJson(data) {
+  if (typeof data === 'string') {
+    try {
+      return JSON.parse(data);
+    } catch {
+      return data;  // return as-is if it's just a plain string
+    }
+  }
+  return data;
+}`}
+      </CodeBlock>
+
+      <FAQAccordion items={[
+        {
+          question: 'How do I identify double-escaped JSON quickly?',
+          answer: 'Look for: the entire response being a string (starts and ends with "), backslashes before every quote inside (\\"name\\":), or typeof response === "string" when you expected an object. In Postman/DevTools, if the Response shows "{ or the raw body has escaped quotes, it\'s double-escaped.',
+        },
+        {
+          question: 'Can JSON have backslashes legitimately?',
+          answer: 'Yes — in two cases: (1) Strings containing actual backslash characters: "path": "C:\\\\Users\\\\alice" (the \\\\ represents a literal backslash). (2) Strings containing actual quote characters that need escaping: "quote": "She said \\"hello\\"". These are legitimate escapes within a JSON string value, not double-encoding.',
+        },
+        {
+          question: 'What causes this in AWS Lambda or API Gateway?',
+          answer: 'AWS API Gateway sometimes double-serializes when the Lambda return value is already a JSON string and API Gateway also applies JSON serialization. Fix: in Lambda, return an object (not a JSON string) from the handler. In API Gateway, ensure "Content Handling" is set appropriately and the integration response is not applying additional JSON encoding.',
+        },
+      ]} />
+    </BlogLayoutWithSidebarAds>
   );
 }

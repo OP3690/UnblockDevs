@@ -1,471 +1,181 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { ArrowLeft, BookOpen, Zap, CheckCircle, AlertCircle, Target, Database, FileText, Code, BarChart3 } from 'lucide-react';
-import BlogSocialShare from '@/components/BlogSocialShare';
-import NewsletterSignup from '@/components/NewsletterSignup';
-import FAQSchema from '@/components/FAQSchema';
+import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
+import {
+  AlertBox, CompareTable, CodeBlock, FAQAccordion, KeyPointsGrid,
+  StatGrid, SectionHeader, QuickFact,
+} from '@/components/blog/BlogVisuals';
 
-export default function BlogPostClient() {
+export default function DifferenceBetweenStructuredSemiStructuredUnstructuredDataClient() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
-      <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/blog" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Developer's Study Materials
-          </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Difference Between Structured, Semi-Structured, and Unstructured Data</h1>
-          <p className="text-sm text-gray-500 mt-1">Learn the differences with examples, use cases, and when to use each type</p>
-        </div>
-      </header>
+    <BlogLayoutWithSidebarAds>
+      <h1>Structured vs Semi-Structured vs Unstructured Data — Differences Explained Simply</h1>
+      <p className="lead">
+        Data comes in three fundamental forms — structured tables, semi-structured formats like JSON,
+        and unstructured content like text and images. Understanding these differences determines how
+        you store, process, and query your data. This guide explains all three with clear examples.
+      </p>
 
-      {/* Floating Social Share Bar */}
-      <BlogSocialShare
-        title="Difference Between Structured, Semi-Structured, and Unstructured Data"
-        description="Learn the difference between structured, semi-structured, and unstructured data with examples and comparisons."
-        variant="floating"
+      <StatGrid stats={[
+        { value: '20%', label: 'of enterprise data is structured', color: 'blue' },
+        { value: '80%', label: 'of enterprise data is unstructured or semi-structured', color: 'amber' },
+        { value: 'SQL', label: 'for structured; NoSQL for semi-structured', color: 'green' },
+        { value: 'AI/ML', label: 'required to extract value from unstructured data', color: 'purple' },
+      ]} />
+
+      <SectionHeader number={1} title="The Three Types Compared" />
+      <CompareTable
+        leftLabel="Type"
+        rightLabel="Examples + Storage"
+        rows={[
+          { label: 'Structured', left: 'Rigid schema, rows and columns', right: 'SQL databases (PostgreSQL, MySQL, SQLite)' },
+          { label: 'Semi-Structured', left: 'Self-describing, flexible schema', right: 'JSON, XML, YAML, Parquet — NoSQL (MongoDB, DynamoDB)' },
+          { label: 'Unstructured', left: 'No predefined schema', right: 'Text, images, video, audio — Object stores (S3, GCS)' },
+        ]}
       />
 
-      {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-20 md:pt-24">
-        <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          {/* Introduction */}
-          <section className="mb-12">
-            <p className="text-lg text-gray-700 leading-relaxed mb-4">
-              Data comes in many forms, and understanding the different types is crucial for effective data management, storage, and analysis. 
-              The three main categories—structured, semi-structured, and unstructured data—each have unique characteristics, use cases, and 
-              processing requirements.
-            </p>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              In this comprehensive guide, you'll learn the key differences between these data types, see real-world examples, understand 
-              when to use each, and discover how to process and store them effectively. We'll use simple explanations and visual comparisons 
-              to make everything clear.
-            </p>
-            <div className="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg mt-6">
-              <p className="font-semibold text-blue-900 mb-2">💡 Quick Tip</p>
-              <p className="text-blue-800">
-                Use our free <Link href="/json-validator" className="font-semibold underline">JSON Validator</Link> to validate semi-structured data 
-                and our <Link href="/json-formatter" className="font-semibold underline">JSON Formatter</Link> to format JSON structures.
-              </p>
-            </div>
-          </section>
+      <SectionHeader number={2} title="Structured Data" />
+      <QuickFact>
+        Structured data fits neatly into tables with defined columns, types, and relationships.
+        Every row has the same fields. SQL is perfect for querying it. Think: bank transactions,
+        user accounts, order records.
+      </QuickFact>
 
-          {/* Definition */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <BookOpen className="w-6 h-6 text-blue-600" />
-              Definition: What Are These Data Types?
-            </h2>
-            <div className="grid md:grid-cols-3 gap-4 mb-4">
-              <div className="p-5 bg-blue-50 rounded-lg border border-blue-200">
-                <Database className="w-6 h-6 text-blue-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 mb-2">Structured Data</h3>
-                <p className="text-sm text-gray-700 mb-2">Highly organized data with fixed schema and format</p>
-                <p className="text-xs text-gray-600">Example: Relational database tables, spreadsheets</p>
-              </div>
-              <div className="p-5 bg-green-50 rounded-lg border border-green-200">
-                <Code className="w-6 h-6 text-green-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 mb-2">Semi-Structured Data</h3>
-                <p className="text-sm text-gray-700 mb-2">Partially organized data with flexible schema</p>
-                <p className="text-xs text-gray-600">Example: JSON, XML, CSV files</p>
-              </div>
-              <div className="p-5 bg-purple-50 rounded-lg border border-purple-200">
-                <FileText className="w-6 h-6 text-purple-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 mb-2">Unstructured Data</h3>
-                <p className="text-sm text-gray-700 mb-2">No predefined structure or format</p>
-                <p className="text-xs text-gray-600">Example: Text documents, images, videos</p>
-              </div>
-            </div>
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-5 rounded-lg border-2 border-blue-200">
-              <h3 className="font-semibold text-gray-900 mb-2">Real-World Analogy</h3>
-              <p className="text-gray-700 text-sm mb-2">
-                <strong>Structured:</strong> Like a form with fixed fields (name, age, address) - everything has a specific place
-              </p>
-              <p className="text-gray-700 text-sm mb-2">
-                <strong>Semi-Structured:</strong> Like a flexible form where some fields are optional or can vary (JSON with optional fields)
-              </p>
-              <p className="text-gray-700 text-sm">
-                <strong>Unstructured:</strong> Like free-form text or a photo - no fixed format, requires interpretation
-              </p>
-            </div>
-          </section>
+      <CodeBlock language="sql" filename="Structured Data — SQL Table">
+{`-- Structured: every row has exactly these columns, these types
+CREATE TABLE orders (
+    order_id   INT          NOT NULL PRIMARY KEY,
+    customer_id INT         NOT NULL,
+    amount      DECIMAL(10,2) NOT NULL,
+    status      VARCHAR(20)  NOT NULL CHECK (status IN ('pending','shipped','delivered')),
+    created_at  TIMESTAMP    NOT NULL DEFAULT NOW()
+);
 
-          {/* What */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">What Are the Key Characteristics?</h2>
-            <div className="overflow-x-auto mb-6">
-              <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 border-b">Characteristic</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 border-b">Structured</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 border-b">Semi-Structured</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 border-b">Unstructured</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  <tr>
-                    <td className="px-4 py-3 text-sm text-gray-900 font-medium">Schema</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">Fixed, predefined</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">Flexible, self-describing</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">No schema</td>
-                  </tr>
-                  <tr className="bg-gray-50">
-                    <td className="px-4 py-3 text-sm text-gray-900 font-medium">Format</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">Rows and columns</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">Key-value pairs, tags</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">Free-form</td>
-                  </tr>
-                  <tr>
-                    <td className="px-4 py-3 text-sm text-gray-900 font-medium">Storage</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">Relational databases</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">NoSQL, files (JSON/XML)</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">File systems, object storage</td>
-                  </tr>
-                  <tr className="bg-gray-50">
-                    <td className="px-4 py-3 text-sm text-gray-900 font-medium">Querying</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">SQL (easy)</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">Query languages (moderate)</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">Complex (ML/AI needed)</td>
-                  </tr>
-                  <tr>
-                    <td className="px-4 py-3 text-sm text-gray-900 font-medium">Size</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">Small to medium</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">Medium</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">Very large</td>
-                  </tr>
-                  <tr className="bg-gray-50">
-                    <td className="px-4 py-3 text-sm text-gray-900 font-medium">Examples</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">Database tables, Excel</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">JSON, XML, CSV</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">Text, images, videos</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
+-- Rigid schema enables fast, indexed queries:
+SELECT customer_id, SUM(amount)
+FROM orders
+WHERE created_at >= '2026-01-01'
+  AND status = 'delivered'
+GROUP BY customer_id
+ORDER BY SUM(amount) DESC;`}
+      </CodeBlock>
 
-          {/* When */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">When to Use Each Data Type?</h2>
-            
-            <div className="mb-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <Database className="w-6 h-6 text-blue-600" />
-                Structured Data
-              </h3>
-              <div className="space-y-3">
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-gray-700"><strong>Transactional systems</strong> - When you need ACID properties and data integrity</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-gray-700"><strong>Fixed schema requirements</strong> - When data structure is well-defined and stable</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-gray-700"><strong>Complex queries</strong> - When you need SQL joins, aggregations, and complex reporting</p>
-                  </div>
-                </div>
-                <div className="p-4 bg-blue-50 rounded-lg border border-blue-200 mt-3">
-                  <p className="text-sm text-gray-700"><strong>Example use cases:</strong> Customer databases, financial records, inventory management, ERP systems</p>
-                </div>
-              </div>
-            </div>
+      <KeyPointsGrid columns={2} items={[
+        { title: 'Advantages', description: 'Fast SQL queries, indexing, joins, ACID transactions. Well-understood tools and decades of optimization.' },
+        { title: 'Disadvantages', description: 'Schema changes are expensive. Can\'t accommodate fields that vary per row without NULL-heavy tables.' },
+        { title: 'Best for', description: 'Financial records, user accounts, inventory, order management — any data with consistent, known structure.' },
+        { title: 'Tools', description: 'PostgreSQL, MySQL, SQLite, Oracle, SQL Server. Queried with SQL.' },
+      ]} />
 
-            <div className="mb-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <Code className="w-6 h-6 text-green-600" />
-                Semi-Structured Data
-              </h3>
-              <div className="space-y-3">
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-gray-700"><strong>Flexible schema</strong> - When data structure varies or evolves over time</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-gray-700"><strong>API responses</strong> - When exchanging data between systems</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-gray-700"><strong>Configuration files</strong> - When storing settings or metadata</p>
-                  </div>
-                </div>
-                <div className="p-4 bg-green-50 rounded-lg border border-green-200 mt-3">
-                  <p className="text-sm text-gray-700"><strong>Example use cases:</strong> Web APIs (JSON), configuration files, log files, sensor data</p>
-                </div>
-              </div>
-            </div>
+      <SectionHeader number={3} title="Semi-Structured Data" />
+      <CodeBlock language="json" filename="Semi-Structured Data — JSON">
+{`// Semi-structured: self-describing, but flexible
+// Different products can have different fields:
+{
+  "product_id": "prod-001",
+  "name": "Laptop",
+  "specs": {
+    "cpu": "Apple M3 Pro",
+    "ram_gb": 18,
+    "storage_tb": 0.5
+  },
+  "tags": ["electronics", "apple", "portable"]
+}
 
-            <div className="mb-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <FileText className="w-6 h-6 text-purple-600" />
-                Unstructured Data
-              </h3>
-              <div className="space-y-3">
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-gray-700"><strong>Rich content</strong> - When data is naturally unstructured (text, media)</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-gray-700"><strong>AI/ML applications</strong> - When using machine learning for analysis</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-gray-700"><strong>Content management</strong> - When storing documents, images, videos</p>
-                  </div>
-                </div>
-                <div className="p-4 bg-purple-50 rounded-lg border border-purple-200 mt-3">
-                  <p className="text-sm text-gray-700"><strong>Example use cases:</strong> Email content, social media posts, images, videos, PDFs, audio files</p>
-                </div>
-              </div>
-            </div>
-          </section>
+// vs a different product type with different fields:
+{
+  "product_id": "prod-002",
+  "name": "Running Shoes",
+  "specs": {
+    "size": "US 10",
+    "color": "Black/White",
+    "material": "Mesh"
+  },
+  "variants": [{"size": "US 9"}, {"size": "US 11"}]
+}`}
+      </CodeBlock>
 
-          {/* How - Examples */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">How Each Data Type Looks: Examples</h2>
-            
-            <div className="mb-8">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">1. Structured Data Example</h3>
-              <p className="text-gray-700 leading-relaxed mb-4">
-                Structured data is organized in rows and columns with a fixed schema:
-              </p>
-              <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-4">
-                <div className="text-gray-400">// Database Table: Users</div>
-                <div className="text-white">┌─────┬──────────┬─────┬─────────────┐</div>
-                <div className="text-white">│ ID  │ Name     │ Age │ Email       │</div>
-                <div className="text-white">├─────┼──────────┼─────┼─────────────┤</div>
-                <div className="text-white">│  1  │ John     │  25 │ john@ex.com │</div>
-                <div className="text-white">│  2  │ Jane     │  30 │ jane@ex.com │</div>
-                <div className="text-white">│  3  │ Bob      │  28 │ bob@ex.com  │</div>
-                <div className="text-white">└─────┴──────────┴─────┴─────────────┘</div>
-              </div>
-              <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
-                <p className="text-blue-800 text-sm">
-                  <strong>Characteristics:</strong> Fixed columns (ID, Name, Age, Email), easy to query with SQL, stored in relational databases
-                </p>
-              </div>
-            </div>
+      <AlertBox type="tip" filename="When to use NoSQL vs SQL for semi-structured data">
+        Use MongoDB/DynamoDB when: documents vary significantly in structure, you need to store nested
+        arrays/objects naturally, or you're building for rapid schema evolution. Use PostgreSQL with
+        JSONB columns when: you need SQL joins alongside flexible data — best of both worlds.
+      </AlertBox>
 
-            <div className="mb-8">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">2. Semi-Structured Data Example</h3>
-              <p className="text-gray-700 leading-relaxed mb-4">
-                Semi-structured data has some organization but flexible schema:
-              </p>
-              <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-4">
-                <div className="text-gray-400">// JSON Example</div>
-                <div className="text-white">{'{'}</div>
-                <div className="text-white ml-4">"id": 1,</div>
-                <div className="text-white ml-4">"name": "John",</div>
-                <div className="text-white ml-4">"age": 25,</div>
-                <div className="text-white ml-4">"email": "john@ex.com",</div>
-                <div className="text-white ml-4">"address": {'{'}</div>
-                <div className="text-white ml-8">"street": "123 Main St",</div>
-                <div className="text-white ml-8">"city": "New York"</div>
-                <div className="text-white ml-4">{'}'},</div>
-                <div className="text-white ml-4">"tags": ["customer", "premium"]</div>
-                <div className="text-white">{'}'}</div>
-              </div>
-              <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
-                <p className="text-green-800 text-sm">
-                  <strong>Characteristics:</strong> Flexible structure (nested objects, arrays), self-describing, stored in NoSQL databases or files
-                </p>
-              </div>
-            </div>
+      <CodeBlock language="sql" filename="PostgreSQL JSONB — Best of Both Worlds">
+{`-- PostgreSQL JSONB: structured table + flexible JSON column
+CREATE TABLE events (
+    id         BIGSERIAL PRIMARY KEY,
+    event_type VARCHAR(50) NOT NULL,
+    user_id    INT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    metadata   JSONB  -- flexible semi-structured data
+);
 
-            <div className="mb-8">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">3. Unstructured Data Example</h3>
-              <p className="text-gray-700 leading-relaxed mb-4">
-                Unstructured data has no predefined format:
-              </p>
-              <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-4">
-                <div className="text-gray-400">// Text Document Example</div>
-                <div className="text-white">"I had a great experience shopping at your store</div>
-                <div className="text-white">yesterday. The staff was very helpful and the</div>
-                <div className="text-white">products were exactly what I was looking for.</div>
-                <div className="text-white">I will definitely shop here again!"</div>
-                <div className="text-gray-400 mt-2">// Image: customer_photo.jpg</div>
-                <div className="text-gray-400">// Video: product_demo.mp4</div>
-              </div>
-              <div className="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-r-lg">
-                <p className="text-purple-800 text-sm">
-                  <strong>Characteristics:</strong> No fixed format, requires NLP/image processing for analysis, stored in file systems or object storage
-                </p>
-              </div>
-            </div>
-          </section>
+-- Insert structured + semi-structured data
+INSERT INTO events (event_type, user_id, metadata) VALUES
+('purchase', 1, '{"product_id": "prod-001", "amount": 999, "coupon": "SAVE10"}'),
+('login', 1,    '{"ip": "192.168.1.1", "device": "iPhone 15", "country": "US"}');
 
-          {/* Comparison Chart */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Data Type Comparison Chart</h2>
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 border-b">Feature</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 border-b">Structured</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 border-b">Semi-Structured</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 border-b">Unstructured</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  <tr>
-                    <td className="px-4 py-3 text-sm text-gray-900 font-medium">Storage</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">RDBMS (MySQL, PostgreSQL)</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">NoSQL (MongoDB), Files</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">File systems, Object storage</td>
-                  </tr>
-                  <tr className="bg-gray-50">
-                    <td className="px-4 py-3 text-sm text-gray-900 font-medium">Query Language</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">SQL</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">JSON Query, XPath</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">Full-text search, ML/AI</td>
-                  </tr>
-                  <tr>
-                    <td className="px-4 py-3 text-sm text-gray-900 font-medium">Scalability</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">Vertical (limited)</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">Horizontal (good)</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">Horizontal (excellent)</td>
-                  </tr>
-                  <tr className="bg-gray-50">
-                    <td className="px-4 py-3 text-sm text-gray-900 font-medium">Processing</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">SQL queries</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">Parsers, APIs</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">NLP, Computer Vision</td>
-                  </tr>
-                  <tr>
-                    <td className="px-4 py-3 text-sm text-gray-900 font-medium">Volume</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">Small to medium</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">Medium to large</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">Very large (80% of data)</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
+-- Query JSON fields with full SQL power:
+SELECT user_id, metadata->>'product_id' as product
+FROM events
+WHERE event_type = 'purchase'
+  AND (metadata->>'amount')::int > 500;`}
+      </CodeBlock>
 
-          {/* Why */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Why Understanding Data Types Matters</h2>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="p-5 bg-blue-50 rounded-lg border border-blue-200">
-                <Database className="w-8 h-8 text-blue-600 mb-3" />
-                <h3 className="font-semibold text-gray-900 mb-2">Right Storage Choice</h3>
-                <p className="text-gray-700 text-sm">Choosing the right storage system based on data type improves performance and cost</p>
-              </div>
-              <div className="p-5 bg-green-50 rounded-lg border border-green-200">
-                <Zap className="w-8 h-8 text-green-600 mb-3" />
-                <h3 className="font-semibold text-gray-900 mb-2">Efficient Processing</h3>
-                <p className="text-gray-700 text-sm">Understanding data type helps select appropriate processing tools and methods</p>
-              </div>
-              <div className="p-5 bg-purple-50 rounded-lg border border-purple-200">
-                <BarChart3 className="w-8 h-8 text-purple-600 mb-3" />
-                <h3 className="font-semibold text-gray-900 mb-2">Better Analysis</h3>
-                <p className="text-gray-700 text-sm">Different data types require different analysis approaches and tools</p>
-              </div>
-              <div className="p-5 bg-orange-50 rounded-lg border border-orange-200">
-                <Target className="w-8 h-8 text-orange-600 mb-3" />
-                <h3 className="font-semibold text-gray-900 mb-2">Cost Optimization</h3>
-                <p className="text-gray-700 text-sm">Right storage and processing choices reduce infrastructure costs</p>
-              </div>
-            </div>
-          </section>
+      <SectionHeader number={4} title="Unstructured Data" />
+      <KeyPointsGrid columns={2} items={[
+        { title: 'What It Is', description: 'Text documents, images, videos, audio files, social media posts, PDFs, emails. No predefined schema. Cannot be stored in a row-column format.' },
+        { title: 'How Much Exists', description: '80-90% of enterprise data is unstructured. Customer emails, support tickets, product reviews, contracts, medical records, surveillance video.' },
+        { title: 'How to Process', description: 'NLP for text (sentiment, classification, NER). Computer vision for images/video. Speech-to-text for audio. Embeddings for semantic search.' },
+        { title: 'Storage', description: 'Object stores (S3, GCS, Azure Blob). Vector databases for embeddings (Pinecone, Weaviate, pgvector). Elasticsearch for full-text search.' },
+      ]} />
 
-          {/* Real-World Examples */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Real-World Data Type Examples</h2>
-            <div className="space-y-4">
-              <div className="p-5 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-                <h3 className="font-semibold text-gray-900 mb-2">Structured Data Examples</h3>
-                <ul className="space-y-1 text-sm text-gray-700 ml-4">
-                  <li>• Customer database tables (name, email, phone)</li>
-                  <li>• Financial transaction records</li>
-                  <li>• Inventory management systems</li>
-                  <li>• Employee payroll data</li>
-                </ul>
-              </div>
-              <div className="p-5 bg-green-50 rounded-lg border-l-4 border-green-500">
-                <h3 className="font-semibold text-gray-900 mb-2">Semi-Structured Data Examples</h3>
-                <ul className="space-y-1 text-sm text-gray-700 ml-4">
-                  <li>• API responses (JSON format)</li>
-                  <li>• Configuration files (YAML, JSON)</li>
-                  <li>• Log files with structured fields</li>
-                  <li>• Email headers (structured metadata)</li>
-                </ul>
-              </div>
-              <div className="p-5 bg-purple-50 rounded-lg border-l-4 border-purple-500">
-                <h3 className="font-semibold text-gray-900 mb-2">Unstructured Data Examples</h3>
-                <ul className="space-y-1 text-sm text-gray-700 ml-4">
-                  <li>• Social media posts and comments</li>
-                  <li>• Images and videos</li>
-                  <li>• PDF documents</li>
-                  <li>• Audio recordings</li>
-                  <li>• Email body content</li>
-                </ul>
-              </div>
-            </div>
-          </section>
+      <CodeBlock language="python" filename="Extracting Value from Unstructured Text">
+{`from transformers import pipeline
 
-          <FAQSchema
-            faqs={[
-              {
-                question: 'What percentage of data is unstructured?',
-                answer: 'Approximately 80-90% of all data is unstructured. This includes text documents, images, videos, social media content, and other media files. Structured data makes up only about 10-20% of total data.',
-              },
-              {
-                question: 'Can unstructured data become structured?',
-                answer: 'Yes, through a process called data extraction and structuring. Techniques include: parsing text to extract entities, using OCR for documents, applying NLP for text analysis, and using computer vision for images. However, this requires significant processing.',
-              },
-              {
-                question: 'Is JSON structured or semi-structured?',
-                answer: 'JSON is semi-structured data. It has some organization (key-value pairs, nested structures) but allows flexible schema - fields can be optional, nested, or vary between records. It\'s more organized than unstructured data but less rigid than structured data.',
-              },
-              {
-                question: 'Which data type is best for analytics?',
-                answer: 'Structured data is easiest for traditional analytics (SQL queries, reporting). Semi-structured data works well with modern analytics tools. Unstructured data requires specialized tools (NLP, ML) but can provide rich insights. Often, you need a combination.',
-              },
-              {
-                question: 'How do you store unstructured data?',
-                answer: 'Unstructured data is typically stored in: file systems, object storage (S3, Azure Blob), NoSQL databases (MongoDB GridFS), or specialized storage systems. Metadata is often extracted and stored separately for easier searching and indexing.',
-              },
-            ]}
-          />
-        </article>
+# Customer review — unstructured text
+review = """
+The laptop is incredibly fast and the battery life is amazing.
+However, the keyboard feels a bit mushy and the price is too high.
+"""
 
-        {/* Social Share Section */}
-        <section className="mt-12">
-          <BlogSocialShare
-            title="Difference Between Structured, Semi-Structured, and Unstructured Data"
-            description="Learn the difference between structured, semi-structured, and unstructured data with examples and comparisons."
-            variant="full"
-          />
-        </section>
+# Extract structure with NLP:
+# 1. Sentiment analysis
+sentiment = pipeline("sentiment-analysis")
+result = sentiment(review)
+print(result)  # [{'label': 'NEGATIVE', 'score': 0.52}] (mixed)
 
-        <section className="mt-12">
-          <NewsletterSignup />
-        </section>
-      </main>
-    </div>
+# 2. Named entity recognition
+ner = pipeline("ner")
+entities = ner(review)
+# Extracts: PRODUCT("laptop"), FEATURE("keyboard"), etc.
+
+# 3. Embeddings for semantic search
+from sentence_transformers import SentenceTransformer
+model = SentenceTransformer('all-MiniLM-L6-v2')
+embedding = model.encode(review)
+# Now searchable: "find reviews mentioning keyboard issues"`}
+      </CodeBlock>
+
+      <FAQAccordion items={[
+        {
+          question: 'Which type of data should I use a NoSQL database for?',
+          answer: 'Use NoSQL for semi-structured data that varies per document (product catalogs with different attributes per category, user profiles with flexible fields) or unstructured data that needs indexing (Elasticsearch for text search). Use SQL for relational structured data. MongoDB is a common choice for document-style semi-structured data; Elasticsearch for unstructured text search.',
+        },
+        {
+          question: 'What is the difference between semi-structured and schemaless?',
+          answer: 'Semi-structured data has implicit structure (JSON has keys and values, XML has tags) even without a rigid schema. "Schemaless" describes databases like MongoDB that don\'t enforce a schema on ingestion. In practice, semi-structured data usually has a de facto schema — you still expect certain fields to exist even if not enforced by the database.',
+        },
+        {
+          question: 'How do data lakes handle all three data types?',
+          answer: 'Data lakes (S3, ADLS, GCS) store all three: structured tables as Parquet files, semi-structured as JSON/Avro, and unstructured as raw files. A query layer (Athena, BigQuery, Databricks) provides SQL access to structured/semi-structured data. Unstructured data requires preprocessing (ML pipelines) to extract structured features before analysis.',
+        },
+        {
+          question: 'When does JSON become too complex for a relational database?',
+          answer: 'PostgreSQL JSONB handles semi-structured data well up to 3-4 levels of nesting. Beyond that, querying becomes complex and performance degrades. When your JSON documents are deeply nested, vary significantly in structure, or you need document-level transactions and atomic updates on nested arrays, a document database (MongoDB) becomes a better fit.',
+        },
+      ]} />
+    </BlogLayoutWithSidebarAds>
   );
 }

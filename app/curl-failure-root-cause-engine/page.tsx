@@ -1,4 +1,8 @@
 import type { Metadata } from 'next';
+import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
+import ToolSEOContent, {
+  SEOSection, SEOProse, C, HowItWorks, FAQ, RelatedTools,
+} from '@/components/tools/ToolSEOContent';
 import CurlFailureRootCauseClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/curl-failure-root-cause-engine';
@@ -122,9 +126,90 @@ export default function CurlFailureRootCausePage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <div id="tool">
-        <CurlFailureRootCauseClient />
-      </div>
+      <CurlFailureRootCauseClient />
+
+      <ToolSEOContent>
+        <SEOSection id="what" heading="Debug cURL Failures — Ranked Root Causes with Confidence Scores">
+          <SEOProse>
+            When a cURL command fails, the error message is often vague: a 401 could mean wrong API key, expired token, missing Authorization header, or incorrect auth scheme. This <strong>cURL Failure Root-Cause Engine</strong> analyzes your failed command and HTTP status code to produce a ranked list of probable root causes — each with a confidence score, explanation, and a corrected cURL command to try next.
+          </SEOProse>
+          <SEOProse>
+            It also detects the classic &quot;works in Postman but not in cURL&quot; pattern — usually caused by missing headers, URL encoding differences, or Bearer vs Basic auth scheme mismatches.
+          </SEOProse>
+        </SEOSection>
+
+        <SEOSection id="how" eyebrow="How it works" heading="Diagnose cURL Failures in Seconds">
+          <HowItWorks steps={[
+            { n: '01', title: 'Paste your cURL command', desc: 'Paste the full cURL command that is failing — including headers, data, and auth flags.' },
+            { n: '02', title: 'Enter the HTTP status code', desc: 'Add the status code you received (401, 403, 400, 404, 429, 500, etc.) to narrow down the root cause.' },
+            { n: '03', title: 'Get ranked root causes', desc: 'The engine produces a ranked list of probable causes with confidence scores — from highest to lowest likelihood.' },
+            { n: '04', title: 'Apply the fix', desc: 'Each root cause includes a suggested fix and a corrected cURL command you can copy and run immediately.' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="errors" heading="Common cURL Error Status Codes">
+          <div className="overflow-x-auto rounded-xl border border-zinc-200">
+            <table className="w-full text-[13px]">
+              <thead>
+                <tr className="border-b border-zinc-200 bg-zinc-50">
+                  <th className="px-4 py-3 text-left font-semibold text-zinc-700">Status</th>
+                  <th className="px-4 py-3 text-left font-semibold text-zinc-700">Meaning</th>
+                  <th className="px-4 py-3 text-left font-semibold text-zinc-700">Common causes</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-zinc-100 bg-white">
+                {[
+                  ['401', 'Unauthorized', 'Missing, expired, or malformed Authorization header; wrong auth scheme (Bearer vs Basic)'],
+                  ['403', 'Forbidden', 'Valid auth but insufficient permissions; IP allowlist; wrong API scope'],
+                  ['400', 'Bad Request', 'Wrong Content-Type header; malformed JSON body; missing required field'],
+                  ['404', 'Not Found', 'Wrong URL path; endpoint removed or versioned; wrong API base URL'],
+                  ['429', 'Rate Limited', 'Too many requests; missing Retry-After handling; exceeded plan quota'],
+                  ['500', 'Server Error', 'Internal API bug; malformed request body triggering server-side crash'],
+                  ['000', 'No Response', 'DNS failure; firewall/proxy blocking; SSL certificate error; wrong port'],
+                ].map(([status, meaning, causes]) => (
+                  <tr key={String(status)}>
+                    <td className="px-4 py-3 font-mono font-semibold text-zinc-900">{status}</td>
+                    <td className="px-4 py-3 font-semibold text-zinc-700">{meaning}</td>
+                    <td className="px-4 py-3 text-zinc-500">{causes}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </SEOSection>
+
+        <SEOSection id="faq" eyebrow="FAQ" heading="Frequently Asked Questions">
+          <FAQ items={[
+            {
+              q: 'Why does my API work in Postman but not in cURL?',
+              a: 'Usually because Postman adds headers automatically — like Content-Type: application/json or Authorization — that you forgot to add in cURL. Paste your cURL command into this engine and it will detect missing headers.',
+            },
+            {
+              q: 'How do I fix a 401 Unauthorized cURL error?',
+              a: <>Common causes: missing <C>-H &quot;Authorization: Bearer YOUR_TOKEN&quot;</C>, expired token, wrong scheme (Basic vs Bearer), or the token string having extra spaces. Paste your command and the engine will rank the most likely cause with a fix.</>,
+            },
+            {
+              q: 'How do I fix a 400 Bad Request cURL error?',
+              a: <>Usually a missing <C>-H &quot;Content-Type: application/json&quot;</C> header, malformed JSON in the <C>-d</C> body, or a missing required field. The engine analyzes your command for these patterns.</>,
+            },
+            {
+              q: 'Is my cURL command sent to any server?',
+              a: 'No. All analysis runs in your browser. Your cURL commands, URLs, and headers never leave your device.',
+            },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="related" eyebrow="Related tools" heading="Tools You Might Also Need">
+          <RelatedTools tools={[
+            { href: '/curl-converter', label: 'cURL Converter', desc: 'Convert cURL to JavaScript fetch, Python, Go, and more', icon: '🔄' },
+            { href: '/har-to-curl', label: 'HAR to cURL', desc: 'Convert browser network requests to cURL commands', icon: '📤' },
+            { href: '/cors-tester', label: 'CORS Tester', desc: 'Test CORS headers and diagnose cross-origin errors', icon: '🌐' },
+            { href: '/jwt-decoder', label: 'JWT Decoder', desc: 'Decode and verify the JWT token used in your Authorization header', icon: '🪙' },
+          ]} />
+        </SEOSection>
+      </ToolSEOContent>
+
+      <ToolPageFooterBand toolName="curl_failure_root_cause_engine" />
     </>
   );
 }

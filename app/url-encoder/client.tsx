@@ -9,9 +9,6 @@ import {
   ChevronDown,
   ChevronRight,
   AlertTriangle,
-  Code2,
-  FileCode2,
-  ScanSearch,
   Plus,
   Trash2,
 } from 'lucide-react';
@@ -461,38 +458,6 @@ export default function UrlEncoderClient() {
           </section>
         )}
 
-        <section className="mt-10 pt-8 border-t border-gray-200">
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Related tools</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Link href="/hash-generator" className="group flex items-start gap-3 p-4 rounded-xl border border-gray-200 bg-white hover:border-primary-200 hover:shadow-md hover:bg-primary-50/30 transition-all">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-600 group-hover:bg-primary-100 group-hover:text-primary-600">
-                <Code2 className="w-5 h-5" />
-              </span>
-              <div className="min-w-0">
-                <span className="font-semibold text-gray-900 group-hover:text-primary-700 block">Hash Generator</span>
-                <span className="text-sm text-gray-500 mt-0.5 block">MD5, SHA256, file hash, HMAC, bcrypt. Verify and compare.</span>
-              </div>
-            </Link>
-            <Link href="/base64-encoder" className="group flex items-start gap-3 p-4 rounded-xl border border-gray-200 bg-white hover:border-primary-200 hover:shadow-md hover:bg-primary-50/30 transition-all">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-600 group-hover:bg-primary-100 group-hover:text-primary-600">
-                <FileCode2 className="w-5 h-5" />
-              </span>
-              <div className="min-w-0">
-                <span className="font-semibold text-gray-900 group-hover:text-primary-700 block">Base64 Encoder</span>
-                <span className="text-sm text-gray-500 mt-0.5 block">Encode and decode Base64 text or files.</span>
-              </div>
-            </Link>
-            <Link href="/jwt-decoder" className="group flex items-start gap-3 p-4 rounded-xl border border-gray-200 bg-white hover:border-primary-200 hover:shadow-md hover:bg-primary-50/30 transition-all">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-600 group-hover:bg-primary-100 group-hover:text-primary-600">
-                <ScanSearch className="w-5 h-5" />
-              </span>
-              <div className="min-w-0">
-                <span className="font-semibold text-gray-900 group-hover:text-primary-700 block">JWT Decoder</span>
-                <span className="text-sm text-gray-500 mt-0.5 block">Decode and verify JSON Web Tokens.</span>
-              </div>
-            </Link>
-          </div>
-        </section>
       </div>
     </div>
   );

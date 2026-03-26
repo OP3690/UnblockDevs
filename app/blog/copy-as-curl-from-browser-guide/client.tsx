@@ -1,417 +1,294 @@
 'use client';
 
-import Link from 'next/link';
-import { ArrowLeft, Copy, CheckCircle, ExternalLink, Chrome, Globe, Monitor, Code, Download } from 'lucide-react';
-import FAQSchema from '@/components/FAQSchema';
-import BlogSocialShare from '@/components/BlogSocialShare';
+import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
+import {
+  AlertBox, FlowDiagram, CompareTable, ErrorFix, VerticalSteps,
+  CodeBlock, FAQAccordion, KeyPointsGrid, StatGrid, SectionHeader,
+  QuickFact, TimelineViz, ArchDiagram,
+} from '@/components/blog/BlogVisuals';
 
 export default function CopyAsCurlFromBrowserGuideClient() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
-      <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/blog" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Developer's Study Materials
-          </Link>
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-green-100 rounded-lg">
-              <Copy className="w-6 h-6 text-green-600" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Copy as cURL from Browser: Complete Tutorial</h1>
-              <p className="text-sm text-gray-500 mt-1">Network Request to cURL Converter Guide</p>
-            </div>
-          </div>
-        </div>
-      </header>
+    <BlogLayoutWithSidebarAds
+      title="Copy as cURL from Browser: Complete Guide 2026"
+      description="Learn how to use Copy as cURL in Chrome, Firefox, Edge, and Safari DevTools to reproduce any HTTP request from the terminal."
+    >
+      <h1>Copy as cURL from Browser: Complete Guide 2026</h1>
+      <p className="lead">
+        Every modern browser's DevTools Network panel has a hidden superpower: <strong>Copy as cURL</strong>. In one right-click you get a perfectly reproduced command that replays any HTTP request — complete with headers, cookies, and request body — directly from your terminal. This guide covers every browser, every use case, and every way to turn that copied curl command into production-ready code.
+      </p>
 
-      {/* Floating Social Share Bar */}
-      <BlogSocialShare 
-        title="Copy as cURL from Browser: Complete Tutorial"
-        description="Network Request to cURL Converter Guide"
-        variant="floating"
+      <StatGrid stats={[
+        { value: '1-click', label: 'to copy any browser request', color: 'blue' },
+        { value: '100%', label: 'headers and cookies preserved', color: 'green' },
+        { value: '5', label: 'major browsers supported', color: 'purple' },
+        { value: '10x', label: 'faster than manual API recreation', color: 'amber' },
+      ]} />
+
+      <SectionHeader number={1} title="What is 'Copy as cURL'?" />
+
+      <p>
+        When your browser makes an HTTP request, it includes dozens of headers: authentication cookies, CSRF tokens, Accept-Encoding preferences, session identifiers, and more. Recreating all of these manually is tedious and error-prone.
+      </p>
+      <p>
+        <strong>Copy as cURL</strong> is a DevTools feature that serializes the complete HTTP request (method, URL, all headers, cookies, and body) into a single curl command that you can paste into your terminal and get identical results to what the browser received.
+      </p>
+
+      <KeyPointsGrid columns={2} items={[
+        { title: 'API debugging', description: 'Reproduce an authenticated API call outside the browser to inspect responses with jq or save them to a file.' },
+        { title: 'Bug reporting', description: 'Share an exact reproduction of a failing network request with a backend engineer or support team.' },
+        { title: 'Automation scripting', description: 'Use the copied curl as a starting point for shell scripts, CI health checks, or load tests.' },
+        { title: 'Code generation', description: 'Paste into a curl-to-code converter to generate Python, JavaScript, Go, or any language SDK call.' },
+      ]} />
+
+      <SectionHeader number={2} title="How to Copy as cURL in Chrome" />
+
+      <VerticalSteps steps={[
+        {
+          title: 'Open DevTools',
+          description: 'Press F12 (Windows/Linux) or Cmd+Option+I (macOS). Alternatively right-click on the page and select "Inspect".',
+        },
+        {
+          title: 'Go to the Network tab',
+          description: 'Click the "Network" tab in the DevTools panel. If no requests are showing, reload the page with DevTools open.',
+        },
+        {
+          title: 'Find the request',
+          description: 'Click on the API request you want to reproduce. Use the filter bar to search by URL or filter by "Fetch/XHR" to show only API calls.',
+        },
+        {
+          title: 'Right-click and copy',
+          description: 'Right-click on the request row. Hover over "Copy". You will see several options.',
+        },
+        {
+          title: 'Choose your format',
+          description: 'Select "Copy as cURL (bash)" for Unix/macOS/Linux or "Copy as cURL (cmd)" for Windows Command Prompt.',
+        },
+      ]} />
+
+      <AlertBox type="info" title="Chrome Copy options explained">
+        Chrome offers multiple copy formats: <strong>Copy as cURL (bash)</strong> uses single-quoted strings and backslash line continuations (Unix-compatible). <strong>Copy as cURL (cmd)</strong> uses Windows CMD syntax with double quotes and carets. Always use bash format for scripts, CI/CD, and piping to jq.
+      </AlertBox>
+
+      <SectionHeader number={3} title="How to Copy as cURL in Firefox, Edge, and Safari" />
+
+      <CompareTable
+        leftLabel="Browser"
+        rightLabel="Steps"
+        rows={[
+          { label: 'Firefox', left: 'Firefox', right: 'F12 → Network tab → right-click request → "Copy Value" → "Copy as cURL"' },
+          { label: 'Edge', left: 'Edge (Chromium)', right: 'F12 → Network tab → right-click → Copy → "Copy as cURL (bash)"' },
+          { label: 'Safari', left: 'Safari', right: 'Develop → Show Web Inspector → Network → right-click → "Copy as cURL"' },
+          { label: 'Brave', left: 'Brave', right: 'Same as Chrome (Chromium-based)' },
+          { label: 'Arc', left: 'Arc', right: 'Same as Chrome (Chromium-based)' },
+        ]}
       />
 
+      <AlertBox type="tip" title="Enable Safari Developer menu">
+        Safari hides Developer Tools by default. Enable them at Safari → Preferences → Advanced → check "Show Develop menu in menu bar". Then Develop → Show Web Inspector.
+      </AlertBox>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 sm:pt-12">
-        <FAQSchema
-          faqs={[
-            {
-              question: 'How do I copy a request as cURL from Chrome?',
-              answer: 'Open Chrome DevTools (F12), go to Network tab, find your request, right-click it, and select "Copy" &gt; "Copy as cURL". The cURL command will be copied to your clipboard instantly.',
-            },
-            {
-              question: 'Can I copy as cURL from Firefox?',
-              answer: 'Yes! Firefox Developer Tools also supports copying requests as cURL. Right-click on any network request and select "Copy" &gt; "Copy as cURL" from the context menu.',
-            },
-            {
-              question: 'What is copy as cURL online?',
-              answer: 'Copy as cURL online refers to tools that allow you to convert browser network requests to cURL commands through a web interface, without needing to use browser DevTools directly.',
-            },
-            {
-              question: 'How do I convert network request to cURL?',
-              answer: 'You can either use browser DevTools to copy as cURL directly, or export your network requests as a HAR file and use our HAR to cURL converter tool to generate cURL commands.',
-            },
-            {
-              question: 'Is there a free copy as cURL tool?',
-              answer: 'Yes! Our free HAR to cURL converter allows you to upload HAR files or paste network request data to generate cURL commands. No signup required.',
-            },
-          ]}
-        />
+      <SectionHeader number={4} title="Anatomy of a Copied cURL Command" />
 
-        <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          {/* Introduction */}
-          <section className="mb-12">
-            <p className="text-lg text-gray-700 leading-relaxed mb-4">
-              Learning how to <strong>copy as cURL from browser</strong> is one of the most valuable skills for API developers and testers. Whether you need to <strong>copy as curl online</strong>, <strong>convert network request to curl</strong>, or <strong>export curl from browser</strong>, this technique allows you to capture and replay browser requests exactly as they occurred.
-            </p>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              In this comprehensive tutorial, we'll show you how to <strong>copy browser requests as cURL</strong> in Chrome, Firefox, and Edge. We'll also introduce you to our free <strong>network request to curl converter</strong> tool that makes this process even easier, especially when working with multiple requests or HAR files.
-            </p>
-            <div className="bg-green-50 border-l-4 border-green-500 p-4 my-6">
-              <p className="text-green-800 font-semibold mb-2">🚀 Try Our Free Tool</p>
-              <p className="text-green-700 text-sm mb-3">
-                Need to <strong>copy as curl online</strong> or <strong>convert network request to curl</strong>? Use our free <Link href="/har-to-curl" className="font-semibold underline hover:text-green-900">Network Request to cURL Converter</Link>. Upload HAR files or paste network request data to get instant cURL commands!
-              </p>
-              <Link 
-                href="/har-to-curl" 
-                className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
-              >
-                Try Network Request to cURL Converter
-                <ExternalLink className="w-4 h-4" />
-              </Link>
-            </div>
-          </section>
+      <p>Understanding what each part does helps you modify the command for your specific needs.</p>
 
-          {/* What is Copy as cURL */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">What is "Copy as cURL"?</h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              <strong>Copy as cURL</strong> is a feature in modern browser DevTools that allows you to copy any HTTP request as a ready-to-use cURL command. This command includes:
-            </p>
-            <ul className="list-disc list-inside space-y-2 text-gray-700 mb-4 ml-4">
-              <li>The HTTP method (GET, POST, PUT, DELETE, etc.)</li>
-              <li>The complete URL with query parameters</li>
-              <li>All request headers including authentication</li>
-              <li>Request body data (for POST/PUT requests)</li>
-              <li>Cookies and session information</li>
-            </ul>
-            <p className="text-gray-700 leading-relaxed">
-              This feature is perfect for <strong>copying curl from browser request</strong>, testing APIs, debugging network issues, and converting browser interactions into executable commands that can be run in terminals or converted to code.
-            </p>
-          </section>
+      <CodeBlock language="bash" filename="copied-curl-example.sh">{`curl 'https://api.example.com/v2/users/me' \\
+  -H 'authority: api.example.com' \\
+  -H 'accept: application/json, text/plain, */*' \\
+  -H 'accept-language: en-US,en;q=0.9' \\
+  -H 'authorization: Bearer eyJhbGciOiJSUzI1NiJ9...' \\
+  -H 'content-type: application/json' \\
+  -H 'cookie: session_id=abc123; csrf_token=xyz789' \\
+  -H 'origin: https://app.example.com' \\
+  -H 'referer: https://app.example.com/dashboard' \\
+  -H 'sec-ch-ua: "Chromium";v="122"' \\
+  -H 'sec-ch-ua-mobile: ?0' \\
+  -H 'sec-fetch-dest: empty' \\
+  -H 'sec-fetch-mode: cors' \\
+  -H 'sec-fetch-site: same-site' \\
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)' \\
+  --compressed`}</CodeBlock>
 
-          {/* Chrome Method */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Chrome className="w-6 h-6 text-blue-600" />
-              How to Copy as cURL in Chrome
-            </h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              Chrome DevTools makes it incredibly easy to <strong>copy as curl from browser</strong>. Here's the step-by-step process:
-            </p>
-            
-            <div className="space-y-4 mb-6">
-              <div className="flex items-start gap-4">
-                <div className="bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold flex-shrink-0">1</div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Open Chrome DevTools</h3>
-                  <p className="text-gray-700 text-sm mb-2">
-                    Press <kbd className="bg-gray-100 px-2 py-1 rounded text-xs">F12</kbd>, <kbd className="bg-gray-100 px-2 py-1 rounded text-xs">Ctrl+Shift+I</kbd> (Windows/Linux), or <kbd className="bg-gray-100 px-2 py-1 rounded text-xs">Cmd+Option+I</kbd> (Mac) to open DevTools.
-                  </p>
-                </div>
-              </div>
+      <KeyPointsGrid columns={2} items={[
+        { title: 'authority header', description: 'HTTP/2 pseudo-header indicating the host. Safe to remove if the server does not require it.' },
+        { title: 'authorization header', description: 'Your Bearer token or session credential. This is what lets the request succeed — keep it secret.' },
+        { title: 'cookie header', description: 'Session cookies from the browser. These often expire — the curl will stop working when cookies expire.' },
+        { title: 'sec-fetch-* headers', description: 'Browser security metadata. Most APIs ignore these. Safe to remove when cleaning up scripts.' },
+        { title: '--compressed flag', description: 'Tells curl to accept gzip/deflate-encoded responses and decompress them. Usually safe to keep.' },
+        { title: 'referer / origin', description: 'Some APIs validate these for CSRF protection. If removing them breaks the request, put them back.' },
+      ]} />
 
-              <div className="flex items-start gap-4">
-                <div className="bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold flex-shrink-0">2</div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Navigate to Network Tab</h3>
-                  <p className="text-gray-700 text-sm mb-2">
-                    Click on the <strong>"Network"</strong> tab. Ensure the recording button (red circle) is active to capture requests.
-                  </p>
-                </div>
-              </div>
+      <SectionHeader number={5} title="Cleaning Up the Copied Command" />
 
-              <div className="flex items-start gap-4">
-                <div className="bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold flex-shrink-0">3</div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Trigger the Request</h3>
-                  <p className="text-gray-700 text-sm mb-2">
-                    Perform the action that triggers the HTTP request you want to capture (submit a form, click a button, navigate to a page, etc.).
-                  </p>
-                </div>
-              </div>
+      <p>
+        Copied curl commands are verbose. For production scripts, strip browser-specific headers that the API does not need.
+      </p>
 
-              <div className="flex items-start gap-4">
-                <div className="bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold flex-shrink-0">4</div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Right-Click and Copy as cURL</h3>
-                  <p className="text-gray-700 text-sm mb-2">
-                    Find the request in the Network tab, right-click on it, hover over <strong>"Copy"</strong>, and select <strong>"Copy as cURL"</strong> or <strong>"Copy as cURL (bash)"</strong>.
-                  </p>
-                  <div className="bg-blue-50 border border-blue-200 rounded p-3 mt-2">
-                    <p className="text-blue-800 text-xs">
-                      <strong>Tip:</strong> Chrome offers two options: "Copy as cURL" (Windows format) and "Copy as cURL (bash)" (Unix/Mac format). Choose based on your operating system.
-                    </p>
-                  </div>
-                </div>
-              </div>
+      <ErrorFix
+        bad={`# Raw copied curl — overly verbose, fragile, leaks browser fingerprint
+curl 'https://api.example.com/users' \\
+  -H 'authority: api.example.com' \\
+  -H 'accept: */*' \\
+  -H 'accept-language: en-US,en;q=0.9' \\
+  -H 'authorization: Bearer $TOKEN' \\
+  -H 'sec-ch-ua: "Chromium";v="122"' \\
+  -H 'sec-ch-ua-mobile: ?0' \\
+  -H 'sec-ch-ua-platform: "macOS"' \\
+  -H 'sec-fetch-dest: empty' \\
+  -H 'sec-fetch-mode: cors' \\
+  -H 'sec-fetch-site: same-site' \\
+  -H 'user-agent: Mozilla/5.0 ...' \\
+  --compressed`}
+        good={`# Cleaned curl — minimal, portable, uses environment variable for token
+curl -sS \\
+  -H "Authorization: Bearer $TOKEN" \\
+  -H "Accept: application/json" \\
+  "https://api.example.com/users" \\
+  | jq`}
+        badLabel="Raw copied (fragile)"
+        goodLabel="Cleaned up (portable)"
+      />
 
-              <div className="flex items-start gap-4">
-                <div className="bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold flex-shrink-0">5</div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Paste and Use</h3>
-                  <p className="text-gray-700 text-sm mb-2">
-                    The cURL command is now in your clipboard. Paste it into your terminal to execute, or use our <Link href="/?tab=curl" className="text-blue-600 hover:underline font-semibold">cURL to Code Converter</Link> to transform it into Python, JavaScript, or other languages.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
+      <SectionHeader number={6} title="Handling Cookies and Sessions" />
 
-          {/* Firefox Method */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Globe className="w-6 h-6 text-orange-600" />
-              How to Copy as cURL in Firefox
-            </h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              Firefox Developer Tools also supports <strong>copying curl from browser request</strong>. The process is similar to Chrome:
-            </p>
-            
-            <div className="space-y-4">
-              <div className="flex items-start gap-4">
-                <div className="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0 text-sm">1</div>
-                <div>
-                  <p className="text-gray-700">
-                    Open Firefox Developer Tools with <kbd className="bg-gray-100 px-2 py-1 rounded text-xs">F12</kbd> or <kbd className="bg-gray-100 px-2 py-1 rounded text-xs">Ctrl+Shift+I</kbd>.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0 text-sm">2</div>
-                <div>
-                  <p className="text-gray-700">
-                    Go to the <strong>Network</strong> tab and ensure it's recording requests.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0 text-sm">3</div>
-                <div>
-                  <p className="text-gray-700">
-                    Trigger the network request you want to capture.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0 text-sm">4</div>
-                <div>
-                  <p className="text-gray-700">
-                    Right-click on the request and select <strong>"Copy"</strong> &gt; <strong>"Copy as cURL"</strong>.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
+      <QuickFact>Cookies in copied curl commands expire when the browser session ends. For long-running scripts, use API tokens instead of cookie-based auth.</QuickFact>
 
-          {/* Edge Method */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Monitor className="w-6 h-6 text-blue-500" />
-              How to Copy as cURL in Microsoft Edge
-            </h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              Microsoft Edge (Chromium-based) uses the same DevTools as Chrome, so the process for <strong>copying curl from browser request</strong> is identical:
-            </p>
-            <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
-              <li>Open Edge DevTools with <kbd className="bg-gray-100 px-2 py-1 rounded text-xs">F12</kbd></li>
-              <li>Navigate to the Network tab</li>
-              <li>Capture the request you want</li>
-              <li>Right-click and select "Copy" &gt; "Copy as cURL"</li>
-            </ul>
-          </section>
+      <VerticalSteps steps={[
+        {
+          title: 'Short-lived testing (OK to use cookies)',
+          description: 'If you just need to test a request right now, the copied command with cookies will work for minutes to hours.',
+          code: `# Paste and run immediately — cookies are still valid
+curl 'https://app.example.com/api/data' \\
+  -H 'cookie: session=abc123' \\
+  | jq '.data'`,
+        },
+        {
+          title: 'Save cookies to file for reuse',
+          description: 'Use curl -c to write cookies and -b to read them back on subsequent requests.',
+          code: `# Save cookies during login
+curl -sS -c /tmp/cookies.txt -X POST \\
+  -d '{"email":"user@example.com","password":"secret"}' \\
+  "https://app.example.com/api/auth/login" | jq
 
-          {/* Alternative: HAR to cURL Converter */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Alternative: Use HAR to cURL Converter</h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              While <strong>copy as curl from browser</strong> works great for single requests, sometimes you need to work with multiple requests or want a more flexible approach. That's where our <strong>HAR to cURL converter</strong> comes in:
-            </p>
-            
-            <div className="bg-gray-50 rounded-lg p-6 mb-4">
-              <h3 className="font-semibold text-gray-900 mb-3">Benefits of Using HAR to cURL Converter:</h3>
-              <ul className="space-y-2 text-gray-700">
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                  <div><strong>Multiple Requests:</strong> Convert all requests from a HAR file at once, not just one at a time.</div>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                  <div><strong>Batch Processing:</strong> Select which requests to convert from a dropdown menu.</div>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                  <div><strong>Online Access:</strong> Use our <strong>copy as curl online</strong> tool from any device, no browser DevTools needed.</div>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                  <div><strong>Share & Collaborate:</strong> Share HAR files with team members who can convert them to cURL independently.</div>
-                </li>
-              </ul>
-            </div>
+# Reuse cookies in subsequent requests
+curl -sS -b /tmp/cookies.txt "https://app.example.com/api/me" | jq`,
+        },
+        {
+          title: 'Prefer API tokens for scripts',
+          description: 'Most APIs offer API keys or OAuth tokens that do not expire hourly. Use these for any automation.',
+          code: `export API_TOKEN=$(curl -sS -X POST \\
+  -d '{"email":"user@example.com","password":"secret"}' \\
+  "https://app.example.com/api/auth/token" | jq -r '.token')
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <p className="text-blue-800 text-sm mb-3">
-                <strong>💡 Pro Tip:</strong> Export your entire network session as a HAR file, then use our converter to generate cURL commands for all requests. This is perfect for documenting API workflows or testing complete user journeys.
-              </p>
-              <Link 
-                href="/har-to-curl" 
-                className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-semibold"
-              >
-                Try HAR to cURL Converter
-                <ExternalLink className="w-4 h-4" />
-              </Link>
-            </div>
-          </section>
+curl -sS -H "Authorization: Bearer $API_TOKEN" \\
+  "https://app.example.com/api/data" | jq`,
+        },
+      ]} />
 
-          {/* Use Cases */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">When to Use Copy as cURL</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-5 rounded-lg">
-                <h3 className="font-semibold text-gray-900 mb-2">🔍 API Debugging</h3>
-                <p className="text-sm text-gray-700">
-                  <strong>Copy curl from browser request</strong> to debug API issues, test authentication, or verify request/response behavior outside the browser.
-                </p>
-              </div>
-              <div className="bg-gradient-to-br from-green-50 to-green-100 p-5 rounded-lg">
-                <h3 className="font-semibold text-gray-900 mb-2">🧪 API Testing</h3>
-                <p className="text-sm text-gray-700">
-                  Use <strong>network request to curl</strong> conversion to test APIs in different environments, with different parameters, or in automated testing scripts.
-                </p>
-              </div>
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-5 rounded-lg">
-                <h3 className="font-semibold text-gray-900 mb-2">📝 Code Generation</h3>
-                <p className="text-sm text-gray-700">
-                  Convert <strong>browser request to curl</strong>, then use our cURL to Code Converter to generate Python, JavaScript, or other language code.
-                </p>
-              </div>
-              <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-5 rounded-lg">
-                <h3 className="font-semibold text-gray-900 mb-2">📚 Documentation</h3>
-                <p className="text-sm text-gray-700">
-                  Document API usage by <strong>copying curl from browser request</strong> and including the commands in API documentation or README files.
-                </p>
-              </div>
-            </div>
-          </section>
+      <SectionHeader number={7} title="Converting Copied cURL to Other Languages" />
 
-          {/* Example Workflow */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Complete Workflow Example</h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              Here's a complete workflow for <strong>copying curl from browser request</strong> and using it:
-            </p>
-            
-            <div className="space-y-4">
-              <div className="flex items-start gap-4">
-                <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0 text-sm">1</div>
-                <div>
-                  <p className="text-gray-700">
-                    <strong>Capture Request:</strong> Use browser DevTools to <strong>copy as curl from browser</strong> for an API call you want to test.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0 text-sm">2</div>
-                <div>
-                  <p className="text-gray-700">
-                    <strong>Test in Terminal:</strong> Paste the cURL command in your terminal to verify it works correctly.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0 text-sm">3</div>
-                <div>
-                  <p className="text-gray-700">
-                    <strong>Convert to Code:</strong> Use our <Link href="/?tab=curl" className="text-blue-600 hover:underline font-semibold">cURL to Code Converter</Link> to transform the command into Python Requests, JavaScript Fetch, or other languages.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0 text-sm">4</div>
-                <div>
-                  <p className="text-gray-700">
-                    <strong>Integrate:</strong> Use the generated code in your application, test scripts, or API client libraries.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
+      <p>Once you have a working curl command, you often want to convert it to Python, JavaScript, or another language for use in a codebase.</p>
 
-          {/* Troubleshooting */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Troubleshooting Common Issues</h2>
-            <div className="space-y-4">
-              <div className="border-l-4 border-yellow-500 pl-4">
-                <h3 className="font-semibold text-gray-900 mb-2">cURL Command Doesn't Work</h3>
-                <p className="text-gray-700 text-sm">
-                  If the copied cURL command fails, check that all required headers are included. Some browsers may not copy all headers. Use our <Link href="/har-to-curl" className="text-blue-600 hover:underline">HAR to cURL converter</Link> for more complete conversion.
-                </p>
-              </div>
-              <div className="border-l-4 border-red-500 pl-4">
-                <h3 className="font-semibold text-gray-900 mb-2">Authentication Issues</h3>
-                <p className="text-gray-700 text-sm">
-                  If authentication fails, ensure cookies and authorization headers are included. The "Copy as cURL" feature should include these, but verify in the generated command.
-                </p>
-              </div>
-              <div className="border-l-4 border-blue-500 pl-4">
-                <h3 className="font-semibold text-gray-900 mb-2">Multiple Requests Needed</h3>
-                <p className="text-gray-700 text-sm">
-                  For multiple requests, export as HAR file and use our <strong>network request to curl converter</strong> to process all requests at once.
-                </p>
-              </div>
-            </div>
-          </section>
+      <CodeBlock language="bash" filename="original-curl.sh">{`# Original copied curl
+curl 'https://api.github.com/repos/octocat/hello-world' \\
+  -H 'Authorization: Bearer ghp_abc123' \\
+  -H 'Accept: application/vnd.github+json'`}</CodeBlock>
 
-          {/* CTA Section */}
-          <section className="mb-12 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl p-8 text-white">
-            <h2 className="text-2xl font-bold mb-4">Ready to Copy as cURL from Browser?</h2>
-            <p className="text-green-100 mb-6 text-lg">
-              Master <strong>copy as curl from browser</strong> techniques and use our free <strong>network request to curl converter</strong> for advanced workflows. 
-              Perfect for <strong>copying curl from browser request</strong>, <strong>converting network request to curl</strong>, and <strong>exporting curl from browser</strong>.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link 
-                href="/har-to-curl" 
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-green-600 rounded-lg hover:bg-green-50 transition-colors font-semibold"
-              >
-                <Copy className="w-5 h-5" />
-                Try Network Request to cURL Converter
-              </Link>
-              <Link 
-                href="/?tab=curl" 
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors font-semibold"
-              >
-                <Code className="w-5 h-5" />
-                Convert cURL to Code
-              </Link>
-            </div>
-          </section>
+      <CodeBlock language="python" filename="converted-python.py">{`# Converted to Python requests
+import requests
 
-          {/* Conclusion */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Conclusion</h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              Learning to <strong>copy as curl from browser</strong> is an essential skill that saves time and improves your API development workflow. Whether you use browser DevTools directly or our <strong>network request to curl converter</strong>, you now have the tools to transform browser requests into executable commands.
-            </p>
-            <p className="text-gray-700 leading-relaxed">
-              Remember: <strong>Copy as curl online</strong> tools like ours are perfect for batch processing, sharing requests with team members, and working with HAR files. Combine this with our <Link href="/?tab=curl" className="text-blue-600 hover:underline font-semibold">cURL to Code Converter</Link> for a complete development toolchain.
-            </p>
-          </section>
-        </article>
-      </main>
-    </div>
+headers = {
+    'Authorization': 'Bearer ghp_abc123',
+    'Accept': 'application/vnd.github+json',
+}
+
+response = requests.get(
+    'https://api.github.com/repos/octocat/hello-world',
+    headers=headers
+)
+data = response.json()
+print(data['stargazers_count'])`}</CodeBlock>
+
+      <CodeBlock language="javascript" filename="converted-fetch.js">{`// Converted to JavaScript fetch
+const response = await fetch('https://api.github.com/repos/octocat/hello-world', {
+  headers: {
+    'Authorization': 'Bearer ghp_abc123',
+    'Accept': 'application/vnd.github+json',
+  },
+});
+const data = await response.json();
+console.log(data.stargazers_count);`}</CodeBlock>
+
+      <SectionHeader number={8} title="Common Issues and Fixes" />
+
+      <AlertBox type="warning" title="CSRF tokens expire">
+        Many web apps embed CSRF tokens in request headers or bodies. The token captured in a copied curl will be single-use or time-limited. If your reproduced request returns 403 Forbidden, the CSRF token has expired.
+      </AlertBox>
+
+      <CompareTable
+        leftLabel="Problem"
+        rightLabel="Solution"
+        rows={[
+          { label: '401 Unauthorized', left: '401 Unauthorized', right: 'Session token or cookie has expired. Redo the login flow and copy again.' },
+          { label: '403 Forbidden', left: '403 Forbidden', right: 'CSRF token expired or IP restriction active. Try refreshing and copying again.' },
+          { label: '404 Not Found', left: '404 Not Found', right: 'Check the URL — query parameters may be URL-encoded differently in the shell.' },
+          { label: 'Empty response', left: 'Empty response', right: 'Missing Accept header. Add -H "Accept: application/json".' },
+          { label: 'Works in browser, fails in curl', left: 'Works in browser', right: 'A required cookie or header is missing. Compare using -v flag and browser Network headers.' },
+          { label: 'Garbled output', left: 'Garbled output', right: 'Response is gzip-encoded. Add --compressed to the curl command.' },
+        ]}
+      />
+
+      <SectionHeader number={9} title="Copy as Fetch: The JavaScript Alternative" />
+
+      <p>
+        Chrome and Firefox also offer <strong>Copy as Fetch</strong>, which generates a <code>fetch()</code> call instead of curl. This is useful when you want to reproduce the request in a Node.js script or browser console.
+      </p>
+
+      <CodeBlock language="javascript" filename="copy-as-fetch.js">{`// Generated by "Copy as Fetch" in Chrome DevTools
+fetch("https://api.example.com/users/me", {
+  "headers": {
+    "accept": "application/json",
+    "authorization": "Bearer eyJhbGciOiJSUzI1NiJ9...",
+    "content-type": "application/json"
+  },
+  "method": "GET"
+});`}</CodeBlock>
+
+      <SectionHeader number={10} title="Advanced Use Cases" />
+
+      <KeyPointsGrid columns={2} items={[
+        { title: 'Load testing baseline', description: 'Copy a complex authenticated request and use it as the baseline for load tests with tools like k6 or Apache Bench.' },
+        { title: 'Webhook debugging', description: 'Capture an incoming webhook payload in browser, copy as curl, then replay it against localhost during development.' },
+        { title: 'Mobile API reverse engineering', description: 'Use Charles Proxy or mitmproxy to capture mobile app requests, export as curl, and analyze the API.' },
+        { title: 'GraphQL queries', description: 'Copy as cURL works perfectly for GraphQL — the query is in the JSON body. Paste into a curl command and add | jq to explore the response.' },
+      ]} />
+
+      <FAQAccordion items={[
+        {
+          question: 'Does Copy as cURL capture POST body data?',
+          answer: 'Yes. For POST/PUT/PATCH requests, Chrome includes the request body as a --data-raw flag. For multipart forms it uses --form. The entire request is reproduced faithfully.',
+        },
+        {
+          question: 'Is it safe to share copied curl commands?',
+          answer: 'No — not without sanitizing them first. Copied curl commands contain your session cookies, authorization tokens, and CSRF tokens. Anyone with this command can impersonate your session. Always redact sensitive headers before sharing.',
+        },
+        {
+          question: 'Why does my copied curl fail when the browser request worked?',
+          answer: 'The most common reason is expired cookies or tokens. These are valid at the moment you copy but can expire within minutes or hours. Other causes: IP allowlists, TLS client certificates, or browser-specific security headers the API validates.',
+        },
+        {
+          question: 'Can I copy as cURL for requests that use HTTP/2?',
+          answer: 'Yes. Chrome DevTools automatically converts HTTP/2 requests to HTTP/1.1 curl syntax (removing :authority, :method etc pseudo-headers and mapping them to equivalent curl flags). curl itself supports HTTP/2 with --http2 flag.',
+        },
+        {
+          question: 'How do I copy as cURL for a request that only happens on page load?',
+          answer: 'Open DevTools first (F12), then check "Preserve log" in the Network panel settings. Reload the page. Now all requests including the initial page load are captured and you can copy any of them.',
+        },
+      ]} />
+
+      <AlertBox type="success" title="Copy as cURL is your fastest debugging shortcut">
+        The next time a colleague reports a weird API response or you need to test an authenticated endpoint from CI, open DevTools, find the request, right-click, and Copy as cURL. You will have a working reproduction in seconds rather than minutes.
+      </AlertBox>
+    </BlogLayoutWithSidebarAds>
   );
 }

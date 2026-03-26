@@ -1,4 +1,8 @@
 import type { Metadata } from 'next';
+import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
+import ToolSEOContent, {
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+} from '@/components/tools/ToolSEOContent';
 import JsonToExcelClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/json-to-excel';
@@ -127,6 +131,73 @@ export default function JsonToExcelPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <JsonToExcelClient />
+
+      <ToolSEOContent>
+        <SEOSection id="what" heading="Convert JSON to Excel or CSV Instantly">
+          <SEOProse>
+            A <strong>JSON to Excel converter</strong> takes a JSON array of objects and turns it into a structured spreadsheet with column headers automatically derived from the JSON keys. This is the fastest way to share API response data with non-technical stakeholders, import data into reporting tools, or export records for analysis in Excel or Google Sheets.
+          </SEOProse>
+          <SEOProse>
+            This converter supports three input methods: paste JSON text, upload a .json file, or fetch live data from a public API URL. Nested objects are flattened into column headers (e.g. <C>{`{"user": {"name": "Alice"}}`}</C> becomes a column called <C>user_name</C> or <C>user.name</C>), and multiple arrays in the same JSON object can be exported to separate worksheet tabs.
+          </SEOProse>
+        </SEOSection>
+
+        <SEOSection id="how" eyebrow="How it works" heading="Export JSON to Excel in Seconds">
+          <HowItWorks steps={[
+            { n: '01', title: 'Provide your JSON', desc: 'Paste a JSON array, upload a .json file, or enter a public API URL to fetch live data.' },
+            { n: '02', title: 'Configure export', desc: 'Choose flatten separator (dot or underscore), select which keys to include, and set multi-sheet grouping for multiple arrays.' },
+            { n: '03', title: 'Preview the table', desc: 'See the spreadsheet layout before downloading. Each JSON key becomes a column header, each object becomes a row.' },
+            { n: '04', title: 'Download XLSX or CSV', desc: 'Export as Excel (.xlsx), CSV, or TSV. Open directly in Excel, Google Sheets, or any BI tool.' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="uses" eyebrow="Use cases" heading="When Developers Export JSON to Excel">
+          <UseCases cases={[
+            { icon: '📊', title: 'Share API Data with Teams', desc: 'Convert API response JSON to a spreadsheet your PM, sales, or finance team can open without writing code.' },
+            { icon: '📥', title: 'Import to Reporting Tools', desc: 'Feed JSON data into Excel pivot tables, Google Data Studio, or Tableau by exporting to CSV first.' },
+            { icon: '🔍', title: 'Inspect Large Arrays', desc: 'View thousands of JSON records in a sortable, filterable spreadsheet rather than scrolling raw JSON.' },
+            { icon: '🗄️', title: 'Database Export to Excel', desc: 'Convert database query results (returned as JSON) into Excel for offline analysis or reporting.' },
+            { icon: '🔌', title: 'Live API Data Export', desc: 'Fetch live data from any public API URL and export it to Excel in one step — no code required.' },
+            { icon: '📋', title: 'Nested Data Flattening', desc: 'Automatically flatten deeply nested JSON into a tabular format suitable for Excel or CSV imports.' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="faq" eyebrow="FAQ" heading="Frequently Asked Questions">
+          <FAQ items={[
+            {
+              q: 'How do I convert JSON to Excel online?',
+              a: 'Paste your JSON array, upload a file, or enter an API URL. The tool detects the schema, flattens nested objects, and exports a downloadable XLSX or CSV file entirely in your browser.',
+            },
+            {
+              q: 'How do I open a JSON file in Excel?',
+              a: "Excel doesn't handle JSON natively. The easiest method: paste your JSON here, click Parse, then download the XLSX file and open it directly in Excel or Google Sheets.",
+            },
+            {
+              q: 'How does nested JSON flattening work?',
+              a: <>Nested keys are combined into column headers using a separator. For example, <C>{`{"user":{"name":"Alice"}}`}</C> becomes a column called <C>user_name</C> (underscore) or <C>user.name</C> (dot). Choose the separator before exporting.</>,
+            },
+            {
+              q: 'What is multi-sheet export?',
+              a: 'When your JSON contains multiple arrays (e.g. users and orders), multi-sheet export places each array on a separate worksheet tab in the same XLSX file.',
+            },
+            {
+              q: 'Is my data safe?',
+              a: 'Yes. All conversion runs in your browser — no JSON data is sent to any server. Safe for API responses, financial records, and confidential business data.',
+            },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="related" eyebrow="Related tools" heading="Tools You Might Also Need">
+          <RelatedTools tools={[
+            { href: '/json-beautifier', label: 'JSON Beautifier', desc: 'Format and validate JSON before converting to Excel', icon: '{}' },
+            { href: '/json-validator', label: 'JSON Validator', desc: 'Validate your JSON syntax to prevent conversion errors', icon: '✅' },
+            { href: '/json-comparator', label: 'JSON Comparator', desc: 'Compare two JSON datasets before exporting to Excel', icon: '🔀' },
+            { href: '/test-data-generator', label: 'Test Data Generator', desc: 'Generate sample JSON datasets to test your Excel export workflow', icon: '🧪' },
+          ]} />
+        </SEOSection>
+      </ToolSEOContent>
+
+      <ToolPageFooterBand toolName="json_to_excel" />
     </>
   );
 }

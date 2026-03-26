@@ -2,11 +2,11 @@
 
 import type { ReactNode } from 'react';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Lock } from 'lucide-react';
 import Breadcrumb, { type BreadcrumbItem } from '@/components/Breadcrumb';
 import FeedbackNewsletterSplit from '@/components/home/FeedbackNewsletterSplit';
 
-/** Feedback + newsletter + ad slot — use after server-rendered SEO when `showFooterBand={false}` on the shell. */
+/** Feedback + newsletter + ad slot */
 export function ToolPageFooterBand({
   toolName,
   showFeedbackNewsletter = true,
@@ -36,30 +36,21 @@ export type ToolPageShellProps = {
   subtitle?: string;
   backHref?: string;
   backLabel?: string;
-  /** Passed to the feedback form in the bottom band (e.g. `json_comparator`). */
   toolName?: string;
-  /** Main interactive UI — rendered inside the privacy-first card. Omit if the page is content-only. */
   tool?: ReactNode;
-  /** Long-form SEO / help content below the tool card. */
   belowCard?: ReactNode;
-  /** Optional row under the subtitle (badges, micro-copy). */
   badges?: ReactNode;
   showFeedbackNewsletter?: boolean;
-  /**
-   * When true, skip the default `ud-card-redesign` wrapper — use for tools that already render a full card UI.
-   * The `#tool` anchor is still applied for deep links.
-   */
   embedTool?: boolean;
-  /**
-   * When false, omit feedback + newsletter + mid-page ad from the shell (render `ToolPageFooterBand` after SEO on the page).
-   */
   showFooterBand?: boolean;
+  /** Emoji icon displayed in the header */
+  icon?: string;
+  /** Extra feature pill labels shown after the privacy badge */
+  features?: string[];
 };
 
-/**
- * Shared shell for standalone tool routes: matches home JSON Beautifier rhythm
- * (`ud-content-tool`, emerald accent card, zinc typography, feedback + newsletter band).
- */
+const DEFAULT_FEATURES = ['No signup', 'Free forever'];
+
 export default function ToolPageShell({
   breadcrumbItems,
   title,
@@ -73,68 +64,98 @@ export default function ToolPageShell({
   showFeedbackNewsletter = true,
   embedTool = false,
   showFooterBand = true,
+  icon,
+  features = DEFAULT_FEATURES,
 }: ToolPageShellProps) {
   return (
-    <div className="w-full pb-4 sm:pb-6">
-      <div className="ud-content-tool relative z-[2] pt-6 sm:pt-8 pb-2 sm:pb-4">
-        {breadcrumbItems && breadcrumbItems.length > 0 && (
-          <Breadcrumb items={breadcrumbItems} />
-        )}
-        <Link
-          href={backHref}
-          className="relative z-[1] mb-4 inline-flex touch-manipulation items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-800 shadow-sm transition-colors hover:border-emerald-300 hover:bg-emerald-50/80 hover:text-emerald-900"
-        >
-          <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden />
-          {backLabel}
-        </Link>
-        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">{title}</h1>
-        {subtitle ? (
-          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-zinc-600 sm:text-base">{subtitle}</p>
-        ) : null}
-        {badges ? <div className="mt-3 flex flex-wrap gap-2">{badges}</div> : null}
+    <div className="w-full">
+      {/* ── Header ─────────────────────────────────────────── */}
+      <div className="border-b border-zinc-200 bg-gradient-to-b from-zinc-50 to-white">
+        <div className="ud-content-tool py-7 sm:py-10">
+          {breadcrumbItems && breadcrumbItems.length > 0 && (
+            <div className="mb-5">
+              <Breadcrumb items={breadcrumbItems} />
+            </div>
+          )}
+
+          {/* Back */}
+          <Link
+            href={backHref}
+            className="mb-6 inline-flex touch-manipulation items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3.5 py-1.5 text-[13px] font-medium text-zinc-600 shadow-sm transition-colors hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-800"
+          >
+            <ArrowLeft className="h-3.5 w-3.5 shrink-0" aria-hidden />
+            {backLabel}
+          </Link>
+
+          {/* Title row */}
+          <div className="flex items-start gap-4">
+            {icon && (
+              <div className="hidden shrink-0 sm:flex h-12 w-12 items-center justify-center rounded-xl border border-zinc-200 bg-white text-2xl shadow-sm">
+                {icon}
+              </div>
+            )}
+            <div className="min-w-0 flex-1">
+              <h1 className="text-[1.7rem] font-semibold leading-[1.15] tracking-[-0.025em] text-zinc-900 sm:text-[2.1rem]">
+                {title}
+              </h1>
+              {subtitle && (
+                <p className="mt-3 max-w-[46rem] text-[15px] leading-relaxed text-zinc-500">
+                  {subtitle}
+                </p>
+              )}
+
+              {/* Trust + feature pills */}
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[12px] font-semibold text-emerald-800">
+                  <Lock className="h-3 w-3" aria-hidden />
+                  Data never leaves your browser
+                </span>
+                {features.map((f) => (
+                  <span
+                    key={f}
+                    className="inline-flex items-center rounded-full border border-zinc-200 bg-white px-3 py-1 text-[12px] font-medium text-zinc-600 shadow-sm"
+                  >
+                    {f}
+                  </span>
+                ))}
+                {badges}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {tool != null ? (
-        <div className="ud-content pb-6 sm:pb-8">
+      {/* ── Tool card ─────────────────────────────────────── */}
+      {tool != null && (
+        <div className="ud-content-tool py-6 sm:py-8">
           {embedTool ? (
-            <div id="tool" className="scroll-mt-28 sm:scroll-mt-32">
-              {toolName ? (
-                <div className="sr-only" aria-hidden>
-                  {/* Feedback API receives toolName from form */}
-                </div>
-              ) : null}
+            <div id="tool" className="scroll-mt-24">
               {tool}
             </div>
           ) : (
             <div
               id="tool"
-              className="ud-card-redesign scroll-mt-28 overflow-hidden shadow-md sm:scroll-mt-32"
+              className="scroll-mt-24 overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-[0_2px_16px_-4px_rgba(0,0,0,0.08),0_1px_4px_-2px_rgba(0,0,0,0.04)]"
             >
-              <div className="h-1 w-full bg-gradient-to-r from-emerald-600 to-emerald-500" aria-hidden />
-              <div className="p-6 sm:p-10 lg:p-12">
-                {toolName ? (
-                  <div className="sr-only" aria-hidden>
-                    {/* Feedback API receives toolName from form; keep for a11y context if needed */}
-                  </div>
-                ) : null}
-                {tool}
-              </div>
+              <div className="h-[3px] w-full bg-gradient-to-r from-emerald-500 via-emerald-400 to-teal-400" aria-hidden />
+              <div className="p-5 sm:p-8 lg:p-10">{tool}</div>
             </div>
           )}
         </div>
-      ) : null}
+      )}
 
-      {belowCard != null ? (
-        <div className="ud-content-tool pb-8 sm:pb-10">
-          <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8 md:p-10">
+      {/* ── Below-card SEO content ─────────────────────── */}
+      {belowCard != null && (
+        <div className="ud-content-tool pb-10 sm:pb-12">
+          <div className="rounded-xl border border-zinc-100 bg-white px-6 py-8 shadow-sm sm:px-10 sm:py-10">
             {belowCard}
           </div>
         </div>
-      ) : null}
+      )}
 
-      {showFooterBand ? (
+      {showFooterBand && (
         <ToolPageFooterBand toolName={toolName} showFeedbackNewsletter={showFeedbackNewsletter} />
-      ) : null}
+      )}
     </div>
   );
 }

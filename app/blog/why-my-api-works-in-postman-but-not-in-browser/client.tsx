@@ -1,465 +1,400 @@
 'use client';
 
-import Link from 'next/link';
-import { ArrowLeft, Code, AlertTriangle, Shield, CheckCircle, AlertCircle, HelpCircle, Clock, Globe, Server, Lock } from 'lucide-react';
-import FAQSchema from '@/components/FAQSchema';
-import BlogSocialShare from '@/components/BlogSocialShare';
-import NewsletterSignup from '@/components/NewsletterSignup';
-import FeedbackForm from '@/components/FeedbackForm';
 import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
+import {
+  AlertBox, FlowDiagram, CompareTable, ErrorFix, VerticalSteps,
+  CodeBlock, FAQAccordion, KeyPointsGrid, StatGrid, SectionHeader,
+  QuickFact, TimelineViz,
+} from '@/components/blog/BlogVisuals';
 
 export default function WhyMyApiWorksInPostmanButNotInBrowserClient() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-red-50 to-orange-50">
-      <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/blog" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Developer's Study Materials
-          </Link>
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-gradient-to-br from-red-500 to-orange-600 rounded-lg">
-              <AlertTriangle className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Why My API Works in Postman but Not in Browser</h1>
-              <p className="text-sm text-gray-500 mt-1">Complete Troubleshooting Guide for Browser API Errors (2026)</p>
-            </div>
-          </div>
-        </div>
-      </header>
+    <BlogLayoutWithSidebarAds>
+      <h1>Why My API Works in Postman but Not in Browser — Complete Debugging Guide</h1>
+      <p className="lead">
+        You test your API in Postman — works perfectly. You paste the same URL into JavaScript — and it crashes.
+        This is one of the most common frustrations in web development, and it has a handful of well-known root causes.
+        This guide covers every one of them with working fixes.
+      </p>
 
-      {/* Floating Social Share Bar */}
-      <BlogSocialShare 
-        title="Why My API Works in Postman but Not in Browser"
-        description="Complete Troubleshooting Guide for Browser API Errors (2026)"
-        variant="floating"
+      <StatGrid
+        stats={[
+          { value: '#1', label: 'cause: missing CORS headers', color: 'red' },
+          { value: '95%', label: 'of cases solved by 3 fixes', color: 'green' },
+          { value: '5+', label: 'root causes covered here', color: 'blue' },
+          { value: '2 min', label: 'to diagnose with this guide', color: 'purple' },
+        ]}
       />
 
+      <SectionHeader number={1} title="Why Postman Succeeds Where the Browser Fails" />
+      <p>
+        Postman is a native application or browser extension that sends requests <strong>directly</strong>, without
+        any browser security model applied. Your browser, on the other hand, enforces several security
+        policies that Postman blissfully ignores.
+      </p>
 
-      <BlogLayoutWithSidebarAds>
-        <FAQSchema
-          faqs={[
-            {
-              question: 'Why does my API work in Postman but not in browser?',
-              answer: 'Common causes include CORS (Cross-Origin Resource Sharing) errors, missing authentication headers, preflight request failures, browser security restrictions, and different request handling. Postman bypasses browser security, while browsers enforce CORS policies and security restrictions that can block API requests.',
-            },
-            {
-              question: 'How do I fix CORS error in browser?',
-              answer: 'Configure your API server to include CORS headers: Access-Control-Allow-Origin, Access-Control-Allow-Methods, Access-Control-Allow-Headers. For development, use a proxy or CORS browser extension. For production, configure your backend (Express.js, Flask, Django) to allow cross-origin requests from your domain.',
-            },
-            {
-              question: 'Why does authentication work in Postman but not browser?',
-              answer: 'Postman allows custom headers and authentication methods that browsers may block. Browsers restrict certain headers (like Authorization) in cross-origin requests. Ensure your API server sends proper CORS headers allowing Authorization header, and use proper authentication methods (Bearer tokens, API keys) that browsers support.',
-            },
-            {
-              question: 'What is a preflight request and why does it fail?',
-              answer: 'A preflight request is an OPTIONS request browsers send before certain cross-origin requests. It checks if the server allows the actual request. Preflight fails if the server doesn\'t respond with proper CORS headers or doesn\'t handle OPTIONS requests. Configure your server to handle OPTIONS requests and return appropriate CORS headers.',
-            },
-            {
-              question: 'How do I test API in browser like Postman?',
-              answer: 'Use browser DevTools Network tab to inspect requests, use fetch() API in console, or create a simple HTML page with JavaScript. For CORS issues, use a proxy server, CORS browser extension, or configure your backend. For authentication, ensure headers are properly set and CORS allows them.',
-            },
-          ]}
-        />
+      <CompareTable
+        leftLabel="Postman / curl"
+        rightLabel="Browser Fetch / XHR"
+        rows={[
+          { label: 'CORS enforced?', left: '❌ Never', right: '✅ Always' },
+          { label: 'Preflight OPTIONS?', left: '❌ Never', right: '✅ For non-simple requests' },
+          { label: 'Cookie scope', left: 'Sends any cookie you add', right: 'SameSite / Domain rules apply' },
+          { label: 'Auth headers', left: 'Always sent', right: 'Blocked if CORS not set up' },
+          { label: 'Mixed content', left: 'Not applicable', right: 'HTTP blocked on HTTPS pages' },
+          { label: 'Origin header', left: 'None (or manual)', right: 'Auto-set by browser' },
+        ]}
+      />
 
-        <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          {/* Definition Section */}
-          <section className="mb-12">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <HelpCircle className="w-6 h-6 text-blue-600" />
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900">Definition: What is the Postman vs Browser API Issue?</h2>
-            </div>
-            <p className="text-lg text-gray-700 leading-relaxed mb-4">
-              <strong>The Postman vs Browser API Issue</strong> occurs when an API request works successfully in Postman (a desktop API testing tool) but fails when made from a web browser. This discrepancy happens because Postman and browsers handle HTTP requests differently, with browsers enforcing additional security restrictions that Postman bypasses.
-            </p>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              The main difference is that browsers enforce CORS (Cross-Origin Resource Sharing) policies, security restrictions, and same-origin policies that prevent cross-origin requests unless the server explicitly allows them. Postman, being a desktop application, doesn't enforce these browser security restrictions, allowing requests that browsers would block.
-            </p>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              This issue is common when developing web applications that consume APIs, testing APIs in browsers, or integrating third-party APIs. Understanding why APIs work in Postman but fail in browsers is essential for debugging API integration issues and ensuring APIs work correctly in web applications.
-            </p>
-            <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
-              <p className="text-blue-800 text-sm">
-                <strong>Key Point:</strong> APIs work in Postman but fail in browsers because browsers enforce CORS policies, security restrictions, and same-origin policies that Postman bypasses. The solution is to configure your API server to allow cross-origin requests with proper CORS headers.
-              </p>
-            </div>
-          </section>
+      <QuickFact>
+        The browser is <strong>not broken</strong> — it is enforcing security policies that protect your users.
+        The fix almost always lives on the <em>server</em>, not in your frontend code.
+      </QuickFact>
 
-          {/* What Section */}
-          <section className="mb-12">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <Globe className="w-6 h-6 text-green-600" />
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900">What: Understanding the Differences</h2>
-            </div>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              The differences between Postman and browsers that cause API issues:
-            </p>
-            <div className="space-y-4 mb-6">
-              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-blue-600" />
-                  CORS (Cross-Origin Resource Sharing)
-                </h3>
-                <p className="text-gray-700 text-sm mb-2">Browsers enforce CORS policies that block cross-origin requests unless the server sends proper CORS headers (Access-Control-Allow-Origin, Access-Control-Allow-Methods). Postman doesn't enforce CORS, allowing any cross-origin request. This is the most common cause of browser API failures.</p>
-                <p className="text-gray-600 text-xs">Example: Browser blocks request from localhost:3000 to api.example.com without CORS headers, while Postman allows it</p>
-              </div>
-              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                  <Lock className="w-5 h-5 text-green-600" />
-                  Authentication Headers
-                </h3>
-                <p className="text-gray-700 text-sm mb-2">Browsers restrict certain headers (Authorization, Custom-Headers) in cross-origin requests unless the server explicitly allows them via Access-Control-Allow-Headers. Postman allows any headers. Browsers also handle cookies and authentication differently than Postman.</p>
-                <p className="text-gray-600 text-xs">Example: Browser blocks Authorization header in cross-origin request without CORS header allowing it</p>
-              </div>
-              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                  <Server className="w-5 h-5 text-purple-600" />
-                  Preflight Requests
-                </h3>
-                <p className="text-gray-700 text-sm mb-2">Browsers send OPTIONS preflight requests before certain cross-origin requests to check if the server allows them. If the server doesn't handle OPTIONS requests or return proper CORS headers, the preflight fails and the actual request is blocked. Postman doesn't send preflight requests.</p>
-                <p className="text-gray-600 text-xs">Example: Browser sends OPTIONS request before POST, server must respond with CORS headers</p>
-              </div>
-              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                  <AlertCircle className="w-5 h-5 text-orange-600" />
-                  Browser Security Restrictions
-                </h3>
-                <p className="text-gray-700 text-sm mb-2">Browsers enforce same-origin policy, content security policies, and security restrictions that prevent certain requests. Postman, being a desktop app, doesn't have these restrictions. Browsers also block mixed content (HTTP from HTTPS) and certain request types.</p>
-                <p className="text-gray-600 text-xs">Example: Browser blocks HTTP requests from HTTPS pages, Postman allows both</p>
-              </div>
-            </div>
-            <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
-              <p className="text-green-800 text-sm">
-                <strong>Important:</strong> Understanding CORS, authentication headers, preflight requests, and browser security restrictions is key to fixing API issues. The main difference is that browsers enforce security policies that Postman bypasses.
-              </p>
-            </div>
-          </section>
+      <SectionHeader number={2} title="Root Cause 1 — CORS (Cross-Origin Resource Sharing)" />
+      <p>
+        CORS is by far the most common culprit. The browser checks whether the server explicitly permits
+        requests from your frontend's origin (scheme + host + port). If the server doesn't include the right
+        response headers, the browser blocks the response — even if the server returned 200 OK.
+      </p>
 
-          {/* When Section */}
-          <section className="mb-12">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-orange-100 rounded-lg">
-                <Clock className="w-6 h-6 text-orange-600" />
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900">When: When This Issue Occurs</h2>
-            </div>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              This issue occurs in these situations:
-            </p>
-            <div className="space-y-3 mb-6">
-              <div className="flex items-start gap-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <CheckCircle className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-1">Cross-Origin API Requests</h3>
-                  <p className="text-gray-700 text-sm">When making API requests from a web page to a different domain, protocol, or port, browsers enforce CORS policies. If the API server doesn't send proper CORS headers, the request fails in browsers but works in Postman.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 p-4 bg-green-50 rounded-lg border border-green-200">
-                <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-1">Authentication in Web Apps</h3>
-                  <p className="text-gray-700 text-sm">When using authentication headers (Bearer tokens, API keys) in browser requests, browsers may block them if the server doesn't allow them via CORS headers. Postman allows any authentication headers without restrictions.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 p-4 bg-purple-50 rounded-lg border border-purple-200">
-                <CheckCircle className="w-5 h-5 text-purple-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-1">Complex HTTP Requests</h3>
-                  <p className="text-gray-700 text-sm">When making POST, PUT, DELETE requests with custom headers or JSON bodies, browsers send preflight OPTIONS requests. If the server doesn't handle preflight requests, the actual request fails in browsers but works in Postman.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-                <CheckCircle className="w-5 h-5 text-yellow-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-1">Local Development</h3>
-                  <p className="text-gray-700 text-sm">When developing locally with frontend on localhost:3000 and API on localhost:8000, browsers treat these as different origins and enforce CORS. Postman doesn't have this restriction, making local API testing easier in Postman than browsers.</p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-orange-50 border-l-4 border-orange-500 p-4 rounded-r-lg">
-              <p className="text-orange-800 text-sm">
-                <strong>Common Scenario:</strong> This issue is most common when making cross-origin API requests from web applications, using authentication in browsers, or developing locally with separate frontend and backend servers. CORS is the primary cause in most cases.
-              </p>
-            </div>
-          </section>
+      <FlowDiagram
+        steps={[
+          { label: 'Browser sends request', color: 'blue' },
+          { label: 'Server responds (any status)', color: 'zinc' },
+          { label: 'Browser checks Access-Control-Allow-Origin', color: 'amber' },
+          { label: 'Header matches origin?', color: 'orange' },
+          { label: 'Allow — JS receives response', color: 'green' },
+        ]}
+      />
 
-          {/* How To Section */}
-          <section className="mb-12">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <Code className="w-6 h-6 text-purple-600" />
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900">How To: Fix Browser API Issues</h2>
-            </div>
-            <p className="text-gray-700 leading-relaxed mb-6">
-              Follow these methods to fix API issues in browsers:
-            </p>
-            
-            <div className="mb-8">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Method 1: Configure CORS Headers (Backend Fix)</h3>
-              <p className="text-gray-700 mb-4">Configure your API server to send proper CORS headers:</p>
-              
-              <div className="mb-6">
-                <h4 className="font-semibold text-gray-900 mb-2">Express.js (Node.js)</h4>
-                <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-2">
-                  <pre className="text-sm"><code>{`const express = require('express');
-const cors = require('cors');
-const app = express();
+      <AlertBox type="error" title="Classic CORS error in console">
+        Access to fetch at 'https://api.example.com/data' from origin 'https://myapp.com' has been blocked by
+        CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+      </AlertBox>
 
-// Enable CORS for all routes
+      <p><strong>The fix is always server-side.</strong> Add the correct response headers:</p>
+
+      <CodeBlock language="http" filename="Server Response Headers">
+{`Access-Control-Allow-Origin: https://myapp.com
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Headers: Content-Type, Authorization
+Access-Control-Allow-Credentials: true   # only if you send cookies`}
+      </CodeBlock>
+
+      <p>
+        Here's how to set this in common backend frameworks:
+      </p>
+
+      <CodeBlock language="javascript" filename="Express.js (Node)">
+{`const cors = require('cors');
+
 app.use(cors({
-  origin: 'https://yourdomain.com', // or ['http://localhost:3000'] for dev
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}));
+  origin: 'https://myapp.com',      // your frontend origin
+  methods: ['GET','POST','PUT','DELETE'],
+  allowedHeaders: ['Content-Type','Authorization'],
+  credentials: true,                 // only if using cookies
+}));`}
+      </CodeBlock>
 
-// Or manually set CORS headers
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://yourdomain.com');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  
-  // Handle preflight requests
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
-  }
-  next();
-});`}</code></pre>
-                </div>
-              </div>
+      <CodeBlock language="python" filename="FastAPI (Python)">
+{`from fastapi.middleware.cors import CORSMiddleware
 
-              <div className="mb-6">
-                <h4 className="font-semibold text-gray-900 mb-2">Flask (Python)</h4>
-                <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-2">
-                  <pre className="text-sm"><code>{`from flask import Flask
-from flask_cors import CORS
+app.add_middleware(
+  CORSMiddleware,
+  allow_origins=["https://myapp.com"],
+  allow_credentials=True,
+  allow_methods=["*"],
+  allow_headers=["*"],
+)`}
+      </CodeBlock>
 
-app = Flask(__name__)
+      <AlertBox type="warning" title="Do NOT use wildcard (*) with credentials">
+        <code>Access-Control-Allow-Origin: *</code> and <code>Access-Control-Allow-Credentials: true</code>{' '}
+        cannot be combined. Use an explicit origin instead.
+      </AlertBox>
 
-# Enable CORS
-CORS(app, resources={
-    r"/api/*": {
-        "origins": ["https://yourdomain.com"],
-        "methods": ["GET", "POST", "PUT", "DELETE"],
-        "allow_headers": ["Content-Type", "Authorization"],
-        "supports_credentials": True
-    }
+      <SectionHeader number={3} title="Root Cause 2 — Preflight OPTIONS Request" />
+      <p>
+        For any request with a custom header (like <code>Authorization</code>) or a non-GET/POST method,
+        the browser first sends a silent <strong>OPTIONS preflight</strong> to ask the server for permission.
+        If the server doesn't handle OPTIONS, it returns 405 Method Not Allowed, and the real request never fires.
+      </p>
+
+      <ErrorFix
+        bad={`# Server ignores OPTIONS — preflight fails
+app.post('/api/data', handler)
+# No OPTIONS route defined`}
+        good={`# Express: cors() handles OPTIONS automatically
+app.use(cors(corsOptions));
+
+# Or manually:
+app.options('*', cors(corsOptions));  // enable preflight for all routes
+app.post('/api/data', cors(corsOptions), handler);`}
+        badLabel="Missing OPTIONS handler"
+        goodLabel="OPTIONS handled"
+      />
+
+      <AlertBox type="info" title="How to spot a preflight issue">
+        Open DevTools → Network tab → look for an <strong>OPTIONS</strong> request to your endpoint.
+        If it returns 4xx or has no CORS headers — that's your problem.
+      </AlertBox>
+
+      <SectionHeader number={4} title="Root Cause 3 — Auth Headers Not Sent" />
+      <p>
+        Postman lets you manually attach any header. The browser's <code>fetch()</code> API requires you to
+        explicitly include credentials in your code. A missing <code>Authorization</code> header is the second
+        most common issue after CORS.
+      </p>
+
+      <ErrorFix
+        bad={`// Auth header forgotten — server returns 401
+fetch('https://api.example.com/data')
+  .then(res => res.json())`}
+        good={`// Include Authorization header explicitly
+const token = localStorage.getItem('token');
+
+fetch('https://api.example.com/data', {
+  method: 'GET',
+  headers: {
+    'Authorization': \`Bearer \${token}\`,
+    'Content-Type': 'application/json',
+  },
 })
+  .then(res => res.json())`}
+        badLabel="No auth header"
+        goodLabel="Auth header included"
+      />
 
-# Or manually
-@app.after_request
-def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', 'https://yourdomain.com')
-    response.headers.add('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-    response.headers.add('Access-Control-Allow-Credentials', 'true')
-    return response`}</code></pre>
-                </div>
-              </div>
-            </div>
+      <SectionHeader number={5} title="Root Cause 4 — Cookies & Credentials" />
+      <p>
+        By default, <code>fetch()</code> does <strong>not</strong> send cookies. You must opt in with
+        <code>credentials: 'include'</code>. The server must also explicitly allow credentials in its CORS headers,
+        and the cookie must meet <code>SameSite</code> requirements.
+      </p>
 
-            <div className="mb-8">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Method 2: Use a Proxy (Frontend Fix)</h3>
-              <p className="text-gray-700 mb-4">Use a proxy to bypass CORS in development:</p>
-              
-              <div className="mb-6">
-                <h4 className="font-semibold text-gray-900 mb-2">Next.js Proxy Configuration</h4>
-                <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-2">
-                  <pre className="text-sm"><code>{`// next.config.js
-module.exports = {
+      <ErrorFix
+        bad={`// Cookies not sent — session breaks
+fetch('/api/user/profile')
+  .then(res => res.json())`}
+        good={`// Send cookies with every request
+fetch('/api/user/profile', {
+  credentials: 'include',   // sends cookies
+})
+  .then(res => res.json())
+
+// Server must respond with:
+// Access-Control-Allow-Credentials: true
+// Access-Control-Allow-Origin: https://myapp.com (exact, no wildcard)`}
+        badLabel="Cookies not sent"
+        goodLabel="Cookies included"
+      />
+
+      <KeyPointsGrid
+        columns={2}
+        items={[
+          { title: 'credentials: "omit"', description: 'Default — no cookies, no TLS certs sent.' },
+          { title: 'credentials: "same-origin"', description: 'Cookies only to same domain. Good default for most apps.' },
+          { title: 'credentials: "include"', description: 'Always send cookies. Required for cross-origin sessions.' },
+          { title: 'SameSite=None; Secure', description: 'Cookie attribute required for cross-site cookies in modern browsers.' },
+        ]}
+      />
+
+      <SectionHeader number={6} title="Root Cause 5 — Mixed Content (HTTP vs HTTPS)" />
+      <p>
+        If your frontend is served over HTTPS but your API is HTTP, the browser blocks the request entirely.
+        This is called <strong>mixed content</strong> and is a security protection — not a bug.
+      </p>
+
+      <AlertBox type="error" title="Mixed content error">
+        Mixed Content: The page at 'https://myapp.com' was loaded over HTTPS, but requested an insecure resource
+        'http://api.example.com/data'. This request has been blocked; the content must be served over HTTPS.
+      </AlertBox>
+
+      <VerticalSteps
+        steps={[
+          {
+            title: 'Upgrade your API to HTTPS',
+            description: 'Use a free Let\'s Encrypt certificate. This is the correct long-term fix.',
+          },
+          {
+            title: 'Use a reverse proxy',
+            description: 'Serve your HTTP API behind an Nginx/Cloudflare HTTPS proxy.',
+          },
+          {
+            title: 'Use environment variables for API base URL',
+            description: 'Set API_URL=https://... in production so the URL is always HTTPS in prod.',
+            code: 'const API = process.env.NEXT_PUBLIC_API_URL || "https://api.example.com";',
+          },
+          {
+            title: 'Temporary: serve frontend over HTTP too',
+            description: 'Not recommended for production — only for local development.',
+          },
+        ]}
+      />
+
+      <SectionHeader number={7} title="Root Cause 6 — Content-Type Header" />
+      <p>
+        Sending a JSON body without <code>Content-Type: application/json</code> causes the server to misread the body.
+        This makes the request fail on the server side, while it worked in Postman because Postman auto-sets it.
+      </p>
+
+      <ErrorFix
+        bad={`// Body is sent as plain text — server can't parse it
+fetch('/api/users', {
+  method: 'POST',
+  body: JSON.stringify({ name: 'Alice', age: 30 }),
+})`}
+        good={`// Correct: tell the server you're sending JSON
+fetch('/api/users', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': \`Bearer \${token}\`,
+  },
+  body: JSON.stringify({ name: 'Alice', age: 30 }),
+})`}
+        badLabel="Missing Content-Type"
+        goodLabel="Content-Type set"
+      />
+
+      <SectionHeader number={8} title="Diagnostic Checklist" />
+
+      <VerticalSteps
+        steps={[
+          {
+            title: 'Open DevTools → Network tab',
+            description: 'Find your request. Look at the Response Headers for Access-Control-Allow-Origin.',
+          },
+          {
+            title: 'Check the Console tab',
+            description: 'CORS errors, mixed-content warnings, and auth failures all appear here with exact details.',
+          },
+          {
+            title: 'Look for the OPTIONS preflight',
+            description: 'If you see a red OPTIONS request before your main request — preflight is failing.',
+          },
+          {
+            title: 'Check the request headers',
+            description: 'Click your request → Headers tab → verify Authorization and Content-Type are present.',
+          },
+          {
+            title: 'Check the response status',
+            description: '401 = auth missing/wrong. 403 = forbidden. 0 = CORS blocked (browser won\'t show response).',
+          },
+          {
+            title: 'Confirm API URL uses HTTPS if frontend does',
+            description: 'Check the request URL in the network tab — http:// on an https:// page is instant block.',
+          },
+        ]}
+      />
+
+      <SectionHeader number={9} title="Quick Reference: Error Messages Decoded" />
+
+      <CompareTable
+        leftLabel="Error Message"
+        rightLabel="Root Cause & Fix"
+        rows={[
+          {
+            label: 'No Access-Control-Allow-Origin header',
+            left: 'CORS error',
+            right: 'Add CORS headers on server',
+          },
+          {
+            label: 'Response to preflight has invalid HTTP status',
+            left: 'Preflight (OPTIONS) fail',
+            right: 'Handle OPTIONS on server',
+          },
+          {
+            label: '401 Unauthorized',
+            left: 'Auth header missing',
+            right: 'Add Authorization header in fetch()',
+          },
+          {
+            label: 'Mixed Content blocked',
+            left: 'HTTP API from HTTPS page',
+            right: 'Use HTTPS for API',
+          },
+          {
+            label: 'Failed to parse JSON body',
+            left: 'Content-Type missing',
+            right: 'Add Content-Type: application/json',
+          },
+          {
+            label: 'Request blocked by cookie policy',
+            left: 'SameSite/credentials mismatch',
+            right: 'Use credentials: include + SameSite=None',
+          },
+        ]}
+      />
+
+      <SectionHeader number={10} title="Development Proxy: The Full Workaround" />
+      <p>
+        During local development, you can use a proxy to avoid CORS entirely by making the browser think
+        the API is on the same origin:
+      </p>
+
+      <CodeBlock language="json" filename="next.config.js (Next.js)">
+{`/** @type {import('next').NextConfig} */
+const nextConfig = {
   async rewrites() {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://api.example.com/:path*',
+        destination: 'http://localhost:8000/:path*', // your backend
       },
     ];
   },
-};`}</code></pre>
-                </div>
-              </div>
+};`}
+      </CodeBlock>
 
-              <div className="mb-6">
-                <h4 className="font-semibold text-gray-900 mb-2">Create React App Proxy</h4>
-                <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-2">
-                  <pre className="text-sm"><code>{`// package.json
-{
-  "proxy": "https://api.example.com"
-}
-
-// Then use relative URLs in fetch
-fetch('/api/users') // Proxied to https://api.example.com/api/users`}</code></pre>
-                </div>
-              </div>
-            </div>
-
-            <div className="mb-8">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Method 3: Handle Preflight Requests</h3>
-              <p className="text-gray-700 mb-4">Ensure your server handles OPTIONS preflight requests:</p>
-              
-              <div className="mb-6">
-                <h4 className="font-semibold text-gray-900 mb-2">Express.js Preflight Handler</h4>
-                <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-2">
-                  <pre className="text-sm"><code>{`app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', req.headers.origin);
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Max-Age', '86400'); // 24 hours
-  res.sendStatus(200);
-});`}</code></pre>
-                </div>
-              </div>
-            </div>
-
-            <div className="mb-8">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Method 4: Browser Fetch API with Proper Headers</h3>
-              <p className="text-gray-700 mb-4">Use fetch API correctly in browsers:</p>
-              
-              <div className="mb-6">
-                <h4 className="font-semibold text-gray-900 mb-2">JavaScript Fetch with CORS</h4>
-                <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-2">
-                  <pre className="text-sm"><code>{`// Simple GET request
-fetch('https://api.example.com/users', {
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json',
+      <CodeBlock language="json" filename="vite.config.js (Vite)">
+{`export default {
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
   },
-  credentials: 'include' // Include cookies if needed
-})
-  .then(response => response.json())
-  .then(data => console.log(data))
-  .catch(error => console.error('Error:', error));
+};`}
+      </CodeBlock>
 
-// POST request with authentication
-fetch('https://api.example.com/users', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + token
-  },
-  body: JSON.stringify({ name: 'John' }),
-  credentials: 'include'
-})
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-  .then(data => console.log(data))
-  .catch(error => console.error('CORS or network error:', error));`}</code></pre>
-                </div>
-              </div>
-            </div>
-            <div className="mt-6 bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-r-lg">
-              <p className="text-indigo-800 text-sm">
-                <strong>Best Practice:</strong> Configure CORS headers on your backend server for production. Use proxies or CORS extensions only for development. Always handle preflight OPTIONS requests. Test API requests in browsers, not just Postman, to catch CORS issues early.
-              </p>
-            </div>
-          </section>
+      <AlertBox type="tip" title="Best practice for production">
+        In production, use a proper CORS configuration on your backend instead of a proxy.
+        The proxy approach is ideal for local dev to avoid touching server config.
+      </AlertBox>
 
-          {/* Why Section */}
-          <section className="mb-12">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-red-100 rounded-lg">
-                <CheckCircle className="w-6 h-6 text-red-600" />
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900">Why: Why This Happens</h2>
-            </div>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              APIs work in Postman but fail in browsers for these reasons:
-            </p>
-            <div className="grid md:grid-cols-2 gap-4 mb-6">
-              <div className="p-5 bg-blue-50 rounded-lg border border-blue-200">
-                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-blue-600" />
-                  Browser Security Model
-                </h3>
-                <p className="text-gray-700 text-sm">Browsers enforce same-origin policy and CORS to prevent malicious websites from making unauthorized requests to other domains. This security model protects users from cross-site request forgery (CSRF) attacks and data theft. Postman, being a desktop app, doesn't have these restrictions.</p>
-              </div>
-              <div className="p-5 bg-green-50 rounded-lg border border-green-200">
-                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                  <Lock className="w-5 h-5 text-green-600" />
-                  CORS Policy Enforcement
-                </h3>
-                <p className="text-gray-700 text-sm">Browsers automatically enforce CORS policies by checking server responses for CORS headers. If headers are missing or incorrect, browsers block requests. Postman doesn't check CORS headers, allowing any cross-origin request. This is why APIs work in Postman but fail in browsers.</p>
-              </div>
-              <div className="p-5 bg-purple-50 rounded-lg border border-purple-200">
-                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                  <Server className="w-5 h-5 text-purple-600" />
-                  Preflight Request Requirement
-                </h3>
-                <p className="text-gray-700 text-sm">Browsers send OPTIONS preflight requests before complex cross-origin requests to check server permissions. If servers don't handle preflight requests, browsers block the actual request. Postman doesn't send preflight requests, making it easier to test APIs.</p>
-              </div>
-              <div className="p-5 bg-orange-50 rounded-lg border border-orange-200">
-                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                  <AlertCircle className="w-5 h-5 text-orange-600" />
-                  Header Restrictions
-                </h3>
-                <p className="text-gray-700 text-sm">Browsers restrict certain headers (Authorization, Custom-Headers) in cross-origin requests unless servers explicitly allow them via Access-Control-Allow-Headers. Postman allows any headers without restrictions. This causes authentication to work in Postman but fail in browsers.</p>
-              </div>
-            </div>
-            <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
-              <p className="text-red-800 text-sm">
-                <strong>Important:</strong> APIs work in Postman but fail in browsers because browsers enforce security policies (CORS, same-origin, preflight) that Postman bypasses. The solution is to configure your API server to allow cross-origin requests with proper CORS headers.
-              </p>
-            </div>
-          </section>
-
-          {/* FAQ Section */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
-            <div className="space-y-6">
-              <div className="border-b border-gray-200 pb-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Why does my API work in Postman but not in browser?</h3>
-                <p className="text-gray-700 leading-relaxed">Common causes include CORS (Cross-Origin Resource Sharing) errors, missing authentication headers, preflight request failures, browser security restrictions, and different request handling. Postman bypasses browser security, while browsers enforce CORS policies and security restrictions that can block API requests.</p>
-              </div>
-              <div className="border-b border-gray-200 pb-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">How do I fix CORS error in browser?</h3>
-                <p className="text-gray-700 leading-relaxed">Configure your API server to include CORS headers: Access-Control-Allow-Origin, Access-Control-Allow-Methods, Access-Control-Allow-Headers. For development, use a proxy or CORS browser extension. For production, configure your backend (Express.js, Flask, Django) to allow cross-origin requests from your domain.</p>
-              </div>
-              <div className="border-b border-gray-200 pb-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Why does authentication work in Postman but not browser?</h3>
-                <p className="text-gray-700 leading-relaxed">Postman allows custom headers and authentication methods that browsers may block. Browsers restrict certain headers (like Authorization) in cross-origin requests. Ensure your API server sends proper CORS headers allowing Authorization header, and use proper authentication methods (Bearer tokens, API keys) that browsers support.</p>
-              </div>
-              <div className="border-b border-gray-200 pb-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">What is a preflight request and why does it fail?</h3>
-                <p className="text-gray-700 leading-relaxed">A preflight request is an OPTIONS request browsers send before certain cross-origin requests. It checks if the server allows the actual request. Preflight fails if the server doesn't respond with proper CORS headers or doesn't handle OPTIONS requests. Configure your server to handle OPTIONS requests and return appropriate CORS headers.</p>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">How do I test API in browser like Postman?</h3>
-                <p className="text-gray-700 leading-relaxed">Use browser DevTools Network tab to inspect requests, use fetch() API in console, or create a simple HTML page with JavaScript. For CORS issues, use a proxy server, CORS browser extension, or configure your backend. For authentication, ensure headers are properly set and CORS allows them.</p>
-              </div>
-            </div>
-          </section>
-        </article>
-
-                {/* Social Share Section */}
-        <section className="mt-12">
-          <BlogSocialShare 
-            title="Why My API Works in Postman but Not in Browser"
-            description="Complete Troubleshooting Guide for Browser API Errors (2026)"
-            variant="full"
-          />
-        </section>
-
-        {/* Newsletter Signup */}
-        <section className="mt-12">
-          <NewsletterSignup />
-        </section>
-
-        {/* Feedback Form */}
-        <section className="mt-12">
-          <FeedbackForm toolName="Why My API Works in Postman but Not in Browser Guide" />
-        </section>
-      </BlogLayoutWithSidebarAds>
-    </div>
+      <FAQAccordion
+        items={[
+          {
+            question: 'Why does my API return 200 but the browser still shows CORS error?',
+            answer: 'The server returned 200, but the CORS headers are missing or wrong. The browser blocks the response regardless of status. Add Access-Control-Allow-Origin to your server response headers.',
+          },
+          {
+            question: 'Can I fix CORS from the frontend?',
+            answer: 'No. CORS is enforced by the browser and can only be resolved server-side. Any "frontend fix" (like using a proxy or same-origin URL) just routes around the problem — the fix belongs on the server.',
+          },
+          {
+            question: 'Should I use Access-Control-Allow-Origin: * in production?',
+            answer: 'Only for fully public APIs that don\'t need credentials. For any API that handles authentication or sensitive data, specify the exact allowed origins instead of *.',
+          },
+          {
+            question: 'What is a "simple" vs "preflighted" CORS request?',
+            answer: 'Simple requests (GET/POST with basic headers) go directly. Preflighted requests (custom headers, PUT/DELETE, JSON body) trigger an OPTIONS preflight first. If your server doesn\'t handle OPTIONS, preflighted requests fail.',
+          },
+          {
+            question: 'I\'m seeing status 0 in the network tab — what does that mean?',
+            answer: 'Status 0 means the browser blocked the request before it could complete — usually CORS. The actual response from the server is hidden by the browser\'s security model.',
+          },
+          {
+            question: 'My API works on localhost but not in production. Why?',
+            answer: 'Your server\'s CORS config likely allows localhost explicitly but not your production domain. Update the allowed origins list on your server to include your production frontend URL.',
+          },
+        ]}
+      />
+    </BlogLayoutWithSidebarAds>
   );
 }

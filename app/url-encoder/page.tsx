@@ -1,13 +1,21 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import TrackedCtaLink from '@/components/TrackedCtaLink';
+import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
+import ToolSEOContent, {
+  SEOSection,
+  SEOProse,
+  C,
+  HowItWorks,
+  UseCases,
+  FAQ,
+  RelatedTools,
+} from '@/components/tools/ToolSEOContent';
 import UrlEncoderClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/url-encoder';
 
 export const metadata: Metadata = {
   title:
-    'URL Encoder Decoder — Percent Encode & Decode URLs, Parse Query Parameters, Fix Double Encoding Free Online | UnblockDevs',
+    'URL Encoder Decoder — Percent-Encode, Decode URL Components, Query Strings & Form Data Online Free | UnblockDevs',
   description:
     'Encode and decode URLs in RFC 3986, form-urlencoded, encodeURI, or encodeURIComponent format. Parse URLs, edit query parameters, detect double encoding, and run security checks. Free, 100% browser-based.',
   keywords: [
@@ -36,9 +44,12 @@ export const metadata: Metadata = {
     'what is the difference between %20 and + in urls',
     'how to fix double encoded urls',
     'URL Encoder Decoder',
+    'percent encode query string',
+    'url encode special characters',
+    'url encoding reference',
   ],
   openGraph: {
-    title: 'URL Encoder Decoder — Percent Encode, Parse Query Params, Fix Double Encoding | UnblockDevs',
+    title: 'URL Encoder Decoder — Percent Encode, Decode URL Components & Query Strings | UnblockDevs',
     description:
       'Encode/decode URLs in RFC 3986, form-urlencoded, encodeURI, encodeURIComponent. Parse URLs, edit query params, detect double encoding. 100% browser-based.',
     type: 'website',
@@ -80,14 +91,6 @@ const faqSchema = {
   mainEntity: [
     {
       '@type': 'Question' as const,
-      name: 'What is the difference between %20 and + in URLs?',
-      acceptedAnswer: {
-        '@type': 'Answer' as const,
-        text: 'Both represent a space but in different contexts. RFC 3986 uses %20 for spaces in URL paths and query strings. The application/x-www-form-urlencoded standard uses + for spaces in form submissions. Using the wrong one causes decoding errors in APIs and web servers.',
-      },
-    },
-    {
-      '@type': 'Question' as const,
       name: 'What is the difference between encodeURI and encodeURIComponent?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
@@ -96,18 +99,34 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is double URL encoding and how do I fix it?',
+      name: 'When should I use + instead of %20 for spaces in a URL?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'Double encoding happens when a URL is percent-encoded twice — the % character gets encoded to %25, turning %20 into %2520. The URL Encoder at unblockdevs.com/url-encoder detects double encoding automatically and decodes back to the original value.',
+        text: 'Use + for spaces only in application/x-www-form-urlencoded content — the format used by HTML forms and some APIs. For RFC 3986 URLs, use %20 for spaces everywhere. Using the wrong one causes decoding errors in APIs and web servers.',
       },
     },
     {
       '@type': 'Question' as const,
-      name: 'What is percent encoding?',
+      name: 'Is percent-encoding the same as Base64 encoding?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'Percent encoding converts characters not allowed in URLs into a % followed by two hex digits. Space becomes %20, # becomes %23, & becomes %26. This ensures special characters don\'t break URL structure when used in query parameters or paths.',
+        text: 'No. Percent-encoding (URL encoding) converts characters to %XX hex sequences so they are safe to use in URLs. Base64 encoding converts binary data into a text string using A-Z, a-z, 0-9, +, /. They serve different purposes: percent-encoding is for URLs; Base64 is for embedding binary in text formats like JSON or HTTP headers.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'Which characters are safe in a URL without encoding?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'RFC 3986 defines unreserved characters that never need encoding: A–Z, a–z, 0–9, hyphen (-), underscore (_), period (.), and tilde (~). All other characters — including spaces, &, =, +, /, ?, #, and @ — must be percent-encoded when used inside a query parameter value.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I decode a URL that has been double-encoded?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Double encoding happens when a URL is percent-encoded twice — %20 becomes %2520 because the % itself gets encoded to %25. Paste the double-encoded string into this URL Decoder; it detects double encoding automatically and decodes it back to the original value in one step.',
       },
     },
   ],
@@ -118,113 +137,255 @@ export default function UrlEncoderPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <div id="tool">
-        <UrlEncoderClient />
-      </div>
-      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200" aria-labelledby="url-enc-heading">
-        <h1 id="url-enc-heading" className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
-          URL Encoder Decoder — Percent Encode &amp; Decode URLs, Parse Query Parameters, Fix Double Encoding Free Online
-        </h1>
-        <p className="text-gray-700 text-base leading-relaxed mb-3">
-          Encode and decode URLs and query strings in RFC 3986, form-urlencoded, encodeURI, or encodeURIComponent. Parse URLs into protocol, host, path, and parameters. Edit query params, detect double encoding, run security checks, and export results. All processing runs in your browser — no URLs are sent to any server.
-        </p>
-        <p className="flex flex-wrap gap-3">
-          <TrackedCtaLink href="#tool" toolName="url_encoder" className="inline-block text-sm font-semibold text-primary-600 hover:text-primary-700">
-            Use the tool →
-          </TrackedCtaLink>
-          <Link href="#what-is-url-encoding" className="inline-block text-sm text-gray-600 hover:text-gray-900">
-            Learn more
-          </Link>
-        </p>
-      </article>
-      <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 border-t border-gray-200">
-        <h2 id="what-is-url-encoding" className="text-xl font-bold text-gray-900 mt-0 mb-4">
-          What is URL encoding?
-        </h2>
-        <p className="text-gray-700 leading-relaxed mb-4">
-          <strong>URL encoding</strong> (percent encoding) converts special characters into a <code className="bg-gray-100 px-1 rounded">%XX</code> form so they can be safely used in URLs and query strings. For example, a space becomes <code className="bg-gray-100 px-1 rounded">%20</code>. A <strong>URL encoder</strong> does this conversion; a <strong>URL decoder</strong> reverses it. Standards like RFC 3986 and <strong>application/x-www-form-urlencoded</strong> (used in forms) differ in how spaces are encoded (<code className="bg-gray-100 px-1 rounded">%20</code> vs <code className="bg-gray-100 px-1 rounded">+</code>).
-        </p>
+      <UrlEncoderClient />
+      <ToolSEOContent>
+        <SEOSection id="what" heading="What Is URL Encoding?">
+          <SEOProse>
+            <strong>URL encoding</strong>, formally called percent-encoding, is the process of converting
+            characters that are not allowed or have special meaning in a URL into a safe representation.
+            Each unsafe character is replaced with a <C>%</C> sign followed by two hexadecimal digits — for
+            example, a space becomes <C>%20</C>, an ampersand becomes <C>%26</C>, and a hash becomes{' '}
+            <C>%23</C>. This ensures that special characters inside query strings or path segments do not
+            break the URL structure.
+          </SEOProse>
+          <SEOProse>
+            RFC 3986 defines the authoritative standard for URL encoding. It divides characters into{' '}
+            <strong>unreserved</strong> (A–Z, a–z, 0–9, <C>-</C>, <C>_</C>, <C>.</C>, <C>~</C>) which
+            never need encoding, and everything else which must be percent-encoded when used inside a
+            component like a query parameter value. A competing standard —{' '}
+            <strong>application/x-www-form-urlencoded</strong> — is used by HTML forms and some APIs; it
+            encodes spaces as <C>+</C> instead of <C>%20</C>. Using the wrong standard is one of the most
+            common causes of API decoding errors.
+          </SEOProse>
+        </SEOSection>
 
-        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-4">URL Encoding vs Form Encoding — What&apos;s the Difference?</h2>
-        <p className="text-gray-700 leading-relaxed mb-4">
-          <strong>RFC 3986</strong> (percent encoding) uses <code className="bg-gray-100 px-1 rounded">%20</code> for spaces everywhere — paths and query strings. <strong>application/x-www-form-urlencoded</strong> (used by HTML forms and many APIs) uses <code className="bg-gray-100 px-1 rounded">+</code> for spaces in query strings only. Using <code className="bg-gray-100 px-1 rounded">+</code> in a path or <code className="bg-gray-100 px-1 rounded">%20</code> where a server expects <code className="bg-gray-100 px-1 rounded">+</code> can cause decoding errors. This tool supports both so you can match your target (API, form, or generic URL).
-        </p>
+        <SEOSection id="how" eyebrow="How it works" heading="Encode or Decode URLs in Seconds">
+          <HowItWorks
+            steps={[
+              {
+                n: '01',
+                title: 'Paste your input',
+                desc: 'Enter a raw URL, a query string, a path segment, or a percent-encoded value into the input field.',
+              },
+              {
+                n: '02',
+                title: 'Choose mode & standard',
+                desc: 'Select Encode, Decode, or Auto (auto-detects which is needed). Pick the encoding standard: RFC 3986, form-urlencoded, encodeURI, or encodeURIComponent.',
+              },
+              {
+                n: '03',
+                title: 'Get instant output',
+                desc: 'The result updates live as you type. Copy the encoded or decoded value, or paste a full URL to open the query parameter editor.',
+              },
+              {
+                n: '04',
+                title: 'Edit & rebuild',
+                desc: 'Use the parsed URL view to add, remove, or edit query parameters individually, then copy the rebuilt URL — no manual string manipulation needed.',
+              },
+            ]}
+          />
+        </SEOSection>
 
-        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-4">encodeURI vs encodeURIComponent — When to Use Each</h2>
-        <p className="text-gray-700 leading-relaxed mb-4">
-          <strong>encodeURI</strong> encodes a full URL but leaves structural characters (<code className="bg-gray-100 px-1 rounded">/</code>, <code className="bg-gray-100 px-1 rounded">?</code>, <code className="bg-gray-100 px-1 rounded">#</code>, <code className="bg-gray-100 px-1 rounded">&</code>) unencoded so the URL stays valid. Use it when you have a complete URL. <strong>encodeURIComponent</strong> encodes a single query parameter value and encodes everything, including <code className="bg-gray-100 px-1 rounded">/</code>, <code className="bg-gray-100 px-1 rounded">?</code>, <code className="bg-gray-100 px-1 rounded">#</code>, <code className="bg-gray-100 px-1 rounded">&</code>, because those must be escaped inside a value. Use it for each query value when building a URL. The tool offers both modes so you can test JavaScript-equivalent output.
-        </p>
+        <SEOSection id="uses" eyebrow="Use cases" heading="When Developers URL-Encode">
+          <UseCases
+            cases={[
+              {
+                icon: '🔗',
+                title: 'Query parameter encoding',
+                desc: 'Encode values that contain &, =, +, or spaces before appending them to a URL so they do not break the query string structure.',
+              },
+              {
+                icon: '🔑',
+                title: 'OAuth redirects',
+                desc: 'Percent-encode the redirect_uri parameter in OAuth flows — many providers reject requests where the URI is not correctly encoded.',
+              },
+              {
+                icon: '📋',
+                title: 'Form POST data',
+                desc: 'Encode form field values in application/x-www-form-urlencoded format before submitting to APIs that expect form-encoded bodies.',
+              },
+              {
+                icon: '🔒',
+                title: 'API request signing',
+                desc: 'Many APIs (AWS Signature V4, HMAC-based auth) require query parameters to be canonically percent-encoded before hashing.',
+              },
+              {
+                icon: '🍪',
+                title: 'Cookie values',
+                desc: 'Encode special characters in cookie values to prevent them from being misinterpreted by browsers or servers during Set-Cookie / Cookie parsing.',
+              },
+              {
+                icon: '📁',
+                title: 'Path segments',
+                desc: 'Encode file names or user-generated slugs used in URL paths so characters like spaces, #, or ? do not break routing.',
+              },
+            ]}
+          />
+        </SEOSection>
 
-        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-4">What Is Double URL Encoding and How to Fix It</h2>
-        <p className="text-gray-700 leading-relaxed mb-4">
-          Double encoding happens when a string is percent-encoded twice: the <code className="bg-gray-100 px-1 rounded">%</code> itself becomes <code className="bg-gray-100 px-1 rounded">%25</code>, so <code className="bg-gray-100 px-1 rounded">%20</code> (space) becomes <code className="bg-gray-100 px-1 rounded">%2520</code>. Servers may then decode only once and treat <code className="bg-gray-100 px-1 rounded">%2520</code> as literal text instead of a space. This tool detects double encoding and decodes in one step so you get back the intended value.
-        </p>
-
-        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-4">How to Parse and Edit URL Query Parameters</h2>
-        <p className="text-gray-700 leading-relaxed mb-4">
-          Paste a full URL into the tool to see it split into protocol, hostname, port, path, <strong>query parameters</strong>, and fragment. Edit, add, or remove query keys and values, then rebuild the URL. Useful for debugging APIs, building request URLs with many params, or fixing malformed query strings. No other free tool combines encode/decode, multiple standards, and a query parameter editor in one place.
-        </p>
-
-        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-4">URL Encoding for API Requests — Common Mistakes</h2>
-        <p className="text-gray-700 leading-relaxed mb-4">
-          Common issues: (1) <strong>Encoding a full URL</strong> with encodeURIComponent — that encodes <code className="bg-gray-100 px-1 rounded">/</code> and <code className="bg-gray-100 px-1 rounded">?</code> and breaks the URL; encode only each parameter value. (2) <strong>Wrong standard</strong> — some APIs expect form-urlencoded (<code className="bg-gray-100 px-1 rounded">+</code> for space), others expect strict percent encoding (<code className="bg-gray-100 px-1 rounded">%20</code>). (3) <strong>Double encoding</strong> — if you encode and the client or server encodes again, you get <code className="bg-gray-100 px-1 rounded">%2520</code>. Use the decoder to fix it. (4) <strong>Leaving structural characters in a value</strong> — if a parameter contains <code className="bg-gray-100 px-1 rounded">&</code> or <code className="bg-gray-100 px-1 rounded">=</code>, encode the whole value with encodeURIComponent (or the equivalent in this tool).
-        </p>
-
-        <h2 id="encode-decode" className="text-xl font-bold text-gray-900 mt-8 mb-4">
-          Encode vs decode vs auto
-        </h2>
-        <p className="text-gray-700 leading-relaxed mb-4">
-          In <strong>Encode</strong> mode, your input is percent-encoded. In <strong>Decode</strong> mode, percent-encoded sequences are converted back to characters. <strong>Auto</strong> detects whether the input looks encoded (contains <code className="bg-gray-100 px-1 rounded">%XX</code>) and decodes it; otherwise it encodes.
-        </p>
-        <h2 id="query-params" className="text-xl font-bold text-gray-900 mt-8 mb-4">
-          Query parameter editor
-        </h2>
-        <p className="text-gray-700 leading-relaxed mb-4">
-          Paste a full URL to see it parsed into protocol, hostname, port, path, <strong>query parameters</strong>, and fragment. Edit, add, or remove parameters and rebuild the URL. Useful for debugging APIs and building request URLs.
-        </p>
-
-        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-4">Frequently Asked Questions</h2>
-        <dl className="space-y-4">
-          <div>
-            <dt className="font-semibold text-gray-900">What is the difference between %20 and + in URLs?</dt>
-            <dd className="text-gray-700 mt-1">
-              Both represent a space but in different contexts. RFC 3986 uses <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">%20</code> for spaces in URL paths and query strings. The application/x-www-form-urlencoded standard (HTML forms) uses <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">+</code> for spaces in query strings only. Using the wrong one causes decoding errors in APIs.
-            </dd>
+        <SEOSection id="chars" heading="URL Encoding Reference — Special Characters">
+          <SEOProse>
+            Common characters that must be percent-encoded when used inside a URL component such as a query
+            parameter value or path segment.
+          </SEOProse>
+          <div className="mt-4 overflow-x-auto rounded-xl border border-zinc-200">
+            <table className="w-full text-[13px]">
+              <thead>
+                <tr className="border-b border-zinc-200 bg-zinc-50">
+                  <th className="px-4 py-3 text-left font-semibold text-zinc-700">Character</th>
+                  <th className="px-4 py-3 text-left font-semibold text-zinc-700">Encoded (RFC 3986)</th>
+                  <th className="px-4 py-3 text-left font-semibold text-zinc-700">Notes</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-zinc-100 bg-white">
+                <tr>
+                  <td className="px-4 py-3 font-mono text-zinc-800">space</td>
+                  <td className="px-4 py-3 font-mono text-zinc-800">%20</td>
+                  <td className="px-4 py-3 text-zinc-600">Form-encoded standard uses <C>+</C> instead</td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-3 font-mono text-zinc-800">&amp;</td>
+                  <td className="px-4 py-3 font-mono text-zinc-800">%26</td>
+                  <td className="px-4 py-3 text-zinc-600">Parameter separator — must be encoded inside values</td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-3 font-mono text-zinc-800">=</td>
+                  <td className="px-4 py-3 font-mono text-zinc-800">%3D</td>
+                  <td className="px-4 py-3 text-zinc-600">Key/value delimiter — encode when it appears in a value</td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-3 font-mono text-zinc-800">+</td>
+                  <td className="px-4 py-3 font-mono text-zinc-800">%2B</td>
+                  <td className="px-4 py-3 text-zinc-600">Encodes to %2B in RFC 3986; represents space in form-encoded</td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-3 font-mono text-zinc-800">/</td>
+                  <td className="px-4 py-3 font-mono text-zinc-800">%2F</td>
+                  <td className="px-4 py-3 text-zinc-600">Path separator — encode in query values with encodeURIComponent</td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-3 font-mono text-zinc-800">?</td>
+                  <td className="px-4 py-3 font-mono text-zinc-800">%3F</td>
+                  <td className="px-4 py-3 text-zinc-600">Query start character — encode inside query values</td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-3 font-mono text-zinc-800">#</td>
+                  <td className="px-4 py-3 font-mono text-zinc-800">%23</td>
+                  <td className="px-4 py-3 text-zinc-600">Fragment identifier — encode to prevent truncation of query string</td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-3 font-mono text-zinc-800">@</td>
+                  <td className="px-4 py-3 font-mono text-zinc-800">%40</td>
+                  <td className="px-4 py-3 text-zinc-600">User-info delimiter — encode when used inside a path or query value</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <div>
-            <dt className="font-semibold text-gray-900">What is the difference between encodeURI and encodeURIComponent?</dt>
-            <dd className="text-gray-700 mt-1">
-              encodeURI encodes a full URL — it leaves characters like <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">/</code>, <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">?</code>, <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">#</code>, <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">&</code> unencoded because they have structural meaning. encodeURIComponent encodes a single parameter value — it encodes everything including those characters because they should be escaped inside a value.
-            </dd>
-          </div>
-          <div>
-            <dt className="font-semibold text-gray-900">What is double URL encoding and how do I fix it?</dt>
-            <dd className="text-gray-700 mt-1">
-              Double encoding happens when a URL is encoded twice — the <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">%</code> character itself gets encoded to <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">%25</code>, turning <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">%20</code> into <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">%2520</code>. This tool detects double encoding automatically and lets you decode back to the original value.
-            </dd>
-          </div>
-          <div>
-            <dt className="font-semibold text-gray-900">What is percent encoding?</dt>
-            <dd className="text-gray-700 mt-1">
-              Percent encoding (URL encoding) converts characters that aren&apos;t allowed in URLs into a <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">%</code> followed by two hex digits. For example, space becomes <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">%20</code>, <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">#</code> becomes <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">%23</code>, and <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">&</code> becomes <code className="rounded bg-gray-100 px-1 py-0.5 text-sm">%26</code>. This ensures special characters don&apos;t break URL structure.
-            </dd>
-          </div>
-          <div>
-            <dt className="font-semibold text-gray-900">Is it safe to paste URLs with sensitive parameters into online encoders?</dt>
-            <dd className="text-gray-700 mt-1">
-              Only if the tool is 100% client-side. This URL Encoder runs entirely in your browser — no URLs, parameters, or tokens are sent to any server. Safe for URLs containing API keys, tokens, or sensitive query parameters.
-            </dd>
-          </div>
-        </dl>
+        </SEOSection>
 
-        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-4">Related Tools</h2>
-        <p className="text-gray-700 leading-relaxed mb-2">
-          <Link href="/base64-encoder" className="text-primary-600 hover:underline font-medium">Base64 Encoder</Link> — encode or decode values for URLs (e.g. Base64URL).{' '}
-          <Link href="/jwt-decoder" className="text-primary-600 hover:underline font-medium">JWT Decoder</Link> — decode JWTs that appear in URL parameters or headers.{' '}
-          <Link href="/hash-generator" className="text-primary-600 hover:underline font-medium">Hash Generator</Link> — hash URL parameters or payloads.{' '}
-          <Link href="/curl-failure-root-cause-engine" className="text-primary-600 hover:underline font-medium">cURL Failure Root-Cause Engine</Link> — debug 400 errors often caused by URL encoding issues in API requests.
-        </p>
-      </article>
+        <SEOSection id="faq" eyebrow="FAQ" heading="Frequently Asked Questions">
+          <FAQ
+            items={[
+              {
+                q: 'What is the difference between encodeURI and encodeURIComponent?',
+                a: (
+                  <>
+                    <C>encodeURI</C> encodes a complete URL. It leaves structural characters like{' '}
+                    <C>/</C>, <C>?</C>, <C>#</C>, and <C>&</C> untouched because they have meaning in the
+                    URL structure. <C>encodeURIComponent</C> encodes a single value to be embedded inside a
+                    URL — it encodes everything including <C>/</C>, <C>?</C>, <C>#</C>, and <C>&</C> so
+                    they cannot break the surrounding URL. Use <C>encodeURIComponent</C> for each query
+                    parameter value when building a URL programmatically.
+                  </>
+                ),
+              },
+              {
+                q: 'When should I use + instead of %20 for spaces?',
+                a: (
+                  <>
+                    Use <C>+</C> for spaces only when building{' '}
+                    <C>application/x-www-form-urlencoded</C> content — the format used by HTML form
+                    submissions and some REST APIs. For standard RFC 3986 URLs (used everywhere else),
+                    encode spaces as <C>%20</C>. Using <C>+</C> in a path segment or an API that expects
+                    RFC 3986 will cause the server to receive a literal <C>+</C> character instead of a
+                    space.
+                  </>
+                ),
+              },
+              {
+                q: 'Is percent-encoding the same as Base64 encoding?',
+                a: (
+                  <>
+                    No — they serve completely different purposes. Percent-encoding converts individual
+                    characters to <C>%XX</C> hex sequences so they are safe inside a URL. Base64 converts
+                    arbitrary binary data into a printable ASCII string using a 64-character alphabet. If
+                    you need to embed a Base64 value in a URL, you should also percent-encode its{' '}
+                    <C>+</C>, <C>/</C>, and <C>=</C> characters (or use the Base64URL variant which
+                    replaces them with <C>-</C>, <C>_</C>, and no padding).
+                  </>
+                ),
+              },
+              {
+                q: 'Which characters are safe in a URL without encoding?',
+                a: (
+                  <>
+                    RFC 3986 defines <strong>unreserved characters</strong> that never need encoding:
+                    uppercase and lowercase letters (A–Z, a–z), digits (0–9), and the four symbols{' '}
+                    <C>-</C> <C>_</C> <C>.</C> <C>~</C>. Every other character — including spaces,{' '}
+                    <C>&</C>, <C>=</C>, <C>+</C>, <C>/</C>, <C>?</C>, <C>#</C>, <C>@</C>, and non-ASCII
+                    Unicode — must be percent-encoded when placed inside a URL component like a query
+                    parameter value or path segment.
+                  </>
+                ),
+              },
+              {
+                q: 'How do I decode a URL that has been double-encoded?',
+                a: (
+                  <>
+                    Double encoding occurs when a string is percent-encoded twice. The <C>%</C> character
+                    itself becomes <C>%25</C>, so a space that was encoded as <C>%20</C> becomes{' '}
+                    <C>%2520</C> after a second pass. Paste the double-encoded string into this tool — it
+                    detects double encoding automatically and decodes back to the original value. You can
+                    also use Decode mode manually and apply it twice to step through the layers.
+                  </>
+                ),
+              },
+            ]}
+          />
+        </SEOSection>
+
+        <SEOSection id="related" eyebrow="Related tools" heading="Tools You Might Also Need">
+          <RelatedTools
+            tools={[
+              {
+                href: '/base64-encoder',
+                label: 'Base64 Encoder',
+                desc: 'Encode or decode Base64 and Base64URL strings, useful when embedding binary data in URLs.',
+                icon: '📦',
+              },
+              {
+                href: '/jwt-decoder',
+                label: 'JWT Decoder',
+                desc: 'Decode JSON Web Tokens that appear in URL parameters, Authorization headers, or cookies.',
+                icon: '🔍',
+              },
+              {
+                href: '/hash-generator',
+                label: 'Hash Generator',
+                desc: 'Generate MD5, SHA-256, HMAC, and other hashes for API request signing and checksum verification.',
+                icon: '#️⃣',
+              },
+              {
+                href: '/token-comparator',
+                label: 'Token Comparator',
+                desc: 'Compare two encoded strings or tokens side-by-side to find differences quickly.',
+                icon: '🔀',
+              },
+            ]}
+          />
+        </SEOSection>
+      </ToolSEOContent>
+      <ToolPageFooterBand toolName="url_encoder" />
     </>
   );
 }
