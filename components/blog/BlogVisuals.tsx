@@ -306,7 +306,8 @@ export function ArchDiagram({ nodes: nodesProp, boxes, arrows: _arrows, layers, 
 // ── StatGrid ──────────────────────────────────────────────────────────────────
 // Animated stat highlight cards
 // Usage: <StatGrid stats={[{value:'99.9%', label:'Uptime', color:'emerald'}]} />
-export function StatGrid({ stats, title }: { stats: { value: string; label: string; desc?: string; color?: string }[]; title?: string }) {
+export function StatGrid({ stats: statsRaw, title }: { stats: { value: string; label: string; desc?: string; description?: string; color?: string }[]; title?: string }) {
+  const stats = statsRaw.map(s => ({ ...s, desc: s.desc ?? s.description }));
   const { ref, inView } = useInView();
   const COLORS: Record<string,string> = {
     emerald: 'text-emerald-600 bg-emerald-50 border-emerald-200',
