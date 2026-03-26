@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Lock, ChevronRight } from 'lucide-react';
-import Breadcrumb, { type BreadcrumbItem } from '@/components/Breadcrumb';
+import type { BreadcrumbItem } from '@/components/Breadcrumb';
 import FeedbackNewsletterSplit from '@/components/home/FeedbackNewsletterSplit';
 
 /** Feedback + newsletter + ad slot */
@@ -31,7 +31,7 @@ export function ToolPageFooterBand({
 }
 
 export type ToolPageShellProps = {
-  breadcrumbItems?: BreadcrumbItem[];
+  breadcrumbItems?: BreadcrumbItem[]; // kept for API compat, no longer rendered
   title: string;
   subtitle?: string;
   backHref?: string;
@@ -72,13 +72,6 @@ export default function ToolPageShell({
       {/* ── Header ─────────────────────────────────────────── */}
       <div className="border-b border-zinc-200 bg-gradient-to-b from-zinc-50/80 to-white">
         <div className="mx-auto w-full max-w-[min(100%,72rem)] px-4 sm:px-6 lg:px-8 py-6 sm:py-9">
-
-          {/* Breadcrumb */}
-          {breadcrumbItems && breadcrumbItems.length > 0 && (
-            <div className="mb-4">
-              <Breadcrumb items={breadcrumbItems} />
-            </div>
-          )}
 
           {/* Back button */}
           <Link
