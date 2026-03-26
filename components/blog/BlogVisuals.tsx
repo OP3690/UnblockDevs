@@ -233,14 +233,43 @@ export function CompareTable({ left, right, headers, rows, leftLabel, rightLabel
 // Box-and-arrow architecture diagram
 // Usage: <ArchDiagram nodes={[{id:'producer',label:'Producer',color:'blue',...}]} />
 // Also supports: <ArchDiagram boxes={[{label:'X',color:'blue'}]} arrows={[...]} />
-export function ArchDiagram({ nodes: nodesProp, boxes, arrows: _arrows, title, subtitle }: {
+export function ArchDiagram({ nodes: nodesProp, boxes, arrows: _arrows, layers, title, subtitle }: {
   nodes?: { id: string; label: string; sublabel?: string; color?: string; icon?: React.ReactNode }[];
   boxes?: { label: string; color?: string; sublabel?: string; icon?: React.ReactNode }[];
   arrows?: string[];
+  layers?: { name: string; components: string[]; color?: string }[];
   title?: string;
   subtitle?: string;
 }) {
   const COLOR_ALIAS: Record<string, string> = { red: 'rose', purple: 'violet', green: 'emerald', gray: 'zinc', grey: 'zinc', teal: 'sky', indigo: 'violet' };
+  const { ref, inView } = useInView();
+  const COLORS: Record<string,string> = {
+    blue: 'bg-blue-600 text-white', emerald: 'bg-emerald-600 text-white', violet: 'bg-violet-600 text-white',
+    amber: 'bg-amber-500 text-white', rose: 'bg-rose-600 text-white', zinc: 'bg-zinc-700 text-white',
+    sky: 'bg-sky-600 text-white', orange: 'bg-orange-600 text-white',
+  };
+  const LAYER_COLORS = ['bg-blue-600', 'bg-violet-600', 'bg-emerald-600', 'bg-amber-500', 'bg-sky-600', 'bg-rose-600'];
+  // ── Layers rendering ──
+  if (layers && layers.length > 0) {
+    return (
+      <div ref={ref} className="my-8 rounded-2xl border border-zinc-200 bg-zinc-50 p-6">
+        {title && <p className="mb-4 text-center text-[11px] font-semibold uppercase tracking-widest text-zinc-400">{title}</p>}
+        <div className="flex flex-col gap-2">
+          {layers.map((layer, i) => (
+            <div key={i} className={`flex items-center gap-3 rounded-xl p-3 transition-all duration-500 ${inView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{ transitionDelay: `${i * 100}ms` }}>
+              <div className={`shrink-0 rounded-lg px-3 py-2 text-center text-[12px] font-semibold text-white w-36 ${LAYER_COLORS[i % LAYER_COLORS.length]}`}>{layer.name}</div>
+              <div className="flex flex-wrap gap-1.5">
+                {layer.components.map((c, j) => (
+                  <span key={j} className="rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-[12px] text-zinc-700 shadow-sm">{c}</span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+  // ── Nodes / boxes rendering ──
   const raw = nodesProp ?? boxes ?? [];
   const nodes = raw.map((n, i) => ({
     id: (n as { id?: string }).id ?? String(i),
@@ -249,12 +278,6 @@ export function ArchDiagram({ nodes: nodesProp, boxes, arrows: _arrows, title, s
     color: COLOR_ALIAS[n.color ?? ''] ?? n.color,
     icon: n.icon,
   }));
-  const { ref, inView } = useInView();
-  const COLORS: Record<string,string> = {
-    blue: 'bg-blue-600 text-white', emerald: 'bg-emerald-600 text-white', violet: 'bg-violet-600 text-white',
-    amber: 'bg-amber-500 text-white', rose: 'bg-rose-600 text-white', zinc: 'bg-zinc-700 text-white',
-    sky: 'bg-sky-600 text-white', orange: 'bg-orange-600 text-white',
-  };
   return (
     <div ref={ref} className="my-8 rounded-2xl border border-zinc-200 bg-zinc-50 p-6">
       {title && <p className="mb-1 text-center text-[11px] font-semibold uppercase tracking-widest text-zinc-400">{title}</p>}
