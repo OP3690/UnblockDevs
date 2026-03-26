@@ -151,7 +151,7 @@ export default function HashGeneratorPage() {
         <SEOSection id="faq" eyebrow="FAQ" heading="Frequently Asked Questions">
           <FAQ items={[
             {
-              q: 'How do I verify a downloaded file's SHA-256 checksum?',
+              q: 'How do I verify a downloaded file\'s SHA-256 checksum?',
               a: 'Switch to File mode, drag your downloaded file in, select SHA-256. Compare the output against the checksum on the download page. Use Verify mode to paste the expected checksum and have the comparison done for you.',
             },
             {
