@@ -45,8 +45,10 @@ export function AlertBox({ type = 'info', title, children, filename: _filename }
 // ── FlowDiagram ───────────────────────────────────────────────────────────────
 // Horizontal animated flow with arrows
 // Usage: <FlowDiagram steps={[{label:'Step 1', desc:'...', color:'emerald'}]} />
-export function FlowDiagram({ steps, title }: { steps: { label: string; desc?: string; icon?: React.ReactNode; color?: string }[]; title?: string }) {
+export function FlowDiagram({ steps: stepsRaw, title }: { steps: { label: string; desc?: string; description?: string; icon?: React.ReactNode; color?: string }[]; title?: string }) {
+  const steps = stepsRaw.map(s => ({ ...s, desc: s.desc ?? s.description ?? '' }));
   const { ref, inView } = useInView();
+  const COLOR_ALIAS: Record<string,string> = { red: 'rose', purple: 'violet', green: 'emerald', gray: 'zinc', grey: 'zinc', teal: 'sky', indigo: 'violet' };
   const COLORS: Record<string, string> = {
     emerald: 'bg-emerald-100 border-emerald-300 text-emerald-800',
     blue: 'bg-blue-100 border-blue-300 text-blue-800',
@@ -62,7 +64,8 @@ export function FlowDiagram({ steps, title }: { steps: { label: string; desc?: s
       {title && <h3 className="text-base font-semibold text-zinc-700 mb-4 uppercase tracking-wide text-[11px]">{title}</h3>}
       <div className="flex flex-wrap items-center gap-2">
         {steps.map((step, i) => {
-          const c = COLORS[step.color ?? 'blue'];
+          const resolvedColor = COLOR_ALIAS[step.color ?? ''] ?? step.color ?? 'blue';
+          const c = COLORS[resolvedColor] ?? COLORS.blue;
           return (
             <div key={i} className="flex items-center gap-2">
               <div
