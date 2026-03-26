@@ -24,6 +24,8 @@ const SLOT_SIDEBAR =
 
 interface BlogLayoutWithSidebarAdsProps {
   children: React.ReactNode;
+  title?: string;
+  description?: string;
 }
 
 /**
