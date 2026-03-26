@@ -125,19 +125,50 @@ export function VerticalSteps({ steps: stepsRaw, title }: { steps: { title: stri
 }
 
 // ── CompareTable ──────────────────────────────────────────────────────────────
-// Supports two APIs:
-//   New: <CompareTable left={{title:'A', items:[...]}} right={{title:'B', items:[...]}} />
-//   Old: <CompareTable headers={['Col1','Col2',...]} rows={[['a','b'],['c','d']]} />
-export function CompareTable({ left, right, headers, rows, title }: {
+// Supports three APIs:
+//   A: <CompareTable left={{title:'A', items:[...]}} right={{title:'B', items:[...]}} />
+//   B: <CompareTable headers={['Col1','Col2',...]} rows={[['a','b'],['c','d']]} />
+//   C: <CompareTable leftLabel="X" rightLabel="Y" rows={[{label:'',left:'',right:''}]} />
+export function CompareTable({ left, right, headers, rows, leftLabel, rightLabel, title }: {
   left?: { title: string; color?: string; items: string[] };
   right?: { title: string; color?: string; items: string[] };
   headers?: string[];
-  rows?: string[][];
+  rows?: ({ label: string; left: string; right: string } | string[])[];
+  leftLabel?: string;
+  rightLabel?: string;
   title?: string;
 }) {
   const { ref, inView } = useInView();
-  // ── General table rendering (headers/rows API) ──
+  // ── API C: leftLabel/rightLabel + rows of {label, left, right} ──
+  if ((leftLabel || rightLabel) && rows && rows.length > 0) {
+    const objRows = rows as { label: string; left: string; right: string }[];
+    return (
+      <div ref={ref} className="my-8 overflow-x-auto">
+        {title && <h3 className="text-lg font-bold text-zinc-900 mb-4">{title}</h3>}
+        <table className={`w-full text-[13px] border-collapse rounded-xl overflow-hidden shadow-sm transition-all duration-500 ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+          <thead>
+            <tr>
+              <th className="bg-zinc-800 text-white px-4 py-2.5 text-left font-semibold text-[12px] w-1/4">Item</th>
+              <th className="bg-zinc-800 text-white px-4 py-2.5 text-left font-semibold text-[12px]">{leftLabel ?? 'Left'}</th>
+              <th className="bg-zinc-800 text-white px-4 py-2.5 text-left font-semibold text-[12px]">{rightLabel ?? 'Right'}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {objRows.map((row, ri) => (
+              <tr key={ri} className={ri % 2 === 0 ? 'bg-white' : 'bg-zinc-50'}>
+                <td className="border-b border-zinc-200 px-4 py-2.5 text-zinc-900 font-medium">{row.label}</td>
+                <td className="border-b border-zinc-200 px-4 py-2.5 text-zinc-700">{row.left}</td>
+                <td className="border-b border-zinc-200 px-4 py-2.5 text-zinc-700">{row.right}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+  // ── API B: headers array + rows as string[][] ──
   if (headers && rows) {
+    const strRows = rows as string[][];
     return (
       <div ref={ref} className="my-8 overflow-x-auto">
         {title && <h3 className="text-lg font-bold text-zinc-900 mb-4">{title}</h3>}
@@ -150,7 +181,7 @@ export function CompareTable({ left, right, headers, rows, title }: {
             </tr>
           </thead>
           <tbody>
-            {rows.map((row, ri) => (
+            {strRows.map((row, ri) => (
               <tr key={ri} className={ri % 2 === 0 ? 'bg-white' : 'bg-zinc-50'}>
                 {row.map((cell, ci) => (
                   <td key={ci} className="border-b border-zinc-200 px-4 py-2.5 text-zinc-700">{cell}</td>
@@ -162,7 +193,7 @@ export function CompareTable({ left, right, headers, rows, title }: {
       </div>
     );
   }
-  // ── Two-column left/right rendering ──
+  // ── API A: Two-column left/right rendering ──
   if (!left || !right) return null;
   const lCol = left.color ?? 'rose';
   const rCol = right.color ?? 'emerald';

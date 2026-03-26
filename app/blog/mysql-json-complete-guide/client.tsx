@@ -139,10 +139,7 @@ ALTER TABLE products ADD INDEX idx_tags ((CAST(tags AS CHAR(100) ARRAY)));
       </CodeBlock>
 
       <AlertBox type="tip" title="Use generated columns for frequently queried JSON fields">
-        If you always query by a specific JSON field (like metadata.brand), create a generated column:
-        ALTER TABLE products ADD COLUMN brand VARCHAR(100) GENERATED ALWAYS AS (metadata->>'$.brand') STORED;
-        CREATE INDEX idx_brand ON products(brand);
-        This gives you full index performance on that field without changing your JSON storage.
+        {`If you always query by a specific JSON field (like metadata.brand), create a generated column: ALTER TABLE products ADD COLUMN brand VARCHAR(100) GENERATED ALWAYS AS (metadata->>'$.brand') STORED; CREATE INDEX idx_brand ON products(brand); This gives you full index performance on that field without changing your JSON storage.`}
       </AlertBox>
 
       <FAQAccordion items={[
