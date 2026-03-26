@@ -8,7 +8,6 @@ import toast from 'react-hot-toast';
 import { PersonalizationManager, ToolTab } from '@/lib/personalization';
 import HomePrivacyFirstSections from '@/components/home/HomePrivacyFirstSections';
 import { trackToolUsed, trackCopy, trackCtaClick } from '@/lib/analytics';
-import JsonBeautifier from '@/components/JsonBeautifier';
 // Below-fold / non-critical: lazy load to reduce initial JS (mobile LCP)
 const JsonInput = dynamic(() => import('@/components/JsonInput'), {
   ssr: false,
@@ -22,7 +21,6 @@ const toolLoading = () => (
   <div className="w-full bg-gray-50 border border-gray-200 rounded-lg animate-pulse" style={{ height: '300px' }} aria-hidden />
 );
 
-/* JsonBeautifier: static import avoids broken webpack async chunks (factory undefined) with next/dynamic + dev/HMR */
 const JsonFixer = dynamic(() => import('@/components/tools/JsonFixer'), { ssr: false, loading: toolLoading });
 
 // Lazy load tool components for better performance
@@ -218,7 +216,7 @@ const POPULAR_BLOG_LINKS: { href: string; label: string }[] = [
 const INITIAL_BLOG_LINKS = 20;
 
 function HomeClient({ hero }: { hero: ReactNode }) {
-  const [activeTab, setActiveTab] = useState<ToolTab>('beautifier');
+  const [activeTab, setActiveTab] = useState<ToolTab>('converter');
   const [rows, setRows] = useState<FlattenedRow[]>([]);
   const [columns, setColumns] = useState<Column[]>([]);
   const [sections, setSections] = useState<Section[]>([]);
@@ -254,18 +252,11 @@ function HomeClient({ hero }: { hero: ReactNode }) {
     toast.success('Downloaded sample.json');
   }, []);
 
-  // Handle tab change — no promotional toasts; scroll to in-page tool when switching to Beautifier
+  // Handle tab change — tracks tool usage and updates active tab
   const handleTabChange = useCallback((tab: ToolTab) => {
     if (tab !== activeTab) {
       setActiveTab(tab);
       trackToolUsed('home', { tab });
-      if (tab === 'beautifier' && typeof document !== 'undefined') {
-        requestAnimationFrame(() => {
-          document.getElementById('active-tool')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-      }
-    } else {
-      setActiveTab(tab);
     }
   }, [activeTab]);
 
@@ -275,12 +266,16 @@ function HomeClient({ hero }: { hero: ReactNode }) {
     if (typeof window === 'undefined') return;
     setMounted(true);
     const urlParams = new URLSearchParams(window.location.search);
-      const tabParam = urlParams.get('tab');
-      if (tabParam === 'converter') {
+    const tabParam = urlParams.get('tab');
+    if (tabParam === 'converter') {
       window.location.replace('/json-to-excel');
       return;
     }
-      if (tabParam && ['beautifier', 'fixer', 'comparator', 'jsoncompare', 'schema', 'logs', 'payload', 'curl', 'mock', 'testdata', 'config', 'sql', 'builder', 'promptchunk', 'schemamasker', 'jsonpromptshield', 'tokencompare', 'timezone', 'hartocurl', 'curlfailure'].includes(tabParam)) {
+    if (tabParam === 'beautifier') {
+      window.location.replace('/json-beautifier');
+      return;
+    }
+    if (tabParam && ['fixer', 'comparator', 'jsoncompare', 'schema', 'logs', 'payload', 'curl', 'mock', 'testdata', 'config', 'sql', 'builder', 'promptchunk', 'schemamasker', 'jsonpromptshield', 'tokencompare', 'timezone', 'hartocurl', 'curlfailure'].includes(tabParam)) {
       setActiveTab(tabParam as ToolTab);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -476,39 +471,18 @@ function HomeClient({ hero }: { hero: ReactNode }) {
 
       <HomePrivacyFirstSections
         toolPageUrls={toolPageUrls}
-        onBeautifierClick={() => handleTabChange('beautifier')}
       />
 
-      {/* Ad strip — mobile-friendly heights for 320x50 / 300x250; collapsed when Beautifier active */}
-      <div key={activeTab} className={`ud-content py-0 border-b border-zinc-200/80 bg-white/60 ${activeTab === 'beautifier' ? 'min-h-0 overflow-hidden' : ''}`}>
-        <div id="ezoic-pub-ad-placeholder-101" role="region" aria-label="Advertisement" className={activeTab === 'beautifier' ? 'min-h-0 h-0 overflow-hidden' : 'min-h-[50px] sm:min-h-[50px] w-full flex items-center justify-center'} style={activeTab !== 'beautifier' ? { contain: 'layout' } : undefined} />
-        <div id="ezoic-pub-ad-placeholder-111" role="region" aria-label="Advertisement" className={activeTab === 'beautifier' ? 'min-h-0 h-0 overflow-hidden' : 'min-h-[250px] sm:min-h-[90px] w-full flex items-center justify-center'} style={activeTab !== 'beautifier' ? { contain: 'layout' } : undefined} />
+      {/* Ad strip */}
+      <div key={activeTab} className="ud-content py-0 border-b border-zinc-200/80 bg-white/60">
+        <div id="ezoic-pub-ad-placeholder-101" role="region" aria-label="Advertisement" className="min-h-[50px] sm:min-h-[50px] w-full flex items-center justify-center" style={{ contain: 'layout' }} />
+        <div id="ezoic-pub-ad-placeholder-111" role="region" aria-label="Advertisement" className="min-h-[250px] sm:min-h-[90px] w-full flex items-center justify-center" style={{ contain: 'layout' }} />
       </div>
 
       {/* Main Content - min-height to reduce CLS; no opacity animation to avoid CLS from paint */}
       {/* No flex-1 here — flex-1 made <main> eat all remaining viewport height and left a huge white gap above the feedback band */}
-      <main id="main-content" className={`w-full min-h-[320px] overflow-x-hidden ${activeTab === 'beautifier' ? 'pt-6 sm:pt-8 pb-4 sm:pb-6' : 'py-6 sm:py-10 lg:py-12'}`}>
+      <main id="main-content" className="w-full min-h-[320px] overflow-x-hidden py-6 sm:py-10 lg:py-12">
         <div className="ud-content">
-        {activeTab === 'beautifier' && (
-          <div className="w-full scroll-mt-28 sm:scroll-mt-32" id="active-tool">
-            <div className="ud-card-redesign overflow-hidden shadow-md">
-              <div className="h-1 w-full bg-gradient-to-r from-emerald-600 to-emerald-500" aria-hidden />
-              <div className="p-6 sm:p-10 lg:p-12">
-                <div className="mb-8 sm:mb-10 pb-6 sm:pb-8 border-b border-zinc-100">
-                  <div className="flex flex-wrap items-center gap-2 mb-3">
-                    <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-900">Live on this page</span>
-                    <span className="rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 text-xs font-medium text-zinc-600">100% client-side</span>
-                  </div>
-                  <h2 className="text-2xl sm:text-3xl font-semibold text-zinc-900 tracking-tight">JSON Beautifier</h2>
-                  <p className="mt-2 text-sm sm:text-base text-zinc-600 max-w-2xl leading-relaxed">
-                    Paste or type JSON — format, minify, and explore the tree. Everything stays in your browser.
-                  </p>
-                </div>
-                <JsonBeautifier />
-              </div>
-            </div>
-          </div>
-        )}
         {activeTab === 'converter' && (
           rows.length === 0 ? (
             <div className="max-w-4xl mx-auto space-y-8 sm:space-y-10">
@@ -710,20 +684,7 @@ function HomeClient({ hero }: { hero: ReactNode }) {
         </div>
       </main>
 
-      {/* Mid-page ad — Beautifier tab only */}
-      {activeTab === 'beautifier' && (
-        <div className="ud-content border-t border-zinc-200/80 py-2 sm:py-2">
-          <div
-            id="ezoic-pub-ad-placeholder-102"
-            role="region"
-            aria-label="Advertisement"
-            className="flex min-h-0 w-full items-center justify-center sm:min-h-[50px]"
-            style={{ contain: 'layout' }}
-          />
-        </div>
-      )}
-
-      <FeedbackNewsletterSplit layout={activeTab === 'beautifier' ? 'split' : 'feedback-only'} />
+      <FeedbackNewsletterSplit layout="feedback-only" />
 
       {/* Ezoic Ad Placement - Before Footer (103) - mobile leaderboard / desktop banner */}
       <div id="ezoic-pub-ad-placeholder-103" role="region" aria-label="Advertisement" className="min-h-[50px] sm:min-h-[90px] w-full" style={{ contain: 'layout' }} />
