@@ -20,7 +20,7 @@ export function useInView(threshold = 0.15) {
 // ── AlertBox ─────────────────────────────────────────────────────────────────
 // Usage: <AlertBox type="info" title="Key point">...</AlertBox>
 // Types: "info" | "warning" | "success" | "error" | "tip"
-export function AlertBox({ type = 'info', title, children }: { type?: 'info'|'warning'|'success'|'error'|'tip'; title?: string; children: React.ReactNode }) {
+export function AlertBox({ type = 'info', title, children, filename: _filename }: { type?: 'info'|'warning'|'success'|'error'|'tip'; title?: string; children: React.ReactNode; filename?: string }) {
   const styles = {
     info:    { bg: 'bg-blue-50',   border: 'border-blue-400',   icon: <Info className="h-5 w-5 text-blue-500" />,    text: 'text-blue-900',   title: 'text-blue-800' },
     warning: { bg: 'bg-amber-50',  border: 'border-amber-400',  icon: <AlertTriangle className="h-5 w-5 text-amber-500" />, text: 'text-amber-900',  title: 'text-amber-800' },
@@ -228,12 +228,24 @@ export function CompareTable({ left, right, headers, rows, leftLabel, rightLabel
 
 // ── ArchDiagram ───────────────────────────────────────────────────────────────
 // Box-and-arrow architecture diagram
-// Usage: <ArchDiagram nodes={[{id:'producer',label:'Producer',color:'blue',...}]} edges={[{from:'producer',to:'kafka'}]} />
-export function ArchDiagram({ nodes, title, subtitle }: {
-  nodes: { id: string; label: string; sublabel?: string; color?: string; icon?: React.ReactNode }[];
+// Usage: <ArchDiagram nodes={[{id:'producer',label:'Producer',color:'blue',...}]} />
+// Also supports: <ArchDiagram boxes={[{label:'X',color:'blue'}]} arrows={[...]} />
+export function ArchDiagram({ nodes: nodesProp, boxes, arrows: _arrows, title, subtitle }: {
+  nodes?: { id: string; label: string; sublabel?: string; color?: string; icon?: React.ReactNode }[];
+  boxes?: { label: string; color?: string; sublabel?: string; icon?: React.ReactNode }[];
+  arrows?: string[];
   title?: string;
   subtitle?: string;
 }) {
+  const COLOR_ALIAS: Record<string, string> = { red: 'rose', purple: 'violet', green: 'emerald', gray: 'zinc', grey: 'zinc', teal: 'sky', indigo: 'violet' };
+  const raw = nodesProp ?? boxes ?? [];
+  const nodes = raw.map((n, i) => ({
+    id: (n as { id?: string }).id ?? String(i),
+    label: n.label,
+    sublabel: n.sublabel,
+    color: COLOR_ALIAS[n.color ?? ''] ?? n.color,
+    icon: n.icon,
+  }));
   const { ref, inView } = useInView();
   const COLORS: Record<string,string> = {
     blue: 'bg-blue-600 text-white', emerald: 'bg-emerald-600 text-white', violet: 'bg-violet-600 text-white',
@@ -433,7 +445,7 @@ export function QuickFact({ children, color = 'violet', label = 'Quick fact' }: 
 // ── ErrorFix ──────────────────────────────────────────────────────────────────
 // Side-by-side bad/good code comparison
 // Usage: <ErrorFix bad="bad code" good="good code" errorMsg="SyntaxError: ..." />
-export function ErrorFix({ bad, good, errorMsg, title }: { bad: string; good: string; errorMsg?: string; title?: string }) {
+export function ErrorFix({ bad, good, errorMsg, title, badLabel, goodLabel }: { bad: string; good: string; errorMsg?: string; title?: string; badLabel?: string; goodLabel?: string; [key: string]: unknown }) {
   return (
     <div className="my-8">
       {title && <h4 className="mb-3 font-semibold text-zinc-900">{title}</h4>}
@@ -443,8 +455,14 @@ export function ErrorFix({ bad, good, errorMsg, title }: { bad: string; good: st
         </div>
       )}
       <div className="grid gap-3 sm:grid-cols-2">
-        <CodeBlock bad>{bad}</CodeBlock>
-        <CodeBlock good>{good}</CodeBlock>
+        <div>
+          {badLabel && <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-rose-600">{badLabel}</p>}
+          <CodeBlock bad>{bad}</CodeBlock>
+        </div>
+        <div>
+          {goodLabel && <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-600">{goodLabel}</p>}
+          <CodeBlock good>{good}</CodeBlock>
+        </div>
       </div>
     </div>
   );
@@ -453,7 +471,7 @@ export function ErrorFix({ bad, good, errorMsg, title }: { bad: string; good: st
 // ── SectionHeader ─────────────────────────────────────────────────────────────
 // Styled H2 section header with number badge
 // Usage: <SectionHeader n={1} title="What is Kafka?" icon={<Database />} color="red" />
-export function SectionHeader({ n, number: num, title, icon, color = 'blue', subtitle }: { n?: number; number?: number; title: string; icon?: React.ReactNode; color?: string; subtitle?: string }) {
+export function SectionHeader({ n, number: num, title, icon, color = 'blue', subtitle, className: _className }: { n?: number; number?: number; title: string; icon?: React.ReactNode; color?: string; subtitle?: string; className?: string }) {
   n = n ?? num;
   const COLORS: Record<string,string> = {
     blue: 'bg-blue-100 text-blue-700', emerald: 'bg-emerald-100 text-emerald-700',
@@ -480,7 +498,9 @@ export function SectionHeader({ n, number: num, title, icon, color = 'blue', sub
 // ── ToolCTA ───────────────────────────────────────────────────────────────────
 // Call-to-action box linking to a tool
 // Usage: <ToolCTA href="/json-validator" label="Try JSON Validator" desc="Validate your JSON in seconds." />
-export function ToolCTA({ href, label, desc, color = 'emerald' }: { href: string; label: string; desc?: string; color?: string }) {
+export function ToolCTA({ href, label: labelProp, title, desc: descProp, description, buttonText, color = 'emerald' }: { href: string; label?: string; title?: string; desc?: string; description?: string; buttonText?: string; color?: string }) {
+  const label = labelProp ?? title ?? 'Try it';
+  const desc = descProp ?? description;
   const COLORS: Record<string,string> = {
     emerald: 'bg-emerald-600 hover:bg-emerald-700', blue: 'bg-blue-600 hover:bg-blue-700',
     violet: 'bg-violet-600 hover:bg-violet-700', amber: 'bg-amber-500 hover:bg-amber-600',
@@ -492,7 +512,7 @@ export function ToolCTA({ href, label, desc, color = 'emerald' }: { href: string
         href={href}
         className={`inline-flex items-center gap-2 rounded-xl px-6 py-3 text-[14px] font-semibold text-white transition-colors ${COLORS[color] ?? COLORS.emerald}`}
       >
-        {label} <ArrowRight className="h-4 w-4" />
+        {buttonText ?? label} <ArrowRight className="h-4 w-4" />
       </a>
     </div>
   );
