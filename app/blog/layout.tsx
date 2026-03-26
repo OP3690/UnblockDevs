@@ -54,7 +54,7 @@ export default function BlogLayout({
           >
             <AdUnit slot={SLOT_LEFT} format="auto" minHeight={250} className="rounded-lg overflow-hidden w-full" />
           </aside>
-          <main className="flex-1 min-w-0 max-w-4xl lg:mx-0 mx-auto overflow-x-hidden">
+          <main className="flex-1 min-w-0 max-w-none lg:mx-0 mx-auto overflow-x-hidden">
             {/* Section 2: Above article (in-content top) */}
             <div
               key={`${key}-in-top`}
