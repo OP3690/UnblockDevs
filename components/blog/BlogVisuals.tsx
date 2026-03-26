@@ -548,7 +548,8 @@ export function ToolCTA({ href, label: labelProp, title, desc: descProp, descrip
 // ── FAQAccordion ──────────────────────────────────────────────────────────────
 // Interactive expandable FAQ with smooth animation
 // Usage: <FAQAccordion items={[{q:'...', a:'...'}]} />
-export function FAQAccordion({ items, title = 'Frequently Asked Questions' }: { items: { q?: string; a?: string; question?: string; answer?: string }[]; title?: string }) {
+export function FAQAccordion({ items: itemsProp, faqs, title = 'Frequently Asked Questions' }: { items?: { q?: string; a?: string; question?: string; answer?: string }[]; faqs?: { q?: string; a?: string; question?: string; answer?: string }[]; title?: string }) {
+  const items = itemsProp ?? faqs ?? [];
   const [open, setOpen] = useState<number | null>(null);
   return (
     <div className="my-10">
