@@ -70,8 +70,11 @@ export default function ToolPageShell({
   return (
     <div className="w-full">
       {/* ── Header ─────────────────────────────────────────── */}
-      <div className="border-b border-zinc-200 bg-gradient-to-b from-zinc-50/80 to-white">
-        <div className="mx-auto w-full max-w-[min(100%,72rem)] px-4 sm:px-6 lg:px-8 py-6 sm:py-9">
+      <div className="border-b border-zinc-200 bg-gradient-to-b from-zinc-50 to-white">
+        {/* Top accent gradient bar */}
+        <div className="h-[3px] w-full bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-400" aria-hidden />
+
+        <div className="mx-auto w-full max-w-[min(100%,72rem)] px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
 
           {/* Back button */}
           <Link
@@ -86,7 +89,7 @@ export default function ToolPageShell({
           {/* Title row */}
           <div className="flex items-start gap-4">
             {icon && (
-              <div className="hidden shrink-0 sm:flex h-14 w-14 items-center justify-center rounded-2xl border border-zinc-200 bg-white text-3xl shadow-sm">
+              <div className="hidden shrink-0 sm:flex h-14 w-14 items-center justify-center rounded-2xl border border-zinc-100 bg-gradient-to-br from-white to-zinc-50 text-3xl shadow-md">
                 {icon}
               </div>
             )}
@@ -104,7 +107,7 @@ export default function ToolPageShell({
               <div className="mt-4 flex flex-wrap items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[11.5px] font-semibold text-emerald-800">
                   <Lock className="h-3 w-3" aria-hidden />
-                  Data never leaves your browser
+                  100% in-browser — nothing sent to servers
                 </span>
                 {features.map((f) => (
                   <span
