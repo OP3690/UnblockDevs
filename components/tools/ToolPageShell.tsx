@@ -123,7 +123,7 @@ export default function ToolPageShell({
 
       {/* ── Tool card ─────────────────────────────────────── */}
       {tool != null && (
-        <div className="mx-auto w-full max-w-[min(100%,72rem)] px-4 sm:px-6 lg:px-8 py-5 sm:py-7">
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-5 sm:py-7">
           {embedTool ? (
             <div id="tool" className="scroll-mt-24">
               {tool}
