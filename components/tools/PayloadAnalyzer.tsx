@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { BarChart3, AlertCircle, TrendingDown, ExternalLink } from 'lucide-react';
+import { trackCtaClick, trackCopy } from '@/lib/analytics';
 import toast from 'react-hot-toast';
 import { validateJson } from '@/lib/jsonParser';
 import Link from 'next/link';
@@ -48,6 +49,7 @@ export default function PayloadAnalyzer() {
   };
 
   const analyzePayload = () => {
+    trackCtaClick('payload_analyzer', 'analyze');
     const validation = validateJson(jsonText);
     if (!validation.valid) {
       toast.error('Invalid JSON format');

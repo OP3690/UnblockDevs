@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useMemo } from 'react';
 import { Upload, FileText, Database, Calculator, BarChart3, Download, X, CheckCircle, AlertTriangle, Plus, Trash2, Filter, Calendar, GripVertical, Hash, Calendar as CalendarIcon, Code, Eye, ChevronRight } from 'lucide-react';
+import { trackCtaClick, trackCopy } from '@/lib/analytics';
 import toast from 'react-hot-toast';
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
@@ -815,6 +816,7 @@ export default function DataInsights() {
 
   // Export to Excel
   const handleExport = useCallback(() => {
+    trackCtaClick('data_insights', 'export');
     const workbook = XLSX.utils.book_new();
 
     // Sheet 1: Raw Data
@@ -2138,7 +2140,7 @@ export default function DataInsights() {
                   Dashboard
                 </button>
                 <button
-                  onClick={() => setActiveStep('export')}
+                  onClick={() => { trackCtaClick('data_insights', 'export'); setActiveStep('export'); }}
                   className="px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all shadow-md hover:shadow-lg flex items-center gap-2"
                 >
                   <Download className="w-5 h-5" />

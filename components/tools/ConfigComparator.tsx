@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import { Settings, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { validateJson } from '@/lib/jsonParser';
+import { trackCtaClick } from '@/lib/analytics';
 
 interface DiffItem {
   key: string;
@@ -47,6 +48,7 @@ export default function ConfigComparator() {
   };
 
   const compareConfigs = () => {
+    trackCtaClick('config_comparator', 'compare');
     try {
       const validation1 = validateJson(config1);
       const validation2 = validateJson(config2);
@@ -136,7 +138,7 @@ export default function ConfigComparator() {
 
         <div className="mb-4 flex items-center gap-2">
           <button
-            onClick={() => setMaskSecrets(!maskSecrets)}
+            onClick={() => { trackCtaClick('config_comparator', 'toggle_mask_secrets'); setMaskSecrets(!maskSecrets); }}
             className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
           >
             {maskSecrets ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}

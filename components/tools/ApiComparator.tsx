@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import { GitCompare, Plus, X, AlertCircle, CheckCircle, Minus, Search, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { validateJson } from '@/lib/jsonParser';
+import { trackCtaClick } from '@/lib/analytics';
 import Link from 'next/link';
 
 interface DiffResult {
@@ -59,6 +60,7 @@ export default function ApiComparator() {
   };
 
   const compareJsons = () => {
+    trackCtaClick('api_comparator', 'compare');
     try {
       const validation1 = validateJson(json1);
       const validation2 = validateJson(json2);

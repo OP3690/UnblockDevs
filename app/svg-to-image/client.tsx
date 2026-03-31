@@ -18,6 +18,7 @@ import {
   Lock,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCtaClick } from '@/lib/analytics';
 
 const SAMPLE_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
   <defs>
@@ -354,6 +355,7 @@ export default function SvgToImageClient() {
   );
 
   const handleExportPng = useCallback(() => {
+    trackCtaClick('svg_to_image', 'export', { format: 'png' });
     exportToCanvas('image/png')
       .then((canvas) => {
         downloadBlob(canvas.toDataURL('image/png'), 'image.png');
@@ -366,6 +368,7 @@ export default function SvgToImageClient() {
   }, [exportToCanvas]);
 
   const handleExportJpeg = useCallback(() => {
+    trackCtaClick('svg_to_image', 'export', { format: 'jpeg' });
     exportToCanvas('image/jpeg', jpegQuality)
       .then((canvas) => {
         downloadBlob(canvas.toDataURL('image/jpeg', jpegQuality), 'image.jpg');
@@ -420,7 +423,7 @@ export default function SvgToImageClient() {
                 <div className="flex gap-2">
                   <button
                     type="button"
-                    onClick={() => setSvgInput(SAMPLE_SVG)}
+                    onClick={() => { trackCtaClick('svg_to_image', 'load_sample'); setSvgInput(SAMPLE_SVG); }}
                     className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-400"
                   >
                     Sample

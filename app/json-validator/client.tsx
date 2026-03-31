@@ -3,6 +3,7 @@
 import ToolPageShell from '@/components/tools/ToolPageShell';
 import type { BreadcrumbItem } from '@/components/Breadcrumb';
 import { useState, useCallback } from 'react';
+import { trackCtaClick, trackCopy } from '@/lib/analytics';
 import { CheckCircle, AlertTriangle, Clipboard, ClipboardCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -39,6 +40,7 @@ function JsonValidatorTool() {
 
   const handleCopy = useCallback(() => {
     if (!input) return;
+    trackCopy('json_validator');
     navigator.clipboard.writeText(input).then(
       () => {
         setCopied(true);
@@ -50,10 +52,12 @@ function JsonValidatorTool() {
   }, [input]);
 
   const handleClear = useCallback(() => {
+    trackCtaClick('json_validator', 'clear');
     setInput('');
   }, []);
 
   const handlePaste = useCallback(async () => {
+    trackCtaClick('json_validator', 'paste_clipboard');
     try {
       const text = await navigator.clipboard.readText();
       setInput(text);
