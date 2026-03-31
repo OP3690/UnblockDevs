@@ -22,6 +22,8 @@ const nextConfig = {
         permanent: true,
       },
       // /curl-to-python is now a real page (dedicated SEO for "convert curl to python")
+      // Fix 404 tool URLs
+      { source: '/json-builder', destination: '/json-beautifier', permanent: true },
       { source: '/json-masking', destination: '/json-prompt-shield', permanent: true },
       { source: '/sql-schema-masking', destination: '/ai-schema-masker', permanent: true },
       { source: '/convert-list-to-sql-in', destination: '/sql-in-generator', permanent: true },
