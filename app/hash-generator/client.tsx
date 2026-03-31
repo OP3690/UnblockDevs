@@ -20,7 +20,7 @@ import {
   ScanSearch,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { trackCopy } from '@/lib/analytics';
+import { trackCopy, trackCtaClick } from '@/lib/analytics';
 import ToolPageShell from '@/components/tools/ToolPageShell';
 import type { BreadcrumbItem } from '@/components/Breadcrumb';
 import {
@@ -207,6 +207,7 @@ export default function HashGeneratorClient() {
   }, [file, activeTab, runFileHash]);
 
   const generatePasswordHash = async () => {
+    trackCtaClick('hash_generator', 'generate_hash');
     if (!password) {
       toast.error('Enter a password');
       return;
@@ -424,7 +425,7 @@ export default function HashGeneratorClient() {
               <label className="text-sm font-semibold text-gray-800">Input — live hashing as you type</label>
               <button
                 type="button"
-                onClick={() => setInput('The quick brown fox jumps over the lazy dog')}
+                onClick={() => { trackCtaClick('hash_generator', 'try_example', { tab: 'hash_text' }); setInput('The quick brown fox jumps over the lazy dog'); }}
                 className="inline-flex items-center gap-1.5 rounded-lg border border-primary-200 bg-primary-50 px-3 py-1.5 text-xs font-medium text-primary-700 hover:bg-primary-100 transition-colors"
               >
                 Try Example
@@ -531,6 +532,7 @@ export default function HashGeneratorClient() {
               <button
                 type="button"
                 onClick={() => {
+                  trackCtaClick('hash_generator', 'try_example', { tab: 'verify' });
                   setInput('hello');
                   setVerifyAlg('sha256');
                   setVerifyExpected('2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824');
@@ -611,7 +613,7 @@ export default function HashGeneratorClient() {
               <label className="text-sm font-medium text-gray-700">Password</label>
               <button
                 type="button"
-                onClick={() => setPassword('demoPassword123')}
+                onClick={() => { trackCtaClick('hash_generator', 'try_example', { tab: 'password' }); setPassword('demoPassword123'); }}
                 className="inline-flex items-center gap-1.5 rounded-lg border border-primary-200 bg-primary-50 px-3 py-1.5 text-xs font-medium text-primary-700 hover:bg-primary-100 transition-colors"
               >
                 Try Example
@@ -689,6 +691,7 @@ export default function HashGeneratorClient() {
             <button
               type="button"
               onClick={() => {
+                trackCtaClick('hash_generator', 'try_example', { tab: 'hmac' });
                 setHmacKey('secret');
                 setInput('message');
                 setHmacAlg('sha256');
@@ -728,7 +731,7 @@ export default function HashGeneratorClient() {
           </div>
                 <button
                   type="button"
-            onClick={() => setHmacOutput(hmacKey && input ? hmacHash(hmacAlg, hmacKey, input, encoding) : '')}
+            onClick={() => { trackCtaClick('hash_generator', 'generate_hmac'); setHmacOutput(hmacKey && input ? hmacHash(hmacAlg, hmacKey, input, encoding) : ''); }}
             className="px-4 py-2 rounded-lg bg-primary-600 text-white font-medium hover:bg-primary-700"
                 >
             Generate HMAC
@@ -754,7 +757,7 @@ export default function HashGeneratorClient() {
             <div className="flex flex-wrap items-center gap-2 mb-2">
               <label className="text-sm">Bytes:</label>
               <input type="number" min={8} max={64} value={saltBytes} onChange={(e) => setSaltBytes(Number(e.target.value))} className="w-16 rounded border border-gray-300 px-2 py-1 text-sm" />
-              <button type="button" onClick={() => setGeneratedSalt(generateSalt(saltBytes))} className="px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-sm font-medium">
+              <button type="button" onClick={() => { trackCtaClick('hash_generator', 'generate_salt'); setGeneratedSalt(generateSalt(saltBytes)); }} className="px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-sm font-medium">
                 Generate
             </button>
           </div>

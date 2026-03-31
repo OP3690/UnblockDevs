@@ -18,7 +18,7 @@ import {
   Code,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { trackCopy } from '@/lib/analytics';
+import { trackCopy, trackCtaClick } from '@/lib/analytics';
 import ToolPageShell from '@/components/tools/ToolPageShell';
 import type { BreadcrumbItem } from '@/components/Breadcrumb';
 import {
@@ -156,6 +156,7 @@ export default function JWTDecoderClient() {
   const canVerifyHMAC = ['HS256', 'HS384', 'HS512'].includes(alg.toUpperCase());
 
   const handleVerify = async () => {
+    trackCtaClick('jwt_decoder', 'verify');
     if (!parsed || !verifySecret.trim()) {
       toast.error('Enter a secret to verify');
       return;
@@ -270,6 +271,7 @@ export default function JWTDecoderClient() {
                 <button
                   type="button"
                   onClick={() => {
+                    trackCtaClick('jwt_decoder', 'try_sample');
                     setToken(SAMPLE_JWT);
                     setError(null);
                     setVerifyResult(null);

@@ -13,7 +13,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { trackCopy } from '@/lib/analytics';
+import { trackCopy, trackCtaClick } from '@/lib/analytics';
 import {
   type EncodeMode,
   type EncodingStandard,
@@ -155,6 +155,7 @@ export default function UrlEncoderClient() {
   };
 
   const runBulk = () => {
+    trackCtaClick('url_encoder', 'process_all');
     const lines = bulkInput.split('\n').map((l) => l.trim()).filter(Boolean);
     if (mode === 'encode') {
       setBulkOutput(lines.map((l) => encodeByStandard(l, standard)));
@@ -216,7 +217,7 @@ export default function UrlEncoderClient() {
                 <button
                   key={m}
                   type="button"
-                  onClick={() => setMode(m)}
+                  onClick={() => { setMode(m); if (m === 'encode') trackCtaClick('url_encoder', 'encode'); else if (m === 'decode') trackCtaClick('url_encoder', 'decode'); }}
                   className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${
                     mode === m ? 'bg-primary-600 text-white shadow-md shadow-primary-200/50' : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-800'
                   }`}
@@ -242,7 +243,7 @@ export default function UrlEncoderClient() {
               <div className="flex gap-2">
                 <button
                   type="button"
-                  onClick={() => { setInput(SAMPLE_URL); setBulkMode(false); }}
+                  onClick={() => { trackCtaClick('url_encoder', 'try_example'); setInput(SAMPLE_URL); setBulkMode(false); }}
                   className="inline-flex items-center gap-1.5 rounded-lg border border-primary-200 bg-primary-50 px-3 py-1.5 text-xs font-medium text-primary-700 hover:bg-primary-100 transition-colors"
                 >
                   Try Example

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Code, Copy, Download, ExternalLink, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { trackCopy } from '@/lib/analytics';
+import { trackCopy, trackCtaClick } from '@/lib/analytics';
 import FAQSchema from '@/components/FAQSchema';
 import ToolPageShell from '@/components/tools/ToolPageShell';
 
@@ -15,6 +15,7 @@ export default function JsonStringifyOnlineClient() {
   const [error, setError] = useState('');
 
   const handleStringify = () => {
+    trackCtaClick('json_stringify_online', 'stringify');
     setError('');
     try {
       // Try to parse as JavaScript object/array
@@ -163,6 +164,7 @@ export default function JsonStringifyOnlineClient() {
               <button
                 key={idx}
                 onClick={() => {
+                  trackCtaClick('json_stringify_online', 'try_example');
                   setInput(example.input);
                   setError('');
                 }}

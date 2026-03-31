@@ -209,6 +209,7 @@ export default function SmartJsonDiff() {
       : null;
 
   const copySummary = useCallback(() => {
+    trackCopy('smart_json_diff');
     if (!result) return;
     const lines = [
       'Semantic Diff Report',

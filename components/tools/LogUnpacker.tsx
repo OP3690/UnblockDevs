@@ -36,6 +36,7 @@ export default function LogUnpacker() {
   const [copiedWhich, setCopiedWhich] = useState<'output' | 'aisafe' | null>(null);
 
   const run = useCallback(() => {
+    trackCtaClick('log_unpacker', 'unpack');
     setError(null);
     setOutput(null);
     setLastData(null);
@@ -67,6 +68,7 @@ export default function LogUnpacker() {
   }, [input, maskJwtPii, annotationMode]);
 
   const copyAiSafe = useCallback(() => {
+    trackCopy('log_unpacker');
     if (lastData == null) {
       toast.error('Run Unpack first.');
       return;

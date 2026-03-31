@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ShieldCheck, Cpu, RefreshCw, Clipboard, Download, Upload, Shield, Plus, Trash2, FileCode, Lock, Award } from 'lucide-react';
-import { trackCopy } from '@/lib/analytics';
+import { trackCopy, trackCtaClick } from '@/lib/analytics';
 
 type TableSchema = { id: string; name: string; columns: string[] };
 
@@ -222,6 +222,7 @@ export default function AiSchemaMaskerClient() {
   };
 
   const handleMask = () => {
+    trackCtaClick('ai_schema_masker', 'mask');
     if (!input.trim() || !workerRef.current) return;
     setProcessing(true);
     setProgress(5);
@@ -240,6 +241,7 @@ export default function AiSchemaMaskerClient() {
   };
 
   const handleRestoreMask = () => {
+    trackCtaClick('ai_schema_masker', 'restore', { tab: 'sql' });
     if (!restoredFromMask.trim() || !mappingFromMask || !workerRef.current) return;
     setError(null);
     setProcessing(true);
@@ -253,6 +255,7 @@ export default function AiSchemaMaskerClient() {
   };
 
   const handleRestorePrompt = () => {
+    trackCtaClick('ai_schema_masker', 'restore', { tab: 'prompt' });
     if (!restoredFromPrompt.trim() || !mappingFromPrompt || !workerRef.current) return;
     setError(null);
     setProcessing(true);
@@ -286,6 +289,7 @@ export default function AiSchemaMaskerClient() {
   };
 
   const handleGeneratePrompt = () => {
+    trackCtaClick('ai_schema_masker', 'generate_prompt');
     if (!workerRef.current) return;
     const tables = structuredTables
       .filter((t) => t.name.trim())
@@ -518,7 +522,7 @@ export default function AiSchemaMaskerClient() {
                   type="button"
                   onClick={() => {
                     if (input.trim()) setInput('');
-                    else setInput(DEFAULT_EXAMPLE);
+                    else { trackCtaClick('ai_schema_masker', 'load_example'); setInput(DEFAULT_EXAMPLE); }
                     document.getElementById('schema-masker-input')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
                   }}
                   className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-200 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 hover:border-slate-300 transition-colors"
