@@ -40,7 +40,7 @@ export default function ToolPagesAdWrap({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-[1400px] flex-col px-3 py-2 sm:py-4 sm:px-5 lg:px-6 xl:flex-row xl:items-start xl:gap-6 xl:px-8">
+    <div className="mx-auto flex w-full max-w-[1600px] flex-col px-3 py-2 sm:py-4 sm:px-5 lg:px-6 xl:flex-row xl:items-start xl:gap-6 xl:px-8">
       {/* Left sidebar — shows at xl (1280px+) */}
       <aside
         role="region"
@@ -63,7 +63,7 @@ export default function ToolPagesAdWrap({ children }: { children: React.ReactNod
       <aside
         role="region"
         aria-label="Advertisement"
-        className="sticky top-[4.75rem] order-3 hidden min-h-[250px] w-[300px] min-w-0 max-w-[300px] flex-shrink-0 overflow-hidden self-start xl:block"
+        className="sticky top-[4.75rem] order-3 hidden min-h-[250px] w-[200px] min-w-0 max-w-[200px] flex-shrink-0 overflow-hidden self-start xl:block"
       >
         <AdUnit
           slot={SLOT_RIGHT}

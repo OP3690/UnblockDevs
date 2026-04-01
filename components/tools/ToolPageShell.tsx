@@ -74,7 +74,7 @@ export default function ToolPageShell({
         {/* Top accent gradient bar */}
         <div className="h-[3px] w-full bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-400" aria-hidden />
 
-        <div className="mx-auto w-full max-w-[min(100%,96rem)] px-4 sm:px-6 lg:px-10 xl:px-16 py-5 sm:py-7">
+        <div className="mx-auto w-full max-w-[min(100%,96rem)] px-4 sm:px-6 lg:px-8 py-5 sm:py-7">
 
           {/* Back button */}
           <Link
@@ -126,7 +126,7 @@ export default function ToolPageShell({
 
       {/* ── Tool card ─────────────────────────────────────── */}
       {tool != null && (
-        <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-16 py-4 sm:py-6">
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
           {embedTool ? (
             <div id="tool" className="scroll-mt-20">
               {tool}
@@ -146,7 +146,7 @@ export default function ToolPageShell({
 
       {/* ── Below-card SEO content ─────────────────────── */}
       {belowCard != null && (
-        <div className="mx-auto w-full max-w-[min(100%,96rem)] px-4 sm:px-6 lg:px-10 xl:px-16 pb-10 sm:pb-14">
+        <div className="mx-auto w-full max-w-[min(100%,96rem)] px-4 sm:px-6 lg:px-8 pb-10 sm:pb-14">
           <div className="rounded-2xl border border-zinc-100 bg-white px-5 py-7 shadow-sm sm:px-8 sm:py-10 lg:px-12">
             {belowCard}
           </div>
