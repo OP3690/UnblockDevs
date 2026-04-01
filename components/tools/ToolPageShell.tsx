@@ -134,7 +134,7 @@ export default function ToolPageShell({
           ) : (
             <div
               id="tool"
-              className="scroll-mt-20 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-[0_4px_24px_-6px_rgba(0,0,0,0.1),0_2px_8px_-3px_rgba(0,0,0,0.06)]"
+              className="scroll-mt-20 overflow-hidden rounded-2xl border border-zinc-300 bg-white shadow-[0_4px_24px_-6px_rgba(0,0,0,0.12),0_2px_8px_-3px_rgba(0,0,0,0.08)]"
             >
               {/* Color accent bar */}
               <div className="h-[3px] w-full bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-400" aria-hidden />
