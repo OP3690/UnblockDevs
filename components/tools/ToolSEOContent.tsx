@@ -206,7 +206,7 @@ export default function ToolSEOContent({
 }) {
   return (
     <div
-      className={`mx-auto w-full max-w-[min(100%,72rem)] px-4 pb-12 sm:px-6 lg:px-8 ${className}`}
+      className={`mx-auto w-full max-w-[min(100%,96rem)] px-4 pb-12 sm:px-6 lg:px-10 xl:px-16 ${className}`}
     >
       <div className="space-y-14">{children}</div>
     </div>
