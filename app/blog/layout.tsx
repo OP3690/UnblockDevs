@@ -43,7 +43,7 @@ export default function BlogLayout({
         className="min-h-[90px] sm:min-h-[50px] w-full"
         style={{ contain: 'layout' }}
       />
-      <div className="mx-auto max-w-[1400px] px-3 sm:px-5 lg:px-8 py-4 sm:py-6">
+      <div className="mx-auto max-w-[1600px] px-3 sm:px-5 lg:px-8 py-4 sm:py-6">
         <div className="flex flex-col xl:flex-row xl:gap-6 2xl:gap-8">
           {/* Left sidebar ad — visible from xl (1280px) */}
           <aside
@@ -80,7 +80,7 @@ export default function BlogLayout({
             key={`${key}-right`}
             role="region"
             aria-label="Advertisement"
-            className="sticky top-[4.75rem] hidden w-[300px] flex-shrink-0 self-start min-h-[250px] xl:block"
+            className="sticky top-[4.75rem] hidden w-[200px] flex-shrink-0 self-start min-h-[250px] xl:block"
           >
             <AdUnit slot={SLOT_RIGHT} format="auto" minHeight={250} className="rounded-lg overflow-hidden w-full" />
           </aside>
