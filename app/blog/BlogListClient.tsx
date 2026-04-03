@@ -13,7 +13,7 @@ type BlogListClientProps = {
 const CAT_COLORS: Record<string, { bg: string; text: string; dot: string }> = {
   'JSON & Logs':                    { bg: 'bg-emerald-50',  text: 'text-emerald-700',  dot: 'bg-emerald-500' },
   'AI & Security':                  { bg: 'bg-violet-50',   text: 'text-violet-700',   dot: 'bg-violet-500' },
-  'APIs':                           { bg: 'bg-sky-50',      text: 'text-sky-700',       dot: 'bg-sky-500' },
+  'APIs':                           { bg: 'bg-sky-50',      text: 'text-sky-700',      dot: 'bg-sky-500' },
   'Algorithms':                     { bg: 'bg-amber-50',    text: 'text-amber-700',    dot: 'bg-amber-500' },
   'ML & AI':                        { bg: 'bg-fuchsia-50',  text: 'text-fuchsia-700',  dot: 'bg-fuchsia-500' },
   'Data Engineering & Analytics':   { bg: 'bg-orange-50',   text: 'text-orange-700',   dot: 'bg-orange-500' },
@@ -36,48 +36,98 @@ function CategoryBadge({ category }: { category: string }) {
   );
 }
 
-function PostCard({ post, latest = false }: { post: BlogPost; latest?: boolean }) {
+function FeaturedCard({ post }: { post: BlogPost }) {
   const dateStr = new Date(post.date).toLocaleDateString('en-US', {
     year: 'numeric', month: 'short', day: 'numeric',
   });
+  const c = catColor(post.category);
 
   return (
-    <article className={`group flex flex-col rounded-2xl border bg-white p-5 shadow-[0_1px_4px_rgba(0,0,0,0.05)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(0,0,0,0.08)] hover:border-zinc-300 ${latest ? 'border-zinc-300 ring-1 ring-zinc-200' : 'border-zinc-200'}`}>
-      <div className="mb-3 flex items-center gap-2">
-        <CategoryBadge category={post.category} />
-        {latest && (
-          <span className="rounded-full bg-zinc-900 px-2 py-0.5 font-mono text-[9.5px] font-bold uppercase tracking-wide text-white">
+    <article className="group relative mb-6 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_48px_rgba(0,0,0,0.1)] hover:border-zinc-300">
+      {/* Category-colored accent bar */}
+      <div className={`h-[3px] w-full ${c.dot}`} />
+      <div className="p-6 sm:p-8">
+        <div className="mb-4 flex flex-wrap items-center gap-2">
+          <CategoryBadge category={post.category} />
+          <span className="rounded-full bg-zinc-900 px-2.5 py-0.5 font-mono text-[9.5px] font-bold uppercase tracking-wide text-white">
             Latest
           </span>
-        )}
-      </div>
-      <Link href={`/blog/${post.slug}`} className="focus:outline-none">
-        <h2 className={`font-bold leading-snug tracking-tight text-zinc-900 group-hover:text-zinc-700 line-clamp-2 ${latest ? 'text-[16px]' : 'text-[14.5px]'}`}>
-          {post.title}
-        </h2>
-      </Link>
-      <p className="mt-2 flex-1 text-[13px] leading-relaxed text-zinc-500 line-clamp-3">
-        {post.excerpt}
-      </p>
-      <div className="mt-4 flex items-center justify-between border-t border-zinc-100 pt-3">
-        <div className="flex items-center gap-3 text-[11px] text-zinc-400">
-          <span className="flex items-center gap-1">
-            <Calendar className="h-3 w-3" />
-            <time dateTime={post.date}>{dateStr}</time>
-          </span>
-          <span className="flex items-center gap-1">
-            <Clock className="h-3 w-3" />
-            {post.readTime}
-          </span>
         </div>
-        <Link
-          href={`/blog/${post.slug}`}
-          aria-label={`Read ${post.title}`}
-          className="flex items-center gap-1 text-[12px] font-semibold text-zinc-500 transition-colors group-hover:text-zinc-800"
-        >
-          Read
-          <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden />
+        <Link href={`/blog/${post.slug}`} className="focus:outline-none">
+          <h2 className="max-w-3xl text-2xl font-bold leading-tight tracking-tight text-zinc-900 transition-colors group-hover:text-zinc-700 sm:text-[1.75rem] line-clamp-2">
+            {post.title}
+          </h2>
         </Link>
+        <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-zinc-500 line-clamp-2">
+          {post.excerpt}
+        </p>
+        <div className="mt-6 flex flex-wrap items-center gap-4">
+          <div className="flex items-center gap-4 text-[12px] text-zinc-400">
+            <span className="flex items-center gap-1.5">
+              <Calendar className="h-3.5 w-3.5" />
+              <time dateTime={post.date}>{dateStr}</time>
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Clock className="h-3.5 w-3.5" />
+              {post.readTime}
+            </span>
+          </div>
+          <Link
+            href={`/blog/${post.slug}`}
+            aria-label={`Read ${post.title}`}
+            className="inline-flex items-center gap-2 rounded-lg bg-zinc-900 px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-zinc-800"
+          >
+            Read article
+            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden />
+          </Link>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function PostCard({ post }: { post: BlogPost }) {
+  const dateStr = new Date(post.date).toLocaleDateString('en-US', {
+    year: 'numeric', month: 'short', day: 'numeric',
+  });
+  const c = catColor(post.category);
+
+  return (
+    <article className="group flex flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-[0_1px_4px_rgba(0,0,0,0.05)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(0,0,0,0.09)] hover:border-zinc-300">
+      {/* Category-colored accent bar */}
+      <div className={`h-[3px] w-full ${c.dot}`} />
+      <div className="flex flex-1 flex-col p-5">
+        <div className="mb-3">
+          <CategoryBadge category={post.category} />
+        </div>
+        <Link href={`/blog/${post.slug}`} className="focus:outline-none">
+          <h2 className="text-[15px] font-bold leading-snug tracking-tight text-zinc-900 transition-colors group-hover:text-zinc-700 line-clamp-2">
+            {post.title}
+          </h2>
+        </Link>
+        <p className="mt-2 flex-1 text-[13px] leading-relaxed text-zinc-500 line-clamp-3">
+          {post.excerpt}
+        </p>
+        <div className="mt-4 flex items-center justify-between border-t border-zinc-100 pt-3">
+          <div className="flex items-center gap-3 text-[11px] text-zinc-400">
+            <span className="flex items-center gap-1">
+              <Calendar className="h-3 w-3" />
+              <time dateTime={post.date}>{dateStr}</time>
+            </span>
+            <span className="flex items-center gap-1">
+              <Clock className="h-3 w-3" />
+              {post.readTime}
+            </span>
+          </div>
+          <Link
+            href={`/blog/${post.slug}`}
+            aria-label={`Read ${post.title}`}
+            className="flex items-center gap-1 text-[12px] font-semibold text-zinc-400 transition-colors group-hover:text-zinc-900"
+          >
+            Read
+            <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden />
+          </Link>
+        </div>
       </div>
     </article>
   );
@@ -85,19 +135,26 @@ function PostCard({ post, latest = false }: { post: BlogPost; latest?: boolean }
 
 export function BlogListClient({ initialPosts, totalPages, currentPage }: BlogListClientProps) {
   const isFirstPage = currentPage === 1;
+  const featuredPost = isFirstPage && initialPosts.length > 0 ? initialPosts[0] : null;
+  const gridPosts = isFirstPage ? initialPosts.slice(1) : initialPosts;
 
   return (
     <>
-      {/* Post grid — uniform 3-col, always fills cleanly regardless of count */}
-      <div
-        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
-        role="feed"
-        aria-label="Blog posts"
-      >
-        {initialPosts.map((post, i) => (
-          <PostCard key={post.slug} post={post} latest={isFirstPage && i === 0} />
-        ))}
-      </div>
+      {/* Featured card — page 1's latest post */}
+      {featuredPost && <FeaturedCard post={featuredPost} />}
+
+      {/* Post grid */}
+      {gridPosts.length > 0 && (
+        <div
+          className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+          role="feed"
+          aria-label="Blog posts"
+        >
+          {gridPosts.map((post) => (
+            <PostCard key={post.slug} post={post} />
+          ))}
+        </div>
+      )}
 
       {/* Pagination */}
       {totalPages > 1 && (

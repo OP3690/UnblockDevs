@@ -187,12 +187,17 @@ export default function BlogPage({
 
         {/* Page heading */}
         {currentPage === 1 ? (
-          <div className="mb-7">
-            <h2 className="text-[1.1rem] font-semibold text-zinc-900">Latest articles</h2>
-            <p className="mt-0.5 text-[13px] text-zinc-500">Most recently published guides</p>
+          <div className="mb-6 flex items-end justify-between gap-4">
+            <div>
+              <h2 className="text-[1.15rem] font-bold tracking-tight text-zinc-900">Latest articles</h2>
+              <p className="mt-0.5 text-[13px] text-zinc-500">Most recently published guides</p>
+            </div>
+            <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-[11px] font-medium text-zinc-500 shadow-sm">
+              {blogPosts.length} total articles
+            </span>
           </div>
         ) : (
-          <div className="mb-7">
+          <div className="mb-6">
             <p className="text-[13px] text-zinc-500">Page {currentPage} of {totalPages}</p>
           </div>
         )}
@@ -204,22 +209,22 @@ export default function BlogPage({
         {currentPage === 1 && (
           <>
             <section className="mt-16" aria-labelledby="featured-heading">
-              <div className="mb-5 flex items-end justify-between gap-4">
+              <div className="mb-5 flex items-center justify-between gap-4">
                 <div>
-                  <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.13em] text-zinc-500">Handpicked</p>
-                  <h2 id="featured-heading" className="text-[1.25rem] font-semibold tracking-tight text-zinc-900">Featured guides</h2>
+                  <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.13em] text-zinc-400">Handpicked</p>
+                  <h2 id="featured-heading" className="text-[1.15rem] font-bold tracking-tight text-zinc-900">Featured guides</h2>
                 </div>
               </div>
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {FEATURED_GUIDES.map((g) => (
                   <Link
                     key={g.href}
                     href={g.href}
-                    className="group flex flex-col rounded-2xl border border-zinc-200 bg-white p-5 shadow-[0_1px_4px_rgba(0,0,0,0.05)] transition-all duration-200 hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-[0_6px_24px_rgba(0,0,0,0.08)]"
+                    className="group flex flex-col rounded-2xl border border-zinc-200 bg-white p-5 shadow-[0_1px_4px_rgba(0,0,0,0.05)] transition-all duration-200 hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-[0_8px_28px_rgba(0,0,0,0.08)]"
                   >
-                    <p className="text-[14px] font-semibold text-zinc-900 group-hover:text-zinc-700">{g.title}</p>
-                    <p className="mt-1 flex-1 text-[12.5px] leading-relaxed text-zinc-500">{g.desc}</p>
-                    <span className="mt-3 inline-flex items-center gap-1 text-[12px] font-semibold text-zinc-400 transition-colors group-hover:text-zinc-700">
+                    <p className="text-[14px] font-bold leading-snug text-zinc-900 transition-colors group-hover:text-zinc-700">{g.title}</p>
+                    <p className="mt-1.5 flex-1 text-[12.5px] leading-relaxed text-zinc-500">{g.desc}</p>
+                    <span className="mt-3 inline-flex items-center gap-1 text-[12px] font-semibold text-zinc-400 transition-colors group-hover:text-zinc-800">
                       Read guide
                       <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden />
                     </span>

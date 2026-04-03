@@ -1,14 +1,12 @@
 'use client';
 
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 import AdUnit from '@/components/AdUnit';
 import AutoBlogArticleSchema from '@/components/AutoBlogArticleSchema';
 import AutoRelatedBlogPosts from '@/components/AutoRelatedBlogPosts';
 
 /** AdSense slot IDs (Ads → By ad unit). Env vars override for different environments. */
-const SLOT_HEADER =
-  typeof process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_HEADER === 'string' && process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_HEADER
-    ? process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_HEADER
-    : '1550643245';
 const SLOT_INARTICLE =
   typeof process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_INARTICLE === 'string' && process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_INARTICLE
     ? process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_INARTICLE
@@ -30,7 +28,8 @@ interface BlogLayoutWithSidebarAdsProps {
 
 /**
  * Shared article layout for every blog post.
- * Provides a clean reading container with sticky sidebar and well-placed ad units.
+ * Content-first: article renders before any ads.
+ * Sticky sidebar ad on xl+ screens.
  */
 export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSidebarAdsProps) {
   return (
@@ -40,27 +39,29 @@ export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSid
       <main className="min-w-0 flex-1">
         <AutoBlogArticleSchema />
 
-        {/* Ad: below page title, horizontal */}
-        <div
-          role="region"
-          aria-label="Advertisement"
-          className="mb-8 overflow-hidden rounded-xl bg-zinc-50"
-        >
-          <AdUnit slot={SLOT_HEADER} format="auto" className="rounded-xl overflow-hidden" />
+        {/* Back link */}
+        <div className="mb-6">
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-[12.5px] font-medium text-zinc-500 shadow-sm transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-800"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            All articles
+          </Link>
         </div>
 
-        {/* Ad: in-article fluid */}
-        <div
-          role="region"
-          aria-label="Advertisement"
-          className="mb-8 overflow-hidden rounded-xl"
-        >
-          <AdUnit slot={SLOT_INARTICLE} format="fluid" layout="in-article" className="rounded-xl overflow-hidden" />
-        </div>
-
-        {/* Article body */}
+        {/* Article body — content first, no ads blocking */}
         <div className="blog-article-body">
           {children}
+        </div>
+
+        {/* In-article ad — after content */}
+        <div
+          role="region"
+          aria-label="Advertisement"
+          className="mt-10 overflow-hidden rounded-xl"
+        >
+          <AdUnit slot={SLOT_INARTICLE} format="fluid" layout="in-article" className="rounded-xl overflow-hidden" />
         </div>
 
         {/* Related posts */}
@@ -68,7 +69,7 @@ export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSid
           <AutoRelatedBlogPosts />
         </div>
 
-        {/* Ad: after article */}
+        {/* Footer ad */}
         <div
           role="region"
           aria-label="Advertisement"
