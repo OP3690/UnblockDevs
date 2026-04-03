@@ -143,7 +143,7 @@ steps:
 
   - send_slack:
       channel: "#finance"
-      message: "New invoice from {{vendor}}: ${{amount}} due {{due_date}}"
+      message: "New invoice from {{vendor}}: \${{amount}} due {{due_date}}"
 
 # What used to take 5 minutes now happens automatically
 # Zapier AI can extract structured data from unstructured emails/docs`}
