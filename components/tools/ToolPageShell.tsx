@@ -2,8 +2,8 @@
 
 import type { ReactNode } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Lock } from 'lucide-react';
-import Breadcrumb, { type BreadcrumbItem } from '@/components/Breadcrumb';
+import { ArrowLeft, Lock, ChevronRight } from 'lucide-react';
+import type { BreadcrumbItem } from '@/components/Breadcrumb';
 import FeedbackNewsletterSplit from '@/components/home/FeedbackNewsletterSplit';
 
 /** Feedback + newsletter + ad slot */
@@ -31,7 +31,7 @@ export function ToolPageFooterBand({
 }
 
 export type ToolPageShellProps = {
-  breadcrumbItems?: BreadcrumbItem[];
+  breadcrumbItems?: BreadcrumbItem[]; // kept for API compat, no longer rendered
   title: string;
   subtitle?: string;
   backHref?: string;
@@ -71,49 +71,48 @@ export default function ToolPageShell({
     <div className="w-full">
       {/* ── Header ─────────────────────────────────────────── */}
       <div className="border-b border-zinc-200 bg-gradient-to-b from-zinc-50 to-white">
-        <div className="ud-content-tool py-7 sm:py-10">
-          {breadcrumbItems && breadcrumbItems.length > 0 && (
-            <div className="mb-5">
-              <Breadcrumb items={breadcrumbItems} />
-            </div>
-          )}
+        {/* Top accent gradient bar */}
+        <div className="h-[3px] w-full bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-400" aria-hidden />
 
-          {/* Back */}
+        <div className="mx-auto w-full max-w-[min(100%,72rem)] px-4 sm:px-6 lg:px-8 py-5 sm:py-7">
+
+          {/* Back button */}
           <Link
             href={backHref}
-            className="mb-6 inline-flex touch-manipulation items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3.5 py-1.5 text-[13px] font-medium text-zinc-600 shadow-sm transition-colors hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-800"
+            className="mb-4 inline-flex touch-manipulation items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-[12px] font-medium text-zinc-500 shadow-sm transition-colors hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-800"
           >
-            <ArrowLeft className="h-3.5 w-3.5 shrink-0" aria-hidden />
+            <ArrowLeft className="h-3 w-3 shrink-0" aria-hidden />
             {backLabel}
+            <ChevronRight className="h-3 w-3 text-zinc-300" aria-hidden />
           </Link>
 
-          {/* Title row */}
-          <div className="flex items-start gap-4">
+          {/* Title row — icon + text side by side on all breakpoints */}
+          <div className="flex items-start gap-3 sm:gap-4">
             {icon && (
-              <div className="hidden shrink-0 sm:flex h-12 w-12 items-center justify-center rounded-xl border border-zinc-200 bg-white text-2xl shadow-sm">
+              <div className="flex shrink-0 h-11 w-11 sm:h-14 sm:w-14 items-center justify-center rounded-xl sm:rounded-2xl border border-zinc-100 bg-gradient-to-br from-white to-zinc-50 text-2xl sm:text-3xl shadow-md">
                 {icon}
               </div>
             )}
             <div className="min-w-0 flex-1">
-              <h1 className="text-[1.7rem] font-semibold leading-[1.15] tracking-[-0.025em] text-zinc-900 sm:text-[2.1rem]">
+              <h1 className="text-[1.5rem] font-bold leading-[1.15] tracking-[-0.03em] text-zinc-900 sm:text-[1.85rem] lg:text-[2.15rem]">
                 {title}
               </h1>
               {subtitle && (
-                <p className="mt-3 max-w-[46rem] text-[15px] leading-relaxed text-zinc-500">
+                <p className="mt-2 max-w-[52rem] text-[13.5px] sm:text-[14.5px] leading-relaxed text-zinc-500">
                   {subtitle}
                 </p>
               )}
 
               {/* Trust + feature pills */}
-              <div className="mt-4 flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[12px] font-semibold text-emerald-800">
-                  <Lock className="h-3 w-3" aria-hidden />
-                  Data never leaves your browser
+              <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] sm:text-[11.5px] font-semibold text-emerald-800">
+                  <Lock className="h-3 w-3 shrink-0" aria-hidden />
+                  100% in-browser
                 </span>
                 {features.map((f) => (
                   <span
                     key={f}
-                    className="inline-flex items-center rounded-full border border-zinc-200 bg-white px-3 py-1 text-[12px] font-medium text-zinc-600 shadow-sm"
+                    className="inline-flex items-center rounded-full border border-zinc-200 bg-white px-2.5 py-1 text-[11px] sm:text-[11.5px] font-medium text-zinc-600 shadow-sm"
                   >
                     {f}
                   </span>
@@ -127,18 +126,19 @@ export default function ToolPageShell({
 
       {/* ── Tool card ─────────────────────────────────────── */}
       {tool != null && (
-        <div className="ud-content-tool py-6 sm:py-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
           {embedTool ? (
-            <div id="tool" className="scroll-mt-24">
+            <div id="tool" className="scroll-mt-20">
               {tool}
             </div>
           ) : (
             <div
               id="tool"
-              className="scroll-mt-24 overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-[0_2px_16px_-4px_rgba(0,0,0,0.08),0_1px_4px_-2px_rgba(0,0,0,0.04)]"
+              className="scroll-mt-20 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-[0_4px_24px_-6px_rgba(0,0,0,0.1),0_2px_8px_-3px_rgba(0,0,0,0.06)]"
             >
-              <div className="h-[3px] w-full bg-gradient-to-r from-emerald-500 via-emerald-400 to-teal-400" aria-hidden />
-              <div className="p-5 sm:p-8 lg:p-10">{tool}</div>
+              {/* Color accent bar */}
+              <div className="h-[3px] w-full bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-400" aria-hidden />
+              <div className="p-4 sm:p-6 lg:p-8">{tool}</div>
             </div>
           )}
         </div>
@@ -146,8 +146,8 @@ export default function ToolPageShell({
 
       {/* ── Below-card SEO content ─────────────────────── */}
       {belowCard != null && (
-        <div className="ud-content-tool pb-10 sm:pb-12">
-          <div className="rounded-xl border border-zinc-100 bg-white px-6 py-8 shadow-sm sm:px-10 sm:py-10">
+        <div className="mx-auto w-full max-w-[min(100%,72rem)] px-4 sm:px-6 lg:px-8 pb-10 sm:pb-14">
+          <div className="rounded-2xl border border-zinc-100 bg-white px-5 py-7 shadow-sm sm:px-8 sm:py-10 lg:px-12">
             {belowCard}
           </div>
         </div>

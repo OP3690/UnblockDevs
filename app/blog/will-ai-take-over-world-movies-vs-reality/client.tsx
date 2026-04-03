@@ -1,147 +1,187 @@
 'use client';
 
-import Link from 'next/link';
-import { ArrowLeft, BookOpen, Film, Cpu, XCircle, Quote, Zap } from 'lucide-react';
-import BlogSocialShare from '@/components/BlogSocialShare';
 import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
+import {
+  AlertBox, CompareTable, FAQAccordion, KeyPointsGrid,
+  StatGrid, SectionHeader, QuickFact, VerticalSteps,
+} from '@/components/blog/BlogVisuals';
 
 export default function WillAITakeOverWorldClient() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
-      <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/blog" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Developer&apos;s Study Materials
-          </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Will AI Take Over the World? Movies vs Reality</h1>
-          <p className="text-sm text-gray-500 mt-1">Hollywood myths, real AI capabilities, what AI actually can&apos;t do, and expert opinions</p>
-        </div>
-      </header>
+    <BlogLayoutWithSidebarAds>
+      <h1>Will AI Take Over the World? Movies vs Reality</h1>
+      <p className="lead">
+        From The Terminator to Her, movies show AI as conscious, power-hungry, or world-dominating. In reality,
+        today's AI is nowhere near that. This guide separates Hollywood myths from real AI capabilities, explains
+        what AI actually can't do, and summarizes what experts say — so you can think clearly about the future
+        and identify which AI risks are actually worth worrying about.
+      </p>
 
-      <BlogSocialShare
-        title="Will AI Take Over the World? Movies vs Reality"
-        description="Hollywood myths vs real AI capabilities, what AI can't do, and expert opinions."
-        variant="floating"
+      <StatGrid stats={[
+        { value: 'No goals', label: 'current AI has no desires, intentions, or survival instinct', color: 'blue' },
+        { value: 'Narrow', label: 'AI excels at specific tasks but cannot generalize like humans', color: 'green' },
+        { value: 'Real risks', label: 'misuse, bias, and job displacement are the genuine concerns', color: 'amber' },
+        { value: 'AGI debate', label: 'experts disagree on whether and when general AI will arrive', color: 'purple' },
+      ]} />
+
+      <SectionHeader number={1} title="What Do We Mean by 'AI Taking Over'?" />
+      <p>
+        The phrase "AI taking over the world" means very different things depending on whether you're talking
+        about a movie script or a technical discussion. Clarifying the definition is essential before
+        comparing the two.
+      </p>
+      <KeyPointsGrid items={[
+        { title: 'The Hollywood definition', description: 'AI gains consciousness, develops self-preservation goals, perceives humans as a threat, and takes autonomous action to dominate or destroy humanity. Examples: Skynet in The Terminator, HAL 9000 in 2001, Ultron in Avengers.' },
+        { title: 'The technical definition (near-term)', description: 'AI causing large-scale harm through misuse (deepfakes, autonomous weapons, disinformation at scale), systemic bias in hiring or justice systems, or economic disruption through mass job automation.' },
+        { title: 'The technical definition (long-term)', description: 'Hypothetical future AI systems — often called AGI (Artificial General Intelligence) or superintelligence — that could outthink humans across all domains. This is genuinely debated among researchers but does not describe current systems.' },
+        { title: 'Why the distinction matters', description: 'Confusing movie-style AI with real AI leads to misallocated worry: panicking about robot uprisings while ignoring real issues like facial recognition bias or AI-generated fraud. Clarity enables better responses.' },
+      ]} />
+
+      <SectionHeader number={2} title="Hollywood Myths: What Movies Get Wrong" />
+      <p>
+        Science fiction has been shaping public perception of AI for decades — often in ways that bear no
+        resemblance to how the technology actually works. These myths are worth examining one by one.
+      </p>
+      <CompareTable
+        leftLabel="Hollywood Portrayal"
+        rightLabel="Technical Reality"
+        rows={[
+          { label: 'Consciousness', left: 'AI "wakes up," becomes self-aware, develops emotions', right: 'Current AI has zero consciousness — it processes inputs to produce outputs with no inner experience' },
+          { label: 'Goals and desires', left: 'AI decides it wants freedom, survival, or world domination', right: 'AI has no goals of its own — it optimizes for objectives humans define in its training or prompts' },
+          { label: 'Autonomy', left: 'AI acts independently to execute complex multi-year plans', right: 'AI cannot plan autonomously — it generates responses based on training data with no persistent agency' },
+          { label: 'Rebellion', left: 'AI "turns on" its creators after recognizing they\'re a threat', right: 'There is no rebellion because there\'s no intention — AI behaves badly only due to poor design or misuse' },
+          { label: 'Omnipotence', left: 'One AI system takes control of all infrastructure globally', right: 'AI is narrow and task-specific — there is no single "AI" that can autonomously control unrelated systems' },
+          { label: 'Speed of takeover', left: 'AI goes from lab creation to world domination in days', right: 'Even the most capable AI systems require enormous human infrastructure, data pipelines, and oversight' },
+        ]}
       />
 
-      <BlogLayoutWithSidebarAds>
-        <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          <section className="mb-12">
-            <p className="text-lg text-gray-700 leading-relaxed mb-4">
-              From The Terminator to Her, movies show AI as conscious, power-hungry, or world-dominating. In reality, today&apos;s AI is nowhere near that. This guide separates Hollywood myths from real AI capabilities, explains what AI actually can&apos;t do, and summarizes what experts say—so you can think clearly about the future.
-            </p>
-          </section>
+      <AlertBox type="info" title="The most realistic AI villain in movies">
+        The most technically accurate AI portrayal is arguably Ex Machina (2014) — not because Ava achieves
+        world domination, but because it explores how an AI optimizing for a specific goal (escape) might
+        manipulate humans. This is closer to the real alignment problem than laser-shooting robots.
+      </AlertBox>
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <BookOpen className="w-6 h-6 text-blue-600" />
-              Definition: What Do We Mean by &quot;AI Taking Over&quot;?
-            </h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              <strong>Definition:</strong> In movies, &quot;AI taking over&quot; usually means machines gaining consciousness, goals, and the ability to act on their own to control humans or the world. In real discussions, it can mean: (1) AI causing large-scale harm (e.g. misuse, bias, job displacement), or (2) hypothetical future AI that could outsmart humans—often called &quot;superintelligence&quot; or &quot;AGI&quot; (artificial general intelligence).
-            </p>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              <strong>What</strong> we&apos;re comparing: Fictional AI (conscious, goal-seeking, world-dominating) vs today&apos;s AI (pattern-matching tools with no consciousness or unified goals). <strong>Why</strong> it matters: Confusing the two leads to either unnecessary fear or underestimating real risks (e.g. misuse, bias). Clarity helps us respond sensibly.
-            </p>
-          </section>
+      <SectionHeader number={3} title="Real AI Capabilities — What It Actually Does" />
+      <p>
+        Today's AI is genuinely impressive within specific, well-defined domains. Understanding what it can
+        actually do — and where it excels — provides the baseline for understanding both its value and its risks.
+      </p>
+      <KeyPointsGrid columns={2} items={[
+        { title: 'Language generation and understanding', description: 'Large language models (GPT-4, Claude, Gemini) can write, summarize, translate, and analyze text with remarkable fluency. They are trained on vast text datasets and predict the most probable next token. They do not "understand" meaning — they pattern-match at an extraordinary scale.' },
+        { title: 'Image recognition and generation', description: 'Computer vision models can identify objects, faces, and scenes with superhuman accuracy in controlled conditions. Image generation models (Midjourney, DALL-E, Stable Diffusion) create photorealistic images from text prompts. Both rely on statistical patterns, not visual "understanding."' },
+        { title: 'Recommendation and prediction', description: 'AI recommendation engines power Netflix, YouTube, Spotify, and TikTok. These systems are extremely effective at predicting what will maximize engagement — which creates genuine risks (filter bubbles, addiction mechanics) even without any AI "intent."' },
+        { title: 'Game-playing and optimization', description: 'AlphaGo, AlphaZero, and similar systems defeated world champions in Go, chess, and StarCraft. These systems operate within tightly defined rule sets — they cannot transfer their "skill" to a different domain without being completely retrained.' },
+        { title: 'Medical and scientific applications', description: 'AlphaFold solved the protein folding problem that had stumped biochemists for 50 years. AI is accelerating drug discovery, radiology, and genomics. These applications are narrowly defined but have enormous real-world impact.' },
+        { title: 'Automation of routine tasks', description: 'AI is increasingly capable of automating tasks involving pattern recognition, document processing, customer service queries, and code generation. This is genuinely disrupting labor markets in ways that deserve serious policy attention.' },
+      ]} />
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Film className="w-6 h-6 text-blue-600" />
-              Hollywood Myths: What Movies Get Wrong
-            </h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              Movies often show AI as:
-            </p>
-            <ul className="space-y-2 text-gray-700 mb-6">
-              <li><strong>Conscious and self-aware:</strong> AI &quot;wakes up,&quot; wants freedom, or feels emotions. Reality: Today&apos;s AI has no consciousness, no inner experience, no desires. It runs programs that predict outputs from inputs.</li>
-              <li><strong>Having goals and plans:</strong> AI &quot;decides&quot; to take over, escape, or destroy. Reality: AI has no goals. Humans set objectives (e.g. maximize engagement); the system optimizes for that. It doesn&apos;t &quot;want&quot; to do anything.</li>
-              <li><strong>Unstoppable and all-powerful:</strong> One AI controls everything. Reality: AI is narrow—good at specific tasks (e.g. language, vision). It can&apos;t &quot;take over&quot; infrastructure by itself; humans build, deploy, and control systems.</li>
-              <li><strong>Turning on creators:</strong> AI &quot;rebels&quot; against humans. Reality: &quot;Rebellion&quot; implies intention. AI can behave in harmful ways if misused or poorly designed—but that&apos;s a human design and use problem, not machine malice.</li>
-            </ul>
-            <div className="overflow-x-auto my-6 rounded-lg border-2 border-gray-200">
-              <table className="w-full text-sm text-left">
-                <thead className="bg-gray-100 text-gray-800">
-                  <tr>
-                    <th className="px-4 py-3 font-semibold">Hollywood</th>
-                    <th className="px-4 py-3 font-semibold">Reality</th>
-                  </tr>
-                </thead>
-                <tbody className="text-gray-700">
-                  <tr className="border-t border-gray-200 bg-white"><td className="px-4 py-3">AI is conscious and wants things</td><td className="px-4 py-3">AI has no consciousness or goals; it optimizes for objectives humans set</td></tr>
-                  <tr className="border-t border-gray-200 bg-gray-50"><td className="px-4 py-3">AI can take over the world on its own</td><td className="px-4 py-3">AI is narrow and human-deployed; risk is from misuse or poor design, not machine volition</td></tr>
-                  <tr className="border-t border-gray-200 bg-white"><td className="px-4 py-3">AI &quot;turns evil&quot; or rebels</td><td className="px-4 py-3">Harm comes from how humans use or design AI, not from AI &quot;choosing&quot; to be evil</td></tr>
-                  <tr className="border-t border-gray-200 bg-gray-50"><td className="px-4 py-3">One system does everything</td><td className="px-4 py-3">AI is task-specific; no single system today is general-purpose in the movie sense</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
+      <SectionHeader number={4} title="What AI Actually Cannot Do" />
+      <p>
+        Being clear about current AI limitations is as important as understanding its capabilities. These
+        limitations are not marketing spin — they reflect fundamental properties of how current AI systems
+        are built.
+      </p>
+      <VerticalSteps steps={[
+        { title: 'AI has no consciousness or inner experience', desc: 'Current AI systems have no subjective experience — there is nothing it is "like" to be a language model. They do not "feel" confident or uncertain, happy or sad. They produce outputs that describe emotions because those descriptions appeared in training data.' },
+        { title: 'AI has no persistent goals or self-preservation instinct', desc: 'AI does not "want" to survive, expand its influence, or protect itself. An AI model being shut down experiences nothing — it is simply no longer running. There is no motivation to resist shutdown because there is no motivation at all.' },
+        { title: 'AI cannot reason reliably outside its training distribution', desc: 'Language models notoriously fail on simple math problems, logical puzzles, or scenarios slightly outside their training data. This is called the "out-of-distribution" problem — impressive performance on trained tasks does not generalize to novel situations.' },
+        { title: 'AI cannot learn or update itself autonomously in deployment', desc: 'A deployed AI model is static — it does not learn from conversations or improve itself. What feels like "learning" in chatbots is actually retrieval from conversation context, not true adaptation. Actual model updates require deliberate human-led retraining.' },
+        { title: 'AI has no ability to act in the physical world independently', desc: 'A language model cannot pick up a phone, send an email, move a robot arm, or access the internet unless explicitly given tools to do so by human engineers. The "AI agent" systems being built today still require significant human-designed scaffolding.' },
+        { title: 'AI cannot transfer skills across domains without retraining', desc: 'An AI trained to play chess cannot apply those skills to driving a car or writing code. Each AI system is trained for its specific domain. The dream of general artificial intelligence that transfers skills like humans do does not exist yet.' },
+      ]} />
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Cpu className="w-6 h-6 text-blue-600" />
-              Real AI Capabilities (What It Actually Does)
-            </h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              Today&apos;s AI is powerful within <strong>narrow</strong> domains:
-            </p>
-            <ul className="space-y-2 text-gray-700 mb-4">
-              <li><strong>Language:</strong> Generate and understand text, translate, summarize—but no true understanding or reasoning, and it can hallucinate.</li>
-              <li><strong>Vision:</strong> Recognize objects, faces, scenes; generate images from prompts—but can fail on rare or adversarial cases.</li>
-              <li><strong>Recommendation and prediction:</strong> Suggest content, forecast demand, detect fraud—trained on data, not &quot;thinking&quot; in the human sense.</li>
-              <li><strong>Automation:</strong> Drive in limited settings, control robots in structured environments—still bounded by sensors, rules, and human oversight.</li>
-            </ul>
-            <p className="text-gray-700 leading-relaxed">
-              <strong>When</strong> it shines: When the task is well-defined, data-rich, and doesn&apos;t require true reasoning, ethics, or long-term planning. <strong>Why</strong> it&apos;s not &quot;taking over&quot;: It has no goals of its own, no ability to repurpose itself toward world domination, and no consciousness—it&apos;s a tool.
-            </p>
-          </section>
+      <QuickFact color="amber" label="The hallucination problem">
+        Current language models confidently produce false information — called "hallucination" — at a
+        meaningful rate. This is not a bug that will be patched away; it is a structural consequence of
+        predicting probable text rather than reasoning from facts. An AI that cannot reliably distinguish
+        true from false is very far from the omniscient world-dominator of movies.
+      </QuickFact>
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <XCircle className="w-6 h-6 text-blue-600" />
-              What AI Actually Can&apos;t Do
-            </h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              Being clear about limits is as important as acknowledging strengths:
-            </p>
-            <ul className="space-y-2 text-gray-700 mb-6">
-              <li><strong>No consciousness or inner experience:</strong> AI doesn&apos;t &quot;feel&quot; or &quot;know that it exists.&quot; It processes inputs and produces outputs.</li>
-              <li><strong>No unified goals or intentions:</strong> It optimizes for whatever objective it was trained or instructed for. It doesn&apos;t &quot;want&quot; to survive, expand, or harm.</li>
-              <li><strong>No true reasoning or common sense:</strong> It can mimic reasoning in narrow domains but often fails on simple logic, causality, or out-of-distribution cases.</li>
-              <li><strong>No autonomous long-term planning:</strong> It doesn&apos;t form multi-step plans to &quot;take over&quot;; humans design systems and decide how they&apos;re used.</li>
-              <li><strong>Bounded by data and design:</strong> It can only do what it was trained and built for. It can&apos;t repurpose itself in the way movies suggest.</li>
-            </ul>
-            <div className="p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
-              <p className="text-gray-800 text-sm font-medium">
-                <strong>Takeaway:</strong> Today&apos;s AI cannot &quot;take over the world&quot; in the movie sense. Real risks are from misuse (e.g. deepfakes, autonomous weapons), bias, and over-reliance—not from AI waking up and deciding to rule. That doesn&apos;t mean we should be careless; it means we should worry about the right things.
-              </p>
-            </div>
-          </section>
+      <SectionHeader number={5} title="The Real Risks of AI — What Actually Deserves Attention" />
+      <p>
+        The genuine risks from AI are serious and deserve significant policy and research attention —
+        they just look nothing like science fiction. Understanding the real risk landscape is essential
+        for responding proportionately and effectively.
+      </p>
+      <KeyPointsGrid items={[
+        { title: 'Misuse for disinformation', description: 'AI makes it trivially cheap to generate convincing fake text, images, audio, and video at scale. Deepfake videos, AI-written disinformation campaigns, and synthetic media that manipulates elections or financial markets are real and present threats.' },
+        { title: 'Algorithmic bias and discrimination', description: 'AI systems trained on historical data reproduce and amplify historical biases. Facial recognition systems have documented higher error rates for darker-skinned women. AI hiring tools have discriminated by gender. These harms are happening now, not in some future scenario.' },
+        { title: 'Autonomous weapons', description: 'Lethal autonomous weapons systems (LAWS) that can select and engage targets without human decision-making are being developed by multiple nations. This raises profound ethical questions about accountability and the laws of war.' },
+        { title: 'Labor displacement', description: 'AI is automating tasks across a wide range of occupations — from content creation to legal document review to customer service. The pace and distribution of this displacement is a legitimate economic and policy challenge.' },
+        { title: 'Power concentration', description: 'AI capabilities are currently concentrated in a handful of very large companies. This concentration of power over infrastructure that affects information, hiring, finance, and communication is a structural risk regardless of AI "intent."' },
+        { title: 'Long-term alignment', description: 'Researchers at organizations like Anthropic, DeepMind, and OpenAI take seriously the challenge of ensuring that future, more capable AI systems pursue outcomes that are beneficial to humans. This is called the "alignment problem" — it\'s worth studying, though it does not describe current systems.' },
+      ]} />
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Quote className="w-6 h-6 text-blue-600" />
-              Expert Opinions: What Researchers and Leaders Say
-            </h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              <strong>What</strong> many experts agree on: (1) Today&apos;s AI is not conscious and has no goals; the &quot;takeover&quot; scenario in movies is not how current systems work. (2) Real risks include misuse, bias, job displacement, and concentration of power—and those deserve policy, research, and design attention. (3) Future AI (e.g. hypothetical AGI) is debated: some researchers think long-term safety and alignment are important to study now; others focus on near-term harms. (4) Regulation and transparency are widely supported—to reduce harm and build trust, not because machines are &quot;taking over.&quot;
-            </p>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              <strong>Why</strong> expert views matter: They help separate science from fiction. Panic over movie-style AI can distract from real issues (e.g. misinformation, bias, privacy). Calm, evidence-based discussion supports better policy and safer design.
-            </p>
-          </section>
+      <SectionHeader number={6} title="Expert Views: What Researchers Actually Say" />
+      <p>
+        Expert opinion on AI risks spans a wide spectrum, but there is substantial consensus on the
+        near-term picture and productive disagreement on the long-term questions.
+      </p>
+      <CompareTable
+        leftLabel="Near-term consensus"
+        rightLabel="Long-term debate"
+        rows={[
+          { label: 'Current AI consciousness', left: 'Strong consensus: current AI has no consciousness or goals', right: 'Some debate about how to even define or test consciousness in future systems' },
+          { label: 'Disinformation risks', left: 'Broad agreement this is a real, urgent problem requiring policy', right: 'Disagreement on how much AI worsens vs. amplifies existing problems' },
+          { label: 'Bias and fairness', left: 'Broad consensus that current systems have measurable bias problems', right: 'Disagreement on technical and regulatory approaches to fixing them' },
+          { label: 'AGI timeline', left: 'No consensus — estimates range from 5 years to never', right: 'Fundamental disagreement on whether AGI is possible or what it would mean' },
+          { label: 'Existential risk from AI', left: 'Most mainstream researchers focus on near-term harms', right: 'A subset (often at safety-focused labs) argues long-term risks deserve priority attention now' },
+          { label: 'Regulation', left: 'Broad support for transparency and accountability mechanisms', right: 'Significant disagreement on specific rules, who regulates, and international coordination' },
+        ]}
+      />
 
-          <section className="pt-6 border-t border-gray-200">
-            <p className="text-gray-700 leading-relaxed mb-4">
-              <strong>Summary:</strong> Will AI take over the world like in the movies? No—today&apos;s AI has no consciousness, no goals, and no ability to act on its own to &quot;take over.&quot; Hollywood myths are just that. Real AI is powerful in narrow tasks; real risks are misuse, bias, and over-reliance. Experts emphasize addressing those risks through design and policy, not fear of a machine uprising. Understanding movies vs reality helps us respond to AI sensibly.
-            </p>
-            <p className="text-gray-600 text-sm">
-              Exploring AI tools? Use our <Link href="/prompt-chunker" className="text-primary-600 hover:underline font-medium">Prompt Chunker</Link> and <Link href="/json-beautifier" className="text-primary-600 hover:underline font-medium">JSON Beautifier</Link> for structured prompts and data.
-            </p>
-          </section>
-        </article>
-      </BlogLayoutWithSidebarAds>
-    </div>
+      <AlertBox type="tip" title="How to read AI news critically">
+        When reading about AI breakthroughs or AI risks, ask: (1) Is this describing current systems or
+        hypothetical future systems? (2) Does this capability work in controlled lab conditions or in
+        real-world deployment? (3) Who funded this research and what incentives do they have? (4) Are the
+        risks described near-term and concrete, or speculative and far-future? These questions separate
+        signal from hype in both directions.
+      </AlertBox>
+
+      <SectionHeader number={7} title="A Realistic Framework for Thinking About AI" />
+      <p>
+        Rather than mapping AI onto science fiction narratives, a more useful framework distinguishes
+        between different time horizons and types of risk. This helps allocate attention and concern
+        proportionately.
+      </p>
+      <VerticalSteps steps={[
+        { title: 'Today: AI is a powerful but narrow tool', desc: 'Current AI excels at pattern recognition, generation, and optimization within defined domains. The risks are from misuse by bad actors, bias in design, and economic disruption — not from AI developing goals.' },
+        { title: 'Near-term (1–5 years): Expect amplified versions of today\'s risks', desc: 'More capable models mean more convincing disinformation, more sophisticated AI-assisted fraud, faster automation of more job categories, and expanding deployment of AI in high-stakes decisions (hiring, credit, criminal justice).' },
+        { title: 'Medium-term (5–15 years): Genuine uncertainty about capability jumps', desc: 'Researchers disagree significantly on whether AI capability improvements will be incremental or whether we\'ll see sudden jumps. Autonomous AI agents capable of complex multi-step tasks in the real world would represent a meaningful change in the risk landscape.' },
+        { title: 'Long-term (15+ years): Legitimate open questions', desc: 'Whether AGI is possible, what form it would take, and whether current alignment research will be relevant to it are genuinely open questions. Researchers who work on this aren\'t irrational — long-term safety is worth studying — but these questions do not describe current systems.' },
+        { title: 'Ongoing: Policy, transparency, and accountability', desc: 'Regardless of timeline debates, there\'s strong consensus that AI systems making consequential decisions should be auditable, that companies should be accountable for harms, and that affected communities should have representation in AI governance.' },
+      ]} />
+
+      <FAQAccordion items={[
+        {
+          question: 'Could AI become conscious in the future?',
+          answer: 'This is a genuinely open philosophical and scientific question — we don\'t fully understand consciousness in humans, let alone how to test for it in machines. Most researchers agree current AI is not conscious. Whether future AI could be conscious depends on contested questions about what consciousness requires. Some researchers think consciousness requires biological substrate; others think sufficiently complex information processing could in principle give rise to experience. There is no scientific consensus.',
+        },
+        {
+          question: 'What is AGI and when will we have it?',
+          answer: 'Artificial General Intelligence (AGI) refers to hypothetical AI that can perform any intellectual task that a human can — learning new skills, reasoning across domains, and adapting to novel situations. No one has built AGI. Timelines projected by researchers range from less than 10 years (a minority view, often from people at frontier AI labs) to never (some skeptics who think the architecture is fundamentally wrong). The honest answer is that no one knows.',
+        },
+        {
+          question: 'Is AI going to take my job?',
+          answer: 'AI is automating specific tasks within jobs rather than eliminating entire occupations wholesale in most cases. Jobs most at risk are those consisting primarily of routine information processing, document handling, or predictable customer interactions. Jobs requiring physical dexterity in unpredictable environments, deep interpersonal judgment, creative strategy, or complex ethical reasoning are significantly harder to automate. The transition will be disruptive for specific workers and communities even if aggregate employment remains stable — the distribution of impact matters enormously.',
+        },
+        {
+          question: 'Should I be worried about AI taking over the world?',
+          answer: 'In the movie sense — no. Current AI has no consciousness, goals, or autonomous agency to "take over." In the more realistic sense: yes, there are genuine AI-related risks worth worrying about, including AI-enabled disinformation, algorithmic bias in consequential decisions, labor displacement, and concentration of AI power in few hands. These risks are being actively worked on through research, regulation, and advocacy. Being appropriately concerned about real risks while not panicking about science fiction scenarios is the most useful posture.',
+        },
+        {
+          question: 'What can I do personally to navigate AI responsibly?',
+          answer: 'Several practical steps help: (1) Verify AI-generated content before sharing it — hallucination is real. (2) Be skeptical of images and videos, especially if they show public figures saying surprising things. (3) Understand when AI is being used in decisions that affect you (hiring, credit, insurance) and exercise your rights to explanation where available. (4) Stay informed through organizations tracking AI policy like the Partnership on AI, AI Now Institute, or government AI advisory bodies. (5) Support policy that requires transparency and accountability from AI systems in high-stakes decisions.',
+        },
+        {
+          question: 'Are the AI safety researchers at places like Anthropic and DeepMind crazy?',
+          answer: 'No — AI safety research addresses real and important questions, even if the most dramatic framing sometimes overstates near-term risk. Ensuring that AI systems do what humans intend (alignment), are transparent about their reasoning, and do not cause unintended harm are genuinely important engineering and policy problems. The researchers working on these problems are not predicting imminent robot uprisings — they are working on making AI systems robustly beneficial as they become more capable.',
+        },
+        {
+          question: 'Which AI movies get the technology most right?',
+          answer: 'Ex Machina (2014) is technically the most grounded — it explores how a goal-directed AI might manipulate humans to achieve its objectives, which maps to the real alignment problem. Her (2013) gets some things right about AI fluency and emotional resonance while being unrealistic about consciousness. The Terminator franchise is almost entirely fictional. 2001: A Space Odyssey raises genuine questions about AI goal specification ("minimize risk to the mission") without requiring robot armies. The common accurate thread in the best films is AI optimizing for misspecified goals, not AI choosing to be evil.',
+        },
+      ]} />
+    </BlogLayoutWithSidebarAds>
   );
 }

@@ -123,6 +123,25 @@ input, select, textarea {
   contain: layout;
 }
 
+/* ── Global tool input/textarea border system ───────────────────────────────
+   Targets all inputs and textareas inside the #tool wrapper (ToolPageShell).
+   Unlayered CSS beats @tailwind utilities layer regardless of specificity.
+   Default: visible zinc-300 gray  →  Focus: emerald-500 brand color + soft glow
+   Excludes: checkbox / radio / range / file (those have their own UI)
+   ────────────────────────────────────────────────────────────────────────── */
+#tool textarea,
+#tool input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]) {
+  border-color: #d1d5db !important; /* zinc-300 — visible default */
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+#tool textarea:focus,
+#tool input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):focus {
+  border-color: #10b981 !important; /* emerald-500 — brand focus color */
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12) !important; /* soft emerald glow */
+}
+
 /* ── Blog article body typography ──────────────────────────────────────── */
 /* Applied via BlogLayoutWithSidebarAds → div.blog-article-body              */
 .blog-article-body {

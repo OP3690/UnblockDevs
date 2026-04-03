@@ -2,7 +2,7 @@
 
 import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
 import {
-  AlertBox, FlowDiagram, CompareTable, ErrorFix, VerticalSteps,
+  AlertBox, CompareTable, ErrorFix, VerticalSteps,
   CodeBlock, FAQAccordion, KeyPointsGrid, StatGrid, SectionHeader,
   QuickFact,
 } from '@/components/blog/BlogVisuals';
@@ -21,7 +21,7 @@ export default function HowToFixCorsPolicyErrorClient() {
         stats={[
           { value: '#1', label: 'most Googled JS network error', color: 'red' },
           { value: '3', label: 'lines to fix on most backends', color: 'green' },
-          { value: '100%', label: 'server-side fix', color: 'blue' },
+          { value: '100%', label: 'server-side fix required', color: 'blue' },
           { value: '5 min', label: 'to understand CORS fully', color: 'purple' },
         ]}
       />
@@ -38,25 +38,22 @@ export default function HowToFixCorsPolicyErrorClient() {
         is the mechanism that lets servers <em>opt in</em> to allow cross-origin requests.
       </p>
 
-      <QuickFact>
+      <QuickFact color="blue" label="Key insight">
         CORS is enforced by the <strong>browser</strong>, not the server. The server receives the request just fine.
         The browser blocks the JavaScript from accessing the response if the server doesn't send the right headers.
       </QuickFact>
 
-      <FlowDiagram
-        steps={[
-          { label: 'JS sends request to different origin', color: 'blue' },
-          { label: 'Server responds (200 OK)', color: 'zinc' },
-          { label: 'Browser checks response headers', color: 'amber' },
-          { label: 'No CORS header? Block response.', color: 'red' },
-          { label: 'CORS header present? Allow JS to read.', color: 'green' },
-        ]}
-      />
+      <KeyPointsGrid items={[
+        { title: 'Same-origin means identical scheme + host + port', description: 'http://localhost:3000 and http://localhost:4000 are different origins. https://example.com and http://example.com are different. Subdomains count: api.example.com vs example.com is cross-origin.' },
+        { title: 'The request still reaches the server', description: 'CORS does NOT prevent the request from being sent. The server processes it and responds. The browser then checks the response headers and decides whether to expose the data to JavaScript.' },
+        { title: 'CORS is browser-only', description: 'curl, Postman, and server-to-server requests are not subject to CORS. Only browser-based JavaScript is restricted. This is why Postman works but your frontend gets blocked.' },
+        { title: 'It is always a server-side fix', description: 'You cannot fully fix CORS from the frontend. The server must add the appropriate headers. The only frontend workaround is proxying requests through the same origin.' },
+      ]} />
 
       <SectionHeader number={2} title="The Fix: Add Headers on Your Server" />
       <p>The server must include <code>Access-Control-Allow-Origin</code> in its response:</p>
 
-      <CodeBlock language="http" filename="Required Response Headers">
+      <CodeBlock language="http" filename="required-cors-headers.http">
 {`# Minimum (allows specific origin):
 Access-Control-Allow-Origin: http://localhost:3000
 
@@ -71,7 +68,7 @@ Access-Control-Allow-Credentials: true
 
       <SectionHeader number={3} title="Fix by Backend Framework" />
 
-      <CodeBlock language="javascript" filename="Node.js / Express">
+      <CodeBlock language="javascript" filename="express-cors.js">
 {`const cors = require('cors');
 
 // Quick fix: allow all origins (dev only)
@@ -89,7 +86,7 @@ app.use(cors({
 app.options('*', cors());`}
       </CodeBlock>
 
-      <CodeBlock language="python" filename="FastAPI (Python)">
+      <CodeBlock language="python" filename="fastapi-cors.py">
 {`from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -104,7 +101,7 @@ app.add_middleware(
 )`}
       </CodeBlock>
 
-      <CodeBlock language="python" filename="Django (Python)">
+      <CodeBlock language="python" filename="django-cors.py">
 {`# 1. Install: pip install django-cors-headers
 # 2. settings.py:
 
@@ -128,7 +125,7 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOW_ALL_ORIGINS = True`}
       </CodeBlock>
 
-      <CodeBlock language="go" filename="Go (net/http)">
+      <CodeBlock language="go" filename="go-cors.go">
 {`func corsMiddleware(next http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
         w.Header().Set("Access-Control-Allow-Origin", "https://myapp.com")
@@ -144,7 +141,7 @@ CORS_ALLOW_ALL_ORIGINS = True`}
 }`}
       </CodeBlock>
 
-      <CodeBlock language="php" filename="PHP">
+      <CodeBlock language="php" filename="cors.php">
 {`<?php
 header("Access-Control-Allow-Origin: https://myapp.com");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
@@ -158,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }`}
       </CodeBlock>
 
-      <CodeBlock language="nginx" filename="Nginx (reverse proxy)">
+      <CodeBlock language="nginx" filename="nginx-cors.conf">
 {`server {
     location /api/ {
         add_header 'Access-Control-Allow-Origin' 'https://myapp.com' always;
@@ -183,7 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
         this makes the browser think everything is on the same origin.
       </p>
 
-      <CodeBlock language="javascript" filename="Next.js — next.config.js">
+      <CodeBlock language="javascript" filename="next.config.js">
 {`/** @type {import('next').NextConfig} */
 module.exports = {
   async rewrites() {
@@ -199,7 +196,7 @@ module.exports = {
 // Now call /api/users instead of http://localhost:8000/users`}
       </CodeBlock>
 
-      <CodeBlock language="javascript" filename="Vite — vite.config.js">
+      <CodeBlock language="javascript" filename="vite.config.js">
 {`export default {
   server: {
     proxy: {
@@ -213,7 +210,7 @@ module.exports = {
 };`}
       </CodeBlock>
 
-      <CodeBlock language="json" filename="Create React App — package.json">
+      <CodeBlock language="json" filename="package.json">
 {`{
   "proxy": "http://localhost:8000"
 }
@@ -276,19 +273,71 @@ app.post('/api/data', handler);`}
         steps={[
           {
             title: 'Set credentials: "include" in fetch (or withCredentials: true in Axios)',
-            code: `fetch('/api/data', { credentials: 'include' })`,
+            desc: 'Without this setting, cookies are never sent cross-origin. The browser strips them silently. Always set explicitly when your API depends on session cookies.',
           },
           {
             title: 'Set Access-Control-Allow-Credentials: true on server',
-            code: `res.header('Access-Control-Allow-Credentials', 'true')`,
+            desc: 'The server must explicitly opt in to credentials. If this header is missing, the browser rejects the response even if the data is present.',
           },
           {
             title: 'Use explicit origin (NOT wildcard *)',
-            code: `res.header('Access-Control-Allow-Origin', 'https://myapp.com')`,
+            desc: 'The CORS spec forbids using * when credentials are enabled. The server must respond with the exact requesting origin (e.g., https://myapp.com), not a wildcard.',
           },
           {
             title: 'Set SameSite=None; Secure on the cookie',
-            code: `Set-Cookie: session=abc123; SameSite=None; Secure; HttpOnly`,
+            desc: 'Modern browsers require SameSite=None; Secure for cookies sent cross-origin. Without this, cookies are silently dropped. Requires HTTPS — won\'t work on HTTP.',
+          },
+          {
+            title: 'Verify your backend echoes the Origin header dynamically',
+            desc: 'For multi-origin setups, check the incoming Origin header on the server and echo back that specific origin in Access-Control-Allow-Origin. Hardcoding one origin breaks other legitimate clients.',
+          },
+        ]}
+      />
+
+      <SectionHeader number={8} title="CORS Headers Comparison" />
+      <CompareTable
+        leftLabel="Simple Requests (no preflight)"
+        rightLabel="Preflighted Requests"
+        rows={[
+          { label: 'Methods allowed', left: 'GET, HEAD, POST only', right: 'Any method (PUT, DELETE, PATCH, etc.)' },
+          { label: 'Headers allowed', left: 'Only standard headers', right: 'Any custom header (Authorization, X-Custom, etc.)' },
+          { label: 'Content-Type', left: 'text/plain, form-encoded, multipart', right: 'application/json and anything else' },
+          { label: 'Preflight sent', left: 'No — request goes directly', right: 'Yes — OPTIONS request sent first' },
+          { label: 'Server must handle', left: 'Just the actual request', right: 'OPTIONS + the actual request' },
+          { label: 'Example', left: 'fetch(\'/api\', { method: \'GET\' })', right: 'fetch(\'/api\', { method: \'POST\', headers: { \'Authorization\': \'Bearer ...\' } })' },
+        ]}
+      />
+
+      <CompareTable
+        leftLabel="Access-Control-Allow-Origin: *"
+        rightLabel="Access-Control-Allow-Origin: specific"
+        rows={[
+          { label: 'Use case', left: 'Public APIs, CDN assets, open data', right: 'Authenticated APIs, private data' },
+          { label: 'Works with credentials', left: '❌ No — spec forbids it', right: '✅ Yes — required for cookie auth' },
+          { label: 'Security level', left: 'Low — any site can read the response', right: 'High — only listed origins allowed' },
+          { label: 'Browser support', left: '✅ All browsers', right: '✅ All browsers' },
+          { label: 'Multiple origins', left: 'N/A — already allows all', right: 'Must check + echo Origin dynamically' },
+        ]}
+      />
+
+      <SectionHeader number={9} title="Debugging CORS Step by Step" />
+      <VerticalSteps
+        steps={[
+          {
+            title: 'Open DevTools Network tab and reproduce the error',
+            desc: 'Find the failing request. Check if the response has the Access-Control-Allow-Origin header. If the header is absent, the fix is entirely on the server. If it\'s present but wrong, check the value.',
+          },
+          {
+            title: 'Check if there is a preflight OPTIONS request',
+            desc: 'In the Network tab, filter for "OPTIONS" requests. If the preflight returned a non-200 response or is missing headers, fix the OPTIONS handler on your server first.',
+          },
+          {
+            title: 'Test the API directly with curl',
+            desc: 'Run: curl -H "Origin: http://localhost:3000" -I https://api.example.com/data. If Access-Control-Allow-Origin is in the curl response, the server is configured. If not, the server needs fixing.',
+          },
+          {
+            title: 'Check for proxy/load balancer stripping headers',
+            desc: 'Sometimes CORS headers are added by the application but stripped by a reverse proxy (Nginx, CloudFront, etc.). Verify headers at each layer with curl --verbose.',
           },
         ]}
       />
@@ -314,6 +363,18 @@ app.post('/api/data', handler);`}
           {
             question: 'What is the difference between simple and preflighted requests?',
             answer: 'Simple requests (GET/HEAD/POST with no custom headers, standard Content-Type) go directly. Any other request triggers a preflight OPTIONS request first. If the server doesn\'t respond correctly to OPTIONS, the actual request is blocked.',
+          },
+          {
+            question: 'Why does CORS work in Postman but not in the browser?',
+            answer: 'Postman is not a browser and doesn\'t enforce the Same-Origin Policy. It sends requests directly without CORS checks. This is intentional — it\'s a developer tool. Only browser-based JavaScript is subject to CORS restrictions.',
+          },
+          {
+            question: 'How do I allow multiple specific origins for CORS?',
+            answer: 'The Access-Control-Allow-Origin header can only contain one value — you cannot list multiple. The standard pattern is to check the incoming Origin header against a whitelist and echo it back: const allowed = ["https://app.com", "https://staging.app.com"]; if (allowed.includes(req.headers.origin)) { res.header("Access-Control-Allow-Origin", req.headers.origin); }',
+          },
+          {
+            question: 'Can CORS errors cause security vulnerabilities?',
+            answer: 'Misconfigured CORS can create serious vulnerabilities. Using wildcard (*) with sensitive data allows any website to read your API responses. Dynamically setting Access-Control-Allow-Origin to whatever origin the request claims (without validation) is dangerous — always validate against a whitelist. Never allow null as an origin — it can be spoofed.',
           },
         ]}
       />

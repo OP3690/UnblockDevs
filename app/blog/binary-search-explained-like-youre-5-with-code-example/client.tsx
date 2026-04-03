@@ -2,7 +2,7 @@
 
 import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
 import {
-  AlertBox, FlowDiagram, CompareTable, ErrorFix, VerticalSteps,
+  AlertBox, CompareTable, ErrorFix, VerticalSteps,
   CodeBlock, FAQAccordion, KeyPointsGrid, StatGrid, SectionHeader,
   QuickFact,
 } from '@/components/blog/BlogVisuals';
@@ -56,22 +56,32 @@ export default function BinarySearchExplainedLikeYoure5WithCodeExampleClient() {
         If it comes after — flip to the right half. Repeat until found.
       </p>
 
-      <FlowDiagram
-        steps={[
-          { label: 'Start: low=0, high=n-1', color: 'blue' },
-          { label: 'mid = (low + high) / 2', color: 'blue' },
-          { label: 'Compare arr[mid] with target', color: 'amber' },
-          { label: 'Equal → Found! Return mid', color: 'green' },
-          { label: 'Target < arr[mid] → high = mid - 1', color: 'orange' },
-          { label: 'Target > arr[mid] → low = mid + 1', color: 'orange' },
-          { label: 'low > high → Not found, return -1', color: 'red' },
+      <KeyPointsGrid
+        columns={2}
+        items={[
+          {
+            title: 'The sorted prerequisite',
+            description: 'Binary search only works on sorted data. If your array is unsorted, you must sort it first — but then binary search applies for all future lookups, making the total cost O(n log n) + O(log n) per query.',
+          },
+          {
+            title: 'Why it is O(log n)',
+            description: 'Each comparison cuts the search space in half. After k comparisons, only n/2^k elements remain. When n/2^k = 1, you have found it. Solving for k: k = log2(n). For n=1,000,000: log2(1,000,000) is approximately 20.',
+          },
+          {
+            title: 'Three outcomes per step',
+            description: 'At each midpoint you get one of three results: found (equal), go left (target is smaller), or go right (target is larger). This three-way branch is the heart of binary search.',
+          },
+          {
+            title: 'Termination condition',
+            description: 'The loop ends when low > high — meaning the search space is empty and the target does not exist. This off-by-one is one of the most common implementation bugs.',
+          },
         ]}
       />
 
-      <QuickFact>
-        Why log₂(n)? Each comparison cuts the search space in half. After k comparisons, you've eliminated
-        all but n/2ᵏ elements. When n/2ᵏ = 1, you've found the answer. Solving: k = log₂(n).
-        For n=1,000,000: log₂(1,000,000) ≈ 20.
+      <QuickFact color="blue" label="Mathematical insight">
+        Why log2(n)? Each comparison cuts the search space in half. After k comparisons, you have eliminated
+        all but n/2^k elements. When n/2^k = 1, you have found the answer. Solving: k = log2(n).
+        For n=1,000,000: log2(1,000,000) is approximately 20.
       </QuickFact>
 
       <SectionHeader number={3} title="Step-by-Step Walkthrough" />
@@ -83,18 +93,19 @@ export default function BinarySearchExplainedLikeYoure5WithCodeExampleClient() {
         steps={[
           {
             title: 'Step 1: low=0, high=9, mid=4',
-            description: 'arr[4] = 16. Target 23 > 16 → search right half.',
-            code: '[2, 5, 8, 12, 16, | 23, 38, 45, 56, 72]  ← right half',
+            desc: 'arr[4] = 16. Target 23 > 16, so we search the right half. Set low = mid + 1 = 5. The left half [2, 5, 8, 12, 16] is completely eliminated.',
           },
           {
             title: 'Step 2: low=5, high=9, mid=7',
-            description: 'arr[7] = 45. Target 23 < 45 → search left half.',
-            code: '[23, 38, 45 | 45, 56, 72]  ← left half: [23, 38]',
+            desc: 'arr[7] = 45. Target 23 < 45, so we search the left half. Set high = mid - 1 = 6. Elements [45, 56, 72] are eliminated.',
           },
           {
             title: 'Step 3: low=5, high=6, mid=5',
-            description: 'arr[5] = 23. Target 23 === 23 → FOUND at index 5!',
-            code: 'arr[5] = 23 ✓ — found in 3 comparisons',
+            desc: 'arr[5] = 23. Target 23 === 23 — FOUND! Return index 5. Total: only 3 comparisons for a 10-element array.',
+          },
+          {
+            title: 'If target was missing: low > high',
+            desc: 'If we were searching for 99: the low pointer would eventually exceed high. Loop exits, return -1 to indicate not found.',
           },
         ]}
       />
@@ -237,29 +248,137 @@ while (low <= high) {
         goodLabel="Correct termination"
       />
 
-      <SectionHeader number={7} title="Real-World Uses of Binary Search" />
+      <SectionHeader number={7} title="Advanced: Find First and Last Occurrence" />
+      <p>
+        Standard binary search returns any matching index when duplicates exist. To find the first or last
+        occurrence of a value, you need a modified version that keeps searching after finding a match.
+      </p>
+
+      <CodeBlock language="javascript" filename="JavaScript — Find First and Last Occurrence">
+{`// Find FIRST occurrence (leftmost)
+function findFirst(arr, target) {
+  let low = 0, high = arr.length - 1, result = -1;
+  while (low <= high) {
+    const mid = Math.floor((low + high) / 2);
+    if (arr[mid] === target) {
+      result = mid;   // Record this match
+      high = mid - 1; // Keep searching LEFT for earlier occurrence
+    } else if (arr[mid] < target) {
+      low = mid + 1;
+    } else {
+      high = mid - 1;
+    }
+  }
+  return result;
+}
+
+// Find LAST occurrence (rightmost)
+function findLast(arr, target) {
+  let low = 0, high = arr.length - 1, result = -1;
+  while (low <= high) {
+    const mid = Math.floor((low + high) / 2);
+    if (arr[mid] === target) {
+      result = mid;   // Record this match
+      low = mid + 1;  // Keep searching RIGHT for later occurrence
+    } else if (arr[mid] < target) {
+      low = mid + 1;
+    } else {
+      high = mid - 1;
+    }
+  }
+  return result;
+}
+
+// Example with duplicates:
+const arr = [1, 2, 2, 2, 3, 4];
+console.log(findFirst(arr, 2));  // → 1
+console.log(findLast(arr, 2));   // → 3`}
+      </CodeBlock>
+
+      <SectionHeader number={8} title="Binary Search on the Answer Space" />
+      <p>
+        Binary search is not just for arrays. A powerful technique is searching the range of valid answers
+        when you need to find the minimum or maximum value that satisfies a condition.
+      </p>
+
+      <CodeBlock language="javascript" filename="Binary Search on Answer — Square Root (Floor)">
+{`// Find the integer square root (floor) of n
+// Instead of searching an array, we binary search the range of possible answers [1, n/2]
+function sqrtFloor(n) {
+  if (n < 2) return n;
+
+  let low = 1, high = Math.floor(n / 2), result = 0;
+
+  while (low <= high) {
+    const mid = Math.floor((low + high) / 2);
+    const square = mid * mid;
+
+    if (square === n) return mid;       // Perfect square
+    if (square < n) {
+      result = mid;     // Valid floor candidate — try going larger
+      low = mid + 1;
+    } else {
+      high = mid - 1;   // Too large
+    }
+  }
+
+  return result;
+}
+
+console.log(sqrtFloor(16));  // → 4
+console.log(sqrtFloor(10));  // → 3 (floor of 3.16...)
+console.log(sqrtFloor(25));  // → 5`}
+      </CodeBlock>
+
+      <SectionHeader number={9} title="Real-World Uses of Binary Search" />
 
       <KeyPointsGrid
         columns={2}
         items={[
           {
             title: 'Database Indexes',
-            description: 'B-tree indexes use a form of binary search. That\'s why indexed queries are fast and full-table scans are slow.',
+            description: 'B-tree indexes use a form of binary search. That\'s why indexed queries are fast and full-table scans are slow. Every WHERE clause on an indexed column is essentially a binary search through the index.',
           },
           {
             title: 'Git Bisect',
-            description: '`git bisect` uses binary search to find the commit that introduced a bug. Halves the commit range with each test.',
+            description: '`git bisect` uses binary search to find the commit that introduced a bug. Halves the commit range with each test — finds a bad commit among 1000 in just 10 steps.',
           },
           {
             title: 'Finding Insertion Point',
-            description: 'Where should a new value be inserted to keep a sorted array sorted? Binary search gives the answer in O(log n).',
+            description: 'Where should a new value be inserted to keep a sorted array sorted? Binary search gives the answer in O(log n). Python\'s bisect module is built on this pattern.',
           },
           {
             title: 'Rotated Array Problems',
-            description: 'Common interview variant: find a target in a rotated sorted array. Modified binary search still solves it in O(log n).',
+            description: 'Common interview variant: find a target in a rotated sorted array [4,5,6,0,1,2,3]. Modified binary search determines which half is sorted and searches appropriately, still in O(log n).',
+          },
+          {
+            title: 'IP Address Routing',
+            description: 'Network routers use longest-prefix matching with binary search on sorted routing tables to determine the next hop for packets — billions of lookups per second.',
+          },
+          {
+            title: 'Autocomplete and Spell Check',
+            description: 'Dictionary-based autocomplete stores words in sorted order and uses binary search (often combined with trie structures) to find prefix matches instantly.',
           },
         ]}
       />
+
+      <CompareTable
+        leftLabel="Iterative Binary Search"
+        rightLabel="Recursive Binary Search"
+        rows={[
+          { label: 'Space complexity', left: 'O(1) — constant space', right: 'O(log n) — call stack frames' },
+          { label: 'Risk of stack overflow', left: 'None', right: 'On very large arrays in some languages' },
+          { label: 'Code clarity', left: 'Slightly more verbose', right: 'More elegant and mathematically natural' },
+          { label: 'Performance', left: 'Slightly faster (no function call overhead)', right: 'Tiny overhead per recursive call' },
+          { label: 'Production recommendation', left: 'Preferred for production code', right: 'Good for learning and interview explanations' },
+        ]}
+      />
+
+      <AlertBox type="tip" title="The template to memorize">
+        For interviews, memorize this exact template: while(low &lt;= high), mid = low + (high - low) / 2,
+        adjust with low = mid + 1 or high = mid - 1 — never set low or high to mid itself.
+        This pattern prevents infinite loops and off-by-one errors in every binary search variant.
+      </AlertBox>
 
       <FAQAccordion
         items={[
@@ -269,15 +388,31 @@ while (low <= high) {
           },
           {
             question: 'What if there are duplicate values?',
-            answer: 'Standard binary search returns *a* matching index — not necessarily the first or last. Use "leftmost binary search" (also called lower_bound) or "rightmost binary search" (upper_bound) when you need the first or last occurrence.',
+            answer: 'Standard binary search returns *a* matching index — not necessarily the first or last. Use "leftmost binary search" (also called lower_bound) or "rightmost binary search" (upper_bound) when you need the first or last occurrence of a duplicated value.',
           },
           {
             question: 'When is linear search better than binary search?',
-            answer: 'For very small arrays (< ~10 elements), the overhead of binary search\'s branching can actually be slower than a simple linear scan. Also, if you only search once, sorting + binary search is O(n log n) which is worse than a single O(n) linear scan.',
+            answer: 'For very small arrays (fewer than about 10 elements), the overhead of binary search\'s branching can be slower than a simple linear scan. Also, if you only search once, sorting first and then binary searching is O(n log n) total, which is worse than a single O(n) linear scan.',
           },
           {
             question: 'Is binary search hard to implement in an interview?',
             answer: 'It\'s notoriously tricky to get perfectly right — the off-by-one errors catch even experienced developers. Practice the template until you can write it from memory: while(lo<=hi), mid=lo+(hi-lo)/2, adjust lo=mid+1 or hi=mid-1.',
+          },
+          {
+            question: 'How does binary search handle an empty array?',
+            answer: 'An empty array has length 0, so high = arr.length - 1 = -1. The while condition low <= high becomes 0 <= -1, which is immediately false. The loop never runs, and -1 is returned correctly. No special case needed for empty arrays.',
+          },
+          {
+            question: 'What is the difference between lower_bound and upper_bound?',
+            answer: 'lower_bound (bisect_left in Python) returns the index of the first element >= target — the leftmost position where target could be inserted. upper_bound (bisect_right) returns the index after the last occurrence of target. The count of a value x in a sorted array is upper_bound(x) - lower_bound(x).',
+          },
+          {
+            question: 'Can binary search work on a linked list?',
+            answer: 'Technically yes, but it is inefficient. Finding the midpoint of a linked list requires O(n) traversal (unlike arrays where mid index access is O(1)). So binary search on a linked list is O(n log n) — worse than simple linear search O(n). Use arrays or skip lists for fast binary search.',
+          },
+          {
+            question: 'What is exponential search and when is it useful?',
+            answer: 'Exponential search finds the range where the target exists by doubling the index (1, 2, 4, 8, 16...) until exceeding the target, then runs binary search on that range. It is useful when the array size is unknown (unbounded) or when the target is near the beginning — overall O(log n) but with a smaller constant for near-start targets.',
           },
         ]}
       />

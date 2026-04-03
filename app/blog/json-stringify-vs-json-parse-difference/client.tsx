@@ -1,308 +1,382 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Code, CheckCircle, Copy, ExternalLink, ArrowRight } from 'lucide-react';
-import { useState } from 'react';
-import toast from 'react-hot-toast';
-import FAQSchema from '@/components/FAQSchema';
-import BlogSocialShare from '@/components/BlogSocialShare';
 import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
+import {
+  AlertBox, CodeBlock, FAQAccordion, KeyPointsGrid, StatGrid, SectionHeader, QuickFact, ErrorFix, VerticalSteps,
+} from '@/components/blog/BlogVisuals';
 
 export default function JsonStringifyVsJsonParseDifferenceClient() {
-  const [copiedExample, setCopiedExample] = useState<string | null>(null);
-
-  const copyToClipboard = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedExample(id);
-    toast.success('Copied to clipboard!');
-    setTimeout(() => setCopiedExample(null), 2000);
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
-      <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/blog" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Developer's Study Materials
-          </Link>
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <Code className="w-6 h-6 text-blue-600" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">JSON.stringify() vs JSON.parse()</h1>
-              <p className="text-sm text-gray-500 mt-1">Complete Difference Guide</p>
-            </div>
-          </div>
-        </div>
-      </header>
+    <BlogLayoutWithSidebarAds>
+      <h1>JSON.stringify() vs JSON.parse() — Complete Difference Guide</h1>
+      <p className="lead">
+        <code>JSON.stringify()</code> and <code>JSON.parse()</code> are the two most important JSON methods
+        in JavaScript. One converts objects to strings; the other converts strings back to objects. Understanding
+        both — including their edge cases and gotchas — is essential for every developer working with APIs,
+        localStorage, or any data exchange.
+      </p>
 
-      {/* Floating Social Share Bar */}
-      <BlogSocialShare 
-        title="JSON.stringify() vs JSON.parse()"
-        description="Complete Difference Guide"
-        variant="floating"
+      <StatGrid
+        stats={[
+          { value: 'Object→String', label: 'JSON.stringify() direction', color: 'blue' },
+          { value: 'String→Object', label: 'JSON.parse() direction', color: 'green' },
+          { value: 'Serialization', label: 'what stringify is called', color: 'purple' },
+          { value: 'Deserialization', label: 'what parse is called', color: 'amber' },
+        ]}
       />
 
+      <SectionHeader number={1} title="The Core Difference" />
+      <p>
+        These two methods are inverse operations. <strong>JSON.stringify()</strong> converts a JavaScript value
+        (object, array, primitive) into a JSON-formatted string. <strong>JSON.parse()</strong> takes a JSON
+        string and converts it back into a JavaScript value. They form a complete serialization cycle.
+      </p>
 
-      <BlogLayoutWithSidebarAds>
-        <FAQSchema
-          faqs={[
-            {
-              question: 'What is the difference between JSON.stringify() and JSON.parse()?',
-              answer: 'JSON.stringify() converts JavaScript objects to JSON strings, while JSON.parse() converts JSON strings back to JavaScript objects. They are inverse operations - stringify creates strings, parse creates objects.',
-            },
-            {
-              question: 'When should I use JSON.stringify()?',
-              answer: 'Use JSON.stringify() when you need to convert JavaScript objects to strings for sending to APIs, storing in localStorage, or creating JSON files. It\'s essential for data transmission.',
-            },
-            {
-              question: 'When should I use JSON.parse()?',
-              answer: 'Use JSON.parse() when you receive JSON strings from APIs, read from localStorage, or load JSON files. It converts the string back into a usable JavaScript object.',
-            },
-            {
-              question: 'Can I use JSON.parse() online?',
-              answer: 'Yes! Use our free JSON Parser online tool to parse JSON strings instantly. It validates and converts JSON strings to JavaScript objects with error handling.',
-            },
-          ]}
-        />
-        <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          <section className="mb-12">
-            <p className="text-lg text-gray-700 leading-relaxed mb-4">
-              <code className="bg-gray-100 px-1 rounded">JSON.stringify()</code> and <code className="bg-gray-100 px-1 rounded">JSON.parse()</code> are 
-              two fundamental JavaScript methods for working with JSON data. Understanding their differences is crucial for effective data handling.
-            </p>
-            <p className="text-gray-700 leading-relaxed">
-              In this guide, we'll explain when to use each method, how they work together, and provide practical examples. 
-              Use our free <Link href="/json-stringify-online" className="text-blue-600 hover:underline font-semibold">JSON.stringify() online tool</Link> and 
-              <Link href="/?tab=beautifier" className="text-blue-600 hover:underline font-semibold"> JSON Parser online</Link> to test examples instantly.
-            </p>
-          </section>
+      <QuickFact>
+        JSON stands for JavaScript Object Notation. Despite the name, JSON is a language-independent format
+        used across Python, Java, Ruby, Go, and virtually every other programming language.
+      </QuickFact>
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Quick Comparison</h2>
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Feature</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">JSON.stringify()</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">JSON.parse()</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  <tr>
-                    <td className="px-4 py-3 text-sm font-medium text-gray-900">Input</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">JavaScript Object/Array</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">JSON String</td>
-                  </tr>
-                  <tr className="bg-gray-50">
-                    <td className="px-4 py-3 text-sm font-medium text-gray-900">Output</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">JSON String</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">JavaScript Object/Array</td>
-                  </tr>
-                  <tr>
-                    <td className="px-4 py-3 text-sm font-medium text-gray-900">Use Case</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">Sending data, storing data</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">Receiving data, reading data</td>
-                  </tr>
-                  <tr className="bg-gray-50">
-                    <td className="px-4 py-3 text-sm font-medium text-gray-900">Direction</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">
-                      <ArrowRight className="w-4 h-4 inline text-blue-600" /> Object → String
-                    </td>
-                    <td className="px-4 py-3 text-sm text-gray-700">
-                      <ArrowLeft className="w-4 h-4 inline text-green-600" /> String → Object
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
+      <SectionHeader number={2} title="JSON.stringify() — Object to String" />
+      <p>
+        Use <code>JSON.stringify()</code> whenever you need to convert a JavaScript value into a string for
+        transmission or storage: sending to an API, saving in localStorage, writing to a file, or logging
+        objects as readable text.
+      </p>
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">JSON.stringify() - Object to String</h2>
-            <div className="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg mb-4">
-              <p className="text-gray-700 mb-3">
-                <strong>JSON.stringify()</strong> converts JavaScript objects, arrays, or values into JSON strings. 
-                This is also known as <strong>JSON serialization</strong>.
-              </p>
-              <p className="text-sm text-gray-600">
-                Use <Link href="/json-stringify-online" className="text-blue-600 hover:underline font-semibold">JSON.stringify() online</Link> to test this instantly.
-              </p>
-            </div>
-            <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-gray-900">Example: JSON.stringify()</h3>
-                <button
-                  onClick={() => copyToClipboard(`const obj = { name: "John", age: 30 };\nconst jsonString = JSON.stringify(obj);\nconsole.log(jsonString);\n// Output: '{"name":"John","age":30}'`, 'stringify-example')}
-                  className="text-blue-600 hover:text-blue-700"
-                >
-                  {copiedExample === 'stringify-example' ? <CheckCircle className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
-                </button>
-              </div>
-              <pre className="bg-white p-4 rounded border border-gray-200 text-sm overflow-x-auto">
-                <code>{`const obj = { name: "John", age: 30 };
-const jsonString = JSON.stringify(obj);
-console.log(jsonString);
-// Output: '{"name":"John","age":30}'`}</code>
-              </pre>
-            </div>
-          </section>
+      <CodeBlock lang="javascript" title="JSON.stringify() Basic Usage">{`const user = { name: "Alice", age: 30, active: true };
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">JSON.parse() - String to Object</h2>
-            <div className="bg-green-50 border-l-4 border-green-500 p-5 rounded-r-lg mb-4">
-              <p className="text-gray-700 mb-3">
-                <strong>JSON.parse()</strong> converts JSON strings back into JavaScript objects or arrays. 
-                This is also known as <strong>JSON deserialization</strong> or <strong>unstringify JSON</strong>.
-              </p>
-              <p className="text-sm text-gray-600">
-                Use our <Link href="/?tab=beautifier" className="text-green-600 hover:underline font-semibold">JSON Parser online</Link> to parse JSON strings instantly.
-              </p>
-            </div>
-            <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-gray-900">Example: JSON.parse()</h3>
-                <button
-                  onClick={() => copyToClipboard(`const jsonString = '{"name":"John","age":30}';\nconst obj = JSON.parse(jsonString);\nconsole.log(obj);\n// Output: { name: "John", age: 30 }`, 'parse-example')}
-                  className="text-green-600 hover:text-green-700"
-                >
-                  {copiedExample === 'parse-example' ? <CheckCircle className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
-                </button>
-              </div>
-              <pre className="bg-white p-4 rounded border border-gray-200 text-sm overflow-x-auto">
-                <code>{`const jsonString = '{"name":"John","age":30}';
+// Basic stringify
+const json = JSON.stringify(user);
+console.log(json);
+// → '{"name":"Alice","age":30,"active":true}'
+console.log(typeof json);
+// → 'string'
+
+// With indentation (pretty print)
+const pretty = JSON.stringify(user, null, 2);
+console.log(pretty);
+// → {
+//     "name": "Alice",
+//     "age": 30,
+//     "active": true
+//   }
+
+// Arrays work too
+const items = [1, "hello", true, null];
+console.log(JSON.stringify(items));
+// → '[1,"hello",true,null]'`}</CodeBlock>
+
+      <AlertBox type="info" title="The replacer parameter">
+        JSON.stringify() accepts a second argument — a replacer — that lets you filter or transform which
+        properties get included. Pass an array of strings to include only specific keys, or a function
+        for custom logic.
+      </AlertBox>
+
+      <CodeBlock lang="javascript" title="JSON.stringify() Advanced — Replacer and Indentation">{`const data = {
+  id: 1,
+  name: "Alice",
+  password: "secret123",  // we want to exclude this
+  createdAt: new Date("2024-01-01"),
+};
+
+// Array replacer: only include these keys
+const safe = JSON.stringify(data, ["id", "name"]);
+console.log(safe);
+// → '{"id":1,"name":"Alice"}'
+
+// Function replacer: custom logic
+const result = JSON.stringify(data, (key, value) => {
+  if (key === "password") return undefined;  // exclude
+  if (value instanceof Date) return value.toISOString(); // transform
+  return value;
+});
+console.log(result);
+// → '{"id":1,"name":"Alice","createdAt":"2024-01-01T00:00:00.000Z"}'
+
+// Third argument: indentation (2 or 4 spaces, or a string like "\t")
+console.log(JSON.stringify({ a: 1 }, null, 4));
+// → {
+//       "a": 1
+//   }`}</CodeBlock>
+
+      <SectionHeader number={3} title="JSON.parse() — String to Object" />
+      <p>
+        Use <code>JSON.parse()</code> whenever you receive a JSON string and need to work with it as a
+        JavaScript value: reading from an API response, loading from localStorage, or parsing JSON files.
+      </p>
+
+      <CodeBlock lang="javascript" title="JSON.parse() Basic Usage">{`const jsonString = '{"name":"Bob","age":25,"tags":["js","react"]}';
+
+// Basic parse
 const obj = JSON.parse(jsonString);
-console.log(obj);
-// Output: { name: "John", age: 30 }`}</code>
-              </pre>
-            </div>
-          </section>
+console.log(obj.name);    // → 'Bob'
+console.log(obj.tags[0]); // → 'js'
+console.log(typeof obj);  // → 'object'
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Working Together</h2>
-            <p className="text-gray-700 mb-4">
-              These methods work together in a complete data flow cycle:
-            </p>
-            <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-6 border border-gray-200">
-              <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0">1</div>
-                  <div>
-                    <p className="text-sm text-gray-700">
-                      <strong>Create object:</strong> <code className="bg-white px-1 rounded">const obj = {'{'} name: "John" {'}'}</code>
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <ArrowRight className="w-6 h-6 text-blue-600 ml-4" />
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0">2</div>
-                  <div>
-                    <p className="text-sm text-gray-700">
-                      <strong>Stringify:</strong> <code className="bg-white px-1 rounded">JSON.stringify(obj)</code> → <code className="bg-white px-1 rounded">{'\''}{'{'}"name":"John"{'}'}{'\''}</code>
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <ArrowRight className="w-6 h-6 text-gray-400 ml-4" />
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="bg-gray-400 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0">3</div>
-                  <div>
-                    <p className="text-sm text-gray-700">
-                      <strong>Send/Store:</strong> API request, localStorage, file, etc.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <ArrowRight className="w-6 h-6 text-green-600 ml-4" />
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0">4</div>
-                  <div>
-                    <p className="text-sm text-gray-700">
-                      <strong>Parse:</strong> <code className="bg-white px-1 rounded">JSON.parse(jsonString)</code> → <code className="bg-white px-1 rounded">{'{'} name: "John" {'}'}</code>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+// Parse numbers and booleans
+const config = JSON.parse('{"debug":true,"maxRetries":3,"timeout":5000}');
+console.log(config.debug);      // → true  (boolean, not string)
+console.log(config.maxRetries); // → 3     (number, not string)
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Common Use Cases</h2>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <h3 className="font-semibold text-gray-900 mb-2">JSON.stringify() Use Cases</h3>
-                <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
-                  <li>Sending data to API (fetch, axios)</li>
-                  <li>Storing in localStorage</li>
-                  <li>Creating JSON files</li>
-                  <li>Logging objects as strings</li>
-                </ul>
-              </div>
-              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                <h3 className="font-semibold text-gray-900 mb-2">JSON.parse() Use Cases</h3>
-                <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
-                  <li>Receiving data from API</li>
-                  <li>Reading from localStorage</li>
-                  <li>Loading JSON files</li>
-                  <li>Parsing JSON strings</li>
-                </ul>
-              </div>
-            </div>
-          </section>
+// Parse arrays
+const ids = JSON.parse('[1, 2, 3, 4, 5]');
+console.log(ids.length); // → 5`}</CodeBlock>
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">JSON Serialize Online vs JSON Parse Online</h2>
-            <div className="bg-yellow-50 border-l-4 border-yellow-500 p-5 rounded-r-lg">
-              <p className="text-gray-700 mb-3">
-                <strong>JSON Serialize Online</strong> = JSON.stringify() online tools
-              </p>
-              <p className="text-gray-700 mb-3">
-                <strong>JSON Parse Online</strong> = JSON.parse() online tools (also called JSON Parser online)
-              </p>
-              <p className="text-sm text-gray-600">
-                Both are essential for working with JSON data. Use <Link href="/json-stringify-online" className="text-blue-600 hover:underline font-semibold">JSON.stringify() online</Link> to convert objects to strings, 
-                and <Link href="/?tab=beautifier" className="text-green-600 hover:underline font-semibold">JSON Parser online</Link> to convert strings back to objects.
-              </p>
-            </div>
-          </section>
+      <CodeBlock lang="javascript" title="JSON.parse() with Reviver Function">{`// The reviver runs on every parsed key-value pair
+const json = '{"name":"Alice","createdAt":"2024-01-15T10:30:00.000Z","score":95}';
 
-          <section className="mb-12 bg-gradient-to-r from-blue-600 to-green-600 rounded-xl p-8 text-white">
-            <div className="flex items-center gap-4 mb-4">
-              <Code className="w-12 h-12" />
-              <div>
-                <h2 className="text-2xl font-bold mb-2">Try Both Tools Online</h2>
-                <p className="text-blue-100">
-                  Use our free online tools to test JSON.stringify() and JSON.parse() with any data.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <Link
-                href="/json-stringify-online"
-                className="inline-flex items-center gap-2 bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
-              >
-                JSON.stringify() Tool
-                <ExternalLink className="w-5 h-5" />
-              </Link>
-              <Link
-                href="/?tab=beautifier"
-                className="inline-flex items-center gap-2 bg-white text-green-600 px-6 py-3 rounded-lg font-semibold hover:bg-green-50 transition-colors"
-              >
-                JSON Parser Tool
-                <ExternalLink className="w-5 h-5" />
-              </Link>
-            </div>
-          </section>
-        </article>
-      </BlogLayoutWithSidebarAds>
-    </div>
-  );
+const data = JSON.parse(json, (key, value) => {
+  // Convert date strings back to Date objects
+  if (key === "createdAt") return new Date(value);
+  return value;
+});
+
+console.log(data.createdAt instanceof Date); // → true
+console.log(data.createdAt.getFullYear());   // → 2024`}</CodeBlock>
+
+      <SectionHeader number={4} title="Error Handling — Never Skip Try-Catch" />
+      <p>
+        <code>JSON.parse()</code> throws a <code>SyntaxError</code> if the string is not valid JSON.
+        In production code, always wrap it in a try-catch. <code>JSON.stringify()</code> can also throw
+        for circular references.
+      </p>
+
+      <ErrorFix
+        bad={`// No error handling — crashes on invalid JSON
+function loadConfig(jsonStr) {
+  return JSON.parse(jsonStr); // throws SyntaxError if invalid
 }
 
+// Calling with malformed JSON
+loadConfig("{broken json,}"); // Uncaught SyntaxError!`}
+        good={`// Always wrap JSON.parse in try-catch
+function safeParseJSON(jsonStr, fallback = null) {
+  try {
+    return JSON.parse(jsonStr);
+  } catch (error) {
+    console.error('JSON parse failed:', error.message);
+    return fallback;
+  }
+}
+
+// Safe — returns null instead of throwing
+const result = safeParseJSON("{broken}", null);
+console.log(result); // → null`}
+      />
+
+      <CodeBlock lang="javascript" title="Handling Circular Reference in JSON.stringify()">{`// Circular reference causes TypeError
+const obj = { name: "Alice" };
+obj.self = obj;  // circular!
+
+// This throws: TypeError: Converting circular structure to JSON
+// JSON.stringify(obj);
+
+// Solution 1: Remove circular references before stringify
+const { self, ...safeObj } = obj;
+console.log(JSON.stringify(safeObj)); // → '{"name":"Alice"}'
+
+// Solution 2: Use a library like flatted or json-stringify-safe
+// import { stringify } from 'flatted';
+// console.log(stringify(obj)); // handles circular refs`}</CodeBlock>
+
+      <SectionHeader number={5} title="What Gets Lost in Stringify" />
+      <p>
+        JSON only supports a subset of JavaScript types. Several things are silently dropped or transformed
+        when you stringify an object. This is a very common source of bugs.
+      </p>
+
+      <AlertBox type="warning" title="Types lost during JSON.stringify()">
+        undefined values (property is omitted), functions (omitted), Symbols (omitted), Date objects
+        (converted to ISO string — not restored on parse), NaN and Infinity (converted to null),
+        and Map/Set objects (converted to empty object).
+      </AlertBox>
+
+      <CodeBlock lang="javascript" title="Values That Get Lost or Changed">{`const data = {
+  name: "Alice",
+  fn: () => "hello",         // function → omitted
+  sym: Symbol("id"),         // Symbol → omitted
+  undef: undefined,           // undefined → omitted
+  date: new Date("2024-01-01"), // Date → ISO string
+  nan: NaN,                   // NaN → null
+  inf: Infinity,              // Infinity → null
+  map: new Map([["a", 1]]),   // Map → {} (empty object!)
+  set: new Set([1, 2, 3]),    // Set → {} (empty object!)
+};
+
+const json = JSON.stringify(data);
+const parsed = JSON.parse(json);
+
+console.log(parsed);
+// → {
+//     name: "Alice",
+//     date: "2024-01-01T00:00:00.000Z",  // string, not Date!
+//     nan: null,
+//     inf: null,
+//     map: {},   // lost all data!
+//     set: {},   // lost all data!
+//   }
+// fn, sym, undef are completely gone!`}</CodeBlock>
+
+      <SectionHeader number={6} title="Common Use Cases with Code" />
+
+      <CodeBlock lang="javascript" title="API Request with fetch()">{`// Sending JSON to an API
+async function createUser(userData) {
+  const response = await fetch('/api/users', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(userData),  // ← stringify for transmission
+  });
+
+  if (!response.ok) throw new Error('Request failed');
+
+  const newUser = await response.json(); // ← response.json() calls JSON.parse internally
+  return newUser;
+}
+
+const user = await createUser({ name: "Carol", email: "carol@example.com" });`}</CodeBlock>
+
+      <CodeBlock lang="javascript" title="localStorage — Persist Objects">{`// Save object to localStorage
+function saveSettings(settings) {
+  localStorage.setItem('app-settings', JSON.stringify(settings));
+}
+
+// Load object from localStorage
+function loadSettings(defaults = {}) {
+  const stored = localStorage.getItem('app-settings');
+  if (!stored) return defaults;
+  try {
+    return JSON.parse(stored);
+  } catch {
+    return defaults;
+  }
+}
+
+saveSettings({ theme: 'dark', fontSize: 14 });
+const settings = loadSettings({ theme: 'light', fontSize: 12 });
+console.log(settings.theme); // → 'dark'`}</CodeBlock>
+
+      <CodeBlock lang="javascript" title="Deep Clone an Object (Simple Objects Only)">{`// Quick deep clone using stringify + parse
+// WARNING: only works for JSON-safe values (no functions, Dates, etc.)
+function deepClone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
+const original = { user: { name: "Dave", scores: [10, 20, 30] } };
+const clone = deepClone(original);
+
+clone.user.name = "Eve";
+clone.user.scores.push(40);
+
+console.log(original.user.name);    // → 'Dave' (unchanged)
+console.log(original.user.scores);  // → [10, 20, 30] (unchanged)
+
+// For production: use structuredClone() instead (handles Dates, Maps, etc.)`}</CodeBlock>
+
+      <SectionHeader number={7} title="Performance Considerations" />
+
+      <KeyPointsGrid
+        items={[
+          {
+            title: 'JSON.stringify is expensive for large objects',
+            description: 'For deeply nested or large objects (thousands of keys), stringify can be a bottleneck. Profile before optimizing — usually it\'s not the bottleneck.',
+          },
+          {
+            title: 'JSON.parse is generally fast',
+            description: 'V8 and other engines have heavily optimized JSON.parse. For most use cases, parsing even large JSON strings is very fast.',
+          },
+          {
+            title: 'Avoid parsing the same string multiple times',
+            description: 'If you need to read a JSON string multiple times, parse it once and reuse the object. Parsing is idempotent but not free.',
+          },
+          {
+            title: 'Use streaming parsers for huge data',
+            description: 'For files or API responses over several MB, use streaming JSON parsers (like node-JSONStream) instead of parsing the entire string at once.',
+          },
+        ]}
+      />
+
+      <SectionHeader number={8} title="Quick Reference" />
+
+      <CodeBlock lang="javascript" title="Complete Cheat Sheet">{`// ═══════════════════════════════════════════
+// JSON.stringify() — JavaScript → JSON string
+// ═══════════════════════════════════════════
+
+JSON.stringify(value)              // basic
+JSON.stringify(value, null, 2)     // pretty print (2 spaces)
+JSON.stringify(value, ["key1"])    // only include these keys
+JSON.stringify(value, replacerFn)  // custom transform
+
+// ════════════════════════════════════════════
+// JSON.parse() — JSON string → JavaScript value
+// ════════════════════════════════════════════
+
+JSON.parse(jsonString)             // basic
+JSON.parse(jsonString, reviverFn)  // with type transformation
+
+// ═══════════════════
+// ALWAYS use try-catch
+// ═══════════════════
+
+try {
+  const data = JSON.parse(maybeJson);
+} catch (e) {
+  // handle invalid JSON
+}
+
+// ════════════════════════════════════════════════
+// What JSON supports:
+// string, number, boolean, null, object, array
+//
+// What JSON does NOT support:
+// undefined, function, Symbol, Date, NaN, Infinity
+// Map, Set, BigInt
+// ════════════════════════════════════════════════`}</CodeBlock>
+
+      <FAQAccordion
+        items={[
+          {
+            question: 'What is the difference between JSON.stringify() and JSON.parse()?',
+            answer: 'JSON.stringify() converts JavaScript objects/arrays/values INTO a JSON string. JSON.parse() converts a JSON string BACK INTO a JavaScript value. They are inverse operations — stringify serializes, parse deserializes.',
+          },
+          {
+            question: 'Why does JSON.stringify(undefined) return undefined (not a string)?',
+            answer: 'When undefined is passed as the top-level value, JSON.stringify returns undefined (not a string). When undefined appears as an object property value, that property is silently omitted. This is because JSON has no concept of undefined — it only supports null, not undefined.',
+          },
+          {
+            question: 'How do I stringify a JavaScript Date and parse it back as a Date?',
+            answer: 'JSON.stringify converts Dates to ISO strings (e.g. "2024-01-15T10:30:00.000Z"). JSON.parse does NOT automatically restore them to Date objects — they come back as strings. Use a reviver function: JSON.parse(str, (key, value) => typeof value === "string" && /^\d{4}-\d{2}-\d{2}T/.test(value) ? new Date(value) : value)',
+          },
+          {
+            question: 'Can I use JSON.stringify to deep clone an object?',
+            answer: 'For simple objects with only JSON-safe values (strings, numbers, booleans, null, plain objects, arrays), yes. But it loses functions, Dates (converted to strings), undefined (omitted), NaN (converted to null), and does not handle Maps or Sets. For production deep cloning, use structuredClone() which handles more types correctly.',
+          },
+          {
+            question: 'What causes "Converting circular structure to JSON"?',
+            answer: 'When an object references itself (directly or indirectly), JSON.stringify cannot serialize it. For example: const a = {}; a.self = a; JSON.stringify(a) throws TypeError. Fix by removing circular references before stringify, or use a library like flatted that supports circular references.',
+          },
+          {
+            question: 'Is JSON.parse safe? Can it execute code?',
+            answer: 'JSON.parse is safe — it only parses JSON data, it cannot execute JavaScript code. This is different from eval(), which is dangerous. Always use JSON.parse (not eval) to parse JSON strings from untrusted sources.',
+          },
+          {
+            question: 'What is the reviver function in JSON.parse?',
+            answer: 'The second argument to JSON.parse is a reviver function (key, value) => newValue. It runs on every key-value pair in the parsed result, bottom-up. You can use it to transform values — most commonly to restore Date strings back to Date objects, or to convert number strings to BigInt.',
+          },
+          {
+            question: 'How do I parse JSON from a fetch() API response?',
+            answer: 'response.json() is a shorthand that reads the response body and calls JSON.parse for you. It returns a Promise. Use it like: const data = await response.json(). You can also do: const text = await response.text(); const data = JSON.parse(text); — both are equivalent.',
+          },
+        ]}
+      />
+
+      <p className="mt-6 text-sm text-gray-600">
+        Need to work with JSON data? Try our free{' '}
+        <Link href="/?tab=beautifier" className="text-blue-600 hover:underline font-medium">JSON Parser and Beautifier</Link>{' '}
+        and{' '}
+        <Link href="/json-stringify-online" className="text-blue-600 hover:underline font-medium">JSON.stringify() online tool</Link>.
+      </p>
+    </BlogLayoutWithSidebarAds>
+  );
+}

@@ -1,224 +1,306 @@
 'use client';
 
-import Link from 'next/link';
-import { ArrowLeft, X, CheckCircle, ExternalLink } from 'lucide-react';
-
-import BlogSocialShare from '@/components/BlogSocialShare';
 import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
+import {
+  AlertBox, CompareTable, CodeBlock, FAQAccordion, KeyPointsGrid,
+  StatGrid, SectionHeader, QuickFact, ErrorFix, VerticalSteps,
+} from '@/components/blog/BlogVisuals';
+
 export default function InvalidJsonVsValidJsonClient() {
-  const examples = [
-    {
-      title: 'Single Quotes',
-      invalid: `{'name': 'John'}`,
-      valid: `{"name": "John"}`,
-      reason: 'JSON only accepts double quotes for strings'
-    },
-    {
-      title: 'Trailing Comma',
-      invalid: `{"name": "John", "age": 30,}`,
-      valid: `{"name": "John", "age": 30}`,
-      reason: 'No trailing commas allowed before closing braces'
-    },
-    {
-      title: 'Comments',
-      invalid: `{// comment\n"name": "John"}`,
-      valid: `{"name": "John"}`,
-      reason: 'JSON does not support comments'
-    },
-    {
-      title: 'NaN Value',
-      invalid: `{"price": NaN}`,
-      valid: `{"price": null}`,
-      reason: 'NaN is not valid in JSON, use null instead'
-    },
-    {
-      title: 'Infinity Value',
-      invalid: `{"count": Infinity}`,
-      valid: `{"count": null}`,
-      reason: 'Infinity is not valid in JSON'
-    },
-    {
-      title: 'Unquoted Keys',
-      invalid: `{name: "John"}`,
-      valid: `{"name": "John"}`,
-      reason: 'All keys must be wrapped in double quotes'
-    },
-    {
-      title: 'Undefined Value',
-      invalid: `{"middleName": undefined}`,
-      valid: `{"middleName": null}`,
-      reason: 'undefined is not valid in JSON, use null or omit'
-    },
-    {
-      title: 'Missing Closing Brace',
-      invalid: `{"users": [{"name": "John"}]`,
-      valid: `{"users": [{"name": "John"}]}`,
-      reason: 'Every opening brace needs a closing brace'
-    },
-    {
-      title: 'Unescaped Quotes',
-      invalid: `{"message": "He said "Hello""}`,
-      valid: `{"message": "He said \\"Hello\\""}`,
-      reason: 'Quotes inside strings must be escaped'
-    },
-    {
-      title: 'Trailing Comma in Array',
-      invalid: `[1, 2, 3,]`,
-      valid: `[1, 2, 3]`,
-      reason: 'No trailing commas in arrays'
-    },
-    {
-      title: 'Function Value',
-      invalid: `{"handler": function() {}}`,
-      valid: `{"handler": null}`,
-      reason: 'Functions are not valid JSON values'
-    },
-    {
-      title: 'Date Object',
-      invalid: `{"date": new Date()}`,
-      valid: `{"date": "2025-01-15T00:00:00.000Z"}`,
-      reason: 'Date objects must be converted to strings'
-    },
-    {
-      title: 'Multiple Root Objects',
-      invalid: `{"a": 1}{"b": 2}`,
-      valid: `[{"a": 1}, {"b": 2}]`,
-      reason: 'JSON must have a single root object or array'
-    },
-    {
-      title: 'Missing Comma',
-      invalid: `{"name": "John" "age": 30}`,
-      valid: `{"name": "John", "age": 30}`,
-      reason: 'Properties must be separated by commas'
-    },
-    {
-      title: 'Octal Numbers',
-      invalid: `{"code": 0123}`,
-      valid: `{"code": 123}`,
-      reason: 'Octal notation is not valid in JSON'
-    }
-  ];
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
-      <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/blog" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Developer's Study Materials
-          </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Invalid JSON vs Valid JSON</h1>
-          <p className="text-sm text-gray-500 mt-1">15 Real Examples Developers Get Wrong</p>
-        </div>
-      </header>
+    <BlogLayoutWithSidebarAds>
+      <h1>Invalid JSON vs Valid JSON — 15 Real Examples Developers Get Wrong</h1>
+      <p className="lead">
+        JSON has a deliberately strict specification — no comments, no trailing commas, no single quotes,
+        no undefined. These constraints trip up every developer at some point. This guide covers 15 real
+        invalid JSON examples with explanations of why they fail and the exact fix for each one.
+      </p>
 
-      {/* Floating Social Share Bar */}
-      <BlogSocialShare 
-        title="Invalid JSON vs Valid JSON"
-        description="15 Real Examples Developers Get Wrong"
-        variant="floating"
+      <StatGrid stats={[
+        { value: '15', label: 'common JSON mistakes covered with before/after fixes', color: 'red' },
+        { value: 'double quotes', label: 'only valid string delimiter — single quotes always fail', color: 'amber' },
+        { value: 'null', label: 'correct replacement for undefined, NaN, Infinity', color: 'green' },
+        { value: 'JSON.stringify()', label: 'generates valid JSON — prevents all manual mistakes', color: 'blue' },
+      ]} />
+
+      <SectionHeader number={1} title="The Golden Rule: Never Build JSON Manually" />
+      <QuickFact color="amber" label="Root cause of most JSON errors">
+        Most invalid JSON comes from building it by hand — concatenating strings, copying JavaScript
+        object literals, or manually editing JSON files. The fix: always use JSON.stringify() to
+        generate JSON and JSON.parse() to consume it. The library handles quoting, escaping, and
+        formatting correctly every time.
+      </QuickFact>
+
+      <SectionHeader number={2} title="Mistakes #1–5: Syntax Violations" />
+
+      <ErrorFix
+        bad={`// ❌ Single quotes — JSON requires double quotes everywhere
+{'name': 'John', 'age': 30}
+
+// The JSON spec (RFC 8259) explicitly requires double-quoted strings.
+// JavaScript allows single quotes in object literals, but JSON does not.`}
+        good={`// ✅ Double quotes for all strings and keys
+{"name": "John", "age": 30}
+
+// Note: numbers, booleans (true/false), and null are NOT quoted:
+{"name": "Alice", "active": true, "score": 95.5, "missing": null}`}
+        badLabel="Single quotes — SyntaxError"
+        goodLabel="Double quotes required for all strings"
       />
 
-
-      <BlogLayoutWithSidebarAds>
-        <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          <section className="mb-12">
-            <p className="text-lg text-gray-700 leading-relaxed mb-4">
-              Understanding the difference between <strong>invalid JSON</strong> and <strong>valid JSON</strong> is crucial for every developer. 
-              Many developers make the same mistakes repeatedly, causing errors in their applications.
-            </p>
-            <p className="text-gray-700 leading-relaxed">
-              In this guide, we'll show you 15 real examples of invalid JSON vs valid JSON, explaining why each is wrong and how to fix it. 
-              Use our free <Link href="/" className="text-blue-600 hover:underline font-semibold">JSON Validator</Link> to check your JSON instantly.
-            </p>
-          </section>
-
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Comparison Table: Invalid ❌ vs Valid ✅</h2>
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Mistake</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Invalid JSON ❌</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Valid JSON ✅</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Why It's Wrong</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {examples.map((example, idx) => (
-                    <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                      <td className="px-4 py-3 text-sm font-medium text-gray-900">{example.title}</td>
-                      <td className="px-4 py-3 text-sm">
-                        <code className="bg-red-50 text-red-800 px-2 py-1 rounded text-xs">{example.invalid}</code>
-                      </td>
-                      <td className="px-4 py-3 text-sm">
-                        <code className="bg-green-50 text-green-800 px-2 py-1 rounded text-xs">{example.valid}</code>
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-700">{example.reason}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Detailed Examples</h2>
-            <div className="space-y-6">
-              {examples.slice(0, 5).map((example, idx) => (
-                <div key={idx} className="border border-gray-200 rounded-lg p-5">
-                  <h3 className="font-semibold text-gray-900 mb-3">{example.title}</h3>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
-                      <p className="font-semibold text-red-900 mb-2 text-sm">❌ Invalid:</p>
-                      <pre className="bg-white p-3 rounded border border-red-200 text-xs overflow-x-auto">{example.invalid}</pre>
-                    </div>
-                    <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
-                      <p className="font-semibold text-green-900 mb-2 text-sm">✅ Valid:</p>
-                      <pre className="bg-white p-3 rounded border border-green-200 text-xs overflow-x-auto">{example.valid}</pre>
-                    </div>
-                  </div>
-                  <p className="text-sm text-gray-600 mt-3"><strong>Why:</strong> {example.reason}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">How to Validate JSON Instantly</h2>
-            <div className="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg">
-              <p className="font-semibold text-blue-900 mb-2">💡 Quick Validation:</p>
-              <ol className="list-decimal list-inside space-y-2 text-blue-800 text-sm">
-                <li>Copy your JSON</li>
-                <li>Paste it into our <Link href="/" className="font-semibold underline">JSON Validator</Link></li>
-                <li>Get instant feedback on validity</li>
-                <li>If invalid, use our <Link href="/" className="font-semibold underline">JSON Fixer</Link> to repair it</li>
-              </ol>
-            </div>
-          </section>
-
-          <section className="mb-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-8 text-white">
-            <div className="flex items-center gap-4 mb-4">
-              <CheckCircle className="w-12 h-12" />
-              <div>
-                <h2 className="text-2xl font-bold mb-2">Validate and Fix JSON Instantly</h2>
-                <p className="text-blue-100">
-                  Use our free JSON Validator to check your JSON, and JSON Fixer to repair any errors automatically.
-                </p>
-              </div>
-            </div>
-            <Link
-              href="/?tab=fixer"
-              className="inline-flex items-center gap-2 bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
-            >
-              Validate JSON Now
-              <ExternalLink className="w-5 h-5" />
-            </Link>
-          </section>
-        </article>
-      </BlogLayoutWithSidebarAds>
-    </div>
-  );
+      <ErrorFix
+        bad={`// ❌ Trailing comma before closing brace or bracket
+{
+  "name": "John",
+  "age": 30,
 }
 
+// Also invalid in arrays:
+[1, 2, 3,]
+
+// JSON.parse throws: "Unexpected token }" or "Unexpected token ]"`}
+        good={`// ✅ No trailing comma — last item has no comma
+{
+  "name": "John",
+  "age": 30
+}
+
+// Arrays too:
+[1, 2, 3]
+
+// Prevention: JSON.stringify() never produces trailing commas.
+const json = JSON.stringify({ name: "John", items: [1, 2, 3] }); // always valid`}
+        badLabel="Trailing comma — not allowed in JSON"
+        goodLabel="Remove trailing comma + use JSON.stringify()"
+      />
+
+      <ErrorFix
+        bad={`// ❌ Comments — JSON has no comment syntax
+{
+  // This is the user object
+  "name": "John",  /* display name */
+  "age": 30
+}`}
+        good={`// ✅ Remove all comments from JSON
+{
+  "name": "John",
+  "age": 30
+}
+
+// If you need comments in config files, use JSONC (VS Code settings.json)
+// or JSON5 — parsed with the json5 npm package: JSON5.parse(text)`}
+        badLabel="Comments — JSON.parse throws on // or /* */"
+        goodLabel="No comments in JSON — use JSONC or JSON5 if needed"
+      />
+
+      <ErrorFix
+        bad={`// ❌ Unquoted keys
+{
+  name: "John",    // missing quotes around key
+  age: 30
+}
+
+// JavaScript object literals allow unquoted keys. JSON does not.
+// JSON requires ALL keys to be double-quoted strings.`}
+        good={`// ✅ All keys must be double-quoted strings
+{
+  "name": "John",
+  "age": 30
+}
+
+// Even numeric-looking keys must be quoted in JSON:
+// {"42": "the answer"}  ← valid JSON
+// {42: "the answer"}    ← invalid JSON`}
+        badLabel="Unquoted keys — JavaScript syntax, not JSON"
+        goodLabel="All JSON keys must be double-quoted strings"
+      />
+
+      <ErrorFix
+        bad={`// ❌ Missing closing brace or bracket
+{
+  "users": [
+    {"name": "John"}
+  ]
+// Missing } at the end
+
+// JSON.parse throws: "Unexpected end of JSON input"`}
+        good={`// ✅ Every opening delimiter needs a matching close
+{
+  "users": [
+    {"name": "John"}
+  ]
+}
+
+// Tip: Use a JSON validator to find the exact line of the missing brace.
+// Most parsers tell you the position: "at position 47" — count from there.`}
+        badLabel="Missing closing brace — truncated JSON"
+        goodLabel="Balanced braces and brackets"
+      />
+
+      <SectionHeader number={3} title="Mistakes #6–10: Invalid Values" />
+      <CompareTable
+        leftLabel="Invalid JSON Value"
+        rightLabel="Valid Replacement + Reason"
+        rows={[
+          { label: 'NaN', left: '{"price": NaN}', right: '{"price": null} — NaN is a JavaScript value, not valid JSON. Replace with null or -1 as sentinel.' },
+          { label: 'Infinity', left: '{"count": Infinity}', right: '{"count": null} — JSON has no Infinity. JSON.stringify() converts Infinity to null automatically.' },
+          { label: 'undefined', left: '{"middle": undefined}', right: 'Omit the key, or use null. JSON.stringify() drops undefined keys entirely from objects.' },
+          { label: 'Function', left: '{"fn": function() {}}', right: 'JSON cannot store functions. JSON.stringify() drops function-valued keys. Use a string descriptor instead.' },
+          { label: 'Date object', left: '{"date": new Date()}', right: '{"date": "2025-01-15T00:00:00.000Z"} — Serialize dates to ISO 8601 strings before stringifying.' },
+        ]}
+      />
+
+      <CodeBlock language="javascript" filename="Handling undefined, NaN, Infinity when serializing">
+{`// JSON.stringify's behavior with invalid values:
+const obj = {
+  name: "Alice",
+  score: NaN,            // → null in JSON
+  count: Infinity,       // → null in JSON
+  middle: undefined,     // → key omitted entirely
+  handler: function() {} // → key omitted entirely
+};
+
+JSON.stringify(obj);
+// Result: {"name":"Alice","score":null,"count":null}
+// undefined and function keys are silently dropped!
+
+// ✅ Fix: use a replacer to control serialization explicitly
+JSON.stringify(obj, (key, value) => {
+  if (value === undefined) return null;   // convert undefined → null
+  if (typeof value === 'number' && !isFinite(value)) return null;  // NaN/Infinity → null
+  if (typeof value === 'function') return undefined;  // omit functions
+  return value;
+});
+
+// ✅ Fix: convert Date objects before stringifying
+const event = {
+  name: "Launch",
+  date: new Date('2025-06-01').toISOString()  // "2025-06-01T00:00:00.000Z"
+};
+JSON.stringify(event);  // {"name":"Launch","date":"2025-06-01T00:00:00.000Z"}`}
+      </CodeBlock>
+
+      <SectionHeader number={4} title="Mistakes #11–15: Structure Errors" />
+      <CompareTable
+        leftLabel="Mistake"
+        rightLabel="Fix and Explanation"
+        rows={[
+          { label: 'Unescaped quotes', left: '{"msg": "He said "Hello""}', right: '{"msg": "He said \\"Hello\\""} — Backslash-escape quotes inside strings. JSON.stringify handles this automatically.' },
+          { label: 'Missing comma', left: '{"name": "John" "age": 30}', right: '{"name": "John", "age": 30} — Properties must be comma-separated. Easy to miss when adding new fields.' },
+          { label: 'Trailing comma in array', left: '[1, 2, 3,]', right: '[1, 2, 3] — Same rule as objects: no trailing comma before the closing ].' },
+          { label: 'Multiple root objects', left: '{"a":1}{"b":2}', right: '[{"a":1},{"b":2}] — JSON must have exactly one root element. Wrap multiple objects in an array.' },
+          { label: 'Octal notation', left: '{"code": 0123}', right: '{"code": 83} — Octal integer literals are not valid in JSON. Use decimal or hex string representation.' },
+        ]}
+      />
+
+      <SectionHeader number={5} title="Complete Reference: JSON Allowed vs Disallowed" />
+      <CompareTable
+        leftLabel="✅ Valid in JSON"
+        rightLabel="❌ NOT Valid in JSON"
+        rows={[
+          { label: 'Strings', left: '"double-quoted string"', right: '\'single-quoted\', `template literal`, unquoted' },
+          { label: 'Numbers', left: '42, -7, 3.14, 1e5, -2.5e-3', right: 'NaN, Infinity, -Infinity, 0123 (octal), 0xFF (hex)' },
+          { label: 'Booleans', left: 'true, false (lowercase)', right: 'True, False, TRUE, FALSE, 1, 0' },
+          { label: 'Null', left: 'null (lowercase)', right: 'undefined, NULL, Null, nil, None' },
+          { label: 'Keys', left: '"quoted-key", "123", "key with spaces"', right: 'unquoted, \'single-quoted\', 123 (number key)' },
+          { label: 'Comments', left: '(none allowed)', right: '// line comment, /* block comment */, # hash' },
+          { label: 'Trailing commas', left: '(none allowed)', right: '{"a": 1,}, [1, 2,]' },
+          { label: 'Special values', left: 'null for missing/unknown', right: 'undefined, NaN, Infinity, functions, symbols' },
+        ]}
+      />
+
+      <SectionHeader number={6} title="Fixing Invalid JSON Programmatically" />
+      <CodeBlock language="javascript" filename="Auto-repair common JSON issues before parsing">
+{`/**
+ * Attempt to repair common JSON mistakes before parsing.
+ * Handles: single quotes, trailing commas, unquoted keys,
+ * undefined/NaN/Infinity values, JavaScript-style comments.
+ * Note: this is a best-effort heuristic — use JSON5 library for full support.
+ */
+function repairJson(input) {
+  let s = input.trim();
+
+  // 1. Strip // and /* */ comments
+  s = s.replace(/\/\/[^\n]*/g, '');
+  s = s.replace(/\/\*[\s\S]*?\*\//g, '');
+
+  // 2. Replace undefined/NaN/Infinity with null
+  s = s.replace(/:\s*undefined\b/g, ': null');
+  s = s.replace(/:\s*NaN\b/g, ': null');
+  s = s.replace(/:\s*-?Infinity\b/g, ': null');
+
+  // 3. Remove trailing commas before } or ]
+  s = s.replace(/,\s*([}\]])/g, '$1');
+
+  // 4. Quote unquoted keys (simple heuristic — may fail on complex cases)
+  s = s.replace(/([{,]\s*)([a-zA-Z_$][a-zA-Z0-9_$]*)\s*:/g, '$1"$2":');
+
+  // 5. Try to parse the repaired string
+  try {
+    return JSON.parse(s);
+  } catch (e) {
+    // If still failing, use json5 library for more robust parsing
+    throw new Error(\`Could not repair JSON: \${e.message}. Try the JSON5 library.\`);
+  }
+}
+
+// Example:
+const broken = \`{
+  // user profile
+  name: 'Alice',
+  score: NaN,
+  active: true,
+}\`;
+
+const repaired = repairJson(broken);
+// { name: "Alice", score: null, active: true }
+
+// For production use, prefer the json5 or jsonrepair npm packages:
+// import { jsonrepair } from 'jsonrepair';
+// const valid = jsonrepair(broken);`}
+      </CodeBlock>
+
+      <VerticalSteps steps={[
+        { title: 'Read the error message — it tells you exactly where', desc: 'JSON.parse() errors include the position: "Unexpected token \',\' at position 47". Count characters from the start of your string to find the exact problem. In browsers, the DevTools console shows the error with a preview of the surrounding content.' },
+        { title: 'Print the raw string before parsing', desc: 'Add console.log(JSON.stringify(rawString)) before the JSON.parse() call. JSON.stringify wraps the string in quotes and escapes special characters, making invisible characters (BOM, zero-width spaces, non-UTF-8 bytes) visible.' },
+        { title: 'Paste into a JSON validator', desc: 'Online validators (jsonlint.com, our JSON Validator) highlight the exact line and character of the first error. Much faster than counting positions manually in a large JSON blob.' },
+        { title: 'Check the source — where is the JSON coming from?', desc: 'API response? Check the raw HTTP body with curl -v or Chrome DevTools Network tab → Response. File? Check encoding (must be UTF-8, no BOM). User input? Always validate before parsing and wrap in try/catch.' },
+        { title: 'Use JSON.stringify() going forward', desc: 'After fixing the immediate problem, eliminate the root cause: switch from manual JSON string building to JSON.stringify(). It handles all escaping, quoting, and formatting automatically, making it impossible to produce most of these errors.' },
+      ]} />
+
+      <AlertBox type="tip" title="Use JSON.stringify() to generate, JSON.parse() to consume">
+        If you build JSON by concatenating strings, you will eventually introduce an error. Let the
+        language handle it: JSON.stringify(yourObject) produces perfectly valid JSON every time. The
+        only exceptions are NaN, Infinity, undefined, and functions — handle these with a replacer
+        function or convert them before stringifying.
+      </AlertBox>
+
+      <FAQAccordion items={[
+        {
+          question: 'Why does JSON require double quotes but JavaScript allows single quotes?',
+          answer: 'JSON was designed as a language-agnostic data interchange format with a deliberately strict spec to ensure all parsers everywhere behave identically. JavaScript object literals are more lenient (single quotes, trailing commas, unquoted keys) because they\'re code parsed by one engine. JSON\'s strictness guarantees that json.loads() in Python produces the same result as JSON.parse() in JavaScript — interoperability that would fail with a looser format.',
+        },
+        {
+          question: 'Why does JSON not support comments?',
+          answer: 'Douglas Crockford (JSON\'s creator) intentionally excluded comments. He later explained that comments were being abused to include parsing directives that broke interoperability between different parsers. If you need comments in JSON-like config files, use JSONC (used by VS Code\'s settings.json), JSON5, or YAML. Standard JSON has no comment syntax — full stop.',
+        },
+        {
+          question: 'What happens to undefined and NaN when you JSON.stringify()?',
+          answer: 'JSON.stringify() handles them differently by type: undefined as a value in an object → key is omitted entirely. undefined in an array → converted to null. NaN → converted to null. Infinity and -Infinity → converted to null. Functions → key is omitted. This is why your object might have fewer keys after a stringify/parse round trip — undefined keys silently disappear.',
+        },
+        {
+          question: 'How do I handle special characters and unicode in JSON strings?',
+          answer: 'JSON strings must escape: double quote (\\" ), backslash (\\\\), and control characters (\\n, \\r, \\t, \\b, \\f). Unicode characters can appear directly as UTF-8, or be escaped as \\uXXXX. JSON.stringify() handles all of this automatically. Never manually escape characters — you will miss edge cases. The entire point of JSON.stringify() is to handle these details for you.',
+        },
+        {
+          question: 'Can JSON have arrays as the root element?',
+          answer: 'Yes — JSON allows any valid JSON value as the root element: object {}, array [], string, number, boolean, or null. [1, 2, 3] is valid JSON. "hello" is valid JSON (though unusual). Most APIs return objects {} at the root, but JSON arrays are completely valid and common for list endpoints.',
+        },
+        {
+          question: 'What is the maximum size for a JSON value or string?',
+          answer: 'The JSON spec (RFC 8259) has no defined limit. In practice, limits are set by the parser: Node.js can handle JSON files up to ~500MB before memory becomes an issue. V8\'s string size limit is ~1GB. Browser JSON.parse() can handle files up to several hundred MB. For very large JSON (>50MB), use streaming parsers like jsonstream or clarinet instead of parsing the entire string at once.',
+        },
+      ]} />
+    </BlogLayoutWithSidebarAds>
+  );
+}

@@ -28,7 +28,7 @@ export const CATEGORY_LABELS: Record<ToolCategory | 'all', string> = {
 export const TOOLS_DIRECTORY: DirectoryTool[] = [
   // —— JSON & data ——
   {
-    href: '/',
+    href: '/json-beautifier',
     name: 'JSON workbench',
     description: 'Viewer, tree, formatter, and JSON → Excel/CSV/Table on one page.',
     category: 'json',

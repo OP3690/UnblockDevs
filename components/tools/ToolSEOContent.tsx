@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
-import { ChevronRight, HelpCircle, ExternalLink } from 'lucide-react';
+import { ArrowRight, CheckCircle2, ChevronDown } from 'lucide-react';
 
 // ── Types ──────────────────────────────────────────────────
 
@@ -11,7 +11,7 @@ export type HowItWorksStep = { n: string; title: string; desc: string };
 
 // ── Sub-components ─────────────────────────────────────────
 
-/** Section heading with eyebrow label */
+/** Section heading with pill eyebrow label */
 export function SEOSection({
   eyebrow,
   heading,
@@ -26,17 +26,17 @@ export function SEOSection({
   return (
     <section className="scroll-mt-24" id={id} aria-labelledby={id ? `${id}-h` : undefined}>
       {eyebrow && (
-        <p className="mb-1 font-mono text-[11px] uppercase tracking-[0.13em] text-emerald-700">
+        <span className="mb-3 inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-emerald-700">
           {eyebrow}
-        </p>
+        </span>
       )}
       <h2
         id={id ? `${id}-h` : undefined}
-        className="mb-4 text-[1.2rem] font-semibold tracking-[-0.02em] text-zinc-900 sm:text-[1.35rem]"
+        className="mb-5 text-[1.25rem] font-bold tracking-[-0.025em] text-zinc-900 sm:text-[1.45rem]"
       >
         {heading}
       </h2>
-      {children}
+      <div className="space-y-3">{children}</div>
     </section>
   );
 }
@@ -44,26 +44,46 @@ export function SEOSection({
 /** Prose paragraph */
 export function SEOProse({ children }: { children: ReactNode }) {
   return (
-    <p className="text-[14.5px] leading-[1.75] text-zinc-600">{children}</p>
+    <p className="text-[14.5px] leading-[1.8] text-zinc-600">{children}</p>
   );
 }
 
 /** Inline code */
 export function C({ children }: { children: ReactNode }) {
   return (
-    <code className="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-[12.5px] text-zinc-700">
+    <code className="rounded-md border border-zinc-200 bg-zinc-100 px-1.5 py-0.5 font-mono text-[12.5px] text-zinc-700">
       {children}
     </code>
   );
 }
 
-/** How It Works 4-step grid */
+/** Pro tip callout */
+export function ProTip({ children }: { children: ReactNode }) {
+  return (
+    <div className="flex gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
+      <span className="mt-0.5 text-lg leading-none">💡</span>
+      <p className="text-[13.5px] leading-relaxed text-amber-900">{children}</p>
+    </div>
+  );
+}
+
+/** How It Works steps with gradient numbered circles */
 export function HowItWorks({ steps }: { steps: HowItWorksStep[] }) {
   return (
-    <div className="grid gap-px overflow-hidden rounded-xl border border-zinc-200 bg-zinc-100 sm:grid-cols-2 lg:grid-cols-4">
-      {steps.map((s) => (
-        <div key={s.n} className="flex flex-col gap-2.5 bg-white p-5 sm:p-6">
-          <span className="font-mono text-[11px] font-medium text-zinc-400">{s.n}</span>
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {steps.map((s, i) => (
+        <div
+          key={s.n}
+          className="relative flex flex-col gap-3 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
+        >
+          {/* connector line between cards (hidden on mobile) */}
+          {i < steps.length - 1 && (
+            <div className="absolute -right-2 top-8 z-10 hidden h-px w-4 bg-gradient-to-r from-emerald-300 to-transparent lg:block" />
+          )}
+          {/* step number bubble */}
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 text-[13px] font-bold text-white shadow-sm">
+            {String(i + 1).padStart(2, '0')}
+          </div>
           <h3 className="text-[14px] font-semibold text-zinc-900">{s.title}</h3>
           <p className="text-[13px] leading-relaxed text-zinc-500">{s.desc}</p>
         </div>
@@ -72,18 +92,22 @@ export function HowItWorks({ steps }: { steps: HowItWorksStep[] }) {
   );
 }
 
-/** Use-case cards grid */
+/** Use-case cards grid with icon bubbles and hover state */
 export function UseCases({ cases }: { cases: UseCase[] }) {
   return (
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {cases.map((c) => (
         <div
           key={c.title}
-          className="flex gap-3 rounded-xl border border-zinc-200 bg-zinc-50 p-4"
+          className="group flex gap-4 rounded-2xl border border-zinc-200 bg-white p-5 transition-all hover:border-emerald-300 hover:shadow-md"
         >
-          <span className="mt-0.5 text-xl leading-none">{c.icon}</span>
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-zinc-100 bg-zinc-50 text-xl transition-all group-hover:border-emerald-200 group-hover:bg-emerald-50">
+            {c.icon}
+          </div>
           <div>
-            <p className="text-[13.5px] font-semibold text-zinc-900">{c.title}</p>
+            <p className="text-[13.5px] font-semibold text-zinc-900 group-hover:text-emerald-800">
+              {c.title}
+            </p>
             <p className="mt-1 text-[12.5px] leading-relaxed text-zinc-500">{c.desc}</p>
           </div>
         </div>
@@ -92,20 +116,28 @@ export function UseCases({ cases }: { cases: UseCase[] }) {
   );
 }
 
-/** FAQ accordion (static — JS not required) */
+/** FAQ accordion — native details/summary, no JS required */
 export function FAQ({ items }: { items: FAQItem[] }) {
   return (
-    <div className="divide-y divide-zinc-100 rounded-xl border border-zinc-200 bg-zinc-50 overflow-hidden">
+    <div className="space-y-2">
       {items.map((item, i) => (
-        <details key={i} className="group bg-white first:rounded-t-xl last:rounded-b-xl">
-          <summary className="flex cursor-pointer select-none items-center justify-between gap-4 px-5 py-4 text-[14px] font-semibold text-zinc-900 marker:hidden list-none hover:bg-zinc-50">
-            {item.q}
-            <ChevronRight
-              className="h-4 w-4 shrink-0 text-zinc-400 transition-transform group-open:rotate-90"
+        <details
+          key={i}
+          className="group overflow-hidden rounded-xl border border-zinc-200 bg-white transition-all open:border-emerald-200 open:shadow-sm"
+        >
+          <summary className="flex cursor-pointer select-none list-none items-center justify-between gap-4 px-5 py-4 marker:hidden">
+            <div className="flex items-center gap-3">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-[11px] font-bold text-emerald-700">
+                {i + 1}
+              </span>
+              <span className="text-[14px] font-semibold text-zinc-900">{item.q}</span>
+            </div>
+            <ChevronDown
+              className="h-4 w-4 shrink-0 text-zinc-400 transition-transform group-open:rotate-180"
               aria-hidden
             />
           </summary>
-          <div className="px-5 pb-5 pt-1 text-[13.5px] leading-relaxed text-zinc-600">
+          <div className="border-t border-zinc-100 px-5 pb-5 pt-4 text-[13.5px] leading-[1.75] text-zinc-600">
             {item.a}
           </div>
         </details>
@@ -114,27 +146,48 @@ export function FAQ({ items }: { items: FAQItem[] }) {
   );
 }
 
-/** Related tools grid */
+/** Related tools grid — arrow animation on hover */
 export function RelatedTools({ tools }: { tools: RelatedTool[] }) {
   return (
-    <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {tools.map((t) => (
         <Link
           key={t.href}
           href={t.href}
-          className="group flex items-start gap-3 rounded-xl border border-zinc-200 bg-white p-4 transition-all hover:border-emerald-300 hover:shadow-sm"
+          className="group flex items-start gap-3 rounded-2xl border border-zinc-200 bg-white p-4 transition-all hover:border-emerald-300 hover:shadow-md"
         >
-          {t.icon && <span className="mt-0.5 text-xl leading-none">{t.icon}</span>}
+          {t.icon && (
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-zinc-100 bg-zinc-50 text-lg transition-all group-hover:border-emerald-200 group-hover:bg-emerald-50">
+              {t.icon}
+            </div>
+          )}
           <div className="min-w-0 flex-1">
             <p className="text-[13px] font-semibold text-zinc-900 group-hover:text-emerald-800">
               {t.label}
             </p>
             <p className="mt-0.5 text-[12px] leading-snug text-zinc-500">{t.desc}</p>
           </div>
-          <ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0 text-zinc-300 group-hover:text-emerald-500" aria-hidden />
+          <ArrowRight
+            className="mt-0.5 h-4 w-4 shrink-0 translate-x-0 text-zinc-300 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:text-emerald-500 group-hover:opacity-100"
+            aria-hidden
+          />
         </Link>
       ))}
     </div>
+  );
+}
+
+/** Feature check-list — compact bullet points with check icons */
+export function FeatureList({ items }: { items: string[] }) {
+  return (
+    <ul className="grid gap-2 sm:grid-cols-2">
+      {items.map((item) => (
+        <li key={item} className="flex items-start gap-2.5 text-[13.5px] text-zinc-600">
+          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" aria-hidden />
+          {item}
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -153,9 +206,9 @@ export default function ToolSEOContent({
 }) {
   return (
     <div
-      className={`mx-auto max-w-[min(100%,72rem)] px-4 pb-12 sm:px-6 lg:px-8 ${className}`}
+      className={`mx-auto w-full max-w-[min(100%,72rem)] px-4 pb-12 sm:px-6 lg:px-8 ${className}`}
     >
-      <div className="space-y-12">{children}</div>
+      <div className="space-y-14">{children}</div>
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
 import {
-  AlertBox, FlowDiagram, CompareTable, ErrorFix, VerticalSteps,
+  AlertBox, CompareTable, ErrorFix, VerticalSteps,
   CodeBlock, FAQAccordion, KeyPointsGrid, StatGrid, SectionHeader,
   QuickFact,
 } from '@/components/blog/BlogVisuals';
@@ -134,25 +134,23 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
         steps={[
           {
             title: 'Add .env to .gitignore immediately',
-            description: 'Before you ever type a real secret. If you accidentally committed a key — rotate it immediately, then remove it from history.',
-            code: 'echo ".env" >> .gitignore',
+            desc: 'Before you ever type a real secret. If you accidentally committed a key — rotate it immediately, then remove it from history with git filter-branch or BFG Repo Cleaner.',
           },
           {
             title: 'Rotate leaked keys immediately',
-            description: 'If a key appears in git history, in logs, or anywhere public — assume it\'s compromised. Rotate in your provider\'s dashboard before doing anything else.',
+            desc: 'If a key appears in git history, in logs, or anywhere public — assume it\'s compromised. Rotate in your provider\'s dashboard before doing anything else.',
           },
           {
             title: 'Use least-privilege API keys',
-            description: 'Create keys with only the permissions they need. Read-only keys for read-only operations. Scoped to specific resources if possible.',
+            desc: 'Create keys with only the permissions they need. Read-only keys for read-only operations. Scoped to specific resources if possible.',
           },
           {
             title: 'Set up secret scanning',
-            description: 'GitHub has built-in secret scanning that alerts you when a key is pushed. Enable it on all repos.',
-            code: 'Settings → Security → Secret scanning → Enable',
+            desc: 'GitHub has built-in secret scanning that alerts you when a key is pushed. Enable it under Settings → Security → Secret scanning on all repos.',
           },
           {
             title: 'Use a secrets manager in production',
-            description: 'AWS Secrets Manager, GCP Secret Manager, HashiCorp Vault — don\'t use .env files on production servers.',
+            desc: 'AWS Secrets Manager, GCP Secret Manager, HashiCorp Vault — don\'t use .env files on production servers. These tools provide audit logs, automatic rotation, and fine-grained access control.',
           },
         ]}
       />
@@ -163,13 +161,25 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
         that if a refresh token is stolen, using the old one immediately invalidates the new one.
       </p>
 
-      <FlowDiagram
-        steps={[
-          { label: 'Access token expires (15 min)', color: 'amber' },
-          { label: 'Client sends refresh token', color: 'blue' },
-          { label: 'Server validates refresh token', color: 'amber' },
-          { label: 'Issue new access token + new refresh token', color: 'green' },
-          { label: 'Invalidate old refresh token (rotation)', color: 'green' },
+      <KeyPointsGrid
+        columns={2}
+        items={[
+          {
+            title: 'How rotation works',
+            description: 'When a client uses a refresh token, the server issues a new access token AND a new refresh token, then invalidates the old refresh token. Each refresh is a one-time use.',
+          },
+          {
+            title: 'Reuse detection',
+            description: 'If a refresh token is presented that was already rotated, it means it was stolen and reused. Immediately revoke the entire token family and log out the user.',
+          },
+          {
+            title: 'Token families',
+            description: 'Group related tokens in a "family." If any member of the family is replayed, revoke all tokens in that family — logging out all sessions for that user.',
+          },
+          {
+            title: 'Silent refresh',
+            description: 'Implement a background refresh mechanism so the access token is silently renewed before expiry. Users stay logged in without interruption while maintaining security.',
+          },
         ]}
       />
 
@@ -214,6 +224,102 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
         ]}
       />
 
+      <SectionHeader number={6} title="Session Security vs JWT — Choosing the Right Approach" />
+      <p>
+        Sessions and JWTs are not the same thing. Understanding their differences helps you pick the right
+        authentication strategy for your application architecture.
+      </p>
+
+      <CompareTable
+        leftLabel="Server-Side Sessions"
+        rightLabel="JWT Tokens"
+        rows={[
+          { label: 'State storage', left: 'Server stores session data (DB/Redis)', right: 'Client stores token; server is stateless' },
+          { label: 'Revocation', left: 'Instant — delete from session store', right: 'Requires blocklist or short expiry' },
+          { label: 'Scalability', left: 'Requires shared session store across servers', right: 'Stateless — works across any server' },
+          { label: 'Microservices', left: 'All services need session store access', right: 'Each service validates token independently' },
+          { label: 'Payload size', left: 'Tiny cookie (just a session ID)', right: 'Larger — all claims embedded in token' },
+          { label: 'Best fit', left: 'Monolith apps, when instant revocation needed', right: 'Distributed systems, APIs, microservices' },
+        ]}
+      />
+
+      <SectionHeader number={7} title="OAuth 2.0 Token Security" />
+      <p>
+        Many applications use OAuth 2.0 for third-party authentication (Sign in with Google, GitHub, etc.).
+        OAuth tokens have their own security considerations beyond standard JWTs.
+      </p>
+
+      <CodeBlock language="javascript" filename="OAuth State Parameter (CSRF Prevention)">
+{`// When initiating OAuth flow, generate a random state
+const state = crypto.randomBytes(32).toString('hex');
+
+// Store in session/cookie
+req.session.oauthState = state;
+
+// Add to authorization URL
+const authUrl = \`https://accounts.google.com/o/oauth2/v2/auth?
+  client_id=\${CLIENT_ID}
+  &redirect_uri=\${REDIRECT_URI}
+  &response_type=code
+  &scope=openid+email+profile
+  &state=\${state}\`;  // ← critical anti-CSRF parameter
+
+// On callback — ALWAYS verify state matches
+app.get('/auth/callback', (req, res) => {
+  if (req.query.state !== req.session.oauthState) {
+    return res.status(403).json({ error: 'State mismatch — potential CSRF attack' });
+  }
+  // Proceed with code exchange...
+});`}
+      </CodeBlock>
+
+      <AlertBox type="warning" title="Never skip the OAuth state parameter">
+        Omitting the state parameter in OAuth flows makes your application vulnerable to CSRF attacks
+        where an attacker can link their account to a victim's session. Always generate a random state,
+        store it server-side, and verify it matches on the callback before exchanging the code.
+      </AlertBox>
+
+      <SectionHeader number={8} title="Security Headers That Protect Tokens" />
+
+      <CodeBlock language="javascript" filename="Essential Security Headers (Express.js + Helmet)">
+{`import helmet from 'helmet';
+
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],     // No inline scripts — protects against XSS
+      styleSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "https://api.yourservice.com"],
+      frameSrc: ["'none'"],      // No iframes
+      objectSrc: ["'none'"],
+    },
+  },
+  hsts: {
+    maxAge: 31536000,           // 1 year
+    includeSubDomains: true,
+    preload: true,              // HTTPS only — tokens never sent over HTTP
+  },
+  referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+}));
+
+// Additional CORS configuration
+app.use(cors({
+  origin: ['https://yourapp.com'],   // Whitelist only your domain
+  credentials: true,                 // Allow cookies
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));`}
+      </CodeBlock>
+
+      <QuickFact color="red" label="Most common token leak vectors">
+        Browser developer tools (localStorage inspection), accidentally committed .env files,
+        server logs that print request headers (including Authorization bearer tokens),
+        insecure HTTP connections, and third-party JavaScript with access to the page DOM.
+        Strong CSP headers and HttpOnly cookies mitigate most of these attack surfaces.
+      </QuickFact>
+
       <FAQAccordion
         items={[
           {
@@ -235,6 +341,18 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
           {
             question: 'How do I detect if someone else is using my token?',
             answer: 'Implement refresh token rotation with family tracking. If a refresh token that was already rotated is used again, it means an attacker stole it. Revoke the entire token family for that user (force all sessions to log out) and alert the user.',
+          },
+          {
+            question: 'What is token binding and should I implement it?',
+            answer: 'Token binding cryptographically ties a token to a specific TLS connection, preventing token theft even if intercepted. It\'s a strong security feature but requires browser and server support. For most applications, short-lived tokens with HttpOnly cookies + HTTPS provide sufficient protection without the complexity of token binding.',
+          },
+          {
+            question: 'How do I handle token expiry gracefully in the frontend?',
+            answer: 'Implement an interceptor (Axios interceptors, fetch middleware) that catches 401 responses. When a 401 is received, automatically attempt a token refresh using your refresh token. If refresh succeeds, replay the original request. If refresh fails (token expired or revoked), redirect the user to the login page. This creates seamless sessions without interrupting the user.',
+          },
+          {
+            question: 'Should I use opaque tokens or JWTs for public APIs?',
+            answer: 'For public APIs where clients are third-party apps (OAuth), opaque tokens (random strings stored server-side) are often better. They allow instant revocation, have no payload to decode, and leak no information. JWTs work well for internal APIs where services trust each other and statelessness is valuable. Many modern APIs use both: opaque tokens for external clients, JWTs for internal service-to-service calls.',
           },
         ]}
       />

@@ -140,7 +140,7 @@ export default function BlogPage({
           <div className="absolute bottom-0 right-0 h-[300px] w-[400px] rounded-full bg-violet-600/15 blur-[100px]" />
         </div>
 
-        <div className="relative mx-auto max-w-[1100px] px-5 sm:px-6 lg:px-8">
+        <div className="relative mx-auto max-w-full px-5 sm:px-6 lg:px-8">
           {/* eyebrow */}
           <div className="mb-5 flex flex-wrap items-center gap-2">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-300">
@@ -183,7 +183,7 @@ export default function BlogPage({
       </section>
 
       {/* ── MAIN CONTENT ───────────────────────────────────────── */}
-      <main className="mx-auto max-w-[1100px] px-5 py-10 sm:px-6 sm:py-12 lg:px-8">
+      <main className="mx-auto max-w-full px-5 py-10 sm:px-6 sm:py-12 lg:px-8">
 
         {/* Page heading */}
         {currentPage === 1 ? (
