@@ -5,7 +5,7 @@ import { blogPosts } from '@/lib/blog-posts-data';
 import { BlogListClient } from './BlogListClient';
 import { BookOpen, Zap, Sparkles, ArrowRight } from 'lucide-react';
 
-const PER_PAGE = 6;
+const PER_PAGE = 9;
 
 export const revalidate = 3600;
 
