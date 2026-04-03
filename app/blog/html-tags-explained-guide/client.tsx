@@ -27,7 +27,7 @@ export default function HtmlTagsExplainedGuideClient() {
       ]} />
 
       <SectionHeader number={1} title="Document Structure — The Required Skeleton" />
-      <CodeBlock lang="html" title="Complete HTML5 document structure">
+      <CodeBlock language="html" filename="Complete HTML5 document structure">
 {`<!DOCTYPE html>          <!-- Tells browser this is HTML5 (not HTML4 or XHTML) -->
 <html lang="en">         <!-- Root element. lang= is important for accessibility/screen readers -->
   <head>                 <!-- Metadata — never visible on the page itself -->
@@ -68,7 +68,7 @@ export default function HtmlTagsExplainedGuideClient() {
       </CodeBlock>
 
       <SectionHeader number={2} title="Text Content Tags" />
-      <CodeBlock lang="html" title="Headings, paragraphs, and inline text elements">
+      <CodeBlock language="html" filename="Headings, paragraphs, and inline text elements">
 {`<!-- ─── Headings — h1 through h6 ────────────────────────────────────────────── -->
 <h1>Page Title — USE EXACTLY ONE per page (primary SEO signal)</h1>
 <h2>Major Section — use multiple per page</h2>
@@ -107,7 +107,7 @@ export default function HtmlTagsExplainedGuideClient() {
       </CodeBlock>
 
       <SectionHeader number={3} title="Links and Media" />
-      <CodeBlock lang="html" title="Links, images, video, audio, and responsive media">
+      <CodeBlock language="html" filename="Links, images, video, audio, and responsive media">
 {`<!-- ─── Links ──────────────────────────────────────────────────────────────── -->
 <a href="https://example.com">External link</a>
 <a href="/about">Internal link (absolute path)</a>
@@ -158,7 +158,7 @@ export default function HtmlTagsExplainedGuideClient() {
       </CodeBlock>
 
       <SectionHeader number={4} title="Lists and Tables" />
-      <CodeBlock lang="html" title="Lists, description lists, and accessible table structure">
+      <CodeBlock language="html" filename="Lists, description lists, and accessible table structure">
 {`<!-- ─── Lists ──────────────────────────────────────────────────────────────── -->
 <ul>                                <!-- Unordered list — order doesn't matter -->
   <li>Apples</li>
@@ -206,7 +206,7 @@ export default function HtmlTagsExplainedGuideClient() {
       </CodeBlock>
 
       <SectionHeader number={5} title="Forms — Complete Input Reference" />
-      <CodeBlock lang="html" title="All form input types with attributes">
+      <CodeBlock language="html" filename="All form input types with attributes">
 {`<form action="/submit" method="POST" novalidate>
   <!-- ALWAYS associate labels with inputs via for/id matching -->
   <label for="name">Full Name</label>
@@ -283,10 +283,9 @@ export default function HtmlTagsExplainedGuideClient() {
       />
 
       <AlertBox type="tip" title="Semantic HTML improves SEO and accessibility simultaneously">
-        Screen readers use HTML landmarks (<main>, <nav>, <header>, <footer>) for navigation.
-        Google uses semantic tags to understand content structure. Using <article> for your blog posts,
-        <nav> for navigation, and exactly one <h1> per page all improve both rankings and accessibility
-        with zero extra effort.
+        Screen readers use HTML landmarks (&lt;main&gt;, &lt;nav&gt;, &lt;header&gt;, &lt;footer&gt;) for navigation.
+        Google uses semantic tags to understand content structure. Using &lt;article&gt; for blog posts
+        and exactly one &lt;h1&gt; per page improves both rankings and accessibility with zero extra effort.
       </AlertBox>
 
       <FAQAccordion items={[

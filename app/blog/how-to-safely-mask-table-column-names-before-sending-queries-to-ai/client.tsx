@@ -74,7 +74,7 @@ CREATE TABLE TABLE_01 (
       />
 
       <SectionHeader number={3} title="Python Schema Masker Implementation" />
-      <CodeBlock lang="python" title="sql_schema_masker.py — complete implementation">
+      <CodeBlock language="python" filename="sql_schema_masker.py — complete implementation">
 {`import re
 import json
 from typing import Dict, Tuple

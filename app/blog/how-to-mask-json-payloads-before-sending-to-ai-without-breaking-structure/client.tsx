@@ -223,7 +223,7 @@ function maskValue(value: JsonValue, key: string): JsonValue {
   // Email: preserve domain for context
   if (value.includes('@')) {
     const [local, domain] = value.split('@');
-    return `${'*'.repeat(local.length)}@${domain}`;
+    return '*'.repeat(local.length) + '@' + domain;
   }
 
   return '*'.repeat(value.length);
@@ -249,7 +249,7 @@ export class TokenMasker {
 
   private tokenize(value: string): string {
     if (this.reverseMap.has(value)) return this.reverseMap.get(value)!;
-    const token = `TOKEN_${Math.random().toString(36).slice(2, 10).toUpperCase()}`;
+    const token = 'TOKEN_' + Math.random().toString(36).slice(2, 10).toUpperCase();
     this.tokenMap.set(token, value);
     this.reverseMap.set(value, token);
     return token;
