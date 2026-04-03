@@ -5,14 +5,10 @@ const nextConfig = {
   // pdfjs-dist is ESM-only and very large — exclude from webpack bundling entirely.
   // The worker is served as a static file from /public/pdf.worker.min.mjs.
   webpack(config, { isServer }) {
-    // Prevent canvas (optional pdfjs dep) from causing build errors
-    config.resolve.alias.canvas = false;
     // Keep pdfjs-dist out of the server bundle (it's client-only)
     if (isServer) {
-      config.externals = [
-        ...(Array.isArray(config.externals) ? config.externals : [config.externals]),
-        'pdfjs-dist',
-      ];
+      const existing = Array.isArray(config.externals) ? config.externals : (config.externals ? [config.externals] : []);
+      config.externals = [...existing, 'pdfjs-dist'];
     }
     return config;
   },
