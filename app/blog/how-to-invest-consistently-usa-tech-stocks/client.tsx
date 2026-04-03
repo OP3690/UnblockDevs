@@ -68,7 +68,7 @@ export default function HowToInvestConsistentlyUsaTechStocksClient() {
         ]}
       />
 
-      <AlertBox type="tip" label="For most investors: QQQM or a combination">
+      <AlertBox type="tip" title="For most investors: QQQM or a combination">
         QQQM (lower cost Nasdaq-100) combined with VOO (S&P 500) covers the vast majority of
         investment goals. QQQM gives tech concentration; VOO adds stability. A 60/40 or 70/30
         QQQM/VOO split is a common portfolio allocation for long-term tech investors.
