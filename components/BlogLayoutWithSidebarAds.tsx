@@ -141,7 +141,7 @@ export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSid
       <div className="mb-6 flex flex-wrap items-center gap-2 px-4 sm:px-6 lg:px-8">
         <Link
           href="/blog"
-          className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-900 px-3 py-1.5 text-[12.5px] font-semibold text-white shadow-sm transition-colors hover:bg-zinc-700"
+          className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-zinc-900 px-3 py-1.5 text-[12.5px] font-semibold text-white shadow-sm transition-colors hover:bg-zinc-700"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
           Back to Blog
