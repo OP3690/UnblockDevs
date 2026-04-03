@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import AdUnit from '@/components/AdUnit';
 import AutoBlogArticleSchema from '@/components/AutoBlogArticleSchema';
 import AutoRelatedBlogPosts from '@/components/AutoRelatedBlogPosts';
@@ -39,14 +39,21 @@ export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSid
       <main className="min-w-0 flex-1">
         <AutoBlogArticleSchema />
 
-        {/* Back link */}
-        <div className="mb-6">
+        {/* Nav buttons */}
+        <div className="mb-6 flex flex-wrap items-center gap-2">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-[12.5px] font-medium text-zinc-500 shadow-sm transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-800"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-[12.5px] font-medium text-zinc-600 shadow-sm transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            All articles
+            Back to Blog
+          </Link>
+          <Link
+            href="/tools/json"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-[12.5px] font-medium text-zinc-600 shadow-sm transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900"
+          >
+            All Tools
+            <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
 

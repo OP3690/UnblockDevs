@@ -40,8 +40,7 @@ export default function BlogLayout({
         id="ezoic-pub-ad-placeholder-104"
         role="region"
         aria-label="Advertisement"
-        className="min-h-[90px] sm:min-h-[50px] w-full"
-        style={{ contain: 'layout' }}
+        className="w-full empty:hidden"
       />
       <div className="max-w-[1600px] mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
         <div className="flex flex-col lg:flex-row lg:gap-6 xl:gap-8">
@@ -55,15 +54,6 @@ export default function BlogLayout({
             <AdUnit slot={SLOT_LEFT} format="auto" minHeight={250} className="rounded-lg overflow-hidden w-full" />
           </aside>
           <main className="flex-1 min-w-0 overflow-x-hidden">
-            {/* Section 2: Above article (in-content top) */}
-            <div
-              key={`${key}-in-top`}
-              role="region"
-              aria-label="Advertisement"
-              className="min-h-[90px] sm:min-h-[50px] flex items-center justify-center bg-gray-50/40 rounded-lg mb-6"
-            >
-              <AdUnit slot={SLOT_INCONTENT_TOP} format="fluid" layout="in-article" minHeight={50} className="w-full rounded-lg overflow-hidden" />
-            </div>
             {children}
             {/* Section 3: Mid / after article */}
             <div
