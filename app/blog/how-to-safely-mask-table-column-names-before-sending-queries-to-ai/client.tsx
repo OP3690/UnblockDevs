@@ -114,14 +114,14 @@ class SqlSchemaMasker:
         """Mask a full schema (one or more CREATE TABLE statements)."""
         # Mask CREATE TABLE statements
         sql = re.sub(
-            r'CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?[`"]?(\w+)[`"]?',
+            r'CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?[\`"]?(\w+)[\`"]?',
             lambda m: f"CREATE TABLE {self._mask_table(m.group(1))}",
             sql, flags=re.IGNORECASE
         )
         # Mask column names in column definitions
         # Pattern: leading whitespace + column_name + data_type
         sql = re.sub(
-            r'^(\s+)[`"]?(\w+)[`"]?\s+(BIGINT|INT|INTEGER|SMALLINT|TINYINT'
+            r'^(\s+)[\`"]?(\w+)[\`"]?\s+(BIGINT|INT|INTEGER|SMALLINT|TINYINT'
             r'|VARCHAR|CHAR|TEXT|LONGTEXT|MEDIUMTEXT'
             r'|DECIMAL|NUMERIC|FLOAT|DOUBLE|REAL'
             r'|BOOLEAN|BOOL|DATE|DATETIME|TIMESTAMP|TIME'
@@ -131,13 +131,13 @@ class SqlSchemaMasker:
         )
         # Mask FOREIGN KEY references
         sql = re.sub(
-            r'FOREIGN\s+KEY\s*\([`"]?(\w+)[`"]?\)',
+            r'FOREIGN\s+KEY\s*\([\`"]?(\w+)[\`"]?\)',
             lambda m: f"FOREIGN KEY ({self.column_map.get(m.group(1), m.group(1))})",
             sql, flags=re.IGNORECASE
         )
         # Mask REFERENCES table(column)
         sql = re.sub(
-            r'REFERENCES\s+[`"]?(\w+)[`"]?\s*\([`"]?(\w+)[`"]?\)',
+            r'REFERENCES\s+[\`"]?(\w+)[\`"]?\s*\([\`"]?(\w+)[\`"]?\)',
             lambda m: (
                 f"REFERENCES {self.table_map.get(m.group(1), m.group(1))}"
                 f"({self.column_map.get(m.group(2), m.group(2))})"
