@@ -18,7 +18,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { trackCopy } from '@/lib/analytics';
+import { trackCopy, trackCtaClick } from '@/lib/analytics';
 import {
   parseHarFile,
   filterHarEntries,
@@ -122,6 +122,7 @@ export default function HarToCurl() {
   };
 
   const handleConvert = () => {
+    trackCtaClick('har_to_curl', 'convert');
     parseHar(harContent);
   };
 
@@ -159,6 +160,7 @@ export default function HarToCurl() {
   };
 
   const handleDownload = () => {
+    trackCtaClick('har_to_curl', 'download');
     if (!outputText) return;
     const ext = outputLang === 'curl' ? 'sh' : outputLang === 'python_requests' || outputLang === 'python_httpx' ? 'py' : outputLang === 'go' ? 'go' : outputLang === 'java' ? 'java' : outputLang === 'php' ? 'php' : outputLang === 'csharp' ? 'cs' : outputLang === 'rust' ? 'rs' : outputLang === 'ruby' ? 'rb' : 'js';
     const blob = new Blob([outputText], { type: 'text/plain' });
@@ -172,6 +174,7 @@ export default function HarToCurl() {
   };
 
   const handleBatchDownload = () => {
+    trackCtaClick('har_to_curl', 'batch_download');
     if (!filteredEntries.length) return;
     const script = generateBatchScript(filteredEntries, convertOptions);
     const blob = new Blob([script], { type: 'text/plain' });
@@ -539,6 +542,7 @@ export default function HarToCurl() {
                       <button
                         type="button"
                         onClick={() => {
+                          trackCtaClick('har_to_curl', 'export_postman');
                           const json = generatePostmanCollection(parsed);
                           const blob = new Blob([json], { type: 'application/json' });
                           const url = URL.createObjectURL(blob);
@@ -556,6 +560,7 @@ export default function HarToCurl() {
                       <button
                         type="button"
                         onClick={() => {
+                          trackCtaClick('har_to_curl', 'export_openapi');
                           const json = generateOpenAPISpec(parsed);
                           const blob = new Blob([json], { type: 'application/json' });
                           const url = URL.createObjectURL(blob);

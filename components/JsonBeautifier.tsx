@@ -4,7 +4,7 @@ import { useState, useRef, useMemo, useEffect } from 'react';
 import { Upload, FileText, X, Copy, Check, Download, ChevronRight, ChevronDown, Minus, Search, BarChart3, Code2, Eye, ExternalLink, AlertTriangle, Wrench, Shield, GitCompare, Sparkles, Database, FileCode } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { validateJson } from '@/lib/jsonParser';
-import { trackCopy } from '@/lib/analytics';
+import { trackCopy, trackCtaClick } from '@/lib/analytics';
 import Link from 'next/link';
 import {
   detectJsonErrorsAndFix,
@@ -243,6 +243,7 @@ export default function JsonBeautifier() {
   };
 
   const applySuggestedFix = () => {
+    trackCtaClick('json_beautifier', 'fix_json');
     if (!fixResult?.suggestedFix) return;
     setJsonText(fixResult.suggestedFix);
     setFixResult(null);
@@ -265,6 +266,7 @@ export default function JsonBeautifier() {
   };
 
   const handleGenerateSample = () => {
+    trackCtaClick('json_beautifier', 'load_sample');
     const count = 10;
     const sample = generateRandomJson(count);
     const str = JSON.stringify(sample, null, 2);
@@ -313,6 +315,7 @@ export default function JsonBeautifier() {
   };
 
   const handleDownload = (content: string, type: 'beautified' | 'minified') => {
+    trackCtaClick('json_beautifier', 'download');
     const blob = new Blob([content], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -579,7 +582,7 @@ export default function JsonBeautifier() {
         <div className="flex flex-col sm:flex-row gap-3">
           <button
             type="button"
-            onClick={() => beautifyJson(jsonText, indentSize)}
+            onClick={() => { trackCtaClick('json_beautifier', 'format'); beautifyJson(jsonText, indentSize); }}
             disabled={!jsonText.trim()}
             className="flex-1 rounded-lg bg-zinc-900 py-3 font-semibold text-white shadow-sm transition-colors hover:bg-zinc-800 disabled:cursor-not-allowed disabled:bg-zinc-300"
           >

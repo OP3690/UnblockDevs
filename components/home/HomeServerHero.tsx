@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { LayoutGrid, Plus, Star, Lock, CheckCircle } from 'lucide-react';
+import { LayoutGrid, Plus, ShieldCheck, Lock, Zap } from 'lucide-react';
 import HomeHeroCodePreview from '@/components/home/HomeHeroCodePreview';
 
 /**
@@ -10,7 +10,7 @@ export default function HomeServerHero() {
     <>
       {/* Hero */}
       <section className="border-b border-zinc-200 bg-[#FAFAFA]" aria-labelledby="home-hero-heading">
-        <div className="mx-auto grid max-w-[1100px] items-center gap-10 px-6 pb-14 pt-10 sm:gap-16 sm:pb-18 sm:pt-14 lg:grid-cols-2 lg:gap-20 lg:pb-[5rem] lg:pt-16">
+        <div className="mx-auto grid max-w-[1400px] items-center gap-10 px-4 sm:px-6 lg:px-8 pb-14 pt-10 sm:gap-16 sm:pb-18 sm:pt-14 lg:grid-cols-2 lg:gap-20 lg:pb-[5rem] lg:pt-16">
 
           {/* Left: copy */}
           <div className="min-w-0">
@@ -57,20 +57,37 @@ export default function HomeServerHero() {
             </div>
 
             {/* Trust badges */}
-            <ul className="mt-8 flex flex-wrap gap-2.5" aria-label="Trust signals">
-              <li className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3.5 py-2 text-[13px] font-medium text-zinc-700 shadow-sm">
-                <Star className="h-3.5 w-3.5 text-amber-500" aria-hidden fill="currentColor" />
-                No signup required
-              </li>
-              <li className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3.5 py-2 text-[13px] font-medium text-zinc-700 shadow-sm">
-                <Lock className="h-3.5 w-3.5 text-emerald-600" aria-hidden />
-                Zero data stored
-              </li>
-              <li className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3.5 py-2 text-[13px] font-medium text-zinc-700 shadow-sm">
-                <CheckCircle className="h-3.5 w-3.5 text-emerald-600" aria-hidden />
-                Free forever
-              </li>
-            </ul>
+            <div className="mt-8 flex flex-wrap gap-3" aria-label="Trust signals">
+              <div className="flex items-center gap-2.5 rounded-xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-white px-4 py-2.5 shadow-sm">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-100">
+                  <ShieldCheck className="h-4 w-4 text-emerald-700" aria-hidden />
+                </span>
+                <div>
+                  <p className="text-[12px] font-bold leading-tight text-emerald-900">No signup required</p>
+                  <p className="text-[10.5px] leading-tight text-emerald-600">Start using instantly</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2.5 rounded-xl border border-sky-100 bg-gradient-to-br from-sky-50 to-white px-4 py-2.5 shadow-sm">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sky-100">
+                  <Lock className="h-4 w-4 text-sky-700" aria-hidden />
+                </span>
+                <div>
+                  <p className="text-[12px] font-bold leading-tight text-sky-900">Zero data stored</p>
+                  <p className="text-[10.5px] leading-tight text-sky-600">100% runs in your browser</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2.5 rounded-xl border border-amber-100 bg-gradient-to-br from-amber-50 to-white px-4 py-2.5 shadow-sm">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-amber-100">
+                  <Zap className="h-4 w-4 text-amber-600" aria-hidden />
+                </span>
+                <div>
+                  <p className="text-[12px] font-bold leading-tight text-amber-900">Free forever</p>
+                  <p className="text-[10.5px] leading-tight text-amber-600">No hidden fees, ever</p>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Right: animated code preview — desktop only */}
@@ -82,7 +99,7 @@ export default function HomeServerHero() {
 
       {/* Stats bar */}
       <div className="border-b border-zinc-200 bg-white">
-        <div className="mx-auto grid max-w-[1100px] grid-cols-2 sm:grid-cols-4">
+        <div className="mx-auto grid max-w-[1400px] grid-cols-2 sm:grid-cols-4">
           {[
             { n: '30+', l: 'Developer tools' },
             { n: '100%', l: 'Client-side processing' },

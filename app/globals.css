@@ -23,11 +23,11 @@
   }
   /* Site-wide content width (privacy-first redesign) */
   .ud-content {
-    @apply mx-auto w-full max-w-[1100px] px-6;
+    @apply mx-auto w-full max-w-[1400px] px-4 sm:px-6 lg:px-8;
   }
-  /* Standalone tool routes — wider column so UI uses horizontal space (see ToolPageShell, ToolPagesAdWrap) */
+  /* Standalone tool routes — inner column capped so content stays readable */
   .ud-content-tool {
-    @apply mx-auto w-full max-w-[min(100%,88rem)] px-4 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-[min(100%,72rem)] px-4 sm:px-6 lg:px-8;
   }
   .ud-card-redesign {
     @apply rounded-xl border border-zinc-200 bg-white shadow-sm;
@@ -125,7 +125,8 @@ input, select, textarea {
 
 /* ── Global tool input/textarea border system ───────────────────────────────
    Targets all inputs and textareas inside the #tool wrapper (ToolPageShell).
-   Unlayered CSS beats @tailwind utilities layer regardless of specificity.
+   Uses ID selector for specificity so it overrides individual Tailwind border-*
+   classes without needing !important.
    Default: visible zinc-300 gray  →  Focus: emerald-500 brand color + soft glow
    Excludes: checkbox / radio / range / file (those have their own UI)
    ────────────────────────────────────────────────────────────────────────── */

@@ -19,6 +19,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { trackCtaClick } from '@/lib/analytics';
 import JsonInput from '@/components/JsonInput';
 import DataTable from '@/components/DataTable';
 import SectionManager from '@/components/SectionManager';
@@ -343,6 +344,7 @@ export default function JsonToExcelClient() {
     }
     const baseName = `json-export-${new Date().toISOString().split('T')[0]}`;
     if (exportFormat === 'xlsx') {
+      trackCtaClick('json_to_excel', 'download', { format: 'xlsx' });
       exportToExcel(filteredRows, columnIds, {
         sections: filteredSections,
         singleSheet: true,
@@ -350,9 +352,11 @@ export default function JsonToExcelClient() {
       });
       toast.success('Excel file downloaded');
     } else if (exportFormat === 'csv') {
+      trackCtaClick('json_to_excel', 'download', { format: 'csv' });
       exportToCSV(filteredRows, columnIds, `${baseName}.csv`);
       toast.success('CSV file downloaded');
     } else {
+      trackCtaClick('json_to_excel', 'download', { format: 'csv' });
       exportToTSV(filteredRows, columnIds, `${baseName}.tsv`);
       toast.success('TSV file downloaded');
     }
@@ -360,6 +364,7 @@ export default function JsonToExcelClient() {
 
   const doMultiSheetExport = () => {
     if (!rawData || multiSheetCandidates.length === 0) return;
+    trackCtaClick('json_to_excel', 'download', { format: 'multi_sheet_xlsx' });
     exportMultiSheetFromRoot(rawData, { fileName: `json-multi-sheet-${new Date().toISOString().split('T')[0]}.xlsx`, delimiter });
     toast.success('Multi-sheet Excel downloaded');
   };
@@ -524,14 +529,14 @@ export default function JsonToExcelClient() {
               <div className="flex flex-wrap gap-3">
                 <button
                   type="button"
-                  onClick={() => handleJsonSubmit(JSON.parse(SAMPLE_JSON))}
+                  onClick={() => { trackCtaClick('json_to_excel', 'load_sample', { sample: 'simple_array' }); handleJsonSubmit(JSON.parse(SAMPLE_JSON)); }}
                   className="px-4 py-2.5 bg-emerald-600 text-white text-sm font-medium rounded-xl hover:bg-emerald-700 transition-colors shadow-sm"
                 >
                   Simple array
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleJsonSubmit(JSON.parse(SAMPLE_MULTI))}
+                  onClick={() => { trackCtaClick('json_to_excel', 'load_sample', { sample: 'multi_sheet' }); handleJsonSubmit(JSON.parse(SAMPLE_MULTI)); }}
                   className="px-4 py-2.5 border border-gray-200 text-gray-700 text-sm font-medium rounded-xl hover:bg-gray-50 transition-colors"
                 >
                   Multi-sheet (users + orders)

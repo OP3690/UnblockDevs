@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Upload, FileText, X, Copy, Check, Download, AlertCircle, CheckCircle, Wrench, Zap, Eye, ExternalLink, BarChart3, Sparkles, ListChecks, Shield } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { trackCopy } from '@/lib/analytics';
+import { trackCopy, trackCtaClick } from '@/lib/analytics';
 import Link from 'next/link';
 import {
   extractJsonFromLogs,
@@ -584,7 +584,7 @@ export default function JsonFixer() {
         <div className="flex flex-wrap gap-2 mt-4">
           <button
             type="button"
-            onClick={() => { setOptions(o => ({ ...o, repairTruncated: true, unquotedKeys: true })); toast.success('Fix options applied'); }}
+            onClick={() => { trackCtaClick('json_fixer', 'fix'); setOptions(o => ({ ...o, repairTruncated: true, unquotedKeys: true })); toast.success('Fix options applied'); }}
             className="px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium"
           >
             Fix JSON

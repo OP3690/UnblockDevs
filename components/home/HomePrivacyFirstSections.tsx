@@ -19,22 +19,19 @@ type MiniDef = {
   label: string;
   cats: Cat[];
   variant?: 'ai' | 'hot';
-  href?: string;
-  beautifier?: boolean;
+  href: string;
 };
 
 export default function HomePrivacyFirstSections({
   toolPageUrls,
-  onBeautifierClick,
 }: {
   toolPageUrls: Record<string, string>;
-  onBeautifierClick: () => void;
 }) {
   const [cat, setCat] = useState<Cat>('all');
 
   const miniTools: MiniDef[] = useMemo(
     () => [
-      { label: 'JSON Beautifier', cats: ['all', 'json'], beautifier: true },
+      { label: 'JSON Beautifier', cats: ['all', 'json'], href: '/json-beautifier' },
       { label: 'SQL Formatter', cats: ['all', 'json', 'dev'], variant: 'hot', href: toolPageUrls.sql },
       { label: 'JWT Decoder', cats: ['all', 'json', 'dev'], href: '/jwt-decoder' },
       { label: 'Base64 Encoder', cats: ['all', 'encode'], href: '/base64-encoder' },
@@ -195,14 +192,6 @@ export default function HomePrivacyFirstSections({
                   : 'bg-zinc-300';
             const cls =
               'flex min-h-[44px] items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-2.5 text-left text-[13px] font-medium text-zinc-700 transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900';
-            if (t.beautifier) {
-              return (
-                <button key={t.label} type="button" onClick={onBeautifierClick} className={cls}>
-                  <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${dot}`} aria-hidden />
-                  {t.label}
-                </button>
-              );
-            }
             return (
               <Link key={t.label} href={t.href!} className={cls}>
                 <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${dot}`} aria-hidden />

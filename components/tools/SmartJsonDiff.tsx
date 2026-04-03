@@ -209,6 +209,7 @@ export default function SmartJsonDiff() {
       : null;
 
   const copySummary = useCallback(() => {
+    trackCopy('smart_json_diff');
     if (!result) return;
     const lines = [
       'Semantic Diff Report',
@@ -308,11 +309,11 @@ export default function SmartJsonDiff() {
   return (
     <div className="space-y-6 tool-panel-contain">
       {/* Header + Input card */}
-      <div className="rounded-2xl border border-gray-200/80 bg-white p-6 shadow-md shadow-gray-200/50">
+      <div className="rounded-2xl border border-zinc-300 bg-white p-6 shadow-md shadow-zinc-200/60">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <h2 className="text-xl font-semibold tracking-tight text-gray-900">Semantic Payload Comparison</h2>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-zinc-600">
               Debug API changes without the noise. Only meaningful logic changes surface.
             </p>
           </div>
@@ -331,7 +332,7 @@ export default function SmartJsonDiff() {
             <div className="mb-1.5 flex items-center justify-between gap-2">
               <label className="text-sm font-medium text-gray-700">JSON A</label>
               <div className="flex items-center gap-1.5">
-                <span className="text-xs text-gray-400">Source / Before</span>
+                <span className="text-xs font-medium text-zinc-500">Source / Before</span>
                 <button
                   type="button"
                   onClick={() => { setJsonA(''); setError(null); setResult(null); }}
@@ -348,7 +349,7 @@ export default function SmartJsonDiff() {
               value={jsonA}
               onChange={(e) => setJsonA(e.target.value)}
               placeholder='Paste first payload or load example'
-              className="min-h-[200px] w-full resize-y rounded-xl border border-gray-200 bg-gray-50/60 p-3.5 font-mono text-[13px] leading-relaxed text-gray-800 placeholder:text-gray-400 focus:border-primary-500 focus:bg-white focus:ring-2 focus:ring-primary-500/20 transition-shadow"
+              className="min-h-[200px] w-full resize-y rounded-xl border border-zinc-300 bg-zinc-50 p-3.5 font-mono text-[13px] leading-relaxed text-zinc-800 placeholder:text-zinc-400 focus:border-primary-500 focus:bg-white focus:ring-2 focus:ring-primary-500/20 transition-shadow"
               spellCheck={false}
             />
           </div>
@@ -356,7 +357,7 @@ export default function SmartJsonDiff() {
             <div className="mb-1.5 flex items-center justify-between gap-2">
               <label className="text-sm font-medium text-gray-700">JSON B</label>
               <div className="flex items-center gap-1.5">
-                <span className="text-xs text-gray-400">Target / After</span>
+                <span className="text-xs font-medium text-zinc-500">Target / After</span>
                 <button
                   type="button"
                   onClick={() => { setJsonB(''); setError(null); setResult(null); }}
@@ -373,7 +374,7 @@ export default function SmartJsonDiff() {
               value={jsonB}
               onChange={(e) => setJsonB(e.target.value)}
               placeholder='Paste second payload or load example'
-              className="min-h-[200px] w-full resize-y rounded-xl border border-gray-200 bg-gray-50/60 p-3.5 font-mono text-[13px] leading-relaxed text-gray-800 placeholder:text-gray-400 focus:border-primary-500 focus:bg-white focus:ring-2 focus:ring-primary-500/20 transition-shadow"
+              className="min-h-[200px] w-full resize-y rounded-xl border border-zinc-300 bg-zinc-50 p-3.5 font-mono text-[13px] leading-relaxed text-zinc-800 placeholder:text-zinc-400 focus:border-primary-500 focus:bg-white focus:ring-2 focus:ring-primary-500/20 transition-shadow"
               spellCheck={false}
             />
           </div>
@@ -390,13 +391,13 @@ export default function SmartJsonDiff() {
               className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
                 activePreset === p.name
                   ? 'border-primary-500 bg-primary-50 text-primary-700'
-                  : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'
+                  : 'border-zinc-300 bg-white text-zinc-700 hover:bg-zinc-50'
               }`}
             >
               {p.name}
             </button>
           ))}
-          <span className="ml-2 text-xs text-gray-400">
+          <span className="ml-2 text-xs text-zinc-500">
             {activePreset === 'Strict' ? 'No normalization' : 'Dynamic fields masked by default'}
           </span>
         </div>

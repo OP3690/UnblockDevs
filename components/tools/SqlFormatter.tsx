@@ -163,6 +163,7 @@ export default function SqlFormatter() {
   ]);
 
   const formatInput = () => {
+    trackCtaClick('sql_formatter', 'format');
     if (!input.trim()) {
       toast.error('Please enter some values');
       return;
@@ -210,6 +211,7 @@ export default function SqlFormatter() {
   };
 
   const handleDownload = (ext: 'sql' | 'csv' | 'json' | 'txt') => {
+    trackCtaClick('sql_formatter', 'download', { format: ext });
     if (!formattedOutput) {
       toast.error('Nothing to download');
       return;

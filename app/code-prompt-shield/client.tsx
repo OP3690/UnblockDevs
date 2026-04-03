@@ -18,7 +18,7 @@ import {
   FileJson,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { trackCopy } from '@/lib/analytics';
+import { trackCopy, trackCtaClick } from '@/lib/analytics';
 
 const LANGUAGES = [
   { id: 'javascript', name: 'JavaScript' },
@@ -249,6 +249,7 @@ export default function CodePromptShieldClient() {
   const sensitiveWarning = detectSensitiveFile(sourceCode);
 
   const handleMask = useCallback(() => {
+    trackCtaClick('code_prompt_shield', 'mask');
     if (!sourceCode.trim()) {
       toast.error('Paste or enter code first');
       return;
@@ -266,6 +267,7 @@ export default function CodePromptShieldClient() {
   }, [sourceCode, language, maskIdentifiers, maskSecrets, maskPII]);
 
   const handleRestore = useCallback(() => {
+    trackCtaClick('code_prompt_shield', 'restore');
     if (!mapping || !aiResponse.trim()) {
       toast.error('Load a mapping and paste AI response first');
       return;
@@ -444,7 +446,7 @@ export default function CodePromptShieldClient() {
             </button>
             <button
               type="button"
-              onClick={() => setSourceCode(DEFAULT_EXAMPLE)}
+              onClick={() => { trackCtaClick('code_prompt_shield', 'try_example'); setSourceCode(DEFAULT_EXAMPLE); }}
               className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors"
             >
               Sample

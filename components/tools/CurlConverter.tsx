@@ -78,6 +78,7 @@ export default function CurlConverter() {
   };
 
   const handleBeautify = () => {
+    trackCtaClick('curl_converter', 'beautify');
     const beautified = beautifyCurl(curlCommand);
     setCurlCommand(beautified);
     toast.success('cURL beautified');
@@ -104,6 +105,7 @@ export default function CurlConverter() {
 
   const runTest = async () => {
     if (!parsed) return;
+    trackCtaClick('curl_converter', 'test_api');
     setTestLoading(true);
     setTestResult(null);
     try {

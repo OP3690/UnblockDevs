@@ -34,10 +34,10 @@ interface BlogLayoutWithSidebarAdsProps {
 export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSidebarAdsProps) {
   return (
     <div className="mx-auto w-full max-w-[1200px] px-4 py-8 sm:px-6 sm:py-12 lg:px-8 xl:flex xl:gap-12">
+      <AutoBlogArticleSchema />
 
       {/* ── Main article column ── */}
       <main className="min-w-0 flex-1">
-        <AutoBlogArticleSchema />
 
         {/* Nav buttons */}
         <div className="mb-6 flex flex-wrap items-center gap-2">
@@ -101,7 +101,6 @@ export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSid
           />
         </div>
       </aside>
-
     </div>
   );
 }

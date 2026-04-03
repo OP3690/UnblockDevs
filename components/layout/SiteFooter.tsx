@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
 /**
- * Global footer — clean, dark design.
+ * Global footer — clean, dark design. Width matches SiteHeader.
  */
 export default function SiteFooter() {
   return (
     <footer className="mt-auto border-t border-zinc-800/60 bg-zinc-950 text-zinc-400">
-      <div className="mx-auto max-w-[1100px] px-6 py-14 sm:py-16">
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 py-14 sm:py-16">
         {/* Top grid */}
         <div className="grid grid-cols-2 gap-10 sm:grid-cols-4">
           {/* Brand */}
@@ -107,18 +107,10 @@ export default function SiteFooter() {
             © {new Date().getFullYear()} UnblockDevs. All tools are free and open to everyone.
           </p>
           <div className="flex flex-wrap gap-5 text-[12px]">
-            <Link href="/privacy-policy" className="text-zinc-500 hover:text-zinc-300">
-              Privacy
-            </Link>
-            <Link href="/terms" className="text-zinc-500 hover:text-zinc-300">
-              Terms
-            </Link>
-            <Link href="/about" className="text-zinc-500 hover:text-zinc-300">
-              About
-            </Link>
-            <Link href="/disclaimer" className="text-zinc-500 hover:text-zinc-300">
-              Disclaimer
-            </Link>
+            <Link href="/privacy-policy" className="text-zinc-500 hover:text-zinc-300">Privacy</Link>
+            <Link href="/terms" className="text-zinc-500 hover:text-zinc-300">Terms</Link>
+            <Link href="/about" className="text-zinc-500 hover:text-zinc-300">About</Link>
+            <Link href="/disclaimer" className="text-zinc-500 hover:text-zinc-300">Disclaimer</Link>
           </div>
         </div>
       </div>

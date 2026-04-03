@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { Lock, Shield, AlertTriangle, Code, Copy, Check, User, Wrench } from 'lucide-react';
+import { trackCtaClick, trackCopy } from '@/lib/analytics';
 import toast from 'react-hot-toast';
 import {
   auditEntropy,
@@ -56,6 +57,7 @@ export default function PasswordAuditClient() {
   const code = useMemo(() => policyToCodeCorrect(policy, codeLang), [policy, codeLang]);
 
   const copyCode = () => {
+    trackCopy('password_audit');
     navigator.clipboard.writeText(code).then(
       () => {
         setCopiedCode(true);
@@ -94,7 +96,7 @@ export default function PasswordAuditClient() {
         <div className="flex items-center gap-2 p-1 bg-gray-100 rounded-lg w-fit mb-6">
           <button
             type="button"
-            onClick={() => setMode('personal')}
+            onClick={() => { trackCtaClick('password_audit', 'mode_personal'); setMode('personal'); }}
             className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${mode === 'personal' ? 'bg-white text-gray-900 shadow' : 'text-gray-600 hover:text-gray-900'}`}
           >
             <User className="w-4 h-4" />
@@ -102,7 +104,7 @@ export default function PasswordAuditClient() {
           </button>
           <button
             type="button"
-            onClick={() => setMode('developer')}
+            onClick={() => { trackCtaClick('password_audit', 'mode_developer'); setMode('developer'); }}
             className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${mode === 'developer' ? 'bg-white text-gray-900 shadow' : 'text-gray-600 hover:text-gray-900'}`}
           >
             <Wrench className="w-4 h-4" />
