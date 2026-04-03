@@ -287,6 +287,14 @@ export const TOOLS_DIRECTORY: DirectoryTool[] = [
     category: 'encode',
     icon: 'SplitSquareHorizontal',
   },
+  {
+    href: '/pdf-to-excel-word',
+    name: 'PDF to Excel & Word converter',
+    description: 'Convert any PDF to Excel (.xlsx) or Word (.docx). Smart table detection, heading recognition, multi-page support. 100% in-browser.',
+    category: 'dev',
+    icon: 'FileText',
+    badge: 'new',
+  },
   // —— Dev utilities ——
   {
     href: '/sql-formatter',

@@ -7,7 +7,7 @@ import {
   AlertCircle, AlignLeft, ArrowLeft, ArrowRight, ArrowRightLeft,
   ArrowUpRight, BarChart3, Binary, Braces, CheckCircle, ChevronRight,
   Clock, Code, Code2, Database, Download, FileCode, FileCode2, FileJson,
-  FileSearch, Fingerprint, Flame, Gauge, GitCompare, Globe, Grid3x3,
+  FileSearch, FileText, Fingerprint, Flame, Gauge, GitCompare, Globe, Grid3x3,
   Hash, Key, KeyRound, Layers, Link2, Lock, Package, Regex, Scissors,
   ScrollText, Search, Settings2, Shield, ShieldCheck, Sparkles,
   SplitSquareHorizontal, Star, Table, Terminal, TestTube2, Webhook,
@@ -24,7 +24,7 @@ const TOOL_ICON_MAP: Record<string, LucideIcon> = {
   Settings2, Shield, Lock, FileCode2, Scissors, Terminal, FileCode, Code2,
   Download, AlertCircle, Webhook, TestTube2, Globe, KeyRound, Binary,
   Fingerprint, Hash, Link2, Key, ShieldCheck, SplitSquareHorizontal,
-  AlignLeft, Regex, Grid3x3, Gauge, Clock,
+  AlignLeft, Regex, Grid3x3, Gauge, Clock, FileText,
 };
 
 const CATEGORIES: (ToolCategory | 'all')[] = ['all', 'json', 'ai', 'api', 'encode', 'dev'];
