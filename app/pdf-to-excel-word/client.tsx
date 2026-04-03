@@ -58,11 +58,8 @@ async function extractPDFPages(
   options: Options,
 ): Promise<PageContent[]> {
   const pdfjsLib = await import('pdfjs-dist');
-  // Use the bundled worker served locally — avoids CDN fetch failures
-  pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-    'pdfjs-dist/build/pdf.worker.min.mjs',
-    import.meta.url,
-  ).toString();
+  // Serve worker as a static file from /public to avoid webpack bundling issues
+  pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
   onProgress(0.05, 'Loading PDF…');
   const arrayBuffer = await file.arrayBuffer();

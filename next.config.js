@@ -2,6 +2,20 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  // pdfjs-dist is ESM-only and very large — exclude from webpack bundling entirely.
+  // The worker is served as a static file from /public/pdf.worker.min.mjs.
+  webpack(config, { isServer }) {
+    // Prevent canvas (optional pdfjs dep) from causing build errors
+    config.resolve.alias.canvas = false;
+    // Keep pdfjs-dist out of the server bundle (it's client-only)
+    if (isServer) {
+      config.externals = [
+        ...(Array.isArray(config.externals) ? config.externals : [config.externals]),
+        'pdfjs-dist',
+      ];
+    }
+    return config;
+  },
   // experimental.optimizeCss was removed: it caused full-page unstyled HTML (Tailwind not applied).
   images: {
     formats: ['image/avif', 'image/webp'],
