@@ -150,20 +150,20 @@ export default function HowToCancelAudibleSubscriptionMobileDesktopClient() {
 
       <SectionHeader number={7} title="Common Cancellation Problems and Fixes" />
       <ErrorFix
-        error="The Cancel Membership button is not visible on the Account Details page"
-        fix="Try accessing audible.com/account/membership directly while signed in. If still missing, use the customer service chat — they can cancel without you navigating the website. Some browsers also hide the link due to ad blockers interfering with Audible's page scripts; try disabling extensions."
+        bad="The Cancel Membership button is not visible on the Account Details page"
+        good="Try accessing audible.com/account/membership directly while signed in. If still missing, use the customer service chat — they can cancel without you navigating the website. Some browsers also hide the link due to ad blockers interfering with Audible's page scripts; try disabling extensions."
       />
       <ErrorFix
-        error="Cancellation went through but I was still charged the following month"
-        fix="This usually means the cancellation didn't complete before the billing date. Check your email for a cancellation confirmation — no email means it didn't go through. Contact Audible customer service with your account email and the charge date. They can verify the cancellation date and issue a refund if the system error was on their side."
+        bad="Cancellation went through but I was still charged the following month"
+        good="This usually means the cancellation didn't complete before the billing date. Check your email for a cancellation confirmation — no email means it didn't go through. Contact Audible customer service with your account email and the charge date. They can verify the cancellation date and issue a refund if the system error was on their side."
       />
       <ErrorFix
-        error="I cancelled but the app still shows 'Member' status"
-        fix="App badges update slowly. Check Account Details on audible.com — it should show your membership end date rather than a renewal date. If the website confirms cancellation, the app will update within 24 hours. If the website still shows active, the cancellation didn't complete."
+        bad="I cancelled but the app still shows 'Member' status"
+        good="App badges update slowly. Check Account Details on audible.com — it should show your membership end date rather than a renewal date. If the website confirms cancellation, the app will update within 24 hours. If the website still shows active, the cancellation didn't complete."
       />
       <ErrorFix
-        error="The iOS Subscriptions page doesn't show Audible"
-        fix="Audible is not billed through Apple for your account. You have a direct Amazon subscription. Cancel at audible.com → Account Details → Cancel Membership, or contact Audible customer service by chat."
+        bad="The iOS Subscriptions page doesn't show Audible"
+        good="Audible is not billed through Apple for your account. You have a direct Amazon subscription. Cancel at audible.com → Account Details → Cancel Membership, or contact Audible customer service by chat."
       />
 
       <AlertBox type="tip" title="Customer service is the fastest cancellation path">

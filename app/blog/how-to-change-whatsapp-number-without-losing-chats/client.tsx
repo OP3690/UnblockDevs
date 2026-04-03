@@ -117,24 +117,24 @@ export default function HowToChangeWhatsappNumberWithoutLosingChatsClient() {
 
       <SectionHeader number={6} title="Troubleshooting Common Issues" />
       <ErrorFix
-        error="Verification code not received on new number"
-        fix="Wait at least 5 minutes before requesting again — there's a rate limit. Confirm you entered the correct country code. Check that the new SIM can receive international SMS (some prepaid SIMs block short-code SMS). Try requesting a voice call verification instead of SMS."
+        bad="Verification code not received on new number"
+        good="Wait at least 5 minutes before requesting again — there's a rate limit. Confirm you entered the correct country code. Check that the new SIM can receive international SMS (some prepaid SIMs block short-code SMS). Try requesting a voice call verification instead of SMS."
       />
       <ErrorFix
-        error="'Change Number' option is greyed out or missing"
-        fix="This happens when your account has a cooldown from a recent number change (typically several weeks), or if your account has temporary restrictions. If neither applies, update WhatsApp to the latest version. Contact WhatsApp Support if the option remains unavailable."
+        bad="'Change Number' option is greyed out or missing"
+        good="This happens when your account has a cooldown from a recent number change (typically several weeks), or if your account has temporary restrictions. If neither applies, update WhatsApp to the latest version. Contact WhatsApp Support if the option remains unavailable."
       />
       <ErrorFix
-        error="Chats are missing after the migration completes"
-        fix="The process may have used an older local backup rather than your cloud backup. Go to Settings → Chats → Chat Backup and compare the backup date to when you last had the messages. If your chat history backup is recent but chats are missing, try uninstalling and reinstalling WhatsApp, then restore from the cloud backup."
+        bad="Chats are missing after the migration completes"
+        good="The process may have used an older local backup rather than your cloud backup. Go to Settings → Chats → Chat Backup and compare the backup date to when you last had the messages. If your chat history backup is recent but chats are missing, try uninstalling and reinstalling WhatsApp, then restore from the cloud backup."
       />
       <ErrorFix
-        error="New number already has an active WhatsApp account"
-        fix="WhatsApp warns you and asks if you want to replace the existing account on the new number. Back up the existing account associated with the new number FIRST, then proceed. The migration will deactivate the old account on that number and replace it with your migrated account."
+        bad="New number already has an active WhatsApp account"
+        good="WhatsApp warns you and asks if you want to replace the existing account on the new number. Back up the existing account associated with the new number FIRST, then proceed. The migration will deactivate the old account on that number and replace it with your migrated account."
       />
       <ErrorFix
-        error="Groups show old number temporarily after migration"
-        fix="This is normal. Group participant lists update asynchronously across WhatsApp's servers. Allow a few hours for all group members to see your updated number. No action is needed — it resolves automatically."
+        bad="Groups show old number temporarily after migration"
+        good="This is normal. Group participant lists update asynchronously across WhatsApp's servers. Allow a few hours for all group members to see your updated number. No action is needed — it resolves automatically."
       />
 
       <KeyPointsGrid items={[
