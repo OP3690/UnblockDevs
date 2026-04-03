@@ -36,57 +36,7 @@ function CategoryBadge({ category }: { category: string }) {
   );
 }
 
-function FeaturedCard({ post }: { post: BlogPost }) {
-  const dateStr = new Date(post.date).toLocaleDateString('en-US', {
-    year: 'numeric', month: 'short', day: 'numeric',
-  });
-  const c = catColor(post.category);
-
-  return (
-    <article className="group relative mb-6 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_48px_rgba(0,0,0,0.1)] hover:border-zinc-300">
-      {/* Category-colored accent bar */}
-      <div className={`h-[3px] w-full ${c.dot}`} />
-      <div className="p-6 sm:p-8">
-        <div className="mb-4 flex flex-wrap items-center gap-2">
-          <CategoryBadge category={post.category} />
-          <span className="rounded-full bg-zinc-900 px-2.5 py-0.5 font-mono text-[9.5px] font-bold uppercase tracking-wide text-white">
-            Latest
-          </span>
-        </div>
-        <Link href={`/blog/${post.slug}`} className="focus:outline-none">
-          <h2 className="max-w-3xl text-2xl font-bold leading-tight tracking-tight text-zinc-900 transition-colors group-hover:text-zinc-700 sm:text-[1.75rem] line-clamp-2">
-            {post.title}
-          </h2>
-        </Link>
-        <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-zinc-500 line-clamp-2">
-          {post.excerpt}
-        </p>
-        <div className="mt-6 flex flex-wrap items-center gap-4">
-          <div className="flex items-center gap-4 text-[12px] text-zinc-400">
-            <span className="flex items-center gap-1.5">
-              <Calendar className="h-3.5 w-3.5" />
-              <time dateTime={post.date}>{dateStr}</time>
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Clock className="h-3.5 w-3.5" />
-              {post.readTime}
-            </span>
-          </div>
-          <Link
-            href={`/blog/${post.slug}`}
-            aria-label={`Read ${post.title}`}
-            className="inline-flex items-center gap-2 rounded-lg bg-zinc-900 px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-zinc-800"
-          >
-            Read article
-            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden />
-          </Link>
-        </div>
-      </div>
-    </article>
-  );
-}
-
-function PostCard({ post }: { post: BlogPost }) {
+function PostCard({ post, latest = false }: { post: BlogPost; latest?: boolean }) {
   const dateStr = new Date(post.date).toLocaleDateString('en-US', {
     year: 'numeric', month: 'short', day: 'numeric',
   });
@@ -97,8 +47,13 @@ function PostCard({ post }: { post: BlogPost }) {
       {/* Category-colored accent bar */}
       <div className={`h-[3px] w-full ${c.dot}`} />
       <div className="flex flex-1 flex-col p-5">
-        <div className="mb-3">
+        <div className="mb-3 flex flex-wrap items-center gap-2">
           <CategoryBadge category={post.category} />
+          {latest && (
+            <span className="rounded-full bg-zinc-900 px-2 py-0.5 font-mono text-[9.5px] font-bold uppercase tracking-wide text-white">
+              Latest
+            </span>
+          )}
         </div>
         <Link href={`/blog/${post.slug}`} className="focus:outline-none">
           <h2 className="text-[15px] font-bold leading-snug tracking-tight text-zinc-900 transition-colors group-hover:text-zinc-700 line-clamp-2">
@@ -135,26 +90,19 @@ function PostCard({ post }: { post: BlogPost }) {
 
 export function BlogListClient({ initialPosts, totalPages, currentPage }: BlogListClientProps) {
   const isFirstPage = currentPage === 1;
-  const featuredPost = isFirstPage && initialPosts.length > 0 ? initialPosts[0] : null;
-  const gridPosts = isFirstPage ? initialPosts.slice(1) : initialPosts;
 
   return (
     <>
-      {/* Featured card — page 1's latest post */}
-      {featuredPost && <FeaturedCard post={featuredPost} />}
-
-      {/* Post grid */}
-      {gridPosts.length > 0 && (
-        <div
-          className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
-          role="feed"
-          aria-label="Blog posts"
-        >
-          {gridPosts.map((post) => (
-            <PostCard key={post.slug} post={post} />
-          ))}
-        </div>
-      )}
+      {/* Uniform 3-col grid — clean rows with no orphaned cards */}
+      <div
+        className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+        role="feed"
+        aria-label="Blog posts"
+      >
+        {initialPosts.map((post, i) => (
+          <PostCard key={post.slug} post={post} latest={isFirstPage && i === 0} />
+        ))}
+      </div>
 
       {/* Pagination */}
       {totalPages > 1 && (
