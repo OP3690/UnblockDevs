@@ -162,7 +162,7 @@ export default function BlogPage({
           </h1>
           <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-zinc-400 sm:text-base">
             JSON errors, API debugging, curl, schema validation, and safe AI workflows.
-            Practical — no fluff, no signup.
+            Practical — no fluff, no signup required.
           </p>
 
           {/* stats */}
