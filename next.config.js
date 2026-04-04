@@ -2,9 +2,11 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  // pdfjs-dist is ESM-only — transpile so webpack can process it correctly.
-  // Worker is served as a static file from /public/pdf.worker.min.mjs.
-  transpilePackages: ['pdfjs-dist'],
+  // pdfjs-dist optionally requires 'canvas' (Node.js native) — alias to false so webpack skips it.
+  webpack(config) {
+    config.resolve.alias = { ...config.resolve.alias, canvas: false };
+    return config;
+  },
   // experimental.optimizeCss was removed: it caused full-page unstyled HTML (Tailwind not applied).
   images: {
     formats: ['image/avif', 'image/webp'],
