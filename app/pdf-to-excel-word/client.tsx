@@ -59,7 +59,7 @@ async function extractPDFPages(
 ): Promise<PageContent[]> {
   const pdfjsLib = await import('pdfjs-dist');
   // Serve worker as a static file from /public to avoid webpack bundling issues
-  pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js';
+  pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
   onProgress(0.05, 'Loading PDF…');
   const arrayBuffer = await file.arrayBuffer();
