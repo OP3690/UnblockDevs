@@ -115,6 +115,14 @@ export default function JsonPromptShieldClient() {
     } catch {}
   };
 
+  const copyRestored = async () => {
+    if (!restored) return;
+    try {
+      await navigator.clipboard.writeText(restored);
+      trackCopy('json_prompt_shield');
+    } catch {}
+  };
+
   const downloadMapping = () => {
     if (!mapping) return;
     try {
@@ -297,6 +305,10 @@ export default function JsonPromptShieldClient() {
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 Restore
+              </button>
+              <button type="button" onClick={copyRestored} disabled={!restored.trim()} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-violet-200 text-sm font-medium text-violet-700 bg-violet-50 hover:bg-violet-100 disabled:opacity-40">
+                <Clipboard className="w-3.5 h-3.5" />
+                Copy
               </button>
               <button type="button" onClick={downloadMapping} disabled={!mapping} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-violet-200 text-sm font-medium text-violet-700 bg-violet-50 hover:bg-violet-100 disabled:opacity-40">
                 <Download className="w-3.5 h-3.5" />

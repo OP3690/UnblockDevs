@@ -589,7 +589,24 @@ export default function CodePromptShieldClient() {
           </button>
           {restoredCode && (
             <div className="mt-4">
-              <label className="block text-sm font-medium text-slate-700 mb-2">Restored code</label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-medium text-slate-700">Restored code</label>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    try {
+                      await navigator.clipboard.writeText(restoredCode);
+                      trackCopy('code_prompt_shield');
+                      toast.success('Restored code copied');
+                    } catch {
+                      toast.error('Copy failed');
+                    }
+                  }}
+                  className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg"
+                >
+                  <Copy className="w-3.5 h-3.5" aria-hidden /> Copy
+                </button>
+              </div>
               <textarea
                 readOnly
                 value={restoredCode}
