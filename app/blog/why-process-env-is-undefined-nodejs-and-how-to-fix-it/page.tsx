@@ -19,7 +19,14 @@ export const metadata: Metadata = {
     'nodejs dotenv',
     'env file nodejs',
     'process.env configuration',
-    'nodejs environment variables setup'
+    'nodejs environment variables setup',
+    'node.js process.env undefined when environment variable not set',
+    'node.js process.env values are strings or undefined',
+    'node.js process.env values are strings or undefined documentation',
+    'typescript process.env type string | undefined node.js',
+    'typescript process.env string undefined type',
+    'process.env returns undefined typescript',
+    'node process env string or undefined'
   ],
   openGraph: {
     title: 'Why process.env Is Undefined in Node.js – Fix | UnblockDevs',

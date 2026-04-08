@@ -19,7 +19,12 @@ export const metadata: Metadata = {
     'CORS error solution',
     'missing CORS header',
     'CORS troubleshooting',
-    'fix CORS all browsers'
+    'fix CORS all browsers',
+    'blocked by cors policy no access-control-allow-origin header is present on the requested resource',
+    'no access-control-allow-origin header is present on the requested resource',
+    'public cors proxy',
+    'cors proxy workaround',
+    'cors anywhere proxy'
   ],
   openGraph: {
     title: 'Fix Access-Control-Allow-Origin Missing 2026 | UnblockDevs',

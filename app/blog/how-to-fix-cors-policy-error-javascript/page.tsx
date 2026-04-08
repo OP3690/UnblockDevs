@@ -19,7 +19,12 @@ export const metadata: Metadata = {
     'cors policy no access control allow origin',
     'javascript cors fix',
     'cors error troubleshooting',
-    'cors policy error solution'
+    'cors policy error solution',
+    'blocked by cors policy',
+    'public cors proxy',
+    'cors proxy',
+    'cors anywhere',
+    'cors error blocked by cors policy'
   ],
   openGraph: {
     title: 'How to Fix "CORS Policy Error" in JavaScript (All Browsers): Complete Guide 2026',

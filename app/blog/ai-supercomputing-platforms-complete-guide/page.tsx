@@ -8,6 +8,7 @@ export const metadata: Metadata = {
     'unblock devs ai',
     'unblockdevs ai',
     'ai supercomputing platforms',
+    'ai supercomputing platforms 2026',
     'ai supercomputers',
     'ai supercomputing',
     'gpu clusters ai',
@@ -29,7 +30,6 @@ export const metadata: Metadata = {
     'ai supercomputing best practices'
   ],
   alternates: { canonical: 'https://unblockdevs.com/blog/ai-supercomputing-platforms-complete-guide' },
-  robots: { index: false, follow: false },
 };
 
 export default function AiSupercomputingPlatforms() {

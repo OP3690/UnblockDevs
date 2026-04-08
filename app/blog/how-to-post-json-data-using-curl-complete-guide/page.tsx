@@ -23,7 +23,12 @@ export const metadata: Metadata = {
     'curl post json data curl',
     'curl post json request',
     'curl post json body example',
-    'curl post json tutorial'
+    'curl post json tutorial',
+    'curl post json example content-type application/json',
+    'curl post json content-type example',
+    'curl man page post json example',
+    'curl -d json content-type application/json',
+    'curl post request with json body and headers'
   ],
   openGraph: {
     title: 'How to Post JSON Data Using cURL: Complete Guide 2026',

@@ -15,7 +15,11 @@ export const metadata: Metadata = {
     'mysql json data type',
     'mysql json manipulation',
     'mysql json examples',
-    'mysql json best practices'
+    'mysql json best practices',
+    'mysql json_extract boolean true comparison',
+    'mysql json_extract boolean value',
+    'mysql json_extract true false',
+    'mysql json column query boolean'
   ],
   alternates: { canonical: 'https://unblockdevs.com/blog/mysql-json-complete-guide' },
 

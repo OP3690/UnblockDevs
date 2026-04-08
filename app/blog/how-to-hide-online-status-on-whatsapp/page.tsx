@@ -7,7 +7,10 @@ export const metadata: Metadata = {
   keywords: [
     'hide online status whatsapp',
     'how to hide online status on whatsapp',
+    'how to hide online status on whatsapp 2026',
+    'how to hide online status in whatsapp 2026',
     'whatsapp hide online status',
+    'whatsapp hide online status 2026',
     'appear offline whatsapp',
     'disable online status whatsapp',
     'whatsapp privacy settings',
@@ -19,7 +22,12 @@ export const metadata: Metadata = {
     'whatsapp privacy online status',
     'hide whatsapp online status 2026',
     'whatsapp appear offline',
-    'whatsapp online status settings'
+    'whatsapp online status settings',
+    'whatsapp hide online status does typing indicator still show',
+    'whatsapp hide online status does it hide typing indicator',
+    'whatsapp hide last seen and online status latest method',
+    'whatsapp online status visibility 2026',
+    'whatsapp hide online status but still use app 2026'
   ],
   openGraph: {
     title: 'How to Hide Online Status on WhatsApp: Complete Guide 2026',
@@ -32,7 +40,6 @@ export const metadata: Metadata = {
 
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-hide-online-status-on-whatsapp' },
-  robots: { index: false, follow: false },
 };
 
 export default function HowToHideOnlineStatusOnWhatsappGuide() {

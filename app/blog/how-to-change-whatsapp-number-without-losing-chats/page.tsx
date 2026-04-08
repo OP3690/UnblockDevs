@@ -19,7 +19,9 @@ export const metadata: Metadata = {
     'transfer whatsapp chats to new number',
     'change whatsapp number step by step',
     'whatsapp number change tutorial',
-    'migrate whatsapp account'
+    'migrate whatsapp account',
+    'whatsapp business change number catalog transfer',
+    'как поменять номер ватсап'
   ],
   openGraph: {
     title: 'How to Change WhatsApp Number Without Losing Chats: Step-by-Step Guide 2026',
@@ -32,7 +34,6 @@ export const metadata: Metadata = {
 
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-change-whatsapp-number-without-losing-chats' },
-  robots: { index: false, follow: false },
 };
 
 export default function HowToChangeWhatsappNumberGuide() {

@@ -8,6 +8,8 @@ export const metadata: Metadata = {
     'unblock devs ai',
     'unblockdevs ai',
     'ai-native development platforms',
+    'ai-native development platforms 2026',
+    'ai native development platforms 2026',
     'ai-native platforms',
     'ai development platforms',
     'ai-first development',

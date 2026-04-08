@@ -19,7 +19,10 @@ export const metadata: Metadata = {
     'json parse error fix',
     'javascript json parse error',
     'node.js json parse error',
-    'fix json input error'
+    'fix json input error',
+    'fetch 204 no content response.json unexpected end of json input',
+    'response.json() unexpected end of json input',
+    'json parse empty response 204'
   ],
   openGraph: {
     title: 'Fix Unexpected End of JSON Input 2026 | UnblockDevs',

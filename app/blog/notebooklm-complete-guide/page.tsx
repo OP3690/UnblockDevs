@@ -12,7 +12,15 @@ export const metadata: Metadata = {
     'notebooklm tutorial',
     'how to use notebooklm',
     'notebooklm best practices',
-    'ai research tool'
+    'ai research tool',
+    'notebooklm study guide features',
+    'notebooklm effective usage guide',
+    'notebooklm generate checklists',
+    'notebooklm features',
+    'notebooklm complete guide',
+    'notebooklm audio overview',
+    'notebooklm for research',
+    'notebooklm prompts guide'
   ],
   alternates: { canonical: 'https://unblockdevs.com/blog/notebooklm-complete-guide' },
 

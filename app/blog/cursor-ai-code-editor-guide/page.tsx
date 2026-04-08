@@ -11,7 +11,19 @@ export const metadata: Metadata = {
     'how to use cursor',
     'cursor vs vs code',
     'ai code editor',
-    'cursor best practices'
+    'cursor best practices',
+    'cursor ai code editor official documentation',
+    'cursor ai editor documentation',
+    'cursor code editor documentation',
+    'cursor ai features',
+    'cursor ai official docs',
+    'cursor ide',
+    'cursor ai composer',
+    'cursor ai shortcuts',
+    'cursor ai guide',
+    'cursor ai setup',
+    'cursor ai tab completion',
+    'cursor ai chat'
   ],
   openGraph: {
     title: 'Cursor AI Code Editor: Complete Guide & Best Practices | UnblockDevs',

@@ -24,10 +24,12 @@ export const metadata: Metadata = {
     'provenance technology',
     'data provenance tools',
     'digital provenance solutions',
-    'provenance verification'
+    'provenance verification',
+    'digital provenance validation standard 2026',
+    'digital provenance standard',
+    'content authenticity provenance 2026'
   ],
   alternates: { canonical: 'https://unblockdevs.com/blog/digital-provenance-complete-guide' },
-  robots: { index: false, follow: false },
 };
 
 export default function DigitalProvenance() {

@@ -19,7 +19,14 @@ export const metadata: Metadata = {
     'change telegram number android',
     'change telegram number iphone',
     'telegram privacy settings',
-    'telegram number change guide'
+    'telegram change phone number notify contacts',
+    'does telegram notify contacts when changing phone number',
+    'telegram change phone number do contacts get notified',
+    'telegram change phone number without sms',
+    'telegram change phone number without access to old number',
+    'telegram change number settings privacy and security change number',
+    'telegram settings privacy and security change number',
+    'telegram change phone number settings'
   ],
   openGraph: {
     title: 'How to Change Phone Number in Telegram Without Notifying Contacts: Complete Guide 2026',

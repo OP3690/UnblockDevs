@@ -16,7 +16,11 @@ export const metadata: Metadata = {
     'dfs vs bfs',
     'dfs code example',
     'tree traversal dfs',
-    'dfs recursive iterative'
+    'dfs recursive iterative',
+    'depth-first search uses stack or recursion',
+    'dfs uses stack',
+    'depth first search stack implementation',
+    'dfs iterative stack vs recursive'
   ],
   openGraph: {
     title: 'Depth-First Search Explained Step by Step (Complete Guide)',

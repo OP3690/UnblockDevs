@@ -13,10 +13,14 @@ export const metadata: Metadata = {
     'feature creation',
     'machine learning features',
     'feature engineering importance',
+    'feature engineering importance in machine learning',
+    'feature engineering definition in machine learning',
     'feature engineering examples',
     'feature engineering techniques',
     'ml feature engineering',
-    'data preprocessing machine learning'
+    'data preprocessing machine learning',
+    'why is feature engineering important',
+    'feature engineering in ml'
   ],
   openGraph: {
     title: 'Feature Engineering in Machine Learning | UnblockDevs',

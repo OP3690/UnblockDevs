@@ -19,7 +19,12 @@ export const metadata: Metadata = {
     'python keyerror troubleshooting',
     'fix keyerror python',
     'python keyerror explained',
-    'keyerror python dictionary'
+    'keyerror python dictionary',
+    'python dict keyerror documentation',
+    'python keyerror dictionary missing key handling',
+    'python keyerror missing key',
+    'python dict get vs keyerror',
+    'python keyerror vs default value'
   ],
   openGraph: {
     title: 'Fix: Python KeyError Explained with Examples: Complete Guide 2026',

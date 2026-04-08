@@ -18,7 +18,17 @@ export const metadata: Metadata = {
     'JSON data modeling',
     'JSON validation',
     'JSON formatting',
-    'JSON naming conventions'
+    'JSON naming conventions',
+    'rfc 8259 json',
+    'rfc 8259 json booleans true false lowercase',
+    'rfc 8259 json newline escape',
+    'rfc 8259 json string escape sequences newline',
+    'rfc 8259 json trailing comma',
+    'rfc 8259 json keys must be strings',
+    'json keys must be strings rfc 8259',
+    'rfc 8259 trailing comma json',
+    'json spec trailing comma not allowed',
+    'json standard rfc 8259'
   ],
   openGraph: {
     title: 'JSON Best Practices: Production-Ready Guide for Developers',

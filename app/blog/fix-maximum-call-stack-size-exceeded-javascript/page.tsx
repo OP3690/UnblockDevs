@@ -19,7 +19,10 @@ export const metadata: Metadata = {
     'fix recursion error',
     'javascript circular reference',
     'stack overflow error',
-    'javascript debugging recursion'
+    'javascript debugging recursion',
+    'node.js maximum call stack size recursion depth',
+    'node.js maximum call stack size exceeded',
+    'maximum call stack size exceeded node.js recursion'
   ],
   openGraph: {
     title: 'Fix Maximum Call Stack Exceeded in JavaScript | UnblockDevs',

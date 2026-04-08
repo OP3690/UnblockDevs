@@ -11,7 +11,19 @@ export const metadata: Metadata = {
     'data encryption',
     'privacy computing',
     'tee technology',
-    'confidential cloud'
+    'confidential cloud',
+    'confidential computing 2026',
+    'secure data processing',
+    'hardware security enclaves',
+    'azure confidential computing',
+    'google confidential computing',
+    'intel sgx confidential computing',
+    'amd sev',
+    'confidential vm',
+    'tee security',
+    'what is confidential computing',
+    'confidential computing use cases',
+    'secure multi-party computation'
   ],
   alternates: { canonical: 'https://unblockdevs.com/blog/confidential-computing-complete-guide' },
 

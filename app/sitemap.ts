@@ -59,9 +59,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'physical-ai-complete-guide',
     'physical-ai-edge-computing-complete-guide',
     'physical-ai-systems-complete-guide',
-    'ai-supercomputing-platforms-complete-guide',
     'ai-security-platforms-complete-guide',
-    'digital-provenance-complete-guide',
     'domain-specific-language-models-complete-guide',
     'multiagent-systems-complete-guide',
   ]

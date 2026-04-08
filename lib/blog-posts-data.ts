@@ -421,7 +421,7 @@ export const blogPosts: BlogPost[] = [
       date: '2026-01-25',
       readTime: '10 min read',
       category: 'Messaging & Communication',
-      keywords: ['hide online status whatsapp', 'how to hide online status on whatsapp', 'whatsapp hide online status', 'appear offline whatsapp']
+      keywords: ['hide online status whatsapp', 'how to hide online status on whatsapp', 'whatsapp hide online status', 'appear offline whatsapp', 'whatsapp hide online status does typing indicator still show', 'whatsapp online status visibility 2026', 'whatsapp hide online status 2026']
     },
     {
       slug: 'how-to-know-if-someone-blocked-you-on-instagram',
@@ -682,7 +682,7 @@ export const blogPosts: BlogPost[] = [
       date: '2026-01-25',
       readTime: '12 min read',
       category: 'Messaging & Communication',
-      keywords: ['change whatsapp number', 'change whatsapp number without losing chats', 'migrate whatsapp number', 'whatsapp number change guide']
+      keywords: ['change whatsapp number', 'change whatsapp number without losing chats', 'migrate whatsapp number', 'whatsapp number change guide', 'whatsapp business change number catalog transfer', 'как поменять номер ватсап']
     },
     {
       slug: 'how-to-change-phone-number-telegram-without-notifying',
@@ -691,7 +691,7 @@ export const blogPosts: BlogPost[] = [
       date: '2026-01-25',
       readTime: '11 min read',
       category: 'Messaging & Communication',
-      keywords: ['change telegram phone number', 'change telegram number without notifying', 'telegram number change guide', 'telegram privacy settings']
+      keywords: ['change telegram phone number', 'change telegram number without notifying', 'telegram number change guide', 'telegram privacy settings', 'telegram change phone number notify contacts', 'does telegram notify contacts when changing phone number', 'telegram change phone number without sms', 'telegram change phone number without access to old number', 'telegram change number settings privacy and security change number']
     },
     {
       slug: 'how-to-change-email-address-google-account-safely',
@@ -754,7 +754,7 @@ export const blogPosts: BlogPost[] = [
       date: '2025-01-15',
       readTime: '10 min read',
       category: 'API Development',
-      keywords: ['copy as curl online', 'copy as curl from browser', 'network request to curl', 'browser request to curl', 'curl from browser request']
+      keywords: ['copy as curl online', 'copy as curl from browser', 'network request to curl', 'browser request to curl', 'curl from browser request', 'firefox network monitor copy as curl', 'firefox devtools network copy as curl', 'chrome devtools network panel copy as curl', 'chrome devtools copy as curl']
     },
     {
       slug: 'how-to-convert-har-files-to-curl',
@@ -799,7 +799,7 @@ export const blogPosts: BlogPost[] = [
       date: '2026-02-04',
       readTime: '31 min read',
       category: 'Technology & Security',
-      keywords: ['digital provenance', 'data provenance', 'digital authenticity', 'data lineage', 'provenance tracking']
+      keywords: ['digital provenance', 'data provenance', 'digital authenticity', 'data lineage', 'provenance tracking', 'digital provenance validation standard 2026']
     },
     {
       slug: 'domain-specific-language-models-complete-guide',
@@ -835,7 +835,7 @@ export const blogPosts: BlogPost[] = [
       date: '2026-02-03',
       readTime: '27 min read',
       category: 'AI & Infrastructure',
-      keywords: ['ai supercomputing platforms', 'ai supercomputers', 'gpu clusters ai', 'distributed ai training', 'high performance ai computing']
+      keywords: ['ai supercomputing platforms', 'ai supercomputing platforms 2026', 'ai supercomputers', 'gpu clusters ai', 'distributed ai training', 'high performance ai computing']
     },
     {
       slug: 'ai-native-development-platforms-complete-guide',
@@ -952,7 +952,7 @@ export const blogPosts: BlogPost[] = [
       date: '2025-01-28',
       readTime: '14 min read',
       category: 'AI & Machine Learning',
-      keywords: ['notebooklm cheat sheet', 'notebooklm tips', 'notebooklm tricks', 'notebooklm shortcuts', 'notebooklm quick reference']
+      keywords: ['notebooklm cheat sheet', 'notebooklm tips', 'notebooklm tricks', 'notebooklm shortcuts', 'notebooklm quick reference', 'notebooklm study guide features', 'notebooklm effective usage guide', 'notebooklm generate checklists']
     },
     {
       slug: 'notebooklm-complete-guide',
@@ -1141,7 +1141,7 @@ export const blogPosts: BlogPost[] = [
       date: '2025-01-28',
       readTime: '16 min read',
       category: 'Developer Tools',
-      keywords: ['cursor ai', 'cursor code editor', 'cursor ai tutorial', 'how to use cursor', 'cursor vs vs code', 'ai code editor']
+      keywords: ['cursor ai', 'cursor code editor', 'cursor ai tutorial', 'how to use cursor', 'cursor vs vs code', 'ai code editor', 'cursor ai code editor official documentation', 'cursor ai official docs', 'cursor ide']
     },
     {
       slug: 'ai-productivity-tools-complete-guide',
@@ -1262,21 +1262,21 @@ export const blogPosts: BlogPost[] = [
     },
     {
       slug: 'json-stringify-vs-json-parse-difference',
-      title: 'JSON.stringify() vs JSON.parse(): Complete Difference Guide',
-      excerpt: 'Learn the difference between JSON.stringify() and JSON.parse(). When to use each, examples, and how they work together. Includes json parse online and json serialize online examples.',
+      title: 'JSON.stringify() undefined Behavior & vs JSON.parse(): Complete Guide',
+      excerpt: 'How JSON.stringify() handles undefined: omits object properties, converts array undefined to null, returns undefined at top level. JSON.parse() differences, examples, and behavior guide.',
       date: '2025-01-15',
       readTime: '10 min read',
       category: 'JavaScript',
-      keywords: ['json stringify vs json parse', 'json parse online', 'json serialize online', 'json parser online', 'unstringify json']
+      keywords: ['json stringify vs json parse', 'json parse online', 'json serialize online', 'json parser online', 'json.stringify undefined properties removed', 'json.stringify omits undefined properties', 'json.stringify array undefined becomes null', 'json.stringify behavior with undefined']
     },
     {
       slug: 'how-to-get-curl-from-chrome',
-      title: 'How to Get cURL from Chrome: Copy Request as cURL',
-      excerpt: 'Learn how to copy HTTP requests as cURL commands from Chrome DevTools. Step-by-step guide to export network requests as cURL for testing and debugging.',
+      title: 'Chrome DevTools Copy as cURL: Complete Guide',
+      excerpt: 'How to copy network requests as cURL commands from Chrome DevTools Network tab. Step-by-step guide with screenshots — right-click any request, select "Copy as cURL".',
       date: '2025-01-15',
       readTime: '8 min read',
       category: 'Developer Tools',
-      keywords: ['how to get curl from chrome', 'copy as curl chrome', 'chrome devtools curl', 'export request as curl']
+      keywords: ['chrome devtools copy as curl', 'chrome devtools network copy as curl', 'copy as curl chrome devtools', 'how to get curl from chrome', 'chrome devtools network panel copy as curl', 'copy request as curl chrome devtools']
     },
     {
       slug: 'curl-vs-python-requests-comparison',
@@ -1420,7 +1420,7 @@ export const blogPosts: BlogPost[] = [
       date: '2025-01-31',
       readTime: '18 min read',
       category: 'Web Development',
-      keywords: ['JSON best practices', 'JSON production guide', 'JSON performance', 'JSON security', 'JSON structure', 'JSON optimization', 'JSON error handling', 'JSON standards', 'JSON development']
+      keywords: ['JSON best practices', 'JSON production guide', 'JSON performance', 'JSON security', 'JSON structure', 'JSON optimization', 'JSON error handling', 'JSON standards', 'JSON development', 'rfc 8259 json', 'rfc 8259 json trailing comma', 'rfc 8259 json keys must be strings', 'json keys must be strings rfc 8259']
     },
     {
       slug: 'json-api-design-patterns',
