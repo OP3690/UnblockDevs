@@ -7,6 +7,7 @@ import { Network } from 'lucide-react';
 export default function HarToCurlClient() {
   return (
     <ToolPageShell
+      showFooterBand={false}
       title="HAR to cURL Converter"
       subtitle="Convert network HAR files into reproducible API requests: cURL, Python, Go, Java, PHP, Ruby. Clean headers, mask secrets, timeline, batch script, AI debug prompt. 100% client-side."
       toolName="har_to_curl"

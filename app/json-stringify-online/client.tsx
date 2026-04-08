@@ -73,6 +73,7 @@ export default function JsonStringifyOnlineClient() {
 
   return (
     <ToolPageShell
+      showFooterBand={false}
       title="JSON.stringify() Online"
       subtitle="Convert JavaScript objects to JSON strings instantly"
       toolName="json_stringify_online"

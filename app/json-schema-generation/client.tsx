@@ -22,6 +22,7 @@ const JSON_SCHEMA_BREADCRUMB: BreadcrumbItem[] = [
 export default function JsonSchemaGenerationClient() {
   return (
     <ToolPageShell
+      showFooterBand={false}
       breadcrumbItems={JSON_SCHEMA_BREADCRUMB}
       title="JSON Schema Generator — Auto-Generate from Sample JSON"
       subtitle="Paste any JSON and instantly generate a Draft 7 or OpenAPI schema. Built-in validator included. 100% client-side."

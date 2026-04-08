@@ -7,6 +7,7 @@ import ToolPageShell from '@/components/tools/ToolPageShell';
 export default function FixJsonParseErrorJavascriptClient() {
   return (
     <ToolPageShell
+      showFooterBand={false}
       title="Fix JSON.parse() Error in JavaScript"
       subtitle="Complete guide with error handling examples"
       toolName="fix_json_parse_error_javascript"

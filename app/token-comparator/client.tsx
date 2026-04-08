@@ -13,6 +13,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
 export default function TokenComparatorLandingClient() {
   return (
     <ToolPageShell
+      showFooterBand={false}
       breadcrumbItems={breadcrumbItems}
       title="JWT Debugger & Token Comparator"
       subtitle="Decode, compare character-by-character, verify signatures, check expiry & security audit. 100% client-side."

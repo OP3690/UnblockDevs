@@ -144,6 +144,7 @@ function JsonValidatorTool() {
 export default function JsonValidatorClient() {
   return (
     <ToolPageShell
+      showFooterBand={false}
       breadcrumbItems={BREADCRUMB}
       title="JSON Validator"
       subtitle="Validate JSON syntax instantly — detailed error messages, 100% in browser"

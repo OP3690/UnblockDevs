@@ -23,6 +23,7 @@ const JSON_BREADCRUMB: BreadcrumbItem[] = [
 export default function LogUnpackerClient() {
   return (
     <ToolPageShell
+      showFooterBand={false}
       breadcrumbItems={JSON_BREADCRUMB}
       title="Log Unpacker — Unescape Stringified JSON, Decode JWTs, Epoch Timestamps & Sanitize for AI"
       subtitle="Recursively unescape nested JSON, decode JWTs, convert epoch timestamps, scrub paths. 100% client-side. AI-safe output."

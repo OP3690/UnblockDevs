@@ -22,6 +22,7 @@ const JSON_BREADCRUMB: BreadcrumbItem[] = [
 export default function JsonFixerOnlineClient() {
   return (
     <ToolPageShell
+      showFooterBand={false}
       breadcrumbItems={JSON_BREADCRUMB}
       title="Advanced JSON Fixer & Recovery Engine"
       subtitle="Paste → Instant fix. Repair malformed JSON, recover truncated payloads, extract from logs, fix AI/API output — 100% client-side. Fix trailing commas, missing quotes, broken arrays, AI-generated JSON."

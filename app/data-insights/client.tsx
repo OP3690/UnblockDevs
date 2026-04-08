@@ -14,6 +14,7 @@ const DataInsights = dynamic(() => import('@/components/tools/DataInsights'), {
 export default function DataInsightsClient() {
   return (
     <ToolPageShell
+      showFooterBand={false}
       title="Data Insights - Analyze JSON Data Instantly"
       subtitle="Get insights, statistics, and patterns from your JSON data"
       toolName="data_insights"

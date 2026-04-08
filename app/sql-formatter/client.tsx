@@ -14,6 +14,7 @@ const SqlFormatter = dynamic(() => import('@/components/tools/SqlFormatter'), {
 export default function SqlFormatterClient() {
   return (
     <ToolPageShell
+      showFooterBand={false}
       title="SQL Formatter"
       subtitle="Paste → Instant fix. Format messy SQL query — clean SQL queries instantly. MySQL, PostgreSQL, Oracle, Trino & more"
       toolName="sql_formatter"

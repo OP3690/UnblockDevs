@@ -14,6 +14,7 @@ const TestDataGenerator = dynamic(() => import('@/components/tools/TestDataGener
 export default function TestDataGeneratorClient() {
   return (
     <ToolPageShell
+      showFooterBand={false}
       title="Test Data Generator — Generate Fake User, Invoice, Banking & API Log Test Data from JSON Schema Online Free"
       subtitle="Create realistic test data for development, testing, and demos — 11 templates or custom JSON Schema, up to 50 records, 100% browser-based"
       toolName="test_data_generator"

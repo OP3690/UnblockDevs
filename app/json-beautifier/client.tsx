@@ -14,6 +14,7 @@ const JSON_BREADCRUMB: BreadcrumbItem[] = [
 export default function JsonBeautifierClient() {
   return (
     <ToolPageShell
+      showFooterBand={false}
       breadcrumbItems={JSON_BREADCRUMB}
       title="Developer JSON Workbench"
       subtitle="Format, validate, fix, explore paths, generate TypeScript & SQL — all in one"

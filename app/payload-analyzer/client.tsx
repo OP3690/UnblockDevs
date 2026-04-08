@@ -14,6 +14,7 @@ const PayloadAnalyzer = dynamic(() => import('@/components/tools/PayloadAnalyzer
 export default function PayloadAnalyzerClient() {
   return (
     <ToolPageShell
+      showFooterBand={false}
       title="Payload Analyzer - Analyze API Payloads Instantly"
       subtitle="Inspect, analyze, and optimize API request and response payloads"
       toolName="payload_analyzer"

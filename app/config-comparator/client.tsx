@@ -16,6 +16,7 @@ const ConfigComparator = dynamic(() => import('@/components/tools/ConfigComparat
 export default function ConfigComparatorClient() {
   return (
     <ToolPageShell
+      showFooterBand={false}
       title="Config Comparator - Compare Configuration Files"
       subtitle="Find differences between config files, environment variables, and settings"
       toolName="config_comparator"

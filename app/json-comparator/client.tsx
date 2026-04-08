@@ -22,6 +22,7 @@ const JSON_BREADCRUMB: BreadcrumbItem[] = [
 export default function JsonComparatorClient() {
   return (
     <ToolPageShell
+      showFooterBand={false}
       breadcrumbItems={JSON_BREADCRUMB}
       title="JSON Comparator — Compare Two JSON Objects, Diff API Responses & Semantic Changes"
       subtitle="Semantic diff: normalizes UUIDs, timestamps, JWTs, hashes so only real logic changes appear. 100% client-side."

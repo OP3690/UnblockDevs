@@ -14,6 +14,7 @@ const TimezoneTranslator = dynamic(() => import('@/components/tools/TimezoneTran
 export default function TimezoneTranslatorClient() {
   return (
     <ToolPageShell
+      showFooterBand={false}
       title="Timezone Translator — Convert Time Between Timezones"
       subtitle="Translate times between UTC, EST, PST, IST and 500+ IANA timezones. DST-aware, 100% browser-based."
       toolName="timezone_translator"

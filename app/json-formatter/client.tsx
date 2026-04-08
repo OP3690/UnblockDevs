@@ -7,6 +7,7 @@ import ToolPageShell from '@/components/tools/ToolPageShell';
 export default function JsonFormatterClient() {
   return (
     <ToolPageShell
+      showFooterBand={false}
       title="JSON Formatter - Free Online Formatting Tool"
       subtitle="Format, beautify, and prettify JSON with customizable indentation — use the JSON Beautifier on the home page."
       toolName="json_formatter"

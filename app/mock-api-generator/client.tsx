@@ -14,6 +14,7 @@ const MockApiGenerator = dynamic(() => import('@/components/tools/MockApiGenerat
 export default function MockApiGeneratorClient() {
   return (
     <ToolPageShell
+      showFooterBand={false}
       title="Mock API Generator – Create Fake REST APIs Instantly"
       subtitle="Dynamic responses, auth simulation, latency, rate limiting, conditional rules. Export to Postman & OpenAPI."
       toolName="mock_api_generator"

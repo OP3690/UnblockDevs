@@ -16,6 +16,7 @@ const ApiComparator = dynamic(() => import('@/components/tools/ApiComparator'), 
 export default function ApiComparatorClient() {
   return (
     <ToolPageShell
+      showFooterBand={false}
       title="API Comparator - Compare API Responses Instantly"
       subtitle="Compare two API responses side-by-side to debug changes and detect differences"
       toolName="api_comparator"

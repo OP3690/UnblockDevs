@@ -14,6 +14,7 @@ const CurlConverter = dynamic(() => import('@/components/tools/CurlConverter'), 
 export default function CurlConverterClient() {
   return (
     <ToolPageShell
+      showFooterBand={false}
       title="cURL Converter – Convert cURL to Production-Ready Code"
       subtitle="JavaScript (Fetch/Axios), Python (Requests/HTTPX), Go, Java, PHP, C#, Rust. Export to Postman & OpenAPI. 100% local."
       toolName="curl_converter"
