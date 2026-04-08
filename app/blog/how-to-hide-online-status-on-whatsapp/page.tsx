@@ -27,7 +27,9 @@ export const metadata: Metadata = {
     'whatsapp hide online status does it hide typing indicator',
     'whatsapp hide last seen and online status latest method',
     'whatsapp online status visibility 2026',
-    'whatsapp hide online status but still use app 2026'
+    'whatsapp hide online status but still use app 2026',
+    'whatsapp hide last seen and online status 2026',
+    'wzp whatsapp privacy change'
   ],
   openGraph: {
     title: 'How to Hide Online Status on WhatsApp: Complete Guide 2026',

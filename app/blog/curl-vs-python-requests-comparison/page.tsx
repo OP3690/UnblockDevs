@@ -10,7 +10,10 @@ export const metadata: Metadata = {
     'curl or python requests',
     'when to use curl vs requests',
     'curl vs requests library',
-    'curl python requests comparison'
+    'curl python requests comparison',
+    'curl vs python',
+    'curl or python',
+    'when to use curl vs python requests'
   ],
   alternates: { canonical: 'https://unblockdevs.com/blog/curl-vs-python-requests-comparison' },
 

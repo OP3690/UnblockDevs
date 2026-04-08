@@ -26,7 +26,8 @@ export const metadata: Metadata = {
     'telegram change phone number without access to old number',
     'telegram change number settings privacy and security change number',
     'telegram settings privacy and security change number',
-    'telegram change phone number settings'
+    'telegram change phone number settings',
+    'telegram change phone number without access to old number 2026'
   ],
   openGraph: {
     title: 'How to Change Phone Number in Telegram Without Notifying Contacts: Complete Guide 2026',

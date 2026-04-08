@@ -40,7 +40,13 @@ export const metadata: Metadata = {
     'chrome devtools copy as curl official docs',
     'chrome devtools copy as fetch network request',
     'copy as curl chrome devtools network',
-    'copy curl chrome devtools network'
+    'copy curl chrome devtools network',
+    'firefox developer tools network tab copy as curl',
+    'firefox devtools copy as curl network request',
+    'microsoft edge devtools copy as curl network request',
+    'edge devtools copy as curl',
+    'chrome devtools copy as fetch network',
+    'copy as fetch chrome devtools'
   ],
   openGraph: {
     title: 'Copy as cURL from Browser: Network Request to cURL Converter Tutorial',

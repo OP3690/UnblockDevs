@@ -16,7 +16,10 @@ export const metadata: Metadata = {
     'best sorting algorithm',
     'sorting algorithms time complexity',
     'when to use which sorting algorithm',
-    'sorting algorithms tutorial'
+    'sorting algorithms tutorial',
+    'sorting',
+    'sorting in computer science',
+    'algorithm sorting'
   ],
   openGraph: {
     title: 'Sorting Algorithms Explained | UnblockDevs',

@@ -45,6 +45,9 @@ export const metadata: Metadata = {
     'what is the none algorithm jwt vulnerability',
     'JWT Debugger',
     'Token Comparator',
+    'compare jwt',
+    'compare jwt token',
+    'jwt token compare',
   ],
   openGraph: {
     title: 'JWT Debugger & Token Comparator — Decode, Compare, Security Audit & Expiry Check | UnblockDevs',

@@ -16,7 +16,10 @@ export const metadata: Metadata = {
     'data pipeline example',
     'data flow pipeline',
     'data pipeline design',
-    'data pipeline best practices'
+    'data pipeline best practices',
+    'data pipeline analytics definition',
+    'analytics data pipeline',
+    'data pipeline definition analytics'
   ],
   openGraph: {
     title: 'What Is a Data Pipeline? Explained for Beginners (Complete Guide)',

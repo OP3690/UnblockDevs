@@ -19,6 +19,7 @@ export const metadata: Metadata = {
     'what is jwt token', 'how does jwt work', 'is jwt.io safe to use',
     'how to check if jwt token is expired', 'debug jwt authentication',
     'aws cognito jwt decoder', 'auth0 jwt decoder', 'firebase jwt decoder',
+    'compare jwt', 'compare jwt token', 'jwt token compare',
   ],
   openGraph: {
     title: 'JWT Decoder — Decode, Verify, Check Expiry & Security Audit Online Free | UnblockDevs',

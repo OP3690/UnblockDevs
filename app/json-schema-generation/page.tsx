@@ -26,6 +26,10 @@ export const metadata: Metadata = {
     'json schema to typescript',
     'ajv json schema',
     'json schema required fields',
+    'jsonschema npm addformat',
+    'jsonschema addformat npm',
+    'ajv addformat json schema',
+    'json schema addformat',
   ],
   openGraph: {
     title: 'Free JSON Schema Generator — Auto-Generate Draft 7 & OpenAPI Schemas | UnblockDevs',

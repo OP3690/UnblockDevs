@@ -19,7 +19,10 @@ export const metadata: Metadata = {
     'node module resolution',
     'module not found troubleshooting',
     'nodejs require error',
-    'fix module not found'
+    'fix module not found',
+    'node.js module_not_found error fix',
+    'module_not_found nodejs',
+    'err_module_not_found nodejs'
   ],
   openGraph: {
     title: 'How to Fix "Module Not Found" Error in Node.js: Complete Guide 2026',

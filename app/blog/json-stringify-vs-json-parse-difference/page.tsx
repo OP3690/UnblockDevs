@@ -26,7 +26,16 @@ export const metadata: Metadata = {
     'json.stringify undefined',
     'json stringify undefined value',
     'json keys must be strings rfc 8259',
-    'json.stringify null vs undefined'
+    'json.stringify null vs undefined',
+    'javascript json.stringify undefined return value',
+    'json.stringify undefined property omitted',
+    'mdn json.stringify undefined properties omitted',
+    'mdn json.stringify undefined property omitted',
+    'javascript json.stringify undefined property omitted',
+    'json.stringify undefined property omitted behavior',
+    'json.stringify(undefined) returns undefined mdn',
+    'json.stringify omit undefined object property',
+    'mdn json.stringify undefined in array becomes null'
   ],
   openGraph: {
     title: 'JSON.stringify() undefined Behavior & vs JSON.parse() | UnblockDevs',

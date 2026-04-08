@@ -18,7 +18,12 @@ export const metadata: Metadata = {
     'http error codes',
     'status code meaning',
     'http status code list',
-    'developer guide http codes'
+    'developer guide http codes',
+    'example of 400 api status code',
+    '400 bad request example',
+    '400 status code api example',
+    '401 unauthorized example',
+    '403 forbidden example'
   ],
   openGraph: {
     title: 'HTTP Status Codes Every Developer Should Know | UnblockDevs',
