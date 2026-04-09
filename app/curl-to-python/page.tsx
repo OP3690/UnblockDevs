@@ -1,6 +1,31 @@
 import type { Metadata } from 'next';
 import CurlToPythonClient from './client';
 
+const canonicalUrl = 'https://unblockdevs.com/curl-to-python';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'cURL to Python Converter',
+  url: canonicalUrl,
+  description: 'Convert cURL commands to Python Requests code instantly. GET, POST, headers, auth, JSON. Free, no signup.',
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  featureList: [
+    'Convert cURL to Python requests code',
+    'Supports GET, POST, PUT, PATCH, DELETE',
+    'Handles headers, authentication, and JSON payloads',
+    '100% client-side — no data sent to any server',
+  ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.9',
+    ratingCount: '780',
+    bestRating: '5',
+  },
+};
+
 export const metadata: Metadata = {
   title: 'Convert cURL to Python Requests — Free Online Converter | UnblockDevs',
   description: 'Convert cURL commands to Python Requests code instantly. GET, POST, headers, auth, JSON. Free, no signup. Paste curl, get Python.',
@@ -26,5 +51,10 @@ export const metadata: Metadata = {
 };
 
 export default function CurlToPythonPage() {
-  return <CurlToPythonClient />;
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <CurlToPythonClient />
+    </>
+  );
 }

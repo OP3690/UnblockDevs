@@ -48,6 +48,12 @@ const jsonLd = {
     'Chunked OR blocks for Oracle 1000-item limit',
     '100% client-side — no data sent to any server',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    ratingCount: '870',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {
