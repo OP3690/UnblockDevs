@@ -217,10 +217,12 @@ export default function JsonBeautifierPage() {
         {/* Related tools */}
         <SEOSection id="related" eyebrow="Related tools" heading="Tools You Might Also Need">
           <RelatedTools tools={[
-            { href: '/json-comparator', label: 'JSON Comparator', desc: 'Semantic diff two JSON objects side-by-side', icon: '🔀' },
+            { href: '/json-fixer-online', label: 'JSON Fixer', desc: 'Auto-repair invalid JSON — trailing commas, single quotes, broken brackets', icon: '🔧' },
+            { href: '/json-validator', label: 'JSON Validator', desc: 'Validate JSON syntax and get exact error line numbers', icon: '✅' },
+            { href: '/json-comparator', label: 'JSON Comparator', desc: 'Semantic diff two JSON objects and highlight changes', icon: '🔀' },
             { href: '/jwt-decoder', label: 'JWT Decoder', desc: 'Decode and inspect JWT tokens containing JSON claims', icon: '🪙' },
             { href: '/ai-schema-masker', label: 'AI Schema Masker', desc: 'Mask sensitive JSON fields before sending to AI', icon: '🔒' },
-            { href: '/uuid-generator', label: 'UUID Generator', desc: 'Generate UUIDs for JSON primary key fields', icon: '🔑' },
+            { href: '/json-to-excel', label: 'JSON to Excel', desc: 'Convert JSON arrays to Excel spreadsheets instantly', icon: '📊' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

@@ -87,11 +87,36 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Generate a SQL IN Clause from a List',
+  description: 'Use the SQL IN Generator to convert a list of values into a properly formatted SQL IN clause for your database.',
+  totalTime: 'PT2M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste your list of values', text: 'Paste a comma-separated, newline-separated, or mixed list of IDs or values into the input.' },
+    { '@type': 'HowToStep', position: 2, name: 'Choose your database', text: 'Select MySQL, PostgreSQL, SQLite, MSSQL, Oracle, or Trino for correct quoting and syntax.' },
+    { '@type': 'HowToStep', position: 3, name: 'Click Format', text: 'The tool generates a clean SQL IN clause: SELECT * FROM table WHERE id IN (1, 2, 3, ...).' },
+    { '@type': 'HowToStep', position: 4, name: 'Copy the SQL', text: 'Click Copy to paste the formatted SQL directly into your query editor or application.' },
+  ],
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://unblockdevs.com' },
+    { '@type': 'ListItem', position: 2, name: 'Tools', item: 'https://unblockdevs.com/tools/json' },
+    { '@type': 'ListItem', position: 3, name: 'SQL IN Clause Generator', item: canonicalUrl },
+  ],
+};
+
 export default function SqlInGeneratorPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <SqlInGeneratorClient />
 
       <ToolSEOContent>

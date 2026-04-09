@@ -95,6 +95,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Compare Two Config Files',
+  description: 'Use the Config Comparator to diff JSON, YAML, .env, TOML, and INI configuration files side by side and detect added, removed, and changed keys.',
+  totalTime: 'PT2M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste your config files', text: 'Paste two configuration files (JSON, YAML, TOML, or env) into the left and right panels.' },
+    { '@type': 'HowToStep', position: 2, name: 'Select format', text: 'Choose the file format if not auto-detected: JSON, YAML, .env, TOML, or INI.' },
+    { '@type': 'HowToStep', position: 3, name: 'Click Compare', text: 'The tool compares the two configs and highlights added, removed, and changed keys side by side.' },
+    { '@type': 'HowToStep', position: 4, name: 'Export the diff', text: 'Copy the diff or export it for your deployment runbook or PR description.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',

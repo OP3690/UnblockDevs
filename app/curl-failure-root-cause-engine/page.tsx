@@ -127,6 +127,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Diagnose a Failing cURL Command',
+  description: 'Use the cURL Failure Analyzer to identify the root cause of a failed cURL request and get a corrected command.',
+  totalTime: 'PT2M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste your failing cURL command', text: 'Copy your cURL command and paste it into the input. Include the full command with all flags.' },
+    { '@type': 'HowToStep', position: 2, name: 'Add the error output', text: 'Paste the error message or HTTP response code you received when the cURL command failed.' },
+    { '@type': 'HowToStep', position: 3, name: 'Run the analysis', text: 'Click Analyze. The tool diagnoses common causes: SSL errors, auth failures, CORS, DNS issues, timeouts.' },
+    { '@type': 'HowToStep', position: 4, name: 'Apply the fix', text: 'The tool provides specific fixes and the corrected cURL command to retry.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',

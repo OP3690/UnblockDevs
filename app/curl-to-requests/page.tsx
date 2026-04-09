@@ -50,10 +50,21 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://unblockdevs.com/curl-to-requests' },
 };
 
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://unblockdevs.com' },
+    { '@type': 'ListItem', position: 2, name: 'Tools', item: 'https://unblockdevs.com/tools/json' },
+    { '@type': 'ListItem', position: 3, name: 'cURL to Code', item: canonicalUrl },
+  ],
+};
+
 export default function CurlToRequests() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <CurlToRequestsClient />
     </>
   );

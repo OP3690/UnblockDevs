@@ -96,6 +96,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Compare Two API Responses',
+  description: 'Use the API Comparator to diff two API JSON responses and detect breaking changes, added or removed fields, and type changes.',
+  totalTime: 'PT2M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste your API URL or response', text: 'Enter the API endpoint URL or paste two API responses you want to compare.' },
+    { '@type': 'HowToStep', position: 2, name: 'Set headers and authentication', text: 'Add any required headers (Authorization, Content-Type) for the API calls.' },
+    { '@type': 'HowToStep', position: 3, name: 'Run the comparison', text: 'Click Compare. The tool shows the structural diff between the two responses.' },
+    { '@type': 'HowToStep', position: 4, name: 'Identify differences', text: 'Added, removed, and changed fields are highlighted. Use this to detect API breaking changes.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',

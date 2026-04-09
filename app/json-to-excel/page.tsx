@@ -131,6 +131,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Convert JSON to Excel Online',
+  description: 'Step-by-step guide to converting a JSON array to an Excel spreadsheet or CSV file.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste your JSON array', text: 'Paste a JSON array of objects into the input. Each object becomes a row in the spreadsheet; keys become column headers.' },
+    { '@type': 'HowToStep', position: 2, name: 'Preview the table', text: 'The tool instantly renders a table preview so you can verify the structure before downloading.' },
+    { '@type': 'HowToStep', position: 3, name: 'Choose Excel or CSV format', text: 'Select .xlsx for Excel or .csv for use in Google Sheets, LibreOffice, or any spreadsheet application.' },
+    { '@type': 'HowToStep', position: 4, name: 'Download the file', text: 'Click Download. Your spreadsheet is generated entirely in the browser — nothing is uploaded to any server.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -146,6 +160,7 @@ export default function JsonToExcelPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <JsonToExcelClient />
 
