@@ -275,6 +275,46 @@ export default function JsonBeautifier() {
     toast.success(`Generated ${count} sample objects`);
   };
 
+  const sortKeysDeep = (obj: unknown): unknown => {
+    if (Array.isArray(obj)) return obj.map(sortKeysDeep);
+    if (obj !== null && typeof obj === 'object') {
+      const sorted: Record<string, unknown> = {};
+      Object.keys(obj as Record<string, unknown>).sort().forEach((k) => {
+        sorted[k] = sortKeysDeep((obj as Record<string, unknown>)[k]);
+      });
+      return sorted;
+    }
+    return obj;
+  };
+
+  const handleSortKeys = () => {
+    const validation = validateJson(jsonText);
+    if (!validation.valid) { toast.error('Valid JSON required'); return; }
+    const sorted = sortKeysDeep(validation.data);
+    const str = JSON.stringify(sorted, null, indentSize === 0 ? '\t' : ' '.repeat(indentSize));
+    setJsonText(str);
+    beautifyJson(str, indentSize);
+    toast.success('Keys sorted alphabetically');
+  };
+
+  const JSON_PRESETS = [
+    {
+      label: 'User Profile',
+      emoji: '👤',
+      json: `{"id":"usr_8829104","name":"Anya Sharma","email":"anya@example.com","role":"admin","createdAt":"2026-01-15T09:30:00Z","profile":{"bio":"Full-stack developer","avatar":"https://cdn.example.com/avatars/anya.png","location":"Bangalore, IN"},"preferences":{"theme":"dark","notifications":true,"language":"en"}}`,
+    },
+    {
+      label: 'API Error',
+      emoji: '🚨',
+      json: `{"error":{"code":"RATE_LIMIT_EXCEEDED","message":"Too many requests — retry after 60 seconds","details":{"limit":100,"window":"1m","retryAfter":60,"requestId":"req_abc123xyz"}},"status":429,"timestamp":"2026-03-05T23:14:04.201Z"}`,
+    },
+    {
+      label: 'E-commerce Order',
+      emoji: '🛒',
+      json: `{"orderId":"ORD-20260305-999888","status":"confirmed","customer":{"id":"cust_4839201","name":"Rohan Mehta","email":"rohan@example.com"},"items":[{"sku":"PROD-999999","name":"iPhone 16 Pro Max","qty":1,"unitPrice":129999},{"sku":"CASE-001","name":"MagSafe Case","qty":2,"unitPrice":2499}],"payment":{"method":"card","last4":"4242","status":"captured","amount":134997},"shippingAddress":{"line1":"123 MG Road","city":"Bengaluru","state":"KA","zip":"560001","country":"IN"},"createdAt":"2026-03-05T23:14:03.567Z"}`,
+    },
+  ];
+
   const copyJsonPath = (path: string) => {
     const jpath = pathToJsonPath(path);
     navigator.clipboard.writeText(jpath);
@@ -443,7 +483,21 @@ export default function JsonBeautifier() {
             </h2>
             <p className="text-sm sm:text-base text-zinc-500 mt-1.5">Format, validate, fix, explore paths, generate TypeScript &amp; SQL — all in one</p>
           </div>
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex flex-wrap items-center gap-2 flex-shrink-0">
+            {JSON_PRESETS.map((p) => (
+              <button
+                key={p.label}
+                type="button"
+                onClick={() => {
+                  trackCtaClick('json_beautifier', 'load_preset');
+                  setJsonText(p.json);
+                  beautifyJson(p.json, indentSize);
+                }}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition-colors"
+              >
+                {p.emoji} {p.label}
+              </button>
+            ))}
             <button
               type="button"
               onClick={handleGenerateSample}
@@ -575,6 +629,16 @@ export default function JsonBeautifier() {
               title="Remove timestamp, request_id, trace_id, session_id, etc."
             >
               Remove noise fields
+            </button>
+          )}
+          {beautifiedJson && (
+            <button
+              type="button"
+              onClick={handleSortKeys}
+              className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg border border-blue-200"
+              title="Sort all object keys alphabetically (deep)"
+            >
+              Sort keys A→Z
             </button>
           )}
         </div>

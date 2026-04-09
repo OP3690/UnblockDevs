@@ -17,6 +17,8 @@ import {
   Shield,
   BookOpen,
   X,
+  Download,
+  Zap,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy, trackCtaClick } from '@/lib/analytics';
@@ -95,6 +97,21 @@ const PRESETS = [
       maskPrefixedId: false,
       arrayMode: 'ordered' as const,
     },
+  },
+];
+
+const QUICK_EXAMPLES = [
+  {
+    name: 'GraphQL',
+    emoji: '⚡',
+    a: `{"data":{"user":{"id":"f47ac10b-58cc-4372-a567-0e02b2c3d479","name":"Alice","role":"admin","createdAt":"2026-01-15T09:30:00Z","permissions":["read","write","delete"]}},"extensions":{"requestId":"req_abc123","latencyMs":42}}`,
+    b: `{"data":{"user":{"id":"a12bc34d-89ef-4567-b890-1f23c4d5e678","name":"Alice","role":"viewer","createdAt":"2026-02-20T14:00:00Z","permissions":["read"]}},"extensions":{"requestId":"req_xyz789","latencyMs":38}}`,
+  },
+  {
+    name: 'DB Records',
+    emoji: '🗄️',
+    a: `{"id":1001,"status":"pending","amount":4999,"currency":"USD","createdAt":1740838930,"updatedAt":1740838930,"metadata":{"source":"web","campaign":"spring_sale"}}`,
+    b: `{"id":1001,"status":"completed","amount":4999,"currency":"USD","createdAt":1740838930,"updatedAt":1740925330,"paidAt":1740925330,"metadata":{"source":"web","campaign":"spring_sale"}}`,
   },
 ];
 
@@ -279,6 +296,51 @@ export default function SmartJsonDiff() {
     );
   }, [result]);
 
+  const downloadReport = useCallback(() => {
+    if (!result) return;
+    const report = {
+      generatedAt: new Date().toISOString(),
+      preset: activePreset,
+      arrayMode: config.arrayMode ?? 'unordered',
+      summary: {
+        meaningfulChanges: result.changes.length,
+        dynamicFieldsMasked: result.entropyReport.length,
+        entropyReductionPct: entropyReduction,
+        confidence,
+        payloadSizeA: result.payloadSizeA,
+        payloadSizeB: result.payloadSizeB,
+        fieldCountA: result.fieldCountA,
+        fieldCountB: result.fieldCountB,
+        depthA: result.depthA,
+        depthB: result.depthB,
+      },
+      changes: result.changes.map((d) => ({
+        path: d.path,
+        type: changeTypeLabel(d.type),
+        before: d.before,
+        after: d.after,
+      })),
+      maskedFields: result.entropyReport.map((e) => ({ path: e.path ?? e.key, reason: formatReason(e.reason) })),
+      jsonPatch: changesToJsonPatch(result.changes),
+    };
+    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `diff-report-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success('Diff report downloaded');
+  }, [result, activePreset, config, entropyReduction, confidence]);
+
+  const loadQuickExample = useCallback((ex: typeof QUICK_EXAMPLES[0]) => {
+    setJsonA(ex.a);
+    setJsonB(ex.b);
+    setError(null);
+    setResult(null);
+    toast.success(`${ex.name} example loaded`);
+  }, []);
+
   const formatBytes = (n: number) => (n < 1024 ? `${n} B` : `${(n / 1024).toFixed(1)} KB`);
 
   /** Side-by-side code block with line numbers; line numbers scroll with content. Flat background, no inner shadow, to avoid horizontal band at line 19 when scrolling. */
@@ -317,14 +379,27 @@ export default function SmartJsonDiff() {
               Debug API changes without the noise. Only meaningful logic changes surface.
             </p>
           </div>
-          <button
-            type="button"
-            onClick={loadExample}
-            className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-primary-200 bg-primary-50 px-4 py-2 text-sm font-medium text-primary-700 hover:bg-primary-100 hover:border-primary-300"
-          >
-            <BookOpen className="h-4 w-4" />
-            Load example
-          </button>
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={loadExample}
+              className="inline-flex items-center gap-2 rounded-xl border border-primary-200 bg-primary-50 px-4 py-2 text-sm font-medium text-primary-700 hover:bg-primary-100 hover:border-primary-300"
+            >
+              <BookOpen className="h-4 w-4" />
+              Load example
+            </button>
+            {QUICK_EXAMPLES.map((ex) => (
+              <button
+                key={ex.name}
+                type="button"
+                onClick={() => loadQuickExample(ex)}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100"
+              >
+                <Zap className="h-3.5 w-3.5" />
+                {ex.emoji} {ex.name}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-2">
@@ -663,6 +738,14 @@ export default function SmartJsonDiff() {
                     Copy JSON Patch
                   </button>
                 )}
+                <button
+                  type="button"
+                  onClick={downloadReport}
+                  className="inline-flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
+                >
+                  <Download className="h-4 w-4" />
+                  Download report
+                </button>
               </div>
 
               {/* Collapsible: Ignored dynamic fields */}

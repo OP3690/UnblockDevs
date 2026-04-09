@@ -55,6 +55,26 @@ function getMessage(entry: LogEntry): string {
   return (entry.raw as string) || '';
 }
 
+const SAMPLE_LOGS_K8S = `{"timestamp":"2026-03-05T23:12:44.123Z","level":"INFO","service":"api-gateway","pod":"api-gateway-7d9f4b5c6-xk8vp","namespace":"production","message":"Started serving on :8080","traceId":"4bf92f3577b34da6","spanId":"00f067aa0ba902b7"}
+{"timestamp":"2026-03-05T23:13:01.456Z","level":"WARN","service":"api-gateway","pod":"api-gateway-7d9f4b5c6-xk8vp","namespace":"production","message":"High memory usage detected","memoryUsageMB":1842,"thresholdMB":1800,"traceId":"7b3af9c1d2e54f08"}
+{"timestamp":"2026-03-05T23:13:22.789Z","level":"ERROR","service":"payment-service","pod":"payment-svc-5c8d9b7f6-p2qrs","namespace":"production","message":"Payment gateway timeout","provider":"stripe","orderId":"ord_9182736450","latencyMs":30012,"traceId":"9c4be2a7f1d30e56"}
+{"timestamp":"2026-03-05T23:13:22.812Z","level":"ERROR","service":"payment-service","pod":"payment-svc-5c8d9b7f6-p2qrs","namespace":"production","message":"Retrying payment — attempt 1/3","traceId":"9c4be2a7f1d30e56"}
+{"timestamp":"2026-03-05T23:14:05.234Z","level":"INFO","service":"order-service","pod":"order-svc-6e7f8a9b0-t3uvw","namespace":"production","message":"Order created successfully","orderId":"ord_1029384756","userId":"usr_5544332211","totalUSD":129.99,"traceId":"1a2b3c4d5e6f7890"}
+{"timestamp":"2026-03-05T23:14:06.789Z","level":"ERROR","service":"inventory-service","pod":"inventory-svc-4d5e6f7g8-m9nop","namespace":"production","message":"Redis connection refused — falling back to DB","host":"redis-primary.production.svc","port":6379,"traceId":"2f3g4h5i6j7k8l9m"}
+{"timestamp":"2026-03-05T23:14:06.901Z","level":"WARN","service":"inventory-service","pod":"inventory-svc-4d5e6f7g8-m9nop","namespace":"production","message":"DB fallback active — latency degraded","latencyMs":4302,"traceId":"2f3g4h5i6j7k8l9m"}
+{"timestamp":"2026-03-05T23:15:12.345Z","level":"ERROR","service":"notification-service","pod":"notify-svc-9h0i1j2k3-q4rst","namespace":"production","message":"SMTP relay rejected email","to":"user@example.com","smtpCode":554,"error":"5.7.1 Relay access denied","traceId":"3n4o5p6q7r8s9t0u"}
+{"timestamp":"2026-03-05T23:15:44.678Z","level":"INFO","service":"auth-service","pod":"auth-svc-1b2c3d4e5-v6wxy","namespace":"production","message":"JWT issued","userId":"usr_5544332211","expiresIn":"1h","traceId":"4v5w6x7y8z9a0b1c"}
+{"timestamp":"2026-03-05T23:16:30.012Z","level":"ERROR","service":"search-service","pod":"search-svc-2d3e4f5g6-h7ijk","namespace":"production","message":"Elasticsearch cluster read-only","cluster":"prod-search","error":"FORBIDDEN/12/index read-only / allow delete (api)","traceId":"5c6d7e8f9g0h1i2j"}`;
+
+const SAMPLE_LOGS_CLOUDWATCH = `{"@timestamp":"2026-03-05T23:12:44.123Z","@logStream":"prod/api-gateway/i-0abc123def456789","@logGroup":"/aws/lambda/api-gateway-prod","level":"INFO","message":"Lambda cold start","requestId":"abc12345-def6-7890-ghij-klmnopqrstuv","functionVersion":"$LATEST","memoryLimitMB":512,"initDurationMs":843}
+{"@timestamp":"2026-03-05T23:12:44.967Z","@logStream":"prod/api-gateway/i-0abc123def456789","@logGroup":"/aws/lambda/api-gateway-prod","level":"INFO","message":"Processing request","requestId":"abc12345-def6-7890-ghij-klmnopqrstuv","httpMethod":"POST","path":"/api/v1/orders","userAgent":"Mozilla/5.0","sourceIp":"203.0.113.42"}
+{"@timestamp":"2026-03-05T23:13:01.234Z","@logStream":"prod/api-gateway/i-0abc123def456789","@logGroup":"/aws/lambda/api-gateway-prod","level":"WARN","message":"DynamoDB throttled","requestId":"bcd23456-ef07-8901-hijk-lmnopqrstuvw","table":"OrdersTable","operation":"PutItem","retryCount":1}
+{"@timestamp":"2026-03-05T23:13:01.567Z","@logStream":"prod/api-gateway/i-0abc123def456789","@logGroup":"/aws/lambda/api-gateway-prod","level":"ERROR","message":"SQS SendMessage failed","requestId":"bcd23456-ef07-8901-hijk-lmnopqrstuvw","queue":"order-events-dlq","errorCode":"AWS.SimpleQueueService.NonExistentQueue","errorMessage":"Queue does not exist"}
+{"@timestamp":"2026-03-05T23:13:44.890Z","@logStream":"prod/payment/i-1def234abc567890","@logGroup":"/aws/ecs/payment-service","level":"ERROR","message":"Stripe webhook signature mismatch","requestId":"cde34567-f018-9012-ijkl-mnopqrstuvwxy","webhookId":"evt_3Nxyz","computed":"sha256=abc","received":"sha256=xyz","action":"discarded"}
+{"@timestamp":"2026-03-05T23:14:12.345Z","@logStream":"prod/payment/i-1def234abc567890","@logGroup":"/aws/ecs/payment-service","level":"INFO","message":"Payment captured","requestId":"def45678-0129-0123-jklm-nopqrstuvwxyz","paymentId":"pi_3Nxyz","amountCents":12999,"currency":"USD","status":"succeeded"}
+{"@timestamp":"2026-03-05T23:15:00.678Z","@logStream":"prod/api-gateway/i-0abc123def456789","@logGroup":"/aws/lambda/api-gateway-prod","level":"ERROR","message":"Lambda timeout","requestId":"efg56789-1230-1234-klmn-opqrstuvwxyza","durationMs":30000,"maxMs":30000,"memoryUsedMB":489}
+{"@timestamp":"2026-03-05T23:16:22.901Z","@logStream":"prod/api-gateway/i-0abc123def456789","@logGroup":"/aws/lambda/api-gateway-prod","level":"WARN","message":"High concurrency — approaching reserved limit","requestId":"fgh67890-2341-2345-lmno-pqrstuvwxyzab","concurrentExecutions":98,"reservedLimit":100}`;
+
 const SAMPLE_LOGS = `2026-03-05 23:12:45.678 [main] INFO  o.s.b.c.c.AnnotationConfigServletWebServerApplicationContext - Refreshing ApplicationContext
 2026-03-05 23:12:48.901 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
 2026-03-05 23:12:49.234 [main] INFO  c.e.OrderServiceApplication - Application started successfully in 11.456s
@@ -113,6 +133,12 @@ const SAMPLE_LOGS = `2026-03-05 23:12:45.678 [main] INFO  o.s.b.c.c.AnnotationCo
 2026-03-05 23:22:44.901 [cleanup-thread-3] ERROR c.e.t.ExpiredTokenCleanup - Batch delete failed → org.postgresql.util.PSQLException: An I/O error occurred while sending to the backend.
 2026-03-05 23:22:44.945 [cleanup-thread-3] WARN  c.e.t.ExpiredTokenCleanup - Partial cleanup completed (14567/50000 tokens deleted), retry scheduled in 5min
 `;
+
+const SAMPLE_LOGS_SAMPLES: { label: string; emoji: string; logs: string }[] = [
+  { label: 'Spring Boot', emoji: '☕', logs: SAMPLE_LOGS },
+  { label: 'K8s / JSON', emoji: '☸️', logs: SAMPLE_LOGS_K8S },
+  { label: 'CloudWatch', emoji: '☁️', logs: SAMPLE_LOGS_CLOUDWATCH },
+];
 
 export default function LogExplorer() {
   const [logText, setLogText] = useState('');
@@ -242,17 +268,22 @@ export default function LogExplorer() {
               JSON lines, plain text, stack traces. Docker, Kubernetes, CloudWatch — one entry per line.
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => {
-              trackCtaClick('log_explorer', 'load_sample');
-              setLogText(SAMPLE_LOGS);
-              toast.success('Sample logs loaded');
-            }}
-            className="px-4 py-2 border border-primary-200 bg-primary-50 text-primary-700 rounded-lg text-sm font-medium hover:bg-primary-100 shrink-0"
-          >
-            Try sample logs
-          </button>
+          <div className="flex flex-wrap gap-2 shrink-0">
+            {SAMPLE_LOGS_SAMPLES.map((s) => (
+              <button
+                key={s.label}
+                type="button"
+                onClick={() => {
+                  trackCtaClick('log_explorer', 'load_sample');
+                  setLogText(s.logs);
+                  toast.success(`${s.label} sample loaded`);
+                }}
+                className="px-3 py-1.5 border border-primary-200 bg-primary-50 text-primary-700 rounded-lg text-sm font-medium hover:bg-primary-100"
+              >
+                {s.emoji} {s.label}
+              </button>
+            ))}
+          </div>
         </div>
         <div className="p-6">
           <textarea
