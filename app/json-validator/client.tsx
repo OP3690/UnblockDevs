@@ -17,6 +17,14 @@ const SAMPLES = [
     label: 'Array',
     json: '[{"id":1,"name":"Widget A","price":9.99,"inStock":true},{"id":2,"name":"Widget B","price":24.5,"inStock":false}]',
   },
+  {
+    label: 'API response',
+    json: '{\n  "status": "success",\n  "data": {\n    "items": [{"id": 1, "title": "Item A"}, {"id": 2, "title": "Item B"}],\n    "total": 2,\n    "page": 1\n  },\n  "meta": {"requestId": "req_abc123", "timestamp": 1710000000}\n}',
+  },
+  {
+    label: '❌ Invalid',
+    json: '{\n  "name": "broken",\n  "values": [1, 2, 3,],\n  key_no_quotes: "oops"\n}',
+  },
 ];
 
 function computeJsonStats(json: string): {

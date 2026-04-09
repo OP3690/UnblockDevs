@@ -104,6 +104,18 @@ export default function JsonStringifyOnlineClient() {
       name: 'Nested Object',
       input: `{ user: { name: "John", address: { city: "NYC" } } }`,
     },
+    {
+      name: 'API Response',
+      input: `{ success: true, data: { users: [{ id: 1, name: "Alice", role: "admin" }], total: 1, page: 1, pageSize: 20 }, message: null, timestamp: 1710000000 }`,
+    },
+    {
+      name: 'Config Object',
+      input: `{ database: { host: "localhost", port: 5432, name: "mydb", ssl: false }, cache: { ttl: 3600, maxItems: 1000 }, features: { darkMode: true, betaUI: false } }`,
+    },
+    {
+      name: 'Payment Payload',
+      input: `{ amount: 9999, currency: "USD", description: "Order #1234", metadata: { orderId: "ord_abc123", userId: "usr_456" }, returnUrl: "https://app.example.com/success" }`,
+    },
   ];
 
   return (

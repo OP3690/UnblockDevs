@@ -301,6 +301,14 @@ export default function SchemaGenerator() {
       name: 'Config File',
       json: JSON.stringify({ database: { host: 'localhost', port: 5432, name: 'mydb', ssl: false }, cache: { ttl: 3600, maxSize: 1000 }, features: { darkMode: true, beta: false } }, null, 2)
     },
+    {
+      name: 'Order',
+      json: JSON.stringify({ orderId: 'ord_001', customerId: 'cust_123', status: 'pending', items: [{ sku: 'PRD-001', name: 'Widget', quantity: 2, unitPrice: 49.99 }], total: 99.98, currency: 'USD', createdAt: '2024-03-15T10:00:00Z' }, null, 2)
+    },
+    {
+      name: 'Event',
+      json: JSON.stringify({ eventId: 'evt_xyz789', type: 'user.signup', source: 'web', userId: 'usr_456', properties: { email: 'alice@example.com', plan: 'pro', referral: null }, occurredAt: 1710000000, version: '1.0' }, null, 2)
+    },
   ];
 
   const handleCopyTs = () => {
