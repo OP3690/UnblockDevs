@@ -2,6 +2,11 @@
 
 import Link from 'next/link';
 import { ArrowLeft, AlertTriangle, Wrench, ExternalLink } from 'lucide-react';
+import dynamic from 'next/dynamic';
+
+const JsonFixer = dynamic(() => import('@/components/tools/JsonFixer'), {
+  loading: () => <div className="flex justify-center py-8"><div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600" /></div>,
+});
 
 export default function FixInvalidControlCharacterClient() {
   return (
@@ -69,23 +74,15 @@ Line 2"  ← Unescaped newline
             </div>
           </section>
 
-          <section className="mb-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-8 text-white">
-            <div className="flex items-center gap-4 mb-4">
-              <Wrench className="w-12 h-12" />
+          <section className="mb-12">
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-6 text-white mb-4 flex items-center gap-4">
+              <Wrench className="w-8 h-8 shrink-0" />
               <div>
-                <h2 className="text-2xl font-bold mb-2">Fix Control Character Errors Instantly</h2>
-                <p className="text-blue-100">
-                  Our free JSON Fixer automatically escapes control characters and fixes this error.
-                </p>
+                <h2 className="text-xl font-bold mb-1">Fix Control Character Errors — Try It Below</h2>
+                <p className="text-blue-100 text-sm">Our tool auto-escapes control characters so your JSON parses cleanly.</p>
               </div>
             </div>
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
-            >
-              Try JSON Fixer Now
-              <ExternalLink className="w-5 h-5" />
-            </Link>
+            <JsonFixer />
           </section>
         </article>
       </main>

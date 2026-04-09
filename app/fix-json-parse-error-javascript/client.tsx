@@ -3,6 +3,11 @@
 import Link from 'next/link';
 import { Code, AlertTriangle, CheckCircle, Wrench, ExternalLink } from 'lucide-react';
 import ToolPageShell from '@/components/tools/ToolPageShell';
+import dynamic from 'next/dynamic';
+
+const JsonFixer = dynamic(() => import('@/components/tools/JsonFixer'), {
+  loading: () => <div className="flex justify-center py-8"><div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600" /></div>,
+});
 
 export default function FixJsonParseErrorJavascriptClient() {
   return (
@@ -93,23 +98,15 @@ export default function FixJsonParseErrorJavascriptClient() {
             </div>
           </section>
 
-          <section className="mb-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-8 text-white">
-            <div className="flex items-center gap-4 mb-4">
-              <Wrench className="w-12 h-12" />
+          <section className="mb-12">
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-6 text-white mb-4 flex items-center gap-4">
+              <Wrench className="w-8 h-8 shrink-0" />
               <div>
-                <h2 className="text-2xl font-bold mb-2">Fix JSON.parse() Errors Instantly</h2>
-                <p className="text-blue-100">
-                  Use our free JSON Fixer to validate and repair JSON before using JSON.parse() in your JavaScript code.
-                </p>
+                <h2 className="text-xl font-bold mb-1">Fix JSON.parse() Errors Instantly — Try It Below</h2>
+                <p className="text-blue-100 text-sm">Paste your broken JSON and our fixer will repair it for safe use with JSON.parse().</p>
               </div>
             </div>
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
-            >
-              Try JSON Fixer Now
-              <ExternalLink className="w-5 h-5" />
-            </Link>
+            <JsonFixer />
           </section>
         </article>
       }
