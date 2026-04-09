@@ -51,6 +51,20 @@ const TOKEN_HISTORY_MAX = 5;
 const SAMPLE_JWT =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
 
+// expired token (exp in the past)
+const SAMPLE_JWT_EXPIRED =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c3JfNDgzOTIwMSIsIm5hbWUiOiJBbHBoYSBUZXN0ZXIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE2MDk0NTkyMDAsImV4cCI6MTYwOTQ2MjgwMCwiaXNzIjoiYXV0aC5leGFtcGxlLmNvbSIsImF1ZCI6ImFwaS5leGFtcGxlLmNvbSJ9.abc123signaturehere';
+
+// RS256 token (has kid + RS256 alg)
+const SAMPLE_JWT_RS256 =
+  'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImtleS0yMDI2MDEifQ.eyJzdWIiOiJ1c3JfOTk4ODc3NjYiLCJuYW1lIjoiQm9iIFdpbHNvbiIsImVtYWlsIjoiYm9iQGV4YW1wbGUuY29tIiwicm9sZXMiOlsidmlld2VyIiwiYW5hbHlzdCJdLCJpYXQiOjE3NDAxMDAwMDAsImV4cCI6OTk5OTk5OTk5OSwiaXNzIjoiaHR0cHM6Ly9hdXRoLmV4YW1wbGUuY29tIiwiYXVkIjoiaHR0cHM6Ly9hcGkuZXhhbXBsZS5jb20ifQ.rs256-signature-placeholder';
+
+const EXTRA_JWT_SAMPLES = [
+  { label: 'HS256 (basic)', token: SAMPLE_JWT, hint: 'verify with: your-256-bit-secret' },
+  { label: 'Expired', token: SAMPLE_JWT_EXPIRED, hint: 'expired token example' },
+  { label: 'RS256 + kid', token: SAMPLE_JWT_RS256, hint: 'RS256 with key ID' },
+];
+
 function objectToYAML(obj: Record<string, unknown>, indent = 0): string {
   const pad = '  '.repeat(indent);
   const lines: string[] = [];
@@ -268,21 +282,24 @@ export default function JWTDecoderClient() {
                     </select>
                   </div>
                 )}
-                <button
-                  type="button"
-                  onClick={() => {
-                    trackCtaClick('jwt_decoder', 'try_sample');
-                    setToken(SAMPLE_JWT);
-                    setError(null);
-                    setVerifyResult(null);
-                    updateUrl(SAMPLE_JWT);
-                    addToHistory(SAMPLE_JWT);
-                    toast.success('Sample JWT loaded — verify with secret: your-256-bit-secret');
-                  }}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-primary-200 bg-primary-50 px-2.5 py-1.5 text-xs font-medium text-primary-700 hover:bg-primary-100 transition-colors"
-                >
-                  Try Sample
-                </button>
+                {EXTRA_JWT_SAMPLES.map((s) => (
+                  <button
+                    key={s.label}
+                    type="button"
+                    onClick={() => {
+                      trackCtaClick('jwt_decoder', 'try_sample');
+                      setToken(s.token);
+                      setError(null);
+                      setVerifyResult(null);
+                      updateUrl(s.token);
+                      addToHistory(s.token);
+                      toast.success(`${s.label} loaded — ${s.hint}`);
+                    }}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-primary-200 bg-primary-50 px-2.5 py-1.5 text-xs font-medium text-primary-700 hover:bg-primary-100 transition-colors"
+                  >
+                    {s.label}
+                  </button>
+                ))}
                 <button
                   type="button"
                   onClick={() => {

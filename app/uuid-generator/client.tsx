@@ -125,6 +125,30 @@ export default function UuidGeneratorClient() {
     toast.success('Downloaded');
   };
 
+  const downloadCSV = () => {
+    const header = 'index,uuid,version';
+    const rows = uuids.map((u, i) => `${i + 1},${formatOne(u)},${version}`);
+    const csv = [header, ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `uuids-v${version}.csv`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast.success('CSV downloaded');
+  };
+
+  const downloadJSON = () => {
+    const json = JSON.stringify(uuids.map((u, i) => ({ index: i + 1, uuid: formatOne(u), version })), null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `uuids-v${version}.json`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast.success('JSON downloaded');
+  };
+
   const validation = validateInput.trim() ? validateUUID(validateInput.trim()) : null;
   const analysis = analyzeInput.trim() ? analyzeUUID(analyzeInput.trim()) : null;
   const comparison = compareA.trim() && compareB.trim() ? compareUUIDs(compareA.trim(), compareB.trim()) : null;
@@ -300,7 +324,13 @@ export default function UuidGeneratorClient() {
                       <Copy className="w-3.5 h-3.5" /> Copy all
                     </button>
                     <button type="button" onClick={download} className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50">
-                      <Download className="w-3.5 h-3.5" /> Download
+                      <Download className="w-3.5 h-3.5" /> .txt
+                    </button>
+                    <button type="button" onClick={downloadCSV} className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1.5 text-xs font-medium text-emerald-700 hover:bg-emerald-100">
+                      <Download className="w-3.5 h-3.5" /> .csv
+                    </button>
+                    <button type="button" onClick={downloadJSON} className="inline-flex items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-2.5 py-1.5 text-xs font-medium text-blue-700 hover:bg-blue-100">
+                      <Download className="w-3.5 h-3.5" /> .json
                     </button>
                   </div>
                 </div>

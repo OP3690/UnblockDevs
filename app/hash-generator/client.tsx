@@ -817,6 +817,23 @@ export default function HashGeneratorClient() {
                 <option key={a.id} value={a.id}>{a.name}</option>
               ))}
             </select>
+            <div className="flex flex-wrap gap-1.5 mb-2">
+              {[
+                { label: 'Fruits', data: 'apple\nbanana\norange\nmango\ngrape' },
+                { label: 'Passwords', data: 'password123\nqwerty\nadmin\nletmein\n123456' },
+                { label: 'Emails', data: 'alice@example.com\nbob@example.com\ncarol@example.com' },
+                { label: 'UUIDs', data: 'f47ac10b-58cc-4372-a567-0e02b2c3d479\na12bc34d-89ef-4567-b890-1f23c4d5e678\n3c4b5a6d-7e8f-9012-ghij-klmnopqrstuv' },
+              ].map((s) => (
+                <button
+                  key={s.label}
+                  type="button"
+                  onClick={() => setBatchLines(s.data)}
+                  className="px-2.5 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                  {s.label}
+                </button>
+              ))}
+            </div>
             <textarea
               value={batchLines}
               onChange={(e) => setBatchLines(e.target.value)}
