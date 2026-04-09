@@ -124,6 +124,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Generate a Truth Table Online',
+  description: 'Step-by-step guide to generating a truth table from a boolean expression in your browser.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Enter your expression', text: 'Type a boolean expression using AND (∧), OR (∨), NOT (¬), XOR (⊕), NAND, NOR, implication (→), and biconditional (↔) operators with single-letter variable names.' },
+    { '@type': 'HowToStep', position: 2, name: 'Click Generate', text: 'The tool parses your expression, identifies variables, and generates all 2^n input combinations and their output values.' },
+    { '@type': 'HowToStep', position: 3, name: 'Explore the output', text: 'View the truth table, Karnaugh map, minterms (rows where output is 1), maxterms (rows where output is 0), and SOP/POS canonical forms.' },
+    { '@type': 'HowToStep', position: 4, name: 'Export code', text: 'Copy the boolean function as a working if-statement in JavaScript, Python, Java, or Go — ready to paste into your project.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -139,6 +153,7 @@ export default function TruthTableGeneratorPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <TruthTableGeneratorClient />
 

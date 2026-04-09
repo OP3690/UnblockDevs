@@ -128,6 +128,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Chunk Long Prompts for AI Models Online',
+  description: 'Step-by-step guide to splitting long documents or prompts into AI-compatible chunks with configurable overlap.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste your text', text: 'Paste any long document, prompt, or codebase into the input area. The tool shows a live token count as you type.' },
+    { '@type': 'HowToStep', position: 2, name: 'Set chunk size & overlap', text: 'Choose chunk size (words or characters) and overlap percentage (30-50% for narrative text, 10-20% for code blocks).' },
+    { '@type': 'HowToStep', position: 3, name: 'See chunks with token counts', text: 'Instantly view each numbered chunk with its token count, so you know it fits your target model context window.' },
+    { '@type': 'HowToStep', position: 4, name: 'Copy each chunk', text: 'Copy individual chunks or download all at once. Send them to the AI in order — consolidation instructions are added automatically.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -143,6 +157,7 @@ export default function PromptChunkerLanding() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <PromptChunkerLandingClient />
       <ToolSEOContent>

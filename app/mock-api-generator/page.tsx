@@ -102,6 +102,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Generate a Mock API Online',
+  description: 'Step-by-step guide to creating fake REST API endpoints with realistic JSON responses for frontend testing.',
+  totalTime: 'PT2M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Define your endpoint', text: 'Set the HTTP method (GET, POST, PUT, DELETE, PATCH), the route path, and an optional response delay to simulate latency.' },
+    { '@type': 'HowToStep', position: 2, name: 'Configure the response', text: 'Choose a status code, write or auto-generate the JSON body using realistic field types: names, emails, UUIDs, dates, and more.' },
+    { '@type': 'HowToStep', position: 3, name: 'Add optional rules', text: 'Simulate auth (API key or Bearer token), configure rate limits, or set up conditional responses based on request parameters.' },
+    { '@type': 'HowToStep', position: 4, name: 'Export and integrate', text: 'Copy the mock config, export a Postman collection or OpenAPI spec, and point your frontend at the mock to start developing immediately.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -117,6 +131,7 @@ export default function MockApiGeneratorPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <MockApiGeneratorClient />
 

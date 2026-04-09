@@ -127,6 +127,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Test a Regular Expression Online',
+  description: 'Step-by-step guide to testing JavaScript regex patterns against sample text in real time.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Enter your pattern', text: 'Type a regex pattern (without the surrounding /slashes/). Toggle flags — g (global), i (case-insensitive), m (multiline), s (dotAll), u (Unicode), y (sticky).' },
+    { '@type': 'HowToStep', position: 2, name: 'Paste test string', text: 'Paste the text you want to match against. Matches highlight inline as you type — no need to click.' },
+    { '@type': 'HowToStep', position: 3, name: 'Inspect matches', text: 'The results table shows every match, its start index, length, and all capture group values ($1, $2…) extracted from the text.' },
+    { '@type': 'HowToStep', position: 4, name: 'Test replace', text: 'Switch to Replace mode and enter a replacement string with $1 $2 group references. See the transformed output immediately.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -142,6 +156,7 @@ export default function RegexTesterPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <RegexTesterClient />
 

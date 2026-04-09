@@ -94,6 +94,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Convert SVG to PNG or JPEG Online',
+  description: 'Step-by-step guide to converting SVG markup to a raster image file in your browser.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste SVG code', text: 'Paste your SVG markup directly or upload an .svg file from your device.' },
+    { '@type': 'HowToStep', position: 2, name: 'Set size and scale', text: 'Enter a custom width and height in pixels, and choose a scale multiplier for high-DPI output.' },
+    { '@type': 'HowToStep', position: 3, name: 'Preview the result', text: 'See a live preview of the raster output before exporting so you can fine-tune dimensions.' },
+    { '@type': 'HowToStep', position: 4, name: 'Download PNG or JPEG', text: 'Choose your output format and download the converted image file to your device.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -109,6 +123,7 @@ export default function SvgToImagePage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <SvgToImageClient />
 

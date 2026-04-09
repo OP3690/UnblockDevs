@@ -120,6 +120,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Generate Realistic Test Data Online',
+  description: 'Step-by-step guide to generating synthetic fake data for development, testing, and demos without using real user records.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Select fields or template', text: 'Pick one of 11 built-in templates (users, invoices, banking, API logs…) or paste your own JSON Schema.' },
+    { '@type': 'HowToStep', position: 2, name: 'Set quantity', text: 'Choose how many records you need — from 1 up to 50 — with a single slider.' },
+    { '@type': 'HowToStep', position: 3, name: 'Pick format', text: 'Select JSON for nested objects or CSV for spreadsheets and database imports.' },
+    { '@type': 'HowToStep', position: 4, name: 'Export or copy', text: 'Copy to clipboard or download — ready to paste into your tests, seed scripts, or mock APIs.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -135,6 +149,7 @@ export default function TestDataGeneratorPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <TestDataGeneratorClient />
 

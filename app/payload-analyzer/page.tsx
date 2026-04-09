@@ -102,6 +102,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Analyze an API Payload Online',
+  description: 'Step-by-step guide to inspecting HTTP request and response payloads in your browser.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste or type your payload', text: 'Paste the raw request body — JSON, form-encoded string, multipart data, XML, or plain text — directly into the editor.' },
+    { '@type': 'HowToStep', position: 2, name: 'Select the content type', text: 'Choose the Content-Type that matches your payload, or let the tool auto-detect it from the input format.' },
+    { '@type': 'HowToStep', position: 3, name: 'Inspect structure and fields', text: 'View a parsed breakdown of all fields, nested objects, arrays, data types, and individual field sizes.' },
+    { '@type': 'HowToStep', position: 4, name: 'Identify issues and optimize', text: 'Spot oversized fields, unexpected null values, missing keys, or structural mismatches against your API documentation.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -117,6 +131,7 @@ export default function PayloadAnalyzerPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <PayloadAnalyzerClient />
 

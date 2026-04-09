@@ -119,6 +119,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Generate JSON Schema from Sample JSON Online',
+  description: 'Step-by-step guide to generating a JSON Schema automatically from a sample JSON object in your browser.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste your JSON', text: 'Drop a sample JSON object or array into the input panel — from an API response, config file, or data export.' },
+    { '@type': 'HowToStep', position: 2, name: 'Choose format', text: 'Select JSON Schema Draft 7 (widest library support) or OpenAPI Schema for use in OpenAPI specs.' },
+    { '@type': 'HowToStep', position: 3, name: 'Generate', text: 'Click Generate. The tool infers types, formats, and required fields to produce a complete schema instantly.' },
+    { '@type': 'HowToStep', position: 4, name: 'Validate & export', text: 'Test any JSON against the schema using the built-in validator, then copy or download the schema file.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -134,6 +148,7 @@ export default function JsonSchemaGenerationPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <JsonSchemaGenerationClient />
 

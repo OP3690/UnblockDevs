@@ -173,6 +173,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Mask Database Schema for AI Prompts',
+  description: 'Step-by-step guide to masking SQL schema identifiers before sending to AI tools like ChatGPT or Claude.',
+  totalTime: 'PT2M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste your SQL or schema', text: 'Paste raw SQL, a CREATE TABLE statement, or build a schema from tables and columns using the schema builder.' },
+    { '@type': 'HowToStep', position: 2, name: 'Mask identifiers', text: 'Click Mask. Every table name becomes T_001, every column name becomes C_001 — deterministically, so the same name always maps to the same token.' },
+    { '@type': 'HowToStep', position: 3, name: 'Send masked version to AI', text: 'Copy the masked SQL and paste it into ChatGPT, Claude, or any AI. Only placeholders are sent — your real schema stays in your browser.' },
+    { '@type': 'HowToStep', position: 4, name: 'Restore AI output', text: 'Paste the AI response into the Restore section. The mapping replaces every placeholder back to your real table and column names.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -188,6 +202,7 @@ export default function AiSchemaMaskerPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <div id="tool">
         <AiSchemaMaskerClient />

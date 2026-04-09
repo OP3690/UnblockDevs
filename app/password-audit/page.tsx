@@ -104,6 +104,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Audit a Password for Security Online',
+  description: 'Step-by-step guide to checking password strength, entropy, and vulnerability patterns in your browser.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Type your password', text: 'Paste or type a password into the checker. All processing is local — nothing leaves your device.' },
+    { '@type': 'HowToStep', position: 2, name: 'See entropy & score', text: 'Instantly view entropy in bits, strength label (Very Weak to Extreme), and estimated crack time at 1B guesses/second.' },
+    { '@type': 'HowToStep', position: 3, name: 'Review pattern warnings', text: 'The tool flags keyboard walks, leet speak, and year patterns that reduce real-world security.' },
+    { '@type': 'HowToStep', position: 4, name: 'Follow improvement suggestions', text: 'Get specific, actionable tips to increase entropy and remove detectable patterns from your password.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -119,6 +133,7 @@ export default function PasswordAuditPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <PasswordAuditClient />
 

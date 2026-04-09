@@ -103,6 +103,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Analyze Data and Get Statistical Insights Online',
+  description: 'Step-by-step guide to analyzing JSON or CSV datasets and extracting statistics in your browser.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste or upload your data', text: 'Paste a JSON array of objects or a CSV string directly into the editor, or upload a .json or .csv file from your machine.' },
+    { '@type': 'HowToStep', position: 2, name: 'Auto-detect schema', text: 'The tool parses the dataset and infers a schema — column names, inferred data types, and structural shape — without any configuration.' },
+    { '@type': 'HowToStep', position: 3, name: 'View statistics and distributions', text: 'See per-field summaries: count, null count, unique values, min, max, mean, median, and a frequency distribution for categorical fields.' },
+    { '@type': 'HowToStep', position: 4, name: 'Export insights', text: 'Copy the statistical summary or export it as JSON to use in reports, documentation, or further processing pipelines.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -118,6 +132,7 @@ export default function DataInsightsPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <DataInsightsClient />
 

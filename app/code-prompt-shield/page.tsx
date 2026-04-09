@@ -144,6 +144,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Mask Code Secrets Before Sending to AI',
+  description: 'Step-by-step guide to shielding sensitive identifiers and secrets in code before pasting into AI assistants.',
+  totalTime: 'PT2M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste your code', text: 'Paste any source code — JavaScript, Python, SQL, TypeScript, Go, or other supported languages. Select the language for accurate identifier detection.' },
+    { '@type': 'HowToStep', position: 2, name: 'Auto-detect secrets', text: 'The tool scans for API keys, JWT tokens, database URLs, OAuth tokens, private keys, IP addresses, emails, and phone numbers — no configuration needed.' },
+    { '@type': 'HowToStep', position: 3, name: 'Mask with placeholders', text: 'Click Mask. Secrets become SECRET_XXXX, variables become VAR_XXXX. The mapping is deterministic and stored locally in your browser.' },
+    { '@type': 'HowToStep', position: 4, name: 'Copy safe version & restore', text: 'Copy the masked code and send it to AI. Paste the AI response into the Restore section and apply the mapping to get your real identifiers back.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -159,6 +173,7 @@ export default function CodePromptShieldPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <div id="tool">
         <CodePromptShieldClient />

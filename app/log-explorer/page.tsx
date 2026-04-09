@@ -108,6 +108,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Parse and Analyze Log Files Online',
+  description: 'Step-by-step guide to exploring log files in your browser without uploading to a server.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste or upload logs', text: 'Drop in raw log text — multi-line JSON, NDJSON, Apache, Nginx, CSV, or unstructured plain text.' },
+    { '@type': 'HowToStep', position: 2, name: 'Auto-detect format', text: 'The tool identifies the log format automatically and parses every entry into structured fields.' },
+    { '@type': 'HowToStep', position: 3, name: 'Filter & search', text: 'Filter by log level (ERROR, WARN, INFO), search by keyword or regex, and narrow by time range.' },
+    { '@type': 'HowToStep', position: 4, name: 'Export results', text: 'Copy filtered entries or export matching rows as JSON or CSV for sharing or further analysis.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -123,6 +137,7 @@ export default function LogExplorerPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <LogExplorerClient />
 
