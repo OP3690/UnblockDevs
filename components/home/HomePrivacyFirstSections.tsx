@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useMemo } from 'react';
-import { ArrowRight, Check, Clock } from 'lucide-react';
+import { ArrowRight, Check, Clock, Search } from 'lucide-react';
 
 type Cat = 'all' | 'ai' | 'json' | 'api' | 'encode' | 'dev';
 
@@ -28,6 +28,7 @@ export default function HomePrivacyFirstSections({
   toolPageUrls: Record<string, string>;
 }) {
   const [cat, setCat] = useState<Cat>('all');
+  const [search, setSearch] = useState('');
 
   const miniTools: MiniDef[] = useMemo(
     () => [
@@ -60,9 +61,11 @@ export default function HomePrivacyFirstSections({
   );
 
   const visibleMini = useMemo(() => {
-    if (cat === 'all') return miniTools;
-    return miniTools.filter((t) => t.cats.includes(cat));
-  }, [cat, miniTools]);
+    const q = search.trim().toLowerCase();
+    let list = cat === 'all' ? miniTools : miniTools.filter((t) => t.cats.includes(cat));
+    if (q) list = list.filter((t) => t.label.toLowerCase().includes(q));
+    return list;
+  }, [cat, miniTools, search]);
 
   return (
     <>
@@ -78,6 +81,19 @@ export default function HomePrivacyFirstSections({
             calls for your payloads.
           </p>
         </header>
+
+        {/* Search bar */}
+        <div className="mb-5 relative max-w-xs">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" aria-hidden />
+          <input
+            type="search"
+            value={search}
+            onChange={(e) => { setSearch(e.target.value); if (e.target.value) setCat('all'); }}
+            placeholder="Search tools…"
+            aria-label="Search tools"
+            className="h-10 w-full rounded-lg border border-zinc-200 bg-white pl-9 pr-4 text-[13.5px] text-zinc-700 shadow-sm placeholder:text-zinc-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200 transition-colors"
+          />
+        </div>
 
         {/* Category tabs */}
         <div className="mb-7 flex gap-0.5 overflow-x-auto border-b border-zinc-200 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -182,6 +198,11 @@ export default function HomePrivacyFirstSections({
         </div>
 
         {/* Mini tool grid */}
+        {visibleMini.length === 0 && (
+          <p className="py-8 text-center text-[13.5px] text-zinc-400">
+            No tools found for &ldquo;{search}&rdquo; — try a different keyword.
+          </p>
+        )}
         <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 lg:grid-cols-6">
           {visibleMini.map((t) => {
             const dot =
