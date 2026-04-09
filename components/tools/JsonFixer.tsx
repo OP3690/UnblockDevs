@@ -30,6 +30,55 @@ interface JsonError {
   severity: 'safe-fix' | 'heuristic-fix' | 'non-fixable';
 }
 
+const BROKEN_SAMPLES = [
+  {
+    label: 'Trailing commas',
+    emoji: '🔧',
+    json: `{
+  "name": "Alice",
+  "age": 30,
+  "tags": ["admin", "beta",],
+  "address": {
+    "city": "Bangalore",
+    "zip": "560001",
+  },
+}`,
+  },
+  {
+    label: 'Unquoted keys',
+    emoji: '🔑',
+    json: `{
+  name: "Bob",
+  age: 25,
+  email: "bob@example.com",
+  active: true
+}`,
+  },
+  {
+    label: 'Single quotes',
+    emoji: '✏️',
+    json: `{
+  'product': 'iPhone 16',
+  'price': 79999,
+  'colors': ['black', 'white'],
+  'inStock': true
+}`,
+  },
+  {
+    label: 'AI output',
+    emoji: '🤖',
+    json: `Here is the JSON you requested:
+\`\`\`json
+{
+  "users": [
+    {"id": 1, "name": "Alice" "role": "admin"},
+    {"id": 2, "name": "Bob", role: "viewer"},
+  ]
+}
+\`\`\``,
+  },
+];
+
 export default function JsonFixer() {
   const [jsonText, setJsonText] = useState('');
   const [fixedJson, setFixedJson] = useState('');
@@ -688,19 +737,32 @@ export default function JsonFixer() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Input Section */}
         <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-gray-200">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
             <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
               <FileText className="w-5 h-5 text-blue-600" />
               JSON Input
             </h3>
-            <button
-              type="button"
-              onClick={() => setJsonText('')}
-              className="px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-              aria-label="Clear JSON input"
-            >
-              Clear
-            </button>
+            <div className="flex flex-wrap items-center gap-2">
+              {BROKEN_SAMPLES.map((s) => (
+                <button
+                  key={s.label}
+                  type="button"
+                  onClick={() => setJsonText(s.json)}
+                  className="px-2.5 py-1 text-xs font-medium bg-amber-50 border border-amber-200 text-amber-800 rounded-lg hover:bg-amber-100 transition-colors"
+                  title={`Load broken sample: ${s.label}`}
+                >
+                  {s.emoji} {s.label}
+                </button>
+              ))}
+              <button
+                type="button"
+                onClick={() => setJsonText('')}
+                className="px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                aria-label="Clear JSON input"
+              >
+                Clear
+              </button>
+            </div>
           </div>
           
           <div className="relative">

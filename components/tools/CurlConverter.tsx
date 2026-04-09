@@ -49,6 +49,12 @@ const EXAMPLE_CURLS = [
   { name: 'POST with JSON', command: "curl -X POST https://api.example.com/users -H \"Content-Type: application/json\" -d '{\"name\":\"John\",\"age\":30}'" },
   { name: 'With Bearer', command: 'curl -X GET https://api.example.com/data -H "Authorization: Bearer your-token-here"' },
   { name: 'With Basic Auth', command: 'curl -u username:password https://api.example.com/protected' },
+  { name: 'PUT (update)', command: 'curl -X PUT https://api.example.com/users/42 -H "Authorization: Bearer token" -H "Content-Type: application/json" -d \'{"name":"Jane","email":"jane@example.com"}\'' },
+  { name: 'DELETE', command: 'curl -X DELETE https://api.example.com/users/42 -H "Authorization: Bearer token"' },
+  { name: 'With API key', command: 'curl -X GET https://api.example.com/data -H "X-API-Key: sk_live_abc123def456" -H "Accept: application/json"' },
+  { name: 'Multipart form', command: 'curl -X POST https://api.example.com/upload -H "Authorization: Bearer token" -F "file=@/path/to/file.pdf" -F "title=My Document"' },
+  { name: 'Query params', command: 'curl "https://api.example.com/search?q=json+formatter&page=1&limit=20&sort=relevance"' },
+  { name: 'With cookies', command: 'curl -X GET https://api.example.com/profile -H "Cookie: session_id=abc123; csrf_token=xyz789"' },
 ];
 
 export default function CurlConverter() {
@@ -60,6 +66,8 @@ export default function CurlConverter() {
   const [showExamples, setShowExamples] = useState(false);
   const [testResult, setTestResult] = useState<{ status?: number; body?: string; error?: string } | null>(null);
   const [testLoading, setTestLoading] = useState(false);
+  const [history, setHistory] = useState<Array<{ cmd: string; lang: string; ts: number }>>([]);
+  const [showHistory, setShowHistory] = useState(false);
   const resultsSectionRef = useRef<HTMLDivElement>(null);
 
   const convert = () => {
@@ -73,6 +81,7 @@ export default function CurlConverter() {
     const code = convertToLanguage(p, targetLanguage);
     setConvertedCode(code);
     setTestResult(null);
+    setHistory((h) => [{ cmd: curlCommand.trim().slice(0, 120), lang: targetLanguage, ts: Date.now() }, ...h].slice(0, 10));
     toast.success('Converted successfully');
     setTimeout(() => resultsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
   };
@@ -177,6 +186,24 @@ export default function CurlConverter() {
             </div>
           </div>
         )}
+        {showHistory && history.length > 0 && (
+          <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <h3 className="font-semibold text-gray-900 mb-2">Recent conversions</h3>
+            <div className="space-y-2">
+              {history.map((h, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => { setCurlCommand(h.cmd); setShowHistory(false); }}
+                  className="block w-full text-left p-2 bg-white rounded border border-blue-200 hover:border-blue-400 text-sm"
+                >
+                  <span className="text-xs text-blue-600 font-medium">{TARGETS.find((t) => t.value === h.lang)?.label ?? h.lang}</span>
+                  <code className="block text-xs text-gray-600 mt-0.5 truncate">{h.cmd}</code>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
           <div>
             <div className="flex items-center justify-between mb-2">
@@ -187,11 +214,21 @@ export default function CurlConverter() {
                   onClick={() => {
                     if (!showExamples) trackCtaClick('curl_converter', 'show_examples');
                     setShowExamples(!showExamples);
+                    setShowHistory(false);
                   }}
                   className="cta-curl-examples inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold rounded-lg border border-slate-300 bg-slate-50 text-slate-700 hover:bg-slate-100 hover:border-slate-400"
                 >
                   <Sparkles className="w-4 h-4" /> Examples
                 </button>
+                {history.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => { setShowHistory(!showHistory); setShowExamples(false); }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold rounded-lg border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
+                  >
+                    History ({history.length})
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={handleBeautify}
