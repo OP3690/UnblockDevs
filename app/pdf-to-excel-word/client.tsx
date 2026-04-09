@@ -61,7 +61,6 @@ async function extractPDFPages(
   // bundles pdfjs-dist — this avoids the options.factory module registry corruption
   // that occurs when pdfjs-dist v5 ESM chunks are lazy-loaded in Next.js dev mode.
   // @ts-ignore — webpackIgnore bypasses webpack; type comes from pdfjs-dist
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const pdfjsLib = await import(/* webpackIgnore: true */ '/pdf.mjs') as any as typeof import('pdfjs-dist');
   pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 

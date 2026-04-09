@@ -162,6 +162,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Compare Two JWT Tokens',
+  description: 'Use the Token Comparator to decode and diff two JWT tokens side by side, inspect claims, and identify differences.',
+  totalTime: 'PT2M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste two JWT tokens', text: 'Paste the first JWT into the left panel and the second JWT into the right panel.' },
+    { '@type': 'HowToStep', position: 2, name: 'Compare headers and payloads', text: 'The tool decodes both tokens and shows a side-by-side diff of every claim in the header and payload.' },
+    { '@type': 'HowToStep', position: 3, name: 'Identify changed claims', text: 'Changed values are highlighted — useful for spotting token version diffs or debugging auth issues.' },
+    { '@type': 'HowToStep', position: 4, name: 'Check expiry differences', text: 'The tool also shows the time difference between exp and iat values in both tokens.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
