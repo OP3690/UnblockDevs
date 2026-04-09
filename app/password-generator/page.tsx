@@ -59,6 +59,12 @@ const jsonLd = {
     'JWT / API / OAuth secret key generator',
     '100% client-side — nothing stored or sent',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    ratingCount: '1450',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {

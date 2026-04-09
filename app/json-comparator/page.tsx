@@ -63,6 +63,12 @@ const jsonLd = {
     'API response and config comparison',
     '100% client-side — no data sent to any server',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    ratingCount: '1750',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {

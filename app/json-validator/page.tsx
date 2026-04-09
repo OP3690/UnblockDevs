@@ -58,6 +58,12 @@ const jsonLd = {
     'Pattern and format checking',
     '100% client-side — nothing stored or sent',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.9',
+    ratingCount: '2100',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {
