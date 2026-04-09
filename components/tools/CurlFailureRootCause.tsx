@@ -20,6 +20,44 @@ interface AnalysisResult {
   detectedIssues: string[];
 }
 
+const CURL_SAMPLES: { label: string; emoji: string; curl: string; status: string; body: string }[] = [
+  {
+    label: '401 Missing token',
+    emoji: '🔑',
+    curl: `curl -X GET "https://api.example.com/v1/users"`,
+    status: '401',
+    body: '{"error":"Unauthorized","message":"No authentication token provided"}',
+  },
+  {
+    label: '400 Bad JSON body',
+    emoji: '📦',
+    curl: `curl -X POST -d '{"name":"Alice","age":30}' "https://api.example.com/v1/users"`,
+    status: '400',
+    body: '{"error":"Bad Request","message":"Content-Type header missing"}',
+  },
+  {
+    label: '403 Permission denied',
+    emoji: '🚫',
+    curl: `curl -X DELETE -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.test" "https://api.example.com/v1/admin/users/42"`,
+    status: '403',
+    body: '{"error":"Forbidden","message":"Insufficient permissions"}',
+  },
+  {
+    label: '404 Not found',
+    emoji: '🔍',
+    curl: `curl -X GET -H "Authorization: Bearer mytoken123" "https://api.example.com/v1/products/9999"`,
+    status: '404',
+    body: '{"error":"Not Found","message":"Product not found"}',
+  },
+  {
+    label: '500 Server error',
+    emoji: '💥',
+    curl: `curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer validtoken" -d '{"query":"SELECT * FROM users"}' "https://api.example.com/v1/query"`,
+    status: '500',
+    body: '{"error":"Internal Server Error","message":"Database connection failed"}',
+  },
+];
+
 export default function CurlFailureRootCause() {
   const [curlCommand, setCurlCommand] = useState('');
   const [responseBody, setResponseBody] = useState('');
@@ -436,6 +474,22 @@ export default function CurlFailureRootCause() {
           </h2>
           
           <div className="space-y-4">
+            {/* Quick samples */}
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Try a sample</p>
+              <div className="flex flex-wrap gap-2">
+                {CURL_SAMPLES.map((s) => (
+                  <button
+                    key={s.label}
+                    type="button"
+                    onClick={() => { setCurlCommand(s.curl); setStatusCode(s.status); setResponseBody(s.body); setAnalysisResult(null); }}
+                    className="px-3 py-1.5 border border-blue-200 bg-blue-50 text-blue-700 rounded-lg text-xs font-medium hover:bg-blue-100 transition-colors"
+                  >
+                    {s.emoji} {s.label}
+                  </button>
+                ))}
+              </div>
+            </div>
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 cURL Command *

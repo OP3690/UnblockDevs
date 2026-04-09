@@ -45,6 +45,21 @@ const FORMAT_OPTIONS: { value: OutputFormatType; label: string }[] = [
   { value: 'mongodb', label: 'MongoDB' },
 ];
 
+const SAMPLE_NUMERIC_IDS = Array.from({ length: 20 }, (_, i) => String(1001 + i * 7)).join('\n');
+
+const SAMPLE_UUID_IDS = [
+  'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+  'b2c3d4e5-f6a7-8901-bcde-f12345678901',
+  'c3d4e5f6-a7b8-9012-cdef-123456789012',
+  'd4e5f6a7-b8c9-0123-defa-234567890123',
+  'e5f6a7b8-c9d0-1234-efab-345678901234',
+].join('\n');
+
+const SAMPLE_EMAIL_IDS = [
+  'alice@example.com', 'bob@example.com', 'carol@example.com',
+  'dave@example.com', 'eve@example.com',
+].join('\n');
+
 // 50 sample IDs: alphanumeric + hyphen, 15 characters each (e.g. Ab12-cD34-ef567)
 const SAMPLE_50_IDS = [
   'Ab12-cD34-ef567', 'Gh89-Ij01-kl234', 'Mn56-Op78-qr901', 'St23-Uv45-wx678', 'Yz90-Ab12-cd345',
@@ -288,19 +303,24 @@ export default function SqlFormatter() {
             <label htmlFor="sql-formatter-input" className="text-sm font-medium text-gray-700">
               Input — paste any list
             </label>
-            <button
-              type="button"
-              onClick={() => {
-                trackCtaClick('sql_formatter', 'load_sample');
-                setInput(SAMPLE_50_IDS.join('\n'));
-                toast.success('Loaded 50 sample IDs (15-char alphanumeric with hyphen)');
-              }}
-              className="cta-examples inline-flex items-center px-4 py-2 rounded-lg border border-primary-300 bg-primary-50 text-primary-700 text-sm font-semibold hover:bg-primary-100 transition-colors"
-              style={dark?.examplesBtn}
-              aria-label="Load sample data"
-            >
-              Load Sample
-            </button>
+            <div className="flex flex-wrap gap-1.5">
+              {[
+                { label: '🔢 Numeric IDs', data: SAMPLE_NUMERIC_IDS, msg: 'Loaded 20 sequential numeric IDs' },
+                { label: '🔑 UUIDs', data: SAMPLE_UUID_IDS, msg: 'Loaded 5 sample UUIDs' },
+                { label: '📧 Emails', data: SAMPLE_EMAIL_IDS, msg: 'Loaded 5 sample emails' },
+                { label: '🔡 Alphanumeric', data: SAMPLE_50_IDS.join('\n'), msg: 'Loaded 50 alphanumeric IDs' },
+              ].map((s) => (
+                <button
+                  key={s.label}
+                  type="button"
+                  onClick={() => { trackCtaClick('sql_formatter', 'load_sample'); setInput(s.data); toast.success(s.msg); }}
+                  className="cta-examples inline-flex items-center px-3 py-1.5 rounded-lg border border-primary-300 bg-primary-50 text-primary-700 text-xs font-semibold hover:bg-primary-100 transition-colors"
+                  style={dark?.examplesBtn}
+                >
+                  {s.label}
+                </button>
+              ))}
+            </div>
           </div>
           <textarea
             id="sql-formatter-input"

@@ -60,6 +60,22 @@ const SAMPLE_MULTI = `{
   ]
 }`;
 
+const SAMPLE_PRODUCTS = `[
+  { "sku": "PRD-001", "name": "Wireless Headphones", "category": "Electronics", "price": 79.99, "stock": 142, "rating": 4.5 },
+  { "sku": "PRD-002", "name": "Mechanical Keyboard", "category": "Electronics", "price": 129.99, "stock": 87, "rating": 4.8 },
+  { "sku": "PRD-003", "name": "Standing Desk Mat", "category": "Office", "price": 39.99, "stock": 310, "rating": 4.2 },
+  { "sku": "PRD-004", "name": "Webcam 4K", "category": "Electronics", "price": 99.99, "stock": 56, "rating": 4.6 },
+  { "sku": "PRD-005", "name": "USB-C Hub", "category": "Electronics", "price": 49.99, "stock": 205, "rating": 4.3 }
+]`;
+
+const SAMPLE_API_LOGS = `[
+  { "timestamp": "2024-03-01T10:00:00Z", "method": "GET", "path": "/api/users", "status": 200, "latency_ms": 45, "user_id": "u_123" },
+  { "timestamp": "2024-03-01T10:01:12Z", "method": "POST", "path": "/api/orders", "status": 201, "latency_ms": 120, "user_id": "u_456" },
+  { "timestamp": "2024-03-01T10:02:03Z", "method": "GET", "path": "/api/products/42", "status": 404, "latency_ms": 22, "user_id": "u_789" },
+  { "timestamp": "2024-03-01T10:03:45Z", "method": "PUT", "path": "/api/users/123", "status": 200, "latency_ms": 88, "user_id": "u_123" },
+  { "timestamp": "2024-03-01T10:05:11Z", "method": "DELETE", "path": "/api/sessions/9", "status": 204, "latency_ms": 31, "user_id": "u_456" }
+]`;
+
 function columnStats(rows: FlattenedRow[], columnId: string) {
   const values = rows.map((r) => r[columnId]).filter((v) => v != null && v !== '');
   const nums = values.map(Number).filter((n) => !isNaN(n));
@@ -540,6 +556,20 @@ export default function JsonToExcelClient() {
                   className="px-4 py-2.5 border border-gray-200 text-gray-700 text-sm font-medium rounded-xl hover:bg-gray-50 transition-colors"
                 >
                   Multi-sheet (users + orders)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { trackCtaClick('json_to_excel', 'load_sample', { sample: 'products' }); handleJsonSubmit(JSON.parse(SAMPLE_PRODUCTS)); }}
+                  className="px-4 py-2.5 border border-gray-200 text-gray-700 text-sm font-medium rounded-xl hover:bg-gray-50 transition-colors"
+                >
+                  🛒 Products catalog
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { trackCtaClick('json_to_excel', 'load_sample', { sample: 'api_logs' }); handleJsonSubmit(JSON.parse(SAMPLE_API_LOGS)); }}
+                  className="px-4 py-2.5 border border-gray-200 text-gray-700 text-sm font-medium rounded-xl hover:bg-gray-50 transition-colors"
+                >
+                  📋 API request logs
                 </button>
               </div>
             </section>
