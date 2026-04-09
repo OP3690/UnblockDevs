@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import {
   Upload,
   Copy,
@@ -16,6 +16,9 @@ import {
   Shield,
   List,
   Trash2,
+  BarChart2,
+  Globe,
+  Activity,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy, trackCtaClick } from '@/lib/analytics';
@@ -206,6 +209,21 @@ export default function HarToCurl() {
   const uniqueDomains = Array.from(new Set(normalizedEntries.map((e) => e.domain))).filter(Boolean).sort();
   const uniqueMethods = Array.from(new Set(normalizedEntries.map((e) => e.method))).sort();
 
+  const harStats = useMemo(() => {
+    if (!normalizedEntries.length) return null;
+    const methodMap: Record<string, number> = {};
+    const statusMap: Record<string, number> = {};
+    let totalTime = 0;
+    for (const e of normalizedEntries) {
+      methodMap[e.method] = (methodMap[e.method] ?? 0) + 1;
+      const bucket = e.status >= 500 ? '5xx' : e.status >= 400 ? '4xx' : e.status >= 300 ? '3xx' : e.status >= 200 ? '2xx' : '1xx';
+      statusMap[bucket] = (statusMap[bucket] ?? 0) + 1;
+      totalTime += Number(e.time) || 0;
+    }
+    const avgTime = normalizedEntries.length > 0 ? (totalTime / normalizedEntries.length).toFixed(0) : '0';
+    return { methodMap, statusMap, avgTime, domainCount: uniqueDomains.length };
+  }, [normalizedEntries, uniqueDomains.length]);
+
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
@@ -390,6 +408,66 @@ export default function HarToCurl() {
 
       {normalizedEntries.length > 0 && (
         <>
+          {harStats && (
+            <div className="bg-white rounded-xl shadow border border-gray-200 p-5 mb-6">
+              <div className="flex items-center gap-2 mb-4">
+                <BarChart2 className="w-5 h-5 text-blue-600" />
+                <h2 className="text-lg font-bold text-gray-900">HAR Summary</h2>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+                <div className="bg-blue-50 rounded-lg p-3 text-center">
+                  <div className="text-2xl font-bold text-blue-700">{normalizedEntries.length}</div>
+                  <div className="text-xs text-blue-600 mt-0.5">Total Requests</div>
+                </div>
+                <div className="bg-emerald-50 rounded-lg p-3 text-center">
+                  <div className="text-2xl font-bold text-emerald-700">{filteredEntries.length}</div>
+                  <div className="text-xs text-emerald-600 mt-0.5">After Filters</div>
+                </div>
+                <div className="bg-purple-50 rounded-lg p-3 text-center flex flex-col items-center">
+                  <div className="flex items-center gap-1">
+                    <Globe className="w-4 h-4 text-purple-600" />
+                    <div className="text-2xl font-bold text-purple-700">{harStats.domainCount}</div>
+                  </div>
+                  <div className="text-xs text-purple-600 mt-0.5">Domains</div>
+                </div>
+                <div className="bg-amber-50 rounded-lg p-3 text-center flex flex-col items-center">
+                  <div className="flex items-center gap-1">
+                    <Activity className="w-4 h-4 text-amber-600" />
+                    <div className="text-2xl font-bold text-amber-700">{harStats.avgTime}ms</div>
+                  </div>
+                  <div className="text-xs text-amber-600 mt-0.5">Avg Response</div>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-4">
+                <div>
+                  <div className="text-xs font-semibold text-gray-500 uppercase mb-1.5">Methods</div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {Object.entries(harStats.methodMap).sort((a, b) => b[1] - a[1]).map(([method, count]) => (
+                      <span key={method} className="px-2 py-0.5 bg-blue-100 text-blue-800 text-xs font-mono rounded">
+                        {method} <span className="font-bold">{count}</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs font-semibold text-gray-500 uppercase mb-1.5">Status Codes</div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {Object.entries(harStats.statusMap).sort().map(([bucket, count]) => (
+                      <span key={bucket} className={`px-2 py-0.5 text-xs font-mono rounded ${
+                        bucket === '2xx' ? 'bg-emerald-100 text-emerald-800' :
+                        bucket === '3xx' ? 'bg-blue-100 text-blue-800' :
+                        bucket === '4xx' ? 'bg-amber-100 text-amber-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {bucket} <span className="font-bold">{count}</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="bg-white rounded-xl shadow border border-gray-200 p-6 mb-6">
             <div className="flex items-center gap-2 mb-3">
               <List className="w-5 h-5 text-gray-600" />

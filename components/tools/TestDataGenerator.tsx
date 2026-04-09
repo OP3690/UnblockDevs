@@ -603,6 +603,33 @@ export default function TestDataGenerator() {
     toast.success('File downloaded!');
   };
 
+  const handleDownloadCsv = () => {
+    try {
+      const arr: Record<string, unknown>[] = JSON.parse(generatedData);
+      if (!Array.isArray(arr) || !arr.length) { toast.error('No array data to export as CSV'); return; }
+      const keys = Array.from(new Set(arr.flatMap((row) => Object.keys(row))));
+      const header = keys.join(',');
+      const rows = arr.map((row) =>
+        keys.map((k) => {
+          const val = row[k];
+          if (val === null || val === undefined) return '';
+          const str = typeof val === 'object' ? JSON.stringify(val) : String(val);
+          return str.includes(',') || str.includes('"') || str.includes('\n')
+            ? `"${str.replace(/"/g, '""')}"` : str;
+        }).join(',')
+      );
+      const csv = [header, ...rows].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `test-data-${dataType}-${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast.success('CSV downloaded!');
+    } catch { toast.error('Failed to convert to CSV'); }
+  };
+
   const predefinedDataTypes = [
     { id: 'user' as PredefinedDataType, name: 'User Data', icon: Users, description: 'Generate user profiles with names, emails, addresses, and registration data' },
     { id: 'invoice' as PredefinedDataType, name: 'Invoice Data', icon: FileText, description: 'Generate invoice records with customer info, items, totals, and payment status' },
@@ -685,13 +712,13 @@ export default function TestDataGenerator() {
               value={count}
               onChange={(e) => {
                 const val = parseInt(e.target.value) || 1;
-                setCount(Math.min(Math.max(val, 1), 50));
+                setCount(Math.min(Math.max(val, 1), 100));
               }}
               min="1"
-              max="50"
+              max="100"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
-            <p className="text-xs text-gray-500 mt-1">Maximum 50 records for predefined templates</p>
+            <p className="text-xs text-gray-500 mt-1">Up to 100 records for predefined templates</p>
           </div>
         </div>
 
@@ -760,7 +787,14 @@ export default function TestDataGenerator() {
                 className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
               >
                 <Download className="w-4 h-4" />
-                Download
+                JSON
+              </button>
+              <button
+                onClick={handleDownloadCsv}
+                className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+              >
+                <Download className="w-4 h-4" />
+                CSV
               </button>
             </div>
           </div>

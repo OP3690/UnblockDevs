@@ -1,11 +1,29 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import { GitCompare, Plus, X, AlertCircle, CheckCircle, Minus, Search, ExternalLink } from 'lucide-react';
+import { useState, useRef, useMemo } from 'react';
+import { GitCompare, Plus, X, AlertCircle, CheckCircle, Minus, Search, ExternalLink, Copy, Download, Zap } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { validateJson } from '@/lib/jsonParser';
-import { trackCtaClick } from '@/lib/analytics';
+import { trackCtaClick, trackCopy } from '@/lib/analytics';
 import Link from 'next/link';
+
+const SAMPLES = [
+  {
+    label: 'User API v1→v2',
+    json1: JSON.stringify({ id: 1, name: 'John Doe', email: 'john@example.com', age: 30, status: 'active' }, null, 2),
+    json2: JSON.stringify({ id: 1, name: 'John Doe', email: 'john@doe.com', age: 30, status: 'active', role: 'admin', updatedAt: '2024-01-15' }, null, 2),
+  },
+  {
+    label: 'Product API',
+    json1: JSON.stringify({ id: 'prod_123', name: 'Widget Pro', price: 99.99, stock: 50, category: 'electronics' }, null, 2),
+    json2: JSON.stringify({ id: 'prod_123', name: 'Widget Pro 2.0', price: 129.99, stock: 45, category: 'electronics', tags: ['new', 'popular'] }, null, 2),
+  },
+  {
+    label: 'Auth Token Change',
+    json1: JSON.stringify({ token: 'eyJhbGciOiJIUzI1NiJ9.old', expires_in: 3600, token_type: 'Bearer' }, null, 2),
+    json2: JSON.stringify({ access_token: 'eyJhbGciOiJSUzI1NiJ9.new', expires_in: 7200, token_type: 'Bearer', refresh_token: 'rft_abc123' }, null, 2),
+  },
+];
 
 interface DiffResult {
   key: string;
@@ -15,6 +33,8 @@ interface DiffResult {
   path: string;
 }
 
+type StatusFilter = 'all' | 'changed' | 'added' | 'removed';
+
 export default function ApiComparator() {
   const [json1, setJson1] = useState('');
   const [json2, setJson2] = useState('');
@@ -23,7 +43,51 @@ export default function ApiComparator() {
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [highlightedField, setHighlightedField] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const resultsSectionRef = useRef<HTMLDivElement>(null);
+
+  const summary = useMemo(() => {
+    if (!diffResults.length) return null;
+    const counts = { added: 0, removed: 0, changed: 0, unchanged: 0 };
+    diffResults.forEach((r) => counts[r.status]++);
+    return counts;
+  }, [diffResults]);
+
+  const exportDiff = (format: 'json' | 'md') => {
+    const changed = diffResults.filter((r) => r.status !== 'unchanged');
+    if (!changed.length) { toast.error('No changes to export'); return; }
+    let content: string;
+    let filename: string;
+    if (format === 'json') {
+      content = JSON.stringify({ summary, breakingChanges, changes: changed }, null, 2);
+      filename = `api-diff-${Date.now()}.json`;
+    } else {
+      const lines = ['# API Diff Report', '', `**Breaking:** ${breakingChanges.length}`, ''];
+      if (breakingChanges.length) { lines.push('## Breaking Changes', ...breakingChanges.map((c) => `- ${c}`), ''); }
+      lines.push('## Changes');
+      changed.forEach((r) => {
+        lines.push(`\n### \`${r.path}\` — ${r.status.toUpperCase()}`);
+        if (r.oldValue !== undefined) lines.push(`- Old: \`${JSON.stringify(r.oldValue)}\``);
+        if (r.newValue !== undefined) lines.push(`- New: \`${JSON.stringify(r.newValue)}\``);
+      });
+      content = lines.join('\n');
+      filename = `api-diff-${Date.now()}.md`;
+    }
+    const blob = new Blob([content], { type: format === 'json' ? 'application/json' : 'text/markdown' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    toast.success(`Exported ${filename}`);
+  };
+
+  const copyDiff = () => {
+    const changed = diffResults.filter((r) => r.status !== 'unchanged');
+    const text = changed.map((r) => `[${r.status.toUpperCase()}] ${r.path}${r.oldValue !== undefined ? ` | old: ${JSON.stringify(r.oldValue)}` : ''}${r.newValue !== undefined ? ` | new: ${JSON.stringify(r.newValue)}` : ''}`).join('\n');
+    navigator.clipboard.writeText(text);
+    trackCopy('api_comparator');
+    toast.success('Diff copied to clipboard');
+  };
 
   const flattenObject = (obj: any, prefix: string = '', result: Map<string, any> = new Map()): Map<string, any> => {
     if (Array.isArray(obj)) {
@@ -167,11 +231,26 @@ export default function ApiComparator() {
   return (
     <div className="space-y-6 tool-panel-contain">
       <div className="bg-white rounded-lg shadow-lg p-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+        <h2 className="text-2xl font-bold text-gray-800 mb-2 flex items-center gap-2">
           <GitCompare className="w-6 h-6 text-primary-600" />
           API Response Comparator
         </h2>
-        <p className="text-gray-600 mb-4">Compare two API responses to detect changes, additions, and breaking changes.</p>
+        <p className="text-gray-600 mb-3">Compare two API responses to detect changes, additions, and breaking changes.</p>
+        {/* Sample data buttons */}
+        <div className="flex flex-wrap items-center gap-2 mb-4">
+          <span className="text-xs font-semibold text-gray-500">Samples:</span>
+          {SAMPLES.map((s) => (
+            <button
+              key={s.label}
+              type="button"
+              onClick={() => { setJson1(s.json1); setJson2(s.json2); trackCtaClick('api_comparator', 'load_sample'); }}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium bg-primary-50 text-primary-700 border border-primary-100 rounded-lg hover:bg-primary-100"
+            >
+              <Zap className="w-3 h-3" />
+              {s.label}
+            </button>
+          ))}
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
@@ -222,29 +301,67 @@ export default function ApiComparator() {
 
       {diffResults.length > 0 && (
         <div ref={resultsSectionRef} data-results-start className="bg-white rounded-lg shadow-lg p-6 scroll-mt-4">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-bold text-gray-800">
-              Comparison Results ({diffResults.filter(r => r.status !== 'unchanged').length} changes)
-            </h3>
-            <div className="relative w-64">
+          {/* Summary stats */}
+          {summary && (
+            <div className="flex flex-wrap gap-3 mb-4">
+              {[
+                { label: 'Added', count: summary.added, color: 'bg-green-50 border-green-200 text-green-800' },
+                { label: 'Removed', count: summary.removed, color: 'bg-red-50 border-red-200 text-red-800' },
+                { label: 'Changed', count: summary.changed, color: 'bg-amber-50 border-amber-200 text-amber-800' },
+                { label: 'Unchanged', count: summary.unchanged, color: 'bg-gray-50 border-gray-200 text-gray-600' },
+              ].map((s) => (
+                <div key={s.label} className={`px-3 py-1.5 rounded-lg border text-xs font-semibold ${s.color}`}>
+                  {s.label}: {s.count}
+                </div>
+              ))}
+              <div className="ml-auto flex flex-wrap gap-2">
+                <button onClick={copyDiff} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                  <Copy className="w-3.5 h-3.5" /> Copy
+                </button>
+                <button onClick={() => exportDiff('json')} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                  <Download className="w-3.5 h-3.5" /> JSON
+                </button>
+                <button onClick={() => exportDiff('md')} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                  <Download className="w-3.5 h-3.5" /> .md
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <div className="flex flex-wrap gap-1.5">
+              {(['all', 'changed', 'added', 'removed'] as StatusFilter[]).map((f) => (
+                <button
+                  key={f}
+                  type="button"
+                  onClick={() => setStatusFilter(f)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-colors ${statusFilter === f ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                >
+                  {f}
+                </button>
+              ))}
+            </div>
+            <div className="relative w-56">
               <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
                 placeholder="Search fields..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
               />
             </div>
           </div>
           <div className="space-y-2 max-h-[600px] overflow-y-auto scrollbar-thin">
             {diffResults
-              .filter((result) => 
-                result.status !== 'unchanged' && // Only show changed, added, or removed fields
-                (!searchTerm || 
-                result.path.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                JSON.stringify(result.oldValue || result.newValue).toLowerCase().includes(searchTerm.toLowerCase()))
-              )
+              .filter((result) => {
+                if (result.status === 'unchanged' && statusFilter !== 'all') return false;
+                if (statusFilter !== 'all' && result.status !== statusFilter) return false;
+                if (statusFilter === 'all' && result.status === 'unchanged') return false;
+                return (!searchTerm ||
+                  result.path.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                  JSON.stringify(result.oldValue || result.newValue).toLowerCase().includes(searchTerm.toLowerCase()));
+              })
               .map((result, idx) => {
                 const isHighlighted = highlightedField === result.path || 
                   (searchTerm && result.path.toLowerCase().includes(searchTerm.toLowerCase()));
