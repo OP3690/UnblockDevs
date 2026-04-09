@@ -57,6 +57,20 @@ const DEBOUNCE_MS = 300;
 const SAMPLE_PLAIN = 'Hello World';
 const SAMPLE_B64 = 'SGVsbG8gV29ybGQ=';
 
+const ENCODE_SAMPLES = [
+  { label: 'Hello World', value: 'Hello World' },
+  { label: 'JSON payload', value: '{"user":"alice","role":"admin","iat":1740000000}' },
+  { label: 'Bearer token', value: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.payload.signature' },
+  { label: 'SQL query', value: "SELECT * FROM users WHERE email = 'alice@example.com' AND active = 1" },
+  { label: 'HTML snippet', value: '<h1 class="title">Hello &amp; Welcome!</h1><p>Developer tools</p>' },
+];
+
+const DECODE_SAMPLES = [
+  { label: 'Hello World', value: 'SGVsbG8gV29ybGQ=' },
+  { label: 'JSON payload', value: 'eyJ1c2VyIjoiYWxpY2UiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDAwMDAwMDB9' },
+  { label: 'URL-safe', value: 'SGVsbG8tV29ybGQ_' },
+];
+
 function getByteLength(s: string): number {
   return new TextEncoder().encode(s).length;
 }
@@ -525,9 +539,16 @@ export default function Base64EncoderClient() {
                       >
                         <ClipboardPaste className="w-3.5 h-3.5" /> Paste
                       </button>
-                      <button type="button" onClick={loadSample} className="rounded-lg border border-primary-200 bg-primary-50 px-2.5 py-1.5 text-xs font-medium text-primary-700 hover:bg-primary-100 transition-colors">
-                        Sample
-                      </button>
+                      {(mode === 'encode' ? ENCODE_SAMPLES : DECODE_SAMPLES).map((s) => (
+                        <button
+                          key={s.label}
+                          type="button"
+                          onClick={() => { trackCtaClick('base64_encoder', 'load_sample'); setInput(s.value); }}
+                          className="rounded-lg border border-primary-200 bg-primary-50 px-2.5 py-1.5 text-xs font-medium text-primary-700 hover:bg-primary-100 transition-colors"
+                        >
+                          {s.label}
+                        </button>
+                      ))}
                       <button type="button" onClick={() => setInput('')} className="rounded-lg px-2.5 py-1.5 text-xs font-medium text-gray-500 hover:bg-gray-100 transition-colors">
                         Clear
                       </button>

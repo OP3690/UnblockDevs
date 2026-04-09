@@ -193,6 +193,19 @@ export default function PasswordGeneratorClient() {
     setSecretKeys(out);
   };
 
+  const exportHistoryCSV = () => {
+    if (!history.length) { toast.error('No history to export'); return; }
+    const rows = ['index,password,length'].concat(
+      history.map((p, i) => `${i + 1},"${p.replace(/"/g, '""')}",${p.length}`)
+    );
+    const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'password-history.csv'; a.click();
+    URL.revokeObjectURL(url);
+    toast.success('History downloaded as CSV');
+  };
+
   const exportAs = (format: 'json' | 'csv' | 'txt') => {
     const data = passwords.length ? passwords : [password];
     let text = '';
@@ -647,12 +660,20 @@ export default function PasswordGeneratorClient() {
                       </li>
                     ))}
                   </ul>
-                  <button
-                    type="button" onClick={() => setHistory([])}
-                    className="mt-2 text-[11.5px] font-medium text-zinc-400 hover:text-red-500 transition-colors"
-                  >
-                    Clear history
-                  </button>
+                  <div className="mt-2 flex items-center gap-3">
+                    <button
+                      type="button" onClick={() => setHistory([])}
+                      className="text-[11.5px] font-medium text-zinc-400 hover:text-red-500 transition-colors"
+                    >
+                      Clear history
+                    </button>
+                    <button
+                      type="button" onClick={exportHistoryCSV}
+                      className="text-[11.5px] font-medium text-emerald-600 hover:text-emerald-800 transition-colors"
+                    >
+                      ↓ Export CSV
+                    </button>
+                  </div>
                 </div>
               )}
             </>

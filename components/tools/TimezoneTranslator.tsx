@@ -762,7 +762,7 @@ export default function TimezoneTranslator() {
 
           {/* Selected Cities */}
           <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-semibold text-gray-900">Selected Cities</h3>
               <button
                 onClick={generateShareableLink}
@@ -771,6 +771,33 @@ export default function TimezoneTranslator() {
                 <Share2 className="w-4 h-4" />
                 Share Link
               </button>
+            </div>
+            {/* Team presets */}
+            <div className="mb-4">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Quick Team Presets</p>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { label: '🌎 US Standup', ids: ['ny', 'chi', 'la'] },
+                  { label: '🌍 EU Daily', ids: ['lon', 'ber', 'par', 'ams'] },
+                  { label: '🌏 APAC Team', ids: ['tok', 'sin', 'syd'] },
+                  { label: '🤝 US + India', ids: ['ny', 'sf', 'del', 'ban'] },
+                  { label: '🌐 Global All-Hands', ids: ['ny', 'lon', 'dubai', 'sin', 'syd'] },
+                ].map((preset) => (
+                  <button
+                    key={preset.label}
+                    type="button"
+                    onClick={() => {
+                      const cities = preset.ids
+                        .map(id => popularCities.find(c => c.id === id))
+                        .filter((c): c is City => !!c);
+                      setSelectedCities(cities);
+                    }}
+                    className="px-3 py-1.5 border border-green-200 bg-green-50 text-green-700 rounded-lg text-xs font-medium hover:bg-green-100 transition-colors"
+                  >
+                    {preset.label}
+                  </button>
+                ))}
+              </div>
             </div>
             <div className="flex flex-wrap gap-2 mb-4">
               {selectedCities.map(city => (
