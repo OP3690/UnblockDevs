@@ -3,6 +3,11 @@
 import Link from 'next/link';
 import { CheckCircle, Wrench, ExternalLink } from 'lucide-react';
 import ToolPageShell from '@/components/tools/ToolPageShell';
+import dynamic from 'next/dynamic';
+
+const JsonFixer = dynamic(() => import('@/components/tools/JsonFixer'), {
+  loading: () => <div className="flex justify-center py-8"><div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600" /></div>,
+});
 
 export default function HowToFixBrokenJsonClient() {
   return (
@@ -80,13 +85,7 @@ export default function HowToFixBrokenJsonClient() {
                 </p>
               </div>
             </div>
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
-            >
-              Try JSON Fixer Now
-              <ExternalLink className="w-5 h-5" />
-            </Link>
+            <JsonFixer />
           </section>
         </article>
       }
