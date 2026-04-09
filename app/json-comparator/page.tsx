@@ -110,6 +110,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Compare Two JSON Objects Online',
+  description: 'Step-by-step guide to diffing JSON and spotting differences between two JSON documents.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste JSON into both panels', text: 'Paste the original JSON on the left and the updated or expected JSON on the right.' },
+    { '@type': 'HowToStep', position: 2, name: 'Click Compare', text: 'Click Compare to run the diff. The tool highlights added, removed, and changed keys in distinct colors.' },
+    { '@type': 'HowToStep', position: 3, name: 'Review the diff results', text: 'Green items are additions, red items are removals, and orange items are value changes. A summary shows the total count of each type.' },
+    { '@type': 'HowToStep', position: 4, name: 'Copy or export the diff', text: 'Copy individual differences, or export the full diff report for code review or documentation.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -125,6 +139,7 @@ export default function JsonComparatorPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <JsonComparatorClient />
 

@@ -111,6 +111,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Convert HAR to cURL Online',
+  description: 'Step-by-step guide to converting HAR network recordings to cURL commands.',
+  totalTime: 'PT2M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Export HAR from DevTools', text: 'Open Chrome or Firefox DevTools, go to the Network tab, right-click any request, and choose "Save all as HAR with content".' },
+    { '@type': 'HowToStep', position: 2, name: 'Upload or paste the HAR file', text: 'Drag and drop the .har file into the tool, or paste the HAR JSON directly into the input area.' },
+    { '@type': 'HowToStep', position: 3, name: 'Select requests to convert', text: 'The tool lists all requests in the HAR. Select the ones you want to convert to cURL commands.' },
+    { '@type': 'HowToStep', position: 4, name: 'Copy the cURL commands', text: 'Click Copy next to each request to copy its cURL command, ready to paste into your terminal or API documentation.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -126,6 +140,7 @@ export default function HarToCurl() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <HarToCurlClient />
 

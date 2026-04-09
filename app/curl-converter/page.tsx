@@ -102,6 +102,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Convert cURL to Code Online',
+  description: 'Step-by-step guide to converting a cURL command to Python, JavaScript, Go, or other languages.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste your cURL command', text: 'Copy a cURL command from your terminal, browser DevTools, or API documentation and paste it into the input box.' },
+    { '@type': 'HowToStep', position: 2, name: 'Select the target language', text: 'Choose the output language: Python (requests), JavaScript (fetch or axios), Go, PHP, Ruby, Java, or others.' },
+    { '@type': 'HowToStep', position: 3, name: 'Copy the generated code', text: 'The converted code appears instantly. Click Copy to copy it to your clipboard.' },
+    { '@type': 'HowToStep', position: 4, name: 'Use in your project', text: 'Paste the code directly into your project. All headers, cookies, and request body from the cURL command are preserved.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -117,6 +131,7 @@ export default function CurlConverterPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <CurlConverterClient />
 
