@@ -331,6 +331,22 @@ export default function JsonBeautifier() {
     }
   }, [beautifiedJson]);
 
+  // ⌘+Enter / Ctrl+Enter keyboard shortcut to format
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        if (jsonText.trim()) {
+          trackCtaClick('json_beautifier', 'format_shortcut');
+          beautifyJson(jsonText, indentSize);
+        }
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [jsonText, indentSize]);
+
   useEffect(() => {
     if (!parsedForGenerate || !beautifiedJson) {
       setGeneratedCode('');
@@ -648,9 +664,12 @@ export default function JsonBeautifier() {
             type="button"
             onClick={() => { trackCtaClick('json_beautifier', 'format'); beautifyJson(jsonText, indentSize); }}
             disabled={!jsonText.trim()}
-            className="flex-1 rounded-lg bg-zinc-900 py-3 font-semibold text-white shadow-sm transition-colors hover:bg-zinc-800 disabled:cursor-not-allowed disabled:bg-zinc-300"
+            className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-zinc-900 py-3 font-semibold text-white shadow-sm transition-colors hover:bg-zinc-800 disabled:cursor-not-allowed disabled:bg-zinc-300"
           >
             Beautify JSON
+            <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border border-zinc-600 bg-zinc-700 px-1.5 py-0.5 font-mono text-[10px] font-normal text-zinc-300">
+              ⌘↵
+            </kbd>
           </button>
           <button
             type="button"
