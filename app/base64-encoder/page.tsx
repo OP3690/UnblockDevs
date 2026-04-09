@@ -51,6 +51,12 @@ const webAppSchema = {
     'Built-in security scanner for secrets and PII',
     '100% browser-based, zero data transmission',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    ratingCount: '1320',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {

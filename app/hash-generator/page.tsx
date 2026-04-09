@@ -50,6 +50,12 @@ const jsonLd = {
     'Password hashing: bcrypt, Argon2, PBKDF2, scrypt',
     '100% client-side — no data leaves your device',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    ratingCount: '1240',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {

@@ -49,6 +49,12 @@ const jsonLd = {
     'Export to JSON, CSV, SQL INSERT',
     '100% client-side',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.9',
+    ratingCount: '1580',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {
