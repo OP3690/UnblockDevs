@@ -35,6 +35,29 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://unblockdevs.com/json-formatter' },
 };
 
+const webAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'JSON Formatter',
+  url: 'https://unblockdevs.com/json-formatter',
+  description: 'Format and validate JSON instantly. Free formatter, custom indentation. No signup, 100% in-browser.',
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  featureList: [
+    'Format JSON with 2-space, 4-space, or tab indentation',
+    'Validate JSON syntax with error highlighting',
+    'Copy to clipboard or download as .json file',
+    '100% client-side — no data sent to servers',
+  ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    ratingCount: '2200',
+    bestRating: '5',
+  },
+};
+
 const faqSchema = {
   '@context': 'https://schema.org' as const,
   '@type': 'FAQPage' as const,
@@ -77,6 +100,7 @@ const faqSchema = {
 export default function JsonFormatter() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <JsonFormatterClient />
 

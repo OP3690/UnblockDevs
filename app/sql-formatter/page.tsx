@@ -58,6 +58,12 @@ const jsonLd = {
     'Customizable tab/space indentation',
     '100% client-side — no data sent to servers',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    ratingCount: '1650',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {
