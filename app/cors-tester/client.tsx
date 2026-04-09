@@ -220,6 +220,27 @@ export default function CorsTesterClient() {
                 Request builder
               </h2>
               <div className="space-y-4 p-4 rounded-2xl bg-gray-50 border border-gray-100">
+                {/* Quick URL presets */}
+                <div>
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Quick test with public APIs</p>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      { label: '📝 JSONPlaceholder', url: 'https://jsonplaceholder.typicode.com/posts' },
+                      { label: '🌐 httpbin GET', url: 'https://httpbin.org/get' },
+                      { label: '🌤️ Open-Meteo', url: 'https://api.open-meteo.com/v1/forecast?latitude=40.71&longitude=-74.01&current_weather=true' },
+                      { label: '🐱 GitHub API', url: 'https://api.github.com/repos/octocat/Hello-World' },
+                    ].map((s) => (
+                      <button
+                        key={s.label}
+                        type="button"
+                        onClick={() => { trackCtaClick('cors_tester', 'load_sample_url'); setUrl(s.url); }}
+                        className="rounded-lg border border-sky-200 bg-sky-50 px-3 py-1.5 text-xs font-medium text-sky-700 hover:bg-sky-100 transition-colors"
+                      >
+                        {s.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
                 <div>
                   <label className="block text-xs font-semibold text-gray-600 mb-1">Target URL</label>
                   <input

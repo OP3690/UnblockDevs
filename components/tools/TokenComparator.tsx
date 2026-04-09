@@ -357,6 +357,24 @@ export default function TokenComparator() {
           >
             API Key sample
           </button>
+          <button
+            type="button"
+            onClick={() => {
+              setToken1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c');
+              setToken2('eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ODc2NTQzMjEwIiwibmFtZSI6IkphbmUgRG9lIiwiaWF0IjoxNzE2MjM5MDIyfQ.dGVzdC1zaWduYXR1cmUtcnMyNTY');
+              trackCtaClick('token_comparator', 'sample_pair');
+            }}
+            className="px-2.5 py-1.5 text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-lg hover:bg-emerald-100"
+          >
+            ⚡ Load pair (HS256 vs RS256)
+          </button>
+          <button
+            type="button"
+            onClick={() => { setToken1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNjAwMDAwMDAwLCJleHAiOjE2MDAwMDEwMDB9.invalid-signature-expired'); trackCtaClick('token_comparator', 'sample_expired'); }}
+            className="px-2.5 py-1.5 text-xs font-medium bg-red-50 text-red-700 border border-red-100 rounded-lg hover:bg-red-100"
+          >
+            ⏰ Expired JWT
+          </button>
         </div>
         <div className="space-y-4">
           <div>

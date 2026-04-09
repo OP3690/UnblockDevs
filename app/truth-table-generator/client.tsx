@@ -29,6 +29,16 @@ import {
   generateCode,
 } from '@/lib/truthTableEngine';
 
+const EXTRA_EXAMPLES = [
+  { lbl: 'NAND', e: 'NOT(A AND B)' },
+  { lbl: 'NOR', e: 'NOT(A OR B)' },
+  { lbl: 'XNOR', e: 'NOT(A XOR B)' },
+  { lbl: 'Half adder sum', e: 'A XOR B' },
+  { lbl: 'Half adder carry', e: 'A AND B' },
+  { lbl: '3-var majority', e: '(A AND B) OR (B AND C) OR (A AND C)' },
+  { lbl: 'Mux(A,B,S)', e: '(A AND NOT S) OR (B AND S)' },
+];
+
 const HISTORY_KEY = 'truth-table-history';
 const HISTORY_MAX = 8;
 
@@ -250,18 +260,33 @@ export default function TruthTableGeneratorClient() {
             </div>
 
             {/* Examples */}
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Examples</span>
-              {EXAMPLES.map((ex) => (
-                <button
-                  key={ex.lbl}
-                  type="button"
-                  onClick={() => loadExample(ex.e)}
-                  className="rounded-xl border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-600 hover:border-violet-300 hover:text-violet-700 transition-colors"
-                >
-                  {ex.lbl}
-                </button>
-              ))}
+            <div className="space-y-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Examples</span>
+                {EXAMPLES.map((ex) => (
+                  <button
+                    key={ex.lbl}
+                    type="button"
+                    onClick={() => loadExample(ex.e)}
+                    className="rounded-xl border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-600 hover:border-violet-300 hover:text-violet-700 transition-colors"
+                  >
+                    {ex.lbl}
+                  </button>
+                ))}
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Gates</span>
+                {EXTRA_EXAMPLES.map((ex) => (
+                  <button
+                    key={ex.lbl}
+                    type="button"
+                    onClick={() => loadExample(ex.e)}
+                    className="rounded-xl border border-violet-200 bg-violet-50 px-2.5 py-1 text-xs font-medium text-violet-700 hover:bg-violet-100 transition-colors"
+                  >
+                    {ex.lbl}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Input */}
