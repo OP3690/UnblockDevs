@@ -15,6 +15,9 @@ import {
   Globe,
   Server,
   ArrowRight,
+  Clock,
+  Download,
+  RotateCcw,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy, trackCtaClick } from '@/lib/analytics';
@@ -54,6 +57,11 @@ export default function CorsTesterClient() {
   const [copied, setCopied] = useState<string | null>(null);
   const [snippetsOpen, setSnippetsOpen] = useState(false);
   const [multiOriginOpen, setMultiOriginOpen] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [history, setHistory] = useState<Array<{
+    url: string; method: string; status?: number; score?: number;
+    timing?: number; success: boolean; ts: number;
+  }>>([]);
 
   // Expand Code snippets and Multi-origin sections on desktop and tablet (md+)
   useEffect(() => {
@@ -99,6 +107,10 @@ export default function CorsTesterClient() {
         timing,
         analysis,
       });
+      setHistory((prev) => [{
+        url: url.trim(), method, status: res.status,
+        score: analysis?.score, timing, success: true, ts: Date.now(),
+      }, ...prev].slice(0, 8));
       toast.success('Request completed');
     } catch (err) {
       const timing = performance.now() - start;
@@ -107,6 +119,9 @@ export default function CorsTesterClient() {
         timing,
         error: err instanceof Error ? err.message : String(err),
       });
+      setHistory((prev) => [{
+        url: url.trim(), method, timing, success: false, ts: Date.now(),
+      }, ...prev].slice(0, 8));
       toast.error('Request failed');
     } finally {
       setLoading(false);
@@ -129,6 +144,25 @@ export default function CorsTesterClient() {
       },
       () => toast.error('Copy failed')
     );
+  };
+
+  const exportReport = () => {
+    if (!result) return;
+    const report = {
+      url: url.trim(), method, origin: effectiveOrigin,
+      withCredentials, timestamp: new Date().toISOString(),
+      result: {
+        success: result.success, status: result.status,
+        statusText: result.statusText, timing: result.timing,
+        error: result.error, analysis: result.analysis,
+      },
+    };
+    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `cors-report-${Date.now()}.json`;
+    a.click();
+    toast.success('Report downloaded');
   };
 
   const severityColor = (s: SecurityFinding['severity']) =>
@@ -282,6 +316,16 @@ export default function CorsTesterClient() {
                 <Play className="w-4 h-4" />
                 {loading ? 'Sending…' : 'Run test'}
               </button>
+              {result && (
+                <button
+                  type="button"
+                  onClick={exportReport}
+                  className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white text-gray-700 px-4 py-2.5 font-medium text-sm hover:bg-gray-50 transition-all"
+                >
+                  <Download className="w-4 h-4" />
+                  Export report
+                </button>
+              )}
               <p className="text-xs text-gray-500">
                 Request is sent from this page&apos;s origin. Results show CORS headers and security analysis.
               </p>
@@ -390,6 +434,50 @@ export default function CorsTesterClient() {
                   </div>
                 )}
               </>
+            )}
+
+            {/* Request history */}
+            {history.length > 0 && (
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setHistoryOpen((o) => !o)}
+                  className="flex items-center gap-2 rounded-lg py-1.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 w-full text-left"
+                >
+                  {historyOpen ? <ChevronDown className="w-4 h-4 text-gray-500" /> : <ChevronRight className="w-4 h-4 text-gray-500" />}
+                  <Clock className="w-4 h-4 text-gray-500" />
+                  Request history ({history.length})
+                </button>
+                {historyOpen && (
+                  <div className="mt-2 space-y-1.5">
+                    {history.map((h, i) => (
+                      <div key={i} className="flex flex-wrap items-center gap-3 px-3 py-2.5 rounded-xl border border-gray-100 bg-gray-50/60 text-xs">
+                        <span className={h.success ? 'text-emerald-500 font-bold' : 'text-red-500 font-bold'}>
+                          {h.success ? '✓' : '✗'}
+                        </span>
+                        <span className="font-semibold text-gray-700 bg-gray-200 px-1.5 py-0.5 rounded">{h.method}</span>
+                        <span className="font-mono text-gray-700 flex-1 truncate">{h.url}</span>
+                        {h.status != null && <span className="text-gray-600">{h.status}</span>}
+                        {h.score != null && (
+                          <span className={`font-medium px-1.5 py-0.5 rounded ${h.score >= 80 ? 'bg-emerald-100 text-emerald-700' : h.score >= 50 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'}`}>
+                            {h.score}/100
+                          </span>
+                        )}
+                        {h.timing != null && <span className="text-gray-500">{h.timing.toFixed(0)} ms</span>}
+                        <span className="text-gray-400">{new Date(h.ts).toLocaleTimeString()}</span>
+                        <button
+                          type="button"
+                          onClick={() => { setUrl(h.url); setMethod(h.method); }}
+                          className="inline-flex items-center gap-1 text-sky-600 hover:text-sky-800 font-medium"
+                          title="Reload this URL + method"
+                        >
+                          <RotateCcw className="w-3 h-3" /> Replay
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             )}
 
             {/* Preflight cURL */}

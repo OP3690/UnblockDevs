@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import {
   UnfoldVertical,
   Copy,
@@ -11,6 +11,8 @@ import {
   FileJson,
   Check,
   Lock,
+  Download,
+  Zap,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy, trackCtaClick } from '@/lib/analytics';
@@ -22,7 +24,20 @@ Example:
 {"timestamp":1740932654000,"level":"ERROR","context":"{\\"service\\":\\"billing-api\\"}"}`;
 
 // ~400 chars: timestamp, JWT, path — enough to demo unpack + decode + scrub
-const SAMPLE_LOG = `{"ts":1740932654000,"level":"ERROR","ctx":"{\\"auth\\":\\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c\\"}","err":"at (/Users/dev/app/src/db.js:45:12)"}`;
+const SAMPLE_LOGS = [
+  {
+    label: 'JWT + Timestamp',
+    log: `{"ts":1740932654000,"level":"ERROR","ctx":"{\\"auth\\":\\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c\\"}","err":"at (/Users/dev/app/src/db.js:45:12)"}`,
+  },
+  {
+    label: 'Nested JSON',
+    log: `{"level":"WARN","message":"Payment failed","payload":"{\\"userId\\":9001,\\"amount\\":199.99,\\"ts\\":1700000000,\\"retry\\":{\\"count\\":3,\\"nextAt\\":1700003600}}"}`,
+  },
+  {
+    label: 'Paths + Error',
+    log: `{"level":"ERROR","msg":"Config not found","path":"/Users/alice/projects/myapp/config/production.json","stack":"Error at /Users/alice/projects/myapp/src/server.ts:22:8","ts":1710000000000}`,
+  },
+];
 
 
 export default function LogUnpacker() {
@@ -97,13 +112,23 @@ export default function LogUnpacker() {
     );
   }, [output]);
 
-  const loadSample = useCallback(() => {
+  const downloadOutput = useCallback(() => {
+    if (!output) return;
+    const blob = new Blob([output], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `log-unpacked-${Date.now()}.json`;
+    a.click();
+    toast.success('Output downloaded.');
+  }, [output]);
+
+  const loadSample = useCallback((log: string, label: string) => {
     trackCtaClick('log_unpacker', 'load_sample');
-    setInput(SAMPLE_LOG);
+    setInput(log);
     setError(null);
     setOutput(null);
     setLastData(null);
-    toast.success('Sample log loaded. Click Unpack to see it processed.');
+    toast.success(`${label} sample loaded. Click Unpack to process.`);
   }, []);
 
   const clearAll = useCallback(() => {
@@ -117,6 +142,15 @@ export default function LogUnpacker() {
 
   const charCount = input.length;
   const hasOutput = !!output;
+
+  // Output stats derived from JSON text
+  const outputStats = useMemo(() => {
+    if (!output) return null;
+    const jwtCount = (output.match(/"__decoded":/g) || []).length;
+    const tsCount = (output.match(/"__human_time":/g) || []).length;
+    const pathCount = (output.match(/"__scrubbed":\s*true/g) || []).length;
+    return { jwtCount, tsCount, pathCount };
+  }, [output]);
 
   return (
     <div className="space-y-6">
@@ -137,13 +171,19 @@ export default function LogUnpacker() {
               <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600">
                 {charCount.toLocaleString()} chars
               </span>
-              <button
-                type="button"
-                onClick={loadSample}
-                className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 shadow-sm transition hover:bg-gray-50"
-              >
-                Load sample
-              </button>
+              <div className="flex flex-wrap gap-1.5">
+                {SAMPLE_LOGS.map((s) => (
+                  <button
+                    key={s.label}
+                    type="button"
+                    onClick={() => loadSample(s.log, s.label)}
+                    className="rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 inline-flex items-center gap-1"
+                  >
+                    <Zap className="h-3 w-3 text-amber-500" />
+                    {s.label}
+                  </button>
+                ))}
+              </div>
               {input.length > 0 && (
                 <button
                   type="button"
@@ -260,6 +300,15 @@ export default function LogUnpacker() {
                   {copiedWhich === 'aisafe' ? <Check className="h-4 w-4" /> : <Shield className="h-4 w-4" />}
                   {copiedWhich === 'aisafe' ? 'Copied' : 'Copy AI-safe'}
                 </button>
+                <button
+                  type="button"
+                  onClick={downloadOutput}
+                  className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
+                  title="Download processed output as JSON"
+                >
+                  <Download className="h-4 w-4" />
+                  Download
+                </button>
               </div>
             </div>
           </div>
@@ -267,6 +316,25 @@ export default function LogUnpacker() {
             <pre className="max-h-[480px] overflow-auto rounded-xl border border-gray-100 bg-slate-50/80 p-4 font-mono text-[13px] leading-relaxed text-gray-800 whitespace-pre-wrap break-words">
               <code>{output}</code>
             </pre>
+            {outputStats && (outputStats.jwtCount > 0 || outputStats.tsCount > 0 || outputStats.pathCount > 0) && (
+              <div className="mt-3 flex flex-wrap gap-3">
+                {outputStats.jwtCount > 0 && (
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-violet-50 border border-violet-100 px-3 py-1 text-xs font-medium text-violet-700">
+                    🔑 {outputStats.jwtCount} JWT{outputStats.jwtCount !== 1 ? 's' : ''} decoded
+                  </span>
+                )}
+                {outputStats.tsCount > 0 && (
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 border border-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
+                    🕐 {outputStats.tsCount} timestamp{outputStats.tsCount !== 1 ? 's' : ''} converted
+                  </span>
+                )}
+                {outputStats.pathCount > 0 && (
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 border border-amber-100 px-3 py-1 text-xs font-medium text-amber-700">
+                    📁 {outputStats.pathCount} path{outputStats.pathCount !== 1 ? 's' : ''} scrubbed
+                  </span>
+                )}
+              </div>
+            )}
           </div>
         </div>
       )}

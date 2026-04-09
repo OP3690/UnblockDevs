@@ -12,6 +12,8 @@ import {
   ChevronUp,
   Lightbulb,
   Replace,
+  Download,
+  BarChart2,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy, trackCtaClick } from '@/lib/analytics';
@@ -151,6 +153,25 @@ export default function RegexTesterClient() {
     [text, matches]
   );
 
+  // Extract named capture group names from pattern
+  const namedGroups = useMemo(() => {
+    const names: string[] = [];
+    const re = /\(\?<([a-zA-Z_][a-zA-Z0-9_]*)>/g;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(pattern)) !== null) names.push(m[1]);
+    return names;
+  }, [pattern]);
+
+  // Match statistics
+  const matchStats = useMemo(() => {
+    if (!matches.length || !text.length) return null;
+    const uniqueCount = new Set(matches.map((m) => m.match)).size;
+    const totalChars = matches.reduce((sum, m) => sum + m.match.length, 0);
+    const avgLength = (totalChars / matches.length).toFixed(1);
+    const coverage = ((totalChars / text.length) * 100).toFixed(1);
+    return { uniqueCount, avgLength, coverage };
+  }, [matches, text]);
+
   const handleReplace = () => {
     const { error: replaceError, result } = replaceAll(text, pattern, flagsStr, replacement);
     if (replaceError) {
@@ -180,6 +201,44 @@ export default function RegexTesterClient() {
     } catch {
       toast.error('Copy failed');
     }
+  };
+
+  const exportMatches = (format: 'json' | 'csv') => {
+    if (!matches.length) return;
+    const maxGroups = Math.max(...matches.map((m) => m.groups.length), 0);
+    const groupHeaders = namedGroups.length
+      ? namedGroups
+      : Array.from({ length: maxGroups }, (_, i) => `Group${i + 1}`);
+    let content: string;
+    let filename: string;
+    let mimeType: string;
+    if (format === 'json') {
+      const data = matches.map((m, i) => ({
+        n: i + 1,
+        index: m.index,
+        match: m.match,
+        ...(m.groups.length
+          ? { groups: Object.fromEntries(groupHeaders.map((g, j) => [g, m.groups[j] ?? ''])) }
+          : {}),
+      }));
+      content = JSON.stringify(data, null, 2);
+      filename = 'regex-matches.json';
+      mimeType = 'application/json';
+    } else {
+      const rows = matches.map((m, i) =>
+        [i + 1, m.index, `"${m.match.replace(/"/g, '""')}"`, ...m.groups.map((g) => `"${(g ?? '').replace(/"/g, '""')}"`)].join(',')
+      );
+      content = [['#', 'Index', 'Match', ...groupHeaders].join(','), ...rows].join('\n');
+      filename = 'regex-matches.csv';
+      mimeType = 'text/csv';
+    }
+    const blob = new Blob([content], { type: mimeType });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    trackCopy('regex_tester');
+    toast.success(`Exported ${filename}`);
   };
 
   const copyReplaceResult = async () => {
@@ -332,22 +391,55 @@ export default function RegexTesterClient() {
               </div>
             ) : (
               <>
-                <div className="flex items-center justify-between gap-4 mb-4">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-600" aria-hidden />
-                    <span className="font-semibold text-slate-800">
-                      {matches.length} {matches.length === 1 ? 'match' : 'matches'}
-                    </span>
+                <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="w-5 h-5 text-emerald-600" aria-hidden />
+                      <span className="font-semibold text-slate-800">
+                        {matches.length} {matches.length === 1 ? 'match' : 'matches'}
+                      </span>
+                    </div>
+                    {matchStats && (
+                      <div className="flex flex-wrap gap-3 mt-1.5 text-xs text-slate-500">
+                        <span className="flex items-center gap-1">
+                          <BarChart2 className="w-3.5 h-3.5" />
+                          Unique: <strong className="text-slate-700">{matchStats.uniqueCount}</strong>
+                        </span>
+                        <span>Avg length: <strong className="text-slate-700">{matchStats.avgLength}</strong></span>
+                        <span>Coverage: <strong className="text-slate-700">{matchStats.coverage}%</strong></span>
+                        {namedGroups.length > 0 && (
+                          <span className="text-violet-600 font-medium">Named groups: {namedGroups.join(', ')}</span>
+                        )}
+                      </div>
+                    )}
                   </div>
                   {matches.length > 0 && (
-                    <button
-                      type="button"
-                      onClick={copyMatches}
-                      className="cta-regex-copy-matches inline-flex items-center gap-1.5 text-sm font-semibold text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100"
-                    >
-                      <Copy className="w-4 h-4" aria-hidden />
-                      Copy matches
-                    </button>
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={copyMatches}
+                        className="cta-regex-copy-matches inline-flex items-center gap-1.5 text-sm font-semibold text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100"
+                      >
+                        <Copy className="w-4 h-4" aria-hidden />
+                        Copy
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => exportMatches('json')}
+                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100"
+                      >
+                        <Download className="w-4 h-4" aria-hidden />
+                        JSON
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => exportMatches('csv')}
+                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100"
+                      >
+                        <Download className="w-4 h-4" aria-hidden />
+                        CSV
+                      </button>
+                    </div>
                   )}
                 </div>
 
@@ -369,7 +461,11 @@ export default function RegexTesterClient() {
                           <th className="py-2 pr-4">#</th>
                           <th className="py-2 pr-4">Index</th>
                           <th className="py-2 pr-4">Match</th>
-                          <th className="py-2">Groups</th>
+                          <th className="py-2">
+                            {namedGroups.length > 0
+                              ? `Groups (${namedGroups.join(', ')})`
+                              : 'Groups'}
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
