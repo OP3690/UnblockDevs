@@ -1,5 +1,9 @@
 import type { Metadata } from 'next';
-import PdfConverterClient from './client';
+import dynamic from 'next/dynamic';
+
+// ssr: false prevents pdfjs-dist (ESM-only) from being processed server-side,
+// which avoids webpack HMR module factory errors in dev and canvas issues in SSR.
+const PdfConverterClient = dynamic(() => import('./client'), { ssr: false });
 
 export const metadata: Metadata = {
   title: 'PDF to Excel & Word Converter — Advanced PDF Parser | UnblockDevs',
@@ -23,3 +27,4 @@ export const metadata: Metadata = {
 export default function PdfConverterPage() {
   return <PdfConverterClient />;
 }
+

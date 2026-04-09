@@ -57,8 +57,12 @@ async function extractPDFPages(
   onProgress: (pct: number, msg: string) => void,
   options: Options,
 ): Promise<PageContent[]> {
-  const pdfjsLib = await import('pdfjs-dist');
-  // Serve worker as a static file from /public to avoid webpack bundling issues
+  // Load pdfjs from /public/pdf.mjs (static file, webpackIgnore) so webpack never
+  // bundles pdfjs-dist — this avoids the options.factory module registry corruption
+  // that occurs when pdfjs-dist v5 ESM chunks are lazy-loaded in Next.js dev mode.
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore — webpackIgnore bypasses webpack; type comes from pdfjs-dist
+  const pdfjsLib = await import(/* webpackIgnore: true */ '/pdf.mjs') as typeof import('pdfjs-dist');
   pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
   onProgress(0.05, 'Loading PDF…');

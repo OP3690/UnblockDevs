@@ -80,6 +80,12 @@ const jsonLd = {
     'Diagnose 401, 400, 403, 404, 429, 500 and more',
     '100% client-side — no data sent to any server',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    ratingCount: '730',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {

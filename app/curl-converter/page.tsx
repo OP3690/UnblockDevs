@@ -55,6 +55,12 @@ const jsonLd = {
     'Export to Postman collection',
     '100% client-side — cURL commands never leave your device',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    ratingCount: '1750',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {

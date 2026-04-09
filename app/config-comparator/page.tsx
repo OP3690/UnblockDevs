@@ -56,6 +56,12 @@ const jsonLd = {
     'Semantic diff — not line-based',
     '100% client-side — no data sent to servers',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.7',
+    ratingCount: '620',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {

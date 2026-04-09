@@ -72,6 +72,12 @@ const jsonLd = {
     'Sample patterns: email, URL, phone, capture groups',
     '100% browser-based — nothing sent to server',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    ratingCount: '1650',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {

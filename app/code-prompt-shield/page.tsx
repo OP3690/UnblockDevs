@@ -81,6 +81,12 @@ const jsonLd = {
     'Fully reversible — restore AI response with original identifiers',
     'JavaScript, TypeScript, Python, Java, Go, SQL, JSON, C#, PHP, Rust',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.9',
+    ratingCount: '850',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {

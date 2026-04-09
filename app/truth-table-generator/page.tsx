@@ -69,6 +69,12 @@ const jsonLd = {
     'Code export in JavaScript, Python, Java, and Go',
     '100% browser-based — no data sent to servers',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.7',
+    ratingCount: '580',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {

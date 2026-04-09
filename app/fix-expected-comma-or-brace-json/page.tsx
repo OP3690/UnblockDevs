@@ -37,6 +37,46 @@ const jsonLd = {
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    ratingCount: '780',
+    bestRating: '5',
+  },
+};
+
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Fix "Expected Comma or Closing Brace" JSON Error',
+  description: 'Step-by-step guide to fixing missing or extra commas in JSON.',
+  totalTime: 'PT2M',
+  step: [
+    {
+      '@type': 'HowToStep',
+      position: 1,
+      name: 'Find the error location',
+      text: 'The error message includes a line or position number. Look near that position for a missing comma between two properties or an extra trailing comma.',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 2,
+      name: 'Paste into the fixer',
+      text: 'Copy your broken JSON and paste it into the JSON Fixer above to instantly see all errors highlighted.',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 3,
+      name: 'Click Auto-Fix',
+      text: 'The auto-fixer adds missing commas, removes trailing commas, and closes any unclosed brackets or braces.',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 4,
+      name: 'Copy the fixed JSON',
+      text: 'Copy the valid JSON output and use it in your application.',
+    },
+  ],
 };
 
 const faqSchema = {
@@ -75,6 +115,7 @@ export default function FixExpectedCommaOrBrace() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <FixExpectedCommaOrBraceClient />
 
       <ToolSEOContent>

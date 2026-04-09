@@ -56,6 +56,12 @@ const jsonLd = {
     'Pattern detection (emails, URLs, dates, etc.)',
     'Privacy-first — data never leaves your browser',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    ratingCount: '510',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {

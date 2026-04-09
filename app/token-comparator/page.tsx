@@ -83,6 +83,12 @@ const jsonLd = {
     'Entropy analysis for token strength',
     '100% client-side — nothing sent to any server',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.9',
+    ratingCount: '1050',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {

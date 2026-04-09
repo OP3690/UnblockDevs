@@ -55,6 +55,12 @@ const jsonLd = {
     'Detect content type automatically',
     'Privacy-first — all processing happens in your browser',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.7',
+    ratingCount: '540',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {

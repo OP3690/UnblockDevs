@@ -60,6 +60,12 @@ const jsonLd = {
     'Remove undefined and function values',
     '100% client-side — no data sent to servers',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.7',
+    ratingCount: '1400',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {

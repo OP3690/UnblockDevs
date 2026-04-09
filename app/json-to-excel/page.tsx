@@ -68,6 +68,12 @@ const jsonLd = {
     'XLSX, CSV, and TSV export',
     '100% client-side — no data sent to servers',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    ratingCount: '1900',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {

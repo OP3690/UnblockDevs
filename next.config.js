@@ -2,15 +2,6 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  // pdfjs-dist v5 ships .mjs files — tell webpack to treat them as plain JS modules.
-  webpack(config) {
-    config.module.rules.push({
-      test: /\.mjs$/,
-      include: /node_modules\/pdfjs-dist/,
-      type: 'javascript/auto',
-    });
-    return config;
-  },
   images: {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 86400, // 24 hours (was 60s — reduced unnecessary reloads)

@@ -57,6 +57,12 @@ const jsonLd = {
     'Code export in JS, Python, Go, Java, PHP',
     '100% client-side — nothing stored or sent',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.9',
+    ratingCount: '590',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {

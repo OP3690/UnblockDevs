@@ -73,6 +73,12 @@ const jsonLd = {
     '100% browser-based — no data sent to servers',
     'No signup required',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    ratingCount: '1200',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {

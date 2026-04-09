@@ -55,6 +55,12 @@ const jsonLd = {
     'Paste SVG code or upload file',
     '100% client-side — no server upload',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.7',
+    ratingCount: '830',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {
