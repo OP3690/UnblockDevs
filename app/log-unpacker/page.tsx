@@ -131,6 +131,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Unpack and Unescape Log Output Online',
+  description: 'Step-by-step guide to unpacking nested escaped JSON, decoding JWTs, and converting timestamps in log output.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste your log', text: 'Paste a log line, a blob of escaped JSON, or a full log file section containing stringified data.' },
+    { '@type': 'HowToStep', position: 2, name: 'Auto-detect & unpack', text: 'The tool recursively unescapes nested JSON, decodes JWTs inline (header + payload), and converts epoch timestamps.' },
+    { '@type': 'HowToStep', position: 3, name: 'Sanitize for AI', text: 'Enable path scrubbing and JWT PII masking to remove usernames and sensitive identifiers before sharing.' },
+    { '@type': 'HowToStep', position: 4, name: 'Copy AI-safe output', text: 'Copy the sanitized, readable output and paste into ChatGPT or any AI to get debugging help safely.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -146,6 +160,7 @@ export default function LogUnpackerPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <LogUnpackerClient />
 

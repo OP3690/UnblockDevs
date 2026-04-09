@@ -120,6 +120,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Convert Time Between Timezones Online',
+  description: 'Step-by-step guide to translating dates and times across multiple timezones with automatic DST adjustment.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Enter a date & time', text: 'Type or pick a date and time. The tool defaults to now in your local timezone, which you can adjust freely.' },
+    { '@type': 'HowToStep', position: 2, name: 'Select source timezone', text: 'Choose the timezone the input time belongs to. Search by city name, abbreviation (EST, PST), or IANA name.' },
+    { '@type': 'HowToStep', position: 3, name: 'Add target timezones', text: 'Add one or more target timezones to see the converted time for each. DST shifts are applied automatically based on the date.' },
+    { '@type': 'HowToStep', position: 4, name: 'Copy or share', text: 'Copy converted times individually or share a permalink so teammates see the same conversion without doing the math themselves.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -135,6 +149,7 @@ export default function TimezoneTranslatorPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <TimezoneTranslatorClient />
       <ToolSEOContent>

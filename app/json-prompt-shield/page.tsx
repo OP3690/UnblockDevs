@@ -155,6 +155,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Mask JSON Before Sending to ChatGPT',
+  description: 'Step-by-step guide to masking JSON keys and values before pasting into AI assistants.',
+  totalTime: 'PT2M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste your JSON', text: 'Paste any JSON payload — API response, database record, configuration, or GraphQL result.' },
+    { '@type': 'HowToStep', position: 2, name: 'Choose what to mask', text: 'Toggle "Mask keys", "Mask string values", or both. Numbers, booleans, and null are preserved so the AI understands types.' },
+    { '@type': 'HowToStep', position: 3, name: 'Copy masked JSON to AI', text: 'Copy the masked output and paste it into ChatGPT, Claude, or any AI. Your real field names are replaced with generic placeholders.' },
+    { '@type': 'HowToStep', position: 4, name: 'Restore real names', text: 'Paste the AI response into the Restore tab along with your mapping. Real field names and string values are substituted back instantly.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -170,6 +184,7 @@ export default function JsonPromptShieldPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <JsonPromptShieldClient />
 
