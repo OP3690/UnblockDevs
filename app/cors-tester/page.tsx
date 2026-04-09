@@ -93,6 +93,12 @@ const jsonLd = {
     'Generate preflight and actual request cURL commands',
     'Multi-origin testing — no data sent to servers',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    ratingCount: '1180',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {

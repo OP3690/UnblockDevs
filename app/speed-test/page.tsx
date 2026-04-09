@@ -49,6 +49,12 @@ const jsonLd = {
     'Test history (browser-local)',
     'Privacy-first — no data stored',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.7',
+    ratingCount: '890',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {

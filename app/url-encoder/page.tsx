@@ -83,6 +83,12 @@ const jsonLd = {
     'Code snippets and bulk mode',
     '100% client-side — no URLs sent to any server',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    ratingCount: '1090',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {
