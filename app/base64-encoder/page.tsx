@@ -70,11 +70,37 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Encode or Decode Base64 Online',
+  description: 'Step-by-step guide to encoding and decoding Base64 text, files, and images.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Choose Encode or Decode', text: 'Select Encode to convert text or binary to Base64, or Decode to reverse Base64 back to the original.' },
+    { '@type': 'HowToStep', position: 2, name: 'Select the Base64 variant', text: 'Choose Standard, Base64URL, MIME, or No-Padding depending on your use case (JWTs use Base64URL).' },
+    { '@type': 'HowToStep', position: 3, name: 'Paste your input or upload a file', text: 'Type or paste text, or drag and drop a file (up to 50 MB) into the input area. The output updates instantly.' },
+    { '@type': 'HowToStep', position: 4, name: 'Copy the result', text: 'Click Copy to copy the encoded or decoded output to your clipboard. Use Download for binary files.' },
+  ],
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://unblockdevs.com' },
+    { '@type': 'ListItem', position: 2, name: 'Tools', item: 'https://unblockdevs.com/tools/json' },
+    { '@type': 'ListItem', position: 3, name: 'Base64 Encoder', item: canonicalUrl },
+  ],
+};
+
 export default function Base64EncoderPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Base64EncoderClient />
 
       <ToolSEOContent>

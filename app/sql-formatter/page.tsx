@@ -113,6 +113,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Format SQL Online',
+  description: 'Step-by-step guide to formatting and beautifying SQL queries using the SQL Formatter.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste your SQL or IDs', text: 'Paste a raw SQL query or a list of IDs (comma-separated, one per line, or mixed) into the input box.' },
+    { '@type': 'HowToStep', position: 2, name: 'Select your database flavor', text: 'Choose MySQL, PostgreSQL, SQLite, MSSQL, Oracle, or Trino to match your target database.' },
+    { '@type': 'HowToStep', position: 3, name: 'Click Format or press ⌘+Enter', text: 'The formatter instantly produces a clean, indented SQL query or IN clause with proper syntax highlighting.' },
+    { '@type': 'HowToStep', position: 4, name: 'Copy or download', text: 'Copy the formatted SQL to your clipboard or download it as a .sql file for use in your IDE or database client.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -128,6 +142,7 @@ export default function SqlFormatterPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <SqlFormatterClient />
 

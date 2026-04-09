@@ -72,6 +72,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Decode a JWT Token Online',
+  description: 'Step-by-step guide to decoding and verifying JWT tokens.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste your JWT token', text: 'Paste your JWT (JSON Web Token) into the input field. The tool auto-detects the header, payload, and signature.' },
+    { '@type': 'HowToStep', position: 2, name: 'View decoded claims', text: 'The Header and Payload tabs show all claims in readable JSON format, including exp (expiry), iat (issued at), and custom claims.' },
+    { '@type': 'HowToStep', position: 3, name: 'Check expiry and security', text: 'The Security Audit tab flags vulnerabilities like the "none" algorithm attack, weak secrets, and expired tokens.' },
+    { '@type': 'HowToStep', position: 4, name: 'Verify HMAC signature (optional)', text: 'To verify an HS256/HS384/HS512 token, enter your secret in the Verify tab and click Verify Signature.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -87,6 +101,7 @@ export default function JWTDecoderPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <JWTDecoderClient />
 

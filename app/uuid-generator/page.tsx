@@ -68,11 +68,37 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Generate a UUID Online',
+  description: 'Step-by-step guide to generating, validating, and exporting UUIDs.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Choose a UUID version', text: 'Select the UUID version you need: v4 for random IDs, v7 for time-sortable database primary keys, v1 for MAC-based IDs.' },
+    { '@type': 'HowToStep', position: 2, name: 'Set quantity and format', text: 'Set how many UUIDs to generate (1–1,000) and choose uppercase or lowercase format.' },
+    { '@type': 'HowToStep', position: 3, name: 'Click Generate', text: 'Click Generate to create cryptographically secure UUIDs instantly in your browser. No server involved.' },
+    { '@type': 'HowToStep', position: 4, name: 'Copy or export', text: 'Copy individual UUIDs, or export all as JSON, CSV, or SQL INSERT statements for direct use in your database.' },
+  ],
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://unblockdevs.com' },
+    { '@type': 'ListItem', position: 2, name: 'Tools', item: 'https://unblockdevs.com/tools/json' },
+    { '@type': 'ListItem', position: 3, name: 'UUID Generator', item: canonicalUrl },
+  ],
+};
+
 export default function UuidGeneratorPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <UuidGeneratorClient />
 
       <ToolSEOContent>

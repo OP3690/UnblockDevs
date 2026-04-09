@@ -72,6 +72,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Beautify and Format JSON Online',
+  description: 'Step-by-step guide to formatting, validating, and fixing JSON using the JSON Beautifier.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste your JSON', text: 'Paste or type your raw or minified JSON into the input editor on the left.' },
+    { '@type': 'HowToStep', position: 2, name: 'Click Beautify JSON or press ⌘+Enter', text: 'The tool instantly formats your JSON with proper indentation and line breaks, highlighting any syntax errors.' },
+    { '@type': 'HowToStep', position: 3, name: 'Fix errors if needed', text: 'If your JSON has errors, click Auto-Fix to repair trailing commas, single quotes, and other common issues automatically.' },
+    { '@type': 'HowToStep', position: 4, name: 'Copy or explore the output', text: 'Copy the formatted JSON, or switch to Tree View to explore the structure interactively with JSONPath support.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -87,6 +101,7 @@ export default function JsonBeautifierPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <JsonBeautifierClient />
 

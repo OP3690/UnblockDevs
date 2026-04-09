@@ -8,7 +8,7 @@ export default function SiteFooter() {
     <footer className="mt-auto border-t border-zinc-800/60 bg-zinc-950 text-zinc-400">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 py-14 sm:py-16">
         {/* Top grid */}
-        <div className="grid grid-cols-2 gap-10 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-10 sm:grid-cols-5">
           {/* Brand */}
           <div className="col-span-2 sm:col-span-1">
             <div className="mb-4 flex items-center gap-2 text-white">
@@ -31,6 +31,31 @@ export default function SiteFooter() {
                 </span>
               ))}
             </div>
+          </div>
+
+          {/* JSON tools */}
+          <div>
+            <p className="mb-4 text-[12px] font-semibold uppercase tracking-widest text-zinc-400">
+              JSON tools
+            </p>
+            <ul className="flex flex-col gap-2.5 text-[13px]">
+              {[
+                { href: '/json-beautifier', label: 'JSON Beautifier' },
+                { href: '/json-fixer-online', label: 'JSON Fixer' },
+                { href: '/json-validator', label: 'JSON Validator' },
+                { href: '/json-comparator', label: 'JSON Comparator' },
+                { href: '/json-formatter', label: 'JSON Formatter' },
+                { href: '/json-stringify-online', label: 'JSON Stringify' },
+                { href: '/json-schema-generation', label: 'Schema Generator' },
+                { href: '/json-to-excel', label: 'JSON to Excel' },
+              ].map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className="text-zinc-500 transition-colors hover:text-zinc-200">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
 
           {/* AI safety */}
@@ -58,16 +83,20 @@ export default function SiteFooter() {
           {/* Dev tools */}
           <div>
             <p className="mb-4 text-[12px] font-semibold uppercase tracking-widest text-zinc-400">
-              Developer tools
+              Dev utilities
             </p>
             <ul className="flex flex-col gap-2.5 text-[13px]">
               {[
-                { href: '/json-beautifier', label: 'JSON Beautifier' },
                 { href: '/jwt-decoder', label: 'JWT Decoder' },
-                { href: '/cors-tester', label: 'CORS Tester' },
-                { href: '/hash-generator', label: 'Hash Generator' },
                 { href: '/base64-encoder', label: 'Base64 Encoder' },
+                { href: '/hash-generator', label: 'Hash Generator' },
+                { href: '/url-encoder', label: 'URL Encoder' },
+                { href: '/uuid-generator', label: 'UUID Generator' },
+                { href: '/cors-tester', label: 'CORS Tester' },
                 { href: '/sql-formatter', label: 'SQL Formatter' },
+                { href: '/regex-tester', label: 'Regex Tester' },
+                { href: '/password-generator', label: 'Password Generator' },
+                { href: '/har-to-curl', label: 'HAR to cURL' },
               ].map((l) => (
                 <li key={l.href}>
                   <Link href={l.href} className="text-zinc-500 transition-colors hover:text-zinc-200">
@@ -90,6 +119,7 @@ export default function SiteFooter() {
                 { href: '/privacy-policy', label: 'Privacy Policy' },
                 { href: '/contact', label: 'Contact' },
                 { href: '/terms', label: 'Terms' },
+                { href: '/disclaimer', label: 'Disclaimer' },
               ].map((l) => (
                 <li key={l.href}>
                   <Link href={l.href} className="text-zinc-500 transition-colors hover:text-zinc-200">
