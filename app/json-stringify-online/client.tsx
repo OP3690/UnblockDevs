@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { Code, Copy, Download, ExternalLink, AlertCircle } from 'lucide-react';
+import { Code, Copy, Download, ExternalLink, AlertCircle, Minimize2, ArrowLeftRight } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy, trackCtaClick } from '@/lib/analytics';
 import FAQSchema from '@/components/FAQSchema';
@@ -13,6 +13,14 @@ export default function JsonStringifyOnlineClient() {
   const [output, setOutput] = useState('');
   const [spaces, setSpaces] = useState(2);
   const [error, setError] = useState('');
+
+  // Live stats
+  const outputStats = useMemo(() => {
+    if (!output || !input) return null;
+    const minified = output.replace(/\s+/g, '').length;
+    const savings = input.length > 0 ? ((1 - minified / input.length) * 100).toFixed(0) : '0';
+    return { inputLen: input.length, outputLen: output.length, minifiedLen: minified, savings };
+  }, [input, output]);
 
   const handleStringify = () => {
     trackCtaClick('json_stringify_online', 'stringify');
@@ -54,6 +62,33 @@ export default function JsonStringifyOnlineClient() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     toast.success('Downloaded!');
+  };
+
+  const handleMinify = () => {
+    setError('');
+    try {
+      let parsed;
+      try { parsed = eval(`(${input})`); } catch { parsed = JSON.parse(input); }
+      const minified = JSON.stringify(parsed);
+      setOutput(minified);
+      trackCtaClick('json_stringify_online', 'minify');
+      toast.success('Minified!');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Invalid input';
+      setError(msg);
+      toast.error('Failed: ' + msg);
+    }
+  };
+
+  const handleCopyMinified = () => {
+    if (!output) return;
+    try {
+      const parsed = JSON.parse(output);
+      const minified = JSON.stringify(parsed);
+      navigator.clipboard.writeText(minified);
+      trackCopy('json_stringify_online');
+      toast.success('Minified copy copied!');
+    } catch { toast.error('Cannot minify output'); }
   };
 
   const examples = [
@@ -149,13 +184,41 @@ export default function JsonStringifyOnlineClient() {
               />
             </div>
           </div>
-          <button
-            onClick={handleStringify}
-            className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
-          >
-            <Code className="w-5 h-5" />
-            Stringify JSON
-          </button>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button
+              onClick={handleStringify}
+              className="flex-1 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+            >
+              <Code className="w-5 h-5" />
+              Stringify JSON
+            </button>
+            <button
+              onClick={handleMinify}
+              className="sm:w-36 py-3 bg-slate-700 text-white font-semibold rounded-lg hover:bg-slate-800 transition-colors flex items-center justify-center gap-2"
+              title="Stringify without any whitespace (compact)"
+            >
+              <Minimize2 className="w-4 h-4" />
+              Minify
+            </button>
+          </div>
+
+          {/* Live stats */}
+          {outputStats && (
+            <div className="flex flex-wrap gap-4 px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600">
+              <span className="flex items-center gap-1.5">
+                <ArrowLeftRight className="w-3.5 h-3.5 text-slate-400" />
+                Input: <strong className="text-slate-800">{outputStats.inputLen.toLocaleString()} chars</strong>
+              </span>
+              <span>Output: <strong className="text-slate-800">{outputStats.outputLen.toLocaleString()} chars</strong></span>
+              <span>Minified: <strong className="text-slate-800">{outputStats.minifiedLen.toLocaleString()} chars</strong></span>
+              <button
+                onClick={handleCopyMinified}
+                className="ml-auto text-blue-600 hover:text-blue-800 font-medium hover:underline"
+              >
+                Copy minified
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="border-t border-zinc-200 pt-8">

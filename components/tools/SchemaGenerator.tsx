@@ -1,21 +1,66 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { FileCode, Copy, Check, Download, Sparkles, CheckCircle, XCircle, ExternalLink } from 'lucide-react';
+import { FileCode, Copy, Check, Download, Sparkles, CheckCircle, XCircle, ExternalLink, Code2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy, trackCtaClick } from '@/lib/analytics';
 import { validateJson } from '@/lib/jsonParser';
 import Link from 'next/link';
+
+// Generate TypeScript interface from JSON Schema
+function schemaToTypescript(schema: any, name: string = 'Root', indent: number = 0): string {
+  const pad = '  '.repeat(indent);
+  if (!schema || typeof schema !== 'object') return 'unknown';
+  if (schema.type === 'object' || schema.properties) {
+    const props = schema.properties || {};
+    const required: string[] = schema.required || [];
+    const lines: string[] = [`${pad}interface ${name} {`];
+    for (const [key, val] of Object.entries(props)) {
+      const propSchema = val as any;
+      const optional = !required.includes(key) ? '?' : '';
+      const tsType = schemaTypeToTs(propSchema, key);
+      lines.push(`${'  '.repeat(indent + 1)}${key}${optional}: ${tsType};`);
+    }
+    lines.push(`${pad}}`);
+    return lines.join('\n');
+  }
+  return schemaTypeToTs(schema, name);
+}
+
+function schemaTypeToTs(schema: any, key: string = ''): string {
+  if (!schema) return 'unknown';
+  if (schema.type === 'string') return 'string';
+  if (schema.type === 'number' || schema.type === 'integer') return 'number';
+  if (schema.type === 'boolean') return 'boolean';
+  if (schema.type === 'null') return 'null';
+  if (schema.type === 'array') {
+    const itemType = schema.items ? schemaTypeToTs(schema.items, key + 'Item') : 'unknown';
+    return `${itemType}[]`;
+  }
+  if (schema.type === 'object' || schema.properties) {
+    const props = schema.properties || {};
+    const required: string[] = schema.required || [];
+    const fields = Object.entries(props).map(([k, v]) => {
+      const opt = !required.includes(k) ? '?' : '';
+      return `${k}${opt}: ${schemaTypeToTs(v as any, k)}`;
+    });
+    return `{ ${fields.join('; ')} }`;
+  }
+  if (schema.oneOf) return schema.oneOf.map((s: any) => schemaTypeToTs(s, key)).join(' | ');
+  return 'unknown';
+}
 
 export default function SchemaGenerator() {
   const [jsonText, setJsonText] = useState('');
   const [schema, setSchema] = useState<any>(null);
   const [schemaFormat, setSchemaFormat] = useState<'draft7' | 'openapi'>('draft7');
   const [copied, setCopied] = useState(false);
+  const [copiedTs, setCopiedTs] = useState(false);
   const [showExamples, setShowExamples] = useState(false);
   const [validationResult, setValidationResult] = useState<{ valid: boolean; errors: string[] } | null>(null);
   const [jsonToValidate, setJsonToValidate] = useState('');
   const resultsSectionRef = useRef<HTMLDivElement>(null);
+  const [tsInterface, setTsInterface] = useState<string | null>(null);
 
   const generateSchema = (obj: any, required: boolean = true): any => {
     if (obj === null) {
@@ -136,6 +181,12 @@ export default function SchemaGenerator() {
         setSchema(generatedSchema);
       }
       
+      // Generate TypeScript interface
+      try {
+        const ts = schemaToTypescript(generatedSchema, 'Root');
+        setTsInterface(ts);
+      } catch { setTsInterface(null); }
+
       toast.success('Schema generated successfully!');
       setTimeout(() => {
         resultsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -235,18 +286,31 @@ export default function SchemaGenerator() {
 
   const examples = [
     {
-      name: 'User Object',
-      json: JSON.stringify({ name: 'John Doe', email: 'john@example.com', age: 30, active: true }, null, 2)
+      name: 'User Profile',
+      json: JSON.stringify({ id: 1, name: 'John Doe', email: 'john@example.com', age: 30, active: true, role: 'admin', createdAt: '2024-01-15T10:30:00Z' }, null, 2)
     },
     {
-      name: 'Product Array',
-      json: JSON.stringify([{ id: 1, name: 'Product 1', price: 99.99 }, { id: 2, name: 'Product 2', price: 149.99 }], null, 2)
+      name: 'Product Catalog',
+      json: JSON.stringify([{ id: 1, name: 'Widget Pro', price: 99.99, inStock: true, tags: ['hardware', 'featured'] }, { id: 2, name: 'Widget Lite', price: 29.99, inStock: false, tags: ['hardware'] }], null, 2)
     },
     {
-      name: 'Nested Object',
-      json: JSON.stringify({ user: { name: 'John', address: { city: 'NYC', zip: '10001' } } }, null, 2)
-    }
+      name: 'API Response',
+      json: JSON.stringify({ success: true, data: { users: [{ id: 1, name: 'Alice' }], total: 1, page: 1 }, message: null, timestamp: 1710000000 }, null, 2)
+    },
+    {
+      name: 'Config File',
+      json: JSON.stringify({ database: { host: 'localhost', port: 5432, name: 'mydb', ssl: false }, cache: { ttl: 3600, maxSize: 1000 }, features: { darkMode: true, beta: false } }, null, 2)
+    },
   ];
+
+  const handleCopyTs = () => {
+    if (!tsInterface) return;
+    navigator.clipboard.writeText(tsInterface);
+    trackCopy('schema_generator');
+    setCopiedTs(true);
+    toast.success('TypeScript interface copied!');
+    setTimeout(() => setCopiedTs(false), 2000);
+  };
 
   return (
     <div className="space-y-6">
@@ -350,6 +414,27 @@ export default function SchemaGenerator() {
               <code>{JSON.stringify(schema, null, 2)}</code>
             </pre>
           </div>
+
+          {tsInterface && (
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+                  <Code2 className="w-5 h-5 text-blue-600" />
+                  TypeScript Interface
+                </h3>
+                <button
+                  onClick={handleCopyTs}
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                  {copiedTs ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  {copiedTs ? 'Copied!' : 'Copy'}
+                </button>
+              </div>
+              <pre className="bg-gray-50 p-4 rounded-lg border border-gray-200 overflow-x-auto text-sm max-h-64 overflow-y-auto">
+                <code className="language-typescript">{tsInterface}</code>
+              </pre>
+            </div>
+          )}
 
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h3 className="text-lg font-bold text-gray-800 mb-4">Validate JSON Against Schema</h3>
