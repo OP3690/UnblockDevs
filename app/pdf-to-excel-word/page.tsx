@@ -24,7 +24,24 @@ export const metadata: Metadata = {
   },
 };
 
+const canonicalUrl = 'https://unblockdevs.com/pdf-to-excel-word';
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://unblockdevs.com' },
+    { '@type': 'ListItem', position: 2, name: 'Tools', item: 'https://unblockdevs.com/tools/json' },
+    { '@type': 'ListItem', position: 3, name: 'PDF to Excel & Word Converter', item: canonicalUrl },
+  ],
+};
+
 export default function PdfConverterPage() {
-  return <PdfConverterClient />;
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <PdfConverterClient />
+    </>
+  );
 }
 

@@ -105,6 +105,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Validate JSON Online',
+  description: 'Step-by-step guide to validating JSON syntax and finding errors.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste your JSON', text: 'Paste your JSON string into the input editor. The validator checks syntax in real time as you type.' },
+    { '@type': 'HowToStep', position: 2, name: 'Review errors highlighted', text: 'Any syntax errors are highlighted in red with the exact line and column number where the error occurs.' },
+    { '@type': 'HowToStep', position: 3, name: 'Fix or auto-fix errors', text: 'Click on the error description to understand the issue, or use Auto-Fix to repair common errors automatically.' },
+    { '@type': 'HowToStep', position: 4, name: 'Confirm valid JSON', text: 'When the JSON is valid, a green checkmark confirms it is well-formed and can be safely parsed by any JSON parser.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -120,6 +134,7 @@ export default function JsonValidatorPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <JsonValidatorClient />
 

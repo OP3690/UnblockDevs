@@ -138,11 +138,37 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to URL Encode or Decode a String Online',
+  description: 'Step-by-step guide to URL encoding and decoding strings for use in query parameters.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Select Encode or Decode mode', text: 'Choose Encode to convert a plain string to percent-encoded format, or Decode to convert an encoded URL back to readable text.' },
+    { '@type': 'HowToStep', position: 2, name: 'Choose the encoding standard', text: 'Select RFC 3986 (for query parameters), Component (encodes / and :), or Form-encoded (replaces spaces with +) based on your use case.' },
+    { '@type': 'HowToStep', position: 3, name: 'Paste your input', text: 'Type or paste your URL or string. The output updates instantly — no button click needed.' },
+    { '@type': 'HowToStep', position: 4, name: 'Copy the result', text: 'Click Copy to copy the encoded or decoded string to your clipboard for use in your API or browser.' },
+  ],
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://unblockdevs.com' },
+    { '@type': 'ListItem', position: 2, name: 'Tools', item: 'https://unblockdevs.com/tools/json' },
+    { '@type': 'ListItem', position: 3, name: 'URL Encoder Decoder', item: canonicalUrl },
+  ],
+};
+
 export default function UrlEncoderPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <UrlEncoderClient />
       <ToolSEOContent>
         <SEOSection id="what" heading="What Is URL Encoding?">

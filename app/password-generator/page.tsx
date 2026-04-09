@@ -181,11 +181,37 @@ const seoContent = (
   </ToolSEOContent>
 );
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Generate a Secure Password Online',
+  description: 'Step-by-step guide to generating strong, random passwords.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Set your password length', text: 'Use the slider or input field to choose a password length. 16+ characters is recommended for high-security accounts.' },
+    { '@type': 'HowToStep', position: 2, name: 'Choose character sets', text: 'Toggle uppercase letters, lowercase letters, numbers, and symbols. Enabling all character sets makes passwords harder to crack.' },
+    { '@type': 'HowToStep', position: 3, name: 'Click Generate', text: 'Click Generate to create a cryptographically secure random password. Click again to get a new one at any time.' },
+    { '@type': 'HowToStep', position: 4, name: 'Copy and store safely', text: 'Click Copy to copy the password. Store it in a password manager — never in plain text files or spreadsheets.' },
+  ],
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://unblockdevs.com' },
+    { '@type': 'ListItem', position: 2, name: 'Tools', item: 'https://unblockdevs.com/tools/json' },
+    { '@type': 'ListItem', position: 3, name: 'Password Generator', item: canonicalUrl },
+  ],
+};
+
 export default function PasswordGeneratorPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <ToolPageShell
         title="Password Generator"
         subtitle="Cryptographically secure passwords, passphrases and API keys. Nothing ever leaves your browser."

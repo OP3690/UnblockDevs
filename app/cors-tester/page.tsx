@@ -140,11 +140,37 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Test CORS Headers Online',
+  description: 'Step-by-step guide to testing CORS configuration and diagnosing cross-origin errors.',
+  totalTime: 'PT2M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Enter your API endpoint URL', text: 'Paste the URL of the API or server endpoint you want to test for CORS support.' },
+    { '@type': 'HowToStep', position: 2, name: 'Set the origin and method', text: 'Enter the origin (your frontend domain) and select the HTTP method (GET, POST, etc.) your app uses to call the API.' },
+    { '@type': 'HowToStep', position: 3, name: 'Run the CORS test', text: 'Click Test. The tool sends a real preflight OPTIONS request and shows the response headers, including Access-Control-Allow-Origin.' },
+    { '@type': 'HowToStep', position: 4, name: 'Read the diagnosis', text: 'The tool highlights any missing or incorrect CORS headers and explains exactly what needs to change on the server to fix the error.' },
+  ],
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://unblockdevs.com' },
+    { '@type': 'ListItem', position: 2, name: 'Tools', item: 'https://unblockdevs.com/tools/json' },
+    { '@type': 'ListItem', position: 3, name: 'CORS Tester', item: canonicalUrl },
+  ],
+};
+
 export default function CorsTesterPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <CorsTesterClient />
       <ToolSEOContent>
         <SEOSection id="what" heading="What Is CORS and Why Does It Matter?">

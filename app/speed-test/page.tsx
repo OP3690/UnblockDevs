@@ -112,6 +112,18 @@ const faqSchema = {
   ],
 };
 
+const canonicalUrl = 'https://unblockdevs.com/speed-test';
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://unblockdevs.com' },
+    { '@type': 'ListItem', position: 2, name: 'Tools', item: 'https://unblockdevs.com/tools/json' },
+    { '@type': 'ListItem', position: 3, name: 'Internet Speed Test', item: canonicalUrl },
+  ],
+};
+
 export default function SpeedTestPage() {
   return (
     <>
@@ -120,6 +132,7 @@ export default function SpeedTestPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <SpeedTestClient />
 
       <ToolSEOContent>

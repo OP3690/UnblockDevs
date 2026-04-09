@@ -106,6 +106,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Fix Invalid JSON Online',
+  description: 'Step-by-step guide to repairing broken or invalid JSON automatically.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste your broken JSON', text: 'Copy your invalid or broken JSON and paste it into the input box. The tool automatically detects errors as you type.' },
+    { '@type': 'HowToStep', position: 2, name: 'Click Auto-Fix', text: 'Click the Auto-Fix button. The fixer repairs trailing commas, single quotes, unquoted keys, missing brackets, and more.' },
+    { '@type': 'HowToStep', position: 3, name: 'Review the fixed JSON', text: 'The repaired JSON appears in the output. A list of applied fixes is shown so you know exactly what was changed.' },
+    { '@type': 'HowToStep', position: 4, name: 'Copy the valid JSON', text: 'Click Copy to copy the valid JSON to your clipboard and use it in your application or API.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -121,6 +135,7 @@ export default function JsonFixerOnline() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <JsonFixerOnlineClient />
 

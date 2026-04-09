@@ -69,6 +69,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Generate a Hash Online',
+  description: 'Step-by-step guide to generating MD5, SHA-1, SHA-256, and other hashes.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste your input text', text: 'Type or paste the string you want to hash into the input box. Hash values update instantly as you type.' },
+    { '@type': 'HowToStep', position: 2, name: 'Choose a hash algorithm', text: 'Select MD5, SHA-1, SHA-256, SHA-384, SHA-512, or HMAC depending on your use case. SHA-256 is recommended for security.' },
+    { '@type': 'HowToStep', position: 3, name: 'Copy the hash output', text: 'The hash digest is shown in hex and Base64 format. Click Copy to copy it to your clipboard.' },
+    { '@type': 'HowToStep', position: 4, name: 'Verify or compare hashes', text: 'Paste a known hash in the verify field to check if two inputs produce the same digest — useful for integrity checks.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -84,6 +98,7 @@ export default function HashGeneratorPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <HashGeneratorClient />
 
