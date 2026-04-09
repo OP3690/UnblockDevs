@@ -23,6 +23,16 @@ const SAMPLES = [
     json1: JSON.stringify({ token: 'eyJhbGciOiJIUzI1NiJ9.old', expires_in: 3600, token_type: 'Bearer' }, null, 2),
     json2: JSON.stringify({ access_token: 'eyJhbGciOiJSUzI1NiJ9.new', expires_in: 7200, token_type: 'Bearer', refresh_token: 'rft_abc123' }, null, 2),
   },
+  {
+    label: 'Order API v1→v2',
+    json1: JSON.stringify({ orderId: 'ord_001', status: 'pending', total: 99.99, customer: 'John' }, null, 2),
+    json2: JSON.stringify({ orderId: 'ord_001', status: 'processing', total: 99.99, customer: 'John', estimatedDelivery: '2024-03-20', trackingNumber: 'TRK123456', paymentStatus: 'captured' }, null, 2),
+  },
+  {
+    label: 'Config drift',
+    json1: JSON.stringify({ maxConnections: 10, timeout: 30, retries: 3, logLevel: 'INFO', features: { darkMode: false, betaUI: false } }, null, 2),
+    json2: JSON.stringify({ maxConnections: 50, timeout: 60, retries: 5, logLevel: 'DEBUG', features: { darkMode: true, betaUI: true, aiAssist: false }, region: 'us-east-1' }, null, 2),
+  },
 ];
 
 interface DiffResult {

@@ -66,6 +66,33 @@ const PRESETS: Array<{ name: string; emoji: string; updates: Partial<MockApiConf
       responseJson: '{\n  "error": "Invalid credentials",\n  "code": "UNAUTHORIZED",\n  "message": "Email or password is incorrect"\n}',
     },
   },
+  {
+    name: 'Order API',
+    emoji: '🛒',
+    updates: {
+      endpoint: '/api/orders', method: 'POST', statusCode: 201, latencyMs: 180,
+      authType: 'bearer', responseMode: 'static',
+      responseJson: '{\n  "orderId": "ord_{{id}}",\n  "status": "pending",\n  "total": 149.99,\n  "currency": "USD",\n  "createdAt": "{{timestamp}}"\n}',
+    },
+  },
+  {
+    name: 'Rate limit',
+    emoji: '🚦',
+    updates: {
+      endpoint: '/api/data', method: 'GET', statusCode: 400, latencyMs: 50,
+      authType: 'api_key', responseMode: 'static',
+      responseJson: '{\n  "error": "Too Many Requests",\n  "message": "Rate limit exceeded. Retry after 60 seconds.",\n  "retryAfter": 60\n}',
+    },
+  },
+  {
+    name: 'Server Error',
+    emoji: '💥',
+    updates: {
+      endpoint: '/api/process', method: 'POST', statusCode: 500, latencyMs: 300,
+      authType: 'none', responseMode: 'static',
+      responseJson: '{\n  "error": "Internal Server Error",\n  "message": "An unexpected error occurred",\n  "requestId": "req_{{id}}"\n}',
+    },
+  },
 ];
 
 function buildCurl(config: MockApiConfig): string {

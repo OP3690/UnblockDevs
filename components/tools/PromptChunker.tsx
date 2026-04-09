@@ -290,7 +290,7 @@ export default function PromptChunker() {
           <FileText className="w-4 h-4 text-purple-600" />
           Prompt templates
         </h3>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 mb-3">
           {PROMPT_TEMPLATES.map((t) => (
             <button
               key={t.id}
@@ -299,6 +299,29 @@ export default function PromptChunker() {
               className="cta-template px-3 py-1.5 bg-purple-50 text-purple-700 rounded-lg text-sm font-medium hover:bg-purple-100"
             >
               {t.name}
+            </button>
+          ))}
+        </div>
+        {/* Long text samples for chunk mode */}
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Sample long texts to chunk</p>
+        <div className="flex flex-wrap gap-2">
+          {[
+            {
+              label: '📖 Research article',
+              text: `Artificial intelligence and machine learning have fundamentally transformed the way we approach problem-solving across industries. From healthcare to finance, from education to manufacturing, AI systems are now capable of performing tasks that once required human expertise and judgment. Deep learning models, trained on vast datasets, can now diagnose diseases from medical images, predict stock market movements, translate languages in real-time, and generate creative content. The rapid advancement of large language models (LLMs) has opened new frontiers in natural language processing, enabling machines to understand and generate human-like text with remarkable accuracy. These models, trained on billions of parameters and petabytes of data, can write code, summarize documents, answer complex questions, and even engage in philosophical discussions. However, this progress comes with significant challenges. The computational resources required to train and run these models are enormous, leading to concerns about energy consumption and environmental impact. Questions about bias, fairness, and transparency in AI decision-making are increasingly important as these systems influence critical decisions in hiring, lending, criminal justice, and healthcare. Researchers and policymakers are working together to develop frameworks for responsible AI development, including techniques for explaining AI decisions, methods for detecting and mitigating bias, and regulatory guidelines for high-stakes applications. The future of AI depends not just on technical innovation but also on thoughtful governance and ethical considerations.`,
+            },
+            {
+              label: '📋 Technical spec',
+              text: `System Architecture Overview: The microservices architecture consists of twelve independent services communicating via REST APIs and message queues. Each service is containerized using Docker and orchestrated through Kubernetes clusters deployed across three availability zones. The API Gateway handles authentication, rate limiting, and request routing. The User Service manages registration, authentication, and profile management using JWT tokens with a 24-hour expiry and refresh token rotation. The Order Service processes transactions with idempotency keys to prevent duplicate charges, integrating with the Payment Service via Stripe webhooks. The Inventory Service maintains real-time stock levels with optimistic locking to handle concurrent updates. The Notification Service sends emails via SendGrid and push notifications through Firebase. All services write logs to a centralized ELK stack (Elasticsearch, Logstash, Kibana) for monitoring and debugging. Service discovery is handled by Consul, and inter-service communication uses gRPC for internal calls. The database layer uses PostgreSQL for transactional data with read replicas for reporting queries, Redis for caching and session storage, and Elasticsearch for full-text search functionality. Circuit breakers are implemented using Resilience4j to prevent cascade failures. Deployment follows a blue-green strategy with automated rollback triggers based on error rate thresholds.`,
+            },
+          ].map((s) => (
+            <button
+              key={s.label}
+              type="button"
+              onClick={() => { setPrompt(s.text); setTabMode('chunk'); }}
+              className="px-3 py-1.5 border border-pink-200 bg-pink-50 text-pink-700 rounded-lg text-sm font-medium hover:bg-pink-100 transition-colors"
+            >
+              {s.label}
             </button>
           ))}
         </div>
