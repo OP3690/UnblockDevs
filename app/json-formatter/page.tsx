@@ -99,6 +99,20 @@ const faqSchema = {
 
 const canonicalUrl = 'https://unblockdevs.com/json-formatter';
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Format JSON Online',
+  description: 'Step-by-step guide to formatting and validating JSON instantly in your browser.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste your JSON', text: 'Copy your minified or messy JSON and paste it into the input area. The formatter accepts any valid or invalid JSON string.' },
+    { '@type': 'HowToStep', position: 2, name: 'Choose indentation', text: 'Select 2 spaces, 4 spaces, or tabs from the options. This controls how the output is indented.' },
+    { '@type': 'HowToStep', position: 3, name: 'Click Format', text: 'Click the Format button. Valid JSON is immediately formatted with your chosen indentation. Syntax errors are highlighted with line numbers.' },
+    { '@type': 'HowToStep', position: 4, name: 'Copy or download', text: 'Click Copy to copy the formatted JSON to your clipboard, or Download to save it as a .json file.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -114,6 +128,7 @@ export default function JsonFormatter() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <JsonFormatterClient />
 

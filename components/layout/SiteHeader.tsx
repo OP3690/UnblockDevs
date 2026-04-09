@@ -182,9 +182,12 @@ export default function SiteHeader() {
                 onClick={openSearch}
                 title="Search tools (press /)"
                 aria-label="Search tools"
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-700"
+                className="flex h-8 items-center gap-1.5 rounded-lg border border-zinc-200 px-2.5 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-700"
               >
-                <Search className="h-3.5 w-3.5" />
+                <Search className="h-3.5 w-3.5 shrink-0" />
+                <kbd className="hidden sm:inline-flex items-center rounded border border-zinc-300 bg-zinc-100 px-1 py-0.5 font-mono text-[10px] text-zinc-400">
+                  /
+                </kbd>
               </button>
             )}
             {/* Search results dropdown */}
