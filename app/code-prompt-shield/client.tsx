@@ -93,6 +93,61 @@ const DEFAULT_EXAMPLE = `function getUserEmail(userId) {
   return fetchCustomerEmail(userId, apiKey);
 }`;
 
+const CODE_SAMPLES: { label: string; lang: string; code: string }[] = [
+  {
+    label: '🐍 Python DB',
+    lang: 'python',
+    code: `import psycopg2
+
+def get_user_orders(user_email: str):
+    conn = psycopg2.connect(
+        host="prod-db.internal.company.com",
+        database="ecommerce_prod",
+        user="app_service",
+        password="Sup3r$ecretPw!"
+    )
+    cursor = conn.cursor()
+    cursor.execute(
+        "SELECT order_id, total_amount FROM orders WHERE customer_email = %s",
+        (user_email,)
+    )
+    return cursor.fetchall()`,
+  },
+  {
+    label: '🔷 TypeScript API',
+    lang: 'typescript',
+    code: `import axios from 'axios';
+
+const OPENAI_API_KEY = 'sk-proj-abc123xyz456';
+const STRIPE_SECRET = 'sk_live_51Abc123';
+
+export async function analyzeCustomerSentiment(customerId: string): Promise<string> {
+  const response = await axios.post('https://api.openai.com/v1/completions', {
+    model: 'gpt-4',
+    prompt: \`Analyze sentiment for customer \${customerId}\`,
+  }, {
+    headers: { Authorization: \`Bearer \${OPENAI_API_KEY}\` }
+  });
+  return response.data.choices[0].text;
+}`,
+  },
+  {
+    label: '🗄️ SQL query',
+    lang: 'sql',
+    code: `SELECT
+  u.user_id, u.email, u.full_name,
+  COUNT(o.order_id) AS total_orders,
+  SUM(o.amount) AS lifetime_value
+FROM production.users u
+LEFT JOIN production.orders o ON o.user_id = u.user_id
+WHERE u.signup_date >= '2024-01-01'
+  AND u.account_status = 'ACTIVE'
+GROUP BY u.user_id, u.email, u.full_name
+HAVING SUM(o.amount) > 1000
+ORDER BY lifetime_value DESC;`,
+  },
+];
+
 /** Deterministic placeholder: same original + prefix → same masked token (consistent across sessions). */
 function ensureMask(
   original: string,
@@ -444,13 +499,16 @@ export default function CodePromptShieldClient() {
               <Shield className="w-4 h-4" aria-hidden />
               Mask code
             </button>
-            <button
-              type="button"
-              onClick={() => { trackCtaClick('code_prompt_shield', 'try_example'); setSourceCode(DEFAULT_EXAMPLE); }}
-              className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors"
-            >
-              Sample
-            </button>
+            {CODE_SAMPLES.map((s) => (
+              <button
+                key={s.label}
+                type="button"
+                onClick={() => { trackCtaClick('code_prompt_shield', 'try_example'); setSourceCode(s.code); setLanguage(s.lang as LangId); }}
+                className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors"
+              >
+                {s.label}
+              </button>
+            ))}
           </div>
         </section>
 

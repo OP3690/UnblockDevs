@@ -29,6 +29,46 @@ const DEFAULT_EXAMPLE = `{
   ]
 }`;
 
+const JSON_SAMPLES: { label: string; value: string }[] = [
+  {
+    label: '👤 User profile',
+    value: JSON.stringify({
+      userId: "usr_8f3a9c12",
+      email: "alice.johnson@company.com",
+      fullName: "Alice Johnson",
+      phoneNumber: "+1-415-555-0192",
+      role: "admin",
+      department: "engineering",
+      apiKey: "sk-prod-x9kLmN3pQrSt",
+      lastLogin: "2024-03-15T09:23:00Z",
+    }, null, 2),
+  },
+  {
+    label: '🛒 Order payload',
+    value: JSON.stringify({
+      orderId: "ord_20240315_8821",
+      customerId: "cust_88f23a",
+      customerEmail: "bob.smith@example.org",
+      shippingAddress: { street: "123 Main St", city: "San Francisco", zip: "94105" },
+      items: [
+        { sku: "PRD-001", productName: "Wireless Headphones", quantity: 2, unitPrice: 79.99 },
+      ],
+      paymentToken: "tok_visa_4242",
+      totalAmount: 159.98,
+    }, null, 2),
+  },
+  {
+    label: '⚙️ App config',
+    value: JSON.stringify({
+      appName: "payment-service",
+      environment: "production",
+      database: { host: "prod-db.internal.company.com", name: "payments_prod", user: "svc_payments" },
+      jwt: { secret: "super-secret-jwt-key-abc123", expiresIn: "24h" },
+      stripe: { publishableKey: "pk_live_abc123", webhookSecret: "whsec_xyz789" },
+    }, null, 2),
+  },
+];
+
 export default function JsonPromptShieldClient() {
   const [input, setInput] = useState<string>(DEFAULT_EXAMPLE);
   const [maskedOutput, setMaskedOutput] = useState<string>('');
@@ -234,20 +274,32 @@ export default function JsonPromptShieldClient() {
 
             <div className="grid gap-4 lg:grid-cols-2">
               <div id="json-shield-input" className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col min-h-[220px]">
-                <div className="flex items-center justify-between px-4 py-2 border-b border-slate-100 bg-slate-50/50">
+                <div className="flex flex-wrap items-center justify-between gap-1.5 px-4 py-2 border-b border-slate-100 bg-slate-50/50">
                   <span className="text-sm font-semibold text-slate-900">Original JSON</span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (input.trim()) setInput('');
-                      else setInput(DEFAULT_EXAMPLE);
-                      document.getElementById('json-shield-input')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50"
-                  >
-                    <RefreshCw className="w-3.5 h-3.5" />
-                    {input.trim() ? 'Clear' : 'Example'}
-                  </button>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {JSON_SAMPLES.map((s) => (
+                      <button
+                        key={s.label}
+                        type="button"
+                        onClick={() => setInput(s.value)}
+                        className="inline-flex items-center gap-1 px-2 py-1 rounded-lg border border-violet-200 bg-violet-50 text-xs font-medium text-violet-700 hover:bg-violet-100 transition-colors"
+                      >
+                        {s.label}
+                      </button>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (input.trim()) setInput('');
+                        else setInput(DEFAULT_EXAMPLE);
+                        document.getElementById('json-shield-input')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      }}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50"
+                    >
+                      <RefreshCw className="w-3.5 h-3.5" />
+                      {input.trim() ? 'Clear' : 'Example'}
+                    </button>
+                  </div>
                 </div>
                 <textarea
                   value={input}

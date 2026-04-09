@@ -78,6 +78,46 @@ WHERE o.created_at >= '2026-01-01'
   AND o.status = 'COMPLETED';
 `;
 
+const SAMPLE_CTE = `WITH monthly_revenue AS (
+  SELECT
+    DATE_TRUNC('month', t.transaction_date) AS month,
+    p.product_category,
+    SUM(t.sale_amount) AS total_revenue,
+    COUNT(DISTINCT t.customer_id) AS unique_customers
+  FROM transactions t
+  JOIN products p ON p.product_id = t.product_id
+  WHERE t.transaction_date >= '2025-01-01'
+  GROUP BY 1, 2
+)
+SELECT month, product_category, total_revenue, unique_customers,
+       ROUND(total_revenue / unique_customers, 2) AS revenue_per_customer
+FROM monthly_revenue
+ORDER BY month DESC, total_revenue DESC;
+`;
+
+const SAMPLE_UPDATE = `UPDATE customer_accounts ca
+SET ca.account_status = 'SUSPENDED',
+    ca.suspension_reason = 'PAYMENT_OVERDUE',
+    ca.updated_at = NOW()
+FROM billing_records br
+WHERE br.account_id = ca.account_id
+  AND br.days_overdue > 90
+  AND ca.account_type != 'ENTERPRISE';
+`;
+
+const SAMPLE_JSON_SCHEMA = `{
+  "tableName": "employee_records",
+  "schema": "hr",
+  "columns": [
+    { "name": "employee_id", "type": "UUID", "primaryKey": true },
+    { "name": "full_name", "type": "VARCHAR(255)", "nullable": false },
+    { "name": "department_code", "type": "VARCHAR(10)", "foreignKey": "departments.dept_code" },
+    { "name": "annual_salary", "type": "DECIMAL(12,2)", "sensitive": true },
+    { "name": "performance_score", "type": "FLOAT" },
+    { "name": "hire_date", "type": "DATE" }
+  ]
+}`;
+
 export default function AiSchemaMaskerClient() {
   const [input, setInput] = useState<string>(DEFAULT_EXAMPLE);
   const [maskedOutput, setMaskedOutput] = useState<string>('');
@@ -517,7 +557,22 @@ export default function AiSchemaMaskerClient() {
                 <h3 className="text-sm font-semibold text-slate-900">Original input</h3>
                 <p className="text-xs text-slate-500 mt-0.5">SQL, procedures,<br />CTEs, or JSON (up to ~5MB)</p>
               </div>
-              <div className="flex items-center justify-end gap-2 ml-auto flex-shrink-0">
+              <div className="flex flex-wrap items-center justify-end gap-2 ml-auto flex-shrink-0">
+                {[
+                  { label: '🔗 JOIN query', data: DEFAULT_EXAMPLE },
+                  { label: '📊 CTE', data: SAMPLE_CTE },
+                  { label: '✏️ UPDATE', data: SAMPLE_UPDATE },
+                  { label: '📋 JSON schema', data: SAMPLE_JSON_SCHEMA },
+                ].map((s) => (
+                  <button
+                    key={s.label}
+                    type="button"
+                    onClick={() => { trackCtaClick('ai_schema_masker', 'load_example'); setInput(s.data); }}
+                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-primary-200 bg-primary-50 text-xs font-medium text-primary-700 hover:bg-primary-100 transition-colors"
+                  >
+                    {s.label}
+                  </button>
+                ))}
                 <button
                   type="button"
                   onClick={() => {
@@ -528,7 +583,7 @@ export default function AiSchemaMaskerClient() {
                   className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-200 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 hover:border-slate-300 transition-colors"
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
-                  {input.trim() ? 'Clear example' : 'See clear example'}
+                  {input.trim() ? 'Clear' : 'Example'}
                 </button>
                 <button
                   type="button"
