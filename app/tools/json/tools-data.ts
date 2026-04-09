@@ -332,6 +332,14 @@ export const TOOLS_DIRECTORY: DirectoryTool[] = [
     category: 'dev',
     icon: 'Clock',
   },
+  {
+    href: '/svg-to-image',
+    name: 'SVG to image',
+    description: 'Convert SVG files to PNG or JPEG instantly, right in the browser.',
+    category: 'dev',
+    icon: 'Download',
+    badge: 'new',
+  },
 ];
 
 export const TOOL_COUNT = TOOLS_DIRECTORY.length;

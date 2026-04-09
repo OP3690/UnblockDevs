@@ -18,7 +18,7 @@ const TABS: { id: Cat; label: string }[] = [
 type MiniDef = {
   label: string;
   cats: Cat[];
-  variant?: 'ai' | 'hot';
+  variant?: 'ai' | 'hot' | 'new';
   href: string;
 };
 
@@ -56,6 +56,13 @@ export default function HomePrivacyFirstSections({
       { label: 'Speed Test', cats: ['all', 'dev'], href: '/speed-test' },
       { label: 'Timezone', cats: ['all', 'dev'], href: toolPageUrls.timezone },
       { label: 'Schema Gen', cats: ['all', 'json'], href: toolPageUrls.schema },
+      { label: 'SVG to Image', cats: ['all', 'dev'], variant: 'new', href: '/svg-to-image' },
+      { label: 'Data Insights', cats: ['all', 'dev'], variant: 'new', href: '/data-insights' },
+      { label: 'Password Audit', cats: ['all', 'dev', 'encode'], variant: 'new', href: '/password-audit' },
+      { label: 'JSON Stringify', cats: ['all', 'json'], href: '/json-stringify-online' },
+      { label: 'Payload Analyzer', cats: ['all', 'api'], href: toolPageUrls.payload },
+      { label: 'API Comparator', cats: ['all', 'api'], href: toolPageUrls.comparator },
+      { label: 'Config Compare', cats: ['all', 'api', 'dev'], href: toolPageUrls.config },
     ],
     [toolPageUrls],
   );
@@ -210,13 +217,20 @@ export default function HomePrivacyFirstSections({
                 ? 'bg-blue-500'
                 : t.variant === 'hot'
                   ? 'bg-amber-500'
-                  : 'bg-zinc-300';
+                  : t.variant === 'new'
+                    ? 'bg-violet-500'
+                    : 'bg-zinc-300';
             const cls =
               'flex min-h-[44px] items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-2.5 text-left text-[13px] font-medium text-zinc-700 transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900';
             return (
               <Link key={t.label} href={t.href!} className={cls}>
                 <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${dot}`} aria-hidden />
-                {t.label}
+                <span className="flex-1 leading-tight">{t.label}</span>
+                {t.variant === 'new' && (
+                  <span className="shrink-0 rounded-full bg-violet-100 px-1.5 py-0.5 font-mono text-[9px] font-semibold text-violet-700">
+                    NEW
+                  </span>
+                )}
               </Link>
             );
           })}

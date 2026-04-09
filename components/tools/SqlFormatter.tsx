@@ -251,6 +251,19 @@ export default function SqlFormatter() {
 
   const cleanedCount = cleanIds(parseInput(input)).length;
 
+  // ⌘+Enter / Ctrl+Enter keyboard shortcut to format
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        if (input.trim()) formatInput();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [input]);
+
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const params = new URLSearchParams(window.location.search);
@@ -567,6 +580,9 @@ export default function SqlFormatter() {
             >
               <Database className="w-5 h-5" aria-hidden style={dark ? (!input.trim() ? { color: 'var(--dev-text-muted)', fill: 'var(--dev-text-muted)' } : { color: '#0f172a', fill: '#0f172a', stroke: '#0f172a' }) : undefined} />
               Format
+              <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border border-sky-400/60 bg-sky-500/20 px-1.5 py-0.5 font-mono text-[10px] font-normal text-sky-100">
+                ⌘↵
+              </kbd>
             </button>
             <button
               onClick={handleClear}
