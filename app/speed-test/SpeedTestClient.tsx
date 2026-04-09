@@ -316,6 +316,23 @@ export default function SpeedTestClient() {
     });
   }
 
+  function exportHistoryCSV() {
+    if (!history.length) return;
+    const header = 'date,download_mbps,upload_mbps,ping_ms,jitter_ms';
+    const rows = history.map((e) => {
+      const d = new Date(e.at);
+      return `${d.toISOString()},${e.download.toFixed(1)},${e.upload.toFixed(1)},${e.ping},${e.jitter}`;
+    });
+    const csv = [header, ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'speed-test-history.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   const rating = download ? getSpeedRating(download) : null;
   const capabilities =
     download !== null && ping !== null ? getCapabilities(download, ping) : [];
@@ -662,10 +679,19 @@ export default function SpeedTestClient() {
               className="animate-speed-fade-in-up rounded-2xl border border-gray-800 bg-gray-900/40 p-4 opacity-0"
               style={{ animationDelay: '350ms', animationFillMode: 'forwards' }}
             >
-              <h2 className="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-gray-300">
-                <History className="h-4 w-4" />
-                Recent tests
-              </h2>
+              <div className="mb-3 flex items-center justify-between">
+                <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-gray-300">
+                  <History className="h-4 w-4" />
+                  Recent tests
+                </h2>
+                <button
+                  type="button"
+                  onClick={exportHistoryCSV}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-700 bg-zinc-800/60 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:bg-zinc-700/80 hover:text-white transition-colors"
+                >
+                  Export CSV
+                </button>
+              </div>
               <ul className="space-y-2">
                 {history.slice(0, 4).map((entry, i) => (
                   <li

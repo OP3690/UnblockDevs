@@ -31,6 +31,53 @@ const SAMPLE_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200
   <path d="M80 100 L95 115 L130 80" fill="none" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
 
+const EXTRA_SAMPLES: { label: string; emoji: string; svg: string }[] = [
+  {
+    label: 'Star',
+    emoji: '⭐',
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#ef4444"/>
+    </linearGradient>
+  </defs>
+  <polygon points="100,15 120,70 180,70 132,107 150,165 100,130 50,165 68,107 20,70 80,70" fill="url(#sg)" stroke="#92400e" stroke-width="2"/>
+</svg>`,
+  },
+  {
+    label: 'Bar chart',
+    emoji: '📊',
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 160" width="200" height="160">
+  <rect x="20" y="100" width="30" height="40" rx="4" fill="#3b82f6"/>
+  <rect x="65" y="60" width="30" height="80" rx="4" fill="#6366f1"/>
+  <rect x="110" y="30" width="30" height="110" rx="4" fill="#8b5cf6"/>
+  <rect x="155" y="75" width="30" height="65" rx="4" fill="#ec4899"/>
+  <line x1="10" y1="140" x2="195" y2="140" stroke="#94a3b8" stroke-width="2"/>
+  <text x="35" y="155" font-size="10" text-anchor="middle" fill="#64748b">Q1</text>
+  <text x="80" y="155" font-size="10" text-anchor="middle" fill="#64748b">Q2</text>
+  <text x="125" y="155" font-size="10" text-anchor="middle" fill="#64748b">Q3</text>
+  <text x="170" y="155" font-size="10" text-anchor="middle" fill="#64748b">Q4</text>
+</svg>`,
+  },
+  {
+    label: 'Logo ring',
+    emoji: '🔵',
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="lr" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#0ea5e9"/>
+    </linearGradient>
+  </defs>
+  <circle cx="100" cy="100" r="90" fill="none" stroke="url(#lr)" stroke-width="14"/>
+  <circle cx="100" cy="100" r="60" fill="none" stroke="#0ea5e9" stroke-width="6" stroke-dasharray="12 8"/>
+  <circle cx="100" cy="100" r="28" fill="#0ea5e9"/>
+  <text x="100" y="106" font-size="14" font-weight="bold" text-anchor="middle" fill="white">DEV</text>
+</svg>`,
+  },
+];
+
 function parseColor(input: string): string {
   const v = (input || '').trim();
   if (/^#[0-9A-Fa-f]{3,8}$/.test(v)) return v;
@@ -426,8 +473,18 @@ export default function SvgToImageClient() {
                     onClick={() => { trackCtaClick('svg_to_image', 'load_sample'); setSvgInput(SAMPLE_SVG); }}
                     className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-400"
                   >
-                    Sample
+                    ✅ Default
                   </button>
+                  {EXTRA_SAMPLES.map((s) => (
+                    <button
+                      key={s.label}
+                      type="button"
+                      onClick={() => { trackCtaClick('svg_to_image', 'load_sample'); setSvgInput(s.svg); }}
+                      className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-400"
+                    >
+                      {s.emoji} {s.label}
+                    </button>
+                  ))}
                   <button
                     type="button"
                     onClick={() => {

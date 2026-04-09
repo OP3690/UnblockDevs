@@ -250,6 +250,77 @@ function SortableMetricItem({
   );
 }
 
+const SAMPLE_DATASETS: { label: string; emoji: string; name: string; csv: string }[] = [
+  {
+    label: 'Sales',
+    emoji: '💰',
+    name: 'sales-q1-2026.csv',
+    csv: `date,region,product,quantity,unit_price,revenue,discount_pct
+2026-01-05,North,Widget A,120,49.99,5998.80,5
+2026-01-07,South,Widget B,85,79.99,6799.15,0
+2026-01-10,East,Widget A,200,49.99,9998.00,10
+2026-01-12,West,Widget C,45,149.99,6749.55,0
+2026-01-15,North,Widget B,60,79.99,4799.40,5
+2026-01-18,South,Widget C,30,149.99,4499.70,0
+2026-01-20,East,Widget B,110,79.99,8798.90,0
+2026-01-22,West,Widget A,180,49.99,8998.20,5
+2026-02-02,North,Widget C,55,149.99,8249.45,10
+2026-02-05,South,Widget A,95,49.99,4749.05,0
+2026-02-08,East,Widget C,40,149.99,5999.60,5
+2026-02-12,West,Widget B,75,79.99,5999.25,0
+2026-02-15,North,Widget A,160,49.99,7998.40,0
+2026-02-18,South,Widget B,90,79.99,7199.10,5
+2026-02-22,East,Widget A,130,49.99,6498.70,0
+2026-03-01,West,Widget C,65,149.99,9749.35,10
+2026-03-05,North,Widget B,100,79.99,7999.00,0
+2026-03-10,South,Widget C,50,149.99,7499.50,5
+2026-03-15,East,Widget B,140,79.99,11198.60,0
+2026-03-20,West,Widget A,210,49.99,10497.90,0`,
+  },
+  {
+    label: 'Users',
+    emoji: '👥',
+    name: 'users-analytics.csv',
+    csv: `user_id,country,plan,age,signup_date,monthly_spend,sessions,is_active
+1001,India,pro,28,2025-03-12,29.99,45,true
+1002,USA,free,34,2025-01-05,0,12,true
+1003,UK,enterprise,41,2024-11-20,299.99,120,true
+1004,India,pro,25,2025-06-01,29.99,88,true
+1005,Germany,free,30,2025-02-14,0,3,false
+1006,USA,pro,27,2025-04-08,29.99,67,true
+1007,Brazil,free,22,2025-07-19,0,9,true
+1008,India,enterprise,38,2024-09-03,299.99,200,true
+1009,Canada,pro,31,2025-05-25,29.99,54,false
+1010,France,free,29,2025-08-01,0,18,true
+1011,India,free,24,2025-09-10,0,6,true
+1012,USA,enterprise,45,2024-07-14,299.99,175,true
+1013,UK,pro,33,2025-03-30,29.99,42,true
+1014,Australia,pro,26,2025-06-15,29.99,91,true
+1015,India,pro,35,2025-01-22,29.99,77,true`,
+  },
+  {
+    label: 'Orders',
+    emoji: '📦',
+    name: 'ecommerce-orders.csv',
+    csv: `order_id,customer_id,category,status,amount,shipping_days,rating
+ORD-001,C100,Electronics,delivered,12999,3,5
+ORD-002,C101,Clothing,delivered,2499,5,4
+ORD-003,C102,Electronics,shipped,8499,2,
+ORD-004,C100,Books,delivered,599,7,5
+ORD-005,C103,Home,cancelled,4999,0,
+ORD-006,C104,Electronics,delivered,34999,2,5
+ORD-007,C101,Clothing,delivered,1299,4,3
+ORD-008,C105,Books,delivered,799,6,4
+ORD-009,C102,Home,delivered,6999,3,4
+ORD-010,C103,Electronics,shipped,15999,1,
+ORD-011,C106,Clothing,delivered,3499,5,5
+ORD-012,C100,Electronics,delivered,24999,2,4
+ORD-013,C107,Books,returned,449,0,2
+ORD-014,C104,Home,delivered,9999,3,5
+ORD-015,C105,Electronics,delivered,5499,4,3`,
+  },
+];
+
 export default function DataInsights() {
   const [data, setData] = useState<DataRow[]>([]);
   const [columns, setColumns] = useState<Column[]>([]);
@@ -917,7 +988,29 @@ export default function DataInsights() {
               >
                 <Upload className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                 <p className="text-lg text-gray-700 mb-2">Drag & Drop Zone</p>
-                <p className="text-sm text-gray-500 mb-4">or</p>
+                <p className="text-sm text-gray-500 mb-2">or try a sample dataset</p>
+                <div className="flex flex-wrap justify-center gap-2 mb-4">
+                  {SAMPLE_DATASETS.map((s) => (
+                    <button
+                      key={s.label}
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        trackCtaClick('data_insights', 'load_sample');
+                        const result = parseCSV(s.csv);
+                        setColumns(result.columns);
+                        setData(result.rows);
+                        setDatasetName(s.name);
+                        setActiveStep('preview');
+                        toast.success(`Loaded ${s.label} sample (${result.rows.length} rows)`);
+                      }}
+                      className="px-3 py-1.5 text-sm font-medium bg-primary-50 border border-primary-200 text-primary-700 rounded-lg hover:bg-primary-100 transition-colors"
+                    >
+                      {s.emoji} {s.label}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-sm text-gray-500 mb-4">or upload your file</p>
                 <input
                   type="file"
                   accept=".csv,.xlsx,.xls,.json"
