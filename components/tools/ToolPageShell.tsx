@@ -1,8 +1,8 @@
 'use client';
 
-import { type ReactNode, useEffect } from 'react';
+import { type ReactNode, useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Lock, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Lock, ChevronRight, Share2, Check } from 'lucide-react';
 import type { BreadcrumbItem } from '@/components/Breadcrumb';
 import FeedbackNewsletterSplit from '@/components/home/FeedbackNewsletterSplit';
 
@@ -91,6 +91,21 @@ export default function ToolPageShell({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const [shared, setShared] = useState(false);
+
+  const handleShare = useCallback(async () => {
+    const url = typeof window !== 'undefined' ? window.location.href : '';
+    try {
+      if (navigator.share) {
+        await navigator.share({ title, url });
+      } else {
+        await navigator.clipboard.writeText(url);
+        setShared(true);
+        setTimeout(() => setShared(false), 2000);
+      }
+    } catch { /* user cancelled or clipboard blocked */ }
+  }, [title]);
+
   return (
     <div className="w-full">
       {/* ── Header ─────────────────────────────────────────── */}
@@ -118,9 +133,31 @@ export default function ToolPageShell({
               </div>
             )}
             <div className="min-w-0 flex-1">
-              <h1 className="text-[1.5rem] font-bold leading-[1.15] tracking-[-0.03em] text-zinc-900 sm:text-[1.85rem] lg:text-[2.15rem]">
-                {title}
-              </h1>
+              <div className="flex items-start justify-between gap-2">
+                <h1 className="text-[1.5rem] font-bold leading-[1.15] tracking-[-0.03em] text-zinc-900 sm:text-[1.85rem] lg:text-[2.15rem]">
+                  {title}
+                </h1>
+                {/* Share button */}
+                <button
+                  type="button"
+                  onClick={handleShare}
+                  aria-label="Share this tool"
+                  title="Copy link to this tool"
+                  className="mt-1 flex shrink-0 touch-manipulation items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 text-[11.5px] font-medium text-zinc-500 shadow-sm transition-all hover:border-emerald-300 hover:text-emerald-700"
+                >
+                  {shared ? (
+                    <>
+                      <Check className="h-3.5 w-3.5 text-emerald-600" aria-hidden />
+                      <span className="hidden sm:inline">Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Share2 className="h-3.5 w-3.5" aria-hidden />
+                      <span className="hidden sm:inline">Share</span>
+                    </>
+                  )}
+                </button>
+              </div>
               {subtitle && (
                 <p className="mt-2 max-w-[52rem] text-[13.5px] sm:text-[14.5px] leading-relaxed text-zinc-500">
                   {subtitle}
