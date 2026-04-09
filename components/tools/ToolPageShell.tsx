@@ -1,10 +1,28 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import { type ReactNode, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Lock, ChevronRight } from 'lucide-react';
 import type { BreadcrumbItem } from '@/components/Breadcrumb';
 import FeedbackNewsletterSplit from '@/components/home/FeedbackNewsletterSplit';
+
+const UD_RECENT_KEY = 'ud_recent_tools';
+const MAX_RECENT = 8;
+
+function recordToolVisit(title: string) {
+  if (typeof window === 'undefined') return;
+  try {
+    const href = window.location.pathname;
+    if (!href || href === '/') return;
+    type RecentEntry = { href: string; title: string; ts: number };
+    const existing: RecentEntry[] = JSON.parse(localStorage.getItem(UD_RECENT_KEY) || '[]');
+    const filtered = existing.filter((e) => e.href !== href);
+    const updated = [{ href, title, ts: Date.now() }, ...filtered].slice(0, MAX_RECENT);
+    localStorage.setItem(UD_RECENT_KEY, JSON.stringify(updated));
+  } catch {
+    // localStorage may be blocked
+  }
+}
 
 /** Feedback + newsletter + ad slot */
 export function ToolPageFooterBand({
@@ -67,6 +85,12 @@ export default function ToolPageShell({
   icon,
   features = DEFAULT_FEATURES,
 }: ToolPageShellProps) {
+  // Track this tool visit for the "Recently Used" homepage widget
+  useEffect(() => {
+    recordToolVisit(title);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="w-full">
       {/* ── Header ─────────────────────────────────────────── */}

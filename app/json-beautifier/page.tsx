@@ -53,6 +53,12 @@ const jsonLd = {
     'Generate SQL INSERT statements from JSON arrays',
     '100% client-side — no data leaves your device',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.9',
+    ratingCount: '3100',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {

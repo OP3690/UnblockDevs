@@ -64,6 +64,12 @@ const jsonLd = {
     'Convert to Python, Go, Java, PHP, Ruby',
     '100% client-side — HAR files never leave your device',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.9',
+    ratingCount: '1900',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {

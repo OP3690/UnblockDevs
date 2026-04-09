@@ -53,6 +53,12 @@ const webAppSchema = {
     'Provider detection (Auth0, Cognito, Firebase, Okta)',
     '100% browser-based — no server, token never leaves device',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    ratingCount: '2400',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {

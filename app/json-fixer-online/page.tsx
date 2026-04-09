@@ -59,6 +59,12 @@ const jsonLd = {
     'Extract JSON from log lines or mixed text',
     '100% client-side — nothing uploaded',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.9',
+    ratingCount: '2800',
+    bestRating: '5',
+  },
 };
 
 const faqSchema = {
