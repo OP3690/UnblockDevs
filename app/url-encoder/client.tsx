@@ -430,6 +430,37 @@ export default function UrlEncoderClient() {
               </section>
             )}
 
+            {/* All-standards comparison */}
+            {!bulkMode && input.trim() && mode !== 'decode' && (
+              <section className="rounded-xl border border-indigo-100 overflow-hidden">
+                <div className="flex items-center justify-between px-4 py-3 bg-indigo-50/60 border-b border-indigo-100">
+                  <span className="text-sm font-semibold text-indigo-900 flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 inline-block" />
+                    All encoding standards
+                  </span>
+                  <span className="text-xs text-indigo-500">Compare variants side-by-side</span>
+                </div>
+                <div className="divide-y divide-gray-100">
+                  {ENCODING_STANDARDS.map((s) => {
+                    const encoded = encodeByStandard(input.trim(), s.id);
+                    return (
+                      <div key={s.id} className={`flex items-start gap-3 px-4 py-3 ${standard === s.id ? 'bg-primary-50/50' : 'bg-white hover:bg-gray-50/60'}`}>
+                        <div className="min-w-[130px] shrink-0">
+                          <span className={`text-xs font-semibold ${standard === s.id ? 'text-primary-700' : 'text-gray-700'}`}>{s.label}</span>
+                          {standard === s.id && <span className="ml-1.5 text-[10px] bg-primary-100 text-primary-600 px-1 py-0.5 rounded font-medium">active</span>}
+                          {s.description && <p className="text-[10px] text-gray-400 mt-0.5 leading-snug">{s.description}</p>}
+                        </div>
+                        <code className="flex-1 min-w-0 break-all text-xs font-mono text-gray-800">{encoded}</code>
+                        <button type="button" onClick={() => copyToClipboard(encoded, `std-${s.id}`)} className="shrink-0 p-1.5 rounded-lg hover:bg-gray-200" title={`Copy ${s.label}`}>
+                          {copiedId === `std-${s.id}` ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-gray-400" />}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+
             {/* Code snippets */}
             <section className="rounded-xl border border-gray-200 overflow-hidden">
               <button type="button" onClick={() => setShowSnippets(!showSnippets)} className="w-full flex items-center justify-between p-4 text-left font-semibold text-gray-900 hover:bg-gray-50">

@@ -13,6 +13,7 @@ import {
   FileCode,
   Download,
   AlertCircle,
+  Scale,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy, trackCtaClick } from '@/lib/analytics';
@@ -40,6 +41,11 @@ export default function TruthTableGeneratorClient() {
   const [codeLang, setCodeLang] = useState('js');
   const [codeOpen, setCodeOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  // Equivalence checker
+  const [exprB, setExprB] = useState('');
+  const [equivResult, setEquivResult] = useState<{ equivalent: boolean; diffRows: number } | null>(null);
+  const [equivError, setEquivError] = useState<string | null>(null);
+  const [equivOpen, setEquivOpen] = useState(false);
 
   const insertAt = useCallback((sym: string) => {
     const inp = inputRef.current;
@@ -144,6 +150,53 @@ export default function TruthTableGeneratorClient() {
     setError(null);
     setResult(null);
     toast('Cleared');
+  };
+
+  const checkEquivalence = useCallback(() => {
+    setEquivError(null);
+    setEquivResult(null);
+    const a = expr.trim();
+    const b = exprB.trim();
+    if (!a || !b) { setEquivError('Enter both expressions.'); return; }
+    try {
+      const ra = generateTable(a);
+      const rb = generateTable(b);
+      // Align variables
+      const allVars = Array.from(new Set([...ra.vars, ...rb.vars])).sort();
+      if (allVars.some((v) => !ra.vars.includes(v) && !rb.vars.includes(v))) {
+        setEquivError('Expressions use incompatible variable sets.');
+        return;
+      }
+      const rowCount = Math.max(ra.numRows, rb.numRows);
+      let diffRows = 0;
+      for (let i = 0; i < rowCount; i++) {
+        const rowA = ra.rows[i];
+        const rowB = rb.rows[i];
+        if (!rowA || !rowB || rowA.res !== rowB.res) diffRows++;
+      }
+      setEquivResult({ equivalent: diffRows === 0, diffRows });
+      trackCtaClick('truth_table_generator', 'check_equivalence');
+    } catch (e) {
+      setEquivError(e instanceof Error ? e.message : 'Parse error');
+    }
+  }, [expr, exprB]);
+
+  const copySOP = () => {
+    if (!sop) return;
+    let text = '';
+    if (sop.type === '0') text = '0';
+    else if (sop.type === '1') text = '1';
+    else if (sop.type === 'terms') text = sop.terms?.map((term) => term.map((lit) => (lit.negated ? `¬${lit.literal}` : lit.literal)).join('·')).join(' + ') ?? '';
+    navigator.clipboard.writeText(text).then(() => { trackCopy('truth_table_generator'); toast.success('SOP copied'); });
+  };
+
+  const copyPOS = () => {
+    if (!pos) return;
+    let text = '';
+    if (pos.type === '0') text = '0';
+    else if (pos.type === '1') text = '1';
+    else if (pos.type === 'terms') text = pos.terms?.map((term) => `(${term.map((lit) => (lit.negated ? `¬${lit.literal}` : lit.literal)).join(' + ')})`).join('·') ?? '';
+    navigator.clipboard.writeText(text).then(() => { trackCopy('truth_table_generator'); toast.success('POS copied'); });
   };
 
   const isTaut = result ? result.trueCount === result.numRows : false;
@@ -253,10 +306,53 @@ export default function TruthTableGeneratorClient() {
               <button type="button" onClick={exportJSON} disabled={!result} className="inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-50">
                 <Download className="w-3.5 h-3.5" /> JSON
               </button>
+              <button type="button" onClick={() => setEquivOpen((o) => !o)} className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-medium transition-colors ${equivOpen ? 'border-violet-300 bg-violet-50 text-violet-700' : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'}`}>
+                <Scale className="w-3.5 h-3.5" /> Equivalence check
+              </button>
               <button type="button" onClick={clearAll} className="rounded-xl px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50">
                 Clear
               </button>
             </div>
+
+            {/* Equivalence checker panel */}
+            {equivOpen && (
+              <div className="rounded-xl border border-violet-200 bg-violet-50/50 p-4 space-y-3">
+                <div className="flex items-center gap-2">
+                  <Scale className="w-4 h-4 text-violet-600" />
+                  <span className="text-sm font-semibold text-violet-900">Expression Equivalence Checker</span>
+                </div>
+                <p className="text-xs text-violet-700">Compare two boolean expressions to see if they produce identical truth tables.</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-[10px] font-semibold text-violet-600 mb-1 uppercase tracking-wider">Expression A</label>
+                    <input type="text" value={expr} readOnly className="w-full rounded-lg border border-violet-200 bg-white/80 px-3 py-2 font-mono text-sm text-gray-700" />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-semibold text-violet-600 mb-1 uppercase tracking-wider">Expression B</label>
+                    <input
+                      type="text"
+                      value={exprB}
+                      onChange={(e) => { setExprB(e.target.value); setEquivResult(null); setEquivError(null); }}
+                      onKeyDown={(e) => e.key === 'Enter' && checkEquivalence()}
+                      placeholder="e.g. NOT (NOT A OR NOT B)"
+                      className="w-full rounded-lg border border-violet-200 bg-white px-3 py-2 font-mono text-sm focus:ring-2 focus:ring-violet-400"
+                    />
+                  </div>
+                </div>
+                <button type="button" onClick={checkEquivalence} disabled={!exprB.trim()}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 disabled:opacity-40 transition-colors">
+                  <Scale className="w-4 h-4" /> Check Equivalence
+                </button>
+                {equivError && <p className="text-sm text-red-700 flex items-center gap-1.5"><AlertCircle className="w-4 h-4" />{equivError}</p>}
+                {equivResult && (
+                  <div className={`rounded-xl border px-4 py-3 text-sm font-semibold ${equivResult.equivalent ? 'border-emerald-300 bg-emerald-50 text-emerald-800' : 'border-red-300 bg-red-50 text-red-800'}`}>
+                    {equivResult.equivalent
+                      ? '✓ Equivalent — both expressions produce identical truth tables.'
+                      : `✗ Not equivalent — ${equivResult.diffRows} row(s) differ.`}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Output */}
             {result && (
@@ -347,7 +443,10 @@ export default function TruthTableGeneratorClient() {
                 {/* SOP / POS */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="rounded-2xl border border-gray-200 bg-gray-50/50 p-4">
-                    <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Minterms Σm — Sum of Products (SOP)</div>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Minterms Σm — Sum of Products (SOP)</div>
+                      <button type="button" onClick={copySOP} disabled={!sop} className="inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium text-gray-500 hover:text-gray-800 border border-gray-200 rounded hover:bg-gray-100 disabled:opacity-30"><Copy className="w-2.5 h-2.5" />Copy</button>
+                    </div>
                     <div className="flex flex-wrap gap-1.5 mb-2">
                       {result.minterms.length ? result.minterms.map((m) => (
                         <span key={m} className="rounded-lg bg-emerald-100 text-emerald-800 px-2 py-0.5 text-xs font-mono">m{m}</span>
@@ -370,7 +469,10 @@ export default function TruthTableGeneratorClient() {
                     </div>
                   </div>
                   <div className="rounded-2xl border border-gray-200 bg-gray-50/50 p-4">
-                    <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Maxterms ΠM — Product of Sums (POS)</div>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Maxterms ΠM — Product of Sums (POS)</div>
+                      <button type="button" onClick={copyPOS} disabled={!pos} className="inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium text-gray-500 hover:text-gray-800 border border-gray-200 rounded hover:bg-gray-100 disabled:opacity-30"><Copy className="w-2.5 h-2.5" />Copy</button>
+                    </div>
                     <div className="flex flex-wrap gap-1.5 mb-2">
                       {result.maxterms.length ? result.maxterms.map((m) => (
                         <span key={m} className="rounded-lg bg-red-100 text-red-800 px-2 py-0.5 text-xs font-mono">M{m}</span>

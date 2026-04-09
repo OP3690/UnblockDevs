@@ -12,6 +12,9 @@ import {
   Trash2,
   Hash,
   ListOrdered,
+  BarChart2,
+  Zap,
+  ArrowUpDown,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy, trackCtaClick } from '@/lib/analytics';
@@ -43,6 +46,30 @@ const FORMAT_OPTIONS: { value: OutputFormatType; label: string }[] = [
   { value: 'mongodb', label: 'MongoDB' },
 ];
 
+const QUICK_SAMPLES = [
+  { label: '1–10', value: Array.from({ length: 10 }, (_, i) => i + 1).join(', ') },
+  { label: '1–50', value: Array.from({ length: 50 }, (_, i) => i + 1).join(', ') },
+  { label: 'Mixed (with dupes)', value: '5, 3, 1, 2, 3, 5, 7, 8, 7, 10\n12, 15, 12, 20' },
+  { label: 'Strings', value: 'alice\nbob\ncharlie\nalice\ndave' },
+];
+
+function computeInputStats(rawIds: string[], cleanedIds: string[]) {
+  const rawCount = rawIds.length;
+  const dupeCount = rawCount - cleanedIds.length;
+  const numericIds = cleanedIds.map(Number).filter((n) => !isNaN(n));
+  const isNumeric = numericIds.length === cleanedIds.length && cleanedIds.length > 0;
+  return {
+    rawCount,
+    cleanedCount: cleanedIds.length,
+    dupeCount,
+    isNumeric,
+    min: isNumeric ? Math.min(...numericIds) : null,
+    max: isNumeric ? Math.max(...numericIds) : null,
+    avg: isNumeric ? (numericIds.reduce((a, b) => a + b, 0) / numericIds.length).toFixed(1) : null,
+    range: isNumeric ? Math.max(...numericIds) - Math.min(...numericIds) : null,
+  };
+}
+
 export default function SqlInGeneratorClient() {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
@@ -58,6 +85,7 @@ export default function SqlInGeneratorClient() {
   const [showInsert, setShowInsert] = useState(false);
   const [ids, setIds] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
+  const [sortOutput, setSortOutput] = useState<'none' | 'asc' | 'desc'>('none');
 
   // Read ?ids= from URL on mount
   useEffect(() => {
@@ -117,14 +145,29 @@ export default function SqlInGeneratorClient() {
     ]
   );
 
+  const getSortedIds = useCallback((cleaned: string[]) => {
+    if (sortOutput === 'asc') return [...cleaned].sort((a, b) => {
+      const na = Number(a), nb = Number(b);
+      return !isNaN(na) && !isNaN(nb) ? na - nb : a.localeCompare(b);
+    });
+    if (sortOutput === 'desc') return [...cleaned].sort((a, b) => {
+      const na = Number(a), nb = Number(b);
+      return !isNaN(na) && !isNaN(nb) ? nb - na : b.localeCompare(a);
+    });
+    return cleaned;
+  }, [sortOutput]);
+
   const handleGenerate = useCallback(() => {
     trackCtaClick('sql_in_generator', 'generate');
     const parsed = parseInput(input);
     const cleaned = cleanIds(parsed);
-    generateOutput(cleaned);
-    if (cleaned.length > 0) toast.success(`${cleaned.length} ID(s) — duplicates removed, cleaned`);
-    else toast.error('No valid values found');
-  }, [input, generateOutput]);
+    const sorted = getSortedIds(cleaned);
+    generateOutput(sorted);
+    if (sorted.length > 0) {
+      const dupes = parsed.length - cleaned.length;
+      toast.success(`${sorted.length} ID(s)${dupes > 0 ? ` — ${dupes} duplicate(s) removed` : ''}`);
+    } else toast.error('No valid values found');
+  }, [input, generateOutput, getSortedIds]);
 
   // Re-run output when options change (use current ids)
   useEffect(() => {
@@ -173,19 +216,34 @@ export default function SqlInGeneratorClient() {
     toast.success('Share link copied to clipboard');
   };
 
-  const cleanedCount = cleanIds(parseInput(input)).length;
+  const rawParsed = parseInput(input);
+  const cleanedForStats = cleanIds(rawParsed);
+  const cleanedCount = cleanedForStats.length;
+  const inputStats = input.trim() ? computeInputStats(rawParsed, cleanedForStats) : null;
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         <div className="p-4 border-b border-gray-100">
-          <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-            <Database className="w-5 h-5 text-primary-600" />
-            Input — auto-detect: CSV, JSON array, newline, tab, mixed
-          </h2>
-          <p className="text-sm text-gray-600 mt-1">
-            Paste any list; we parse and clean (trim, remove duplicates, optional character strip).
-          </p>
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                <Database className="w-5 h-5 text-primary-600" />
+                Input — auto-detect: CSV, JSON array, newline, tab, mixed
+              </h2>
+              <p className="text-sm text-gray-600 mt-1">
+                Paste any list; we parse and clean (trim, remove duplicates, optional character strip).
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-1.5 shrink-0">
+              {QUICK_SAMPLES.map((s) => (
+                <button key={s.label} type="button" onClick={() => setInput(s.value)}
+                  className="px-2 py-1 text-xs font-medium rounded-lg bg-gray-100 text-gray-700 hover:bg-primary-100 hover:text-primary-700 transition-colors">
+                  {s.label}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
         <div className="p-4">
           <label htmlFor="sql-in-input" className="block text-sm font-medium text-gray-700 mb-1.5">
@@ -222,6 +280,40 @@ export default function SqlInGeneratorClient() {
               </span>
             )}
           </div>
+          {/* Input stats panel */}
+          {inputStats && inputStats.rawCount > 0 && (
+            <div className="mt-3 p-3 rounded-lg bg-blue-50 border border-blue-100">
+              <div className="flex items-center gap-1.5 mb-2">
+                <BarChart2 className="w-3.5 h-3.5 text-blue-600" />
+                <span className="text-xs font-semibold text-blue-800">Input Stats</span>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <div className="text-center">
+                  <div className="text-lg font-bold text-blue-700">{inputStats.rawCount}</div>
+                  <div className="text-[10px] text-blue-600">Raw values</div>
+                </div>
+                <div className="text-center">
+                  <div className={`text-lg font-bold ${inputStats.dupeCount > 0 ? 'text-amber-600' : 'text-emerald-600'}`}>{inputStats.dupeCount}</div>
+                  <div className="text-[10px] text-blue-600">Duplicates removed</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-lg font-bold text-emerald-700">{inputStats.cleanedCount}</div>
+                  <div className="text-[10px] text-blue-600">Unique values</div>
+                </div>
+                {inputStats.isNumeric && inputStats.range !== null && (
+                  <div className="text-center">
+                    <div className="text-lg font-bold text-violet-700">{inputStats.range}</div>
+                    <div className="text-[10px] text-blue-600">Range ({inputStats.min}–{inputStats.max})</div>
+                  </div>
+                )}
+              </div>
+              {inputStats.isNumeric && inputStats.avg && (
+                <div className="mt-1.5 text-xs text-blue-700 text-center">
+                  Min: <strong>{inputStats.min}</strong> · Max: <strong>{inputStats.max}</strong> · Avg: <strong>{inputStats.avg}</strong>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -396,6 +488,15 @@ export default function SqlInGeneratorClient() {
               )}
             </h3>
             <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => setSortOutput((s) => s === 'none' ? 'asc' : s === 'asc' ? 'desc' : 'none')}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg border transition-colors ${sortOutput !== 'none' ? 'bg-primary-100 border-primary-300 text-primary-700' : 'bg-gray-100 border-transparent text-gray-700 hover:bg-gray-200'}`}
+                title="Sort output values"
+              >
+                <ArrowUpDown className="w-4 h-4" />
+                {sortOutput === 'asc' ? 'A→Z' : sortOutput === 'desc' ? 'Z→A' : 'Sort'}
+              </button>
               <button
                 type="button"
                 onClick={handleCopy}
