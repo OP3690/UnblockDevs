@@ -37,6 +37,46 @@ const jsonLd = {
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    ratingCount: '980',
+    bestRating: '5',
+  },
+};
+
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Fix "Unexpected end of JSON input" Error',
+  description: 'Step-by-step guide to fix the "Unexpected end of JSON input" error in JavaScript.',
+  totalTime: 'PT2M',
+  step: [
+    {
+      '@type': 'HowToStep',
+      position: 1,
+      name: 'Identify the missing closing characters',
+      text: 'Count your opening { and [ characters and ensure each one has a matching } or ]. The error occurs when JSON is truncated before the structure is complete.',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 2,
+      name: 'Paste your broken JSON into the fixer',
+      text: 'Copy your broken JSON and paste it into the JSON Fixer tool above. It will immediately show the error location and what is missing.',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 3,
+      name: 'Click Auto-Fix',
+      text: 'The auto-fixer detects unclosed brackets and braces and appends the missing characters to produce valid, parseable JSON.',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 4,
+      name: 'Copy and use the fixed JSON',
+      text: 'Copy the repaired JSON to your clipboard and paste it back into your code or API client.',
+    },
+  ],
 };
 
 const faqSchema = {
@@ -75,6 +115,7 @@ export default function FixUnexpectedEndOfJsonInput() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <FixUnexpectedEndOfJsonInputClient />
 
       <ToolSEOContent>

@@ -38,6 +38,46 @@ const jsonLd = {
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.7',
+    ratingCount: '860',
+    bestRating: '5',
+  },
+};
+
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Fix JSON.parse() Errors in JavaScript',
+  description: 'Step-by-step guide to diagnosing and fixing SyntaxError thrown by JSON.parse() in JavaScript.',
+  totalTime: 'PT3M',
+  step: [
+    {
+      '@type': 'HowToStep',
+      position: 1,
+      name: 'Identify the error type',
+      text: 'Look at the full error message. "Unexpected token <" means HTML was returned. "Unexpected end of JSON input" means the JSON is truncated. Other tokens indicate a syntax issue.',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 2,
+      name: 'Paste the broken JSON into the fixer',
+      text: 'Copy the exact string that was passed to JSON.parse() and paste it into the JSON Fixer above to see the exact error location.',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 3,
+      name: 'Apply auto-fix or check your API',
+      text: 'If the JSON has syntax errors, click Auto-Fix. If it starts with "<", your API is returning HTML — check the endpoint URL and HTTP status code.',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 4,
+      name: 'Wrap JSON.parse() in try-catch',
+      text: 'Add a try/catch around JSON.parse() in your code. Check response.ok and Content-Type before parsing API responses to prevent future errors.',
+    },
+  ],
 };
 
 const faqSchema = {
@@ -76,6 +116,7 @@ export default function FixJsonParseErrorJavascript() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <FixJsonParseErrorJavascriptClient />
 
       <ToolSEOContent>

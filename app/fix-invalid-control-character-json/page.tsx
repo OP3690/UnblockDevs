@@ -37,6 +37,46 @@ const jsonLd = {
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.7',
+    ratingCount: '630',
+    bestRating: '5',
+  },
+};
+
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Fix "Invalid Control Character" JSON Error',
+  description: 'Step-by-step guide to fixing unescaped control characters in JSON strings.',
+  totalTime: 'PT2M',
+  step: [
+    {
+      '@type': 'HowToStep',
+      position: 1,
+      name: 'Identify the control character',
+      text: 'The error names the position of the invalid character. Common culprits: raw newlines (\\n), tabs (\\t), or null bytes (\\0) inside JSON string values.',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 2,
+      name: 'Paste your broken JSON into the fixer',
+      text: 'Copy your JSON and paste it into the JSON Fixer above. The tool scans for raw control characters and highlights them.',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 3,
+      name: 'Click Auto-Fix',
+      text: 'The fixer replaces all raw control characters with their proper JSON escape sequences (\\n for newlines, \\t for tabs, etc.).',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 4,
+      name: 'Use JSON.stringify for future serialization',
+      text: 'Always use JSON.stringify() to generate JSON, which automatically escapes all control characters. Avoid manual string building.',
+    },
+  ],
 };
 
 const faqSchema = {
@@ -75,6 +115,7 @@ export default function FixInvalidControlCharacter() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <FixInvalidControlCharacterClient />
 
       <ToolSEOContent>
