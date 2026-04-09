@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useMemo, useCallback } from 'react';
-import { Settings, Eye, EyeOff, Copy, Download, FileCode, Filter, Plus, Minus, RefreshCw, GitDiff } from 'lucide-react';
+import { Settings, Eye, EyeOff, Copy, Download, FileCode, Filter, Plus, Minus, RefreshCw, ArrowRightLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { validateJson } from '@/lib/jsonParser';
 import { trackCtaClick, trackCopy } from '@/lib/analytics';
@@ -282,7 +282,7 @@ export default function ConfigComparator() {
           disabled={!config1.trim() || !config2.trim()}
           className="w-full py-2.5 bg-primary-600 text-white rounded-lg font-semibold text-sm hover:bg-primary-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
         >
-          <GitDiff className="w-4 h-4" /> Compare Configs
+          <ArrowRightLeft className="w-4 h-4" /> Compare Configs
         </button>
       </div>
 
