@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import { Copy, Scissors, Download, Settings, Info, ChevronDown, ChevronUp, CheckCircle2, Sparkles, BarChart3, Shield, FileText } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
@@ -177,6 +177,37 @@ export default function PromptChunker() {
     setSimplifiedResult(null);
     toast.success('Cleared');
   };
+
+  const copyChunksAsJson = () => {
+    const arr = chunks.map((c) => c.content);
+    navigator.clipboard.writeText(JSON.stringify(arr, null, 2));
+    trackCopy('prompt_chunker');
+    toast.success('Chunks copied as JSON array');
+  };
+
+  const downloadChunksMarkdown = () => {
+    const md = chunks
+      .map((c, i) => `## Chunk ${i + 1}/${chunks.length} (${c.wordCount} words)\n\n${c.content}`)
+      .join('\n\n---\n\n');
+    const blob = new Blob([md], { type: 'text/markdown' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `chunks-${Date.now()}.md`;
+    a.click();
+    toast.success('Chunks downloaded as Markdown');
+  };
+
+  // Live estimated chunk count
+  const liveEstimate = useMemo(() => {
+    if (!prompt.trim()) return null;
+    const words = prompt.trim().split(/\s+/).length;
+    const chars = prompt.length;
+    const effectiveSize = chunkSize * (1 - overlap / 100);
+    const estChunks = chunkType === 'words'
+      ? Math.max(1, Math.ceil(words / effectiveSize))
+      : Math.max(1, Math.ceil(chars / effectiveSize));
+    return { words, chars, estChunks };
+  }, [prompt, chunkSize, chunkType, overlap]);
 
   const runSimplify = () => {
     if (!prompt.trim()) {
@@ -408,6 +439,12 @@ export default function PromptChunker() {
             <span>{totalWords} words</span>
             <span>•</span>
             <span>{totalChars} characters</span>
+            {liveEstimate && tabMode === 'chunk' && (
+              <>
+                <span>•</span>
+                <span className="font-semibold text-purple-600">~{liveEstimate.estChunks} chunk{liveEstimate.estChunks !== 1 ? 's' : ''}</span>
+              </>
+            )}
           </div>
         </div>
         
@@ -548,7 +585,7 @@ export default function PromptChunker() {
             <h3 className="text-lg font-semibold text-gray-900">
               Generated Chunks ({chunks.length})
             </h3>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <button
                 type="button"
                 onClick={copyAllChunks}
@@ -559,11 +596,29 @@ export default function PromptChunker() {
               </button>
               <button
                 type="button"
+                onClick={copyChunksAsJson}
+                className="flex items-center gap-2 px-3 py-2 bg-violet-600 text-white rounded-lg font-semibold hover:bg-violet-700 transition-colors text-sm"
+                title="Copy all chunks as a JSON array"
+              >
+                <Copy className="w-4 h-4" />
+                JSON
+              </button>
+              <button
+                type="button"
                 onClick={downloadChunks}
-                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors text-sm"
+                className="flex items-center gap-2 px-3 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors text-sm"
               >
                 <Download className="w-4 h-4" />
-                Download
+                .txt
+              </button>
+              <button
+                type="button"
+                onClick={downloadChunksMarkdown}
+                className="flex items-center gap-2 px-3 py-2 bg-slate-600 text-white rounded-lg font-semibold hover:bg-slate-700 transition-colors text-sm"
+                title="Download as Markdown file"
+              >
+                <Download className="w-4 h-4" />
+                .md
               </button>
             </div>
           </div>

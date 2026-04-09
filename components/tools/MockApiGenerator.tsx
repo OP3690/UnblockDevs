@@ -29,6 +29,54 @@ const AUTH_TYPES: { value: AuthType; label: string }[] = [
   { value: 'basic', label: 'Basic Auth' },
 ];
 
+const PRESETS: Array<{ name: string; emoji: string; updates: Partial<MockApiConfig> }> = [
+  {
+    name: 'User CRUD',
+    emoji: '👤',
+    updates: {
+      endpoint: '/api/users', method: 'GET', statusCode: 200, latencyMs: 150,
+      authType: 'bearer', responseMode: 'template', itemCount: 10,
+      responseJson: '{\n  "id": "{{id}}",\n  "name": "{{name}}",\n  "email": "{{email}}",\n  "role": "user",\n  "createdAt": "{{timestamp}}"\n}',
+    },
+  },
+  {
+    name: 'Blog Posts',
+    emoji: '📝',
+    updates: {
+      endpoint: '/api/posts', method: 'GET', statusCode: 200, latencyMs: 100,
+      authType: 'none', responseMode: 'template', itemCount: 5,
+      responseJson: '{\n  "id": "{{id}}",\n  "title": "Blog post {{id}}",\n  "author": "{{name}}",\n  "publishedAt": "{{timestamp}}",\n  "views": {{random_int}}\n}',
+    },
+  },
+  {
+    name: 'Products',
+    emoji: '🛍️',
+    updates: {
+      endpoint: '/api/products', method: 'GET', statusCode: 200, latencyMs: 80,
+      authType: 'api_key', responseMode: 'template', itemCount: 20,
+      responseJson: '{\n  "id": "{{id}}",\n  "name": "Product {{id}}",\n  "price": {{random_int}},\n  "inStock": {{random_bool}},\n  "sku": "SKU-{{id}}"\n}',
+    },
+  },
+  {
+    name: 'Auth Error',
+    emoji: '🔒',
+    updates: {
+      endpoint: '/api/auth/login', method: 'POST', statusCode: 401, latencyMs: 200,
+      authType: 'none', responseMode: 'static',
+      responseJson: '{\n  "error": "Invalid credentials",\n  "code": "UNAUTHORIZED",\n  "message": "Email or password is incorrect"\n}',
+    },
+  },
+];
+
+function buildCurl(config: MockApiConfig): string {
+  const base = `http://localhost:3001${config.endpoint}`;
+  const lines: string[] = [`curl -X ${config.method}`, `  '${base}'`, `  -H 'Content-Type: application/json'`];
+  if (config.authType === 'bearer') lines.push(`  -H 'Authorization: Bearer ${config.authHeaderValue || 'demo-token'}'`);
+  if (config.authType === 'api_key') lines.push(`  -H 'X-API-Key: ${config.authHeaderValue || 'your-api-key'}'`);
+  if (['POST', 'PUT', 'PATCH'].includes(config.method)) lines.push(`  -d '{"example":"data"}'`);
+  return lines.join(' \\\n');
+}
+
 export default function MockApiGenerator() {
   const [config, setConfig] = useState<MockApiConfig>(getDefaultConfig());
   const [mockCode, setMockCode] = useState('');
@@ -130,7 +178,15 @@ export default function MockApiGenerator() {
     return mockCode;
   };
 
+  const applyPreset = (preset: typeof PRESETS[number]) => {
+    setConfig((c) => ({ ...c, conditionalRules: [], ...preset.updates } as MockApiConfig));
+    setMockCode('');
+    setTestResult(null);
+    toast.success(`${preset.name} preset loaded`);
+  };
+
   const localUrl = `http://localhost:3001${config.endpoint}`;
+  const curlCommand = buildCurl(config);
 
   return (
     <div className="space-y-6 tool-panel-contain">
@@ -144,6 +200,23 @@ export default function MockApiGenerator() {
           <p className="text-indigo-100 text-sm mt-1">
             Create REST endpoints with dynamic responses, auth simulation, latency, and error scenarios. Export to Postman or OpenAPI.
           </p>
+        </div>
+
+        {/* Quick presets */}
+        <div className="px-6 pt-4 pb-0">
+          <div className="flex flex-wrap items-center gap-2 mb-4">
+            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Quick start:</span>
+            {PRESETS.map((p) => (
+              <button
+                key={p.name}
+                type="button"
+                onClick={() => applyPreset(p)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-medium hover:bg-indigo-100 transition-colors"
+              >
+                <span>{p.emoji}</span> {p.name}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Core config */}
@@ -474,6 +547,24 @@ export default function MockApiGenerator() {
               </pre>
             </div>
           )}
+
+          {/* cURL command */}
+          <div className="px-6 pb-0 border-t border-gray-100 pt-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Test with cURL</span>
+              <button
+                type="button"
+                onClick={() => handleCopy(curlCommand)}
+                className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 rounded"
+              >
+                {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                Copy
+              </button>
+            </div>
+            <pre className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-xs font-mono overflow-x-auto whitespace-pre-wrap text-slate-700">
+              {curlCommand}
+            </pre>
+          </div>
 
           <div className="p-6">
             <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm font-mono whitespace-pre-wrap">

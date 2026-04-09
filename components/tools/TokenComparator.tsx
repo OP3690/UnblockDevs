@@ -229,6 +229,34 @@ export default function TokenComparator() {
     toast.success('Cleared');
   };
 
+  const exportComparisonJson = () => {
+    if (!comparisonStats) return;
+    const report = {
+      timestamp: new Date().toISOString(),
+      token1: {
+        length: comparisonStats.token1Length,
+        entropy: comparisonStats.entropy1,
+        detection: detection ? { type: detection.type, confidence: detection.confidence } : null,
+      },
+      token2: { length: comparisonStats.token2Length, entropy: comparisonStats.entropy2 },
+      comparison: {
+        matchPercentage: comparisonStats.matchPercentage,
+        matches: comparisonStats.matches,
+        mismatches: comparisonStats.mismatches,
+        firstMismatchPosition: comparisonStats.firstMismatchPosition,
+        expectedChar: comparisonStats.expectedChar,
+        actualChar: comparisonStats.actualChar,
+        identical: comparisonStats.mismatches === 0,
+      },
+    };
+    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `token-comparison-${Date.now()}.json`;
+    a.click();
+    toast.success('Comparison JSON downloaded');
+  };
+
   const renderTokenWithDiff = (token: string, isToken1: boolean) => {
     if (!diffResults.length) {
       return (
@@ -303,8 +331,33 @@ export default function TokenComparator() {
 
       {/* Section 1: Token Input & Comparator */}
       <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200">
-        <h3 className="text-lg font-bold text-gray-900 mb-4">Token Comparator</h3>
-        <p className="text-sm text-gray-600 mb-4">Compare two tokens character-by-character. Paste one token to decode and analyze; paste two and click Compare for diff.</p>
+        <h3 className="text-lg font-bold text-gray-900 mb-2">Token Comparator</h3>
+        <p className="text-sm text-gray-600 mb-3">Compare two tokens character-by-character. Paste one token to decode and analyze; paste two and click Compare for diff.</p>
+        {/* Sample JWTs */}
+        <div className="mb-4 flex flex-wrap items-center gap-2">
+          <span className="text-xs font-semibold text-gray-500">Try a sample:</span>
+          <button
+            type="button"
+            onClick={() => { setToken1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'); trackCtaClick('token_comparator', 'sample_jwt'); }}
+            className="px-2.5 py-1.5 text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100 rounded-lg hover:bg-indigo-100"
+          >
+            HS256 JWT (Token 1)
+          </button>
+          <button
+            type="button"
+            onClick={() => { setToken2('eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ODc2NTQzMjEwIiwibmFtZSI6IkphbmUgRG9lIiwiaWF0IjoxNzE2MjM5MDIyfQ.dGVzdC1zaWduYXR1cmUtcnMyNTY'); trackCtaClick('token_comparator', 'sample_jwt2'); }}
+            className="px-2.5 py-1.5 text-xs font-medium bg-violet-50 text-violet-700 border border-violet-100 rounded-lg hover:bg-violet-100"
+          >
+            RS256 JWT (Token 2)
+          </button>
+          <button
+            type="button"
+            onClick={() => { setToken1('sk-proj-abc123XYZ789defGHI456jklMNO012pqrSTU345vwxYZA678'); trackCtaClick('token_comparator', 'sample_apikey'); }}
+            className="px-2.5 py-1.5 text-xs font-medium bg-amber-50 text-amber-700 border border-amber-100 rounded-lg hover:bg-amber-100"
+          >
+            API Key sample
+          </button>
+        </div>
         <div className="space-y-4">
           <div>
             <div className="flex items-center justify-between mb-2">
@@ -343,10 +396,16 @@ export default function TokenComparator() {
               className="w-full h-24 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 font-mono text-sm resize-none"
             />
           </div>
-          <div className="flex gap-3">
-            <button type="button" onClick={compareTokens} className="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all">
+          <div className="flex flex-wrap gap-3">
+            <button type="button" onClick={compareTokens} className="flex-1 min-w-[140px] bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all">
               Compare Tokens
             </button>
+            {comparisonStats && (
+              <button type="button" onClick={exportComparisonJson} className="px-4 py-3 bg-slate-700 text-white rounded-lg font-semibold hover:bg-slate-800 flex items-center gap-2 text-sm">
+                <Download className="w-4 h-4" />
+                Export JSON
+              </button>
+            )}
             <button type="button" onClick={clearAll} className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200">
               Clear
             </button>
