@@ -240,14 +240,22 @@ export default function UrlEncoderClient() {
           <div className="px-6 md:px-8 py-6 space-y-6">
             <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
               <label className="text-sm font-semibold text-gray-800">Input</label>
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => { trackCtaClick('url_encoder', 'try_example'); setInput(SAMPLE_URL); setBulkMode(false); }}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-primary-200 bg-primary-50 px-3 py-1.5 text-xs font-medium text-primary-700 hover:bg-primary-100 transition-colors"
-                >
-                  Try Example
-                </button>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { label: '🔗 Default', url: SAMPLE_URL },
+                  { label: '🔍 Search params', url: 'https://search.example.com/results?q=hello world&page=1&filter=price:low&lang=en' },
+                  { label: '🔒 OAuth redirect', url: 'https://auth.example.com/oauth/authorize?client_id=abc123&redirect_uri=https://app.example.com/callback&scope=read write&state=random_state' },
+                  { label: '📦 API endpoint', url: 'https://api.example.com/v2/users?fields=id,name,email&sort=created_at:desc&limit=50' },
+                ].map((s) => (
+                  <button
+                    key={s.label}
+                    type="button"
+                    onClick={() => { trackCtaClick('url_encoder', 'try_example'); setInput(s.url); setBulkMode(false); }}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-primary-200 bg-primary-50 px-3 py-1.5 text-xs font-medium text-primary-700 hover:bg-primary-100 transition-colors"
+                  >
+                    {s.label}
+                  </button>
+                ))}
                 <button
                   type="button"
                   onClick={() => setBulkMode(!bulkMode)}

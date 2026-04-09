@@ -34,6 +34,12 @@ const SAMPLES: { name: string; pattern: string; text: string }[] = [
   { name: 'Numbers', pattern: '\\d+(?:\\.\\d+)?', text: 'Prices: 99.99, 42, 3.14' },
   { name: 'Words', pattern: '\\b\\w+\\b', text: 'Hello world from regex tester.' },
   { name: 'Capture groups', pattern: '(\\w+)\\s*=\\s*([^;]+)', text: 'name = John; age = 30; city = NYC' },
+  { name: 'IPv4 address', pattern: '\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b', text: 'Hosts: 192.168.1.1, 10.0.0.255, and 172.16.0.5 are internal.' },
+  { name: 'ISO date', pattern: '\\d{4}-\\d{2}-\\d{2}(?:T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?Z?)?', text: 'Events on 2024-03-15 and 2024-03-16T09:30:00Z are confirmed.' },
+  { name: 'Log level', pattern: '\\b(ERROR|WARN|INFO|DEBUG|TRACE|FATAL)\\b', text: '[INFO] Server started. [WARN] Low memory. [ERROR] DB timeout. [DEBUG] Cache miss.' },
+  { name: 'Git commit hash', pattern: '\\b[0-9a-f]{7,40}\\b', text: 'Commits: a3f8b21, d9e4c1a7b3f2e8d9, 1a2b3c4d' },
+  { name: 'Hex color', pattern: '#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})\\b', text: 'Colors used: #fff, #1a2b3c, #FF6600, #abc' },
+  { name: 'Semantic version', pattern: '\\bv?\\d+\\.\\d+\\.\\d+(?:-[a-zA-Z0-9.]+)?\\b', text: 'Released v1.0.0, 2.3.1-beta, and 10.0.0-rc.1' },
 ];
 
 interface MatchResult {

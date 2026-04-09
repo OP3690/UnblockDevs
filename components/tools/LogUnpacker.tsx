@@ -37,6 +37,14 @@ const SAMPLE_LOGS = [
     label: 'Paths + Error',
     log: `{"level":"ERROR","msg":"Config not found","path":"/Users/alice/projects/myapp/config/production.json","stack":"Error at /Users/alice/projects/myapp/src/server.ts:22:8","ts":1710000000000}`,
   },
+  {
+    label: 'K8s pod log',
+    log: `{"time":"2024-03-15T10:22:31.456Z","stream":"stderr","log":"{\\"severity\\":\\"ERROR\\",\\"caller\\":\\"handlers/payments.go:88\\",\\"msg\\":\\"charge failed\\",\\"userId\\":\\"usr_9a1b2c\\",\\"traceId\\":\\"abc123def456\\",\\"err\\":\\"context deadline exceeded\\"}"}`,
+  },
+  {
+    label: 'Multi-service',
+    log: `{"service":"api-gateway","traceId":"t-9f8e7d","spans":"[{\\"svc\\":\\"auth-service\\",\\"ms\\":12},{\\"svc\\":\\"user-service\\",\\"ms\\":45},{\\"svc\\":\\"billing-service\\",\\"ms\\":230}]","status":500,"ts":1720000000000}`,
+  },
 ];
 
 
