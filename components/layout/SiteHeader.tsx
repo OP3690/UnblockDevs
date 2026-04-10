@@ -48,9 +48,13 @@ const ALL_TOOLS: { label: string; href: string; tags?: string }[] = [
   { label: 'Timezone Translator', href: '/timezone-translator', tags: 'time zone convert' },
   { label: 'Truth Table Generator', href: '/truth-table-generator', tags: 'logic boolean' },
   { label: 'cURL Failure Analyzer', href: '/curl-failure-root-cause-engine', tags: 'debug curl error' },
-  { label: 'Password Audit', href: '/password-audit', tags: 'security check' },
-  { label: 'Data Insights', href: '/data-insights', tags: 'analyze data' },
-  { label: 'SVG to Image', href: '/svg-to-image', tags: 'convert png jpg' },
+  { label: 'Password Audit', href: '/password-audit', tags: 'security check strength entropy' },
+  { label: 'Data Insights', href: '/data-insights', tags: 'analyze data csv statistics' },
+  { label: 'SVG to Image', href: '/svg-to-image', tags: 'convert png jpg raster' },
+  { label: 'PDF to Excel/Word', href: '/pdf-to-excel-word', tags: 'convert pdf excel csv word' },
+  { label: 'JSON Stringify', href: '/json-stringify-online', tags: 'stringify serialize javascript' },
+  { label: 'JSON Formatter', href: '/json-formatter', tags: 'format prettify json' },
+  { label: 'JSON Validator', href: '/json-validator', tags: 'validate check json syntax' },
 ];
 
 /**
