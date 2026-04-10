@@ -114,6 +114,8 @@ export default function SiteFooter() {
             </p>
             <ul className="flex flex-col gap-2.5 text-[13px]">
               {[
+                { href: '/cron-expression', label: 'Cron Expression Builder' },
+                { href: '/markdown-preview', label: 'Markdown Preview' },
                 { href: '/svg-to-image', label: 'SVG to Image' },
                 { href: '/pdf-to-excel-word', label: 'PDF to Excel/Word' },
                 { href: '/data-insights', label: 'Data Insights' },

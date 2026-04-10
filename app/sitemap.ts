@@ -401,6 +401,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.85,
       changefreq: 'weekly' as const,
     },
+    {
+      url: 'cron-expression',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
+    {
+      url: 'markdown-preview',
+      priority: 0.9,
+      changefreq: 'weekly' as const,
+    },
   ]
 
   const mainUrls = new Set(mainPages.map((p) => p.url))

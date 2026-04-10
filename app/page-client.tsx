@@ -197,6 +197,8 @@ function HomeClient({ hero }: { hero: ReactNode }) {
                 ['/payload-analyzer', 'Payload Analyzer'],
                 ['/config-comparator', 'Config Comparator'],
                 ['/pdf-to-excel-word', 'PDF to Excel/Word'],
+                ['/cron-expression', 'Cron Expression Builder'],
+                ['/markdown-preview', 'Markdown Preview'],
               ].map(([href, label]) => (
                 <Link key={href} href={href} className="text-emerald-800 hover:text-emerald-950 hover:underline">
                   ✓ {label}

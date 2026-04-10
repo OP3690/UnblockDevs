@@ -340,6 +340,22 @@ export const TOOLS_DIRECTORY: DirectoryTool[] = [
     icon: 'Download',
     badge: 'new',
   },
+  {
+    href: '/cron-expression',
+    name: 'Cron Expression Builder',
+    description: 'Build and explain cron expressions. See next run times and get human-readable schedules.',
+    category: 'dev',
+    icon: 'Clock',
+    badge: 'new',
+  },
+  {
+    href: '/markdown-preview',
+    name: 'Markdown Preview',
+    description: 'Live GitHub Flavored Markdown editor and preview. Copy HTML or download instantly.',
+    category: 'dev',
+    icon: 'FileText',
+    badge: 'new',
+  },
 ];
 
 export const TOOL_COUNT = TOOLS_DIRECTORY.length;

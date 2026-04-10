@@ -67,6 +67,8 @@ export default function HomePrivacyFirstSections({
       { label: 'Config Compare', cats: ['all', 'api', 'dev'], href: toolPageUrls.config },
       { label: 'JSON Fixer', cats: ['all', 'json'], href: '/json-fixer-online' },
       { label: 'PDF to Excel', cats: ['all', 'dev'], variant: 'new', href: '/pdf-to-excel-word' },
+      { label: 'Cron Builder', cats: ['all', 'dev'], variant: 'new', href: '/cron-expression' },
+      { label: 'Markdown Preview', cats: ['all', 'dev'], variant: 'new', href: '/markdown-preview' },
     ],
     [toolPageUrls],
   );

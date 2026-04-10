@@ -55,6 +55,8 @@ const ALL_TOOLS: { label: string; href: string; tags?: string }[] = [
   { label: 'JSON Stringify', href: '/json-stringify-online', tags: 'stringify serialize javascript' },
   { label: 'JSON Formatter', href: '/json-formatter', tags: 'format prettify json' },
   { label: 'JSON Validator', href: '/json-validator', tags: 'validate check json syntax' },
+  { label: 'Cron Expression Builder', href: '/cron-expression', tags: 'cron job scheduler crontab syntax' },
+  { label: 'Markdown Preview', href: '/markdown-preview', tags: 'markdown editor preview github gfm' },
 ];
 
 /**
