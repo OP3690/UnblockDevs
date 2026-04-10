@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
+  SEOSection, SEOProse, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts, ProTip,
 } from '@/components/tools/ToolSEOContent';
 import JsonFormatterClient from './client';
 
@@ -137,6 +137,7 @@ export default function JsonFormatter() {
           <SEOProse>
             A <strong>JSON formatter</strong> adds indentation, line breaks, and consistent spacing to minified or messy JSON, making it instantly readable. Paste any JSON — a compressed API response, a log entry, or a config file — and get back properly structured output with 2-space, 4-space, or tab indentation. The formatter also validates JSON syntax, making it easy to spot the exact location of an error.
           </SEOProse>
+                  <ProTip>Press <strong>⌘+Enter</strong> (Mac) or <strong>Ctrl+Enter</strong> (Windows) to format without clicking. Output is ready to copy or download in one keystroke.</ProTip>
         </SEOSection>
 
         <SEOSection id="how" eyebrow="How it works" heading="Format JSON in One Step">

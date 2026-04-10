@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts, ProTip,
 } from '@/components/tools/ToolSEOContent';
 import JsonValidatorClient from './client';
 
@@ -155,6 +155,7 @@ export default function JsonValidatorPage() {
             most modern API tooling. Both levels of validation are essential: syntax errors break parsers;
             schema errors break application logic.
           </SEOProse>
+                  <ProTip>Press <strong>⌘+Enter</strong> (Mac) or <strong>Ctrl+Enter</strong> (Windows) to validate instantly. Errors are highlighted with exact line and column numbers.</ProTip>
         </SEOSection>
 
         {/* How it works */}

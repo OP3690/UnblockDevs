@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts, ProTip,
 } from '@/components/tools/ToolSEOContent';
 import JsonBeautifierClient from './client';
 
@@ -129,6 +129,7 @@ export default function JsonBeautifierPage() {
             auto-fixes common mistakes, explores structure via tree view and JSONPath, and generates
             TypeScript interfaces or SQL from JSON — all without leaving your browser.
           </SEOProse>
+          <ProTip>Press <strong>⌘+Enter</strong> (Mac) or <strong>Ctrl+Enter</strong> (Windows) to format instantly — no mouse needed. Works from any tab.</ProTip>
         </SEOSection>
 
         {/* How it works */}
