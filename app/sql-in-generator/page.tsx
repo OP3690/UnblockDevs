@@ -29,6 +29,11 @@ export const metadata: Metadata = {
     url: canonicalUrl,
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'SQL IN Generator — Build IN Clauses from Lists | UnblockDevs',
+    description: 'Generate SQL IN clauses from comma-separated lists or JSON arrays. Format for PostgreSQL, MySQL, SQLite. Free, browser-based.',
+  },
   alternates: { canonical: canonicalUrl },
 };
 

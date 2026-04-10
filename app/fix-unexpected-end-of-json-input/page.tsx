@@ -25,6 +25,11 @@ export const metadata: Metadata = {
     description: 'Learn how to fix "Unexpected end of JSON input" error instantly with examples and free tools.',
     type: 'article',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Fix Unexpected End of JSON Input Error | UnblockDevs',
+    description: 'Fix "Unexpected end of JSON input" errors instantly. Understand the cause, repair truncated JSON, and prevent it in production.',
+  },
   alternates: { canonical: 'https://unblockdevs.com/fix-unexpected-end-of-json-input' },
 };
 

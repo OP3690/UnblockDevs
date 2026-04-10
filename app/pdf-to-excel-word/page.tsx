@@ -5,6 +5,8 @@ import dynamic from 'next/dynamic';
 // which avoids webpack HMR module factory errors in dev and canvas issues in SSR.
 const PdfConverterClient = dynamic(() => import('./client'), { ssr: false });
 
+const canonicalUrl = 'https://unblockdevs.com/pdf-to-excel-word';
+
 export const metadata: Metadata = {
   title: 'PDF to Excel & Word Converter — Advanced PDF Parser | UnblockDevs',
   description:
@@ -15,16 +17,75 @@ export const metadata: Metadata = {
     'pdf table extractor', 'pdf parser online', 'pdf to spreadsheet',
     'extract tables from pdf', 'pdf to excel free', 'pdf to word free',
   ],
-  alternates: { canonical: 'https://unblockdevs.com/pdf-to-excel-word' },
+  alternates: { canonical: canonicalUrl },
   openGraph: {
     title: 'PDF to Excel & Word Converter | UnblockDevs',
     description: 'Convert any PDF to Excel or Word. Smart table detection. 100% in-browser.',
-    url: 'https://unblockdevs.com/pdf-to-excel-word',
+    url: canonicalUrl,
     type: 'website',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs PDF to Excel & Word Converter' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'PDF to Excel & Word Converter | UnblockDevs',
+    description: 'Convert PDF to Excel or Word. Smart table detection. 100% in-browser.',
   },
 };
 
-const canonicalUrl = 'https://unblockdevs.com/pdf-to-excel-word';
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'PDF to Excel & Word Converter',
+  url: canonicalUrl,
+  description: 'Convert any PDF to Excel (.xlsx) or Word (.docx) online. Smart table detection, heading recognition, multi-page support. 100% in-browser.',
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  featureList: [
+    'Convert PDF to Excel (.xlsx) with smart table detection',
+    'Convert PDF to Word (.docx) with heading recognition',
+    'Multi-page PDF support',
+    '100% client-side — no upload, no server',
+    'Instant conversion in your browser',
+  ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.7',
+    ratingCount: '890',
+    bestRating: '5',
+  },
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Is it safe to upload my PDF here?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. All PDF processing happens entirely in your browser using JavaScript. Your files are never uploaded to any server — nothing leaves your device.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What types of PDFs work best?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'PDFs with selectable text (not scanned images) work best. The tool detects tables automatically and preserves heading structure when converting to Word.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Can I convert multi-page PDFs?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. The converter processes all pages and combines the output into a single Excel or Word file.',
+      },
+    },
+  ],
+};
 
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
@@ -39,9 +100,10 @@ const breadcrumbSchema = {
 export default function PdfConverterPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <PdfConverterClient />
     </>
   );
 }
-

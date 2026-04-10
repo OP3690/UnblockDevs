@@ -37,6 +37,11 @@ export const metadata: Metadata = {
     'curl to http online',
     'transform curl to http'
   ],
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Convert cURL to HTTP Request | UnblockDevs',
+    description: 'Convert cURL commands to readable HTTP request format. Supports headers, cookies, auth, and body parsing.',
+  },
   alternates: { canonical: canonicalUrl },
   openGraph: {
     title: 'Free cURL to HTTP Request Converter – Instant Conversion | UnblockDevs',

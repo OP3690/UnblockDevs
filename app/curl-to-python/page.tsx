@@ -47,6 +47,11 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/curl-to-python',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - cURL to Python Converter' }],
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'cURL to Python Converter | UnblockDevs',
+    description: 'Convert cURL commands to Python requests code instantly. Supports headers, auth, POST body, and cookies.',
+  },
   alternates: { canonical: 'https://unblockdevs.com/curl-to-python' },
 };
 
