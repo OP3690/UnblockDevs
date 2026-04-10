@@ -114,6 +114,20 @@ const faqSchema = {
 
 const canonicalUrl = 'https://unblockdevs.com/speed-test';
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Test Your Internet Speed Online',
+  description: 'Step-by-step guide to measuring your download speed, upload speed, ping, and jitter in your browser.',
+  totalTime: 'PT2M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Click Start Test', text: 'Hit the Start button to begin the speed test. No account or plugin required — runs entirely in your browser.' },
+    { '@type': 'HowToStep', position: 2, name: 'Download test', text: 'The tool fetches data from the server and measures how quickly your connection receives bytes, reporting download speed in Mbps.' },
+    { '@type': 'HowToStep', position: 3, name: 'Upload test', text: 'The tool sends data to the server and measures throughput, reporting your upload speed in Mbps.' },
+    { '@type': 'HowToStep', position: 4, name: 'See ping, jitter & history', text: 'View your ping and jitter results alongside download and upload. Results are saved locally in your browser for comparison over time.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -132,6 +146,7 @@ export default function SpeedTestPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <SpeedTestClient />
 
