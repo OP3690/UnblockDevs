@@ -730,7 +730,7 @@ export default function MarkdownPreviewClient() {
     <ToolPageShell
       title="Markdown Preview & Editor"
       subtitle="Live GitHub Flavored Markdown renderer — write on the left, preview on the right."
-      backHref="/tools"
+      backHref="/tools/json"
       backLabel="All tools"
       toolName="markdown_preview"
       icon="📝"
