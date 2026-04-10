@@ -204,6 +204,19 @@ export default function PayloadAnalyzer() {
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
   }, [jsonText, liveMode, analyze]);
 
+  // ⌘+Enter / Ctrl+Enter to analyze
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        analyze(jsonText);
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [jsonText]);
+
   const sortedFiltered = useMemo(() => {
     let list = [...fields];
     if (filterType !== 'all') list = list.filter((f) => f.type === filterType);
@@ -318,6 +331,7 @@ export default function PayloadAnalyzer() {
             className="mt-3 w-full py-2.5 bg-primary-600 text-white rounded-lg font-semibold text-sm hover:bg-primary-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             Analyze Payload
+            <kbd className="ml-2 hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>
           </button>
         )}
       </div>
