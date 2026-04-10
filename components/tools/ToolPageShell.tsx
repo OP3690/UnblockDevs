@@ -187,7 +187,7 @@ export default function ToolPageShell({
 
       {/* ── Tool card ─────────────────────────────────────── */}
       {tool != null && (
-        <div className="w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+        <div className="w-full px-3 sm:px-5 lg:px-6 xl:px-8 py-4 sm:py-6">
           {embedTool ? (
             <div id="tool" className="scroll-mt-20">
               {tool}
@@ -195,11 +195,11 @@ export default function ToolPageShell({
           ) : (
             <div
               id="tool"
-              className="scroll-mt-20 overflow-hidden rounded-2xl border border-zinc-300 bg-white shadow-[0_4px_24px_-6px_rgba(0,0,0,0.12),0_2px_8px_-3px_rgba(0,0,0,0.08)]"
+              className="scroll-mt-20 overflow-x-hidden rounded-2xl border border-zinc-300 bg-white shadow-[0_4px_24px_-6px_rgba(0,0,0,0.12),0_2px_8px_-3px_rgba(0,0,0,0.08)]"
             >
               {/* Color accent bar */}
               <div className="h-[3px] w-full bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-400" aria-hidden />
-              <div className="p-4 sm:p-6 lg:p-8">{tool}</div>
+              <div className="p-3 sm:p-5">{tool}</div>
             </div>
           )}
         </div>

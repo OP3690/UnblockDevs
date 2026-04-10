@@ -472,43 +472,43 @@ export default function SvgToImageClient() {
 
       <main className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col lg:flex-row gap-6 min-h-[calc(100vh-12rem)]">
-          {/* Left: SVG code (30%) + controls */}
-          <div className="lg:w-[30%] lg:min-w-[280px] lg:max-w-[420px] flex flex-col gap-4 shrink-0">
-            <section className="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden flex flex-col flex-1 min-h-[240px] lg:min-h-0 ring-1 ring-slate-900/5">
-              <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200/80 bg-slate-50/80 shrink-0">
+          {/* Left: SVG code (40%) + controls — wider on desktop */}
+          <div className="lg:w-[40%] lg:min-w-[340px] lg:max-w-[580px] flex flex-col gap-4 shrink-0">
+            <section className="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-visible flex flex-col flex-1 min-h-[240px] lg:min-h-0 ring-1 ring-slate-900/5">
+              {/* Header: title + clear only */}
+              <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200/80 bg-slate-50/80 shrink-0 rounded-t-2xl">
                 <h2 className="text-base font-semibold text-slate-800 flex items-center gap-2">
                   <Code2 className="w-4 h-4 text-slate-500" aria-hidden />
                   SVG Code
                 </h2>
-                <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => { setSvgInput(''); setPreviewStatus(''); }}
+                  className="px-3 py-1.5 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-red-50 hover:border-red-200 hover:text-red-700 transition-colors"
+                >
+                  Clear
+                </button>
+              </div>
+              {/* Sample buttons — own row, always wraps, never clips */}
+              <div className="flex flex-wrap items-center gap-2 px-4 py-2.5 border-b border-slate-100 bg-white shrink-0">
+                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wide mr-0.5">Samples:</span>
+                <button
+                  type="button"
+                  onClick={() => { trackCtaClick('svg_to_image', 'load_sample'); setSvgInput(SAMPLE_SVG); }}
+                  className="px-2.5 py-1 text-xs font-medium text-slate-700 bg-slate-50 border border-slate-200 rounded-lg hover:bg-primary-50 hover:border-primary-200 hover:text-primary-700 transition-colors"
+                >
+                  ✅ Default
+                </button>
+                {EXTRA_SAMPLES.map((s) => (
                   <button
+                    key={s.label}
                     type="button"
-                    onClick={() => { trackCtaClick('svg_to_image', 'load_sample'); setSvgInput(SAMPLE_SVG); }}
-                    className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-400"
+                    onClick={() => { trackCtaClick('svg_to_image', 'load_sample'); setSvgInput(s.svg); }}
+                    className="px-2.5 py-1 text-xs font-medium text-slate-700 bg-slate-50 border border-slate-200 rounded-lg hover:bg-primary-50 hover:border-primary-200 hover:text-primary-700 transition-colors"
                   >
-                    ✅ Default
+                    {s.emoji} {s.label}
                   </button>
-                  {EXTRA_SAMPLES.map((s) => (
-                    <button
-                      key={s.label}
-                      type="button"
-                      onClick={() => { trackCtaClick('svg_to_image', 'load_sample'); setSvgInput(s.svg); }}
-                      className="px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-400"
-                    >
-                      {s.emoji} {s.label}
-                    </button>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSvgInput('');
-                      setPreviewStatus('');
-                    }}
-                    className="px-3 py-1.5 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-red-50 hover:border-red-200 hover:text-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500/30"
-                  >
-                    Clear
-                  </button>
-                </div>
+                ))}
               </div>
               <textarea
                 value={svgInput}
