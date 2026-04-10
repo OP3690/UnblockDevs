@@ -8,9 +8,9 @@ export default function SiteFooter() {
     <footer className="mt-auto border-t border-zinc-800/60 bg-zinc-950 text-zinc-400">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 py-14 sm:py-16">
         {/* Top grid */}
-        <div className="grid grid-cols-2 gap-10 sm:grid-cols-5">
+        <div className="grid grid-cols-2 gap-10 sm:grid-cols-3 lg:grid-cols-6">
           {/* Brand */}
-          <div className="col-span-2 sm:col-span-1">
+          <div className="col-span-2 sm:col-span-3 lg:col-span-1">
             <div className="mb-4 flex items-center gap-2 text-white">
               <span className="flex h-[26px] w-[26px] items-center justify-center rounded bg-white font-mono text-[11px] font-bold text-zinc-900">
                 U
@@ -97,6 +97,32 @@ export default function SiteFooter() {
                 { href: '/regex-tester', label: 'Regex Tester' },
                 { href: '/password-generator', label: 'Password Generator' },
                 { href: '/har-to-curl', label: 'HAR to cURL' },
+              ].map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className="text-zinc-500 transition-colors hover:text-zinc-200">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* More tools */}
+          <div>
+            <p className="mb-4 text-[12px] font-semibold uppercase tracking-widest text-zinc-400">
+              More tools
+            </p>
+            <ul className="flex flex-col gap-2.5 text-[13px]">
+              {[
+                { href: '/svg-to-image', label: 'SVG to Image' },
+                { href: '/pdf-to-excel-word', label: 'PDF to Excel/Word' },
+                { href: '/data-insights', label: 'Data Insights' },
+                { href: '/password-audit', label: 'Password Audit' },
+                { href: '/truth-table-generator', label: 'Truth Table' },
+                { href: '/speed-test', label: 'Speed Test' },
+                { href: '/timezone-translator', label: 'Timezone Translator' },
+                { href: '/curl-converter', label: 'cURL Converter' },
+                { href: '/curl-failure-root-cause-engine', label: 'cURL Failure Analyzer' },
               ].map((l) => (
                 <li key={l.href}>
                   <Link href={l.href} className="text-zinc-500 transition-colors hover:text-zinc-200">

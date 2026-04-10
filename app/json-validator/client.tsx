@@ -172,10 +172,11 @@ function JsonValidatorTool() {
             onClick={handleFormat}
             disabled={!input}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 bg-white text-xs font-medium text-zinc-600 hover:bg-zinc-50 disabled:opacity-40"
-            title="Pretty-print JSON with 2-space indentation"
+            title="Pretty-print JSON with 2-space indentation (⌘+Enter)"
           >
             <Maximize2 className="w-3.5 h-3.5" />
             Format
+            <kbd className="hidden sm:inline-flex items-center rounded border border-zinc-300 bg-zinc-100 px-1 py-0.5 font-mono text-[9px] text-zinc-400">⌘↵</kbd>
           </button>
           <button
             type="button"
