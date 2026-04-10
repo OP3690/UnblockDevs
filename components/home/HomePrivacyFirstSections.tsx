@@ -33,6 +33,8 @@ export default function HomePrivacyFirstSections({
   const miniTools: MiniDef[] = useMemo(
     () => [
       { label: 'JSON Beautifier', cats: ['all', 'json'], href: '/json-beautifier' },
+      { label: 'JSON Formatter', cats: ['all', 'json'], variant: 'hot', href: '/json-formatter' },
+      { label: 'JSON Validator', cats: ['all', 'json'], href: '/json-validator' },
       { label: 'SQL Formatter', cats: ['all', 'json', 'dev'], variant: 'hot', href: toolPageUrls.sql },
       { label: 'JWT Decoder', cats: ['all', 'json', 'dev'], href: '/jwt-decoder' },
       { label: 'Base64 Encoder', cats: ['all', 'encode'], href: '/base64-encoder' },
@@ -63,6 +65,8 @@ export default function HomePrivacyFirstSections({
       { label: 'Payload Analyzer', cats: ['all', 'api'], href: toolPageUrls.payload },
       { label: 'API Comparator', cats: ['all', 'api'], href: toolPageUrls.comparator },
       { label: 'Config Compare', cats: ['all', 'api', 'dev'], href: toolPageUrls.config },
+      { label: 'JSON Fixer', cats: ['all', 'json'], href: '/json-fixer-online' },
+      { label: 'PDF to Excel', cats: ['all', 'dev'], variant: 'new', href: '/pdf-to-excel-word' },
     ],
     [toolPageUrls],
   );
@@ -229,6 +233,16 @@ export default function HomePrivacyFirstSections({
                 {t.variant === 'new' && (
                   <span className="shrink-0 rounded-full bg-violet-100 px-1.5 py-0.5 font-mono text-[9px] font-semibold text-violet-700">
                     NEW
+                  </span>
+                )}
+                {t.variant === 'hot' && (
+                  <span className="shrink-0 rounded-full bg-amber-100 px-1.5 py-0.5 font-mono text-[9px] font-semibold text-amber-700">
+                    HOT
+                  </span>
+                )}
+                {t.variant === 'ai' && (
+                  <span className="shrink-0 rounded-full bg-blue-100 px-1.5 py-0.5 font-mono text-[9px] font-semibold text-blue-700">
+                    AI
                   </span>
                 )}
               </Link>
