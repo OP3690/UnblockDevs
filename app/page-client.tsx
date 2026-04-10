@@ -34,29 +34,61 @@ const toolPageUrls: Record<string, string> = {
 };
 
 const POPULAR_BLOG_LINKS: { href: string; label: string }[] = [
+  // JSON deep dives
+  { href: '/blog/top-10-json-errors-waste-developer-time', label: 'Top 10 JSON Errors' },
+  { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Why JSON Breaks in APIs' },
+  { href: '/blog/json-best-practices-production-guide', label: 'JSON Best Practices' },
+  { href: '/blog/json-stringify-complete-guide', label: 'JSON.stringify Guide' },
+  { href: '/blog/json-stringify-vs-json-parse-difference', label: 'stringify vs parse' },
+  { href: '/blog/why-does-my-json-have-backslashes', label: 'JSON Backslash Fix' },
+  { href: '/blog/why-json-stringify-returns-undefined-fix', label: 'stringify Undefined Fix' },
+  { href: '/blog/json-schema-complete-guide', label: 'JSON Schema Guide' },
+  { href: '/blog/25-broken-json-examples-fix', label: '25 Broken JSON Examples' },
+  { href: '/blog/invalid-json-vs-valid-json-examples', label: 'Invalid vs Valid JSON' },
+  { href: '/blog/json-format-standards-complete-guide', label: 'JSON Format Standards' },
+  // API & cURL
+  { href: '/blog/why-my-api-works-in-postman-but-not-in-browser', label: 'Postman vs Browser' },
+  { href: '/blog/why-my-api-returns-200-ok-but-data-is-empty', label: '200 OK But Empty' },
+  { href: '/blog/how-to-fix-cors-policy-error-javascript', label: 'CORS Policy Fix' },
+  { href: '/blog/debug-api-changes-compare-responses', label: 'Debug API Changes' },
+  { href: '/blog/api-payload-size-optimization', label: 'API Payload Optimization' },
+  { href: '/blog/post-json-data-with-curl-examples-complete-guide', label: 'POST JSON with cURL' },
+  { href: '/blog/curl-to-code-converter-guide', label: 'cURL to Code Guide' },
+  { href: '/blog/har-to-curl-converter-complete-guide', label: 'HAR to cURL Guide' },
+  // JavaScript / Node.js fixes
+  { href: '/blog/why-async-await-is-not-working-javascript-common-mistakes', label: 'async/await Mistakes' },
+  { href: '/blog/fix-failed-to-fetch-error-javascript-cors-https-network', label: 'Failed to Fetch Fix' },
+  { href: '/blog/fix-uncaught-in-promise-error-javascript-explained', label: 'Uncaught Promise Fix' },
+  { href: '/blog/fix-cannot-read-property-map-of-undefined-javascript', label: 'Cannot Read .map Fix' },
+  { href: '/blog/why-process-env-is-undefined-nodejs-and-how-to-fix-it', label: 'process.env Fix' },
+  { href: '/blog/fix-error-listen-eaddrinuse-nodejs-port-already-in-use', label: 'EADDRINUSE Port Fix' },
+  // SQL & MySQL
+  { href: '/blog/mysql-10-most-used-functions', label: 'MySQL Functions' },
+  { href: '/blog/mysql-25-most-used-queries', label: 'MySQL Queries' },
+  { href: '/blog/mysql-json-complete-guide', label: 'MySQL JSON Guide' },
+  { href: '/blog/is-it-safe-to-paste-sql-into-chatgpt', label: 'Safe to Paste SQL to AI?' },
+  // AI & security
   { href: '/blog/chatgpt-real-life-usage-guide', label: 'ChatGPT Usage' },
   { href: '/blog/ai-prompt-engineering-guide', label: 'AI Prompt Engineering' },
-  { href: '/blog/blockchain-complete-guide', label: 'Blockchain' },
-  { href: '/blog/mysql-10-most-used-functions', label: 'MySQL Functions' },
   { href: '/blog/token-security-privacy-best-practices', label: 'Token Security' },
-  { href: '/blog/5g-6g-complete-guide', label: '5G & 6G' },
-  { href: '/blog/agentic-ai-complete-guide', label: 'Agentic AI' },
-  { href: '/blog/apache-kafka-complete-guide', label: 'Apache Kafka' },
-  { href: '/blog/confidential-computing-complete-guide', label: 'Confidential Computing' },
-  { href: '/blog/cursor-ai-code-editor-guide', label: 'Cursor AI' },
-  { href: '/blog/ai-productivity-tools-complete-guide', label: 'AI Productivity' },
-  { href: '/blog/digital-twins-complete-guide', label: 'Digital Twins' },
-  { href: '/blog/apache-kafka-cheat-sheet', label: 'Kafka Cheat Sheet' },
   { href: '/blog/hipaa-compliant-ai-development', label: 'HIPAA-Compliant AI' },
-  { href: '/blog/must-learn-tech-skills-2030', label: 'Tech Skills 2030' },
-  { href: '/blog/most-useful-tech-skills-2026', label: 'Tech Skills 2026' },
+  { href: '/blog/how-to-use-ai-for-mysql-without-exposing-database-schema', label: 'AI for MySQL Safely' },
+  { href: '/blog/agentic-ai-complete-guide', label: 'Agentic AI' },
+  // CS fundamentals
   { href: '/blog/what-is-hashmap-hashtable-explained-simply-with-examples', label: 'HashMap/HashTable' },
-  { href: '/blog/how-to-fix-cors-policy-error-javascript', label: 'CORS Policy Error' },
   { href: '/blog/binary-search-explained-like-youre-5-with-code-example', label: 'Binary Search' },
+  { href: '/blog/what-is-big-o-notation-explained-without-math', label: 'Big O Notation' },
+  { href: '/blog/what-is-recursion-explained-with-simple-real-life-examples', label: 'Recursion Explained' },
+  // Career & tools
   { href: '/blog/best-free-developer-tools-2026', label: 'Free Dev Tools 2026' },
+  { href: '/blog/most-useful-tech-skills-2026', label: 'Tech Skills 2026' },
+  { href: '/blog/must-learn-tech-skills-2030', label: 'Tech Skills 2030' },
+  { href: '/blog/cursor-ai-code-editor-guide', label: 'Cursor AI Editor' },
+  { href: '/blog/apache-kafka-complete-guide', label: 'Apache Kafka' },
+  { href: '/blog/apache-kafka-cheat-sheet', label: 'Kafka Cheat Sheet' },
 ];
 
-const INITIAL_BLOG_LINKS = 20;
+const INITIAL_BLOG_LINKS = 15;
 
 function HomeClient({ hero }: { hero: ReactNode }) {
   const [mounted, setMounted] = useState(false);
