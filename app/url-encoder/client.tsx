@@ -154,6 +154,19 @@ export default function UrlEncoderClient() {
     );
   };
 
+  // ⌘+Enter / Ctrl+Enter → copy output to clipboard
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        if (output) copyToClipboard(output, 'shortcut');
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [output]);
+
   const runBulk = () => {
     trackCtaClick('url_encoder', 'process_all');
     const lines = bulkInput.split('\n').map((l) => l.trim()).filter(Boolean);

@@ -2,7 +2,7 @@
 
 import ToolPageShell from '@/components/tools/ToolPageShell';
 import type { BreadcrumbItem } from '@/components/Breadcrumb';
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { trackCtaClick, trackCopy } from '@/lib/analytics';
 import { CheckCircle, AlertTriangle, Clipboard, ClipboardCheck, Maximize2, Minimize2, BarChart2, Zap } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -131,6 +131,19 @@ function JsonValidatorTool() {
       trackCtaClick('json_validator', 'minify');
       toast.success('Minified');
     } catch { toast.error('Cannot minify — invalid JSON'); }
+  }, [input]);
+
+  // ⌘+Enter / Ctrl+Enter → format JSON
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        if (input.trim()) handleFormat();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input]);
 
   return (

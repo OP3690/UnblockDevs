@@ -259,6 +259,22 @@ export default function HashGeneratorClient() {
     );
   };
 
+  // ⌘+Enter / Ctrl+Enter → copy all visible hashes
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        if (Object.keys(liveHashes).length > 0) {
+          const text = Object.entries(liveHashes).map(([alg, h]) => `${alg.toUpperCase()}: ${h}`).join('\n');
+          copyToClipboard(text, 'shortcut');
+        }
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [liveHashes]);
+
   const addToHistory = (inputVal: string, hashes: Record<string, string>) => {
     if (!inputVal.trim() && Object.keys(hashes).length === 0) return;
     setHistory((prev) => {
