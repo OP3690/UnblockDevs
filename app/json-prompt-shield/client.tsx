@@ -120,6 +120,19 @@ export default function JsonPromptShieldClient() {
     };
   }, []);
 
+  // ⌘+Enter / Ctrl+Enter to mask
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        handleMask();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleMask = () => {
     if (!input.trim() || !workerRef.current) return;
     setError(null);
@@ -327,6 +340,7 @@ export default function JsonPromptShieldClient() {
                     >
                       <Shield className="w-3.5 h-3.5" />
                       Mask
+                      <kbd className="hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>
                     </button>
                   </div>
                 </div>

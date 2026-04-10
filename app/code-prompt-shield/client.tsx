@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import {
   ArrowLeft,
@@ -303,6 +303,19 @@ export default function CodePromptShieldClient() {
 
   const sensitiveWarning = detectSensitiveFile(sourceCode);
 
+  // ⌘+Enter / Ctrl+Enter to mask
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        handleMask();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleMask = useCallback(() => {
     trackCtaClick('code_prompt_shield', 'mask');
     if (!sourceCode.trim()) {
@@ -498,6 +511,7 @@ export default function CodePromptShieldClient() {
             >
               <Shield className="w-4 h-4" aria-hidden />
               Mask code
+              <kbd className="hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>
             </button>
             {CODE_SAMPLES.map((s) => (
               <button

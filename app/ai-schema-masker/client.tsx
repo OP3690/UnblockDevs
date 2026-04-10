@@ -261,6 +261,19 @@ export default function AiSchemaMaskerClient() {
     }
   };
 
+  // ⌘+Enter / Ctrl+Enter to mask
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        handleMask();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleMask = () => {
     trackCtaClick('ai_schema_masker', 'mask');
     if (!input.trim() || !workerRef.current) return;
@@ -593,6 +606,7 @@ export default function AiSchemaMaskerClient() {
                 >
                   <Shield className="w-4 h-4" />
                   Mask identifiers
+                  <kbd className="hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>
                 </button>
               </div>
             </div>
