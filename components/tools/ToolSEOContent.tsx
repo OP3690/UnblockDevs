@@ -191,6 +191,28 @@ export function FeatureList({ items }: { items: string[] }) {
   );
 }
 
+/** Related blog post type */
+export type RelatedBlogPost = { href: string; label: string; desc?: string };
+
+/** Related blog posts — compact horizontal list with arrow links */
+export function RelatedBlogPosts({ posts }: { posts: RelatedBlogPost[] }) {
+  return (
+    <div className="flex flex-wrap gap-3">
+      {posts.map((p) => (
+        <Link
+          key={p.href}
+          href={p.href}
+          className="group flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-2 text-[13px] font-medium text-zinc-700 shadow-sm transition-all hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-800 hover:shadow-md"
+        >
+          <span className="text-sm">📖</span>
+          {p.label}
+          <ArrowRight className="h-3 w-3 translate-x-0 text-zinc-400 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:text-emerald-500 group-hover:opacity-100" aria-hidden />
+        </Link>
+      ))}
+    </div>
+  );
+}
+
 // ── Main wrapper ───────────────────────────────────────────
 
 /**

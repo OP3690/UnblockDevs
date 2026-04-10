@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import JsonBeautifierClient from './client';
 
@@ -223,6 +223,17 @@ export default function JsonBeautifierPage() {
             { href: '/jwt-decoder', label: 'JWT Decoder', desc: 'Decode and inspect JWT tokens containing JSON claims', icon: '🪙' },
             { href: '/ai-schema-masker', label: 'AI Schema Masker', desc: 'Mask sensitive JSON fields before sending to AI', icon: '🔒' },
             { href: '/json-to-excel', label: 'JSON to Excel', desc: 'Convert JSON arrays to Excel spreadsheets instantly', icon: '📊' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'Top 10 JSON Errors' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Why JSON Breaks in APIs' },
+            { href: '/blog/json-best-practices-production-guide', label: 'JSON Best Practices' },
+            { href: '/blog/25-broken-json-examples-fix', label: '25 Broken JSON Examples' },
+            { href: '/blog/json-stringify-vs-json-parse-difference', label: 'stringify vs parse' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Fix JSON Errors Guide' },
           ]} />
         </SEOSection>
       </ToolSEOContent>
