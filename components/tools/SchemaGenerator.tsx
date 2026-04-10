@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { FileCode, Copy, Check, Download, Sparkles, CheckCircle, XCircle, ExternalLink, Code2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy, trackCtaClick } from '@/lib/analytics';
@@ -157,6 +157,19 @@ export default function SchemaGenerator() {
 
     return { type: typeof obj };
   };
+
+  // ⌘+Enter / Ctrl+Enter to generate
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        handleGenerate();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleGenerate = () => {
     const validation = validateJson(jsonText);
@@ -393,6 +406,7 @@ export default function SchemaGenerator() {
           className="w-full py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
         >
           Generate Schema
+          <kbd className="ml-2 hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>
         </button>
       </div>
 
