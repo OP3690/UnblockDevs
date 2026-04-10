@@ -570,7 +570,7 @@ export default function AiSchemaMaskerClient() {
                 <h3 className="text-sm font-semibold text-slate-900">Original input</h3>
                 <p className="text-xs text-slate-500 mt-0.5">SQL, procedures,<br />CTEs, or JSON (up to ~5MB)</p>
               </div>
-              <div className="flex flex-wrap items-center justify-end gap-2 ml-auto flex-shrink-0">
+              <div className="flex flex-wrap items-center gap-2 ml-auto flex-shrink-0">
                 {[
                   { label: '🔗 JOIN query', data: DEFAULT_EXAMPLE },
                   { label: '📊 CTE', data: SAMPLE_CTE },
@@ -598,26 +598,11 @@ export default function AiSchemaMaskerClient() {
                   <RefreshCw className="w-3.5 h-3.5" />
                   {input.trim() ? 'Clear' : 'Example'}
                 </button>
-                <button
-                  type="button"
-                  onClick={handleMask}
-                  disabled={!input.trim() || processing}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm transition-colors"
-                >
-                  <Shield className="w-4 h-4" />
-                  Mask identifiers
-                  <kbd className="hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>
-                </button>
               </div>
             </div>
             <div className="flex-1 min-h-[240px] flex flex-col">
               <TextAreaEditor value={input} onChange={setInput} placeholder="Paste your SQL or JSON here…" />
             </div>
-            {identifierCountMask > 0 && (
-              <div className="px-4 py-2 border-t border-slate-100 bg-slate-50/30 text-xs text-slate-500">
-                <span className="font-medium text-slate-700">{identifierCountMask}</span> identifiers masked
-              </div>
-            )}
           </div>
 
           <div id="schema-masker-output" className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col min-h-[260px]">
@@ -640,6 +625,25 @@ export default function AiSchemaMaskerClient() {
               <TextAreaEditor value={maskedOutput} onChange={setMaskedOutput} placeholder="Masked query appears here" />
             </div>
           </div>
+          </div>
+
+          {/* Primary CTA — always visible, never clipped */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 py-1">
+            <button
+              type="button"
+              onClick={handleMask}
+              disabled={!input.trim() || processing}
+              className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-primary-600 text-white text-base font-semibold hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-md transition-colors w-full sm:w-auto justify-center"
+            >
+              <Shield className="w-5 h-5" />
+              {processing ? 'Masking…' : 'Mask identifiers'}
+              <kbd className="hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1.5 py-0.5 font-mono text-[11px]">⌘↵</kbd>
+            </button>
+            {identifierCountMask > 0 && (
+              <span className="text-sm text-slate-500">
+                <span className="font-semibold text-slate-700">{identifierCountMask}</span> identifiers masked ✓
+              </span>
+            )}
           </div>
 
           <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">

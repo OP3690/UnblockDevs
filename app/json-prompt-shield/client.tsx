@@ -332,16 +332,6 @@ export default function JsonPromptShieldClient() {
                     <button type="button" onClick={copyMasked} disabled={!maskedOutput} className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium text-violet-600 hover:bg-violet-50 disabled:opacity-40">
                       <Clipboard className="w-3.5 h-3.5" /> Copy
                     </button>
-                    <button
-                      type="button"
-                      onClick={handleMask}
-                      disabled={!input.trim() || processing}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 disabled:opacity-50"
-                    >
-                      <Shield className="w-3.5 h-3.5" />
-                      Mask
-                      <kbd className="hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>
-                    </button>
                   </div>
                 </div>
                 <textarea
@@ -352,6 +342,25 @@ export default function JsonPromptShieldClient() {
                   spellCheck={false}
                 />
               </div>
+            </div>
+
+            {/* Primary CTA — always visible, never clipped */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-1">
+              <button
+                type="button"
+                onClick={handleMask}
+                disabled={!input.trim() || processing}
+                className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-violet-600 text-white text-base font-semibold hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-md transition-colors w-full sm:w-auto justify-center"
+              >
+                <Shield className="w-5 h-5" />
+                {processing ? 'Masking…' : 'Mask JSON'}
+                <kbd className="hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1.5 py-0.5 font-mono text-[11px]">⌘↵</kbd>
+              </button>
+              {identifierCount > 0 && (
+                <span className="text-sm text-slate-500">
+                  <span className="font-semibold text-slate-700">{identifierCount}</span> identifiers masked ✓
+                </span>
+              )}
             </div>
           </div>
         </section>
