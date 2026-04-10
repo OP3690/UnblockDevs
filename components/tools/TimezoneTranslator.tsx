@@ -255,6 +255,19 @@ export default function TimezoneTranslator() {
     }
   };
 
+  // ⌘+Enter / Ctrl+Enter to convert
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        convertTime();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const convertTime = () => {
     if (!inputTime.trim() && !useCurrentTime) {
       toast.error('Please enter a time or use current time');
@@ -756,6 +769,7 @@ export default function TimezoneTranslator() {
                 className="cta-primary w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-green-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg"
               >
                 Convert Time
+                <kbd className="ml-2 hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>
               </button>
             </div>
           </div>
