@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import FixExpectedCommaOrBraceClient from './client';
 
@@ -157,6 +157,16 @@ export default function FixExpectedCommaOrBrace() {
             { href: '/json-beautifier', label: 'JSON Beautifier', desc: 'Format and validate JSON with inline error highlighting', icon: '{}' },
             { href: '/json-validator', label: 'JSON Validator', desc: 'Validate JSON syntax and report all errors', icon: '✅' },
             { href: '/json-comparator', label: 'JSON Comparator', desc: 'Compare fixed vs original JSON to see what changed', icon: '🔀' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Related Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'Top 10 JSON Errors' },
+            { href: '/blog/25-broken-json-examples-fix', label: '25 Broken JSON Examples' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Fix JSON Errors Guide' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Why JSON Breaks in APIs' },
+            { href: '/blog/json-best-practices-production-guide', label: 'JSON Best Practices' },
           ]} />
         </SEOSection>
       </ToolSEOContent>
