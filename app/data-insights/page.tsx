@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import DataInsightsClient from './client';
 
@@ -261,6 +261,15 @@ export default function DataInsightsPage() {
             { href: '/json-comparator', label: 'JSON Comparator', desc: 'Diff two JSON datasets to spot structural changes between versions', icon: '🔀' },
             { href: '/test-data-generator', label: 'Test Data Generator', desc: 'Generate realistic JSON or CSV test datasets to explore and validate', icon: '🏭' },
             { href: '/json-schema-generation', label: 'JSON Schema Generator', desc: 'Derive a JSON Schema from a sample dataset for validation and documentation', icon: '📐' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'Data Analysis with JSON' },
+            { href: '/blog/json-best-practices-production-guide', label: 'Analyzing API Response Data' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'CSV vs JSON for Data' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Cleaning Data Pipelines' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

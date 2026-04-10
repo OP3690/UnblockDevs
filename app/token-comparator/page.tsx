@@ -8,6 +8,7 @@ import ToolSEOContent, {
   UseCases,
   FAQ,
   RelatedTools,
+  RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import TokenComparatorLandingClient from './client';
 
@@ -410,6 +411,14 @@ export default function TokenComparatorLanding() {
               },
             ]}
           />
+        </SEOSection>
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'JWT Token Comparison Guide' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Auth Token Debugging' },
+            { href: '/blog/json-best-practices-production-guide', label: 'JWT Best Practices' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Fixing Token Errors' },
+          ]} />
         </SEOSection>
       </ToolSEOContent>
 

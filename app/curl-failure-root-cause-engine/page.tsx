@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import CurlFailureRootCauseClient from './client';
 
@@ -237,6 +237,15 @@ export default function CurlFailureRootCausePage() {
             { href: '/har-to-curl', label: 'HAR to cURL', desc: 'Convert browser network requests to cURL commands', icon: '📤' },
             { href: '/cors-tester', label: 'CORS Tester', desc: 'Test CORS headers and diagnose cross-origin errors', icon: '🌐' },
             { href: '/jwt-decoder', label: 'JWT Decoder', desc: 'Decode and verify the JWT token used in your Authorization header', icon: '🪙' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'cURL Error Reference' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Debugging cURL Failures' },
+            { href: '/blog/json-best-practices-production-guide', label: 'REST API Debugging Guide' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'HTTP Status Codes Guide' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

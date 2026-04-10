@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import SvgToImageClient from './client';
 
@@ -197,6 +197,15 @@ export default function SvgToImagePage() {
             { href: '/base64-encoder', label: 'Base64 Encoder', desc: 'Encode your converted image as Base64 for embedding in CSS or HTML', icon: '🔡' },
             { href: '/uuid-generator', label: 'UUID Generator', desc: 'Generate unique IDs for image asset filenames and manifests', icon: '🔑' },
             { href: '/hash-generator', label: 'Hash Generator', desc: 'Compute checksums of your exported image files for integrity checks', icon: '#️⃣' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'SVG in Web APIs Guide' },
+            { href: '/blog/json-best-practices-production-guide', label: 'Image Optimization Tips' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Base64 Images in APIs' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Frontend Asset Best Practices' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

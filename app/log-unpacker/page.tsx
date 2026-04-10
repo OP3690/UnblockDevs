@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import LogUnpackerClient from './client';
 
@@ -222,6 +222,15 @@ export default function LogUnpackerPage() {
             { href: '/json-prompt-shield', label: 'JSON Prompt Shield', desc: 'Mask JSON keys and values before sending to AI', icon: '🛡️' },
             { href: '/code-prompt-shield', label: 'Code Prompt Shield', desc: 'Sanitize code files with secrets and tokens before AI prompts', icon: '🔐' },
             { href: '/ai-schema-masker', label: 'AI Schema Masker', desc: 'Mask database schema names before sharing with AI', icon: '🔒' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'JSON in Log Lines Guide' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Structured Log Debugging' },
+            { href: '/blog/json-best-practices-production-guide', label: 'Log Parsing Best Practices' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Fixing Escaped JSON in Logs' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

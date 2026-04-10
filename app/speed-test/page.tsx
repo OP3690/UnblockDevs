@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import SpeedTestClient from './SpeedTestClient';
 
@@ -223,6 +223,15 @@ export default function SpeedTestPage() {
             { href: '/json-beautifier', label: 'JSON Beautifier', desc: 'Format and inspect JSON responses from API endpoints', icon: '{}' },
             { href: '/uuid-generator', label: 'UUID Generator', desc: 'Generate UUIDs for request tracing and correlation IDs', icon: '🔑' },
             { href: '/hash-generator', label: 'Hash Generator', desc: 'Generate checksums for verifying downloaded file integrity', icon: '#️⃣' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'Network Debugging Guide' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Slow API Responses Fix' },
+            { href: '/blog/json-best-practices-production-guide', label: 'API Performance Best Practices' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Diagnosing Latency Issues' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

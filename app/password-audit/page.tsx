@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import PasswordAuditClient from './client';
 
@@ -265,6 +265,15 @@ export default function PasswordAuditPage() {
             { href: '/hash-generator', label: 'Hash Generator', desc: 'bcrypt, Argon2, SHA-256 for securely storing passwords', icon: '#️⃣' },
             { href: '/token-comparator', label: 'Token Comparator', desc: 'Compare two tokens or hashes with constant-time visual diff', icon: '🔍' },
             { href: '/uuid-generator', label: 'UUID Generator', desc: 'Generate cryptographically random UUIDs for tokens and IDs', icon: '🔑' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'Security in APIs Guide' },
+            { href: '/blog/json-best-practices-production-guide', label: 'Password Policy Best Practices' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Auth Token Security' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Securing API Credentials' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

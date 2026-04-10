@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import TruthTableGeneratorClient from './client';
 
@@ -250,6 +250,15 @@ export default function TruthTableGeneratorPage() {
             { href: '/json-validator', label: 'JSON Validator', desc: 'Validate JSON schemas that encode conditional logic', icon: '✅' },
             { href: '/hash-generator', label: 'Hash Generator', desc: 'Generate checksums for comparing boolean expression outputs', icon: '#️⃣' },
             { href: '/uuid-generator', label: 'UUID Generator', desc: 'Generate UUIDs for test case identifiers in logic test suites', icon: '🔑' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'Logic in JSON Validation' },
+            { href: '/blog/json-best-practices-production-guide', label: 'Boolean Logic Best Practices' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Conditional API Logic Guide' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Debugging Complex Conditions' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

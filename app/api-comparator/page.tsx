@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import ApiComparatorClient from './client';
 
@@ -186,6 +186,15 @@ export default function ApiComparatorPage() {
             { href: '/json-beautifier', label: 'JSON Beautifier', desc: 'Format and validate JSON before comparing', icon: '{}' },
             { href: '/cors-tester', label: 'CORS Tester', desc: 'Test the CORS headers on the API endpoints you are comparing', icon: '🌐' },
             { href: '/har-to-curl', label: 'HAR to cURL', desc: 'Convert browser network requests to cURL commands for API testing', icon: '🔄' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'API Response Comparison Guide' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Why API Responses Differ' },
+            { href: '/blog/json-best-practices-production-guide', label: 'API Versioning Best Practices' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Debugging API Drift' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import ConfigComparatorClient from './client';
 
@@ -197,6 +197,15 @@ export default function ConfigComparatorPage() {
             { href: '/json-beautifier', label: 'JSON Beautifier', desc: 'Format and pretty-print JSON before comparing', icon: '{}' },
             { href: '/ai-schema-masker', label: 'AI Schema Masker', desc: 'Redact sensitive fields from JSON before sharing', icon: '🛡️' },
             { href: '/token-comparator', label: 'Token Comparator', desc: 'Decode and compare JWT tokens side by side', icon: '🔐' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'Config File Best Practices' },
+            { href: '/blog/json-best-practices-production-guide', label: 'Managing JSON Configs' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Config Drift in Production' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Debugging Config Errors' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

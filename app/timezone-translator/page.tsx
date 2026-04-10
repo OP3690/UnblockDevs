@@ -9,6 +9,7 @@ import ToolSEOContent, {
   UseCases,
   FAQ,
   RelatedTools,
+  RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 
 const canonicalUrl = 'https://unblockdevs.com/timezone-translator';
@@ -381,6 +382,14 @@ export default function TimezoneTranslatorPage() {
               },
             ]}
           />
+        </SEOSection>
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'Timezone in APIs Guide' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'UTC vs Local Time in JSON' },
+            { href: '/blog/json-best-practices-production-guide', label: 'Datetime Best Practices' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Fixing Timezone Errors' },
+          ]} />
         </SEOSection>
       </ToolSEOContent>
       <ToolPageFooterBand />
