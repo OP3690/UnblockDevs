@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Database, Copy, Check, Download, Users, FileText, CreditCard, ShoppingBag, Newspaper, Sparkles, Server, Shield, Brain, Activity, AlertTriangle, TrendingUp } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy } from '@/lib/analytics';
@@ -515,6 +515,19 @@ export default function TestDataGenerator() {
     return results;
   };
 
+  // ⌘+Enter / Ctrl+Enter to generate
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        handleGenerate();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleGenerate = () => {
     try {
       let data: any[] = [];
@@ -765,6 +778,7 @@ export default function TestDataGenerator() {
         >
           <Database className="w-5 h-5" />
           Generate Test Data
+          <kbd className="hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>
         </button>
       </div>
 

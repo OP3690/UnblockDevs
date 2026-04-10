@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Server, Copy, Check, Download, Play, ChevronDown, ChevronUp, Zap } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy } from '@/lib/analytics';
@@ -121,6 +121,19 @@ export default function MockApiGenerator() {
   const updateConfig = (updates: Partial<MockApiConfig>) => {
     setConfig((c) => ({ ...c, ...updates }));
   };
+
+  // ⌘+Enter / Ctrl+Enter to generate
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        generateMockApi();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const generateMockApi = () => {
     if (config.responseMode === 'static') {
@@ -498,6 +511,7 @@ export default function MockApiGenerator() {
         >
             <Zap className="w-5 h-5" />
           Generate Mock API
+            <kbd className="hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>
         </button>
         </div>
       </div>
