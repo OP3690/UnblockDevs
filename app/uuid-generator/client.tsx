@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import {
   Copy,
@@ -98,6 +98,19 @@ export default function UuidGeneratorClient() {
     if (quantity >= 1000) setBenchmarkResult(performance.now() - start);
     toast.success(`Generated ${quantity} UUID${quantity > 1 ? 's' : ''}`);
   }, [version, quantity, namespace, namespaceName]);
+
+  // ⌘+Enter / Ctrl+Enter → generate UUIDs
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        generate();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [generate]);
 
   const copyOne = (uuid: string) => {
     const formatted = formatOne(uuid);

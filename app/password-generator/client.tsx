@@ -116,6 +116,19 @@ export default function PasswordGeneratorClient() {
 
   useEffect(() => { generate(); }, []);
 
+  // ⌘+Enter / Ctrl+Enter → regenerate password
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        generate();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [generate]);
+
   useEffect(() => {
     try {
       const raw = localStorage.getItem(HISTORY_KEY);
