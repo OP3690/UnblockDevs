@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useMemo, useDeferredValue } from 'react';
+import { useState, useRef, useMemo, useDeferredValue, useEffect } from 'react';
 import {
   Key,
   Copy,
@@ -93,6 +93,19 @@ export default function TokenComparator() {
   );
 
   const normalizeToken = (token: string) => token.replace(/\s+/g, '');
+  // ⌘+Enter / Ctrl+Enter to compare
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        compareTokens();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const compareTokens = () => {
     if (!token1.trim() || !token2.trim()) {
       toast.error('Please enter both tokens to compare');
@@ -417,6 +430,7 @@ export default function TokenComparator() {
           <div className="flex flex-wrap gap-3">
             <button type="button" onClick={compareTokens} className="flex-1 min-w-[140px] bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all">
               Compare Tokens
+              <kbd className="ml-2 hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>
             </button>
             {comparisonStats && (
               <button type="button" onClick={exportComparisonJson} className="px-4 py-3 bg-slate-700 text-white rounded-lg font-semibold hover:bg-slate-800 flex items-center gap-2 text-sm">

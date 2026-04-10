@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useMemo, useCallback } from 'react';
+import { useState, useRef, useMemo, useCallback, useEffect } from 'react';
 import { Settings, Eye, EyeOff, Copy, Download, FileCode, Filter, Plus, Minus, RefreshCw, ArrowRightLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { validateJson } from '@/lib/jsonParser';
@@ -90,6 +90,19 @@ export default function ConfigComparator() {
     const v = validateJson(text);
     if (!v.valid) throw new Error('Invalid JSON');
     return v.data;
+  }, []);
+
+  // ⌘+Enter / Ctrl+Enter to compare
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        compareConfigs();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const compareConfigs = useCallback(() => {
@@ -283,6 +296,7 @@ export default function ConfigComparator() {
           className="w-full py-2.5 bg-primary-600 text-white rounded-lg font-semibold text-sm hover:bg-primary-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
         >
           <ArrowRightLeft className="w-4 h-4" /> Compare Configs
+          <kbd className="hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>
         </button>
       </div>
 
