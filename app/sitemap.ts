@@ -392,6 +392,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changefreq: 'monthly' as const,
     },
     {
+      url: 'pdf-to-excel-word',
+      priority: 0.85,
+      changefreq: 'weekly' as const,
+    },
+    {
       url: 'svg-to-image',
       priority: 0.85,
       changefreq: 'weekly' as const,
