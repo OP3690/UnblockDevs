@@ -9,6 +9,7 @@ import ToolSEOContent, {
   UseCases,
   FAQ,
   RelatedTools,
+  RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 
 const canonicalUrl = 'https://unblockdevs.com/prompt-chunker';
@@ -369,6 +370,14 @@ export default function PromptChunkerLanding() {
               },
             ]}
           />
+        </SEOSection>
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'AI Context Window Guide' },
+            { href: '/blog/json-best-practices-production-guide', label: 'LLM Prompt Engineering Tips' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Chunking API Responses' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Token Limits Explained' },
+          ]} />
         </SEOSection>
       </ToolSEOContent>
       <ToolPageFooterBand />

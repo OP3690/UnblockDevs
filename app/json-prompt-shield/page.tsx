@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import JsonPromptShieldClient from './client';
 
@@ -253,6 +253,15 @@ export default function JsonPromptShieldPage() {
             { href: '/code-prompt-shield', label: 'Code Prompt Shield', desc: 'Sanitize code files before pasting into AI — remove tokens, secrets, paths', icon: '🛡️' },
             { href: '/json-beautifier', label: 'JSON Beautifier', desc: 'Format and validate JSON before masking to ensure it is clean', icon: '{}' },
             { href: '/json-validator', label: 'JSON Validator', desc: 'Validate JSON syntax to catch errors before processing', icon: '✅' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'JSON Privacy for AI' },
+            { href: '/blog/json-best-practices-production-guide', label: 'Masking JSON for LLMs' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Safe AI API Workflows' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'JSON Prompt Engineering' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

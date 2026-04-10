@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import CodePromptShieldClient from './client';
 
@@ -284,6 +284,15 @@ export default function CodePromptShieldPage() {
             { href: '/ai-schema-masker', label: 'AI Schema Masker', desc: 'Mask SQL table and column names before sending to AI', icon: '🗄️' },
             { href: '/hash-generator', label: 'Hash Generator', desc: 'Generate SHA-256, MD5, and other hashes for data integrity', icon: '#️⃣' },
             { href: '/base64-encoder', label: 'Base64 Encoder', desc: 'Encode and decode Base64 strings in your browser', icon: '🔤' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'Code Privacy for AI' },
+            { href: '/blog/json-best-practices-production-guide', label: 'Masking Secrets in Code' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Safe AI Code Reviews' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'AI Prompt Engineering Tips' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

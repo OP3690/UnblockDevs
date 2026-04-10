@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import MockApiGeneratorClient from './client';
 
@@ -236,6 +236,15 @@ export default function MockApiGeneratorPage() {
             { href: '/uuid-generator', label: 'UUID Generator', desc: 'Generate UUIDs to use as mock resource IDs in your responses', icon: '🆔' },
             { href: '/curl-converter', label: 'cURL Converter', desc: 'Convert cURL commands to code after testing against your mock', icon: '⚡' },
             { href: '/hash-generator', label: 'Hash Generator', desc: 'Hash mock passwords or tokens for realistic auth response payloads', icon: '🔑' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'Mock API Design Guide' },
+            { href: '/blog/json-best-practices-production-guide', label: 'JSON API Best Practices' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'API Testing Strategies' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Debugging Mock Responses' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

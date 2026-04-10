@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import LogExplorerClient from './client';
 
@@ -242,6 +242,15 @@ export default function LogExplorerPage() {
             { href: '/json-comparator', label: 'JSON Comparator', desc: 'Diff two log entries or API responses side by side', icon: '🔀' },
             { href: '/base64-encoder', label: 'Base64 Encoder', desc: 'Decode Base64-encoded values found in log fields', icon: '🔤' },
             { href: '/uuid-generator', label: 'UUID Generator', desc: 'Generate trace IDs and correlation IDs for logging', icon: '🔑' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'Top 10 JSON Log Errors' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Debugging API Logs' },
+            { href: '/blog/json-best-practices-production-guide', label: 'Structured Logging Guide' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Fix JSON in Log Lines' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

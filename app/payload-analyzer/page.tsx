@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import PayloadAnalyzerClient from './client';
 
@@ -254,6 +254,15 @@ export default function PayloadAnalyzerPage() {
             { href: '/jwt-decoder', label: 'JWT Decoder', desc: 'Decode and inspect JWT tokens found in Authorization headers or request bodies', icon: '🪙' },
             { href: '/json-beautifier', label: 'JSON Beautifier', desc: 'Format and syntax-highlight JSON payloads for easier reading', icon: '✨' },
             { href: '/token-comparator', label: 'Token Comparator', desc: 'Compare two auth tokens side-by-side to spot differences in claims', icon: '🔀' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'Top 10 JSON Payload Errors' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Why API Payloads Break' },
+            { href: '/blog/json-best-practices-production-guide', label: 'Payload Design Best Practices' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Fix Payload Parsing Errors' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

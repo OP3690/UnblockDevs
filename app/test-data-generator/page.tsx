@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import TestDataGeneratorClient from './client';
 
@@ -257,6 +257,15 @@ export default function TestDataGeneratorPage() {
             { href: '/json-beautifier', label: 'JSON Beautifier', desc: 'Format and prettify generated JSON output', icon: '✨' },
             { href: '/json-schema-generation', label: 'JSON Schema Generator', desc: 'Create a schema from sample JSON, then generate data', icon: '📐' },
             { href: '/mock-api-generator', label: 'Mock API Generator', desc: 'Serve generated test data through a mock endpoint', icon: '📡' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'Test Data JSON Guide' },
+            { href: '/blog/json-best-practices-production-guide', label: 'Seed Data Best Practices' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'API Testing with Fake Data' },
+            { href: '/blog/25-broken-json-examples-fix', label: '25 Broken JSON Examples' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

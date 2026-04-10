@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import AiSchemaMaskerClient from './client';
 
@@ -282,6 +282,15 @@ export default function AiSchemaMaskerPage() {
             { href: '/json-prompt-shield', label: 'JSON Prompt Shield', desc: 'Mask JSON keys and string values before pasting into ChatGPT', icon: '🔒' },
             { href: '/hash-generator', label: 'Hash Generator', desc: 'Generate SHA-256, MD5, and other hashes for data integrity', icon: '#️⃣' },
             { href: '/base64-encoder', label: 'Base64 Encoder', desc: 'Encode and decode Base64 strings in your browser', icon: '🔤' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'AI Privacy in JSON APIs' },
+            { href: '/blog/json-best-practices-production-guide', label: 'Masking PII in Production' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Safe AI Prompt Engineering' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'JSON Schema for AI Tools' },
           ]} />
         </SEOSection>
       </ToolSEOContent>
