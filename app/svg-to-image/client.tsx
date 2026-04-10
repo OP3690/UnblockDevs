@@ -262,6 +262,19 @@ export default function SvgToImageClient() {
     setSvgInput(baked);
   }, [overrides, hasOverrideActive]);
 
+  // ⌘+Enter / Ctrl+Enter to export PNG
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        handleExportPng();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     const raw = svgInput.trim();
     if (!raw) {
@@ -614,6 +627,7 @@ export default function SvgToImageClient() {
                 >
                   <Download className="w-4 h-4" aria-hidden />
                   Export PNG
+                  <kbd className="hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>
                 </button>
                 <button
                   type="button"
