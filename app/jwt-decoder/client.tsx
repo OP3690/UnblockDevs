@@ -126,6 +126,19 @@ export default function JWTDecoderClient() {
     }
   }, []);
 
+  // ⌘+Enter / Ctrl+Enter to verify when on verify tab
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        if (activeTab === 'verify') handleVerify();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
+
   const addToHistory = (t: string) => {
     const trimmed = t.trim();
     if (!trimmed) return;
@@ -724,6 +737,7 @@ export default function JWTDecoderClient() {
                             className="px-4 py-2.5 bg-primary-600 text-white rounded-xl font-medium text-sm hover:bg-primary-700 transition-colors shadow-sm"
                           >
                             Verify
+                            <kbd className="ml-1 hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>
                           </button>
                         </div>
                         {verifyResult && (

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import {
   ArrowLeft,
@@ -348,6 +348,19 @@ export default function JsonToExcelClient() {
     setFilters([]);
     historyManager.clear();
   };
+
+  // ⌘+Enter / Ctrl+Enter to export
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        doExport();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const doExport = () => {
     const columnIds =
@@ -761,6 +774,7 @@ export default function JsonToExcelClient() {
               >
                 <Download className="w-4 h-4" />
                 Download {exportFormat.toUpperCase()}
+                <kbd className="hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>
               </button>
               {multiSheetCandidates.length > 1 && (
                 <button
