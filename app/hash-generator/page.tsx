@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import HashGeneratorClient from './client';
 
@@ -216,6 +216,15 @@ export default function HashGeneratorPage() {
             { href: '/base64-encoder', label: 'Base64 Encoder', desc: 'Encode hash output from hex to Base64', icon: '🔤' },
             { href: '/jwt-decoder', label: 'JWT Decoder', desc: 'JWTs use HMAC or RSA for signing — decode them', icon: '🪙' },
             { href: '/token-comparator', label: 'Token Comparator', desc: 'Compare hash values character-by-character', icon: '🔍' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'Hashing & Security Guide' },
+            { href: '/blog/json-best-practices-production-guide', label: 'API Security Best Practices' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Encoding in REST APIs' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Debugging Data Integrity' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

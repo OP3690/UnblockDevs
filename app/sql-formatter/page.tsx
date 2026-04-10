@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import SqlFormatterClient from './client';
 
@@ -254,6 +254,15 @@ export default function SqlFormatterPage() {
             { href: '/json-comparator', label: 'JSON Comparator', desc: 'Semantic diff for two JSON payloads side by side', icon: '🔀' },
             { href: '/hash-generator', label: 'Hash Generator', desc: 'Generate MD5, SHA-256 checksums for query auditing', icon: '#️⃣' },
             { href: '/uuid-generator', label: 'UUID Generator', desc: 'Generate UUIDs for INSERT statements and test data', icon: '🔑' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'Top SQL Formatting Tips' },
+            { href: '/blog/json-best-practices-production-guide', label: 'SQL Best Practices' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Debugging SQL in APIs' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Common SQL Errors Guide' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

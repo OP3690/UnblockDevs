@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import JsonFixerOnlineClient from './client';
 
@@ -247,6 +247,16 @@ export default function JsonFixerOnline() {
             { href: '/json-comparator', label: 'JSON Comparator', desc: 'Diff two JSON objects side-by-side to spot differences', icon: '🔀' },
             { href: '/json-schema-generation', label: 'JSON Schema Generator', desc: 'Generate a JSON Schema from any valid JSON object', icon: '📐' },
             { href: '/hash-generator', label: 'Hash Generator', desc: 'Hash JSON payloads for integrity checks or caching keys', icon: '🔑' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'Top 10 JSON Errors' },
+            { href: '/blog/25-broken-json-examples-fix', label: '25 Broken JSON Examples' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Fix JSON Errors Guide' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Why JSON Breaks in APIs' },
+            { href: '/blog/json-stringify-vs-json-parse-difference', label: 'stringify vs parse' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

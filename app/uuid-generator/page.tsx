@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import UuidGeneratorClient from './client';
 
@@ -222,6 +222,15 @@ export default function UuidGeneratorPage() {
             { href: '/token-comparator', label: 'Token Comparator', desc: 'Compare two UUIDs or tokens with visual diff', icon: '🔍' },
             { href: '/json-comparator', label: 'JSON Comparator', desc: 'Semantic diff that normalises UUID noise', icon: '🔀' },
             { href: '/base64-encoder', label: 'Base64 Encoder', desc: 'Encode UUIDs as Base64 or decode values', icon: '🔤' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'UUIDs in API Design' },
+            { href: '/blog/json-best-practices-production-guide', label: 'Unique IDs Best Practices' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'ID Strategies for Databases' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Distributed Systems IDs' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

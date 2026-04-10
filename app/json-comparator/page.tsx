@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import JsonComparatorClient from './client';
 
@@ -220,6 +220,15 @@ export default function JsonComparatorPage() {
             { href: '/jwt-decoder', label: 'JWT Decoder', desc: 'Inspect JWT payloads found in API responses', icon: '🔑' },
             { href: '/token-comparator', label: 'Token Comparator', desc: 'Character-level diff for tokens and short strings', icon: '🔍' },
             { href: '/uuid-generator', label: 'UUID Generator', desc: 'Generate UUIDs to use as test fixture IDs', icon: '🆔' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'Top 10 JSON Errors' },
+            { href: '/blog/json-best-practices-production-guide', label: 'JSON Best Practices' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Why JSON Breaks in APIs' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Fix JSON Errors Guide' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

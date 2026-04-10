@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import RegexTesterClient from './client';
 
@@ -264,6 +264,15 @@ export default function RegexTesterPage() {
             { href: '/url-encoder', label: 'URL Encoder', desc: 'Encode strings extracted via regex before using in URLs or query parameters', icon: '🔗' },
             { href: '/hash-generator', label: 'Hash Generator', desc: 'Hash matched strings for safe logging or comparison', icon: '#️⃣' },
             { href: '/token-comparator', label: 'Token Comparator', desc: 'Compare extracted tokens or pattern matches side by side', icon: '🔍' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'Regex for JSON Validation' },
+            { href: '/blog/json-best-practices-production-guide', label: 'Input Validation Patterns' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Pattern Matching in APIs' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Debugging Regex Errors' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

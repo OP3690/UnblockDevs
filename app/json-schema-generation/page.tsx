@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import JsonSchemaGenerationClient from './client';
 
@@ -228,6 +228,15 @@ export default function JsonSchemaGenerationPage() {
             { href: '/json-comparator', label: 'JSON Comparator', desc: 'Diff two JSON objects or API responses semantically', icon: '🔀' },
             { href: '/uuid-generator', label: 'UUID Generator', desc: 'Generate UUIDs for test fixtures and sample data', icon: '🆔' },
             { href: '/hash-generator', label: 'Hash Generator', desc: 'Compute SHA-256 or MD5 hashes for data integrity', icon: '#️⃣' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'JSON Schema Guide' },
+            { href: '/blog/json-best-practices-production-guide', label: 'JSON Best Practices' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'API Validation with Schemas' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Fix JSON Validation Errors' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

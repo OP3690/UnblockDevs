@@ -8,6 +8,7 @@ import ToolSEOContent, {
   UseCases,
   FAQ,
   RelatedTools,
+  RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import UrlEncoderClient from './client';
 
@@ -415,6 +416,14 @@ export default function UrlEncoderPage() {
               },
             ]}
           />
+        </SEOSection>
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'URL Encoding Guide' },
+            { href: '/blog/json-best-practices-production-guide', label: 'API Query Strings Best Practices' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Encoding in REST APIs' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Debugging Percent-Encoded URLs' },
+          ]} />
         </SEOSection>
       </ToolSEOContent>
       <ToolPageFooterBand toolName="url_encoder" />

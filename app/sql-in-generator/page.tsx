@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import SqlInGeneratorClient from './client';
 
@@ -181,6 +181,15 @@ export default function SqlInGeneratorPage() {
             { href: '/json-beautifier', label: 'JSON Beautifier', desc: 'Format the JSON array before extracting IDs for your IN clause', icon: '{}' },
             { href: '/test-data-generator', label: 'Test Data Generator', desc: 'Generate sets of test IDs and values to test your IN clause queries', icon: '🧪' },
             { href: '/uuid-generator', label: 'UUID Generator', desc: 'Generate UUID primary keys for SQL IN clause filtering', icon: '🔑' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'SQL IN Clause Guide' },
+            { href: '/blog/json-best-practices-production-guide', label: 'SQL Query Optimization' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Parameterized Queries Guide' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'SQL Injection Prevention' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

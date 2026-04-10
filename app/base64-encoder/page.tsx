@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import Base64EncoderClient from './client';
 
@@ -203,6 +203,15 @@ export default function Base64EncoderPage() {
             { href: '/hash-generator', label: 'Hash Generator', desc: 'MD5, SHA-256, HMAC, bcrypt/Argon2 hashes', icon: '#️⃣' },
             { href: '/code-prompt-shield', label: 'Code Prompt Shield', desc: 'Mask secrets before sending code to AI', icon: '🔐' },
             { href: '/json-prompt-shield', label: 'JSON Prompt Shield', desc: 'Mask JSON keys and values before AI', icon: '🔒' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'Encoding in HTTP APIs' },
+            { href: '/blog/json-best-practices-production-guide', label: 'Base64 Use Cases Guide' },
+            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Binary Data in REST APIs' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Data Encoding Best Practices' },
           ]} />
         </SEOSection>
       </ToolSEOContent>
