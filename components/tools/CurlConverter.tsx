@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   Code,
   Copy,
@@ -69,6 +69,19 @@ export default function CurlConverter() {
   const [history, setHistory] = useState<Array<{ cmd: string; lang: string; ts: number }>>([]);
   const [showHistory, setShowHistory] = useState(false);
   const resultsSectionRef = useRef<HTMLDivElement>(null);
+
+  // ⌘+Enter / Ctrl+Enter to convert
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        convert();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const convert = () => {
     const p = parseCurl(curlCommand);
@@ -271,6 +284,7 @@ export default function CurlConverter() {
             className="cta-curl-convert w-full py-3 bg-slate-700 text-white font-semibold rounded-lg hover:bg-slate-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
         >
           Convert cURL to Code
+          <kbd className="ml-2 hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>
         </button>
       </div>
       </div>
