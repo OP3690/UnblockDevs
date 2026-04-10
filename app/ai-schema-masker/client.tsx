@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ShieldCheck, Cpu, RefreshCw, Clipboard, Download, Upload, Shield, Plus, Trash2, FileCode, Lock, Award } from 'lucide-react';
+import { ShieldCheck, Cpu, RefreshCw, Clipboard, Download, Upload, Shield, Plus, Trash2, FileCode, Lock, Award, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { trackCopy, trackCtaClick } from '@/lib/analytics';
 
 type TableSchema = { id: string; name: string; columns: string[] };
@@ -563,88 +563,125 @@ export default function AiSchemaMaskerClient() {
             </div>
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-2">
-          <div id="schema-masker-input" className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col min-h-[300px]">
-            <div className="flex flex-wrap items-start justify-between gap-3 px-4 py-3 border-b border-slate-100 bg-slate-50/50">
-              <div className="min-w-0">
-                <h3 className="text-sm font-semibold text-slate-900">Original input</h3>
-                <p className="text-xs text-slate-500 mt-0.5">SQL, procedures,<br />CTEs, or JSON (up to ~5MB)</p>
-              </div>
-              <div className="flex flex-wrap items-center gap-2 ml-auto flex-shrink-0">
-                {[
-                  { label: '🔗 JOIN query', data: DEFAULT_EXAMPLE },
-                  { label: '📊 CTE', data: SAMPLE_CTE },
-                  { label: '✏️ UPDATE', data: SAMPLE_UPDATE },
-                  { label: '📋 JSON schema', data: SAMPLE_JSON_SCHEMA },
-                ].map((s) => (
-                  <button
-                    key={s.label}
-                    type="button"
-                    onClick={() => { trackCtaClick('ai_schema_masker', 'load_example'); setInput(s.data); }}
-                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-primary-200 bg-primary-50 text-xs font-medium text-primary-700 hover:bg-primary-100 transition-colors"
-                  >
-                    {s.label}
-                  </button>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (input.trim()) setInput('');
-                    else { trackCtaClick('ai_schema_masker', 'load_example'); setInput(DEFAULT_EXAMPLE); }
-                    document.getElementById('schema-masker-input')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                  }}
-                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-200 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 hover:border-slate-300 transition-colors"
-                >
-                  <RefreshCw className="w-3.5 h-3.5" />
-                  {input.trim() ? 'Clear' : 'Example'}
-                </button>
-              </div>
-            </div>
-            <div className="flex-1 min-h-[240px] flex flex-col">
-              <TextAreaEditor value={input} onChange={setInput} placeholder="Paste your SQL or JSON here…" />
-            </div>
-          </div>
-
-          <div id="schema-masker-output" className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col min-h-[260px]">
-            <div className="flex flex-wrap items-start justify-between gap-3 px-4 py-3 border-b border-slate-100 bg-slate-50/50">
-              <div className="min-w-0">
-                <h3 className="text-sm font-semibold text-slate-900">Masked output</h3>
-                <p className="text-xs text-slate-500 mt-0.5">Copy and send to AI</p>
-              </div>
-              <button
-                type="button"
-                onClick={handleCopyMasked}
-                disabled={!maskedOutput}
-                className="cta-icon-copy inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-200 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex-shrink-0"
-              >
-                <Clipboard className="w-3.5 h-3.5" />
-                Copy
-              </button>
-            </div>
-            <div className="flex-1 min-h-[200px] flex flex-col">
-              <TextAreaEditor value={maskedOutput} onChange={setMaskedOutput} placeholder="Masked query appears here" />
-            </div>
-          </div>
-          </div>
-
-          {/* Primary CTA — always visible, never clipped */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 py-1">
+          {/* Mobile-only CTA — shown above panels when stacked */}
+          <div className="flex lg:hidden">
             <button
               type="button"
               onClick={handleMask}
               disabled={!input.trim() || processing}
-              className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-primary-600 text-white text-base font-semibold hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-md transition-colors w-full sm:w-auto justify-center"
+              className="inline-flex items-center justify-center gap-2.5 w-full px-6 py-3 rounded-xl bg-primary-600 text-white text-base font-semibold hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-md transition-colors"
             >
               <Shield className="w-5 h-5" />
               {processing ? 'Masking…' : 'Mask identifiers'}
-              <kbd className="hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1.5 py-0.5 font-mono text-[11px]">⌘↵</kbd>
+              <kbd className="inline-flex items-center rounded border border-white/30 bg-white/20 px-1.5 py-0.5 font-mono text-[11px]">⌘↵</kbd>
             </button>
-            {identifierCountMask > 0 && (
-              <span className="text-sm text-slate-500">
-                <span className="font-semibold text-slate-700">{identifierCountMask}</span> identifiers masked ✓
-              </span>
-            )}
           </div>
+
+          {/* Desktop 3-column: [Input] [Mask action] [Output] */}
+          <div className="grid gap-4 lg:grid-cols-[1fr_148px_1fr]">
+
+            {/* Left: Input panel */}
+            <div id="schema-masker-input" className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col min-h-[300px]">
+              <div className="flex flex-wrap items-start justify-between gap-2 px-4 py-3 border-b border-slate-100 bg-slate-50/50">
+                <div className="min-w-0">
+                  <h3 className="text-sm font-semibold text-slate-900">Original input</h3>
+                  <p className="text-xs text-slate-500 mt-0.5">SQL, procedures, CTEs, or JSON (up to ~5MB)</p>
+                </div>
+                <div className="flex flex-wrap items-center gap-1.5 mt-1">
+                  {[
+                    { label: '🔗 JOIN', data: DEFAULT_EXAMPLE },
+                    { label: '📊 CTE', data: SAMPLE_CTE },
+                    { label: '✏️ UPDATE', data: SAMPLE_UPDATE },
+                    { label: '📋 JSON', data: SAMPLE_JSON_SCHEMA },
+                  ].map((s) => (
+                    <button
+                      key={s.label}
+                      type="button"
+                      onClick={() => { trackCtaClick('ai_schema_masker', 'load_example'); setInput(s.data); }}
+                      className="inline-flex items-center px-2 py-1 rounded-md border border-primary-200 bg-primary-50 text-[11px] font-medium text-primary-700 hover:bg-primary-100 transition-colors"
+                    >
+                      {s.label}
+                    </button>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (input.trim()) setInput('');
+                      else { trackCtaClick('ai_schema_masker', 'load_example'); setInput(DEFAULT_EXAMPLE); }
+                    }}
+                    className="inline-flex items-center gap-1 px-2 py-1 rounded-md border border-slate-200 text-[11px] font-medium text-slate-600 bg-white hover:bg-slate-50 transition-colors"
+                  >
+                    <RefreshCw className="w-3 h-3" />
+                    {input.trim() ? 'Clear' : 'Example'}
+                  </button>
+                </div>
+              </div>
+              <div className="flex-1 min-h-[240px] flex flex-col">
+                <TextAreaEditor value={input} onChange={setInput} placeholder="Paste your SQL or JSON here…" />
+              </div>
+            </div>
+
+            {/* Center: Mask action column — desktop only */}
+            <div className="hidden lg:flex flex-col items-center justify-center gap-4 px-2">
+              <button
+                type="button"
+                onClick={handleMask}
+                disabled={!input.trim() || processing}
+                className="group flex flex-col items-center gap-2.5 w-full py-6 px-3 rounded-2xl bg-primary-600 text-white hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg transition-all hover:shadow-xl hover:scale-[1.03] active:scale-[0.98]"
+              >
+                <Shield className="w-7 h-7" />
+                <span className="text-sm font-bold leading-tight text-center">
+                  {processing ? 'Masking…' : 'Mask'}
+                </span>
+                <ArrowRight className="w-5 h-5 opacity-80" />
+                <kbd className="inline-flex items-center rounded border border-white/30 bg-white/20 px-1.5 py-0.5 font-mono text-[10px]">⌘↵</kbd>
+              </button>
+
+              {/* Status badge */}
+              {identifierCountMask > 0 ? (
+                <div className="flex flex-col items-center gap-1 text-center">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <span className="text-xs font-semibold text-slate-700">{identifierCountMask}</span>
+                  <span className="text-[10px] text-slate-500 leading-tight">identifiers<br />masked</span>
+                </div>
+              ) : (
+                <p className="text-[10px] text-slate-400 text-center leading-relaxed">
+                  Paste SQL,<br />then click<br />to mask
+                </p>
+              )}
+            </div>
+
+            {/* Right: Output panel */}
+            <div id="schema-masker-output" className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col min-h-[260px]">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 bg-slate-50/50">
+                <div className="min-w-0">
+                  <h3 className="text-sm font-semibold text-slate-900">Masked output</h3>
+                  <p className="text-xs text-slate-500 mt-0.5">Copy and send to AI</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleCopyMasked}
+                  disabled={!maskedOutput}
+                  className="cta-icon-copy inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-200 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex-shrink-0"
+                >
+                  <Clipboard className="w-3.5 h-3.5" />
+                  Copy
+                </button>
+              </div>
+              <div className="flex-1 min-h-[200px] flex flex-col">
+                <TextAreaEditor value={maskedOutput} onChange={setMaskedOutput} placeholder="Masked query appears here" />
+              </div>
+            </div>
+
+          </div>
+
+          {/* Mobile status — shown below panels when stacked */}
+          {identifierCountMask > 0 && (
+            <div className="flex lg:hidden items-center justify-center gap-2 text-sm text-slate-600">
+              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+              <span><span className="font-semibold text-slate-800">{identifierCountMask}</span> identifiers masked</span>
+            </div>
+          )}
 
           <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
             <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-b border-slate-100 bg-slate-50/50">
