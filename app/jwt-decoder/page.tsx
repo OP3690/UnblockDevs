@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import JWTDecoderClient from './client';
 
@@ -226,6 +226,14 @@ export default function JWTDecoderPage() {
             { href: '/base64-encoder', label: 'Base64 Encoder', desc: 'Manually decode JWT parts (header/payload) with Base64URL', icon: '🔤' },
             { href: '/code-prompt-shield', label: 'Code Prompt Shield', desc: 'Mask tokens and secrets before sharing code with AI', icon: '🔐' },
             { href: '/hash-generator', label: 'Hash Generator', desc: 'Generate HMAC-SHA256 signatures for API signing', icon: '#️⃣' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/token-security-privacy-best-practices', label: 'Token Security Best Practices' },
+            { href: '/blog/tokens-complete-guide', label: 'JWT Tokens Complete Guide' },
+            { href: '/blog/stringified-json-hell-unescape-decode-jwt-epoch-sanitize-logs', label: 'Decode JWT in Logs' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

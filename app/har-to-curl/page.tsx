@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import HarToCurlClient from './client';
 
@@ -244,6 +244,14 @@ export default function HarToCurl() {
             { href: '/token-comparator', label: 'Token Comparator', desc: 'Compare two auth tokens to spot differences in claims', icon: '🔀' },
             { href: '/hash-generator', label: 'Hash Generator', desc: 'Hash request payloads for integrity checks', icon: '🔑' },
             { href: '/base64-encoder', label: 'Base64 Encoder', desc: 'Decode Base64-encoded values found in HAR headers or bodies', icon: '🔤' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/har-to-curl-converter-complete-guide', label: 'HAR to cURL Guide' },
+            { href: '/blog/copy-as-curl-from-browser-guide', label: 'Copy as cURL from Browser' },
+            { href: '/blog/post-json-data-with-curl-examples-complete-guide', label: 'POST JSON with cURL' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

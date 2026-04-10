@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import JsonToExcelClient from './client';
 
@@ -225,6 +225,14 @@ export default function JsonToExcelPage() {
             { href: '/json-validator', label: 'JSON Validator', desc: 'Validate your JSON syntax to prevent conversion errors', icon: '✅' },
             { href: '/json-comparator', label: 'JSON Comparator', desc: 'Compare two JSON datasets before exporting to Excel', icon: '🔀' },
             { href: '/test-data-generator', label: 'Test Data Generator', desc: 'Generate sample JSON datasets to test your Excel export workflow', icon: '🧪' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/json-to-excel-converter-best-practices', label: 'JSON to Excel Best Practices' },
+            { href: '/blog/json-best-practices-production-guide', label: 'JSON Best Practices' },
+            { href: '/blog/api-payload-size-optimization', label: 'API Payload Optimization' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

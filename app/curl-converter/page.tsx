@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import CurlConverterClient from './client';
 
@@ -265,6 +265,15 @@ export default function CurlConverterPage() {
             { href: '/jwt-decoder', label: 'JWT Decoder', desc: 'Decode JWT tokens found in cURL Authorization headers', icon: '🪙' },
             { href: '/hash-generator', label: 'Hash Generator', desc: 'Hash API keys or payloads for integrity verification', icon: '🔑' },
             { href: '/base64-encoder', label: 'Base64 Encoder', desc: 'Encode or decode Base64 values used in Basic Auth headers', icon: '🔤' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/curl-to-code-converter-guide', label: 'cURL to Code Guide' },
+            { href: '/blog/post-json-data-with-curl-examples-complete-guide', label: 'POST JSON with cURL' },
+            { href: '/blog/why-my-api-works-in-postman-but-not-in-browser', label: 'Postman vs Browser' },
+            { href: '/blog/har-to-curl-converter-complete-guide', label: 'HAR to cURL Guide' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

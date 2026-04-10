@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
-  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools,
+  SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
 import JsonValidatorClient from './client';
 
@@ -258,6 +258,15 @@ export default function JsonValidatorPage() {
             { href: '/json-schema-generation', label: 'JSON Schema Generator', desc: 'Auto-generate a Draft 7 or OpenAPI schema from sample JSON', icon: '📐' },
             { href: '/json-comparator', label: 'JSON Comparator', desc: 'Diff two JSON documents and highlight structural differences', icon: '🔀' },
             { href: '/json-fixer-online', label: 'JSON Fixer', desc: 'Automatically repair common JSON syntax errors', icon: '🔧' },
+          ]} />
+        </SEOSection>
+
+        <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
+          <RelatedBlogPosts posts={[
+            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'Top 10 JSON Errors' },
+            { href: '/blog/invalid-json-vs-valid-json-examples', label: 'Valid vs Invalid JSON Examples' },
+            { href: '/blog/fix-json-errors-complete-guide', label: 'Fix JSON Errors Guide' },
+            { href: '/blog/how-to-validate-api-response-using-json-schema', label: 'Validate API Responses' },
           ]} />
         </SEOSection>
       </ToolSEOContent>
