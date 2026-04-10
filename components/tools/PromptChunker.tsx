@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo, useEffect } from 'react';
 import { Copy, Scissors, Download, Settings, Info, ChevronDown, ChevronUp, CheckCircle2, Sparkles, BarChart3, Shield, FileText } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
@@ -45,6 +45,20 @@ export default function PromptChunker() {
   const [simplifierModel, setSimplifierModel] = useState<ModelStyle>('neutral');
   const [simplifierSafety, setSimplifierSafety] = useState(true);
   const [simplifiedCopied, setSimplifiedCopied] = useState(false);
+
+  // ⌘+Enter / Ctrl+Enter to split or simplify
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        if (tabMode === 'chunk') splitIntoChunks();
+        else runSimplify();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tabMode]);
 
   const splitIntoChunks = () => {
     if (!prompt.trim()) {
@@ -487,6 +501,7 @@ export default function PromptChunker() {
           >
             <Scissors className="w-5 h-5" />
             Split into Chunks
+            <kbd className="hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>
           </button>
           ) : (
             <button
@@ -496,6 +511,7 @@ export default function PromptChunker() {
             >
               <Sparkles className="w-5 h-5" />
               Simplify prompt
+              <kbd className="hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>
             </button>
           )}
           <button

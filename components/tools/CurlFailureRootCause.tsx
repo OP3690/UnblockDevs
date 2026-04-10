@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AlertTriangle, CheckCircle, Copy, RefreshCw, Code, Info, TrendingUp, Lightbulb, XCircle, Shield, Clock, FileText } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy } from '@/lib/analytics';
@@ -413,6 +413,19 @@ export default function CurlFailureRootCause() {
     return statusTexts[code] || 'Unknown';
   };
 
+  // ⌘+Enter / Ctrl+Enter to analyze
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        handleAnalyze();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleAnalyze = () => {
     if (!curlCommand.trim()) {
       toast.error('Please enter a cURL command');
@@ -554,6 +567,7 @@ export default function CurlFailureRootCause() {
                   <>
                     <AlertTriangle className="w-5 h-5" />
                     Analyze Failure
+                    <kbd className="hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>
                   </>
                 )}
               </button>
