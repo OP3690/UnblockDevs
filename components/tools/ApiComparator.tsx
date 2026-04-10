@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo, useEffect } from 'react';
 import { GitCompare, Plus, X, AlertCircle, CheckCircle, Minus, Search, ExternalLink, Copy, Download, Zap } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { validateJson } from '@/lib/jsonParser';
@@ -132,6 +132,19 @@ export default function ApiComparator() {
     }
     return result;
   };
+
+  // ⌘+Enter / Ctrl+Enter to compare
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        compareJsons();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const compareJsons = () => {
     trackCtaClick('api_comparator', 'compare');
@@ -289,6 +302,7 @@ export default function ApiComparator() {
           className="w-full py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
         >
           Compare Responses
+          <kbd className="ml-2 hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>
         </button>
       </div>
 

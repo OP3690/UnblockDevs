@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import {
   UnfoldVertical,
   Copy,
@@ -57,6 +57,19 @@ export default function LogUnpacker() {
   const [maskJwtPii, setMaskJwtPii] = useState(false);
   const [annotationMode, setAnnotationMode] = useState<AnnotationMode>('inline');
   const [copiedWhich, setCopiedWhich] = useState<'output' | 'aisafe' | null>(null);
+
+  // ⌘+Enter / Ctrl+Enter to run
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        run();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const run = useCallback(() => {
     trackCtaClick('log_unpacker', 'unpack');
@@ -256,6 +269,7 @@ export default function LogUnpacker() {
                 <UnfoldVertical className="h-4 w-4" />
               )}
               {processing ? 'Unpacking…' : 'Unpack & Sanitize'}
+              {!processing && <kbd className="hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>}
             </button>
             <span className="text-xs text-gray-500">100% client-side · nothing sent to servers</span>
           </div>
