@@ -24,6 +24,7 @@ export const metadata: Metadata = {
     title: 'Fix "Unexpected end of JSON input" Error - Complete Guide',
     description: 'Learn how to fix "Unexpected end of JSON input" error instantly with examples and free tools.',
     type: 'article',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Fix Unexpected end of JSON input' }],
   },
   twitter: {
     card: 'summary_large_image',
