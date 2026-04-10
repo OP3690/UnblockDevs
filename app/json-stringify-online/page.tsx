@@ -99,6 +99,20 @@ const faqSchema = {
   ],
 };
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Stringify a JavaScript Object to JSON Online',
+  description: 'Step-by-step guide to converting JavaScript objects to JSON strings using JSON.stringify() in your browser.',
+  totalTime: 'PT1M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Paste your JS object', text: 'Paste a JavaScript object literal, JSON, or any serializable value into the input panel.' },
+    { '@type': 'HowToStep', position: 2, name: 'Choose indent and options', text: 'Select indentation (2 spaces, 4 spaces, tab, or none for minified output) and toggle options like removing undefined values.' },
+    { '@type': 'HowToStep', position: 3, name: 'Get the JSON string', text: 'The output panel shows the result of JSON.stringify() with your chosen settings, updated in real time.' },
+    { '@type': 'HowToStep', position: 4, name: 'Copy the output', text: 'Copy the serialized JSON string for use in API requests, localStorage, config files, or debug logs.' },
+  ],
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -114,6 +128,7 @@ export default function JsonStringifyOnline() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <JsonStringifyOnlineClient />
 
