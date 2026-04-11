@@ -396,6 +396,14 @@ export const TOOLS_DIRECTORY: DirectoryTool[] = [
     icon: 'Square',
     badge: 'new',
   },
+  {
+    href: '/ui-components',
+    name: 'CSS UI components library',
+    description: '30+ production-ready UI components with live preview. Copy Tailwind or CSS code — buttons, cards, modals, tables, forms & more.',
+    category: 'dev',
+    icon: 'LayoutGrid',
+    badge: 'new',
+  },
 ];
 
 export const TOOL_COUNT = TOOLS_DIRECTORY.length;

@@ -11,7 +11,7 @@ import {
   Hash, Key, KeyRound, Layers, Link2, Lock, Package, Palette, Regex, Scissors,
   ScrollText, Search, Settings2, Shield, ShieldCheck, Sparkles,
   SplitSquareHorizontal, Square, Star, Table, Terminal, TestTube2, Timer, Webhook,
-  Wrench, X, Zap,
+  Wrench, X, Zap, LayoutGrid,
 } from 'lucide-react';
 import type { ToolCategory } from './tools-data';
 import { CATEGORY_LABELS, TOOLS_DIRECTORY, TOOL_COUNT } from './tools-data';
@@ -24,7 +24,7 @@ const TOOL_ICON_MAP: Record<string, LucideIcon> = {
   Settings2, Shield, Lock, FileCode2, Scissors, Terminal, FileCode, Code2,
   Download, AlertCircle, Webhook, TestTube2, Globe, KeyRound, Binary,
   Fingerprint, Hash, Link2, Key, ShieldCheck, SplitSquareHorizontal,
-  AlignLeft, Regex, Grid3x3, Gauge, Clock, FileText, Palette, Timer, Square,
+  AlignLeft, Regex, Grid3x3, Gauge, Clock, FileText, Palette, Timer, Square, LayoutGrid,
 };
 
 const CATEGORIES: (ToolCategory | 'all')[] = ['all', 'json', 'ai', 'api', 'encode', 'dev'];
