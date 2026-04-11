@@ -5161,6 +5161,2625 @@ function CalSidebarSearchPreview() {
   );
 }
 
+
+/* ─────────────────────────────────────────────
+   Charts (18)
+───────────────────────────────────────────── */
+function LineChartPreview() {
+  const data = [40, 65, 50, 80, 72, 90, 85, 110, 95, 120, 108, 130];
+  const max = Math.max(...data), min = Math.min(...data);
+  const w = 280, h = 120, pad = 10;
+  const pts = data.map((v, i) => {
+    const x = pad + (i / (data.length - 1)) * (w - pad * 2);
+    const y = pad + ((max - v) / (max - min)) * (h - pad * 2);
+    return `${x},${y}`;
+  }).join(' ');
+  const areaPoints = `${pad},${h - pad} ${pts} ${w - pad},${h - pad}`;
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-sm bg-white rounded-2xl border border-zinc-100 shadow-sm p-4">
+        <div className="flex items-start justify-between mb-3">
+          <div>
+            <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">Revenue</p>
+            <p className="text-2xl font-bold text-zinc-900">$12,430</p>
+          </div>
+          <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-700">+8.2%</span>
+        </div>
+        <svg viewBox={`0 0 ${w} ${h}`} className="w-full">
+          <defs>
+            <linearGradient id="lg1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#6366f1" stopOpacity="0.25" />
+              <stop offset="100%" stopColor="#6366f1" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <polygon points={areaPoints} fill="url(#lg1)" />
+          <polyline points={pts} fill="none" stroke="#6366f1" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+          {data.map((v, i) => {
+            const x = pad + (i / (data.length - 1)) * (w - pad * 2);
+            const y = pad + ((max - v) / (max - min)) * (h - pad * 2);
+            return i === data.length - 1 ? <circle key={i} cx={x} cy={y} r={3} fill="#6366f1" stroke="white" strokeWidth={1.5} /> : null;
+          })}
+        </svg>
+        <div className="flex justify-between mt-1 text-[10px] text-zinc-400">
+          {['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].map(m => <span key={m}>{m}</span>)}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function BarChartV2Preview() {
+  const data = [65, 82, 55, 93, 71, 88, 60, 95];
+  const labels = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun','Mon'];
+  const max = Math.max(...data);
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-sm bg-white rounded-2xl border border-zinc-100 shadow-sm p-4">
+        <div className="flex items-start justify-between mb-4">
+          <div>
+            <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">Monthly Sales</p>
+            <p className="text-2xl font-bold text-zinc-900">8,246</p>
+          </div>
+          <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-bold text-blue-700">+12%</span>
+        </div>
+        <div className="flex items-end gap-2 h-28">
+          {data.map((v, i) => (
+            <div key={i} className="flex-1 flex flex-col items-center gap-1">
+              <div
+                className="w-full rounded-t-lg bg-blue-500 transition-all hover:bg-blue-600"
+                style={{ height: `${(v / max) * 100}%` }}
+              />
+              <span className="text-[9px] text-zinc-400">{labels[i]}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function HorizontalBarPreview() {
+  const categories = [
+    { label: 'Electronics', value: 82, color: 'bg-indigo-500' },
+    { label: 'Clothing', value: 65, color: 'bg-blue-400' },
+    { label: 'Home & Garden', value: 48, color: 'bg-cyan-400' },
+    { label: 'Sports', value: 38, color: 'bg-teal-400' },
+    { label: 'Books', value: 27, color: 'bg-emerald-400' },
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-sm bg-white rounded-2xl border border-zinc-100 shadow-sm p-4">
+        <p className="text-sm font-bold text-zinc-800 mb-4">Category Breakdown</p>
+        <div className="space-y-3">
+          {categories.map(({ label, value, color }) => (
+            <div key={label}>
+              <div className="flex justify-between text-xs mb-1">
+                <span className="font-medium text-zinc-700">{label}</span>
+                <span className="text-zinc-500">{value}%</span>
+              </div>
+              <div className="h-2.5 w-full rounded-full bg-zinc-100">
+                <div className={`h-full rounded-full ${color}`} style={{ width: `${value}%` }} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function AreaChartPreview() {
+  const d1 = [20,45,30,65,50,80,70,90,75,100];
+  const d2 = [10,25,20,40,35,55,45,65,55,75];
+  const w = 280, h = 110, pad = 8;
+  const toPath = (d: number[]) => d.map((v, i) => {
+    const x = pad + (i / (d.length-1)) * (w - pad*2);
+    const y = pad + ((100 - v) / 100) * (h - pad*2);
+    return `${x},${y}`;
+  }).join(' ');
+  const pts1 = toPath(d1), pts2 = toPath(d2);
+  const area1 = `${pad},${h-pad} ${pts1} ${w-pad},${h-pad}`;
+  const area2 = `${pad},${h-pad} ${pts2} ${w-pad},${h-pad}`;
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-sm bg-white rounded-2xl border border-zinc-100 shadow-sm p-4">
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-sm font-bold text-zinc-800">Traffic Overview</p>
+          <div className="flex gap-3 text-[10px]">
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-violet-500 inline-block"/><span className="text-zinc-500">Users</span></span>
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-400 inline-block"/><span className="text-zinc-500">Sessions</span></span>
+          </div>
+        </div>
+        <svg viewBox={`0 0 ${w} ${h}`} className="w-full">
+          <defs>
+            <linearGradient id="ag1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.3"/>
+              <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0"/>
+            </linearGradient>
+            <linearGradient id="ag2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#60a5fa" stopOpacity="0.3"/>
+              <stop offset="100%" stopColor="#60a5fa" stopOpacity="0"/>
+            </linearGradient>
+          </defs>
+          <polygon points={area1} fill="url(#ag1)"/>
+          <polygon points={area2} fill="url(#ag2)"/>
+          <polyline points={pts1} fill="none" stroke="#8b5cf6" strokeWidth="2" strokeLinejoin="round"/>
+          <polyline points={pts2} fill="none" stroke="#60a5fa" strokeWidth="2" strokeLinejoin="round"/>
+        </svg>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function MultiLineChartPreview() {
+  const s1 = [30,42,38,55,48,62,58,74,68,82];
+  const s2 = [20,28,25,35,30,42,38,50,45,58];
+  const w = 280, h = 110, pad = 8;
+  const toP = (d: number[]) => d.map((v,i) => `${pad+(i/(d.length-1))*(w-pad*2)},${pad+((85-v)/85)*(h-pad*2)}`).join(' ');
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-sm bg-white rounded-2xl border border-zinc-100 shadow-sm p-4">
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-sm font-bold text-zinc-800">Performance</p>
+          <div className="flex gap-3 text-[10px]">
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-indigo-500 inline-block"/>Product A</span>
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-rose-400 inline-block"/>Product B</span>
+          </div>
+        </div>
+        <svg viewBox={`0 0 ${w} ${h}`} className="w-full">
+          <polyline points={toP(s1)} fill="none" stroke="#6366f1" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round"/>
+          <polyline points={toP(s2)} fill="none" stroke="#fb7185" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" strokeDasharray="4 2"/>
+        </svg>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function PieChartPreview() {
+  const segments = [
+    { label: 'Direct', value: 35, color: '#6366f1' },
+    { label: 'Organic', value: 28, color: '#22d3ee' },
+    { label: 'Referral', value: 22, color: '#f59e0b' },
+    { label: 'Social', value: 15, color: '#fb7185' },
+  ];
+  let cumulative = 0;
+  const cx = 60, cy = 60, r = 50;
+  const slices = segments.map(seg => {
+    const startAngle = cumulative * 3.6 - 90;
+    cumulative += seg.value;
+    const endAngle = cumulative * 3.6 - 90;
+    const s = (a: number) => [cx + r * Math.cos(a * Math.PI/180), cy + r * Math.sin(a * Math.PI/180)];
+    const [sx, sy] = s(startAngle), [ex, ey] = s(endAngle);
+    const large = seg.value > 50 ? 1 : 0;
+    return { ...seg, d: `M ${cx} ${cy} L ${sx} ${sy} A ${r} ${r} 0 ${large} 1 ${ex} ${ey} Z` };
+  });
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-sm bg-white rounded-2xl border border-zinc-100 shadow-sm p-4">
+        <p className="text-sm font-bold text-zinc-800 mb-3">Traffic Sources</p>
+        <div className="flex items-center gap-6">
+          <svg viewBox="0 0 120 120" className="w-28 shrink-0">
+            {slices.map(s => <path key={s.label} d={s.d} fill={s.color}/>)}
+            <circle cx={cx} cy={cy} r={22} fill="white"/>
+            <text x={cx} y={cy+4} textAnchor="middle" fontSize={10} fontWeight="bold" fill="#18181b">100%</text>
+          </svg>
+          <div className="space-y-1.5">
+            {segments.map(s => (
+              <div key={s.label} className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{background:s.color}}/>
+                <span className="text-xs text-zinc-600">{s.label}</span>
+                <span className="ml-auto text-xs font-bold text-zinc-800">{s.value}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function DonutChartV2Preview() {
+  const data = [
+    { label: 'Used', value: 68, color: '#6366f1' },
+    { label: 'Available', value: 22, color: '#22d3ee' },
+    { label: 'Reserved', value: 10, color: '#f59e0b' },
+  ];
+  const r = 40, circ = 2 * Math.PI * r;
+  let offset = 0;
+  const arcs = data.map(d => {
+    const dash = (d.value / 100) * circ;
+    const gap = circ - dash;
+    const arc = { ...d, dash, gap, offset };
+    offset += dash;
+    return arc;
+  });
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-sm bg-white rounded-2xl border border-zinc-100 shadow-sm p-4">
+        <p className="text-sm font-bold text-zinc-800 mb-3">Storage Usage</p>
+        <div className="flex items-center gap-6">
+          <svg viewBox="0 0 100 100" className="w-28 shrink-0">
+            <circle cx="50" cy="50" r={r} fill="none" stroke="#f4f4f5" strokeWidth="14"/>
+            {arcs.map((a, i) => (
+              <circle key={i} cx="50" cy="50" r={r} fill="none" stroke={a.color} strokeWidth="14"
+                strokeDasharray={`${a.dash} ${a.gap}`} strokeDashoffset={-a.offset} transform="rotate(-90 50 50)"/>
+            ))}
+            <text x="50" y="46" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#18181b">68%</text>
+            <text x="50" y="57" textAnchor="middle" fontSize="7" fill="#71717a">Used</text>
+          </svg>
+          <div className="space-y-2">
+            {data.map(d => (
+              <div key={d.label} className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{background:d.color}}/>
+                <span className="text-xs text-zinc-600">{d.label}</span>
+                <span className="ml-2 text-xs font-bold text-zinc-800">{d.value}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function StackedBarPreview() {
+  const months = ['Jan','Feb','Mar','Apr','May','Jun'];
+  const data = [
+    [30,25,20,35,28,32],
+    [20,30,25,22,35,28],
+    [15,18,22,20,18,25],
+  ];
+  const colors = ['bg-indigo-500','bg-blue-400','bg-cyan-300'];
+  const totals = months.map((_,i) => data.reduce((s,d) => s + d[i], 0));
+  const maxT = Math.max(...totals);
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-sm bg-white rounded-2xl border border-zinc-100 shadow-sm p-4">
+        <p className="text-sm font-bold text-zinc-800 mb-4">Quarterly Revenue</p>
+        <div className="flex items-end gap-2 h-28">
+          {months.map((m, i) => (
+            <div key={m} className="flex-1 flex flex-col items-center gap-1">
+              <div className="w-full flex flex-col-reverse rounded-t overflow-hidden" style={{height:`${(totals[i]/maxT)*100}%`}}>
+                {data.map((d, di) => (
+                  <div key={di} className={colors[di]} style={{height:`${(d[i]/totals[i])*100}%`}}/>
+                ))}
+              </div>
+              <span className="text-[9px] text-zinc-400">{m}</span>
+            </div>
+          ))}
+        </div>
+        <div className="flex gap-3 mt-3">
+          {['Product A','Product B','Product C'].map((l,i) => (
+            <span key={l} className="flex items-center gap-1 text-[10px] text-zinc-500">
+              <span className={`w-2 h-2 rounded-sm ${colors[i]}`}/>{l}
+            </span>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function SparklinesPreview() {
+  const rows = [
+    { label: 'Revenue', value: '$24.5K', change: '+12%', color: '#6366f1', data: [40,55,45,65,55,75,70,85] },
+    { label: 'Users', value: '8,320', change: '+5%', color: '#22d3ee', data: [60,45,55,50,65,60,70,68] },
+    { label: 'Churn', value: '2.4%', change: '-0.8%', color: '#fb7185', data: [35,40,38,45,35,32,30,28] },
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-sm bg-white rounded-2xl border border-zinc-100 shadow-sm p-4 space-y-3">
+        <p className="text-sm font-bold text-zinc-800">Key Metrics</p>
+        {rows.map(row => {
+          const w=80,h=30,pad=2,max=Math.max(...row.data),min=Math.min(...row.data);
+          const pts = row.data.map((v,i)=>`${pad+(i/(row.data.length-1))*(w-pad*2)},${pad+((max-v)/(max-min))*(h-pad*2)}`).join(' ');
+          return (
+            <div key={row.label} className="flex items-center gap-3">
+              <div className="w-24">
+                <p className="text-xs font-semibold text-zinc-700">{row.label}</p>
+                <p className="text-base font-bold text-zinc-900">{row.value}</p>
+              </div>
+              <svg viewBox={`0 0 ${w} ${h}`} className="flex-1 h-8">
+                <polyline points={pts} fill="none" stroke={row.color} strokeWidth="2" strokeLinejoin="round"/>
+              </svg>
+              <span className={`text-xs font-bold ${row.change.startsWith('+') ? 'text-emerald-600' : 'text-rose-500'}`}>{row.change}</span>
+            </div>
+          );
+        })}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CandlestickPreview() {
+  const candles = [
+    {o:60,h:75,l:55,c:70},{o:70,h:80,l:65,c:65},{o:65,h:72,l:58,c:68},
+    {o:68,h:82,l:62,c:80},{o:80,h:88,l:74,c:76},{o:76,h:84,l:70,c:82},
+    {o:82,h:90,l:78,c:85},{o:85,h:95,l:80,c:90},
+  ];
+  const w=280,h=120,pad=10;
+  const allH=candles.map(c=>c.h),allL=candles.map(c=>c.l);
+  const max=Math.max(...allH),min=Math.min(...allL);
+  const scale=(v:number)=>pad+((max-v)/(max-min))*(h-pad*2);
+  const barW=22,gap=10;
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-sm bg-white rounded-2xl border border-zinc-100 shadow-sm p-4">
+        <div className="flex justify-between items-start mb-2">
+          <p className="text-sm font-bold text-zinc-800">BTC/USD</p>
+          <span className="text-xs font-bold text-emerald-600">$90,420 ↑</span>
+        </div>
+        <svg viewBox={`0 0 ${w} ${h}`} className="w-full">
+          {candles.map((c,i)=>{
+            const x=pad+i*(barW+gap)+barW/2;
+            const bull=c.c>=c.o;
+            const top=Math.min(c.o,c.c),bot=Math.max(c.o,c.c);
+            return (
+              <g key={i}>
+                <line x1={x} y1={scale(c.h)} x2={x} y2={scale(c.l)} stroke={bull?'#22c55e':'#ef4444'} strokeWidth={1.5}/>
+                <rect x={x-barW/2} y={scale(top)} width={barW} height={Math.max(1,scale(bot)-scale(top))} fill={bull?'#22c55e':'#ef4444'} rx={2}/>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function StockAreaPreview() {
+  const prices=[100,108,104,115,110,122,118,130,125,135];
+  const vols=[45,60,35,75,50,80,55,90,65,70];
+  const w=280,h=100,vH=30,pad=8;
+  const maxP=Math.max(...prices),minP=Math.min(...prices),maxV=Math.max(...vols);
+  const pPts=prices.map((v,i)=>`${pad+(i/(prices.length-1))*(w-pad*2)},${pad+((maxP-v)/(maxP-minP))*(h-pad*2)}`).join(' ');
+  const areaP=`${pad},${h-pad} ${pPts} ${w-pad},${h-pad}`;
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-sm bg-white rounded-2xl border border-zinc-100 shadow-sm p-4">
+        <div className="flex justify-between items-start mb-1">
+          <div>
+            <p className="text-xs text-zinc-500">AAPL</p>
+            <p className="text-xl font-bold text-zinc-900">$185.40</p>
+          </div>
+          <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-700">+2.1%</span>
+        </div>
+        <svg viewBox={`0 0 ${w} ${h}`} className="w-full">
+          <defs>
+            <linearGradient id="sg1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#6366f1" stopOpacity="0.2"/>
+              <stop offset="100%" stopColor="#6366f1" stopOpacity="0"/>
+            </linearGradient>
+          </defs>
+          <polygon points={areaP} fill="url(#sg1)"/>
+          <polyline points={pPts} fill="none" stroke="#6366f1" strokeWidth="2" strokeLinejoin="round"/>
+        </svg>
+        <div className="flex items-end gap-1 mt-1" style={{height:`${vH}px`}}>
+          {vols.map((v,i)=>(
+            <div key={i} className="flex-1 bg-zinc-200 rounded-t" style={{height:`${(v/maxV)*100}%`}}/>
+          ))}
+        </div>
+        <p className="text-[9px] text-zinc-400 mt-1">Volume</p>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CurrencyRatesPreview() {
+  const pairs=[
+    {from:'EUR',to:'USD',rate:'1.0842',change:'+0.12%',up:true},
+    {from:'GBP',to:'USD',rate:'1.2631',change:'+0.08%',up:true},
+    {from:'USD',to:'JPY',rate:'151.24',change:'-0.35%',up:false},
+    {from:'USD',to:'CAD',rate:'1.3621',change:'-0.05%',up:false},
+    {from:'AUD',to:'USD',rate:'0.6548',change:'+0.22%',up:true},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-sm bg-white rounded-2xl border border-zinc-100 shadow-sm p-4">
+        <p className="text-sm font-bold text-zinc-800 mb-3">FX Rates</p>
+        <div className="divide-y divide-zinc-100">
+          {pairs.map(p=>(
+            <div key={`${p.from}${p.to}`} className="flex items-center justify-between py-2">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold bg-zinc-100 rounded px-1.5 py-0.5 text-zinc-600">{p.from}</span>
+                <span className="text-zinc-300 text-xs">→</span>
+                <span className="text-[10px] font-bold bg-zinc-100 rounded px-1.5 py-0.5 text-zinc-600">{p.to}</span>
+              </div>
+              <span className="text-sm font-bold text-zinc-900">{p.rate}</span>
+              <span className={`text-xs font-semibold ${p.up?'text-emerald-600':'text-rose-500'}`}>{p.change}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function GaugeChartPreview() {
+  const value=72;
+  const r=50,cx=70,cy=70;
+  const startAngle=-210,endAngle=30;
+  const totalAngle=endAngle-startAngle;
+  const valueAngle=startAngle+(value/100)*totalAngle;
+  const toXY=(angle:number,rad:number)=>[
+    cx+rad*Math.cos(angle*Math.PI/180),
+    cy+rad*Math.sin(angle*Math.PI/180)
+  ];
+  const [sx,sy]=toXY(startAngle,r),[ex,ey]=toXY(endAngle,r);
+  const [vx,vy]=toXY(valueAngle,r);
+  const [nx,ny]=toXY(valueAngle,38);
+  const arcPath=`M ${sx} ${sy} A ${r} ${r} 0 1 1 ${ex} ${ey}`;
+  const fillPath=`M ${sx} ${sy} A ${r} ${r} 0 ${value>50?1:0} 1 ${vx} ${vy}`;
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-xs bg-white rounded-2xl border border-zinc-100 shadow-sm p-4 mx-auto">
+        <p className="text-sm font-bold text-zinc-800 mb-2 text-center">CPU Usage</p>
+        <svg viewBox="0 0 140 100" className="w-full max-w-[200px] mx-auto block">
+          <path d={arcPath} fill="none" stroke="#f4f4f5" strokeWidth="12" strokeLinecap="round"/>
+          <path d={fillPath} fill="none" stroke="#6366f1" strokeWidth="12" strokeLinecap="round"/>
+          <line x1={cx} y1={cy} x2={nx} y2={ny} stroke="#18181b" strokeWidth={2} strokeLinecap="round"/>
+          <circle cx={cx} cy={cy} r={4} fill="#18181b"/>
+          <text x={cx} y={cy+18} textAnchor="middle" fontSize="16" fontWeight="bold" fill="#18181b">{value}%</text>
+        </svg>
+        <div className="flex justify-between text-[10px] text-zinc-400 mt-1 px-4">
+          <span>0%</span><span>50%</span><span>100%</span>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function HeatmapV2Preview() {
+  const cols=12,rows=7;
+  const days=['S','M','T','W','T','F','S'];
+  const intensity=(i:number,j:number)=>{
+    const seed=(i*cols+j)*2654435761;
+    return (seed>>>28)%5;
+  };
+  const colors=['bg-zinc-100','bg-emerald-200','bg-emerald-300','bg-emerald-500','bg-emerald-700'];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-sm bg-white rounded-2xl border border-zinc-100 shadow-sm p-4">
+        <div className="flex justify-between items-center mb-3">
+          <p className="text-sm font-bold text-zinc-800">Activity Heatmap</p>
+          <span className="text-xs text-zinc-500">248 contributions</span>
+        </div>
+        <div className="flex gap-1">
+          <div className="flex flex-col gap-1 mr-1">
+            {days.map(d=><span key={d} className="text-[9px] text-zinc-400 h-3 flex items-center">{d}</span>)}
+          </div>
+          {Array.from({length:cols}).map((_,j)=>(
+            <div key={j} className="flex flex-col gap-1">
+              {Array.from({length:rows}).map((_,i)=>(
+                <div key={i} className={`w-3 h-3 rounded-[2px] ${colors[intensity(i,j)]}`}/>
+              ))}
+            </div>
+          ))}
+        </div>
+        <div className="flex items-center gap-1 mt-2 justify-end">
+          <span className="text-[9px] text-zinc-400">Less</span>
+          {colors.map((c,i)=><div key={i} className={`w-3 h-3 rounded-[2px] ${c}`}/>)}
+          <span className="text-[9px] text-zinc-400">More</span>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function FunnelChartPreview() {
+  const stages=[
+    {label:'Visitors',value:10000,pct:100,color:'bg-indigo-500'},
+    {label:'Leads',value:4200,pct:42,color:'bg-blue-500'},
+    {label:'Qualified',value:1800,pct:18,color:'bg-cyan-500'},
+    {label:'Closed',value:620,pct:6.2,color:'bg-emerald-500'},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-sm bg-white rounded-2xl border border-zinc-100 shadow-sm p-4">
+        <p className="text-sm font-bold text-zinc-800 mb-4">Sales Funnel</p>
+        <div className="space-y-1.5">
+          {stages.map((s,i)=>(
+            <div key={s.label} className="flex items-center gap-3">
+              <span className="text-xs text-zinc-500 w-20 text-right">{s.label}</span>
+              <div className="flex-1 flex justify-center">
+                <div className={`${s.color} rounded h-7 flex items-center justify-center`} style={{width:`${s.pct}%`}}>
+                  <span className="text-[10px] font-bold text-white">{s.value.toLocaleString()}</span>
+                </div>
+              </div>
+              <span className="text-[10px] text-zinc-400 w-10">{s.pct}%</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function RadialBarPreview() {
+  const metrics=[
+    {label:'CPU',value:72,color:'#6366f1',r:42},
+    {label:'RAM',value:55,color:'#22d3ee',r:32},
+    {label:'Disk',value:38,color:'#f59e0b',r:22},
+    {label:'Net',value:81,color:'#fb7185',r:12},
+  ];
+  const cx=55,cy=55;
+  const circ=(r:number)=>2*Math.PI*r;
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-sm bg-white rounded-2xl border border-zinc-100 shadow-sm p-4">
+        <p className="text-sm font-bold text-zinc-800 mb-3">System Metrics</p>
+        <div className="flex items-center gap-6">
+          <svg viewBox="0 0 110 110" className="w-32 shrink-0">
+            {metrics.map(m=>{
+              const c=circ(m.r);
+              const dash=(m.value/100)*c;
+              return (
+                <g key={m.label}>
+                  <circle cx={cx} cy={cy} r={m.r} fill="none" stroke="#f4f4f5" strokeWidth={7}/>
+                  <circle cx={cx} cy={cy} r={m.r} fill="none" stroke={m.color} strokeWidth={7}
+                    strokeDasharray={`${dash} ${c-dash}`} strokeLinecap="round" transform={`rotate(-90 ${cx} ${cy})`}/>
+                </g>
+              );
+            })}
+          </svg>
+          <div className="space-y-2">
+            {metrics.map(m=>(
+              <div key={m.label} className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full" style={{background:m.color}}/>
+                <span className="text-xs text-zinc-600 w-8">{m.label}</span>
+                <span className="text-xs font-bold text-zinc-800">{m.value}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function BubbleChartPreview() {
+  const bubbles=[
+    {x:30,y:60,r:18,color:'#6366f1',label:'A'},
+    {x:55,y:35,r:24,color:'#22d3ee',label:'B'},
+    {x:75,y:65,r:14,color:'#f59e0b',label:'C'},
+    {x:45,y:75,r:10,color:'#fb7185',label:'D'},
+    {x:65,y:20,r:8,color:'#10b981',label:'E'},
+    {x:20,y:30,r:16,color:'#8b5cf6',label:'F'},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-sm bg-white rounded-2xl border border-zinc-100 shadow-sm p-4">
+        <p className="text-sm font-bold text-zinc-800 mb-2">Market Share</p>
+        <svg viewBox="0 0 100 100" className="w-full h-40 border border-zinc-100 rounded-xl">
+          {bubbles.map(b=>(
+            <g key={b.label}>
+              <circle cx={b.x} cy={b.y} r={b.r} fill={b.color} fillOpacity={0.8}/>
+              <text x={b.x} y={b.y+4} textAnchor="middle" fontSize={7} fill="white" fontWeight="bold">{b.label}</text>
+            </g>
+          ))}
+        </svg>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function HistogramPreview() {
+  const bars=[2,5,11,18,27,32,24,18,11,6,3,1];
+  const max=Math.max(...bars);
+  const w=280,h=100,pad=10;
+  const barW=(w-pad*2)/bars.length;
+  const pts=bars.map((v,i)=>{
+    const x=pad+i*barW+barW/2;
+    const y=pad+((max-v)/max)*(h-pad*2);
+    return `${x},${y}`;
+  }).join(' ');
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-sm bg-white rounded-2xl border border-zinc-100 shadow-sm p-4">
+        <p className="text-sm font-bold text-zinc-800 mb-3">Distribution</p>
+        <svg viewBox={`0 0 ${w} ${h}`} className="w-full">
+          {bars.map((v,i)=>{
+            const x=pad+i*barW;
+            const barH=((v/max)*(h-pad*2));
+            const y=h-pad-barH;
+            return <rect key={i} x={x+1} y={y} width={barW-2} height={barH} fill="#6366f1" fillOpacity={0.7} rx={2}/>;
+          })}
+          <polyline points={pts} fill="none" stroke="#f59e0b" strokeWidth="2" strokeLinejoin="round"/>
+        </svg>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Tables (9)
+───────────────────────────────────────────── */
+function BasicTableV2Preview() {
+  const rows=[
+    {name:'Alice Johnson',email:'alice@acme.com',role:'Admin',status:'Active'},
+    {name:'Bob Smith',email:'bob@acme.com',role:'Editor',status:'Active'},
+    {name:'Carol White',email:'carol@acme.com',role:'Viewer',status:'Inactive'},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-xl bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden">
+        <table className="w-full text-sm">
+          <thead className="bg-zinc-50 border-b border-zinc-100">
+            <tr>{['Name','Email','Role','Status'].map(h=><th key={h} className="px-4 py-3 text-left text-xs font-bold text-zinc-500 uppercase tracking-wide">{h}</th>)}</tr>
+          </thead>
+          <tbody className="divide-y divide-zinc-100">
+            {rows.map(r=>(
+              <tr key={r.email} className="hover:bg-zinc-50 transition">
+                <td className="px-4 py-3 font-medium text-zinc-800">{r.name}</td>
+                <td className="px-4 py-3 text-zinc-500">{r.email}</td>
+                <td className="px-4 py-3 text-zinc-600">{r.role}</td>
+                <td className="px-4 py-3">
+                  <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${r.status==='Active'?'bg-emerald-100 text-emerald-700':'bg-zinc-100 text-zinc-500'}`}>{r.status}</span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function StripedTablePreview() {
+  const rows=[
+    {name:'Alex Turner',dept:'Engineering',salary:'$120k'},
+    {name:'Jamie Lee',dept:'Design',salary:'$95k'},
+    {name:'Morgan Yu',dept:'Marketing',salary:'$88k'},
+    {name:'Riley Chen',dept:'Sales',salary:'$105k'},
+    {name:'Sam Davis',dept:'Operations',salary:'$92k'},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-xl bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden">
+        <table className="w-full text-sm">
+          <thead className="bg-indigo-600 text-white">
+            <tr>{['Name','Department','Salary'].map(h=><th key={h} className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide">{h}</th>)}</tr>
+          </thead>
+          <tbody>
+            {rows.map((r,i)=>(
+              <tr key={r.name} className={i%2===0?'bg-white':'bg-indigo-50/40'}>
+                <td className="px-4 py-2.5 font-medium text-zinc-800">{r.name}</td>
+                <td className="px-4 py-2.5 text-zinc-500">{r.dept}</td>
+                <td className="px-4 py-2.5 text-zinc-700 font-semibold">{r.salary}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function BorderedTablePreview() {
+  const rows=[
+    {q:'Q1',rev:'$42,000',costs:'$28,000',profit:'$14,000'},
+    {q:'Q2',rev:'$55,000',costs:'$32,000',profit:'$23,000'},
+    {q:'Q3',rev:'$48,000',costs:'$30,000',profit:'$18,000'},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-xl bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
+        <table className="w-full text-sm border-collapse">
+          <thead>
+            <tr>{['Quarter','Revenue','Costs','Profit'].map(h=><th key={h} className="border border-zinc-200 px-4 py-2 text-left text-xs font-bold text-zinc-600 bg-zinc-50">{h}</th>)}</tr>
+          </thead>
+          <tbody>
+            {rows.map(r=>(
+              <tr key={r.q}>
+                <td className="border border-zinc-200 px-4 py-2.5 font-semibold text-zinc-700">{r.q}</td>
+                <td className="border border-zinc-200 px-4 py-2.5 text-zinc-600">{r.rev}</td>
+                <td className="border border-zinc-200 px-4 py-2.5 text-zinc-600">{r.costs}</td>
+                <td className="border border-zinc-200 px-4 py-2.5 text-emerald-700 font-semibold">{r.profit}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CompactTablePreview() {
+  const rows=[
+    {id:'#1042',item:'MacBook Pro',cat:'Electronics',qty:2,total:'$5,198'},
+    {id:'#1043',item:'AirPods Pro',cat:'Audio',qty:5,total:'$1,245'},
+    {id:'#1044',item:'iPad Air',cat:'Tablet',qty:1,total:'$749'},
+    {id:'#1045',item:'Magic Mouse',cat:'Peripherals',qty:3,total:'$237'},
+    {id:'#1046',item:'USB-C Hub',cat:'Accessories',qty:8,total:'$320'},
+    {id:'#1047',item:'iPhone 15',cat:'Mobile',qty:2,total:'$1,998'},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-xl bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden">
+        <table className="w-full text-xs">
+          <thead className="bg-zinc-50 border-b border-zinc-100">
+            <tr>{['Order','Item','Category','Qty','Total'].map(h=><th key={h} className="px-3 py-2 text-left font-bold text-zinc-500 uppercase tracking-wide">{h}</th>)}</tr>
+          </thead>
+          <tbody className="divide-y divide-zinc-50">
+            {rows.map(r=>(
+              <tr key={r.id} className="hover:bg-zinc-50">
+                <td className="px-3 py-1.5 font-mono text-indigo-600">{r.id}</td>
+                <td className="px-3 py-1.5 font-medium text-zinc-800">{r.item}</td>
+                <td className="px-3 py-1.5 text-zinc-500">{r.cat}</td>
+                <td className="px-3 py-1.5 text-zinc-600">{r.qty}</td>
+                <td className="px-3 py-1.5 font-semibold text-zinc-800">{r.total}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function DataTablePaginatedPreview() {
+  const [page, setPage] = useState(1);
+  const [sortCol, setSortCol] = useState('name');
+  const [sortAsc, setSortAsc] = useState(true);
+  const allRows=[
+    {name:'Alice A',role:'Admin',date:'2024-01-15'},
+    {name:'Bob B',role:'Editor',date:'2024-02-20'},
+    {name:'Carol C',role:'Viewer',date:'2024-03-10'},
+    {name:'Dave D',role:'Admin',date:'2024-04-05'},
+    {name:'Eve E',role:'Editor',date:'2024-05-12'},
+    {name:'Frank F',role:'Viewer',date:'2024-06-18'},
+  ];
+  const perPage=3;
+  const sorted=[...allRows].sort((a,b)=>{
+    const av=a[sortCol as keyof typeof a],bv=b[sortCol as keyof typeof b];
+    return sortAsc?av.localeCompare(bv):bv.localeCompare(av);
+  });
+  const rows=sorted.slice((page-1)*perPage,page*perPage);
+  const pages=Math.ceil(allRows.length/perPage);
+  const toggleSort=(col:string)=>{if(sortCol===col)setSortAsc(v=>!v);else{setSortCol(col);setSortAsc(true);}};
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-xl bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden">
+        <table className="w-full text-sm">
+          <thead className="bg-zinc-50 border-b border-zinc-100">
+            <tr>
+              {[{k:'name',l:'Name'},{k:'role',l:'Role'},{k:'date',l:'Date'}].map(({k,l})=>(
+                <th key={k} className="px-4 py-3 text-left text-xs font-bold text-zinc-500 uppercase tracking-wide cursor-pointer hover:text-zinc-800" onClick={()=>toggleSort(k)}>
+                  {l} {sortCol===k?(sortAsc?'↑':'↓'):''}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-zinc-100">
+            {rows.map(r=>(
+              <tr key={r.name} className="hover:bg-zinc-50">
+                <td className="px-4 py-3 font-medium text-zinc-800">{r.name}</td>
+                <td className="px-4 py-3 text-zinc-500">{r.role}</td>
+                <td className="px-4 py-3 text-zinc-500">{r.date}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="flex items-center justify-between px-4 py-3 border-t border-zinc-100 bg-zinc-50">
+          <span className="text-xs text-zinc-500">Page {page} of {pages}</span>
+          <div className="flex gap-1">
+            <button onClick={()=>setPage(p=>Math.max(1,p-1))} disabled={page===1} className="px-2.5 py-1 text-xs rounded border border-zinc-200 hover:bg-zinc-100 disabled:opacity-40">Prev</button>
+            <button onClick={()=>setPage(p=>Math.min(pages,p+1))} disabled={page===pages} className="px-2.5 py-1 text-xs rounded border border-zinc-200 hover:bg-zinc-100 disabled:opacity-40">Next</button>
+          </div>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function ActionTablePreview() {
+  const [rows, setRows] = useState([
+    {id:1,name:'Project Alpha',owner:'Alice',status:'Active'},
+    {id:2,name:'Project Beta',owner:'Bob',status:'Paused'},
+    {id:3,name:'Project Gamma',owner:'Carol',status:'Active'},
+  ]);
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-xl bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden">
+        <table className="w-full text-sm">
+          <thead className="bg-zinc-50 border-b border-zinc-100">
+            <tr>{['Name','Owner','Status','Actions'].map(h=><th key={h} className="px-4 py-3 text-left text-xs font-bold text-zinc-500 uppercase tracking-wide">{h}</th>)}</tr>
+          </thead>
+          <tbody className="divide-y divide-zinc-100">
+            {rows.map(r=>(
+              <tr key={r.id} className="hover:bg-zinc-50">
+                <td className="px-4 py-3 font-medium text-zinc-800">{r.name}</td>
+                <td className="px-4 py-3 text-zinc-500">{r.owner}</td>
+                <td className="px-4 py-3"><span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${r.status==='Active'?'bg-emerald-100 text-emerald-700':'bg-amber-100 text-amber-700'}`}>{r.status}</span></td>
+                <td className="px-4 py-3">
+                  <div className="flex gap-1.5">
+                    <button className="rounded px-2 py-1 text-xs font-semibold bg-blue-50 text-blue-600 hover:bg-blue-100">Edit</button>
+                    <button onClick={()=>setRows(rs=>rs.filter(x=>x.id!==r.id))} className="rounded px-2 py-1 text-xs font-semibold bg-red-50 text-red-600 hover:bg-red-100">Delete</button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function StatusTablePreview() {
+  const rows=[
+    {name:'Sarah K',avatar:'SK',status:'Online',task:'UI Review',progress:85},
+    {name:'Mark L',avatar:'ML',status:'Away',task:'Backend API',progress:42},
+    {name:'Nina P',avatar:'NP',status:'Busy',task:'Data Pipeline',progress:67},
+    {name:'Tom R',avatar:'TR',status:'Offline',task:'Testing',progress:20},
+  ];
+  const statusColor:Record<string,string>={Online:'bg-emerald-500',Away:'bg-amber-400',Busy:'bg-rose-500',Offline:'bg-zinc-300'};
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-xl bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden">
+        <table className="w-full text-sm">
+          <thead className="bg-zinc-50 border-b border-zinc-100">
+            <tr>{['Member','Status','Task','Progress'].map(h=><th key={h} className="px-4 py-3 text-left text-xs font-bold text-zinc-500 uppercase tracking-wide">{h}</th>)}</tr>
+          </thead>
+          <tbody className="divide-y divide-zinc-100">
+            {rows.map(r=>(
+              <tr key={r.name} className="hover:bg-zinc-50">
+                <td className="px-4 py-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-full bg-indigo-100 flex items-center justify-center text-xs font-bold text-indigo-600">{r.avatar}</div>
+                    <span className="font-medium text-zinc-800">{r.name}</span>
+                  </div>
+                </td>
+                <td className="px-4 py-3">
+                  <span className="flex items-center gap-1.5 text-xs"><span className={`w-2 h-2 rounded-full ${statusColor[r.status]}`}/>{r.status}</span>
+                </td>
+                <td className="px-4 py-3 text-zinc-500 text-xs">{r.task}</td>
+                <td className="px-4 py-3">
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 h-1.5 bg-zinc-100 rounded-full"><div className="h-full bg-indigo-500 rounded-full" style={{width:`${r.progress}%`}}/></div>
+                    <span className="text-xs text-zinc-500">{r.progress}%</span>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CheckboxTablePreview() {
+  const allRows=[
+    {id:1,name:'Homepage Redesign',due:'Apr 20',priority:'High'},
+    {id:2,name:'API Integration',due:'Apr 25',priority:'Medium'},
+    {id:3,name:'Mobile App',due:'May 1',priority:'High'},
+    {id:4,name:'Analytics Dashboard',due:'May 10',priority:'Low'},
+  ];
+  const [selected, setSelected] = useState<Set<number>>(new Set());
+  const toggle=(id:number)=>setSelected(s=>{const n=new Set(s);n.has(id)?n.delete(id):n.add(id);return n;});
+  const allSel=selected.size===allRows.length;
+  const toggleAll=()=>setSelected(allSel?new Set():new Set(allRows.map(r=>r.id)));
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-xl bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden">
+        {selected.size>0&&<div className="px-4 py-2 bg-indigo-50 border-b border-indigo-100 text-xs font-semibold text-indigo-700">{selected.size} selected</div>}
+        <table className="w-full text-sm">
+          <thead className="bg-zinc-50 border-b border-zinc-100">
+            <tr>
+              <th className="px-4 py-3 w-10"><input type="checkbox" checked={allSel} onChange={toggleAll} className="rounded"/></th>
+              {['Task','Due','Priority'].map(h=><th key={h} className="px-4 py-3 text-left text-xs font-bold text-zinc-500 uppercase tracking-wide">{h}</th>)}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-zinc-100">
+            {allRows.map(r=>(
+              <tr key={r.id} className={`hover:bg-zinc-50 ${selected.has(r.id)?'bg-indigo-50/40':''}`}>
+                <td className="px-4 py-3"><input type="checkbox" checked={selected.has(r.id)} onChange={()=>toggle(r.id)} className="rounded"/></td>
+                <td className="px-4 py-3 font-medium text-zinc-800">{r.name}</td>
+                <td className="px-4 py-3 text-zinc-500 text-xs">{r.due}</td>
+                <td className="px-4 py-3"><span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${r.priority==='High'?'bg-rose-100 text-rose-700':r.priority==='Medium'?'bg-amber-100 text-amber-700':'bg-zinc-100 text-zinc-500'}`}>{r.priority}</span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function ExpandableTablePreview() {
+  const rows=[
+    {id:1,name:'Order #1042',amount:'$1,250',items:['MacBook Pro x1','USB-C Hub x2']},
+    {id:2,name:'Order #1043',amount:'$380',items:['AirPods Pro x1','Case x1']},
+    {id:3,name:'Order #1044',amount:'$2,100',items:['iPad Air x2','Apple Pencil x1']},
+  ];
+  const [expanded, setExpanded] = useState<Set<number>>(new Set());
+  const toggle=(id:number)=>setExpanded(s=>{const n=new Set(s);n.has(id)?n.delete(id):n.add(id);return n;});
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-xl bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden">
+        <table className="w-full text-sm">
+          <thead className="bg-zinc-50 border-b border-zinc-100">
+            <tr>
+              <th className="px-4 py-3 w-8"/>
+              {['Order','Amount'].map(h=><th key={h} className="px-4 py-3 text-left text-xs font-bold text-zinc-500 uppercase tracking-wide">{h}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(r=>(
+              <>
+                <tr key={r.id} className="hover:bg-zinc-50 border-b border-zinc-100 cursor-pointer" onClick={()=>toggle(r.id)}>
+                  <td className="px-4 py-3 text-zinc-400">{expanded.has(r.id)?<ChevronDown size={14}/>:<ChevronRight size={14}/>}</td>
+                  <td className="px-4 py-3 font-medium text-zinc-800">{r.name}</td>
+                  <td className="px-4 py-3 text-zinc-700 font-semibold">{r.amount}</td>
+                </tr>
+                {expanded.has(r.id)&&(
+                  <tr key={`${r.id}-exp`} className="bg-zinc-50 border-b border-zinc-100">
+                    <td/>
+                    <td colSpan={2} className="px-4 py-3">
+                      <ul className="space-y-1">
+                        {r.items.map(item=><li key={item} className="text-xs text-zinc-500 flex items-center gap-1"><Check size={10} className="text-emerald-500"/>{item}</li>)}
+                      </ul>
+                    </td>
+                  </tr>
+                )}
+              </>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+
+/* ─────────────────────────────────────────────
+   Alerts (3)
+───────────────────────────────────────────── */
+function AlertSuccessPreview() {
+  const [visible, setVisible] = useState(true);
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-md space-y-3">
+        {visible?(
+          <div className="flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3">
+            <CheckCircle size={16} className="text-emerald-600 mt-0.5 shrink-0"/>
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-emerald-800">Successfully saved!</p>
+              <p className="text-xs text-emerald-700 mt-0.5">Your changes have been saved and are now live.</p>
+            </div>
+            <button onClick={()=>setVisible(false)} className="text-emerald-400 hover:text-emerald-600"><X size={14}/></button>
+          </div>
+        ):(
+          <button onClick={()=>setVisible(true)} className="text-xs text-zinc-500 underline">Show alert</button>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function AlertVariantsPreview() {
+  const alerts=[
+    {type:'success',icon:<CheckCircle size={15}/>,title:'Success',msg:'Operation completed.',cls:'border-emerald-200 bg-emerald-50 text-emerald-800'},
+    {type:'warning',icon:<AlertCircle size={15}/>,title:'Warning',msg:'Review before proceeding.',cls:'border-amber-200 bg-amber-50 text-amber-800'},
+    {type:'error',icon:<XCircle size={15}/>,title:'Error',msg:'Something went wrong.',cls:'border-red-200 bg-red-50 text-red-800'},
+    {type:'info',icon:<Info size={15}/>,title:'Info',msg:'Here is some information.',cls:'border-blue-200 bg-blue-50 text-blue-800'},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-md space-y-2">
+        {alerts.map(a=>(
+          <div key={a.type} className={`flex items-start gap-3 rounded-xl border px-4 py-3 ${a.cls}`}>
+            <span className="mt-0.5 shrink-0">{a.icon}</span>
+            <div>
+              <p className="text-sm font-semibold">{a.title}</p>
+              <p className="text-xs mt-0.5 opacity-80">{a.msg}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function AlertBannerPreview() {
+  const [show, setShow] = useState(true);
+  return (
+    <PreviewWrap bg="bg-zinc-100">
+      <div className="w-full max-w-xl space-y-3">
+        {show&&(
+          <div className="flex items-center gap-3 rounded-xl bg-indigo-600 px-4 py-3 text-white">
+            <Bell size={15} className="shrink-0"/>
+            <p className="flex-1 text-sm font-medium">New version available! Update to get the latest features.</p>
+            <button className="shrink-0 rounded-lg bg-white/20 px-3 py-1 text-xs font-bold hover:bg-white/30">Update</button>
+            <button onClick={()=>setShow(false)} className="text-white/60 hover:text-white"><X size={14}/></button>
+          </div>
+        )}
+        {!show&&<button onClick={()=>setShow(true)} className="text-xs text-zinc-500 underline">Show banner</button>}
+        <div className="rounded-xl bg-white p-4 text-xs text-zinc-500">Page content below banner</div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Avatars (3)
+───────────────────────────────────────────── */
+function AvatarBasicPreview() {
+  const sizes=[
+    {cls:'w-6 h-6 text-[9px]',label:'XS'},
+    {cls:'w-8 h-8 text-[10px]',label:'SM'},
+    {cls:'w-10 h-10 text-xs',label:'MD'},
+    {cls:'w-14 h-14 text-base',label:'LG'},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="flex items-end gap-5 flex-wrap">
+        {sizes.map(s=>(
+          <div key={s.label} className="flex flex-col items-center gap-1.5">
+            <div className={`${s.cls} rounded-full bg-indigo-100 flex items-center justify-center font-bold text-indigo-600`}>AJ</div>
+            <span className="text-[10px] text-zinc-400">{s.label}</span>
+          </div>
+        ))}
+        <div className="w-px h-10 bg-zinc-200 mx-2"/>
+        {sizes.map(s=>(
+          <div key={`img-${s.label}`} className="flex flex-col items-center gap-1.5">
+            <div className={`${s.cls} rounded-full bg-gradient-to-br from-violet-400 to-indigo-500 flex items-center justify-center`}>
+              <User size={parseInt(s.cls.match(/w-(\d+)/)?.[1]??'8')*2} className="text-white opacity-80"/>
+            </div>
+            <span className="text-[10px] text-zinc-400">{s.label}</span>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function AvatarGroupV2Preview() {
+  const colors=['bg-indigo-400','bg-blue-400','bg-cyan-400','bg-teal-400','bg-emerald-400'];
+  const initials=['AJ','BK','CM','DP','EL'];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="flex flex-col items-center gap-4">
+        <div className="flex -space-x-3">
+          {colors.map((c,i)=>(
+            <div key={i} className={`w-10 h-10 rounded-full ${c} border-2 border-white flex items-center justify-center text-xs font-bold text-white`}>{initials[i]}</div>
+          ))}
+          <div className="w-10 h-10 rounded-full bg-zinc-100 border-2 border-white flex items-center justify-center text-xs font-bold text-zinc-600">+8</div>
+        </div>
+        <p className="text-xs text-zinc-500">13 team members</p>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function AvatarStatusPreview() {
+  const members=[
+    {init:'AJ',color:'bg-indigo-400',status:'Online',dot:'bg-emerald-500'},
+    {init:'BK',color:'bg-blue-400',status:'Away',dot:'bg-amber-400'},
+    {init:'CM',color:'bg-cyan-500',status:'Busy',dot:'bg-red-500'},
+    {init:'DP',color:'bg-teal-400',status:'Offline',dot:'bg-zinc-300'},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="flex gap-6 flex-wrap">
+        {members.map(m=>(
+          <div key={m.init} className="flex flex-col items-center gap-1.5">
+            <div className="relative">
+              <div className={`w-11 h-11 rounded-full ${m.color} flex items-center justify-center text-sm font-bold text-white`}>{m.init}</div>
+              <span className={`absolute bottom-0 right-0 w-3 h-3 rounded-full ${m.dot} border-2 border-white`}/>
+            </div>
+            <span className="text-[10px] text-zinc-500">{m.status}</span>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Badge (3)
+───────────────────────────────────────────── */
+function BadgeBasicPreview() {
+  const badges=[
+    {label:'New',cls:'bg-blue-100 text-blue-700'},
+    {label:'Active',cls:'bg-emerald-100 text-emerald-700'},
+    {label:'Pending',cls:'bg-amber-100 text-amber-700'},
+    {label:'Danger',cls:'bg-red-100 text-red-700'},
+    {label:'Paused',cls:'bg-zinc-100 text-zinc-600'},
+    {label:'Pro',cls:'bg-violet-100 text-violet-700'},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="flex flex-wrap gap-2">
+        {badges.map(b=>(
+          <span key={b.label} className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${b.cls}`}>{b.label}</span>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function BadgeDotPreview() {
+  const items=[
+    {icon:<Bell size={18}/>,count:5,color:'bg-red-500'},
+    {icon:<Mail size={18}/>,count:12,color:'bg-indigo-500'},
+    {icon:<Settings size={18}/>,count:1,color:'bg-amber-500'},
+    {icon:<User size={18}/>,count:3,color:'bg-emerald-500'},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="flex gap-6">
+        {items.map((item,i)=>(
+          <div key={i} className="relative">
+            <button className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center text-zinc-600 hover:bg-zinc-200">
+              {item.icon}
+            </button>
+            <span className={`absolute -top-1 -right-1 min-w-[18px] h-[18px] ${item.color} text-white text-[9px] font-bold rounded-full flex items-center justify-center px-1`}>{item.count}</span>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function BadgeOutlinedPreview() {
+  const badges=[
+    {label:'Draft',cls:'border-zinc-300 text-zinc-600'},
+    {label:'Review',cls:'border-amber-400 text-amber-700'},
+    {label:'Approved',cls:'border-emerald-400 text-emerald-700'},
+    {label:'Rejected',cls:'border-red-400 text-red-700'},
+    {label:'Premium',cls:'border-violet-400 text-violet-700'},
+    {label:'Beta',cls:'border-blue-400 text-blue-700'},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="flex flex-wrap gap-2">
+        {badges.map(b=>(
+          <span key={b.label} className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold bg-transparent ${b.cls}`}>{b.label}</span>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Breadcrumb (3)
+───────────────────────────────────────────── */
+function BreadcrumbBasicPreview() {
+  const crumbs=['Home','Products','Electronics','MacBook Pro'];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="space-y-4 w-full max-w-md">
+        <nav className="flex items-center gap-1 text-sm">
+          {crumbs.map((c,i)=>(
+            <span key={c} className="flex items-center gap-1">
+              {i>0&&<ChevronRight size={14} className="text-zinc-300"/>}
+              <span className={i===crumbs.length-1?'font-semibold text-zinc-800':'text-zinc-400 hover:text-zinc-600 cursor-pointer'}>{c}</span>
+            </span>
+          ))}
+        </nav>
+        <nav className="flex items-center gap-1 text-sm">
+          {['Dashboard','Analytics','Reports'].map((c,i)=>(
+            <span key={c} className="flex items-center gap-1">
+              {i>0&&<span className="text-zinc-300">/</span>}
+              <span className={i===2?'font-semibold text-indigo-600':'text-zinc-400 hover:text-zinc-600 cursor-pointer'}>{c}</span>
+            </span>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function BreadcrumbIconPreview() {
+  const crumbs=[{label:'Home',icon:'🏠'},{label:'Documents',icon:'📁'},{label:'Projects',icon:'📂'},{label:'Report.pdf',icon:'📄'}];
+  return (
+    <PreviewWrap bg="bg-white">
+      <nav className="flex items-center gap-1 text-sm">
+        {crumbs.map((c,i)=>(
+          <span key={c.label} className="flex items-center gap-1">
+            {i>0&&<ChevronRight size={13} className="text-zinc-300"/>}
+            <span className={`flex items-center gap-1 ${i===crumbs.length-1?'font-semibold text-zinc-800':'text-zinc-400 hover:text-zinc-600 cursor-pointer'}`}>
+              <span>{c.icon}</span>
+              <span>{c.label}</span>
+            </span>
+          </span>
+        ))}
+      </nav>
+    </PreviewWrap>
+  );
+}
+
+function BreadcrumbPillsPreview() {
+  const crumbs=['Home','Settings','Account','Security'];
+  return (
+    <PreviewWrap bg="bg-white">
+      <nav className="flex items-center gap-1.5 flex-wrap">
+        {crumbs.map((c,i)=>(
+          <span key={c} className="flex items-center gap-1.5">
+            {i>0&&<ChevronRight size={12} className="text-zinc-300"/>}
+            <span className={`rounded-full px-3 py-1 text-xs font-semibold cursor-pointer ${i===crumbs.length-1?'bg-indigo-600 text-white':'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'}`}>{c}</span>
+          </span>
+        ))}
+      </nav>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Button Variants (3)
+───────────────────────────────────────────── */
+function ButtonsGhostPreview() {
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="flex flex-wrap gap-2">
+        {[
+          {label:'Default',cls:'border-zinc-300 text-zinc-700 hover:bg-zinc-50'},
+          {label:'Primary',cls:'border-indigo-400 text-indigo-700 hover:bg-indigo-50'},
+          {label:'Success',cls:'border-emerald-400 text-emerald-700 hover:bg-emerald-50'},
+          {label:'Warning',cls:'border-amber-400 text-amber-700 hover:bg-amber-50'},
+          {label:'Danger',cls:'border-red-400 text-red-700 hover:bg-red-50'},
+        ].map(b=>(
+          <button key={b.label} className={`rounded-lg border px-4 py-2 text-sm font-semibold bg-transparent transition ${b.cls}`}>{b.label}</button>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function ButtonsIconPreview() {
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="space-y-3">
+        <div className="flex gap-2">
+          {[Bell,Settings,User,Mail,Search].map((Icon,i)=>(
+            <button key={i} className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center text-zinc-600 hover:bg-indigo-100 hover:text-indigo-600 transition">
+              <Icon size={17}/>
+            </button>
+          ))}
+        </div>
+        <div className="flex gap-2 flex-wrap">
+          {[
+            {Icon:Bell,label:'Notify',cls:'bg-indigo-600 text-white hover:bg-indigo-700'},
+            {Icon:Settings,label:'Settings',cls:'bg-zinc-800 text-white hover:bg-zinc-900'},
+            {Icon:Mail,label:'Message',cls:'bg-emerald-600 text-white hover:bg-emerald-700'},
+          ].map(({Icon,label,cls})=>(
+            <button key={label} className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition ${cls}`}>
+              <Icon size={15}/>{label}
+            </button>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function ButtonsGradientPreview() {
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="flex flex-wrap gap-3">
+        <button className="rounded-lg px-5 py-2.5 text-sm font-bold text-white shadow-md hover:opacity-90 transition" style={{background:'linear-gradient(135deg,#6366f1,#8b5cf6)'}}>Violet Gradient</button>
+        <button className="rounded-lg px-5 py-2.5 text-sm font-bold text-white shadow-md hover:opacity-90 transition" style={{background:'linear-gradient(135deg,#06b6d4,#3b82f6)'}}>Ocean Gradient</button>
+        <button className="rounded-lg px-5 py-2.5 text-sm font-bold text-white shadow-md hover:opacity-90 transition" style={{background:'linear-gradient(135deg,#10b981,#06b6d4)'}}>Emerald Gradient</button>
+        <button className="rounded-lg px-5 py-2.5 text-sm font-bold text-white shadow-md hover:opacity-90 transition" style={{background:'linear-gradient(135deg,#f59e0b,#ef4444)'}}>Sunset Gradient</button>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Button Groups (3)
+───────────────────────────────────────────── */
+function BtnGroupBasicPreview() {
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="space-y-3">
+        <div className="inline-flex rounded-lg border border-zinc-200 overflow-hidden">
+          {['Left','Center','Right'].map((l,i)=>(
+            <button key={l} className={`px-4 py-2 text-sm font-semibold text-zinc-700 hover:bg-zinc-100 transition ${i>0?'border-l border-zinc-200':''}`}>{l}</button>
+          ))}
+        </div>
+        <div className="inline-flex rounded-lg border border-indigo-200 overflow-hidden">
+          {['Day','Week','Month','Year'].map((l,i)=>(
+            <button key={l} className={`px-3 py-1.5 text-xs font-bold text-indigo-700 hover:bg-indigo-50 transition ${i>0?'border-l border-indigo-200':''}`}>{l}</button>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function BtnGroupRadioPreview() {
+  const [active, setActive] = useState('Grid');
+  const opts=['List','Grid','Cards','Table'];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="inline-flex p-1 rounded-xl bg-zinc-100 gap-0.5">
+        {opts.map(o=>(
+          <button key={o} onClick={()=>setActive(o)}
+            className={`px-4 py-1.5 text-sm font-semibold rounded-lg transition-all ${active===o?'bg-white shadow text-zinc-900':'text-zinc-500 hover:text-zinc-700'}`}>
+            {o}
+          </button>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function BtnGroupIconPreview() {
+  const [active, setActive] = useState<string[]>([]);
+  const tools=[
+    {id:'bold',icon:'B',style:'font-bold'},
+    {id:'italic',icon:'I',style:'italic'},
+    {id:'underline',icon:'U',style:'underline'},
+  ];
+  const toggle=(id:string)=>setActive(a=>a.includes(id)?a.filter(x=>x!==id):[...a,id]);
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="space-y-3">
+        <div className="inline-flex rounded-lg border border-zinc-200 overflow-hidden">
+          {tools.map((t,i)=>(
+            <button key={t.id} onClick={()=>toggle(t.id)}
+              className={`px-4 py-2 text-sm transition ${active.includes(t.id)?'bg-zinc-800 text-white':'text-zinc-700 hover:bg-zinc-100'} ${i>0?'border-l border-zinc-200':''} ${t.style}`}>
+              {t.icon}
+            </button>
+          ))}
+        </div>
+        <div className="inline-flex rounded-lg border border-zinc-200 overflow-hidden">
+          {[Bell,Settings,User,Search].map((Icon,i)=>(
+            <button key={i} className={`w-9 h-9 flex items-center justify-center text-zinc-600 hover:bg-zinc-100 transition ${i>0?'border-l border-zinc-200':''}`}>
+              <Icon size={15}/>
+            </button>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Cards (3)
+───────────────────────────────────────────── */
+function CardProfilePreview() {
+  const [following, setFollowing] = useState(false);
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-56 bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden">
+        <div className="h-16 bg-gradient-to-r from-indigo-500 to-violet-500"/>
+        <div className="px-4 pb-4">
+          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 border-4 border-white -mt-7 flex items-center justify-center text-white font-bold text-lg">AJ</div>
+          <p className="mt-2 font-bold text-zinc-900">Alice Johnson</p>
+          <p className="text-xs text-zinc-500 mt-0.5">Senior Designer at Acme Inc.</p>
+          <div className="flex gap-4 mt-3 text-center">
+            <div><p className="text-sm font-bold text-zinc-800">142</p><p className="text-[10px] text-zinc-400">Posts</p></div>
+            <div><p className="text-sm font-bold text-zinc-800">8.2K</p><p className="text-[10px] text-zinc-400">Followers</p></div>
+            <div><p className="text-sm font-bold text-zinc-800">312</p><p className="text-[10px] text-zinc-400">Following</p></div>
+          </div>
+          <button onClick={()=>setFollowing(f=>!f)}
+            className={`mt-3 w-full rounded-lg py-2 text-xs font-bold transition ${following?'bg-zinc-100 text-zinc-700':'bg-indigo-600 text-white hover:bg-indigo-700'}`}>
+            {following?'Following':'Follow'}
+          </button>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CardStatPreview() {
+  const stats=[
+    {label:'Total Revenue',value:'$84,200',change:'+12.5%',up:true,icon:'💰'},
+    {label:'Active Users',value:'24,816',change:'+8.1%',up:true,icon:'👥'},
+    {label:'Churn Rate',value:'2.4%',change:'-0.6%',up:false,icon:'📉'},
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="flex gap-3 flex-wrap">
+        {stats.map(s=>(
+          <div key={s.label} className="bg-white rounded-2xl border border-zinc-100 shadow-sm p-4 min-w-[140px]">
+            <p className="text-lg mb-1">{s.icon}</p>
+            <p className="text-xl font-bold text-zinc-900">{s.value}</p>
+            <p className="text-xs text-zinc-500 mt-0.5">{s.label}</p>
+            <span className={`text-xs font-semibold ${s.up?'text-emerald-600':'text-rose-500'}`}>{s.change}</span>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CardPricingPreview() {
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-56 bg-white rounded-2xl border-2 border-indigo-500 shadow-lg p-5">
+        <div className="flex justify-between items-start">
+          <div>
+            <p className="text-xs font-bold text-indigo-600 uppercase tracking-wide">Pro Plan</p>
+            <p className="text-3xl font-bold text-zinc-900 mt-1">$49<span className="text-base font-normal text-zinc-400">/mo</span></p>
+          </div>
+          <span className="rounded-full bg-indigo-100 px-2 py-0.5 text-[10px] font-bold text-indigo-700">Popular</span>
+        </div>
+        <div className="mt-4 space-y-2">
+          {['Unlimited projects','Priority support','Advanced analytics','Custom domains','Team collaboration'].map(f=>(
+            <div key={f} className="flex items-center gap-2">
+              <Check size={13} className="text-emerald-500 shrink-0"/>
+              <span className="text-xs text-zinc-600">{f}</span>
+            </div>
+          ))}
+        </div>
+        <button className="mt-4 w-full rounded-xl py-2.5 text-sm font-bold bg-indigo-600 text-white hover:bg-indigo-700 transition">Get Started</button>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Carousel (3)
+───────────────────────────────────────────── */
+function CarouselBasicPreview() {
+  const slides=[
+    {bg:'bg-indigo-500',label:'Slide 1',sub:'Welcome to our platform'},
+    {bg:'bg-cyan-500',label:'Slide 2',sub:'Explore our features'},
+    {bg:'bg-violet-500',label:'Slide 3',sub:'Get started today'},
+  ];
+  const [idx, setIdx] = useState(0);
+  const prev=()=>setIdx(i=>(i-1+slides.length)%slides.length);
+  const next=()=>setIdx(i=>(i+1)%slides.length);
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-sm relative overflow-hidden rounded-2xl">
+        <div className={`${slides[idx].bg} h-36 flex flex-col items-center justify-center text-white transition-all`}>
+          <p className="text-xl font-bold">{slides[idx].label}</p>
+          <p className="text-sm opacity-80 mt-1">{slides[idx].sub}</p>
+        </div>
+        <button onClick={prev} className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center shadow hover:bg-white"><ChevronRight size={16} className="rotate-180"/></button>
+        <button onClick={next} className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center shadow hover:bg-white"><ChevronRight size={16}/></button>
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+          {slides.map((_,i)=><span key={i} className={`w-2 h-2 rounded-full transition-all ${i===idx?'bg-white':'bg-white/40'}`}/>)}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CarouselCardPreview() {
+  const [center, setCenter] = useState(1);
+  const cards=[
+    {name:'Sarah K',role:'Designer',quote:'Amazing product! Saved us hours.'},
+    {name:'Mark L',role:'Developer',quote:'Best tool in our workflow.'},
+    {name:'Nina P',role:'Manager',quote:'Highly recommend to every team.'},
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="flex gap-3 items-center">
+        <button onClick={()=>setCenter(c=>(c-1+cards.length)%cards.length)} className="w-7 h-7 rounded-full bg-white border border-zinc-200 flex items-center justify-center shadow hover:bg-zinc-100"><ChevronRight size={14} className="rotate-180"/></button>
+        <div className="flex gap-2 overflow-hidden">
+          {cards.map((c,i)=>(
+            <div key={c.name} className={`flex-shrink-0 w-48 bg-white rounded-2xl border p-4 shadow-sm transition-all ${i===center?'border-indigo-300 shadow-indigo-100 scale-105':'border-zinc-100 opacity-70 scale-95'}`}>
+              <p className="text-xs text-zinc-600 italic">"{c.quote}"</p>
+              <div className="mt-3 flex items-center gap-2">
+                <div className="w-7 h-7 rounded-full bg-indigo-100 flex items-center justify-center text-xs font-bold text-indigo-600">{c.name[0]}</div>
+                <div>
+                  <p className="text-xs font-bold text-zinc-800">{c.name}</p>
+                  <p className="text-[10px] text-zinc-400">{c.role}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <button onClick={()=>setCenter(c=>(c+1)%cards.length)} className="w-7 h-7 rounded-full bg-white border border-zinc-200 flex items-center justify-center shadow hover:bg-zinc-100"><ChevronRight size={14}/></button>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CarouselImagePreview() {
+  const [idx, setIdx] = useState(0);
+  const images=[
+    {color:'bg-gradient-to-br from-indigo-400 to-violet-500',label:'Mountain View'},
+    {color:'bg-gradient-to-br from-cyan-400 to-blue-500',label:'Ocean Sunset'},
+    {color:'bg-gradient-to-br from-amber-400 to-orange-500',label:'City Lights'},
+    {color:'bg-gradient-to-br from-emerald-400 to-teal-500',label:'Forest Path'},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-sm">
+        <div className={`${images[idx].color} h-32 rounded-2xl flex items-end p-3 mb-3`}>
+          <span className="text-white font-bold text-sm bg-black/30 rounded-lg px-2 py-1">{images[idx].label}</span>
+        </div>
+        <div className="flex gap-2">
+          {images.map((img,i)=>(
+            <button key={i} onClick={()=>setIdx(i)}
+              className={`flex-1 h-12 rounded-lg ${img.color} transition-all ${i===idx?'ring-2 ring-offset-1 ring-indigo-500':'opacity-60 hover:opacity-80'}`}/>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Dropdowns (3)
+───────────────────────────────────────────── */
+function DropdownBasicPreview() {
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState('Select option');
+  const items=['Profile','Settings','Billing','Help Center','Sign Out'];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="relative w-48">
+        <button onClick={()=>setOpen(o=>!o)}
+          className="w-full flex items-center justify-between rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-700 bg-white hover:border-zinc-300 shadow-sm">
+          <span>{selected}</span>
+          <ChevronDown size={15} className={`text-zinc-400 transition-transform ${open?'rotate-180':''}`}/>
+        </button>
+        {open&&(
+          <div className="absolute top-full mt-1.5 w-full rounded-xl border border-zinc-100 bg-white shadow-lg z-10 overflow-hidden">
+            {items.map(item=>(
+              <button key={item} onClick={()=>{setSelected(item);setOpen(false);}}
+                className={`w-full px-4 py-2.5 text-left text-sm hover:bg-zinc-50 transition ${item==='Sign Out'?'text-red-600 border-t border-zinc-100':'text-zinc-700'}`}>
+                {item}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function DropdownSearchPreview() {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const [selected, setSelected] = useState('');
+  const options=['React','Vue','Angular','Svelte','Next.js','Nuxt','Remix','Astro'];
+  const filtered=options.filter(o=>o.toLowerCase().includes(query.toLowerCase()));
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="relative w-52">
+        <button onClick={()=>setOpen(o=>!o)}
+          className="w-full flex items-center justify-between rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-700 bg-white hover:border-zinc-300 shadow-sm">
+          <span className={selected?'text-zinc-800':'text-zinc-400'}>{selected||'Choose framework'}</span>
+          <ChevronDown size={15} className={`text-zinc-400 transition-transform ${open?'rotate-180':''}`}/>
+        </button>
+        {open&&(
+          <div className="absolute top-full mt-1.5 w-full rounded-xl border border-zinc-100 bg-white shadow-lg z-10 overflow-hidden">
+            <div className="p-2 border-b border-zinc-100">
+              <div className="flex items-center gap-2 rounded-lg bg-zinc-50 px-3 py-1.5">
+                <Search size={13} className="text-zinc-400"/>
+                <input autoFocus value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search..." className="flex-1 text-sm bg-transparent focus:outline-none text-zinc-700 placeholder:text-zinc-400"/>
+              </div>
+            </div>
+            <div className="max-h-40 overflow-y-auto">
+              {filtered.map(o=>(
+                <button key={o} onClick={()=>{setSelected(o);setOpen(false);setQuery('');}}
+                  className={`w-full px-4 py-2 text-left text-sm transition ${selected===o?'bg-indigo-50 text-indigo-700':'text-zinc-700 hover:bg-zinc-50'}`}>
+                  {o}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function DropdownMultiPreview() {
+  const [open, setOpen] = useState(false);
+  const [sel, setSel] = useState<string[]>([]);
+  const opts=['Design','Engineering','Marketing','Sales','Support','Finance'];
+  const toggle=(o:string)=>setSel(s=>s.includes(o)?s.filter(x=>x!==o):[...s,o]);
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="relative w-56">
+        <button onClick={()=>setOpen(o=>!o)}
+          className="w-full flex items-center justify-between rounded-xl border border-zinc-200 px-4 py-2.5 text-sm bg-white hover:border-zinc-300 shadow-sm">
+          <span className="text-zinc-700">{sel.length?`${sel.length} selected`:'Select teams'}</span>
+          <ChevronDown size={15} className={`text-zinc-400 transition-transform ${open?'rotate-180':''}`}/>
+        </button>
+        {open&&(
+          <div className="absolute top-full mt-1.5 w-full rounded-xl border border-zinc-100 bg-white shadow-lg z-10 overflow-hidden">
+            {opts.map(o=>(
+              <label key={o} className="flex items-center gap-3 px-4 py-2.5 hover:bg-zinc-50 cursor-pointer">
+                <input type="checkbox" checked={sel.includes(o)} onChange={()=>toggle(o)} className="rounded text-indigo-600"/>
+                <span className="text-sm text-zinc-700">{o}</span>
+              </label>
+            ))}
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Images (3)
+───────────────────────────────────────────── */
+function ImageGridPreview() {
+  const imgs=[
+    {color:'bg-gradient-to-br from-indigo-400 to-violet-500',h:'h-20'},
+    {color:'bg-gradient-to-br from-cyan-400 to-blue-500',h:'h-32'},
+    {color:'bg-gradient-to-br from-amber-400 to-orange-500',h:'h-20'},
+    {color:'bg-gradient-to-br from-emerald-400 to-teal-500',h:'h-24'},
+    {color:'bg-gradient-to-br from-rose-400 to-pink-500',h:'h-28'},
+    {color:'bg-gradient-to-br from-violet-400 to-indigo-500',h:'h-20'},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="columns-3 gap-2 w-full max-w-sm">
+        {imgs.map((img,i)=>(
+          <div key={i} className={`${img.color} ${img.h} rounded-xl mb-2 hover:opacity-90 cursor-pointer transition-opacity`}/>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function ImageCaptionPreview() {
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-sm rounded-2xl overflow-hidden border border-zinc-100 shadow-sm">
+        <div className="relative">
+          <div className="h-40 bg-gradient-to-br from-indigo-400 via-violet-500 to-purple-600"/>
+          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+            <p className="text-white font-bold text-sm">Northern Lights, Iceland</p>
+            <p className="text-white/70 text-xs mt-0.5">Aurora Borealis over Reykjavik · Feb 2024</p>
+          </div>
+        </div>
+        <div className="px-4 py-3 flex items-center justify-between">
+          <span className="text-xs text-zinc-500">Photo by @aurora_lens</span>
+          <button className="text-xs font-semibold text-indigo-600 hover:text-indigo-700">View full</button>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function ImageGalleryV2Preview() {
+  const [expanded, setExpanded] = useState<number|null>(null);
+  const imgs=[
+    'bg-gradient-to-br from-indigo-400 to-violet-500',
+    'bg-gradient-to-br from-cyan-400 to-blue-500',
+    'bg-gradient-to-br from-amber-400 to-rose-500',
+    'bg-gradient-to-br from-emerald-400 to-teal-500',
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-sm">
+        <div className="grid grid-cols-2 gap-2">
+          {imgs.map((img,i)=>(
+            <div key={i} onClick={()=>setExpanded(i)} className={`${img} h-20 rounded-xl cursor-pointer hover:opacity-90 transition-opacity`}/>
+          ))}
+        </div>
+        {expanded!==null&&(
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50" onClick={()=>setExpanded(null)}>
+            <div className={`${imgs[expanded]} w-72 h-48 rounded-2xl`}/>
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+
+/* ─────────────────────────────────────────────
+   Links (3)
+───────────────────────────────────────────── */
+function LinksBasicPreview() {
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="space-y-3 w-full max-w-xs">
+        <div className="flex flex-col gap-2">
+          <a href="#" className="text-sm text-blue-600 underline underline-offset-2 hover:text-blue-800">Underline link</a>
+          <a href="#" className="text-sm text-indigo-600 decoration-dashed underline underline-offset-2 hover:text-indigo-800">Dashed underline</a>
+          <a href="#" className="text-sm font-semibold text-emerald-600 hover:text-emerald-800 no-underline">Colored link</a>
+          <a href="#" className="text-sm text-zinc-700 hover:text-zinc-900 flex items-center gap-1">
+            External link <span className="text-xs">↗</span>
+          </a>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function LinksNavPreview() {
+  const [active, setActive] = useState('Home');
+  const links=['Home','About','Services','Portfolio','Contact'];
+  return (
+    <PreviewWrap bg="bg-white">
+      <nav className="flex gap-1 p-1 rounded-xl bg-zinc-50 border border-zinc-200">
+        {links.map(l=>(
+          <button key={l} onClick={()=>setActive(l)}
+            className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${active===l?'bg-white text-zinc-900 shadow-sm':'text-zinc-500 hover:text-zinc-700'}`}>
+            {l}
+          </button>
+        ))}
+      </nav>
+    </PreviewWrap>
+  );
+}
+
+function LinksCTAPreview() {
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="space-y-3 w-full max-w-xs">
+        <a href="#" className="flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-800 group">
+          Learn more <ChevronRight size={15} className="group-hover:translate-x-0.5 transition-transform"/>
+        </a>
+        <a href="#" className="flex items-center gap-2 text-sm font-semibold text-zinc-700 hover:text-zinc-900 group">
+          <Mail size={15}/> Send email
+        </a>
+        <div className="rounded-xl border border-zinc-100 p-3 hover:border-indigo-200 hover:bg-indigo-50/30 cursor-pointer transition-all group">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-semibold text-zinc-800 group-hover:text-indigo-700">Read the docs →</p>
+              <p className="text-xs text-zinc-500 mt-0.5">Full API reference and guides</p>
+            </div>
+            <ChevronRight size={16} className="text-zinc-300 group-hover:text-indigo-400"/>
+          </div>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   List (3)
+───────────────────────────────────────────── */
+function ListBasicPreview() {
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="flex gap-8 w-full max-w-md">
+        <div>
+          <p className="text-xs font-bold text-zinc-500 uppercase mb-2">Unordered</p>
+          <ul className="space-y-1.5 text-sm text-zinc-700">
+            {['Design system','Component library','Documentation','Testing suite'].map(i=>(
+              <li key={i} className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-zinc-400 shrink-0"/>{i}</li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <p className="text-xs font-bold text-zinc-500 uppercase mb-2">Ordered</p>
+          <ol className="space-y-1.5 text-sm text-zinc-700">
+            {['Research','Design','Develop','Deploy'].map((i,n)=>(
+              <li key={i} className="flex items-center gap-2"><span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-[10px] font-bold flex items-center justify-center shrink-0">{n+1}</span>{i}</li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function ListIconPreview() {
+  const items=[
+    {icon:<Check size={13} className="text-emerald-600"/>,text:'Unlimited projects',sub:'No cap on project count'},
+    {icon:<Check size={13} className="text-emerald-600"/>,text:'Priority support',sub:'24/7 dedicated help'},
+    {icon:<Check size={13} className="text-emerald-600"/>,text:'Advanced analytics',sub:'Deep insights & reports'},
+    {icon:<X size={13} className="text-zinc-300"/>,text:'Custom domains',sub:'Available on Enterprise'},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <ul className="space-y-3 w-full max-w-xs">
+        {items.map(item=>(
+          <li key={item.text} className="flex items-start gap-3">
+            <div className="w-5 h-5 rounded-full bg-zinc-50 border border-zinc-200 flex items-center justify-center shrink-0 mt-0.5">{item.icon}</div>
+            <div>
+              <p className="text-sm font-medium text-zinc-800">{item.text}</p>
+              <p className="text-xs text-zinc-400">{item.sub}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </PreviewWrap>
+  );
+}
+
+function ListGroupV2Preview() {
+  const items=[
+    {label:'Design Team',sub:'8 members',badge:'Active',badgeCls:'bg-emerald-100 text-emerald-700'},
+    {label:'Engineering',sub:'24 members',badge:'Active',badgeCls:'bg-emerald-100 text-emerald-700'},
+    {label:'Marketing',sub:'6 members',badge:'Paused',badgeCls:'bg-amber-100 text-amber-700'},
+    {label:'Operations',sub:'12 members',badge:'Active',badgeCls:'bg-emerald-100 text-emerald-700'},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-xs border border-zinc-200 rounded-xl overflow-hidden divide-y divide-zinc-100">
+        {items.map(item=>(
+          <div key={item.label} className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 transition">
+            <div>
+              <p className="text-sm font-semibold text-zinc-800">{item.label}</p>
+              <p className="text-xs text-zinc-400">{item.sub}</p>
+            </div>
+            <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${item.badgeCls}`}>{item.badge}</span>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Modals (3)
+───────────────────────────────────────────── */
+function ModalConfirmPreview() {
+  const [open, setOpen] = useState(false);
+  return (
+    <PreviewWrap bg="bg-zinc-100">
+      <div className="relative w-full max-w-sm h-40 flex items-center justify-center">
+        <button onClick={()=>setOpen(true)} className="rounded-xl bg-red-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-red-700 transition">Delete Item</button>
+        {open&&(
+          <div className="absolute inset-0 bg-black/50 rounded-2xl flex items-center justify-center">
+            <div className="bg-white rounded-2xl shadow-xl p-5 w-64">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-9 h-9 rounded-full bg-red-100 flex items-center justify-center"><XCircle size={18} className="text-red-600"/></div>
+                <div>
+                  <p className="text-sm font-bold text-zinc-900">Delete item?</p>
+                  <p className="text-xs text-zinc-500">This cannot be undone.</p>
+                </div>
+              </div>
+              <div className="flex gap-2 mt-4">
+                <button onClick={()=>setOpen(false)} className="flex-1 rounded-lg border border-zinc-200 py-2 text-sm font-semibold text-zinc-700 hover:bg-zinc-50">Cancel</button>
+                <button onClick={()=>setOpen(false)} className="flex-1 rounded-lg bg-red-600 py-2 text-sm font-bold text-white hover:bg-red-700">Delete</button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function ModalDrawerPreview() {
+  const [open, setOpen] = useState(false);
+  return (
+    <PreviewWrap bg="bg-zinc-100">
+      <div className="relative w-full max-w-sm h-48 overflow-hidden rounded-2xl bg-zinc-200 flex items-center justify-center">
+        <button onClick={()=>setOpen(true)} className="rounded-xl bg-zinc-800 px-5 py-2.5 text-sm font-bold text-white hover:bg-zinc-900">Open Drawer</button>
+        <div className={`absolute top-0 right-0 h-full w-52 bg-white shadow-2xl border-l border-zinc-100 transform transition-transform duration-300 ${open?'translate-x-0':'translate-x-full'}`}>
+          <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100">
+            <p className="font-bold text-zinc-800 text-sm">Settings</p>
+            <button onClick={()=>setOpen(false)} className="text-zinc-400 hover:text-zinc-600"><X size={16}/></button>
+          </div>
+          <div className="p-4 space-y-3">
+            {['Profile','Notifications','Security','Billing'].map(item=>(
+              <div key={item} className="flex items-center gap-2 text-sm text-zinc-700 hover:text-indigo-600 cursor-pointer">
+                <ChevronRight size={13} className="text-zinc-300"/>
+                {item}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function ModalFormPreview() {
+  const [open, setOpen] = useState(false);
+  return (
+    <PreviewWrap bg="bg-zinc-100">
+      <div className="relative w-full max-w-sm h-52 flex items-center justify-center rounded-2xl bg-zinc-200">
+        <button onClick={()=>setOpen(true)} className="rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-indigo-700">Open Form</button>
+        {open&&(
+          <div className="absolute inset-0 bg-black/50 rounded-2xl flex items-center justify-center">
+            <div className="bg-white rounded-2xl shadow-xl p-5 w-72">
+              <div className="flex items-center justify-between mb-4">
+                <p className="font-bold text-zinc-900 text-sm">Create project</p>
+                <button onClick={()=>setOpen(false)} className="text-zinc-400 hover:text-zinc-600"><X size={15}/></button>
+              </div>
+              <div className="space-y-3">
+                <input className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:outline-none focus:border-indigo-400" placeholder="Project name"/>
+                <textarea className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:outline-none focus:border-indigo-400 h-16 resize-none" placeholder="Description"/>
+                <button onClick={()=>setOpen(false)} className="w-full rounded-lg bg-indigo-600 py-2 text-sm font-bold text-white hover:bg-indigo-700">Create</button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Notifications (3)
+───────────────────────────────────────────── */
+function NotificationToastPreview() {
+  const [toasts, setToasts] = useState([
+    {id:1,type:'success',msg:'Changes saved successfully!',icon:<CheckCircle size={15} className="text-emerald-500"/>},
+    {id:2,type:'error',msg:'Failed to upload file.',icon:<XCircle size={15} className="text-red-500"/>},
+    {id:3,type:'info',msg:'New message from Alice.',icon:<Info size={15} className="text-blue-500"/>},
+  ]);
+  const dismiss=(id:number)=>setToasts(t=>t.filter(x=>x.id!==id));
+  return (
+    <PreviewWrap bg="bg-zinc-100">
+      <div className="space-y-2 w-full max-w-xs">
+        {toasts.map(t=>(
+          <div key={t.id} className="flex items-center gap-3 rounded-xl bg-white shadow-lg border border-zinc-100 px-4 py-3">
+            {t.icon}
+            <p className="flex-1 text-sm text-zinc-700">{t.msg}</p>
+            <button onClick={()=>dismiss(t.id)} className="text-zinc-300 hover:text-zinc-500"><X size={13}/></button>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function NotificationBannerPreview() {
+  const [idx, setIdx] = useState(0);
+  const banners=[
+    {bg:'bg-indigo-600',msg:'🎉 New features released! See what\'s new →'},
+    {bg:'bg-amber-500',msg:'⚠️ Scheduled maintenance on Sunday at 3AM UTC.'},
+    {bg:'bg-emerald-600',msg:'✅ Your account has been verified successfully.'},
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-100">
+      <div className="w-full max-w-sm space-y-2">
+        {banners.map((b,i)=>(
+          <div key={i} className={`${b.bg} rounded-xl px-4 py-2.5 flex items-center justify-between`}>
+            <p className="text-xs text-white font-medium">{b.msg}</p>
+            <button className="ml-3 text-white/60 hover:text-white text-xs"><X size={12}/></button>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function NotificationFeedPreview() {
+  const items=[
+    {init:'AJ',color:'bg-indigo-500',msg:'Alice commented on your post',time:'2m ago',unread:true},
+    {init:'BK',color:'bg-blue-500',msg:'Bob sent you a friend request',time:'15m ago',unread:true},
+    {init:'CM',color:'bg-cyan-500',msg:'Carol liked your photo',time:'1h ago',unread:false},
+    {init:'DP',color:'bg-teal-500',msg:'Dave mentioned you in a note',time:'3h ago',unread:false},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-xs border border-zinc-100 rounded-2xl overflow-hidden shadow-sm">
+        <div className="px-4 py-3 border-b border-zinc-100 flex items-center justify-between">
+          <p className="text-sm font-bold text-zinc-800">Notifications</p>
+          <span className="text-xs font-bold bg-indigo-100 text-indigo-700 rounded-full px-2 py-0.5">2 new</span>
+        </div>
+        <div className="divide-y divide-zinc-50">
+          {items.map((item,i)=>(
+            <div key={i} className={`flex items-start gap-3 px-4 py-3 ${item.unread?'bg-indigo-50/40':''}`}>
+              <div className={`w-8 h-8 rounded-full ${item.color} text-white flex items-center justify-center text-xs font-bold shrink-0`}>{item.init}</div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-zinc-700">{item.msg}</p>
+                <p className="text-[10px] text-zinc-400 mt-0.5">{item.time}</p>
+              </div>
+              {item.unread&&<span className="w-2 h-2 rounded-full bg-indigo-500 mt-1 shrink-0"/>}
+            </div>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Pagination (3)
+───────────────────────────────────────────── */
+function PaginationBasicPreview() {
+  const [page, setPage] = useState(3);
+  const total=7;
+  const pages=Array.from({length:total},(_,i)=>i+1);
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="flex items-center gap-1">
+        <button onClick={()=>setPage(p=>Math.max(1,p-1))} disabled={page===1}
+          className="px-3 py-1.5 text-sm rounded-lg border border-zinc-200 text-zinc-600 hover:bg-zinc-50 disabled:opacity-40">Prev</button>
+        {pages.map(p=>(
+          <button key={p} onClick={()=>setPage(p)}
+            className={`w-9 h-9 rounded-lg text-sm font-semibold transition ${p===page?'bg-indigo-600 text-white':'border border-zinc-200 text-zinc-600 hover:bg-zinc-50'}`}>{p}</button>
+        ))}
+        <button onClick={()=>setPage(p=>Math.min(total,p+1))} disabled={page===total}
+          className="px-3 py-1.5 text-sm rounded-lg border border-zinc-200 text-zinc-600 hover:bg-zinc-50 disabled:opacity-40">Next</button>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function PaginationSimplePreview() {
+  const [page, setPage] = useState(1);
+  const total=12;
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="flex items-center gap-4">
+        <button onClick={()=>setPage(p=>Math.max(1,p-1))} disabled={page===1}
+          className="flex items-center gap-1 px-4 py-2 text-sm font-semibold rounded-xl border border-zinc-200 text-zinc-700 hover:bg-zinc-50 disabled:opacity-40">
+          <ChevronRight size={15} className="rotate-180"/>Prev
+        </button>
+        <span className="text-sm text-zinc-500">Page <span className="font-bold text-zinc-800">{page}</span> of {total}</span>
+        <button onClick={()=>setPage(p=>Math.min(total,p+1))} disabled={page===total}
+          className="flex items-center gap-1 px-4 py-2 text-sm font-semibold rounded-xl border border-zinc-200 text-zinc-700 hover:bg-zinc-50 disabled:opacity-40">
+          Next<ChevronRight size={15}/>
+        </button>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function PaginationDotsPreview() {
+  const [page, setPage] = useState(0);
+  const total=6;
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-full max-w-xs h-20 rounded-xl bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center text-white font-bold">
+          Slide {page+1}
+        </div>
+        <div className="flex items-center gap-2">
+          <button onClick={()=>setPage(p=>(p-1+total)%total)} className="w-6 h-6 rounded-full bg-zinc-100 flex items-center justify-center hover:bg-zinc-200"><ChevronRight size={12} className="rotate-180"/></button>
+          {Array.from({length:total}).map((_,i)=>(
+            <button key={i} onClick={()=>setPage(i)}
+              className={`rounded-full transition-all ${i===page?'w-6 h-2.5 bg-indigo-600':'w-2.5 h-2.5 bg-zinc-200 hover:bg-zinc-300'}`}/>
+          ))}
+          <button onClick={()=>setPage(p=>(p+1)%total)} className="w-6 h-6 rounded-full bg-zinc-100 flex items-center justify-center hover:bg-zinc-200"><ChevronRight size={12}/></button>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Popovers (3)
+───────────────────────────────────────────── */
+function PopoverBasicPreview() {
+  const [open, setOpen] = useState(false);
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="relative inline-block">
+        <button onClick={()=>setOpen(o=>!o)}
+          className="rounded-xl bg-zinc-800 px-4 py-2 text-sm font-semibold text-white hover:bg-zinc-900">
+          Info
+        </button>
+        {open&&(
+          <div className="absolute left-full ml-2 top-0 w-52 bg-white rounded-xl border border-zinc-100 shadow-lg p-3 z-10">
+            <div className="flex items-start gap-2">
+              <Info size={14} className="text-blue-500 mt-0.5 shrink-0"/>
+              <div>
+                <p className="text-xs font-bold text-zinc-800 mb-1">What is this?</p>
+                <p className="text-xs text-zinc-500">This is a basic popover with info content that appears on click.</p>
+              </div>
+            </div>
+            <button onClick={()=>setOpen(false)} className="absolute top-2 right-2 text-zinc-300 hover:text-zinc-500"><X size={12}/></button>
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function PopoverRichPreview() {
+  const [open, setOpen] = useState(false);
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="relative inline-block">
+        <button onClick={()=>setOpen(o=>!o)} className="flex items-center gap-2 rounded-xl border border-zinc-200 px-3 py-2 text-sm hover:bg-zinc-50">
+          <div className="w-7 h-7 rounded-full bg-indigo-100 flex items-center justify-center text-xs font-bold text-indigo-600">AJ</div>
+          <span className="font-medium text-zinc-700">Alice Johnson</span>
+          <ChevronDown size={13} className="text-zinc-400"/>
+        </button>
+        {open&&(
+          <div className="absolute top-full mt-2 left-0 w-64 bg-white rounded-2xl border border-zinc-100 shadow-xl p-4 z-10">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center text-white font-bold">AJ</div>
+              <div>
+                <p className="font-bold text-zinc-900">Alice Johnson</p>
+                <p className="text-xs text-zinc-500">alice@acme.com</p>
+                <p className="text-xs text-emerald-600 font-semibold">● Online</p>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <button className="flex-1 rounded-lg bg-indigo-600 py-1.5 text-xs font-bold text-white hover:bg-indigo-700">Message</button>
+              <button className="flex-1 rounded-lg border border-zinc-200 py-1.5 text-xs font-semibold text-zinc-700 hover:bg-zinc-50" onClick={()=>setOpen(false)}>Close</button>
+            </div>
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function PopoverMenuPreview() {
+  const [open, setOpen] = useState(false);
+  const items=[
+    {label:'Copy',icon:<Copy size={13}/>},
+    {label:'Search',icon:<Search size={13}/>},
+    {label:'Settings',icon:<Settings size={13}/>},
+    {label:'Delete',icon:<X size={13}/>,danger:true},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="relative inline-block">
+        <button onClick={()=>setOpen(o=>!o)}
+          className="rounded-xl bg-zinc-100 px-4 py-2 text-sm font-semibold text-zinc-700 hover:bg-zinc-200 flex items-center gap-2">
+          <MoreHorizontal size={16}/>Options
+        </button>
+        {open&&(
+          <div className="absolute top-full mt-1.5 left-0 w-44 bg-white rounded-xl border border-zinc-100 shadow-lg overflow-hidden z-10">
+            {items.map((item,i)=>(
+              <button key={item.label} onClick={()=>setOpen(false)}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm hover:bg-zinc-50 transition ${item.danger?'text-red-600':' text-zinc-700'} ${i>0&&items[i-1].danger===undefined&&item.danger?'border-t border-zinc-100':''}`}>
+                {item.icon}{item.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Progress Bars (3)
+───────────────────────────────────────────── */
+function ProgressBasicPreview() {
+  const bars=[
+    {label:'Default',value:72,cls:'bg-indigo-500'},
+    {label:'Success',value:88,cls:'bg-emerald-500'},
+    {label:'Warning',value:45,cls:'bg-amber-500'},
+    {label:'Danger',value:25,cls:'bg-red-500'},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-xs space-y-3">
+        {bars.map(b=>(
+          <div key={b.label}>
+            <div className="flex justify-between text-xs mb-1">
+              <span className="font-medium text-zinc-700">{b.label}</span>
+              <span className="text-zinc-500">{b.value}%</span>
+            </div>
+            <div className="h-2.5 w-full rounded-full bg-zinc-100">
+              <div className={`h-full rounded-full ${b.cls} transition-all`} style={{width:`${b.value}%`}}/>
+            </div>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function ProgressMultiPreview() {
+  const steps=['Research','Design','Develop','Review','Launch'];
+  const [current, setCurrent] = useState(2);
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-sm">
+        <div className="flex items-center mb-4">
+          {steps.map((s,i)=>(
+            <div key={s} className="flex-1 flex items-center">
+              <div className="flex flex-col items-center">
+                <div className={`w-7 h-7 rounded-full border-2 flex items-center justify-center text-xs font-bold transition-all ${i<current?'bg-indigo-600 border-indigo-600 text-white':i===current?'border-indigo-600 text-indigo-600 bg-white':'border-zinc-200 text-zinc-400'}`}>
+                  {i<current?<Check size={12}/>:i+1}
+                </div>
+                <span className="text-[9px] text-zinc-500 mt-1 whitespace-nowrap">{s}</span>
+              </div>
+              {i<steps.length-1&&<div className={`flex-1 h-0.5 mx-1 -mt-4 ${i<current?'bg-indigo-600':'bg-zinc-200'}`}/>}
+            </div>
+          ))}
+        </div>
+        <div className="flex gap-2 justify-center">
+          <button onClick={()=>setCurrent(c=>Math.max(0,c-1))} className="px-3 py-1.5 text-xs rounded-lg border border-zinc-200 text-zinc-600 hover:bg-zinc-50">Back</button>
+          <button onClick={()=>setCurrent(c=>Math.min(steps.length,c+1))} className="px-3 py-1.5 text-xs rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700">Next</button>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function ProgressCircularPreview() {
+  const rings=[
+    {label:'CPU',value:72,color:'#6366f1',r:28},
+    {label:'RAM',value:55,color:'#22d3ee',r:28},
+    {label:'Disk',value:38,color:'#f59e0b',r:28},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="flex gap-6">
+        {rings.map(ring=>{
+          const circ=2*Math.PI*ring.r;
+          const dash=(ring.value/100)*circ;
+          return (
+            <div key={ring.label} className="flex flex-col items-center gap-1">
+              <svg width="72" height="72" viewBox="0 0 72 72">
+                <circle cx="36" cy="36" r={ring.r} fill="none" stroke="#f4f4f5" strokeWidth="8"/>
+                <circle cx="36" cy="36" r={ring.r} fill="none" stroke={ring.color} strokeWidth="8"
+                  strokeDasharray={`${dash} ${circ-dash}`} strokeLinecap="round" transform="rotate(-90 36 36)"/>
+                <text x="36" y="40" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#18181b">{ring.value}%</text>
+              </svg>
+              <span className="text-xs text-zinc-500">{ring.label}</span>
+            </div>
+          );
+        })}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Ribbons (3)
+───────────────────────────────────────────── */
+function RibbonCornerPreview() {
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="flex gap-4">
+        {[
+          {label:'NEW',cls:'bg-indigo-600',label2:'Pro Card'},
+          {label:'SALE',cls:'bg-red-500',label2:'Starter Card'},
+          {label:'HOT',cls:'bg-amber-500',label2:'Business Card'},
+        ].map(card=>(
+          <div key={card.label2} className="relative w-32 h-28 bg-white rounded-xl border border-zinc-100 shadow-sm overflow-hidden flex items-center justify-center">
+            <div className="absolute top-0 right-0 overflow-hidden w-20 h-20">
+              <div className={`${card.cls} text-white text-[9px] font-bold text-center py-0.5 transform rotate-45 translate-x-4 translate-y-3 w-20`}>{card.label}</div>
+            </div>
+            <span className="text-xs font-semibold text-zinc-700">{card.label2}</span>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function RibbonBannerPreview() {
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="space-y-3 w-full max-w-xs">
+        {[
+          {text:'🎉 Limited Time Offer',cls:'bg-indigo-600'},
+          {text:'⚡ Flash Sale — 50% Off',cls:'bg-red-500'},
+          {text:'✨ New Release',cls:'bg-emerald-600'},
+        ].map(r=>(
+          <div key={r.text} className="bg-white rounded-xl border border-zinc-100 shadow-sm overflow-hidden">
+            <div className={`${r.cls} px-4 py-1.5 text-xs font-bold text-white text-center`}>{r.text}</div>
+            <div className="px-4 py-3 text-xs text-zinc-500">Card content goes here</div>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function RibbonBadgePreview() {
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="flex gap-4 flex-wrap">
+        {[
+          {label:'Featured',cls:'bg-indigo-600',shadow:'shadow-indigo-200'},
+          {label:'Popular',cls:'bg-rose-500',shadow:'shadow-rose-200'},
+          {label:'New',cls:'bg-emerald-600',shadow:'shadow-emerald-200'},
+        ].map(r=>(
+          <div key={r.label} className="relative">
+            <div className="w-28 h-20 bg-white rounded-xl border border-zinc-100 shadow-sm flex items-center justify-center text-xs text-zinc-500">Card</div>
+            <div className={`absolute -left-1 top-3 ${r.cls} text-white text-[10px] font-bold px-3 py-0.5 rounded-r-full shadow ${r.shadow}`}>
+              {r.label}
+              <div className={`absolute left-0 -bottom-1 border-l-[4px] border-l-transparent border-r-0 border-t-[4px] ${r.cls} opacity-60`}
+                style={{borderTopColor:'inherit',width:0,height:0,borderStyle:'solid'}}/>
+            </div>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Spinners (3)
+───────────────────────────────────────────── */
+function SpinnerBasicPreview() {
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="flex gap-8 items-center flex-wrap">
+        <div className="flex flex-col items-center gap-2">
+          <div className="w-8 h-8 rounded-full border-4 border-zinc-200 border-t-indigo-600 animate-spin"/>
+          <span className="text-[10px] text-zinc-400">Border</span>
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <div className="flex gap-1">
+            {[0,1,2].map(i=>(
+              <div key={i} className="w-2 h-2 rounded-full bg-indigo-600 animate-bounce" style={{animationDelay:`${i*0.15}s`}}/>
+            ))}
+          </div>
+          <span className="text-[10px] text-zinc-400">Dots</span>
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-indigo-600 animate-ping opacity-50"/>
+          <span className="text-[10px] text-zinc-400">Pulse</span>
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <div className="flex gap-1 items-end">
+            {[0,1,2,3].map(i=>(
+              <div key={i} className="w-1.5 bg-indigo-600 rounded-full animate-bounce" style={{height:`${8+i*4}px`,animationDelay:`${i*0.1}s`}}/>
+            ))}
+          </div>
+          <span className="text-[10px] text-zinc-400">Wave</span>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function SpinnerLabeledPreview() {
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="space-y-4 w-full max-w-xs">
+        {[
+          {size:'w-4 h-4',text:'Loading...','textSize':'text-sm'},
+          {size:'w-6 h-6',text:'Processing','textSize':'text-base'},
+          {size:'w-8 h-8',text:'Please wait...','textSize':'text-lg'},
+        ].map((s,i)=>(
+          <div key={i} className="flex items-center gap-3">
+            <div className={`${s.size} rounded-full border-4 border-zinc-200 border-t-indigo-600 animate-spin shrink-0`}/>
+            <span className={`${s.textSize} font-medium text-zinc-600`}>{s.text}</span>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function SpinnerOverlayPreview() {
+  const [loading, setLoading] = useState(false);
+  return (
+    <PreviewWrap bg="bg-zinc-100">
+      <div className="relative w-64 h-36 bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden">
+        <div className="p-4">
+          <p className="text-sm font-bold text-zinc-800">Dashboard</p>
+          <p className="text-xs text-zinc-500 mt-1">Content loaded below</p>
+        </div>
+        {loading&&(
+          <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center rounded-2xl">
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-8 h-8 rounded-full border-4 border-zinc-200 border-t-indigo-600 animate-spin"/>
+              <span className="text-xs text-zinc-500">Loading...</span>
+            </div>
+          </div>
+        )}
+        <div className="absolute bottom-3 right-3">
+          <button onClick={()=>{setLoading(true);setTimeout(()=>setLoading(false),2000);}}
+            className="rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-indigo-700">
+            {loading?'Loading...':'Load Data'}
+          </button>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Tabs (3)
+───────────────────────────────────────────── */
+function TabsPillPreview() {
+  const [tab, setTab] = useState('overview');
+  const tabs=[{id:'overview',label:'Overview'},{id:'analytics',label:'Analytics'},{id:'reports',label:'Reports'},{id:'settings',label:'Settings'}];
+  const content:Record<string,string>={overview:'Overview content',analytics:'Analytics & charts',reports:'Monthly reports',settings:'Account settings'};
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-sm">
+        <div className="flex gap-1 p-1 bg-zinc-100 rounded-xl mb-4">
+          {tabs.map(t=>(
+            <button key={t.id} onClick={()=>setTab(t.id)}
+              className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all ${tab===t.id?'bg-white text-zinc-900 shadow':'text-zinc-500 hover:text-zinc-700'}`}>
+              {t.label}
+            </button>
+          ))}
+        </div>
+        <div className="rounded-xl bg-zinc-50 border border-zinc-100 p-4 text-sm text-zinc-600">{content[tab]}</div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function TabsVerticalPreview() {
+  const [tab, setTab] = useState('profile');
+  const tabs=[{id:'profile',label:'Profile',icon:'👤'},{id:'security',label:'Security',icon:'🔒'},{id:'billing',label:'Billing',icon:'💳'},{id:'notifs',label:'Notifications',icon:'🔔'}];
+  const content:Record<string,string>={profile:'Manage your profile info',security:'Update password & 2FA',billing:'Manage plans & invoices',notifs:'Configure alert preferences'};
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="flex gap-3 w-full max-w-sm h-40">
+        <div className="flex flex-col gap-0.5 w-32">
+          {tabs.map(t=>(
+            <button key={t.id} onClick={()=>setTab(t.id)}
+              className={`flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-left transition-all ${tab===t.id?'bg-indigo-50 text-indigo-700 font-semibold':'text-zinc-500 hover:bg-zinc-50'}`}>
+              <span>{t.icon}</span>{t.label}
+            </button>
+          ))}
+        </div>
+        <div className="flex-1 rounded-xl bg-zinc-50 border border-zinc-100 p-3 text-xs text-zinc-600">{content[tab]}</div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function TabsIconPreview() {
+  const [tab, setTab] = useState('mail');
+  const tabs=[
+    {id:'mail',icon:<Mail size={16}/>,label:'Mail'},
+    {id:'bell',icon:<Bell size={16}/>,label:'Alerts'},
+    {id:'user',icon:<User size={16}/>,label:'Profile'},
+    {id:'settings',icon:<Settings size={16}/>,label:'Settings'},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="w-full max-w-sm">
+        <div className="flex border-b border-zinc-200 mb-4">
+          {tabs.map(t=>(
+            <button key={t.id} onClick={()=>setTab(t.id)}
+              className={`flex-1 flex flex-col items-center gap-1 py-3 text-[10px] font-semibold transition-all border-b-2 ${tab===t.id?'border-indigo-600 text-indigo-600':'border-transparent text-zinc-400 hover:text-zinc-600'}`}>
+              {t.icon}{t.label}
+            </button>
+          ))}
+        </div>
+        <div className="text-sm text-zinc-600 px-1">{tabs.find(t=>t.id===tab)?.label} content</div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Tooltips (3)
+───────────────────────────────────────────── */
+function TooltipBasicPreview() {
+  const tips=[
+    {label:'Top',pos:'bottom-full mb-2 left-1/2 -translate-x-1/2',cls:'bg-zinc-800 text-white'},
+    {label:'Right',pos:'left-full ml-2 top-1/2 -translate-y-1/2',cls:'bg-indigo-600 text-white'},
+    {label:'Bottom',pos:'top-full mt-2 left-1/2 -translate-x-1/2',cls:'bg-emerald-600 text-white'},
+    {label:'Left',pos:'right-full mr-2 top-1/2 -translate-y-1/2',cls:'bg-rose-500 text-white'},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="grid grid-cols-2 gap-6 p-4">
+        {tips.map(t=>(
+          <div key={t.label} className="relative flex items-center justify-center group">
+            <button className="rounded-lg border border-zinc-200 px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-50">{t.label}</button>
+            <div className={`absolute ${t.pos} ${t.cls} text-xs font-semibold rounded-lg px-2.5 py-1.5 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10`}>
+              Tooltip {t.label}
+            </div>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function TooltipRichPreview() {
+  const [show, setShow] = useState(false);
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="relative inline-block" onMouseEnter={()=>setShow(true)} onMouseLeave={()=>setShow(false)}>
+        <button className="rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 flex items-center gap-2">
+          <Info size={15}/>Learn more
+        </button>
+        {show&&(
+          <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 w-56 bg-white rounded-xl border border-zinc-100 shadow-xl p-3 z-20">
+            <p className="text-xs font-bold text-zinc-900 mb-1">Rich Tooltip</p>
+            <p className="text-xs text-zinc-500 mb-2">Tooltips can include titles, descriptions, and even links for rich content.</p>
+            <a href="#" className="text-xs font-semibold text-indigo-600 hover:underline">Read documentation →</a>
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function TooltipDarkPreview() {
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="flex gap-8 flex-wrap justify-center p-4">
+        {[
+          {label:'Copy',icon:<Copy size={15}/>,tip:'Copy to clipboard'},
+          {label:'Settings',icon:<Settings size={15}/>,tip:'Manage settings'},
+          {label:'Delete',icon:<X size={15}/>,tip:'Remove item'},
+        ].map(item=>(
+          <div key={item.label} className="relative group flex flex-col items-center">
+            <button className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center text-zinc-600 hover:bg-zinc-200 transition">
+              {item.icon}
+            </button>
+            <div className="absolute -top-9 left-1/2 -translate-x-1/2 bg-zinc-900 text-white text-[10px] font-semibold rounded-lg px-2.5 py-1.5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+              {item.tip}
+              <div className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 bg-zinc-900 rotate-45"/>
+            </div>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Videos (3)
+───────────────────────────────────────────── */
+function VideoPlayerPreview() {
+  const [playing, setPlaying] = useState(false);
+  const [progress, setProgress] = useState(35);
+  const [muted, setMuted] = useState(false);
+  return (
+    <PreviewWrap bg="bg-zinc-900">
+      <div className="w-full max-w-sm bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-700">
+        <div className="h-32 bg-gradient-to-br from-zinc-800 to-zinc-900 flex items-center justify-center relative">
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjMWUxZTJlIi8+PC9zdmc+')] opacity-30"/>
+          <button onClick={()=>setPlaying(p=>!p)}
+            className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center hover:bg-white transition shadow-lg z-10">
+            {playing?(
+              <svg viewBox="0 0 16 16" width="18" fill="#18181b"><rect x="3" y="2" width="4" height="12" rx="1"/><rect x="9" y="2" width="4" height="12" rx="1"/></svg>
+            ):(
+              <svg viewBox="0 0 16 16" width="18" fill="#18181b"><polygon points="3,1 15,8 3,15"/></svg>
+            )}
+          </button>
+        </div>
+        <div className="px-3 py-2.5 bg-zinc-800">
+          <div className="flex items-center gap-2 mb-2">
+            <button onClick={()=>setPlaying(p=>!p)} className="text-white hover:text-zinc-300">
+              {playing?<svg viewBox="0 0 16 16" width="14" fill="currentColor"><rect x="2" y="1" width="4" height="14" rx="1"/><rect x="10" y="1" width="4" height="14" rx="1"/></svg>
+              :<svg viewBox="0 0 16 16" width="14" fill="currentColor"><polygon points="2,0 14,8 2,16"/></svg>}
+            </button>
+            <div className="flex-1 h-1 bg-zinc-600 rounded-full cursor-pointer" onClick={(e)=>{
+              const r=e.currentTarget.getBoundingClientRect();
+              setProgress(Math.round(((e.clientX-r.left)/r.width)*100));
+            }}>
+              <div className="h-full bg-indigo-500 rounded-full" style={{width:`${progress}%`}}/>
+            </div>
+            <span className="text-[10px] text-zinc-400 whitespace-nowrap">1:24 / 4:02</span>
+            <button onClick={()=>setMuted(m=>!m)} className="text-zinc-400 hover:text-white text-[10px]">{muted?'🔇':'🔊'}</button>
+          </div>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function VideoCardV2Preview() {
+  const cards=[
+    {title:'Getting Started with React Hooks',views:'24K views',duration:'12:34',author:'DevTube',color:'bg-gradient-to-br from-indigo-500 to-violet-600'},
+    {title:'Build a Full-Stack App in 1 Hour',views:'84K views',duration:'58:21',author:'CodeWorld',color:'bg-gradient-to-br from-cyan-500 to-blue-600'},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="flex gap-3 w-full max-w-md">
+        {cards.map(card=>(
+          <div key={card.title} className="flex-1 bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden hover:shadow-md transition">
+            <div className={`${card.color} h-20 relative flex items-end p-2`}>
+              <span className="bg-black/70 text-white text-[10px] font-bold rounded px-1.5 py-0.5 ml-auto">{card.duration}</span>
+            </div>
+            <div className="p-3">
+              <p className="text-xs font-bold text-zinc-800 leading-tight">{card.title}</p>
+              <p className="text-[10px] text-zinc-500 mt-1">{card.author} · {card.views}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function VideoGridPreview() {
+  const videos=[
+    {color:'bg-gradient-to-br from-indigo-500 to-violet-600',dur:'5:24',title:'React Tips'},
+    {color:'bg-gradient-to-br from-cyan-500 to-blue-600',dur:'12:08',title:'CSS Grid'},
+    {color:'bg-gradient-to-br from-amber-500 to-orange-600',dur:'8:42',title:'JS Async'},
+    {color:'bg-gradient-to-br from-emerald-500 to-teal-600',dur:'18:55',title:'Next.js SSR'},
+  ];
+  return (
+    <PreviewWrap bg="bg-white">
+      <div className="grid grid-cols-2 gap-2 w-full max-w-xs">
+        {videos.map(v=>(
+          <div key={v.title} className="rounded-xl overflow-hidden border border-zinc-100 hover:shadow-md transition cursor-pointer">
+            <div className={`${v.color} h-16 relative`}>
+              <span className="absolute bottom-1.5 right-1.5 bg-black/70 text-white text-[9px] font-bold rounded px-1 py-0.5">{v.dur}</span>
+            </div>
+            <div className="px-2 py-1.5 bg-white">
+              <p className="text-[10px] font-semibold text-zinc-800 truncate">{v.title}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
 /* ─────────────────────────────────────────────
    Aside Navigation — Dashboard (3)
 ───────────────────────────────────────────── */
@@ -6486,7 +9105,7 @@ const COMPONENTS: ComponentDef[] = [
   {
     id: 'list-group', name: 'List Group', category: 'Display',
     description: 'Clickable list items with icon, label, sub-label, and chevron.',
-    Preview: ListGroupPreview,
+    Preview: ListGroupV2Preview,
     tailwind: `<div class="divide-y divide-zinc-100 rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden">
   <button class="flex w-full items-center gap-3 px-4 py-3.5 hover:bg-zinc-50 transition text-left">
     <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-500">
@@ -6959,7 +9578,7 @@ input[type=range]::-webkit-slider-thumb { width:1.125rem; height:1.125rem; borde
   {
     id: 'image-gallery', name: 'Image Gallery', category: 'Display',
     description: 'Responsive grid image gallery with thumbnail strip for lightbox-style layouts.',
-    Preview: ImageGalleryPreview,
+    Preview: ImageGalleryV2Preview,
     tailwind: `<!-- 3-column grid -->
 <div class="grid grid-cols-3 gap-1.5">
   <div class="aspect-square rounded-lg bg-gradient-to-br from-blue-400 to-indigo-500 hover:scale-105 transition cursor-pointer"></div>
@@ -6979,7 +9598,7 @@ input[type=range]::-webkit-slider-thumb { width:1.125rem; height:1.125rem; borde
   {
     id: 'video-card', name: 'Video Card', category: 'Display',
     description: 'Video thumbnail card with play button overlay, duration badge, and meta info.',
-    Preview: VideoCardPreview,
+    Preview: VideoCardV2Preview,
     tailwind: `<div class="rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden">
   <!-- Thumbnail with play -->
   <div class="relative h-36 bg-zinc-900 flex items-center justify-center cursor-pointer group">
@@ -7374,7 +9993,7 @@ input[type=range]::-webkit-slider-thumb { width:1.125rem; height:1.125rem; borde
   {
     id: 'donut-chart', name: 'Donut Chart', category: 'Display',
     description: 'CSS + SVG donut chart with legend — no library required.',
-    Preview: DonutChartPreview,
+    Preview: DonutChartV2Preview,
     tailwind: `<div class="flex items-center gap-6">
   <svg width="100" height="100" viewBox="0 0 100 100" class="-rotate-90">
     <!-- Track -->
@@ -7400,7 +10019,7 @@ input[type=range]::-webkit-slider-thumb { width:1.125rem; height:1.125rem; borde
   {
     id: 'bar-chart', name: 'Bar Chart', category: 'Display',
     description: 'Simple vertical bar chart with value labels — pure CSS, no library.',
-    Preview: BarChartPreview,
+    Preview: BarChartV2Preview,
     tailwind: `<div class="flex items-end justify-between gap-2 h-28">
   <!-- Bar -->
   <div class="flex flex-col items-center gap-1 flex-1">
@@ -7630,7 +10249,7 @@ input[type=range]::-webkit-slider-thumb { width:1.125rem; height:1.125rem; borde
   {
     id: 'heatmap', name: 'Activity Heatmap', category: 'Display',
     description: 'GitHub-style contribution heatmap grid with color intensity legend.',
-    Preview: HeatmapPreview,
+    Preview: HeatmapV2Preview,
     tailwind: `<!-- Heatmap row (repeat per day) -->
 <div class="flex items-center gap-1">
   <span class="w-6 text-[9px] text-zinc-400 text-right">Mon</span>
@@ -8290,7 +10909,7 @@ input[type=range]::-webkit-slider-thumb { width:1.125rem; height:1.125rem; borde
   {
     id: 'avatar-group', name: 'Avatar Group', category: 'Display',
     description: 'Stacked overlapping avatars with overflow count indicator and size variants.',
-    Preview: AvatarGroupPreview,
+    Preview: AvatarGroupV2Preview,
     tailwind: `<div class="flex items-center">
   <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500 text-[11px] font-bold text-white ring-2 ring-white">JD</div>
   <div class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-[11px] font-bold text-white ring-2 ring-white -ml-2.5">KL</div>
@@ -10775,6 +13394,1050 @@ kbd { border-radius:.375rem; border:1px solid #e4e4e7; background:#f4f4f5; paddi
 .cal-view-btn.active { background:#16a34a; color:#fff; }
 .cal-view-btn:not(.active) { background:#f4f4f5; color:#71717a; }`,
   },
+
+  /* ── Charts ── */
+  {
+    id: 'line-chart', name: 'Line Chart', category: 'Charts',
+    description: 'Revenue trend line chart with gradient fill and indigo polyline.',
+    Preview: LineChartPreview,
+    tailwind: `<div class="rounded-2xl border border-zinc-100 shadow-sm p-4 bg-white">
+  <div class="flex justify-between mb-3"><div><p class="text-xs font-semibold text-zinc-500 uppercase">Revenue</p><p class="text-2xl font-bold">$12,430</p></div><span class="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-700">+8.2%</span></div>
+  <svg viewBox="0 0 280 120" class="w-full"><polyline points="10,100 32,78 55,88 78,52 100,60 123,30 145,38 168,10 190,25 213,10" fill="none" stroke="#6366f1" stroke-width="2" stroke-linejoin="round"/></svg>
+</div>`,
+    css: `.line-chart { border-radius:1rem; border:1px solid #f4f4f5; padding:1rem; background:#fff; } .line-chart polyline { fill:none; stroke:#6366f1; stroke-width:2; }`,
+  },
+  {
+    id: 'bar-chart', name: 'Bar Chart', category: 'Charts',
+    description: 'Monthly sales vertical bar chart with rounded tops.',
+    Preview: BarChartV2Preview,
+    tailwind: `<div class="rounded-2xl border border-zinc-100 shadow-sm p-4 bg-white">
+  <p class="text-xs font-semibold text-zinc-500 uppercase mb-4">Monthly Sales</p>
+  <div class="flex items-end gap-2 h-28">
+    <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full rounded-t-lg bg-blue-500 h-3/4"/><span class="text-[9px] text-zinc-400">Mon</span></div>
+  </div>
+</div>`,
+    css: `.bar-chart { border-radius:1rem; border:1px solid #f4f4f5; padding:1rem; } .bar { background:#3b82f6; border-radius:.25rem .25rem 0 0; }`,
+  },
+  {
+    id: 'horizontal-bar', name: 'Horizontal Bar Chart', category: 'Charts',
+    description: 'Category breakdown horizontal bar chart.',
+    Preview: HorizontalBarPreview,
+    tailwind: `<div class="rounded-2xl border border-zinc-100 shadow-sm p-4 bg-white space-y-3">
+  <div><div class="flex justify-between text-xs mb-1"><span>Electronics</span><span>82%</span></div><div class="h-2.5 w-full rounded-full bg-zinc-100"><div class="h-full rounded-full bg-indigo-500 w-4/5"/></div></div>
+</div>`,
+    css: `.hbar-track { height:.625rem; background:#f4f4f5; border-radius:9999px; } .hbar-fill { height:100%; background:#6366f1; border-radius:9999px; }`,
+  },
+  {
+    id: 'area-chart', name: 'Area Chart', category: 'Charts',
+    description: 'Multi-series area chart with two overlapping gradient areas.',
+    Preview: AreaChartPreview,
+    tailwind: `<div class="rounded-2xl border border-zinc-100 shadow-sm p-4 bg-white">
+  <p class="text-sm font-bold mb-3">Traffic Overview</p>
+  <svg viewBox="0 0 280 110" class="w-full"><defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.3"/><stop offset="100%" stop-color="#8b5cf6" stop-opacity="0"/></linearGradient></defs><polygon points="8,102 ..." fill="url(#ag)"/><polyline points="8,78 ..." fill="none" stroke="#8b5cf6" stroke-width="2"/></svg>
+</div>`,
+    css: `.area-chart { border-radius:1rem; border:1px solid #f4f4f5; padding:1rem; } .area-fill { fill:url(#gradient); }`,
+  },
+  {
+    id: 'multi-line-chart', name: 'Multi-Line Chart', category: 'Charts',
+    description: 'Two data series performance line chart.',
+    Preview: MultiLineChartPreview,
+    tailwind: `<div class="rounded-2xl border border-zinc-100 shadow-sm p-4 bg-white">
+  <p class="text-sm font-bold mb-2">Performance</p>
+  <svg viewBox="0 0 280 110" class="w-full"><polyline points="..." fill="none" stroke="#6366f1" stroke-width="2.5"/><polyline points="..." fill="none" stroke="#fb7185" stroke-width="2.5" stroke-dasharray="4 2"/></svg>
+</div>`,
+    css: `.multi-line { stroke-width:2.5; fill:none; stroke-linecap:round; }`,
+  },
+  {
+    id: 'pie-chart', name: 'Pie Chart', category: 'Charts',
+    description: 'Traffic sources pie chart with 4 SVG arc segments and legend.',
+    Preview: PieChartPreview,
+    tailwind: `<div class="rounded-2xl border border-zinc-100 shadow-sm p-4 bg-white"><p class="text-sm font-bold mb-3">Traffic Sources</p><div class="flex gap-6"><svg viewBox="0 0 120 120" class="w-28"><path d="M 60 60 L 60 10 A 50 50 0 0 1 103 85 Z" fill="#6366f1"/></svg></div></div>`,
+    css: `.pie-segment { stroke:none; } .pie-legend { display:flex; align-items:center; gap:.5rem; font-size:.75rem; }`,
+  },
+  {
+    id: 'donut-chart', name: 'Donut Chart', category: 'Charts',
+    description: 'Storage usage donut chart with SVG stroke-dasharray and legend.',
+    Preview: DonutChartV2Preview,
+    tailwind: `<div class="rounded-2xl border border-zinc-100 shadow-sm p-4 bg-white"><p class="text-sm font-bold mb-3">Storage Usage</p><svg viewBox="0 0 100 100" class="w-28"><circle cx="50" cy="50" r="40" fill="none" stroke="#f4f4f5" stroke-width="14"/><circle cx="50" cy="50" r="40" fill="none" stroke="#6366f1" stroke-width="14" stroke-dasharray="171 251" transform="rotate(-90 50 50)"/></svg></div>`,
+    css: `.donut-track { fill:none; stroke:#f4f4f5; stroke-width:14; } .donut-fill { fill:none; stroke:#6366f1; stroke-width:14; stroke-linecap:round; }`,
+  },
+  {
+    id: 'stacked-bar', name: 'Stacked Bar Chart', category: 'Charts',
+    description: 'Quarterly revenue stacked bar chart with 3 layers per bar.',
+    Preview: StackedBarPreview,
+    tailwind: `<div class="rounded-2xl border border-zinc-100 shadow-sm p-4 bg-white"><p class="text-sm font-bold mb-4">Quarterly Revenue</p><div class="flex items-end gap-2 h-28"><div class="flex-1 flex flex-col-reverse rounded-t overflow-hidden h-4/5"><div class="bg-indigo-500 h-1/2"/><div class="bg-blue-400 h-1/3"/><div class="bg-cyan-300 h-1/6"/></div></div></div>`,
+    css: `.stacked-bar { display:flex; flex-direction:column-reverse; border-radius:.25rem .25rem 0 0; overflow:hidden; }`,
+  },
+  {
+    id: 'sparklines', name: 'Sparklines Row', category: 'Charts',
+    description: '3 mini inline sparklines with label and value.',
+    Preview: SparklinesPreview,
+    tailwind: `<div class="rounded-2xl border border-zinc-100 shadow-sm p-4 bg-white space-y-3"><div class="flex items-center gap-3"><div class="w-24"><p class="text-xs font-semibold">Revenue</p><p class="text-base font-bold">$24.5K</p></div><svg class="flex-1 h-8"><polyline points="..." fill="none" stroke="#6366f1" stroke-width="2"/></svg><span class="text-xs font-bold text-emerald-600">+12%</span></div></div>`,
+    css: `.sparkline { fill:none; stroke:#6366f1; stroke-width:2; stroke-linejoin:round; }`,
+  },
+  {
+    id: 'candlestick', name: 'Candlestick Chart', category: 'Charts',
+    description: '8 OHLC candles with green/red coloring for BTC/USD.',
+    Preview: CandlestickPreview,
+    tailwind: `<div class="rounded-2xl border border-zinc-100 shadow-sm p-4 bg-white"><div class="flex justify-between mb-2"><p class="text-sm font-bold">BTC/USD</p><span class="text-xs font-bold text-emerald-600">$90,420 ↑</span></div><svg viewBox="0 0 280 120" class="w-full"><line x1="21" y1="20" x2="21" y2="110" stroke="#22c55e" stroke-width="1.5"/><rect x="10" y="35" width="22" height="40" fill="#22c55e" rx="2"/></svg></div>`,
+    css: `.candle-bull { fill:#22c55e; } .candle-bear { fill:#ef4444; } .candle-wick { stroke-width:1.5; }`,
+  },
+  {
+    id: 'stock-area', name: 'Stock Area Chart', category: 'Charts',
+    description: 'AAPL price line with gradient fill and volume bars below.',
+    Preview: StockAreaPreview,
+    tailwind: `<div class="rounded-2xl border border-zinc-100 shadow-sm p-4 bg-white"><div class="flex justify-between mb-1"><div><p class="text-xs text-zinc-500">AAPL</p><p class="text-xl font-bold">$185.40</p></div><span class="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-700">+2.1%</span></div></div>`,
+    css: `.stock-area { fill:url(#stockGrad); } .stock-line { fill:none; stroke:#6366f1; stroke-width:2; }`,
+  },
+  {
+    id: 'currency-rates', name: 'Currency Rate Board', category: 'Charts',
+    description: '5 currency pairs with live rate and change indicator.',
+    Preview: CurrencyRatesPreview,
+    tailwind: `<div class="rounded-2xl border border-zinc-100 shadow-sm p-4 bg-white"><p class="text-sm font-bold mb-3">FX Rates</p><div class="divide-y divide-zinc-100"><div class="flex items-center justify-between py-2"><div class="flex items-center gap-2"><span class="text-[10px] font-bold bg-zinc-100 rounded px-1.5">EUR</span><span class="text-zinc-300">→</span><span class="text-[10px] font-bold bg-zinc-100 rounded px-1.5">USD</span></div><span class="text-sm font-bold">1.0842</span><span class="text-xs font-semibold text-emerald-600">+0.12%</span></div></div></div>`,
+    css: `.fx-pair { display:flex; align-items:center; justify-content:space-between; padding:.5rem 0; border-bottom:1px solid #f4f4f5; }`,
+  },
+  {
+    id: 'gauge-chart', name: 'Gauge / Meter Chart', category: 'Charts',
+    description: 'SVG semicircle arc gauge with needle pointer for CPU usage.',
+    Preview: GaugeChartPreview,
+    tailwind: `<div class="rounded-2xl border border-zinc-100 shadow-sm p-4 bg-white text-center"><p class="text-sm font-bold mb-2">CPU Usage</p><svg viewBox="0 0 140 100" class="w-48 mx-auto"><path d="M 20 80 A 50 50 0 1 1 120 80" fill="none" stroke="#f4f4f5" stroke-width="12" stroke-linecap="round"/><path d="M 20 80 A 50 50 0 0 1 106 38" fill="none" stroke="#6366f1" stroke-width="12" stroke-linecap="round"/></svg></div>`,
+    css: `.gauge-track { fill:none; stroke:#f4f4f5; stroke-width:12; stroke-linecap:round; } .gauge-fill { fill:none; stroke:#6366f1; stroke-width:12; stroke-linecap:round; }`,
+  },
+  {
+    id: 'heatmap', name: 'Activity Heatmap', category: 'Charts',
+    description: 'GitHub-style 7×12 contribution heatmap with intensity coloring.',
+    Preview: HeatmapV2Preview,
+    tailwind: `<div class="rounded-2xl border border-zinc-100 shadow-sm p-4 bg-white"><p class="text-sm font-bold mb-3">Activity Heatmap</p><div class="flex gap-1"><div class="flex flex-col gap-1"><div class="w-3 h-3 rounded-sm bg-emerald-500"/><div class="w-3 h-3 rounded-sm bg-emerald-300"/><div class="w-3 h-3 rounded-sm bg-zinc-100"/></div></div></div>`,
+    css: `.heatmap-cell { width:.75rem; height:.75rem; border-radius:2px; } .heatmap-0 { background:#f4f4f5; } .heatmap-4 { background:#15803d; }`,
+  },
+  {
+    id: 'funnel-chart', name: 'Funnel Chart', category: 'Charts',
+    description: '4-stage sales funnel with trapezoid shapes and percentage labels.',
+    Preview: FunnelChartPreview,
+    tailwind: `<div class="rounded-2xl border border-zinc-100 shadow-sm p-4 bg-white"><p class="text-sm font-bold mb-4">Sales Funnel</p><div class="space-y-1.5"><div class="flex items-center gap-3"><span class="text-xs text-zinc-500 w-20 text-right">Visitors</span><div class="flex-1 flex justify-center"><div class="bg-indigo-500 rounded h-7 w-full flex items-center justify-center"><span class="text-[10px] font-bold text-white">10,000</span></div></div></div></div></div>`,
+    css: `.funnel-stage { display:flex; align-items:center; border-radius:.25rem; height:1.75rem; } .funnel-label { font-size:.625rem; font-weight:700; color:#fff; }`,
+  },
+  {
+    id: 'radial-bar', name: 'Radial Bar Chart', category: 'Charts',
+    description: '4 concentric SVG arcs at different radii showing system metrics.',
+    Preview: RadialBarPreview,
+    tailwind: `<div class="rounded-2xl border border-zinc-100 shadow-sm p-4 bg-white"><p class="text-sm font-bold mb-3">System Metrics</p><svg viewBox="0 0 110 110" class="w-32"><circle cx="55" cy="55" r="42" fill="none" stroke="#f4f4f5" stroke-width="7"/><circle cx="55" cy="55" r="42" fill="none" stroke="#6366f1" stroke-width="7" stroke-dasharray="190 267" stroke-linecap="round" transform="rotate(-90 55 55)"/></svg></div>`,
+    css: `.radial-track { fill:none; stroke:#f4f4f5; } .radial-fill { fill:none; stroke-linecap:round; transform-origin:center; transform:rotate(-90deg); }`,
+  },
+  {
+    id: 'bubble-chart', name: 'Bubble Chart', category: 'Charts',
+    description: '6 bubbles varying in size and color positioned at x,y coordinates.',
+    Preview: BubbleChartPreview,
+    tailwind: `<div class="rounded-2xl border border-zinc-100 shadow-sm p-4 bg-white"><p class="text-sm font-bold mb-2">Market Share</p><svg viewBox="0 0 100 100" class="w-full h-40 border border-zinc-100 rounded-xl"><circle cx="30" cy="60" r="18" fill="#6366f1" fill-opacity="0.8"/><circle cx="55" cy="35" r="24" fill="#22d3ee" fill-opacity="0.8"/></svg></div>`,
+    css: `.bubble { fill-opacity:.8; } .bubble-label { fill:#fff; font-size:.4rem; font-weight:700; text-anchor:middle; }`,
+  },
+  {
+    id: 'histogram', name: 'Histogram', category: 'Charts',
+    description: 'Distribution histogram with 12 bars and normal curve overlay.',
+    Preview: HistogramPreview,
+    tailwind: `<div class="rounded-2xl border border-zinc-100 shadow-sm p-4 bg-white"><p class="text-sm font-bold mb-3">Distribution</p><svg viewBox="0 0 280 100" class="w-full"><rect x="1" y="85" width="21" height="5" fill="#6366f1" fill-opacity="0.7" rx="2"/><polyline points="12,90 35,70 58,45 ..." fill="none" stroke="#f59e0b" stroke-width="2"/></svg></div>`,
+    css: `.histogram-bar { fill:#6366f1; fill-opacity:.7; border-radius:2px 2px 0 0; } .histogram-curve { fill:none; stroke:#f59e0b; stroke-width:2; stroke-linejoin:round; }`,
+  },
+
+  /* ── Tables ── */
+  {
+    id: 'basic-table-v2', name: 'Basic Table', category: 'Tables',
+    description: 'Clean 4-column table with Name, Email, Role, Status.',
+    Preview: BasicTableV2Preview,
+    tailwind: `<table class="w-full text-sm"><thead class="bg-zinc-50 border-b border-zinc-100"><tr><th class="px-4 py-3 text-left text-xs font-bold text-zinc-500 uppercase">Name</th><th class="px-4 py-3 text-left text-xs font-bold text-zinc-500 uppercase">Email</th></tr></thead><tbody class="divide-y divide-zinc-100"><tr class="hover:bg-zinc-50"><td class="px-4 py-3 font-medium text-zinc-800">Alice Johnson</td><td class="px-4 py-3 text-zinc-500">alice@acme.com</td></tr></tbody></table>`,
+    css: `.table { width:100%; font-size:.875rem; border-collapse:collapse; } .table th { padding:.75rem 1rem; text-align:left; font-size:.75rem; font-weight:700; color:#71717a; background:#fafafa; } .table td { padding:.75rem 1rem; border-bottom:1px solid #f4f4f5; }`,
+  },
+  {
+    id: 'striped-table', name: 'Striped Table', category: 'Tables',
+    description: 'Alternating row colors with indigo header.',
+    Preview: StripedTablePreview,
+    tailwind: `<table class="w-full text-sm"><thead class="bg-indigo-600 text-white"><tr><th class="px-4 py-3 text-left text-xs font-bold uppercase">Name</th></tr></thead><tbody><tr class="bg-white"><td class="px-4 py-2.5">Alex Turner</td></tr><tr class="bg-indigo-50/40"><td class="px-4 py-2.5">Jamie Lee</td></tr></tbody></table>`,
+    css: `.striped-table tr:nth-child(even) { background:#eef2ff55; } .striped-table thead { background:#4f46e5; color:#fff; }`,
+  },
+  {
+    id: 'bordered-table', name: 'Bordered Table', category: 'Tables',
+    description: 'All-cell bordered table for financial data.',
+    Preview: BorderedTablePreview,
+    tailwind: `<table class="w-full text-sm border-collapse"><thead><tr><th class="border border-zinc-200 px-4 py-2 text-left text-xs font-bold text-zinc-600 bg-zinc-50">Quarter</th></tr></thead><tbody><tr><td class="border border-zinc-200 px-4 py-2.5">Q1</td></tr></tbody></table>`,
+    css: `.bordered-table { border-collapse:collapse; } .bordered-table td, .bordered-table th { border:1px solid #e4e4e7; padding:.625rem 1rem; }`,
+  },
+  {
+    id: 'compact-table', name: 'Compact Dense Table', category: 'Tables',
+    description: 'Tight padding table showing 6+ rows of order data.',
+    Preview: CompactTablePreview,
+    tailwind: `<table class="w-full text-xs"><thead class="bg-zinc-50 border-b border-zinc-100"><tr><th class="px-3 py-2 text-left font-bold text-zinc-500 uppercase">Order</th><th class="px-3 py-2 text-left font-bold text-zinc-500 uppercase">Item</th></tr></thead><tbody class="divide-y divide-zinc-50"><tr class="hover:bg-zinc-50"><td class="px-3 py-1.5 font-mono text-indigo-600">#1042</td></tr></tbody></table>`,
+    css: `.compact-table td, .compact-table th { padding:.375rem .75rem; font-size:.75rem; } .compact-table tbody tr:hover { background:#fafafa; }`,
+  },
+  {
+    id: 'data-table-paginated', name: 'Data Table with Pagination', category: 'Tables',
+    description: 'Sortable columns with prev/next pagination controls.',
+    Preview: DataTablePaginatedPreview,
+    tailwind: `<div class="rounded-2xl border border-zinc-100 shadow-sm overflow-hidden"><table class="w-full text-sm"><thead class="bg-zinc-50"><tr><th class="px-4 py-3 text-left text-xs font-bold text-zinc-500 cursor-pointer">Name ↑</th></tr></thead></table><div class="flex justify-between px-4 py-3 border-t border-zinc-100 bg-zinc-50"><span class="text-xs text-zinc-500">Page 1 of 2</span><div class="flex gap-1"><button class="px-2.5 py-1 text-xs rounded border border-zinc-200">Prev</button><button class="px-2.5 py-1 text-xs rounded border border-zinc-200">Next</button></div></div></div>`,
+    css: `.paginated-table th { cursor:pointer; } .paginated-table th:hover { color:#18181b; } .pagination-bar { display:flex; justify-content:space-between; padding:.75rem 1rem; border-top:1px solid #f4f4f5; }`,
+  },
+  {
+    id: 'action-table', name: 'Table with Row Actions', category: 'Tables',
+    description: 'Edit/Delete action buttons per row.',
+    Preview: ActionTablePreview,
+    tailwind: `<table class="w-full text-sm"><thead class="bg-zinc-50 border-b border-zinc-100"><tr><th class="px-4 py-3 text-left text-xs font-bold text-zinc-500 uppercase">Name</th><th class="px-4 py-3 text-left text-xs font-bold text-zinc-500 uppercase">Actions</th></tr></thead><tbody class="divide-y divide-zinc-100"><tr class="hover:bg-zinc-50"><td class="px-4 py-3 font-medium">Project Alpha</td><td class="px-4 py-3"><div class="flex gap-1.5"><button class="rounded px-2 py-1 text-xs font-semibold bg-blue-50 text-blue-600">Edit</button><button class="rounded px-2 py-1 text-xs font-semibold bg-red-50 text-red-600">Delete</button></div></td></tr></tbody></table>`,
+    css: `.action-table .btn-edit { background:#eff6ff; color:#2563eb; border-radius:.25rem; padding:.25rem .5rem; font-size:.75rem; } .action-table .btn-delete { background:#fef2f2; color:#dc2626; }`,
+  },
+  {
+    id: 'status-table', name: 'Status Column Table', category: 'Tables',
+    description: 'Member table with avatar, status dot, and progress bar.',
+    Preview: StatusTablePreview,
+    tailwind: `<table class="w-full text-sm"><thead class="bg-zinc-50 border-b border-zinc-100"><tr><th class="px-4 py-3 text-left text-xs font-bold text-zinc-500 uppercase">Member</th><th class="px-4 py-3 text-left text-xs font-bold text-zinc-500 uppercase">Status</th></tr></thead><tbody class="divide-y divide-zinc-100"><tr><td class="px-4 py-3"><div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full bg-indigo-100 flex items-center justify-center text-xs font-bold text-indigo-600">SK</div><span>Sarah K</span></div></td><td class="px-4 py-3"><span class="flex items-center gap-1.5 text-xs"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>Online</span></td></tr></tbody></table>`,
+    css: `.status-avatar { width:1.75rem; height:1.75rem; border-radius:9999px; } .status-dot { width:.5rem; height:.5rem; border-radius:9999px; display:inline-block; }`,
+  },
+  {
+    id: 'checkbox-table', name: 'Selectable Table', category: 'Tables',
+    description: 'Row checkboxes with select-all header checkbox.',
+    Preview: CheckboxTablePreview,
+    tailwind: `<table class="w-full text-sm"><thead class="bg-zinc-50 border-b border-zinc-100"><tr><th class="px-4 py-3 w-10"><input type="checkbox" class="rounded"/></th><th class="px-4 py-3 text-left text-xs font-bold text-zinc-500 uppercase">Task</th></tr></thead><tbody class="divide-y divide-zinc-100"><tr class="hover:bg-zinc-50"><td class="px-4 py-3"><input type="checkbox" class="rounded"/></td><td class="px-4 py-3 font-medium">Homepage Redesign</td></tr></tbody></table>`,
+    css: `.checkbox-table tr.selected { background:#eef2ff55; } .checkbox-table input[type=checkbox] { border-radius:.25rem; accent-color:#4f46e5; }`,
+  },
+  {
+    id: 'expandable-table', name: 'Expandable Row Table', category: 'Tables',
+    description: 'Click to expand row and reveal order item details.',
+    Preview: ExpandableTablePreview,
+    tailwind: `<table class="w-full text-sm"><thead class="bg-zinc-50 border-b border-zinc-100"><tr><th class="px-4 py-3 w-8"></th><th class="px-4 py-3 text-left text-xs font-bold text-zinc-500 uppercase">Order</th></tr></thead><tbody><tr class="hover:bg-zinc-50 border-b border-zinc-100 cursor-pointer"><td class="px-4 py-3 text-zinc-400">▶</td><td class="px-4 py-3 font-medium">Order #1042</td></tr></tbody></table>`,
+    css: `.expandable-table .expand-icon { color:#a1a1aa; transition:transform .15s; } .expandable-table .expand-icon.open { transform:rotate(90deg); } .expandable-row { background:#fafafa; }`,
+  },
+
+  /* ── Alerts ── */
+  {
+    id: 'alert-success', name: 'Success Alert', category: 'Alerts',
+    description: 'Green dismissable success alert with icon.',
+    Preview: AlertSuccessPreview,
+    tailwind: `<div class="flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3"><svg class="text-emerald-600 mt-0.5 shrink-0" .../><div class="flex-1"><p class="text-sm font-semibold text-emerald-800">Successfully saved!</p><p class="text-xs text-emerald-700 mt-0.5">Your changes have been saved.</p></div><button class="text-emerald-400 hover:text-emerald-600">✕</button></div>`,
+    css: `.alert-success { display:flex; align-items:flex-start; gap:.75rem; border-radius:.75rem; border:1px solid #a7f3d0; background:#ecfdf5; padding:.75rem 1rem; }`,
+  },
+  {
+    id: 'alert-variants', name: 'Alert Variants', category: 'Alerts',
+    description: 'All 4 alert variants: success, warning, error, info.',
+    Preview: AlertVariantsPreview,
+    tailwind: `<div class="space-y-2">
+  <div class="flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800"><span>✓</span><div><p class="text-sm font-semibold">Success</p><p class="text-xs">Operation completed.</p></div></div>
+  <div class="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-800"><span>⚠</span><div><p class="text-sm font-semibold">Warning</p><p class="text-xs">Review before proceeding.</p></div></div>
+</div>`,
+    css: `.alert { display:flex; gap:.75rem; border-radius:.75rem; border-width:1px; padding:.75rem 1rem; font-size:.875rem; } .alert-success { background:#ecfdf5; border-color:#a7f3d0; color:#065f46; } .alert-warning { background:#fffbeb; border-color:#fde68a; color:#92400e; } .alert-error { background:#fef2f2; border-color:#fecaca; color:#991b1b; } .alert-info { background:#eff6ff; border-color:#bfdbfe; color:#1e40af; }`,
+  },
+  {
+    id: 'alert-banner', name: 'Alert Banner', category: 'Alerts',
+    description: 'Full-width top banner with action button and dismiss.',
+    Preview: AlertBannerPreview,
+    tailwind: `<div class="flex items-center gap-3 rounded-xl bg-indigo-600 px-4 py-3 text-white"><svg .../><p class="flex-1 text-sm font-medium">New version available! Update now.</p><button class="rounded-lg bg-white/20 px-3 py-1 text-xs font-bold hover:bg-white/30">Update</button><button class="text-white/60 hover:text-white">✕</button></div>`,
+    css: `.alert-banner { display:flex; align-items:center; gap:.75rem; border-radius:.75rem; background:#4f46e5; padding:.75rem 1rem; color:#fff; } .alert-banner-action { background:rgba(255,255,255,.2); border-radius:.5rem; padding:.25rem .75rem; font-size:.75rem; font-weight:700; }`,
+  },
+
+  /* ── Avatars ── */
+  {
+    id: 'avatar-basic', name: 'Avatar Sizes', category: 'Avatars',
+    description: '4 avatar sizes with initials and gradient icon styles.',
+    Preview: AvatarBasicPreview,
+    tailwind: `<div class="flex items-end gap-5">
+  <div class="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center text-[9px] font-bold text-indigo-600">AJ</div>
+  <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-[10px] font-bold text-indigo-600">AJ</div>
+  <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-xs font-bold text-indigo-600">AJ</div>
+  <div class="w-14 h-14 rounded-full bg-indigo-100 flex items-center justify-center text-base font-bold text-indigo-600">AJ</div>
+</div>`,
+    css: `.avatar { border-radius:9999px; display:flex; align-items:center; justify-content:center; font-weight:700; } .avatar-xs { width:1.5rem; height:1.5rem; font-size:.5625rem; } .avatar-sm { width:2rem; height:2rem; font-size:.625rem; } .avatar-md { width:2.5rem; height:2.5rem; font-size:.75rem; } .avatar-lg { width:3.5rem; height:3.5rem; font-size:1rem; }`,
+  },
+  {
+    id: 'avatar-group', name: 'Avatar Group', category: 'Avatars',
+    description: 'Overlapping stack of 5 avatars with overflow count badge.',
+    Preview: AvatarGroupV2Preview,
+    tailwind: `<div class="flex -space-x-3">
+  <div class="w-10 h-10 rounded-full bg-indigo-400 border-2 border-white flex items-center justify-center text-xs font-bold text-white">AJ</div>
+  <div class="w-10 h-10 rounded-full bg-blue-400 border-2 border-white flex items-center justify-center text-xs font-bold text-white">BK</div>
+  <div class="w-10 h-10 rounded-full bg-zinc-100 border-2 border-white flex items-center justify-center text-xs font-bold text-zinc-600">+8</div>
+</div>`,
+    css: `.avatar-group { display:flex; } .avatar-group .avatar { margin-left:-.75rem; border:2px solid #fff; } .avatar-group .avatar:first-child { margin-left:0; } .avatar-overflow { background:#f4f4f5; color:#52525b; }`,
+  },
+  {
+    id: 'avatar-status', name: 'Avatar with Status', category: 'Avatars',
+    description: 'Avatars with online/away/busy/offline status dots.',
+    Preview: AvatarStatusPreview,
+    tailwind: `<div class="relative inline-block">
+  <div class="w-11 h-11 rounded-full bg-indigo-400 flex items-center justify-center text-sm font-bold text-white">AJ</div>
+  <span class="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white"></span>
+</div>`,
+    css: `.avatar-status-wrapper { position:relative; display:inline-block; } .status-dot { position:absolute; bottom:0; right:0; width:.75rem; height:.75rem; border-radius:9999px; border:2px solid #fff; } .status-online { background:#22c55e; } .status-away { background:#f59e0b; } .status-busy { background:#ef4444; } .status-offline { background:#d4d4d8; }`,
+  },
+
+  /* ── Badge ── */
+  {
+    id: 'badge-basic', name: 'Basic Badges', category: 'Badge',
+    description: '6 color pill badge variants.',
+    Preview: BadgeBasicPreview,
+    tailwind: `<div class="flex flex-wrap gap-2">
+  <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-blue-100 text-blue-700">New</span>
+  <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-emerald-100 text-emerald-700">Active</span>
+  <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-amber-100 text-amber-700">Pending</span>
+  <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-red-100 text-red-700">Danger</span>
+</div>`,
+    css: `.badge { display:inline-flex; align-items:center; border-radius:9999px; padding:.25rem .75rem; font-size:.75rem; font-weight:600; } .badge-blue { background:#dbeafe; color:#1d4ed8; } .badge-green { background:#d1fae5; color:#065f46; } .badge-amber { background:#fef3c7; color:#92400e; } .badge-red { background:#fee2e2; color:#991b1b; }`,
+  },
+  {
+    id: 'badge-dot', name: 'Dot Badges', category: 'Badge',
+    description: 'Notification count dots on icon buttons.',
+    Preview: BadgeDotPreview,
+    tailwind: `<div class="relative inline-block">
+  <button class="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center text-zinc-600">🔔</button>
+  <span class="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center px-1">5</span>
+</div>`,
+    css: `.badge-dot { position:absolute; top:-.25rem; right:-.25rem; min-width:1.125rem; height:1.125rem; border-radius:9999px; background:#ef4444; color:#fff; font-size:.5625rem; font-weight:700; display:flex; align-items:center; justify-content:center; padding:0 .25rem; }`,
+  },
+  {
+    id: 'badge-outlined', name: 'Outlined Badges', category: 'Badge',
+    description: 'Bordered transparent outline badge variants.',
+    Preview: BadgeOutlinedPreview,
+    tailwind: `<div class="flex flex-wrap gap-2">
+  <span class="inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold border-zinc-300 text-zinc-600">Draft</span>
+  <span class="inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold border-emerald-400 text-emerald-700">Approved</span>
+  <span class="inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold border-red-400 text-red-700">Rejected</span>
+</div>`,
+    css: `.badge-outlined { display:inline-flex; align-items:center; border-radius:9999px; border-width:1px; padding:.25rem .75rem; font-size:.75rem; font-weight:600; background:transparent; }`,
+  },
+
+  /* ── Breadcrumb ── */
+  {
+    id: 'breadcrumb-basic', name: 'Basic Breadcrumb', category: 'Breadcrumb',
+    description: 'Home > Products > Details breadcrumb with chevrons.',
+    Preview: BreadcrumbBasicPreview,
+    tailwind: `<nav class="flex items-center gap-1 text-sm">
+  <span class="text-zinc-400 hover:text-zinc-600 cursor-pointer">Home</span>
+  <svg .../> 
+  <span class="text-zinc-400 hover:text-zinc-600 cursor-pointer">Products</span>
+  <svg .../> 
+  <span class="font-semibold text-zinc-800">MacBook Pro</span>
+</nav>`,
+    css: `.breadcrumb { display:flex; align-items:center; gap:.25rem; font-size:.875rem; } .breadcrumb-link { color:#a1a1aa; cursor:pointer; } .breadcrumb-link:hover { color:#52525b; } .breadcrumb-current { font-weight:600; color:#18181b; }`,
+  },
+  {
+    id: 'breadcrumb-icon', name: 'Breadcrumb with Icons', category: 'Breadcrumb',
+    description: 'Folder icon breadcrumbs per navigation segment.',
+    Preview: BreadcrumbIconPreview,
+    tailwind: `<nav class="flex items-center gap-1 text-sm">
+  <span class="flex items-center gap-1 text-zinc-400">🏠 Home</span>
+  <svg .../> 
+  <span class="flex items-center gap-1 text-zinc-400">📁 Documents</span>
+  <svg .../> 
+  <span class="flex items-center gap-1 font-semibold text-zinc-800">📄 Report.pdf</span>
+</nav>`,
+    css: `.breadcrumb-icon { display:flex; align-items:center; gap:.25rem; font-size:.875rem; } .breadcrumb-icon .segment { display:flex; align-items:center; gap:.25rem; }`,
+  },
+  {
+    id: 'breadcrumb-pills', name: 'Pill Breadcrumb', category: 'Breadcrumb',
+    description: 'Rounded pill style navigation breadcrumbs.',
+    Preview: BreadcrumbPillsPreview,
+    tailwind: `<nav class="flex items-center gap-1.5">
+  <span class="rounded-full px-3 py-1 text-xs font-semibold cursor-pointer bg-zinc-100 text-zinc-600">Home</span>
+  <svg .../> 
+  <span class="rounded-full px-3 py-1 text-xs font-semibold bg-indigo-600 text-white">Security</span>
+</nav>`,
+    css: `.breadcrumb-pill { border-radius:9999px; padding:.25rem .75rem; font-size:.75rem; font-weight:600; } .breadcrumb-pill-active { background:#4f46e5; color:#fff; } .breadcrumb-pill-inactive { background:#f4f4f5; color:#52525b; }`,
+  },
+
+  /* ── Button Variants ── */
+  {
+    id: 'buttons-ghost', name: 'Ghost Buttons', category: 'Button Variants',
+    description: 'Outlined ghost buttons in multiple colors.',
+    Preview: ButtonsGhostPreview,
+    tailwind: `<div class="flex flex-wrap gap-2">
+  <button class="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-700 bg-transparent hover:bg-zinc-50">Default</button>
+  <button class="rounded-lg border border-indigo-400 px-4 py-2 text-sm font-semibold text-indigo-700 bg-transparent hover:bg-indigo-50">Primary</button>
+  <button class="rounded-lg border border-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-700 bg-transparent hover:bg-emerald-50">Success</button>
+</div>`,
+    css: `.ghost-btn { border-radius:.5rem; border-width:1px; padding:.5rem 1rem; font-size:.875rem; font-weight:600; background:transparent; cursor:pointer; transition:background .15s; } .ghost-btn-primary { border-color:#818cf8; color:#4338ca; } .ghost-btn-primary:hover { background:#eef2ff; }`,
+  },
+  {
+    id: 'buttons-icon', name: 'Icon Buttons', category: 'Button Variants',
+    description: 'Square icon-only buttons plus icon+label combos.',
+    Preview: ButtonsIconPreview,
+    tailwind: `<div class="space-y-2">
+  <div class="flex gap-2">
+    <button class="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center text-zinc-600 hover:bg-indigo-100 hover:text-indigo-600">🔔</button>
+  </div>
+  <div class="flex gap-2">
+    <button class="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold bg-indigo-600 text-white hover:bg-indigo-700">🔔 Notify</button>
+  </div>
+</div>`,
+    css: `.icon-btn { width:2.5rem; height:2.5rem; border-radius:.75rem; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background .15s; } .icon-btn-square { background:#f4f4f5; color:#52525b; }`,
+  },
+  {
+    id: 'buttons-gradient', name: 'Gradient Buttons', category: 'Button Variants',
+    description: 'Gradient background buttons in violet, ocean, emerald, sunset.',
+    Preview: ButtonsGradientPreview,
+    tailwind: `<div class="flex flex-wrap gap-3">
+  <button class="rounded-lg px-5 py-2.5 text-sm font-bold text-white shadow-md hover:opacity-90" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">Violet Gradient</button>
+  <button class="rounded-lg px-5 py-2.5 text-sm font-bold text-white shadow-md hover:opacity-90" style="background:linear-gradient(135deg,#06b6d4,#3b82f6)">Ocean Gradient</button>
+</div>`,
+    css: `.gradient-btn { border-radius:.5rem; padding:.625rem 1.25rem; font-size:.875rem; font-weight:700; color:#fff; border:none; cursor:pointer; transition:opacity .15s; } .gradient-violet { background:linear-gradient(135deg,#6366f1,#8b5cf6); } .gradient-ocean { background:linear-gradient(135deg,#06b6d4,#3b82f6); }`,
+  },
+
+  /* ── Button Groups ── */
+  {
+    id: 'btn-group-basic', name: 'Button Group', category: 'Button Groups',
+    description: 'Joined border buttons in a single group.',
+    Preview: BtnGroupBasicPreview,
+    tailwind: `<div class="inline-flex rounded-lg border border-zinc-200 overflow-hidden">
+  <button class="px-4 py-2 text-sm font-semibold text-zinc-700 hover:bg-zinc-100">Left</button>
+  <button class="px-4 py-2 text-sm font-semibold text-zinc-700 hover:bg-zinc-100 border-l border-zinc-200">Center</button>
+  <button class="px-4 py-2 text-sm font-semibold text-zinc-700 hover:bg-zinc-100 border-l border-zinc-200">Right</button>
+</div>`,
+    css: `.btn-group { display:inline-flex; border:1px solid #e4e4e7; border-radius:.5rem; overflow:hidden; } .btn-group button { padding:.5rem 1rem; font-size:.875rem; font-weight:600; background:none; border:none; border-left:1px solid #e4e4e7; cursor:pointer; } .btn-group button:first-child { border-left:none; }`,
+  },
+  {
+    id: 'btn-group-radio', name: 'Radio Button Group', category: 'Button Groups',
+    description: 'Single-select pill toggle group.',
+    Preview: BtnGroupRadioPreview,
+    tailwind: `<div class="inline-flex p-1 rounded-xl bg-zinc-100 gap-0.5">
+  <button class="px-4 py-1.5 text-sm font-semibold rounded-lg bg-white shadow text-zinc-900">Grid</button>
+  <button class="px-4 py-1.5 text-sm font-semibold rounded-lg text-zinc-500 hover:text-zinc-700">List</button>
+  <button class="px-4 py-1.5 text-sm font-semibold rounded-lg text-zinc-500 hover:text-zinc-700">Cards</button>
+</div>`,
+    css: `.radio-group { display:inline-flex; padding:.25rem; border-radius:.75rem; background:#f4f4f5; gap:.125rem; } .radio-group button { padding:.375rem 1rem; border-radius:.5rem; font-size:.875rem; font-weight:600; border:none; cursor:pointer; } .radio-group button.active { background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.1); color:#18181b; }`,
+  },
+  {
+    id: 'btn-group-icon', name: 'Icon Button Group', category: 'Button Groups',
+    description: 'Toolbar-style icon group with toggle state.',
+    Preview: BtnGroupIconPreview,
+    tailwind: `<div class="inline-flex rounded-lg border border-zinc-200 overflow-hidden">
+  <button class="px-4 py-2 text-sm font-bold text-zinc-700 hover:bg-zinc-100">B</button>
+  <button class="px-4 py-2 text-sm italic text-zinc-700 hover:bg-zinc-100 border-l border-zinc-200">I</button>
+  <button class="px-4 py-2 text-sm underline text-zinc-700 hover:bg-zinc-100 border-l border-zinc-200">U</button>
+</div>`,
+    css: `.icon-btn-group { display:inline-flex; border:1px solid #e4e4e7; border-radius:.5rem; overflow:hidden; } .icon-btn-group button { padding:.5rem 1rem; border:none; border-left:1px solid #e4e4e7; cursor:pointer; background:none; } .icon-btn-group button.active { background:#18181b; color:#fff; }`,
+  },
+
+  /* ── Cards ── */
+  {
+    id: 'card-profile', name: 'Profile Card', category: 'Cards',
+    description: 'User profile card with avatar, stats, and follow button.',
+    Preview: CardProfilePreview,
+    tailwind: `<div class="w-56 bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden">
+  <div class="h-16 bg-gradient-to-r from-indigo-500 to-violet-500"></div>
+  <div class="px-4 pb-4">
+    <div class="w-14 h-14 rounded-full bg-indigo-400 border-4 border-white -mt-7 flex items-center justify-center text-white font-bold text-lg">AJ</div>
+    <p class="mt-2 font-bold">Alice Johnson</p>
+    <p class="text-xs text-zinc-500">Senior Designer</p>
+    <button class="mt-3 w-full rounded-lg py-2 text-xs font-bold bg-indigo-600 text-white">Follow</button>
+  </div>
+</div>`,
+    css: `.profile-card { border-radius:1rem; border:1px solid #f4f4f5; overflow:hidden; } .profile-card-header { height:4rem; background:linear-gradient(90deg,#6366f1,#8b5cf6); } .profile-avatar { width:3.5rem; height:3.5rem; border-radius:9999px; border:4px solid #fff; margin-top:-1.75rem; }`,
+  },
+  {
+    id: 'card-stat', name: 'Stat Cards Row', category: 'Cards',
+    description: '3 mini KPI stat cards with icon, value, and change.',
+    Preview: CardStatPreview,
+    tailwind: `<div class="flex gap-3">
+  <div class="bg-white rounded-2xl border border-zinc-100 shadow-sm p-4 min-w-[140px]">
+    <p class="text-lg mb-1">💰</p>
+    <p class="text-xl font-bold">$84,200</p>
+    <p class="text-xs text-zinc-500 mt-0.5">Total Revenue</p>
+    <span class="text-xs font-semibold text-emerald-600">+12.5%</span>
+  </div>
+</div>`,
+    css: `.stat-card { background:#fff; border-radius:1rem; border:1px solid #f4f4f5; padding:1rem; } .stat-card-value { font-size:1.25rem; font-weight:700; color:#18181b; } .stat-card-change-up { color:#16a34a; font-size:.75rem; font-weight:600; }`,
+  },
+  {
+    id: 'card-pricing', name: 'Pricing Card', category: 'Cards',
+    description: 'Pro plan pricing card with features list and CTA.',
+    Preview: CardPricingPreview,
+    tailwind: `<div class="w-56 bg-white rounded-2xl border-2 border-indigo-500 shadow-lg p-5">
+  <p class="text-xs font-bold text-indigo-600 uppercase">Pro Plan</p>
+  <p class="text-3xl font-bold mt-1">$49<span class="text-base font-normal text-zinc-400">/mo</span></p>
+  <div class="mt-4 space-y-2">
+    <div class="flex items-center gap-2"><span class="text-emerald-500">✓</span><span class="text-xs text-zinc-600">Unlimited projects</span></div>
+  </div>
+  <button class="mt-4 w-full rounded-xl py-2.5 text-sm font-bold bg-indigo-600 text-white">Get Started</button>
+</div>`,
+    css: `.pricing-card { border-radius:1rem; border:2px solid #6366f1; padding:1.25rem; } .pricing-card-price { font-size:1.875rem; font-weight:700; } .pricing-feature { display:flex; align-items:center; gap:.5rem; font-size:.75rem; }`,
+  },
+
+  /* ── Carousel ── */
+  {
+    id: 'carousel-basic', name: 'Basic Carousel', category: 'Carousel',
+    description: 'Colored slide panels with prev/next buttons and dot indicators.',
+    Preview: CarouselBasicPreview,
+    tailwind: `<div class="relative overflow-hidden rounded-2xl">
+  <div class="bg-indigo-500 h-36 flex flex-col items-center justify-center text-white">
+    <p class="text-xl font-bold">Slide 1</p>
+    <p class="text-sm opacity-80">Welcome to our platform</p>
+  </div>
+  <button class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center shadow">◀</button>
+  <button class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center shadow">▶</button>
+  <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5"><span class="w-2 h-2 rounded-full bg-white"></span></div>
+</div>`,
+    css: `.carousel { position:relative; overflow:hidden; border-radius:1rem; } .carousel-btn { position:absolute; top:50%; transform:translateY(-50%); width:2rem; height:2rem; border-radius:9999px; background:rgba(255,255,255,.8); border:none; cursor:pointer; } .carousel-dots { position:absolute; bottom:.75rem; left:50%; transform:translateX(-50%); display:flex; gap:.375rem; }`,
+  },
+  {
+    id: 'carousel-card', name: 'Card Carousel', category: 'Carousel',
+    description: '3 testimonial cards with center card highlighted.',
+    Preview: CarouselCardPreview,
+    tailwind: `<div class="flex gap-2 items-center">
+  <button class="w-7 h-7 rounded-full bg-white border border-zinc-200 flex items-center justify-center shadow">◀</button>
+  <div class="flex gap-2 overflow-hidden">
+    <div class="flex-shrink-0 w-48 bg-white rounded-2xl border border-indigo-300 shadow-sm p-4 scale-105">
+      <p class="text-xs italic">"Best tool in our workflow."</p>
+      <p class="text-xs font-bold mt-2">Mark L · Developer</p>
+    </div>
+  </div>
+  <button class="w-7 h-7 rounded-full bg-white border border-zinc-200 flex items-center justify-center shadow">▶</button>
+</div>`,
+    css: `.card-carousel { display:flex; align-items:center; gap:.75rem; } .carousel-card { border-radius:1rem; border:1px solid #f4f4f5; padding:1rem; flex-shrink:0; transition:transform .2s,border-color .2s; } .carousel-card.active { transform:scale(1.05); border-color:#a5b4fc; }`,
+  },
+  {
+    id: 'carousel-image', name: 'Image Carousel', category: 'Carousel',
+    description: 'Thumbnail strip with main display for image browsing.',
+    Preview: CarouselImagePreview,
+    tailwind: `<div class="max-w-sm">
+  <div class="h-32 rounded-2xl bg-gradient-to-br from-indigo-400 to-violet-500 mb-3 flex items-end p-3">
+    <span class="text-white font-bold text-sm bg-black/30 rounded-lg px-2 py-1">Mountain View</span>
+  </div>
+  <div class="flex gap-2">
+    <button class="flex-1 h-12 rounded-lg bg-gradient-to-br from-indigo-400 to-violet-500 ring-2 ring-offset-1 ring-indigo-500"/>
+    <button class="flex-1 h-12 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-500 opacity-60"/>
+  </div>
+</div>`,
+    css: `.image-carousel-main { border-radius:1rem; height:8rem; } .image-carousel-thumb { border-radius:.5rem; height:3rem; flex:1; opacity:.6; transition:opacity .15s; cursor:pointer; } .image-carousel-thumb.active { opacity:1; outline:2px solid #6366f1; outline-offset:2px; }`,
+  },
+
+  /* ── Dropdowns ── */
+  {
+    id: 'dropdown-basic', name: 'Basic Dropdown', category: 'Dropdowns',
+    description: 'Simple menu list that toggles open/closed.',
+    Preview: DropdownBasicPreview,
+    tailwind: `<div class="relative w-48">
+  <button class="w-full flex items-center justify-between rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-700 bg-white shadow-sm">
+    <span>Select option</span><span>▾</span>
+  </button>
+  <div class="absolute top-full mt-1.5 w-full rounded-xl border border-zinc-100 bg-white shadow-lg z-10 overflow-hidden">
+    <button class="w-full px-4 py-2.5 text-left text-sm text-zinc-700 hover:bg-zinc-50">Profile</button>
+    <button class="w-full px-4 py-2.5 text-left text-sm text-zinc-700 hover:bg-zinc-50">Settings</button>
+  </div>
+</div>`,
+    css: `.dropdown-trigger { display:flex; align-items:center; justify-content:space-between; border-radius:.75rem; border:1px solid #e4e4e7; padding:.625rem 1rem; font-size:.875rem; background:#fff; cursor:pointer; } .dropdown-menu { position:absolute; top:100%; margin-top:.375rem; border-radius:.75rem; border:1px solid #f4f4f5; background:#fff; box-shadow:0 4px 6px rgba(0,0,0,.07); overflow:hidden; z-index:10; }`,
+  },
+  {
+    id: 'dropdown-search', name: 'Searchable Dropdown', category: 'Dropdowns',
+    description: 'Dropdown with text filter input and results list.',
+    Preview: DropdownSearchPreview,
+    tailwind: `<div class="relative w-52">
+  <button class="w-full flex items-center justify-between rounded-xl border border-zinc-200 px-4 py-2.5 text-sm bg-white shadow-sm">Choose framework ▾</button>
+  <div class="absolute top-full mt-1.5 w-full rounded-xl border border-zinc-100 bg-white shadow-lg z-10">
+    <div class="p-2 border-b border-zinc-100"><div class="flex items-center gap-2 rounded-lg bg-zinc-50 px-3 py-1.5"><span>🔍</span><input class="flex-1 text-sm bg-transparent focus:outline-none" placeholder="Search..."/></div></div>
+    <button class="w-full px-4 py-2 text-left text-sm text-zinc-700 hover:bg-zinc-50">React</button>
+  </div>
+</div>`,
+    css: `.searchable-dropdown .search-input { display:flex; align-items:center; gap:.5rem; background:#fafafa; border-radius:.5rem; padding:.375rem .75rem; } .searchable-dropdown .search-input input { border:none; background:transparent; font-size:.875rem; outline:none; flex:1; }`,
+  },
+  {
+    id: 'dropdown-multi', name: 'Multi-Select Dropdown', category: 'Dropdowns',
+    description: 'Dropdown with checkboxes for multi-selection.',
+    Preview: DropdownMultiPreview,
+    tailwind: `<div class="relative w-56">
+  <button class="w-full flex items-center justify-between rounded-xl border border-zinc-200 px-4 py-2.5 text-sm bg-white shadow-sm">2 selected ▾</button>
+  <div class="absolute top-full mt-1.5 w-full rounded-xl border border-zinc-100 bg-white shadow-lg z-10">
+    <label class="flex items-center gap-3 px-4 py-2.5 hover:bg-zinc-50 cursor-pointer"><input type="checkbox" checked class="rounded text-indigo-600"/><span class="text-sm">Design</span></label>
+    <label class="flex items-center gap-3 px-4 py-2.5 hover:bg-zinc-50 cursor-pointer"><input type="checkbox" class="rounded text-indigo-600"/><span class="text-sm">Engineering</span></label>
+  </div>
+</div>`,
+    css: `.multi-dropdown label { display:flex; align-items:center; gap:.75rem; padding:.625rem 1rem; font-size:.875rem; cursor:pointer; } .multi-dropdown label:hover { background:#fafafa; } .multi-dropdown input[type=checkbox] { accent-color:#4f46e5; border-radius:.25rem; }`,
+  },
+
+  /* ── Images ── */
+  {
+    id: 'image-grid', name: 'Image Grid', category: 'Images',
+    description: 'Masonry-style 2×3 colored placeholder grid.',
+    Preview: ImageGridPreview,
+    tailwind: `<div class="columns-3 gap-2">
+  <div class="bg-gradient-to-br from-indigo-400 to-violet-500 h-20 rounded-xl mb-2"/>
+  <div class="bg-gradient-to-br from-cyan-400 to-blue-500 h-32 rounded-xl mb-2"/>
+  <div class="bg-gradient-to-br from-amber-400 to-orange-500 h-20 rounded-xl mb-2"/>
+</div>`,
+    css: `.image-grid { columns:3; gap:.5rem; } .image-grid-item { border-radius:.75rem; margin-bottom:.5rem; break-inside:avoid; }`,
+  },
+  {
+    id: 'image-caption', name: 'Image with Caption', category: 'Images',
+    description: 'Single image with gradient overlay caption.',
+    Preview: ImageCaptionPreview,
+    tailwind: `<div class="rounded-2xl overflow-hidden border border-zinc-100 shadow-sm">
+  <div class="relative">
+    <div class="h-40 bg-gradient-to-br from-indigo-400 via-violet-500 to-purple-600"/>
+    <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+      <p class="text-white font-bold text-sm">Northern Lights, Iceland</p>
+      <p class="text-white/70 text-xs mt-0.5">Aurora Borealis · Feb 2024</p>
+    </div>
+  </div>
+</div>`,
+    css: `.image-caption { border-radius:1rem; overflow:hidden; } .image-caption-overlay { position:absolute; bottom:0; left:0; right:0; background:linear-gradient(to top,rgba(0,0,0,.7),transparent); padding:1rem; }`,
+  },
+  {
+    id: 'image-gallery', name: 'Gallery with Lightbox', category: 'Images',
+    description: 'Thumbnail grid with click-to-expand lightbox modal.',
+    Preview: ImageGalleryV2Preview,
+    tailwind: `<div class="grid grid-cols-2 gap-2">
+  <div class="bg-gradient-to-br from-indigo-400 to-violet-500 h-20 rounded-xl cursor-pointer hover:opacity-90"/>
+  <div class="bg-gradient-to-br from-cyan-400 to-blue-500 h-20 rounded-xl cursor-pointer hover:opacity-90"/>
+</div>`,
+    css: `.gallery-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:.5rem; } .gallery-item { border-radius:.75rem; cursor:pointer; transition:opacity .15s; } .gallery-item:hover { opacity:.9; } .lightbox { position:fixed; inset:0; background:rgba(0,0,0,.7); display:flex; align-items:center; justify-content:center; z-index:50; }`,
+  },
+
+  /* ── Links ── */
+  {
+    id: 'links-basic', name: 'Link Styles', category: 'Links',
+    description: 'Underline, dashed, colored, and external link styles.',
+    Preview: LinksBasicPreview,
+    tailwind: `<div class="flex flex-col gap-2">
+  <a href="#" class="text-sm text-blue-600 underline underline-offset-2 hover:text-blue-800">Underline link</a>
+  <a href="#" class="text-sm text-indigo-600 decoration-dashed underline underline-offset-2 hover:text-indigo-800">Dashed underline</a>
+  <a href="#" class="text-sm font-semibold text-emerald-600 hover:text-emerald-800">Colored link</a>
+  <a href="#" class="text-sm text-zinc-700 hover:text-zinc-900 flex items-center gap-1">External link ↗</a>
+</div>`,
+    css: `.link-underline { color:#2563eb; text-decoration:underline; text-underline-offset:2px; } .link-dashed { color:#4f46e5; text-decoration:underline; text-decoration-style:dashed; } .link-colored { color:#059669; font-weight:600; text-decoration:none; } .link-external { color:#3f3f46; text-decoration:none; }`,
+  },
+  {
+    id: 'links-nav', name: 'Navigation Links', category: 'Links',
+    description: 'Horizontal nav link bar with active state.',
+    Preview: LinksNavPreview,
+    tailwind: `<nav class="flex gap-1 p-1 rounded-xl bg-zinc-50 border border-zinc-200">
+  <button class="px-3 py-1.5 text-sm font-medium rounded-lg bg-white text-zinc-900 shadow-sm">Home</button>
+  <button class="px-3 py-1.5 text-sm font-medium rounded-lg text-zinc-500 hover:text-zinc-700">About</button>
+  <button class="px-3 py-1.5 text-sm font-medium rounded-lg text-zinc-500 hover:text-zinc-700">Services</button>
+</nav>`,
+    css: `.nav-links { display:flex; gap:.25rem; padding:.25rem; background:#fafafa; border:1px solid #e4e4e7; border-radius:.75rem; } .nav-link { padding:.375rem .75rem; border-radius:.5rem; font-size:.875rem; font-weight:500; border:none; cursor:pointer; } .nav-link.active { background:#fff; color:#18181b; box-shadow:0 1px 2px rgba(0,0,0,.05); }`,
+  },
+  {
+    id: 'links-cta', name: 'CTA Links', category: 'Links',
+    description: 'Arrow links, icon links, and card link styles.',
+    Preview: LinksCTAPreview,
+    tailwind: `<div class="space-y-3">
+  <a href="#" class="flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-800 group">Learn more <span class="group-hover:translate-x-0.5 transition-transform">→</span></a>
+  <a href="#" class="flex items-center gap-2 text-sm font-semibold text-zinc-700 hover:text-zinc-900">✉ Send email</a>
+  <div class="rounded-xl border border-zinc-100 p-3 hover:border-indigo-200 hover:bg-indigo-50/30 cursor-pointer group">
+    <div class="flex items-center justify-between"><div><p class="text-sm font-semibold group-hover:text-indigo-700">Read the docs →</p><p class="text-xs text-zinc-500">Full API reference</p></div></div>
+  </div>
+</div>`,
+    css: `.cta-link { display:flex; align-items:center; gap:.5rem; font-size:.875rem; font-weight:600; text-decoration:none; transition:color .15s; } .cta-link-arrow svg { transition:transform .15s; } .cta-link:hover .cta-link-arrow { transform:translateX(2px); }`,
+  },
+
+  /* ── List ── */
+  {
+    id: 'list-basic', name: 'Basic List', category: 'List',
+    description: 'Unordered and ordered list styles side by side.',
+    Preview: ListBasicPreview,
+    tailwind: `<div class="flex gap-8">
+  <ul class="space-y-1.5 text-sm text-zinc-700">
+    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-zinc-400"/>Design system</li>
+    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-zinc-400"/>Component library</li>
+  </ul>
+  <ol class="space-y-1.5 text-sm text-zinc-700">
+    <li class="flex items-center gap-2"><span class="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-[10px] font-bold flex items-center justify-center">1</span>Research</li>
+    <li class="flex items-center gap-2"><span class="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-[10px] font-bold flex items-center justify-center">2</span>Design</li>
+  </ol>
+</div>`,
+    css: `.basic-list { list-style:none; padding:0; } .basic-list li { display:flex; align-items:center; gap:.5rem; font-size:.875rem; padding:.25rem 0; } .basic-list-dot { width:.375rem; height:.375rem; border-radius:9999px; background:#a1a1aa; flex-shrink:0; }`,
+  },
+  {
+    id: 'list-icon', name: 'Icon List', category: 'List',
+    description: 'Feature list with check/x icons per item and description.',
+    Preview: ListIconPreview,
+    tailwind: `<ul class="space-y-3">
+  <li class="flex items-start gap-3"><div class="w-5 h-5 rounded-full bg-zinc-50 border border-zinc-200 flex items-center justify-center shrink-0"><span class="text-emerald-600 text-xs">✓</span></div><div><p class="text-sm font-medium">Unlimited projects</p><p class="text-xs text-zinc-400">No cap on project count</p></div></li>
+</ul>`,
+    css: `.icon-list { list-style:none; padding:0; } .icon-list li { display:flex; align-items:flex-start; gap:.75rem; } .icon-list-icon { width:1.25rem; height:1.25rem; border-radius:9999px; border:1px solid #e4e4e7; background:#fafafa; display:flex; align-items:center; justify-content:center; flex-shrink:0; }`,
+  },
+  {
+    id: 'list-group', name: 'List Group', category: 'List',
+    description: 'Bordered list group with badges and secondary text.',
+    Preview: ListGroupV2Preview,
+    tailwind: `<div class="border border-zinc-200 rounded-xl overflow-hidden divide-y divide-zinc-100">
+  <div class="flex items-center justify-between px-4 py-3 hover:bg-zinc-50">
+    <div><p class="text-sm font-semibold">Design Team</p><p class="text-xs text-zinc-400">8 members</p></div>
+    <span class="rounded-full px-2 py-0.5 text-[10px] font-bold bg-emerald-100 text-emerald-700">Active</span>
+  </div>
+</div>`,
+    css: `.list-group { border:1px solid #e4e4e7; border-radius:.75rem; overflow:hidden; } .list-group-item { display:flex; align-items:center; justify-content:space-between; padding:.75rem 1rem; transition:background .15s; } .list-group-item:hover { background:#fafafa; } .list-group-item + .list-group-item { border-top:1px solid #f4f4f5; }`,
+  },
+
+  /* ── Modals ── */
+  {
+    id: 'modal-confirm', name: 'Confirm Dialog', category: 'Modals',
+    description: 'Delete confirmation dialog with cancel/confirm buttons.',
+    Preview: ModalConfirmPreview,
+    tailwind: `<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-2xl shadow-xl p-5 w-64">
+    <div class="flex items-center gap-3 mb-3"><div class="w-9 h-9 rounded-full bg-red-100 flex items-center justify-center">✕</div><div><p class="text-sm font-bold">Delete item?</p><p class="text-xs text-zinc-500">This cannot be undone.</p></div></div>
+    <div class="flex gap-2 mt-4"><button class="flex-1 rounded-lg border border-zinc-200 py-2 text-sm font-semibold text-zinc-700">Cancel</button><button class="flex-1 rounded-lg bg-red-600 py-2 text-sm font-bold text-white">Delete</button></div>
+  </div>
+</div>`,
+    css: `.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.5); display:flex; align-items:center; justify-content:center; z-index:50; } .modal-dialog { background:#fff; border-radius:1rem; padding:1.25rem; max-width:18rem; width:100%; box-shadow:0 20px 25px rgba(0,0,0,.15); }`,
+  },
+  {
+    id: 'modal-drawer', name: 'Side Drawer', category: 'Modals',
+    description: 'Slide-in right panel drawer modal.',
+    Preview: ModalDrawerPreview,
+    tailwind: `<div class="fixed inset-y-0 right-0 w-72 bg-white shadow-2xl border-l border-zinc-100">
+  <div class="flex items-center justify-between px-4 py-3 border-b border-zinc-100"><p class="font-bold text-sm">Settings</p><button>✕</button></div>
+  <div class="p-4 space-y-3"><a class="flex items-center gap-2 text-sm text-zinc-700 hover:text-indigo-600">▶ Profile</a></div>
+</div>`,
+    css: `.drawer { position:fixed; top:0; right:0; height:100%; width:18rem; background:#fff; border-left:1px solid #f4f4f5; box-shadow:-4px 0 24px rgba(0,0,0,.1); transform:translateX(100%); transition:transform .3s ease; } .drawer.open { transform:translateX(0); }`,
+  },
+  {
+    id: 'modal-form', name: 'Form Modal', category: 'Modals',
+    description: 'Modal dialog with form fields for creating a project.',
+    Preview: ModalFormPreview,
+    tailwind: `<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-2xl shadow-xl p-5 w-72">
+    <div class="flex items-center justify-between mb-4"><p class="font-bold text-sm">Create project</p><button>✕</button></div>
+    <div class="space-y-3"><input class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm" placeholder="Project name"/><textarea class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm h-16 resize-none" placeholder="Description"/><button class="w-full rounded-lg bg-indigo-600 py-2 text-sm font-bold text-white">Create</button></div>
+  </div>
+</div>`,
+    css: `.modal-form { background:#fff; border-radius:1rem; padding:1.25rem; width:18rem; } .modal-form input, .modal-form textarea { width:100%; border:1px solid #e4e4e7; border-radius:.5rem; padding:.5rem .75rem; font-size:.875rem; } .modal-form input:focus { outline:none; border-color:#818cf8; }`,
+  },
+
+  /* ── Notifications ── */
+  {
+    id: 'notification-toast', name: 'Toast Notifications', category: 'Notifications',
+    description: 'Stacked dismissable toast notifications.',
+    Preview: NotificationToastPreview,
+    tailwind: `<div class="space-y-2">
+  <div class="flex items-center gap-3 rounded-xl bg-white shadow-lg border border-zinc-100 px-4 py-3"><span class="text-emerald-500">✓</span><p class="flex-1 text-sm text-zinc-700">Changes saved successfully!</p><button class="text-zinc-300">✕</button></div>
+  <div class="flex items-center gap-3 rounded-xl bg-white shadow-lg border border-zinc-100 px-4 py-3"><span class="text-red-500">✕</span><p class="flex-1 text-sm text-zinc-700">Failed to upload file.</p><button class="text-zinc-300">✕</button></div>
+</div>`,
+    css: `.toast { display:flex; align-items:center; gap:.75rem; background:#fff; border-radius:.75rem; border:1px solid #f4f4f5; padding:.75rem 1rem; box-shadow:0 4px 12px rgba(0,0,0,.08); } .toast-success .toast-icon { color:#22c55e; } .toast-error .toast-icon { color:#ef4444; }`,
+  },
+  {
+    id: 'notification-banner', name: 'Notification Banner', category: 'Notifications',
+    description: 'Top-of-page announcement strip notifications.',
+    Preview: NotificationBannerPreview,
+    tailwind: `<div class="space-y-2">
+  <div class="bg-indigo-600 rounded-xl px-4 py-2.5 flex items-center justify-between"><p class="text-xs text-white font-medium">🎉 New features released!</p><button class="ml-3 text-white/60">✕</button></div>
+  <div class="bg-amber-500 rounded-xl px-4 py-2.5 flex items-center justify-between"><p class="text-xs text-white font-medium">⚠️ Scheduled maintenance Sunday.</p><button class="ml-3 text-white/60">✕</button></div>
+</div>`,
+    css: `.notification-banner { display:flex; align-items:center; justify-content:space-between; border-radius:.75rem; padding:.625rem 1rem; } .notification-banner-info { background:#4f46e5; } .notification-banner-warning { background:#f59e0b; } .notification-banner p { color:#fff; font-size:.75rem; font-weight:500; }`,
+  },
+  {
+    id: 'notification-feed', name: 'Notification Feed', category: 'Notifications',
+    description: 'List of notification items with avatars and unread state.',
+    Preview: NotificationFeedPreview,
+    tailwind: `<div class="border border-zinc-100 rounded-2xl overflow-hidden shadow-sm">
+  <div class="px-4 py-3 border-b border-zinc-100 flex items-center justify-between"><p class="text-sm font-bold">Notifications</p><span class="text-xs font-bold bg-indigo-100 text-indigo-700 rounded-full px-2 py-0.5">2 new</span></div>
+  <div class="divide-y divide-zinc-50">
+    <div class="flex items-start gap-3 px-4 py-3 bg-indigo-50/40"><div class="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center text-xs font-bold">AJ</div><div><p class="text-xs text-zinc-700">Alice commented on your post</p><p class="text-[10px] text-zinc-400">2m ago</p></div><span class="w-2 h-2 rounded-full bg-indigo-500 mt-1 ml-auto"/></div>
+  </div>
+</div>`,
+    css: `.notification-feed { border:1px solid #f4f4f5; border-radius:1rem; overflow:hidden; } .notification-item { display:flex; align-items:flex-start; gap:.75rem; padding:.75rem 1rem; } .notification-item.unread { background:#eef2ff55; } .notification-badge { width:.5rem; height:.5rem; border-radius:9999px; background:#4f46e5; flex-shrink:0; }`,
+  },
+
+  /* ── Pagination ── */
+  {
+    id: 'pagination-basic', name: 'Basic Pagination', category: 'Pagination',
+    description: 'Prev/next with page number buttons.',
+    Preview: PaginationBasicPreview,
+    tailwind: `<div class="flex items-center gap-1">
+  <button class="px-3 py-1.5 text-sm rounded-lg border border-zinc-200 text-zinc-600 hover:bg-zinc-50">Prev</button>
+  <button class="w-9 h-9 rounded-lg text-sm font-semibold bg-indigo-600 text-white">3</button>
+  <button class="w-9 h-9 rounded-lg text-sm font-semibold border border-zinc-200 text-zinc-600 hover:bg-zinc-50">4</button>
+  <button class="px-3 py-1.5 text-sm rounded-lg border border-zinc-200 text-zinc-600 hover:bg-zinc-50">Next</button>
+</div>`,
+    css: `.pagination { display:flex; align-items:center; gap:.25rem; } .pagination-btn { border:1px solid #e4e4e7; border-radius:.5rem; padding:.375rem .75rem; font-size:.875rem; background:none; cursor:pointer; color:#52525b; } .pagination-btn.active { background:#4f46e5; border-color:#4f46e5; color:#fff; }`,
+  },
+  {
+    id: 'pagination-simple', name: 'Simple Pagination', category: 'Pagination',
+    description: 'Just Prev / Page X of N / Next.',
+    Preview: PaginationSimplePreview,
+    tailwind: `<div class="flex items-center gap-4">
+  <button class="flex items-center gap-1 px-4 py-2 text-sm font-semibold rounded-xl border border-zinc-200 text-zinc-700 hover:bg-zinc-50">◀ Prev</button>
+  <span class="text-sm text-zinc-500">Page <strong class="text-zinc-800">3</strong> of 12</span>
+  <button class="flex items-center gap-1 px-4 py-2 text-sm font-semibold rounded-xl border border-zinc-200 text-zinc-700 hover:bg-zinc-50">Next ▶</button>
+</div>`,
+    css: `.simple-pagination { display:flex; align-items:center; gap:1rem; } .simple-pagination-btn { display:flex; align-items:center; gap:.25rem; border:1px solid #e4e4e7; border-radius:.75rem; padding:.5rem 1rem; font-size:.875rem; font-weight:600; cursor:pointer; }`,
+  },
+  {
+    id: 'pagination-dots', name: 'Dot Pagination', category: 'Pagination',
+    description: 'Dot/pill indicators for carousel and slide navigation.',
+    Preview: PaginationDotsPreview,
+    tailwind: `<div class="flex items-center gap-2">
+  <button class="w-6 h-6 rounded-full bg-zinc-100 flex items-center justify-center">◀</button>
+  <button class="rounded-full w-6 h-2.5 bg-indigo-600"/>
+  <button class="rounded-full w-2.5 h-2.5 bg-zinc-200"/>
+  <button class="rounded-full w-2.5 h-2.5 bg-zinc-200"/>
+  <button class="w-6 h-6 rounded-full bg-zinc-100 flex items-center justify-center">▶</button>
+</div>`,
+    css: `.dot-pagination { display:flex; align-items:center; gap:.5rem; } .dot { border-radius:9999px; height:.625rem; background:#e4e4e7; border:none; cursor:pointer; transition:width .2s,background .2s; width:.625rem; } .dot.active { background:#4f46e5; width:1.5rem; }`,
+  },
+
+  /* ── Popovers ── */
+  {
+    id: 'popover-basic', name: 'Basic Popover', category: 'Popovers',
+    description: 'Click to show small info card popover.',
+    Preview: PopoverBasicPreview,
+    tailwind: `<div class="relative inline-block">
+  <button class="rounded-xl bg-zinc-800 px-4 py-2 text-sm font-semibold text-white">Info</button>
+  <div class="absolute left-full ml-2 top-0 w-52 bg-white rounded-xl border border-zinc-100 shadow-lg p-3 z-10">
+    <div class="flex items-start gap-2"><span class="text-blue-500">ℹ</span><div><p class="text-xs font-bold mb-1">What is this?</p><p class="text-xs text-zinc-500">A basic popover with info content.</p></div></div>
+  </div>
+</div>`,
+    css: `.popover { position:absolute; background:#fff; border:1px solid #f4f4f5; border-radius:.75rem; padding:.75rem; box-shadow:0 4px 12px rgba(0,0,0,.08); z-index:10; } .popover-right { left:100%; margin-left:.5rem; top:0; }`,
+  },
+  {
+    id: 'popover-rich', name: 'Rich Popover', category: 'Popovers',
+    description: 'User card popover with avatar, status, and action buttons.',
+    Preview: PopoverRichPreview,
+    tailwind: `<div class="w-64 bg-white rounded-2xl border border-zinc-100 shadow-xl p-4">
+  <div class="flex items-center gap-3 mb-3">
+    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center text-white font-bold">AJ</div>
+    <div><p class="font-bold">Alice Johnson</p><p class="text-xs text-zinc-500">alice@acme.com</p><p class="text-xs text-emerald-600 font-semibold">● Online</p></div>
+  </div>
+  <div class="flex gap-2"><button class="flex-1 rounded-lg bg-indigo-600 py-1.5 text-xs font-bold text-white">Message</button><button class="flex-1 rounded-lg border border-zinc-200 py-1.5 text-xs font-semibold">Close</button></div>
+</div>`,
+    css: `.rich-popover { border-radius:1rem; border:1px solid #f4f4f5; padding:1rem; box-shadow:0 8px 24px rgba(0,0,0,.1); background:#fff; width:16rem; }`,
+  },
+  {
+    id: 'popover-menu', name: 'Popover Menu', category: 'Popovers',
+    description: 'Right-click context menu style popover.',
+    Preview: PopoverMenuPreview,
+    tailwind: `<div class="w-44 bg-white rounded-xl border border-zinc-100 shadow-lg overflow-hidden">
+  <button class="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50">📋 Copy</button>
+  <button class="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50">🔍 Search</button>
+  <button class="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-red-600 hover:bg-zinc-50">✕ Delete</button>
+</div>`,
+    css: `.context-menu { background:#fff; border:1px solid #f4f4f5; border-radius:.75rem; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,.08); width:11rem; } .context-menu-item { display:flex; align-items:center; gap:.75rem; padding:.625rem .75rem; font-size:.875rem; cursor:pointer; width:100%; text-align:left; } .context-menu-item:hover { background:#fafafa; } .context-menu-item.danger { color:#dc2626; }`,
+  },
+
+  /* ── Progress Bars ── */
+  {
+    id: 'progress-basic', name: 'Progress Bars', category: 'Progress Bars',
+    description: '4 progress bars: default, success, warning, danger.',
+    Preview: ProgressBasicPreview,
+    tailwind: `<div class="space-y-3">
+  <div><div class="flex justify-between text-xs mb-1"><span>Default</span><span>72%</span></div><div class="h-2.5 w-full rounded-full bg-zinc-100"><div class="h-full rounded-full bg-indigo-500 w-[72%]"/></div></div>
+  <div><div class="flex justify-between text-xs mb-1"><span>Success</span><span>88%</span></div><div class="h-2.5 w-full rounded-full bg-zinc-100"><div class="h-full rounded-full bg-emerald-500 w-[88%]"/></div></div>
+</div>`,
+    css: `.progress-track { height:.625rem; background:#f4f4f5; border-radius:9999px; } .progress-fill { height:100%; border-radius:9999px; transition:width .3s ease; } .progress-default { background:#6366f1; } .progress-success { background:#22c55e; } .progress-warning { background:#f59e0b; } .progress-danger { background:#ef4444; }`,
+  },
+  {
+    id: 'progress-multi', name: 'Multi-Step Progress', category: 'Progress Bars',
+    description: 'Step-by-step progress with clickable stages.',
+    Preview: ProgressMultiPreview,
+    tailwind: `<div class="flex items-center">
+  <div class="flex flex-col items-center">
+    <div class="w-7 h-7 rounded-full border-2 bg-indigo-600 border-indigo-600 text-white flex items-center justify-center text-xs font-bold">✓</div>
+    <span class="text-[9px] text-zinc-500 mt-1">Research</span>
+  </div>
+  <div class="flex-1 h-0.5 mx-1 bg-indigo-600"/>
+  <div class="flex flex-col items-center">
+    <div class="w-7 h-7 rounded-full border-2 border-indigo-600 text-indigo-600 bg-white flex items-center justify-center text-xs font-bold">2</div>
+    <span class="text-[9px] text-zinc-500 mt-1">Design</span>
+  </div>
+</div>`,
+    css: `.stepper { display:flex; align-items:center; } .step-circle { width:1.75rem; height:1.75rem; border-radius:9999px; border:2px solid #e4e4e7; display:flex; align-items:center; justify-content:center; font-size:.75rem; font-weight:700; } .step-circle.complete { background:#4f46e5; border-color:#4f46e5; color:#fff; } .step-circle.active { border-color:#4f46e5; color:#4f46e5; } .step-line { flex:1; height:2px; background:#e4e4e7; margin:0 .25rem; }`,
+  },
+  {
+    id: 'progress-circular', name: 'Circular Progress', category: 'Progress Bars',
+    description: '3 SVG circle progress rings for CPU, RAM, Disk.',
+    Preview: ProgressCircularPreview,
+    tailwind: `<div class="flex gap-6">
+  <div class="flex flex-col items-center gap-1">
+    <svg width="72" height="72" viewBox="0 0 72 72">
+      <circle cx="36" cy="36" r="28" fill="none" stroke="#f4f4f5" stroke-width="8"/>
+      <circle cx="36" cy="36" r="28" fill="none" stroke="#6366f1" stroke-width="8" stroke-dasharray="127 176" stroke-linecap="round" transform="rotate(-90 36 36)"/>
+      <text x="36" y="40" text-anchor="middle" font-size="11" font-weight="bold" fill="#18181b">72%</text>
+    </svg>
+    <span class="text-xs text-zinc-500">CPU</span>
+  </div>
+</div>`,
+    css: `.circle-progress { transform-origin:center; transform:rotate(-90deg); } .circle-track { fill:none; stroke:#f4f4f5; } .circle-fill { fill:none; stroke-linecap:round; transition:stroke-dasharray .4s ease; }`,
+  },
+
+  /* ── Ribbons ── */
+  {
+    id: 'ribbon-corner', name: 'Corner Ribbon', category: 'Ribbons',
+    description: 'Top-right corner NEW/SALE ribbon on cards.',
+    Preview: RibbonCornerPreview,
+    tailwind: `<div class="relative w-32 h-28 bg-white rounded-xl border border-zinc-100 shadow-sm overflow-hidden flex items-center justify-center">
+  <div class="absolute top-0 right-0 overflow-hidden w-20 h-20">
+    <div class="bg-indigo-600 text-white text-[9px] font-bold text-center py-0.5 transform rotate-45 translate-x-4 translate-y-3 w-20">NEW</div>
+  </div>
+  <span class="text-xs font-semibold text-zinc-700">Pro Card</span>
+</div>`,
+    css: `.corner-ribbon-wrapper { overflow:hidden; position:relative; } .corner-ribbon { position:absolute; top:0; right:0; width:5rem; height:5rem; overflow:hidden; } .corner-ribbon-label { position:absolute; top:.75rem; right:-1.5rem; width:5rem; text-align:center; font-size:.5625rem; font-weight:700; color:#fff; padding:.125rem 0; transform:rotate(45deg); }`,
+  },
+  {
+    id: 'ribbon-banner', name: 'Banner Ribbon', category: 'Ribbons',
+    description: 'Horizontal ribbon across card top.',
+    Preview: RibbonBannerPreview,
+    tailwind: `<div class="bg-white rounded-xl border border-zinc-100 shadow-sm overflow-hidden">
+  <div class="bg-indigo-600 px-4 py-1.5 text-xs font-bold text-white text-center">🎉 Limited Time Offer</div>
+  <div class="px-4 py-3 text-xs text-zinc-500">Card content goes here</div>
+</div>`,
+    css: `.ribbon-banner { display:block; padding:.375rem 1rem; font-size:.75rem; font-weight:700; text-align:center; } .ribbon-banner-indigo { background:#4f46e5; color:#fff; } .ribbon-banner-red { background:#ef4444; color:#fff; } .ribbon-banner-green { background:#16a34a; color:#fff; }`,
+  },
+  {
+    id: 'ribbon-badge', name: 'Folded Ribbon Badge', category: 'Ribbons',
+    description: 'CSS folded ribbon label on card.',
+    Preview: RibbonBadgePreview,
+    tailwind: `<div class="relative">
+  <div class="w-28 h-20 bg-white rounded-xl border border-zinc-100 shadow-sm flex items-center justify-center text-xs text-zinc-500">Card</div>
+  <div class="absolute -left-1 top-3 bg-indigo-600 text-white text-[10px] font-bold px-3 py-0.5 rounded-r-full shadow-indigo-200 shadow">Featured</div>
+</div>`,
+    css: `.folded-ribbon { position:absolute; left:-.25rem; top:.75rem; padding:.125rem .75rem; border-radius:0 9999px 9999px 0; font-size:.625rem; font-weight:700; color:#fff; } .folded-ribbon-indigo { background:#4f46e5; } .folded-ribbon-rose { background:#f43f5e; }`,
+  },
+
+  /* ── Spinners ── */
+  {
+    id: 'spinner-basic', name: 'Spinner Variants', category: 'Spinners',
+    description: '4 spinner styles: border, dots, pulse, wave.',
+    Preview: SpinnerBasicPreview,
+    tailwind: `<div class="flex gap-8 items-center flex-wrap">
+  <div class="flex flex-col items-center gap-2"><div class="w-8 h-8 rounded-full border-4 border-zinc-200 border-t-indigo-600 animate-spin"/><span class="text-[10px] text-zinc-400">Border</span></div>
+  <div class="flex flex-col items-center gap-2"><div class="flex gap-1"><div class="w-2 h-2 rounded-full bg-indigo-600 animate-bounce"/><div class="w-2 h-2 rounded-full bg-indigo-600 animate-bounce" style="animation-delay:.15s"/></div><span class="text-[10px] text-zinc-400">Dots</span></div>
+</div>`,
+    css: `.spinner-border { width:2rem; height:2rem; border-radius:9999px; border:4px solid #f4f4f5; border-top-color:#4f46e5; animation:spin .8s linear infinite; } @keyframes spin { to { transform:rotate(360deg); } } .spinner-dot { width:.5rem; height:.5rem; border-radius:9999px; background:#4f46e5; animation:bounce .6s alternate infinite; }`,
+  },
+  {
+    id: 'spinner-labeled', name: 'Labeled Spinners', category: 'Spinners',
+    description: 'Spinners with loading text in different sizes.',
+    Preview: SpinnerLabeledPreview,
+    tailwind: `<div class="space-y-4">
+  <div class="flex items-center gap-3"><div class="w-4 h-4 rounded-full border-4 border-zinc-200 border-t-indigo-600 animate-spin"/><span class="text-sm font-medium text-zinc-600">Loading...</span></div>
+  <div class="flex items-center gap-3"><div class="w-6 h-6 rounded-full border-4 border-zinc-200 border-t-indigo-600 animate-spin"/><span class="text-base font-medium text-zinc-600">Processing</span></div>
+</div>`,
+    css: `.labeled-spinner { display:flex; align-items:center; gap:.75rem; } .labeled-spinner .spinner { border-radius:9999px; border:4px solid #f4f4f5; border-top-color:#4f46e5; animation:spin .8s linear infinite; }`,
+  },
+  {
+    id: 'spinner-overlay', name: 'Loading Overlay', category: 'Spinners',
+    description: 'Full-card dimmed overlay with centered spinner.',
+    Preview: SpinnerOverlayPreview,
+    tailwind: `<div class="relative w-64 h-36 bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden">
+  <div class="p-4"><p class="text-sm font-bold">Dashboard</p></div>
+  <div class="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center rounded-2xl">
+    <div class="flex flex-col items-center gap-2"><div class="w-8 h-8 rounded-full border-4 border-zinc-200 border-t-indigo-600 animate-spin"/><span class="text-xs text-zinc-500">Loading...</span></div>
+  </div>
+</div>`,
+    css: `.spinner-overlay { position:absolute; inset:0; background:rgba(255,255,255,.8); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; border-radius:inherit; }`,
+  },
+
+  /* ── Tabs ── */
+  {
+    id: 'tabs-pill', name: 'Pill Tabs', category: 'Tabs',
+    description: 'Rounded pill active tab style.',
+    Preview: TabsPillPreview,
+    tailwind: `<div class="flex gap-1 p-1 bg-zinc-100 rounded-xl mb-4">
+  <button class="flex-1 py-1.5 text-xs font-semibold rounded-lg bg-white text-zinc-900 shadow">Overview</button>
+  <button class="flex-1 py-1.5 text-xs font-semibold rounded-lg text-zinc-500 hover:text-zinc-700">Analytics</button>
+  <button class="flex-1 py-1.5 text-xs font-semibold rounded-lg text-zinc-500 hover:text-zinc-700">Reports</button>
+</div>`,
+    css: `.pill-tabs { display:flex; gap:.25rem; padding:.25rem; background:#f4f4f5; border-radius:.75rem; } .pill-tab { flex:1; padding:.375rem 0; border-radius:.5rem; font-size:.75rem; font-weight:600; border:none; cursor:pointer; background:none; } .pill-tab.active { background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.1); color:#18181b; } .pill-tab:not(.active) { color:#71717a; }`,
+  },
+  {
+    id: 'tabs-vertical', name: 'Vertical Tabs', category: 'Tabs',
+    description: 'Left-side tab list with content panel.',
+    Preview: TabsVerticalPreview,
+    tailwind: `<div class="flex gap-3 h-40">
+  <div class="flex flex-col gap-0.5 w-32">
+    <button class="flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold text-left bg-indigo-50 text-indigo-700">👤 Profile</button>
+    <button class="flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-left text-zinc-500 hover:bg-zinc-50">🔒 Security</button>
+  </div>
+  <div class="flex-1 rounded-xl bg-zinc-50 border border-zinc-100 p-3 text-xs text-zinc-600">Manage your profile info</div>
+</div>`,
+    css: `.vertical-tabs { display:flex; gap:.75rem; } .vertical-tab-list { display:flex; flex-direction:column; gap:.125rem; width:8rem; } .vertical-tab { display:flex; align-items:center; gap:.5rem; border-radius:.5rem; padding:.5rem .75rem; font-size:.75rem; font-weight:500; border:none; cursor:pointer; background:none; text-align:left; } .vertical-tab.active { background:#eef2ff; color:#4338ca; font-weight:600; }`,
+  },
+  {
+    id: 'tabs-icon', name: 'Icon Tabs', category: 'Tabs',
+    description: 'Tabs with icons above labels and border-bottom active indicator.',
+    Preview: TabsIconPreview,
+    tailwind: `<div class="flex border-b border-zinc-200 mb-4">
+  <button class="flex-1 flex flex-col items-center gap-1 py-3 text-[10px] font-semibold border-b-2 border-indigo-600 text-indigo-600">✉ Mail</button>
+  <button class="flex-1 flex flex-col items-center gap-1 py-3 text-[10px] font-semibold border-b-2 border-transparent text-zinc-400 hover:text-zinc-600">🔔 Alerts</button>
+  <button class="flex-1 flex flex-col items-center gap-1 py-3 text-[10px] font-semibold border-b-2 border-transparent text-zinc-400 hover:text-zinc-600">👤 Profile</button>
+</div>`,
+    css: `.icon-tabs { display:flex; border-bottom:2px solid #f4f4f5; } .icon-tab { flex:1; display:flex; flex-direction:column; align-items:center; gap:.25rem; padding:.75rem 0; font-size:.625rem; font-weight:600; border:none; border-bottom:2px solid transparent; cursor:pointer; background:none; margin-bottom:-2px; } .icon-tab.active { border-bottom-color:#4f46e5; color:#4f46e5; }`,
+  },
+
+  /* ── Tooltips ── */
+  {
+    id: 'tooltip-basic', name: 'Tooltip Variants', category: 'Tooltips',
+    description: '4 directional tooltips that appear on hover.',
+    Preview: TooltipBasicPreview,
+    tailwind: `<div class="relative group inline-block">
+  <button class="rounded-lg border border-zinc-200 px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-50">Hover me</button>
+  <div class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-zinc-800 text-white text-xs font-semibold rounded-lg px-2.5 py-1.5 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">Tooltip Top</div>
+</div>`,
+    css: `.tooltip-wrapper { position:relative; display:inline-block; } .tooltip { position:absolute; border-radius:.5rem; padding:.375rem .625rem; font-size:.75rem; font-weight:600; white-space:nowrap; pointer-events:none; opacity:0; transition:opacity .15s; z-index:10; } .tooltip-wrapper:hover .tooltip { opacity:1; } .tooltip-dark { background:#18181b; color:#fff; }`,
+  },
+  {
+    id: 'tooltip-rich', name: 'Rich Tooltip', category: 'Tooltips',
+    description: 'Tooltip with title, description, and link on hover.',
+    Preview: TooltipRichPreview,
+    tailwind: `<div class="relative inline-block group">
+  <button class="rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white">ℹ Learn more</button>
+  <div class="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 w-56 bg-white rounded-xl border border-zinc-100 shadow-xl p-3 z-20 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+    <p class="text-xs font-bold text-zinc-900 mb-1">Rich Tooltip</p>
+    <p class="text-xs text-zinc-500 mb-2">Tooltips can include titles and descriptions.</p>
+    <a href="#" class="text-xs font-semibold text-indigo-600">Read docs →</a>
+  </div>
+</div>`,
+    css: `.rich-tooltip { position:absolute; background:#fff; border:1px solid #f4f4f5; border-radius:.75rem; padding:.75rem; box-shadow:0 8px 24px rgba(0,0,0,.1); width:14rem; z-index:20; } .rich-tooltip-title { font-size:.75rem; font-weight:700; margin-bottom:.25rem; }`,
+  },
+  {
+    id: 'tooltip-dark', name: 'Dark Tooltips', category: 'Tooltips',
+    description: 'Dark rounded tooltips with arrow pointer.',
+    Preview: TooltipDarkPreview,
+    tailwind: `<div class="relative group flex flex-col items-center">
+  <button class="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center text-zinc-600 hover:bg-zinc-200">📋</button>
+  <div class="absolute -top-9 left-1/2 -translate-x-1/2 bg-zinc-900 text-white text-[10px] font-semibold rounded-lg px-2.5 py-1.5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+    Copy to clipboard
+    <div class="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 bg-zinc-900 rotate-45"/>
+  </div>
+</div>`,
+    css: `.dark-tooltip { position:absolute; background:#18181b; color:#fff; border-radius:.5rem; padding:.375rem .625rem; font-size:.625rem; font-weight:600; white-space:nowrap; pointer-events:none; } .dark-tooltip-arrow { position:absolute; bottom:-.25rem; left:50%; transform:translateX(-50%) rotate(45deg); width:.5rem; height:.5rem; background:#18181b; }`,
+  },
+
+  /* ── Videos ── */
+  {
+    id: 'video-player', name: 'Video Player UI', category: 'Videos',
+    description: 'Custom video player with play/pause, seek, and volume controls.',
+    Preview: VideoPlayerPreview,
+    tailwind: `<div class="bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-700">
+  <div class="h-32 bg-zinc-800 flex items-center justify-center">
+    <button class="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center shadow-lg">▶</button>
+  </div>
+  <div class="px-3 py-2.5 bg-zinc-800">
+    <div class="flex items-center gap-2"><button class="text-white">▶</button><div class="flex-1 h-1 bg-zinc-600 rounded-full"><div class="h-full bg-indigo-500 rounded-full w-[35%]"/></div><span class="text-[10px] text-zinc-400">1:24/4:02</span></div>
+  </div>
+</div>`,
+    css: `.video-player { background:#18181b; border-radius:1rem; overflow:hidden; } .video-controls { display:flex; align-items:center; gap:.5rem; padding:.625rem .75rem; background:#27272a; } .video-progress { flex:1; height:.25rem; background:#52525b; border-radius:9999px; cursor:pointer; } .video-progress-fill { height:100%; background:#6366f1; border-radius:9999px; }`,
+  },
+  {
+    id: 'video-card', name: 'Video Card', category: 'Videos',
+    description: 'Thumbnail with title, duration, and view count.',
+    Preview: VideoCardV2Preview,
+    tailwind: `<div class="flex gap-3">
+  <div class="flex-1 bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden hover:shadow-md transition">
+    <div class="bg-gradient-to-br from-indigo-500 to-violet-600 h-20 relative flex items-end p-2">
+      <span class="bg-black/70 text-white text-[10px] font-bold rounded px-1.5 py-0.5 ml-auto">12:34</span>
+    </div>
+    <div class="p-3"><p class="text-xs font-bold text-zinc-800">Getting Started with React Hooks</p><p class="text-[10px] text-zinc-500 mt-1">DevTube · 24K views</p></div>
+  </div>
+</div>`,
+    css: `.video-card { border-radius:1rem; border:1px solid #f4f4f5; overflow:hidden; transition:box-shadow .2s; } .video-card:hover { box-shadow:0 4px 12px rgba(0,0,0,.08); } .video-thumbnail { position:relative; } .video-duration { position:absolute; bottom:.375rem; right:.375rem; background:rgba(0,0,0,.7); color:#fff; font-size:.5625rem; font-weight:700; border-radius:.25rem; padding:.125rem .375rem; }`,
+  },
+  {
+    id: 'video-grid', name: 'Video Grid', category: 'Videos',
+    description: '4 video thumbnails in a 2×2 responsive grid.',
+    Preview: VideoGridPreview,
+    tailwind: `<div class="grid grid-cols-2 gap-2">
+  <div class="rounded-xl overflow-hidden border border-zinc-100 hover:shadow-md transition cursor-pointer">
+    <div class="bg-gradient-to-br from-indigo-500 to-violet-600 h-16 relative"><span class="absolute bottom-1.5 right-1.5 bg-black/70 text-white text-[9px] font-bold rounded px-1 py-0.5">5:24</span></div>
+    <div class="px-2 py-1.5 bg-white"><p class="text-[10px] font-semibold text-zinc-800 truncate">React Tips</p></div>
+  </div>
+</div>`,
+    css: `.video-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:.5rem; } .video-grid-item { border-radius:.75rem; overflow:hidden; border:1px solid #f4f4f5; cursor:pointer; } .video-grid-thumb { position:relative; height:4rem; }`,
+  },
 ];
 
 /* ─────────────────────────────────────────────
@@ -10825,13 +14488,37 @@ const CATEGORY_META: Record<string, { icon: string; pill: string; pillActive: st
   'Aside Nav':      { icon: '◧',  pill: 'bg-teal-50 text-teal-700',            pillActive: 'bg-teal-600 text-white',          accent: 'bg-teal-50/40' },
   'AI Tools':       { icon: '✦',  pill: 'bg-violet-50 text-violet-700',         pillActive: 'bg-violet-700 text-white',        accent: 'bg-slate-950' },
   'eCommerce':      { icon: '🛍️', pill: 'bg-orange-50 text-orange-700',         pillActive: 'bg-orange-500 text-white',        accent: 'bg-orange-50/40' },
-  'Calendar':       { icon: '📅', pill: 'bg-blue-50 text-blue-700',             pillActive: 'bg-blue-600 text-white',          accent: 'bg-blue-50/40' },
+  'Calendar':         { icon: '📅', pill: 'bg-blue-50 text-blue-700',             pillActive: 'bg-blue-600 text-white',          accent: 'bg-blue-50/40' },
+  'Charts':           { icon: '📈', pill: 'bg-indigo-50 text-indigo-700',         pillActive: 'bg-indigo-600 text-white',         accent: 'bg-indigo-50/40' },
+  'Tables':           { icon: '⊟',  pill: 'bg-slate-100 text-slate-700',          pillActive: 'bg-slate-700 text-white',          accent: 'bg-slate-50/60' },
+  'Alerts':           { icon: '🔔', pill: 'bg-amber-50 text-amber-700',           pillActive: 'bg-amber-500 text-white',          accent: 'bg-amber-50/60' },
+  'Avatars':          { icon: '👤', pill: 'bg-violet-50 text-violet-700',         pillActive: 'bg-violet-600 text-white',         accent: 'bg-violet-50/60' },
+  'Badge':            { icon: '🏷️', pill: 'bg-blue-50 text-blue-700',             pillActive: 'bg-blue-600 text-white',           accent: 'bg-blue-50/40' },
+  'Breadcrumb':       { icon: '›',  pill: 'bg-zinc-100 text-zinc-600',            pillActive: 'bg-zinc-800 text-white',           accent: 'bg-zinc-50/60' },
+  'Button Variants':  { icon: '⬡',  pill: 'bg-emerald-50 text-emerald-700',       pillActive: 'bg-emerald-600 text-white',        accent: 'bg-emerald-50/60' },
+  'Button Groups':    { icon: '⊞',  pill: 'bg-teal-50 text-teal-700',             pillActive: 'bg-teal-600 text-white',           accent: 'bg-teal-50/40' },
+  'Cards':            { icon: '▭',  pill: 'bg-rose-50 text-rose-700',             pillActive: 'bg-rose-500 text-white',           accent: 'bg-rose-50/60' },
+  'Carousel':         { icon: '⟳',  pill: 'bg-cyan-50 text-cyan-700',             pillActive: 'bg-cyan-600 text-white',           accent: 'bg-cyan-50/40' },
+  'Dropdowns':        { icon: '▾',  pill: 'bg-slate-100 text-slate-600',          pillActive: 'bg-slate-700 text-white',          accent: 'bg-slate-50/60' },
+  'Images':           { icon: '🖼️', pill: 'bg-orange-50 text-orange-700',         pillActive: 'bg-orange-500 text-white',         accent: 'bg-orange-50/40' },
+  'Links':            { icon: '🔗', pill: 'bg-blue-50 text-blue-700',             pillActive: 'bg-blue-600 text-white',           accent: 'bg-blue-50/40' },
+  'List':             { icon: '≡',  pill: 'bg-zinc-100 text-zinc-600',            pillActive: 'bg-zinc-800 text-white',           accent: 'bg-zinc-50/60' },
+  'Modals':           { icon: '🪟', pill: 'bg-violet-50 text-violet-700',         pillActive: 'bg-violet-600 text-white',         accent: 'bg-violet-50/60' },
+  'Notifications':    { icon: '🔔', pill: 'bg-amber-50 text-amber-700',           pillActive: 'bg-amber-500 text-white',          accent: 'bg-amber-50/60' },
+  'Pagination':       { icon: '⟨⟩', pill: 'bg-indigo-50 text-indigo-700',        pillActive: 'bg-indigo-600 text-white',         accent: 'bg-indigo-50/40' },
+  'Popovers':         { icon: '💬', pill: 'bg-teal-50 text-teal-700',             pillActive: 'bg-teal-600 text-white',           accent: 'bg-teal-50/40' },
+  'Progress Bars':    { icon: '▬',  pill: 'bg-emerald-50 text-emerald-700',       pillActive: 'bg-emerald-600 text-white',        accent: 'bg-emerald-50/60' },
+  'Ribbons':          { icon: '🎀', pill: 'bg-rose-50 text-rose-700',             pillActive: 'bg-rose-500 text-white',           accent: 'bg-rose-50/60' },
+  'Spinners':         { icon: '⟳',  pill: 'bg-cyan-50 text-cyan-700',             pillActive: 'bg-cyan-600 text-white',           accent: 'bg-cyan-50/40' },
+  'Tabs':             { icon: '⊟',  pill: 'bg-slate-100 text-slate-600',          pillActive: 'bg-slate-700 text-white',          accent: 'bg-slate-50/60' },
+  'Tooltips':         { icon: '💡', pill: 'bg-yellow-50 text-yellow-700',         pillActive: 'bg-yellow-500 text-white',         accent: 'bg-yellow-50/40' },
+  'Videos':           { icon: '▶',  pill: 'bg-zinc-100 text-zinc-700',            pillActive: 'bg-zinc-800 text-white',           accent: 'bg-zinc-50/60' },
 };
 
-const CATEGORIES = ['All', 'Feedback', 'Navigation', 'Forms & Inputs', 'Display', 'Overlay', 'Layout', 'Aside Nav', 'AI Tools', 'eCommerce', 'Calendar'];
+const CATEGORIES = ['All', 'Feedback', 'Navigation', 'Forms & Inputs', 'Display', 'Overlay', 'Layout', 'Aside Nav', 'AI Tools', 'eCommerce', 'Calendar', 'Charts', 'Tables', 'Alerts', 'Avatars', 'Badge', 'Breadcrumb', 'Button Variants', 'Button Groups', 'Cards', 'Carousel', 'Dropdowns', 'Images', 'Links', 'List', 'Modals', 'Notifications', 'Pagination', 'Popovers', 'Progress Bars', 'Ribbons', 'Spinners', 'Tabs', 'Tooltips', 'Videos'];
 
 /** Categories that render better as a single-column list */
-const SINGLE_COL_CATS = new Set(['Aside Nav', 'AI Tools', 'eCommerce', 'Calendar']);
+const SINGLE_COL_CATS = new Set(['Aside Nav', 'AI Tools', 'eCommerce', 'Calendar', 'Alerts', 'Avatars', 'Badge', 'Breadcrumb', 'Button Variants', 'Button Groups', 'Cards', 'Carousel', 'Dropdowns', 'Images', 'Links', 'List', 'Modals', 'Notifications', 'Pagination', 'Popovers', 'Progress Bars', 'Ribbons', 'Spinners', 'Tabs', 'Tooltips', 'Videos']);
 
 /* ─────────────────────────────────────────────
    Share Toast
