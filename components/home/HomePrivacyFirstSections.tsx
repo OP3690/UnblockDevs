@@ -69,6 +69,8 @@ export default function HomePrivacyFirstSections({
       { label: 'PDF to Excel', cats: ['all', 'dev'], variant: 'new', href: '/pdf-to-excel-word' },
       { label: 'Cron Builder', cats: ['all', 'dev'], variant: 'new', href: '/cron-expression' },
       { label: 'Markdown Preview', cats: ['all', 'dev'], variant: 'new', href: '/markdown-preview' },
+      { label: 'Color Picker', cats: ['all', 'dev'], variant: 'new', href: '/color-picker' },
+      { label: 'Text Diff', cats: ['all', 'dev', 'json'], variant: 'new', href: '/text-diff' },
     ],
     [toolPageUrls],
   );
