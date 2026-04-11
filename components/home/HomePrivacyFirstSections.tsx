@@ -74,7 +74,7 @@ export default function HomePrivacyFirstSections({
       { label: 'JSON → TypeScript', cats: ['all', 'json'], variant: 'new', href: '/json-to-typescript' },
       { label: 'Timestamp', cats: ['all', 'dev'], variant: 'new', href: '/timestamp-converter' },
       { label: 'Box Shadow', cats: ['all', 'dev'], variant: 'new', href: '/css-box-shadow' },
-      { label: 'UI Components', cats: ['all', 'dev'], variant: 'new', href: '/ui-components' },
+      { label: 'UI Components', cats: ['all', 'dev'], variant: 'new', href: '/css-ui-components' },
     ],
     [toolPageUrls],
   );

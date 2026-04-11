@@ -22,6 +22,7 @@ const nextConfig = {
       },
       // /curl-to-python is now a real page (dedicated SEO for "convert curl to python")
       // Fix 404 tool URLs
+      { source: '/ui-components', destination: '/css-ui-components', permanent: true },
       { source: '/json-builder', destination: '/json-beautifier', permanent: true },
       { source: '/json-masking', destination: '/json-prompt-shield', permanent: true },
       { source: '/sql-schema-masking', destination: '/ai-schema-masker', permanent: true },

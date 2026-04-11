@@ -611,28 +611,6 @@ function SpinnerPreview() {
   );
 }
 
-function SkeletonPreview() {
-  return (
-    <PreviewWrap bg="bg-zinc-50">
-      <div className="w-full max-w-xs rounded-2xl border border-zinc-200 bg-white p-4 space-y-3">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-full bg-zinc-200 animate-pulse" />
-          <div className="flex-1 space-y-2">
-            <div className="h-3 w-24 rounded-full bg-zinc-200 animate-pulse" />
-            <div className="h-2.5 w-16 rounded-full bg-zinc-200 animate-pulse" />
-          </div>
-        </div>
-        <div className="space-y-2">
-          <div className="h-2.5 w-full rounded-full bg-zinc-200 animate-pulse" />
-          <div className="h-2.5 w-5/6 rounded-full bg-zinc-200 animate-pulse" />
-          <div className="h-2.5 w-4/6 rounded-full bg-zinc-200 animate-pulse" />
-        </div>
-        <div className="h-24 rounded-xl bg-zinc-200 animate-pulse" />
-      </div>
-    </PreviewWrap>
-  );
-}
-
 function InputPreview() {
   return (
     <PreviewWrap bg="bg-zinc-50">
@@ -723,33 +701,6 @@ function TooltipPreview() {
             </button>
             <div className={`pointer-events-none absolute z-10 whitespace-nowrap rounded-lg bg-zinc-800 px-3 py-1.5 text-xs font-medium text-white opacity-0 transition-opacity group-hover:opacity-100 ${t.pos}`}>
               Tooltip on {t.dir}
-            </div>
-          </div>
-        ))}
-      </div>
-    </PreviewWrap>
-  );
-}
-
-function TimelinePreview() {
-  const items = [
-    { icon: '🚀', title: 'Project Launched', time: '2 hours ago', desc: 'Initial version deployed to production.', color: 'bg-blue-500' },
-    { icon: '✅', title: 'PR Merged', time: '5 hours ago', desc: 'Feature branch merged into main.', color: 'bg-emerald-500' },
-    { icon: '💬', title: 'Review Requested', time: '1 day ago', desc: 'Code review requested from team.', color: 'bg-purple-500' },
-  ];
-  return (
-    <PreviewWrap bg="bg-zinc-50">
-      <div className="w-full max-w-xs">
-        {items.map((item, i) => (
-          <div key={i} className="flex gap-4">
-            <div className="flex flex-col items-center">
-              <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${item.color} text-base shadow`}>{item.icon}</div>
-              {i < items.length - 1 && <div className="w-px flex-1 bg-zinc-200 my-1" />}
-            </div>
-            <div className="pb-6 pt-1">
-              <p className="text-sm font-semibold text-zinc-800">{item.title}</p>
-              <p className="text-xs text-zinc-400 mt-0.5">{item.time}</p>
-              <p className="mt-1 text-xs text-zinc-500">{item.desc}</p>
             </div>
           </div>
         ))}
@@ -1142,30 +1093,6 @@ function RibbonPreview() {
             </div>
           </div>
         ))}
-      </div>
-    </PreviewWrap>
-  );
-}
-
-function FileUploadPreview() {
-  return (
-    <PreviewWrap bg="bg-zinc-50">
-      <div className="w-full max-w-xs space-y-3">
-        <div className="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-zinc-300 bg-white p-6 text-center hover:border-blue-400 hover:bg-blue-50 transition cursor-pointer">
-          <div className="text-2xl">📂</div>
-          <p className="text-sm font-medium text-zinc-700">Drop files here</p>
-          <p className="text-xs text-zinc-400">or <span className="text-blue-600 font-medium">browse files</span></p>
-          <p className="text-[10px] text-zinc-400">PNG, JPG, PDF up to 10MB</p>
-        </div>
-        <div className="rounded-xl border border-zinc-200 bg-white p-3 flex items-center gap-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 text-sm">📄</div>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-medium text-zinc-800 truncate">design-specs.pdf</p>
-            <div className="mt-1 h-1.5 w-full rounded-full bg-zinc-100"><div className="h-1.5 w-3/4 rounded-full bg-blue-500 transition-all"/></div>
-            <p className="mt-0.5 text-[10px] text-zinc-400">75% · 2.4 MB</p>
-          </div>
-          <button className="text-zinc-300 hover:text-zinc-500 text-sm">×</button>
-        </div>
       </div>
     </PreviewWrap>
   );
@@ -2692,6 +2619,493 @@ function BreadcrumbIconsPreview() {
             </span>
           ))}
         </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   16 New Preview Components
+───────────────────────────────────────────── */
+
+function TimelinePreview() {
+  const events = [
+    { time: '09:00', title: 'Project Kickoff', desc: 'Team aligned on goals.', dot: 'bg-blue-500' },
+    { time: '11:30', title: 'Design Review', desc: 'Wireframes approved.', dot: 'bg-purple-500' },
+    { time: '14:00', title: 'Dev Sprint Start', desc: 'Tickets assigned.', dot: 'bg-emerald-500' },
+    { time: '17:00', title: 'Deployment', desc: 'v1.2 shipped to production.', dot: 'bg-amber-500' },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs">
+        {events.map((e, i) => (
+          <div key={i} className="flex gap-3">
+            <div className="flex flex-col items-center">
+              <div className={`mt-1 h-2.5 w-2.5 rounded-full shrink-0 ${e.dot}`} />
+              {i < events.length - 1 && <div className="my-1 w-px flex-1 bg-zinc-200" />}
+            </div>
+            <div className="pb-3 min-w-0">
+              <p className="text-[10px] font-mono text-zinc-400">{e.time}</p>
+              <p className="text-sm font-semibold text-zinc-800">{e.title}</p>
+              <p className="text-xs text-zinc-500">{e.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function SkeletonPreview() {
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs space-y-3">
+        {[1, 2].map((i) => (
+          <div key={i} className="rounded-xl border border-zinc-200 bg-white p-4 space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="h-9 w-9 rounded-full bg-zinc-200 animate-pulse shrink-0" />
+              <div className="flex-1 space-y-1.5">
+                <div className="h-2.5 w-2/3 rounded-full bg-zinc-200 animate-pulse" />
+                <div className="h-2 w-1/3 rounded-full bg-zinc-100 animate-pulse" />
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <div className="h-2 w-full rounded-full bg-zinc-200 animate-pulse" />
+              <div className="h-2 w-5/6 rounded-full bg-zinc-200 animate-pulse" />
+              <div className="h-2 w-3/4 rounded-full bg-zinc-100 animate-pulse" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function AvatarGroupPreview() {
+  const avatars = [
+    { initials: 'JD', bg: 'bg-blue-500' },
+    { initials: 'KL', bg: 'bg-emerald-500' },
+    { initials: 'MP', bg: 'bg-purple-500' },
+    { initials: 'SR', bg: 'bg-amber-500' },
+    { initials: 'TW', bg: 'bg-rose-500' },
+  ];
+  return (
+    <PreviewWrap>
+      <div className="flex flex-col items-center gap-4">
+        <div className="flex items-center">
+          {avatars.map((a, i) => (
+            <div key={i} className={`flex h-10 w-10 items-center justify-center rounded-full text-[11px] font-bold text-white ring-2 ring-white ${a.bg} ${i > 0 ? '-ml-2.5' : ''}`}>
+              {a.initials}
+            </div>
+          ))}
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-200 text-[11px] font-bold text-zinc-600 ring-2 ring-white -ml-2.5">+8</div>
+        </div>
+        <p className="text-xs text-zinc-500 font-medium">13 team members</p>
+        <div className="flex items-end gap-2">
+          {[{ s: 'h-7 w-7 text-[9px]', l: 'sm' }, { s: 'h-10 w-10 text-xs', l: 'md' }, { s: 'h-14 w-14 text-sm', l: 'lg' }].map(({ s, l }) => (
+            <div key={l} className={`flex items-center justify-center rounded-full bg-blue-500 font-bold text-white ${s}`}>{l}</div>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function SplitButtonPreview() {
+  const [open, setOpen] = useState(false);
+  const [action, setAction] = useState('Save');
+  const opts = ['Save', 'Save & Close', 'Save as Draft', 'Publish'];
+  return (
+    <PreviewWrap>
+      <div className="relative flex">
+        <button className="rounded-l-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition border-r border-blue-500">
+          {action}
+        </button>
+        <button onClick={() => setOpen((o) => !o)} className="rounded-r-lg bg-blue-600 px-2.5 py-2 text-sm text-white hover:bg-blue-700 transition">
+          <ChevronDown size={14} className={`transition-transform ${open ? 'rotate-180' : ''}`} />
+        </button>
+        {open && (
+          <div className="absolute top-full right-0 mt-1 w-44 rounded-xl border border-zinc-200 bg-white shadow-xl z-10 py-1">
+            {opts.map((o) => (
+              <button key={o} onClick={() => { setAction(o); setOpen(false); }} className="w-full px-4 py-2 text-left text-sm text-zinc-700 hover:bg-zinc-50 transition">{o}</button>
+            ))}
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function FileUploadPreview() {
+  const [dragging, setDragging] = useState(false);
+  const [file, setFile] = useState<string | null>(null);
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      {file ? (
+        <div className="flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 w-full max-w-xs">
+          <CheckCircle size={18} className="text-emerald-500 shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-zinc-800 truncate">{file}</p>
+            <p className="text-xs text-zinc-500">Ready to upload</p>
+          </div>
+          <button onClick={() => setFile(null)} className="text-zinc-400 hover:text-zinc-600 transition"><X size={14} /></button>
+        </div>
+      ) : (
+        <div
+          onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={(e) => { e.preventDefault(); setDragging(false); const f = e.dataTransfer.files[0]; if (f) setFile(f.name); }}
+          className={`w-full max-w-xs rounded-xl border-2 border-dashed p-6 text-center transition cursor-pointer ${dragging ? 'border-blue-400 bg-blue-50' : 'border-zinc-300 bg-white hover:border-zinc-400'}`}
+        >
+          <div className="text-2xl mb-2">📁</div>
+          <p className="text-sm font-semibold text-zinc-700">Drop files here</p>
+          <p className="text-xs text-zinc-400 mt-1">or <button className="text-blue-600 underline" onClick={() => setFile('design-mockup.fig')}>browse files</button></p>
+          <p className="text-[10px] text-zinc-400 mt-2">PNG, JPG, PDF, FIG up to 10MB</p>
+        </div>
+      )}
+    </PreviewWrap>
+  );
+}
+
+function InlineEditPreview() {
+  const [editing, setEditing] = useState(false);
+  const [value, setValue] = useState('Untitled Project');
+  const [temp, setTemp] = useState(value);
+  return (
+    <PreviewWrap>
+      <div className="w-full max-w-xs space-y-2">
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">Project Name</p>
+        {editing ? (
+          <div className="flex items-center gap-2">
+            <input
+              autoFocus
+              value={temp}
+              onChange={(e) => setTemp(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') { setValue(temp); setEditing(false); } if (e.key === 'Escape') { setTemp(value); setEditing(false); } }}
+              className="flex-1 rounded-lg border border-blue-400 bg-white px-3 py-1.5 text-sm text-zinc-800 outline-none ring-2 ring-blue-100"
+            />
+            <button onClick={() => { setValue(temp); setEditing(false); }} className="rounded-lg bg-blue-600 px-2.5 py-1.5 text-xs font-bold text-white hover:bg-blue-700">✓</button>
+            <button onClick={() => { setTemp(value); setEditing(false); }} className="rounded-lg border border-zinc-200 px-2.5 py-1.5 text-xs text-zinc-500 hover:bg-zinc-50">✕</button>
+          </div>
+        ) : (
+          <button onClick={() => { setTemp(value); setEditing(true); }} className="group flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-semibold text-zinc-800 hover:bg-zinc-100 transition text-left">
+            {value}
+            <span className="opacity-0 group-hover:opacity-100 text-zinc-400 text-xs transition ml-auto">✏️ edit</span>
+          </button>
+        )}
+        <p className="text-xs text-zinc-400">Click the field to edit inline</p>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function DataTablePreview() {
+  const [sortCol, setSortCol] = useState<'name' | 'role' | 'status'>('name');
+  const [sortAsc, setSortAsc] = useState(true);
+  const rows = [
+    { name: 'Alice Kim', role: 'Designer', status: 'Active' },
+    { name: 'Bob Patel', role: 'Engineer', status: 'Idle' },
+    { name: 'Carol Wu', role: 'PM', status: 'Active' },
+    { name: 'Dan Rose', role: 'Engineer', status: 'Away' },
+  ];
+  const sorted = [...rows].sort((a, b) => {
+    const cmp = a[sortCol].localeCompare(b[sortCol]);
+    return sortAsc ? cmp : -cmp;
+  });
+  const toggle = (col: 'name' | 'role' | 'status') => { if (sortCol === col) setSortAsc((v) => !v); else { setSortCol(col); setSortAsc(true); } };
+  const statusColor: Record<string, string> = { Active: 'bg-emerald-100 text-emerald-700', Idle: 'bg-zinc-100 text-zinc-600', Away: 'bg-amber-100 text-amber-700' };
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full overflow-x-auto rounded-xl border border-zinc-200 bg-white">
+        <table className="w-full text-sm">
+          <thead className="border-b border-zinc-100 bg-zinc-50">
+            <tr>
+              {(['name', 'role', 'status'] as const).map((col) => (
+                <th key={col} onClick={() => toggle(col)} className="cursor-pointer select-none px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500 hover:text-zinc-800 transition">
+                  {col} {sortCol === col ? (sortAsc ? '↑' : '↓') : ''}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {sorted.map((r, i) => (
+              <tr key={i} className="border-b border-zinc-50 hover:bg-zinc-50 transition">
+                <td className="px-4 py-2.5 font-medium text-zinc-800">{r.name}</td>
+                <td className="px-4 py-2.5 text-zinc-500">{r.role}</td>
+                <td className="px-4 py-2.5"><span className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${statusColor[r.status]}`}>{r.status}</span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function VerticalStepperPreview() {
+  const [step, setStep] = useState(1);
+  const steps = [
+    { n: 1, title: 'Account', desc: 'Enter your email & password' },
+    { n: 2, title: 'Profile', desc: 'Add your name and avatar' },
+    { n: 3, title: 'Plan', desc: 'Choose a subscription tier' },
+    { n: 4, title: 'Done', desc: 'Review and confirm setup' },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs">
+        {steps.map((s, i) => (
+          <div key={s.n} className="flex gap-3">
+            <div className="flex flex-col items-center">
+              <button onClick={() => setStep(s.n)} className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold transition border-2 ${s.n < step ? 'bg-emerald-500 border-emerald-500 text-white' : s.n === step ? 'bg-blue-600 border-blue-600 text-white' : 'bg-white border-zinc-300 text-zinc-400'}`}>
+                {s.n < step ? '✓' : s.n}
+              </button>
+              {i < steps.length - 1 && <div className={`my-0.5 w-0.5 flex-1 min-h-[20px] transition-colors ${s.n < step ? 'bg-emerald-300' : 'bg-zinc-200'}`} />}
+            </div>
+            <div className={`pb-4 pt-1 min-w-0 ${s.n === step ? '' : 'opacity-60'}`}>
+              <p className="text-sm font-semibold text-zinc-800">{s.title}</p>
+              <p className="text-xs text-zinc-500">{s.desc}</p>
+            </div>
+          </div>
+        ))}
+        <div className="flex gap-2 mt-2 pl-11">
+          <button onClick={() => setStep((v) => Math.max(1, v - 1))} disabled={step === 1} className="rounded-lg border border-zinc-200 px-3 py-1.5 text-xs font-semibold text-zinc-600 hover:bg-zinc-50 disabled:opacity-40 transition">Back</button>
+          <button onClick={() => setStep((v) => Math.min(4, v + 1))} disabled={step === 4} className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-700 disabled:opacity-40 transition">Next</button>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function KPICardGroupPreview() {
+  const stats = [
+    { label: 'Revenue', value: '$48.2K', change: '+12.5%', up: true, color: 'text-emerald-600' },
+    { label: 'Users', value: '3,841', change: '+8.1%', up: true, color: 'text-blue-600' },
+    { label: 'Churn', value: '2.4%', change: '-0.3%', up: false, color: 'text-rose-500' },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="grid grid-cols-3 gap-2 w-full max-w-sm">
+        {stats.map((s) => (
+          <div key={s.label} className="rounded-xl border border-zinc-200 bg-white p-3 text-center shadow-sm">
+            <p className="text-[10px] text-zinc-400 font-medium">{s.label}</p>
+            <p className="text-lg font-bold text-zinc-900 mt-0.5">{s.value}</p>
+            <span className={`text-[10px] font-semibold ${s.up ? 'text-emerald-600' : 'text-rose-500'}`}>{s.change}</span>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function ColorSwatchPreview() {
+  const [selected, setSelected] = useState('#3B82F6');
+  const palette = ['#3B82F6', '#8B5CF6', '#10B981', '#F59E0B', '#EF4444', '#EC4899', '#14B8A6', '#F97316', '#6366F1', '#84CC16'];
+  return (
+    <PreviewWrap>
+      <div className="flex flex-col items-center gap-3">
+        <div className="flex flex-wrap gap-2 justify-center max-w-[200px]">
+          {palette.map((c) => (
+            <button key={c} onClick={() => setSelected(c)} style={{ backgroundColor: c }} className={`h-8 w-8 rounded-lg transition hover:scale-110 ${selected === c ? 'ring-2 ring-offset-2 ring-zinc-600 scale-110' : ''}`} />
+          ))}
+        </div>
+        <div className="flex items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5">
+          <div className="h-4 w-4 rounded" style={{ backgroundColor: selected }} />
+          <code className="text-xs font-mono text-zinc-700">{selected}</code>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function ChipTagPreview() {
+  const [tags, setTags] = useState(['React', 'TypeScript', 'Tailwind', 'Next.js']);
+  const [input, setInput] = useState('');
+  const remove = (t: string) => setTags((p) => p.filter((x) => x !== t));
+  const add = () => { const v = input.trim(); if (v && !tags.includes(v)) { setTags((p) => [...p, v]); setInput(''); } };
+  const colors = ['bg-blue-100 text-blue-700', 'bg-purple-100 text-purple-700', 'bg-emerald-100 text-emerald-700', 'bg-amber-100 text-amber-700'];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs space-y-2">
+        <div className="flex flex-wrap gap-1.5">
+          {tags.map((t, i) => (
+            <span key={t} className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold ${colors[i % colors.length]}`}>
+              {t}
+              <button onClick={() => remove(t)} className="opacity-60 hover:opacity-100 transition"><X size={10} /></button>
+            </span>
+          ))}
+        </div>
+        <div className="flex gap-2">
+          <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && add()}
+            placeholder="Add tag…" className="flex-1 rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-xs outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100" />
+          <button onClick={add} className="rounded-lg bg-zinc-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-zinc-900 transition">Add</button>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function ProgressRingPreview() {
+  const rings = [{ pct: 75, color: '#3B82F6', label: 'CPU' }, { pct: 48, color: '#10B981', label: 'RAM' }, { pct: 90, color: '#F59E0B', label: 'Disk' }];
+  return (
+    <PreviewWrap>
+      <div className="flex items-center gap-6">
+        {rings.map(({ pct, color, label }) => {
+          const r = 22, c = 2 * Math.PI * r;
+          return (
+            <div key={label} className="flex flex-col items-center gap-1.5">
+              <svg width="60" height="60" viewBox="0 0 60 60">
+                <circle cx="30" cy="30" r={r} fill="none" stroke="#e4e4e7" strokeWidth="5" />
+                <circle cx="30" cy="30" r={r} fill="none" stroke={color} strokeWidth="5"
+                  strokeDasharray={`${(pct / 100) * c} ${c}`} strokeLinecap="round" transform="rotate(-90 30 30)" />
+                <text x="30" y="34" textAnchor="middle" className="text-xs font-bold" fill="#18181b" fontSize="11" fontWeight="700">{pct}%</text>
+              </svg>
+              <span className="text-[10px] font-semibold text-zinc-500">{label}</span>
+            </div>
+          );
+        })}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function PageHeaderPreview() {
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-sm space-y-4">
+        <div className="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm">
+          <nav className="flex items-center gap-1 text-xs text-zinc-400 mb-3">
+            <span className="text-blue-600 hover:underline cursor-pointer">Dashboard</span>
+            <ChevronRight size={12} />
+            <span className="text-blue-600 hover:underline cursor-pointer">Projects</span>
+            <ChevronRight size={12} />
+            <span className="text-zinc-600 font-medium">Alpha</span>
+          </nav>
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <h2 className="text-base font-bold text-zinc-900">Project Alpha</h2>
+              <p className="text-xs text-zinc-500 mt-0.5">Last updated 2 hours ago</p>
+            </div>
+            <div className="flex gap-1.5 shrink-0">
+              <button className="rounded-lg border border-zinc-200 px-2.5 py-1 text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition">Share</button>
+              <button className="rounded-lg bg-blue-600 px-2.5 py-1 text-xs font-semibold text-white hover:bg-blue-700 transition">Edit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function NotificationCenterPreview() {
+  const [notifs, setNotifs] = useState([
+    { id: 1, icon: '💬', title: 'New comment', msg: 'Alice left a comment on Alpha.', time: '2m', read: false },
+    { id: 2, icon: '✅', title: 'Task completed', msg: 'Design review marked done.', time: '1h', read: false },
+    { id: 3, icon: '🚀', title: 'Deploy success', msg: 'v1.3 deployed to production.', time: '3h', read: true },
+  ]);
+  const unread = notifs.filter((n) => !n.read).length;
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs rounded-xl border border-zinc-200 bg-white shadow-sm overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-semibold text-zinc-800">Notifications</span>
+            {unread > 0 && <span className="rounded-full bg-blue-600 px-1.5 py-0.5 text-[9px] font-bold text-white">{unread}</span>}
+          </div>
+          <button onClick={() => setNotifs((p) => p.map((n) => ({ ...n, read: true })))} className="text-xs text-blue-600 hover:underline">Mark all read</button>
+        </div>
+        {notifs.map((n) => (
+          <div key={n.id} onClick={() => setNotifs((p) => p.map((x) => x.id === n.id ? { ...x, read: true } : x))}
+            className={`flex items-start gap-3 px-4 py-3 cursor-pointer transition border-b border-zinc-50 last:border-0 ${n.read ? 'opacity-50' : 'hover:bg-blue-50/40'}`}>
+            <span className="text-base mt-0.5">{n.icon}</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold text-zinc-800">{n.title}</p>
+              <p className="text-xs text-zinc-500 truncate">{n.msg}</p>
+            </div>
+            <span className="text-[10px] text-zinc-400 shrink-0">{n.time}</span>
+            {!n.read && <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-blue-500 shrink-0" />}
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function MediaPlayerPreview() {
+  const [playing, setPlaying] = useState(false);
+  const [progress, setProgress] = useState(35);
+  const [vol, setVol] = useState(70);
+  return (
+    <PreviewWrap bg="bg-zinc-900">
+      <div className="w-full max-w-xs rounded-2xl bg-zinc-800 p-4 shadow-xl">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-xl shrink-0">🎵</div>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-white truncate">Midnight Drive</p>
+            <p className="text-xs text-zinc-400">Neon Echoes</p>
+          </div>
+          <button className="ml-auto text-zinc-400 hover:text-white transition"><Bell size={14} /></button>
+        </div>
+        <div className="space-y-1 mb-4">
+          <div className="relative h-1.5 w-full rounded-full bg-zinc-700 cursor-pointer" onClick={(e) => { const r = e.currentTarget.getBoundingClientRect(); setProgress(Math.round(((e.clientX - r.left) / r.width) * 100)); }}>
+            <div className="h-full rounded-full bg-gradient-to-r from-purple-500 to-blue-500 transition-all" style={{ width: `${progress}%` }} />
+          </div>
+          <div className="flex justify-between text-[10px] text-zinc-500">
+            <span>1:{String(Math.floor(progress * 0.6)).padStart(2, '0')}</span>
+            <span>2:47</span>
+          </div>
+        </div>
+        <div className="flex items-center justify-center gap-4 mb-4">
+          <button onClick={() => setProgress((v) => Math.max(0, v - 10))} className="text-zinc-400 hover:text-white transition text-lg">⏮</button>
+          <button onClick={() => setPlaying((v) => !v)} className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-zinc-900 hover:scale-105 transition font-bold text-lg">
+            {playing ? '⏸' : '▶'}
+          </button>
+          <button onClick={() => setProgress((v) => Math.min(100, v + 10))} className="text-zinc-400 hover:text-white transition text-lg">⏭</button>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-zinc-500 text-xs">🔈</span>
+          <div className="relative flex-1 h-1 rounded-full bg-zinc-700 cursor-pointer" onClick={(e) => { const r = e.currentTarget.getBoundingClientRect(); setVol(Math.round(((e.clientX - r.left) / r.width) * 100)); }}>
+            <div className="h-full rounded-full bg-zinc-400" style={{ width: `${vol}%` }} />
+          </div>
+          <span className="text-zinc-500 text-xs">🔊</span>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function PricingTogglePreview() {
+  const [annual, setAnnual] = useState(false);
+  const plans = [
+    { name: 'Starter', monthly: 9, color: 'border-zinc-200', badge: '', features: ['5 projects', '10GB storage', 'Email support'] },
+    { name: 'Pro', monthly: 29, color: 'border-blue-500', badge: 'Popular', features: ['Unlimited projects', '100GB storage', 'Priority support'] },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-sm space-y-3">
+        <div className="flex items-center justify-center gap-3">
+          <span className={`text-xs font-semibold ${!annual ? 'text-zinc-900' : 'text-zinc-400'}`}>Monthly</span>
+          <button onClick={() => setAnnual((v) => !v)} className={`relative h-6 w-11 rounded-full transition-colors ${annual ? 'bg-blue-600' : 'bg-zinc-300'}`}>
+            <span className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${annual ? 'translate-x-5' : ''}`} />
+          </button>
+          <span className={`text-xs font-semibold ${annual ? 'text-zinc-900' : 'text-zinc-400'}`}>Annual <span className="text-emerald-600">-20%</span></span>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          {plans.map((p) => (
+            <div key={p.name} className={`rounded-xl border-2 bg-white p-3 ${p.color}`}>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-bold text-zinc-700">{p.name}</span>
+                {p.badge && <span className="rounded-full bg-blue-100 px-2 py-0.5 text-[9px] font-bold text-blue-600">{p.badge}</span>}
+              </div>
+              <div className="mb-2">
+                <span className="text-xl font-bold text-zinc-900">${annual ? Math.floor(p.monthly * 0.8) : p.monthly}</span>
+                <span className="text-[10px] text-zinc-400">/mo</span>
+              </div>
+              <ul className="space-y-0.5">
+                {p.features.map((f) => <li key={f} className="text-[10px] text-zinc-500 flex items-center gap-1"><Check size={8} className="text-emerald-500 shrink-0" />{f}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
       </div>
     </PreviewWrap>
   );
@@ -4967,6 +5381,393 @@ input[type=range]::-webkit-slider-thumb { width:1.125rem; height:1.125rem; borde
 .breadcrumb-icon-item.current { background:#f4f4f5; color:#52525b; }
 .breadcrumb-sep { color:#d4d4d8; }`,
   },
+
+  // ── 16 new components ──
+  {
+    id: 'timeline', name: 'Timeline', category: 'Display',
+    description: 'Vertical event timeline with colored dots, timestamps, and connector lines.',
+    Preview: TimelinePreview,
+    tailwind: `<div class="flex flex-col gap-0">
+  <!-- Event -->
+  <div class="flex gap-3">
+    <div class="flex flex-col items-center">
+      <div class="mt-1 h-2.5 w-2.5 rounded-full bg-blue-500 shrink-0"></div>
+      <div class="my-1 w-px flex-1 bg-zinc-200"></div>
+    </div>
+    <div class="pb-4">
+      <p class="text-[10px] font-mono text-zinc-400">09:00</p>
+      <p class="text-sm font-semibold text-zinc-800">Project Kickoff</p>
+      <p class="text-xs text-zinc-500">Team aligned on goals.</p>
+    </div>
+  </div>
+  <!-- Repeat for more events -->
+</div>`,
+    css: `.timeline { display:flex; flex-direction:column; }
+.timeline-item { display:flex; gap:.75rem; }
+.timeline-dot { width:.625rem; height:.625rem; border-radius:9999px; background:#3b82f6; margin-top:.25rem; flex-shrink:0; }
+.timeline-line { width:1px; flex:1; background:#e4e4e7; margin:.25rem 0; }
+.timeline-content { padding-bottom:1rem; }
+.timeline-time { font-family:monospace; font-size:.625rem; color:#a1a1aa; }
+.timeline-title { font-size:.875rem; font-weight:600; color:#18181b; }
+.timeline-desc { font-size:.75rem; color:#71717a; }`,
+  },
+  {
+    id: 'skeleton', name: 'Skeleton Loader', category: 'Feedback',
+    description: 'Animated placeholder that mimics content layout while data loads.',
+    Preview: SkeletonPreview,
+    tailwind: `<div class="rounded-xl border border-zinc-200 bg-white p-4 space-y-3 w-72">
+  <div class="flex items-center gap-3">
+    <div class="h-9 w-9 rounded-full bg-zinc-200 animate-pulse"></div>
+    <div class="flex-1 space-y-1.5">
+      <div class="h-2.5 w-2/3 rounded-full bg-zinc-200 animate-pulse"></div>
+      <div class="h-2 w-1/3 rounded-full bg-zinc-100 animate-pulse"></div>
+    </div>
+  </div>
+  <div class="space-y-1.5">
+    <div class="h-2 w-full rounded-full bg-zinc-200 animate-pulse"></div>
+    <div class="h-2 w-5/6 rounded-full bg-zinc-200 animate-pulse"></div>
+    <div class="h-2 w-3/4 rounded-full bg-zinc-100 animate-pulse"></div>
+  </div>
+</div>`,
+    css: `.skeleton { border-radius:.75rem; border:1px solid #e4e4e7; background:#fff; padding:1rem; }
+.skeleton-circle { height:2.25rem; width:2.25rem; border-radius:9999px; background:#e4e4e7; }
+.skeleton-line { height:.5rem; border-radius:9999px; background:#e4e4e7; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+.skeleton-line, .skeleton-circle { animation: pulse 2s cubic-bezier(.4,0,.6,1) infinite; }`,
+  },
+  {
+    id: 'avatar-group', name: 'Avatar Group', category: 'Display',
+    description: 'Stacked overlapping avatars with overflow count indicator and size variants.',
+    Preview: AvatarGroupPreview,
+    tailwind: `<div class="flex items-center">
+  <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500 text-[11px] font-bold text-white ring-2 ring-white">JD</div>
+  <div class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-[11px] font-bold text-white ring-2 ring-white -ml-2.5">KL</div>
+  <div class="flex h-10 w-10 items-center justify-center rounded-full bg-purple-500 text-[11px] font-bold text-white ring-2 ring-white -ml-2.5">MP</div>
+  <div class="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-200 text-[11px] font-bold text-zinc-600 ring-2 ring-white -ml-2.5">+8</div>
+</div>`,
+    css: `.avatar-stack { display:flex; align-items:center; }
+.avatar { display:flex; align-items:center; justify-content:center; height:2.5rem; width:2.5rem; border-radius:9999px; font-size:.6875rem; font-weight:700; color:#fff; outline:2px solid #fff; }
+.avatar:not(:first-child) { margin-left:-.625rem; }
+.avatar-overflow { background:#e4e4e7; color:#52525b; }`,
+  },
+  {
+    id: 'split-button', name: 'Split Button', category: 'Navigation',
+    description: 'Primary action combined with a dropdown for secondary actions.',
+    Preview: SplitButtonPreview,
+    tailwind: `<div class="relative flex">
+  <button class="rounded-l-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition border-r border-blue-500">
+    Save
+  </button>
+  <button class="rounded-r-lg bg-blue-600 px-2.5 py-2 text-sm text-white hover:bg-blue-700 transition">▼</button>
+  <!-- Dropdown (toggled) -->
+  <div class="absolute top-full right-0 mt-1 w-44 rounded-xl border border-zinc-200 bg-white shadow-xl z-10 py-1">
+    <button class="w-full px-4 py-2 text-left text-sm text-zinc-700 hover:bg-zinc-50">Save & Close</button>
+    <button class="w-full px-4 py-2 text-left text-sm text-zinc-700 hover:bg-zinc-50">Save as Draft</button>
+    <button class="w-full px-4 py-2 text-left text-sm text-zinc-700 hover:bg-zinc-50">Publish</button>
+  </div>
+</div>`,
+    css: `.split-btn { display:flex; position:relative; }
+.split-btn-primary { border-radius:.5rem 0 0 .5rem; background:#2563eb; color:#fff; padding:.5rem 1rem; font-size:.875rem; font-weight:600; border-right:1px solid #1d4ed8; }
+.split-btn-chevron { border-radius:0 .5rem .5rem 0; background:#2563eb; color:#fff; padding:.5rem .625rem; }
+.split-btn-dropdown { position:absolute; top:100%; right:0; margin-top:.25rem; width:11rem; border-radius:.75rem; border:1px solid #e4e4e7; background:#fff; box-shadow:0 10px 25px rgba(0,0,0,.1); padding:.25rem 0; z-index:10; }`,
+  },
+  {
+    id: 'file-upload', name: 'File Upload Dropzone', category: 'Forms & Inputs',
+    description: 'Drag-and-drop upload zone with file name display and clear action.',
+    Preview: FileUploadPreview,
+    tailwind: `<div class="rounded-xl border-2 border-dashed border-zinc-300 bg-white p-6 text-center hover:border-zinc-400 transition cursor-pointer">
+  <div class="text-2xl mb-2">📁</div>
+  <p class="text-sm font-semibold text-zinc-700">Drop files here</p>
+  <p class="text-xs text-zinc-400 mt-1">or <a class="text-blue-600 underline">browse files</a></p>
+  <p class="text-[10px] text-zinc-400 mt-2">PNG, JPG, PDF up to 10MB</p>
+</div>`,
+    css: `.dropzone { border-radius:.75rem; border:2px dashed #d4d4d8; background:#fff; padding:1.5rem; text-align:center; cursor:pointer; transition:border-color .15s; }
+.dropzone:hover, .dropzone.drag-over { border-color:#60a5fa; background:#eff6ff; }
+.dropzone-icon { font-size:1.5rem; margin-bottom:.5rem; }
+.dropzone-label { font-size:.875rem; font-weight:600; color:#3f3f46; }`,
+  },
+  {
+    id: 'inline-edit', name: 'Inline Edit', category: 'Forms & Inputs',
+    description: 'Click-to-edit field with confirm and cancel actions — no separate edit page.',
+    Preview: InlineEditPreview,
+    tailwind: `<!-- View mode -->
+<button class="group flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-semibold text-zinc-800 hover:bg-zinc-100 transition text-left">
+  Untitled Project
+  <span class="opacity-0 group-hover:opacity-100 text-zinc-400 text-xs ml-auto transition">✏️ edit</span>
+</button>
+<!-- Edit mode -->
+<div class="flex items-center gap-2">
+  <input class="flex-1 rounded-lg border border-blue-400 bg-white px-3 py-1.5 text-sm outline-none ring-2 ring-blue-100" value="Untitled Project" />
+  <button class="rounded-lg bg-blue-600 px-2.5 py-1.5 text-xs font-bold text-white">✓</button>
+  <button class="rounded-lg border border-zinc-200 px-2.5 py-1.5 text-xs text-zinc-500">✕</button>
+</div>`,
+    css: `.inline-edit-view { display:flex; align-items:center; gap:.5rem; border-radius:.5rem; padding:.375rem .75rem; background:transparent; cursor:pointer; width:100%; text-align:left; }
+.inline-edit-view:hover { background:#f4f4f5; }
+.inline-edit-hint { opacity:0; font-size:.75rem; color:#a1a1aa; margin-left:auto; transition:opacity .15s; }
+.inline-edit-view:hover .inline-edit-hint { opacity:1; }
+.inline-edit-input { border-radius:.5rem; border:1px solid #60a5fa; padding:.375rem .75rem; font-size:.875rem; outline:none; box-shadow:0 0 0 2px #bfdbfe; }`,
+  },
+  {
+    id: 'data-table', name: 'Sortable Data Table', category: 'Display',
+    description: 'Table with sortable column headers, status badges, and hover row highlight.',
+    Preview: DataTablePreview,
+    tailwind: `<div class="overflow-x-auto rounded-xl border border-zinc-200 bg-white">
+  <table class="w-full text-sm">
+    <thead class="border-b border-zinc-100 bg-zinc-50">
+      <tr>
+        <th class="cursor-pointer px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500">Name ↑</th>
+        <th class="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500">Role</th>
+        <th class="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border-b border-zinc-50 hover:bg-zinc-50 transition">
+        <td class="px-4 py-2.5 font-medium text-zinc-800">Alice Kim</td>
+        <td class="px-4 py-2.5 text-zinc-500">Designer</td>
+        <td class="px-4 py-2.5"><span class="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-semibold text-emerald-700">Active</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>`,
+    css: `.data-table { border-radius:.75rem; border:1px solid #e4e4e7; overflow:hidden; }
+.data-table thead { background:#fafafa; border-bottom:1px solid #f4f4f5; }
+.data-table th { padding:.625rem 1rem; font-size:.75rem; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:#71717a; cursor:pointer; }
+.data-table td { padding:.625rem 1rem; font-size:.875rem; border-bottom:1px solid #fafafa; }
+.data-table tr:hover td { background:#fafafa; }
+.badge-active { background:#dcfce7; color:#15803d; border-radius:9999px; padding:.125rem .625rem; font-size:.625rem; font-weight:600; }`,
+  },
+  {
+    id: 'vertical-stepper', name: 'Vertical Stepper', category: 'Navigation',
+    description: 'Multi-step wizard with completed, current, and upcoming states and back/next controls.',
+    Preview: VerticalStepperPreview,
+    tailwind: `<div class="flex flex-col gap-0">
+  <!-- Completed step -->
+  <div class="flex gap-3">
+    <div class="flex flex-col items-center">
+      <div class="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500 border-2 border-emerald-500 text-white text-xs font-bold">✓</div>
+      <div class="my-0.5 w-0.5 flex-1 min-h-[20px] bg-emerald-300"></div>
+    </div>
+    <div class="pb-4 pt-1"><p class="text-sm font-semibold text-zinc-800">Account</p><p class="text-xs text-zinc-500">Enter your email & password</p></div>
+  </div>
+  <!-- Active step -->
+  <div class="flex gap-3">
+    <div class="flex flex-col items-center">
+      <div class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 border-2 border-blue-600 text-white text-xs font-bold">2</div>
+      <div class="my-0.5 w-0.5 flex-1 min-h-[20px] bg-zinc-200"></div>
+    </div>
+    <div class="pb-4 pt-1"><p class="text-sm font-semibold text-zinc-800">Profile</p><p class="text-xs text-zinc-500">Add your name and avatar</p></div>
+  </div>
+</div>`,
+    css: `.v-stepper { display:flex; flex-direction:column; }
+.v-step { display:flex; gap:.75rem; }
+.v-step-dot { display:flex; height:2rem; width:2rem; align-items:center; justify-content:center; border-radius:9999px; border:2px solid #d4d4d8; font-size:.75rem; font-weight:700; flex-shrink:0; }
+.v-step-dot.complete { background:#10b981; border-color:#10b981; color:#fff; }
+.v-step-dot.active { background:#2563eb; border-color:#2563eb; color:#fff; }
+.v-step-line { width:2px; flex:1; min-height:20px; background:#e4e4e7; margin:.25rem auto; }`,
+  },
+  {
+    id: 'kpi-cards', name: 'KPI Card Group', category: 'Display',
+    description: 'Metric summary cards with value, label, and trend indicators.',
+    Preview: KPICardGroupPreview,
+    tailwind: `<div class="grid grid-cols-3 gap-2">
+  <div class="rounded-xl border border-zinc-200 bg-white p-3 text-center shadow-sm">
+    <p class="text-[10px] text-zinc-400 font-medium">Revenue</p>
+    <p class="text-lg font-bold text-zinc-900 mt-0.5">$48.2K</p>
+    <span class="text-[10px] font-semibold text-emerald-600">+12.5%</span>
+  </div>
+  <div class="rounded-xl border border-zinc-200 bg-white p-3 text-center shadow-sm">
+    <p class="text-[10px] text-zinc-400 font-medium">Users</p>
+    <p class="text-lg font-bold text-zinc-900 mt-0.5">3,841</p>
+    <span class="text-[10px] font-semibold text-emerald-600">+8.1%</span>
+  </div>
+  <div class="rounded-xl border border-zinc-200 bg-white p-3 text-center shadow-sm">
+    <p class="text-[10px] text-zinc-400 font-medium">Churn</p>
+    <p class="text-lg font-bold text-zinc-900 mt-0.5">2.4%</p>
+    <span class="text-[10px] font-semibold text-rose-500">-0.3%</span>
+  </div>
+</div>`,
+    css: `.kpi-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:.5rem; }
+.kpi-card { border-radius:.75rem; border:1px solid #e4e4e7; background:#fff; padding:.75rem; text-align:center; box-shadow:0 1px 2px rgba(0,0,0,.05); }
+.kpi-label { font-size:.625rem; color:#a1a1aa; font-weight:500; }
+.kpi-value { font-size:1.125rem; font-weight:700; color:#18181b; margin-top:.125rem; }
+.kpi-trend-up { font-size:.625rem; font-weight:600; color:#16a34a; }
+.kpi-trend-down { font-size:.625rem; font-weight:600; color:#ef4444; }`,
+  },
+  {
+    id: 'color-swatch', name: 'Color Swatch Palette', category: 'Display',
+    description: 'Clickable color palette with selection ring and HEX code display.',
+    Preview: ColorSwatchPreview,
+    tailwind: `<div class="flex flex-wrap gap-2 max-w-[200px]">
+  <button style="background:#3B82F6" class="h-8 w-8 rounded-lg ring-2 ring-offset-2 ring-zinc-600 hover:scale-110 transition"></button>
+  <button style="background:#8B5CF6" class="h-8 w-8 rounded-lg hover:scale-110 transition"></button>
+  <button style="background:#10B981" class="h-8 w-8 rounded-lg hover:scale-110 transition"></button>
+  <!-- more colors -->
+</div>
+<div class="flex items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 mt-2 w-fit">
+  <div class="h-4 w-4 rounded" style="background:#3B82F6"></div>
+  <code class="text-xs font-mono text-zinc-700">#3B82F6</code>
+</div>`,
+    css: `.color-swatch { height:2rem; width:2rem; border-radius:.5rem; cursor:pointer; transition:transform .15s; border:none; }
+.color-swatch:hover { transform:scale(1.1); }
+.color-swatch.selected { outline:2px solid #27272a; outline-offset:2px; transform:scale(1.1); }
+.color-hex { display:flex; align-items:center; gap:.5rem; border-radius:.5rem; border:1px solid #e4e4e7; background:#fafafa; padding:.375rem .75rem; }
+.color-hex-dot { height:1rem; width:1rem; border-radius:.25rem; }
+.color-hex-code { font-family:monospace; font-size:.75rem; color:#3f3f46; }`,
+  },
+  {
+    id: 'chip-tag', name: 'Chip / Tag Input', category: 'Forms & Inputs',
+    description: 'Removable pill tags with keyboard-friendly add-on-enter input field.',
+    Preview: ChipTagPreview,
+    tailwind: `<div class="space-y-2">
+  <div class="flex flex-wrap gap-1.5">
+    <span class="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-semibold text-blue-700">
+      React <button class="opacity-60 hover:opacity-100">✕</button>
+    </span>
+    <span class="inline-flex items-center gap-1 rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-semibold text-purple-700">
+      TypeScript <button class="opacity-60 hover:opacity-100">✕</button>
+    </span>
+  </div>
+  <div class="flex gap-2">
+    <input placeholder="Add tag…" class="flex-1 rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-xs outline-none focus:border-blue-400" />
+    <button class="rounded-lg bg-zinc-800 px-3 py-1.5 text-xs font-semibold text-white">Add</button>
+  </div>
+</div>`,
+    css: `.chip { display:inline-flex; align-items:center; gap:.25rem; border-radius:9999px; padding:.125rem .625rem; font-size:.75rem; font-weight:600; }
+.chip-remove { opacity:.6; background:none; border:none; cursor:pointer; transition:opacity .15s; }
+.chip-remove:hover { opacity:1; }
+.chip-input { border-radius:.5rem; border:1px solid #d4d4d8; padding:.375rem .75rem; font-size:.75rem; outline:none; }
+.chip-input:focus { border-color:#60a5fa; box-shadow:0 0 0 2px #bfdbfe; }`,
+  },
+  {
+    id: 'progress-ring', name: 'Progress Ring', category: 'Feedback',
+    description: 'SVG circular progress indicators with percentage labels and color variants.',
+    Preview: ProgressRingPreview,
+    tailwind: `<!-- CPU ring (75%) -->
+<div class="flex flex-col items-center gap-1.5">
+  <svg width="60" height="60" viewBox="0 0 60 60">
+    <circle cx="30" cy="30" r="22" fill="none" stroke="#e4e4e7" stroke-width="5"/>
+    <circle cx="30" cy="30" r="22" fill="none" stroke="#3B82F6" stroke-width="5"
+      stroke-dasharray="103.67 138.23" stroke-linecap="round" transform="rotate(-90 30 30)"/>
+    <text x="30" y="34" text-anchor="middle" fill="#18181b" font-size="11" font-weight="700">75%</text>
+  </svg>
+  <span class="text-[10px] font-semibold text-zinc-500">CPU</span>
+</div>`,
+    css: `.progress-ring { display:flex; flex-direction:column; align-items:center; gap:.375rem; }
+.progress-ring svg circle { transition:stroke-dasharray .4s ease; }
+.progress-ring-label { font-size:.625rem; font-weight:600; color:#71717a; }`,
+  },
+  {
+    id: 'page-header', name: 'Page Header', category: 'Layout',
+    description: 'Breadcrumb navigation + title + action buttons — standard page header pattern.',
+    Preview: PageHeaderPreview,
+    tailwind: `<div class="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm">
+  <nav class="flex items-center gap-1 text-xs text-zinc-400 mb-3">
+    <a class="text-blue-600 hover:underline">Dashboard</a>
+    <span>›</span>
+    <a class="text-blue-600 hover:underline">Projects</a>
+    <span>›</span>
+    <span class="text-zinc-600 font-medium">Alpha</span>
+  </nav>
+  <div class="flex items-start justify-between gap-2">
+    <div>
+      <h2 class="text-base font-bold text-zinc-900">Project Alpha</h2>
+      <p class="text-xs text-zinc-500 mt-0.5">Last updated 2 hours ago</p>
+    </div>
+    <div class="flex gap-1.5">
+      <button class="rounded-lg border border-zinc-200 px-2.5 py-1 text-xs font-medium text-zinc-600 hover:bg-zinc-50">Share</button>
+      <button class="rounded-lg bg-blue-600 px-2.5 py-1 text-xs font-semibold text-white hover:bg-blue-700">Edit</button>
+    </div>
+  </div>
+</div>`,
+    css: `.page-header { border-radius:.75rem; border:1px solid #e4e4e7; background:#fff; padding:1rem; box-shadow:0 1px 2px rgba(0,0,0,.05); }
+.page-header-breadcrumb { display:flex; align-items:center; gap:.25rem; font-size:.75rem; color:#a1a1aa; margin-bottom:.75rem; }
+.page-header-breadcrumb a { color:#2563eb; text-decoration:none; }
+.page-header-title { font-size:1rem; font-weight:700; color:#18181b; }
+.page-header-subtitle { font-size:.75rem; color:#71717a; margin-top:.125rem; }
+.page-header-actions { display:flex; gap:.375rem; }`,
+  },
+  {
+    id: 'notification-center', name: 'Notification Center', category: 'Overlay',
+    description: 'Grouped notification list with unread badge, mark-all-read, and click-to-read.',
+    Preview: NotificationCenterPreview,
+    tailwind: `<div class="rounded-xl border border-zinc-200 bg-white shadow-sm overflow-hidden w-80">
+  <div class="flex items-center justify-between px-4 py-3 border-b border-zinc-100">
+    <div class="flex items-center gap-2">
+      <span class="text-sm font-semibold text-zinc-800">Notifications</span>
+      <span class="rounded-full bg-blue-600 px-1.5 py-0.5 text-[9px] font-bold text-white">2</span>
+    </div>
+    <button class="text-xs text-blue-600 hover:underline">Mark all read</button>
+  </div>
+  <div class="flex items-start gap-3 px-4 py-3 hover:bg-blue-50/40 cursor-pointer border-b border-zinc-50">
+    <span class="text-base mt-0.5">💬</span>
+    <div class="flex-1 min-w-0">
+      <p class="text-xs font-semibold text-zinc-800">New comment</p>
+      <p class="text-xs text-zinc-500 truncate">Alice left a comment on Alpha.</p>
+    </div>
+    <span class="text-[10px] text-zinc-400">2m</span>
+    <div class="mt-1.5 h-1.5 w-1.5 rounded-full bg-blue-500"></div>
+  </div>
+</div>`,
+    css: `.notif-panel { border-radius:.75rem; border:1px solid #e4e4e7; background:#fff; box-shadow:0 4px 12px rgba(0,0,0,.08); overflow:hidden; }
+.notif-header { display:flex; align-items:center; justify-content:space-between; padding:.75rem 1rem; border-bottom:1px solid #f4f4f5; }
+.notif-item { display:flex; align-items:flex-start; gap:.75rem; padding:.75rem 1rem; cursor:pointer; border-bottom:1px solid #fafafa; transition:background .15s; }
+.notif-item:hover { background:#eff6ff40; }
+.notif-dot { height:.375rem; width:.375rem; border-radius:9999px; background:#2563eb; margin-top:.375rem; flex-shrink:0; }`,
+  },
+  {
+    id: 'media-player', name: 'Media Player', category: 'Display',
+    description: 'Audio player UI with album art, progress bar, volume control, and playback buttons.',
+    Preview: MediaPlayerPreview,
+    tailwind: `<div class="rounded-2xl bg-zinc-800 p-4 shadow-xl w-72">
+  <div class="flex items-center gap-3 mb-4">
+    <div class="h-12 w-12 rounded-lg bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-xl">🎵</div>
+    <div><p class="text-sm font-semibold text-white">Midnight Drive</p><p class="text-xs text-zinc-400">Neon Echoes</p></div>
+  </div>
+  <div class="h-1.5 w-full rounded-full bg-zinc-700 mb-4">
+    <div class="h-full w-[35%] rounded-full bg-gradient-to-r from-purple-500 to-blue-500"></div>
+  </div>
+  <div class="flex items-center justify-center gap-4 mb-4">
+    <button class="text-zinc-400 hover:text-white text-lg">⏮</button>
+    <button class="flex h-10 w-10 items-center justify-center rounded-full bg-white text-zinc-900 font-bold">▶</button>
+    <button class="text-zinc-400 hover:text-white text-lg">⏭</button>
+  </div>
+</div>`,
+    css: `.media-player { border-radius:1rem; background:#27272a; padding:1rem; box-shadow:0 20px 40px rgba(0,0,0,.3); }
+.media-art { height:3rem; width:3rem; border-radius:.5rem; flex-shrink:0; }
+.media-progress { height:.375rem; border-radius:9999px; background:#3f3f46; cursor:pointer; }
+.media-progress-fill { height:100%; border-radius:9999px; background:linear-gradient(to right,#a855f7,#3b82f6); }
+.media-play-btn { display:flex; height:2.5rem; width:2.5rem; align-items:center; justify-content:center; border-radius:9999px; background:#fff; color:#18181b; font-weight:700; }`,
+  },
+  {
+    id: 'pricing-toggle', name: 'Pricing Toggle', category: 'Display',
+    description: 'Monthly / Annual billing toggle with dynamic price update and discount badge.',
+    Preview: PricingTogglePreview,
+    tailwind: `<div class="space-y-3">
+  <div class="flex items-center justify-center gap-3">
+    <span class="text-xs font-semibold text-zinc-900">Monthly</span>
+    <button class="relative h-6 w-11 rounded-full bg-blue-600">
+      <span class="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow translate-x-5"></span>
+    </button>
+    <span class="text-xs font-semibold text-zinc-400">Annual <span class="text-emerald-600">-20%</span></span>
+  </div>
+  <div class="grid grid-cols-2 gap-2">
+    <div class="rounded-xl border-2 border-zinc-200 bg-white p-3">
+      <p class="text-xs font-bold text-zinc-700">Starter</p>
+      <p class="text-xl font-bold text-zinc-900 mt-1">$9<span class="text-[10px] text-zinc-400">/mo</span></p>
+    </div>
+    <div class="rounded-xl border-2 border-blue-500 bg-white p-3">
+      <p class="text-xs font-bold text-zinc-700">Pro</p>
+      <p class="text-xl font-bold text-zinc-900 mt-1">$29<span class="text-[10px] text-zinc-400">/mo</span></p>
+    </div>
+  </div>
+</div>`,
+    css: `.billing-toggle { display:flex; align-items:center; justify-content:center; gap:.75rem; }
+.toggle-track { position:relative; height:1.5rem; width:2.75rem; border-radius:9999px; background:#2563eb; cursor:pointer; }
+.toggle-thumb { position:absolute; top:.125rem; left:.125rem; height:1.25rem; width:1.25rem; border-radius:9999px; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.2); transition:transform .2s; }
+.toggle-thumb.on { transform:translateX(1.25rem); }
+.pricing-card { border-radius:.75rem; border:2px solid #e4e4e7; background:#fff; padding:.75rem; }
+.pricing-card.featured { border-color:#2563eb; }`,
+  },
 ];
 
 /* ─────────────────────────────────────────────
@@ -5001,38 +5802,60 @@ function CodeBlock({ code, id, tab }: { code: string; id: string; tab: CodeTab }
 }
 
 /* ─────────────────────────────────────────────
+   Category color map
+───────────────────────────────────────────── */
+const CATEGORY_COLORS: Record<string, string> = {
+  'Feedback': 'bg-amber-100 text-amber-700 border-amber-200',
+  'Navigation': 'bg-blue-100 text-blue-700 border-blue-200',
+  'Forms & Inputs': 'bg-emerald-100 text-emerald-700 border-emerald-200',
+  'Display': 'bg-purple-100 text-purple-700 border-purple-200',
+  'Overlay': 'bg-rose-100 text-rose-700 border-rose-200',
+  'Layout': 'bg-zinc-100 text-zinc-600 border-zinc-200',
+};
+
+/* ─────────────────────────────────────────────
    Component Card
 ───────────────────────────────────────────── */
 function ComponentCard({ comp }: { comp: ComponentDef }) {
   const [tab, setTab] = useState<CodeTab>('tailwind');
   const Preview = comp.Preview;
+  const catColor = CATEGORY_COLORS[comp.category] || 'bg-zinc-100 text-zinc-600 border-zinc-200';
   return (
-    <div className="flex flex-col rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden">
-      <div className="flex items-start justify-between border-b border-zinc-100 px-5 py-4">
-        <div>
-          <h3 className="font-semibold text-zinc-800 text-[15px]">{comp.name}</h3>
-          <p className="mt-0.5 text-xs text-zinc-500 leading-relaxed max-w-sm">{comp.description}</p>
+    <div className="group flex flex-col rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5">
+      {/* Header */}
+      <div className="flex items-start justify-between gap-3 px-5 py-4 border-b border-zinc-100">
+        <div className="min-w-0">
+          <h3 className="font-semibold text-zinc-900 text-sm leading-snug">{comp.name}</h3>
+          <p className="mt-1 text-[12px] text-zinc-400 leading-relaxed line-clamp-2">{comp.description}</p>
         </div>
-        <span className="ml-3 shrink-0 inline-flex rounded-full bg-zinc-100 px-2.5 py-0.5 text-[10px] font-semibold text-zinc-500">{comp.category}</span>
+        <span className={`ml-2 shrink-0 inline-flex items-center rounded-full border px-2.5 py-0.5 text-[10px] font-semibold whitespace-nowrap ${catColor}`}>
+          {comp.category}
+        </span>
       </div>
-      <div className="border-b border-zinc-100">
+
+      {/* Preview */}
+      <div className="border-b border-zinc-100 bg-[#FAFAFA] min-h-[160px] flex items-center justify-center">
         <Preview />
       </div>
-      <div>
-        <div className="flex border-b border-zinc-100">
+
+      {/* Code tabs */}
+      <div className="flex flex-col flex-1">
+        <div className="flex items-center border-b border-zinc-100 bg-zinc-50 px-1 pt-1">
           {(['tailwind', 'css'] as CodeTab[]).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
-              className={`px-4 py-2.5 text-xs font-semibold border-b-2 -mb-px transition ${
-                tab === t ? 'border-blue-600 text-blue-600' : 'border-transparent text-zinc-400 hover:text-zinc-600'
+              className={`px-4 py-2 text-[11px] font-semibold rounded-t-lg border-b-2 transition ${
+                tab === t
+                  ? 'border-zinc-900 text-zinc-900 bg-white'
+                  : 'border-transparent text-zinc-400 hover:text-zinc-600'
               }`}
             >
-              {t === 'tailwind' ? 'Tailwind' : 'Plain CSS'}
+              {t === 'tailwind' ? '⚡ Tailwind' : '🎨 Plain CSS'}
             </button>
           ))}
         </div>
-        <div className="p-3">
+        <div className="p-3 flex-1">
           <CodeBlock code={tab === 'tailwind' ? comp.tailwind : comp.css} id={comp.id} tab={tab} />
         </div>
       </div>
@@ -5062,70 +5885,113 @@ export default function UIComponentsClient() {
   }, [activeCat, search]);
 
   return (
-    <div className="min-h-screen bg-zinc-50">
-      {/* Hero */}
-      <div className="border-b border-zinc-200 bg-white px-4 py-10 text-center">
-        <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-600 mb-4">
-          ✦ {COMPONENTS.length} Components
-        </div>
-        <h1 className="text-3xl font-bold text-zinc-900 tracking-tight sm:text-4xl">CSS UI Components</h1>
-        <p className="mx-auto mt-3 max-w-xl text-zinc-500 text-sm leading-relaxed">
-          Production-ready components with live previews. Copy Tailwind or plain CSS — no framework lock-in.
-        </p>
-        <div className="relative mx-auto mt-6 max-w-sm">
-          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" />
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search components…"
-            className="w-full rounded-xl border border-zinc-300 bg-white py-2.5 pl-10 pr-4 text-sm text-zinc-800 placeholder-zinc-400 shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition"
-          />
-          {search && (
-            <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600">
-              <X size={14} />
-            </button>
-          )}
+    <div className="min-h-screen bg-[#F8F9FB]">
+      {/* ── Hero ── */}
+      <div className="relative overflow-hidden border-b border-zinc-200 bg-white">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-blue-50/70 via-white to-purple-50/50" />
+        <div className="relative mx-auto max-w-4xl px-4 py-14 text-center sm:py-16">
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-1.5 text-xs font-semibold text-blue-600">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500" />
+            {COMPONENTS.length} Ready-to-Use Components
+          </div>
+          <h1 className="text-4xl font-bold tracking-tight text-zinc-900 sm:text-5xl">
+            CSS UI{' '}
+            <span className="bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
+              Components
+            </span>
+          </h1>
+          <p className="mx-auto mt-4 max-w-xl text-[15px] text-zinc-500 leading-relaxed">
+            Production-ready components with live previews. Copy Tailwind or plain CSS — no framework lock-in, no signup required.
+          </p>
+
+          {/* Stats chips */}
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+            {[
+              { n: String(COMPONENTS.length) + '+', l: 'Components' },
+              { n: '2', l: 'Code formats' },
+              { n: '100%', l: 'Free forever' },
+              { n: '0', l: 'Dependencies' },
+            ].map((s) => (
+              <div key={s.l} className="flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3.5 py-1.5 text-xs shadow-sm">
+                <span className="font-bold text-zinc-900">{s.n}</span>
+                <span className="text-zinc-500">{s.l}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Search */}
+          <div className="relative mx-auto mt-7 max-w-md">
+            <Search size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search components… (e.g. button, modal, card)"
+              className="w-full rounded-2xl border border-zinc-200 bg-white py-3 pl-11 pr-11 text-sm text-zinc-800 placeholder-zinc-400 shadow-sm outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+            />
+            {search && (
+              <button onClick={() => setSearch('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 transition">
+                <X size={14} />
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Category filter */}
-      <div className="sticky top-0 z-20 border-b border-zinc-200 bg-white/90 backdrop-blur-md px-4 py-3">
-        <div className="mx-auto flex max-w-7xl items-center gap-2 overflow-x-auto">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCat(cat)}
-              className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold transition ${
-                activeCat === cat
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'bg-white border border-zinc-200 text-zinc-600 hover:border-blue-300 hover:text-blue-600'
-              }`}
-            >
-              {cat}
-              {cat !== 'All' && (
-                <span className="ml-1.5 text-[10px] opacity-70">{COMPONENTS.filter((c) => c.category === cat).length}</span>
-              )}
-            </button>
-          ))}
-          <span className="ml-auto shrink-0 text-xs text-zinc-400">{filtered.length} component{filtered.length !== 1 ? 's' : ''}</span>
+      {/* ── Category filter ── */}
+      <div className="sticky top-0 z-20 border-b border-zinc-200 bg-white/95 backdrop-blur-md shadow-sm">
+        <div className="mx-auto flex max-w-7xl items-center gap-1.5 overflow-x-auto px-4 py-3 sm:px-6">
+          {CATEGORIES.map((cat) => {
+            const count = cat === 'All' ? COMPONENTS.length : COMPONENTS.filter((c) => c.category === cat).length;
+            return (
+              <button
+                key={cat}
+                onClick={() => setActiveCat(cat)}
+                className={`shrink-0 flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold transition whitespace-nowrap ${
+                  activeCat === cat
+                    ? 'bg-zinc-900 text-white shadow-sm'
+                    : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
+                }`}
+              >
+                {cat}
+                <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold ${activeCat === cat ? 'bg-white/20 text-white' : 'bg-white text-zinc-500'}`}>
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+          <div className="ml-auto shrink-0 pl-4 text-xs text-zinc-400 whitespace-nowrap">
+            {filtered.length} result{filtered.length !== 1 ? 's' : ''}
+          </div>
         </div>
       </div>
 
-      {/* Grid */}
-      <div className="mx-auto max-w-7xl px-4 py-8">
+      {/* ── Grid ── */}
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
         {filtered.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 text-zinc-400">
-            <Search size={40} className="mb-4 opacity-30" />
-            <p className="text-lg font-medium">No components found</p>
-            <p className="text-sm mt-1">Try a different search or category</p>
+          <div className="flex flex-col items-center justify-center py-28 text-zinc-400">
+            <Search size={44} className="mb-4 opacity-20" />
+            <p className="text-lg font-semibold text-zinc-600">No components found</p>
+            <p className="mt-1 text-sm text-zinc-400">Try a different search or category</p>
+            <button
+              onClick={() => { setSearch(''); setActiveCat('All'); }}
+              className="mt-5 rounded-xl bg-zinc-900 px-5 py-2 text-sm font-semibold text-white hover:bg-zinc-800 transition"
+            >
+              Clear filters
+            </button>
           </div>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-1 lg:grid-cols-2">
+          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {filtered.map((comp) => (
               <ComponentCard key={comp.id} comp={comp} />
             ))}
           </div>
         )}
+      </div>
+
+      {/* ── Footer CTA ── */}
+      <div className="border-t border-zinc-200 bg-white py-10 text-center">
+        <p className="text-sm font-medium text-zinc-600">All components are <span className="text-zinc-900 font-bold">100% free</span> — copy, paste, and ship.</p>
+        <p className="mt-1.5 text-xs text-zinc-400">No account required · No watermarks · Tailwind + plain CSS included</p>
       </div>
     </div>
   );

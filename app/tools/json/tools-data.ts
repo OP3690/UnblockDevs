@@ -397,7 +397,7 @@ export const TOOLS_DIRECTORY: DirectoryTool[] = [
     badge: 'new',
   },
   {
-    href: '/ui-components',
+    href: '/css-ui-components',
     name: 'CSS UI components library',
     description: '30+ production-ready UI components with live preview. Copy Tailwind or CSS code — buttons, cards, modals, tables, forms & more.',
     category: 'dev',
