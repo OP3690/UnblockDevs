@@ -4,7 +4,7 @@ import { useState, useMemo, useCallback } from 'react';
 import {
   Check, Copy, Search, ChevronRight, ChevronDown, X,
   Bell, Settings, User, Mail, Lock,
-  AlertCircle, CheckCircle, XCircle, Info,
+  AlertCircle, CheckCircle, XCircle, Info, MoreHorizontal,
 } from 'lucide-react';
 
 /* ─────────────────────────────────────────────
@@ -1448,6 +1448,1256 @@ function FaqPreview() {
 }
 
 /* ─────────────────────────────────────────────
+   48 New Preview Components
+───────────────────────────────────────────── */
+
+/* ── FORMS ── */
+
+function FloatingLabelPreview() {
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs space-y-5">
+        {['Email address', 'Full name', 'Company'].map((label) => (
+          <div key={label} className="group relative">
+            <input
+              placeholder=" "
+              className="peer w-full rounded-xl border border-zinc-300 bg-white px-4 pb-2.5 pt-5 text-sm text-zinc-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition"
+            />
+            <label className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-zinc-400 transition-all peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-[10px] peer-focus:font-semibold peer-focus:text-blue-600 peer-not-placeholder-shown:top-3 peer-not-placeholder-shown:-translate-y-0 peer-not-placeholder-shown:text-[10px] peer-not-placeholder-shown:font-semibold peer-not-placeholder-shown:text-zinc-500">
+              {label}
+            </label>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function OTPInputPreview() {
+  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const refs = Array.from({ length: 6 }, () => null) as (HTMLInputElement | null)[];
+  const handleChange = (i: number, val: string) => {
+    if (!/^\d*$/.test(val)) return;
+    const next = [...otp]; next[i] = val.slice(-1);
+    setOtp(next);
+    if (val && refs[i + 1]) refs[i + 1]!.focus();
+  };
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="space-y-4 text-center">
+        <p className="text-sm font-semibold text-zinc-700">Enter verification code</p>
+        <div className="flex justify-center gap-2">
+          {otp.map((v, i) => (
+            <input key={i} type="text" maxLength={1} value={v}
+              ref={(el) => { refs[i] = el; }}
+              onChange={(e) => handleChange(i, e.target.value)}
+              className={`h-11 w-10 rounded-xl border-2 text-center text-lg font-bold outline-none transition ${v ? 'border-blue-600 text-blue-700 bg-blue-50' : 'border-zinc-300 bg-white text-zinc-800'} focus:border-blue-500 focus:ring-2 focus:ring-blue-100`}
+            />
+          ))}
+        </div>
+        <p className="text-xs text-zinc-400">Sent to ••••••••@email.com</p>
+        <button className="text-xs font-semibold text-blue-600 hover:underline">Resend code</button>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function PasswordStrengthPreview() {
+  const [pw, setPw] = useState('');
+  const checks = [/[A-Z]/, /[0-9]/, /[^A-Za-z0-9]/, /.{8,}/];
+  const labels = ['Uppercase', 'Number', 'Special char', '8+ chars'];
+  const score = checks.filter((r) => r.test(pw)).length;
+  const bars = ['bg-red-500', 'bg-orange-400', 'bg-yellow-400', 'bg-emerald-500'];
+  const words = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs space-y-3">
+        <div className="relative">
+          <input type="password" value={pw} onChange={(e) => setPw(e.target.value)}
+            className="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition"
+            placeholder="Enter password…" />
+        </div>
+        <div className="flex gap-1.5">
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className={`h-1.5 flex-1 rounded-full transition-colors ${i < score ? bars[score - 1] : 'bg-zinc-200'}`} />
+          ))}
+        </div>
+        {score > 0 && <p className={`text-xs font-semibold ${['', 'text-red-500', 'text-orange-400', 'text-yellow-500', 'text-emerald-600'][score]}`}>{words[score]}</p>}
+        <div className="grid grid-cols-2 gap-1">
+          {labels.map((l, i) => (
+            <div key={l} className={`flex items-center gap-1.5 text-[11px] font-medium ${checks[i].test(pw) ? 'text-emerald-600' : 'text-zinc-400'}`}>
+              <span>{checks[i].test(pw) ? '✓' : '○'}</span>{l}
+            </div>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function NumberStepperPreview() {
+  const [counts, setCounts] = useState([1, 0, 3]);
+  const labels = ['Adults', 'Children', 'Rooms'];
+  return (
+    <PreviewWrap>
+      <div className="space-y-3 w-full max-w-xs">
+        {counts.map((c, i) => (
+          <div key={labels[i]} className="flex items-center justify-between">
+            <span className="text-sm font-medium text-zinc-700">{labels[i]}</span>
+            <div className="flex items-center gap-0 rounded-xl border border-zinc-200 overflow-hidden shadow-sm">
+              <button onClick={() => setCounts((p) => p.map((v, j) => j === i ? Math.max(0, v - 1) : v))}
+                className="h-9 w-9 flex items-center justify-center text-zinc-500 hover:bg-zinc-50 transition font-bold text-lg">−</button>
+              <span className="w-8 text-center text-sm font-bold text-zinc-800">{c}</span>
+              <button onClick={() => setCounts((p) => p.map((v, j) => j === i ? Math.min(10, v + 1) : v))}
+                className="h-9 w-9 flex items-center justify-center text-zinc-500 hover:bg-zinc-50 transition font-bold text-lg">+</button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function ColorPickerInputPreview() {
+  const [color, setColor] = useState('#3b82f6');
+  const presets = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6'];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs space-y-3">
+        <div className="flex items-center gap-3 rounded-xl border border-zinc-300 bg-white px-3 py-2.5 shadow-sm">
+          <div className="relative h-8 w-8 shrink-0 rounded-lg overflow-hidden border border-zinc-200 cursor-pointer shadow-inner" style={{ background: color }}>
+            <input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="absolute inset-0 opacity-0 w-full h-full cursor-pointer" />
+          </div>
+          <input value={color} onChange={(e) => setColor(e.target.value)}
+            className="flex-1 bg-transparent font-mono text-sm text-zinc-700 outline-none uppercase" maxLength={7} />
+          <span className="text-xs text-zinc-400 font-medium">HEX</span>
+        </div>
+        <div className="flex gap-1.5 flex-wrap">
+          {presets.map((c) => (
+            <button key={c} onClick={() => setColor(c)}
+              className={`h-7 w-7 rounded-lg border-2 transition ${color === c ? 'border-zinc-700 scale-110' : 'border-transparent hover:scale-110'}`}
+              style={{ background: c }} />
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function PhoneInputPreview() {
+  const [code, setCode] = useState('+1');
+  const codes = ['+1', '+44', '+91', '+61', '+49', '+33'];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs space-y-3">
+        <div className="flex overflow-hidden rounded-xl border border-zinc-300 shadow-sm focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100 transition">
+          <select value={code} onChange={(e) => setCode(e.target.value)}
+            className="shrink-0 appearance-none bg-zinc-100 px-3 text-sm font-medium text-zinc-700 outline-none border-r border-zinc-300 cursor-pointer">
+            {codes.map((c) => <option key={c} value={c}>{c}</option>)}
+          </select>
+          <input type="tel" placeholder="(555) 000-0000"
+            className="flex-1 bg-white px-4 py-2.5 text-sm text-zinc-800 placeholder-zinc-400 outline-none" />
+        </div>
+        <p className="text-[11px] text-zinc-400">We'll send a verification code to this number</p>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function DateInputPreview() {
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs space-y-3">
+        <div className="relative">
+          <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-base">📅</span>
+          <input type="date" className="w-full rounded-xl border border-zinc-300 bg-white py-2.5 pl-10 pr-4 text-sm text-zinc-700 shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition" />
+        </div>
+        <div className="flex gap-2">
+          <div className="relative flex-1">
+            <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-sm">📅</span>
+            <input type="date" placeholder="Start" className="w-full rounded-xl border border-zinc-300 bg-white py-2 pl-8 pr-2 text-xs text-zinc-700 outline-none focus:border-blue-500 transition" />
+          </div>
+          <span className="flex items-center text-zinc-400 text-sm">→</span>
+          <div className="relative flex-1">
+            <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-sm">📅</span>
+            <input type="date" placeholder="End" className="w-full rounded-xl border border-zinc-300 bg-white py-2 pl-8 pr-2 text-xs text-zinc-700 outline-none focus:border-blue-500 transition" />
+          </div>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function MultiSelectPreview() {
+  const opts = ['Design', 'Development', 'Marketing', 'Analytics', 'Support'];
+  const [selected, setSelected] = useState<string[]>(['Design', 'Development']);
+  const [open, setOpen] = useState(false);
+  const toggle = (o: string) => setSelected((p) => p.includes(o) ? p.filter((x) => x !== o) : [...p, o]);
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="relative w-full max-w-xs">
+        <button onClick={() => setOpen((o) => !o)}
+          className="flex w-full flex-wrap items-center gap-1.5 rounded-xl border border-zinc-300 bg-white p-2.5 min-h-[2.75rem] text-left shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition">
+          {selected.length === 0 && <span className="text-sm text-zinc-400 px-1.5">Select options…</span>}
+          {selected.map((s) => (
+            <span key={s} className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-700">
+              {s} <span onClick={(e) => { e.stopPropagation(); toggle(s); }} className="text-blue-400 hover:text-blue-700 cursor-pointer">×</span>
+            </span>
+          ))}
+          <ChevronDown size={14} className={`ml-auto text-zinc-400 transition-transform shrink-0 ${open ? 'rotate-180' : ''}`} />
+        </button>
+        {open && (
+          <div className="absolute top-full left-0 right-0 mt-1 rounded-xl border border-zinc-200 bg-white shadow-xl z-20 py-1">
+            {opts.map((o) => (
+              <button key={o} onClick={() => toggle(o)}
+                className="flex w-full items-center gap-2.5 px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-50 transition">
+                <div className={`h-4 w-4 rounded border-2 flex items-center justify-center transition ${selected.includes(o) ? 'border-blue-600 bg-blue-600' : 'border-zinc-300'}`}>
+                  {selected.includes(o) && <Check size={9} className="text-white" strokeWidth={3} />}
+                </div>
+                {o}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CreditCardPreview() {
+  const [num, setNum] = useState('');
+  const fmt = (v: string) => v.replace(/\D/g, '').slice(0, 16).replace(/(.{4})/g, '$1 ').trim();
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs space-y-3">
+        <div className="rounded-2xl bg-gradient-to-br from-zinc-800 to-zinc-900 p-5 text-white shadow-xl">
+          <div className="flex justify-between items-start">
+            <div className="text-[10px] font-bold tracking-widest text-zinc-400 uppercase">Credit Card</div>
+            <div className="text-2xl">💳</div>
+          </div>
+          <div className="mt-4 font-mono text-lg tracking-widest">{fmt(num) || '•••• •••• •••• ••••'}</div>
+          <div className="mt-3 flex justify-between text-[10px] text-zinc-400">
+            <div><div className="text-zinc-500 text-[9px] uppercase">Card Holder</div><div className="text-white text-xs font-medium mt-0.5">John Doe</div></div>
+            <div className="text-right"><div className="text-zinc-500 text-[9px] uppercase">Expires</div><div className="text-white text-xs font-medium mt-0.5">12/26</div></div>
+          </div>
+        </div>
+        <input value={fmt(num)} onChange={(e) => setNum(e.target.value.replace(/\s/g, ''))}
+          placeholder="1234 5678 9012 3456"
+          className="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 font-mono text-sm text-zinc-800 placeholder-zinc-400 shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition" />
+        <div className="flex gap-3">
+          <input placeholder="MM/YY" maxLength={5} className="flex-1 rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition" />
+          <input placeholder="CVV" maxLength={3} className="w-20 rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition" />
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function SwitchGroupPreview() {
+  const [vals, setVals] = useState<Record<string, boolean>>({ emails: true, push: false, sms: true, weekly: false });
+  const items = [
+    { key: 'emails', label: 'Email Notifications', sub: 'Receive updates via email' },
+    { key: 'push', label: 'Push Notifications', sub: 'Alerts on your device' },
+    { key: 'sms', label: 'SMS Alerts', sub: 'Text message notifications' },
+    { key: 'weekly', label: 'Weekly Digest', sub: 'Summary every Monday' },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs divide-y divide-zinc-100 rounded-2xl border border-zinc-200 bg-white overflow-hidden shadow-sm">
+        {items.map((item) => (
+          <div key={item.key} className="flex items-center justify-between px-4 py-3.5">
+            <div>
+              <p className="text-sm font-medium text-zinc-800">{item.label}</p>
+              <p className="text-[11px] text-zinc-400 mt-0.5">{item.sub}</p>
+            </div>
+            <button onClick={() => setVals((p) => ({ ...p, [item.key]: !p[item.key] }))}
+              className={`relative h-6 w-11 rounded-full transition-colors shrink-0 ml-4 ${vals[item.key] ? 'bg-blue-600' : 'bg-zinc-300'}`}>
+              <span className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${vals[item.key] ? 'translate-x-5' : ''}`} />
+            </button>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ── DISPLAY ── */
+
+function DonutChartPreview() {
+  const segments = [
+    { label: 'Design', pct: 35, color: '#3b82f6' },
+    { label: 'Dev', pct: 45, color: '#10b981' },
+    { label: 'Marketing', pct: 20, color: '#f59e0b' },
+  ];
+  let offset = 0;
+  const r = 40; const circ = 2 * Math.PI * r;
+  return (
+    <PreviewWrap>
+      <div className="flex items-center gap-6">
+        <svg width="100" height="100" viewBox="0 0 100 100" className="-rotate-90">
+          {segments.map((s) => {
+            const dash = (s.pct / 100) * circ;
+            const el = (
+              <circle key={s.label} cx="50" cy="50" r={r}
+                fill="none" stroke={s.color} strokeWidth="12"
+                strokeDasharray={`${dash} ${circ - dash}`}
+                strokeDashoffset={-offset * circ / 100}
+              />
+            );
+            offset += s.pct; return el;
+          })}
+        </svg>
+        <div className="space-y-2">
+          {segments.map((s) => (
+            <div key={s.label} className="flex items-center gap-2 text-xs">
+              <span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ background: s.color }} />
+              <span className="text-zinc-600">{s.label}</span>
+              <span className="font-bold text-zinc-800 ml-auto pl-2">{s.pct}%</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function BarChartPreview() {
+  const data = [
+    { label: 'Mon', val: 65 }, { label: 'Tue', val: 78 }, { label: 'Wed', val: 52 },
+    { label: 'Thu', val: 91 }, { label: 'Fri', val: 84 }, { label: 'Sat', val: 43 }, { label: 'Sun', val: 29 },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-sm">
+        <div className="flex items-end justify-between gap-2 h-28 px-2">
+          {data.map((d) => (
+            <div key={d.label} className="flex flex-col items-center gap-1 flex-1">
+              <span className="text-[9px] font-bold text-zinc-500">{d.val}</span>
+              <div className="w-full rounded-t-md bg-gradient-to-t from-blue-600 to-blue-400 transition-all hover:from-blue-700 hover:to-blue-500 cursor-pointer"
+                style={{ height: `${(d.val / 100) * 80}px` }} />
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-between gap-2 px-2 mt-1">
+          {data.map((d) => <span key={d.label} className="flex-1 text-center text-[9px] text-zinc-400">{d.label}</span>)}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function TestimonialPreview() {
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="space-y-3 w-full max-w-sm">
+        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
+          <div className="flex gap-0.5 mb-3">{Array(5).fill(0).map((_, i) => <span key={i} className="text-amber-400 text-sm">★</span>)}</div>
+          <p className="text-sm text-zinc-600 leading-relaxed italic">&ldquo;This is hands down the best component library I&rsquo;ve used. Saved our team weeks of work and the code quality is exceptional.&rdquo;</p>
+          <div className="mt-4 flex items-center gap-3">
+            <div className="h-9 w-9 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white text-xs font-bold">SM</div>
+            <div>
+              <p className="text-sm font-semibold text-zinc-800">Sarah Miller</p>
+              <p className="text-xs text-zinc-400">CTO at TechCorp</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function FeedPostPreview() {
+  const [liked, setLiked] = useState(false);
+  const [likes, setLikes] = useState(142);
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-sm rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden">
+        <div className="flex items-center justify-between p-4">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-full bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center text-white text-xs font-bold">JD</div>
+            <div><p className="text-sm font-semibold text-zinc-800">Jane Doe</p><p className="text-xs text-zinc-400">2 hours ago · 🌍</p></div>
+          </div>
+          <button className="text-zinc-400 hover:text-zinc-600 transition"><MoreHorizontal size={18}/></button>
+        </div>
+        <div className="px-4 pb-3">
+          <p className="text-sm text-zinc-700 leading-relaxed">Just shipped the new design system! 🎉 Took 3 months but it&apos;s finally live. Check out the docs and let me know what you think!</p>
+        </div>
+        <div className="h-28 bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-4xl">🎨</div>
+        <div className="flex items-center gap-4 px-4 py-3 border-t border-zinc-100">
+          <button onClick={() => { setLiked((l) => !l); setLikes((n) => n + (liked ? -1 : 1)); }}
+            className={`flex items-center gap-1.5 text-xs font-medium transition ${liked ? 'text-red-500' : 'text-zinc-500 hover:text-red-500'}`}>
+            <span className="text-base">{liked ? '❤️' : '🤍'}</span>{likes}
+          </button>
+          <button className="flex items-center gap-1.5 text-xs font-medium text-zinc-500 hover:text-blue-600 transition"><span className="text-base">💬</span>24</button>
+          <button className="flex items-center gap-1.5 text-xs font-medium text-zinc-500 hover:text-emerald-600 transition"><span className="text-base">↗️</span>Share</button>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CommentPreview() {
+  const [comment, setComment] = useState('');
+  const [comments, setComments] = useState([
+    { name: 'Alex Chen', time: '5m ago', text: 'Great component! Love the clean design.', avatar: 'AC', replies: 2 },
+    { name: 'Maria López', time: '12m ago', text: 'How do I customize the colors?', avatar: 'ML', replies: 0 },
+  ]);
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-sm space-y-3">
+        <div className="flex gap-3">
+          <div className="h-8 w-8 shrink-0 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white text-[10px] font-bold">You</div>
+          <div className="flex-1 flex gap-2">
+            <input value={comment} onChange={(e) => setComment(e.target.value)}
+              placeholder="Add a comment…"
+              className="flex-1 rounded-xl border border-zinc-300 bg-white px-3 py-2 text-xs text-zinc-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition" />
+            <button onClick={() => { if (comment.trim()) { setComments((p) => [{ name: 'You', time: 'now', text: comment, avatar: 'You', replies: 0 }, ...p]); setComment(''); }}}
+              className="rounded-xl bg-blue-600 px-3 text-xs font-semibold text-white hover:bg-blue-700 transition">Post</button>
+          </div>
+        </div>
+        <div className="space-y-3">
+          {comments.map((c, i) => (
+            <div key={i} className="flex gap-3">
+              <div className="h-8 w-8 shrink-0 rounded-full bg-gradient-to-br from-zinc-400 to-zinc-500 flex items-center justify-center text-white text-[9px] font-bold">{c.avatar}</div>
+              <div className="flex-1 rounded-xl bg-white border border-zinc-100 px-3 py-2.5 shadow-sm">
+                <div className="flex items-center gap-2"><p className="text-xs font-semibold text-zinc-800">{c.name}</p><p className="text-[10px] text-zinc-400">{c.time}</p></div>
+                <p className="mt-0.5 text-xs text-zinc-600">{c.text}</p>
+                {c.replies > 0 && <button className="mt-1 text-[11px] font-medium text-blue-600 hover:underline">{c.replies} replies</button>}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function FileCardPreview() {
+  const files = [
+    { name: 'design-system.fig', size: '24.5 MB', icon: '🎨', color: 'bg-purple-100 text-purple-600' },
+    { name: 'report-Q4.pdf', size: '2.1 MB', icon: '📄', color: 'bg-red-100 text-red-600' },
+    { name: 'data-export.xlsx', size: '856 KB', icon: '📊', color: 'bg-emerald-100 text-emerald-600' },
+    { name: 'assets.zip', size: '128 MB', icon: '📦', color: 'bg-amber-100 text-amber-600' },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="grid grid-cols-2 gap-2 w-full max-w-xs">
+        {files.map((f) => (
+          <div key={f.name} className="rounded-xl border border-zinc-200 bg-white p-3 hover:shadow-md transition cursor-pointer group">
+            <div className={`h-10 w-10 rounded-xl ${f.color} flex items-center justify-center text-xl mb-2`}>{f.icon}</div>
+            <p className="text-xs font-semibold text-zinc-800 truncate group-hover:text-blue-600 transition">{f.name}</p>
+            <p className="text-[10px] text-zinc-400 mt-0.5">{f.size}</p>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function ComparisonTablePreview() {
+  const features = ['Unlimited projects', 'Custom domain', 'Analytics', 'API access', 'Priority support', 'White label'];
+  const plans: Record<string, boolean[]> = {
+    Free:  [true, false, false, false, false, false],
+    Pro:   [true, true,  true,  true,  false, false],
+    Enterprise: [true, true, true, true, true, true],
+  };
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full overflow-x-auto">
+        <table className="w-full text-xs text-center">
+          <thead>
+            <tr>
+              <th className="text-left py-2 pr-3 text-zinc-500 font-medium text-[11px]">Feature</th>
+              {Object.keys(plans).map((p) => (
+                <th key={p} className={`py-2 px-2 font-bold text-[11px] ${p === 'Pro' ? 'text-blue-600' : 'text-zinc-700'}`}>{p}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-zinc-100">
+            {features.map((f, i) => (
+              <tr key={f} className="hover:bg-zinc-50">
+                <td className="py-2 pr-3 text-left text-[11px] text-zinc-600">{f}</td>
+                {Object.values(plans).map((vals, j) => (
+                  <td key={j} className="py-2 px-2">
+                    {vals[i] ? <span className="text-emerald-500 font-bold">✓</span> : <span className="text-zinc-300">–</span>}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function TeamCardPreview() {
+  const team = [
+    { name: 'Alex Chen', role: 'CEO', avatar: 'AC', grad: 'from-blue-400 to-indigo-500' },
+    { name: 'Sara Kim', role: 'Design', avatar: 'SK', grad: 'from-rose-400 to-pink-500' },
+    { name: 'Tom Lee', role: 'Engineer', avatar: 'TL', grad: 'from-emerald-400 to-teal-500' },
+    { name: 'Mia Wang', role: 'Marketing', avatar: 'MW', grad: 'from-amber-400 to-orange-500' },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="grid grid-cols-2 gap-3 w-full max-w-xs">
+        {team.map((m) => (
+          <div key={m.name} className="rounded-2xl border border-zinc-200 bg-white p-4 text-center hover:shadow-md transition">
+            <div className={`mx-auto h-12 w-12 rounded-full bg-gradient-to-br ${m.grad} flex items-center justify-center text-white font-bold text-sm mb-2`}>{m.avatar}</div>
+            <p className="text-xs font-bold text-zinc-800">{m.name}</p>
+            <p className="text-[10px] text-zinc-400 mt-0.5">{m.role}</p>
+            <div className="mt-2 flex justify-center gap-2">
+              {['𝕏', 'in', '✉'].map((icon) => (
+                <button key={icon} className="h-6 w-6 rounded-full bg-zinc-100 hover:bg-zinc-200 text-[10px] text-zinc-500 transition flex items-center justify-center">{icon}</button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function OrderSummaryPreview() {
+  const items = [
+    { name: 'Pro Plan', qty: 1, price: 29 },
+    { name: 'Extra Seat', qty: 3, price: 9 },
+    { name: 'Storage Add-on', qty: 1, price: 5 },
+  ];
+  const subtotal = items.reduce((a, i) => a + i.qty * i.price, 0);
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden">
+        <div className="border-b border-zinc-100 px-4 py-3">
+          <p className="text-sm font-bold text-zinc-800">Order Summary</p>
+        </div>
+        <div className="divide-y divide-zinc-50 px-4">
+          {items.map((item) => (
+            <div key={item.name} className="flex items-center justify-between py-2.5">
+              <div><p className="text-xs font-medium text-zinc-800">{item.name}</p><p className="text-[10px] text-zinc-400">×{item.qty}</p></div>
+              <p className="text-xs font-semibold text-zinc-700">${(item.qty * item.price).toFixed(2)}</p>
+            </div>
+          ))}
+        </div>
+        <div className="border-t border-zinc-200 px-4 py-3 space-y-1.5">
+          <div className="flex justify-between text-xs text-zinc-500"><span>Subtotal</span><span>${subtotal}</span></div>
+          <div className="flex justify-between text-xs text-zinc-500"><span>Tax (10%)</span><span>${(subtotal * 0.1).toFixed(2)}</span></div>
+          <div className="flex justify-between text-sm font-bold text-zinc-800 pt-1 border-t border-zinc-100"><span>Total</span><span>${(subtotal * 1.1).toFixed(2)}</span></div>
+        </div>
+        <div className="px-4 pb-4"><button className="w-full rounded-xl bg-blue-600 py-2.5 text-sm font-bold text-white hover:bg-blue-700 transition">Checkout</button></div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function MetricSparklinePreview() {
+  const data = [30, 45, 28, 60, 75, 52, 90, 68, 85, 95];
+  const max = Math.max(...data);
+  const pts = data.map((v, i) => `${(i / (data.length - 1)) * 100},${100 - (v / max) * 80}`).join(' ');
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="grid grid-cols-2 gap-3 w-full max-w-sm">
+        {[
+          { label: 'Revenue', val: '$12,845', change: '+18%', up: true, color: '#3b82f6' },
+          { label: 'Users', val: '4,291', change: '+6%', up: true, color: '#10b981' },
+          { label: 'Bounce Rate', val: '32.4%', change: '-3%', up: false, color: '#ef4444' },
+          { label: 'Sessions', val: '9,832', change: '+12%', up: true, color: '#8b5cf6' },
+        ].map((m) => (
+          <div key={m.label} className="rounded-xl border border-zinc-200 bg-white p-3 shadow-sm">
+            <p className="text-[10px] font-medium text-zinc-400 uppercase tracking-wide">{m.label}</p>
+            <p className="mt-1 text-lg font-bold text-zinc-800">{m.val}</p>
+            <div className="mt-2">
+              <svg viewBox="0 0 100 100" className="h-8 w-full" preserveAspectRatio="none">
+                <polyline fill="none" stroke={m.color} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" points={pts} />
+              </svg>
+            </div>
+            <span className={`text-[10px] font-bold ${m.up ? 'text-emerald-600' : 'text-red-500'}`}>{m.change}</span>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function HeatmapPreview() {
+  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const weeks = 15;
+  const vals = Array.from({ length: weeks * 7 }, () => Math.floor(Math.random() * 5));
+  const colors = ['bg-zinc-100', 'bg-emerald-200', 'bg-emerald-300', 'bg-emerald-500', 'bg-emerald-700'];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="space-y-1">
+        <div className="flex gap-1">
+          <div className="w-6" />
+          {Array.from({ length: weeks }, (_, i) => (
+            <div key={i} className="w-3 text-[8px] text-zinc-300 text-center">{i % 4 === 0 ? `W${i + 1}` : ''}</div>
+          ))}
+        </div>
+        {days.map((day, di) => (
+          <div key={day} className="flex items-center gap-1">
+            <span className="w-6 text-[9px] text-zinc-400 text-right">{day.slice(0, 2)}</span>
+            {Array.from({ length: weeks }, (_, wi) => (
+              <div key={wi} className={`h-3 w-3 rounded-sm ${colors[vals[wi * 7 + di]]}`} title={`${vals[wi * 7 + di]} contributions`} />
+            ))}
+          </div>
+        ))}
+        <div className="flex items-center gap-1 mt-1 justify-end">
+          <span className="text-[9px] text-zinc-400">Less</span>
+          {colors.map((c, i) => <div key={i} className={`h-2.5 w-2.5 rounded-sm ${c}`} />)}
+          <span className="text-[9px] text-zinc-400">More</span>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function QuotePreview() {
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="space-y-3 w-full max-w-sm">
+        <blockquote className="rounded-2xl border-l-4 border-blue-500 bg-blue-50 px-5 py-4">
+          <p className="text-sm text-blue-900 italic leading-relaxed">&ldquo;Design is not just what it looks like and feels like. Design is how it works.&rdquo;</p>
+          <footer className="mt-2 text-xs font-semibold text-blue-600">— Steve Jobs</footer>
+        </blockquote>
+        <blockquote className="rounded-2xl bg-zinc-900 px-5 py-4">
+          <p className="text-2xl text-zinc-400 font-serif leading-none mb-2">&ldquo;</p>
+          <p className="text-sm text-zinc-300 leading-relaxed">Any sufficiently advanced technology is indistinguishable from magic.</p>
+          <footer className="mt-2 text-xs text-zinc-500">— Arthur C. Clarke</footer>
+        </blockquote>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function ImageCardPreview() {
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="flex gap-3 flex-wrap justify-center">
+        <div className="relative w-40 h-28 rounded-2xl overflow-hidden group cursor-pointer">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-700" />
+          <div className="absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-black/70 via-transparent">
+            <p className="text-white text-xs font-bold">Mountain Vista</p>
+            <p className="text-white/70 text-[10px]">Photography</p>
+          </div>
+          <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+            <span className="text-white text-2xl">🔍</span>
+          </div>
+        </div>
+        <div className="relative w-40 h-28 rounded-2xl overflow-hidden group cursor-pointer">
+          <div className="absolute inset-0 bg-gradient-to-br from-rose-500 to-orange-400" />
+          <div className="absolute top-2 right-2"><span className="rounded-full bg-white/20 backdrop-blur-sm px-2 py-0.5 text-[10px] font-bold text-white">New</span></div>
+          <div className="absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-black/60 via-transparent">
+            <p className="text-white text-xs font-bold">Sunset Glow</p>
+            <div className="flex items-center gap-1 mt-0.5"><span className="text-amber-300 text-[10px]">★★★★★</span></div>
+          </div>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ── NAVIGATION ── */
+
+function BottomNavPreview() {
+  const [active, setActive] = useState('home');
+  const tabs = [
+    { id: 'home', icon: '🏠', label: 'Home' },
+    { id: 'search', icon: '🔍', label: 'Search' },
+    { id: 'notif', icon: '🔔', label: 'Alerts', badge: 3 },
+    { id: 'profile', icon: '👤', label: 'Profile' },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-100">
+      <div className="w-full max-w-xs overflow-hidden rounded-2xl border border-zinc-200 shadow-lg">
+        <div className="h-28 bg-white flex items-center justify-center">
+          <p className="text-zinc-400 text-sm">App Content</p>
+        </div>
+        <nav className="flex bg-white border-t border-zinc-200">
+          {tabs.map((t) => (
+            <button key={t.id} onClick={() => setActive(t.id)}
+              className={`relative flex flex-1 flex-col items-center py-2.5 gap-0.5 transition ${active === t.id ? 'text-blue-600' : 'text-zinc-400 hover:text-zinc-600'}`}>
+              <span className="text-lg leading-none">{t.icon}</span>
+              <span className="text-[9px] font-medium">{t.label}</span>
+              {t.badge && <span className="absolute top-1.5 right-3 h-3.5 min-w-[14px] rounded-full bg-red-500 text-[8px] font-bold text-white flex items-center justify-center px-0.5">{t.badge}</span>}
+              {active === t.id && <span className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-5 rounded-full bg-blue-600" />}
+            </button>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function DrawerPreview() {
+  const [open, setOpen] = useState(false);
+  return (
+    <PreviewWrap>
+      <button onClick={() => setOpen(true)} className="rounded-lg bg-zinc-800 px-4 py-2 text-sm font-semibold text-white hover:bg-zinc-900 transition">Open Drawer</button>
+      {open && (
+        <div className="fixed inset-0 z-50 flex">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setOpen(false)} />
+          <div className="relative ml-auto h-full w-72 bg-white shadow-2xl flex flex-col">
+            <div className="flex items-center justify-between border-b border-zinc-100 px-5 py-4">
+              <h3 className="font-semibold text-zinc-800">Side Panel</h3>
+              <button onClick={() => setOpen(false)} className="rounded-lg p-1 text-zinc-400 hover:bg-zinc-100"><X size={18}/></button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-5 space-y-3">
+              {['Account settings', 'Billing & plans', 'Team members', 'Integrations', 'API keys', 'Help & docs'].map((item) => (
+                <button key={item} className="flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 transition">
+                  {item}<ChevronRight size={14} className="text-zinc-300"/>
+                </button>
+              ))}
+            </div>
+            <div className="border-t border-zinc-100 p-4">
+              <button className="w-full rounded-xl bg-blue-600 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition">Upgrade Plan</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </PreviewWrap>
+  );
+}
+
+function CommandPalettePreview() {
+  const [open, setOpen] = useState(false);
+  const [q, setQ] = useState('');
+  const cmds = ['Dashboard', 'Analytics', 'Settings', 'Users', 'Reports', 'Billing', 'API Keys', 'Logout'];
+  const filtered = cmds.filter((c) => c.toLowerCase().includes(q.toLowerCase()));
+  return (
+    <PreviewWrap>
+      <div>
+        <button onClick={() => setOpen(true)} className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-2 text-sm text-zinc-500 shadow-sm hover:bg-zinc-50 transition">
+          <Search size={14}/> Search commands…<kbd className="ml-2 rounded border border-zinc-200 bg-zinc-50 px-1.5 py-0.5 font-mono text-[10px]">⌘K</kbd>
+        </button>
+        {open && (
+          <div className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh]" onClick={() => setOpen(false)}>
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm"/>
+            <div className="relative w-full max-w-md mx-4 rounded-2xl bg-white shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center gap-3 border-b border-zinc-100 px-4 py-3">
+                <Search size={16} className="text-zinc-400 shrink-0"/>
+                <input autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search commands…"
+                  className="flex-1 text-sm text-zinc-800 outline-none placeholder-zinc-400"/>
+                <kbd className="rounded border border-zinc-200 bg-zinc-50 px-1.5 py-0.5 font-mono text-[10px] text-zinc-400">ESC</kbd>
+              </div>
+              <div className="max-h-60 overflow-y-auto py-2">
+                {filtered.length === 0 ? <p className="px-4 py-6 text-center text-sm text-zinc-400">No results found</p> : filtered.map((cmd) => (
+                  <button key={cmd} className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-zinc-700 hover:bg-blue-50 hover:text-blue-700 transition">
+                    <span className="text-zinc-400">→</span>{cmd}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function FABPreview() {
+  const [open, setOpen] = useState(false);
+  const actions = [{ icon: '✏️', label: 'New post' }, { icon: '📁', label: 'Upload file' }, { icon: '👤', label: 'Add user' }];
+  return (
+    <PreviewWrap bg="bg-zinc-100">
+      <div className="relative h-36 w-full max-w-xs rounded-xl bg-zinc-50 border border-zinc-200">
+        <p className="absolute inset-0 flex items-center justify-center text-zinc-400 text-xs">App Background</p>
+        <div className="absolute bottom-3 right-3 flex flex-col-reverse items-end gap-2">
+          {open && actions.map((a) => (
+            <div key={a.label} className="flex items-center gap-2">
+              <span className="rounded-lg bg-white shadow-md px-2.5 py-1 text-xs font-medium text-zinc-700">{a.label}</span>
+              <button className="h-9 w-9 rounded-full bg-white shadow-md flex items-center justify-center text-base hover:scale-110 transition">{a.icon}</button>
+            </div>
+          ))}
+          <button onClick={() => setOpen((o) => !o)}
+            className={`h-12 w-12 rounded-full bg-blue-600 shadow-lg flex items-center justify-center text-white text-xl transition-transform hover:bg-blue-700 ${open ? 'rotate-45' : ''}`}>+</button>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function BackToTopPreview() {
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="space-y-3 text-center">
+        <p className="text-xs text-zinc-500">Scroll-triggered back-to-top button</p>
+        <div className="flex gap-3 justify-center">
+          <button className="h-10 w-10 rounded-full bg-blue-600 shadow-lg flex items-center justify-center text-white text-lg hover:bg-blue-700 hover:-translate-y-1 transition-all">↑</button>
+          <button className="h-10 w-10 rounded-full bg-zinc-800 shadow-lg flex items-center justify-center text-white text-lg hover:bg-zinc-900 hover:-translate-y-1 transition-all">↑</button>
+          <button className="flex items-center gap-2 rounded-full bg-white border border-zinc-200 shadow-lg px-4 py-2 text-xs font-semibold text-zinc-700 hover:-translate-y-1 transition-all">↑ Back to top</button>
+        </div>
+        <p className="text-[10px] text-zinc-400">Fixed bottom-right after scrolling 300px</p>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ── FEEDBACK ── */
+
+function CircularProgressPreview() {
+  const rings = [
+    { pct: 75, color: '#3b82f6', label: 'Storage', val: '75%' },
+    { pct: 48, color: '#10b981', label: 'CPU', val: '48%' },
+    { pct: 92, color: '#f59e0b', label: 'Memory', val: '92%' },
+  ];
+  return (
+    <PreviewWrap>
+      <div className="flex gap-5 flex-wrap justify-center">
+        {rings.map((r) => {
+          const radius = 30, circ = 2 * Math.PI * radius;
+          const dash = (r.pct / 100) * circ;
+          return (
+            <div key={r.label} className="flex flex-col items-center gap-2">
+              <div className="relative">
+                <svg width="80" height="80" viewBox="0 0 80 80" className="-rotate-90">
+                  <circle cx="40" cy="40" r={radius} fill="none" stroke="#e4e4e7" strokeWidth="8" />
+                  <circle cx="40" cy="40" r={radius} fill="none" stroke={r.color} strokeWidth="8"
+                    strokeDasharray={`${dash} ${circ - dash}`} strokeLinecap="round" />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-sm font-bold text-zinc-800">{r.val}</span>
+                </div>
+              </div>
+              <span className="text-xs font-medium text-zinc-500">{r.label}</span>
+            </div>
+          );
+        })}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function StatusBannerPreview() {
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-sm space-y-2">
+        {[
+          { bg: 'bg-blue-600', icon: '📢', text: 'System maintenance on Dec 31 at 2AM UTC.', btn: 'Learn more' },
+          { bg: 'bg-emerald-600', icon: '✅', text: 'All systems are operational.', btn: 'Status page' },
+          { bg: 'bg-amber-500', icon: '⚠️', text: 'Degraded performance on API v2.', btn: 'View details' },
+          { bg: 'bg-red-600', icon: '🚨', text: 'Critical incident in progress. Team notified.', btn: 'Updates' },
+        ].map((b) => (
+          <div key={b.text} className={`${b.bg} flex items-center gap-3 rounded-xl px-4 py-2.5`}>
+            <span className="text-base shrink-0">{b.icon}</span>
+            <p className="flex-1 text-xs font-medium text-white">{b.text}</p>
+            <button className="shrink-0 rounded-lg bg-white/20 hover:bg-white/30 px-2.5 py-1 text-[10px] font-bold text-white transition">{b.btn}</button>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function ConfirmDialogPreview() {
+  const [open, setOpen] = useState(false);
+  const [done, setDone] = useState(false);
+  return (
+    <PreviewWrap>
+      <div className="space-y-3 text-center">
+        {done && <p className="text-xs font-semibold text-emerald-600">✓ Action confirmed!</p>}
+        <button onClick={() => { setOpen(true); setDone(false); }} className="rounded-lg bg-red-500 px-4 py-2 text-sm font-semibold text-white hover:bg-red-600 transition">Delete Account</button>
+        {open && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center">
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setOpen(false)} />
+            <div className="relative w-80 mx-4 rounded-2xl bg-white shadow-2xl p-6 text-center">
+              <div className="mx-auto h-12 w-12 rounded-full bg-red-100 flex items-center justify-center text-2xl mb-4">🗑️</div>
+              <h3 className="font-bold text-zinc-800">Delete Account?</h3>
+              <p className="mt-2 text-xs text-zinc-500 leading-relaxed">This will permanently delete your account and all data. This action cannot be undone.</p>
+              <div className="mt-5 flex gap-2">
+                <button onClick={() => setOpen(false)} className="flex-1 rounded-xl border border-zinc-200 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition">Cancel</button>
+                <button onClick={() => { setOpen(false); setDone(true); }} className="flex-1 rounded-xl bg-red-500 py-2.5 text-sm font-bold text-white hover:bg-red-600 transition">Yes, delete</button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function LoadingOverlayPreview() {
+  const [loading, setLoading] = useState(false);
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="relative w-full max-w-xs rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden">
+        {loading && (
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-white/90 backdrop-blur-sm rounded-2xl">
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-zinc-200 border-t-blue-600" />
+            <p className="text-sm font-semibold text-zinc-700">Loading data…</p>
+          </div>
+        )}
+        <div className="p-5 space-y-3">
+          <div className="h-3 w-3/4 rounded-full bg-zinc-200" /><div className="h-3 w-full rounded-full bg-zinc-200" />
+          <div className="h-3 w-5/6 rounded-full bg-zinc-200" /><div className="h-16 rounded-xl bg-zinc-100" />
+        </div>
+        <div className="border-t border-zinc-100 px-5 py-3">
+          <button onClick={() => { setLoading(true); setTimeout(() => setLoading(false), 2000); }}
+            className="w-full rounded-xl bg-blue-600 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition">
+            {loading ? 'Loading…' : 'Trigger Loading'}
+          </button>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function MultiStepProgressPreview() {
+  const [step, setStep] = useState(1);
+  const steps = ['Details', 'Payment', 'Review', 'Done'];
+  const pct = (step / (steps.length - 1)) * 100;
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-sm space-y-4">
+        <div className="relative">
+          <div className="h-2 w-full rounded-full bg-zinc-200">
+            <div className="h-2 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500" style={{ width: `${pct}%` }} />
+          </div>
+          <div className="mt-2 flex justify-between">
+            {steps.map((s, i) => (
+              <div key={s} className={`flex flex-col items-center gap-1 text-[10px] font-medium ${i <= step ? 'text-blue-600' : 'text-zinc-400'}`}>
+                <div className={`-mt-5 h-4 w-4 rounded-full border-2 bg-white ${i <= step ? 'border-blue-600' : 'border-zinc-300'} flex items-center justify-center`}>
+                  {i < step && <span className="text-[8px] text-blue-600">✓</span>}
+                </div>
+                {s}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <button disabled={step === 0} onClick={() => setStep((s) => Math.max(0, s - 1))}
+            className="rounded-lg border border-zinc-200 px-4 py-2 text-xs font-medium text-zinc-600 hover:bg-zinc-50 disabled:opacity-40 transition flex-1">Back</button>
+          <button disabled={step === steps.length - 1} onClick={() => setStep((s) => Math.min(steps.length - 1, s + 1))}
+            className="rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white hover:bg-blue-700 disabled:opacity-40 transition flex-1">Next →</button>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ── OVERLAY ── */
+
+function ContextMenuPreview() {
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+  const items = [
+    { icon: '✏️', label: 'Edit' }, { icon: '📋', label: 'Copy' }, { icon: '📌', label: 'Pin' },
+    null,
+    { icon: '🗑️', label: 'Delete', danger: true },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="relative w-full max-w-xs">
+        <div onContextMenu={(e) => { e.preventDefault(); setPos({ x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY }); }}
+          onClick={() => setPos(null)}
+          className="flex h-24 items-center justify-center rounded-xl border-2 border-dashed border-zinc-300 bg-white text-xs text-zinc-400 cursor-context-menu select-none hover:border-zinc-400 transition">
+          Right-click anywhere here
+        </div>
+        {pos && (
+          <div className="absolute rounded-xl border border-zinc-200 bg-white shadow-xl py-1 z-20 w-40"
+            style={{ left: pos.x, top: pos.y }}>
+            {items.map((item, i) =>
+              item === null ? <div key={i} className="my-1 border-t border-zinc-100" /> :
+              <button key={item.label} onClick={() => setPos(null)}
+                className={`flex w-full items-center gap-2.5 px-3 py-2 text-sm transition ${item.danger ? 'text-red-500 hover:bg-red-50' : 'text-zinc-700 hover:bg-zinc-50'}`}>
+                <span>{item.icon}</span>{item.label}
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function BottomSheetPreview() {
+  const [open, setOpen] = useState(false);
+  return (
+    <PreviewWrap bg="bg-zinc-100">
+      <div>
+        <button onClick={() => setOpen(true)} className="rounded-lg bg-zinc-800 px-4 py-2 text-sm font-semibold text-white hover:bg-zinc-900 transition">Open Sheet</button>
+        {open && (
+          <div className="fixed inset-0 z-50 flex items-end justify-center">
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setOpen(false)} />
+            <div className="relative w-full max-w-md rounded-t-3xl bg-white shadow-2xl">
+              <div className="flex justify-center pt-3 pb-1"><div className="h-1 w-10 rounded-full bg-zinc-200" /></div>
+              <div className="px-6 pb-2 pt-3">
+                <h3 className="font-bold text-zinc-800">Share this post</h3>
+              </div>
+              <div className="grid grid-cols-4 gap-3 px-6 py-4">
+                {[{ icon: '📘', label: 'Facebook' }, { icon: '𝕏', label: 'Twitter' }, { icon: '📸', label: 'Instagram' }, { icon: '💼', label: 'LinkedIn' },
+                  { icon: '📧', label: 'Email' }, { icon: '🔗', label: 'Copy link' }, { icon: '📨', label: 'Message' }, { icon: '⋯', label: 'More' }].map((a) => (
+                  <button key={a.label} onClick={() => setOpen(false)}
+                    className="flex flex-col items-center gap-1.5 rounded-xl p-2 hover:bg-zinc-50 transition">
+                    <span className="text-xl">{a.icon}</span>
+                    <span className="text-[10px] text-zinc-500">{a.label}</span>
+                  </button>
+                ))}
+              </div>
+              <div className="px-6 pb-6"><button onClick={() => setOpen(false)} className="w-full rounded-xl border border-zinc-200 py-3 text-sm font-medium text-zinc-600 hover:bg-zinc-50 transition">Cancel</button></div>
+            </div>
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function LightboxPreview() {
+  const [active, setActive] = useState<number | null>(null);
+  const imgs = [
+    { grad: 'from-blue-500 to-indigo-600', emoji: '🏔️' },
+    { grad: 'from-rose-500 to-pink-600', emoji: '🌸' },
+    { grad: 'from-amber-500 to-orange-500', emoji: '🌅' },
+    { grad: 'from-emerald-500 to-teal-600', emoji: '🌊' },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="grid grid-cols-4 gap-1.5 w-full max-w-xs">
+        {imgs.map((img, i) => (
+          <div key={i} onClick={() => setActive(i)}
+            className={`aspect-square rounded-xl bg-gradient-to-br ${img.grad} flex items-center justify-center text-xl cursor-zoom-in hover:scale-105 transition`}>{img.emoji}</div>
+        ))}
+      </div>
+      {active !== null && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm" onClick={() => setActive(null)}>
+          <button onClick={(e) => { e.stopPropagation(); setActive((a) => ((a! - 1) + imgs.length) % imgs.length); }} className="absolute left-4 h-12 w-12 rounded-full bg-white/10 text-white text-2xl hover:bg-white/20 transition">‹</button>
+          <div className={`h-64 w-64 rounded-3xl bg-gradient-to-br ${imgs[active].grad} flex items-center justify-center text-7xl shadow-2xl`}>{imgs[active].emoji}</div>
+          <button onClick={(e) => { e.stopPropagation(); setActive((a) => (a! + 1) % imgs.length); }} className="absolute right-4 h-12 w-12 rounded-full bg-white/10 text-white text-2xl hover:bg-white/20 transition">›</button>
+          <button onClick={() => setActive(null)} className="absolute top-4 right-4 h-8 w-8 rounded-full bg-white/10 text-white text-sm hover:bg-white/20 transition flex items-center justify-center">✕</button>
+          <div className="absolute bottom-4 flex gap-2">
+            {imgs.map((_, i) => <button key={i} onClick={(e) => { e.stopPropagation(); setActive(i); }} className={`h-2 rounded-full transition-all ${i === active ? 'w-6 bg-white' : 'w-2 bg-white/40'}`} />)}
+          </div>
+        </div>
+      )}
+    </PreviewWrap>
+  );
+}
+
+function SidePanelPreview() {
+  const [open, setOpen] = useState(false);
+  return (
+    <PreviewWrap>
+      <button onClick={() => setOpen(true)} className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition">View Details</button>
+      {open && (
+        <div className="fixed inset-0 z-50 flex">
+          <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={() => setOpen(false)} />
+          <div className="relative ml-auto h-full w-80 bg-white shadow-2xl flex flex-col overflow-hidden">
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-6 text-white">
+              <div className="flex items-start justify-between">
+                <div>
+                  <div className="h-12 w-12 rounded-full bg-white/20 flex items-center justify-center text-lg font-bold mb-2">JD</div>
+                  <h3 className="font-bold text-lg">Jane Doe</h3>
+                  <p className="text-blue-200 text-xs">Senior Designer · SF</p>
+                </div>
+                <button onClick={() => setOpen(false)} className="text-white/60 hover:text-white"><X size={18}/></button>
+              </div>
+            </div>
+            <div className="flex-1 overflow-y-auto p-5 space-y-4">
+              {[['Email', 'jane@company.com'], ['Phone', '+1 (555) 234-5678'], ['Department', 'Design'], ['Start Date', 'Jan 15, 2022'], ['Salary', '$120,000/yr']].map(([k, v]) => (
+                <div key={k}><p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">{k}</p><p className="mt-0.5 text-sm text-zinc-700">{v}</p></div>
+              ))}
+            </div>
+            <div className="border-t border-zinc-100 p-4 flex gap-2">
+              <button className="flex-1 rounded-xl border border-zinc-200 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-50 transition">Message</button>
+              <button className="flex-1 rounded-xl bg-blue-600 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition">Edit</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </PreviewWrap>
+  );
+}
+
+function CookieBannerPreview() {
+  const [open, setOpen] = useState(true);
+  const [prefs, setPrefs] = useState(false);
+  return (
+    <PreviewWrap bg="bg-zinc-100">
+      <div className="relative w-full max-w-sm">
+        {!open && <button onClick={() => setOpen(true)} className="w-full rounded-xl bg-zinc-800 py-2 text-xs font-semibold text-white hover:bg-zinc-900 transition">Show Cookie Banner</button>}
+        {open && !prefs && (
+          <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-xl">
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">🍪</span>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-zinc-800">We use cookies</p>
+                <p className="mt-0.5 text-xs text-zinc-500 leading-relaxed">We use cookies to enhance your experience, analyze site traffic, and serve personalized content.</p>
+              </div>
+            </div>
+            <div className="mt-3 flex gap-2">
+              <button onClick={() => setOpen(false)} className="flex-1 rounded-xl bg-blue-600 py-2 text-xs font-bold text-white hover:bg-blue-700 transition">Accept All</button>
+              <button onClick={() => setPrefs(true)} className="flex-1 rounded-xl border border-zinc-200 py-2 text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition">Manage</button>
+              <button onClick={() => setOpen(false)} className="flex-1 rounded-xl border border-zinc-200 py-2 text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition">Reject</button>
+            </div>
+          </div>
+        )}
+        {open && prefs && (
+          <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-xl space-y-3">
+            <p className="text-sm font-bold text-zinc-800">Cookie Preferences</p>
+            {[{ label: 'Essential', sub: 'Required for the site to work', locked: true },
+              { label: 'Analytics', sub: 'Help us improve our product' },
+              { label: 'Marketing', sub: 'Personalised ads & content' }].map((c) => (
+              <div key={c.label} className="flex items-center justify-between">
+                <div><p className="text-xs font-semibold text-zinc-800">{c.label}</p><p className="text-[10px] text-zinc-400">{c.sub}</p></div>
+                <div className={`h-5 w-9 rounded-full flex items-center px-0.5 ${c.locked ? 'bg-zinc-300' : 'bg-blue-600'}`}>
+                  <div className={`h-4 w-4 rounded-full bg-white shadow transition-transform ${c.locked ? '' : 'translate-x-4'}`}/>
+                </div>
+              </div>
+            ))}
+            <button onClick={() => { setPrefs(false); setOpen(false); }} className="w-full rounded-xl bg-blue-600 py-2 text-xs font-bold text-white hover:bg-blue-700 transition">Save Preferences</button>
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ── LAYOUT ── */
+
+function HeroSectionPreview() {
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-sm rounded-2xl overflow-hidden border border-zinc-200 shadow-sm">
+        <div className="relative bg-gradient-to-br from-zinc-900 via-blue-950 to-indigo-900 px-8 py-10 text-center">
+          <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, #3b82f6 0%, transparent 50%), radial-gradient(circle at 80% 20%, #8b5cf6 0%, transparent 50%)' }}/>
+          <div className="relative">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-500/20 border border-blue-400/30 px-3 py-1 text-[10px] font-semibold text-blue-300 mb-4">✦ New release v2.0</span>
+            <h2 className="text-xl font-black text-white leading-tight">Build faster with<br/><span className="text-blue-400">beautiful UI</span></h2>
+            <p className="mt-2 text-xs text-zinc-400 leading-relaxed">Production-ready components for your next project. No design skills needed.</p>
+            <div className="mt-5 flex gap-2 justify-center">
+              <button className="rounded-xl bg-blue-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500 transition">Get started →</button>
+              <button className="rounded-xl border border-zinc-700 px-4 py-2 text-xs font-medium text-zinc-300 hover:border-zinc-500 transition">View docs</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function FeatureCardsPreview() {
+  const features = [
+    { icon: '⚡', title: 'Lightning Fast', desc: 'Optimized for speed.', color: 'bg-amber-100 text-amber-600' },
+    { icon: '🔒', title: 'Secure', desc: 'Built-in security.', color: 'bg-blue-100 text-blue-600' },
+    { icon: '📱', title: 'Responsive', desc: 'Works everywhere.', color: 'bg-purple-100 text-purple-600' },
+    { icon: '🎨', title: 'Customizable', desc: 'Fully themeable.', color: 'bg-rose-100 text-rose-600' },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="grid grid-cols-2 gap-3 w-full max-w-xs">
+        {features.map((f) => (
+          <div key={f.title} className="rounded-2xl border border-zinc-200 bg-white p-4 hover:shadow-md transition">
+            <div className={`h-9 w-9 rounded-xl ${f.color} flex items-center justify-center text-lg mb-3`}>{f.icon}</div>
+            <p className="text-xs font-bold text-zinc-800">{f.title}</p>
+            <p className="mt-1 text-[10px] text-zinc-400 leading-relaxed">{f.desc}</p>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CTABannerPreview() {
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-sm space-y-3">
+        <div className="rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 p-5 flex items-center justify-between gap-4">
+          <div>
+            <p className="text-sm font-bold text-white">Start free today</p>
+            <p className="text-xs text-blue-200 mt-0.5">No credit card required.</p>
+          </div>
+          <button className="shrink-0 rounded-xl bg-white px-3 py-2 text-xs font-bold text-blue-600 hover:bg-blue-50 transition whitespace-nowrap">Get Started →</button>
+        </div>
+        <div className="rounded-2xl border border-zinc-200 bg-white p-5 flex items-center justify-between gap-4 shadow-sm">
+          <div>
+            <p className="text-sm font-bold text-zinc-800">Upgrade to Pro</p>
+            <p className="text-xs text-zinc-400 mt-0.5">Unlock all features.</p>
+          </div>
+          <button className="shrink-0 rounded-xl bg-blue-600 px-3 py-2 text-xs font-bold text-white hover:bg-blue-700 transition">Upgrade</button>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function FooterPreview() {
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-sm overflow-hidden rounded-2xl border border-zinc-200 shadow-sm">
+        <div className="bg-zinc-900 px-5 py-5">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="h-6 w-6 rounded-lg bg-blue-500 flex items-center justify-center text-white text-xs font-bold">A</div>
+            <span className="text-sm font-bold text-white">AppName</span>
+          </div>
+          <p className="text-xs text-zinc-400 leading-relaxed">Building the future of developer tooling, one component at a time.</p>
+          <div className="mt-3 flex gap-2">
+            {['𝕏', 'in', 'gh', 'yt'].map((s) => (
+              <button key={s} className="h-7 w-7 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white text-xs transition flex items-center justify-center">{s}</button>
+            ))}
+          </div>
+        </div>
+        <div className="bg-zinc-800 px-5 py-3 grid grid-cols-3 gap-3">
+          {[['Product', ['Features', 'Pricing', 'Changelog']], ['Company', ['About', 'Blog', 'Careers']], ['Legal', ['Privacy', 'Terms', 'Cookies']]].map(([title, links]) => (
+            <div key={title as string}>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2">{title}</p>
+              {(links as string[]).map((l) => <p key={l} className="text-[10px] text-zinc-400 hover:text-zinc-200 cursor-pointer transition mb-1">{l}</p>)}
+            </div>
+          ))}
+        </div>
+        <div className="bg-zinc-900 border-t border-zinc-800 px-5 py-2.5">
+          <p className="text-[10px] text-zinc-600">© 2024 AppName. All rights reserved.</p>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function GridSystemPreview() {
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-sm space-y-2">
+        {[['1/2', '1/2'], ['1/3', '1/3', '1/3'], ['1/4', '1/4', '1/2'], ['1/4', '3/4'], ['Full']].map((row, i) => (
+          <div key={i} className="flex gap-1.5">
+            {row.map((col, j) => (
+              <div key={j} className="flex-1 rounded-lg border-2 border-dashed border-zinc-300 bg-blue-50 py-2.5 text-center">
+                <span className="text-[10px] font-bold text-blue-500">{col}</span>
+              </div>
+            ))}
+          </div>
+        ))}
+        <p className="text-[10px] text-zinc-400 text-center mt-1">Responsive grid system demo</p>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function BreadcrumbIconsPreview() {
+  return (
+    <PreviewWrap>
+      <div className="space-y-3">
+        <nav className="flex items-center gap-1.5 text-sm">
+          {[{ icon: '🏠', label: 'Home' }, { icon: '👥', label: 'Users' }, { icon: '✏️', label: 'Edit' }].map((item, i, arr) => (
+            <span key={item.label} className="flex items-center gap-1.5">
+              <a href="#" className={`flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-medium transition ${i === arr.length - 1 ? 'bg-zinc-100 text-zinc-600' : 'text-blue-600 hover:bg-blue-50'}`}>
+                <span>{item.icon}</span>{item.label}
+              </a>
+              {i < arr.length - 1 && <span className="text-zinc-300">/</span>}
+            </span>
+          ))}
+        </nav>
+        <nav aria-label="breadcrumb" className="flex items-center rounded-xl border border-zinc-200 bg-white px-4 py-2 shadow-sm text-xs w-fit">
+          {['Dashboard', 'Projects', 'Alpha', 'Settings'].map((item, i, arr) => (
+            <span key={item} className="flex items-center gap-1.5">
+              {i > 0 && <ChevronRight size={12} className="text-zinc-300" />}
+              <a href="#" className={i === arr.length - 1 ? 'font-semibold text-zinc-800' : 'text-blue-600 hover:underline'}>{item}</a>
+            </span>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
    Component Registry
 ───────────────────────────────────────────── */
 const COMPONENTS: ComponentDef[] = [
@@ -2632,6 +3882,1090 @@ input[type=range]::-webkit-slider-thumb { width:1.125rem; height:1.125rem; borde
 .profile-avatar { width:3.5rem; height:3.5rem; border-radius:9999px; border:3px solid #fff; margin-top:-1.75rem; margin-bottom:.75rem; box-shadow:0 2px 8px rgba(0,0,0,.12); }
 .profile-name  { font-size:.875rem; font-weight:700; color:#18181b; }
 .profile-role  { font-size:.75rem; color:#71717a; }`,
+  },
+
+  /* ═══ 48 NEW COMPONENTS ═══ */
+
+  /* ── FORMS ── */
+  {
+    id: 'floating-label', name: 'Floating Label Input', category: 'Forms & Inputs',
+    description: 'Label that floats above on focus — clean, modern form pattern.',
+    Preview: FloatingLabelPreview,
+    tailwind: `<div class="relative">
+  <input placeholder=" " class="peer w-full rounded-xl border border-zinc-300 bg-white px-4 pb-2.5 pt-5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition" />
+  <label class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-zinc-400 transition-all
+    peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-[10px] peer-focus:font-semibold peer-focus:text-blue-600
+    peer-not-placeholder-shown:top-3 peer-not-placeholder-shown:-translate-y-0 peer-not-placeholder-shown:text-[10px] peer-not-placeholder-shown:font-semibold">
+    Email address
+  </label>
+</div>`,
+    css: `.float-wrap { position:relative; }
+.float-input { width:100%; padding:.625rem 1rem 0; padding-top:1.25rem; border-radius:.75rem; border:1px solid #d4d4d8; background:#fff; font-size:.875rem; outline:none; transition:border .15s,box-shadow .15s; }
+.float-input:focus { border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,.15); }
+.float-label { position:absolute; left:1rem; top:50%; transform:translateY(-50%); font-size:.875rem; color:#a1a1aa; pointer-events:none; transition:all .15s; }
+.float-input:focus ~ .float-label,
+.float-input:not(:placeholder-shown) ~ .float-label { top:.75rem; transform:none; font-size:.625rem; font-weight:600; color:#3b82f6; }`,
+  },
+  {
+    id: 'otp-input', name: 'OTP / Verification Code', category: 'Forms & Inputs',
+    description: 'Six-box one-time password input with auto-focus and fill highlight.',
+    Preview: OTPInputPreview,
+    tailwind: `<div class="flex justify-center gap-2">
+  <input type="text" maxlength="1" class="h-11 w-10 rounded-xl border-2 border-zinc-300 bg-white text-center text-lg font-bold outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition" />
+  <input type="text" maxlength="1" class="h-11 w-10 rounded-xl border-2 border-blue-600 bg-blue-50 text-center text-lg font-bold text-blue-700 outline-none" />
+  <!-- Repeat for 6 boxes -->
+</div>`,
+    css: `.otp-group { display:flex; gap:.5rem; justify-content:center; }
+.otp-box { width:2.5rem; height:2.75rem; border-radius:.75rem; border:2px solid #d4d4d8; background:#fff; text-align:center; font-size:1.125rem; font-weight:700; outline:none; transition:.15s; }
+.otp-box:focus { border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,.15); }
+.otp-box.filled { border-color:#2563eb; background:#eff6ff; color:#1d4ed8; }`,
+  },
+  {
+    id: 'password-strength', name: 'Password Strength', category: 'Forms & Inputs',
+    description: 'Password field with animated strength meter and requirement checklist.',
+    Preview: PasswordStrengthPreview,
+    tailwind: `<div class="space-y-2">
+  <input type="password" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" placeholder="Enter password…" />
+  <!-- Strength bars -->
+  <div class="flex gap-1.5">
+    <div class="h-1.5 flex-1 rounded-full bg-red-500"></div>
+    <div class="h-1.5 flex-1 rounded-full bg-red-500"></div>
+    <div class="h-1.5 flex-1 rounded-full bg-zinc-200"></div>
+    <div class="h-1.5 flex-1 rounded-full bg-zinc-200"></div>
+  </div>
+  <p class="text-xs font-semibold text-red-500">Weak</p>
+  <!-- Requirements -->
+  <div class="grid grid-cols-2 gap-1">
+    <div class="flex items-center gap-1.5 text-[11px] text-emerald-600"><span>✓</span>Uppercase</div>
+    <div class="flex items-center gap-1.5 text-[11px] text-zinc-400"><span>○</span>Number</div>
+  </div>
+</div>`,
+    css: `.pw-bars { display:flex; gap:.375rem; }
+.pw-bar { flex:1; height:.375rem; border-radius:9999px; background:#e4e4e7; transition:background .3s; }
+.pw-bar.weak   { background:#ef4444; }
+.pw-bar.fair   { background:#f97316; }
+.pw-bar.good   { background:#eab308; }
+.pw-bar.strong { background:#10b981; }
+.pw-reqs { display:grid; grid-template-columns:1fr 1fr; gap:.25rem; margin-top:.5rem; }
+.pw-req { display:flex; align-items:center; gap:.375rem; font-size:.6875rem; color:#a1a1aa; }
+.pw-req.met { color:#059669; }`,
+  },
+  {
+    id: 'number-stepper', name: 'Number Stepper', category: 'Forms & Inputs',
+    description: 'Increment/decrement counter input — great for quantity, booking, and settings.',
+    Preview: NumberStepperPreview,
+    tailwind: `<div class="flex items-center justify-between">
+  <span class="text-sm font-medium text-zinc-700">Adults</span>
+  <div class="flex items-center rounded-xl border border-zinc-200 overflow-hidden shadow-sm">
+    <button class="h-9 w-9 flex items-center justify-center text-zinc-500 hover:bg-zinc-50 font-bold text-lg transition">−</button>
+    <span class="w-8 text-center text-sm font-bold text-zinc-800">1</span>
+    <button class="h-9 w-9 flex items-center justify-center text-zinc-500 hover:bg-zinc-50 font-bold text-lg transition">+</button>
+  </div>
+</div>`,
+    css: `.stepper-input { display:flex; align-items:center; border-radius:.75rem; border:1px solid #e4e4e7; overflow:hidden; box-shadow:0 1px 2px rgba(0,0,0,.06); }
+.stepper-btn { width:2.25rem; height:2.25rem; display:flex; align-items:center; justify-content:center; background:#fff; border:none; cursor:pointer; font-size:1.125rem; font-weight:700; color:#71717a; transition:background .15s; }
+.stepper-btn:hover { background:#fafafa; }
+.stepper-val { width:2rem; text-align:center; font-size:.875rem; font-weight:700; color:#18181b; }`,
+  },
+  {
+    id: 'color-picker-input', name: 'Color Picker Input', category: 'Forms & Inputs',
+    description: 'Color swatch + HEX input with preset palette swatches.',
+    Preview: ColorPickerInputPreview,
+    tailwind: `<!-- Color input row -->
+<div class="flex items-center gap-3 rounded-xl border border-zinc-300 bg-white px-3 py-2.5 shadow-sm">
+  <div class="relative h-8 w-8 rounded-lg overflow-hidden border border-zinc-200 cursor-pointer" style="background:#3b82f6">
+    <input type="color" value="#3b82f6" class="absolute inset-0 opacity-0 w-full h-full cursor-pointer" />
+  </div>
+  <input value="#3B82F6" class="flex-1 bg-transparent font-mono text-sm text-zinc-700 outline-none uppercase" maxlength="7" />
+  <span class="text-xs text-zinc-400 font-medium">HEX</span>
+</div>
+<!-- Preset swatches -->
+<div class="flex gap-1.5 flex-wrap mt-2">
+  <button class="h-7 w-7 rounded-lg border-2 border-transparent hover:scale-110 transition" style="background:#ef4444"></button>
+  <button class="h-7 w-7 rounded-lg border-2 border-zinc-700 scale-110" style="background:#3b82f6"></button>
+</div>`,
+    css: `.color-input-row { display:flex; align-items:center; gap:.75rem; padding:.625rem .75rem; border-radius:.75rem; border:1px solid #d4d4d8; background:#fff; }
+.color-swatch { width:2rem; height:2rem; border-radius:.5rem; border:1px solid #e4e4e7; position:relative; overflow:hidden; cursor:pointer; }
+.color-swatch input[type=color] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+.color-hex { flex:1; background:transparent; font-family:monospace; font-size:.875rem; color:#3f3f46; outline:none; text-transform:uppercase; }
+.color-presets { display:flex; gap:.375rem; flex-wrap:wrap; margin-top:.5rem; }
+.color-preset { width:1.75rem; height:1.75rem; border-radius:.5rem; border:2px solid transparent; cursor:pointer; transition:transform .15s,border-color .15s; }
+.color-preset:hover,.color-preset.active { transform:scale(1.1); border-color:#27272a; }`,
+  },
+  {
+    id: 'phone-input', name: 'Phone Number Input', category: 'Forms & Inputs',
+    description: 'Country code selector + phone number field combined input.',
+    Preview: PhoneInputPreview,
+    tailwind: `<div class="flex overflow-hidden rounded-xl border border-zinc-300 shadow-sm focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100 transition">
+  <select class="shrink-0 appearance-none bg-zinc-100 px-3 text-sm font-medium text-zinc-700 outline-none border-r border-zinc-300 cursor-pointer">
+    <option>+1</option>
+    <option>+44</option>
+    <option>+91</option>
+  </select>
+  <input type="tel" placeholder="(555) 000-0000" class="flex-1 bg-white px-4 py-2.5 text-sm text-zinc-800 placeholder-zinc-400 outline-none" />
+</div>`,
+    css: `.phone-wrap { display:flex; overflow:hidden; border-radius:.75rem; border:1px solid #d4d4d8; transition:border .15s,box-shadow .15s; }
+.phone-wrap:focus-within { border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,.15); }
+.phone-code { padding:0 .75rem; background:#f4f4f5; border-right:1px solid #d4d4d8; font-size:.875rem; font-weight:500; color:#3f3f46; outline:none; cursor:pointer; }
+.phone-number { flex:1; padding:.625rem 1rem; font-size:.875rem; background:#fff; outline:none; }`,
+  },
+  {
+    id: 'date-input', name: 'Date & Date Range', category: 'Forms & Inputs',
+    description: 'Single date input and date range picker with icon prefix.',
+    Preview: DateInputPreview,
+    tailwind: `<!-- Single date -->
+<div class="relative">
+  <span class="absolute left-3.5 top-1/2 -translate-y-1/2">📅</span>
+  <input type="date" class="w-full rounded-xl border border-zinc-300 bg-white py-2.5 pl-10 pr-4 text-sm text-zinc-700 shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition" />
+</div>
+<!-- Date range -->
+<div class="flex items-center gap-2">
+  <div class="relative flex-1">
+    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm">📅</span>
+    <input type="date" class="w-full rounded-xl border border-zinc-300 bg-white py-2 pl-8 pr-2 text-xs outline-none focus:border-blue-500 transition" />
+  </div>
+  <span class="text-zinc-400">→</span>
+  <div class="relative flex-1">
+    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm">📅</span>
+    <input type="date" class="w-full rounded-xl border border-zinc-300 bg-white py-2 pl-8 pr-2 text-xs outline-none focus:border-blue-500 transition" />
+  </div>
+</div>`,
+    css: `.date-input { width:100%; padding:.625rem 1rem .625rem 2.5rem; border-radius:.75rem; border:1px solid #d4d4d8; background:#fff; font-size:.875rem; color:#3f3f46; outline:none; }
+.date-input:focus { border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,.15); }`,
+  },
+  {
+    id: 'multi-select', name: 'Multi-Select', category: 'Forms & Inputs',
+    description: 'Dropdown with checkboxes — select multiple options with badge chips.',
+    Preview: MultiSelectPreview,
+    tailwind: `<!-- Trigger with selected chips -->
+<div class="flex flex-wrap items-center gap-1.5 rounded-xl border border-zinc-300 bg-white p-2.5 min-h-[2.75rem] cursor-pointer">
+  <span class="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-700">
+    Design <span class="cursor-pointer text-blue-400 hover:text-blue-700">×</span>
+  </span>
+  <svg class="ml-auto h-3.5 w-3.5 text-zinc-400" .../><!-- ChevronDown -->
+</div>
+<!-- Dropdown -->
+<div class="mt-1 rounded-xl border border-zinc-200 bg-white shadow-xl py-1">
+  <button class="flex w-full items-center gap-2.5 px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-50">
+    <div class="h-4 w-4 rounded border-2 border-blue-600 bg-blue-600 flex items-center justify-center"><svg .../></div>
+    Design
+  </button>
+</div>`,
+    css: `.multi-select { width:100%; }
+.ms-trigger { display:flex; flex-wrap:wrap; align-items:center; gap:.375rem; padding:.625rem; border-radius:.75rem; border:1px solid #d4d4d8; background:#fff; cursor:pointer; min-height:2.75rem; }
+.ms-chip { display:inline-flex; align-items:center; gap:.25rem; padding:.125rem .5rem; border-radius:9999px; background:#dbeafe; color:#1d4ed8; font-size:.75rem; font-weight:600; }
+.ms-menu { border-radius:.75rem; border:1px solid #e4e4e7; background:#fff; box-shadow:0 10px 25px rgba(0,0,0,.1); }
+.ms-option { display:flex; align-items:center; gap:.625rem; padding:.5rem 1rem; font-size:.875rem; cursor:pointer; }
+.ms-option:hover { background:#fafafa; }`,
+  },
+  {
+    id: 'credit-card', name: 'Credit Card Form', category: 'Forms & Inputs',
+    description: 'Animated credit card preview with number, expiry, and CVV fields.',
+    Preview: CreditCardPreview,
+    tailwind: `<!-- Card preview -->
+<div class="rounded-2xl bg-gradient-to-br from-zinc-800 to-zinc-900 p-5 text-white shadow-xl">
+  <div class="flex justify-between"><span class="text-[10px] font-bold tracking-widest text-zinc-400">CREDIT CARD</span><span class="text-2xl">💳</span></div>
+  <div class="mt-4 font-mono text-lg tracking-widest">•••• •••• •••• ••••</div>
+  <div class="mt-3 flex justify-between text-[10px] text-zinc-400">
+    <div><div class="uppercase text-[9px]">Card Holder</div><div class="text-white text-xs font-medium mt-0.5">John Doe</div></div>
+    <div class="text-right"><div class="uppercase text-[9px]">Expires</div><div class="text-white text-xs font-medium mt-0.5">12/26</div></div>
+  </div>
+</div>
+<!-- Fields -->
+<input placeholder="1234 5678 9012 3456" class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 font-mono text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 mt-3" />
+<div class="flex gap-3 mt-3">
+  <input placeholder="MM/YY" class="flex-1 rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm outline-none focus:border-blue-500" />
+  <input placeholder="CVV" class="w-20 rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm outline-none focus:border-blue-500" />
+</div>`,
+    css: `.cc-preview { border-radius:1rem; padding:1.25rem; background:linear-gradient(135deg,#27272a,#18181b); color:#fff; box-shadow:0 8px 32px rgba(0,0,0,.3); }
+.cc-number { font-family:monospace; font-size:1.125rem; letter-spacing:.1em; margin-top:1rem; }
+.cc-meta { display:flex; justify-content:space-between; margin-top:.75rem; font-size:.625rem; color:#a1a1aa; }
+.cc-meta-val { color:#fff; font-size:.75rem; font-weight:500; margin-top:.125rem; }`,
+  },
+  {
+    id: 'switch-group', name: 'Switch Group', category: 'Forms & Inputs',
+    description: 'Grouped notification preference toggles with label and sub-label.',
+    Preview: SwitchGroupPreview,
+    tailwind: `<div class="divide-y divide-zinc-100 rounded-2xl border border-zinc-200 bg-white overflow-hidden shadow-sm">
+  <div class="flex items-center justify-between px-4 py-3.5">
+    <div>
+      <p class="text-sm font-medium text-zinc-800">Email Notifications</p>
+      <p class="text-[11px] text-zinc-400 mt-0.5">Receive updates via email</p>
+    </div>
+    <!-- Toggle -->
+    <button class="relative h-6 w-11 rounded-full bg-blue-600 shrink-0 ml-4">
+      <span class="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow translate-x-5"></span>
+    </button>
+  </div>
+</div>`,
+    css: `.switch-group { border-radius:1rem; border:1px solid #e4e4e7; background:#fff; overflow:hidden; }
+.switch-row { display:flex; align-items:center; justify-content:space-between; padding:.875rem 1rem; border-bottom:1px solid #f4f4f5; }
+.switch-label { font-size:.875rem; font-weight:500; color:#27272a; }
+.switch-sub   { font-size:.6875rem; color:#a1a1aa; margin-top:.125rem; }`,
+  },
+
+  /* ── DISPLAY ── */
+  {
+    id: 'donut-chart', name: 'Donut Chart', category: 'Display',
+    description: 'CSS + SVG donut chart with legend — no library required.',
+    Preview: DonutChartPreview,
+    tailwind: `<div class="flex items-center gap-6">
+  <svg width="100" height="100" viewBox="0 0 100 100" class="-rotate-90">
+    <!-- Track -->
+    <circle cx="50" cy="50" r="40" fill="none" stroke="#e4e4e7" stroke-width="12" />
+    <!-- Blue segment 35% -->
+    <circle cx="50" cy="50" r="40" fill="none" stroke="#3b82f6" stroke-width="12"
+      stroke-dasharray="87.96 163.36" stroke-dashoffset="0" />
+    <!-- Green segment 45% -->
+    <circle cx="50" cy="50" r="40" fill="none" stroke="#10b981" stroke-width="12"
+      stroke-dasharray="113.1 138.22" stroke-dashoffset="-87.96" />
+  </svg>
+  <div class="space-y-2">
+    <div class="flex items-center gap-2 text-xs"><span class="h-2.5 w-2.5 rounded-full bg-blue-500"></span>Design <span class="font-bold ml-auto">35%</span></div>
+    <div class="flex items-center gap-2 text-xs"><span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span>Dev <span class="font-bold ml-auto">45%</span></div>
+  </div>
+</div>`,
+    css: `.donut-chart { transform:rotate(-90deg); }
+.donut-segment { fill:none; stroke-width:12; transition:stroke-dasharray .5s ease; }
+.donut-legend { display:flex; flex-direction:column; gap:.5rem; }
+.donut-legend-item { display:flex; align-items:center; gap:.5rem; font-size:.75rem; color:#52525b; }
+.donut-dot { width:.625rem; height:.625rem; border-radius:9999px; flex-shrink:0; }`,
+  },
+  {
+    id: 'bar-chart', name: 'Bar Chart', category: 'Display',
+    description: 'Simple vertical bar chart with value labels — pure CSS, no library.',
+    Preview: BarChartPreview,
+    tailwind: `<div class="flex items-end justify-between gap-2 h-28">
+  <!-- Bar -->
+  <div class="flex flex-col items-center gap-1 flex-1">
+    <span class="text-[9px] font-bold text-zinc-500">65</span>
+    <div class="w-full rounded-t-md bg-gradient-to-t from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 transition cursor-pointer" style="height:52px"></div>
+  </div>
+  <!-- Repeat per data point -->
+</div>
+<div class="flex justify-between mt-1">
+  <span class="flex-1 text-center text-[9px] text-zinc-400">Mon</span>
+  <!-- Repeat labels -->
+</div>`,
+    css: `.bar-chart { display:flex; align-items:flex-end; gap:.5rem; height:7rem; }
+.bar { flex:1; display:flex; flex-direction:column; align-items:center; gap:.25rem; }
+.bar-fill { width:100%; border-radius:.25rem .25rem 0 0; background:linear-gradient(to top,#2563eb,#60a5fa); transition:opacity .15s; }
+.bar-fill:hover { opacity:.8; }
+.bar-label { font-size:.5625rem; font-weight:700; color:#71717a; }`,
+  },
+  {
+    id: 'testimonial', name: 'Testimonial Card', category: 'Display',
+    description: 'Social proof quote card with star rating, avatar, and role.',
+    Preview: TestimonialPreview,
+    tailwind: `<div class="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
+  <div class="flex gap-0.5 mb-3">
+    <span class="text-amber-400 text-sm">★</span><!-- ×5 -->
+  </div>
+  <p class="text-sm text-zinc-600 leading-relaxed italic">
+    "This is hands down the best component library I've used. Saved our team weeks of work."
+  </p>
+  <div class="mt-4 flex items-center gap-3">
+    <div class="h-9 w-9 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white text-xs font-bold">SM</div>
+    <div>
+      <p class="text-sm font-semibold text-zinc-800">Sarah Miller</p>
+      <p class="text-xs text-zinc-400">CTO at TechCorp</p>
+    </div>
+  </div>
+</div>`,
+    css: `.testimonial { border-radius:1rem; border:1px solid #e4e4e7; background:#fff; padding:1.25rem; box-shadow:0 1px 3px rgba(0,0,0,.06); }
+.testimonial-stars { display:flex; gap:.125rem; margin-bottom:.75rem; color:#fbbf24; font-size:.875rem; }
+.testimonial-quote { font-size:.875rem; color:#52525b; font-style:italic; line-height:1.7; }
+.testimonial-author { display:flex; align-items:center; gap:.75rem; margin-top:1rem; }
+.testimonial-name { font-size:.875rem; font-weight:600; color:#27272a; }
+.testimonial-role { font-size:.75rem; color:#a1a1aa; }`,
+  },
+  {
+    id: 'feed-post', name: 'Social Feed Post', category: 'Display',
+    description: 'Social media post card with avatar, actions (like, comment, share), and image.',
+    Preview: FeedPostPreview,
+    tailwind: `<div class="rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden">
+  <!-- Header -->
+  <div class="flex items-center justify-between p-4">
+    <div class="flex items-center gap-3">
+      <div class="h-9 w-9 rounded-full bg-rose-400 flex items-center justify-center text-white text-xs font-bold">JD</div>
+      <div><p class="text-sm font-semibold text-zinc-800">Jane Doe</p><p class="text-xs text-zinc-400">2 hours ago</p></div>
+    </div>
+    <button class="text-zinc-400">⋯</button>
+  </div>
+  <p class="px-4 pb-3 text-sm text-zinc-700 leading-relaxed">Just shipped the new design system! 🎉</p>
+  <!-- Image -->
+  <div class="h-28 bg-gradient-to-br from-blue-500 to-indigo-600"></div>
+  <!-- Actions -->
+  <div class="flex items-center gap-4 px-4 py-3 border-t border-zinc-100">
+    <button class="flex items-center gap-1.5 text-xs font-medium text-red-500">❤️ 142</button>
+    <button class="flex items-center gap-1.5 text-xs font-medium text-zinc-500">💬 24</button>
+    <button class="flex items-center gap-1.5 text-xs font-medium text-zinc-500">↗️ Share</button>
+  </div>
+</div>`,
+    css: `.feed-post { border-radius:1rem; border:1px solid #e4e4e7; background:#fff; overflow:hidden; }
+.feed-header { display:flex; align-items:center; justify-content:space-between; padding:1rem; }
+.feed-meta { display:flex; align-items:center; gap:.75rem; }
+.feed-actions { display:flex; align-items:center; gap:1rem; padding:.75rem 1rem; border-top:1px solid #f4f4f5; }
+.feed-action { display:flex; align-items:center; gap:.375rem; font-size:.75rem; font-weight:500; background:none; border:none; cursor:pointer; color:#71717a; }`,
+  },
+  {
+    id: 'comment-thread', name: 'Comment Thread', category: 'Display',
+    description: 'Nested comment list with input field, reply counts, and live submission.',
+    Preview: CommentPreview,
+    tailwind: `<!-- Add comment row -->
+<div class="flex gap-3">
+  <div class="h-8 w-8 shrink-0 rounded-full bg-blue-500 flex items-center justify-center text-white text-[10px] font-bold">You</div>
+  <div class="flex-1 flex gap-2">
+    <input placeholder="Add a comment…" class="flex-1 rounded-xl border border-zinc-300 bg-white px-3 py-2 text-xs outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" />
+    <button class="rounded-xl bg-blue-600 px-3 text-xs font-semibold text-white hover:bg-blue-700">Post</button>
+  </div>
+</div>
+<!-- Comment -->
+<div class="flex gap-3">
+  <div class="h-8 w-8 shrink-0 rounded-full bg-zinc-400 flex items-center justify-center text-white text-[9px] font-bold">AC</div>
+  <div class="flex-1 rounded-xl bg-white border border-zinc-100 px-3 py-2.5 shadow-sm">
+    <div class="flex items-center gap-2"><p class="text-xs font-semibold text-zinc-800">Alex Chen</p><p class="text-[10px] text-zinc-400">5m ago</p></div>
+    <p class="mt-0.5 text-xs text-zinc-600">Great component! Love the clean design.</p>
+  </div>
+</div>`,
+    css: `.comment-box { display:flex; gap:.75rem; }
+.comment-avatar { width:2rem; height:2rem; border-radius:9999px; display:flex; align-items:center; justify-content:center; font-size:.625rem; font-weight:700; color:#fff; flex-shrink:0; }
+.comment-bubble { flex:1; border-radius:.75rem; border:1px solid #f4f4f5; background:#fff; padding:.625rem .75rem; box-shadow:0 1px 2px rgba(0,0,0,.05); }
+.comment-author { font-size:.75rem; font-weight:600; color:#27272a; }
+.comment-time   { font-size:.625rem; color:#a1a1aa; }
+.comment-text   { font-size:.75rem; color:#52525b; margin-top:.25rem; }`,
+  },
+  {
+    id: 'file-card', name: 'File Cards', category: 'Display',
+    description: 'File and document cards with icon, name, size, and hover effect.',
+    Preview: FileCardPreview,
+    tailwind: `<div class="grid grid-cols-2 gap-2">
+  <div class="rounded-xl border border-zinc-200 bg-white p-3 hover:shadow-md transition cursor-pointer group">
+    <div class="h-10 w-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl mb-2">🎨</div>
+    <p class="text-xs font-semibold text-zinc-800 truncate group-hover:text-blue-600 transition">design-system.fig</p>
+    <p class="text-[10px] text-zinc-400 mt-0.5">24.5 MB</p>
+  </div>
+  <div class="rounded-xl border border-zinc-200 bg-white p-3 hover:shadow-md transition cursor-pointer group">
+    <div class="h-10 w-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center text-xl mb-2">📄</div>
+    <p class="text-xs font-semibold text-zinc-800 truncate group-hover:text-blue-600 transition">report-Q4.pdf</p>
+    <p class="text-[10px] text-zinc-400 mt-0.5">2.1 MB</p>
+  </div>
+</div>`,
+    css: `.file-card { border-radius:.75rem; border:1px solid #e4e4e7; background:#fff; padding:.75rem; cursor:pointer; transition:box-shadow .2s; }
+.file-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.08); }
+.file-icon { width:2.5rem; height:2.5rem; border-radius:.75rem; display:flex; align-items:center; justify-content:center; font-size:1.25rem; margin-bottom:.5rem; }
+.file-name { font-size:.75rem; font-weight:600; color:#27272a; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.file-size { font-size:.625rem; color:#a1a1aa; margin-top:.125rem; }`,
+  },
+  {
+    id: 'comparison-table', name: 'Comparison Table', category: 'Display',
+    description: 'Feature comparison matrix with ✓ / — for free, pro, and enterprise plans.',
+    Preview: ComparisonTablePreview,
+    tailwind: `<table class="w-full text-xs text-center">
+  <thead>
+    <tr>
+      <th class="text-left py-2 text-zinc-500 font-medium text-[11px]">Feature</th>
+      <th class="py-2 font-bold text-[11px] text-zinc-700">Free</th>
+      <th class="py-2 font-bold text-[11px] text-blue-600">Pro</th>
+      <th class="py-2 font-bold text-[11px] text-zinc-700">Enterprise</th>
+    </tr>
+  </thead>
+  <tbody class="divide-y divide-zinc-100">
+    <tr class="hover:bg-zinc-50">
+      <td class="py-2 text-left text-[11px] text-zinc-600">Unlimited projects</td>
+      <td class="py-2"><span class="text-emerald-500 font-bold">✓</span></td>
+      <td class="py-2"><span class="text-emerald-500 font-bold">✓</span></td>
+      <td class="py-2"><span class="text-emerald-500 font-bold">✓</span></td>
+    </tr>
+    <tr class="hover:bg-zinc-50">
+      <td class="py-2 text-left text-[11px] text-zinc-600">API access</td>
+      <td class="py-2"><span class="text-zinc-300">–</span></td>
+      <td class="py-2"><span class="text-emerald-500 font-bold">✓</span></td>
+      <td class="py-2"><span class="text-emerald-500 font-bold">✓</span></td>
+    </tr>
+  </tbody>
+</table>`,
+    css: `.compare-table { width:100%; border-collapse:collapse; font-size:.75rem; text-align:center; }
+.compare-table th { padding:.5rem; font-size:.6875rem; font-weight:600; color:#71717a; }
+.compare-table th.featured { color:#2563eb; }
+.compare-table td { padding:.5rem; border-bottom:1px solid #f4f4f5; font-size:.6875rem; color:#52525b; }
+.compare-table tr:hover td { background:#fafafa; }
+.check { color:#059669; font-weight:700; } .dash { color:#d4d4d8; }`,
+  },
+  {
+    id: 'team-card', name: 'Team Card Grid', category: 'Display',
+    description: 'Team member cards with gradient avatar, name, role, and social links.',
+    Preview: TeamCardPreview,
+    tailwind: `<div class="grid grid-cols-2 gap-3">
+  <div class="rounded-2xl border border-zinc-200 bg-white p-4 text-center hover:shadow-md transition">
+    <div class="mx-auto h-12 w-12 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white font-bold text-sm mb-2">AC</div>
+    <p class="text-xs font-bold text-zinc-800">Alex Chen</p>
+    <p class="text-[10px] text-zinc-400 mt-0.5">CEO</p>
+    <div class="mt-2 flex justify-center gap-2">
+      <button class="h-6 w-6 rounded-full bg-zinc-100 hover:bg-zinc-200 text-[10px] text-zinc-500 transition flex items-center justify-center">𝕏</button>
+      <button class="h-6 w-6 rounded-full bg-zinc-100 hover:bg-zinc-200 text-[10px] text-zinc-500 transition flex items-center justify-center">in</button>
+    </div>
+  </div>
+</div>`,
+    css: `.team-card { border-radius:1rem; border:1px solid #e4e4e7; background:#fff; padding:1rem; text-align:center; transition:box-shadow .2s; }
+.team-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.08); }
+.team-avatar { margin:0 auto .5rem; width:3rem; height:3rem; border-radius:9999px; display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; }
+.team-name { font-size:.75rem; font-weight:700; color:#18181b; }
+.team-role { font-size:.625rem; color:#a1a1aa; margin-top:.125rem; }
+.team-socials { display:flex; justify-content:center; gap:.5rem; margin-top:.5rem; }`,
+  },
+  {
+    id: 'order-summary', name: 'Order Summary', category: 'Display',
+    description: 'E-commerce order summary with items, subtotal, tax, and checkout button.',
+    Preview: OrderSummaryPreview,
+    tailwind: `<div class="rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden">
+  <div class="border-b border-zinc-100 px-4 py-3"><p class="text-sm font-bold text-zinc-800">Order Summary</p></div>
+  <div class="divide-y divide-zinc-50 px-4">
+    <div class="flex items-center justify-between py-2.5">
+      <div><p class="text-xs font-medium text-zinc-800">Pro Plan</p><p class="text-[10px] text-zinc-400">×1</p></div>
+      <p class="text-xs font-semibold text-zinc-700">$29.00</p>
+    </div>
+  </div>
+  <div class="border-t border-zinc-200 px-4 py-3 space-y-1.5">
+    <div class="flex justify-between text-xs text-zinc-500"><span>Subtotal</span><span>$43.00</span></div>
+    <div class="flex justify-between text-xs text-zinc-500"><span>Tax (10%)</span><span>$4.30</span></div>
+    <div class="flex justify-between text-sm font-bold text-zinc-800 pt-1 border-t border-zinc-100"><span>Total</span><span>$47.30</span></div>
+  </div>
+  <div class="px-4 pb-4"><button class="w-full rounded-xl bg-blue-600 py-2.5 text-sm font-bold text-white hover:bg-blue-700 transition">Checkout</button></div>
+</div>`,
+    css: `.order-card { border-radius:1rem; border:1px solid #e4e4e7; background:#fff; overflow:hidden; }
+.order-header { padding:.75rem 1rem; border-bottom:1px solid #f4f4f5; font-size:.875rem; font-weight:700; color:#27272a; }
+.order-item { display:flex; align-items:center; justify-content:space-between; padding:.625rem 1rem; border-bottom:1px solid #fafafa; }
+.order-totals { padding:.75rem 1rem; border-top:1px solid #e4e4e7; }
+.order-row { display:flex; justify-content:space-between; font-size:.75rem; color:#71717a; margin-bottom:.375rem; }
+.order-total { display:flex; justify-content:space-between; font-size:.875rem; font-weight:700; color:#18181b; padding-top:.375rem; border-top:1px solid #f4f4f5; }`,
+  },
+  {
+    id: 'metric-sparkline', name: 'Metric + Sparkline', category: 'Display',
+    description: 'KPI card with an inline SVG sparkline trend line — no library needed.',
+    Preview: MetricSparklinePreview,
+    tailwind: `<div class="rounded-xl border border-zinc-200 bg-white p-3 shadow-sm">
+  <p class="text-[10px] font-medium text-zinc-400 uppercase tracking-wide">Revenue</p>
+  <p class="mt-1 text-lg font-bold text-zinc-800">$12,845</p>
+  <!-- SVG sparkline -->
+  <svg viewBox="0 0 100 100" class="h-8 w-full my-2" preserveAspectRatio="none">
+    <polyline fill="none" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+      points="0,70 11,55 22,72 33,40 44,25 55,48 66,10 77,32 88,15 100,5" />
+  </svg>
+  <span class="text-[10px] font-bold text-emerald-600">+18%</span>
+</div>`,
+    css: `.metric-card { border-radius:.75rem; border:1px solid #e4e4e7; background:#fff; padding:.75rem; box-shadow:0 1px 3px rgba(0,0,0,.06); }
+.metric-label { font-size:.625rem; font-weight:500; color:#a1a1aa; text-transform:uppercase; letter-spacing:.08em; }
+.metric-value { font-size:1.125rem; font-weight:700; color:#18181b; margin-top:.25rem; }
+.metric-sparkline { display:block; width:100%; height:2rem; margin:.5rem 0; }
+.metric-change-up   { font-size:.625rem; font-weight:700; color:#059669; }
+.metric-change-down { font-size:.625rem; font-weight:700; color:#dc2626; }`,
+  },
+  {
+    id: 'heatmap', name: 'Activity Heatmap', category: 'Display',
+    description: 'GitHub-style contribution heatmap grid with color intensity legend.',
+    Preview: HeatmapPreview,
+    tailwind: `<!-- Heatmap row (repeat per day) -->
+<div class="flex items-center gap-1">
+  <span class="w-6 text-[9px] text-zinc-400 text-right">Mon</span>
+  <div class="h-3 w-3 rounded-sm bg-zinc-100"></div>
+  <div class="h-3 w-3 rounded-sm bg-emerald-200"></div>
+  <div class="h-3 w-3 rounded-sm bg-emerald-500"></div>
+  <!-- Repeat cells per week -->
+</div>
+<!-- Legend -->
+<div class="flex items-center gap-1 mt-1">
+  <span class="text-[9px] text-zinc-400">Less</span>
+  <div class="h-2.5 w-2.5 rounded-sm bg-zinc-100"></div>
+  <div class="h-2.5 w-2.5 rounded-sm bg-emerald-200"></div>
+  <div class="h-2.5 w-2.5 rounded-sm bg-emerald-500"></div>
+  <div class="h-2.5 w-2.5 rounded-sm bg-emerald-700"></div>
+  <span class="text-[9px] text-zinc-400">More</span>
+</div>`,
+    css: `.heatmap { display:flex; flex-direction:column; gap:.25rem; }
+.heatmap-row { display:flex; align-items:center; gap:.25rem; }
+.heatmap-day { width:.75rem; height:.75rem; border-radius:.2rem; }
+.heatmap-0 { background:#f4f4f5; } .heatmap-1 { background:#bbf7d0; }
+.heatmap-2 { background:#4ade80; } .heatmap-3 { background:#16a34a; } .heatmap-4 { background:#14532d; }`,
+  },
+  {
+    id: 'quote', name: 'Blockquote Styles', category: 'Display',
+    description: 'Styled blockquote variants — colored accent, dark, and pull quote.',
+    Preview: QuotePreview,
+    tailwind: `<!-- Blue accent quote -->
+<blockquote class="rounded-2xl border-l-4 border-blue-500 bg-blue-50 px-5 py-4">
+  <p class="text-sm text-blue-900 italic leading-relaxed">"Design is not just what it looks like and feels like. Design is how it works."</p>
+  <footer class="mt-2 text-xs font-semibold text-blue-600">— Steve Jobs</footer>
+</blockquote>
+<!-- Dark quote -->
+<blockquote class="rounded-2xl bg-zinc-900 px-5 py-4">
+  <p class="text-2xl text-zinc-400 font-serif leading-none mb-2">"</p>
+  <p class="text-sm text-zinc-300 leading-relaxed">Any sufficiently advanced technology is indistinguishable from magic.</p>
+  <footer class="mt-2 text-xs text-zinc-500">— Arthur C. Clarke</footer>
+</blockquote>`,
+    css: `.blockquote { border-radius:1rem; padding:1rem 1.25rem; }
+.blockquote-blue { border-left:4px solid #3b82f6; background:#eff6ff; }
+.blockquote-blue p { color:#1e3a8a; font-style:italic; }
+.blockquote-dark { background:#18181b; }
+.blockquote-dark p { color:#d4d4d8; }
+.blockquote footer { font-size:.75rem; font-weight:600; margin-top:.5rem; }`,
+  },
+  {
+    id: 'image-card', name: 'Image Overlay Card', category: 'Display',
+    description: 'Image card with gradient overlay, title, badge, and hover zoom effect.',
+    Preview: ImageCardPreview,
+    tailwind: `<div class="relative w-40 h-28 rounded-2xl overflow-hidden group cursor-pointer">
+  <img src="..." alt="" class="absolute inset-0 h-full w-full object-cover group-hover:scale-110 transition duration-500" />
+  <!-- Or gradient placeholder -->
+  <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-700"></div>
+  <!-- Overlay content -->
+  <div class="absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-black/70 via-transparent">
+    <p class="text-white text-xs font-bold">Mountain Vista</p>
+    <p class="text-white/70 text-[10px]">Photography</p>
+  </div>
+  <!-- Hover overlay -->
+  <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+    <span class="text-white text-2xl">🔍</span>
+  </div>
+</div>`,
+    css: `.img-card { position:relative; border-radius:1rem; overflow:hidden; cursor:pointer; }
+.img-card img { width:100%; height:100%; object-fit:cover; transition:transform .5s; }
+.img-card:hover img { transform:scale(1.1); }
+.img-overlay { position:absolute; inset:0; background:linear-gradient(to top,rgba(0,0,0,.7) 0%,transparent 60%); display:flex; flex-direction:column; justify-content:flex-end; padding:.75rem; }
+.img-title { color:#fff; font-size:.75rem; font-weight:700; }`,
+  },
+
+  /* ── NAVIGATION ── */
+  {
+    id: 'bottom-nav', name: 'Bottom Navigation', category: 'Navigation',
+    description: 'Mobile-style tab bar with active indicator, badge, and icons.',
+    Preview: BottomNavPreview,
+    tailwind: `<nav class="flex bg-white border-t border-zinc-200 safe-area-inset-bottom">
+  <!-- Active tab -->
+  <button class="relative flex flex-1 flex-col items-center py-2.5 gap-0.5 text-blue-600">
+    <span class="text-lg leading-none">🏠</span>
+    <span class="text-[9px] font-medium">Home</span>
+    <span class="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-5 rounded-full bg-blue-600"></span>
+  </button>
+  <!-- Inactive tab with badge -->
+  <button class="relative flex flex-1 flex-col items-center py-2.5 gap-0.5 text-zinc-400 hover:text-zinc-600">
+    <span class="text-lg leading-none">🔔</span>
+    <span class="text-[9px] font-medium">Alerts</span>
+    <span class="absolute top-1.5 right-3 h-3.5 min-w-[14px] rounded-full bg-red-500 text-[8px] font-bold text-white flex items-center justify-center px-0.5">3</span>
+  </button>
+</nav>`,
+    css: `.bottom-nav { display:flex; background:#fff; border-top:1px solid #e4e4e7; }
+.bottom-nav-item { flex:1; display:flex; flex-direction:column; align-items:center; padding:.625rem 0; gap:.125rem; position:relative; cursor:pointer; color:#a1a1aa; transition:color .15s; }
+.bottom-nav-item.active { color:#2563eb; }
+.bottom-nav-item.active::after { content:''; position:absolute; bottom:0; width:1.25rem; height:2px; border-radius:9999px; background:#2563eb; }`,
+  },
+  {
+    id: 'drawer', name: 'Drawer / Side Panel', category: 'Navigation',
+    description: 'Slide-in side drawer with overlay backdrop and content sections.',
+    Preview: DrawerPreview,
+    tailwind: `<!-- Trigger -->
+<button class="rounded-lg bg-zinc-800 px-4 py-2 text-sm font-semibold text-white">Open Drawer</button>
+
+<!-- Drawer -->
+<div class="fixed inset-0 z-50 flex">
+  <!-- Backdrop -->
+  <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+  <!-- Panel -->
+  <div class="relative ml-auto h-full w-72 bg-white shadow-2xl flex flex-col">
+    <div class="flex items-center justify-between border-b border-zinc-100 px-5 py-4">
+      <h3 class="font-semibold text-zinc-800">Side Panel</h3>
+      <button class="rounded-lg p-1 text-zinc-400 hover:bg-zinc-100">✕</button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-5 space-y-1">
+      <button class="flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50">Account settings <span>›</span></button>
+    </div>
+    <div class="border-t p-4">
+      <button class="w-full rounded-xl bg-blue-600 py-2.5 text-sm font-semibold text-white">Upgrade Plan</button>
+    </div>
+  </div>
+</div>`,
+    css: `.drawer-backdrop { position:fixed; inset:0; z-index:50; display:flex; background:rgba(0,0,0,.4); backdrop-filter:blur(4px); }
+.drawer { position:relative; margin-left:auto; height:100%; width:18rem; background:#fff; box-shadow:-10px 0 40px rgba(0,0,0,.15); display:flex; flex-direction:column; }
+.drawer-header { display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem; border-bottom:1px solid #f4f4f5; }
+.drawer-body   { flex:1; overflow-y:auto; padding:1.25rem; }
+.drawer-footer { padding:1rem 1.25rem; border-top:1px solid #f4f4f5; }`,
+  },
+  {
+    id: 'command-palette', name: 'Command Palette', category: 'Navigation',
+    description: 'Spotlight-style ⌘K search modal with filtered command results.',
+    Preview: CommandPalettePreview,
+    tailwind: `<!-- Trigger -->
+<button class="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-2 text-sm text-zinc-500 shadow-sm hover:bg-zinc-50">
+  <svg .../> Search commands…<kbd class="ml-2 rounded border border-zinc-200 bg-zinc-50 px-1.5 py-0.5 font-mono text-[10px]">⌘K</kbd>
+</button>
+<!-- Modal -->
+<div class="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] bg-black/50 backdrop-blur-sm">
+  <div class="w-full max-w-md rounded-2xl bg-white shadow-2xl overflow-hidden">
+    <div class="flex items-center gap-3 border-b border-zinc-100 px-4 py-3">
+      <svg .../> <input placeholder="Search commands…" class="flex-1 text-sm outline-none" />
+    </div>
+    <div class="py-2">
+      <button class="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-zinc-700 hover:bg-blue-50 hover:text-blue-700">
+        <span class="text-zinc-400">→</span>Dashboard
+      </button>
+    </div>
+  </div>
+</div>`,
+    css: `.cmd-palette { position:fixed; inset:0; z-index:9999; display:flex; align-items:flex-start; justify-content:center; padding-top:15vh; background:rgba(0,0,0,.5); backdrop-filter:blur(4px); }
+.cmd-modal { width:100%; max-width:28rem; border-radius:1rem; background:#fff; box-shadow:0 25px 60px rgba(0,0,0,.2); overflow:hidden; }
+.cmd-search { display:flex; align-items:center; gap:.75rem; padding:.75rem 1rem; border-bottom:1px solid #f4f4f5; }
+.cmd-input { flex:1; font-size:.875rem; outline:none; color:#27272a; }
+.cmd-result { display:flex; align-items:center; gap:.75rem; width:100%; padding:.625rem 1rem; font-size:.875rem; color:#3f3f46; }
+.cmd-result:hover { background:#eff6ff; color:#2563eb; }`,
+  },
+  {
+    id: 'fab', name: 'Floating Action Button', category: 'Navigation',
+    description: 'FAB with expandable action items — common in mobile and dashboard UIs.',
+    Preview: FABPreview,
+    tailwind: `<div class="fixed bottom-6 right-6 flex flex-col-reverse items-end gap-3">
+  <!-- Action items (shown when open) -->
+  <div class="flex items-center gap-2">
+    <span class="rounded-lg bg-white shadow-md px-2.5 py-1 text-xs font-medium text-zinc-700">New post</span>
+    <button class="h-10 w-10 rounded-full bg-white shadow-md flex items-center justify-center text-base hover:scale-110 transition">✏️</button>
+  </div>
+  <!-- Main FAB -->
+  <button class="h-14 w-14 rounded-full bg-blue-600 shadow-lg flex items-center justify-center text-white text-2xl hover:bg-blue-700 transition rotate-45">+</button>
+</div>`,
+    css: `.fab-container { position:fixed; bottom:1.5rem; right:1.5rem; display:flex; flex-direction:column-reverse; align-items:flex-end; gap:.75rem; }
+.fab { width:3.5rem; height:3.5rem; border-radius:9999px; background:#2563eb; color:#fff; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.5rem; box-shadow:0 8px 25px rgba(37,99,235,.4); transition:background .15s,transform .2s; }
+.fab:hover { background:#1d4ed8; }
+.fab.open { transform:rotate(45deg); }
+.fab-action { display:flex; align-items:center; gap:.5rem; }
+.fab-action-btn { width:2.5rem; height:2.5rem; border-radius:9999px; background:#fff; border:none; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,.1); }`,
+  },
+  {
+    id: 'back-to-top', name: 'Back to Top', category: 'Navigation',
+    description: 'Scroll-to-top button variants — icon only, with label, and pill style.',
+    Preview: BackToTopPreview,
+    tailwind: `<!-- Icon only -->
+<button onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  class="fixed bottom-6 right-6 h-10 w-10 rounded-full bg-blue-600 shadow-lg flex items-center justify-center text-white text-lg hover:bg-blue-700 hover:-translate-y-1 transition-all z-50">↑</button>
+
+<!-- With label -->
+<button onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  class="fixed bottom-6 right-6 flex items-center gap-2 rounded-full bg-white border border-zinc-200 shadow-lg px-4 py-2 text-xs font-semibold text-zinc-700 hover:-translate-y-1 transition-all z-50">↑ Back to top</button>`,
+    css: `.back-to-top { position:fixed; bottom:1.5rem; right:1.5rem; z-index:50; width:2.5rem; height:2.5rem; border-radius:9999px; background:#2563eb; color:#fff; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.125rem; box-shadow:0 4px 16px rgba(37,99,235,.3); transition:transform .2s,opacity .2s; }
+.back-to-top:hover { transform:translateY(-4px); }
+.back-to-top.hidden { opacity:0; pointer-events:none; }`,
+  },
+
+  /* ── FEEDBACK ── */
+  {
+    id: 'circular-progress', name: 'Circular Progress', category: 'Feedback',
+    description: 'SVG ring progress indicators for storage, CPU, and memory metrics.',
+    Preview: CircularProgressPreview,
+    tailwind: `<div class="relative">
+  <svg width="80" height="80" viewBox="0 0 80 80" class="-rotate-90">
+    <!-- Track -->
+    <circle cx="40" cy="40" r="30" fill="none" stroke="#e4e4e7" stroke-width="8" />
+    <!-- Progress (75%) -->
+    <circle cx="40" cy="40" r="30" fill="none" stroke="#3b82f6" stroke-width="8"
+      stroke-dasharray="141.37 188.5" stroke-linecap="round" />
+  </svg>
+  <div class="absolute inset-0 flex items-center justify-center">
+    <span class="text-sm font-bold text-zinc-800">75%</span>
+  </div>
+</div>`,
+    css: `.ring-progress { position:relative; display:inline-block; }
+.ring-track { fill:none; stroke:#e4e4e7; }
+.ring-bar   { fill:none; stroke-linecap:round; transition:stroke-dasharray .6s ease; }
+.ring-label { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:.875rem; font-weight:700; color:#18181b; }`,
+  },
+  {
+    id: 'status-banner', name: 'Status Banner', category: 'Feedback',
+    description: 'Colored announcement banners for info, success, warning, and critical states.',
+    Preview: StatusBannerPreview,
+    tailwind: `<!-- Info -->
+<div class="bg-blue-600 flex items-center gap-3 rounded-xl px-4 py-2.5">
+  <span class="text-base shrink-0">📢</span>
+  <p class="flex-1 text-xs font-medium text-white">System maintenance on Dec 31 at 2AM UTC.</p>
+  <button class="shrink-0 rounded-lg bg-white/20 hover:bg-white/30 px-2.5 py-1 text-[10px] font-bold text-white transition">Learn more</button>
+</div>
+<!-- Critical -->
+<div class="bg-red-600 flex items-center gap-3 rounded-xl px-4 py-2.5">
+  <span class="text-base shrink-0">🚨</span>
+  <p class="flex-1 text-xs font-medium text-white">Critical incident in progress. Team notified.</p>
+  <button class="shrink-0 rounded-lg bg-white/20 px-2.5 py-1 text-[10px] font-bold text-white">Updates</button>
+</div>`,
+    css: `.status-banner { display:flex; align-items:center; gap:.75rem; border-radius:.75rem; padding:.625rem 1rem; }
+.status-banner p { flex:1; font-size:.75rem; font-weight:500; color:#fff; }
+.status-btn { border-radius:.5rem; padding:.25rem .625rem; font-size:.625rem; font-weight:700; color:#fff; background:rgba(255,255,255,.2); border:none; cursor:pointer; }
+.status-btn:hover { background:rgba(255,255,255,.3); }`,
+  },
+  {
+    id: 'confirm-dialog', name: 'Confirm Dialog', category: 'Feedback',
+    description: 'Destructive action confirmation modal with icon, warning copy, and yes/cancel.',
+    Preview: ConfirmDialogPreview,
+    tailwind: `<!-- Trigger -->
+<button class="rounded-lg bg-red-500 px-4 py-2 text-sm font-semibold text-white hover:bg-red-600">Delete Account</button>
+
+<!-- Dialog -->
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+  <div class="w-80 mx-4 rounded-2xl bg-white shadow-2xl p-6 text-center">
+    <div class="mx-auto h-12 w-12 rounded-full bg-red-100 flex items-center justify-center text-2xl mb-4">🗑️</div>
+    <h3 class="font-bold text-zinc-800">Delete Account?</h3>
+    <p class="mt-2 text-xs text-zinc-500 leading-relaxed">This will permanently delete your account and all data.</p>
+    <div class="mt-5 flex gap-2">
+      <button class="flex-1 rounded-xl border border-zinc-200 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50">Cancel</button>
+      <button class="flex-1 rounded-xl bg-red-500 py-2.5 text-sm font-bold text-white hover:bg-red-600">Yes, delete</button>
+    </div>
+  </div>
+</div>`,
+    css: `.confirm-dialog { width:20rem; margin:1rem; border-radius:1rem; background:#fff; box-shadow:0 25px 50px rgba(0,0,0,.25); padding:1.5rem; text-align:center; }
+.confirm-icon { width:3rem; height:3rem; border-radius:9999px; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; font-size:1.5rem; }
+.confirm-icon.danger { background:#fee2e2; }
+.confirm-title { font-weight:700; color:#18181b; font-size:.9375rem; }
+.confirm-actions { display:flex; gap:.5rem; margin-top:1.25rem; }`,
+  },
+  {
+    id: 'loading-overlay', name: 'Loading Overlay', category: 'Feedback',
+    description: 'Full-content loading overlay with spinner and message — press button to try.',
+    Preview: LoadingOverlayPreview,
+    tailwind: `<div class="relative rounded-2xl border border-zinc-200 bg-white overflow-hidden">
+  <!-- Loading overlay (conditionally shown) -->
+  <div class="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-white/90 backdrop-blur-sm rounded-2xl">
+    <div class="h-10 w-10 animate-spin rounded-full border-4 border-zinc-200 border-t-blue-600"></div>
+    <p class="text-sm font-semibold text-zinc-700">Loading data…</p>
+  </div>
+  <!-- Content behind overlay -->
+  <div class="p-5 space-y-3">
+    <div class="h-3 w-3/4 rounded-full bg-zinc-200"></div>
+    <div class="h-3 w-full rounded-full bg-zinc-200"></div>
+  </div>
+</div>`,
+    css: `.loading-overlay { position:absolute; inset:0; z-index:10; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.75rem; background:rgba(255,255,255,.9); backdrop-filter:blur(4px); border-radius:inherit; }
+.loading-text { font-size:.875rem; font-weight:600; color:#3f3f46; }`,
+  },
+  {
+    id: 'multi-step-progress', name: 'Multi-Step Progress', category: 'Feedback',
+    description: 'Horizontal progress bar linked to step dots with prev/next navigation.',
+    Preview: MultiStepProgressPreview,
+    tailwind: `<div class="space-y-4">
+  <!-- Progress bar + dots -->
+  <div class="relative">
+    <div class="h-2 w-full rounded-full bg-zinc-200">
+      <div class="h-2 w-[50%] rounded-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500"></div>
+    </div>
+    <div class="mt-2 flex justify-between">
+      <div class="flex flex-col items-center gap-1 text-[10px] font-medium text-blue-600">
+        <div class="-mt-5 h-4 w-4 rounded-full border-2 border-blue-600 bg-white flex items-center justify-center"><span class="text-[8px] text-blue-600">✓</span></div>
+        Details
+      </div>
+      <!-- Repeat for each step -->
+    </div>
+  </div>
+  <div class="flex gap-2">
+    <button class="rounded-lg border border-zinc-200 px-4 py-2 text-xs font-medium text-zinc-600 hover:bg-zinc-50 flex-1">Back</button>
+    <button class="rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white hover:bg-blue-700 flex-1">Next →</button>
+  </div>
+</div>`,
+    css: `.msp-track { height:.5rem; border-radius:9999px; background:#e4e4e7; position:relative; }
+.msp-fill { height:100%; border-radius:9999px; background:linear-gradient(to right,#3b82f6,#2563eb); transition:width .4s ease; }
+.msp-steps { display:flex; justify-content:space-between; margin-top:.5rem; }
+.msp-step { display:flex; flex-direction:column; align-items:center; gap:.25rem; font-size:.625rem; font-weight:500; }
+.msp-dot { width:1rem; height:1rem; border-radius:9999px; border:2px solid #d4d4d8; background:#fff; margin-top:-.625rem; }
+.msp-dot.done { border-color:#2563eb; }
+.msp-dot.active { border-color:#2563eb; }`,
+  },
+
+  /* ── OVERLAY ── */
+  {
+    id: 'context-menu', name: 'Context Menu', category: 'Overlay',
+    description: 'Right-click context menu with icons, divider, and danger item.',
+    Preview: ContextMenuPreview,
+    tailwind: `<!-- Right-click zone -->
+<div oncontextmenu="..." class="flex h-24 items-center justify-center rounded-xl border-2 border-dashed border-zinc-300 bg-white text-xs text-zinc-400 cursor-context-menu select-none">
+  Right-click anywhere here
+</div>
+
+<!-- Context menu (shown on right-click) -->
+<div class="absolute rounded-xl border border-zinc-200 bg-white shadow-xl py-1 w-40" style="left:80px;top:40px">
+  <button class="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50">✏️ Edit</button>
+  <button class="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50">📋 Copy</button>
+  <div class="my-1 border-t border-zinc-100"></div>
+  <button class="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-red-500 hover:bg-red-50">🗑️ Delete</button>
+</div>`,
+    css: `.context-menu { position:absolute; min-width:10rem; background:#fff; border:1px solid #e4e4e7; border-radius:.75rem; box-shadow:0 10px 25px rgba(0,0,0,.12); padding:.25rem 0; z-index:9999; }
+.context-item { display:flex; align-items:center; gap:.625rem; width:100%; padding:.5rem .75rem; font-size:.875rem; color:#3f3f46; cursor:pointer; background:none; border:none; }
+.context-item:hover { background:#fafafa; }
+.context-item.danger { color:#ef4444; }
+.context-item.danger:hover { background:#fef2f2; }`,
+  },
+  {
+    id: 'bottom-sheet', name: 'Bottom Sheet', category: 'Overlay',
+    description: 'Mobile slide-up sheet with drag handle, share actions, and cancel button.',
+    Preview: BottomSheetPreview,
+    tailwind: `<!-- Trigger -->
+<button class="rounded-lg bg-zinc-800 px-4 py-2 text-sm font-semibold text-white">Open Sheet</button>
+
+<!-- Sheet (slides up from bottom) -->
+<div class="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm">
+  <div class="w-full max-w-md rounded-t-3xl bg-white shadow-2xl">
+    <div class="flex justify-center pt-3 pb-1"><div class="h-1 w-10 rounded-full bg-zinc-200"></div></div>
+    <div class="px-6 pb-2 pt-3"><h3 class="font-bold text-zinc-800">Share this post</h3></div>
+    <div class="grid grid-cols-4 gap-3 px-6 py-4">
+      <button class="flex flex-col items-center gap-1.5 rounded-xl p-2 hover:bg-zinc-50">
+        <span class="text-xl">📘</span><span class="text-[10px] text-zinc-500">Facebook</span>
+      </button>
+    </div>
+    <div class="px-6 pb-6">
+      <button class="w-full rounded-xl border border-zinc-200 py-3 text-sm font-medium text-zinc-600">Cancel</button>
+    </div>
+  </div>
+</div>`,
+    css: `.bottom-sheet { border-radius:1.5rem 1.5rem 0 0; background:#fff; box-shadow:0 -8px 40px rgba(0,0,0,.15); max-height:90vh; overflow-y:auto; }
+.sheet-handle { display:flex; justify-content:center; padding:.75rem 0 .25rem; }
+.sheet-handle-bar { width:2.5rem; height:.25rem; border-radius:9999px; background:#e4e4e7; }
+.sheet-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:.75rem; padding:1rem 1.5rem; }
+.sheet-action { display:flex; flex-direction:column; align-items:center; gap:.375rem; border-radius:.75rem; padding:.5rem; cursor:pointer; }`,
+  },
+  {
+    id: 'lightbox', name: 'Image Lightbox', category: 'Overlay',
+    description: 'Click any thumbnail to open a fullscreen lightbox with prev/next navigation.',
+    Preview: LightboxPreview,
+    tailwind: `<!-- Thumbnails grid -->
+<div class="grid grid-cols-4 gap-1.5">
+  <div onclick="openLightbox(0)" class="aspect-square rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-xl cursor-zoom-in hover:scale-105 transition">🏔️</div>
+  <!-- Repeat -->
+</div>
+
+<!-- Lightbox overlay -->
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm">
+  <button class="absolute left-4 h-12 w-12 rounded-full bg-white/10 text-white text-2xl hover:bg-white/20">‹</button>
+  <div class="h-64 w-64 rounded-3xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-7xl shadow-2xl">🏔️</div>
+  <button class="absolute right-4 h-12 w-12 rounded-full bg-white/10 text-white text-2xl hover:bg-white/20">›</button>
+  <button class="absolute top-4 right-4 h-8 w-8 rounded-full bg-white/10 text-white text-sm hover:bg-white/20 flex items-center justify-center">✕</button>
+</div>`,
+    css: `.lightbox { position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.92); backdrop-filter:blur(8px); }
+.lightbox-img { max-width:90vw; max-height:80vh; border-radius:1rem; box-shadow:0 25px 60px rgba(0,0,0,.5); }
+.lightbox-nav { position:absolute; top:50%; transform:translateY(-50%); width:3rem; height:3rem; border-radius:9999px; background:rgba(255,255,255,.1); border:none; color:#fff; font-size:1.5rem; cursor:pointer; }
+.lightbox-nav.prev { left:1rem; }
+.lightbox-nav.next { right:1rem; }`,
+  },
+  {
+    id: 'side-panel', name: 'Detail Side Panel', category: 'Overlay',
+    description: 'Flyout detail panel for user profiles, record views, and quick edits.',
+    Preview: SidePanelPreview,
+    tailwind: `<!-- Trigger -->
+<button class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white">View Details</button>
+
+<!-- Side panel flyout -->
+<div class="fixed inset-0 z-50 flex">
+  <div class="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
+  <div class="relative ml-auto h-full w-80 bg-white shadow-2xl flex flex-col overflow-hidden">
+    <!-- Gradient header -->
+    <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-6 text-white">
+      <div class="flex items-start justify-between">
+        <div>
+          <div class="h-12 w-12 rounded-full bg-white/20 flex items-center justify-center text-lg font-bold mb-2">JD</div>
+          <h3 class="font-bold text-lg">Jane Doe</h3>
+          <p class="text-blue-200 text-xs">Senior Designer · SF</p>
+        </div>
+        <button class="text-white/60 hover:text-white">✕</button>
+      </div>
+    </div>
+    <!-- Details -->
+    <div class="flex-1 overflow-y-auto p-5 space-y-4">
+      <div><p class="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Email</p><p class="mt-0.5 text-sm text-zinc-700">jane@company.com</p></div>
+    </div>
+    <div class="border-t border-zinc-100 p-4 flex gap-2">
+      <button class="flex-1 rounded-xl border border-zinc-200 py-2 text-sm text-zinc-600">Message</button>
+      <button class="flex-1 rounded-xl bg-blue-600 py-2 text-sm font-semibold text-white">Edit</button>
+    </div>
+  </div>
+</div>`,
+    css: `.side-panel { position:relative; margin-left:auto; height:100%; width:20rem; background:#fff; box-shadow:-10px 0 40px rgba(0,0,0,.15); display:flex; flex-direction:column; overflow:hidden; }
+.side-panel-header { padding:1.5rem 1.25rem; }
+.side-panel-body   { flex:1; overflow-y:auto; padding:1.25rem; }
+.side-panel-footer { padding:1rem 1.25rem; border-top:1px solid #f4f4f5; display:flex; gap:.5rem; }`,
+  },
+  {
+    id: 'cookie-banner', name: 'Cookie Banner', category: 'Overlay',
+    description: 'GDPR cookie consent banner with accept, reject, and manage preferences.',
+    Preview: CookieBannerPreview,
+    tailwind: `<!-- Simple banner -->
+<div class="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-sm rounded-2xl border border-zinc-200 bg-white p-4 shadow-xl z-50">
+  <div class="flex items-start gap-3">
+    <span class="text-2xl">🍪</span>
+    <div class="flex-1">
+      <p class="text-sm font-semibold text-zinc-800">We use cookies</p>
+      <p class="mt-0.5 text-xs text-zinc-500 leading-relaxed">We use cookies to enhance your experience and analyze site traffic.</p>
+    </div>
+  </div>
+  <div class="mt-3 flex gap-2">
+    <button class="flex-1 rounded-xl bg-blue-600 py-2 text-xs font-bold text-white hover:bg-blue-700">Accept All</button>
+    <button class="flex-1 rounded-xl border border-zinc-200 py-2 text-xs font-medium text-zinc-600 hover:bg-zinc-50">Manage</button>
+    <button class="flex-1 rounded-xl border border-zinc-200 py-2 text-xs font-medium text-zinc-600 hover:bg-zinc-50">Reject</button>
+  </div>
+</div>`,
+    css: `.cookie-banner { position:fixed; bottom:1rem; right:1rem; max-width:22rem; border-radius:1rem; background:#fff; border:1px solid #e4e4e7; padding:1rem; box-shadow:0 10px 30px rgba(0,0,0,.12); z-index:9999; }
+.cookie-actions { display:flex; gap:.5rem; margin-top:.75rem; }
+.cookie-btn { flex:1; padding:.5rem; border-radius:.75rem; font-size:.75rem; font-weight:600; cursor:pointer; border:none; transition:.15s; }
+.cookie-accept { background:#2563eb; color:#fff; }
+.cookie-manage { background:transparent; border:1px solid #e4e4e7; color:#52525b; }`,
+  },
+
+  /* ── LAYOUT ── */
+  {
+    id: 'hero-section', name: 'Hero Section', category: 'Layout',
+    description: 'Dark gradient hero with badge, headline, sub-copy, and dual CTA buttons.',
+    Preview: HeroSectionPreview,
+    tailwind: `<div class="relative bg-gradient-to-br from-zinc-900 via-blue-950 to-indigo-900 px-8 py-16 text-center overflow-hidden">
+  <!-- Badge -->
+  <span class="inline-flex items-center gap-1.5 rounded-full bg-blue-500/20 border border-blue-400/30 px-3 py-1 text-[10px] font-semibold text-blue-300 mb-4">✦ New release v2.0</span>
+  <!-- Headline -->
+  <h1 class="text-3xl font-black text-white leading-tight">Build faster with<br/><span class="text-blue-400">beautiful UI</span></h1>
+  <!-- Sub-copy -->
+  <p class="mt-3 text-sm text-zinc-400 leading-relaxed max-w-sm mx-auto">Production-ready components for your next project. No design skills needed.</p>
+  <!-- CTAs -->
+  <div class="mt-6 flex gap-3 justify-center">
+    <button class="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-blue-500 transition">Get started →</button>
+    <button class="rounded-xl border border-zinc-700 px-5 py-2.5 text-sm font-medium text-zinc-300 hover:border-zinc-500 transition">View docs</button>
+  </div>
+</div>`,
+    css: `.hero { position:relative; overflow:hidden; text-align:center; padding:4rem 2rem; background:linear-gradient(135deg,#18181b,#1e3a8a,#312e81); }
+.hero-badge { display:inline-flex; align-items:center; gap:.375rem; border-radius:9999px; padding:.25rem .75rem; font-size:.625rem; font-weight:700; background:rgba(59,130,246,.2); border:1px solid rgba(147,197,253,.3); color:#93c5fd; margin-bottom:1rem; }
+.hero-title { font-size:2rem; font-weight:900; color:#fff; line-height:1.15; }
+.hero-sub   { margin-top:.75rem; font-size:.875rem; color:#a1a1aa; line-height:1.6; max-width:28rem; margin-left:auto; margin-right:auto; }
+.hero-ctas  { display:flex; gap:.75rem; justify-content:center; margin-top:1.5rem; }`,
+  },
+  {
+    id: 'feature-cards', name: 'Feature Cards', category: 'Layout',
+    description: 'Icon + title + description feature grid — common on landing pages.',
+    Preview: FeatureCardsPreview,
+    tailwind: `<div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+  <div class="rounded-2xl border border-zinc-200 bg-white p-5 hover:shadow-md transition">
+    <div class="h-10 w-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl mb-4">⚡</div>
+    <h3 class="text-sm font-bold text-zinc-800">Lightning Fast</h3>
+    <p class="mt-1.5 text-xs text-zinc-400 leading-relaxed">Optimized for maximum performance.</p>
+  </div>
+  <!-- Repeat per feature -->
+</div>`,
+    css: `.features { display:grid; gap:1rem; }
+@media (min-width:640px) { .features { grid-template-columns:repeat(2,1fr); } }
+@media (min-width:1024px) { .features { grid-template-columns:repeat(4,1fr); } }
+.feature-card { border-radius:1rem; border:1px solid #e4e4e7; background:#fff; padding:1.25rem; transition:box-shadow .2s; }
+.feature-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.08); }
+.feature-icon { width:2.5rem; height:2.5rem; border-radius:.75rem; display:flex; align-items:center; justify-content:center; font-size:1.25rem; margin-bottom:1rem; }
+.feature-title { font-size:.875rem; font-weight:700; color:#18181b; }
+.feature-desc  { margin-top:.375rem; font-size:.75rem; color:#a1a1aa; line-height:1.6; }`,
+  },
+  {
+    id: 'cta-banner', name: 'CTA Banner', category: 'Layout',
+    description: 'Call-to-action strip variants — gradient, white card, and inline.',
+    Preview: CTABannerPreview,
+    tailwind: `<!-- Gradient CTA -->
+<div class="rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 p-5 flex items-center justify-between gap-4">
+  <div>
+    <p class="text-sm font-bold text-white">Start free today</p>
+    <p class="text-xs text-blue-200 mt-0.5">No credit card required.</p>
+  </div>
+  <button class="shrink-0 rounded-xl bg-white px-3 py-2 text-xs font-bold text-blue-600 hover:bg-blue-50 transition whitespace-nowrap">Get Started →</button>
+</div>
+
+<!-- Card CTA -->
+<div class="rounded-2xl border border-zinc-200 bg-white p-5 flex items-center justify-between gap-4 shadow-sm">
+  <div>
+    <p class="text-sm font-bold text-zinc-800">Upgrade to Pro</p>
+    <p class="text-xs text-zinc-400 mt-0.5">Unlock all features.</p>
+  </div>
+  <button class="shrink-0 rounded-xl bg-blue-600 px-3 py-2 text-xs font-bold text-white hover:bg-blue-700 transition">Upgrade</button>
+</div>`,
+    css: `.cta-banner { display:flex; align-items:center; justify-content:space-between; gap:1rem; border-radius:1rem; padding:1.25rem; }
+.cta-gradient { background:linear-gradient(to right,#2563eb,#4f46e5); }
+.cta-title { font-size:.875rem; font-weight:700; color:#fff; }
+.cta-sub   { font-size:.75rem; color:rgba(255,255,255,.7); margin-top:.125rem; }
+.cta-btn   { flex-shrink:0; border-radius:.75rem; padding:.5rem .75rem; font-size:.75rem; font-weight:700; white-space:nowrap; cursor:pointer; transition:.15s; }`,
+  },
+  {
+    id: 'footer', name: 'Footer', category: 'Layout',
+    description: 'Dark site footer with logo, tagline, social links, and multi-column link grid.',
+    Preview: FooterPreview,
+    tailwind: `<footer class="bg-zinc-900">
+  <div class="px-5 py-6">
+    <div class="flex items-center gap-2 mb-3">
+      <div class="h-6 w-6 rounded-lg bg-blue-500 flex items-center justify-center text-white text-xs font-bold">A</div>
+      <span class="text-sm font-bold text-white">AppName</span>
+    </div>
+    <p class="text-xs text-zinc-400 leading-relaxed">Building the future of developer tooling.</p>
+    <div class="mt-3 flex gap-2">
+      <button class="h-7 w-7 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white text-xs flex items-center justify-center">𝕏</button>
+    </div>
+  </div>
+  <div class="bg-zinc-800 px-5 py-4 grid grid-cols-3 gap-4">
+    <div><p class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2">Product</p>
+      <p class="text-[10px] text-zinc-400 hover:text-zinc-200 cursor-pointer mb-1">Features</p></div>
+  </div>
+  <div class="bg-zinc-900 border-t border-zinc-800 px-5 py-3">
+    <p class="text-[10px] text-zinc-600">© 2024 AppName. All rights reserved.</p>
+  </div>
+</footer>`,
+    css: `.footer { background:#18181b; }
+.footer-main { padding:1.5rem 1.25rem; }
+.footer-brand { display:flex; align-items:center; gap:.5rem; font-size:.875rem; font-weight:700; color:#fff; margin-bottom:.75rem; }
+.footer-tagline { font-size:.75rem; color:#71717a; line-height:1.6; }
+.footer-socials { display:flex; gap:.5rem; margin-top:.75rem; }
+.footer-links { background:#27272a; display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; padding:1rem 1.25rem; }
+.footer-link-group-title { font-size:.5625rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:#52525b; margin-bottom:.5rem; }
+.footer-link { font-size:.625rem; color:#71717a; cursor:pointer; transition:color .15s; display:block; margin-bottom:.25rem; }
+.footer-link:hover { color:#e4e4e7; }
+.footer-bottom { background:#18181b; border-top:1px solid #27272a; padding:.625rem 1.25rem; font-size:.625rem; color:#52525b; }`,
+  },
+  {
+    id: 'grid-system', name: 'Grid System', category: 'Layout',
+    description: 'Responsive column grid demo — 2-col, 3-col, mixed, and full-width layouts.',
+    Preview: GridSystemPreview,
+    tailwind: `<!-- 2 equal columns -->
+<div class="grid grid-cols-2 gap-4">
+  <div class="rounded-lg border-2 border-dashed border-zinc-300 bg-blue-50 py-3 text-center text-xs font-bold text-blue-500">1/2</div>
+  <div class="rounded-lg border-2 border-dashed border-zinc-300 bg-blue-50 py-3 text-center text-xs font-bold text-blue-500">1/2</div>
+</div>
+<!-- Mixed: 1/4 + 3/4 -->
+<div class="grid grid-cols-4 gap-4">
+  <div class="rounded-lg border-2 border-dashed border-zinc-300 bg-blue-50 py-3 text-center text-xs font-bold text-blue-500">1/4</div>
+  <div class="col-span-3 rounded-lg border-2 border-dashed border-zinc-300 bg-blue-50 py-3 text-center text-xs font-bold text-blue-500">3/4</div>
+</div>`,
+    css: `.grid { display:grid; gap:1rem; }
+.grid-2 { grid-template-columns:repeat(2,1fr); }
+.grid-3 { grid-template-columns:repeat(3,1fr); }
+.grid-4 { grid-template-columns:repeat(4,1fr); }
+.col-span-2 { grid-column:span 2; }
+.col-span-3 { grid-column:span 3; }
+.col-full   { grid-column:1/-1; }
+@media (max-width:640px) { .grid-2,.grid-3,.grid-4 { grid-template-columns:1fr; } }`,
+  },
+  {
+    id: 'breadcrumb-icons', name: 'Breadcrumb with Icons', category: 'Navigation',
+    description: 'Icon-prefixed breadcrumb and pill-style breadcrumb variants.',
+    Preview: BreadcrumbIconsPreview,
+    tailwind: `<!-- Icon breadcrumb -->
+<nav class="flex items-center gap-1.5 text-sm">
+  <a href="/" class="flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-medium text-blue-600 hover:bg-blue-50 transition">🏠 Home</a>
+  <span class="text-zinc-300">/</span>
+  <a href="/users" class="flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-medium text-blue-600 hover:bg-blue-50 transition">👥 Users</a>
+  <span class="text-zinc-300">/</span>
+  <span class="flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-medium bg-zinc-100 text-zinc-600">✏️ Edit</span>
+</nav>
+
+<!-- Card-style breadcrumb -->
+<nav class="flex items-center rounded-xl border border-zinc-200 bg-white px-4 py-2 shadow-sm text-xs w-fit">
+  <a href="/" class="text-blue-600 hover:underline">Dashboard</a>
+  <svg class="mx-1.5 h-3 w-3 text-zinc-300" .../><!-- ChevronRight -->
+  <a href="/projects" class="text-blue-600 hover:underline">Projects</a>
+  <svg class="mx-1.5 h-3 w-3 text-zinc-300" .../>
+  <span class="font-semibold text-zinc-800">Settings</span>
+</nav>`,
+    css: `.breadcrumb-icons { display:flex; align-items:center; gap:.375rem; }
+.breadcrumb-icon-item { display:flex; align-items:center; gap:.25rem; border-radius:.5rem; padding:.25rem .625rem; font-size:.75rem; font-weight:500; text-decoration:none; transition:background .15s,color .15s; }
+.breadcrumb-icon-item.link { color:#2563eb; }
+.breadcrumb-icon-item.link:hover { background:#eff6ff; }
+.breadcrumb-icon-item.current { background:#f4f4f5; color:#52525b; }
+.breadcrumb-sep { color:#d4d4d8; }`,
   },
 ];
 
