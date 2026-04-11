@@ -4140,6 +4140,808 @@ function EmptyStateVariantsPreview() {
 }
 
 /* ─────────────────────────────────────────────
+   Aside Navigation — Dashboard (3)
+───────────────────────────────────────────── */
+function DashSidebarMinimalPreview() {
+  const [active, setActive] = useState('Dashboard');
+  const items = [
+    { icon: '⊞', label: 'Dashboard' },
+    { icon: '📊', label: 'Analytics' },
+    { icon: '👥', label: 'Users' },
+    { icon: '📁', label: 'Projects' },
+    { icon: '💬', label: 'Messages', badge: 4 },
+    { icon: '⚙️', label: 'Settings' },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-100">
+      <div className="flex h-[280px] w-[200px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="flex items-center gap-2 px-4 py-3.5 border-b border-zinc-100">
+          <div className="h-7 w-7 rounded-lg bg-indigo-600 flex items-center justify-center text-white text-xs font-bold">D</div>
+          <span className="text-sm font-bold text-zinc-800">Dashboard</span>
+        </div>
+        <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {items.map(({ icon, label, badge }) => (
+            <button key={label} onClick={() => setActive(label)}
+              className={`w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium transition-all ${active === label ? 'bg-indigo-50 text-indigo-700' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700'}`}>
+              <span className="text-sm leading-none">{icon}</span>
+              <span className="flex-1 text-left">{label}</span>
+              {badge && <span className="rounded-full bg-indigo-100 px-1.5 py-0.5 text-[10px] font-bold text-indigo-600">{badge}</span>}
+            </button>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function DashSidebarGroupedPreview() {
+  const [active, setActive] = useState('Overview');
+  const groups = [
+    { title: 'MAIN', items: [{ icon: '🏠', label: 'Overview' }, { icon: '📈', label: 'Revenue' }, { icon: '🎯', label: 'Goals' }] },
+    { title: 'REPORTS', items: [{ icon: '📋', label: 'Weekly' }, { icon: '📅', label: 'Monthly' }] },
+    { title: 'ACCOUNT', items: [{ icon: '👤', label: 'Profile' }, { icon: '⚙️', label: 'Settings' }] },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-100">
+      <div className="flex h-[280px] w-[200px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="flex items-center gap-2 px-4 py-3.5 border-b border-zinc-100">
+          <div className="h-7 w-7 rounded-lg bg-emerald-500 flex items-center justify-center text-white text-xs font-bold">A</div>
+          <span className="text-sm font-bold text-zinc-800">Acme Co.</span>
+        </div>
+        <nav className="flex-1 px-2 py-2 overflow-auto space-y-3">
+          {groups.map(({ title, items }) => (
+            <div key={title}>
+              <p className="px-2.5 mb-1 text-[9px] font-bold tracking-widest text-zinc-400">{title}</p>
+              {items.map(({ icon, label }) => (
+                <button key={label} onClick={() => setActive(label)}
+                  className={`w-full flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all ${active === label ? 'bg-emerald-50 text-emerald-700' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700'}`}>
+                  <span className="text-sm">{icon}</span>{label}
+                </button>
+              ))}
+            </div>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function DashSidebarFullPreview() {
+  const [active, setActive] = useState('Dashboard');
+  const [collapsed, setCollapsed] = useState(false);
+  const items = [
+    { icon: '⊞', label: 'Dashboard' },
+    { icon: '📊', label: 'Analytics', badge: 'New' },
+    { icon: '🛒', label: 'Orders', badge: '12' },
+    { icon: '👥', label: 'Customers' },
+    { icon: '💰', label: 'Revenue' },
+    { icon: '⚙️', label: 'Settings' },
+  ];
+  return (
+    <PreviewWrap bg="bg-slate-100">
+      <div className={`flex h-[280px] flex-col rounded-2xl bg-slate-900 shadow-xl overflow-hidden transition-all duration-200 ${collapsed ? 'w-[52px]' : 'w-[200px]'}`}>
+        <div className="flex items-center justify-between px-3 py-3.5 border-b border-slate-700/50">
+          {!collapsed && <div className="flex items-center gap-2"><div className="h-6 w-6 rounded-md bg-violet-500 flex items-center justify-center text-white text-[10px] font-bold">V</div><span className="text-xs font-bold text-white">Vertex</span></div>}
+          <button onClick={() => setCollapsed(v => !v)} className="ml-auto text-slate-400 hover:text-white text-xs px-1">
+            {collapsed ? '→' : '←'}
+          </button>
+        </div>
+        <nav className="flex-1 px-1.5 py-2 space-y-0.5 overflow-auto">
+          {items.map(({ icon, label, badge }) => (
+            <button key={label} onClick={() => setActive(label)} title={collapsed ? label : undefined}
+              className={`w-full flex items-center gap-2.5 rounded-lg px-2 py-2 text-xs font-medium transition-all ${active === label ? 'bg-violet-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
+              <span className="text-sm shrink-0">{icon}</span>
+              {!collapsed && <><span className="flex-1 text-left">{label}</span>{badge && <span className={`rounded-md px-1.5 text-[9px] font-bold ${badge === 'New' ? 'bg-violet-500 text-white' : 'bg-slate-700 text-slate-300'}`}>{badge}</span>}</>}
+            </button>
+          ))}
+        </nav>
+        {!collapsed && (
+          <div className="flex items-center gap-2 px-3 py-3 border-t border-slate-700/50">
+            <div className="h-6 w-6 rounded-full bg-violet-400 flex items-center justify-center text-[10px] font-bold text-white">JD</div>
+            <div className="min-w-0 flex-1"><p className="text-[10px] font-semibold text-white truncate">Jane Doe</p><p className="text-[9px] text-slate-400">Admin</p></div>
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Aside Navigation — eCommerce (3)
+───────────────────────────────────────────── */
+function EcomSidebarAdminPreview() {
+  const [active, setActive] = useState('Orders');
+  const items = [
+    { icon: '🛒', label: 'Orders', badge: '23' },
+    { icon: '📦', label: 'Products' },
+    { icon: '👥', label: 'Customers' },
+    { icon: '💳', label: 'Payments' },
+    { icon: '🏷️', label: 'Discounts' },
+    { icon: '📊', label: 'Reports' },
+    { icon: '⚙️', label: 'Settings' },
+  ];
+  return (
+    <PreviewWrap bg="bg-orange-50">
+      <div className="flex h-[280px] w-[200px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="flex items-center gap-2 px-4 py-3.5 border-b border-zinc-100 bg-orange-500">
+          <span className="text-white text-sm font-bold">🛍️ ShopAdmin</span>
+        </div>
+        <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {items.map(({ icon, label, badge }) => (
+            <button key={label} onClick={() => setActive(label)}
+              className={`w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium transition-all ${active === label ? 'bg-orange-50 text-orange-700' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700'}`}>
+              <span>{icon}</span><span className="flex-1 text-left">{label}</span>
+              {badge && <span className="rounded-full bg-orange-100 px-1.5 py-0.5 text-[10px] font-bold text-orange-600">{badge}</span>}
+            </button>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function EcomSidebarStorePreview() {
+  const [active, setActive] = useState('All Products');
+  const categories = ['All Products', 'Electronics', 'Clothing', 'Home & Garden', 'Sports', 'Books', 'Toys'];
+  const counts = [248, 64, 91, 37, 28, 15, 13];
+  return (
+    <PreviewWrap bg="bg-rose-50">
+      <div className="flex h-[280px] w-[200px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="px-3 py-3 border-b border-zinc-100">
+          <p className="text-xs font-bold text-zinc-700 mb-2">Categories</p>
+          <div className="flex items-center gap-1.5 rounded-lg bg-zinc-100 px-2.5 py-1.5">
+            <span className="text-xs text-zinc-400">🔍</span>
+            <span className="text-xs text-zinc-400">Search...</span>
+          </div>
+        </div>
+        <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {categories.map((cat, i) => (
+            <button key={cat} onClick={() => setActive(cat)}
+              className={`w-full flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all ${active === cat ? 'bg-rose-50 text-rose-700' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700'}`}>
+              <span>{cat}</span>
+              <span className={`text-[10px] ${active === cat ? 'text-rose-400' : 'text-zinc-400'}`}>{counts[i]}</span>
+            </button>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function EcomSidebarCatalogPreview() {
+  const [expanded, setExpanded] = useState<string[]>(['Electronics']);
+  const [active, setActive] = useState('Smartphones');
+  const tree = [
+    { label: 'Electronics', children: ['Smartphones', 'Laptops', 'Tablets'] },
+    { label: 'Fashion', children: ['Men', 'Women', 'Kids'] },
+    { label: 'Home', children: ['Kitchen', 'Furniture'] },
+  ];
+  const toggle = (l: string) => setExpanded(p => p.includes(l) ? p.filter(x => x !== l) : [...p, l]);
+  return (
+    <PreviewWrap bg="bg-amber-50">
+      <div className="flex h-[280px] w-[200px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="px-4 py-3 border-b border-zinc-100"><p className="text-xs font-bold text-zinc-800">📂 Catalog</p></div>
+        <nav className="flex-1 px-2 py-2 overflow-auto">
+          {tree.map(({ label, children }) => (
+            <div key={label}>
+              <button onClick={() => toggle(label)}
+                className="w-full flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-semibold text-zinc-700 hover:bg-zinc-50 transition">
+                <span>{label}</span>
+                <span className="text-zinc-400 text-[10px]">{expanded.includes(label) ? '▾' : '▸'}</span>
+              </button>
+              {expanded.includes(label) && (
+                <div className="ml-3 border-l border-zinc-200 pl-2 space-y-0.5 mb-1">
+                  {children.map(c => (
+                    <button key={c} onClick={() => setActive(c)}
+                      className={`w-full text-left rounded-md px-2 py-1.5 text-xs transition ${active === c ? 'text-amber-700 font-semibold' : 'text-zinc-500 hover:text-zinc-700'}`}>{c}</button>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Aside Navigation — Analytics (3)
+───────────────────────────────────────────── */
+function AnalyticsSidebarMainPreview() {
+  const [active, setActive] = useState('Overview');
+  const items = [
+    { icon: '📊', label: 'Overview' },
+    { icon: '👁️', label: 'Traffic' },
+    { icon: '🎯', label: 'Conversions' },
+    { icon: '🔄', label: 'Funnels' },
+    { icon: '👥', label: 'Cohorts' },
+    { icon: '📍', label: 'Heatmaps' },
+    { icon: '📋', label: 'Reports' },
+  ];
+  return (
+    <PreviewWrap bg="bg-violet-50">
+      <div className="flex h-[280px] w-[200px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="flex items-center gap-2 px-4 py-3.5 border-b border-zinc-100">
+          <div className="h-6 w-6 rounded-md bg-violet-600 flex items-center justify-center text-white text-[10px] font-bold">A</div>
+          <span className="text-xs font-bold text-zinc-800">Analytics Pro</span>
+        </div>
+        <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {items.map(({ icon, label }) => (
+            <button key={label} onClick={() => setActive(label)}
+              className={`w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium transition-all ${active === label ? 'bg-violet-600 text-white' : 'text-zinc-500 hover:bg-violet-50 hover:text-violet-700'}`}>
+              <span>{icon}</span>{label}
+            </button>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function AnalyticsSidebarMetricsPreview() {
+  const [active, setActive] = useState('Sessions');
+  const metrics = [
+    { label: 'Sessions', val: '24.3K', trend: '+12%', up: true },
+    { label: 'Bounce Rate', val: '38.2%', trend: '-4%', up: true },
+    { label: 'Avg Duration', val: '2m 41s', trend: '+0.3%', up: true },
+    { label: 'Revenue', val: '$8.4K', trend: '+22%', up: true },
+    { label: 'Goal Completions', val: '1,204', trend: '-2%', up: false },
+  ];
+  return (
+    <PreviewWrap bg="bg-blue-50">
+      <div className="flex h-[280px] w-[220px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="px-4 py-3 border-b border-zinc-100"><p className="text-xs font-bold text-zinc-800">📈 Key Metrics</p></div>
+        <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {metrics.map(({ label, val, trend, up }) => (
+            <button key={label} onClick={() => setActive(label)}
+              className={`w-full flex items-center justify-between rounded-lg px-2.5 py-2 text-xs transition-all ${active === label ? 'bg-blue-50 text-blue-700' : 'text-zinc-600 hover:bg-zinc-50'}`}>
+              <span className="font-medium">{label}</span>
+              <div className="flex items-center gap-1.5 text-right">
+                <span className="font-bold text-zinc-800">{val}</span>
+                <span className={`text-[10px] font-semibold ${up ? 'text-emerald-600' : 'text-red-500'}`}>{trend}</span>
+              </div>
+            </button>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function AnalyticsSidebarReportsPreview() {
+  const [active, setActive] = useState('Q1 Summary');
+  const [open, setOpen] = useState('Quarterly');
+  const folders = [
+    { name: 'Quarterly', reports: ['Q1 Summary', 'Q2 Summary', 'Q3 Summary'] },
+    { name: 'Marketing', reports: ['SEO Report', 'Paid Ads'] },
+    { name: 'Custom', reports: ['Board Deck'] },
+  ];
+  return (
+    <PreviewWrap bg="bg-indigo-50">
+      <div className="flex h-[280px] w-[200px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="px-4 py-3 border-b border-zinc-100"><p className="text-xs font-bold text-zinc-800">📁 Reports</p></div>
+        <nav className="flex-1 px-2 py-2 overflow-auto">
+          {folders.map(({ name, reports }) => (
+            <div key={name}>
+              <button onClick={() => setOpen(o => o === name ? '' : name)}
+                className="w-full flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-zinc-700 hover:bg-zinc-50 transition">
+                <span>{open === name ? '📂' : '📁'}</span><span className="flex-1 text-left">{name}</span>
+                <span className="text-zinc-400 text-[10px]">{open === name ? '▾' : '▸'}</span>
+              </button>
+              {open === name && (
+                <div className="ml-3 border-l-2 border-indigo-100 pl-2 space-y-0.5 mb-1">
+                  {reports.map(r => (
+                    <button key={r} onClick={() => setActive(r)}
+                      className={`w-full text-left rounded-md px-2 py-1.5 text-xs transition ${active === r ? 'text-indigo-700 font-bold' : 'text-zinc-500 hover:text-zinc-700'}`}>{r}</button>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Aside Navigation — Marketing (3)
+───────────────────────────────────────────── */
+function MarketingSidebarMainPreview() {
+  const [active, setActive] = useState('Campaigns');
+  const items = [
+    { icon: '🚀', label: 'Campaigns', badge: '3 live' },
+    { icon: '📧', label: 'Email', badge: '12' },
+    { icon: '📣', label: 'Social' },
+    { icon: '🔍', label: 'SEO' },
+    { icon: '💰', label: 'Paid Ads' },
+    { icon: '📊', label: 'Analytics' },
+    { icon: '🧪', label: 'A/B Tests' },
+  ];
+  return (
+    <PreviewWrap bg="bg-pink-50">
+      <div className="flex h-[280px] w-[200px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="flex items-center gap-2 px-4 py-3.5 border-b border-zinc-100 bg-gradient-to-r from-pink-500 to-rose-500">
+          <span className="text-xs font-bold text-white">🎯 Marketing Hub</span>
+        </div>
+        <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {items.map(({ icon, label, badge }) => (
+            <button key={label} onClick={() => setActive(label)}
+              className={`w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-medium transition-all ${active === label ? 'bg-pink-50 text-pink-700' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700'}`}>
+              <span>{icon}</span><span className="flex-1 text-left">{label}</span>
+              {badge && <span className="rounded-full bg-pink-100 px-1.5 py-0.5 text-[10px] font-bold text-pink-600">{badge}</span>}
+            </button>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function MarketingSidebarCampaignsPreview() {
+  const [active, setActive] = useState('Summer Sale');
+  const campaigns = [
+    { name: 'Summer Sale', status: 'Live', color: 'bg-green-400' },
+    { name: 'Back to School', status: 'Live', color: 'bg-green-400' },
+    { name: 'Newsletter #24', status: 'Draft', color: 'bg-zinc-300' },
+    { name: 'Product Launch', status: 'Scheduled', color: 'bg-amber-400' },
+    { name: 'Retargeting', status: 'Paused', color: 'bg-red-400' },
+  ];
+  return (
+    <PreviewWrap bg="bg-fuchsia-50">
+      <div className="flex h-[280px] w-[210px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="flex items-center justify-between px-3 py-3 border-b border-zinc-100">
+          <p className="text-xs font-bold text-zinc-800">🚀 Campaigns</p>
+          <span className="rounded-md bg-fuchsia-100 px-2 py-0.5 text-[10px] font-bold text-fuchsia-700">2 Live</span>
+        </div>
+        <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {campaigns.map(({ name, status, color }) => (
+            <button key={name} onClick={() => setActive(name)}
+              className={`w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs transition-all ${active === name ? 'bg-fuchsia-50 text-fuchsia-700' : 'text-zinc-600 hover:bg-zinc-50'}`}>
+              <span className={`h-2 w-2 rounded-full shrink-0 ${color}`} />
+              <span className="flex-1 text-left font-medium truncate">{name}</span>
+              <span className="text-[10px] text-zinc-400 shrink-0">{status}</span>
+            </button>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function MarketingSidebarChannelsPreview() {
+  const [active, setActive] = useState('Email');
+  const channels = [
+    { icon: '📧', label: 'Email', reach: '14.2K', pct: 74 },
+    { icon: '📱', label: 'SMS', reach: '3.8K', pct: 20 },
+    { icon: '🐦', label: 'Twitter/X', reach: '6.1K', pct: 32 },
+    { icon: '📘', label: 'Facebook', reach: '9.4K', pct: 49 },
+    { icon: '📸', label: 'Instagram', reach: '11K', pct: 58 },
+  ];
+  return (
+    <PreviewWrap bg="bg-cyan-50">
+      <div className="flex h-[280px] w-[220px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="px-4 py-3 border-b border-zinc-100"><p className="text-xs font-bold text-zinc-800">📡 Channels</p></div>
+        <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {channels.map(({ icon, label, reach, pct }) => (
+            <button key={label} onClick={() => setActive(label)}
+              className={`w-full rounded-lg px-2.5 py-2 text-left transition-all ${active === label ? 'bg-cyan-50' : 'hover:bg-zinc-50'}`}>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-sm">{icon}</span>
+                <span className={`text-xs font-semibold flex-1 ${active === label ? 'text-cyan-700' : 'text-zinc-700'}`}>{label}</span>
+                <span className="text-[10px] font-bold text-zinc-500">{reach}</span>
+              </div>
+              <div className="h-1 w-full rounded-full bg-zinc-100">
+                <div className="h-1 rounded-full bg-cyan-400 transition-all" style={{ width: `${pct}%` }} />
+              </div>
+            </button>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Aside Navigation — CRM (3)
+───────────────────────────────────────────── */
+function CrmSidebarMainPreview() {
+  const [active, setActive] = useState('Contacts');
+  const items = [
+    { icon: '👤', label: 'Contacts', badge: '1.2K' },
+    { icon: '🏢', label: 'Companies', badge: '248' },
+    { icon: '💼', label: 'Deals', badge: '36' },
+    { icon: '📅', label: 'Activities' },
+    { icon: '📧', label: 'Emails' },
+    { icon: '📊', label: 'Reports' },
+    { icon: '⚙️', label: 'Settings' },
+  ];
+  return (
+    <PreviewWrap bg="bg-blue-50">
+      <div className="flex h-[280px] w-[200px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="flex items-center gap-2 px-4 py-3.5 border-b border-zinc-100 bg-blue-600">
+          <span className="text-xs font-bold text-white">🤝 CRM Suite</span>
+        </div>
+        <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {items.map(({ icon, label, badge }) => (
+            <button key={label} onClick={() => setActive(label)}
+              className={`w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium transition-all ${active === label ? 'bg-blue-50 text-blue-700' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700'}`}>
+              <span>{icon}</span><span className="flex-1 text-left">{label}</span>
+              {badge && <span className="rounded-full bg-blue-100 px-1.5 py-0.5 text-[10px] font-bold text-blue-500">{badge}</span>}
+            </button>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CrmSidebarPipelinePreview() {
+  const [active, setActive] = useState('Proposal');
+  const stages = [
+    { label: 'Lead', count: 42, value: '$0', color: 'bg-zinc-200' },
+    { label: 'Qualified', count: 18, value: '$24K', color: 'bg-blue-200' },
+    { label: 'Proposal', count: 9, value: '$88K', color: 'bg-indigo-300' },
+    { label: 'Negotiation', count: 5, value: '$140K', color: 'bg-violet-400' },
+    { label: 'Closed Won', count: 3, value: '$210K', color: 'bg-emerald-400' },
+  ];
+  return (
+    <PreviewWrap bg="bg-indigo-50">
+      <div className="flex h-[280px] w-[220px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="px-4 py-3 border-b border-zinc-100"><p className="text-xs font-bold text-zinc-800">💼 Pipeline</p></div>
+        <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {stages.map(({ label, count, value, color }) => (
+            <button key={label} onClick={() => setActive(label)}
+              className={`w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-all ${active === label ? 'bg-indigo-50 text-indigo-700' : 'text-zinc-600 hover:bg-zinc-50'}`}>
+              <span className={`h-2.5 w-2.5 rounded-sm shrink-0 ${color}`} />
+              <span className="flex-1 text-left font-medium">{label}</span>
+              <span className="text-[10px] text-zinc-400">{count}</span>
+              <span className="text-[10px] font-bold text-zinc-600">{value}</span>
+            </button>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CrmSidebarContactsPreview() {
+  const [active, setActive] = useState('All');
+  const filters = [
+    { label: 'All', count: 1248 },
+    { label: 'Leads', count: 312 },
+    { label: 'Customers', count: 684 },
+    { label: 'Partners', count: 89 },
+    { label: 'Churned', count: 163 },
+  ];
+  const recent = ['Alice Wang', 'Bob Torres', 'Carol Kim'];
+  return (
+    <PreviewWrap bg="bg-sky-50">
+      <div className="flex h-[280px] w-[200px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="px-3 py-3 border-b border-zinc-100">
+          <p className="text-xs font-bold text-zinc-800 mb-2">👤 Contacts</p>
+          <div className="flex items-center gap-1.5 rounded-lg bg-zinc-100 px-2.5 py-1.5"><span className="text-xs text-zinc-400">🔍</span><span className="text-xs text-zinc-400">Search contacts...</span></div>
+        </div>
+        <div className="px-2 py-1.5 space-y-0.5">
+          {filters.map(({ label, count }) => (
+            <button key={label} onClick={() => setActive(label)}
+              className={`w-full flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all ${active === label ? 'bg-sky-50 text-sky-700' : 'text-zinc-500 hover:bg-zinc-50'}`}>
+              <span>{label}</span><span className="text-[10px] text-zinc-400">{count}</span>
+            </button>
+          ))}
+        </div>
+        <div className="px-3 pt-1 pb-2 border-t border-zinc-100 mt-auto">
+          <p className="text-[9px] font-bold text-zinc-400 mb-1 tracking-widest">RECENT</p>
+          {recent.map(n => <p key={n} className="text-[11px] text-zinc-600 py-0.5 truncate">{n}</p>)}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Aside Navigation — Stocks (3)
+───────────────────────────────────────────── */
+function StocksSidebarMainPreview() {
+  const [active, setActive] = useState('Portfolio');
+  const items = [
+    { icon: '💼', label: 'Portfolio' },
+    { icon: '👁️', label: 'Watchlist', badge: '8' },
+    { icon: '📊', label: 'Markets' },
+    { icon: '📰', label: 'News' },
+    { icon: '🔔', label: 'Alerts', badge: '2' },
+    { icon: '📋', label: 'Orders' },
+    { icon: '📈', label: 'P&L Report' },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-900">
+      <div className="flex h-[280px] w-[200px] flex-col rounded-2xl bg-[#0f1117] shadow-xl border border-zinc-800 overflow-hidden">
+        <div className="flex items-center gap-2 px-4 py-3.5 border-b border-zinc-800">
+          <div className="h-6 w-6 rounded-md bg-emerald-500 flex items-center justify-center text-white text-[10px] font-bold">T</div>
+          <span className="text-xs font-bold text-white">TradeView</span>
+        </div>
+        <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {items.map(({ icon, label, badge }) => (
+            <button key={label} onClick={() => setActive(label)}
+              className={`w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium transition-all ${active === label ? 'bg-emerald-500/20 text-emerald-400' : 'text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200'}`}>
+              <span>{icon}</span><span className="flex-1 text-left">{label}</span>
+              {badge && <span className="rounded-full bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-bold text-emerald-400">{badge}</span>}
+            </button>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function StocksSidebarPortfolioPreview() {
+  const [active, setActive] = useState('AAPL');
+  const holdings = [
+    { ticker: 'AAPL', name: 'Apple', price: '$182', change: '+1.4%', up: true },
+    { ticker: 'MSFT', name: 'Microsoft', price: '$374', change: '+0.8%', up: true },
+    { ticker: 'GOOGL', name: 'Alphabet', price: '$140', change: '-0.3%', up: false },
+    { ticker: 'NVDA', name: 'NVIDIA', price: '$498', change: '+3.2%', up: true },
+    { ticker: 'TSLA', name: 'Tesla', price: '$248', change: '-1.8%', up: false },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-900">
+      <div className="flex h-[280px] w-[230px] flex-col rounded-2xl bg-[#0f1117] shadow-xl border border-zinc-800 overflow-hidden">
+        <div className="px-4 py-3 border-b border-zinc-800"><p className="text-xs font-bold text-white">💼 Holdings</p></div>
+        <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {holdings.map(({ ticker, name, price, change, up }) => (
+            <button key={ticker} onClick={() => setActive(ticker)}
+              className={`w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-all ${active === ticker ? 'bg-zinc-800' : 'hover:bg-zinc-800/60'}`}>
+              <div className="h-6 w-6 rounded-md bg-zinc-700 flex items-center justify-center text-[9px] font-bold text-zinc-200 shrink-0">{ticker.slice(0, 2)}</div>
+              <div className="flex-1 text-left min-w-0">
+                <p className="font-semibold text-zinc-200 text-[11px]">{ticker}</p>
+                <p className="text-[9px] text-zinc-500 truncate">{name}</p>
+              </div>
+              <div className="text-right">
+                <p className="font-bold text-zinc-200 text-[11px]">{price}</p>
+                <p className={`text-[9px] font-semibold ${up ? 'text-emerald-400' : 'text-red-400'}`}>{change}</p>
+              </div>
+            </button>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function StocksSidebarWatchlistPreview() {
+  const [active, setActive] = useState('Tech');
+  const lists = ['Tech', 'ETFs', 'Crypto', 'Dividends'];
+  const items: Record<string, { t: string; c: string; up: boolean }[]> = {
+    Tech: [{ t: 'AAPL', c: '+1.4%', up: true }, { t: 'META', c: '+2.1%', up: true }, { t: 'AMD', c: '-0.9%', up: false }],
+    ETFs: [{ t: 'SPY', c: '+0.4%', up: true }, { t: 'QQQ', c: '+0.7%', up: true }],
+    Crypto: [{ t: 'BTC', c: '+3.8%', up: true }, { t: 'ETH', c: '-1.2%', up: false }],
+    Dividends: [{ t: 'JNJ', c: '+0.2%', up: true }, { t: 'KO', c: '+0.1%', up: true }],
+  };
+  return (
+    <PreviewWrap bg="bg-zinc-900">
+      <div className="flex h-[280px] w-[210px] flex-col rounded-2xl bg-[#0f1117] shadow-xl border border-zinc-800 overflow-hidden">
+        <div className="px-3 py-2.5 border-b border-zinc-800">
+          <p className="text-xs font-bold text-white mb-2">👁️ Watchlist</p>
+          <div className="flex gap-1">
+            {lists.map(l => (
+              <button key={l} onClick={() => setActive(l)}
+                className={`rounded-md px-2 py-1 text-[10px] font-semibold transition ${active === l ? 'bg-emerald-500 text-white' : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'}`}>{l}</button>
+            ))}
+          </div>
+        </div>
+        <div className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {(items[active] || []).map(({ t, c, up }) => (
+            <div key={t} className="flex items-center justify-between rounded-lg px-2.5 py-2 hover:bg-zinc-800 transition">
+              <div className="h-6 w-6 rounded-md bg-zinc-700 flex items-center justify-center text-[9px] font-bold text-zinc-200">{t.slice(0, 2)}</div>
+              <span className="flex-1 ml-2 text-xs font-semibold text-zinc-300">{t}</span>
+              <span className={`text-xs font-bold ${up ? 'text-emerald-400' : 'text-red-400'}`}>{c}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Aside Navigation — SaaS (3)
+───────────────────────────────────────────── */
+function SaasSidebarMainPreview() {
+  const [active, setActive] = useState('Workspace');
+  const [workspace, setWorkspace] = useState('Acme Inc.');
+  const items = [
+    { icon: '🏠', label: 'Workspace' },
+    { icon: '📋', label: 'Projects', badge: '4' },
+    { icon: '👥', label: 'Team' },
+    { icon: '💬', label: 'Inbox', badge: '7' },
+    { icon: '📊', label: 'Usage' },
+    { icon: '🔌', label: 'Integrations' },
+  ];
+  const workspaces = ['Acme Inc.', 'Side Project', 'Personal'];
+  return (
+    <PreviewWrap bg="bg-slate-100">
+      <div className="flex h-[280px] w-[200px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="px-3 py-3 border-b border-zinc-100">
+          <select value={workspace} onChange={e => setWorkspace(e.target.value)}
+            className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-2 py-1.5 text-xs font-semibold text-zinc-700 focus:outline-none">
+            {workspaces.map(w => <option key={w}>{w}</option>)}
+          </select>
+        </div>
+        <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {items.map(({ icon, label, badge }) => (
+            <button key={label} onClick={() => setActive(label)}
+              className={`w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium transition-all ${active === label ? 'bg-slate-900 text-white' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700'}`}>
+              <span>{icon}</span><span className="flex-1 text-left">{label}</span>
+              {badge && <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold ${active === label ? 'bg-white/20 text-white' : 'bg-zinc-100 text-zinc-500'}`}>{badge}</span>}
+            </button>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function SaasSidebarSettingsPreview() {
+  const [active, setActive] = useState('General');
+  const sections = [
+    { title: 'ACCOUNT', items: ['General', 'Profile', 'Password', 'Notifications'] },
+    { title: 'WORKSPACE', items: ['Members', 'Billing', 'Plans'] },
+    { title: 'DEVELOPER', items: ['API Keys', 'Webhooks'] },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-100">
+      <div className="flex h-[280px] w-[200px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="flex items-center gap-2 px-4 py-3 border-b border-zinc-100">
+          <span className="text-sm">⚙️</span>
+          <p className="text-xs font-bold text-zinc-800">Settings</p>
+        </div>
+        <nav className="flex-1 px-2 py-2 overflow-auto space-y-2">
+          {sections.map(({ title, items }) => (
+            <div key={title}>
+              <p className="px-2.5 mb-0.5 text-[9px] font-bold tracking-widest text-zinc-400">{title}</p>
+              {items.map(item => (
+                <button key={item} onClick={() => setActive(item)}
+                  className={`w-full text-left rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all ${active === item ? 'bg-zinc-900 text-white' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700'}`}>{item}</button>
+              ))}
+            </div>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function SaasSidebarAdminPreview() {
+  const [active, setActive] = useState('Users');
+  const items = [
+    { icon: '👥', label: 'Users', badge: '2.4K' },
+    { icon: '💳', label: 'Subscriptions', badge: '1.1K' },
+    { icon: '🏢', label: 'Organizations' },
+    { icon: '🚦', label: 'Feature Flags' },
+    { icon: '📊', label: 'MRR & Revenue' },
+    { icon: '🔔', label: 'System Alerts', badge: '3' },
+    { icon: '📋', label: 'Audit Logs' },
+  ];
+  return (
+    <PreviewWrap bg="bg-rose-50">
+      <div className="flex h-[280px] w-[200px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="px-4 py-3 border-b border-zinc-100 bg-rose-600 flex items-center gap-2">
+          <span className="text-white text-xs font-bold">🔑 Admin Panel</span>
+        </div>
+        <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {items.map(({ icon, label, badge }) => (
+            <button key={label} onClick={() => setActive(label)}
+              className={`w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium transition-all ${active === label ? 'bg-rose-50 text-rose-700' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700'}`}>
+              <span>{icon}</span><span className="flex-1 text-left">{label}</span>
+              {badge && <span className="rounded-full bg-rose-100 px-1.5 py-0.5 text-[10px] font-bold text-rose-500">{badge}</span>}
+            </button>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Aside Navigation — Logistics (3)
+───────────────────────────────────────────── */
+function LogisticsSidebarMainPreview() {
+  const [active, setActive] = useState('Shipments');
+  const items = [
+    { icon: '📦', label: 'Shipments', badge: '18' },
+    { icon: '🗺️', label: 'Routes' },
+    { icon: '🚚', label: 'Fleet', badge: '6' },
+    { icon: '🏭', label: 'Warehouses' },
+    { icon: '🔍', label: 'Tracking' },
+    { icon: '📊', label: 'Reports' },
+    { icon: '⚙️', label: 'Settings' },
+  ];
+  return (
+    <PreviewWrap bg="bg-teal-50">
+      <div className="flex h-[280px] w-[200px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="flex items-center gap-2 px-4 py-3.5 border-b border-zinc-100 bg-teal-700">
+          <span className="text-xs font-bold text-white">🚛 LogiTrack</span>
+        </div>
+        <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {items.map(({ icon, label, badge }) => (
+            <button key={label} onClick={() => setActive(label)}
+              className={`w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium transition-all ${active === label ? 'bg-teal-50 text-teal-700' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700'}`}>
+              <span>{icon}</span><span className="flex-1 text-left">{label}</span>
+              {badge && <span className="rounded-full bg-teal-100 px-1.5 py-0.5 text-[10px] font-bold text-teal-600">{badge}</span>}
+            </button>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function LogisticsSidebarShipmentsPreview() {
+  const [active, setActive] = useState('In Transit');
+  const statuses = [
+    { label: 'All Shipments', count: 142, dot: 'bg-zinc-400' },
+    { label: 'In Transit', count: 58, dot: 'bg-blue-500' },
+    { label: 'Out for Delivery', count: 12, dot: 'bg-amber-500' },
+    { label: 'Delivered', count: 64, dot: 'bg-emerald-500' },
+    { label: 'Delayed', count: 6, dot: 'bg-red-500' },
+    { label: 'Returned', count: 2, dot: 'bg-zinc-400' },
+  ];
+  return (
+    <PreviewWrap bg="bg-blue-50">
+      <div className="flex h-[280px] w-[210px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="px-4 py-3 border-b border-zinc-100">
+          <p className="text-xs font-bold text-zinc-800">📦 Shipments</p>
+          <p className="text-[10px] text-zinc-400 mt-0.5">142 total this month</p>
+        </div>
+        <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {statuses.map(({ label, count, dot }) => (
+            <button key={label} onClick={() => setActive(label)}
+              className={`w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs transition-all ${active === label ? 'bg-blue-50 text-blue-700' : 'text-zinc-600 hover:bg-zinc-50'}`}>
+              <span className={`h-2 w-2 rounded-full shrink-0 ${dot}`} />
+              <span className="flex-1 text-left font-medium">{label}</span>
+              <span className="font-bold text-zinc-500 text-[10px]">{count}</span>
+            </button>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function LogisticsSidebarFleetPreview() {
+  const [active, setActive] = useState('TRK-001');
+  const fleet = [
+    { id: 'TRK-001', driver: 'Mike R.', status: 'On Route', pct: 68, color: 'bg-emerald-400' },
+    { id: 'TRK-002', driver: 'Sara L.', status: 'Loading', pct: 0, color: 'bg-amber-400' },
+    { id: 'TRK-003', driver: 'James P.', status: 'On Route', pct: 35, color: 'bg-emerald-400' },
+    { id: 'TRK-004', driver: 'Ana V.', status: 'Idle', pct: 0, color: 'bg-zinc-300' },
+  ];
+  return (
+    <PreviewWrap bg="bg-green-50">
+      <div className="flex h-[280px] w-[230px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="px-4 py-3 border-b border-zinc-100"><p className="text-xs font-bold text-zinc-800">🚚 Fleet Status</p></div>
+        <nav className="flex-1 px-2 py-2 space-y-1 overflow-auto">
+          {fleet.map(({ id, driver, status, pct, color }) => (
+            <button key={id} onClick={() => setActive(id)}
+              className={`w-full rounded-lg px-2.5 py-2 text-left transition-all ${active === id ? 'bg-teal-50 border border-teal-200' : 'hover:bg-zinc-50 border border-transparent'}`}>
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-bold text-zinc-800">{id}</span>
+                <span className={`text-[9px] font-semibold rounded-full px-2 py-0.5 ${status === 'On Route' ? 'bg-emerald-100 text-emerald-700' : status === 'Loading' ? 'bg-amber-100 text-amber-700' : 'bg-zinc-100 text-zinc-500'}`}>{status}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex-1 h-1 rounded-full bg-zinc-100"><div className={`h-1 rounded-full ${color}`} style={{ width: `${pct}%` }} /></div>
+                <span className="text-[10px] text-zinc-400 shrink-0">{driver}</span>
+              </div>
+            </button>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
    Component Registry
 ───────────────────────────────────────────── */
 const COMPONENTS: ComponentDef[] = [
@@ -7582,6 +8384,604 @@ kbd { border-radius:.375rem; border:1px solid #e4e4e7; background:#f4f4f5; paddi
 .empty-state-desc { font-size:.75rem; color:#a1a1aa; margin-top:.25rem; line-height:1.5; }
 .empty-state-cta { display:inline-block; margin-top:1rem; border-radius:.75rem; border:2px solid; padding:.375rem 1rem; font-size:.75rem; font-weight:600; cursor:pointer; transition:background .15s; }`,
   },
+
+  /* ── Aside Navigation — Dashboard ── */
+  {
+    id: 'dash-sidebar-minimal', name: 'Dashboard Sidebar — Minimal', category: 'Aside Nav',
+    description: 'Clean icon-and-label sidebar with active highlight and notification badge.',
+    Preview: DashSidebarMinimalPreview,
+    tailwind: `<aside class="flex h-72 w-48 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="flex items-center gap-2 border-b border-zinc-100 px-4 py-3.5">
+    <div class="h-7 w-7 rounded-lg bg-indigo-600 flex items-center justify-center text-white text-xs font-bold">D</div>
+    <span class="text-sm font-bold text-zinc-800">Dashboard</span>
+  </div>
+  <nav class="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+    <a href="#" class="flex items-center gap-2.5 rounded-lg bg-indigo-50 px-2.5 py-2 text-xs font-medium text-indigo-700">
+      <span>⊞</span> Dashboard
+    </a>
+    <a href="#" class="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700">
+      <span>📊</span> Analytics
+    </a>
+    <a href="#" class="flex items-center justify-between gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700">
+      <span class="flex items-center gap-2.5"><span>💬</span> Messages</span>
+      <span class="rounded-full bg-indigo-100 px-1.5 py-0.5 text-[10px] font-bold text-indigo-600">4</span>
+    </a>
+  </nav>
+</aside>`,
+    css: `.dash-aside { display:flex; flex-direction:column; height:18rem; width:12rem; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; box-shadow:0 4px 24px rgba(0,0,0,.06); overflow:hidden; }
+.dash-aside-header { display:flex; align-items:center; gap:.5rem; border-bottom:1px solid #f4f4f5; padding:.875rem 1rem; }
+.dash-aside-logo { height:1.75rem; width:1.75rem; border-radius:.5rem; background:#4f46e5; display:flex; align-items:center; justify-content:center; color:#fff; font-size:.75rem; font-weight:700; }
+.dash-aside-nav { flex:1; padding:.5rem; display:flex; flex-direction:column; gap:.125rem; overflow:auto; }
+.dash-aside-item { display:flex; align-items:center; gap:.625rem; border-radius:.5rem; padding:.5rem .625rem; font-size:.75rem; font-weight:500; text-decoration:none; color:#71717a; transition:background .15s, color .15s; }
+.dash-aside-item:hover { background:#fafafa; color:#27272a; }
+.dash-aside-item.active { background:#eef2ff; color:#4338ca; }
+.dash-aside-badge { border-radius:9999px; background:#e0e7ff; padding:.125rem .375rem; font-size:.625rem; font-weight:700; color:#4338ca; }`,
+  },
+  {
+    id: 'dash-sidebar-grouped', name: 'Dashboard Sidebar — Grouped', category: 'Aside Nav',
+    description: 'Sidebar with section headings grouping related nav items.',
+    Preview: DashSidebarGroupedPreview,
+    tailwind: `<aside class="flex h-72 w-48 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="flex items-center gap-2 border-b border-zinc-100 px-4 py-3.5">
+    <div class="h-7 w-7 rounded-lg bg-emerald-500 flex items-center justify-center text-white text-xs font-bold">A</div>
+    <span class="text-sm font-bold text-zinc-800">Acme Co.</span>
+  </div>
+  <nav class="flex-1 px-2 py-2 overflow-auto space-y-3">
+    <div>
+      <p class="px-2.5 mb-1 text-[9px] font-bold tracking-widest text-zinc-400">MAIN</p>
+      <a href="#" class="flex items-center gap-2 rounded-lg bg-emerald-50 px-2.5 py-1.5 text-xs font-medium text-emerald-700"><span>🏠</span> Overview</a>
+      <a href="#" class="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-medium text-zinc-500 hover:bg-zinc-50"><span>📈</span> Revenue</a>
+    </div>
+    <div>
+      <p class="px-2.5 mb-1 text-[9px] font-bold tracking-widest text-zinc-400">REPORTS</p>
+      <a href="#" class="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-medium text-zinc-500 hover:bg-zinc-50"><span>📋</span> Weekly</a>
+    </div>
+  </nav>
+</aside>`,
+    css: `.grouped-aside { display:flex; flex-direction:column; height:18rem; width:12rem; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; box-shadow:0 4px 24px rgba(0,0,0,.06); overflow:hidden; }
+.grouped-aside-section-title { padding:.125rem .625rem .25rem; font-size:.5625rem; font-weight:700; letter-spacing:.1em; color:#a1a1aa; }
+.grouped-aside-item { display:flex; align-items:center; gap:.5rem; border-radius:.5rem; padding:.375rem .625rem; font-size:.75rem; font-weight:500; color:#71717a; text-decoration:none; transition:background .15s; }
+.grouped-aside-item:hover { background:#fafafa; }
+.grouped-aside-item.active { background:#ecfdf5; color:#059669; }`,
+  },
+  {
+    id: 'dash-sidebar-dark', name: 'Dashboard Sidebar — Dark Collapsible', category: 'Aside Nav',
+    description: 'Dark sidebar with collapse toggle, badges, and user profile footer.',
+    Preview: DashSidebarFullPreview,
+    tailwind: `<aside class="flex h-72 w-48 flex-col rounded-2xl bg-slate-900 shadow-xl overflow-hidden">
+  <div class="flex items-center justify-between border-b border-slate-700/50 px-3 py-3.5">
+    <div class="flex items-center gap-2">
+      <div class="h-6 w-6 rounded-md bg-violet-500 flex items-center justify-center text-white text-[10px] font-bold">V</div>
+      <span class="text-xs font-bold text-white">Vertex</span>
+    </div>
+    <button class="text-slate-400 hover:text-white text-xs">←</button>
+  </div>
+  <nav class="flex-1 px-1.5 py-2 space-y-0.5">
+    <a href="#" class="flex items-center gap-2.5 rounded-lg bg-violet-600 px-2 py-2 text-xs font-medium text-white"><span>⊞</span> Dashboard</a>
+    <a href="#" class="flex items-center justify-between rounded-lg px-2 py-2 text-xs font-medium text-slate-400 hover:bg-slate-800 hover:text-white">
+      <span class="flex items-center gap-2.5"><span>📊</span> Analytics</span>
+      <span class="rounded-md bg-violet-500 px-1.5 text-[9px] font-bold text-white">New</span>
+    </a>
+  </nav>
+  <div class="flex items-center gap-2 border-t border-slate-700/50 px-3 py-3">
+    <div class="h-6 w-6 rounded-full bg-violet-400 flex items-center justify-center text-[10px] font-bold text-white">JD</div>
+    <div><p class="text-[10px] font-semibold text-white">Jane Doe</p><p class="text-[9px] text-slate-400">Admin</p></div>
+  </div>
+</aside>`,
+    css: `.dark-aside { display:flex; flex-direction:column; height:18rem; background:#0f172a; border-radius:1rem; box-shadow:0 8px 32px rgba(0,0,0,.3); overflow:hidden; }
+.dark-aside-item { display:flex; align-items:center; gap:.625rem; border-radius:.5rem; padding:.5rem; font-size:.75rem; font-weight:500; color:#94a3b8; text-decoration:none; transition:background .15s, color .15s; }
+.dark-aside-item:hover { background:#1e293b; color:#fff; }
+.dark-aside-item.active { background:#7c3aed; color:#fff; }
+.dark-aside-footer { display:flex; align-items:center; gap:.5rem; border-top:1px solid rgba(255,255,255,.08); padding:.75rem; }`,
+  },
+
+  /* ── Aside Navigation — eCommerce ── */
+  {
+    id: 'ecom-sidebar-admin', name: 'eCommerce Admin Sidebar', category: 'Aside Nav',
+    description: 'Shop admin sidebar — orders with pending badge, products, customers, payments.',
+    Preview: EcomSidebarAdminPreview,
+    tailwind: `<aside class="flex h-72 w-48 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="bg-orange-500 px-4 py-3.5"><span class="text-sm font-bold text-white">🛍️ ShopAdmin</span></div>
+  <nav class="flex-1 px-2 py-2 space-y-0.5">
+    <a href="#" class="flex items-center justify-between rounded-lg bg-orange-50 px-2.5 py-2 text-xs font-medium text-orange-700">
+      <span class="flex items-center gap-2"><span>🛒</span> Orders</span>
+      <span class="rounded-full bg-orange-100 px-1.5 py-0.5 text-[10px] font-bold text-orange-600">23</span>
+    </a>
+    <a href="#" class="flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-medium text-zinc-500 hover:bg-zinc-50"><span>📦</span> Products</a>
+    <a href="#" class="flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-medium text-zinc-500 hover:bg-zinc-50"><span>👥</span> Customers</a>
+    <a href="#" class="flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-medium text-zinc-500 hover:bg-zinc-50"><span>💳</span> Payments</a>
+  </nav>
+</aside>`,
+    css: `.ecom-aside { display:flex; flex-direction:column; height:18rem; width:12rem; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; box-shadow:0 4px 24px rgba(0,0,0,.06); }
+.ecom-aside-header { background:#f97316; padding:.875rem 1rem; }
+.ecom-aside-item { display:flex; align-items:center; justify-content:space-between; border-radius:.5rem; padding:.5rem .625rem; font-size:.75rem; font-weight:500; color:#71717a; text-decoration:none; transition:background .15s; }
+.ecom-aside-item:hover { background:#fafafa; }
+.ecom-aside-item.active { background:#fff7ed; color:#c2410c; }
+.ecom-aside-badge { border-radius:9999px; background:#ffedd5; padding:.125rem .375rem; font-size:.625rem; font-weight:700; color:#ea580c; }`,
+  },
+  {
+    id: 'ecom-sidebar-store', name: 'eCommerce Store Category Sidebar', category: 'Aside Nav',
+    description: 'Storefront category filter sidebar with product counts and search.',
+    Preview: EcomSidebarStorePreview,
+    tailwind: `<aside class="flex h-72 w-48 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="border-b border-zinc-100 px-3 py-3">
+    <p class="mb-2 text-xs font-bold text-zinc-700">Categories</p>
+    <div class="flex items-center gap-1.5 rounded-lg bg-zinc-100 px-2.5 py-1.5 text-xs text-zinc-400">🔍 Search...</div>
+  </div>
+  <nav class="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+    <a href="#" class="flex items-center justify-between rounded-lg bg-rose-50 px-2.5 py-1.5 text-xs font-medium text-rose-700">
+      <span>All Products</span><span class="text-[10px] text-rose-400">248</span>
+    </a>
+    <a href="#" class="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-medium text-zinc-500 hover:bg-zinc-50">
+      <span>Electronics</span><span class="text-[10px] text-zinc-400">64</span>
+    </a>
+    <a href="#" class="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-medium text-zinc-500 hover:bg-zinc-50">
+      <span>Clothing</span><span class="text-[10px] text-zinc-400">91</span>
+    </a>
+  </nav>
+</aside>`,
+    css: `.store-aside { display:flex; flex-direction:column; height:18rem; width:12rem; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.store-aside-item { display:flex; align-items:center; justify-content:space-between; border-radius:.5rem; padding:.375rem .625rem; font-size:.75rem; font-weight:500; color:#71717a; text-decoration:none; transition:background .15s; }
+.store-aside-item:hover { background:#fafafa; }
+.store-aside-item.active { background:#fff1f2; color:#be123c; }`,
+  },
+  {
+    id: 'ecom-sidebar-catalog', name: 'eCommerce Catalog Tree Sidebar', category: 'Aside Nav',
+    description: 'Expandable product category tree with nested sub-categories.',
+    Preview: EcomSidebarCatalogPreview,
+    tailwind: `<aside class="flex h-72 w-48 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="border-b border-zinc-100 px-4 py-3"><p class="text-xs font-bold text-zinc-800">📂 Catalog</p></div>
+  <nav class="flex-1 px-2 py-2 overflow-auto">
+    <button class="w-full flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-semibold text-zinc-700 hover:bg-zinc-50">
+      <span>Electronics</span><span class="text-zinc-400 text-[10px]">▾</span>
+    </button>
+    <div class="ml-3 border-l border-zinc-200 pl-2 space-y-0.5">
+      <a href="#" class="block rounded-md px-2 py-1.5 text-xs font-semibold text-amber-700">Smartphones</a>
+      <a href="#" class="block rounded-md px-2 py-1.5 text-xs text-zinc-500 hover:text-zinc-700">Laptops</a>
+    </div>
+  </nav>
+</aside>`,
+    css: `.catalog-aside { display:flex; flex-direction:column; height:18rem; width:12rem; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.catalog-aside-parent { display:flex; align-items:center; justify-content:space-between; border-radius:.5rem; padding:.375rem .625rem; font-size:.75rem; font-weight:600; color:#27272a; cursor:pointer; }
+.catalog-aside-parent:hover { background:#fafafa; }
+.catalog-aside-children { margin-left:.75rem; border-left:1px solid #e4e4e7; padding-left:.5rem; }
+.catalog-aside-child { display:block; border-radius:.375rem; padding:.375rem .5rem; font-size:.75rem; color:#71717a; text-decoration:none; transition:color .15s; }
+.catalog-aside-child:hover { color:#27272a; }
+.catalog-aside-child.active { color:#b45309; font-weight:700; }`,
+  },
+
+  /* ── Aside Navigation — Analytics ── */
+  {
+    id: 'analytics-sidebar-main', name: 'Analytics Sidebar', category: 'Aside Nav',
+    description: 'Analytics platform sidebar — traffic, funnels, cohorts, heatmaps.',
+    Preview: AnalyticsSidebarMainPreview,
+    tailwind: `<aside class="flex h-72 w-48 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="flex items-center gap-2 border-b border-zinc-100 px-4 py-3.5">
+    <div class="h-6 w-6 rounded-md bg-violet-600 flex items-center justify-center text-white text-[10px] font-bold">A</div>
+    <span class="text-xs font-bold text-zinc-800">Analytics Pro</span>
+  </div>
+  <nav class="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+    <a href="#" class="flex items-center gap-2.5 rounded-lg bg-violet-600 px-2.5 py-2 text-xs font-medium text-white"><span>📊</span> Overview</a>
+    <a href="#" class="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium text-zinc-500 hover:bg-violet-50 hover:text-violet-700"><span>👁️</span> Traffic</a>
+    <a href="#" class="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium text-zinc-500 hover:bg-violet-50 hover:text-violet-700"><span>🔄</span> Funnels</a>
+  </nav>
+</aside>`,
+    css: `.analytics-aside { display:flex; flex-direction:column; height:18rem; width:12rem; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.analytics-aside-item { display:flex; align-items:center; gap:.625rem; border-radius:.5rem; padding:.5rem .625rem; font-size:.75rem; font-weight:500; color:#71717a; text-decoration:none; transition:background .15s, color .15s; }
+.analytics-aside-item:hover { background:#f5f3ff; color:#6d28d9; }
+.analytics-aside-item.active { background:#7c3aed; color:#fff; }`,
+  },
+  {
+    id: 'analytics-sidebar-metrics', name: 'Analytics Metrics Nav', category: 'Aside Nav',
+    description: 'Sidebar showing key metrics with live values and trend indicators.',
+    Preview: AnalyticsSidebarMetricsPreview,
+    tailwind: `<aside class="flex h-72 w-56 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="border-b border-zinc-100 px-4 py-3"><p class="text-xs font-bold text-zinc-800">📈 Key Metrics</p></div>
+  <nav class="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+    <a href="#" class="flex items-center justify-between rounded-lg bg-blue-50 px-2.5 py-2 text-xs text-blue-700">
+      <span class="font-medium">Sessions</span>
+      <span class="flex items-center gap-1.5"><span class="font-bold text-zinc-800">24.3K</span><span class="text-[10px] font-semibold text-emerald-600">+12%</span></span>
+    </a>
+    <a href="#" class="flex items-center justify-between rounded-lg px-2.5 py-2 text-xs text-zinc-600 hover:bg-zinc-50">
+      <span class="font-medium">Revenue</span>
+      <span class="flex items-center gap-1.5"><span class="font-bold text-zinc-800">$8.4K</span><span class="text-[10px] font-semibold text-emerald-600">+22%</span></span>
+    </a>
+  </nav>
+</aside>`,
+    css: `.metrics-aside { display:flex; flex-direction:column; height:18rem; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.metrics-aside-item { display:flex; align-items:center; justify-content:space-between; border-radius:.5rem; padding:.5rem .625rem; font-size:.75rem; color:#52525b; text-decoration:none; transition:background .15s; }
+.metrics-aside-item:hover { background:#fafafa; }
+.metrics-aside-item.active { background:#eff6ff; color:#1d4ed8; }
+.metrics-aside-trend.up { color:#16a34a; font-size:.625rem; font-weight:700; }
+.metrics-aside-trend.down { color:#dc2626; font-size:.625rem; font-weight:700; }`,
+  },
+  {
+    id: 'analytics-sidebar-reports', name: 'Analytics Reports Sidebar', category: 'Aside Nav',
+    description: 'Folder-based report library sidebar with expand/collapse tree.',
+    Preview: AnalyticsSidebarReportsPreview,
+    tailwind: `<aside class="flex h-72 w-48 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="border-b border-zinc-100 px-4 py-3"><p class="text-xs font-bold text-zinc-800">📁 Reports</p></div>
+  <nav class="flex-1 px-2 py-2 overflow-auto">
+    <button class="w-full flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-zinc-700 hover:bg-zinc-50">
+      <span>📂</span><span class="flex-1 text-left">Quarterly</span><span class="text-zinc-400 text-[10px]">▾</span>
+    </button>
+    <div class="ml-3 border-l-2 border-indigo-100 pl-2 space-y-0.5">
+      <a href="#" class="block rounded-md px-2 py-1.5 text-xs font-bold text-indigo-700">Q1 Summary</a>
+      <a href="#" class="block rounded-md px-2 py-1.5 text-xs text-zinc-500 hover:text-zinc-700">Q2 Summary</a>
+    </div>
+  </nav>
+</aside>`,
+    css: `.reports-aside { display:flex; flex-direction:column; height:18rem; width:12rem; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.reports-aside-folder { display:flex; align-items:center; gap:.375rem; border-radius:.5rem; padding:.375rem .625rem; font-size:.75rem; font-weight:600; color:#27272a; cursor:pointer; }
+.reports-aside-folder:hover { background:#fafafa; }
+.reports-aside-tree { margin-left:.75rem; border-left:2px solid #e0e7ff; padding-left:.5rem; }
+.reports-aside-file { display:block; border-radius:.375rem; padding:.375rem .5rem; font-size:.75rem; color:#71717a; text-decoration:none; }
+.reports-aside-file.active { color:#4338ca; font-weight:700; }`,
+  },
+
+  /* ── Aside Navigation — Marketing ── */
+  {
+    id: 'marketing-sidebar-main', name: 'Marketing Hub Sidebar', category: 'Aside Nav',
+    description: 'Marketing platform sidebar with campaigns, email, social, SEO, and A/B tests.',
+    Preview: MarketingSidebarMainPreview,
+    tailwind: `<aside class="flex h-72 w-48 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="bg-gradient-to-r from-pink-500 to-rose-500 px-4 py-3.5"><span class="text-xs font-bold text-white">🎯 Marketing Hub</span></div>
+  <nav class="flex-1 px-2 py-2 space-y-0.5">
+    <a href="#" class="flex items-center justify-between rounded-lg bg-pink-50 px-2.5 py-2 text-xs font-medium text-pink-700">
+      <span class="flex items-center gap-2"><span>🚀</span> Campaigns</span>
+      <span class="rounded-full bg-pink-100 px-1.5 py-0.5 text-[10px] font-bold text-pink-600">3 live</span>
+    </a>
+    <a href="#" class="flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-medium text-zinc-500 hover:bg-zinc-50"><span>📧</span> Email</a>
+    <a href="#" class="flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-medium text-zinc-500 hover:bg-zinc-50"><span>🔍</span> SEO</a>
+  </nav>
+</aside>`,
+    css: `.mktg-aside { display:flex; flex-direction:column; height:18rem; width:12rem; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.mktg-aside-header { background:linear-gradient(90deg,#ec4899,#f43f5e); padding:.875rem 1rem; }
+.mktg-aside-item { display:flex; align-items:center; gap:.5rem; border-radius:.5rem; padding:.5rem .625rem; font-size:.75rem; font-weight:500; color:#71717a; text-decoration:none; transition:background .15s; }
+.mktg-aside-item:hover { background:#fafafa; }
+.mktg-aside-item.active { background:#fdf2f8; color:#be185d; }`,
+  },
+  {
+    id: 'marketing-sidebar-campaigns', name: 'Campaign Manager Sidebar', category: 'Aside Nav',
+    description: 'List of campaigns with live/draft/scheduled status indicators.',
+    Preview: MarketingSidebarCampaignsPreview,
+    tailwind: `<aside class="flex h-72 w-52 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="flex items-center justify-between border-b border-zinc-100 px-3 py-3">
+    <p class="text-xs font-bold text-zinc-800">🚀 Campaigns</p>
+    <span class="rounded-md bg-fuchsia-100 px-2 py-0.5 text-[10px] font-bold text-fuchsia-700">2 Live</span>
+  </div>
+  <nav class="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+    <a href="#" class="flex items-center gap-2.5 rounded-lg bg-fuchsia-50 px-2.5 py-2 text-xs text-fuchsia-700">
+      <span class="h-2 w-2 rounded-full bg-green-400 shrink-0"></span>
+      <span class="flex-1 font-medium">Summer Sale</span><span class="text-[10px] text-zinc-400">Live</span>
+    </a>
+    <a href="#" class="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs text-zinc-600 hover:bg-zinc-50">
+      <span class="h-2 w-2 rounded-full bg-zinc-300 shrink-0"></span>
+      <span class="flex-1 font-medium">Newsletter #24</span><span class="text-[10px] text-zinc-400">Draft</span>
+    </a>
+  </nav>
+</aside>`,
+    css: `.campaigns-aside { display:flex; flex-direction:column; height:18rem; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.campaigns-aside-item { display:flex; align-items:center; gap:.625rem; border-radius:.5rem; padding:.5rem .625rem; font-size:.75rem; color:#52525b; text-decoration:none; transition:background .15s; }
+.campaigns-aside-item:hover { background:#fafafa; }
+.campaigns-aside-item.active { background:#fdf4ff; color:#a21caf; }
+.campaign-dot { height:.5rem; width:.5rem; border-radius:9999px; flex-shrink:0; }
+.campaign-dot.live { background:#4ade80; }
+.campaign-dot.draft { background:#d4d4d8; }
+.campaign-dot.scheduled { background:#fbbf24; }`,
+  },
+  {
+    id: 'marketing-sidebar-channels', name: 'Marketing Channels Sidebar', category: 'Aside Nav',
+    description: 'Channel performance sidebar with reach stats and progress bars.',
+    Preview: MarketingSidebarChannelsPreview,
+    tailwind: `<aside class="flex h-72 w-56 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="border-b border-zinc-100 px-4 py-3"><p class="text-xs font-bold text-zinc-800">📡 Channels</p></div>
+  <nav class="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+    <a href="#" class="block rounded-lg bg-cyan-50 px-2.5 py-2">
+      <div class="flex items-center gap-2 mb-1">
+        <span>📧</span><span class="text-xs font-semibold flex-1 text-cyan-700">Email</span><span class="text-[10px] font-bold text-zinc-500">14.2K</span>
+      </div>
+      <div class="h-1 w-full rounded-full bg-zinc-100"><div class="h-1 rounded-full bg-cyan-400" style="width:74%"></div></div>
+    </a>
+    <a href="#" class="block rounded-lg px-2.5 py-2 hover:bg-zinc-50">
+      <div class="flex items-center gap-2 mb-1">
+        <span>📸</span><span class="text-xs font-semibold flex-1 text-zinc-700">Instagram</span><span class="text-[10px] font-bold text-zinc-500">11K</span>
+      </div>
+      <div class="h-1 w-full rounded-full bg-zinc-100"><div class="h-1 rounded-full bg-cyan-300" style="width:58%"></div></div>
+    </a>
+  </nav>
+</aside>`,
+    css: `.channels-aside { display:flex; flex-direction:column; height:18rem; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.channel-item { display:block; border-radius:.5rem; padding:.5rem .625rem; text-decoration:none; transition:background .15s; }
+.channel-item:hover { background:#fafafa; }
+.channel-item.active { background:#ecfeff; }
+.channel-bar-bg { height:.25rem; width:100%; border-radius:9999px; background:#f4f4f5; margin-top:.25rem; }
+.channel-bar-fill { height:.25rem; border-radius:9999px; background:#22d3ee; }`,
+  },
+
+  /* ── Aside Navigation — CRM ── */
+  {
+    id: 'crm-sidebar-main', name: 'CRM Sidebar', category: 'Aside Nav',
+    description: 'CRM sidebar with contacts, companies, deals, and activity counts.',
+    Preview: CrmSidebarMainPreview,
+    tailwind: `<aside class="flex h-72 w-48 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="bg-blue-600 px-4 py-3.5"><span class="text-xs font-bold text-white">🤝 CRM Suite</span></div>
+  <nav class="flex-1 px-2 py-2 space-y-0.5">
+    <a href="#" class="flex items-center justify-between rounded-lg bg-blue-50 px-2.5 py-2 text-xs font-medium text-blue-700">
+      <span class="flex items-center gap-2"><span>👤</span> Contacts</span>
+      <span class="rounded-full bg-blue-100 px-1.5 py-0.5 text-[10px] font-bold text-blue-500">1.2K</span>
+    </a>
+    <a href="#" class="flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-medium text-zinc-500 hover:bg-zinc-50"><span>🏢</span> Companies</a>
+    <a href="#" class="flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-medium text-zinc-500 hover:bg-zinc-50"><span>💼</span> Deals</a>
+  </nav>
+</aside>`,
+    css: `.crm-aside { display:flex; flex-direction:column; height:18rem; width:12rem; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.crm-aside-header { background:#2563eb; padding:.875rem 1rem; }
+.crm-aside-item { display:flex; align-items:center; gap:.5rem; border-radius:.5rem; padding:.5rem .625rem; font-size:.75rem; font-weight:500; color:#71717a; text-decoration:none; transition:background .15s; }
+.crm-aside-item:hover { background:#fafafa; }
+.crm-aside-item.active { background:#eff6ff; color:#1d4ed8; }`,
+  },
+  {
+    id: 'crm-sidebar-pipeline', name: 'CRM Pipeline Sidebar', category: 'Aside Nav',
+    description: 'Pipeline stage sidebar showing deal counts and total value per stage.',
+    Preview: CrmSidebarPipelinePreview,
+    tailwind: `<aside class="flex h-72 w-56 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="border-b border-zinc-100 px-4 py-3"><p class="text-xs font-bold text-zinc-800">💼 Pipeline</p></div>
+  <nav class="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+    <a href="#" class="flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs text-zinc-600 hover:bg-zinc-50">
+      <span class="h-2.5 w-2.5 rounded-sm bg-zinc-200"></span><span class="flex-1 font-medium">Lead</span><span class="text-[10px] text-zinc-400">42</span><span class="text-[10px] font-bold text-zinc-600">$0</span>
+    </a>
+    <a href="#" class="flex items-center gap-2 rounded-lg bg-indigo-50 px-2.5 py-2 text-xs text-indigo-700">
+      <span class="h-2.5 w-2.5 rounded-sm bg-indigo-300"></span><span class="flex-1 font-medium">Proposal</span><span class="text-[10px] text-zinc-400">9</span><span class="text-[10px] font-bold text-zinc-600">$88K</span>
+    </a>
+  </nav>
+</aside>`,
+    css: `.pipeline-aside { display:flex; flex-direction:column; height:18rem; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.pipeline-stage { display:flex; align-items:center; gap:.5rem; border-radius:.5rem; padding:.5rem .625rem; font-size:.75rem; color:#52525b; text-decoration:none; transition:background .15s; }
+.pipeline-stage:hover { background:#fafafa; }
+.pipeline-stage.active { background:#eef2ff; color:#4338ca; }
+.stage-dot { height:.625rem; width:.625rem; border-radius:.125rem; flex-shrink:0; }`,
+  },
+  {
+    id: 'crm-sidebar-contacts', name: 'CRM Contacts Filter Sidebar', category: 'Aside Nav',
+    description: 'Contact type filter sidebar with search and recently viewed contacts.',
+    Preview: CrmSidebarContactsPreview,
+    tailwind: `<aside class="flex h-72 w-48 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="border-b border-zinc-100 px-3 py-3">
+    <p class="text-xs font-bold text-zinc-800 mb-2">👤 Contacts</p>
+    <div class="flex items-center gap-1.5 rounded-lg bg-zinc-100 px-2.5 py-1.5 text-xs text-zinc-400">🔍 Search contacts...</div>
+  </div>
+  <div class="px-2 py-1.5 space-y-0.5">
+    <a href="#" class="flex items-center justify-between rounded-lg bg-sky-50 px-2.5 py-1.5 text-xs font-medium text-sky-700"><span>All</span><span class="text-[10px] text-zinc-400">1248</span></a>
+    <a href="#" class="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-medium text-zinc-500 hover:bg-zinc-50"><span>Leads</span><span class="text-[10px] text-zinc-400">312</span></a>
+  </div>
+</aside>`,
+    css: `.contacts-aside { display:flex; flex-direction:column; height:18rem; width:12rem; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.contacts-aside-filter { display:flex; align-items:center; justify-content:space-between; border-radius:.5rem; padding:.375rem .625rem; font-size:.75rem; font-weight:500; color:#71717a; text-decoration:none; transition:background .15s; }
+.contacts-aside-filter:hover { background:#fafafa; }
+.contacts-aside-filter.active { background:#f0f9ff; color:#0369a1; }`,
+  },
+
+  /* ── Aside Navigation — Stocks ── */
+  {
+    id: 'stocks-sidebar-main', name: 'Trading App Sidebar', category: 'Aside Nav',
+    description: 'Dark-mode trading sidebar — portfolio, watchlist, markets, alerts.',
+    Preview: StocksSidebarMainPreview,
+    tailwind: `<aside class="flex h-72 w-48 flex-col rounded-2xl bg-[#0f1117] shadow-xl border border-zinc-800 overflow-hidden">
+  <div class="flex items-center gap-2 border-b border-zinc-800 px-4 py-3.5">
+    <div class="h-6 w-6 rounded-md bg-emerald-500 flex items-center justify-center text-white text-[10px] font-bold">T</div>
+    <span class="text-xs font-bold text-white">TradeView</span>
+  </div>
+  <nav class="flex-1 px-1.5 py-2 space-y-0.5">
+    <a href="#" class="flex items-center gap-2.5 rounded-lg bg-emerald-500/20 px-2.5 py-2 text-xs font-medium text-emerald-400"><span>💼</span> Portfolio</a>
+    <a href="#" class="flex items-center justify-between rounded-lg px-2.5 py-2 text-xs font-medium text-zinc-400 hover:bg-zinc-800 hover:text-white">
+      <span class="flex items-center gap-2.5"><span>👁️</span> Watchlist</span>
+      <span class="rounded-full bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-bold text-emerald-400">8</span>
+    </a>
+  </nav>
+</aside>`,
+    css: `.trading-aside { display:flex; flex-direction:column; height:18rem; width:12rem; border-radius:1rem; background:#0f1117; border:1px solid #27272a; overflow:hidden; }
+.trading-aside-item { display:flex; align-items:center; gap:.625rem; border-radius:.5rem; padding:.5rem .625rem; font-size:.75rem; font-weight:500; color:#71717a; text-decoration:none; transition:background .15s, color .15s; }
+.trading-aside-item:hover { background:#1c1c27; color:#fff; }
+.trading-aside-item.active { background:rgba(16,185,129,.15); color:#34d399; }`,
+  },
+  {
+    id: 'stocks-sidebar-portfolio', name: 'Stock Portfolio Sidebar', category: 'Aside Nav',
+    description: 'Portfolio holdings sidebar with ticker, price, and daily % change.',
+    Preview: StocksSidebarPortfolioPreview,
+    tailwind: `<aside class="flex h-72 w-56 flex-col rounded-2xl bg-[#0f1117] shadow-xl border border-zinc-800 overflow-hidden">
+  <div class="border-b border-zinc-800 px-4 py-3"><p class="text-xs font-bold text-white">💼 Holdings</p></div>
+  <nav class="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+    <a href="#" class="flex items-center gap-2 rounded-lg bg-zinc-800 px-2.5 py-2 text-xs">
+      <div class="h-6 w-6 rounded-md bg-zinc-700 flex items-center justify-center text-[9px] font-bold text-zinc-200">AA</div>
+      <div class="flex-1 min-w-0"><p class="font-semibold text-zinc-200 text-[11px]">AAPL</p><p class="text-[9px] text-zinc-500">Apple</p></div>
+      <div class="text-right"><p class="font-bold text-zinc-200 text-[11px]">$182</p><p class="text-[9px] font-semibold text-emerald-400">+1.4%</p></div>
+    </a>
+  </nav>
+</aside>`,
+    css: `.portfolio-aside { display:flex; flex-direction:column; height:18rem; border-radius:1rem; background:#0f1117; border:1px solid #27272a; overflow:hidden; }
+.holding-item { display:flex; align-items:center; gap:.5rem; border-radius:.5rem; padding:.5rem .625rem; text-decoration:none; transition:background .15s; }
+.holding-item:hover { background:#1c1c27; }
+.holding-item.active { background:#27272a; }
+.holding-ticker-badge { height:1.5rem; width:1.5rem; border-radius:.375rem; background:#3f3f46; display:flex; align-items:center; justify-content:center; font-size:.5625rem; font-weight:700; color:#d4d4d8; }
+.holding-change.up { color:#34d399; }
+.holding-change.down { color:#f87171; }`,
+  },
+  {
+    id: 'stocks-sidebar-watchlist', name: 'Watchlist Sidebar', category: 'Aside Nav',
+    description: 'Tabbed watchlist sidebar — tech, ETFs, crypto with price change.',
+    Preview: StocksSidebarWatchlistPreview,
+    tailwind: `<aside class="flex h-72 w-52 flex-col rounded-2xl bg-[#0f1117] shadow-xl border border-zinc-800 overflow-hidden">
+  <div class="border-b border-zinc-800 px-3 py-2.5">
+    <p class="text-xs font-bold text-white mb-2">👁️ Watchlist</p>
+    <div class="flex gap-1">
+      <button class="rounded-md bg-emerald-500 px-2 py-1 text-[10px] font-semibold text-white">Tech</button>
+      <button class="rounded-md bg-zinc-800 px-2 py-1 text-[10px] font-semibold text-zinc-400 hover:bg-zinc-700">ETFs</button>
+      <button class="rounded-md bg-zinc-800 px-2 py-1 text-[10px] font-semibold text-zinc-400 hover:bg-zinc-700">Crypto</button>
+    </div>
+  </div>
+  <div class="flex-1 px-2 py-2 space-y-0.5">
+    <div class="flex items-center justify-between rounded-lg px-2.5 py-2 hover:bg-zinc-800 transition">
+      <div class="h-6 w-6 rounded-md bg-zinc-700 flex items-center justify-center text-[9px] font-bold text-zinc-200">AA</div>
+      <span class="flex-1 ml-2 text-xs font-semibold text-zinc-300">AAPL</span>
+      <span class="text-xs font-bold text-emerald-400">+1.4%</span>
+    </div>
+  </div>
+</aside>`,
+    css: `.watchlist-aside { display:flex; flex-direction:column; height:18rem; border-radius:1rem; background:#0f1117; border:1px solid #27272a; overflow:hidden; }
+.watchlist-tab { border-radius:.375rem; padding:.25rem .5rem; font-size:.625rem; font-weight:600; border:none; cursor:pointer; transition:background .15s; }
+.watchlist-tab.active { background:#10b981; color:#fff; }
+.watchlist-tab:not(.active) { background:#27272a; color:#71717a; }
+.watchlist-row { display:flex; align-items:center; border-radius:.5rem; padding:.5rem .625rem; transition:background .15s; }
+.watchlist-row:hover { background:#1c1c27; }`,
+  },
+
+  /* ── Aside Navigation — SaaS ── */
+  {
+    id: 'saas-sidebar-main', name: 'SaaS App Sidebar', category: 'Aside Nav',
+    description: 'Workspace-switcher sidebar with projects, team, inbox, and integrations.',
+    Preview: SaasSidebarMainPreview,
+    tailwind: `<aside class="flex h-72 w-48 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="border-b border-zinc-100 px-3 py-3">
+    <select class="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-2 py-1.5 text-xs font-semibold text-zinc-700 focus:outline-none">
+      <option>Acme Inc.</option><option>Side Project</option>
+    </select>
+  </div>
+  <nav class="flex-1 px-2 py-2 space-y-0.5">
+    <a href="#" class="flex items-center gap-2.5 rounded-lg bg-slate-900 px-2.5 py-2 text-xs font-medium text-white"><span>🏠</span> Workspace</a>
+    <a href="#" class="flex items-center justify-between rounded-lg px-2.5 py-2 text-xs font-medium text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700">
+      <span class="flex items-center gap-2"><span>📋</span> Projects</span>
+      <span class="rounded-full bg-zinc-100 px-1.5 py-0.5 text-[10px] font-bold text-zinc-500">4</span>
+    </a>
+  </nav>
+</aside>`,
+    css: `.saas-aside { display:flex; flex-direction:column; height:18rem; width:12rem; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.saas-aside-item { display:flex; align-items:center; gap:.625rem; border-radius:.5rem; padding:.5rem .625rem; font-size:.75rem; font-weight:500; color:#71717a; text-decoration:none; transition:background .15s, color .15s; }
+.saas-aside-item:hover { background:#fafafa; color:#27272a; }
+.saas-aside-item.active { background:#18181b; color:#fff; }`,
+  },
+  {
+    id: 'saas-sidebar-settings', name: 'SaaS Settings Sidebar', category: 'Aside Nav',
+    description: 'Settings sidebar grouped into Account, Workspace, and Developer sections.',
+    Preview: SaasSidebarSettingsPreview,
+    tailwind: `<aside class="flex h-72 w-48 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="flex items-center gap-2 border-b border-zinc-100 px-4 py-3"><span>⚙️</span><p class="text-xs font-bold text-zinc-800">Settings</p></div>
+  <nav class="flex-1 px-2 py-2 overflow-auto space-y-2">
+    <div>
+      <p class="px-2.5 mb-0.5 text-[9px] font-bold tracking-widest text-zinc-400">ACCOUNT</p>
+      <a href="#" class="block rounded-lg bg-zinc-900 px-2.5 py-1.5 text-xs font-medium text-white">General</a>
+      <a href="#" class="block rounded-lg px-2.5 py-1.5 text-xs font-medium text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700">Profile</a>
+      <a href="#" class="block rounded-lg px-2.5 py-1.5 text-xs font-medium text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700">Billing</a>
+    </div>
+    <div>
+      <p class="px-2.5 mb-0.5 text-[9px] font-bold tracking-widest text-zinc-400">DEVELOPER</p>
+      <a href="#" class="block rounded-lg px-2.5 py-1.5 text-xs font-medium text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700">API Keys</a>
+    </div>
+  </nav>
+</aside>`,
+    css: `.settings-aside { display:flex; flex-direction:column; height:18rem; width:12rem; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.settings-aside-section { font-size:.5625rem; font-weight:700; letter-spacing:.1em; color:#a1a1aa; padding:.25rem .625rem .125rem; }
+.settings-aside-item { display:block; border-radius:.5rem; padding:.375rem .625rem; font-size:.75rem; font-weight:500; color:#71717a; text-decoration:none; transition:background .15s; }
+.settings-aside-item:hover { background:#fafafa; color:#27272a; }
+.settings-aside-item.active { background:#18181b; color:#fff; }`,
+  },
+  {
+    id: 'saas-sidebar-admin', name: 'SaaS Admin Panel Sidebar', category: 'Aside Nav',
+    description: 'Admin sidebar for SaaS ops — users, subscriptions, feature flags, alerts.',
+    Preview: SaasSidebarAdminPreview,
+    tailwind: `<aside class="flex h-72 w-48 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="bg-rose-600 px-4 py-3 flex items-center gap-2"><span class="text-white text-xs font-bold">🔑 Admin Panel</span></div>
+  <nav class="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+    <a href="#" class="flex items-center justify-between rounded-lg bg-rose-50 px-2.5 py-2 text-xs font-medium text-rose-700">
+      <span class="flex items-center gap-2"><span>👥</span> Users</span>
+      <span class="rounded-full bg-rose-100 px-1.5 py-0.5 text-[10px] font-bold text-rose-500">2.4K</span>
+    </a>
+    <a href="#" class="flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-medium text-zinc-500 hover:bg-zinc-50"><span>💳</span> Subscriptions</a>
+    <a href="#" class="flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-medium text-zinc-500 hover:bg-zinc-50"><span>🚦</span> Feature Flags</a>
+  </nav>
+</aside>`,
+    css: `.admin-aside { display:flex; flex-direction:column; height:18rem; width:12rem; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.admin-aside-header { background:#e11d48; padding:.75rem 1rem; }
+.admin-aside-item { display:flex; align-items:center; gap:.5rem; border-radius:.5rem; padding:.5rem .625rem; font-size:.75rem; font-weight:500; color:#71717a; text-decoration:none; transition:background .15s; }
+.admin-aside-item:hover { background:#fafafa; }
+.admin-aside-item.active { background:#fff1f2; color:#be123c; }`,
+  },
+
+  /* ── Aside Navigation — Logistics ── */
+  {
+    id: 'logistics-sidebar-main', name: 'Logistics Sidebar', category: 'Aside Nav',
+    description: 'Logistics platform sidebar — shipments, routes, fleet, warehouses.',
+    Preview: LogisticsSidebarMainPreview,
+    tailwind: `<aside class="flex h-72 w-48 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="bg-teal-700 px-4 py-3.5"><span class="text-xs font-bold text-white">🚛 LogiTrack</span></div>
+  <nav class="flex-1 px-2 py-2 space-y-0.5">
+    <a href="#" class="flex items-center justify-between rounded-lg bg-teal-50 px-2.5 py-2 text-xs font-medium text-teal-700">
+      <span class="flex items-center gap-2"><span>📦</span> Shipments</span>
+      <span class="rounded-full bg-teal-100 px-1.5 py-0.5 text-[10px] font-bold text-teal-600">18</span>
+    </a>
+    <a href="#" class="flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-medium text-zinc-500 hover:bg-zinc-50"><span>🗺️</span> Routes</a>
+    <a href="#" class="flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-medium text-zinc-500 hover:bg-zinc-50"><span>🚚</span> Fleet</a>
+  </nav>
+</aside>`,
+    css: `.logi-aside { display:flex; flex-direction:column; height:18rem; width:12rem; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.logi-aside-header { background:#0f766e; padding:.875rem 1rem; }
+.logi-aside-item { display:flex; align-items:center; gap:.5rem; border-radius:.5rem; padding:.5rem .625rem; font-size:.75rem; font-weight:500; color:#71717a; text-decoration:none; transition:background .15s; }
+.logi-aside-item:hover { background:#fafafa; }
+.logi-aside-item.active { background:#f0fdfa; color:#0f766e; }`,
+  },
+  {
+    id: 'logistics-sidebar-shipments', name: 'Shipments Status Sidebar', category: 'Aside Nav',
+    description: 'Shipment filter sidebar with color-coded status counts.',
+    Preview: LogisticsSidebarShipmentsPreview,
+    tailwind: `<aside class="flex h-72 w-52 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="border-b border-zinc-100 px-4 py-3">
+    <p class="text-xs font-bold text-zinc-800">📦 Shipments</p>
+    <p class="text-[10px] text-zinc-400 mt-0.5">142 total this month</p>
+  </div>
+  <nav class="flex-1 px-2 py-2 space-y-0.5">
+    <a href="#" class="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs text-zinc-600 hover:bg-zinc-50">
+      <span class="h-2 w-2 rounded-full bg-zinc-400"></span><span class="flex-1 font-medium">All Shipments</span><span class="font-bold text-zinc-500 text-[10px]">142</span>
+    </a>
+    <a href="#" class="flex items-center gap-2.5 rounded-lg bg-blue-50 px-2.5 py-2 text-xs text-blue-700">
+      <span class="h-2 w-2 rounded-full bg-blue-500"></span><span class="flex-1 font-medium">In Transit</span><span class="font-bold text-zinc-500 text-[10px]">58</span>
+    </a>
+    <a href="#" class="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs text-zinc-600 hover:bg-zinc-50">
+      <span class="h-2 w-2 rounded-full bg-emerald-500"></span><span class="flex-1 font-medium">Delivered</span><span class="font-bold text-zinc-500 text-[10px]">64</span>
+    </a>
+  </nav>
+</aside>`,
+    css: `.shipments-aside { display:flex; flex-direction:column; height:18rem; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.shipment-filter { display:flex; align-items:center; gap:.625rem; border-radius:.5rem; padding:.5rem .625rem; font-size:.75rem; color:#52525b; text-decoration:none; transition:background .15s; }
+.shipment-filter:hover { background:#fafafa; }
+.shipment-filter.active { background:#eff6ff; color:#1d4ed8; }
+.shipment-dot { height:.5rem; width:.5rem; border-radius:9999px; flex-shrink:0; }`,
+  },
+  {
+    id: 'logistics-sidebar-fleet', name: 'Fleet Management Sidebar', category: 'Aside Nav',
+    description: 'Fleet status sidebar with vehicle ID, driver, status badge, and route progress bar.',
+    Preview: LogisticsSidebarFleetPreview,
+    tailwind: `<aside class="flex h-72 w-56 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="border-b border-zinc-100 px-4 py-3"><p class="text-xs font-bold text-zinc-800">🚚 Fleet Status</p></div>
+  <nav class="flex-1 px-2 py-2 space-y-1 overflow-auto">
+    <a href="#" class="block rounded-lg border border-teal-200 bg-teal-50 px-2.5 py-2">
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-xs font-bold text-zinc-800">TRK-001</span>
+        <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-semibold text-emerald-700">On Route</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="flex-1 h-1 rounded-full bg-zinc-100"><div class="h-1 rounded-full bg-emerald-400" style="width:68%"></div></div>
+        <span class="text-[10px] text-zinc-400">Mike R.</span>
+      </div>
+    </a>
+  </nav>
+</aside>`,
+    css: `.fleet-aside { display:flex; flex-direction:column; height:18rem; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.fleet-vehicle { display:block; border-radius:.5rem; border:1px solid transparent; padding:.5rem .625rem; text-decoration:none; transition:background .15s, border-color .15s; }
+.fleet-vehicle:hover { background:#fafafa; }
+.fleet-vehicle.active { background:#f0fdfa; border-color:#5eead4; }
+.fleet-progress-bg { height:.25rem; border-radius:9999px; background:#f4f4f5; flex:1; }
+.fleet-progress-fill { height:.25rem; border-radius:9999px; background:#4ade80; }`,
+  },
 ];
 
 /* ─────────────────────────────────────────────
@@ -7629,9 +9029,10 @@ const CATEGORY_META: Record<string, { icon: string; pill: string; pillActive: st
   'Display':        { icon: '📊', pill: 'bg-violet-50 text-violet-700',        pillActive: 'bg-violet-600 text-white',        accent: 'bg-violet-50/60' },
   'Overlay':        { icon: '🪟', pill: 'bg-rose-50 text-rose-700',            pillActive: 'bg-rose-500 text-white',          accent: 'bg-rose-50/60' },
   'Layout':         { icon: '▦',  pill: 'bg-slate-100 text-slate-600',         pillActive: 'bg-slate-700 text-white',         accent: 'bg-slate-50/60' },
+  'Aside Nav':      { icon: '◧',  pill: 'bg-teal-50 text-teal-700',            pillActive: 'bg-teal-600 text-white',          accent: 'bg-teal-50/40' },
 };
 
-const CATEGORIES = ['All', 'Feedback', 'Navigation', 'Forms & Inputs', 'Display', 'Overlay', 'Layout'];
+const CATEGORIES = ['All', 'Feedback', 'Navigation', 'Forms & Inputs', 'Display', 'Overlay', 'Layout', 'Aside Nav'];
 
 /* ─────────────────────────────────────────────
    Share Toast
