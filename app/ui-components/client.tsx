@@ -27,7 +27,7 @@ type CodeTab = 'tailwind' | 'css';
 ───────────────────────────────────────────── */
 function PreviewWrap({ children, bg = 'bg-white' }: { children: React.ReactNode; bg?: string }) {
   return (
-    <div className={`flex min-h-[130px] flex-wrap items-center justify-center gap-3 rounded-xl p-6 ${bg}`}>
+    <div className={`flex min-h-[220px] w-full flex-wrap items-center justify-center gap-3 p-8 ${bg}`}>
       {children}
     </div>
   );
@@ -7634,65 +7634,71 @@ const CATEGORIES = ['All', 'Feedback', 'Navigation', 'Forms & Inputs', 'Display'
 ───────────────────────────────────────────── */
 function ComponentCard({ comp }: { comp: ComponentDef }) {
   const [tab, setTab] = useState<CodeTab>('tailwind');
-  const [expanded, setExpanded] = useState(false);
+  const [showCode, setShowCode] = useState(false);
   const Preview = comp.Preview;
   const meta = CATEGORY_META[comp.category] ?? CATEGORY_META['Layout'];
 
   return (
-    <div className="group flex flex-col rounded-2xl border border-zinc-200/80 bg-white shadow-sm overflow-hidden transition-all duration-200 hover:shadow-xl hover:shadow-zinc-200/60 hover:-translate-y-0.5">
+    <div className="group flex flex-col rounded-3xl border border-zinc-200/80 bg-white shadow-sm overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-zinc-300/40 hover:-translate-y-1">
 
       {/* ── Card Header ── */}
-      <div className="flex items-start justify-between gap-3 px-5 pt-5 pb-3">
+      <div className="flex items-center justify-between gap-3 px-6 pt-5 pb-4 border-b border-zinc-100">
         <div className="min-w-0 flex-1">
-          <h3 className="font-semibold text-[14px] text-zinc-900 leading-snug tracking-[-0.01em]">{comp.name}</h3>
-          <p className="mt-1 text-[12px] text-zinc-400 leading-relaxed line-clamp-2">{comp.description}</p>
+          <h3 className="font-bold text-[15px] text-zinc-900 leading-tight tracking-[-0.02em]">{comp.name}</h3>
+          <p className="mt-1 text-[12px] text-zinc-400 leading-relaxed line-clamp-1">{comp.description}</p>
         </div>
-        <span className={`ml-2 shrink-0 inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-bold whitespace-nowrap tracking-wide ${meta.pill}`}>
-          {CATEGORY_META[comp.category]?.icon} {comp.category}
+        <span className={`ml-3 shrink-0 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[10px] font-bold whitespace-nowrap ${meta.pill}`}>
+          <span>{CATEGORY_META[comp.category]?.icon}</span>
+          <span className="hidden sm:inline">{comp.category}</span>
         </span>
       </div>
 
       {/* ── Live Preview ── */}
-      <div className={`relative border-y border-zinc-100 ${meta.accent} flex items-center justify-center overflow-hidden`} style={{ minHeight: 220 }}>
-        <div className="w-full">
+      <div
+        className={`relative flex w-full items-center justify-center overflow-hidden ${meta.accent}`}
+        style={{ minHeight: 300 }}
+      >
+        {/* Subtle dot grid overlay */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.04]"
+          style={{ backgroundImage: 'radial-gradient(circle, #000 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+        <div className="relative w-full">
           <Preview />
         </div>
       </div>
 
-      {/* ── Code Section ── */}
-      <div className="flex flex-col">
-        {/* Tab strip */}
-        <div className="flex items-center border-b border-zinc-100 bg-zinc-50/80 px-4">
+      {/* ── Code toggle bar ── */}
+      <div className="flex items-center border-t border-zinc-100 bg-zinc-50 px-5">
+        <div className="flex">
           {(['tailwind', 'css'] as CodeTab[]).map((t) => (
             <button
               key={t}
-              onClick={() => setTab(t)}
-              className={`flex items-center gap-1.5 px-3 py-2.5 text-[11px] font-semibold border-b-2 -mb-px transition-all ${
-                tab === t
+              onClick={() => { setTab(t); setShowCode(true); }}
+              className={`flex items-center gap-1.5 px-4 py-3 text-[11px] font-bold border-b-2 -mb-px transition-all ${
+                tab === t && showCode
                   ? 'border-zinc-900 text-zinc-900'
-                  : 'border-transparent text-zinc-400 hover:text-zinc-600'
+                  : 'border-transparent text-zinc-400 hover:text-zinc-700'
               }`}
             >
-              {t === 'tailwind' ? (
-                <><span className="text-sky-500">⚡</span> Tailwind</>
-              ) : (
-                <><span className="text-purple-500">🎨</span> CSS</>
-              )}
+              {t === 'tailwind' ? <><span>⚡</span> Tailwind</> : <><span>🎨</span> CSS</>}
             </button>
           ))}
-          <button
-            onClick={() => setExpanded(e => !e)}
-            className="ml-auto text-[10px] font-semibold text-zinc-400 hover:text-zinc-700 transition py-2.5"
-          >
-            {expanded ? '▲ Less' : '▼ More'}
-          </button>
         </div>
+        <button
+          onClick={() => setShowCode(v => !v)}
+          className={`ml-auto flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-bold transition-all ${
+            showCode
+              ? 'bg-zinc-900 text-white'
+              : 'border border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50'
+          }`}
+        >
+          {showCode ? <><span>✕</span> Hide</> : <><span>{'</>'}</span> Code</>}
+        </button>
+      </div>
 
-        {/* Code block */}
-        <div className={`transition-all duration-300 overflow-hidden ${expanded ? 'max-h-[400px]' : 'max-h-[180px]'}`}>
-          <div className="p-3">
-            <CodeBlock code={tab === 'tailwind' ? comp.tailwind : comp.css} id={comp.id} tab={tab} />
-          </div>
+      {/* ── Code block (collapsible) ── */}
+      <div className={`overflow-hidden transition-all duration-300 ease-in-out ${showCode ? 'max-h-[320px]' : 'max-h-0'}`}>
+        <div className="p-4 pt-0">
+          <CodeBlock code={tab === 'tailwind' ? comp.tailwind : comp.css} id={comp.id} tab={tab} />
         </div>
       </div>
     </div>
@@ -7926,7 +7932,7 @@ export default function UIComponentsClient() {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 2xl:grid-cols-3">
+            <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
               {filtered.map((comp) => (
                 <ComponentCard key={comp.id} comp={comp} />
               ))}
