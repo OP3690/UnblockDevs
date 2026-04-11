@@ -6,6 +6,7 @@ import {
   Bell, Settings, User, Mail, Lock,
   AlertCircle, CheckCircle, XCircle, Info, MoreHorizontal,
 } from 'lucide-react';
+import { trackEvent } from '@/lib/analytics';
 
 /* ─────────────────────────────────────────────
    Types
@@ -7587,14 +7588,20 @@ kbd { border-radius:.375rem; border:1px solid #e4e4e7; background:#f4f4f5; paddi
 /* ─────────────────────────────────────────────
    Code Block
 ───────────────────────────────────────────── */
-function CodeBlock({ code, id, tab }: { code: string; id: string; tab: CodeTab }) {
+function CodeBlock({ code, id, tab, componentName }: { code: string; id: string; tab: CodeTab; componentName: string }) {
   const [copied, setCopied] = useState(false);
   const copy = useCallback(() => {
     navigator.clipboard.writeText(code);
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
-  }, [code]);
-  void id; void tab;
+    // GA4: fire when user copies code
+    trackEvent('component_code_copied', {
+      tool_name:      'css_ui_components',
+      component_id:   id,
+      component_name: componentName,
+      code_format:    tab,           // 'tailwind' | 'css'
+    });
+  }, [code, id, tab, componentName]);
   return (
     <div className="relative group/code">
       <pre className="overflow-x-auto rounded-xl bg-[#0d0d14] p-4 text-[11.5px] leading-[1.75] text-zinc-300 max-h-[260px] scrollbar-thin">
@@ -7655,7 +7662,13 @@ function ComponentCard({ comp }: { comp: ComponentDef }) {
     navigator.clipboard.writeText(url);
     setShared(true);
     setTimeout(() => setShared(false), 2000);
-  }, [comp.id]);
+    trackEvent('component_shared', {
+      tool_name:      'css_ui_components',
+      component_id:   comp.id,
+      component_name: comp.name,
+      category:       comp.category,
+    });
+  }, [comp.id, comp.name, comp.category]);
 
   return (
     <div id={comp.id} className="relative flex flex-col rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-zinc-200/50 hover:-translate-y-0.5">
@@ -7725,7 +7738,18 @@ function ComponentCard({ comp }: { comp: ComponentDef }) {
 
         {/* Code toggle */}
         <button
-          onClick={() => setShowCode(v => !v)}
+          onClick={() => {
+            const opening = !showCode;
+            setShowCode(opening);
+            if (opening) {
+              trackEvent('component_code_viewed', {
+                tool_name:      'css_ui_components',
+                component_id:   comp.id,
+                component_name: comp.name,
+                code_format:    tab,
+              });
+            }
+          }}
           className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 my-1.5 text-[11px] font-bold transition-all ${
             showCode
               ? 'bg-zinc-900 text-white'
@@ -7742,7 +7766,7 @@ function ComponentCard({ comp }: { comp: ComponentDef }) {
       {/* ── Code panel ── */}
       <div className={`overflow-hidden transition-all duration-300 ease-out ${showCode ? 'max-h-[300px]' : 'max-h-0'}`}>
         <div className="p-4">
-          <CodeBlock code={tab === 'tailwind' ? comp.tailwind : comp.css} id={comp.id} tab={tab} />
+          <CodeBlock code={tab === 'tailwind' ? comp.tailwind : comp.css} id={comp.id} tab={tab} componentName={comp.name} />
         </div>
       </div>
 
