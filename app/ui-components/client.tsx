@@ -7594,21 +7594,19 @@ function CodeBlock({ code, id, tab }: { code: string; id: string; tab: CodeTab }
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
   }, [code]);
-  void id;
+  void id; void tab;
   return (
     <div className="relative group/code">
-      <pre className="overflow-x-auto rounded-xl bg-[#0d0d14] p-4 text-[11.5px] leading-[1.75] text-zinc-300 min-h-[80px] max-h-[220px]">
+      <pre className="overflow-x-auto rounded-xl bg-[#0d0d14] p-4 text-[11.5px] leading-[1.75] text-zinc-300 max-h-[260px] scrollbar-thin">
         <code className="font-mono">{code}</code>
       </pre>
       <button
         onClick={copy}
-        className="absolute right-3 top-3 flex items-center gap-1.5 rounded-lg border border-zinc-700/80 bg-zinc-800/90 px-2.5 py-1.5 text-[11px] font-medium text-zinc-400 opacity-0 group-hover/code:opacity-100 transition-all hover:bg-zinc-700 hover:text-zinc-200 backdrop-blur-sm"
+        className="absolute right-3 top-3 flex items-center gap-1.5 rounded-lg border border-zinc-700/60 bg-zinc-800/95 px-2.5 py-1.5 text-[11px] font-semibold text-zinc-300 opacity-0 group-hover/code:opacity-100 transition-all duration-150 hover:bg-zinc-700 hover:text-white backdrop-blur-sm shadow-lg"
       >
-        {copied ? (
-          <><Check size={11} className="text-emerald-400" /><span className="text-emerald-400">Copied!</span></>
-        ) : (
-          <><Copy size={11} /> Copy</>
-        )}
+        {copied
+          ? <><Check size={11} className="text-emerald-400" /><span className="text-emerald-400">Copied!</span></>
+          : <><Copy size={11} /> Copy</>}
       </button>
     </div>
   );
@@ -7617,17 +7615,30 @@ function CodeBlock({ code, id, tab }: { code: string; id: string; tab: CodeTab }
 /* ─────────────────────────────────────────────
    Category meta
 ───────────────────────────────────────────── */
-const CATEGORY_META: Record<string, { icon: string; pill: string; accent: string; border: string }> = {
-  'All':          { icon: '⊞', pill: 'bg-zinc-800 text-white',              accent: 'bg-zinc-50',    border: 'border-zinc-200' },
-  'Feedback':     { icon: '⚡', pill: 'bg-amber-100 text-amber-700',         accent: 'bg-amber-50',   border: 'border-amber-100' },
-  'Navigation':   { icon: '🧭', pill: 'bg-blue-100 text-blue-700',           accent: 'bg-blue-50',    border: 'border-blue-100' },
-  'Forms & Inputs': { icon: '✏️', pill: 'bg-emerald-100 text-emerald-700',   accent: 'bg-emerald-50', border: 'border-emerald-100' },
-  'Display':      { icon: '📊', pill: 'bg-violet-100 text-violet-700',       accent: 'bg-violet-50',  border: 'border-violet-100' },
-  'Overlay':      { icon: '🪟', pill: 'bg-rose-100 text-rose-700',           accent: 'bg-rose-50',    border: 'border-rose-100' },
-  'Layout':       { icon: '▦',  pill: 'bg-slate-100 text-slate-700',         accent: 'bg-slate-50',   border: 'border-slate-100' },
+const CATEGORY_META: Record<string, { icon: string; pill: string; pillActive: string; accent: string }> = {
+  'All':            { icon: '⊞',  pill: 'bg-zinc-100 text-zinc-600',          pillActive: 'bg-zinc-900 text-white',          accent: 'bg-white' },
+  'Feedback':       { icon: '⚡',  pill: 'bg-amber-50 text-amber-700',         pillActive: 'bg-amber-500 text-white',         accent: 'bg-amber-50/60' },
+  'Navigation':     { icon: '🧭', pill: 'bg-blue-50 text-blue-700',            pillActive: 'bg-blue-600 text-white',          accent: 'bg-blue-50/60' },
+  'Forms & Inputs': { icon: '✏️', pill: 'bg-emerald-50 text-emerald-700',      pillActive: 'bg-emerald-600 text-white',       accent: 'bg-emerald-50/60' },
+  'Display':        { icon: '📊', pill: 'bg-violet-50 text-violet-700',        pillActive: 'bg-violet-600 text-white',        accent: 'bg-violet-50/60' },
+  'Overlay':        { icon: '🪟', pill: 'bg-rose-50 text-rose-700',            pillActive: 'bg-rose-500 text-white',          accent: 'bg-rose-50/60' },
+  'Layout':         { icon: '▦',  pill: 'bg-slate-100 text-slate-600',         pillActive: 'bg-slate-700 text-white',         accent: 'bg-slate-50/60' },
 };
 
 const CATEGORIES = ['All', 'Feedback', 'Navigation', 'Forms & Inputs', 'Display', 'Overlay', 'Layout'];
+
+/* ─────────────────────────────────────────────
+   Share Toast
+───────────────────────────────────────────── */
+function ShareToast({ visible }: { visible: boolean }) {
+  return (
+    <div className={`pointer-events-none absolute bottom-[72px] left-1/2 -translate-x-1/2 z-50 transition-all duration-200 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
+      <div className="flex items-center gap-2 rounded-full bg-zinc-900 px-4 py-2 text-xs font-semibold text-white shadow-xl whitespace-nowrap">
+        <Check size={12} className="text-emerald-400" /> Link copied to clipboard!
+      </div>
+    </div>
+  );
+}
 
 /* ─────────────────────────────────────────────
    Component Card
@@ -7635,96 +7646,128 @@ const CATEGORIES = ['All', 'Feedback', 'Navigation', 'Forms & Inputs', 'Display'
 function ComponentCard({ comp }: { comp: ComponentDef }) {
   const [tab, setTab] = useState<CodeTab>('tailwind');
   const [showCode, setShowCode] = useState(false);
+  const [shared, setShared] = useState(false);
   const Preview = comp.Preview;
   const meta = CATEGORY_META[comp.category] ?? CATEGORY_META['Layout'];
 
-  return (
-    <div className="group flex flex-col rounded-3xl border border-zinc-200/80 bg-white shadow-sm overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-zinc-300/40 hover:-translate-y-1">
+  const handleShare = useCallback(() => {
+    const url = `${typeof window !== 'undefined' ? window.location.origin : ''}/css-ui-components#${comp.id}`;
+    navigator.clipboard.writeText(url);
+    setShared(true);
+    setTimeout(() => setShared(false), 2000);
+  }, [comp.id]);
 
-      {/* ── Card Header ── */}
-      <div className="flex items-center justify-between gap-3 px-6 pt-5 pb-4 border-b border-zinc-100">
-        <div className="min-w-0 flex-1">
-          <h3 className="font-bold text-[15px] text-zinc-900 leading-tight tracking-[-0.02em]">{comp.name}</h3>
-          <p className="mt-1 text-[12px] text-zinc-400 leading-relaxed line-clamp-1">{comp.description}</p>
-        </div>
-        <span className={`ml-3 shrink-0 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[10px] font-bold whitespace-nowrap ${meta.pill}`}>
-          <span>{CATEGORY_META[comp.category]?.icon}</span>
-          <span className="hidden sm:inline">{comp.category}</span>
+  return (
+    <div id={comp.id} className="relative flex flex-col rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-zinc-200/50 hover:-translate-y-0.5">
+
+      {/* ── Header ── */}
+      <div className="flex items-center gap-3 px-5 py-4 border-b border-zinc-100/80">
+        {/* Category pill */}
+        <span className={`shrink-0 inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-bold ${meta.pill}`}>
+          <span className="text-sm leading-none">{meta.icon}</span>
+          <span>{comp.category}</span>
         </span>
+
+        {/* Name + description */}
+        <div className="flex-1 min-w-0">
+          <h3 className="font-bold text-[14px] text-zinc-900 leading-tight tracking-[-0.02em] truncate">{comp.name}</h3>
+          <p className="text-[11.5px] text-zinc-400 mt-0.5 leading-relaxed line-clamp-1">{comp.description}</p>
+        </div>
+
+        {/* Action buttons */}
+        <div className="flex items-center gap-1.5 shrink-0">
+          {/* Share button */}
+          <button
+            onClick={handleShare}
+            title="Share component"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-400 transition-all hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600"
+          >
+            {shared
+              ? <Check size={13} className="text-emerald-500" />
+              : <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            }
+          </button>
+        </div>
       </div>
 
       {/* ── Live Preview ── */}
-      <div
-        className={`relative flex w-full items-center justify-center overflow-hidden ${meta.accent}`}
-        style={{ minHeight: 300 }}
-      >
-        {/* Subtle dot grid overlay */}
-        <div className="pointer-events-none absolute inset-0 opacity-[0.04]"
-          style={{ backgroundImage: 'radial-gradient(circle, #000 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+      <div className={`relative flex w-full items-center justify-center overflow-hidden ${meta.accent}`} style={{ minHeight: 320 }}>
+        {/* Dot-grid texture */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{ backgroundImage: 'radial-gradient(circle, #00000008 1px, transparent 1px)', backgroundSize: '18px 18px' }}
+        />
         <div className="relative w-full">
           <Preview />
         </div>
       </div>
 
-      {/* ── Code toggle bar ── */}
-      <div className="flex items-center border-t border-zinc-100 bg-zinc-50 px-5">
-        <div className="flex">
-          {(['tailwind', 'css'] as CodeTab[]).map((t) => (
-            <button
-              key={t}
-              onClick={() => { setTab(t); setShowCode(true); }}
-              className={`flex items-center gap-1.5 px-4 py-3 text-[11px] font-bold border-b-2 -mb-px transition-all ${
-                tab === t && showCode
-                  ? 'border-zinc-900 text-zinc-900'
-                  : 'border-transparent text-zinc-400 hover:text-zinc-700'
-              }`}
-            >
-              {t === 'tailwind' ? <><span>⚡</span> Tailwind</> : <><span>🎨</span> CSS</>}
-            </button>
-          ))}
-        </div>
+      {/* ── Toolbar ── */}
+      <div className="flex items-center border-t border-zinc-100 bg-zinc-50/80 px-4 py-0">
+        {/* Code format tabs */}
+        {(['tailwind', 'css'] as CodeTab[]).map((t) => (
+          <button
+            key={t}
+            onClick={() => { setTab(t); setShowCode(true); }}
+            className={`flex items-center gap-1.5 px-3 py-3 text-[11px] font-bold border-b-2 -mb-px transition-all ${
+              tab === t && showCode
+                ? 'border-zinc-800 text-zinc-900'
+                : 'border-transparent text-zinc-400 hover:text-zinc-700'
+            }`}
+          >
+            <span className="opacity-80">{t === 'tailwind' ? '⚡' : '🎨'}</span>
+            {t === 'tailwind' ? 'Tailwind' : 'CSS'}
+          </button>
+        ))}
+
+        {/* Spacer */}
+        <div className="flex-1" />
+
+        {/* Code toggle */}
         <button
           onClick={() => setShowCode(v => !v)}
-          className={`ml-auto flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-bold transition-all ${
+          className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 my-1.5 text-[11px] font-bold transition-all ${
             showCode
               ? 'bg-zinc-900 text-white'
-              : 'border border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50'
+              : 'border border-zinc-200 bg-white text-zinc-500 hover:border-zinc-300 hover:text-zinc-800'
           }`}
         >
-          {showCode ? <><span>✕</span> Hide</> : <><span>{'</>'}</span> Code</>}
+          {showCode
+            ? <><X size={11} /> Hide</>
+            : <><span className="font-mono text-xs">{'<>'}</span> View Code</>
+          }
         </button>
       </div>
 
-      {/* ── Code block (collapsible) ── */}
-      <div className={`overflow-hidden transition-all duration-300 ease-in-out ${showCode ? 'max-h-[320px]' : 'max-h-0'}`}>
-        <div className="p-4 pt-0">
+      {/* ── Code panel ── */}
+      <div className={`overflow-hidden transition-all duration-300 ease-out ${showCode ? 'max-h-[300px]' : 'max-h-0'}`}>
+        <div className="p-4">
           <CodeBlock code={tab === 'tailwind' ? comp.tailwind : comp.css} id={comp.id} tab={tab} />
         </div>
       </div>
+
+      {/* Share toast */}
+      <ShareToast visible={shared} />
     </div>
   );
 }
 
 /* ─────────────────────────────────────────────
-   Sidebar category item
+   Sidebar item
 ───────────────────────────────────────────── */
-function SidebarItem({
-  cat, count, active, onClick,
-}: { cat: string; count: number; active: boolean; onClick: () => void }) {
+function SidebarItem({ cat, count, active, onClick }: { cat: string; count: number; active: boolean; onClick: () => void }) {
   const meta = CATEGORY_META[cat] ?? CATEGORY_META['Layout'];
   return (
     <button
       onClick={onClick}
-      className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-150 text-left ${
-        active
-          ? 'bg-zinc-900 text-white shadow-sm'
-          : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900'
+      className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150 text-left ${
+        active ? 'bg-zinc-900 text-white shadow-sm' : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900'
       }`}
     >
-      <span className="text-base leading-none shrink-0">{meta.icon}</span>
-      <span className="flex-1 font-medium truncate">{cat}</span>
-      <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold tabular-nums ${
-        active ? 'bg-white/20 text-white' : 'bg-zinc-100 text-zinc-500'
+      <span className="w-6 text-center text-[15px] leading-none shrink-0">{meta.icon}</span>
+      <span className="flex-1 truncate">{cat}</span>
+      <span className={`shrink-0 min-w-[28px] rounded-full px-2 py-0.5 text-center text-[10px] font-bold tabular-nums transition-colors ${
+        active ? 'bg-white/15 text-white' : 'bg-zinc-100 text-zinc-400 group-hover:bg-zinc-200'
       }`}>
         {count}
       </span>
@@ -7738,7 +7781,6 @@ function SidebarItem({
 export default function UIComponentsClient() {
   const [activeCat, setActiveCat] = useState('All');
   const [search, setSearch] = useState('');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
@@ -7753,73 +7795,68 @@ export default function UIComponentsClient() {
     Object.fromEntries(CATEGORIES.map(cat => [
       cat,
       cat === 'All' ? COMPONENTS.length : COMPONENTS.filter(c => c.category === cat).length
-    ])),
-  []);
+    ])), []);
 
   return (
-    <div className="min-h-screen bg-[#F4F5F7]">
+    <div className="min-h-screen bg-[#F2F3F5]">
 
-      {/* ══════════════════════════════
-          HERO
-      ══════════════════════════════ */}
-      <div className="relative overflow-hidden bg-white border-b border-zinc-200">
-        {/* Subtle grid background */}
-        <div className="pointer-events-none absolute inset-0 opacity-[0.03]"
-          style={{ backgroundImage: 'linear-gradient(#000 1px,transparent 1px),linear-gradient(90deg,#000 1px,transparent 1px)', backgroundSize: '40px 40px' }} />
-        {/* Gradient orbs */}
-        <div className="pointer-events-none absolute -top-24 -left-24 h-96 w-96 rounded-full bg-blue-400/20 blur-3xl" />
-        <div className="pointer-events-none absolute -top-24 right-0 h-96 w-96 rounded-full bg-violet-400/20 blur-3xl" />
+      {/* ══════════ HERO ══════════ */}
+      <div className="relative overflow-hidden border-b border-zinc-200 bg-white">
+        <div className="pointer-events-none absolute inset-0 opacity-[0.025]"
+          style={{ backgroundImage: 'linear-gradient(#000 1px,transparent 1px),linear-gradient(90deg,#000 1px,transparent 1px)', backgroundSize: '32px 32px' }} />
+        <div className="pointer-events-none absolute -top-32 left-1/4 h-80 w-80 rounded-full bg-blue-400/25 blur-3xl" />
+        <div className="pointer-events-none absolute -top-32 right-1/4 h-80 w-80 rounded-full bg-violet-400/25 blur-3xl" />
 
-        <div className="relative mx-auto max-w-5xl px-4 py-16 text-center sm:py-20">
-          {/* Badge */}
-          <div className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-blue-200 bg-gradient-to-r from-blue-50 to-violet-50 px-5 py-2 text-xs font-semibold text-blue-700 shadow-sm">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-blue-500" />
-            {COMPONENTS.length}+ Production-Ready Components
-            <span className="h-2 w-2 animate-pulse rounded-full bg-violet-500" />
+        <div className="relative mx-auto max-w-4xl px-6 py-16 text-center sm:py-20">
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-gradient-to-r from-blue-50 to-violet-50 px-5 py-2 text-xs font-semibold text-blue-700 shadow-sm">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500" />
+            {COMPONENTS.length}+ Production-Ready Components · Free Forever
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-violet-500" />
           </div>
 
-          {/* Headline */}
-          <h1 className="text-[clamp(2.5rem,5vw,3.75rem)] font-black tracking-[-0.04em] text-zinc-900 leading-[1.05]">
+          <h1 className="text-[clamp(2.2rem,4.5vw,3.5rem)] font-black tracking-[-0.04em] text-zinc-900 leading-[1.08]">
             CSS UI{' '}
             <span className="bg-gradient-to-r from-blue-600 via-violet-600 to-purple-600 bg-clip-text text-transparent">
-              Components
+              Component Library
             </span>
           </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-[15px] text-zinc-500 leading-relaxed">
-            Live preview + instant code copy. Tailwind & plain CSS — pick what fits your stack.
-            No framework lock-in. No signup. Completely free.
+          <p className="mx-auto mt-4 max-w-xl text-[15px] text-zinc-500 leading-relaxed">
+            Live interactive previews with Tailwind & plain CSS code. Copy-paste into any project — no signup, no dependencies.
           </p>
 
-          {/* Stats row */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          {/* Stats */}
+          <div className="mt-8 flex flex-wrap items-stretch justify-center gap-3">
             {[
-              { n: COMPONENTS.length + '+', l: 'Components', color: 'text-blue-600' },
-              { n: '6', l: 'Categories', color: 'text-violet-600' },
-              { n: '2', l: 'Code formats', color: 'text-emerald-600' },
-              { n: '100%', l: 'Free forever', color: 'text-amber-600' },
+              { n: `${COMPONENTS.length}+`, l: 'Components', icon: '⊞', c: 'from-blue-500 to-blue-600' },
+              { n: '6',     l: 'Categories',   icon: '🗂️', c: 'from-violet-500 to-violet-600' },
+              { n: '2',     l: 'Code formats', icon: '💻', c: 'from-emerald-500 to-emerald-600' },
+              { n: '100%',  l: 'Free forever', icon: '🎁', c: 'from-amber-500 to-orange-500' },
             ].map((s) => (
-              <div key={s.l} className="flex flex-col items-center rounded-2xl border border-zinc-200 bg-white px-5 py-3 shadow-sm">
-                <span className={`text-xl font-black tabular-nums ${s.color}`}>{s.n}</span>
-                <span className="text-[11px] text-zinc-400 font-medium mt-0.5">{s.l}</span>
+              <div key={s.l} className="flex items-center gap-3 rounded-2xl border border-zinc-200 bg-white px-5 py-3 shadow-sm">
+                <span className="text-xl">{s.icon}</span>
+                <div className="text-left">
+                  <p className={`text-lg font-black tabular-nums bg-gradient-to-br ${s.c} bg-clip-text text-transparent leading-none`}>{s.n}</p>
+                  <p className="text-[11px] text-zinc-400 font-medium mt-0.5">{s.l}</p>
+                </div>
               </div>
             ))}
           </div>
 
           {/* Search */}
-          <div className="relative mx-auto mt-8 max-w-lg">
-            <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" />
+          <div className="relative mx-auto mt-7 max-w-lg">
+            <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search 144 components… button, modal, chart, form…"
-              className="w-full rounded-2xl border border-zinc-200 bg-white py-3.5 pl-11 pr-12 text-sm text-zinc-800 placeholder-zinc-400 shadow-md outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100"
+              placeholder={`Search ${COMPONENTS.length} components… button, modal, chart…`}
+              className="w-full rounded-2xl border border-zinc-200 bg-white py-3.5 pl-11 pr-12 text-sm text-zinc-800 placeholder-zinc-400 shadow-md outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100/60"
             />
             {search ? (
-              <button onClick={() => setSearch('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700 transition">
-                <X size={15} />
+              <button onClick={() => setSearch('')} className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 transition">
+                <X size={14} />
               </button>
             ) : (
-              <kbd className="absolute right-4 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-0.5 rounded-lg border border-zinc-200 bg-zinc-50 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-400">
+              <kbd className="absolute right-4 top-1/2 -translate-y-1/2 hidden sm:flex items-center rounded-lg border border-zinc-200 bg-zinc-50 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-400">
                 ⌘K
               </kbd>
             )}
@@ -7827,128 +7864,124 @@ export default function UIComponentsClient() {
         </div>
       </div>
 
-      {/* ══════════════════════════════
-          BODY: sidebar + grid
-      ══════════════════════════════ */}
-      <div className="mx-auto flex max-w-[1600px] gap-0 lg:gap-0">
+      {/* ══════════ BODY ══════════ */}
+      <div className="mx-auto flex max-w-[1600px]">
 
-        {/* ── Mobile category bar ── */}
-        <div className="sticky top-0 z-30 lg:hidden w-full border-b border-zinc-200 bg-white/95 backdrop-blur shadow-sm">
-          <div className="flex items-center gap-1.5 overflow-x-auto px-4 py-2.5">
+        {/* Mobile tab bar */}
+        <div className="sticky top-0 z-30 lg:hidden fixed inset-x-0 border-b border-zinc-200 bg-white/95 backdrop-blur-md shadow-sm">
+          <div className="flex items-center gap-1 overflow-x-auto px-3 py-2">
             {CATEGORIES.map(cat => (
-              <button key={cat}
-                onClick={() => { setActiveCat(cat); setSidebarOpen(false); }}
-                className={`shrink-0 flex items-center gap-1 rounded-full px-3 py-1.5 text-[11px] font-semibold transition whitespace-nowrap ${
-                  activeCat === cat ? 'bg-zinc-900 text-white shadow-sm' : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
+              <button key={cat} onClick={() => setActiveCat(cat)}
+                className={`shrink-0 flex items-center gap-1 rounded-xl px-3 py-1.5 text-[11px] font-bold transition whitespace-nowrap ${
+                  activeCat === cat ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
                 }`}>
-                <span>{CATEGORY_META[cat]?.icon}</span>
-                {cat}
-                <span className={`text-[9px] font-bold ${activeCat === cat ? 'text-white/70' : 'text-zinc-400'}`}>{catCounts[cat]}</span>
+                {CATEGORY_META[cat]?.icon} {cat}
+                <span className={`ml-0.5 text-[9px] ${activeCat === cat ? 'text-white/60' : 'text-zinc-400'}`}>{catCounts[cat]}</span>
               </button>
             ))}
           </div>
         </div>
 
-        {/* ── LEFT SIDEBAR (desktop) ── */}
-        <aside className="hidden lg:flex lg:flex-col w-64 xl:w-72 shrink-0 border-r border-zinc-200 bg-white">
-          <div className="sticky top-0 flex flex-col gap-1 p-5 pt-8" style={{ maxHeight: '100vh', overflowY: 'auto' }}>
+        {/* ── LEFT SIDEBAR ── */}
+        <aside className="hidden lg:block w-64 xl:w-72 shrink-0 border-r border-zinc-200 bg-white">
+          <div className="sticky top-0 h-screen overflow-y-auto flex flex-col p-5 pt-7 gap-1">
 
-            {/* Sidebar header */}
-            <div className="mb-4">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-0.5">Categories</p>
-              <p className="text-xs text-zinc-400">{filtered.length} of {COMPONENTS.length} shown</p>
+            {/* Header */}
+            <div className="mb-3 px-1">
+              <p className="text-[10px] font-black uppercase tracking-[0.12em] text-zinc-400">Browse</p>
+              <p className="text-[12px] text-zinc-400 mt-0.5">
+                <span className="font-semibold text-zinc-700">{filtered.length}</span> of <span className="font-semibold text-zinc-700">{COMPONENTS.length}</span> components
+              </p>
             </div>
 
-            {/* Category nav */}
+            {/* Nav */}
             <nav className="flex flex-col gap-0.5">
               {CATEGORIES.map(cat => (
-                <SidebarItem
-                  key={cat}
-                  cat={cat}
-                  count={catCounts[cat]}
-                  active={activeCat === cat}
-                  onClick={() => setActiveCat(cat)}
-                />
+                <SidebarItem key={cat} cat={cat} count={catCounts[cat]} active={activeCat === cat} onClick={() => setActiveCat(cat)} />
               ))}
             </nav>
 
-            {/* Divider */}
-            <div className="my-4 border-t border-zinc-100" />
+            <div className="my-5 border-t border-zinc-100" />
 
-            {/* Tips card */}
-            <div className="rounded-2xl border border-zinc-100 bg-gradient-to-br from-zinc-50 to-white p-4">
-              <p className="text-[11px] font-bold text-zinc-700 mb-2">💡 Pro tips</p>
-              <ul className="space-y-1.5 text-[11px] text-zinc-500 leading-relaxed">
-                <li>• Hover code block to reveal <strong>Copy</strong></li>
-                <li>• Toggle <strong>▼ More</strong> for full snippet</li>
-                <li>• Switch Tailwind ↔ CSS per card</li>
-                <li>• All previews are <strong>interactive</strong></li>
-              </ul>
+            {/* Tips */}
+            <div className="rounded-2xl bg-zinc-50 border border-zinc-100 p-4 space-y-2.5">
+              <p className="text-[11px] font-bold text-zinc-700">💡 Quick tips</p>
+              {[
+                ['<> View Code', 'toggle per card'],
+                ['⚡ / 🎨', 'switch code format'],
+                ['Share icon', 'copy component link'],
+                ['All previews', 'are interactive'],
+              ].map(([a, b]) => (
+                <div key={a} className="flex items-start gap-2">
+                  <span className="text-[10px] font-bold text-zinc-800 shrink-0 mt-px">{a}</span>
+                  <span className="text-[10px] text-zinc-400">{b}</span>
+                </div>
+              ))}
             </div>
 
-            {/* Badge */}
+            {/* CTA */}
             <div className="mt-3 rounded-2xl bg-gradient-to-br from-blue-600 to-violet-600 p-4 text-white">
-              <p className="text-[11px] font-bold mb-1">🚀 {COMPONENTS.length}+ components</p>
-              <p className="text-[10px] text-white/70 leading-relaxed">Free forever · No account · Tailwind + CSS</p>
+              <p className="text-xs font-bold leading-snug">🚀 {COMPONENTS.length}+ components</p>
+              <p className="text-[10px] text-white/70 mt-1 leading-relaxed">All free · Tailwind + CSS · No account needed</p>
             </div>
+
           </div>
         </aside>
 
         {/* ── MAIN CONTENT ── */}
-        <main className="flex-1 min-w-0 px-4 py-8 sm:px-6 lg:px-8">
+        <main className="flex-1 min-w-0 px-4 pt-6 pb-16 sm:px-6 lg:px-8">
 
-          {/* Active filter header */}
-          <div className="mb-6 flex items-center justify-between gap-4">
-            <div>
-              <h2 className="text-lg font-bold text-zinc-900 tracking-tight">
-                {activeCat === 'All' ? 'All Components' : activeCat}
-              </h2>
-              <p className="text-sm text-zinc-400 mt-0.5">
-                {filtered.length} component{filtered.length !== 1 ? 's' : ''}
-                {search ? ` matching "${search}"` : ''}
-              </p>
+          {/* Toolbar row */}
+          <div className="mb-5 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div>
+                <h2 className="text-base font-bold text-zinc-900 tracking-tight leading-none">
+                  {activeCat === 'All' ? 'All Components' : activeCat}
+                </h2>
+                <p className="text-[12px] text-zinc-400 mt-1">
+                  {filtered.length} component{filtered.length !== 1 ? 's' : ''}
+                  {search && <span className="ml-1 text-blue-500">· "{search}"</span>}
+                </p>
+              </div>
             </div>
             {(search || activeCat !== 'All') && (
               <button
                 onClick={() => { setSearch(''); setActiveCat('All'); }}
-                className="flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs font-semibold text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50 transition shadow-sm"
+                className="flex items-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3.5 py-2 text-xs font-semibold text-zinc-500 hover:border-zinc-300 hover:bg-zinc-50 transition shadow-sm"
               >
-                <X size={11} /> Clear filters
+                <X size={11} /> Clear
               </button>
             )}
           </div>
 
-          {/* Empty state */}
+          {/* Grid */}
           {filtered.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-32">
-              <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-zinc-100 text-4xl mb-6">🔍</div>
-              <h3 className="text-lg font-bold text-zinc-700">No components found</h3>
-              <p className="mt-2 text-sm text-zinc-400 max-w-xs text-center">Try different keywords or browse a different category.</p>
-              <button
-                onClick={() => { setSearch(''); setActiveCat('All'); }}
-                className="mt-6 rounded-2xl bg-zinc-900 px-6 py-2.5 text-sm font-semibold text-white hover:bg-zinc-800 transition"
-              >
-                Show all components
+            <div className="flex flex-col items-center justify-center py-40">
+              <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-zinc-100 text-4xl mb-5 shadow-inner">🔍</div>
+              <h3 className="text-base font-bold text-zinc-700">Nothing found</h3>
+              <p className="mt-1.5 text-sm text-zinc-400 text-center max-w-xs">Try different keywords or select a category from the sidebar.</p>
+              <button onClick={() => { setSearch(''); setActiveCat('All'); }}
+                className="mt-5 rounded-2xl bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-zinc-800 transition">
+                Browse all components
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+            <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
               {filtered.map((comp) => (
                 <ComponentCard key={comp.id} comp={comp} />
               ))}
             </div>
           )}
 
-          {/* Footer */}
-          <div className="mt-16 rounded-3xl border border-zinc-200 bg-white px-8 py-10 text-center shadow-sm">
-            <div className="text-3xl mb-3">🎨</div>
-            <h3 className="text-lg font-bold text-zinc-900">All {COMPONENTS.length}+ components are free</h3>
-            <p className="mt-2 text-sm text-zinc-400 max-w-sm mx-auto leading-relaxed">
-              Copy-paste into any project. Tailwind CSS + plain CSS included. No attribution required.
+          {/* Footer strip */}
+          <div className="mt-14 rounded-2xl border border-zinc-200 bg-white px-8 py-8 text-center shadow-sm">
+            <p className="text-base font-bold text-zinc-900">All {COMPONENTS.length}+ components — completely free</p>
+            <p className="mt-1.5 text-sm text-zinc-400 max-w-md mx-auto leading-relaxed">
+              Copy-paste into any project. Tailwind + plain CSS. No attribution required.
             </p>
-            <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-xs text-zinc-400">
-              {['✓ No account', '✓ No watermark', '✓ Commercial use', '✓ MIT license'].map(t => (
-                <span key={t} className="rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 font-medium">{t}</span>
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+              {['✓ No account', '✓ No watermark', '✓ Commercial OK', '✓ MIT license'].map(t => (
+                <span key={t} className="rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 text-xs font-semibold text-zinc-500">{t}</span>
               ))}
             </div>
           </div>
