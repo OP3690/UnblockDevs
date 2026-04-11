@@ -356,6 +356,22 @@ export const TOOLS_DIRECTORY: DirectoryTool[] = [
     icon: 'FileText',
     badge: 'new',
   },
+  {
+    href: '/color-picker',
+    name: 'Color picker & converter',
+    description: 'Convert HEX ↔ RGB ↔ HSL ↔ CMYK instantly. WCAG contrast, Tailwind shades, and harmony palettes.',
+    category: 'dev',
+    icon: 'Palette',
+    badge: 'new',
+  },
+  {
+    href: '/text-diff',
+    name: 'Text & code diff checker',
+    description: 'Compare two texts or files side-by-side. Line and inline char diff, unified and split view.',
+    category: 'dev',
+    icon: 'GitCompare',
+    badge: 'new',
+  },
 ];
 
 export const TOOL_COUNT = TOOLS_DIRECTORY.length;
