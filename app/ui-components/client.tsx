@@ -7594,16 +7594,15 @@ function CodeBlock({ code, id, tab }: { code: string; id: string; tab: CodeTab }
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
   }, [code]);
-  // suppress unused-var warning for id
   void id;
   return (
-    <div className="relative">
-      <pre className="overflow-x-auto rounded-xl bg-zinc-950 p-4 text-[11.5px] leading-[1.7] text-zinc-300">
-        <code>{code}</code>
+    <div className="relative group/code">
+      <pre className="overflow-x-auto rounded-xl bg-[#0d0d14] p-4 text-[11.5px] leading-[1.75] text-zinc-300 min-h-[80px] max-h-[220px]">
+        <code className="font-mono">{code}</code>
       </pre>
       <button
         onClick={copy}
-        className="absolute right-3 top-3 flex items-center gap-1.5 rounded-lg border border-zinc-700 bg-zinc-800 px-2.5 py-1.5 text-[11px] font-medium text-zinc-400 transition hover:bg-zinc-700 hover:text-zinc-200"
+        className="absolute right-3 top-3 flex items-center gap-1.5 rounded-lg border border-zinc-700/80 bg-zinc-800/90 px-2.5 py-1.5 text-[11px] font-medium text-zinc-400 opacity-0 group-hover/code:opacity-100 transition-all hover:bg-zinc-700 hover:text-zinc-200 backdrop-blur-sm"
       >
         {copied ? (
           <><Check size={11} className="text-emerald-400" /><span className="text-emerald-400">Copied!</span></>
@@ -7616,61 +7615,84 @@ function CodeBlock({ code, id, tab }: { code: string; id: string; tab: CodeTab }
 }
 
 /* ─────────────────────────────────────────────
-   Category color map
+   Category meta
 ───────────────────────────────────────────── */
-const CATEGORY_COLORS: Record<string, string> = {
-  'Feedback': 'bg-amber-100 text-amber-700 border-amber-200',
-  'Navigation': 'bg-blue-100 text-blue-700 border-blue-200',
-  'Forms & Inputs': 'bg-emerald-100 text-emerald-700 border-emerald-200',
-  'Display': 'bg-purple-100 text-purple-700 border-purple-200',
-  'Overlay': 'bg-rose-100 text-rose-700 border-rose-200',
-  'Layout': 'bg-zinc-100 text-zinc-600 border-zinc-200',
+const CATEGORY_META: Record<string, { icon: string; pill: string; accent: string; border: string }> = {
+  'All':          { icon: '⊞', pill: 'bg-zinc-800 text-white',              accent: 'bg-zinc-50',    border: 'border-zinc-200' },
+  'Feedback':     { icon: '⚡', pill: 'bg-amber-100 text-amber-700',         accent: 'bg-amber-50',   border: 'border-amber-100' },
+  'Navigation':   { icon: '🧭', pill: 'bg-blue-100 text-blue-700',           accent: 'bg-blue-50',    border: 'border-blue-100' },
+  'Forms & Inputs': { icon: '✏️', pill: 'bg-emerald-100 text-emerald-700',   accent: 'bg-emerald-50', border: 'border-emerald-100' },
+  'Display':      { icon: '📊', pill: 'bg-violet-100 text-violet-700',       accent: 'bg-violet-50',  border: 'border-violet-100' },
+  'Overlay':      { icon: '🪟', pill: 'bg-rose-100 text-rose-700',           accent: 'bg-rose-50',    border: 'border-rose-100' },
+  'Layout':       { icon: '▦',  pill: 'bg-slate-100 text-slate-700',         accent: 'bg-slate-50',   border: 'border-slate-100' },
 };
+
+const CATEGORIES = ['All', 'Feedback', 'Navigation', 'Forms & Inputs', 'Display', 'Overlay', 'Layout'];
 
 /* ─────────────────────────────────────────────
    Component Card
 ───────────────────────────────────────────── */
 function ComponentCard({ comp }: { comp: ComponentDef }) {
   const [tab, setTab] = useState<CodeTab>('tailwind');
+  const [expanded, setExpanded] = useState(false);
   const Preview = comp.Preview;
-  const catColor = CATEGORY_COLORS[comp.category] || 'bg-zinc-100 text-zinc-600 border-zinc-200';
+  const meta = CATEGORY_META[comp.category] ?? CATEGORY_META['Layout'];
+
   return (
-    <div className="group flex flex-col rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5">
-      {/* Header */}
-      <div className="flex items-start justify-between gap-3 px-5 py-4 border-b border-zinc-100">
-        <div className="min-w-0">
-          <h3 className="font-semibold text-zinc-900 text-sm leading-snug">{comp.name}</h3>
+    <div className="group flex flex-col rounded-2xl border border-zinc-200/80 bg-white shadow-sm overflow-hidden transition-all duration-200 hover:shadow-xl hover:shadow-zinc-200/60 hover:-translate-y-0.5">
+
+      {/* ── Card Header ── */}
+      <div className="flex items-start justify-between gap-3 px-5 pt-5 pb-3">
+        <div className="min-w-0 flex-1">
+          <h3 className="font-semibold text-[14px] text-zinc-900 leading-snug tracking-[-0.01em]">{comp.name}</h3>
           <p className="mt-1 text-[12px] text-zinc-400 leading-relaxed line-clamp-2">{comp.description}</p>
         </div>
-        <span className={`ml-2 shrink-0 inline-flex items-center rounded-full border px-2.5 py-0.5 text-[10px] font-semibold whitespace-nowrap ${catColor}`}>
-          {comp.category}
+        <span className={`ml-2 shrink-0 inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-bold whitespace-nowrap tracking-wide ${meta.pill}`}>
+          {CATEGORY_META[comp.category]?.icon} {comp.category}
         </span>
       </div>
 
-      {/* Preview */}
-      <div className="border-b border-zinc-100 bg-[#FAFAFA] min-h-[160px] flex items-center justify-center">
-        <Preview />
+      {/* ── Live Preview ── */}
+      <div className={`relative border-y border-zinc-100 ${meta.accent} flex items-center justify-center overflow-hidden`} style={{ minHeight: 220 }}>
+        <div className="w-full">
+          <Preview />
+        </div>
       </div>
 
-      {/* Code tabs */}
-      <div className="flex flex-col flex-1">
-        <div className="flex items-center border-b border-zinc-100 bg-zinc-50 px-1 pt-1">
+      {/* ── Code Section ── */}
+      <div className="flex flex-col">
+        {/* Tab strip */}
+        <div className="flex items-center border-b border-zinc-100 bg-zinc-50/80 px-4">
           {(['tailwind', 'css'] as CodeTab[]).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
-              className={`px-4 py-2 text-[11px] font-semibold rounded-t-lg border-b-2 transition ${
+              className={`flex items-center gap-1.5 px-3 py-2.5 text-[11px] font-semibold border-b-2 -mb-px transition-all ${
                 tab === t
-                  ? 'border-zinc-900 text-zinc-900 bg-white'
+                  ? 'border-zinc-900 text-zinc-900'
                   : 'border-transparent text-zinc-400 hover:text-zinc-600'
               }`}
             >
-              {t === 'tailwind' ? '⚡ Tailwind' : '🎨 Plain CSS'}
+              {t === 'tailwind' ? (
+                <><span className="text-sky-500">⚡</span> Tailwind</>
+              ) : (
+                <><span className="text-purple-500">🎨</span> CSS</>
+              )}
             </button>
           ))}
+          <button
+            onClick={() => setExpanded(e => !e)}
+            className="ml-auto text-[10px] font-semibold text-zinc-400 hover:text-zinc-700 transition py-2.5"
+          >
+            {expanded ? '▲ Less' : '▼ More'}
+          </button>
         </div>
-        <div className="p-3 flex-1">
-          <CodeBlock code={tab === 'tailwind' ? comp.tailwind : comp.css} id={comp.id} tab={tab} />
+
+        {/* Code block */}
+        <div className={`transition-all duration-300 overflow-hidden ${expanded ? 'max-h-[400px]' : 'max-h-[180px]'}`}>
+          <div className="p-3">
+            <CodeBlock code={tab === 'tailwind' ? comp.tailwind : comp.css} id={comp.id} tab={tab} />
+          </div>
         </div>
       </div>
     </div>
@@ -7678,9 +7700,31 @@ function ComponentCard({ comp }: { comp: ComponentDef }) {
 }
 
 /* ─────────────────────────────────────────────
-   Categories
+   Sidebar category item
 ───────────────────────────────────────────── */
-const CATEGORIES = ['All', 'Feedback', 'Navigation', 'Forms & Inputs', 'Display', 'Overlay', 'Layout'];
+function SidebarItem({
+  cat, count, active, onClick,
+}: { cat: string; count: number; active: boolean; onClick: () => void }) {
+  const meta = CATEGORY_META[cat] ?? CATEGORY_META['Layout'];
+  return (
+    <button
+      onClick={onClick}
+      className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-150 text-left ${
+        active
+          ? 'bg-zinc-900 text-white shadow-sm'
+          : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900'
+      }`}
+    >
+      <span className="text-base leading-none shrink-0">{meta.icon}</span>
+      <span className="flex-1 font-medium truncate">{cat}</span>
+      <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold tabular-nums ${
+        active ? 'bg-white/20 text-white' : 'bg-zinc-100 text-zinc-500'
+      }`}>
+        {count}
+      </span>
+    </button>
+  );
+}
 
 /* ─────────────────────────────────────────────
    Main Export
@@ -7688,6 +7732,7 @@ const CATEGORIES = ['All', 'Feedback', 'Navigation', 'Forms & Inputs', 'Display'
 export default function UIComponentsClient() {
   const [activeCat, setActiveCat] = useState('All');
   const [search, setSearch] = useState('');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
@@ -7698,114 +7743,210 @@ export default function UIComponentsClient() {
     });
   }, [activeCat, search]);
 
+  const catCounts = useMemo(() =>
+    Object.fromEntries(CATEGORIES.map(cat => [
+      cat,
+      cat === 'All' ? COMPONENTS.length : COMPONENTS.filter(c => c.category === cat).length
+    ])),
+  []);
+
   return (
-    <div className="min-h-screen bg-[#F8F9FB]">
-      {/* ── Hero ── */}
-      <div className="relative overflow-hidden border-b border-zinc-200 bg-white">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-blue-50/70 via-white to-purple-50/50" />
-        <div className="relative mx-auto max-w-4xl px-4 py-14 text-center sm:py-16">
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-1.5 text-xs font-semibold text-blue-600">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500" />
-            {COMPONENTS.length} Ready-to-Use Components
+    <div className="min-h-screen bg-[#F4F5F7]">
+
+      {/* ══════════════════════════════
+          HERO
+      ══════════════════════════════ */}
+      <div className="relative overflow-hidden bg-white border-b border-zinc-200">
+        {/* Subtle grid background */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.03]"
+          style={{ backgroundImage: 'linear-gradient(#000 1px,transparent 1px),linear-gradient(90deg,#000 1px,transparent 1px)', backgroundSize: '40px 40px' }} />
+        {/* Gradient orbs */}
+        <div className="pointer-events-none absolute -top-24 -left-24 h-96 w-96 rounded-full bg-blue-400/20 blur-3xl" />
+        <div className="pointer-events-none absolute -top-24 right-0 h-96 w-96 rounded-full bg-violet-400/20 blur-3xl" />
+
+        <div className="relative mx-auto max-w-5xl px-4 py-16 text-center sm:py-20">
+          {/* Badge */}
+          <div className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-blue-200 bg-gradient-to-r from-blue-50 to-violet-50 px-5 py-2 text-xs font-semibold text-blue-700 shadow-sm">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-blue-500" />
+            {COMPONENTS.length}+ Production-Ready Components
+            <span className="h-2 w-2 animate-pulse rounded-full bg-violet-500" />
           </div>
-          <h1 className="text-4xl font-bold tracking-tight text-zinc-900 sm:text-5xl">
+
+          {/* Headline */}
+          <h1 className="text-[clamp(2.5rem,5vw,3.75rem)] font-black tracking-[-0.04em] text-zinc-900 leading-[1.05]">
             CSS UI{' '}
-            <span className="bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-600 via-violet-600 to-purple-600 bg-clip-text text-transparent">
               Components
             </span>
           </h1>
-          <p className="mx-auto mt-4 max-w-xl text-[15px] text-zinc-500 leading-relaxed">
-            Production-ready components with live previews. Copy Tailwind or plain CSS — no framework lock-in, no signup required.
+          <p className="mx-auto mt-5 max-w-2xl text-[15px] text-zinc-500 leading-relaxed">
+            Live preview + instant code copy. Tailwind & plain CSS — pick what fits your stack.
+            No framework lock-in. No signup. Completely free.
           </p>
 
-          {/* Stats chips */}
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+          {/* Stats row */}
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             {[
-              { n: String(COMPONENTS.length) + '+', l: 'Components' },
-              { n: '2', l: 'Code formats' },
-              { n: '100%', l: 'Free forever' },
-              { n: '0', l: 'Dependencies' },
+              { n: COMPONENTS.length + '+', l: 'Components', color: 'text-blue-600' },
+              { n: '6', l: 'Categories', color: 'text-violet-600' },
+              { n: '2', l: 'Code formats', color: 'text-emerald-600' },
+              { n: '100%', l: 'Free forever', color: 'text-amber-600' },
             ].map((s) => (
-              <div key={s.l} className="flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3.5 py-1.5 text-xs shadow-sm">
-                <span className="font-bold text-zinc-900">{s.n}</span>
-                <span className="text-zinc-500">{s.l}</span>
+              <div key={s.l} className="flex flex-col items-center rounded-2xl border border-zinc-200 bg-white px-5 py-3 shadow-sm">
+                <span className={`text-xl font-black tabular-nums ${s.color}`}>{s.n}</span>
+                <span className="text-[11px] text-zinc-400 font-medium mt-0.5">{s.l}</span>
               </div>
             ))}
           </div>
 
           {/* Search */}
-          <div className="relative mx-auto mt-7 max-w-md">
-            <Search size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" />
+          <div className="relative mx-auto mt-8 max-w-lg">
+            <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search components… (e.g. button, modal, card)"
-              className="w-full rounded-2xl border border-zinc-200 bg-white py-3 pl-11 pr-11 text-sm text-zinc-800 placeholder-zinc-400 shadow-sm outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+              placeholder="Search 144 components… button, modal, chart, form…"
+              className="w-full rounded-2xl border border-zinc-200 bg-white py-3.5 pl-11 pr-12 text-sm text-zinc-800 placeholder-zinc-400 shadow-md outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100"
             />
-            {search && (
-              <button onClick={() => setSearch('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 transition">
-                <X size={14} />
+            {search ? (
+              <button onClick={() => setSearch('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700 transition">
+                <X size={15} />
               </button>
+            ) : (
+              <kbd className="absolute right-4 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-0.5 rounded-lg border border-zinc-200 bg-zinc-50 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-400">
+                ⌘K
+              </kbd>
             )}
           </div>
         </div>
       </div>
 
-      {/* ── Category filter ── */}
-      <div className="sticky top-0 z-20 border-b border-zinc-200 bg-white/95 backdrop-blur-md shadow-sm">
-        <div className="mx-auto flex max-w-7xl items-center gap-1.5 overflow-x-auto px-4 py-3 sm:px-6">
-          {CATEGORIES.map((cat) => {
-            const count = cat === 'All' ? COMPONENTS.length : COMPONENTS.filter((c) => c.category === cat).length;
-            return (
-              <button
-                key={cat}
-                onClick={() => setActiveCat(cat)}
-                className={`shrink-0 flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold transition whitespace-nowrap ${
-                  activeCat === cat
-                    ? 'bg-zinc-900 text-white shadow-sm'
-                    : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
-                }`}
-              >
-                {cat}
-                <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold ${activeCat === cat ? 'bg-white/20 text-white' : 'bg-white text-zinc-500'}`}>
-                  {count}
-                </span>
-              </button>
-            );
-          })}
-          <div className="ml-auto shrink-0 pl-4 text-xs text-zinc-400 whitespace-nowrap">
-            {filtered.length} result{filtered.length !== 1 ? 's' : ''}
-          </div>
-        </div>
-      </div>
+      {/* ══════════════════════════════
+          BODY: sidebar + grid
+      ══════════════════════════════ */}
+      <div className="mx-auto flex max-w-[1600px] gap-0 lg:gap-0">
 
-      {/* ── Grid ── */}
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-        {filtered.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-28 text-zinc-400">
-            <Search size={44} className="mb-4 opacity-20" />
-            <p className="text-lg font-semibold text-zinc-600">No components found</p>
-            <p className="mt-1 text-sm text-zinc-400">Try a different search or category</p>
-            <button
-              onClick={() => { setSearch(''); setActiveCat('All'); }}
-              className="mt-5 rounded-xl bg-zinc-900 px-5 py-2 text-sm font-semibold text-white hover:bg-zinc-800 transition"
-            >
-              Clear filters
-            </button>
-          </div>
-        ) : (
-          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-            {filtered.map((comp) => (
-              <ComponentCard key={comp.id} comp={comp} />
+        {/* ── Mobile category bar ── */}
+        <div className="sticky top-0 z-30 lg:hidden w-full border-b border-zinc-200 bg-white/95 backdrop-blur shadow-sm">
+          <div className="flex items-center gap-1.5 overflow-x-auto px-4 py-2.5">
+            {CATEGORIES.map(cat => (
+              <button key={cat}
+                onClick={() => { setActiveCat(cat); setSidebarOpen(false); }}
+                className={`shrink-0 flex items-center gap-1 rounded-full px-3 py-1.5 text-[11px] font-semibold transition whitespace-nowrap ${
+                  activeCat === cat ? 'bg-zinc-900 text-white shadow-sm' : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
+                }`}>
+                <span>{CATEGORY_META[cat]?.icon}</span>
+                {cat}
+                <span className={`text-[9px] font-bold ${activeCat === cat ? 'text-white/70' : 'text-zinc-400'}`}>{catCounts[cat]}</span>
+              </button>
             ))}
           </div>
-        )}
-      </div>
+        </div>
 
-      {/* ── Footer CTA ── */}
-      <div className="border-t border-zinc-200 bg-white py-10 text-center">
-        <p className="text-sm font-medium text-zinc-600">All components are <span className="text-zinc-900 font-bold">100% free</span> — copy, paste, and ship.</p>
-        <p className="mt-1.5 text-xs text-zinc-400">No account required · No watermarks · Tailwind + plain CSS included</p>
+        {/* ── LEFT SIDEBAR (desktop) ── */}
+        <aside className="hidden lg:flex lg:flex-col w-64 xl:w-72 shrink-0 border-r border-zinc-200 bg-white">
+          <div className="sticky top-0 flex flex-col gap-1 p-5 pt-8" style={{ maxHeight: '100vh', overflowY: 'auto' }}>
+
+            {/* Sidebar header */}
+            <div className="mb-4">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-0.5">Categories</p>
+              <p className="text-xs text-zinc-400">{filtered.length} of {COMPONENTS.length} shown</p>
+            </div>
+
+            {/* Category nav */}
+            <nav className="flex flex-col gap-0.5">
+              {CATEGORIES.map(cat => (
+                <SidebarItem
+                  key={cat}
+                  cat={cat}
+                  count={catCounts[cat]}
+                  active={activeCat === cat}
+                  onClick={() => setActiveCat(cat)}
+                />
+              ))}
+            </nav>
+
+            {/* Divider */}
+            <div className="my-4 border-t border-zinc-100" />
+
+            {/* Tips card */}
+            <div className="rounded-2xl border border-zinc-100 bg-gradient-to-br from-zinc-50 to-white p-4">
+              <p className="text-[11px] font-bold text-zinc-700 mb-2">💡 Pro tips</p>
+              <ul className="space-y-1.5 text-[11px] text-zinc-500 leading-relaxed">
+                <li>• Hover code block to reveal <strong>Copy</strong></li>
+                <li>• Toggle <strong>▼ More</strong> for full snippet</li>
+                <li>• Switch Tailwind ↔ CSS per card</li>
+                <li>• All previews are <strong>interactive</strong></li>
+              </ul>
+            </div>
+
+            {/* Badge */}
+            <div className="mt-3 rounded-2xl bg-gradient-to-br from-blue-600 to-violet-600 p-4 text-white">
+              <p className="text-[11px] font-bold mb-1">🚀 {COMPONENTS.length}+ components</p>
+              <p className="text-[10px] text-white/70 leading-relaxed">Free forever · No account · Tailwind + CSS</p>
+            </div>
+          </div>
+        </aside>
+
+        {/* ── MAIN CONTENT ── */}
+        <main className="flex-1 min-w-0 px-4 py-8 sm:px-6 lg:px-8">
+
+          {/* Active filter header */}
+          <div className="mb-6 flex items-center justify-between gap-4">
+            <div>
+              <h2 className="text-lg font-bold text-zinc-900 tracking-tight">
+                {activeCat === 'All' ? 'All Components' : activeCat}
+              </h2>
+              <p className="text-sm text-zinc-400 mt-0.5">
+                {filtered.length} component{filtered.length !== 1 ? 's' : ''}
+                {search ? ` matching "${search}"` : ''}
+              </p>
+            </div>
+            {(search || activeCat !== 'All') && (
+              <button
+                onClick={() => { setSearch(''); setActiveCat('All'); }}
+                className="flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs font-semibold text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50 transition shadow-sm"
+              >
+                <X size={11} /> Clear filters
+              </button>
+            )}
+          </div>
+
+          {/* Empty state */}
+          {filtered.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-32">
+              <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-zinc-100 text-4xl mb-6">🔍</div>
+              <h3 className="text-lg font-bold text-zinc-700">No components found</h3>
+              <p className="mt-2 text-sm text-zinc-400 max-w-xs text-center">Try different keywords or browse a different category.</p>
+              <button
+                onClick={() => { setSearch(''); setActiveCat('All'); }}
+                className="mt-6 rounded-2xl bg-zinc-900 px-6 py-2.5 text-sm font-semibold text-white hover:bg-zinc-800 transition"
+              >
+                Show all components
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 2xl:grid-cols-3">
+              {filtered.map((comp) => (
+                <ComponentCard key={comp.id} comp={comp} />
+              ))}
+            </div>
+          )}
+
+          {/* Footer */}
+          <div className="mt-16 rounded-3xl border border-zinc-200 bg-white px-8 py-10 text-center shadow-sm">
+            <div className="text-3xl mb-3">🎨</div>
+            <h3 className="text-lg font-bold text-zinc-900">All {COMPONENTS.length}+ components are free</h3>
+            <p className="mt-2 text-sm text-zinc-400 max-w-sm mx-auto leading-relaxed">
+              Copy-paste into any project. Tailwind CSS + plain CSS included. No attribution required.
+            </p>
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-xs text-zinc-400">
+              {['✓ No account', '✓ No watermark', '✓ Commercial use', '✓ MIT license'].map(t => (
+                <span key={t} className="rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 font-medium">{t}</span>
+              ))}
+            </div>
+          </div>
+        </main>
       </div>
     </div>
   );
