@@ -71,6 +71,9 @@ export default function HomePrivacyFirstSections({
       { label: 'Markdown Preview', cats: ['all', 'dev'], variant: 'new', href: '/markdown-preview' },
       { label: 'Color Picker', cats: ['all', 'dev'], variant: 'new', href: '/color-picker' },
       { label: 'Text Diff', cats: ['all', 'dev', 'json'], variant: 'new', href: '/text-diff' },
+      { label: 'JSON → TypeScript', cats: ['all', 'json'], variant: 'new', href: '/json-to-typescript' },
+      { label: 'Timestamp', cats: ['all', 'dev'], variant: 'new', href: '/timestamp-converter' },
+      { label: 'Box Shadow', cats: ['all', 'dev'], variant: 'new', href: '/css-box-shadow' },
     ],
     [toolPageUrls],
   );

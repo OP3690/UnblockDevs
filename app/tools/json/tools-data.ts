@@ -372,6 +372,30 @@ export const TOOLS_DIRECTORY: DirectoryTool[] = [
     icon: 'GitCompare',
     badge: 'new',
   },
+  {
+    href: '/json-to-typescript',
+    name: 'JSON → TypeScript generator',
+    description: 'Convert any JSON to TypeScript interfaces, type aliases, or Zod schemas — instantly.',
+    category: 'json',
+    icon: 'Braces',
+    badge: 'new',
+  },
+  {
+    href: '/timestamp-converter',
+    name: 'Unix timestamp converter',
+    description: 'Convert Unix epoch to readable dates in any timezone. Live clock, world clock, relative time.',
+    category: 'dev',
+    icon: 'Timer',
+    badge: 'new',
+  },
+  {
+    href: '/css-box-shadow',
+    name: 'CSS box shadow generator',
+    description: 'Build beautiful multi-layer box shadows visually. 8 presets, live preview, instant CSS copy.',
+    category: 'dev',
+    icon: 'Square',
+    badge: 'new',
+  },
 ];
 
 export const TOOL_COUNT = TOOLS_DIRECTORY.length;
