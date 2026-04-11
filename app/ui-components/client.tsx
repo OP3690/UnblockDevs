@@ -3112,6 +3112,1034 @@ function PricingTogglePreview() {
 }
 
 /* ─────────────────────────────────────────────
+   28 New Preview Components
+───────────────────────────────────────────── */
+
+function SegmentedControlPreview() {
+  const [period, setPeriod] = useState('Week');
+  const [view, setView] = useState('List');
+  return (
+    <PreviewWrap>
+      <div className="flex flex-col items-center gap-4">
+        <div className="inline-flex rounded-xl bg-zinc-100 p-1 gap-0.5">
+          {['Day', 'Week', 'Month', 'Year'].map((o) => (
+            <button key={o} onClick={() => setPeriod(o)}
+              className={`rounded-lg px-4 py-1.5 text-xs font-semibold transition ${period === o ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}>
+              {o}
+            </button>
+          ))}
+        </div>
+        <div className="inline-flex rounded-xl bg-zinc-100 p-1 gap-0.5">
+          {['List', 'Grid', 'Map'].map((o) => (
+            <button key={o} onClick={() => setView(o)}
+              className={`rounded-lg px-4 py-1.5 text-xs font-semibold transition ${view === o ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}>
+              {o}
+            </button>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function RichTextToolbarPreview() {
+  const [active, setActive] = useState<string[]>(['bold']);
+  const toggle = (t: string) => setActive(p => p.includes(t) ? p.filter(x => x !== t) : [...p, t]);
+  const tools = [
+    { id: 'bold', label: 'B', style: 'font-bold' },
+    { id: 'italic', label: 'I', style: 'italic' },
+    { id: 'underline', label: 'U', style: 'underline' },
+    { id: 'strike', label: 'S', style: 'line-through' },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-sm space-y-2">
+        <div className="flex items-center gap-1 rounded-xl border border-zinc-200 bg-white px-2 py-1.5 flex-wrap">
+          {tools.map(t => (
+            <button key={t.id} onClick={() => toggle(t.id)}
+              className={`h-7 w-7 rounded-lg text-sm ${t.style} transition ${active.includes(t.id) ? 'bg-blue-600 text-white' : 'text-zinc-600 hover:bg-zinc-100'}`}>
+              {t.label}
+            </button>
+          ))}
+          <div className="h-5 w-px bg-zinc-200 mx-1" />
+          {[{ id: 'h1', label: 'H1' }, { id: 'h2', label: 'H2' }].map(t => (
+            <button key={t.id} onClick={() => toggle(t.id)}
+              className={`rounded-lg px-2 py-0.5 text-xs font-bold transition ${active.includes(t.id) ? 'bg-blue-600 text-white' : 'text-zinc-600 hover:bg-zinc-100'}`}>
+              {t.label}
+            </button>
+          ))}
+          <div className="h-5 w-px bg-zinc-200 mx-1" />
+          {['• List', '1. List', '— Quote'].map(t => (
+            <button key={t} className="rounded-lg px-2 py-0.5 text-xs text-zinc-600 hover:bg-zinc-100 transition">{t}</button>
+          ))}
+        </div>
+        <div className="rounded-xl border border-zinc-200 bg-white px-3 py-3 text-sm text-zinc-700 min-h-[60px]">
+          <span className={`${active.includes('bold') ? 'font-bold' : ''} ${active.includes('italic') ? 'italic' : ''} ${active.includes('underline') ? 'underline' : ''}`}>
+            Start typing your content here…
+          </span>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function AutocompletePreview() {
+  const [query, setQuery] = useState('');
+  const [open, setOpen] = useState(false);
+  const options = ['JavaScript', 'TypeScript', 'Python', 'Rust', 'Go', 'Swift', 'Kotlin', 'Dart'];
+  const filtered = options.filter(o => o.toLowerCase().includes(query.toLowerCase()));
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="relative w-full max-w-xs">
+        <input value={query} onChange={e => { setQuery(e.target.value); setOpen(true); }}
+          onFocus={() => setOpen(true)} onBlur={() => setTimeout(() => setOpen(false), 150)}
+          placeholder="Search languages…"
+          className="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition" />
+        {open && filtered.length > 0 && (
+          <div className="absolute z-10 mt-1 w-full rounded-xl border border-zinc-200 bg-white shadow-xl overflow-hidden">
+            {filtered.slice(0, 5).map(o => (
+              <button key={o} onMouseDown={() => { setQuery(o); setOpen(false); }}
+                className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-zinc-700 hover:bg-blue-50 hover:text-blue-700 transition text-left">
+                <Search size={12} className="text-zinc-400 shrink-0" /> {o}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function TransferListPreview() {
+  const [left, setLeft] = useState(['Analytics', 'Reports', 'Export', 'API']);
+  const [right, setRight] = useState(['Dashboard', 'Users']);
+  const [selL, setSelL] = useState<string[]>([]);
+  const [selR, setSelR] = useState<string[]>([]);
+  const moveToRight = () => { setRight(p => [...p, ...selL]); setLeft(p => p.filter(x => !selL.includes(x))); setSelL([]); };
+  const moveToLeft = () => { setLeft(p => [...p, ...selR]); setRight(p => p.filter(x => !selR.includes(x))); setSelR([]); };
+  const ListBox = ({ items, sel, setSel }: { items: string[]; sel: string[]; setSel: (v: string[]) => void }) => (
+    <div className="h-28 w-32 overflow-y-auto rounded-xl border border-zinc-200 bg-white py-1">
+      {items.map(i => (
+        <div key={i} onClick={() => { const cur = sel; setSel(cur.includes(i) ? cur.filter((x: string) => x !== i) : [...cur, i]); }}
+          className={`cursor-pointer px-3 py-1.5 text-xs transition ${sel.includes(i) ? 'bg-blue-600 text-white' : 'text-zinc-700 hover:bg-zinc-50'}`}>
+          {i}
+        </div>
+      ))}
+    </div>
+  );
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="flex items-center gap-2">
+        <div className="flex flex-col items-center gap-1">
+          <p className="text-[10px] font-semibold text-zinc-400">Available</p>
+          <ListBox items={left} sel={selL} setSel={setSelL} />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <button onClick={moveToRight} disabled={!selL.length} className="rounded-lg border border-zinc-200 bg-white px-2 py-1 text-xs font-bold text-zinc-600 hover:bg-zinc-50 disabled:opacity-30 transition">→</button>
+          <button onClick={moveToLeft} disabled={!selR.length} className="rounded-lg border border-zinc-200 bg-white px-2 py-1 text-xs font-bold text-zinc-600 hover:bg-zinc-50 disabled:opacity-30 transition">←</button>
+        </div>
+        <div className="flex flex-col items-center gap-1">
+          <p className="text-[10px] font-semibold text-zinc-400">Selected</p>
+          <ListBox items={right} sel={selR} setSel={setSelR} />
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function ActivityFeedPreview() {
+  const events = [
+    { icon: '🟢', user: 'Alice', action: 'pushed to main', time: '2m ago', color: 'bg-emerald-50 border-emerald-100' },
+    { icon: '💬', user: 'Bob', action: 'commented on PR #42', time: '18m ago', color: 'bg-blue-50 border-blue-100' },
+    { icon: '🔀', user: 'Carol', action: 'merged feature/auth', time: '1h ago', color: 'bg-purple-50 border-purple-100' },
+    { icon: '🐛', user: 'Dan', action: 'opened issue #91', time: '3h ago', color: 'bg-amber-50 border-amber-100' },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs space-y-2">
+        {events.map((e, i) => (
+          <div key={i} className={`flex items-start gap-3 rounded-xl border px-3 py-2.5 ${e.color}`}>
+            <span className="text-base shrink-0">{e.icon}</span>
+            <div className="min-w-0">
+              <p className="text-xs text-zinc-700"><strong>{e.user}</strong> {e.action}</p>
+              <p className="text-[10px] text-zinc-400 mt-0.5">{e.time}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function LeaderboardPreview() {
+  const rows = [
+    { rank: 1, name: 'Alice Kim', score: 9820, medal: '🥇' },
+    { rank: 2, name: 'Bob Patel', score: 8750, medal: '🥈' },
+    { rank: 3, name: 'Carol Wu', score: 7430, medal: '🥉' },
+    { rank: 4, name: 'Dan Rose', score: 6210, medal: '' },
+    { rank: 5, name: 'Eve Stone', score: 5980, medal: '' },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs rounded-xl border border-zinc-200 bg-white overflow-hidden">
+        {rows.map((r, i) => (
+          <div key={r.rank} className={`flex items-center gap-3 px-4 py-2.5 ${i < rows.length - 1 ? 'border-b border-zinc-50' : ''} ${r.rank === 1 ? 'bg-amber-50' : ''}`}>
+            <span className="w-5 text-center text-sm">{r.medal || <span className="text-xs font-bold text-zinc-400">{r.rank}</span>}</span>
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-[10px] font-bold text-white">
+              {r.name.split(' ').map(w => w[0]).join('')}
+            </div>
+            <span className="flex-1 text-sm font-medium text-zinc-800">{r.name}</span>
+            <span className="text-xs font-bold text-zinc-600">{r.score.toLocaleString()}</span>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function GaugeMeterPreview() {
+  const [val, setVal] = useState(68);
+  const angle = (val / 100) * 180 - 90;
+  const color = val < 40 ? '#10b981' : val < 70 ? '#f59e0b' : '#ef4444';
+  return (
+    <PreviewWrap>
+      <div className="flex flex-col items-center gap-3">
+        <div className="relative flex items-end justify-center" style={{ width: 140, height: 80 }}>
+          <svg width="140" height="90" viewBox="0 0 140 90">
+            <path d="M15 80 A55 55 0 0 1 125 80" fill="none" stroke="#e4e4e7" strokeWidth="10" strokeLinecap="round" />
+            <path d="M15 80 A55 55 0 0 1 125 80" fill="none" stroke={color} strokeWidth="10" strokeLinecap="round"
+              strokeDasharray={`${(val / 100) * 172.8} 172.8`} />
+            <line x1="70" y1="80" x2={70 + 45 * Math.cos((angle * Math.PI) / 180)} y2={80 + 45 * Math.sin((angle * Math.PI) / 180)}
+              stroke="#18181b" strokeWidth="2.5" strokeLinecap="round" />
+            <circle cx="70" cy="80" r="4" fill="#18181b" />
+          </svg>
+          <div className="absolute bottom-0 text-center">
+            <p className="text-2xl font-bold leading-none" style={{ color }}>{val}%</p>
+          </div>
+        </div>
+        <input type="range" min={0} max={100} value={val} onChange={e => setVal(+e.target.value)} className="w-32 accent-blue-600" />
+        <div className="flex gap-3 text-[10px] font-semibold">
+          <span className="text-emerald-600">● Good</span><span className="text-amber-500">● Warn</span><span className="text-red-500">● Critical</span>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function RadarChartPreview() {
+  const skills = [
+    { label: 'Design', val: 80 }, { label: 'Frontend', val: 92 },
+    { label: 'Backend', val: 70 }, { label: 'DevOps', val: 55 },
+    { label: 'Testing', val: 75 }, { label: 'Docs', val: 60 },
+  ];
+  const cx = 70, cy = 70, r = 52;
+  const pts = skills.map((s, i) => {
+    const a = (i / skills.length) * 2 * Math.PI - Math.PI / 2;
+    const rv = (s.val / 100) * r;
+    return { x: cx + rv * Math.cos(a), y: cy + rv * Math.sin(a), lx: cx + (r + 14) * Math.cos(a), ly: cy + (r + 14) * Math.sin(a), label: s.label };
+  });
+  const gridPts = (frac: number) => skills.map((_, i) => {
+    const a = (i / skills.length) * 2 * Math.PI - Math.PI / 2;
+    return `${cx + frac * r * Math.cos(a)},${cy + frac * r * Math.sin(a)}`;
+  }).join(' ');
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <svg width="150" height="150" viewBox="0 0 150 150">
+        {[0.25, 0.5, 0.75, 1].map(f => <polygon key={f} points={gridPts(f)} fill="none" stroke="#e4e4e7" strokeWidth="1" />)}
+        {skills.map((_, i) => {
+          const a = (i / skills.length) * 2 * Math.PI - Math.PI / 2;
+          return <line key={i} x1={cx} y1={cy} x2={cx + r * Math.cos(a)} y2={cy + r * Math.sin(a)} stroke="#e4e4e7" strokeWidth="1" />;
+        })}
+        <polygon points={pts.map(p => `${p.x},${p.y}`).join(' ')} fill="#3b82f620" stroke="#3b82f6" strokeWidth="2" />
+        {pts.map((p, i) => (
+          <g key={i}>
+            <circle cx={p.x} cy={p.y} r="3" fill="#3b82f6" />
+            <text x={p.lx} y={p.ly} textAnchor="middle" dominantBaseline="middle" fill="#71717a" fontSize="7" fontWeight="600">{p.label}</text>
+          </g>
+        ))}
+      </svg>
+    </PreviewWrap>
+  );
+}
+
+function UserCardPreview() {
+  const [followed, setFollowed] = useState(false);
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden w-56">
+        <div className="h-16 bg-gradient-to-r from-blue-500 to-violet-500" />
+        <div className="px-4 pb-4">
+          <div className="flex items-end justify-between -mt-7 mb-3">
+            <div className="h-14 w-14 rounded-2xl border-4 border-white bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-lg font-bold text-white shadow">AK</div>
+            <button onClick={() => setFollowed(f => !f)}
+              className={`rounded-full px-3 py-1 text-xs font-semibold transition ${followed ? 'bg-zinc-100 text-zinc-700' : 'bg-blue-600 text-white hover:bg-blue-700'}`}>
+              {followed ? 'Following' : 'Follow'}
+            </button>
+          </div>
+          <p className="text-sm font-bold text-zinc-900">Alice Kim</p>
+          <p className="text-xs text-zinc-400 mb-2">Senior Product Designer · SF</p>
+          <div className="flex gap-4 text-center">
+            {[['142', 'Posts'], ['8.4K', 'Followers'], ['320', 'Following']].map(([n, l]) => (
+              <div key={l}><p className="text-xs font-bold text-zinc-900">{n}</p><p className="text-[10px] text-zinc-400">{l}</p></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function GanttBarPreview() {
+  const tasks = [
+    { name: 'Research', start: 0, dur: 2, color: 'bg-blue-400' },
+    { name: 'Design', start: 1, dur: 3, color: 'bg-purple-400' },
+    { name: 'Build', start: 3, dur: 4, color: 'bg-emerald-400' },
+    { name: 'Test', start: 6, dur: 2, color: 'bg-amber-400' },
+    { name: 'Launch', start: 7, dur: 1, color: 'bg-rose-400' },
+  ];
+  const total = 8;
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-sm space-y-1.5">
+        <div className="flex items-center gap-1 mb-2 pl-16">
+          {Array.from({ length: total }, (_, i) => (
+            <div key={i} className="flex-1 text-center text-[9px] font-bold text-zinc-400">W{i + 1}</div>
+          ))}
+        </div>
+        {tasks.map(t => (
+          <div key={t.name} className="flex items-center gap-2">
+            <span className="w-14 shrink-0 text-[11px] font-medium text-zinc-600 text-right">{t.name}</span>
+            <div className="flex flex-1 gap-1">
+              {Array.from({ length: total }, (_, i) => (
+                <div key={i} className={`flex-1 h-6 rounded-sm ${i >= t.start && i < t.start + t.dur ? t.color : 'bg-zinc-100'}`} />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function MegaMenuPreview() {
+  const [open, setOpen] = useState(false);
+  const cols = [
+    { title: 'Products', items: [{ icon: '📊', label: 'Analytics', desc: 'Track metrics' }, { icon: '🚀', label: 'Deploy', desc: 'Ship fast' }, { icon: '🔒', label: 'Security', desc: 'Stay safe' }] },
+    { title: 'Solutions', items: [{ icon: '🏢', label: 'Enterprise', desc: 'For large teams' }, { icon: '🌱', label: 'Startup', desc: 'Scale quickly' }, { icon: '🧑‍💻', label: 'Developer', desc: 'API first' }] },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="relative">
+        <button onClick={() => setOpen(o => !o)}
+          className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-900 px-4 py-2 text-sm font-semibold text-white hover:bg-zinc-800 transition">
+          Products <ChevronDown size={14} className={`transition-transform ${open ? 'rotate-180' : ''}`} />
+        </button>
+        {open && (
+          <div className="absolute left-0 top-full mt-2 w-80 rounded-2xl border border-zinc-200 bg-white shadow-2xl p-4 z-10">
+            <div className="grid grid-cols-2 gap-4">
+              {cols.map(col => (
+                <div key={col.title}>
+                  <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-zinc-400">{col.title}</p>
+                  <div className="space-y-1">
+                    {col.items.map(item => (
+                      <button key={item.label} className="flex w-full items-start gap-2.5 rounded-xl p-2 text-left hover:bg-zinc-50 transition">
+                        <span className="text-base shrink-0">{item.icon}</span>
+                        <div>
+                          <p className="text-xs font-semibold text-zinc-800">{item.label}</p>
+                          <p className="text-[10px] text-zinc-400">{item.desc}</p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function DockPreview() {
+  const [hovered, setHovered] = useState<number | null>(null);
+  const apps = ['🌐', '📁', '✉️', '📅', '🎵', '⚙️', '🔍'];
+  return (
+    <PreviewWrap bg="bg-zinc-900">
+      <div className="flex flex-col items-center gap-3">
+        <p className="text-xs text-zinc-400">Hover the icons</p>
+        <div className="flex items-end gap-1.5 rounded-2xl border border-white/10 bg-white/10 px-3 py-2 backdrop-blur-md">
+          {apps.map((app, i) => {
+            const dist = hovered !== null ? Math.abs(i - hovered) : 999;
+            const scale = dist === 0 ? 'scale-150 -translate-y-3' : dist === 1 ? 'scale-125 -translate-y-1' : 'scale-100';
+            return (
+              <button key={i} onMouseEnter={() => setHovered(i)} onMouseLeave={() => setHovered(null)}
+                className={`flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 text-xl transition-all duration-150 ${scale}`}>
+                {app}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function SurveyRatingPreview() {
+  const [nps, setNps] = useState<number | null>(8);
+  const [satisfaction, setSatisfaction] = useState<number | null>(4);
+  const emojis = ['😞', '😕', '😐', '🙂', '😄'];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs space-y-4">
+        <div>
+          <p className="text-xs font-semibold text-zinc-700 mb-2">How likely are you to recommend us? (NPS)</p>
+          <div className="flex gap-0.5 flex-wrap">
+            {Array.from({ length: 11 }, (_, i) => (
+              <button key={i} onClick={() => setNps(i)}
+                className={`h-7 w-7 rounded-lg text-[10px] font-bold transition ${nps === i ? (i >= 9 ? 'bg-emerald-500 text-white' : i >= 7 ? 'bg-amber-400 text-white' : 'bg-red-500 text-white') : 'bg-white border border-zinc-200 text-zinc-600 hover:border-blue-300'}`}>
+                {i}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div>
+          <p className="text-xs font-semibold text-zinc-700 mb-2">Rate your experience</p>
+          <div className="flex gap-2">
+            {emojis.map((e, i) => (
+              <button key={i} onClick={() => setSatisfaction(i)}
+                className={`text-2xl transition-all ${satisfaction === i ? 'scale-125' : 'opacity-40 hover:opacity-70'}`}>{e}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function TypingIndicatorPreview() {
+  return (
+    <PreviewWrap bg="bg-zinc-100">
+      <div className="w-full max-w-xs space-y-3">
+        <div className="flex items-end gap-2">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-500 text-xs font-bold text-white">AK</div>
+          <div className="rounded-2xl rounded-bl-sm bg-white border border-zinc-200 px-4 py-3 shadow-sm">
+            <div className="flex items-center gap-1.5">
+              {[0, 150, 300].map(delay => (
+                <div key={delay} className="h-2 w-2 rounded-full bg-zinc-400 animate-bounce" style={{ animationDelay: `${delay}ms` }} />
+              ))}
+            </div>
+          </div>
+        </div>
+        <p className="text-[10px] text-zinc-400 ml-10">Alice is typing…</p>
+        <div className="flex flex-col gap-2">
+          <div className="self-start max-w-[180px] rounded-2xl rounded-tl-sm bg-white border border-zinc-200 px-3 py-2 text-xs text-zinc-700 shadow-sm">Hey! How&apos;s the project going?</div>
+          <div className="self-end max-w-[180px] rounded-2xl rounded-tr-sm bg-blue-600 px-3 py-2 text-xs text-white shadow-sm">Almost done! Just finishing tests 🚀</div>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function UploadProgressPreview() {
+  const [prog, setProg] = useState(72);
+  const files = [
+    { name: 'design-assets.zip', size: '24 MB', prog, color: 'bg-blue-500' },
+    { name: 'report-q4.pdf', size: '2.1 MB', prog: 100, color: 'bg-emerald-500' },
+    { name: 'video-intro.mp4', size: '180 MB', prog: 31, color: 'bg-amber-500' },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs space-y-2.5">
+        {files.map(f => (
+          <div key={f.name} className="rounded-xl border border-zinc-200 bg-white px-3 py-2.5">
+            <div className="flex items-center justify-between mb-1.5">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold text-zinc-800 truncate">{f.name}</p>
+                <p className="text-[10px] text-zinc-400">{f.size}</p>
+              </div>
+              <span className={`ml-2 shrink-0 text-[10px] font-bold ${f.prog === 100 ? 'text-emerald-500' : 'text-zinc-500'}`}>{f.prog}%</span>
+            </div>
+            <div className="h-1.5 w-full rounded-full bg-zinc-100">
+              <div className={`h-full rounded-full transition-all ${f.color}`} style={{ width: `${f.prog}%` }} />
+            </div>
+          </div>
+        ))}
+        <button onClick={() => setProg(p => Math.min(100, p + 5))} className="w-full rounded-lg bg-zinc-800 py-1.5 text-xs font-semibold text-white hover:bg-zinc-900 transition">Simulate progress</button>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function PopoverCardPreview() {
+  const [open, setOpen] = useState(false);
+  return (
+    <PreviewWrap>
+      <div className="relative">
+        <button onClick={() => setOpen(o => !o)}
+          className="flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm font-medium text-zinc-700 shadow-sm hover:bg-zinc-50 transition">
+          <div className="h-7 w-7 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-xs font-bold text-white">AK</div>
+          Alice Kim
+        </button>
+        {open && (
+          <div className="absolute left-0 top-full mt-2 w-64 rounded-2xl border border-zinc-200 bg-white shadow-2xl p-4 z-10">
+            <div className="flex items-start gap-3 mb-3">
+              <div className="h-12 w-12 shrink-0 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-lg font-bold text-white">AK</div>
+              <div>
+                <p className="font-bold text-zinc-900">Alice Kim</p>
+                <p className="text-xs text-zinc-400">Senior Designer · San Francisco</p>
+                <div className="mt-1 flex gap-1">
+                  <span className="rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-600">Design</span>
+                  <span className="rounded-full bg-purple-100 px-2 py-0.5 text-[10px] font-semibold text-purple-600">Figma</span>
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <button className="flex-1 rounded-xl bg-blue-600 py-1.5 text-xs font-semibold text-white hover:bg-blue-700 transition">Message</button>
+              <button className="flex-1 rounded-xl border border-zinc-200 py-1.5 text-xs font-semibold text-zinc-700 hover:bg-zinc-50 transition">Profile</button>
+            </div>
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function GlobalSearchPreview() {
+  const [open, setOpen] = useState(false);
+  const [q, setQ] = useState('');
+  const results = [
+    { icon: '📄', label: 'Q4 Report.pdf', cat: 'Documents' },
+    { icon: '👤', label: 'Alice Kim', cat: 'People' },
+    { icon: '🔧', label: 'API Settings', cat: 'Settings' },
+    { icon: '📊', label: 'Analytics Dashboard', cat: 'Pages' },
+  ].filter(r => !q || r.label.toLowerCase().includes(q.toLowerCase()));
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs">
+        <button onClick={() => setOpen(true)}
+          className="flex w-full items-center gap-2 rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-400 shadow-sm hover:border-zinc-400 transition">
+          <Search size={14} /> Search everything… <kbd className="ml-auto rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-500">⌘K</kbd>
+        </button>
+        {open && (
+          <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4" onClick={() => setOpen(false)}>
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+            <div className="relative w-full max-w-md rounded-2xl border border-zinc-200 bg-white shadow-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
+              <div className="flex items-center gap-3 border-b border-zinc-100 px-4 py-3">
+                <Search size={16} className="text-zinc-400 shrink-0" />
+                <input autoFocus value={q} onChange={e => setQ(e.target.value)} placeholder="Search anything…" className="flex-1 text-sm text-zinc-800 outline-none placeholder-zinc-400" />
+                <button onClick={() => setOpen(false)}><X size={16} className="text-zinc-400" /></button>
+              </div>
+              <div className="py-2">
+                {results.map(r => (
+                  <button key={r.label} className="flex w-full items-center gap-3 px-4 py-2.5 hover:bg-zinc-50 transition text-left">
+                    <span className="text-base">{r.icon}</span>
+                    <div>
+                      <p className="text-sm font-medium text-zinc-800">{r.label}</p>
+                      <p className="text-[10px] text-zinc-400">{r.cat}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function MasonryGridPreview() {
+  const cards = [
+    { h: 'h-20', bg: 'bg-blue-100', label: 'Analytics' },
+    { h: 'h-32', bg: 'bg-purple-100', label: 'Design System' },
+    { h: 'h-24', bg: 'bg-emerald-100', label: 'API Docs' },
+    { h: 'h-16', bg: 'bg-amber-100', label: 'Deploy' },
+    { h: 'h-28', bg: 'bg-rose-100', label: 'Monitoring' },
+    { h: 'h-20', bg: 'bg-sky-100', label: 'Settings' },
+  ];
+  const col1 = cards.filter((_, i) => i % 2 === 0);
+  const col2 = cards.filter((_, i) => i % 2 === 1);
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="flex gap-2 w-full max-w-xs">
+        {[col1, col2].map((col, ci) => (
+          <div key={ci} className="flex flex-1 flex-col gap-2">
+            {col.map(c => (
+              <div key={c.label} className={`rounded-xl border border-zinc-200 ${c.bg} ${c.h} flex items-center justify-center`}>
+                <p className="text-xs font-semibold text-zinc-700">{c.label}</p>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function SplitPanePreview() {
+  const [split, setSplit] = useState(50);
+  return (
+    <PreviewWrap bg="bg-zinc-900">
+      <div className="w-full max-w-xs rounded-xl overflow-hidden border border-zinc-700 select-none">
+        <div className="flex items-center gap-2 border-b border-zinc-700 bg-zinc-800 px-3 py-1.5">
+          <div className="h-2.5 w-2.5 rounded-full bg-red-500" />
+          <div className="h-2.5 w-2.5 rounded-full bg-amber-400" />
+          <div className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+          <span className="ml-2 text-[10px] text-zinc-400">split-view.tsx</span>
+        </div>
+        <div className="flex h-28 relative">
+          <div className="overflow-hidden bg-zinc-950 p-3 text-[10px] font-mono text-zinc-300" style={{ width: `${split}%` }}>
+            <span className="text-purple-400">const</span> <span className="text-blue-400">x</span> <span className="text-zinc-400">=</span> <span className="text-amber-300">42</span>
+          </div>
+          <div className="w-1 cursor-col-resize bg-zinc-700 hover:bg-blue-500 transition shrink-0 flex items-center justify-center">
+            <div className="h-6 w-0.5 rounded-full bg-current opacity-60" />
+          </div>
+          <div className="flex-1 overflow-hidden bg-zinc-900 p-3 text-[10px] text-zinc-400">
+            <div className="font-semibold text-zinc-200 mb-1">Output</div>
+            <div className="text-emerald-400">→ 42</div>
+          </div>
+        </div>
+        <div className="border-t border-zinc-700 bg-zinc-800 px-3 py-1.5 flex items-center gap-2">
+          <input type="range" min={20} max={80} value={split} onChange={e => setSplit(+e.target.value)} className="w-24 accent-blue-500" />
+          <span className="text-[10px] text-zinc-400">{split}% / {100 - split}%</span>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function StickyTablePreview() {
+  const headers = ['Name', 'Role', 'Dept', 'Status', 'Score'];
+  const rows = [
+    ['Alice Kim', 'Designer', 'Product', 'Active', '98'],
+    ['Bob Patel', 'Engineer', 'Eng', 'Active', '94'],
+    ['Carol Wu', 'PM', 'Product', 'Away', '87'],
+    ['Dan Rose', 'DevOps', 'Infra', 'Idle', '82'],
+    ['Eve Stone', 'QA', 'Eng', 'Active', '79'],
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-sm overflow-auto rounded-xl border border-zinc-200 bg-white" style={{ maxHeight: 160 }}>
+        <table className="w-full text-xs">
+          <thead className="sticky top-0 z-10">
+            <tr className="bg-zinc-100 border-b border-zinc-200">
+              {headers.map(h => <th key={h} className="px-3 py-2 text-left font-semibold text-zinc-600 whitespace-nowrap">{h}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r, i) => (
+              <tr key={i} className="border-b border-zinc-50 hover:bg-zinc-50 transition">
+                <td className="sticky left-0 bg-white px-3 py-2 font-medium text-zinc-800 whitespace-nowrap border-r border-zinc-100">{r[0]}</td>
+                {r.slice(1).map((c, j) => (
+                  <td key={j} className="px-3 py-2 text-zinc-500 whitespace-nowrap">{j === 2 ?
+                    <span className={`rounded-full px-2 py-0.5 text-[9px] font-semibold ${c === 'Active' ? 'bg-emerald-100 text-emerald-700' : c === 'Away' ? 'bg-amber-100 text-amber-700' : 'bg-zinc-100 text-zinc-600'}`}>{c}</span> : c}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function WordCloudPreview() {
+  const words = [
+    { text: 'TypeScript', size: 'text-xl', color: 'text-blue-600', weight: 'font-bold' },
+    { text: 'React', size: 'text-lg', color: 'text-sky-500', weight: 'font-bold' },
+    { text: 'Next.js', size: 'text-base', color: 'text-zinc-800', weight: 'font-semibold' },
+    { text: 'Tailwind', size: 'text-lg', color: 'text-teal-500', weight: 'font-bold' },
+    { text: 'Node', size: 'text-sm', color: 'text-emerald-600', weight: 'font-semibold' },
+    { text: 'GraphQL', size: 'text-sm', color: 'text-pink-500', weight: 'font-medium' },
+    { text: 'Docker', size: 'text-base', color: 'text-blue-400', weight: 'font-semibold' },
+    { text: 'Prisma', size: 'text-sm', color: 'text-purple-500', weight: 'font-medium' },
+    { text: 'Rust', size: 'text-xs', color: 'text-amber-600', weight: 'font-medium' },
+    { text: 'Go', size: 'text-xs', color: 'text-cyan-500', weight: 'font-semibold' },
+    { text: 'AWS', size: 'text-sm', color: 'text-amber-500', weight: 'font-semibold' },
+    { text: 'Vercel', size: 'text-xs', color: 'text-zinc-600', weight: 'font-medium' },
+  ];
+  return (
+    <PreviewWrap>
+      <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 max-w-xs">
+        {words.map(w => (
+          <span key={w.text} className={`${w.size} ${w.color} ${w.weight} hover:opacity-70 transition cursor-default`}>{w.text}</span>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function FloatingActionMenuPreview() {
+  const [open, setOpen] = useState(false);
+  const actions = [
+    { icon: '📝', label: 'Note', color: 'bg-blue-500' },
+    { icon: '📎', label: 'Attach', color: 'bg-purple-500' },
+    { icon: '📷', label: 'Photo', color: 'bg-emerald-500' },
+    { icon: '📊', label: 'Chart', color: 'bg-amber-500' },
+  ];
+  return (
+    <PreviewWrap>
+      <div className="relative flex flex-col items-center gap-2 py-4">
+        <div className={`flex flex-col items-center gap-2 transition-all ${open ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+          {actions.map((a, i) => (
+            <div key={a.label} className="flex items-center gap-2" style={{ transform: open ? 'translateY(0)' : 'translateY(20px)', transition: `transform .2s ${i * 50}ms` }}>
+              <span className="rounded-lg border border-zinc-200 bg-white px-2 py-0.5 text-[10px] font-semibold text-zinc-600 shadow-sm">{a.label}</span>
+              <button className={`h-10 w-10 rounded-full text-lg shadow-lg ${a.color} text-white flex items-center justify-center hover:scale-110 transition`}>{a.icon}</button>
+            </div>
+          ))}
+        </div>
+        <button onClick={() => setOpen(o => !o)}
+          className={`h-12 w-12 rounded-full bg-zinc-900 text-white shadow-xl flex items-center justify-center hover:bg-zinc-800 transition-transform ${open ? 'rotate-45' : ''}`}>
+          <span className="text-xl">+</span>
+        </button>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CommandPaletteV2Preview() {
+  const [q, setQ] = useState('');
+  const cmds = [
+    { icon: '🏠', label: 'Go to Dashboard', shortcut: 'G D' },
+    { icon: '➕', label: 'New Project', shortcut: '⌘ N' },
+    { icon: '🔍', label: 'Search Files', shortcut: '⌘ F' },
+    { icon: '⚙️', label: 'Open Settings', shortcut: '⌘ ,' },
+    { icon: '📤', label: 'Export Data', shortcut: '⌘ E' },
+  ].filter(c => !q || c.label.toLowerCase().includes(q.toLowerCase()));
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs rounded-2xl border border-zinc-200 bg-white shadow-xl overflow-hidden">
+        <div className="flex items-center gap-2 border-b border-zinc-100 px-4 py-3">
+          <Search size={14} className="text-zinc-400 shrink-0" />
+          <input value={q} onChange={e => setQ(e.target.value)} placeholder="Type a command…" className="flex-1 text-sm text-zinc-800 outline-none placeholder-zinc-400" />
+          <kbd className="rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-500">esc</kbd>
+        </div>
+        <div className="py-1 max-h-40 overflow-y-auto">
+          <p className="px-4 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-wider text-zinc-400">Commands</p>
+          {cmds.map(c => (
+            <button key={c.label} className="flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-blue-50 transition group">
+              <span className="text-base">{c.icon}</span>
+              <span className="flex-1 text-sm text-zinc-700 group-hover:text-blue-700">{c.label}</span>
+              <kbd className="rounded bg-zinc-100 px-1.5 py-0.5 text-[9px] font-semibold text-zinc-400">{c.shortcut}</kbd>
+            </button>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function TableOfContentsPreview() {
+  const [active, setActive] = useState('installation');
+  const sections = [
+    { id: 'intro', label: 'Introduction', level: 0 },
+    { id: 'installation', label: 'Installation', level: 0 },
+    { id: 'config', label: 'Configuration', level: 1 },
+    { id: 'env', label: 'Environment vars', level: 2 },
+    { id: 'usage', label: 'Usage', level: 0 },
+    { id: 'api', label: 'API Reference', level: 0 },
+    { id: 'deploy', label: 'Deployment', level: 0 },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-[200px]">
+        <p className="mb-3 text-[10px] font-bold uppercase tracking-wider text-zinc-400">On this page</p>
+        <nav className="space-y-0.5 border-l border-zinc-200">
+          {sections.map(s => (
+            <button key={s.id} onClick={() => setActive(s.id)}
+              className={`block w-full text-left py-1 text-xs transition border-l-2 -ml-px ${
+                s.level === 0 ? 'pl-3' : s.level === 1 ? 'pl-6' : 'pl-9'
+              } ${active === s.id ? 'border-blue-600 font-semibold text-blue-600' : 'border-transparent text-zinc-500 hover:text-zinc-800 hover:border-zinc-300'}`}>
+              {s.label}
+            </button>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function InvoicePreview() {
+  const items = [
+    { desc: 'UI Design', qty: 8, unit: 150, total: 1200 },
+    { desc: 'Frontend Dev', qty: 20, unit: 120, total: 2400 },
+    { desc: 'API Integration', qty: 5, unit: 180, total: 900 },
+  ];
+  const subtotal = items.reduce((s, i) => s + i.total, 0);
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-sm rounded-xl border border-zinc-200 bg-white overflow-hidden shadow-sm">
+        <div className="flex items-center justify-between border-b border-zinc-100 bg-zinc-50 px-4 py-3">
+          <div><p className="text-sm font-bold text-zinc-900">Invoice #INV-0042</p><p className="text-[10px] text-zinc-400">Due: Jan 31, 2026</p></div>
+          <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-[10px] font-bold text-amber-700">Pending</span>
+        </div>
+        <table className="w-full text-xs">
+          <thead><tr className="border-b border-zinc-100 text-zinc-400">
+            <th className="px-4 py-2 text-left font-semibold">Description</th>
+            <th className="px-2 py-2 text-right font-semibold">Qty</th>
+            <th className="px-2 py-2 text-right font-semibold">Rate</th>
+            <th className="px-4 py-2 text-right font-semibold">Total</th>
+          </tr></thead>
+          <tbody>
+            {items.map(i => (
+              <tr key={i.desc} className="border-b border-zinc-50">
+                <td className="px-4 py-2 text-zinc-700">{i.desc}</td>
+                <td className="px-2 py-2 text-right text-zinc-500">{i.qty}h</td>
+                <td className="px-2 py-2 text-right text-zinc-500">${i.unit}</td>
+                <td className="px-4 py-2 text-right font-semibold text-zinc-800">${i.total.toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="border-t border-zinc-200 px-4 py-3 flex items-center justify-between">
+          <span className="text-xs text-zinc-500">Subtotal (USD)</span>
+          <span className="text-sm font-bold text-zinc-900">${subtotal.toLocaleString()}</span>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function ScrollSpyPreview() {
+  const [active, setActive] = useState(1);
+  const sections = ['Hero', 'Features', 'Pricing', 'FAQ', 'Contact'];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="flex items-start gap-4 w-full max-w-xs">
+        <div className="sticky top-0 flex flex-col gap-1 pt-1">
+          {sections.map((s, i) => (
+            <button key={s} onClick={() => setActive(i)}
+              className={`flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs transition ${active === i ? 'bg-blue-600 text-white font-semibold' : 'text-zinc-500 hover:text-zinc-800'}`}>
+              <div className={`h-1.5 w-1.5 rounded-full ${active === i ? 'bg-white' : 'bg-zinc-300'}`} />
+              {s}
+            </button>
+          ))}
+        </div>
+        <div className="flex-1 space-y-2">
+          {sections.map((s, i) => (
+            <div key={s} onClick={() => setActive(i)} className={`cursor-pointer rounded-xl border p-3 transition ${active === i ? 'border-blue-300 bg-blue-50' : 'border-zinc-200 bg-white hover:border-zinc-300'}`}>
+              <p className="text-xs font-semibold text-zinc-700">{s}</p>
+              <div className="mt-1 h-1.5 w-full rounded-full bg-zinc-100" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function BannerAnnouncementPreview() {
+  const [visible, setVisible] = useState(true);
+  const [type, setType] = useState<'info' | 'success' | 'warning' | 'error'>('info');
+  const configs = {
+    info: { bg: 'bg-blue-600', icon: 'ℹ️', text: 'New version 2.0 is now available!', btn: 'bg-blue-700' },
+    success: { bg: 'bg-emerald-600', icon: '✅', text: 'Deployment succeeded in 34s.', btn: 'bg-emerald-700' },
+    warning: { bg: 'bg-amber-500', icon: '⚠️', text: 'Scheduled maintenance on Jan 15.', btn: 'bg-amber-600' },
+    error: { bg: 'bg-red-600', icon: '🚨', text: 'Service disruption detected.', btn: 'bg-red-700' },
+  };
+  const c = configs[type];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-sm space-y-3">
+        {visible && (
+          <div className={`flex items-center gap-3 rounded-xl px-4 py-3 text-white ${c.bg}`}>
+            <span className="text-base shrink-0">{c.icon}</span>
+            <p className="flex-1 text-xs font-medium">{c.text}</p>
+            <button onClick={() => setVisible(false)} className="shrink-0 text-white/70 hover:text-white transition"><X size={14} /></button>
+          </div>
+        )}
+        {!visible && <button onClick={() => setVisible(true)} className="text-xs text-blue-600 hover:underline">Show banner</button>}
+        <div className="flex gap-1.5 flex-wrap">
+          {(['info', 'success', 'warning', 'error'] as const).map(t => (
+            <button key={t} onClick={() => { setType(t); setVisible(true); }}
+              className={`rounded-full px-3 py-1 text-[10px] font-semibold capitalize transition ${type === t ? 'bg-zinc-900 text-white' : 'bg-white border border-zinc-200 text-zinc-600 hover:bg-zinc-50'}`}>{t}</button>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function PermissionGatePreview() {
+  const [role, setRole] = useState<'admin' | 'editor' | 'viewer'>('admin');
+  const perms: Record<string, string[]> = {
+    admin: ['View', 'Edit', 'Delete', 'Manage Users', 'Billing'],
+    editor: ['View', 'Edit'],
+    viewer: ['View'],
+  };
+  const all = ['View', 'Edit', 'Delete', 'Manage Users', 'Billing'];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs space-y-3">
+        <div className="flex gap-1.5">
+          {(['admin', 'editor', 'viewer'] as const).map(r => (
+            <button key={r} onClick={() => setRole(r)}
+              className={`rounded-full px-3 py-1 text-[10px] font-semibold capitalize transition ${role === r ? 'bg-zinc-900 text-white' : 'bg-white border border-zinc-200 text-zinc-600 hover:bg-zinc-50'}`}>{r}</button>
+          ))}
+        </div>
+        <div className="rounded-xl border border-zinc-200 bg-white overflow-hidden">
+          {all.map(p => {
+            const has = perms[role].includes(p);
+            return (
+              <div key={p} className={`flex items-center justify-between px-4 py-2.5 border-b border-zinc-50 last:border-0 ${!has ? 'opacity-40' : ''}`}>
+                <span className="text-sm text-zinc-700">{p}</span>
+                <span className={`flex h-5 w-5 items-center justify-center rounded-full text-[11px] ${has ? 'bg-emerald-100 text-emerald-600' : 'bg-zinc-100 text-zinc-400'}`}>{has ? '✓' : '✕'}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function DragSortPreview() {
+  const [items, setItems] = useState(['🎨 Design', '💻 Development', '🧪 Testing', '🚀 Deploy']);
+  const [dragging, setDragging] = useState<number | null>(null);
+  const [over, setOver] = useState<number | null>(null);
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs space-y-1.5">
+        <p className="text-[10px] text-zinc-400 font-medium text-center mb-2">Drag to reorder</p>
+        {items.map((item, i) => (
+          <div key={item} draggable
+            onDragStart={() => setDragging(i)}
+            onDragOver={e => { e.preventDefault(); setOver(i); }}
+            onDrop={() => {
+              if (dragging !== null && dragging !== i) {
+                const next = [...items]; const [moved] = next.splice(dragging, 1); next.splice(i, 0, moved);
+                setItems(next);
+              } setDragging(null); setOver(null);
+            }}
+            onDragEnd={() => { setDragging(null); setOver(null); }}
+            className={`flex items-center gap-3 rounded-xl border bg-white px-4 py-2.5 cursor-grab active:cursor-grabbing transition ${over === i && dragging !== i ? 'border-blue-400 bg-blue-50 scale-[1.02]' : 'border-zinc-200'} ${dragging === i ? 'opacity-40' : ''}`}>
+            <span className="text-zinc-300 text-sm">⠿</span>
+            <span className="text-sm font-medium text-zinc-700">{item}</span>
+            <span className="ml-auto text-[10px] text-zinc-300">#{i + 1}</span>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CounterAnimatedPreview() {
+  const [counts, setCounts] = useState([0, 0, 0]);
+  const targets = [12847, 98.6, 4392];
+  const labels = ['Total Users', 'Uptime %', 'Deployments'];
+  const colors = ['text-blue-600', 'text-emerald-600', 'text-purple-600'];
+  const animate = () => {
+    setCounts([0, 0, 0]);
+    let step = 0;
+    const interval = setInterval(() => {
+      step++;
+      setCounts(targets.map(t => Math.min(t, Math.round(t * (step / 30)))));
+      if (step >= 30) clearInterval(interval);
+    }, 33);
+  };
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs space-y-3">
+        <div className="grid grid-cols-3 gap-2">
+          {labels.map((l, i) => (
+            <div key={l} className="rounded-xl border border-zinc-200 bg-white p-3 text-center">
+              <p className={`text-lg font-black tabular-nums ${colors[i]}`}>
+                {i === 1 ? counts[i].toFixed(1) : counts[i].toLocaleString()}{i === 1 ? '%' : ''}
+              </p>
+              <p className="text-[10px] text-zinc-400 font-medium mt-0.5">{l}</p>
+            </div>
+          ))}
+        </div>
+        <button onClick={animate} className="w-full rounded-xl bg-zinc-900 py-2 text-xs font-semibold text-white hover:bg-zinc-800 transition">
+          Animate counters
+        </button>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function ShortcutBadgePreview() {
+  const shortcuts = [
+    { action: 'Save', keys: ['⌘', 'S'] },
+    { action: 'Find', keys: ['⌘', 'F'] },
+    { action: 'Undo', keys: ['⌘', 'Z'] },
+    { action: 'Copy', keys: ['⌘', 'C'] },
+    { action: 'Paste', keys: ['⌘', 'V'] },
+    { action: 'Select All', keys: ['⌘', 'A'] },
+    { action: 'Command', keys: ['⌘', 'K'] },
+    { action: 'New File', keys: ['⌘', 'N'] },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="grid grid-cols-2 gap-1.5 w-full max-w-xs">
+        {shortcuts.map(s => (
+          <div key={s.action} className="flex items-center justify-between rounded-lg border border-zinc-200 bg-white px-3 py-2">
+            <span className="text-xs text-zinc-600 font-medium">{s.action}</span>
+            <div className="flex gap-0.5">
+              {s.keys.map(k => (
+                <kbd key={k} className="rounded-md border border-zinc-200 bg-zinc-100 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-600 shadow-[0_1px_0_#d4d4d8]">{k}</kbd>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function OAuthButtonsPreview() {
+  const [loading, setLoading] = useState<string | null>(null);
+  const providers = [
+    { name: 'Google', icon: '🔵', bg: 'bg-white', text: 'text-zinc-700', border: 'border-zinc-300' },
+    { name: 'GitHub', icon: '⚫', bg: 'bg-zinc-900', text: 'text-white', border: 'border-zinc-900' },
+    { name: 'Twitter', icon: '🐦', bg: 'bg-sky-500', text: 'text-white', border: 'border-sky-500' },
+    { name: 'Apple', icon: '🍎', bg: 'bg-black', text: 'text-white', border: 'border-black' },
+  ];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs space-y-2">
+        <p className="text-center text-xs font-semibold text-zinc-500 mb-3">Sign in with</p>
+        {providers.map(p => (
+          <button key={p.name} onClick={() => { setLoading(p.name); setTimeout(() => setLoading(null), 1500); }}
+            className={`flex w-full items-center justify-center gap-2.5 rounded-xl border py-2.5 text-sm font-semibold transition hover:opacity-90 ${p.bg} ${p.text} ${p.border}`}>
+            {loading === p.name ? <div className="h-4 w-4 rounded-full border-2 border-current border-t-transparent animate-spin" /> : <span>{p.icon}</span>}
+            {loading === p.name ? 'Connecting…' : `Continue with ${p.name}`}
+          </button>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function EmptyStateVariantsPreview() {
+  const [variant, setVariant] = useState(0);
+  const variants = [
+    { icon: '📭', title: 'No messages yet', desc: 'When you receive messages, they\'ll show up here.', btn: 'Compose message', color: 'text-blue-600' },
+    { icon: '🔍', title: 'No results found', desc: 'Try adjusting your search or filter criteria.', btn: 'Clear filters', color: 'text-purple-600' },
+    { icon: '📂', title: 'Folder is empty', desc: 'Upload files or create a new folder to get started.', btn: 'Upload files', color: 'text-emerald-600' },
+  ];
+  const v = variants[variant];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs text-center space-y-3">
+        <div className="flex justify-center gap-1.5 mb-1">
+          {variants.map((_, i) => (
+            <button key={i} onClick={() => setVariant(i)} className={`h-1.5 rounded-full transition-all ${variant === i ? 'w-6 bg-zinc-700' : 'w-1.5 bg-zinc-300'}`} />
+          ))}
+        </div>
+        <div className="rounded-2xl border border-zinc-200 bg-white px-6 py-8 shadow-sm">
+          <div className="text-4xl mb-3">{v.icon}</div>
+          <p className="text-sm font-bold text-zinc-800">{v.title}</p>
+          <p className="text-xs text-zinc-400 mt-1 leading-relaxed">{v.desc}</p>
+          <button className={`mt-4 rounded-xl border-2 px-4 py-1.5 text-xs font-semibold transition hover:opacity-80 ${v.color} border-current`}>{v.btn}</button>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
    Component Registry
 ───────────────────────────────────────────── */
 const COMPONENTS: ComponentDef[] = [
@@ -5767,6 +6795,792 @@ input[type=range]::-webkit-slider-thumb { width:1.125rem; height:1.125rem; borde
 .toggle-thumb.on { transform:translateX(1.25rem); }
 .pricing-card { border-radius:.75rem; border:2px solid #e4e4e7; background:#fff; padding:.75rem; }
 .pricing-card.featured { border-color:#2563eb; }`,
+  },
+  // ── 28 new components ──
+  {
+    id: 'segmented-control', name: 'Segmented Control', category: 'Navigation',
+    description: 'iOS-style pill segment switcher — great for view mode or filter toggles.',
+    Preview: SegmentedControlPreview,
+    tailwind: `<div class="inline-flex rounded-xl bg-zinc-100 p-1 gap-0.5">
+  <button class="rounded-lg bg-white px-4 py-1.5 text-xs font-semibold text-zinc-900 shadow-sm">Day</button>
+  <button class="rounded-lg px-4 py-1.5 text-xs font-semibold text-zinc-500 hover:text-zinc-700">Week</button>
+  <button class="rounded-lg px-4 py-1.5 text-xs font-semibold text-zinc-500 hover:text-zinc-700">Month</button>
+  <button class="rounded-lg px-4 py-1.5 text-xs font-semibold text-zinc-500 hover:text-zinc-700">Year</button>
+</div>`,
+    css: `.seg-ctrl { display:inline-flex; border-radius:.75rem; background:#f4f4f5; padding:.25rem; gap:.125rem; }
+.seg-btn { border-radius:.5rem; padding:.375rem 1rem; font-size:.75rem; font-weight:600; border:none; cursor:pointer; transition:all .15s; color:#71717a; background:transparent; }
+.seg-btn.active { background:#fff; color:#18181b; box-shadow:0 1px 3px rgba(0,0,0,.1); }`,
+  },
+  {
+    id: 'rich-text-toolbar', name: 'Rich Text Toolbar', category: 'Forms & Inputs',
+    description: 'Formatting toolbar for rich text editors — bold, italic, headings, lists.',
+    Preview: RichTextToolbarPreview,
+    tailwind: `<div class="flex items-center gap-1 rounded-xl border border-zinc-200 bg-white px-2 py-1.5">
+  <button class="h-7 w-7 rounded-lg bg-blue-600 text-white text-sm font-bold">B</button>
+  <button class="h-7 w-7 rounded-lg text-zinc-600 text-sm italic hover:bg-zinc-100">I</button>
+  <button class="h-7 w-7 rounded-lg text-zinc-600 text-sm underline hover:bg-zinc-100">U</button>
+  <div class="h-5 w-px bg-zinc-200 mx-1"></div>
+  <button class="rounded-lg px-2 py-0.5 text-xs font-bold text-zinc-600 hover:bg-zinc-100">H1</button>
+  <button class="rounded-lg px-2 py-0.5 text-xs font-bold text-zinc-600 hover:bg-zinc-100">H2</button>
+  <div class="h-5 w-px bg-zinc-200 mx-1"></div>
+  <button class="rounded-lg px-2 py-0.5 text-xs text-zinc-600 hover:bg-zinc-100">• List</button>
+  <button class="rounded-lg px-2 py-0.5 text-xs text-zinc-600 hover:bg-zinc-100">— Quote</button>
+</div>`,
+    css: `.rte-toolbar { display:flex; align-items:center; gap:.25rem; border-radius:.75rem; border:1px solid #e4e4e7; background:#fff; padding:.375rem .5rem; flex-wrap:wrap; }
+.rte-btn { height:1.75rem; min-width:1.75rem; border-radius:.5rem; font-size:.875rem; border:none; cursor:pointer; transition:background .15s; color:#52525b; background:transparent; }
+.rte-btn:hover { background:#f4f4f5; }
+.rte-btn.active { background:#2563eb; color:#fff; }
+.rte-sep { width:1px; height:1.25rem; background:#e4e4e7; margin:0 .25rem; }`,
+  },
+  {
+    id: 'autocomplete', name: 'Autocomplete Input', category: 'Forms & Inputs',
+    description: 'Search input with live filtered dropdown suggestions.',
+    Preview: AutocompletePreview,
+    tailwind: `<div class="relative w-64">
+  <input placeholder="Search languages…" class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100" />
+  <!-- Dropdown -->
+  <div class="absolute z-10 mt-1 w-full rounded-xl border border-zinc-200 bg-white shadow-xl overflow-hidden">
+    <button class="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-zinc-700 hover:bg-blue-50 hover:text-blue-700">🔍 JavaScript</button>
+    <button class="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-zinc-700 hover:bg-blue-50 hover:text-blue-700">🔍 TypeScript</button>
+    <button class="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-zinc-700 hover:bg-blue-50 hover:text-blue-700">🔍 Python</button>
+  </div>
+</div>`,
+    css: `.autocomplete { position:relative; }
+.autocomplete-input { width:100%; border-radius:.75rem; border:1px solid #d4d4d8; padding:.625rem 1rem; font-size:.875rem; outline:none; }
+.autocomplete-input:focus { border-color:#60a5fa; box-shadow:0 0 0 2px #bfdbfe; }
+.autocomplete-dropdown { position:absolute; z-index:10; margin-top:.25rem; width:100%; border-radius:.75rem; border:1px solid #e4e4e7; background:#fff; box-shadow:0 10px 25px rgba(0,0,0,.1); overflow:hidden; }
+.autocomplete-item { display:flex; align-items:center; gap:.5rem; width:100%; padding:.625rem 1rem; font-size:.875rem; color:#3f3f46; cursor:pointer; transition:background .15s; }
+.autocomplete-item:hover { background:#eff6ff; color:#1d4ed8; }`,
+  },
+  {
+    id: 'transfer-list', name: 'Transfer List', category: 'Forms & Inputs',
+    description: 'Move items between two lists — classic dual-list picker pattern.',
+    Preview: TransferListPreview,
+    tailwind: `<div class="flex items-center gap-2">
+  <!-- Left list -->
+  <div class="h-28 w-32 overflow-y-auto rounded-xl border border-zinc-200 bg-white py-1">
+    <div class="bg-blue-600 text-white px-3 py-1.5 text-xs cursor-pointer">Analytics</div>
+    <div class="text-zinc-700 px-3 py-1.5 text-xs hover:bg-zinc-50 cursor-pointer">Reports</div>
+  </div>
+  <!-- Arrow buttons -->
+  <div class="flex flex-col gap-1.5">
+    <button class="rounded-lg border border-zinc-200 bg-white px-2 py-1 text-xs font-bold">→</button>
+    <button class="rounded-lg border border-zinc-200 bg-white px-2 py-1 text-xs font-bold">←</button>
+  </div>
+  <!-- Right list -->
+  <div class="h-28 w-32 overflow-y-auto rounded-xl border border-zinc-200 bg-white py-1">
+    <div class="text-zinc-700 px-3 py-1.5 text-xs hover:bg-zinc-50 cursor-pointer">Dashboard</div>
+  </div>
+</div>`,
+    css: `.transfer-list { display:flex; align-items:center; gap:.5rem; }
+.transfer-box { height:7rem; width:8rem; overflow-y:auto; border-radius:.75rem; border:1px solid #e4e4e7; background:#fff; padding:.25rem 0; }
+.transfer-item { padding:.375rem .75rem; font-size:.75rem; cursor:pointer; transition:background .15s; color:#3f3f46; }
+.transfer-item:hover { background:#fafafa; }
+.transfer-item.selected { background:#2563eb; color:#fff; }
+.transfer-arrows { display:flex; flex-direction:column; gap:.375rem; }
+.transfer-arrow { border-radius:.5rem; border:1px solid #e4e4e7; background:#fff; padding:.25rem .5rem; font-size:.75rem; font-weight:700; cursor:pointer; }`,
+  },
+  {
+    id: 'activity-feed', name: 'Activity Feed', category: 'Display',
+    description: 'GitHub-style activity log with icons, user actions, and timestamps.',
+    Preview: ActivityFeedPreview,
+    tailwind: `<div class="space-y-2">
+  <div class="flex items-start gap-3 rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-2.5">
+    <span class="text-base">🟢</span>
+    <div><p class="text-xs text-zinc-700"><strong>Alice</strong> pushed to main</p><p class="text-[10px] text-zinc-400 mt-0.5">2m ago</p></div>
+  </div>
+  <div class="flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50 px-3 py-2.5">
+    <span class="text-base">💬</span>
+    <div><p class="text-xs text-zinc-700"><strong>Bob</strong> commented on PR #42</p><p class="text-[10px] text-zinc-400 mt-0.5">18m ago</p></div>
+  </div>
+</div>`,
+    css: `.activity-feed { display:flex; flex-direction:column; gap:.5rem; }
+.activity-item { display:flex; align-items:flex-start; gap:.75rem; border-radius:.75rem; border:1px solid; padding:.625rem .75rem; }
+.activity-icon { font-size:1rem; flex-shrink:0; }
+.activity-text { font-size:.75rem; color:#3f3f46; }
+.activity-text strong { color:#18181b; }
+.activity-time { font-size:.625rem; color:#a1a1aa; margin-top:.125rem; }`,
+  },
+  {
+    id: 'leaderboard', name: 'Leaderboard', category: 'Display',
+    description: 'Ranked list with medal icons, avatar initials, and score display.',
+    Preview: LeaderboardPreview,
+    tailwind: `<div class="rounded-xl border border-zinc-200 bg-white overflow-hidden">
+  <div class="flex items-center gap-3 border-b border-zinc-50 bg-amber-50 px-4 py-2.5">
+    <span class="w-5 text-center">🥇</span>
+    <div class="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-[10px] font-bold text-white">AK</div>
+    <span class="flex-1 text-sm font-medium text-zinc-800">Alice Kim</span>
+    <span class="text-xs font-bold text-zinc-600">9,820</span>
+  </div>
+  <div class="flex items-center gap-3 border-b border-zinc-50 px-4 py-2.5">
+    <span class="w-5 text-center">🥈</span>
+    <div class="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 text-[10px] font-bold text-white">BP</div>
+    <span class="flex-1 text-sm font-medium text-zinc-800">Bob Patel</span>
+    <span class="text-xs font-bold text-zinc-600">8,750</span>
+  </div>
+</div>`,
+    css: `.leaderboard { border-radius:.75rem; border:1px solid #e4e4e7; overflow:hidden; }
+.leaderboard-row { display:flex; align-items:center; gap:.75rem; padding:.625rem 1rem; border-bottom:1px solid #fafafa; }
+.leaderboard-row.gold { background:#fffbeb; }
+.leaderboard-rank { width:1.25rem; text-align:center; font-size:.875rem; }
+.leaderboard-avatar { display:flex; height:1.75rem; width:1.75rem; align-items:center; justify-content:center; border-radius:9999px; font-size:.625rem; font-weight:700; color:#fff; flex-shrink:0; }
+.leaderboard-score { font-size:.75rem; font-weight:700; color:#52525b; }`,
+  },
+  {
+    id: 'gauge-meter', name: 'Gauge Meter', category: 'Display',
+    description: 'SVG speedometer gauge with dynamic color zones — drag slider to update.',
+    Preview: GaugeMeterPreview,
+    tailwind: `<!-- Gauge is SVG-based -->
+<svg width="140" height="90" viewBox="0 0 140 90">
+  <!-- Background arc -->
+  <path d="M15 80 A55 55 0 0 1 125 80" fill="none" stroke="#e4e4e7" stroke-width="10" stroke-linecap="round"/>
+  <!-- Value arc (68%) -->
+  <path d="M15 80 A55 55 0 0 1 125 80" fill="none" stroke="#f59e0b" stroke-width="10" stroke-linecap="round"
+    stroke-dasharray="117.5 172.8"/>
+  <!-- Needle -->
+  <line x1="70" y1="80" x2="107" y2="47" stroke="#18181b" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="70" cy="80" r="4" fill="#18181b"/>
+  <text x="70" y="70" text-anchor="middle" fill="#f59e0b" font-size="14" font-weight="700">68%</text>
+</svg>`,
+    css: `.gauge { display:flex; flex-direction:column; align-items:center; gap:.75rem; }
+.gauge svg path { transition:stroke-dasharray .4s ease, stroke .3s ease; }
+.gauge-label { font-size:1.25rem; font-weight:900; line-height:1; }
+.gauge-legend { display:flex; gap:.75rem; font-size:.625rem; font-weight:600; }`,
+  },
+  {
+    id: 'radar-chart', name: 'Radar / Spider Chart', category: 'Display',
+    description: 'SVG spider chart for visualizing multi-axis scores and skill sets.',
+    Preview: RadarChartPreview,
+    tailwind: `<!-- Radar is SVG-based — use a charting lib in production -->
+<svg width="150" height="150" viewBox="0 0 150 150">
+  <!-- Grid polygons, axis lines, and data polygon via SVG -->
+  <!-- See CSS snippet for structure guidance -->
+</svg>`,
+    css: `.radar-chart { display:flex; align-items:center; justify-content:center; }
+.radar-grid polygon { fill:none; stroke:#e4e4e7; stroke-width:1; }
+.radar-data { fill:rgba(59,130,246,.1); stroke:#3b82f6; stroke-width:2; }
+.radar-dot { fill:#3b82f6; }
+.radar-label { fill:#71717a; font-size:7px; font-weight:600; }`,
+  },
+  {
+    id: 'user-card', name: 'User / Profile Card', category: 'Display',
+    description: 'Social-style profile card with cover image, avatar, stats, and follow button.',
+    Preview: UserCardPreview,
+    tailwind: `<div class="rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden w-56">
+  <!-- Cover -->
+  <div class="h-16 bg-gradient-to-r from-blue-500 to-violet-500"></div>
+  <div class="px-4 pb-4">
+    <div class="flex items-end justify-between -mt-7 mb-3">
+      <div class="h-14 w-14 rounded-2xl border-4 border-white bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-lg font-bold text-white shadow">AK</div>
+      <button class="rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white hover:bg-blue-700">Follow</button>
+    </div>
+    <p class="text-sm font-bold text-zinc-900">Alice Kim</p>
+    <p class="text-xs text-zinc-400 mb-2">Senior Product Designer · SF</p>
+    <div class="flex gap-4 text-center">
+      <div><p class="text-xs font-bold text-zinc-900">142</p><p class="text-[10px] text-zinc-400">Posts</p></div>
+      <div><p class="text-xs font-bold text-zinc-900">8.4K</p><p class="text-[10px] text-zinc-400">Followers</p></div>
+    </div>
+  </div>
+</div>`,
+    css: `.user-card { border-radius:1rem; border:1px solid #e4e4e7; background:#fff; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+.user-card-cover { height:4rem; }
+.user-card-avatar { height:3.5rem; width:3.5rem; border-radius:.75rem; border:4px solid #fff; box-shadow:0 2px 4px rgba(0,0,0,.1); flex-shrink:0; }
+.user-card-body { padding:0 1rem 1rem; }
+.user-card-stats { display:flex; gap:1rem; text-align:center; }`,
+  },
+  {
+    id: 'gantt-bar', name: 'Gantt Chart', category: 'Display',
+    description: 'Simple sprint Gantt / timeline bar chart for project planning views.',
+    Preview: GanttBarPreview,
+    tailwind: `<div class="space-y-1.5">
+  <!-- Week labels -->
+  <div class="flex items-center gap-1 pl-16 mb-2">
+    <div class="flex-1 text-center text-[9px] font-bold text-zinc-400">W1</div>
+    <!-- ...repeat for W2–W8 -->
+  </div>
+  <!-- Task row -->
+  <div class="flex items-center gap-2">
+    <span class="w-14 text-[11px] font-medium text-zinc-600 text-right shrink-0">Research</span>
+    <div class="flex flex-1 gap-1">
+      <div class="flex-1 h-6 rounded-sm bg-blue-400"></div><!-- W1 filled -->
+      <div class="flex-1 h-6 rounded-sm bg-blue-400"></div><!-- W2 filled -->
+      <div class="flex-1 h-6 rounded-sm bg-zinc-100"></div><!-- W3 empty -->
+    </div>
+  </div>
+</div>`,
+    css: `.gantt { display:flex; flex-direction:column; gap:.375rem; }
+.gantt-row { display:flex; align-items:center; gap:.5rem; }
+.gantt-label { width:3.5rem; flex-shrink:0; font-size:.6875rem; font-weight:500; color:#52525b; text-align:right; }
+.gantt-track { display:flex; flex:1; gap:.25rem; }
+.gantt-cell { flex:1; height:1.5rem; border-radius:.125rem; }
+.gantt-cell.filled { background:#60a5fa; }
+.gantt-cell.empty { background:#f4f4f5; }`,
+  },
+  {
+    id: 'mega-menu', name: 'Mega Menu', category: 'Navigation',
+    description: 'Multi-column dropdown menu with icons and descriptions for complex navs.',
+    Preview: MegaMenuPreview,
+    tailwind: `<div class="relative">
+  <button class="inline-flex items-center gap-1.5 rounded-xl bg-zinc-900 px-4 py-2 text-sm font-semibold text-white">
+    Products ▾
+  </button>
+  <!-- Mega dropdown -->
+  <div class="absolute left-0 top-full mt-2 w-80 rounded-2xl border border-zinc-200 bg-white shadow-2xl p-4 z-10">
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <p class="mb-2 text-[10px] font-bold uppercase tracking-wider text-zinc-400">Products</p>
+        <button class="flex w-full items-start gap-2.5 rounded-xl p-2 hover:bg-zinc-50">
+          <span>📊</span>
+          <div><p class="text-xs font-semibold text-zinc-800">Analytics</p><p class="text-[10px] text-zinc-400">Track metrics</p></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>`,
+    css: `.mega-menu { position:relative; }
+.mega-trigger { display:inline-flex; align-items:center; gap:.375rem; border-radius:.75rem; padding:.5rem 1rem; font-size:.875rem; font-weight:600; cursor:pointer; }
+.mega-dropdown { position:absolute; top:100%; left:0; margin-top:.5rem; border-radius:1rem; border:1px solid #e4e4e7; background:#fff; box-shadow:0 20px 40px rgba(0,0,0,.12); padding:1rem; z-index:20; }
+.mega-section-title { font-size:.625rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:#a1a1aa; margin-bottom:.5rem; }
+.mega-item { display:flex; align-items:flex-start; gap:.625rem; border-radius:.75rem; padding:.5rem; cursor:pointer; transition:background .15s; }
+.mega-item:hover { background:#fafafa; }`,
+  },
+  {
+    id: 'dock', name: 'macOS Dock', category: 'Navigation',
+    description: 'macOS-style icon dock with magnification effect on hover.',
+    Preview: DockPreview,
+    tailwind: `<div class="flex items-end gap-1.5 rounded-2xl border border-white/10 bg-white/10 px-3 py-2 backdrop-blur-md">
+  <button class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 text-xl hover:scale-150 hover:-translate-y-3 transition-all duration-150">🌐</button>
+  <button class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 text-xl hover:scale-150 hover:-translate-y-3 transition-all duration-150">📁</button>
+  <button class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 text-xl hover:scale-150 hover:-translate-y-3 transition-all duration-150">✉️</button>
+  <!-- add more icons -->
+</div>`,
+    css: `.dock { display:flex; align-items:flex-end; gap:.375rem; border-radius:1rem; border:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.1); padding:.5rem .75rem; backdrop-filter:blur(12px); }
+.dock-icon { display:flex; height:2.5rem; width:2.5rem; align-items:center; justify-content:center; border-radius:.75rem; background:rgba(255,255,255,.15); font-size:1.25rem; cursor:pointer; transition:transform .15s, translate .15s; }
+.dock-icon:hover { transform:scale(1.5) translateY(-.75rem); }`,
+  },
+  {
+    id: 'survey-rating', name: 'Survey / NPS Rating', category: 'Forms & Inputs',
+    description: 'NPS 0–10 scale + emoji satisfaction picker for feedback forms.',
+    Preview: SurveyRatingPreview,
+    tailwind: `<!-- NPS row -->
+<div class="flex gap-0.5 flex-wrap">
+  <button class="h-7 w-7 rounded-lg text-[10px] font-bold bg-red-500 text-white">0</button>
+  <button class="h-7 w-7 rounded-lg text-[10px] font-bold border border-zinc-200 text-zinc-600">1</button>
+  <!-- ...0–10 -->
+  <button class="h-7 w-7 rounded-lg text-[10px] font-bold bg-emerald-500 text-white">9</button>
+</div>
+<!-- Emoji row -->
+<div class="flex gap-2">
+  <button class="text-2xl opacity-40 hover:opacity-100 hover:scale-125 transition-all">😞</button>
+  <button class="text-2xl opacity-40 hover:opacity-100 hover:scale-125 transition-all">😕</button>
+  <button class="text-2xl scale-125">😐</button>
+  <button class="text-2xl opacity-40 hover:opacity-100 hover:scale-125 transition-all">🙂</button>
+  <button class="text-2xl opacity-40 hover:opacity-100 hover:scale-125 transition-all">😄</button>
+</div>`,
+    css: `.nps-row { display:flex; gap:.125rem; flex-wrap:wrap; }
+.nps-btn { height:1.75rem; width:1.75rem; border-radius:.5rem; font-size:.625rem; font-weight:700; border:1px solid #e4e4e7; cursor:pointer; transition:all .15s; }
+.nps-btn.selected.high { background:#10b981; color:#fff; border-color:#10b981; }
+.nps-btn.selected.mid { background:#f59e0b; color:#fff; border-color:#f59e0b; }
+.nps-btn.selected.low { background:#ef4444; color:#fff; border-color:#ef4444; }
+.emoji-row { display:flex; gap:.5rem; }
+.emoji-btn { font-size:1.5rem; opacity:.4; cursor:pointer; transition:all .15s; }
+.emoji-btn.active, .emoji-btn:hover { opacity:1; transform:scale(1.25); }`,
+  },
+  {
+    id: 'typing-indicator', name: 'Typing Indicator', category: 'Display',
+    description: 'Chat bubbles with animated "..." typing indicator and conversation preview.',
+    Preview: TypingIndicatorPreview,
+    tailwind: `<!-- Typing bubble -->
+<div class="flex items-end gap-2">
+  <div class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 text-xs font-bold text-white">AK</div>
+  <div class="rounded-2xl rounded-bl-sm bg-white border border-zinc-200 px-4 py-3 shadow-sm">
+    <div class="flex items-center gap-1.5">
+      <div class="h-2 w-2 rounded-full bg-zinc-400 animate-bounce" style="animation-delay:0ms"></div>
+      <div class="h-2 w-2 rounded-full bg-zinc-400 animate-bounce" style="animation-delay:150ms"></div>
+      <div class="h-2 w-2 rounded-full bg-zinc-400 animate-bounce" style="animation-delay:300ms"></div>
+    </div>
+  </div>
+</div>`,
+    css: `.typing-bubble { display:flex; align-items:flex-end; gap:.5rem; }
+.typing-dot { height:.5rem; width:.5rem; border-radius:9999px; background:#a1a1aa; animation:bounce 1s infinite; }
+.typing-dot:nth-child(2) { animation-delay:.15s; }
+.typing-dot:nth-child(3) { animation-delay:.3s; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+.chat-bubble-in { border-radius:1rem; border-radius-bl:0; background:#fff; border:1px solid #e4e4e7; padding:.5rem .75rem; font-size:.75rem; }
+.chat-bubble-out { border-radius:1rem; border-radius-tr:0; background:#2563eb; color:#fff; padding:.5rem .75rem; font-size:.75rem; }`,
+  },
+  {
+    id: 'upload-progress', name: 'Upload Progress', category: 'Feedback',
+    description: 'File upload list with per-file progress bars, sizes, and completion states.',
+    Preview: UploadProgressPreview,
+    tailwind: `<div class="rounded-xl border border-zinc-200 bg-white px-3 py-2.5">
+  <div class="flex items-center justify-between mb-1.5">
+    <div>
+      <p class="text-xs font-semibold text-zinc-800">design-assets.zip</p>
+      <p class="text-[10px] text-zinc-400">24 MB</p>
+    </div>
+    <span class="text-[10px] font-bold text-zinc-500">72%</span>
+  </div>
+  <div class="h-1.5 w-full rounded-full bg-zinc-100">
+    <div class="h-full w-[72%] rounded-full bg-blue-500 transition-all"></div>
+  </div>
+</div>`,
+    css: `.upload-item { border-radius:.75rem; border:1px solid #e4e4e7; background:#fff; padding:.625rem .75rem; }
+.upload-meta { display:flex; align-items:center; justify-content:space-between; margin-bottom:.375rem; }
+.upload-name { font-size:.75rem; font-weight:600; color:#18181b; }
+.upload-size { font-size:.625rem; color:#a1a1aa; }
+.upload-pct { font-size:.625rem; font-weight:700; color:#52525b; }
+.upload-track { height:.375rem; border-radius:9999px; background:#f4f4f5; overflow:hidden; }
+.upload-fill { height:100%; border-radius:9999px; transition:width .3s ease; }`,
+  },
+  {
+    id: 'popover-card', name: 'Popover Card', category: 'Overlay',
+    description: 'Rich popover with user bio, role tags, and action buttons on click.',
+    Preview: PopoverCardPreview,
+    tailwind: `<div class="relative">
+  <button class="flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm font-medium text-zinc-700 shadow-sm hover:bg-zinc-50">
+    <div class="h-7 w-7 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-xs font-bold text-white">AK</div>
+    Alice Kim
+  </button>
+  <!-- Popover card -->
+  <div class="absolute left-0 top-full mt-2 w-64 rounded-2xl border border-zinc-200 bg-white shadow-2xl p-4 z-10">
+    <div class="flex items-start gap-3 mb-3">
+      <div class="h-12 w-12 shrink-0 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-lg font-bold text-white">AK</div>
+      <div>
+        <p class="font-bold text-zinc-900">Alice Kim</p>
+        <p class="text-xs text-zinc-400">Senior Designer · SF</p>
+      </div>
+    </div>
+    <div class="flex gap-2">
+      <button class="flex-1 rounded-xl bg-blue-600 py-1.5 text-xs font-semibold text-white">Message</button>
+      <button class="flex-1 rounded-xl border border-zinc-200 py-1.5 text-xs font-semibold text-zinc-700">Profile</button>
+    </div>
+  </div>
+</div>`,
+    css: `.popover-card { position:relative; }
+.popover-trigger { display:flex; align-items:center; gap:.5rem; border-radius:.75rem; border:1px solid #e4e4e7; background:#fff; padding:.5rem .75rem; font-size:.875rem; font-weight:500; cursor:pointer; }
+.popover-content { position:absolute; top:100%; left:0; margin-top:.5rem; width:16rem; border-radius:1rem; border:1px solid #e4e4e7; background:#fff; box-shadow:0 20px 40px rgba(0,0,0,.12); padding:1rem; z-index:30; }`,
+  },
+  {
+    id: 'global-search', name: 'Global Search Modal', category: 'Overlay',
+    description: 'Full-screen ⌘K search modal with categorised results and keyboard shortcut.',
+    Preview: GlobalSearchPreview,
+    tailwind: `<!-- Trigger -->
+<button class="flex w-full items-center gap-2 rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-400 shadow-sm">
+  🔍 Search everything…
+  <kbd class="ml-auto rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-500">⌘K</kbd>
+</button>
+<!-- Modal (visible on open) -->
+<div class="fixed inset-0 z-50 flex items-start justify-center pt-20 bg-black/40 backdrop-blur-sm">
+  <div class="w-full max-w-md rounded-2xl border border-zinc-200 bg-white shadow-2xl overflow-hidden">
+    <div class="flex items-center gap-3 border-b border-zinc-100 px-4 py-3">
+      <svg class="w-4 h-4 text-zinc-400" .../>
+      <input placeholder="Search anything…" class="flex-1 text-sm outline-none"/>
+      <kbd class="rounded bg-zinc-100 px-1.5 py-0.5 text-[10px]">esc</kbd>
+    </div>
+    <div class="py-2">
+      <button class="flex w-full items-center gap-3 px-4 py-2.5 hover:bg-zinc-50">
+        <span>📄</span><div><p class="text-sm font-medium text-zinc-800">Q4 Report.pdf</p><p class="text-[10px] text-zinc-400">Documents</p></div>
+      </button>
+    </div>
+  </div>
+</div>`,
+    css: `.global-search-trigger { display:flex; align-items:center; gap:.5rem; border-radius:.75rem; border:1px solid #d4d4d8; background:#fff; padding:.625rem 1rem; font-size:.875rem; color:#a1a1aa; cursor:pointer; }
+.global-search-modal { position:fixed; inset:0; z-index:50; display:flex; align-items:flex-start; justify-content:center; padding-top:5rem; background:rgba(0,0,0,.4); backdrop-filter:blur(4px); }
+.global-search-box { width:100%; max-width:28rem; border-radius:1rem; border:1px solid #e4e4e7; background:#fff; box-shadow:0 24px 48px rgba(0,0,0,.18); overflow:hidden; }
+.global-search-input { display:flex; align-items:center; gap:.75rem; border-bottom:1px solid #f4f4f5; padding:.75rem 1rem; }`,
+  },
+  {
+    id: 'masonry-grid', name: 'Masonry Grid', category: 'Layout',
+    description: 'Pinterest-style variable-height grid layout with two columns.',
+    Preview: MasonryGridPreview,
+    tailwind: `<div class="flex gap-2">
+  <!-- Column 1 -->
+  <div class="flex flex-1 flex-col gap-2">
+    <div class="rounded-xl border border-zinc-200 bg-blue-100 h-20 flex items-center justify-center">
+      <p class="text-xs font-semibold text-zinc-700">Analytics</p>
+    </div>
+    <div class="rounded-xl border border-zinc-200 bg-emerald-100 h-24 flex items-center justify-center">
+      <p class="text-xs font-semibold text-zinc-700">API Docs</p>
+    </div>
+  </div>
+  <!-- Column 2 -->
+  <div class="flex flex-1 flex-col gap-2">
+    <div class="rounded-xl border border-zinc-200 bg-purple-100 h-32 flex items-center justify-center">
+      <p class="text-xs font-semibold text-zinc-700">Design System</p>
+    </div>
+  </div>
+</div>`,
+    css: `.masonry { display:flex; gap:.5rem; }
+.masonry-col { display:flex; flex:1; flex-direction:column; gap:.5rem; }
+.masonry-item { border-radius:.75rem; border:1px solid #e4e4e7; display:flex; align-items:center; justify-content:center; }`,
+  },
+  {
+    id: 'split-pane', name: 'Split Pane Editor', category: 'Layout',
+    description: 'Resizable split-view layout — code editor on left, output on right.',
+    Preview: SplitPanePreview,
+    tailwind: `<div class="rounded-xl overflow-hidden border border-zinc-700 bg-zinc-950">
+  <!-- Titlebar -->
+  <div class="flex items-center gap-2 bg-zinc-800 px-3 py-1.5 border-b border-zinc-700">
+    <div class="h-2.5 w-2.5 rounded-full bg-red-500"></div>
+    <div class="h-2.5 w-2.5 rounded-full bg-amber-400"></div>
+    <div class="h-2.5 w-2.5 rounded-full bg-emerald-500"></div>
+  </div>
+  <!-- Panes -->
+  <div class="flex h-32">
+    <div class="w-1/2 bg-zinc-950 p-3 font-mono text-[10px] text-zinc-300 border-r border-zinc-700">
+      <span class="text-purple-400">const</span> x = <span class="text-amber-300">42</span>
+    </div>
+    <div class="flex-1 bg-zinc-900 p-3 text-[10px] text-zinc-400">
+      <p class="text-zinc-200 font-semibold mb-1">Output</p>
+      <p class="text-emerald-400">→ 42</p>
+    </div>
+  </div>
+</div>`,
+    css: `.split-pane { display:flex; border-radius:.75rem; overflow:hidden; border:1px solid #3f3f46; }
+.split-panel { overflow:hidden; padding:.75rem; font-size:.625rem; }
+.split-panel.left { background:#09090b; font-family:monospace; color:#d4d4d8; border-right:1px solid #3f3f46; }
+.split-panel.right { background:#18181b; color:#a1a1aa; flex:1; }
+.split-divider { width:.25rem; background:#3f3f46; cursor:col-resize; transition:background .15s; }
+.split-divider:hover { background:#60a5fa; }`,
+  },
+  {
+    id: 'sticky-table', name: 'Sticky Header Table', category: 'Display',
+    description: 'Scrollable table with a sticky top header and frozen first column.',
+    Preview: StickyTablePreview,
+    tailwind: `<div class="overflow-auto rounded-xl border border-zinc-200 bg-white" style="max-height:160px">
+  <table class="w-full text-xs">
+    <thead class="sticky top-0 z-10">
+      <tr class="bg-zinc-100 border-b border-zinc-200">
+        <th class="px-3 py-2 text-left font-semibold text-zinc-600">Name</th>
+        <th class="px-3 py-2 text-left font-semibold text-zinc-600">Role</th>
+        <th class="px-3 py-2 text-left font-semibold text-zinc-600">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border-b border-zinc-50 hover:bg-zinc-50">
+        <td class="sticky left-0 bg-white px-3 py-2 font-medium text-zinc-800 border-r border-zinc-100">Alice Kim</td>
+        <td class="px-3 py-2 text-zinc-500">Designer</td>
+        <td class="px-3 py-2"><span class="rounded-full bg-emerald-100 px-2 text-[9px] font-semibold text-emerald-700">Active</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>`,
+    css: `.sticky-table { overflow:auto; border-radius:.75rem; border:1px solid #e4e4e7; background:#fff; }
+.sticky-table thead { position:sticky; top:0; z-index:10; }
+.sticky-table th { background:#f4f4f5; padding:.5rem .75rem; font-size:.75rem; font-weight:600; color:#52525b; border-bottom:1px solid #e4e4e7; }
+.sticky-table .frozen-col { position:sticky; left:0; background:#fff; border-right:1px solid #f4f4f5; z-index:5; }
+.sticky-table td { padding:.5rem .75rem; font-size:.75rem; border-bottom:1px solid #fafafa; }`,
+  },
+  {
+    id: 'word-cloud', name: 'Word Cloud / Tag Cloud', category: 'Display',
+    description: 'Keyword cloud with varying font sizes and colors based on frequency.',
+    Preview: WordCloudPreview,
+    tailwind: `<div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 max-w-xs p-4">
+  <span class="text-xl font-bold text-blue-600 cursor-default hover:opacity-70 transition">TypeScript</span>
+  <span class="text-lg font-bold text-sky-500 cursor-default hover:opacity-70 transition">React</span>
+  <span class="text-base font-semibold text-zinc-800 cursor-default hover:opacity-70 transition">Next.js</span>
+  <span class="text-lg font-bold text-teal-500 cursor-default hover:opacity-70 transition">Tailwind</span>
+  <span class="text-sm font-semibold text-emerald-600 cursor-default hover:opacity-70 transition">Node</span>
+  <span class="text-sm font-medium text-pink-500 cursor-default hover:opacity-70 transition">GraphQL</span>
+</div>`,
+    css: `.word-cloud { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:.5rem 1rem; padding:1rem; }
+.word-cloud-tag { cursor:default; transition:opacity .15s; }
+.word-cloud-tag:hover { opacity:.7; }`,
+  },
+  {
+    id: 'floating-action-menu', name: 'Floating Action Menu', category: 'Navigation',
+    description: 'Radial/vertical FAB menu that expands with labelled action buttons.',
+    Preview: FloatingActionMenuPreview,
+    tailwind: `<div class="relative flex flex-col items-center gap-2">
+  <!-- Actions (shown when open) -->
+  <div class="flex flex-col items-center gap-2">
+    <div class="flex items-center gap-2">
+      <span class="rounded-lg bg-white border px-2 py-0.5 text-[10px] font-semibold text-zinc-600 shadow-sm">Note</span>
+      <button class="h-10 w-10 rounded-full bg-blue-500 text-white text-lg shadow-lg flex items-center justify-center hover:scale-110 transition">📝</button>
+    </div>
+  </div>
+  <!-- FAB trigger -->
+  <button class="h-12 w-12 rounded-full bg-zinc-900 text-white text-xl shadow-xl flex items-center justify-center hover:bg-zinc-800 transition">+</button>
+</div>`,
+    css: `.fab-menu { position:relative; display:flex; flex-direction:column; align-items:center; }
+.fab-trigger { height:3rem; width:3rem; border-radius:9999px; background:#18181b; color:#fff; font-size:1.25rem; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px rgba(0,0,0,.25); transition:transform .2s, background .15s; }
+.fab-trigger.open { transform:rotate(45deg); }
+.fab-actions { display:flex; flex-direction:column; align-items:center; gap:.5rem; }
+.fab-action { display:flex; align-items:center; gap:.5rem; }
+.fab-action-btn { height:2.5rem; width:2.5rem; border-radius:9999px; color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.125rem; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,.2); transition:transform .15s; }`,
+  },
+  {
+    id: 'command-palette-v2', name: 'Command Palette', category: 'Overlay',
+    description: 'Spotlight-style command palette with fuzzy search and keyboard shortcuts.',
+    Preview: CommandPaletteV2Preview,
+    tailwind: `<div class="rounded-2xl border border-zinc-200 bg-white shadow-xl overflow-hidden w-80">
+  <div class="flex items-center gap-2 border-b border-zinc-100 px-4 py-3">
+    🔍 <input placeholder="Type a command…" class="flex-1 text-sm outline-none placeholder-zinc-400"/>
+    <kbd class="rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] font-semibold">esc</kbd>
+  </div>
+  <div class="py-1">
+    <p class="px-4 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-wider text-zinc-400">Commands</p>
+    <button class="flex w-full items-center gap-3 px-4 py-2.5 hover:bg-blue-50 group">
+      <span>🏠</span>
+      <span class="flex-1 text-sm text-zinc-700 group-hover:text-blue-700">Go to Dashboard</span>
+      <kbd class="rounded bg-zinc-100 px-1.5 py-0.5 text-[9px] text-zinc-400">G D</kbd>
+    </button>
+  </div>
+</div>`,
+    css: `.cmd-palette { border-radius:1rem; border:1px solid #e4e4e7; background:#fff; box-shadow:0 20px 40px rgba(0,0,0,.14); overflow:hidden; }
+.cmd-search { display:flex; align-items:center; gap:.5rem; border-bottom:1px solid #f4f4f5; padding:.75rem 1rem; }
+.cmd-input { flex:1; font-size:.875rem; outline:none; color:#18181b; }
+.cmd-item { display:flex; align-items:center; gap:.75rem; padding:.625rem 1rem; cursor:pointer; transition:background .1s; }
+.cmd-item:hover { background:#eff6ff; }
+.cmd-item-label { flex:1; font-size:.875rem; color:#3f3f46; }
+.cmd-item:hover .cmd-item-label { color:#1d4ed8; }`,
+  },
+  {
+    id: 'table-of-contents', name: 'Table of Contents', category: 'Navigation',
+    description: 'Docs-style sidebar TOC with active section highlight and indent levels.',
+    Preview: TableOfContentsPreview,
+    tailwind: `<nav class="border-l border-zinc-200">
+  <p class="mb-3 pl-3 text-[10px] font-bold uppercase tracking-wider text-zinc-400">On this page</p>
+  <a href="#" class="block py-1 pl-3 text-xs font-semibold text-blue-600 border-l-2 border-blue-600 -ml-px">Installation</a>
+  <a href="#" class="block py-1 pl-6 text-xs text-zinc-500 hover:text-zinc-800 border-l-2 border-transparent -ml-px">Configuration</a>
+  <a href="#" class="block py-1 pl-9 text-xs text-zinc-500 hover:text-zinc-800 border-l-2 border-transparent -ml-px">Environment vars</a>
+  <a href="#" class="block py-1 pl-3 text-xs text-zinc-500 hover:text-zinc-800 border-l-2 border-transparent -ml-px">Usage</a>
+</nav>`,
+    css: `.toc { border-left:1px solid #e4e4e7; }
+.toc-title { padding:.25rem .75rem; font-size:.625rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:#a1a1aa; margin-bottom:.5rem; }
+.toc-link { display:block; padding:.25rem; font-size:.75rem; border-left:2px solid transparent; margin-left:-1px; color:#71717a; transition:color .15s, border-color .15s; text-decoration:none; }
+.toc-link:hover { color:#18181b; border-color:#d4d4d8; }
+.toc-link.active { color:#2563eb; border-color:#2563eb; font-weight:600; }
+.toc-link.level-1 { padding-left:.75rem; }
+.toc-link.level-2 { padding-left:1.5rem; }
+.toc-link.level-3 { padding-left:2.25rem; }`,
+  },
+  {
+    id: 'invoice', name: 'Invoice Table', category: 'Display',
+    description: 'Line-item invoice with description, quantity, rate, total, and status badge.',
+    Preview: InvoicePreview,
+    tailwind: `<div class="rounded-xl border border-zinc-200 bg-white overflow-hidden shadow-sm">
+  <div class="flex items-center justify-between border-b border-zinc-100 bg-zinc-50 px-4 py-3">
+    <div><p class="text-sm font-bold text-zinc-900">Invoice #INV-0042</p><p class="text-[10px] text-zinc-400">Due: Jan 31, 2026</p></div>
+    <span class="rounded-full bg-amber-100 px-2.5 py-0.5 text-[10px] font-bold text-amber-700">Pending</span>
+  </div>
+  <table class="w-full text-xs">
+    <thead><tr class="border-b border-zinc-100 text-zinc-400">
+      <th class="px-4 py-2 text-left font-semibold">Description</th>
+      <th class="px-2 py-2 text-right font-semibold">Qty</th>
+      <th class="px-4 py-2 text-right font-semibold">Total</th>
+    </tr></thead>
+    <tbody>
+      <tr class="border-b border-zinc-50">
+        <td class="px-4 py-2 text-zinc-700">UI Design</td>
+        <td class="px-2 py-2 text-right text-zinc-500">8h</td>
+        <td class="px-4 py-2 text-right font-semibold text-zinc-800">$1,200</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="border-t border-zinc-200 px-4 py-3 flex justify-between">
+    <span class="text-xs text-zinc-500">Subtotal (USD)</span>
+    <span class="text-sm font-bold text-zinc-900">$4,500</span>
+  </div>
+</div>`,
+    css: `.invoice { border-radius:.75rem; border:1px solid #e4e4e7; background:#fff; overflow:hidden; }
+.invoice-header { display:flex; align-items:center; justify-content:space-between; padding:.75rem 1rem; background:#fafafa; border-bottom:1px solid #f4f4f5; }
+.invoice-table { width:100%; font-size:.75rem; }
+.invoice-table th { padding:.5rem; font-weight:600; color:#a1a1aa; border-bottom:1px solid #f4f4f5; }
+.invoice-table td { padding:.5rem 1rem; border-bottom:1px solid #fafafa; }
+.invoice-total { display:flex; align-items:center; justify-content:space-between; padding:.75rem 1rem; border-top:1px solid #e4e4e7; }`,
+  },
+  {
+    id: 'scroll-spy', name: 'Scroll Spy Nav', category: 'Navigation',
+    description: 'Sidebar navigation that highlights the currently visible section.',
+    Preview: ScrollSpyPreview,
+    tailwind: `<div class="flex items-start gap-4">
+  <!-- Sidebar -->
+  <div class="flex flex-col gap-1">
+    <button class="flex items-center gap-2 rounded-lg bg-blue-600 px-2.5 py-1.5 text-xs font-semibold text-white">
+      <div class="h-1.5 w-1.5 rounded-full bg-white"></div> Hero
+    </button>
+    <button class="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs text-zinc-500 hover:text-zinc-800">
+      <div class="h-1.5 w-1.5 rounded-full bg-zinc-300"></div> Features
+    </button>
+    <!-- more sections -->
+  </div>
+  <!-- Content preview -->
+  <div class="flex-1 space-y-2">
+    <div class="rounded-xl border border-blue-300 bg-blue-50 p-3"><p class="text-xs font-semibold text-zinc-700">Hero</p></div>
+    <div class="rounded-xl border border-zinc-200 bg-white p-3"><p class="text-xs font-semibold text-zinc-700">Features</p></div>
+  </div>
+</div>`,
+    css: `.scroll-spy-nav { display:flex; flex-direction:column; gap:.25rem; position:sticky; top:0; }
+.scroll-spy-item { display:flex; align-items:center; gap:.5rem; border-radius:.5rem; padding:.375rem .625rem; font-size:.75rem; cursor:pointer; transition:all .15s; color:#71717a; background:transparent; }
+.scroll-spy-item.active { background:#2563eb; color:#fff; font-weight:600; }
+.scroll-spy-item.active .scroll-spy-dot { background:#fff; }
+.scroll-spy-dot { height:.375rem; width:.375rem; border-radius:9999px; background:#d4d4d8; transition:background .15s; }`,
+  },
+  {
+    id: 'announcement-banner', name: 'Announcement Banner', category: 'Feedback',
+    description: 'Full-width dismissible announcement bar with info, success, warning, and error variants.',
+    Preview: BannerAnnouncementPreview,
+    tailwind: `<div class="flex items-center gap-3 rounded-xl bg-blue-600 px-4 py-3 text-white">
+  <span class="text-base shrink-0">ℹ️</span>
+  <p class="flex-1 text-xs font-medium">New version 2.0 is now available!</p>
+  <button class="shrink-0 text-white/70 hover:text-white transition">✕</button>
+</div>
+<!-- Variants -->
+<div class="flex items-center gap-3 rounded-xl bg-emerald-600 px-4 py-3 text-white">
+  <span>✅</span><p class="flex-1 text-xs font-medium">Deployment succeeded.</p><button>✕</button>
+</div>
+<div class="flex items-center gap-3 rounded-xl bg-amber-500 px-4 py-3 text-white">
+  <span>⚠️</span><p class="flex-1 text-xs font-medium">Scheduled maintenance Jan 15.</p><button>✕</button>
+</div>`,
+    css: `.announcement { display:flex; align-items:center; gap:.75rem; border-radius:.75rem; padding:.75rem 1rem; color:#fff; }
+.announcement.info { background:#2563eb; }
+.announcement.success { background:#059669; }
+.announcement.warning { background:#d97706; }
+.announcement.error { background:#dc2626; }
+.announcement-text { flex:1; font-size:.75rem; font-weight:500; }
+.announcement-close { color:rgba(255,255,255,.7); background:none; border:none; cursor:pointer; transition:color .15s; }
+.announcement-close:hover { color:#fff; }`,
+  },
+  {
+    id: 'permission-gate', name: 'Permission / Role Gate', category: 'Display',
+    description: 'Role-based access table showing which permissions each role has.',
+    Preview: PermissionGatePreview,
+    tailwind: `<!-- Role switcher -->
+<div class="flex gap-1.5 mb-3">
+  <button class="rounded-full bg-zinc-900 px-3 py-1 text-[10px] font-semibold text-white">admin</button>
+  <button class="rounded-full border border-zinc-200 px-3 py-1 text-[10px] font-semibold text-zinc-600">editor</button>
+  <button class="rounded-full border border-zinc-200 px-3 py-1 text-[10px] font-semibold text-zinc-600">viewer</button>
+</div>
+<!-- Permission rows -->
+<div class="rounded-xl border border-zinc-200 bg-white overflow-hidden">
+  <div class="flex items-center justify-between px-4 py-2.5 border-b border-zinc-50">
+    <span class="text-sm text-zinc-700">View</span>
+    <span class="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-[11px] text-emerald-600">✓</span>
+  </div>
+  <div class="flex items-center justify-between px-4 py-2.5 opacity-40">
+    <span class="text-sm text-zinc-700">Delete</span>
+    <span class="flex h-5 w-5 items-center justify-center rounded-full bg-zinc-100 text-[11px] text-zinc-400">✕</span>
+  </div>
+</div>`,
+    css: `.perm-table { border-radius:.75rem; border:1px solid #e4e4e7; background:#fff; overflow:hidden; }
+.perm-row { display:flex; align-items:center; justify-content:space-between; padding:.625rem 1rem; border-bottom:1px solid #fafafa; transition:opacity .2s; }
+.perm-row.denied { opacity:.4; }
+.perm-check { display:flex; height:1.25rem; width:1.25rem; align-items:center; justify-content:center; border-radius:9999px; font-size:.6875rem; }
+.perm-check.yes { background:#dcfce7; color:#16a34a; }
+.perm-check.no { background:#f4f4f5; color:#a1a1aa; }`,
+  },
+  {
+    id: 'drag-sort', name: 'Drag & Drop Sortable', category: 'Forms & Inputs',
+    description: 'Reorder list items by dragging — shows a drop target highlight on hover.',
+    Preview: DragSortPreview,
+    tailwind: `<div class="space-y-1.5">
+  <div class="flex items-center gap-3 rounded-xl border border-zinc-200 bg-white px-4 py-2.5 cursor-grab">
+    <span class="text-zinc-300">⠿</span>
+    <span class="text-sm font-medium text-zinc-700">🎨 Design</span>
+    <span class="ml-auto text-[10px] text-zinc-300">#1</span>
+  </div>
+  <div class="flex items-center gap-3 rounded-xl border border-blue-400 bg-blue-50 px-4 py-2.5 cursor-grab scale-[1.02]">
+    <span class="text-zinc-300">⠿</span>
+    <span class="text-sm font-medium text-zinc-700">💻 Development</span>
+    <span class="ml-auto text-[10px] text-zinc-300">#2</span>
+  </div>
+</div>`,
+    css: `.sortable-item { display:flex; align-items:center; gap:.75rem; border-radius:.75rem; border:1px solid #e4e4e7; background:#fff; padding:.625rem 1rem; cursor:grab; transition:all .15s; }
+.sortable-item:active { cursor:grabbing; opacity:.6; }
+.sortable-item.drag-over { border-color:#60a5fa; background:#eff6ff; transform:scale(1.02); }
+.sortable-handle { color:#d4d4d8; font-size:.875rem; }
+.sortable-label { font-size:.875rem; font-weight:500; color:#3f3f46; }
+.sortable-index { margin-left:auto; font-size:.625rem; color:#d4d4d8; }`,
+  },
+  {
+    id: 'counter-animated', name: 'Animated Counter', category: 'Display',
+    description: 'Number count-up animation for KPI and stats sections — click to replay.',
+    Preview: CounterAnimatedPreview,
+    tailwind: `<div class="grid grid-cols-3 gap-2">
+  <div class="rounded-xl border border-zinc-200 bg-white p-3 text-center">
+    <p class="text-lg font-black text-blue-600 tabular-nums" id="counter1">12,847</p>
+    <p class="text-[10px] text-zinc-400 font-medium mt-0.5">Total Users</p>
+  </div>
+  <div class="rounded-xl border border-zinc-200 bg-white p-3 text-center">
+    <p class="text-lg font-black text-emerald-600 tabular-nums" id="counter2">98.6%</p>
+    <p class="text-[10px] text-zinc-400 font-medium mt-0.5">Uptime</p>
+  </div>
+  <div class="rounded-xl border border-zinc-200 bg-white p-3 text-center">
+    <p class="text-lg font-black text-purple-600 tabular-nums" id="counter3">4,392</p>
+    <p class="text-[10px] text-zinc-400 font-medium mt-0.5">Deployments</p>
+  </div>
+</div>`,
+    css: `.counter-card { border-radius:.75rem; border:1px solid #e4e4e7; background:#fff; padding:.75rem; text-align:center; }
+.counter-value { font-size:1.125rem; font-weight:900; font-variant-numeric:tabular-nums; line-height:1; }
+.counter-label { font-size:.625rem; color:#a1a1aa; font-weight:500; margin-top:.25rem; }
+@keyframes countUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.counter-value.animate { animation:countUp .4s ease forwards; }`,
+  },
+  {
+    id: 'shortcut-badge', name: 'Keyboard Shortcut Badges', category: 'Display',
+    description: 'Grid of keyboard shortcut reference cards with styled key badges.',
+    Preview: ShortcutBadgePreview,
+    tailwind: `<div class="grid grid-cols-2 gap-1.5">
+  <div class="flex items-center justify-between rounded-lg border border-zinc-200 bg-white px-3 py-2">
+    <span class="text-xs text-zinc-600 font-medium">Save</span>
+    <div class="flex gap-0.5">
+      <kbd class="rounded-md border border-zinc-200 bg-zinc-100 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-600 shadow-[0_1px_0_#d4d4d8]">⌘</kbd>
+      <kbd class="rounded-md border border-zinc-200 bg-zinc-100 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-600 shadow-[0_1px_0_#d4d4d8]">S</kbd>
+    </div>
+  </div>
+  <!-- repeat for other shortcuts -->
+</div>`,
+    css: `.shortcut-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:.375rem; }
+.shortcut-row { display:flex; align-items:center; justify-content:space-between; border-radius:.5rem; border:1px solid #e4e4e7; background:#fff; padding:.5rem .75rem; }
+.shortcut-action { font-size:.75rem; font-weight:500; color:#52525b; }
+.shortcut-keys { display:flex; gap:.125rem; }
+kbd { border-radius:.375rem; border:1px solid #e4e4e7; background:#f4f4f5; padding:.125rem .375rem; font-size:.625rem; font-weight:600; color:#52525b; box-shadow:0 1px 0 #d4d4d8; font-family:inherit; }`,
+  },
+  {
+    id: 'oauth-buttons', name: 'OAuth / SSO Buttons', category: 'Forms & Inputs',
+    description: 'Social login buttons for Google, GitHub, Twitter, Apple — with loading state.',
+    Preview: OAuthButtonsPreview,
+    tailwind: `<div class="space-y-2">
+  <button class="flex w-full items-center justify-center gap-2.5 rounded-xl border border-zinc-300 bg-white py-2.5 text-sm font-semibold text-zinc-700 hover:bg-zinc-50 transition">
+    🔵 Continue with Google
+  </button>
+  <button class="flex w-full items-center justify-center gap-2.5 rounded-xl bg-zinc-900 py-2.5 text-sm font-semibold text-white hover:bg-zinc-800 transition">
+    ⚫ Continue with GitHub
+  </button>
+  <button class="flex w-full items-center justify-center gap-2.5 rounded-xl bg-sky-500 py-2.5 text-sm font-semibold text-white hover:bg-sky-600 transition">
+    🐦 Continue with Twitter
+  </button>
+  <button class="flex w-full items-center justify-center gap-2.5 rounded-xl bg-black py-2.5 text-sm font-semibold text-white hover:bg-zinc-900 transition">
+    🍎 Continue with Apple
+  </button>
+</div>`,
+    css: `.oauth-btn { display:flex; align-items:center; justify-content:center; gap:.625rem; width:100%; border-radius:.75rem; padding:.625rem; font-size:.875rem; font-weight:600; cursor:pointer; transition:opacity .15s; border:none; }
+.oauth-btn:hover { opacity:.9; }
+.oauth-btn.google { background:#fff; color:#3f3f46; border:1px solid #d4d4d8; }
+.oauth-btn.github { background:#18181b; color:#fff; }
+.oauth-btn.twitter { background:#0ea5e9; color:#fff; }
+.oauth-btn.apple { background:#000; color:#fff; }
+.oauth-spinner { height:1rem; width:1rem; border-radius:9999px; border:2px solid currentColor; border-top-color:transparent; animation:spin .7s linear infinite; }`,
+  },
+  {
+    id: 'empty-state-variants', name: 'Empty State Variants', category: 'Feedback',
+    description: 'Three empty state variants — no messages, no results, empty folder — with CTAs.',
+    Preview: EmptyStateVariantsPreview,
+    tailwind: `<div class="rounded-2xl border border-zinc-200 bg-white px-6 py-8 shadow-sm text-center">
+  <div class="text-4xl mb-3">📭</div>
+  <p class="text-sm font-bold text-zinc-800">No messages yet</p>
+  <p class="text-xs text-zinc-400 mt-1 leading-relaxed">When you receive messages, they'll show up here.</p>
+  <button class="mt-4 rounded-xl border-2 border-blue-600 px-4 py-1.5 text-xs font-semibold text-blue-600 hover:bg-blue-50 transition">
+    Compose message
+  </button>
+</div>`,
+    css: `.empty-state { border-radius:1rem; border:1px solid #e4e4e7; background:#fff; padding:2rem 1.5rem; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+.empty-state-icon { font-size:2.5rem; margin-bottom:.75rem; }
+.empty-state-title { font-size:.875rem; font-weight:700; color:#18181b; }
+.empty-state-desc { font-size:.75rem; color:#a1a1aa; margin-top:.25rem; line-height:1.5; }
+.empty-state-cta { display:inline-block; margin-top:1rem; border-radius:.75rem; border:2px solid; padding:.375rem 1rem; font-size:.75rem; font-weight:600; cursor:pointer; transition:background .15s; }`,
   },
 ];
 
