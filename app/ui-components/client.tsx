@@ -104,7 +104,6 @@ function CheckboxPreview() {
     <PreviewWrap>
       <div className="grid grid-cols-2 gap-6">
         <div className="space-y-2">
-          {[['a', 'Design'], ['b', 'Development'], ['c', 'Marketing']] as [string, string][]}
           {([['a', 'Design'], ['b', 'Development'], ['c', 'Marketing']] as [string, string][]).map(([k, label]) => (
             <label key={k} className="flex items-center gap-2.5 cursor-pointer">
               <div
@@ -657,26 +656,26 @@ function TablePreview() {
   ];
   return (
     <PreviewWrap bg="bg-zinc-50">
-      <div className="w-full overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm">
-        <table className="w-full text-left text-sm">
+      <div className="w-full overflow-x-auto rounded-xl border border-zinc-200 bg-white shadow-sm">
+        <table className="w-full min-w-[340px] text-left text-sm">
           <thead className="bg-zinc-50 border-b border-zinc-200">
             <tr>
               {['Name', 'Role', 'Status', 'Action'].map((h) => (
-                <th key={h} className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-zinc-500">{h}</th>
+                <th key={h} className="px-3 py-2.5 text-xs font-semibold uppercase tracking-wide text-zinc-500 whitespace-nowrap">{h}</th>
               ))}
             </tr>
           </thead>
           <tbody className="divide-y divide-zinc-100">
             {rows.map((r) => (
               <tr key={r.name} className="hover:bg-zinc-50 transition">
-                <td className="px-4 py-3 font-medium text-zinc-800">{r.name}</td>
-                <td className="px-4 py-3 text-zinc-500">{r.role}</td>
-                <td className="px-4 py-3">
+                <td className="px-3 py-2.5 font-medium text-zinc-800 whitespace-nowrap">{r.name}</td>
+                <td className="px-3 py-2.5 text-zinc-500 whitespace-nowrap">{r.role}</td>
+                <td className="px-3 py-2.5">
                   <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${
                     r.status === 'Active' ? 'bg-green-100 text-green-700' : r.status === 'Away' ? 'bg-yellow-100 text-yellow-700' : 'bg-zinc-100 text-zinc-500'
                   }`}>{r.status}</span>
                 </td>
-                <td className="px-4 py-3"><button className="text-xs font-medium text-blue-600 hover:underline">Edit</button></td>
+                <td className="px-3 py-2.5"><button className="rounded-md border border-zinc-200 bg-white px-2.5 py-1 text-xs font-medium text-zinc-700 hover:bg-zinc-50 transition whitespace-nowrap">Edit</button></td>
               </tr>
             ))}
           </tbody>
