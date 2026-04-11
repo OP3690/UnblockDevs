@@ -4140,6 +4140,1028 @@ function EmptyStateVariantsPreview() {
 }
 
 /* ─────────────────────────────────────────────
+   AI Assistant Sidebars (9)
+───────────────────────────────────────────── */
+function AiSidebarMainPreview() {
+  const [active, setActive] = useState('Text Generator');
+  const items = [
+    { icon: '✍️', label: 'Text Generator', badge: 'GPT-4' },
+    { icon: '🎨', label: 'Image Generator', badge: 'DALL·E' },
+    { icon: '💻', label: 'Code Generator', badge: 'Claude' },
+    { icon: '🎬', label: 'Video Generator', badge: 'New' },
+    { icon: '🎵', label: 'Audio Generator' },
+    { icon: '📝', label: 'Summarizer' },
+    { icon: '🌍', label: 'Translator' },
+  ];
+  return (
+    <PreviewWrap bg="bg-slate-950">
+      <div className="flex h-[300px] w-[210px] flex-col rounded-2xl bg-gradient-to-b from-slate-900 to-slate-800 shadow-2xl border border-slate-700 overflow-hidden">
+        <div className="flex items-center gap-2 px-4 py-3.5 border-b border-slate-700">
+          <div className="h-7 w-7 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center text-white text-sm">✦</div>
+          <span className="text-sm font-bold text-white">AI Studio</span>
+        </div>
+        <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {items.map(({ icon, label, badge }) => (
+            <button key={label} onClick={() => setActive(label)}
+              className={`w-full flex items-center gap-2 rounded-xl px-2.5 py-2 text-xs font-medium transition-all ${active === label ? 'bg-violet-600/80 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-700 hover:text-white'}`}>
+              <span>{icon}</span><span className="flex-1 text-left">{label}</span>
+              {badge && <span className={`rounded-md px-1.5 py-0.5 text-[9px] font-bold ${badge === 'New' ? 'bg-emerald-500 text-white' : 'bg-slate-700 text-slate-300'}`}>{badge}</span>}
+            </button>
+          ))}
+        </nav>
+        <div className="flex items-center gap-2 px-3 py-3 border-t border-slate-700">
+          <div className="h-6 w-6 rounded-full bg-violet-500 flex items-center justify-center text-[10px] font-bold text-white">U</div>
+          <div className="flex-1 min-w-0"><p className="text-[10px] font-semibold text-white">Pro Plan</p><p className="text-[9px] text-slate-400">850 credits left</p></div>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function AiSidebarTextPreview() {
+  const [active, setActive] = useState('Blog Post');
+  const [model, setModel] = useState('GPT-4o');
+  const templates = ['Blog Post', 'Email Draft', 'LinkedIn Post', 'Product Desc.', 'Tweet Thread', 'Press Release'];
+  const recents = ['Explain quantum computing', 'Write a cold email for...', 'Summarize this article'];
+  return (
+    <PreviewWrap bg="bg-slate-950">
+      <div className="flex h-[300px] w-[220px] flex-col rounded-2xl bg-slate-900 shadow-2xl border border-slate-700 overflow-hidden">
+        <div className="px-3 py-3 border-b border-slate-700">
+          <p className="text-xs font-bold text-white mb-2">✍️ Text Generator</p>
+          <select value={model} onChange={e => setModel(e.target.value)}
+            className="w-full rounded-lg bg-slate-800 border border-slate-600 text-[11px] text-slate-300 px-2 py-1.5 focus:outline-none">
+            {['GPT-4o', 'Claude 3.5', 'Gemini Pro'].map(m => <option key={m}>{m}</option>)}
+          </select>
+        </div>
+        <div className="px-2 py-2 space-y-0.5 border-b border-slate-700">
+          <p className="px-2.5 text-[9px] font-bold text-slate-500 mb-1">TEMPLATES</p>
+          {templates.map(t => (
+            <button key={t} onClick={() => setActive(t)}
+              className={`w-full text-left rounded-lg px-2.5 py-1.5 text-xs transition-all ${active === t ? 'bg-violet-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>{t}</button>
+          ))}
+        </div>
+        <div className="px-2 py-2 flex-1 overflow-auto">
+          <p className="px-2.5 text-[9px] font-bold text-slate-500 mb-1">RECENT</p>
+          {recents.map(r => <p key={r} className="px-2.5 py-1 text-[10px] text-slate-500 hover:text-slate-300 truncate cursor-pointer">{r}</p>)}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function AiSidebarImagePreview() {
+  const [style, setStyle] = useState('Photorealistic');
+  const [ratio, setRatio] = useState('1:1');
+  const styles = ['Photorealistic', 'Illustration', 'Anime', 'Oil Painting', 'Pixel Art', '3D Render'];
+  const ratios = ['1:1', '16:9', '4:3', '9:16'];
+  return (
+    <PreviewWrap bg="bg-slate-950">
+      <div className="flex h-[300px] w-[220px] flex-col rounded-2xl bg-slate-900 shadow-2xl border border-slate-700 overflow-hidden">
+        <div className="px-3 py-3 border-b border-slate-700"><p className="text-xs font-bold text-white">🎨 Image Generator</p></div>
+        <div className="flex-1 px-3 py-2 overflow-auto space-y-3">
+          <div>
+            <p className="text-[9px] font-bold text-slate-400 mb-1.5 tracking-widest">STYLE</p>
+            <div className="space-y-0.5">
+              {styles.map(s => (
+                <button key={s} onClick={() => setStyle(s)}
+                  className={`w-full text-left rounded-lg px-2.5 py-1.5 text-xs transition-all ${style === s ? 'bg-pink-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <p className="text-[9px] font-bold text-slate-400 mb-1.5 tracking-widest">ASPECT RATIO</p>
+            <div className="grid grid-cols-4 gap-1">
+              {ratios.map(r => (
+                <button key={r} onClick={() => setRatio(r)}
+                  className={`rounded-lg py-1.5 text-[10px] font-bold transition-all ${ratio === r ? 'bg-pink-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>{r}</button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <p className="text-[9px] font-bold text-slate-400 mb-1 tracking-widest">QUALITY</p>
+            <div className="grid grid-cols-3 gap-1">
+              {['Draft', 'Standard', 'HD'].map(q => (
+                <button key={q} className="rounded-lg bg-slate-800 py-1.5 text-[10px] font-bold text-slate-400 hover:bg-slate-700">{q}</button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function AiSidebarCodePreview() {
+  const [lang, setLang] = useState('TypeScript');
+  const [active, setActive] = useState('Generate');
+  const langs = ['TypeScript', 'Python', 'Go', 'Rust', 'Java', 'SQL', 'Bash'];
+  const actions = ['Generate', 'Refactor', 'Explain', 'Debug', 'Add Tests', 'Document'];
+  return (
+    <PreviewWrap bg="bg-slate-950">
+      <div className="flex h-[300px] w-[220px] flex-col rounded-2xl bg-slate-900 shadow-2xl border border-slate-700 overflow-hidden">
+        <div className="px-3 py-3 border-b border-slate-700"><p className="text-xs font-bold text-white">💻 Code Generator</p></div>
+        <div className="flex-1 px-3 py-2 overflow-auto space-y-3">
+          <div>
+            <p className="text-[9px] font-bold text-slate-400 mb-1.5 tracking-widest">LANGUAGE</p>
+            <div className="flex flex-wrap gap-1">
+              {langs.map(l => (
+                <button key={l} onClick={() => setLang(l)}
+                  className={`rounded-md px-2 py-1 text-[10px] font-semibold transition-all ${lang === l ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>{l}</button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <p className="text-[9px] font-bold text-slate-400 mb-1.5 tracking-widest">ACTION</p>
+            <div className="space-y-0.5">
+              {actions.map(a => (
+                <button key={a} onClick={() => setActive(a)}
+                  className={`w-full text-left rounded-lg px-2.5 py-1.5 text-xs transition-all ${active === a ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>{a}</button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function AiSidebarVideoPreview() {
+  const [duration, setDuration] = useState('15s');
+  const [active, setActive] = useState('Text to Video');
+  const modes = ['Text to Video', 'Image to Video', 'Video to Video', 'Storyboard'];
+  const durations = ['5s', '10s', '15s', '30s', '60s'];
+  return (
+    <PreviewWrap bg="bg-slate-950">
+      <div className="flex h-[300px] w-[220px] flex-col rounded-2xl bg-slate-900 shadow-2xl border border-slate-700 overflow-hidden">
+        <div className="px-3 py-3 border-b border-slate-700 flex items-center justify-between">
+          <p className="text-xs font-bold text-white">🎬 Video Generator</p>
+          <span className="rounded-md bg-emerald-500 px-2 py-0.5 text-[9px] font-bold text-white">New</span>
+        </div>
+        <div className="flex-1 px-3 py-2 overflow-auto space-y-3">
+          <div>
+            <p className="text-[9px] font-bold text-slate-400 mb-1.5 tracking-widest">MODE</p>
+            <div className="space-y-0.5">
+              {modes.map(m => (
+                <button key={m} onClick={() => setActive(m)}
+                  className={`w-full text-left rounded-lg px-2.5 py-1.5 text-xs transition-all ${active === m ? 'bg-rose-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>{m}</button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <p className="text-[9px] font-bold text-slate-400 mb-1.5 tracking-widest">DURATION</p>
+            <div className="flex flex-wrap gap-1">
+              {durations.map(d => (
+                <button key={d} onClick={() => setDuration(d)}
+                  className={`rounded-md px-2.5 py-1 text-[10px] font-bold transition-all ${duration === d ? 'bg-rose-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>{d}</button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <p className="text-[9px] font-bold text-slate-400 mb-1 tracking-widest">QUALITY</p>
+            <div className="grid grid-cols-3 gap-1">
+              {['480p', '720p', '1080p'].map(q => (
+                <button key={q} className="rounded-lg bg-slate-800 py-1.5 text-[10px] font-bold text-slate-400 hover:bg-slate-700">{q}</button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function AiSidebarHistoryPreview() {
+  const [active, setActive] = useState(0);
+  const history = [
+    { type: '✍️', prompt: 'Write a product launch email for...', time: '2m ago', tag: 'Text' },
+    { type: '🎨', prompt: 'Futuristic city at night, neon lights...', time: '14m ago', tag: 'Image' },
+    { type: '💻', prompt: 'Create a React hook for debounce...', time: '1h ago', tag: 'Code' },
+    { type: '✍️', prompt: 'Summarize this article about AI...', time: '3h ago', tag: 'Text' },
+    { type: '🌍', prompt: 'Translate to Spanish: "Hello world"', time: 'Yesterday', tag: 'Translate' },
+  ];
+  return (
+    <PreviewWrap bg="bg-slate-950">
+      <div className="flex h-[300px] w-[240px] flex-col rounded-2xl bg-slate-900 shadow-2xl border border-slate-700 overflow-hidden">
+        <div className="flex items-center justify-between px-3 py-3 border-b border-slate-700">
+          <p className="text-xs font-bold text-white">🕐 History</p>
+          <button className="text-[10px] text-slate-400 hover:text-slate-200">Clear all</button>
+        </div>
+        <div className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {history.map(({ type, prompt, time, tag }, i) => (
+            <button key={i} onClick={() => setActive(i)}
+              className={`w-full rounded-xl px-2.5 py-2 text-left transition-all ${active === i ? 'bg-slate-700' : 'hover:bg-slate-800'}`}>
+              <div className="flex items-center gap-2 mb-0.5">
+                <span className="text-sm">{type}</span>
+                <span className="flex-1 text-[11px] font-semibold text-slate-200 truncate">{prompt}</span>
+              </div>
+              <div className="flex items-center gap-2 pl-6">
+                <span className="rounded-md bg-slate-700 px-1.5 py-0.5 text-[9px] font-bold text-slate-400">{tag}</span>
+                <span className="text-[9px] text-slate-500">{time}</span>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function AiSidebarModelsPreview() {
+  const [selected, setSelected] = useState('GPT-4o');
+  const models = [
+    { name: 'GPT-4o', provider: 'OpenAI', speed: '⚡⚡⚡', quality: '★★★★★', badge: 'Best' },
+    { name: 'Claude 3.5', provider: 'Anthropic', speed: '⚡⚡⚡', quality: '★★★★★', badge: '' },
+    { name: 'Gemini Pro', provider: 'Google', speed: '⚡⚡', quality: '★★★★', badge: '' },
+    { name: 'Llama 3', provider: 'Meta', speed: '⚡⚡⚡⚡', quality: '★★★', badge: 'Free' },
+    { name: 'Mistral', provider: 'Mistral AI', speed: '⚡⚡⚡⚡', quality: '★★★★', badge: '' },
+  ];
+  return (
+    <PreviewWrap bg="bg-slate-950">
+      <div className="flex h-[300px] w-[250px] flex-col rounded-2xl bg-slate-900 shadow-2xl border border-slate-700 overflow-hidden">
+        <div className="px-3 py-3 border-b border-slate-700"><p className="text-xs font-bold text-white">🤖 Select Model</p></div>
+        <div className="flex-1 px-2 py-2 space-y-1 overflow-auto">
+          {models.map(({ name, provider, speed, quality, badge }) => (
+            <button key={name} onClick={() => setSelected(name)}
+              className={`w-full rounded-xl px-3 py-2 text-left transition-all border ${selected === name ? 'border-violet-500 bg-violet-600/20' : 'border-transparent hover:bg-slate-800'}`}>
+              <div className="flex items-center justify-between">
+                <span className={`text-xs font-bold ${selected === name ? 'text-violet-300' : 'text-slate-200'}`}>{name}</span>
+                {badge && <span className={`rounded-md px-1.5 py-0.5 text-[9px] font-bold ${badge === 'Free' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-violet-500/30 text-violet-300'}`}>{badge}</span>}
+              </div>
+              <div className="flex items-center gap-3 mt-0.5">
+                <span className="text-[9px] text-slate-500">{provider}</span>
+                <span className="text-[9px] text-slate-500">Speed: {speed}</span>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function AiSidebarPromptsPreview() {
+  const [active, setActive] = useState('Marketing');
+  const [fav, setFav] = useState(new Set([0, 2]));
+  const cats = ['All', 'Marketing', 'Dev', 'Writing', 'SEO'];
+  const prompts = [
+    { title: 'Product launch email', uses: 142, fav: true },
+    { title: 'Bug report template', uses: 98, fav: false },
+    { title: 'SEO meta description', uses: 204, fav: true },
+    { title: 'LinkedIn headline', uses: 67, fav: false },
+  ];
+  return (
+    <PreviewWrap bg="bg-slate-950">
+      <div className="flex h-[300px] w-[240px] flex-col rounded-2xl bg-slate-900 shadow-2xl border border-slate-700 overflow-hidden">
+        <div className="px-3 py-3 border-b border-slate-700"><p className="text-xs font-bold text-white">📝 Saved Prompts</p></div>
+        <div className="flex gap-1 px-2 py-2 border-b border-slate-700 overflow-x-auto">
+          {cats.map(c => (
+            <button key={c} onClick={() => setActive(c)}
+              className={`shrink-0 rounded-md px-2 py-1 text-[10px] font-semibold transition-all ${active === c ? 'bg-violet-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>{c}</button>
+          ))}
+        </div>
+        <div className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {prompts.map(({ title, uses }, i) => (
+            <div key={title} className="flex items-center gap-2 rounded-xl px-2.5 py-2 hover:bg-slate-800 transition">
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-medium text-slate-200 truncate">{title}</p>
+                <p className="text-[9px] text-slate-500">{uses} uses</p>
+              </div>
+              <button onClick={() => setFav(s => { const n = new Set(s); n.has(i) ? n.delete(i) : n.add(i); return n; })}
+                className={`text-sm transition-all ${fav.has(i) ? 'text-yellow-400' : 'text-slate-600 hover:text-slate-400'}`}>★</button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function AiSidebarSettingsPreview() {
+  const [streaming, setStreaming] = useState(true);
+  const [memory, setMemory] = useState(true);
+  const [temp, setTemp] = useState(0.7);
+  const sections = [
+    { title: 'API & KEYS', items: ['API Keys', 'Usage & Billing', 'Rate Limits'] },
+    { title: 'PREFERENCES', items: ['Default Model', 'Language', 'Timezone'] },
+  ];
+  return (
+    <PreviewWrap bg="bg-slate-950">
+      <div className="flex h-[300px] w-[240px] flex-col rounded-2xl bg-slate-900 shadow-2xl border border-slate-700 overflow-hidden">
+        <div className="px-3 py-3 border-b border-slate-700"><p className="text-xs font-bold text-white">⚙️ AI Settings</p></div>
+        <div className="flex-1 px-3 py-2 overflow-auto space-y-3">
+          <div className="flex items-center justify-between">
+            <div><p className="text-xs font-semibold text-slate-200">Streaming</p><p className="text-[9px] text-slate-500">Real-time token output</p></div>
+            <button onClick={() => setStreaming(v => !v)} className={`relative h-5 w-9 rounded-full transition-colors ${streaming ? 'bg-violet-600' : 'bg-slate-700'}`}>
+              <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white transition-all ${streaming ? 'left-4' : 'left-0.5'}`} />
+            </button>
+          </div>
+          <div className="flex items-center justify-between">
+            <div><p className="text-xs font-semibold text-slate-200">Memory</p><p className="text-[9px] text-slate-500">Remember past chats</p></div>
+            <button onClick={() => setMemory(v => !v)} className={`relative h-5 w-9 rounded-full transition-colors ${memory ? 'bg-violet-600' : 'bg-slate-700'}`}>
+              <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white transition-all ${memory ? 'left-4' : 'left-0.5'}`} />
+            </button>
+          </div>
+          <div>
+            <div className="flex items-center justify-between mb-1"><p className="text-xs font-semibold text-slate-200">Temperature</p><span className="text-xs font-bold text-violet-400">{temp}</span></div>
+            <input type="range" min="0" max="1" step="0.1" value={temp} onChange={e => setTemp(+e.target.value)} className="w-full accent-violet-500" />
+            <div className="flex justify-between text-[9px] text-slate-500 mt-0.5"><span>Precise</span><span>Creative</span></div>
+          </div>
+          {sections.map(({ title, items }) => (
+            <div key={title}>
+              <p className="text-[9px] font-bold text-slate-500 mb-1 tracking-widest">{title}</p>
+              {items.map(item => <p key={item} className="py-1 text-xs text-slate-400 hover:text-slate-200 cursor-pointer">{item}</p>)}
+            </div>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   E-Commerce Sidebars (12)
+───────────────────────────────────────────── */
+function Ecom2SidebarMainPreview() {
+  const [active, setActive] = useState('Dashboard');
+  const groups = [
+    { title: 'STORE', items: [{ icon: '⊞', label: 'Dashboard' }, { icon: '📦', label: 'Products', badge: '248' }, { icon: '🛒', label: 'Orders', badge: '12' }] },
+    { title: 'FINANCES', items: [{ icon: '💳', label: 'Billing' }, { icon: '🧾', label: 'Invoices' }, { icon: '💸', label: 'Transactions' }] },
+    { title: 'CUSTOMERS', items: [{ icon: '👥', label: 'Customers' }, { icon: '⭐', label: 'Reviews' }] },
+    { title: 'SETTINGS', items: [{ icon: '⚙️', label: 'Settings' }, { icon: '🚀', label: 'Integrations' }] },
+  ];
+  return (
+    <PreviewWrap bg="bg-orange-50">
+      <div className="flex h-[320px] w-[200px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="flex items-center gap-2 px-4 py-3.5 border-b border-zinc-100">
+          <div className="h-7 w-7 rounded-xl bg-orange-500 flex items-center justify-center text-white text-xs font-bold">🛍</div>
+          <span className="text-sm font-bold text-zinc-800">ShopFlow</span>
+        </div>
+        <nav className="flex-1 px-2 py-1.5 overflow-auto space-y-2">
+          {groups.map(({ title, items }) => (
+            <div key={title}>
+              <p className="px-2.5 mb-0.5 text-[9px] font-bold tracking-widest text-zinc-400">{title}</p>
+              {items.map(({ icon, label, badge }) => (
+                <button key={label} onClick={() => setActive(label)}
+                  className={`w-full flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all ${active === label ? 'bg-orange-50 text-orange-700' : 'text-zinc-500 hover:bg-zinc-50'}`}>
+                  <span>{icon}</span><span className="flex-1 text-left">{label}</span>
+                  {badge && <span className="rounded-full bg-orange-100 px-1.5 py-0.5 text-[9px] font-bold text-orange-600">{badge}</span>}
+                </button>
+              ))}
+            </div>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function Ecom2SidebarProductsPreview() {
+  const [active, setActive] = useState('All');
+  const [sort, setSort] = useState('Newest');
+  const cats = [{ l: 'All', n: 248 }, { l: 'Active', n: 189 }, { l: 'Draft', n: 42 }, { l: 'Archived', n: 17 }, { l: 'Out of Stock', n: 6 }];
+  return (
+    <PreviewWrap bg="bg-amber-50">
+      <div className="flex h-[300px] w-[220px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="flex items-center gap-2 px-3 py-3 border-b border-zinc-100">
+          <div className="flex items-center gap-1.5 flex-1 rounded-lg bg-zinc-100 px-2.5 py-1.5"><span className="text-xs text-zinc-400">🔍</span><span className="text-xs text-zinc-400">Search products...</span></div>
+          <button className="rounded-lg bg-orange-500 px-2.5 py-1.5 text-[10px] font-bold text-white">+ Add</button>
+        </div>
+        <div className="flex items-center justify-between px-3 py-2 border-b border-zinc-100">
+          <p className="text-[10px] font-semibold text-zinc-600">Status filter</p>
+          <select value={sort} onChange={e => setSort(e.target.value)} className="text-[10px] text-zinc-500 bg-transparent border-none focus:outline-none">
+            {['Newest', 'Price ↑', 'Price ↓', 'Stock'].map(s => <option key={s}>{s}</option>)}
+          </select>
+        </div>
+        <nav className="flex-1 px-2 py-1.5 space-y-0.5 overflow-auto">
+          {cats.map(({ l, n }) => (
+            <button key={l} onClick={() => setActive(l)}
+              className={`w-full flex items-center justify-between rounded-lg px-2.5 py-2 text-xs font-medium transition-all ${active === l ? 'bg-orange-50 text-orange-700' : 'text-zinc-500 hover:bg-zinc-50'}`}>
+              <span>{l}</span><span className={`text-[10px] ${active === l ? 'text-orange-400' : 'text-zinc-400'}`}>{n}</span>
+            </button>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function Ecom2SidebarAddProductPreview() {
+  const [step, setStep] = useState(2);
+  const steps = [
+    { n: 1, title: 'Basic Info', desc: 'Name, SKU, category' },
+    { n: 2, title: 'Pricing', desc: 'Price, compare, tax' },
+    { n: 3, title: 'Inventory', desc: 'Stock, variants' },
+    { n: 4, title: 'Images', desc: 'Upload photos' },
+    { n: 5, title: 'SEO', desc: 'Meta title, slug' },
+    { n: 6, title: 'Publish', desc: 'Review & go live' },
+  ];
+  return (
+    <PreviewWrap bg="bg-orange-50">
+      <div className="flex h-[300px] w-[220px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="px-4 py-3 border-b border-zinc-100"><p className="text-xs font-bold text-zinc-800">📦 Add Product</p><p className="text-[9px] text-zinc-400 mt-0.5">Step {step} of 6</p></div>
+        <div className="h-1 bg-zinc-100"><div className="h-1 bg-orange-500 transition-all" style={{ width: `${(step/6)*100}%` }} /></div>
+        <nav className="flex-1 px-3 py-2 overflow-auto">
+          {steps.map((s, i) => (
+            <button key={s.n} onClick={() => setStep(s.n)}
+              className={`w-full flex items-center gap-3 rounded-lg px-2 py-2 text-left transition-all ${step === s.n ? 'bg-orange-50' : 'hover:bg-zinc-50'}`}>
+              <div className={`h-6 w-6 shrink-0 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all ${s.n < step ? 'bg-orange-500 border-orange-500 text-white' : s.n === step ? 'border-orange-500 text-orange-600' : 'border-zinc-200 text-zinc-400'}`}>
+                {s.n < step ? '✓' : s.n}
+              </div>
+              <div className="min-w-0">
+                <p className={`text-xs font-semibold ${step === s.n ? 'text-orange-700' : s.n < step ? 'text-zinc-600' : 'text-zinc-400'}`}>{s.title}</p>
+                <p className="text-[9px] text-zinc-400 truncate">{s.desc}</p>
+              </div>
+            </button>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function Ecom2SidebarBillingPreview() {
+  const [active, setActive] = useState('Overview');
+  const items = ['Overview', 'Current Plan', 'Payment Methods', 'Billing History', 'Invoices', 'Usage'];
+  const plan = { name: 'Pro', price: '$49/mo', next: 'May 15, 2026', used: 68 };
+  return (
+    <PreviewWrap bg="bg-green-50">
+      <div className="flex h-[300px] w-[220px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="px-4 py-3 border-b border-zinc-100"><p className="text-xs font-bold text-zinc-800">💳 Billing</p></div>
+        <div className="px-3 py-2.5 bg-gradient-to-br from-emerald-500 to-teal-600 mx-2 mt-2 rounded-xl">
+          <div className="flex items-center justify-between">
+            <p className="text-[10px] font-bold text-emerald-100">CURRENT PLAN</p>
+            <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[9px] font-bold text-white">{plan.name}</span>
+          </div>
+          <p className="text-lg font-bold text-white mt-0.5">{plan.price}</p>
+          <p className="text-[9px] text-emerald-100">Renews {plan.next}</p>
+          <div className="mt-1.5 h-1 rounded-full bg-white/20"><div className="h-1 rounded-full bg-white" style={{ width: `${plan.used}%` }} /></div>
+          <p className="text-[9px] text-emerald-100 mt-0.5">{plan.used}% of quota used</p>
+        </div>
+        <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {items.map(item => (
+            <button key={item} onClick={() => setActive(item)}
+              className={`w-full text-left rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all ${active === item ? 'bg-emerald-50 text-emerald-700' : 'text-zinc-500 hover:bg-zinc-50'}`}>{item}</button>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function Ecom2SidebarInvoicesPreview() {
+  const [active, setActive] = useState('All');
+  const filters = [{ l: 'All', n: 47, dot: 'bg-zinc-400' }, { l: 'Paid', n: 38, dot: 'bg-emerald-500' }, { l: 'Pending', n: 6, dot: 'bg-amber-400' }, { l: 'Overdue', n: 3, dot: 'bg-red-500' }];
+  const recent = [
+    { id: 'INV-2024', client: 'Acme Corp', amount: '$1,200', status: 'Paid', statusColor: 'text-emerald-600' },
+    { id: 'INV-2023', client: 'Beta LLC', amount: '$840', status: 'Pending', statusColor: 'text-amber-600' },
+    { id: 'INV-2022', client: 'Gamma Inc', amount: '$2,400', status: 'Paid', statusColor: 'text-emerald-600' },
+  ];
+  return (
+    <PreviewWrap bg="bg-blue-50">
+      <div className="flex h-[300px] w-[230px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100">
+          <p className="text-xs font-bold text-zinc-800">🧾 Invoices</p>
+          <button className="rounded-lg bg-blue-600 px-2 py-1 text-[10px] font-bold text-white">+ New</button>
+        </div>
+        <div className="flex gap-1 px-2 py-2 border-b border-zinc-100">
+          {filters.map(({ l, n, dot }) => (
+            <button key={l} onClick={() => setActive(l)}
+              className={`flex items-center gap-1 rounded-lg px-2 py-1 text-[10px] font-semibold transition-all ${active === l ? 'bg-blue-50 text-blue-700' : 'text-zinc-500 hover:bg-zinc-50'}`}>
+              <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />{l} <span className="text-zinc-400">({n})</span>
+            </button>
+          ))}
+        </div>
+        <div className="flex-1 px-2 py-1.5 overflow-auto space-y-0.5">
+          {recent.map(({ id, client, amount, status, statusColor }) => (
+            <div key={id} className="flex items-center gap-2 rounded-lg px-2.5 py-2 hover:bg-zinc-50 transition">
+              <div className="flex-1 min-w-0"><p className="text-xs font-semibold text-zinc-800">{id}</p><p className="text-[9px] text-zinc-500">{client}</p></div>
+              <div className="text-right"><p className="text-xs font-bold text-zinc-800">{amount}</p><p className={`text-[9px] font-semibold ${statusColor}`}>{status}</p></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function Ecom2SidebarSingleInvoicePreview() {
+  return (
+    <PreviewWrap bg="bg-slate-50">
+      <div className="flex h-[300px] w-[240px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100">
+          <div><p className="text-xs font-bold text-zinc-800">INV-2024-001</p><p className="text-[9px] text-zinc-400">Apr 1 – Apr 30, 2026</p></div>
+          <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">Paid</span>
+        </div>
+        <div className="flex-1 px-4 py-3 overflow-auto space-y-2">
+          <div className="flex items-center justify-between py-1 border-b border-zinc-100"><p className="text-xs text-zinc-500">Client</p><p className="text-xs font-semibold text-zinc-800">Acme Corp</p></div>
+          <div className="flex items-center justify-between py-1 border-b border-zinc-100"><p className="text-xs text-zinc-500">Issued</p><p className="text-xs font-semibold text-zinc-800">Apr 1, 2026</p></div>
+          <div className="flex items-center justify-between py-1 border-b border-zinc-100"><p className="text-xs text-zinc-500">Due</p><p className="text-xs font-semibold text-zinc-800">Apr 30, 2026</p></div>
+          <div className="rounded-xl bg-zinc-50 px-3 py-2.5 space-y-1">
+            {[['Consulting (10h)', '$800'], ['Design work', '$400'], ['Tax (10%)', '$120']].map(([item, val]) => (
+              <div key={item} className="flex items-center justify-between"><p className="text-[11px] text-zinc-600">{item}</p><p className="text-[11px] font-semibold text-zinc-800">{val}</p></div>
+            ))}
+          </div>
+          <div className="flex items-center justify-between rounded-xl bg-blue-600 px-3 py-2.5">
+            <p className="text-xs font-bold text-white">Total</p>
+            <p className="text-sm font-bold text-white">$1,320</p>
+          </div>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function Ecom2SidebarCreateInvoicePreview() {
+  const [step, setStep] = useState(1);
+  const steps = [
+    { n: 1, label: 'Client Details' },
+    { n: 2, label: 'Line Items' },
+    { n: 3, label: 'Tax & Discount' },
+    { n: 4, label: 'Payment Terms' },
+    { n: 5, label: 'Preview & Send' },
+  ];
+  return (
+    <PreviewWrap bg="bg-blue-50">
+      <div className="flex h-[300px] w-[220px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="px-4 py-3 border-b border-zinc-100">
+          <p className="text-xs font-bold text-zinc-800">🧾 Create Invoice</p>
+          <div className="mt-2 h-1.5 rounded-full bg-zinc-100"><div className="h-1.5 rounded-full bg-blue-600 transition-all" style={{ width: `${(step/5)*100}%` }} /></div>
+          <p className="text-[9px] text-zinc-400 mt-1">Step {step} of 5</p>
+        </div>
+        <nav className="flex-1 px-3 py-2 overflow-auto space-y-1">
+          {steps.map(s => (
+            <button key={s.n} onClick={() => setStep(s.n)}
+              className={`w-full flex items-center gap-3 rounded-xl px-2.5 py-2 text-left transition-all ${step === s.n ? 'bg-blue-50' : 'hover:bg-zinc-50'}`}>
+              <div className={`h-7 w-7 shrink-0 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all ${s.n < step ? 'bg-blue-600 border-blue-600 text-white' : s.n === step ? 'border-blue-600 text-blue-600' : 'border-zinc-200 text-zinc-400'}`}>
+                {s.n < step ? '✓' : s.n}
+              </div>
+              <span className={`text-xs font-semibold ${step === s.n ? 'text-blue-700' : s.n < step ? 'text-zinc-600' : 'text-zinc-400'}`}>{s.label}</span>
+            </button>
+          ))}
+        </nav>
+        <div className="px-3 py-3 border-t border-zinc-100 flex gap-2">
+          <button onClick={() => setStep(s => Math.max(1, s - 1))} disabled={step === 1} className="flex-1 rounded-lg border border-zinc-200 py-1.5 text-xs font-semibold text-zinc-600 disabled:opacity-40">Back</button>
+          <button onClick={() => setStep(s => Math.min(5, s + 1))} disabled={step === 5} className="flex-1 rounded-lg bg-blue-600 py-1.5 text-xs font-semibold text-white disabled:opacity-40">Next</button>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function Ecom2SidebarTransactionsPreview() {
+  const [active, setActive] = useState('All');
+  const filters = ['All', 'Income', 'Expense', 'Refund'];
+  const txns = [
+    { label: 'Order #4821', amount: '+$248', type: 'income', time: '2h ago' },
+    { label: 'Stripe Fee', amount: '-$7.20', type: 'expense', time: '2h ago' },
+    { label: 'Refund #4790', amount: '-$49', type: 'refund', time: '5h ago' },
+    { label: 'Order #4820', amount: '+$129', type: 'income', time: '1d ago' },
+  ];
+  const colorMap: Record<string, string> = { income: 'text-emerald-600', expense: 'text-red-500', refund: 'text-amber-600' };
+  return (
+    <PreviewWrap bg="bg-teal-50">
+      <div className="flex h-[300px] w-[230px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100">
+          <p className="text-xs font-bold text-zinc-800">💸 Transactions</p>
+          <span className="text-[10px] text-zinc-400">This month</span>
+        </div>
+        <div className="flex gap-1 px-2 py-2 border-b border-zinc-100">
+          {filters.map(f => (
+            <button key={f} onClick={() => setActive(f)}
+              className={`flex-1 rounded-lg py-1 text-[10px] font-semibold transition-all ${active === f ? 'bg-teal-600 text-white' : 'bg-zinc-100 text-zinc-500 hover:bg-zinc-200'}`}>{f}</button>
+          ))}
+        </div>
+        <div className="flex-1 px-2 py-1.5 overflow-auto space-y-0.5">
+          {txns.map(({ label, amount, type, time }) => (
+            <div key={label} className="flex items-center gap-2 rounded-lg px-2.5 py-2 hover:bg-zinc-50 transition">
+              <div className={`h-6 w-6 rounded-lg flex items-center justify-center text-xs shrink-0 ${type === 'income' ? 'bg-emerald-100' : type === 'expense' ? 'bg-red-100' : 'bg-amber-100'}`}>
+                {type === 'income' ? '↑' : '↓'}
+              </div>
+              <div className="flex-1 min-w-0"><p className="text-xs font-medium text-zinc-800 truncate">{label}</p><p className="text-[9px] text-zinc-400">{time}</p></div>
+              <span className={`text-xs font-bold ${colorMap[type]}`}>{amount}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function Ecom2SidebarSingleTxnPreview() {
+  return (
+    <PreviewWrap bg="bg-emerald-50">
+      <div className="flex h-[300px] w-[230px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100">
+          <p className="text-xs font-bold text-zinc-800">Transaction Detail</p>
+          <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">Success</span>
+        </div>
+        <div className="flex-1 px-4 py-3 overflow-auto space-y-2">
+          <div className="text-center py-3">
+            <p className="text-2xl font-bold text-zinc-900">+$248.00</p>
+            <p className="text-[10px] text-zinc-400 mt-0.5">Apr 11, 2026 · 2:34 PM</p>
+          </div>
+          {[['Order ID', '#ORD-4821'], ['Customer', 'John Smith'], ['Payment', 'Visa •••• 4242'], ['Net Amount', '$240.80'], ['Fee', '$7.20 (2.9% + 30¢)'], ['Status', 'Settled']].map(([k, v]) => (
+            <div key={k} className="flex items-center justify-between py-1 border-b border-zinc-50">
+              <p className="text-[10px] text-zinc-500">{k}</p>
+              <p className="text-[10px] font-semibold text-zinc-800">{v}</p>
+            </div>
+          ))}
+          <button className="w-full mt-2 rounded-xl border border-zinc-200 py-2 text-xs font-semibold text-zinc-600 hover:bg-zinc-50 transition">Issue Refund</button>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function Ecom2SidebarOrdersPreview() {
+  const [active, setActive] = useState('Pending');
+  const statuses = [{ l: 'All Orders', n: 142, dot: 'bg-zinc-300' }, { l: 'Pending', n: 12, dot: 'bg-amber-400' }, { l: 'Processing', n: 8, dot: 'bg-blue-400' }, { l: 'Shipped', n: 58, dot: 'bg-indigo-400' }, { l: 'Delivered', n: 54, dot: 'bg-emerald-400' }, { l: 'Returned', n: 10, dot: 'bg-red-400' }];
+  return (
+    <PreviewWrap bg="bg-indigo-50">
+      <div className="flex h-[300px] w-[220px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100">
+          <p className="text-xs font-bold text-zinc-800">🛒 Orders</p>
+          <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">12 pending</span>
+        </div>
+        <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {statuses.map(({ l, n, dot }) => (
+            <button key={l} onClick={() => setActive(l)}
+              className={`w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs transition-all ${active === l ? 'bg-indigo-50 text-indigo-700' : 'text-zinc-600 hover:bg-zinc-50'}`}>
+              <span className={`h-2 w-2 rounded-full ${dot}`} /><span className="flex-1 font-medium text-left">{l}</span>
+              <span className="text-[10px] text-zinc-400">{n}</span>
+            </button>
+          ))}
+        </nav>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function Ecom2SidebarCustomersPreview() {
+  const [active, setActive] = useState('All');
+  const segs = [{ l: 'All', n: 1248 }, { l: 'VIP', n: 84 }, { l: 'Repeat', n: 392 }, { l: 'At-risk', n: 47 }, { l: 'New', n: 128 }];
+  const recent = [{ name: 'Alice Wang', spent: '$4,820', tag: 'VIP' }, { name: 'Bob Torres', spent: '$240', tag: 'New' }, { name: 'Carol Kim', spent: '$1,200', tag: 'Repeat' }];
+  return (
+    <PreviewWrap bg="bg-rose-50">
+      <div className="flex h-[300px] w-[220px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="px-3 py-3 border-b border-zinc-100"><div className="flex items-center gap-1.5 rounded-lg bg-zinc-100 px-2.5 py-1.5 mb-2"><span className="text-xs text-zinc-400">🔍</span><span className="text-xs text-zinc-400">Search customers...</span></div>
+          <div className="flex flex-wrap gap-1">
+            {segs.map(({ l, n }) => (
+              <button key={l} onClick={() => setActive(l)}
+                className={`rounded-md px-2 py-0.5 text-[10px] font-semibold transition-all ${active === l ? 'bg-rose-600 text-white' : 'bg-zinc-100 text-zinc-500 hover:bg-zinc-200'}`}>{l} ({n})</button>
+            ))}
+          </div>
+        </div>
+        <div className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {recent.map(({ name, spent, tag }) => (
+            <div key={name} className="flex items-center gap-2 rounded-lg px-2.5 py-2 hover:bg-zinc-50 transition">
+              <div className="h-7 w-7 rounded-full bg-rose-100 flex items-center justify-center text-[10px] font-bold text-rose-600 shrink-0">{name[0]}</div>
+              <div className="flex-1 min-w-0"><p className="text-xs font-semibold text-zinc-800 truncate">{name}</p><p className="text-[9px] text-zinc-500">{spent} lifetime</p></div>
+              <span className="rounded-md bg-zinc-100 px-1.5 py-0.5 text-[9px] font-bold text-zinc-500">{tag}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function Ecom2SidebarAnalyticsPreview() {
+  const [period, setPeriod] = useState('7D');
+  const stats = [{ label: 'Revenue', val: '$12.4K', ch: '+18%', up: true }, { label: 'Orders', val: '284', ch: '+9%', up: true }, { label: 'Avg Order', val: '$43.7', ch: '-2%', up: false }, { label: 'Conv Rate', val: '3.2%', ch: '+0.4%', up: true }];
+  return (
+    <PreviewWrap bg="bg-violet-50">
+      <div className="flex h-[300px] w-[230px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="flex items-center justify-between px-3 py-3 border-b border-zinc-100">
+          <p className="text-xs font-bold text-zinc-800">📊 Store Analytics</p>
+          <div className="flex gap-1">
+            {['7D', '30D', '90D'].map(p => (
+              <button key={p} onClick={() => setPeriod(p)} className={`rounded-md px-2 py-0.5 text-[10px] font-bold transition-all ${period === p ? 'bg-violet-600 text-white' : 'bg-zinc-100 text-zinc-500'}`}>{p}</button>
+            ))}
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-2 p-3">
+          {stats.map(({ label, val, ch, up }) => (
+            <div key={label} className="rounded-xl bg-zinc-50 p-2.5">
+              <p className="text-[9px] text-zinc-500 font-medium">{label}</p>
+              <p className="text-sm font-bold text-zinc-900 mt-0.5">{val}</p>
+              <p className={`text-[9px] font-bold ${up ? 'text-emerald-600' : 'text-red-500'}`}>{ch}</p>
+            </div>
+          ))}
+        </div>
+        <div className="px-3 pb-3 flex-1 flex flex-col justify-end gap-1">
+          {[['Top Product', 'Wireless Headphones'], ['Top Region', 'California']].map(([k, v]) => (
+            <div key={k} className="flex items-center justify-between rounded-lg bg-zinc-50 px-2.5 py-1.5">
+              <p className="text-[10px] text-zinc-500">{k}</p><p className="text-[10px] font-semibold text-zinc-800">{v}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Calendar Sidebars (9)
+───────────────────────────────────────────── */
+function CalSidebarMainPreview() {
+  const [selDay, setSelDay] = useState(11);
+  const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  const nums = [null, null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
+  const events = [{ time: '9:00', title: 'Team standup', color: 'bg-blue-500' }, { time: '11:30', title: 'Design review', color: 'bg-violet-500' }, { time: '14:00', title: '1:1 with manager', color: 'bg-emerald-500' }];
+  return (
+    <PreviewWrap bg="bg-blue-50">
+      <div className="flex h-[320px] w-[220px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="flex items-center justify-between px-3 py-2.5 border-b border-zinc-100">
+          <span className="text-xs font-bold text-zinc-800">April 2026</span>
+          <div className="flex gap-1"><button className="text-zinc-400 hover:text-zinc-700 px-1">‹</button><button className="text-zinc-400 hover:text-zinc-700 px-1">›</button></div>
+        </div>
+        <div className="px-2 py-2">
+          <div className="grid grid-cols-7 mb-1">
+            {days.map((d, i) => <span key={i} className="text-center text-[9px] font-bold text-zinc-400">{d}</span>)}
+          </div>
+          <div className="grid grid-cols-7 gap-y-0.5">
+            {nums.map((n, i) => n ? (
+              <button key={i} onClick={() => setSelDay(n)}
+                className={`h-6 w-6 mx-auto flex items-center justify-center rounded-full text-[10px] font-medium transition-all ${n === selDay ? 'bg-blue-600 text-white' : n === 11 ? 'ring-1 ring-blue-400 text-blue-600' : 'text-zinc-600 hover:bg-zinc-100'}`}>{n}</button>
+            ) : <div key={i} />)}
+          </div>
+        </div>
+        <div className="flex-1 px-2 pb-2 overflow-auto space-y-1 border-t border-zinc-100 pt-2">
+          <p className="px-1 text-[9px] font-bold text-zinc-400 mb-1">TODAY</p>
+          {events.map(({ time, title, color }) => (
+            <div key={title} className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-zinc-50">
+              <span className={`h-2 w-2 rounded-full ${color} shrink-0`} />
+              <span className="text-[9px] font-bold text-zinc-400 w-7 shrink-0">{time}</span>
+              <span className="text-[10px] font-medium text-zinc-700 truncate">{title}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CalSidebarMiniCalPreview() {
+  const [sel, setSel] = useState(11);
+  const [month, setMonth] = useState(3);
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  const firstDay = new Date(2026, month, 1).getDay();
+  const total = daysInMonth[month];
+  const hasDot = new Set([4, 9, 11, 17, 22, 28]);
+  return (
+    <PreviewWrap bg="bg-indigo-50">
+      <div className="flex h-[300px] w-[210px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="flex items-center justify-between px-3 py-2.5 border-b border-zinc-100">
+          <button onClick={() => setMonth(m => Math.max(0, m - 1))} className="text-zinc-400 hover:text-zinc-700 px-1 text-sm">‹</button>
+          <span className="text-xs font-bold text-zinc-800">{months[month]} 2026</span>
+          <button onClick={() => setMonth(m => Math.min(11, m + 1))} className="text-zinc-400 hover:text-zinc-700 px-1 text-sm">›</button>
+        </div>
+        <div className="px-3 py-2">
+          <div className="grid grid-cols-7 mb-1.5">{days.map((d, i) => <span key={i} className="text-center text-[9px] font-bold text-zinc-400">{d}</span>)}</div>
+          <div className="grid grid-cols-7 gap-y-1">
+            {Array(firstDay).fill(null).map((_, i) => <div key={`e${i}`} />)}
+            {Array.from({ length: total }, (_, i) => i + 1).map(n => (
+              <button key={n} onClick={() => setSel(n)}
+                className={`relative flex h-6 w-6 mx-auto flex-col items-center justify-center rounded-full text-[10px] font-medium transition-all ${n === sel ? 'bg-indigo-600 text-white' : 'text-zinc-600 hover:bg-indigo-50'}`}>
+                {n}
+                {hasDot.has(n) && <span className={`absolute bottom-0.5 h-1 w-1 rounded-full ${n === sel ? 'bg-white' : 'bg-indigo-400'}`} />}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="px-3 py-2 border-t border-zinc-100 flex-1 overflow-auto">
+          <p className="text-[9px] font-bold text-zinc-400 mb-1">Selected: Apr {sel}, 2026</p>
+          <div className="space-y-1">
+            {[{ t: 'Sprint review', c: 'bg-indigo-500' }, { t: 'Client call', c: 'bg-rose-400' }].map(({ t, c }) => (
+              <div key={t} className="flex items-center gap-1.5"><span className={`h-1.5 w-1.5 rounded-full ${c}`} /><span className="text-[10px] text-zinc-600">{t}</span></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CalSidebarEventsPreview() {
+  const [active, setActive] = useState(0);
+  const upcoming = [
+    { day: 'Today', time: '9:00 AM', title: 'Team standup', loc: 'Zoom', color: 'bg-blue-500', people: 8 },
+    { day: 'Today', time: '2:00 PM', title: 'Design review', loc: 'Conf Room A', color: 'bg-violet-500', people: 4 },
+    { day: 'Tomorrow', time: '10:30 AM', title: 'Board meeting', loc: 'HQ Floor 3', color: 'bg-rose-500', people: 12 },
+    { day: 'Apr 14', time: '1:00 PM', title: 'Product demo', loc: 'Google Meet', color: 'bg-emerald-500', people: 6 },
+  ];
+  return (
+    <PreviewWrap bg="bg-sky-50">
+      <div className="flex h-[300px] w-[240px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100">
+          <p className="text-xs font-bold text-zinc-800">📅 Upcoming Events</p>
+          <button className="rounded-lg bg-blue-600 px-2 py-1 text-[10px] font-bold text-white">+ Add</button>
+        </div>
+        <div className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {upcoming.map(({ day, time, title, loc, color, people }, i) => (
+            <button key={i} onClick={() => setActive(i)}
+              className={`w-full flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-left transition-all ${active === i ? 'bg-blue-50' : 'hover:bg-zinc-50'}`}>
+              <span className={`h-8 w-1 rounded-full shrink-0 ${color}`} />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-zinc-800 truncate">{title}</p>
+                <p className="text-[9px] text-zinc-500">{day} · {time} · {loc}</p>
+              </div>
+              <span className="text-[9px] text-zinc-400 shrink-0">{people}👥</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CalSidebarCategoriesPreview() {
+  const [enabled, setEnabled] = useState(new Set(['Work', 'Personal', 'Birthdays']));
+  const cals = [
+    { label: 'Work', color: 'bg-blue-500', count: 14 },
+    { label: 'Personal', color: 'bg-emerald-500', count: 7 },
+    { label: 'Family', color: 'bg-rose-500', count: 3 },
+    { label: 'Birthdays', color: 'bg-amber-400', count: 5 },
+    { label: 'Holidays', color: 'bg-violet-500', count: 8 },
+    { label: 'Sport', color: 'bg-teal-500', count: 6 },
+  ];
+  const toggle = (l: string) => setEnabled(s => { const n = new Set(s); n.has(l) ? n.delete(l) : n.add(l); return n; });
+  return (
+    <PreviewWrap bg="bg-violet-50">
+      <div className="flex h-[300px] w-[210px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="px-4 py-3 border-b border-zinc-100"><p className="text-xs font-bold text-zinc-800">🗂️ Calendars</p></div>
+        <div className="flex-1 px-3 py-2 space-y-0.5 overflow-auto">
+          <p className="text-[9px] font-bold text-zinc-400 mb-1 tracking-widest">MY CALENDARS</p>
+          {cals.map(({ label, color, count }) => (
+            <div key={label} className="flex items-center gap-2.5 rounded-lg px-1 py-1.5 hover:bg-zinc-50 transition cursor-pointer" onClick={() => toggle(label)}>
+              <span className={`h-3.5 w-3.5 rounded-sm shrink-0 ${enabled.has(label) ? color : 'bg-zinc-200'} transition-colors`} />
+              <span className={`flex-1 text-xs font-medium ${enabled.has(label) ? 'text-zinc-700' : 'text-zinc-400'}`}>{label}</span>
+              <span className="text-[9px] text-zinc-400">{count}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CalSidebarSchedulePreview() {
+  const hours = [9, 10, 11, 12, 13, 14, 15, 16, 17];
+  const events = [
+    { start: 9, span: 1, title: 'Standup', color: 'bg-blue-500' },
+    { start: 11, span: 1.5, title: 'Design Review', color: 'bg-violet-500' },
+    { start: 14, span: 1, title: '1:1 Manager', color: 'bg-emerald-500' },
+  ];
+  const fmt = (h: number) => `${h > 12 ? h - 12 : h}${h >= 12 ? 'pm' : 'am'}`;
+  return (
+    <PreviewWrap bg="bg-cyan-50">
+      <div className="flex h-[300px] w-[220px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100">
+          <p className="text-xs font-bold text-zinc-800">🗓️ Today — Apr 11</p>
+          <span className="rounded-md bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-700">3 events</span>
+        </div>
+        <div className="flex-1 overflow-auto px-2 py-2">
+          <div className="relative">
+            {hours.map(h => (
+              <div key={h} className="flex items-start gap-2 mb-2">
+                <span className="text-[9px] text-zinc-400 w-8 shrink-0 pt-0.5">{fmt(h)}</span>
+                <div className="flex-1 border-t border-zinc-100 min-h-[20px] relative">
+                  {events.filter(e => e.start === h).map(({ title, color, span }) => (
+                    <div key={title} className={`rounded-md px-2 py-1 text-[10px] font-semibold text-white ${color}`} style={{ height: `${span * 24}px` }}>{title}</div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CalSidebarInvitesPreview() {
+  const [resp, setResp] = useState<Record<string, string>>({});
+  const invites = [
+    { title: 'Q2 Planning', who: 'Sarah M.', time: 'Apr 14, 10am', color: 'bg-violet-500' },
+    { title: 'Product Launch', who: 'Team Lead', time: 'Apr 18, 2pm', color: 'bg-rose-500' },
+    { title: 'Team Lunch', who: 'HR Team', time: 'Apr 22, 12pm', color: 'bg-amber-400' },
+  ];
+  return (
+    <PreviewWrap bg="bg-rose-50">
+      <div className="flex h-[300px] w-[250px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100">
+          <p className="text-xs font-bold text-zinc-800">📨 Invites</p>
+          <span className="rounded-full bg-rose-100 px-2 py-0.5 text-[10px] font-bold text-rose-700">{invites.length} pending</span>
+        </div>
+        <div className="flex-1 px-2 py-2 space-y-1 overflow-auto">
+          {invites.map(({ title, who, time, color }) => (
+            <div key={title} className="rounded-xl border border-zinc-100 p-2.5">
+              <div className="flex items-start gap-2 mb-2">
+                <span className={`h-2 w-2 rounded-full mt-1 shrink-0 ${color}`} />
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold text-zinc-800">{title}</p>
+                  <p className="text-[9px] text-zinc-500">{who} · {time}</p>
+                </div>
+              </div>
+              <div className="flex gap-1.5">
+                {resp[title] ? (
+                  <span className={`rounded-md px-2 py-1 text-[10px] font-bold ${resp[title] === 'yes' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-600'}`}>{resp[title] === 'yes' ? '✓ Accepted' : '✗ Declined'}</span>
+                ) : (
+                  <>
+                    <button onClick={() => setResp(p => ({ ...p, [title]: 'yes' }))} className="flex-1 rounded-md bg-emerald-500 py-1 text-[10px] font-bold text-white">Accept</button>
+                    <button onClick={() => setResp(p => ({ ...p, [title]: 'no' }))} className="flex-1 rounded-md border border-zinc-200 py-1 text-[10px] font-bold text-zinc-600">Decline</button>
+                  </>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CalSidebarRemindersPreview() {
+  const [done, setDone] = useState(new Set<number>());
+  const reminders = [
+    { time: 'In 15 min', title: 'Team standup', priority: 'high' },
+    { time: 'In 2h', title: 'Submit weekly report', priority: 'medium' },
+    { time: 'Today 5pm', title: 'Review PRs', priority: 'low' },
+    { time: 'Tomorrow', title: 'Monthly 1:1s', priority: 'medium' },
+    { time: 'Apr 15', title: 'Quarterly goals review', priority: 'high' },
+  ];
+  const p = { high: 'text-red-500', medium: 'text-amber-500', low: 'text-zinc-400' };
+  return (
+    <PreviewWrap bg="bg-amber-50">
+      <div className="flex h-[300px] w-[240px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100">
+          <p className="text-xs font-bold text-zinc-800">🔔 Reminders</p>
+          <button className="rounded-lg bg-amber-500 px-2 py-1 text-[10px] font-bold text-white">+ Add</button>
+        </div>
+        <div className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          {reminders.map(({ time, title, priority }, i) => (
+            <div key={i} className={`flex items-center gap-2.5 rounded-xl px-2.5 py-2 transition-all ${done.has(i) ? 'opacity-40' : 'hover:bg-zinc-50'}`}>
+              <button onClick={() => setDone(s => { const n = new Set(s); n.has(i) ? n.delete(i) : n.add(i); return n; })}
+                className={`h-4 w-4 shrink-0 rounded-full border-2 flex items-center justify-center transition-all ${done.has(i) ? 'bg-emerald-500 border-emerald-500' : 'border-zinc-300'}`}>
+                {done.has(i) && <span className="text-white text-[8px]">✓</span>}
+              </button>
+              <div className="flex-1 min-w-0">
+                <p className={`text-xs font-medium text-zinc-700 ${done.has(i) ? 'line-through' : ''} truncate`}>{title}</p>
+                <p className={`text-[9px] font-semibold ${p[priority as keyof typeof p]}`}>{time} · {priority}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CalSidebarSearchPreview() {
+  const [query, setQuery] = useState('');
+  const [view, setView] = useState('Month');
+  const views = ['Day', 'Week', 'Month', 'Year'];
+  const results = [
+    { title: 'Team standup', date: 'Daily 9am', color: 'bg-blue-500' },
+    { title: 'Board meeting', date: 'Apr 18, 10am', color: 'bg-rose-500' },
+    { title: 'Product review', date: 'Apr 25, 2pm', color: 'bg-violet-500' },
+  ];
+  return (
+    <PreviewWrap bg="bg-emerald-50">
+      <div className="flex h-[300px] w-[230px] flex-col rounded-2xl bg-white shadow-lg border border-zinc-100 overflow-hidden">
+        <div className="px-3 py-3 border-b border-zinc-100 space-y-2">
+          <div className="flex items-center gap-1.5 rounded-xl border border-zinc-200 px-2.5 py-2">
+            <span className="text-zinc-400 text-xs">🔍</span>
+            <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search events..." className="flex-1 text-xs text-zinc-700 bg-transparent focus:outline-none placeholder:text-zinc-400" />
+          </div>
+          <div className="flex gap-1">
+            {views.map(v => (
+              <button key={v} onClick={() => setView(v)}
+                className={`flex-1 rounded-lg py-1 text-[10px] font-bold transition-all ${view === v ? 'bg-emerald-600 text-white' : 'bg-zinc-100 text-zinc-500 hover:bg-zinc-200'}`}>{v}</button>
+            ))}
+          </div>
+        </div>
+        <div className="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+          <p className="px-1 text-[9px] font-bold text-zinc-400 mb-1">UPCOMING</p>
+          {results.map(({ title, date, color }) => (
+            <div key={title} className="flex items-center gap-2.5 rounded-xl px-2.5 py-2 hover:bg-zinc-50 transition">
+              <span className={`h-2 w-2 rounded-full ${color} shrink-0`} />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-zinc-800 truncate">{title}</p>
+                <p className="text-[9px] text-zinc-500">{date}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
    Aside Navigation — Dashboard (3)
 ───────────────────────────────────────────── */
 function DashSidebarMinimalPreview() {
@@ -8982,6 +10004,777 @@ kbd { border-radius:.375rem; border:1px solid #e4e4e7; background:#f4f4f5; paddi
 .fleet-progress-bg { height:.25rem; border-radius:9999px; background:#f4f4f5; flex:1; }
 .fleet-progress-fill { height:.25rem; border-radius:9999px; background:#4ade80; }`,
   },
+
+  /* ── AI Assistant Sidebars ── */
+  {
+    id: 'ai-sidebar-main', name: 'AI Studio Sidebar', category: 'AI Tools',
+    description: 'Dark AI studio sidebar with Text, Image, Code, Video generators and credit counter.',
+    Preview: AiSidebarMainPreview,
+    tailwind: `<aside class="flex h-72 w-52 flex-col rounded-2xl border border-slate-700 bg-gradient-to-b from-slate-900 to-slate-800 shadow-2xl overflow-hidden">
+  <div class="flex items-center gap-2 border-b border-slate-700 px-4 py-3.5">
+    <div class="h-7 w-7 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center text-white text-sm">✦</div>
+    <span class="text-sm font-bold text-white">AI Studio</span>
+  </div>
+  <nav class="flex-1 px-2 py-2 space-y-0.5">
+    <a href="#" class="flex items-center gap-2 rounded-xl bg-violet-600/80 px-2.5 py-2 text-xs font-medium text-white shadow-lg"><span>✍️</span> Text Generator <span class="ml-auto rounded-md bg-slate-700 px-1.5 text-[9px] font-bold text-slate-300">GPT-4</span></a>
+    <a href="#" class="flex items-center gap-2 rounded-xl px-2.5 py-2 text-xs font-medium text-slate-400 hover:bg-slate-700 hover:text-white"><span>🎨</span> Image Generator</a>
+    <a href="#" class="flex items-center gap-2 rounded-xl px-2.5 py-2 text-xs font-medium text-slate-400 hover:bg-slate-700 hover:text-white"><span>💻</span> Code Generator</a>
+    <a href="#" class="flex items-center justify-between rounded-xl px-2.5 py-2 text-xs font-medium text-slate-400 hover:bg-slate-700 hover:text-white"><span class="flex items-center gap-2"><span>🎬</span> Video Generator</span><span class="rounded-md bg-emerald-500 px-1.5 text-[9px] font-bold text-white">New</span></a>
+  </nav>
+  <div class="flex items-center gap-2 border-t border-slate-700 px-3 py-3">
+    <div class="h-6 w-6 rounded-full bg-violet-500 flex items-center justify-center text-[10px] font-bold text-white">U</div>
+    <div><p class="text-[10px] font-semibold text-white">Pro Plan</p><p class="text-[9px] text-slate-400">850 credits left</p></div>
+  </div>
+</aside>`,
+    css: `.ai-aside { display:flex; flex-direction:column; background:linear-gradient(180deg,#0f172a,#1e293b); border:1px solid #334155; border-radius:1rem; overflow:hidden; }
+.ai-aside-item { display:flex; align-items:center; gap:.5rem; border-radius:.75rem; padding:.5rem .625rem; font-size:.75rem; font-weight:500; color:#94a3b8; text-decoration:none; transition:background .15s, color .15s; }
+.ai-aside-item:hover { background:#1e293b; color:#fff; }
+.ai-aside-item.active { background:rgba(139,92,246,.5); color:#fff; box-shadow:0 4px 12px rgba(139,92,246,.2); }`,
+  },
+  {
+    id: 'ai-sidebar-text', name: 'AI Text Generator Sidebar', category: 'AI Tools',
+    description: 'Text generator sidebar with model selector, templates, and prompt history.',
+    Preview: AiSidebarTextPreview,
+    tailwind: `<aside class="flex h-72 w-52 flex-col rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl overflow-hidden">
+  <div class="border-b border-slate-700 px-3 py-3">
+    <p class="text-xs font-bold text-white mb-2">✍️ Text Generator</p>
+    <select class="w-full rounded-lg bg-slate-800 border border-slate-600 text-[11px] text-slate-300 px-2 py-1.5 focus:outline-none">
+      <option>GPT-4o</option><option>Claude 3.5</option><option>Gemini Pro</option>
+    </select>
+  </div>
+  <div class="px-2 py-2 border-b border-slate-700">
+    <p class="px-2.5 text-[9px] font-bold text-slate-500 mb-1">TEMPLATES</p>
+    <a href="#" class="flex items-center rounded-lg bg-violet-600 px-2.5 py-1.5 text-xs text-white">Blog Post</a>
+    <a href="#" class="flex items-center rounded-lg px-2.5 py-1.5 text-xs text-slate-400 hover:bg-slate-800">Email Draft</a>
+  </div>
+</aside>`,
+    css: `.text-ai-aside { display:flex; flex-direction:column; background:#0f172a; border:1px solid #334155; border-radius:1rem; overflow:hidden; }
+.text-ai-template { border-radius:.5rem; padding:.375rem .625rem; font-size:.75rem; color:#94a3b8; text-decoration:none; display:block; transition:background .15s; }
+.text-ai-template:hover { background:#1e293b; }
+.text-ai-template.active { background:#7c3aed; color:#fff; }`,
+  },
+  {
+    id: 'ai-sidebar-image', name: 'AI Image Generator Sidebar', category: 'AI Tools',
+    description: 'Image generator sidebar — art style selector, aspect ratio, and quality picker.',
+    Preview: AiSidebarImagePreview,
+    tailwind: `<aside class="flex h-72 w-52 flex-col rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl overflow-hidden">
+  <div class="border-b border-slate-700 px-3 py-3"><p class="text-xs font-bold text-white">🎨 Image Generator</p></div>
+  <div class="flex-1 px-3 py-2 overflow-auto space-y-3">
+    <div>
+      <p class="text-[9px] font-bold text-slate-400 mb-1.5 tracking-widest">STYLE</p>
+      <a href="#" class="block rounded-lg bg-pink-600 px-2.5 py-1.5 text-xs text-white mb-0.5">Photorealistic</a>
+      <a href="#" class="block rounded-lg px-2.5 py-1.5 text-xs text-slate-400 hover:bg-slate-800">Illustration</a>
+    </div>
+    <div>
+      <p class="text-[9px] font-bold text-slate-400 mb-1.5 tracking-widest">ASPECT RATIO</p>
+      <div class="flex gap-1">
+        <button class="rounded-lg bg-pink-600 px-3 py-1 text-[10px] font-bold text-white">1:1</button>
+        <button class="rounded-lg bg-slate-800 px-3 py-1 text-[10px] font-bold text-slate-400">16:9</button>
+        <button class="rounded-lg bg-slate-800 px-3 py-1 text-[10px] font-bold text-slate-400">9:16</button>
+      </div>
+    </div>
+  </div>
+</aside>`,
+    css: `.image-ai-aside { display:flex; flex-direction:column; background:#0f172a; border:1px solid #334155; border-radius:1rem; overflow:hidden; }
+.style-option { border-radius:.5rem; padding:.375rem .625rem; font-size:.75rem; color:#94a3b8; display:block; transition:background .15s; }
+.style-option.active { background:#db2777; color:#fff; }
+.ratio-btn { border-radius:.5rem; padding:.25rem .75rem; font-size:.625rem; font-weight:700; transition:background .15s; }
+.ratio-btn.active { background:#db2777; color:#fff; }`,
+  },
+  {
+    id: 'ai-sidebar-code', name: 'AI Code Generator Sidebar', category: 'AI Tools',
+    description: 'Code generator sidebar — language tags and action modes (generate, refactor, debug).',
+    Preview: AiSidebarCodePreview,
+    tailwind: `<aside class="flex h-72 w-52 flex-col rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl overflow-hidden">
+  <div class="border-b border-slate-700 px-3 py-3"><p class="text-xs font-bold text-white">💻 Code Generator</p></div>
+  <div class="flex-1 px-3 py-2 overflow-auto space-y-3">
+    <div>
+      <p class="text-[9px] font-bold text-slate-400 mb-1.5 tracking-widest">LANGUAGE</p>
+      <div class="flex flex-wrap gap-1">
+        <button class="rounded-md bg-blue-600 px-2 py-1 text-[10px] font-semibold text-white">TypeScript</button>
+        <button class="rounded-md bg-slate-800 px-2 py-1 text-[10px] font-semibold text-slate-400 hover:bg-slate-700">Python</button>
+        <button class="rounded-md bg-slate-800 px-2 py-1 text-[10px] font-semibold text-slate-400 hover:bg-slate-700">Go</button>
+      </div>
+    </div>
+    <div>
+      <p class="text-[9px] font-bold text-slate-400 mb-1.5 tracking-widest">ACTION</p>
+      <a href="#" class="block rounded-lg bg-blue-600 px-2.5 py-1.5 text-xs text-white mb-0.5">Generate</a>
+      <a href="#" class="block rounded-lg px-2.5 py-1.5 text-xs text-slate-400 hover:bg-slate-800">Refactor</a>
+    </div>
+  </div>
+</aside>`,
+    css: `.code-ai-aside { display:flex; flex-direction:column; background:#0f172a; border:1px solid #334155; border-radius:1rem; overflow:hidden; }
+.lang-chip { border-radius:.375rem; padding:.25rem .5rem; font-size:.625rem; font-weight:600; transition:background .15s; }
+.lang-chip.active { background:#2563eb; color:#fff; }
+.lang-chip:not(.active) { background:#1e293b; color:#64748b; }`,
+  },
+  {
+    id: 'ai-sidebar-video', name: 'AI Video Generator Sidebar', category: 'AI Tools',
+    description: 'Video generator sidebar — mode selector, duration, and quality options.',
+    Preview: AiSidebarVideoPreview,
+    tailwind: `<aside class="flex h-72 w-52 flex-col rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl overflow-hidden">
+  <div class="flex items-center justify-between border-b border-slate-700 px-3 py-3">
+    <p class="text-xs font-bold text-white">🎬 Video Generator</p>
+    <span class="rounded-md bg-emerald-500 px-2 py-0.5 text-[9px] font-bold text-white">New</span>
+  </div>
+  <div class="flex-1 px-3 py-2 overflow-auto space-y-3">
+    <div>
+      <p class="text-[9px] font-bold text-slate-400 mb-1.5 tracking-widest">MODE</p>
+      <a href="#" class="block rounded-lg bg-rose-600 px-2.5 py-1.5 text-xs text-white mb-0.5">Text to Video</a>
+      <a href="#" class="block rounded-lg px-2.5 py-1.5 text-xs text-slate-400 hover:bg-slate-800">Image to Video</a>
+    </div>
+    <div>
+      <p class="text-[9px] font-bold text-slate-400 mb-1.5 tracking-widest">DURATION</p>
+      <div class="flex flex-wrap gap-1">
+        <button class="rounded-md bg-slate-800 px-2.5 py-1 text-[10px] font-bold text-slate-400">5s</button>
+        <button class="rounded-md bg-rose-600 px-2.5 py-1 text-[10px] font-bold text-white">15s</button>
+        <button class="rounded-md bg-slate-800 px-2.5 py-1 text-[10px] font-bold text-slate-400">30s</button>
+      </div>
+    </div>
+  </div>
+</aside>`,
+    css: `.video-ai-aside { display:flex; flex-direction:column; background:#0f172a; border:1px solid #334155; border-radius:1rem; overflow:hidden; }
+.video-mode { border-radius:.5rem; padding:.375rem .625rem; font-size:.75rem; display:block; transition:background .15s; }
+.video-mode.active { background:#e11d48; color:#fff; }
+.video-mode:not(.active) { color:#64748b; }
+.duration-btn { border-radius:.375rem; padding:.25rem .625rem; font-size:.625rem; font-weight:700; transition:background .15s; }
+.duration-btn.active { background:#e11d48; color:#fff; }`,
+  },
+  {
+    id: 'ai-sidebar-history', name: 'AI Generation History Sidebar', category: 'AI Tools',
+    description: 'AI generation history sidebar with type icon, truncated prompt, tag, and timestamp.',
+    Preview: AiSidebarHistoryPreview,
+    tailwind: `<aside class="flex h-72 w-60 flex-col rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl overflow-hidden">
+  <div class="flex items-center justify-between border-b border-slate-700 px-3 py-3">
+    <p class="text-xs font-bold text-white">🕐 History</p>
+    <button class="text-[10px] text-slate-400 hover:text-slate-200">Clear all</button>
+  </div>
+  <div class="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+    <button class="w-full rounded-xl bg-slate-700 px-2.5 py-2 text-left">
+      <div class="flex items-center gap-2 mb-0.5"><span>✍️</span><span class="flex-1 text-[11px] font-semibold text-slate-200 truncate">Write a product launch email for...</span></div>
+      <div class="flex items-center gap-2 pl-6"><span class="rounded-md bg-slate-700 px-1.5 py-0.5 text-[9px] font-bold text-slate-400">Text</span><span class="text-[9px] text-slate-500">2m ago</span></div>
+    </button>
+    <button class="w-full rounded-xl px-2.5 py-2 text-left hover:bg-slate-800">
+      <div class="flex items-center gap-2 mb-0.5"><span>🎨</span><span class="flex-1 text-[11px] font-semibold text-slate-200 truncate">Futuristic city at night, neon lights...</span></div>
+      <div class="flex items-center gap-2 pl-6"><span class="rounded-md bg-slate-700 px-1.5 py-0.5 text-[9px] font-bold text-slate-400">Image</span><span class="text-[9px] text-slate-500">14m ago</span></div>
+    </button>
+  </div>
+</aside>`,
+    css: `.history-ai-aside { display:flex; flex-direction:column; background:#0f172a; border:1px solid #334155; border-radius:1rem; overflow:hidden; }
+.history-item { border-radius:.75rem; padding:.5rem .625rem; text-align:left; transition:background .15s; cursor:pointer; }
+.history-item:hover { background:#1e293b; }
+.history-item.active { background:#334155; }`,
+  },
+  {
+    id: 'ai-sidebar-models', name: 'AI Model Selection Sidebar', category: 'AI Tools',
+    description: 'AI model picker showing provider, speed, quality rating, and free/best badges.',
+    Preview: AiSidebarModelsPreview,
+    tailwind: `<aside class="flex h-72 w-60 flex-col rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl overflow-hidden">
+  <div class="border-b border-slate-700 px-3 py-3"><p class="text-xs font-bold text-white">🤖 Select Model</p></div>
+  <div class="flex-1 px-2 py-2 space-y-1 overflow-auto">
+    <button class="w-full rounded-xl border border-violet-500 bg-violet-600/20 px-3 py-2 text-left">
+      <div class="flex items-center justify-between"><span class="text-xs font-bold text-violet-300">GPT-4o</span><span class="rounded-md bg-violet-500/30 px-1.5 py-0.5 text-[9px] font-bold text-violet-300">Best</span></div>
+      <div class="flex items-center gap-3 mt-0.5"><span class="text-[9px] text-slate-500">OpenAI</span><span class="text-[9px] text-slate-500">Speed: ⚡⚡⚡</span></div>
+    </button>
+    <button class="w-full rounded-xl border border-transparent px-3 py-2 text-left hover:bg-slate-800">
+      <div class="flex items-center justify-between"><span class="text-xs font-bold text-slate-200">Claude 3.5</span></div>
+      <div class="flex items-center gap-3 mt-0.5"><span class="text-[9px] text-slate-500">Anthropic</span><span class="text-[9px] text-slate-500">Speed: ⚡⚡⚡</span></div>
+    </button>
+  </div>
+</aside>`,
+    css: `.models-ai-aside { display:flex; flex-direction:column; background:#0f172a; border:1px solid #334155; border-radius:1rem; overflow:hidden; }
+.model-card { border-radius:.75rem; border:1px solid transparent; padding:.5rem .75rem; text-align:left; transition:background .15s, border-color .15s; cursor:pointer; }
+.model-card:hover { background:#1e293b; }
+.model-card.selected { border-color:#7c3aed; background:rgba(139,92,246,.15); }`,
+  },
+  {
+    id: 'ai-sidebar-prompts', name: 'AI Saved Prompts Sidebar', category: 'AI Tools',
+    description: 'Saved prompts library with category tabs, usage counts, and favourite star.',
+    Preview: AiSidebarPromptsPreview,
+    tailwind: `<aside class="flex h-72 w-60 flex-col rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl overflow-hidden">
+  <div class="border-b border-slate-700 px-3 py-3"><p class="text-xs font-bold text-white">📝 Saved Prompts</p></div>
+  <div class="flex gap-1 border-b border-slate-700 px-2 py-2">
+    <button class="rounded-md bg-violet-600 px-2 py-1 text-[10px] font-semibold text-white">All</button>
+    <button class="rounded-md bg-slate-800 px-2 py-1 text-[10px] font-semibold text-slate-400">Marketing</button>
+    <button class="rounded-md bg-slate-800 px-2 py-1 text-[10px] font-semibold text-slate-400">Dev</button>
+    <button class="rounded-md bg-slate-800 px-2 py-1 text-[10px] font-semibold text-slate-400">SEO</button>
+  </div>
+  <div class="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+    <div class="flex items-center gap-2 rounded-xl px-2.5 py-2 hover:bg-slate-800 transition">
+      <div class="flex-1 min-w-0"><p class="text-xs font-medium text-slate-200 truncate">Product launch email</p><p class="text-[9px] text-slate-500">142 uses</p></div>
+      <span class="text-yellow-400 text-sm">★</span>
+    </div>
+  </div>
+</aside>`,
+    css: `.prompts-ai-aside { display:flex; flex-direction:column; background:#0f172a; border:1px solid #334155; border-radius:1rem; overflow:hidden; }
+.prompt-item { display:flex; align-items:center; gap:.5rem; border-radius:.75rem; padding:.5rem .625rem; transition:background .15s; cursor:pointer; }
+.prompt-item:hover { background:#1e293b; }
+.prompt-fav { color:#facc15; font-size:1rem; cursor:pointer; }`,
+  },
+  {
+    id: 'ai-sidebar-settings', name: 'AI Settings Sidebar', category: 'AI Tools',
+    description: 'AI settings sidebar — streaming toggle, memory toggle, temperature slider, API keys.',
+    Preview: AiSidebarSettingsPreview,
+    tailwind: `<aside class="flex h-72 w-60 flex-col rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl overflow-hidden">
+  <div class="border-b border-slate-700 px-3 py-3"><p class="text-xs font-bold text-white">⚙️ AI Settings</p></div>
+  <div class="flex-1 px-3 py-2 overflow-auto space-y-3">
+    <div class="flex items-center justify-between">
+      <div><p class="text-xs font-semibold text-slate-200">Streaming</p><p class="text-[9px] text-slate-500">Real-time token output</p></div>
+      <div class="relative h-5 w-9 rounded-full bg-violet-600 cursor-pointer"><span class="absolute top-0.5 left-4 h-4 w-4 rounded-full bg-white transition-all" /></div>
+    </div>
+    <div>
+      <div class="flex items-center justify-between mb-1"><p class="text-xs font-semibold text-slate-200">Temperature</p><span class="text-xs font-bold text-violet-400">0.7</span></div>
+      <input type="range" class="w-full accent-violet-500" value="70" max="100" />
+    </div>
+    <div><p class="text-[9px] font-bold text-slate-500 mb-1 tracking-widest">API & KEYS</p>
+      <p class="py-1 text-xs text-slate-400 cursor-pointer hover:text-slate-200">API Keys</p>
+      <p class="py-1 text-xs text-slate-400 cursor-pointer hover:text-slate-200">Usage & Billing</p>
+    </div>
+  </div>
+</aside>`,
+    css: `.settings-ai-aside { display:flex; flex-direction:column; background:#0f172a; border:1px solid #334155; border-radius:1rem; overflow:hidden; }
+.ai-toggle { position:relative; height:1.25rem; width:2.25rem; border-radius:9999px; cursor:pointer; transition:background .2s; }
+.ai-toggle.on { background:#7c3aed; }
+.ai-toggle.off { background:#334155; }
+.ai-toggle-thumb { position:absolute; top:.125rem; height:1rem; width:1rem; border-radius:9999px; background:#fff; transition:left .2s; }`,
+  },
+
+  /* ── E-Commerce Sidebars ── */
+  {
+    id: 'ecom2-sidebar-main', name: 'eCommerce Full Sidebar', category: 'eCommerce',
+    description: 'Full eCommerce app sidebar — grouped Store, Finances, Customers, and Settings.',
+    Preview: Ecom2SidebarMainPreview,
+    tailwind: `<aside class="flex h-80 w-48 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="flex items-center gap-2 border-b border-zinc-100 px-4 py-3.5">
+    <div class="h-7 w-7 rounded-xl bg-orange-500 flex items-center justify-center text-white text-xs font-bold">🛍</div>
+    <span class="text-sm font-bold text-zinc-800">ShopFlow</span>
+  </div>
+  <nav class="flex-1 px-2 py-1.5 overflow-auto space-y-2">
+    <div><p class="px-2.5 mb-0.5 text-[9px] font-bold tracking-widest text-zinc-400">STORE</p>
+      <a href="#" class="flex items-center gap-2 rounded-lg bg-orange-50 px-2.5 py-1.5 text-xs font-medium text-orange-700"><span>⊞</span> Dashboard</a>
+      <a href="#" class="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-medium text-zinc-500 hover:bg-zinc-50"><span class="flex items-center gap-2"><span>📦</span> Products</span><span class="rounded-full bg-orange-100 px-1.5 text-[9px] font-bold text-orange-600">248</span></a>
+    </div>
+    <div><p class="px-2.5 mb-0.5 text-[9px] font-bold tracking-widest text-zinc-400">FINANCES</p>
+      <a href="#" class="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-medium text-zinc-500 hover:bg-zinc-50"><span>💳</span> Billing</a>
+      <a href="#" class="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-medium text-zinc-500 hover:bg-zinc-50"><span>🧾</span> Invoices</a>
+    </div>
+  </nav>
+</aside>`,
+    css: `.ecom2-aside { display:flex; flex-direction:column; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.ecom2-section-title { font-size:.5625rem; font-weight:700; letter-spacing:.1em; color:#a1a1aa; padding:.25rem .625rem .125rem; }
+.ecom2-item { display:flex; align-items:center; gap:.5rem; border-radius:.5rem; padding:.375rem .625rem; font-size:.75rem; font-weight:500; color:#71717a; text-decoration:none; transition:background .15s; }
+.ecom2-item:hover { background:#fafafa; }
+.ecom2-item.active { background:#fff7ed; color:#c2410c; }`,
+  },
+  {
+    id: 'ecom2-sidebar-products', name: 'Products Filter Sidebar', category: 'eCommerce',
+    description: 'Products sidebar with search, sort dropdown, and status filter tabs.',
+    Preview: Ecom2SidebarProductsPreview,
+    tailwind: `<aside class="flex h-72 w-52 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="flex items-center gap-2 border-b border-zinc-100 px-3 py-3">
+    <div class="flex flex-1 items-center gap-1.5 rounded-lg bg-zinc-100 px-2.5 py-1.5 text-xs text-zinc-400">🔍 Search products...</div>
+    <button class="rounded-lg bg-orange-500 px-2.5 py-1.5 text-[10px] font-bold text-white">+ Add</button>
+  </div>
+  <nav class="flex-1 px-2 py-1.5 space-y-0.5 overflow-auto">
+    <a href="#" class="flex items-center justify-between rounded-lg bg-orange-50 px-2.5 py-2 text-xs font-medium text-orange-700"><span>All Products</span><span class="text-[10px] text-orange-400">248</span></a>
+    <a href="#" class="flex items-center justify-between rounded-lg px-2.5 py-2 text-xs font-medium text-zinc-500 hover:bg-zinc-50"><span>Active</span><span class="text-[10px] text-zinc-400">189</span></a>
+    <a href="#" class="flex items-center justify-between rounded-lg px-2.5 py-2 text-xs font-medium text-zinc-500 hover:bg-zinc-50"><span>Draft</span><span class="text-[10px] text-zinc-400">42</span></a>
+    <a href="#" class="flex items-center justify-between rounded-lg px-2.5 py-2 text-xs font-medium text-zinc-500 hover:bg-zinc-50"><span>Out of Stock</span><span class="text-[10px] text-zinc-400">6</span></a>
+  </nav>
+</aside>`,
+    css: `.products-aside { display:flex; flex-direction:column; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.product-filter { display:flex; align-items:center; justify-content:space-between; border-radius:.5rem; padding:.5rem .625rem; font-size:.75rem; font-weight:500; color:#71717a; text-decoration:none; transition:background .15s; }
+.product-filter:hover { background:#fafafa; }
+.product-filter.active { background:#fff7ed; color:#c2410c; }`,
+  },
+  {
+    id: 'ecom2-sidebar-add-product', name: 'Add Product Stepper Sidebar', category: 'eCommerce',
+    description: 'Multi-step product creation stepper with progress bar — 6 steps.',
+    Preview: Ecom2SidebarAddProductPreview,
+    tailwind: `<aside class="flex h-72 w-52 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="border-b border-zinc-100 px-4 py-3"><p class="text-xs font-bold text-zinc-800">📦 Add Product</p><p class="text-[9px] text-zinc-400 mt-0.5">Step 2 of 6</p></div>
+  <div class="h-1 bg-zinc-100"><div class="h-1 bg-orange-500" style="width:33%"></div></div>
+  <nav class="flex-1 px-3 py-2 overflow-auto">
+    <div class="flex items-center gap-3 rounded-lg px-2 py-2">
+      <div class="h-6 w-6 rounded-full bg-orange-500 border-2 border-orange-500 text-white text-xs font-bold flex items-center justify-center">✓</div>
+      <div><p class="text-xs font-semibold text-zinc-600">Basic Info</p><p class="text-[9px] text-zinc-400">Name, SKU, category</p></div>
+    </div>
+    <div class="flex items-center gap-3 rounded-lg bg-orange-50 px-2 py-2">
+      <div class="h-6 w-6 rounded-full border-2 border-orange-500 text-orange-600 text-xs font-bold flex items-center justify-center">2</div>
+      <div><p class="text-xs font-semibold text-orange-700">Pricing</p><p class="text-[9px] text-zinc-400">Price, compare, tax</p></div>
+    </div>
+  </nav>
+</aside>`,
+    css: `.add-product-aside { display:flex; flex-direction:column; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.add-product-step { display:flex; align-items:center; gap:.75rem; border-radius:.5rem; padding:.5rem; transition:background .15s; cursor:pointer; }
+.add-product-step.active { background:#fff7ed; }
+.step-circle { height:1.5rem; width:1.5rem; border-radius:9999px; border:2px solid #e4e4e7; display:flex; align-items:center; justify-content:center; font-size:.75rem; font-weight:700; color:#a1a1aa; flex-shrink:0; }
+.step-circle.done { background:#f97316; border-color:#f97316; color:#fff; }
+.step-circle.current { border-color:#f97316; color:#ea580c; }`,
+  },
+  {
+    id: 'ecom2-sidebar-billing', name: 'Billing Sidebar', category: 'eCommerce',
+    description: 'Billing sidebar with live plan card, quota bar, and billing navigation.',
+    Preview: Ecom2SidebarBillingPreview,
+    tailwind: `<aside class="flex h-72 w-52 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="border-b border-zinc-100 px-4 py-3"><p class="text-xs font-bold text-zinc-800">💳 Billing</p></div>
+  <div class="bg-gradient-to-br from-emerald-500 to-teal-600 mx-2 mt-2 rounded-xl px-3 py-2.5">
+    <div class="flex items-center justify-between"><p class="text-[10px] font-bold text-emerald-100">CURRENT PLAN</p><span class="rounded-md bg-white/20 px-1.5 py-0.5 text-[9px] font-bold text-white">Pro</span></div>
+    <p class="text-lg font-bold text-white mt-0.5">$49/mo</p>
+    <div class="mt-1.5 h-1 rounded-full bg-white/20"><div class="h-1 rounded-full bg-white" style="width:68%"></div></div>
+    <p class="text-[9px] text-emerald-100 mt-0.5">68% of quota used</p>
+  </div>
+  <nav class="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+    <a href="#" class="block rounded-lg bg-emerald-50 px-2.5 py-1.5 text-xs font-medium text-emerald-700">Overview</a>
+    <a href="#" class="block rounded-lg px-2.5 py-1.5 text-xs font-medium text-zinc-500 hover:bg-zinc-50">Payment Methods</a>
+    <a href="#" class="block rounded-lg px-2.5 py-1.5 text-xs font-medium text-zinc-500 hover:bg-zinc-50">Billing History</a>
+  </nav>
+</aside>`,
+    css: `.billing-aside { display:flex; flex-direction:column; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.billing-plan-card { background:linear-gradient(135deg,#10b981,#0d9488); border-radius:.75rem; margin:.5rem; padding:.75rem; }
+.billing-item { display:block; border-radius:.5rem; padding:.375rem .625rem; font-size:.75rem; font-weight:500; color:#71717a; text-decoration:none; transition:background .15s; }
+.billing-item:hover { background:#fafafa; }
+.billing-item.active { background:#ecfdf5; color:#059669; }`,
+  },
+  {
+    id: 'ecom2-sidebar-invoices', name: 'Invoices List Sidebar', category: 'eCommerce',
+    description: 'Invoice sidebar with status tabs (Paid/Pending/Overdue) and recent invoice list.',
+    Preview: Ecom2SidebarInvoicesPreview,
+    tailwind: `<aside class="flex h-72 w-56 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="flex items-center justify-between border-b border-zinc-100 px-4 py-3">
+    <p class="text-xs font-bold text-zinc-800">🧾 Invoices</p>
+    <button class="rounded-lg bg-blue-600 px-2 py-1 text-[10px] font-bold text-white">+ New</button>
+  </div>
+  <div class="flex gap-1 border-b border-zinc-100 px-2 py-2">
+    <button class="flex items-center gap-1 rounded-lg bg-blue-50 px-2 py-1 text-[10px] font-semibold text-blue-700"><span class="h-1.5 w-1.5 rounded-full bg-zinc-400"></span>All (47)</button>
+    <button class="rounded-lg px-2 py-1 text-[10px] font-semibold text-zinc-500 hover:bg-zinc-50">Paid</button>
+    <button class="rounded-lg px-2 py-1 text-[10px] font-semibold text-zinc-500 hover:bg-zinc-50">Pending</button>
+  </div>
+  <div class="flex-1 px-2 py-1.5 overflow-auto">
+    <div class="flex items-center gap-2 rounded-lg px-2.5 py-2 hover:bg-zinc-50">
+      <div class="flex-1"><p class="text-xs font-semibold text-zinc-800">INV-2024</p><p class="text-[9px] text-zinc-500">Acme Corp</p></div>
+      <div class="text-right"><p class="text-xs font-bold text-zinc-800">$1,200</p><p class="text-[9px] font-semibold text-emerald-600">Paid</p></div>
+    </div>
+  </div>
+</aside>`,
+    css: `.invoices-aside { display:flex; flex-direction:column; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.invoice-row { display:flex; align-items:center; gap:.5rem; border-radius:.5rem; padding:.5rem .625rem; transition:background .15s; cursor:pointer; }
+.invoice-row:hover { background:#fafafa; }
+.invoice-status.paid { color:#16a34a; }
+.invoice-status.pending { color:#d97706; }
+.invoice-status.overdue { color:#dc2626; }`,
+  },
+  {
+    id: 'ecom2-sidebar-single-invoice', name: 'Single Invoice Detail Sidebar', category: 'eCommerce',
+    description: 'Invoice detail sidebar — client, dates, line items breakdown, and total.',
+    Preview: Ecom2SidebarSingleInvoicePreview,
+    tailwind: `<aside class="flex h-72 w-56 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="flex items-center justify-between border-b border-zinc-100 px-4 py-3">
+    <div><p class="text-xs font-bold text-zinc-800">INV-2024-001</p><p class="text-[9px] text-zinc-400">Apr 1–30, 2026</p></div>
+    <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">Paid</span>
+  </div>
+  <div class="flex-1 px-4 py-3 overflow-auto space-y-2">
+    <div class="flex items-center justify-between py-1 border-b border-zinc-100"><p class="text-[10px] text-zinc-500">Client</p><p class="text-[10px] font-semibold text-zinc-800">Acme Corp</p></div>
+    <div class="rounded-xl bg-zinc-50 px-3 py-2 space-y-1">
+      <div class="flex justify-between"><p class="text-[11px] text-zinc-600">Consulting</p><p class="text-[11px] font-semibold">$800</p></div>
+      <div class="flex justify-between"><p class="text-[11px] text-zinc-600">Design</p><p class="text-[11px] font-semibold">$400</p></div>
+    </div>
+    <div class="flex items-center justify-between rounded-xl bg-blue-600 px-3 py-2.5">
+      <p class="text-xs font-bold text-white">Total</p><p class="text-sm font-bold text-white">$1,320</p>
+    </div>
+  </div>
+</aside>`,
+    css: `.invoice-detail-aside { display:flex; flex-direction:column; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.invoice-line { display:flex; align-items:center; justify-content:space-between; padding:.25rem 0; border-bottom:1px solid #fafafa; font-size:.75rem; }
+.invoice-total { display:flex; align-items:center; justify-content:space-between; border-radius:.75rem; background:#2563eb; padding:.625rem .75rem; color:#fff; font-weight:700; }`,
+  },
+  {
+    id: 'ecom2-sidebar-create-invoice', name: 'Create Invoice Stepper Sidebar', category: 'eCommerce',
+    description: '5-step invoice creation wizard sidebar with progress bar and Back/Next controls.',
+    Preview: Ecom2SidebarCreateInvoicePreview,
+    tailwind: `<aside class="flex h-72 w-52 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="border-b border-zinc-100 px-4 py-3">
+    <p class="text-xs font-bold text-zinc-800">🧾 Create Invoice</p>
+    <div class="mt-2 h-1.5 rounded-full bg-zinc-100"><div class="h-1.5 rounded-full bg-blue-600" style="width:20%"></div></div>
+    <p class="text-[9px] text-zinc-400 mt-1">Step 1 of 5</p>
+  </div>
+  <nav class="flex-1 px-3 py-2 overflow-auto space-y-1">
+    <div class="flex items-center gap-3 rounded-xl bg-blue-50 px-2.5 py-2">
+      <div class="h-7 w-7 rounded-full border-2 border-blue-600 text-blue-600 text-xs font-bold flex items-center justify-center">1</div>
+      <span class="text-xs font-semibold text-blue-700">Client Details</span>
+    </div>
+    <div class="flex items-center gap-3 rounded-xl px-2.5 py-2 hover:bg-zinc-50">
+      <div class="h-7 w-7 rounded-full border-2 border-zinc-200 text-zinc-400 text-xs font-bold flex items-center justify-center">2</div>
+      <span class="text-xs font-semibold text-zinc-400">Line Items</span>
+    </div>
+  </nav>
+  <div class="border-t border-zinc-100 px-3 py-3 flex gap-2">
+    <button class="flex-1 rounded-lg border border-zinc-200 py-1.5 text-xs font-semibold text-zinc-600 opacity-40">Back</button>
+    <button class="flex-1 rounded-lg bg-blue-600 py-1.5 text-xs font-semibold text-white">Next</button>
+  </div>
+</aside>`,
+    css: `.create-invoice-aside { display:flex; flex-direction:column; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.invoice-step { display:flex; align-items:center; gap:.75rem; border-radius:.75rem; padding:.5rem .625rem; transition:background .15s; cursor:pointer; }
+.invoice-step.active { background:#eff6ff; }
+.invoice-step-num { height:1.75rem; width:1.75rem; border-radius:9999px; border:2px solid #e4e4e7; display:flex; align-items:center; justify-content:center; font-size:.75rem; font-weight:700; flex-shrink:0; }
+.invoice-step-num.current { border-color:#2563eb; color:#2563eb; }
+.invoice-step-num.done { background:#2563eb; border-color:#2563eb; color:#fff; }`,
+  },
+  {
+    id: 'ecom2-sidebar-transactions', name: 'Transactions Sidebar', category: 'eCommerce',
+    description: 'Transaction sidebar with Income/Expense/Refund tabs and live feed of entries.',
+    Preview: Ecom2SidebarTransactionsPreview,
+    tailwind: `<aside class="flex h-72 w-56 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="flex items-center justify-between border-b border-zinc-100 px-4 py-3">
+    <p class="text-xs font-bold text-zinc-800">💸 Transactions</p>
+    <span class="text-[10px] text-zinc-400">This month</span>
+  </div>
+  <div class="flex gap-1 border-b border-zinc-100 px-2 py-2">
+    <button class="flex-1 rounded-lg bg-teal-600 py-1 text-[10px] font-semibold text-white">All</button>
+    <button class="flex-1 rounded-lg bg-zinc-100 py-1 text-[10px] font-semibold text-zinc-500">Income</button>
+    <button class="flex-1 rounded-lg bg-zinc-100 py-1 text-[10px] font-semibold text-zinc-500">Expense</button>
+    <button class="flex-1 rounded-lg bg-zinc-100 py-1 text-[10px] font-semibold text-zinc-500">Refund</button>
+  </div>
+  <div class="flex-1 px-2 py-1.5 overflow-auto">
+    <div class="flex items-center gap-2 rounded-lg px-2.5 py-2 hover:bg-zinc-50">
+      <div class="h-6 w-6 rounded-lg bg-emerald-100 flex items-center justify-center text-xs">↑</div>
+      <div class="flex-1"><p class="text-xs font-medium text-zinc-800 truncate">Order #4821</p><p class="text-[9px] text-zinc-400">2h ago</p></div>
+      <span class="text-xs font-bold text-emerald-600">+$248</span>
+    </div>
+  </div>
+</aside>`,
+    css: `.transactions-aside { display:flex; flex-direction:column; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.txn-row { display:flex; align-items:center; gap:.5rem; border-radius:.5rem; padding:.5rem .625rem; transition:background .15s; }
+.txn-row:hover { background:#fafafa; }
+.txn-icon.income { background:#dcfce7; }
+.txn-icon.expense { background:#fee2e2; }
+.txn-icon.refund { background:#fef9c3; }
+.txn-amount.income { color:#16a34a; }
+.txn-amount.expense { color:#dc2626; }
+.txn-amount.refund { color:#d97706; }`,
+  },
+  {
+    id: 'ecom2-sidebar-single-txn', name: 'Single Transaction Sidebar', category: 'eCommerce',
+    description: 'Transaction detail sidebar — amount hero, metadata rows, and refund CTA.',
+    Preview: Ecom2SidebarSingleTxnPreview,
+    tailwind: `<aside class="flex h-72 w-56 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="flex items-center justify-between border-b border-zinc-100 px-4 py-3">
+    <p class="text-xs font-bold text-zinc-800">Transaction Detail</p>
+    <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">Success</span>
+  </div>
+  <div class="flex-1 px-4 py-3 overflow-auto">
+    <div class="text-center py-3"><p class="text-2xl font-bold text-zinc-900">+$248.00</p><p class="text-[10px] text-zinc-400 mt-0.5">Apr 11, 2026 · 2:34 PM</p></div>
+    <div class="space-y-1">
+      <div class="flex justify-between border-b border-zinc-50 py-1"><p class="text-[10px] text-zinc-500">Order ID</p><p class="text-[10px] font-semibold text-zinc-800">#ORD-4821</p></div>
+      <div class="flex justify-between border-b border-zinc-50 py-1"><p class="text-[10px] text-zinc-500">Net Amount</p><p class="text-[10px] font-semibold text-zinc-800">$240.80</p></div>
+      <div class="flex justify-between border-b border-zinc-50 py-1"><p class="text-[10px] text-zinc-500">Fee</p><p class="text-[10px] font-semibold text-zinc-800">$7.20</p></div>
+    </div>
+    <button class="mt-3 w-full rounded-xl border border-zinc-200 py-2 text-xs font-semibold text-zinc-600">Issue Refund</button>
+  </div>
+</aside>`,
+    css: `.txn-detail-aside { display:flex; flex-direction:column; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.txn-amount-hero { font-size:1.5rem; font-weight:700; color:#18181b; text-align:center; padding:.75rem 0; }
+.txn-meta-row { display:flex; align-items:center; justify-content:space-between; padding:.25rem 0; border-bottom:1px solid #fafafa; font-size:.625rem; }
+.txn-refund-btn { width:100%; border-radius:.75rem; border:1px solid #e4e4e7; padding:.5rem; font-size:.75rem; font-weight:600; color:#52525b; cursor:pointer; transition:background .15s; }
+.txn-refund-btn:hover { background:#fafafa; }`,
+  },
+  {
+    id: 'ecom2-sidebar-orders', name: 'Orders Status Sidebar', category: 'eCommerce',
+    description: 'Orders sidebar with color-dot status filters and pending badge.',
+    Preview: Ecom2SidebarOrdersPreview,
+    tailwind: `<aside class="flex h-72 w-52 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="flex items-center justify-between border-b border-zinc-100 px-4 py-3">
+    <p class="text-xs font-bold text-zinc-800">🛒 Orders</p>
+    <span class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">12 pending</span>
+  </div>
+  <nav class="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+    <a href="#" class="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs text-zinc-600 hover:bg-zinc-50"><span class="h-2 w-2 rounded-full bg-zinc-300"></span><span class="flex-1 font-medium">All Orders</span><span class="text-[10px] text-zinc-400">142</span></a>
+    <a href="#" class="flex items-center gap-2.5 rounded-lg bg-indigo-50 px-2.5 py-2 text-xs text-indigo-700"><span class="h-2 w-2 rounded-full bg-amber-400"></span><span class="flex-1 font-medium">Pending</span><span class="text-[10px] text-zinc-400">12</span></a>
+    <a href="#" class="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs text-zinc-600 hover:bg-zinc-50"><span class="h-2 w-2 rounded-full bg-emerald-400"></span><span class="flex-1 font-medium">Delivered</span><span class="text-[10px] text-zinc-400">54</span></a>
+  </nav>
+</aside>`,
+    css: `.orders-aside { display:flex; flex-direction:column; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.order-status { display:flex; align-items:center; gap:.625rem; border-radius:.5rem; padding:.5rem .625rem; font-size:.75rem; font-weight:500; text-decoration:none; transition:background .15s; }
+.order-status:hover { background:#fafafa; }
+.order-status.active { background:#eef2ff; color:#4338ca; }`,
+  },
+  {
+    id: 'ecom2-sidebar-customers', name: 'Customers Sidebar', category: 'eCommerce',
+    description: 'Customer segment filter sidebar with search bar and recent customer list.',
+    Preview: Ecom2SidebarCustomersPreview,
+    tailwind: `<aside class="flex h-72 w-52 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="border-b border-zinc-100 px-3 py-3">
+    <div class="flex items-center gap-1.5 rounded-lg bg-zinc-100 px-2.5 py-1.5 mb-2 text-xs text-zinc-400">🔍 Search customers...</div>
+    <div class="flex flex-wrap gap-1">
+      <button class="rounded-md bg-rose-600 px-2 py-0.5 text-[10px] font-semibold text-white">All (1248)</button>
+      <button class="rounded-md bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold text-zinc-500">VIP (84)</button>
+      <button class="rounded-md bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold text-zinc-500">New (128)</button>
+    </div>
+  </div>
+  <div class="flex-1 px-2 py-2 overflow-auto">
+    <div class="flex items-center gap-2 rounded-lg px-2.5 py-2 hover:bg-zinc-50">
+      <div class="h-7 w-7 rounded-full bg-rose-100 flex items-center justify-center text-[10px] font-bold text-rose-600">A</div>
+      <div class="flex-1"><p class="text-xs font-semibold text-zinc-800">Alice Wang</p><p class="text-[9px] text-zinc-500">$4,820 lifetime</p></div>
+      <span class="rounded-md bg-zinc-100 px-1.5 py-0.5 text-[9px] font-bold text-zinc-500">VIP</span>
+    </div>
+  </div>
+</aside>`,
+    css: `.customers-aside { display:flex; flex-direction:column; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.customer-row { display:flex; align-items:center; gap:.5rem; border-radius:.5rem; padding:.5rem .625rem; transition:background .15s; cursor:pointer; }
+.customer-row:hover { background:#fafafa; }
+.customer-avatar { height:1.75rem; width:1.75rem; border-radius:9999px; display:flex; align-items:center; justify-content:center; font-size:.625rem; font-weight:700; flex-shrink:0; }`,
+  },
+  {
+    id: 'ecom2-sidebar-analytics', name: 'Store Analytics Sidebar', category: 'eCommerce',
+    description: 'eCommerce analytics sidebar with period toggle, 4 KPI mini-cards, and top product.',
+    Preview: Ecom2SidebarAnalyticsPreview,
+    tailwind: `<aside class="flex h-72 w-56 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="flex items-center justify-between border-b border-zinc-100 px-3 py-3">
+    <p class="text-xs font-bold text-zinc-800">📊 Store Analytics</p>
+    <div class="flex gap-1">
+      <button class="rounded-md bg-violet-600 px-2 py-0.5 text-[10px] font-bold text-white">7D</button>
+      <button class="rounded-md bg-zinc-100 px-2 py-0.5 text-[10px] font-bold text-zinc-500">30D</button>
+    </div>
+  </div>
+  <div class="grid grid-cols-2 gap-2 p-3">
+    <div class="rounded-xl bg-zinc-50 p-2.5"><p class="text-[9px] text-zinc-500">Revenue</p><p class="text-sm font-bold text-zinc-900">$12.4K</p><p class="text-[9px] font-bold text-emerald-600">+18%</p></div>
+    <div class="rounded-xl bg-zinc-50 p-2.5"><p class="text-[9px] text-zinc-500">Orders</p><p class="text-sm font-bold text-zinc-900">284</p><p class="text-[9px] font-bold text-emerald-600">+9%</p></div>
+  </div>
+</aside>`,
+    css: `.store-analytics-aside { display:flex; flex-direction:column; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.kpi-mini-card { border-radius:.75rem; background:#fafafa; padding:.625rem; }
+.kpi-label { font-size:.5625rem; color:#71717a; font-weight:500; }
+.kpi-value { font-size:.875rem; font-weight:700; color:#18181b; margin-top:.125rem; }
+.kpi-change.up { font-size:.5625rem; font-weight:700; color:#16a34a; }
+.kpi-change.down { font-size:.5625rem; font-weight:700; color:#dc2626; }`,
+  },
+
+  /* ── Calendar Sidebars ── */
+  {
+    id: 'cal-sidebar-main', name: 'Calendar Sidebar — Full', category: 'Calendar',
+    description: 'Full calendar sidebar with mini-month picker and upcoming events list.',
+    Preview: CalSidebarMainPreview,
+    tailwind: `<aside class="flex h-80 w-52 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="flex items-center justify-between border-b border-zinc-100 px-3 py-2.5">
+    <span class="text-xs font-bold text-zinc-800">April 2026</span>
+    <div class="flex gap-1"><button class="px-1 text-zinc-400">‹</button><button class="px-1 text-zinc-400">›</button></div>
+  </div>
+  <div class="px-2 py-2">
+    <div class="grid grid-cols-7 mb-1"><!-- day headers S M T W T F S --></div>
+    <div class="grid grid-cols-7 gap-y-0.5"><!-- day buttons --></div>
+  </div>
+  <div class="flex-1 border-t border-zinc-100 px-2 py-2 overflow-auto">
+    <p class="px-1 text-[9px] font-bold text-zinc-400 mb-1">TODAY</p>
+    <div class="flex items-center gap-2 rounded-lg px-2 py-1.5"><span class="h-2 w-2 rounded-full bg-blue-500"></span><span class="text-[9px] font-bold text-zinc-400 w-7">9:00</span><span class="text-[10px] font-medium text-zinc-700">Team standup</span></div>
+    <div class="flex items-center gap-2 rounded-lg px-2 py-1.5"><span class="h-2 w-2 rounded-full bg-violet-500"></span><span class="text-[9px] font-bold text-zinc-400 w-7">2:00</span><span class="text-[10px] font-medium text-zinc-700">1:1 with manager</span></div>
+  </div>
+</aside>`,
+    css: `.cal-aside { display:flex; flex-direction:column; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.cal-day { height:1.5rem; width:1.5rem; border-radius:9999px; display:flex; align-items:center; justify-content:center; font-size:.625rem; font-weight:500; cursor:pointer; transition:background .15s; }
+.cal-day:hover { background:#f4f4f5; }
+.cal-day.today { outline:1px solid #60a5fa; color:#2563eb; }
+.cal-day.selected { background:#2563eb; color:#fff; }
+.cal-event-row { display:flex; align-items:center; gap:.5rem; border-radius:.5rem; padding:.375rem .5rem; transition:background .15s; }
+.cal-event-row:hover { background:#fafafa; }`,
+  },
+  {
+    id: 'cal-sidebar-mini-cal', name: 'Mini Calendar Picker Sidebar', category: 'Calendar',
+    description: 'Interactive mini-month calendar with prev/next navigation, dot indicators for events.',
+    Preview: CalSidebarMiniCalPreview,
+    tailwind: `<aside class="flex h-72 w-52 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="flex items-center justify-between border-b border-zinc-100 px-3 py-2.5">
+    <button class="px-1 text-zinc-400 text-sm">‹</button>
+    <span class="text-xs font-bold text-zinc-800">April 2026</span>
+    <button class="px-1 text-zinc-400 text-sm">›</button>
+  </div>
+  <div class="px-3 py-2">
+    <div class="grid grid-cols-7 mb-1.5"><!-- S M T W T F S --></div>
+    <div class="grid grid-cols-7 gap-y-1">
+      <!-- day 11 selected: -->
+      <button class="relative flex h-6 w-6 mx-auto items-center justify-center rounded-full bg-indigo-600 text-[10px] font-medium text-white">11</button>
+    </div>
+  </div>
+</aside>`,
+    css: `.mini-cal-aside { display:flex; flex-direction:column; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.mini-cal-day { position:relative; display:flex; flex-direction:column; align-items:center; height:1.5rem; width:1.5rem; margin:auto; border-radius:9999px; font-size:.625rem; font-weight:500; cursor:pointer; transition:background .15s; color:#3f3f46; }
+.mini-cal-day:hover { background:#eef2ff; }
+.mini-cal-day.selected { background:#4f46e5; color:#fff; }
+.mini-cal-dot { position:absolute; bottom:1px; height:.25rem; width:.25rem; border-radius:9999px; background:#818cf8; }
+.mini-cal-day.selected .mini-cal-dot { background:#fff; }`,
+  },
+  {
+    id: 'cal-sidebar-events', name: 'Upcoming Events Sidebar', category: 'Calendar',
+    description: 'Event list sidebar with color strip, time, location, and attendee count.',
+    Preview: CalSidebarEventsPreview,
+    tailwind: `<aside class="flex h-72 w-60 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="flex items-center justify-between border-b border-zinc-100 px-4 py-3">
+    <p class="text-xs font-bold text-zinc-800">📅 Upcoming Events</p>
+    <button class="rounded-lg bg-blue-600 px-2 py-1 text-[10px] font-bold text-white">+ Add</button>
+  </div>
+  <div class="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+    <div class="flex items-center gap-2.5 rounded-xl bg-blue-50 px-2.5 py-2">
+      <span class="h-8 w-1 rounded-full bg-blue-500"></span>
+      <div class="flex-1 min-w-0"><p class="text-xs font-semibold text-zinc-800">Team standup</p><p class="text-[9px] text-zinc-500">Today · 9:00 AM · Zoom</p></div>
+      <span class="text-[9px] text-zinc-400">8👥</span>
+    </div>
+    <div class="flex items-center gap-2.5 rounded-xl px-2.5 py-2 hover:bg-zinc-50">
+      <span class="h-8 w-1 rounded-full bg-rose-500"></span>
+      <div class="flex-1 min-w-0"><p class="text-xs font-semibold text-zinc-800">Board meeting</p><p class="text-[9px] text-zinc-500">Tomorrow · 10:30 AM</p></div>
+    </div>
+  </div>
+</aside>`,
+    css: `.events-aside { display:flex; flex-direction:column; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.event-card { display:flex; align-items:center; gap:.625rem; border-radius:.75rem; padding:.5rem .625rem; transition:background .15s; cursor:pointer; }
+.event-card:hover { background:#fafafa; }
+.event-card.active { background:#eff6ff; }
+.event-strip { height:2rem; width:.25rem; border-radius:9999px; flex-shrink:0; }`,
+  },
+  {
+    id: 'cal-sidebar-categories', name: 'Calendar Categories Sidebar', category: 'Calendar',
+    description: 'Toggle calendar visibility by category — Work, Personal, Family, Sport with event counts.',
+    Preview: CalSidebarCategoriesPreview,
+    tailwind: `<aside class="flex h-72 w-52 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="border-b border-zinc-100 px-4 py-3"><p class="text-xs font-bold text-zinc-800">🗂️ Calendars</p></div>
+  <div class="flex-1 px-3 py-2 space-y-0.5 overflow-auto">
+    <p class="text-[9px] font-bold text-zinc-400 mb-1 tracking-widest">MY CALENDARS</p>
+    <div class="flex items-center gap-2.5 rounded-lg px-1 py-1.5 hover:bg-zinc-50 cursor-pointer">
+      <span class="h-3.5 w-3.5 rounded-sm bg-blue-500"></span>
+      <span class="flex-1 text-xs font-medium text-zinc-700">Work</span>
+      <span class="text-[9px] text-zinc-400">14</span>
+    </div>
+    <div class="flex items-center gap-2.5 rounded-lg px-1 py-1.5 hover:bg-zinc-50 cursor-pointer">
+      <span class="h-3.5 w-3.5 rounded-sm bg-emerald-500"></span>
+      <span class="flex-1 text-xs font-medium text-zinc-700">Personal</span>
+      <span class="text-[9px] text-zinc-400">7</span>
+    </div>
+    <div class="flex items-center gap-2.5 rounded-lg px-1 py-1.5 cursor-pointer opacity-40">
+      <span class="h-3.5 w-3.5 rounded-sm bg-zinc-200"></span>
+      <span class="flex-1 text-xs font-medium text-zinc-400">Family</span>
+      <span class="text-[9px] text-zinc-400">3</span>
+    </div>
+  </div>
+</aside>`,
+    css: `.categories-aside { display:flex; flex-direction:column; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.cal-category { display:flex; align-items:center; gap:.625rem; border-radius:.5rem; padding:.375rem .25rem; cursor:pointer; transition:opacity .15s; }
+.cal-category.hidden { opacity:.4; }
+.cal-category-dot { height:.875rem; width:.875rem; border-radius:.25rem; flex-shrink:0; transition:background .15s; }`,
+  },
+  {
+    id: 'cal-sidebar-schedule', name: 'Day Schedule Sidebar', category: 'Calendar',
+    description: 'Hour-by-hour day schedule sidebar with event blocks placed at correct times.',
+    Preview: CalSidebarSchedulePreview,
+    tailwind: `<aside class="flex h-72 w-52 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="flex items-center justify-between border-b border-zinc-100 px-4 py-3">
+    <p class="text-xs font-bold text-zinc-800">🗓️ Today — Apr 11</p>
+    <span class="rounded-md bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-700">3 events</span>
+  </div>
+  <div class="flex-1 overflow-auto px-2 py-2">
+    <div class="flex items-start gap-2 mb-2">
+      <span class="text-[9px] text-zinc-400 w-8 shrink-0 pt-0.5">9am</span>
+      <div class="flex-1 border-t border-zinc-100">
+        <div class="rounded-md bg-blue-500 px-2 py-1 text-[10px] font-semibold text-white" style="height:24px">Standup</div>
+      </div>
+    </div>
+    <div class="flex items-start gap-2 mb-2">
+      <span class="text-[9px] text-zinc-400 w-8 shrink-0 pt-0.5">11am</span>
+      <div class="flex-1 border-t border-zinc-100">
+        <div class="rounded-md bg-violet-500 px-2 py-1 text-[10px] font-semibold text-white" style="height:36px">Design Review</div>
+      </div>
+    </div>
+  </div>
+</aside>`,
+    css: `.schedule-aside { display:flex; flex-direction:column; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.schedule-hour { display:flex; align-items:flex-start; gap:.5rem; margin-bottom:.5rem; }
+.schedule-time { font-size:.5625rem; color:#a1a1aa; width:2rem; flex-shrink:0; padding-top:.125rem; }
+.schedule-slot { flex:1; border-top:1px solid #f4f4f5; min-height:1.25rem; }
+.schedule-event { border-radius:.375rem; padding:.25rem .5rem; font-size:.625rem; font-weight:600; color:#fff; }`,
+  },
+  {
+    id: 'cal-sidebar-invites', name: 'Event Invites Sidebar', category: 'Calendar',
+    description: 'Pending event invitations with Accept/Decline buttons and confirmation states.',
+    Preview: CalSidebarInvitesPreview,
+    tailwind: `<aside class="flex h-72 w-60 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="flex items-center justify-between border-b border-zinc-100 px-4 py-3">
+    <p class="text-xs font-bold text-zinc-800">📨 Invites</p>
+    <span class="rounded-full bg-rose-100 px-2 py-0.5 text-[10px] font-bold text-rose-700">3 pending</span>
+  </div>
+  <div class="flex-1 px-2 py-2 space-y-1 overflow-auto">
+    <div class="rounded-xl border border-zinc-100 p-2.5">
+      <div class="flex items-start gap-2 mb-2">
+        <span class="h-2 w-2 rounded-full mt-1 bg-violet-500"></span>
+        <div><p class="text-xs font-semibold text-zinc-800">Q2 Planning</p><p class="text-[9px] text-zinc-500">Sarah M. · Apr 14, 10am</p></div>
+      </div>
+      <div class="flex gap-1.5">
+        <button class="flex-1 rounded-md bg-emerald-500 py-1 text-[10px] font-bold text-white">Accept</button>
+        <button class="flex-1 rounded-md border border-zinc-200 py-1 text-[10px] font-bold text-zinc-600">Decline</button>
+      </div>
+    </div>
+  </div>
+</aside>`,
+    css: `.invites-aside { display:flex; flex-direction:column; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.invite-card { border-radius:.75rem; border:1px solid #f4f4f5; padding:.625rem; }
+.invite-accept { flex:1; border-radius:.375rem; background:#22c55e; color:#fff; font-size:.625rem; font-weight:700; padding:.25rem; border:none; cursor:pointer; }
+.invite-decline { flex:1; border-radius:.375rem; border:1px solid #e4e4e7; color:#52525b; font-size:.625rem; font-weight:700; padding:.25rem; cursor:pointer; background:transparent; }`,
+  },
+  {
+    id: 'cal-sidebar-reminders', name: 'Reminders Sidebar', category: 'Calendar',
+    description: 'Reminder checklist sidebar with priority levels, check-off, and strikethrough.',
+    Preview: CalSidebarRemindersPreview,
+    tailwind: `<aside class="flex h-72 w-60 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="flex items-center justify-between border-b border-zinc-100 px-4 py-3">
+    <p class="text-xs font-bold text-zinc-800">🔔 Reminders</p>
+    <button class="rounded-lg bg-amber-500 px-2 py-1 text-[10px] font-bold text-white">+ Add</button>
+  </div>
+  <div class="flex-1 px-2 py-2 space-y-0.5 overflow-auto">
+    <div class="flex items-center gap-2.5 rounded-xl px-2.5 py-2 hover:bg-zinc-50">
+      <div class="h-4 w-4 shrink-0 rounded-full border-2 border-zinc-300 flex items-center justify-center"></div>
+      <div class="flex-1 min-w-0">
+        <p class="text-xs font-medium text-zinc-700 truncate">Team standup</p>
+        <p class="text-[9px] font-semibold text-red-500">In 15 min · high</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-2.5 rounded-xl px-2.5 py-2 opacity-40">
+      <div class="h-4 w-4 shrink-0 rounded-full border-2 bg-emerald-500 border-emerald-500 flex items-center justify-center"><span class="text-white text-[8px]">✓</span></div>
+      <p class="text-xs font-medium text-zinc-400 line-through truncate">Weekly report</p>
+    </div>
+  </div>
+</aside>`,
+    css: `.reminders-aside { display:flex; flex-direction:column; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.reminder-row { display:flex; align-items:center; gap:.625rem; border-radius:.75rem; padding:.5rem .625rem; transition:opacity .15s; }
+.reminder-row.done { opacity:.4; }
+.reminder-check { height:1rem; width:1rem; border-radius:9999px; border:2px solid #d4d4d8; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; transition:background .15s, border-color .15s; }
+.reminder-check.checked { background:#22c55e; border-color:#22c55e; }`,
+  },
+  {
+    id: 'cal-sidebar-search', name: 'Calendar Search Sidebar', category: 'Calendar',
+    description: 'Calendar search sidebar with view toggle (Day/Week/Month/Year) and upcoming results.',
+    Preview: CalSidebarSearchPreview,
+    tailwind: `<aside class="flex h-72 w-56 flex-col rounded-2xl border border-zinc-100 bg-white shadow-lg overflow-hidden">
+  <div class="border-b border-zinc-100 px-3 py-3 space-y-2">
+    <div class="flex items-center gap-1.5 rounded-xl border border-zinc-200 px-2.5 py-2">
+      <span class="text-zinc-400 text-xs">🔍</span>
+      <input placeholder="Search events..." class="flex-1 text-xs bg-transparent focus:outline-none placeholder:text-zinc-400" />
+    </div>
+    <div class="flex gap-1">
+      <button class="flex-1 rounded-lg bg-emerald-600 py-1 text-[10px] font-bold text-white">Month</button>
+      <button class="flex-1 rounded-lg bg-zinc-100 py-1 text-[10px] font-bold text-zinc-500">Day</button>
+      <button class="flex-1 rounded-lg bg-zinc-100 py-1 text-[10px] font-bold text-zinc-500">Week</button>
+      <button class="flex-1 rounded-lg bg-zinc-100 py-1 text-[10px] font-bold text-zinc-500">Year</button>
+    </div>
+  </div>
+  <div class="flex-1 px-2 py-2 overflow-auto">
+    <p class="px-1 text-[9px] font-bold text-zinc-400 mb-1">UPCOMING</p>
+    <div class="flex items-center gap-2.5 rounded-xl px-2.5 py-2 hover:bg-zinc-50">
+      <span class="h-2 w-2 rounded-full bg-blue-500"></span>
+      <div><p class="text-xs font-semibold text-zinc-800">Team standup</p><p class="text-[9px] text-zinc-500">Daily 9am</p></div>
+    </div>
+  </div>
+</aside>`,
+    css: `.cal-search-aside { display:flex; flex-direction:column; border-radius:1rem; border:1px solid #f4f4f5; background:#fff; overflow:hidden; }
+.cal-view-btn { flex:1; border-radius:.5rem; padding:.25rem; font-size:.625rem; font-weight:700; cursor:pointer; transition:background .15s; border:none; }
+.cal-view-btn.active { background:#16a34a; color:#fff; }
+.cal-view-btn:not(.active) { background:#f4f4f5; color:#71717a; }`,
+  },
 ];
 
 /* ─────────────────────────────────────────────
@@ -9030,9 +10823,15 @@ const CATEGORY_META: Record<string, { icon: string; pill: string; pillActive: st
   'Overlay':        { icon: '🪟', pill: 'bg-rose-50 text-rose-700',            pillActive: 'bg-rose-500 text-white',          accent: 'bg-rose-50/60' },
   'Layout':         { icon: '▦',  pill: 'bg-slate-100 text-slate-600',         pillActive: 'bg-slate-700 text-white',         accent: 'bg-slate-50/60' },
   'Aside Nav':      { icon: '◧',  pill: 'bg-teal-50 text-teal-700',            pillActive: 'bg-teal-600 text-white',          accent: 'bg-teal-50/40' },
+  'AI Tools':       { icon: '✦',  pill: 'bg-violet-50 text-violet-700',         pillActive: 'bg-violet-700 text-white',        accent: 'bg-slate-950' },
+  'eCommerce':      { icon: '🛍️', pill: 'bg-orange-50 text-orange-700',         pillActive: 'bg-orange-500 text-white',        accent: 'bg-orange-50/40' },
+  'Calendar':       { icon: '📅', pill: 'bg-blue-50 text-blue-700',             pillActive: 'bg-blue-600 text-white',          accent: 'bg-blue-50/40' },
 };
 
-const CATEGORIES = ['All', 'Feedback', 'Navigation', 'Forms & Inputs', 'Display', 'Overlay', 'Layout', 'Aside Nav'];
+const CATEGORIES = ['All', 'Feedback', 'Navigation', 'Forms & Inputs', 'Display', 'Overlay', 'Layout', 'Aside Nav', 'AI Tools', 'eCommerce', 'Calendar'];
+
+/** Categories that render better as a single-column list */
+const SINGLE_COL_CATS = new Set(['Aside Nav', 'AI Tools', 'eCommerce', 'Calendar']);
 
 /* ─────────────────────────────────────────────
    Share Toast
@@ -9390,7 +11189,7 @@ export default function UIComponentsClient() {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+            <div className={`grid gap-5 ${SINGLE_COL_CATS.has(activeCat) ? 'grid-cols-1 max-w-2xl' : 'grid-cols-1 xl:grid-cols-2'}`}>
               {filtered.map((comp) => (
                 <ComponentCard key={comp.id} comp={comp} />
               ))}
