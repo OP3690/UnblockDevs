@@ -130,6 +130,8 @@ export default function HtmlViewerPage() {
       </ToolSEOContent>
 
       <ToolPageFooterBand toolName="html_viewer" />
+      {/* Portal target for HTML Viewer fullscreen — must be outside ToolPageShell's overflow-hidden */}
+      <div id="hv-fs-root" />
     </>
   );
 }

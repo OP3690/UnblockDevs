@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   Copy, Check, RefreshCw, Maximize2, Minimize2, Monitor, Smartphone, Tablet,
   Moon, Sun, Download, Play, Share2, Trash2, ZoomIn, ZoomOut, Terminal,
@@ -108,6 +109,7 @@ function HtmlViewerTool() {
   const [logs, setLogs]             = useState<ConsoleEntry[]>([]);
   const [consoleOpen, setConsoleOpen] = useState(false);
   const [splitPos, setSplitPos]     = useState(42); // editor % of total width
+  const [mounted, setMounted]       = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dragRef = useRef(false);
 
@@ -134,6 +136,9 @@ function HtmlViewerTool() {
     window.addEventListener('message', h);
     return () => window.removeEventListener('message', h);
   }, []);
+
+  // Mount flag (for portal SSR safety)
+  useEffect(() => { setMounted(true); }, []);
 
   // Keyboard
   useEffect(() => {
@@ -207,7 +212,7 @@ function HtmlViewerTool() {
     checker: 'repeating-conic-gradient(#d1d5db 0% 25%, #f9fafb 0% 50%) 0 0 / 16px 16px',
   };
 
-  return (
+  const toolContent = (
     <div className={outerCls}>
 
       {/* ══════════════ TOP TOOLBAR ══════════════ */}
@@ -409,6 +414,11 @@ function HtmlViewerTool() {
       </div>
     </div>
   );
+
+  if (fullscreen && mounted) {
+    return createPortal(toolContent, document.body);
+  }
+  return toolContent;
 }
 
 // ── Page shell ────────────────────────────────────────────────────────────────
