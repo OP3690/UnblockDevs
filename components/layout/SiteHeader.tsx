@@ -292,7 +292,7 @@ export default function SiteHeader() {
                 value={searchQ}
                 onChange={(e) => { setSearchQ(e.target.value); setSelectedIdx(0); }}
                 onKeyDown={handleSearchKey}
-                placeholder="Search 50+ tools — try 'gradient', 'jwt', 'base64'…"
+                placeholder="Search 50+ tools — try 'gradient', 'jwt', 'css'…"
                 aria-label="Search all tools"
                 className="flex-1 bg-transparent text-[14px] text-zinc-800 placeholder:text-zinc-400 focus:outline-none"
               />
