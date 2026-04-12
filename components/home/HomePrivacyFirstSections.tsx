@@ -77,6 +77,7 @@ export default function HomePrivacyFirstSections({
       { label: 'CSS Gradients', cats: ['all', 'dev'], variant: 'hot', href: '/css-gradient-generator' },
       { label: 'HTML Formatter', cats: ['all', 'dev'], variant: 'new', href: '/html-formatter' },
       { label: 'Image → Base64', cats: ['all', 'encode', 'dev'], variant: 'new', href: '/image-to-base64' },
+      { label: 'HTML Viewer', cats: ['all', 'dev'], variant: 'new', href: '/html-viewer' },
     ],
     [toolPageUrls],
   );

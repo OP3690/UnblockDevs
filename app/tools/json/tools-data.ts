@@ -396,6 +396,38 @@ export const TOOLS_DIRECTORY: DirectoryTool[] = [
     icon: 'Square',
     badge: 'new',
   },
+  {
+    href: '/css-gradient-generator',
+    name: 'CSS gradient generator',
+    description: 'Build linear, radial and conic CSS gradients visually. 15 presets, drag color stops, CSS & Tailwind output.',
+    category: 'dev',
+    icon: 'Palette',
+    badge: 'new',
+  },
+  {
+    href: '/html-formatter',
+    name: 'HTML formatter & minifier',
+    description: 'Beautify messy HTML with custom indentation, or minify for production. Shows size savings.',
+    category: 'dev',
+    icon: 'Code',
+    badge: 'new',
+  },
+  {
+    href: '/image-to-base64',
+    name: 'Image to Base64 converter',
+    description: 'Convert PNG, JPG, SVG, GIF to Base64 data URIs. CSS, HTML img tag, and raw Base64 output.',
+    category: 'encode',
+    icon: 'ImageIcon',
+    badge: 'new',
+  },
+  {
+    href: '/html-viewer',
+    name: 'HTML viewer & live editor',
+    description: 'Live HTML/CSS/JS sandbox. Write code and see it render instantly in a safe iframe preview.',
+    category: 'dev',
+    icon: 'Monitor',
+    badge: 'new',
+  },
 ];
 
 export const TOOL_COUNT = TOOLS_DIRECTORY.length;
