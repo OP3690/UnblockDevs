@@ -74,6 +74,9 @@ export default function HomePrivacyFirstSections({
       { label: 'JSON → TypeScript', cats: ['all', 'json'], variant: 'new', href: '/json-to-typescript' },
       { label: 'Timestamp', cats: ['all', 'dev'], variant: 'new', href: '/timestamp-converter' },
       { label: 'Box Shadow', cats: ['all', 'dev'], variant: 'new', href: '/css-box-shadow' },
+      { label: 'CSS Gradients', cats: ['all', 'dev'], variant: 'hot', href: '/css-gradient-generator' },
+      { label: 'HTML Formatter', cats: ['all', 'dev'], variant: 'new', href: '/html-formatter' },
+      { label: 'Image → Base64', cats: ['all', 'encode', 'dev'], variant: 'new', href: '/image-to-base64' },
     ],
     [toolPageUrls],
   );
