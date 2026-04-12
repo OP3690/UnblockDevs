@@ -140,7 +140,7 @@ const TOOL_FEATURES: Record<string, string[]> = {
 };
 
 const STATS = [
-  { value: `${TOOL_COUNT}+`, label: 'Free tools',    icon: Zap },
+  { value: '50+',            label: 'Free tools',    icon: Zap },
   { value: '100%',           label: 'Browser-side',  icon: Shield },
   { value: 'Zero',           label: 'Data stored',   icon: Lock },
   { value: 'Free',           label: 'Forever',       icon: Star },
@@ -209,7 +209,7 @@ export default function ToolsJsonHubClient() {
                 </span>
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 font-mono text-[11px] text-zinc-400">
                   <Sparkles className="h-3 w-3 text-violet-400" />
-                  {TOOL_COUNT} tools · everything runs in your browser
+                  50+ tools · everything runs in your browser
                 </span>
               </div>
 
@@ -233,7 +233,7 @@ export default function ToolsJsonHubClient() {
                   type="search"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder={`Search ${TOOL_COUNT} tools…`}
+                  placeholder="Search 50+ tools…"
                   className="flex-1 bg-transparent text-[15px] text-white placeholder:text-zinc-500 focus:outline-none"
                   aria-label="Search all tools"
                 />
@@ -555,7 +555,7 @@ export default function ToolsJsonHubClient() {
           <div className="flex flex-col items-center gap-5 p-7 text-center sm:flex-row sm:justify-between sm:text-left">
             <div>
               <p className="text-[16px] font-bold text-zinc-900">
-                All {TOOL_COUNT}+ tools — free, forever
+                All 50+ tools — free, forever
               </p>
               <p className="mt-0.5 text-[13px] text-zinc-500">
                 No signup, no paywall. Everything runs entirely in your browser.

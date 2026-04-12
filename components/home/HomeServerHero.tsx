@@ -33,7 +33,7 @@ export default function HomeServerHero() {
 
             {/* Sub-copy */}
             <p className="mt-5 max-w-[30rem] text-[15px] leading-relaxed text-zinc-500 text-pretty">
-              53+ free browser-based tools for JSON, SQL, APIs, AI, color, diff, and CSS. Mask sensitive data
+              50+ free browser-based tools for JSON, SQL, APIs, AI, color, diff, and CSS. Mask sensitive data
               before sending to ChatGPT. Format, debug, and convert — all without uploading anything to a
               server.
             </p>
@@ -101,7 +101,7 @@ export default function HomeServerHero() {
       <div className="border-b border-zinc-200 bg-white">
         <div className="mx-auto grid max-w-[1400px] grid-cols-2 sm:grid-cols-4">
           {[
-            { n: '53+', l: 'Developer tools' },
+            { n: '50+', l: 'Developer tools' },
             { n: '100%', l: 'Client-side processing' },
             { n: '0', l: 'Bytes sent to servers' },
             { n: 'Free', l: 'No account, no limits' },
