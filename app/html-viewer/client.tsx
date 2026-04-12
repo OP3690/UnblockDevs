@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import {
   Copy, Check, RefreshCw, Maximize2, Minimize2, Monitor, Smartphone, Tablet,
   Moon, Sun, Download, Play, Share2, Trash2, ZoomIn, ZoomOut, Terminal,
-  ChevronDown, X, Code2, FileCode, Braces, RotateCcw, Layers,
+  ChevronDown, X, Code2, FileCode, Braces, RotateCcw, Layers, ShieldCheck, Eraser,
 } from 'lucide-react';
 import ToolPageShell from '@/components/tools/ToolPageShell';
 
@@ -82,6 +82,28 @@ const EDITOR_TEXT: Record<Tab, string> = {
   js:   'text-yellow-300',
 };
 
+// ── PII masking ───────────────────────────────────────────────────────────────
+
+function maskPII(text: string): { result: string; count: number } {
+  let n = 0;
+  const result = text
+    // Email addresses
+    .replace(/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/g, () => `[EMAIL_${++n}]`)
+    // Phone numbers (US + international variants)
+    .replace(/(\+?1[-.\s]?)?\(?([0-9]{3})\)?[-.\s]([0-9]{3})[-.\s]([0-9]{4})\b/g, () => `[PHONE_${++n}]`)
+    // Credit / debit card numbers (groups of 4)
+    .replace(/\b\d{4}[\s\-]?\d{4}[\s\-]?\d{4}[\s\-]?\d{4}\b/g, () => `[CARD_${++n}]`)
+    // Social Security Numbers
+    .replace(/\b\d{3}-\d{2}-\d{4}\b/g, () => `[SSN_${++n}]`)
+    // IPv4 addresses
+    .replace(/\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\b/g, () => `[IP_${++n}]`)
+    // Passport / national ID patterns  (e.g. A12345678)
+    .replace(/\b[A-Z]{1,2}\d{6,9}\b/g, () => `[ID_${++n}]`)
+    // Dates of birth (dd/mm/yyyy, mm-dd-yyyy, yyyy-mm-dd)
+    .replace(/\b(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}|\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2})\b/g, () => `[DATE_${++n}]`);
+  return { result, count: n };
+}
+
 function CopyBtn({ text, label }: { text: string; label: string }) {
   const [ok, setOk] = useState(false);
   return (
@@ -110,6 +132,7 @@ function HtmlViewerTool() {
   const [consoleOpen, setConsoleOpen] = useState(false);
   const [splitPos, setSplitPos]     = useState(42); // editor % of total width
   const [mounted, setMounted]       = useState(false);
+  const [maskMsg, setMaskMsg]       = useState('');
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dragRef = useRef(false);
 
@@ -171,6 +194,21 @@ function HtmlViewerTool() {
     } catch {}
   }, [html, css, js]);
 
+  const clearAll = useCallback(() => {
+    setHtml(''); setCss(''); setJs('');
+    setLogs([]); setDoc(buildDoc('', '', ''));
+  }, []);
+
+  const handleMaskPII = useCallback(() => {
+    const rh = maskPII(html); const rc = maskPII(css); const rj = maskPII(js);
+    const total = rh.count + rc.count + rj.count;
+    setHtml(rh.result); setCss(rc.result); setJs(rj.result);
+    const msg = total > 0 ? `${total} item${total !== 1 ? 's' : ''} masked` : 'No PII found';
+    setMaskMsg(msg);
+    setTimeout(() => setMaskMsg(''), 3000);
+    if (autoRun) { setLogs([]); setDoc(buildDoc(rh.result, rc.result, rj.result)); }
+  }, [html, css, js, autoRun]);
+
   // URL load
   useEffect(() => {
     try {
@@ -216,10 +254,10 @@ function HtmlViewerTool() {
     <div className={outerCls}>
 
       {/* ══════════════ TOP TOOLBAR ══════════════ */}
-      <div className={`flex flex-wrap items-center gap-2 px-3 py-2 border-b border-white/5 bg-[#161620] ${fullscreen ? '' : 'sticky top-[60px] z-20'}`}>
+      <div className={`border-b border-white/5 bg-[#161620] ${fullscreen ? '' : 'sticky top-[60px] z-20'}`}>
 
-        {/* Templates */}
-        <div className="flex items-center gap-1.5 flex-wrap min-w-0">
+        {/* Row 1: Templates + viewport/zoom/bg controls */}
+        <div className="flex flex-wrap items-center gap-2 px-3 py-2 border-b border-white/5">
           <Layers className="h-3 w-3 text-zinc-600 shrink-0" />
           {TEMPLATES.map(t => (
             <button key={t.label} onClick={() => loadTemplate(t)}
@@ -227,37 +265,37 @@ function HtmlViewerTool() {
               <span>{t.emoji}</span> {t.label}
             </button>
           ))}
+
+          <div className="ml-auto flex items-center gap-1.5">
+            {/* Viewport */}
+            <div className="flex items-center rounded-md border border-white/10 overflow-hidden text-[10px]">
+              {([['Full', Monitor, null], ['1024', Tablet, 1024], ['768', Tablet, 768], ['375', Smartphone, 375]] as const).map(([l, Icon, w]) => (
+                <button key={l} onClick={() => setVpWidth(w ?? null)}
+                  className={`flex items-center gap-1 px-2 py-1.5 transition ${vpWidth === (w ?? null) ? 'bg-indigo-600 text-white' : 'bg-white/5 text-zinc-400 hover:bg-white/10'}`}>
+                  <Icon className="h-3 w-3" /> <span className="hidden lg:inline">{l}</span>
+                </button>
+              ))}
+            </div>
+            {/* Zoom */}
+            <div className="flex items-center gap-0.5 rounded-md border border-white/10 bg-white/5 px-1.5 py-1">
+              <button onClick={() => setZoom(z => Math.max(25, z - 25))} className="text-zinc-500 hover:text-white transition p-0.5"><ZoomOut className="h-3 w-3" /></button>
+              <span className="text-[10px] text-zinc-300 w-8 text-center tabular-nums">{zoom}%</span>
+              <button onClick={() => setZoom(z => Math.min(200, z + 25))} className="text-zinc-500 hover:text-white transition p-0.5"><ZoomIn className="h-3 w-3" /></button>
+            </div>
+            {/* Preview BG */}
+            <div className="flex items-center rounded-md border border-white/10 overflow-hidden">
+              {(['white', 'dark', 'checker'] as PreviewBg[]).map(bg => (
+                <button key={bg} onClick={() => setPreviewBg(bg)} title={bg}
+                  className={`px-2 py-1.5 transition ${previewBg === bg ? 'bg-indigo-600 text-white' : 'bg-white/5 text-zinc-400 hover:bg-white/10'}`}>
+                  {bg === 'white' ? <Sun className="h-3 w-3" /> : bg === 'dark' ? <Moon className="h-3 w-3" /> : <span className="font-mono text-[9px]">░</span>}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Right controls */}
-        <div className="ml-auto flex items-center gap-1.5 flex-wrap">
-          {/* Viewport */}
-          <div className="flex items-center rounded-md border border-white/10 overflow-hidden text-[10px]">
-            {([['Full', Monitor, null], ['1024', Tablet, 1024], ['768', Tablet, 768], ['375', Smartphone, 375]] as const).map(([l, Icon, w]) => (
-              <button key={l} onClick={() => setVpWidth(w ?? null)}
-                className={`flex items-center gap-1 px-2 py-1.5 transition ${vpWidth === (w ?? null) ? 'bg-indigo-600 text-white' : 'bg-white/5 text-zinc-400 hover:bg-white/10'}`}>
-                <Icon className="h-3 w-3" /> <span className="hidden sm:inline">{l}</span>
-              </button>
-            ))}
-          </div>
-
-          {/* Zoom */}
-          <div className="flex items-center gap-0.5 rounded-md border border-white/10 bg-white/5 px-1.5 py-1">
-            <button onClick={() => setZoom(z => Math.max(25, z - 25))} className="text-zinc-500 hover:text-white transition p-0.5"><ZoomOut className="h-3 w-3" /></button>
-            <span className="text-[10px] text-zinc-300 w-8 text-center tabular-nums">{zoom}%</span>
-            <button onClick={() => setZoom(z => Math.min(200, z + 25))} className="text-zinc-500 hover:text-white transition p-0.5"><ZoomIn className="h-3 w-3" /></button>
-          </div>
-
-          {/* Preview BG */}
-          <div className="flex items-center rounded-md border border-white/10 overflow-hidden">
-            {(['white', 'dark', 'checker'] as PreviewBg[]).map(bg => (
-              <button key={bg} onClick={() => setPreviewBg(bg)} title={bg}
-                className={`px-2 py-1.5 transition ${previewBg === bg ? 'bg-indigo-600 text-white' : 'bg-white/5 text-zinc-400 hover:bg-white/10'}`}>
-                {bg === 'white' ? <Sun className="h-3 w-3" /> : bg === 'dark' ? <Moon className="h-3 w-3" /> : <span className="font-mono text-[9px]">░</span>}
-              </button>
-            ))}
-          </div>
-
+        {/* Row 2: Actions */}
+        <div className="flex flex-wrap items-center gap-1.5 px-3 py-1.5">
           {/* Auto / Run */}
           <button onClick={() => setAutoRun(v => !v)}
             className={`flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-[10px] font-semibold transition ${autoRun ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400' : 'border-white/10 bg-white/5 text-zinc-400 hover:bg-white/10'}`}>
@@ -270,22 +308,43 @@ function HtmlViewerTool() {
             </button>
           )}
 
-          <CopyBtn text={`<!DOCTYPE html>\n<html>\n<head>\n<style>${css}</style>\n</head>\n<body>${html}\n<script>${js}<\/script>\n</body>\n</html>`} label="Copy" />
+          <div className="w-px h-4 bg-white/10 mx-0.5" />
+
+          {/* Mask PII */}
+          <button onClick={handleMaskPII}
+            className="flex items-center gap-1.5 rounded-md border border-violet-500/30 bg-violet-500/10 px-2.5 py-1.5 text-[10px] font-semibold text-violet-300 hover:bg-violet-500/20 transition">
+            <ShieldCheck className="h-3 w-3" />
+            {maskMsg || 'Mask PII'}
+          </button>
+
+          {/* Clear All */}
+          <button onClick={clearAll}
+            className="flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-2.5 py-1.5 text-[10px] text-zinc-400 hover:text-red-400 hover:border-red-500/30 hover:bg-red-500/5 transition">
+            <Eraser className="h-3 w-3" /> Clear
+          </button>
+
+          <div className="w-px h-4 bg-white/10 mx-0.5" />
+
+          <CopyBtn text={`<!DOCTYPE html>\n<html>\n<head>\n<style>${css}</style>\n</head>\n<body>${html}\n<script>${js}<\/script>\n</body>\n</html>`} label="Copy HTML" />
           <button onClick={share} className="flex items-center gap-1 rounded-md border border-white/10 bg-white/5 px-2.5 py-1.5 text-[10px] text-zinc-300 hover:bg-white/10 transition">
             <Share2 className="h-3 w-3" /> Share
           </button>
           <button onClick={download} className="flex items-center gap-1 rounded-md border border-white/10 bg-white/5 px-2.5 py-1.5 text-[10px] text-zinc-300 hover:bg-white/10 transition">
             <Download className="h-3 w-3" /> Save
           </button>
-          <button onClick={() => setFullscreen(v => !v)}
-            className="flex items-center rounded-md border border-white/10 bg-white/5 p-1.5 text-zinc-400 hover:bg-white/10 transition">
-            {fullscreen ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
-          </button>
+
+          <div className="ml-auto">
+            <button onClick={() => setFullscreen(v => !v)}
+              className="flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-2 py-1.5 text-[10px] text-zinc-400 hover:bg-white/10 transition">
+              {fullscreen ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
+              {fullscreen ? 'Exit' : 'Expand'}
+            </button>
+          </div>
         </div>
       </div>
 
       {/* ══════════════ EDITOR + PREVIEW ══════════════ */}
-      <div id="hv-split" className="flex flex-1 min-h-0" style={{ height: fullscreen ? 'calc(100vh - 48px)' : '600px' }}>
+      <div id="hv-split" className="flex flex-1 min-h-0" style={{ height: fullscreen ? 'calc(100vh - 84px)' : '620px' }}>
 
         {/* ─── Editor column ─── */}
         <div className="flex flex-col min-w-0 border-r border-white/5" style={{ width: `${splitPos}%` }}>
