@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import {
   Check, Copy, Search, ChevronRight, ChevronDown, X,
   Bell, Settings, User, Mail, Lock,
@@ -28,7 +28,7 @@ type CodeTab = 'tailwind' | 'css';
 ───────────────────────────────────────────── */
 function PreviewWrap({ children, bg = 'bg-white' }: { children: React.ReactNode; bg?: string }) {
   return (
-    <div className={`flex min-h-[220px] w-full flex-wrap items-center justify-center gap-3 p-8 ${bg}`}>
+    <div className={`flex h-full w-full flex-wrap items-center justify-center gap-3 p-5 ${bg}`}>
       {children}
     </div>
   );
@@ -1946,10 +1946,13 @@ function MetricSparklinePreview() {
   );
 }
 
+// Fixed deterministic heatmap values (avoid Math.random in render = hydration mismatch)
+const HEATMAP_VALS = Array.from({ length: 15 * 7 }, (_, i) => [0,1,2,3,4,2,1,3,0,4,1,2,3,1,0][i % 15]);
+
 function HeatmapPreview() {
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const weeks = 15;
-  const vals = Array.from({ length: weeks * 7 }, () => Math.floor(Math.random() * 5));
+  const vals = HEATMAP_VALS;
   const colors = ['bg-zinc-100', 'bg-emerald-200', 'bg-emerald-300', 'bg-emerald-500', 'bg-emerald-700'];
   return (
     <PreviewWrap bg="bg-zinc-50">
@@ -6107,14 +6110,14 @@ function ExpandableTablePreview() {
           </thead>
           <tbody>
             {rows.map(r=>(
-              <>
-                <tr key={r.id} className="hover:bg-zinc-50 border-b border-zinc-100 cursor-pointer" onClick={()=>toggle(r.id)}>
+              <React.Fragment key={r.id}>
+                <tr className="hover:bg-zinc-50 border-b border-zinc-100 cursor-pointer" onClick={()=>toggle(r.id)}>
                   <td className="px-4 py-3 text-zinc-400">{expanded.has(r.id)?<ChevronDown size={14}/>:<ChevronRight size={14}/>}</td>
                   <td className="px-4 py-3 font-medium text-zinc-800">{r.name}</td>
                   <td className="px-4 py-3 text-zinc-700 font-semibold">{r.amount}</td>
                 </tr>
                 {expanded.has(r.id)&&(
-                  <tr key={`${r.id}-exp`} className="bg-zinc-50 border-b border-zinc-100">
+                  <tr className="bg-zinc-50 border-b border-zinc-100">
                     <td/>
                     <td colSpan={2} className="px-4 py-3">
                       <ul className="space-y-1">
@@ -6123,7 +6126,7 @@ function ExpandableTablePreview() {
                     </td>
                   </tr>
                 )}
-              </>
+              </React.Fragment>
             ))}
           </tbody>
         </table>
@@ -8583,6 +8586,781 @@ function LogisticsSidebarFleetPreview() {
 }
 
 /* ─────────────────────────────────────────────
+   New Stateful Preview Components
+───────────────────────────────────────────── */
+
+function AlertTogglePreview() {
+  const [open, setOpen] = useState(true);
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      {open ? (
+        <div className="w-full max-w-sm flex items-start gap-3 rounded-xl bg-blue-50 border border-blue-200 px-4 py-3 shadow-sm">
+          <Info size={16} className="text-blue-500 mt-0.5 shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-bold text-blue-800">Heads up!</p>
+            <p className="text-xs text-blue-600 mt-0.5">Your trial ends in 3 days. Upgrade now.</p>
+            <div className="flex gap-2 mt-2">
+              <button className="text-[10px] font-semibold text-white bg-blue-600 rounded px-2 py-1 hover:bg-blue-700">Upgrade</button>
+              <button onClick={() => setOpen(false)} className="text-[10px] font-semibold text-blue-600 border border-blue-300 rounded px-2 py-1 hover:bg-blue-100">Dismiss</button>
+            </div>
+          </div>
+          <button onClick={() => setOpen(false)} className="text-blue-400 hover:text-blue-600"><X size={14} /></button>
+        </div>
+      ) : (
+        <button onClick={() => setOpen(true)} className="text-xs text-blue-600 underline">Show alert</button>
+      )}
+    </PreviewWrap>
+  );
+}
+
+function BtnGroupTogglePreview() {
+  const [sel, setSel] = useState('Week');
+  return (
+    <PreviewWrap>
+      <div className="inline-flex rounded-lg border border-zinc-200 overflow-hidden">
+        {['Day', 'Week', 'Month', 'Year'].map(t => (
+          <button key={t} onClick={() => setSel(t)}
+            className={`px-4 py-2 text-xs font-semibold transition ${sel === t ? 'bg-indigo-600 text-white' : 'bg-white text-zinc-600 hover:bg-zinc-50'} border-r border-zinc-200 last:border-r-0`}>
+            {t}
+          </button>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function TabsUnderlinePreview() {
+  const [active, setActive] = useState('Profile');
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-sm">
+        <div className="flex border-b border-zinc-200">
+          {['Profile', 'Settings', 'Billing', 'Team'].map(t => (
+            <button key={t} onClick={() => setActive(t)}
+              className={`px-4 py-2 text-xs font-semibold transition border-b-2 -mb-px ${active === t ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-zinc-500 hover:text-zinc-800'}`}>
+              {t}
+            </button>
+          ))}
+        </div>
+        <div className="mt-4 px-1 text-xs text-zinc-500">{active} content goes here.</div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function TabsBoxedPreview() {
+  const [active, setActive] = useState('All');
+  return (
+    <PreviewWrap>
+      <div className="inline-flex gap-1 rounded-xl bg-zinc-100 p-1">
+        {['All', 'Active', 'Draft', 'Archived'].map(t => (
+          <button key={t} onClick={() => setActive(t)}
+            className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition ${active === t ? 'bg-white shadow text-zinc-900' : 'text-zinc-500 hover:text-zinc-700'}`}>
+            {t}
+          </button>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function TabsCardStylePreview() {
+  const [active, setActive] = useState('Overview');
+  return (
+    <PreviewWrap bg="bg-zinc-100">
+      <div className="w-full max-w-sm">
+        <div className="flex gap-0.5">
+          {['Overview', 'Stats', 'Settings'].map(t => (
+            <button key={t} onClick={() => setActive(t)}
+              className={`px-4 py-2 text-xs font-semibold rounded-t-lg transition ${active === t ? 'bg-white text-indigo-600 border border-b-0 border-zinc-200' : 'text-zinc-500 hover:bg-zinc-50'}`}>
+              {t}
+            </button>
+          ))}
+        </div>
+        <div className="bg-white border border-zinc-200 rounded-b-xl rounded-tr-xl px-4 py-3 text-xs text-zinc-500">{active} panel</div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function TabsFullWidthPreview() {
+  const [active, setActive] = useState('Home');
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-sm">
+        <div className="grid grid-cols-4 border border-zinc-200 rounded-xl overflow-hidden">
+          {['Home', 'Explore', 'Alerts', 'Profile'].map(t => (
+            <button key={t} onClick={() => setActive(t)}
+              className={`py-2 text-xs font-semibold transition ${active === t ? 'bg-indigo-600 text-white' : 'bg-white text-zinc-500 hover:bg-zinc-50'}`}>
+              {t}
+            </button>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function TabsScrollablePreview() {
+  const [active, setActive] = useState('Dashboard');
+  const tabs = ['Dashboard', 'Analytics', 'Reports', 'Users', 'Settings', 'Billing', 'Logs'];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-sm overflow-x-auto">
+        <div className="flex border-b border-zinc-200 min-w-max">
+          {tabs.map(t => (
+            <button key={t} onClick={() => setActive(t)}
+              className={`px-4 py-2 text-xs font-semibold whitespace-nowrap border-b-2 -mb-px transition ${active === t ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-zinc-500 hover:text-zinc-800'}`}>
+              {t}
+            </button>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CarouselTestimonialPreview() {
+  const items = [
+    { quote: 'This tool saved us countless hours every week.', name: 'Sarah K.', role: 'CTO at Acme' },
+    { quote: 'An incredible developer experience from start to finish.', name: 'James L.', role: 'Lead Dev at Orbit' },
+    { quote: 'We shipped 3x faster after adopting this stack.', name: 'Priya M.', role: 'Founder at Nova' },
+  ];
+  const [idx, setIdx] = useState(0);
+  const cur = items[idx];
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-sm bg-white rounded-2xl border border-zinc-100 shadow-sm p-5 text-center">
+        <p className="text-xs text-zinc-600 italic">"{cur.quote}"</p>
+        <div className="mt-3 flex flex-col items-center gap-1">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-white text-xs font-bold">{cur.name[0]}</div>
+          <p className="text-xs font-bold text-zinc-800">{cur.name}</p>
+          <p className="text-[10px] text-zinc-400">{cur.role}</p>
+        </div>
+        <div className="flex justify-center gap-1 mt-3">
+          {items.map((_, i) => <button key={i} onClick={() => setIdx(i)} className={`w-2 h-2 rounded-full transition ${i === idx ? 'bg-indigo-600' : 'bg-zinc-200'}`} />)}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CarouselNavPreview() {
+  const slides = ['Slide One', 'Slide Two', 'Slide Three'];
+  const [idx, setIdx] = useState(0);
+  return (
+    <PreviewWrap>
+      <div className="w-full max-w-sm">
+        <div className="relative rounded-xl overflow-hidden bg-gradient-to-br from-indigo-500 to-violet-600 h-32 flex items-center justify-center">
+          <p className="text-white font-bold text-sm">{slides[idx]}</p>
+          <button onClick={() => setIdx((idx - 1 + slides.length) % slides.length)} className="absolute left-2 bg-white/30 hover:bg-white/50 text-white rounded-full p-1 backdrop-blur-sm"><ChevronRight size={14} className="rotate-180" /></button>
+          <button onClick={() => setIdx((idx + 1) % slides.length)} className="absolute right-2 bg-white/30 hover:bg-white/50 text-white rounded-full p-1 backdrop-blur-sm"><ChevronRight size={14} /></button>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CarouselDotsNavPreview() {
+  const slides = ['bg-gradient-to-br from-pink-500 to-rose-600', 'bg-gradient-to-br from-emerald-500 to-teal-600', 'bg-gradient-to-br from-amber-500 to-orange-600'];
+  const [idx, setIdx] = useState(0);
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs text-center">
+        <div className={`h-28 rounded-xl ${slides[idx]} transition-all`} />
+        <div className="flex justify-center gap-2 mt-3">
+          {slides.map((_, i) => <button key={i} onClick={() => setIdx(i)} className={`rounded-full transition-all ${i === idx ? 'w-5 h-2 bg-indigo-600' : 'w-2 h-2 bg-zinc-300'}`} />)}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CarouselCounterPreview() {
+  const total = 5;
+  const [idx, setIdx] = useState(0);
+  return (
+    <PreviewWrap>
+      <div className="w-full max-w-sm">
+        <div className="relative rounded-xl overflow-hidden bg-gradient-to-br from-violet-500 to-indigo-600 h-32 flex items-center justify-center">
+          <p className="text-white font-bold text-sm">Item {idx + 1}</p>
+        </div>
+        <div className="flex items-center justify-between mt-3 px-1">
+          <button onClick={() => setIdx(Math.max(0, idx - 1))} className="text-xs text-zinc-500 hover:text-zinc-800 flex items-center gap-1"><ChevronRight size={14} className="rotate-180" /> Prev</button>
+          <span className="text-xs font-bold text-zinc-600">{idx + 1} / {total}</span>
+          <button onClick={() => setIdx(Math.min(total - 1, idx + 1))} className="text-xs text-zinc-500 hover:text-zinc-800 flex items-center gap-1">Next <ChevronRight size={14} /></button>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function CarouselMiniPreview() {
+  const cards = [
+    { title: 'React Hooks', color: 'from-indigo-500 to-violet-600' },
+    { title: 'Tailwind CSS', color: 'from-sky-500 to-cyan-600' },
+    { title: 'Next.js App', color: 'from-emerald-500 to-teal-600' },
+  ];
+  const [idx, setIdx] = useState(0);
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs">
+        <div className={`h-24 rounded-xl bg-gradient-to-br ${cards[idx].color} flex items-center justify-center text-white font-bold text-sm mb-3`}>{cards[idx].title}</div>
+        <div className="flex gap-2">
+          {cards.map((c, i) => (
+            <button key={i} onClick={() => setIdx(i)} className={`flex-1 h-12 rounded-lg bg-gradient-to-br ${c.color} opacity-${i === idx ? '100' : '40'} transition-opacity text-white text-[10px] font-semibold`}>{c.title}</button>
+          ))}
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function DropdownUserPreview() {
+  const [open, setOpen] = useState(false);
+  return (
+    <PreviewWrap>
+      <div className="relative">
+        <button onClick={() => setOpen(!open)} className="flex items-center gap-2 rounded-xl border border-zinc-200 px-3 py-2 bg-white hover:bg-zinc-50 shadow-sm">
+          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-white text-xs font-bold">JD</div>
+          <span className="text-xs font-semibold text-zinc-700">Jane Doe</span>
+          <ChevronDown size={12} className="text-zinc-400" />
+        </button>
+        {open && (
+          <div className="absolute top-full mt-1 left-0 w-44 bg-white border border-zinc-100 rounded-xl shadow-lg py-1 z-10">
+            {['Profile', 'Settings', 'Billing', 'Sign out'].map(item => (
+              <button key={item} onClick={() => setOpen(false)} className={`w-full text-left px-3 py-2 text-xs hover:bg-zinc-50 ${item === 'Sign out' ? 'text-red-500 border-t border-zinc-100 mt-1 pt-2' : 'text-zinc-700'}`}>{item}</button>
+            ))}
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function DropdownIconPreview() {
+  const [open, setOpen] = useState(false);
+  const items = [
+    { icon: User, label: 'My Account' },
+    { icon: Settings, label: 'Preferences' },
+    { icon: Bell, label: 'Notifications' },
+    { icon: Lock, label: 'Security' },
+  ];
+  return (
+    <PreviewWrap>
+      <div className="relative">
+        <button onClick={() => setOpen(!open)} className="flex items-center gap-1.5 rounded-xl border border-zinc-200 px-3 py-2 bg-white hover:bg-zinc-50 shadow-sm text-xs font-semibold text-zinc-700">
+          Menu <ChevronDown size={12} className="text-zinc-400" />
+        </button>
+        {open && (
+          <div className="absolute top-full mt-1 left-0 w-44 bg-white border border-zinc-100 rounded-xl shadow-lg py-1 z-10">
+            {items.map(({ icon: Icon, label }) => (
+              <button key={label} onClick={() => setOpen(false)} className="w-full flex items-center gap-2 px-3 py-2 text-xs text-zinc-700 hover:bg-zinc-50">
+                <Icon size={13} className="text-zinc-400" /> {label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function DropdownActionPreview() {
+  const [open, setOpen] = useState(false);
+  return (
+    <PreviewWrap>
+      <div className="relative">
+        <button onClick={() => setOpen(!open)} className="rounded-lg border border-zinc-200 p-2 bg-white hover:bg-zinc-50 shadow-sm">
+          <MoreHorizontal size={16} className="text-zinc-500" />
+        </button>
+        {open && (
+          <div className="absolute top-full mt-1 right-0 w-40 bg-white border border-zinc-100 rounded-xl shadow-lg py-1 z-10">
+            <button onClick={() => setOpen(false)} className="w-full text-left px-3 py-2 text-xs text-zinc-700 hover:bg-zinc-50">Edit</button>
+            <button onClick={() => setOpen(false)} className="w-full text-left px-3 py-2 text-xs text-zinc-700 hover:bg-zinc-50">Duplicate</button>
+            <button onClick={() => setOpen(false)} className="w-full text-left px-3 py-2 text-xs text-zinc-700 hover:bg-zinc-50">Archive</button>
+            <div className="border-t border-zinc-100 mt-1 pt-1">
+              <button onClick={() => setOpen(false)} className="w-full text-left px-3 py-2 text-xs text-red-500 hover:bg-red-50">Delete</button>
+            </div>
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function DropdownColorPreview() {
+  const colors = ['#ef4444','#f97316','#eab308','#22c55e','#3b82f6','#8b5cf6','#ec4899','#14b8a6'];
+  const [sel, setSel] = useState(colors[4]);
+  const [open, setOpen] = useState(false);
+  return (
+    <PreviewWrap>
+      <div className="relative">
+        <button onClick={() => setOpen(!open)} className="flex items-center gap-2 rounded-xl border border-zinc-200 px-3 py-2 bg-white shadow-sm">
+          <span className="w-4 h-4 rounded-full border border-white shadow-sm" style={{ background: sel }} />
+          <span className="text-xs font-semibold text-zinc-700">{sel}</span>
+          <ChevronDown size={12} className="text-zinc-400" />
+        </button>
+        {open && (
+          <div className="absolute top-full mt-1 left-0 bg-white border border-zinc-100 rounded-xl shadow-lg p-2 z-10">
+            <div className="grid grid-cols-4 gap-1.5">
+              {colors.map(c => (
+                <button key={c} onClick={() => { setSel(c); setOpen(false); }} className={`w-7 h-7 rounded-full border-2 transition ${sel === c ? 'border-zinc-700 scale-110' : 'border-transparent'}`} style={{ background: c }} />
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function DropdownFlagPreview() {
+  const countries = [
+    { flag: '🇺🇸', name: 'United States' },
+    { flag: '🇬🇧', name: 'United Kingdom' },
+    { flag: '🇯🇵', name: 'Japan' },
+    { flag: '🇩🇪', name: 'Germany' },
+    { flag: '🇧🇷', name: 'Brazil' },
+  ];
+  const [sel, setSel] = useState(countries[0]);
+  const [open, setOpen] = useState(false);
+  return (
+    <PreviewWrap>
+      <div className="relative">
+        <button onClick={() => setOpen(!open)} className="flex items-center gap-2 rounded-xl border border-zinc-200 px-3 py-2 bg-white shadow-sm">
+          <span className="text-base">{sel.flag}</span>
+          <span className="text-xs font-semibold text-zinc-700">{sel.name}</span>
+          <ChevronDown size={12} className="text-zinc-400" />
+        </button>
+        {open && (
+          <div className="absolute top-full mt-1 left-0 w-48 bg-white border border-zinc-100 rounded-xl shadow-lg py-1 z-10">
+            {countries.map(c => (
+              <button key={c.name} onClick={() => { setSel(c); setOpen(false); }} className={`w-full flex items-center gap-2 px-3 py-2 text-xs ${sel.name === c.name ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-zinc-700 hover:bg-zinc-50'}`}>
+                <span className="text-base">{c.flag}</span> {c.name}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function ImageHoverPreview() {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <PreviewWrap>
+      <div className="relative w-48 h-32 rounded-xl overflow-hidden cursor-pointer" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 to-violet-600" />
+        <div className={`absolute inset-0 bg-black/60 flex flex-col items-center justify-center transition-opacity duration-200 ${hovered ? 'opacity-100' : 'opacity-0'}`}>
+          <p className="text-white font-bold text-sm">View Details</p>
+          <p className="text-white/70 text-xs mt-1">Click to open</p>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function ModalAlertDialogPreview() {
+  const [open, setOpen] = useState(false);
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <button onClick={() => setOpen(true)} className="rounded-lg bg-red-500 text-white px-4 py-2 text-xs font-semibold hover:bg-red-600">Delete Account</button>
+      {open && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl shadow-2xl w-80 p-6">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center"><XCircle size={20} className="text-red-600" /></div>
+              <div>
+                <p className="text-sm font-bold text-zinc-900">Delete Account</p>
+                <p className="text-xs text-zinc-500">This action cannot be undone.</p>
+              </div>
+            </div>
+            <p className="text-xs text-zinc-500 mb-4">All your data will be permanently removed. Are you sure?</p>
+            <div className="flex gap-2 justify-end">
+              <button onClick={() => setOpen(false)} className="px-3 py-1.5 text-xs font-semibold border border-zinc-200 rounded-lg hover:bg-zinc-50">Cancel</button>
+              <button onClick={() => setOpen(false)} className="px-3 py-1.5 text-xs font-semibold bg-red-500 text-white rounded-lg hover:bg-red-600">Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </PreviewWrap>
+  );
+}
+
+function ModalSuccessPreview() {
+  const [open, setOpen] = useState(false);
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <button onClick={() => setOpen(true)} className="rounded-lg bg-emerald-500 text-white px-4 py-2 text-xs font-semibold hover:bg-emerald-600">Complete Order</button>
+      {open && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl shadow-2xl w-72 p-6 text-center">
+            <div className="w-14 h-14 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-4">
+              <CheckCircle size={28} className="text-emerald-500" />
+            </div>
+            <p className="text-sm font-bold text-zinc-900">Order Placed!</p>
+            <p className="text-xs text-zinc-500 mt-2">Your order has been successfully placed and is being processed.</p>
+            <button onClick={() => setOpen(false)} className="mt-4 w-full py-2 bg-emerald-500 text-white text-xs font-semibold rounded-lg hover:bg-emerald-600">Continue Shopping</button>
+          </div>
+        </div>
+      )}
+    </PreviewWrap>
+  );
+}
+
+function ModalBottomSheetPreview() {
+  const [open, setOpen] = useState(false);
+  return (
+    <PreviewWrap bg="bg-zinc-100">
+      <button onClick={() => setOpen(true)} className="rounded-xl bg-zinc-800 text-white px-4 py-2 text-xs font-semibold">Open Sheet</button>
+      {open && (
+        <div className="fixed inset-0 bg-black/40 flex items-end justify-center z-50" onClick={() => setOpen(false)}>
+          <div className="bg-white w-full max-w-sm rounded-t-2xl p-5 shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="w-10 h-1 rounded-full bg-zinc-300 mx-auto mb-4" />
+            <p className="font-bold text-sm text-zinc-800 mb-3">Share Options</p>
+            {['Copy Link', 'Send via Email', 'Export as PDF', 'Download'].map(a => (
+              <button key={a} onClick={() => setOpen(false)} className="w-full text-left text-xs text-zinc-700 py-2.5 border-b border-zinc-100 last:border-0 hover:text-indigo-600">{a}</button>
+            ))}
+          </div>
+        </div>
+      )}
+    </PreviewWrap>
+  );
+}
+
+function ModalCookiePreview() {
+  const [open, setOpen] = useState(true);
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      {open ? (
+        <div className="w-full max-w-sm bg-zinc-900 text-white rounded-2xl p-4 shadow-xl">
+          <p className="text-xs font-bold mb-1">🍪 Cookie Preferences</p>
+          <p className="text-[10px] text-zinc-400 mb-3">We use cookies to enhance your experience. By continuing, you agree to our cookie policy.</p>
+          <div className="flex gap-2">
+            <button onClick={() => setOpen(false)} className="flex-1 py-1.5 bg-indigo-600 text-white text-[11px] font-semibold rounded-lg hover:bg-indigo-700">Accept All</button>
+            <button onClick={() => setOpen(false)} className="flex-1 py-1.5 border border-zinc-600 text-zinc-300 text-[11px] font-semibold rounded-lg hover:bg-zinc-800">Decline</button>
+          </div>
+        </div>
+      ) : (
+        <button onClick={() => setOpen(true)} className="text-xs text-zinc-500 underline">Show cookie banner</button>
+      )}
+    </PreviewWrap>
+  );
+}
+
+function ModalImageLightboxPreview() {
+  const [open, setOpen] = useState(false);
+  return (
+    <PreviewWrap>
+      <div className="cursor-pointer" onClick={() => setOpen(true)}>
+        <div className="w-40 h-24 rounded-xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-white text-xs font-semibold hover:opacity-90 transition">Click to expand</div>
+      </div>
+      {open && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50" onClick={() => setOpen(false)}>
+          <div className="w-72 h-48 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center shadow-2xl">
+            <p className="text-white font-bold">Large Image Preview</p>
+          </div>
+        </div>
+      )}
+    </PreviewWrap>
+  );
+}
+
+function PopoverUserCardPreview() {
+  const [open, setOpen] = useState(false);
+  return (
+    <PreviewWrap>
+      <div className="relative">
+        <button onClick={() => setOpen(!open)} className="flex items-center gap-2 rounded-xl border border-zinc-200 px-3 py-2 bg-white shadow-sm text-xs font-semibold text-zinc-700">
+          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500" /> @john_doe
+        </button>
+        {open && (
+          <div className="absolute top-full mt-2 left-0 w-56 bg-white border border-zinc-100 rounded-2xl shadow-xl p-4 z-10">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-white font-bold">JD</div>
+              <div>
+                <p className="text-xs font-bold text-zinc-900">John Doe</p>
+                <p className="text-[10px] text-zinc-400">@john_doe</p>
+              </div>
+            </div>
+            <p className="text-[10px] text-zinc-500 mb-3">Full-stack developer. Building cool stuff. Open to opportunities.</p>
+            <button onClick={() => setOpen(false)} className="w-full py-1.5 bg-indigo-600 text-white text-[11px] font-semibold rounded-lg hover:bg-indigo-700">Follow</button>
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function PopoverEmojiPreview() {
+  const [open, setOpen] = useState(false);
+  const [picked, setPicked] = useState('😊');
+  const emojis = ['😊','❤️','🎉','🔥','👍','😂','🚀','⭐','💡','🎨','✅','🌟'];
+  return (
+    <PreviewWrap>
+      <div className="relative">
+        <button onClick={() => setOpen(!open)} className="w-10 h-10 rounded-xl border border-zinc-200 bg-white text-xl shadow-sm hover:bg-zinc-50 flex items-center justify-center">{picked}</button>
+        {open && (
+          <div className="absolute top-full mt-1 left-0 bg-white border border-zinc-100 rounded-xl shadow-lg p-2 z-10">
+            <div className="grid grid-cols-4 gap-1">
+              {emojis.map(e => <button key={e} onClick={() => { setPicked(e); setOpen(false); }} className="w-8 h-8 text-lg hover:bg-zinc-100 rounded-lg">{e}</button>)}
+            </div>
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function PopoverColorPickerPreview() {
+  const palette = ['#ef4444','#f97316','#eab308','#22c55e','#3b82f6','#8b5cf6','#ec4899','#06b6d4','#f1f5f9','#1e293b'];
+  const [sel, setSel] = useState('#3b82f6');
+  const [open, setOpen] = useState(false);
+  return (
+    <PreviewWrap>
+      <div className="relative">
+        <button onClick={() => setOpen(!open)} className="flex items-center gap-2 rounded-xl border border-zinc-200 px-3 py-2 bg-white shadow-sm text-xs">
+          <span className="w-5 h-5 rounded border border-zinc-200" style={{ background: sel }} /> Pick Color
+        </button>
+        {open && (
+          <div className="absolute top-full mt-1 left-0 bg-white border border-zinc-100 rounded-xl shadow-lg p-3 z-10 w-48">
+            <p className="text-[10px] font-bold text-zinc-600 mb-2">SELECT COLOR</p>
+            <div className="flex flex-wrap gap-1.5">
+              {palette.map(c => <button key={c} onClick={() => { setSel(c); setOpen(false); }} className={`w-7 h-7 rounded-lg border-2 ${sel === c ? 'border-zinc-700 scale-110' : 'border-transparent'} transition`} style={{ background: c }} />)}
+            </div>
+            <div className="mt-2 text-[10px] text-zinc-500 flex items-center gap-1"><span className="w-3 h-3 rounded border" style={{ background: sel }} /> {sel}</div>
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function PopoverStatsPreview() {
+  const [open, setOpen] = useState(false);
+  return (
+    <PreviewWrap>
+      <div className="relative">
+        <button onClick={() => setOpen(!open)} className="rounded-xl border border-zinc-200 px-3 py-2 bg-white shadow-sm text-xs font-semibold text-zinc-700 hover:bg-zinc-50">View Stats</button>
+        {open && (
+          <div className="absolute top-full mt-2 left-0 w-52 bg-white border border-zinc-100 rounded-2xl shadow-xl p-4 z-10">
+            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide mb-3">This Month</p>
+            <div className="space-y-2">
+              {[{label:'Page Views', value:'12,450', change:'+18%'},{label:'Visitors', value:'3,210', change:'+7%'},{label:'Conversions', value:'284', change:'+24%'}].map(s => (
+                <div key={s.label} className="flex justify-between items-center">
+                  <span className="text-xs text-zinc-500">{s.label}</span>
+                  <span className="text-xs font-bold text-zinc-800">{s.value} <span className="text-emerald-500 font-semibold text-[10px]">{s.change}</span></span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function PopoverSharePreview() {
+  const [open, setOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  return (
+    <PreviewWrap>
+      <div className="relative">
+        <button onClick={() => setOpen(!open)} className="rounded-xl border border-zinc-200 px-3 py-2 bg-white shadow-sm text-xs font-semibold text-zinc-700 flex items-center gap-1.5">Share ↗</button>
+        {open && (
+          <div className="absolute top-full mt-2 left-0 w-48 bg-white border border-zinc-100 rounded-2xl shadow-xl p-3 z-10">
+            <p className="text-[10px] font-bold text-zinc-500 mb-2">SHARE VIA</p>
+            <div className="grid grid-cols-2 gap-1.5">
+              {['Twitter','LinkedIn','Email','Reddit'].map(s => (
+                <button key={s} onClick={() => setOpen(false)} className="py-1.5 text-[10px] font-semibold border border-zinc-200 rounded-lg hover:bg-zinc-50 text-zinc-700">{s}</button>
+              ))}
+            </div>
+            <button onClick={() => { setCopied(true); setTimeout(() => setCopied(false), 2000); }} className="mt-2 w-full py-1.5 text-[10px] font-semibold bg-zinc-900 text-white rounded-lg hover:bg-zinc-700">
+              {copied ? '✓ Copied!' : 'Copy Link'}
+            </button>
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function PaginationJumpPreview() {
+  const [page, setPage] = useState('');
+  const [current, setCurrent] = useState(1);
+  return (
+    <PreviewWrap>
+      <div className="flex items-center gap-2">
+        <span className="text-xs text-zinc-500">Page</span>
+        <input value={page} onChange={e => setPage(e.target.value)} placeholder={String(current)} className="w-12 border border-zinc-200 rounded-lg px-2 py-1 text-xs text-center outline-none focus:border-indigo-400" />
+        <span className="text-xs text-zinc-500">of 24</span>
+        <button onClick={() => { const p = parseInt(page); if (p >= 1 && p <= 24) setCurrent(p); setPage(''); }} className="px-3 py-1 text-xs font-semibold bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Go</button>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function PaginationLoadMorePreview() {
+  const [count, setCount] = useState(10);
+  const total = 47;
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs text-center">
+        <p className="text-xs text-zinc-400 mb-3">Showing {count} of {total} items</p>
+        <div className="w-full bg-zinc-200 rounded-full h-1 mb-4">
+          <div className="bg-indigo-500 h-1 rounded-full transition-all" style={{ width: `${(count/total)*100}%` }} />
+        </div>
+        {count < total ? (
+          <button onClick={() => setCount(Math.min(count + 10, total))} className="px-6 py-2 text-xs font-semibold border border-zinc-300 rounded-xl hover:bg-zinc-100 text-zinc-700">Load More</button>
+        ) : (
+          <p className="text-xs text-emerald-600 font-semibold">All items loaded ✓</p>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function PaginationCursorPreview() {
+  const [page, setPage] = useState(1);
+  const total = 8;
+  return (
+    <PreviewWrap>
+      <div className="flex items-center gap-3">
+        <button disabled={page <= 1} onClick={() => setPage(page - 1)} className="flex items-center gap-1 px-3 py-1.5 text-xs font-semibold border border-zinc-200 rounded-lg disabled:opacity-40 hover:bg-zinc-50 transition">
+          <ChevronRight size={12} className="rotate-180" /> Prev
+        </button>
+        <span className="text-xs text-zinc-500">{page} of {total}</span>
+        <button disabled={page >= total} onClick={() => setPage(page + 1)} className="flex items-center gap-1 px-3 py-1.5 text-xs font-semibold border border-zinc-200 rounded-lg disabled:opacity-40 hover:bg-zinc-50 transition">
+          Next <ChevronRight size={12} />
+        </button>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function PaginationNumberedFullPreview() {
+  const [page, setPage] = useState(1);
+  const total = 10;
+  const pages = [1, 2, 3, '...', 8, 9, 10];
+  return (
+    <PreviewWrap>
+      <div className="flex items-center gap-1">
+        <button disabled={page <= 1} onClick={() => setPage(page - 1)} className="w-7 h-7 flex items-center justify-center rounded-lg border border-zinc-200 hover:bg-zinc-50 disabled:opacity-40 text-zinc-600">
+          <ChevronRight size={12} className="rotate-180" />
+        </button>
+        {pages.map((p, i) => (
+          <button key={i} disabled={p === '...'} onClick={() => typeof p === 'number' && setPage(p)}
+            className={`w-7 h-7 flex items-center justify-center rounded-lg text-xs font-semibold transition ${p === page ? 'bg-indigo-600 text-white' : p === '...' ? 'text-zinc-400 cursor-default' : 'hover:bg-zinc-100 text-zinc-600'}`}>{p}</button>
+        ))}
+        <button disabled={page >= total} onClick={() => setPage(page + 1)} className="w-7 h-7 flex items-center justify-center rounded-lg border border-zinc-200 hover:bg-zinc-50 disabled:opacity-40 text-zinc-600">
+          <ChevronRight size={12} />
+        </button>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function PaginationCompactPreview() {
+  const [page, setPage] = useState(1);
+  const total = 12;
+  return (
+    <PreviewWrap>
+      <div className="flex items-center gap-2 bg-white border border-zinc-200 rounded-xl px-4 py-2 shadow-sm">
+        <button disabled={page <= 1} onClick={() => setPage(page - 1)} className="text-zinc-400 hover:text-zinc-700 disabled:opacity-40"><ChevronRight size={14} className="rotate-180" /></button>
+        <span className="text-xs font-semibold text-zinc-700">Page {page} of {total}</span>
+        <button disabled={page >= total} onClick={() => setPage(page + 1)} className="text-zinc-400 hover:text-zinc-700 disabled:opacity-40"><ChevronRight size={14} /></button>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function BtnGroupSplitPreview() {
+  const [open, setOpen] = useState(false);
+  return (
+    <PreviewWrap>
+      <div className="relative flex">
+        <button className="rounded-l-lg bg-indigo-600 text-white text-xs font-semibold px-4 py-2 hover:bg-indigo-700 border-r border-indigo-500">Deploy</button>
+        <button onClick={() => setOpen(!open)} className="rounded-r-lg bg-indigo-600 text-white px-2 py-2 hover:bg-indigo-700 border-l border-indigo-500">
+          <ChevronDown size={14} />
+        </button>
+        {open && (
+          <div className="absolute top-full mt-1 right-0 w-36 bg-white border border-zinc-100 rounded-xl shadow-lg py-1 z-10">
+            {['Deploy to Staging', 'Deploy to Prod', 'Schedule Deploy'].map(a => (
+              <button key={a} onClick={() => setOpen(false)} className="w-full text-left px-3 py-2 text-xs text-zinc-700 hover:bg-zinc-50">{a}</button>
+            ))}
+          </div>
+        )}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function ListCheckPreview() {
+  const items = ['Design mockups', 'Write unit tests', 'Review PR', 'Deploy to staging', 'Update docs'];
+  const [done, setDone] = useState<Record<string, boolean>>({ 'Design mockups': true, 'Write unit tests': true });
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <div className="w-full max-w-xs bg-white rounded-2xl border border-zinc-100 shadow-sm p-4 space-y-2">
+        {items.map(item => (
+          <label key={item} className="flex items-center gap-3 cursor-pointer group">
+            <input type="checkbox" checked={!!done[item]} onChange={() => setDone(d => ({ ...d, [item]: !d[item] }))} className="w-4 h-4 accent-indigo-600 rounded" />
+            <span className={`text-xs ${done[item] ? 'line-through text-zinc-400' : 'text-zinc-700 group-hover:text-zinc-900'}`}>{item}</span>
+          </label>
+        ))}
+      </div>
+    </PreviewWrap>
+  );
+}
+
+function NotificationSnackPreview() {
+  const [show, setShow] = useState(false);
+  return (
+    <PreviewWrap bg="bg-zinc-50">
+      <button onClick={() => setShow(true)} className="px-4 py-2 text-xs font-semibold bg-zinc-800 text-white rounded-lg hover:bg-zinc-700">Show Snackbar</button>
+      {show && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-zinc-900 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-4 z-50">
+          <p className="text-xs font-medium">Item deleted successfully</p>
+          <button onClick={() => setShow(false)} className="text-indigo-400 text-xs font-bold hover:text-indigo-300">UNDO</button>
+          <button onClick={() => setShow(false)} className="text-zinc-400 hover:text-white"><X size={14} /></button>
+        </div>
+      )}
+    </PreviewWrap>
+  );
+}
+
+function VideoControlsPreview() {
+  const [playing, setPlaying] = useState(false);
+  const [progress, setProgress] = useState(35);
+  const [volume, setVolume] = useState(70);
+  return (
+    <PreviewWrap bg="bg-zinc-900">
+      <div className="w-full max-w-sm">
+        <div className="h-28 bg-gradient-to-br from-indigo-800 to-violet-900 rounded-xl mb-3 flex items-center justify-center">
+          <span className="text-white/30 text-xs">Video Content</span>
+        </div>
+        <div className="bg-zinc-800 rounded-xl px-3 py-2.5 space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="text-zinc-400 text-[10px]">0:42</span>
+            <input type="range" min={0} max={100} value={progress} onChange={e => setProgress(Number(e.target.value))} className="flex-1 accent-indigo-500 h-1" />
+            <span className="text-zinc-400 text-[10px]">2:00</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <button onClick={() => setPlaying(!playing)} className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-zinc-900 hover:bg-zinc-100">
+              {playing ? '⏸' : '▶'}
+            </button>
+            <span className="text-white text-[10px] font-semibold flex-1">React Hooks Tutorial</span>
+            <span className="text-zinc-400 text-[10px]">🔊</span>
+            <input type="range" min={0} max={100} value={volume} onChange={e => setVolume(Number(e.target.value))} className="w-14 accent-indigo-500 h-1" />
+          </div>
+        </div>
+      </div>
+    </PreviewWrap>
+  );
+}
+
+/* ─────────────────────────────────────────────
    Component Registry
 ───────────────────────────────────────────── */
 const COMPONENTS: ComponentDef[] = [
@@ -10855,7 +11633,7 @@ input[type=range]::-webkit-slider-thumb { width:1.125rem; height:1.125rem; borde
 
   // ── 16 new components ──
   {
-    id: 'timeline', name: 'Timeline', category: 'Display',
+    id: 'timeline-v2', name: 'Timeline', category: 'Display',
     description: 'Vertical event timeline with colored dots, timestamps, and connector lines.',
     Preview: TimelinePreview,
     tailwind: `<div class="flex flex-col gap-0">
@@ -10883,7 +11661,7 @@ input[type=range]::-webkit-slider-thumb { width:1.125rem; height:1.125rem; borde
 .timeline-desc { font-size:.75rem; color:#71717a; }`,
   },
   {
-    id: 'skeleton', name: 'Skeleton Loader', category: 'Feedback',
+    id: 'skeleton-v2', name: 'Skeleton Loader', category: 'Feedback',
     description: 'Animated placeholder that mimics content layout while data loads.',
     Preview: SkeletonPreview,
     tailwind: `<div class="rounded-xl border border-zinc-200 bg-white p-4 space-y-3 w-72">
@@ -10907,7 +11685,7 @@ input[type=range]::-webkit-slider-thumb { width:1.125rem; height:1.125rem; borde
 .skeleton-line, .skeleton-circle { animation: pulse 2s cubic-bezier(.4,0,.6,1) infinite; }`,
   },
   {
-    id: 'avatar-group', name: 'Avatar Group', category: 'Display',
+    id: 'avatar-group-v2', name: 'Avatar Group', category: 'Display',
     description: 'Stacked overlapping avatars with overflow count indicator and size variants.',
     Preview: AvatarGroupV2Preview,
     tailwind: `<div class="flex items-center">
@@ -10943,7 +11721,7 @@ input[type=range]::-webkit-slider-thumb { width:1.125rem; height:1.125rem; borde
 .split-btn-dropdown { position:absolute; top:100%; right:0; margin-top:.25rem; width:11rem; border-radius:.75rem; border:1px solid #e4e4e7; background:#fff; box-shadow:0 10px 25px rgba(0,0,0,.1); padding:.25rem 0; z-index:10; }`,
   },
   {
-    id: 'file-upload', name: 'File Upload Dropzone', category: 'Forms & Inputs',
+    id: 'file-upload-v2', name: 'File Upload Dropzone', category: 'Forms & Inputs',
     description: 'Drag-and-drop upload zone with file name display and clear action.',
     Preview: FileUploadPreview,
     tailwind: `<div class="rounded-xl border-2 border-dashed border-zinc-300 bg-white p-6 text-center hover:border-zinc-400 transition cursor-pointer">
@@ -13407,7 +14185,7 @@ kbd { border-radius:.375rem; border:1px solid #e4e4e7; background:#f4f4f5; paddi
     css: `.line-chart { border-radius:1rem; border:1px solid #f4f4f5; padding:1rem; background:#fff; } .line-chart polyline { fill:none; stroke:#6366f1; stroke-width:2; }`,
   },
   {
-    id: 'bar-chart', name: 'Bar Chart', category: 'Charts',
+    id: 'charts-bar', name: 'Bar Chart', category: 'Charts',
     description: 'Monthly sales vertical bar chart with rounded tops.',
     Preview: BarChartV2Preview,
     tailwind: `<div class="rounded-2xl border border-zinc-100 shadow-sm p-4 bg-white">
@@ -13455,7 +14233,7 @@ kbd { border-radius:.375rem; border:1px solid #e4e4e7; background:#f4f4f5; paddi
     css: `.pie-segment { stroke:none; } .pie-legend { display:flex; align-items:center; gap:.5rem; font-size:.75rem; }`,
   },
   {
-    id: 'donut-chart', name: 'Donut Chart', category: 'Charts',
+    id: 'charts-donut', name: 'Donut Chart', category: 'Charts',
     description: 'Storage usage donut chart with SVG stroke-dasharray and legend.',
     Preview: DonutChartV2Preview,
     tailwind: `<div class="rounded-2xl border border-zinc-100 shadow-sm p-4 bg-white"><p class="text-sm font-bold mb-3">Storage Usage</p><svg viewBox="0 0 100 100" class="w-28"><circle cx="50" cy="50" r="40" fill="none" stroke="#f4f4f5" stroke-width="14"/><circle cx="50" cy="50" r="40" fill="none" stroke="#6366f1" stroke-width="14" stroke-dasharray="171 251" transform="rotate(-90 50 50)"/></svg></div>`,
@@ -13504,7 +14282,7 @@ kbd { border-radius:.375rem; border:1px solid #e4e4e7; background:#f4f4f5; paddi
     css: `.gauge-track { fill:none; stroke:#f4f4f5; stroke-width:12; stroke-linecap:round; } .gauge-fill { fill:none; stroke:#6366f1; stroke-width:12; stroke-linecap:round; }`,
   },
   {
-    id: 'heatmap', name: 'Activity Heatmap', category: 'Charts',
+    id: 'charts-heatmap', name: 'Activity Heatmap', category: 'Charts',
     description: 'GitHub-style 7×12 contribution heatmap with intensity coloring.',
     Preview: HeatmapV2Preview,
     tailwind: `<div class="rounded-2xl border border-zinc-100 shadow-sm p-4 bg-white"><p class="text-sm font-bold mb-3">Activity Heatmap</p><div class="flex gap-1"><div class="flex flex-col gap-1"><div class="w-3 h-3 rounded-sm bg-emerald-500"/><div class="w-3 h-3 rounded-sm bg-emerald-300"/><div class="w-3 h-3 rounded-sm bg-zinc-100"/></div></div></div>`,
@@ -13644,7 +14422,7 @@ kbd { border-radius:.375rem; border:1px solid #e4e4e7; background:#f4f4f5; paddi
     css: `.avatar { border-radius:9999px; display:flex; align-items:center; justify-content:center; font-weight:700; } .avatar-xs { width:1.5rem; height:1.5rem; font-size:.5625rem; } .avatar-sm { width:2rem; height:2rem; font-size:.625rem; } .avatar-md { width:2.5rem; height:2.5rem; font-size:.75rem; } .avatar-lg { width:3.5rem; height:3.5rem; font-size:1rem; }`,
   },
   {
-    id: 'avatar-group', name: 'Avatar Group', category: 'Avatars',
+    id: 'avatars-group', name: 'Avatar Group', category: 'Avatars',
     description: 'Overlapping stack of 5 avatars with overflow count badge.',
     Preview: AvatarGroupV2Preview,
     tailwind: `<div class="flex -space-x-3">
@@ -13975,7 +14753,7 @@ kbd { border-radius:.375rem; border:1px solid #e4e4e7; background:#f4f4f5; paddi
     css: `.image-caption { border-radius:1rem; overflow:hidden; } .image-caption-overlay { position:absolute; bottom:0; left:0; right:0; background:linear-gradient(to top,rgba(0,0,0,.7),transparent); padding:1rem; }`,
   },
   {
-    id: 'image-gallery', name: 'Gallery with Lightbox', category: 'Images',
+    id: 'images-gallery', name: 'Gallery with Lightbox', category: 'Images',
     description: 'Thumbnail grid with click-to-expand lightbox modal.',
     Preview: ImageGalleryV2Preview,
     tailwind: `<div class="grid grid-cols-2 gap-2">
@@ -14050,7 +14828,7 @@ kbd { border-radius:.375rem; border:1px solid #e4e4e7; background:#f4f4f5; paddi
     css: `.icon-list { list-style:none; padding:0; } .icon-list li { display:flex; align-items:flex-start; gap:.75rem; } .icon-list-icon { width:1.25rem; height:1.25rem; border-radius:9999px; border:1px solid #e4e4e7; background:#fafafa; display:flex; align-items:center; justify-content:center; flex-shrink:0; }`,
   },
   {
-    id: 'list-group', name: 'List Group', category: 'List',
+    id: 'list-group-v2', name: 'List Group', category: 'List',
     description: 'Bordered list group with badges and secondary text.',
     Preview: ListGroupV2Preview,
     tailwind: `<div class="border border-zinc-200 rounded-xl overflow-hidden divide-y divide-zinc-100">
@@ -14413,7 +15191,7 @@ kbd { border-radius:.375rem; border:1px solid #e4e4e7; background:#f4f4f5; paddi
     css: `.video-player { background:#18181b; border-radius:1rem; overflow:hidden; } .video-controls { display:flex; align-items:center; gap:.5rem; padding:.625rem .75rem; background:#27272a; } .video-progress { flex:1; height:.25rem; background:#52525b; border-radius:9999px; cursor:pointer; } .video-progress-fill { height:100%; background:#6366f1; border-radius:9999px; }`,
   },
   {
-    id: 'video-card', name: 'Video Card', category: 'Videos',
+    id: 'videos-card', name: 'Video Card', category: 'Videos',
     description: 'Thumbnail with title, duration, and view count.',
     Preview: VideoCardV2Preview,
     tailwind: `<div class="flex gap-3">
@@ -14437,6 +15215,2255 @@ kbd { border-radius:.375rem; border:1px solid #e4e4e7; background:#f4f4f5; paddi
   </div>
 </div>`,
     css: `.video-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:.5rem; } .video-grid-item { border-radius:.75rem; overflow:hidden; border:1px solid #f4f4f5; cursor:pointer; } .video-grid-thumb { position:relative; height:4rem; }`,
+  },
+  // ── Alerts ──────────────────────────────────────────────
+  {
+    id: 'alert-banner-v2', name: 'Banner Alert', category: 'Alerts',
+    description: 'Full-width top banner for site-wide announcements.',
+    Preview: () => (
+      <PreviewWrap bg="bg-zinc-50">
+        <div className="w-full max-w-sm bg-indigo-600 text-white flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-medium shadow">
+          <span>🎉 New feature launched — <span className="underline cursor-pointer">Learn more</span></span>
+          <button className="ml-3 text-indigo-200 hover:text-white text-sm">✕</button>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="w-full bg-indigo-600 text-white flex items-center justify-between px-4 py-2.5 text-xs font-medium"><span>🎉 New feature — <span class="underline cursor-pointer">Learn more</span></span><button class="ml-3 text-indigo-200 hover:text-white">✕</button></div>`,
+    css: `.alert-banner { background:#4f46e5; color:#fff; display:flex; align-items:center; justify-content:space-between; padding:.625rem 1rem; font-size:.75rem; font-weight:500; }`,
+  },
+  {
+    id: 'alert-success-v2', name: 'Success Alert', category: 'Alerts',
+    description: 'Green success alert with check icon and dismiss.',
+    Preview: () => (
+      <PreviewWrap bg="bg-zinc-50">
+        <div className="w-full max-w-sm flex items-start gap-3 rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-3 shadow-sm">
+          <span className="text-emerald-500 mt-0.5">✔</span>
+          <div className="flex-1"><p className="text-xs font-bold text-emerald-800">Success!</p><p className="text-xs text-emerald-600 mt-0.5">Your changes have been saved.</p></div>
+          <button className="text-emerald-400 hover:text-emerald-600 text-sm">✕</button>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="flex items-start gap-3 rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-3"><span class="text-emerald-500 mt-0.5">✔</span><div class="flex-1"><p class="text-xs font-bold text-emerald-800">Success!</p><p class="text-xs text-emerald-600 mt-0.5">Your changes have been saved.</p></div><button class="text-emerald-400 text-sm">✕</button></div>`,
+    css: `.alert-success { display:flex; gap:.75rem; border-radius:.75rem; background:#ecfdf5; border:1px solid #a7f3d0; padding:.75rem 1rem; }`,
+  },
+  {
+    id: 'alert-warning', name: 'Warning Alert', category: 'Alerts',
+    description: 'Amber warning alert with bold title and message.',
+    Preview: () => (
+      <PreviewWrap bg="bg-zinc-50">
+        <div className="w-full max-w-sm flex items-start gap-3 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 shadow-sm">
+          <span className="text-amber-500 mt-0.5">⚠</span>
+          <div><p className="text-xs font-bold text-amber-800">Low Storage</p><p className="text-xs text-amber-700 mt-0.5">You have used 90% of your storage quota.</p></div>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="flex items-start gap-3 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3"><span class="text-amber-500 mt-0.5">⚠</span><div><p class="text-xs font-bold text-amber-800">Low Storage</p><p class="text-xs text-amber-700 mt-0.5">You have used 90% of your storage quota.</p></div></div>`,
+    css: `.alert-warning { display:flex; gap:.75rem; border-radius:.75rem; background:#fffbeb; border:1px solid #fde68a; padding:.75rem 1rem; }`,
+  },
+  {
+    id: 'alert-error', name: 'Error Alert', category: 'Alerts',
+    description: 'Red error alert with action button.',
+    Preview: () => (
+      <PreviewWrap bg="bg-zinc-50">
+        <div className="w-full max-w-sm flex items-start gap-3 rounded-xl bg-red-50 border border-red-200 px-4 py-3 shadow-sm">
+          <span className="text-red-500 mt-0.5">✖</span>
+          <div className="flex-1"><p className="text-xs font-bold text-red-800">Payment Failed</p><p className="text-xs text-red-600 mt-0.5">Your card was declined. Please try again.</p><button className="mt-2 text-xs font-semibold text-red-700 underline">Retry</button></div>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="flex items-start gap-3 rounded-xl bg-red-50 border border-red-200 px-4 py-3"><span class="text-red-500 mt-0.5">✖</span><div class="flex-1"><p class="text-xs font-bold text-red-800">Payment Failed</p><p class="text-xs text-red-600 mt-0.5">Your card was declined.</p><button class="mt-2 text-xs font-semibold text-red-700 underline">Retry</button></div></div>`,
+    css: `.alert-error { display:flex; gap:.75rem; border-radius:.75rem; background:#fef2f2; border:1px solid #fecaca; padding:.75rem 1rem; }`,
+  },
+  {
+    id: 'alert-neutral', name: 'Neutral Info Alert', category: 'Alerts',
+    description: 'Minimal grey informational alert for general notices.',
+    Preview: () => (
+      <PreviewWrap bg="bg-zinc-50">
+        <div className="w-full max-w-sm flex items-center gap-3 rounded-xl bg-zinc-100 border border-zinc-200 px-4 py-3 shadow-sm">
+          <span className="text-zinc-500 text-sm">ℹ</span>
+          <p className="text-xs text-zinc-600">Maintenance scheduled for Sunday 2am–4am UTC.</p>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="flex items-center gap-3 rounded-xl bg-zinc-100 border border-zinc-200 px-4 py-3"><span class="text-zinc-500 text-sm">ℹ</span><p class="text-xs text-zinc-600">Maintenance scheduled Sunday 2–4am UTC.</p></div>`,
+    css: `.alert-neutral { display:flex; align-items:center; gap:.75rem; border-radius:.75rem; background:#f4f4f5; border:1px solid #e4e4e7; padding:.75rem 1rem; }`,
+  },
+  // ── Avatars ─────────────────────────────────────────────
+  {
+    id: 'avatar-stack', name: 'Avatar Stack', category: 'Avatars',
+    description: 'Overlapping avatar stack with +N overflow count.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex items-center">
+          {['bg-indigo-400','bg-pink-400','bg-emerald-400','bg-amber-400'].map((c,i) => (
+            <div key={i} className={`w-9 h-9 rounded-full ${c} border-2 border-white flex items-center justify-center text-white text-xs font-bold`} style={{marginLeft: i ? '-10px' : 0}}>
+              {String.fromCharCode(65+i)}
+            </div>
+          ))}
+          <div className="w-9 h-9 rounded-full bg-zinc-200 border-2 border-white flex items-center justify-center text-xs font-bold text-zinc-600" style={{marginLeft:'-10px'}}>+5</div>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="flex items-center"><div class="w-9 h-9 rounded-full bg-indigo-400 border-2 border-white flex items-center justify-center text-white text-xs font-bold">A</div><div class="-ml-2.5 w-9 h-9 rounded-full bg-pink-400 border-2 border-white flex items-center justify-center text-white text-xs font-bold">B</div><div class="-ml-2.5 w-9 h-9 rounded-full bg-zinc-200 border-2 border-white flex items-center justify-center text-xs font-bold text-zinc-600">+5</div></div>`,
+    css: `.avatar-stack { display:flex; } .avatar-stack .avatar { width:2.25rem; height:2.25rem; border-radius:50%; border:2px solid #fff; margin-left:-.625rem; } .avatar-stack .avatar:first-child { margin-left:0; }`,
+  },
+  {
+    id: 'avatar-status-v2', name: 'Avatar with Status', category: 'Avatars',
+    description: 'Avatar with online/away/offline status dot indicator.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex gap-5">
+          {[['bg-indigo-500','bg-emerald-400','Online'],['bg-pink-500','bg-amber-400','Away'],['bg-zinc-400','bg-zinc-300','Offline']].map(([av,dot,label]) => (
+            <div key={label} className="flex flex-col items-center gap-1">
+              <div className="relative">
+                <div className={`w-10 h-10 rounded-full ${av} flex items-center justify-center text-white text-sm font-bold`}>U</div>
+                <span className={`absolute bottom-0 right-0 w-3 h-3 rounded-full ${dot} border-2 border-white`} />
+              </div>
+              <span className="text-[10px] text-zinc-500">{label}</span>
+            </div>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="relative inline-block"><div class="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold">U</div><span class="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-400 border-2 border-white"></span></div>`,
+    css: `.avatar-status { position:relative; display:inline-block; } .status-dot { position:absolute; bottom:0; right:0; width:.75rem; height:.75rem; border-radius:50%; border:2px solid #fff; }`,
+  },
+  {
+    id: 'avatar-initials', name: 'Initials Avatar', category: 'Avatars',
+    description: 'Color-coded initials avatars in multiple sizes.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex items-center gap-3">
+          {([['JD','bg-violet-500',44],['AB','bg-rose-500',36],['MK','bg-teal-500',28]] as [string,string,number][]).map(([init,bg,size]) => (
+            <div key={init} className={`rounded-full ${bg} flex items-center justify-center text-white font-bold`} style={{width:size,height:size,fontSize:size*0.35}}>
+              {init}
+            </div>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="flex items-center gap-3"><div class="w-11 h-11 rounded-full bg-violet-500 flex items-center justify-center text-white font-bold text-sm">JD</div><div class="w-9 h-9 rounded-full bg-rose-500 flex items-center justify-center text-white font-bold text-xs">AB</div><div class="w-7 h-7 rounded-full bg-teal-500 flex items-center justify-center text-white font-bold text-[10px]">MK</div></div>`,
+    css: `.avatar-initials { border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; }`,
+  },
+  {
+    id: 'avatar-upload', name: 'Avatar Upload', category: 'Avatars',
+    description: 'Avatar with camera icon overlay for photo upload.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex flex-col items-center gap-3">
+          <div className="relative cursor-pointer group">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center text-white text-xl font-bold">JD</div>
+            <div className="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <span className="text-white text-lg">📷</span>
+            </div>
+          </div>
+          <span className="text-xs text-zinc-500">Click to change photo</span>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="relative cursor-pointer group w-16 h-16"><div class="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center text-white text-xl font-bold">JD</div><div class="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">📷</div></div>`,
+    css: `.avatar-upload { position:relative; cursor:pointer; } .avatar-upload-overlay { position:absolute; inset:0; border-radius:50%; background:rgba(0,0,0,.4); display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .2s; } .avatar-upload:hover .avatar-upload-overlay { opacity:1; }`,
+  },
+  {
+    id: 'avatar-group-list', name: 'Avatar Group List', category: 'Avatars',
+    description: 'Avatar with name and role in a vertical list.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="w-full max-w-xs space-y-2">
+          {[['Alice','bg-indigo-400','Designer'],['Bob','bg-rose-400','Engineer'],['Carol','bg-teal-400','PM']].map(([n,c,r]) => (
+            <div key={n} className="flex items-center gap-3 p-2 rounded-xl hover:bg-zinc-50 transition">
+              <div className={`w-8 h-8 rounded-full ${c} flex items-center justify-center text-white text-xs font-bold shrink-0`}>{n[0]}</div>
+              <div><p className="text-xs font-semibold text-zinc-800">{n}</p><p className="text-[10px] text-zinc-400">{r}</p></div>
+            </div>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="flex items-center gap-3 p-2 rounded-xl hover:bg-zinc-50 transition"><div class="w-8 h-8 rounded-full bg-indigo-400 flex items-center justify-center text-white text-xs font-bold">A</div><div><p class="text-xs font-semibold text-zinc-800">Alice</p><p class="text-[10px] text-zinc-400">Designer</p></div></div>`,
+    css: `.avatar-list-item { display:flex; align-items:center; gap:.75rem; padding:.5rem; border-radius:.75rem; transition:background .15s; } .avatar-list-item:hover { background:#f9f9f9; }`,
+  },
+  // ── Badge ────────────────────────────────────────────────
+  {
+    id: 'badge-pill', name: 'Pill Badges', category: 'Badge',
+    description: 'Rounded pill badges in multiple color variants.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex flex-wrap gap-2">
+          {[['New','bg-indigo-100 text-indigo-700'],['Hot','bg-rose-100 text-rose-700'],['Sale','bg-emerald-100 text-emerald-700'],['Beta','bg-amber-100 text-amber-700'],['Pro','bg-violet-100 text-violet-700']].map(([l,c]) => (
+            <span key={l} className={`px-3 py-1 rounded-full text-[11px] font-semibold ${c}`}>{l}</span>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="flex flex-wrap gap-2"><span class="px-3 py-1 rounded-full text-[11px] font-semibold bg-indigo-100 text-indigo-700">New</span><span class="px-3 py-1 rounded-full text-[11px] font-semibold bg-rose-100 text-rose-700">Hot</span><span class="px-3 py-1 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-700">Sale</span></div>`,
+    css: `.badge-pill { padding:.25rem .75rem; border-radius:9999px; font-size:.6875rem; font-weight:600; }`,
+  },
+  {
+    id: 'badge-dot-v2', name: 'Dot Badges', category: 'Badge',
+    description: 'Small colored dot badges for status indication.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex flex-col gap-2.5">
+          {[['Active','bg-emerald-400'],['Pending','bg-amber-400'],['Inactive','bg-zinc-400'],['Error','bg-red-400']].map(([l,c]) => (
+            <div key={l} className="flex items-center gap-2">
+              <span className={`w-2 h-2 rounded-full ${c} shrink-0`} />
+              <span className="text-xs text-zinc-700">{l}</span>
+            </div>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-400"></span><span class="text-xs text-zinc-700">Active</span></div>`,
+    css: `.badge-dot { display:flex; align-items:center; gap:.5rem; } .badge-dot-indicator { width:.5rem; height:.5rem; border-radius:50%; }`,
+  },
+  {
+    id: 'badge-counter', name: 'Counter Badge', category: 'Badge',
+    description: 'Notification counter badge overlaid on icons.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex gap-6">
+          {([['🔔',3],['✉️',12],['🛒',0]] as [string,number][]).map(([icon,count]) => (
+            <div key={icon} className="relative cursor-pointer">
+              <span className="text-2xl">{icon}</span>
+              {count > 0 && <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1">{count > 9 ? '9+' : count}</span>}
+            </div>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="relative cursor-pointer inline-block"><span class="text-2xl">🔔</span><span class="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1">3</span></div>`,
+    css: `.badge-counter { position:relative; display:inline-block; } .badge-counter-bubble { position:absolute; top:-.375rem; right:-.375rem; min-width:1.125rem; height:1.125rem; background:#ef4444; color:#fff; font-size:.625rem; font-weight:700; border-radius:9999px; display:flex; align-items:center; justify-content:center; padding:0 .25rem; }`,
+  },
+  {
+    id: 'badge-icon', name: 'Icon Badge', category: 'Badge',
+    description: 'Badge variants with leading icon for context.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex flex-wrap gap-2">
+          {[['✔ Verified','bg-emerald-100 text-emerald-700'],['★ Featured','bg-amber-100 text-amber-700'],['🔒 Secure','bg-zinc-100 text-zinc-600'],['⚡ Fast','bg-blue-100 text-blue-700']].map(([l,c]) => (
+            <span key={l} className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold ${c}`}>{l}</span>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="flex flex-wrap gap-2"><span class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-emerald-100 text-emerald-700">✔ Verified</span><span class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-amber-100 text-amber-700">★ Featured</span></div>`,
+    css: `.badge-icon { padding:.25rem .625rem; border-radius:.5rem; font-size:.6875rem; font-weight:600; display:inline-flex; align-items:center; gap:.25rem; }`,
+  },
+  {
+    id: 'badge-outline', name: 'Outline Badges', category: 'Badge',
+    description: 'Border-only outline style badges without fill.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex flex-wrap gap-2">
+          {[['Design','border-violet-400 text-violet-600'],['React','border-blue-400 text-blue-600'],['Open Source','border-emerald-400 text-emerald-600']].map(([l,c]) => (
+            <span key={l} className={`px-2.5 py-0.5 rounded-full border text-[11px] font-medium ${c}`}>{l}</span>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="flex flex-wrap gap-2"><span class="px-2.5 py-0.5 rounded-full border border-violet-400 text-violet-600 text-[11px] font-medium">Design</span><span class="px-2.5 py-0.5 rounded-full border border-blue-400 text-blue-600 text-[11px] font-medium">React</span></div>`,
+    css: `.badge-outline { padding:.125rem .625rem; border-radius:9999px; border:1px solid; font-size:.6875rem; font-weight:500; background:transparent; }`,
+  },
+  // ── Breadcrumb ───────────────────────────────────────────
+  {
+    id: 'breadcrumb-slash', name: 'Slash Breadcrumb', category: 'Breadcrumb',
+    description: 'Classic slash-separated breadcrumb navigation.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <nav className="flex items-center gap-1 text-xs">
+          {['Home','Products','Shoes'].map((s,i,arr) => (
+            <span key={s} className="flex items-center gap-1">
+              <span className={i < arr.length-1 ? 'text-zinc-400 hover:text-zinc-700 cursor-pointer' : 'text-zinc-800 font-semibold'}>{s}</span>
+              {i < arr.length-1 && <span className="text-zinc-300">/</span>}
+            </span>
+          ))}
+        </nav>
+      </PreviewWrap>
+    ),
+    tailwind: `<nav class="flex items-center gap-1 text-xs"><a class="text-zinc-400 hover:text-zinc-700">Home</a><span class="text-zinc-300">/</span><a class="text-zinc-400 hover:text-zinc-700">Products</a><span class="text-zinc-300">/</span><span class="text-zinc-800 font-semibold">Shoes</span></nav>`,
+    css: `.breadcrumb { display:flex; align-items:center; gap:.25rem; font-size:.75rem; } .breadcrumb-sep { color:#d4d4d8; } .breadcrumb a { color:#a1a1aa; } .breadcrumb a:hover { color:#3f3f46; }`,
+  },
+  {
+    id: 'breadcrumb-arrow', name: 'Arrow Breadcrumb', category: 'Breadcrumb',
+    description: 'Chevron arrow separated breadcrumb with icon home.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <nav className="flex items-center gap-1 text-xs">
+          {['🏠 Home','Category','Sub','Item'].map((s,i,arr) => (
+            <span key={s} className="flex items-center gap-1">
+              <span className={i < arr.length-1 ? 'text-zinc-400 hover:text-indigo-600 cursor-pointer transition' : 'text-indigo-600 font-semibold'}>{s}</span>
+              {i < arr.length-1 && <span className="text-zinc-300">›</span>}
+            </span>
+          ))}
+        </nav>
+      </PreviewWrap>
+    ),
+    tailwind: `<nav class="flex items-center gap-1 text-xs"><a class="text-zinc-400 hover:text-indigo-600 transition">🏠 Home</a><span class="text-zinc-300">›</span><a class="text-zinc-400 hover:text-indigo-600">Category</a><span class="text-zinc-300">›</span><span class="text-indigo-600 font-semibold">Item</span></nav>`,
+    css: `.breadcrumb-arrow { display:flex; align-items:center; gap:.25rem; font-size:.75rem; }`,
+  },
+  {
+    id: 'breadcrumb-pills-v2', name: 'Pill Breadcrumb', category: 'Breadcrumb',
+    description: 'Each breadcrumb step as a distinct pill button.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <nav className="flex items-center gap-2 flex-wrap">
+          {['Home','Blog','Tech','Article'].map((s,i,arr) => (
+            <span key={s} className={`px-3 py-1 rounded-full text-[11px] font-medium cursor-pointer ${i === arr.length-1 ? 'bg-indigo-600 text-white' : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'}`}>{s}</span>
+          ))}
+        </nav>
+      </PreviewWrap>
+    ),
+    tailwind: `<nav class="flex items-center gap-2"><span class="px-3 py-1 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-600 hover:bg-zinc-200 cursor-pointer">Home</span><span class="px-3 py-1 rounded-full text-[11px] font-medium bg-indigo-600 text-white">Article</span></nav>`,
+    css: `.breadcrumb-pill { padding:.25rem .75rem; border-radius:9999px; font-size:.6875rem; font-weight:500; cursor:pointer; } .breadcrumb-pill.active { background:#4f46e5; color:#fff; }`,
+  },
+  {
+    id: 'breadcrumb-collapsed', name: 'Collapsed Breadcrumb', category: 'Breadcrumb',
+    description: 'Long path collapsed with ellipsis in the middle.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <nav className="flex items-center gap-1 text-xs">
+          <span className="text-zinc-400 hover:text-zinc-700 cursor-pointer">Home</span>
+          <span className="text-zinc-300">/</span>
+          <span className="px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500 cursor-pointer text-[11px] font-medium hover:bg-zinc-200">•••</span>
+          <span className="text-zinc-300">/</span>
+          <span className="text-zinc-400 hover:text-zinc-700 cursor-pointer">Docs</span>
+          <span className="text-zinc-300">/</span>
+          <span className="text-zinc-800 font-semibold">API Reference</span>
+        </nav>
+      </PreviewWrap>
+    ),
+    tailwind: `<nav class="flex items-center gap-1 text-xs"><a class="text-zinc-400 hover:text-zinc-700">Home</a><span class="text-zinc-300">/</span><span class="px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500 text-[11px] cursor-pointer">•••</span><span class="text-zinc-300">/</span><span class="text-zinc-800 font-semibold">API Reference</span></nav>`,
+    css: `.breadcrumb-collapsed { display:flex; align-items:center; gap:.25rem; font-size:.75rem; }`,
+  },
+  {
+    id: 'breadcrumb-bg', name: 'Background Breadcrumb', category: 'Breadcrumb',
+    description: 'Breadcrumb with subtle background bar.',
+    Preview: () => (
+      <PreviewWrap bg="bg-zinc-50">
+        <nav className="flex items-center gap-1 bg-white border border-zinc-200 rounded-xl px-4 py-2 text-xs shadow-sm">
+          {['Home','Settings','Profile'].map((s,i,arr) => (
+            <span key={s} className="flex items-center gap-1">
+              <span className={i < arr.length-1 ? 'text-zinc-400 hover:text-zinc-700 cursor-pointer' : 'text-zinc-900 font-bold'}>{s}</span>
+              {i < arr.length-1 && <span className="text-zinc-300 mx-0.5">›</span>}
+            </span>
+          ))}
+        </nav>
+      </PreviewWrap>
+    ),
+    tailwind: `<nav class="flex items-center gap-1 bg-white border border-zinc-200 rounded-xl px-4 py-2 text-xs shadow-sm"><a class="text-zinc-400 hover:text-zinc-700">Home</a><span class="text-zinc-300 mx-0.5">›</span><span class="text-zinc-900 font-bold">Profile</span></nav>`,
+    css: `.breadcrumb-bg { background:#fff; border:1px solid #e4e4e7; border-radius:.75rem; padding:.5rem 1rem; display:flex; align-items:center; gap:.25rem; font-size:.75rem; }`,
+  },
+  // ── Button Groups ────────────────────────────────────────
+  {
+    id: 'btn-group-icon-v2', name: 'Icon Button Group', category: 'Button Groups',
+    description: 'Icon-only button group for editor-style toolbars.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex rounded-xl overflow-hidden border border-zinc-200 shadow-sm">
+          {[['B','font-bold'],['I','italic'],['U','underline']].map(([l,s],i,arr) => (
+            <button key={l} className={`px-3.5 py-2 text-sm text-zinc-700 hover:bg-zinc-100 transition ${s} ${i < arr.length-1 ? 'border-r border-zinc-200' : ''}`}>{l}</button>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="flex rounded-xl overflow-hidden border border-zinc-200 shadow-sm"><button class="px-3.5 py-2 text-sm font-bold text-zinc-700 hover:bg-zinc-100 border-r border-zinc-200">B</button><button class="px-3.5 py-2 text-sm italic text-zinc-700 hover:bg-zinc-100 border-r border-zinc-200">I</button><button class="px-3.5 py-2 text-sm underline text-zinc-700 hover:bg-zinc-100">U</button></div>`,
+    css: `.btn-group { display:flex; border:1px solid #e4e4e7; border-radius:.75rem; overflow:hidden; } .btn-group button { padding:.5rem .875rem; font-size:.875rem; color:#3f3f46; transition:background .15s; } .btn-group button:not(:last-child) { border-right:1px solid #e4e4e7; } .btn-group button:hover { background:#f4f4f5; }`,
+  },
+  {
+    id: 'btn-group-toggle', name: 'Toggle Button Group', category: 'Button Groups',
+    description: 'Single-select toggle group with active state.',
+    Preview: () => {
+      const [active, setActive] = React.useState('Month');
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="flex rounded-xl border border-zinc-200 overflow-hidden shadow-sm">
+            {['Day','Week','Month','Year'].map(t => (
+              <button key={t} onClick={() => setActive(t)} className={`px-3.5 py-2 text-xs font-semibold transition border-r border-zinc-200 last:border-r-0 ${active === t ? 'bg-indigo-600 text-white' : 'bg-white text-zinc-600 hover:bg-zinc-50'}`}>{t}</button>
+            ))}
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="flex rounded-xl border border-zinc-200 overflow-hidden shadow-sm"><button class="px-3.5 py-2 text-xs font-semibold bg-indigo-600 text-white">Day</button><button class="px-3.5 py-2 text-xs font-semibold bg-white text-zinc-600 hover:bg-zinc-50 border-l border-zinc-200">Week</button><button class="px-3.5 py-2 text-xs font-semibold bg-white text-zinc-600 hover:bg-zinc-50 border-l border-zinc-200">Month</button></div>`,
+    css: `.btn-toggle-group { display:flex; border:1px solid #e4e4e7; border-radius:.75rem; overflow:hidden; } .btn-toggle-group button.active { background:#4f46e5; color:#fff; }`,
+  },
+  {
+    id: 'btn-group-outlined', name: 'Outlined Button Group', category: 'Button Groups',
+    description: 'Outlined action group with shared border.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex">
+          {['Copy','Edit','Delete'].map((l,i,arr) => (
+            <button key={l} className={`px-4 py-2 text-xs font-semibold border border-zinc-300 text-zinc-700 hover:bg-zinc-50 transition ${i===0 ? 'rounded-l-xl' : ''} ${i===arr.length-1 ? 'rounded-r-xl' : ''} ${i>0 ? '-ml-px' : ''}`}>{l}</button>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="flex"><button class="px-4 py-2 text-xs font-semibold border border-zinc-300 text-zinc-700 hover:bg-zinc-50 rounded-l-xl">Copy</button><button class="px-4 py-2 text-xs font-semibold border border-zinc-300 text-zinc-700 hover:bg-zinc-50 -ml-px">Edit</button><button class="px-4 py-2 text-xs font-semibold border border-zinc-300 text-zinc-700 hover:bg-zinc-50 -ml-px rounded-r-xl">Delete</button></div>`,
+    css: `.btn-group-outlined { display:flex; } .btn-group-outlined button { padding:.5rem 1rem; font-size:.75rem; font-weight:600; border:1px solid #d4d4d8; color:#3f3f46; margin-left:-1px; } .btn-group-outlined button:first-child { border-radius:.75rem 0 0 .75rem; margin-left:0; } .btn-group-outlined button:last-child { border-radius:0 .75rem .75rem 0; }`,
+  },
+  {
+    id: 'btn-group-split', name: 'Split Button', category: 'Button Groups',
+    description: 'Primary action button with dropdown arrow split.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex items-stretch shadow-sm">
+          <button className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-l-xl transition">Publish</button>
+          <button className="px-2.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-r-xl border-l border-indigo-500 transition text-xs">▾</button>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="flex items-stretch shadow-sm"><button class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-l-xl transition">Publish</button><button class="px-2.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-r-xl border-l border-indigo-500 text-xs">▾</button></div>`,
+    css: `.btn-split { display:flex; } .btn-split-main { padding:.5rem 1rem; background:#4f46e5; color:#fff; font-size:.75rem; font-weight:600; border-radius:.75rem 0 0 .75rem; } .btn-split-arrow { padding:.5rem .625rem; background:#4f46e5; color:#fff; border-radius:0 .75rem .75rem 0; border-left:1px solid #6366f1; }`,
+  },
+  {
+    id: 'btn-group-color', name: 'Color Button Group', category: 'Button Groups',
+    description: 'Color-themed button group for category selection.',
+    Preview: () => {
+      const [active, setActive] = React.useState(0);
+      const opts = [['All','bg-zinc-800 text-white','bg-white text-zinc-700'],['Design','bg-violet-600 text-white','bg-violet-50 text-violet-700'],['Dev','bg-blue-600 text-white','bg-blue-50 text-blue-700']];
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="flex gap-1.5">
+            {opts.map(([l,on,off],i) => (
+              <button key={l} onClick={() => setActive(i)} className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${active===i ? on : off}`}>{l}</button>
+            ))}
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="flex gap-1.5"><button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-zinc-800 text-white">All</button><button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-violet-50 text-violet-700 hover:bg-violet-100">Design</button><button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100">Dev</button></div>`,
+    css: `.btn-group-color button { padding:.375rem .75rem; border-radius:.5rem; font-size:.75rem; font-weight:600; transition:background .15s; }`,
+  },
+  // ── Button Variants ──────────────────────────────────────
+  {
+    id: 'btn-gradient', name: 'Gradient Buttons', category: 'Button Variants',
+    description: 'Vibrant gradient-fill buttons in multiple styles.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex flex-wrap gap-2">
+          <button className="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-600 text-white text-xs font-bold shadow hover:shadow-md hover:scale-105 transition-all">Get Started</button>
+          <button className="px-4 py-2 rounded-xl bg-gradient-to-r from-rose-500 to-pink-600 text-white text-xs font-bold shadow hover:shadow-md hover:scale-105 transition-all">Subscribe</button>
+          <button className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 text-white text-xs font-bold shadow hover:shadow-md hover:scale-105 transition-all">Download</button>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<button class="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-600 text-white text-xs font-bold shadow hover:shadow-md hover:scale-105 transition-all">Get Started</button>`,
+    css: `.btn-gradient { padding:.5rem 1rem; border-radius:.75rem; background:linear-gradient(to right,#6366f1,#7c3aed); color:#fff; font-size:.75rem; font-weight:700; box-shadow:0 1px 3px rgba(0,0,0,.12); transition:all .15s; } .btn-gradient:hover { box-shadow:0 4px 12px rgba(99,102,241,.4); transform:scale(1.05); }`,
+  },
+  {
+    id: 'btn-ghost', name: 'Ghost Buttons', category: 'Button Variants',
+    description: 'Transparent ghost buttons that show on hover.',
+    Preview: () => (
+      <PreviewWrap bg="bg-zinc-50">
+        <div className="flex flex-wrap gap-2">
+          <button className="px-4 py-2 rounded-xl text-indigo-600 text-xs font-semibold hover:bg-indigo-50 transition">Learn More</button>
+          <button className="px-4 py-2 rounded-xl text-zinc-600 text-xs font-semibold hover:bg-zinc-100 transition">Cancel</button>
+          <button className="px-4 py-2 rounded-xl text-rose-500 text-xs font-semibold hover:bg-rose-50 transition">Delete</button>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<button class="px-4 py-2 rounded-xl text-indigo-600 text-xs font-semibold hover:bg-indigo-50 transition">Learn More</button>`,
+    css: `.btn-ghost { padding:.5rem 1rem; border-radius:.75rem; background:transparent; font-size:.75rem; font-weight:600; transition:background .15s; }`,
+  },
+  {
+    id: 'btn-pill', name: 'Pill Buttons', category: 'Button Variants',
+    description: 'Fully rounded pill-shaped buttons.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex flex-wrap gap-2">
+          <button className="px-5 py-2 rounded-full bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 transition">Follow</button>
+          <button className="px-5 py-2 rounded-full border border-indigo-600 text-indigo-600 text-xs font-bold hover:bg-indigo-50 transition">Message</button>
+          <button className="px-5 py-2 rounded-full bg-zinc-100 text-zinc-700 text-xs font-bold hover:bg-zinc-200 transition">Share</button>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<button class="px-5 py-2 rounded-full bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 transition">Follow</button>`,
+    css: `.btn-pill { padding:.5rem 1.25rem; border-radius:9999px; font-size:.75rem; font-weight:700; }`,
+  },
+  {
+    id: 'btn-icon-label', name: 'Icon Label Buttons', category: 'Button Variants',
+    description: 'Buttons with leading icon and label.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex flex-wrap gap-2">
+          <button className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-700 transition">
+            <span>⬆</span> Upload
+          </button>
+          <button className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-500 text-white text-xs font-semibold hover:bg-emerald-600 transition">
+            <span>✔</span> Confirm
+          </button>
+          <button className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-zinc-300 text-zinc-700 text-xs font-semibold hover:bg-zinc-50 transition">
+            <span>⬇</span> Export
+          </button>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<button class="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-700 transition"><span>⬆</span> Upload</button>`,
+    css: `.btn-icon-label { display:flex; align-items:center; gap:.375rem; padding:.5rem 1rem; border-radius:.75rem; font-size:.75rem; font-weight:600; }`,
+  },
+  {
+    id: 'btn-sizes', name: 'Button Sizes', category: 'Button Variants',
+    description: 'XS through XL button size scale showcase.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex items-center flex-wrap gap-2">
+          <button className="px-2.5 py-1 rounded-lg bg-indigo-600 text-white text-[10px] font-bold">XS</button>
+          <button className="px-3 py-1.5 rounded-lg bg-indigo-600 text-white text-xs font-bold">SM</button>
+          <button className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm font-bold">MD</button>
+          <button className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-base font-bold">LG</button>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="flex items-center gap-2"><button class="px-2.5 py-1 rounded-lg bg-indigo-600 text-white text-[10px] font-bold">XS</button><button class="px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm font-bold">MD</button><button class="px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-base font-bold">LG</button></div>`,
+    css: `.btn-xs { padding:.25rem .625rem; font-size:.625rem; border-radius:.5rem; } .btn-sm { padding:.375rem .75rem; font-size:.75rem; border-radius:.5rem; } .btn-md { padding:.5rem 1rem; font-size:.875rem; border-radius:.75rem; } .btn-lg { padding:.625rem 1.25rem; font-size:1rem; border-radius:.75rem; }`,
+  },
+  // ── Cards ────────────────────────────────────────────────
+  {
+    id: 'card-pricing-v2', name: 'Pricing Card', category: 'Cards',
+    description: 'Pricing plan card with feature list and CTA.',
+    Preview: () => (
+      <PreviewWrap bg="bg-zinc-50">
+        <div className="w-48 bg-white rounded-2xl border border-zinc-200 shadow-sm p-5 flex flex-col gap-3">
+          <div><p className="text-xs font-bold text-indigo-600 uppercase tracking-wide">Pro</p><p className="text-2xl font-extrabold text-zinc-900 mt-1">$29<span className="text-sm font-normal text-zinc-400">/mo</span></p></div>
+          <ul className="space-y-1.5 text-[11px] text-zinc-600">
+            {['Unlimited projects','10GB storage','Priority support'].map(f => <li key={f} className="flex items-center gap-1.5"><span className="text-emerald-500">✔</span>{f}</li>)}
+          </ul>
+          <button className="w-full py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 transition mt-auto">Upgrade</button>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="w-48 bg-white rounded-2xl border border-zinc-200 shadow-sm p-5"><p class="text-xs font-bold text-indigo-600 uppercase">Pro</p><p class="text-2xl font-extrabold text-zinc-900 mt-1">$29<span class="text-sm font-normal text-zinc-400">/mo</span></p><button class="w-full mt-3 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold">Upgrade</button></div>`,
+    css: `.pricing-card { background:#fff; border-radius:1rem; border:1px solid #e4e4e7; padding:1.25rem; box-shadow:0 1px 3px rgba(0,0,0,.07); }`,
+  },
+  {
+    id: 'card-testimonial', name: 'Testimonial Card', category: 'Cards',
+    description: 'Quote card with avatar, name and star rating.',
+    Preview: () => (
+      <PreviewWrap bg="bg-zinc-50">
+        <div className="w-60 bg-white rounded-2xl border border-zinc-100 shadow-sm p-5">
+          <div className="text-amber-400 text-xs mb-2">★★★★★</div>
+          <p className="text-xs text-zinc-600 leading-relaxed">"Absolutely love this product. It has completely transformed how our team works."</p>
+          <div className="flex items-center gap-2.5 mt-4">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center text-white text-xs font-bold">JD</div>
+            <div><p className="text-xs font-bold text-zinc-800">Jane Doe</p><p className="text-[10px] text-zinc-400">CEO @ Acme</p></div>
+          </div>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="w-60 bg-white rounded-2xl border border-zinc-100 shadow-sm p-5"><div class="text-amber-400 text-xs mb-2">★★★★★</div><p class="text-xs text-zinc-600">"Absolutely love this product."</p><div class="flex items-center gap-2.5 mt-4"><div class="w-8 h-8 rounded-full bg-indigo-400 flex items-center justify-center text-white text-xs font-bold">JD</div><div><p class="text-xs font-bold text-zinc-800">Jane Doe</p><p class="text-[10px] text-zinc-400">CEO @ Acme</p></div></div></div>`,
+    css: `.testimonial-card { background:#fff; border-radius:1rem; border:1px solid #f4f4f5; padding:1.25rem; box-shadow:0 1px 3px rgba(0,0,0,.06); }`,
+  },
+  {
+    id: 'card-stats', name: 'Stats Card', category: 'Cards',
+    description: 'KPI stat card with trend indicator.',
+    Preview: () => (
+      <PreviewWrap bg="bg-zinc-50">
+        <div className="flex gap-3">
+          {[['Revenue','$12,400','↑ 8.2%','text-emerald-600'],['Users','3,280','↓ 1.4%','text-red-500'],['Orders','842','↑ 12%','text-emerald-600']].map(([label,val,trend,tc]) => (
+            <div key={label} className="bg-white rounded-2xl border border-zinc-100 shadow-sm p-3.5 flex-1 min-w-0">
+              <p className="text-[10px] text-zinc-400 font-medium">{label}</p>
+              <p className="text-base font-extrabold text-zinc-900 mt-0.5">{val}</p>
+              <p className={`text-[10px] font-semibold mt-1 ${tc}`}>{trend}</p>
+            </div>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="bg-white rounded-2xl border border-zinc-100 shadow-sm p-3.5"><p class="text-[10px] text-zinc-400 font-medium">Revenue</p><p class="text-base font-extrabold text-zinc-900 mt-0.5">$12,400</p><p class="text-[10px] font-semibold mt-1 text-emerald-600">↑ 8.2%</p></div>`,
+    css: `.stats-card { background:#fff; border-radius:1rem; border:1px solid #f4f4f5; padding:.875rem; box-shadow:0 1px 3px rgba(0,0,0,.06); }`,
+  },
+  {
+    id: 'card-horizontal', name: 'Horizontal Card', category: 'Cards',
+    description: 'Side-by-side image and content card layout.',
+    Preview: () => (
+      <PreviewWrap bg="bg-zinc-50">
+        <div className="w-72 flex bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden">
+          <div className="w-20 bg-gradient-to-br from-indigo-400 to-violet-500 shrink-0" />
+          <div className="p-3.5 flex-1 min-w-0">
+            <span className="text-[10px] font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">Design</span>
+            <p className="text-xs font-bold text-zinc-800 mt-1.5 leading-snug">Mastering UI Design Patterns</p>
+            <p className="text-[10px] text-zinc-400 mt-1">5 min read · Apr 2025</p>
+          </div>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="w-72 flex bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden"><div class="w-20 bg-gradient-to-br from-indigo-400 to-violet-500 shrink-0"></div><div class="p-3.5"><p class="text-xs font-bold text-zinc-800">Mastering UI Design</p><p class="text-[10px] text-zinc-400 mt-1">5 min read</p></div></div>`,
+    css: `.horizontal-card { display:flex; background:#fff; border-radius:1rem; border:1px solid #f4f4f5; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.06); }`,
+  },
+  {
+    id: 'card-glass', name: 'Glass Card', category: 'Cards',
+    description: 'Frosted glass morphism card with blur effect.',
+    Preview: () => (
+      <PreviewWrap bg="bg-gradient-to-br from-indigo-500 via-violet-600 to-purple-700">
+        <div className="w-52 rounded-2xl p-5 text-white" style={{background:'rgba(255,255,255,0.15)',backdropFilter:'blur(12px)',border:'1px solid rgba(255,255,255,0.25)'}}>
+          <p className="text-xs font-bold opacity-80 mb-1">Total Balance</p>
+          <p className="text-2xl font-extrabold">$8,240.00</p>
+          <p className="text-[10px] opacity-70 mt-3">**** **** **** 4281</p>
+          <div className="flex justify-between items-end mt-3">
+            <p className="text-[10px] opacity-70">Jane Doe</p>
+            <p className="text-xs font-bold opacity-80">VISA</p>
+          </div>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="w-52 rounded-2xl p-5 text-white" style="background:rgba(255,255,255,0.15);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.25)"><p class="text-xs font-bold opacity-80">Total Balance</p><p class="text-2xl font-extrabold">$8,240.00</p></div>`,
+    css: `.glass-card { background:rgba(255,255,255,.15); backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,.25); border-radius:1rem; padding:1.25rem; color:#fff; }`,
+  },
+  // ── Carousel ─────────────────────────────────────────────
+  {
+    id: 'carousel-dots', name: 'Dots Carousel', category: 'Carousel',
+    description: 'Slide carousel with dot navigation indicators.',
+    Preview: () => {
+      const [idx, setIdx] = React.useState(0);
+      const slides = [['from-indigo-500 to-violet-600','Slide One'],['from-rose-400 to-pink-600','Slide Two'],['from-emerald-400 to-teal-500','Slide Three']];
+      return (
+        <PreviewWrap bg="bg-zinc-50">
+          <div className="w-64">
+            <div className={`w-full h-24 rounded-2xl bg-gradient-to-r ${slides[idx][0]} flex items-center justify-center text-white font-bold text-sm shadow`}>{slides[idx][1]}</div>
+            <div className="flex justify-center gap-2 mt-3">
+              {slides.map((_,i) => <button key={i} onClick={() => setIdx(i)} className={`w-2 h-2 rounded-full transition ${i===idx ? 'bg-indigo-600 w-4' : 'bg-zinc-300'}`} />)}
+            </div>
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="w-64"><div class="w-full h-24 rounded-2xl bg-gradient-to-r from-indigo-500 to-violet-600 flex items-center justify-center text-white font-bold">Slide One</div><div class="flex justify-center gap-2 mt-3"><span class="w-4 h-2 rounded-full bg-indigo-600"></span><span class="w-2 h-2 rounded-full bg-zinc-300"></span><span class="w-2 h-2 rounded-full bg-zinc-300"></span></div></div>`,
+    css: `.carousel-dot { width:.5rem; height:.5rem; border-radius:9999px; background:#d4d4d8; transition:all .2s; } .carousel-dot.active { background:#4f46e5; width:1rem; }`,
+  },
+  {
+    id: 'carousel-arrows', name: 'Arrow Carousel', category: 'Carousel',
+    description: 'Carousel with left/right arrow navigation buttons.',
+    Preview: () => {
+      const [idx, setIdx] = React.useState(0);
+      const slides = ['from-indigo-400 to-violet-500','from-rose-400 to-pink-500','from-amber-400 to-orange-500'];
+      return (
+        <PreviewWrap bg="bg-zinc-50">
+          <div className="relative w-56 h-28">
+            <div className={`w-full h-full rounded-2xl bg-gradient-to-r ${slides[idx]} flex items-center justify-center text-white font-bold shadow`}>{idx+1}/{slides.length}</div>
+            <button onClick={() => setIdx((idx-1+slides.length)%slides.length)} className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/80 rounded-full flex items-center justify-center text-zinc-700 shadow hover:bg-white text-xs">‹</button>
+            <button onClick={() => setIdx((idx+1)%slides.length)} className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/80 rounded-full flex items-center justify-center text-zinc-700 shadow hover:bg-white text-xs">›</button>
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="relative w-56 h-28"><div class="w-full h-full rounded-2xl bg-gradient-to-r from-indigo-400 to-violet-500 flex items-center justify-center text-white font-bold">1/3</div><button class="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/80 rounded-full flex items-center justify-center text-zinc-700 shadow text-xs">‹</button><button class="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/80 rounded-full flex items-center justify-center text-zinc-700 shadow text-xs">›</button></div>`,
+    css: `.carousel-arrow { position:absolute; top:50%; transform:translateY(-50%); width:1.75rem; height:1.75rem; background:rgba(255,255,255,.8); border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 4px rgba(0,0,0,.15); cursor:pointer; }`,
+  },
+  {
+    id: 'carousel-card-v2', name: 'Card Carousel', category: 'Carousel',
+    description: 'Horizontally scrolling card carousel.',
+    Preview: () => (
+      <PreviewWrap bg="bg-zinc-50">
+        <div className="flex gap-3 overflow-x-auto pb-1 w-full max-w-xs [&::-webkit-scrollbar]:hidden">
+          {[['indigo','UI Kit'],['rose','Icon Pack'],['emerald','Templates'],['amber','Fonts']].map(([c,t]) => (
+            <div key={t} className={`shrink-0 w-28 h-20 rounded-xl bg-${c}-100 border border-${c}-200 flex flex-col items-center justify-center gap-1`}>
+              <div className={`w-8 h-8 rounded-lg bg-${c}-400`} />
+              <p className={`text-[10px] font-semibold text-${c}-700`}>{t}</p>
+            </div>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="flex gap-3 overflow-x-auto pb-1"><div class="shrink-0 w-28 h-20 rounded-xl bg-indigo-100 border border-indigo-200 flex flex-col items-center justify-center gap-1"><div class="w-8 h-8 rounded-lg bg-indigo-400"></div><p class="text-[10px] font-semibold text-indigo-700">UI Kit</p></div></div>`,
+    css: `.card-carousel { display:flex; gap:.75rem; overflow-x:auto; scrollbar-width:none; } .card-carousel::-webkit-scrollbar { display:none; } .carousel-card-item { flex-shrink:0; width:7rem; height:5rem; border-radius:.75rem; }`,
+  },
+  {
+    id: 'carousel-progress', name: 'Progress Carousel', category: 'Carousel',
+    description: 'Carousel with progress bar indicating slide position.',
+    Preview: () => {
+      const [idx, setIdx] = React.useState(0);
+      const total = 4;
+      return (
+        <PreviewWrap bg="bg-zinc-50">
+          <div className="w-64">
+            <div className="w-full h-20 rounded-2xl bg-gradient-to-r from-indigo-500 to-violet-600 flex items-center justify-center text-white font-bold shadow text-sm">Slide {idx+1}</div>
+            <div className="mt-3 h-1 bg-zinc-200 rounded-full overflow-hidden">
+              <div className="h-full bg-indigo-600 rounded-full transition-all duration-300" style={{width:`${((idx+1)/total)*100}%`}} />
+            </div>
+            <div className="flex justify-between mt-2">
+              <button onClick={() => setIdx(Math.max(0,idx-1))} className="text-xs text-zinc-500 hover:text-zinc-800">‹ Prev</button>
+              <span className="text-[10px] text-zinc-400">{idx+1}/{total}</span>
+              <button onClick={() => setIdx(Math.min(total-1,idx+1))} className="text-xs text-zinc-500 hover:text-zinc-800">Next ›</button>
+            </div>
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="w-64"><div class="w-full h-20 rounded-2xl bg-gradient-to-r from-indigo-500 to-violet-600 flex items-center justify-center text-white font-bold">Slide 1</div><div class="mt-3 h-1 bg-zinc-200 rounded-full overflow-hidden"><div class="h-full bg-indigo-600 rounded-full" style="width:25%"></div></div></div>`,
+    css: `.carousel-progress { height:.25rem; background:#e4e4e7; border-radius:9999px; overflow:hidden; } .carousel-progress-fill { height:100%; background:#4f46e5; border-radius:9999px; transition:width .3s; }`,
+  },
+  {
+    id: 'carousel-testimonial', name: 'Testimonial Carousel', category: 'Carousel',
+    description: 'Auto-cycle testimonial quote carousel.',
+    Preview: () => {
+      const quotes = [['Great product!','Alice'],['Changed my workflow.','Bob'],['10/10 recommend.','Carol']];
+      const [idx, setIdx] = React.useState(0);
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="w-64 text-center px-4">
+            <p className="text-xs text-zinc-600 italic">"{quotes[idx][0]}"</p>
+            <p className="text-[10px] font-bold text-zinc-800 mt-2">— {quotes[idx][1]}</p>
+            <div className="flex justify-center gap-1.5 mt-3">
+              {quotes.map((_,i) => <button key={i} onClick={() => setIdx(i)} className={`w-2 h-2 rounded-full ${i===idx ? 'bg-indigo-600' : 'bg-zinc-300'}`} />)}
+            </div>
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="w-64 text-center px-4"><p class="text-xs text-zinc-600 italic">"Great product!"</p><p class="text-[10px] font-bold text-zinc-800 mt-2">— Alice</p></div>`,
+    css: `.testimonial-carousel { text-align:center; } .testimonial-carousel blockquote { font-size:.75rem; font-style:italic; color:#52525b; }`,
+  },
+  // ── Dropdowns ────────────────────────────────────────────
+  {
+    id: 'dropdown-select', name: 'Select Dropdown', category: 'Dropdowns',
+    description: 'Custom styled select dropdown with options list.',
+    Preview: () => {
+      const [open, setOpen] = React.useState(false);
+      const [val, setVal] = React.useState('Select option...');
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="relative w-52">
+            <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between px-3.5 py-2.5 bg-white border border-zinc-300 rounded-xl text-xs text-zinc-700 shadow-sm hover:border-indigo-400 transition">
+              {val}<span className="text-zinc-400 ml-2">▾</span>
+            </button>
+            {open && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-zinc-200 rounded-xl shadow-lg z-10 overflow-hidden">
+                {['Design','Engineering','Marketing','Product'].map(o => (
+                  <button key={o} onClick={() => { setVal(o); setOpen(false); }} className="w-full text-left px-3.5 py-2 text-xs text-zinc-700 hover:bg-indigo-50 hover:text-indigo-700 transition">{o}</button>
+                ))}
+              </div>
+            )}
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="relative w-52"><button class="w-full flex items-center justify-between px-3.5 py-2.5 bg-white border border-zinc-300 rounded-xl text-xs text-zinc-700 shadow-sm">Select option... <span class="text-zinc-400">▾</span></button></div>`,
+    css: `.dropdown-select { position:relative; } .dropdown-btn { width:100%; display:flex; align-items:center; justify-content:space-between; padding:.625rem .875rem; background:#fff; border:1px solid #d4d4d8; border-radius:.75rem; font-size:.75rem; } .dropdown-menu { position:absolute; top:calc(100% + .25rem); left:0; right:0; background:#fff; border:1px solid #e4e4e7; border-radius:.75rem; box-shadow:0 4px 12px rgba(0,0,0,.1); overflow:hidden; }`,
+  },
+  {
+    id: 'dropdown-user-menu', name: 'User Menu Dropdown', category: 'Dropdowns',
+    description: 'Avatar-triggered user account dropdown menu.',
+    Preview: () => {
+      const [open, setOpen] = React.useState(false);
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="relative">
+            <button onClick={() => setOpen(!open)} className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-100 hover:bg-zinc-200 transition">
+              <div className="w-6 h-6 rounded-full bg-indigo-500 flex items-center justify-center text-white text-[10px] font-bold">JD</div>
+              <span className="text-xs font-medium text-zinc-700">Jane Doe</span>
+              <span className="text-zinc-400 text-[10px]">▾</span>
+            </button>
+            {open && (
+              <div className="absolute top-full right-0 mt-1 w-44 bg-white border border-zinc-200 rounded-xl shadow-lg z-10 overflow-hidden py-1">
+                {['Profile','Settings','Billing','Sign out'].map((o,i) => (
+                  <button key={o} onClick={() => setOpen(false)} className={`w-full text-left px-3.5 py-2 text-xs ${i===3 ? 'text-red-500 hover:bg-red-50' : 'text-zinc-700 hover:bg-zinc-50'} transition`}>{o}</button>
+                ))}
+              </div>
+            )}
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="relative"><button class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-100"><div class="w-6 h-6 rounded-full bg-indigo-500 flex items-center justify-center text-white text-[10px] font-bold">JD</div><span class="text-xs font-medium text-zinc-700">Jane Doe</span><span class="text-[10px] text-zinc-400">▾</span></button></div>`,
+    css: `.user-dropdown { position:relative; } .user-dropdown-menu { position:absolute; top:calc(100% + .25rem); right:0; width:11rem; background:#fff; border:1px solid #e4e4e7; border-radius:.75rem; box-shadow:0 4px 12px rgba(0,0,0,.1); padding:.25rem 0; }`,
+  },
+  {
+    id: 'dropdown-context', name: 'Context Menu', category: 'Dropdowns',
+    description: 'Right-click style context menu with icons.',
+    Preview: () => {
+      const [open, setOpen] = React.useState(false);
+      const items = [['✏️','Edit'],['📋','Copy'],['📌','Pin'],['🗑️','Delete']];
+      return (
+        <PreviewWrap bg="bg-zinc-50">
+          <div className="relative">
+            <button onClick={() => setOpen(!open)} className="px-3.5 py-2 bg-white border border-zinc-200 rounded-xl text-xs text-zinc-700 shadow-sm hover:bg-zinc-50 transition">Right-click menu ▾</button>
+            {open && (
+              <div className="absolute top-full left-0 mt-1 w-40 bg-white border border-zinc-200 rounded-xl shadow-xl z-10 py-1">
+                {items.map(([icon,label],i) => (
+                  <button key={label} onClick={() => setOpen(false)} className={`w-full text-left px-3 py-2 text-xs flex items-center gap-2 transition ${i===3 ? 'text-red-500 hover:bg-red-50' : 'text-zinc-700 hover:bg-zinc-50'}`}>
+                    <span>{icon}</span>{label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="w-40 bg-white border border-zinc-200 rounded-xl shadow-xl py-1"><button class="w-full text-left px-3 py-2 text-xs flex items-center gap-2 text-zinc-700 hover:bg-zinc-50">✏️ Edit</button><button class="w-full text-left px-3 py-2 text-xs flex items-center gap-2 text-red-500 hover:bg-red-50">🗑️ Delete</button></div>`,
+    css: `.context-menu { background:#fff; border:1px solid #e4e4e7; border-radius:.75rem; box-shadow:0 8px 24px rgba(0,0,0,.12); padding:.25rem 0; min-width:10rem; } .context-menu-item { width:100%; text-align:left; padding:.5rem .75rem; font-size:.75rem; display:flex; align-items:center; gap:.5rem; }`,
+  },
+  {
+    id: 'dropdown-sort', name: 'Sort Dropdown', category: 'Dropdowns',
+    description: 'Sort/filter dropdown for table or list views.',
+    Preview: () => {
+      const [open, setOpen] = React.useState(false);
+      const [val, setVal] = React.useState('Newest first');
+      return (
+        <PreviewWrap bg="bg-zinc-50">
+          <div className="relative w-44">
+            <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between px-3 py-2 bg-white border border-zinc-300 rounded-xl text-xs text-zinc-700 shadow-sm gap-2">
+              <span className="truncate">⇅ {val}</span><span className="text-zinc-400 shrink-0">▾</span>
+            </button>
+            {open && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-zinc-200 rounded-xl shadow-lg z-10 overflow-hidden">
+                {['Newest first','Oldest first','A–Z','Z–A','Most popular'].map(o => (
+                  <button key={o} onClick={() => { setVal(o); setOpen(false); }} className={`w-full text-left px-3 py-2 text-xs transition ${val===o ? 'text-indigo-600 bg-indigo-50' : 'text-zinc-700 hover:bg-zinc-50'}`}>{o}</button>
+                ))}
+              </div>
+            )}
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="relative w-44"><button class="w-full flex items-center justify-between px-3 py-2 bg-white border border-zinc-300 rounded-xl text-xs text-zinc-700 shadow-sm">⇅ Newest first <span class="text-zinc-400">▾</span></button></div>`,
+    css: `.sort-dropdown { position:relative; } .sort-dropdown-btn { width:100%; display:flex; align-items:center; justify-content:space-between; padding:.5rem .75rem; background:#fff; border:1px solid #d4d4d8; border-radius:.75rem; font-size:.75rem; }`,
+  },
+  {
+    id: 'dropdown-multiselect', name: 'Multi-Select Dropdown', category: 'Dropdowns',
+    description: 'Checkbox-based multi-select dropdown.',
+    Preview: () => {
+      const [open, setOpen] = React.useState(false);
+      const [sel, setSel] = React.useState<string[]>(['React']);
+      const opts = ['React','Vue','Angular','Svelte','Next.js'];
+      const toggle = (o: string) => setSel(s => s.includes(o) ? s.filter(x=>x!==o) : [...s,o]);
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="relative w-52">
+            <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between px-3.5 py-2.5 bg-white border border-zinc-300 rounded-xl text-xs text-zinc-700 shadow-sm hover:border-indigo-400 transition">
+              <span className="truncate">{sel.length ? sel.join(', ') : 'Select...'}</span><span className="text-zinc-400 ml-1 shrink-0">▾</span>
+            </button>
+            {open && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-zinc-200 rounded-xl shadow-lg z-10 overflow-hidden py-1">
+                {opts.map(o => (
+                  <label key={o} className="flex items-center gap-2.5 px-3.5 py-2 cursor-pointer hover:bg-zinc-50 text-xs text-zinc-700">
+                    <input type="checkbox" checked={sel.includes(o)} onChange={() => toggle(o)} className="accent-indigo-600" />{o}
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="relative w-52"><button class="w-full flex items-center justify-between px-3.5 py-2.5 bg-white border border-zinc-300 rounded-xl text-xs text-zinc-700 shadow-sm">React, Vue <span class="text-zinc-400">▾</span></button></div>`,
+    css: `.multiselect { position:relative; } .multiselect-menu label { display:flex; align-items:center; gap:.625rem; padding:.5rem .875rem; cursor:pointer; font-size:.75rem; } .multiselect-menu label:hover { background:#f9f9f9; }`,
+  },
+  // ── Images ───────────────────────────────────────────────
+  {
+    id: 'image-grid-v2', name: 'Image Grid', category: 'Images',
+    description: '3×2 responsive image grid with hover overlay.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="grid grid-cols-3 gap-1.5 w-56">
+          {[['from-indigo-400 to-violet-500'],['from-rose-400 to-pink-500'],['from-emerald-400 to-teal-500'],['from-amber-400 to-orange-500'],['from-blue-400 to-cyan-500'],['from-fuchsia-400 to-purple-500']].map(([g],i) => (
+            <div key={i} className={`h-14 rounded-lg bg-gradient-to-br ${g} cursor-pointer hover:opacity-80 transition`} />
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="grid grid-cols-3 gap-1.5"><div class="h-14 rounded-lg bg-gradient-to-br from-indigo-400 to-violet-500 cursor-pointer hover:opacity-80 transition"></div></div>`,
+    css: `.image-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:.375rem; } .image-grid-item { border-radius:.5rem; cursor:pointer; overflow:hidden; transition:opacity .15s; } .image-grid-item:hover { opacity:.8; }`,
+  },
+  {
+    id: 'image-with-caption', name: 'Image with Caption', category: 'Images',
+    description: 'Rounded image with overlaid bottom caption.',
+    Preview: () => (
+      <PreviewWrap bg="bg-zinc-50">
+        <div className="w-56 rounded-2xl overflow-hidden shadow-md relative">
+          <div className="h-28 bg-gradient-to-br from-indigo-400 via-violet-500 to-pink-500" />
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+            <p className="text-white text-xs font-bold">Mountain Sunrise</p>
+            <p className="text-white/70 text-[10px]">Photo by @nature</p>
+          </div>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="w-56 rounded-2xl overflow-hidden shadow-md relative"><div class="h-28 bg-gradient-to-br from-indigo-400 to-pink-500"></div><div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3"><p class="text-white text-xs font-bold">Mountain Sunrise</p><p class="text-white/70 text-[10px]">Photo by @nature</p></div></div>`,
+    css: `.img-caption { position:relative; border-radius:1rem; overflow:hidden; } .img-caption-overlay { position:absolute; bottom:0; left:0; right:0; background:linear-gradient(to top,rgba(0,0,0,.7),transparent); padding:.75rem; }`,
+  },
+  {
+    id: 'image-avatar-group', name: 'Image Avatar Group', category: 'Images',
+    description: 'Profile picture group for team or collaborators.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex flex-col items-center gap-3">
+          <div className="flex">
+            {['from-indigo-400 to-violet-500','from-rose-400 to-pink-500','from-emerald-400 to-teal-500','from-amber-400 to-orange-400'].map((g,i) => (
+              <div key={i} className={`w-10 h-10 rounded-full bg-gradient-to-br ${g} border-2 border-white`} style={{marginLeft:i?'-10px':0}} />
+            ))}
+          </div>
+          <p className="text-xs text-zinc-500">4 contributors</p>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="flex"><div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 border-2 border-white"></div><div class="-ml-2.5 w-10 h-10 rounded-full bg-gradient-to-br from-rose-400 to-pink-500 border-2 border-white"></div></div>`,
+    css: `.img-avatar-group { display:flex; } .img-avatar-group img { width:2.5rem; height:2.5rem; border-radius:50%; border:2px solid #fff; margin-left:-.625rem; } .img-avatar-group img:first-child { margin-left:0; }`,
+  },
+  {
+    id: 'image-skeleton', name: 'Image Skeleton', category: 'Images',
+    description: 'Animated skeleton placeholder while image loads.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="w-52 space-y-2.5">
+          <div className="w-full h-28 rounded-2xl bg-zinc-200 animate-pulse" />
+          <div className="flex items-start gap-2.5">
+            <div className="w-8 h-8 rounded-full bg-zinc-200 animate-pulse shrink-0" />
+            <div className="flex-1 space-y-1.5">
+              <div className="h-3 bg-zinc-200 rounded-full animate-pulse w-3/4" />
+              <div className="h-3 bg-zinc-200 rounded-full animate-pulse w-1/2" />
+            </div>
+          </div>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="w-52 space-y-2.5"><div class="w-full h-28 rounded-2xl bg-zinc-200 animate-pulse"></div><div class="h-3 bg-zinc-200 rounded-full animate-pulse w-3/4"></div></div>`,
+    css: `@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} } .skeleton { background:#e4e4e7; border-radius:.5rem; animation:pulse 1.5s ease-in-out infinite; }`,
+  },
+  {
+    id: 'image-compare', name: 'Before/After Image', category: 'Images',
+    description: 'Side-by-side before/after image comparison.',
+    Preview: () => (
+      <PreviewWrap bg="bg-zinc-50">
+        <div className="w-56 flex gap-0.5 rounded-2xl overflow-hidden shadow-md">
+          <div className="flex-1 bg-zinc-300 h-24 flex items-end p-2">
+            <span className="bg-black/60 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">Before</span>
+          </div>
+          <div className="w-0.5 bg-white z-10" />
+          <div className="flex-1 bg-gradient-to-br from-indigo-400 to-violet-500 h-24 flex items-end p-2">
+            <span className="bg-black/60 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">After</span>
+          </div>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="w-56 flex gap-0.5 rounded-2xl overflow-hidden shadow-md"><div class="flex-1 bg-zinc-300 h-24 flex items-end p-2"><span class="bg-black/60 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">Before</span></div><div class="flex-1 bg-gradient-to-br from-indigo-400 to-violet-500 h-24 flex items-end p-2"><span class="bg-black/60 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">After</span></div></div>`,
+    css: `.img-compare { display:flex; border-radius:1rem; overflow:hidden; } .img-compare-label { background:rgba(0,0,0,.6); color:#fff; font-size:.5625rem; font-weight:700; padding:.125rem .375rem; border-radius:.25rem; }`,
+  },
+  // ── Links ────────────────────────────────────────────────
+  {
+    id: 'link-underline-anim', name: 'Animated Underline', category: 'Links',
+    description: 'Link with animated underline slide-in effect.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex flex-col gap-3">
+          {['Documentation','GitHub Repository','API Reference'].map(l => (
+            <a key={l} className="relative text-sm font-medium text-zinc-800 cursor-pointer group w-fit">
+              {l}
+              <span className="absolute left-0 bottom-0 h-0.5 w-0 bg-indigo-600 group-hover:w-full transition-all duration-300" />
+            </a>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<a class="relative text-sm font-medium text-zinc-800 cursor-pointer group">Documentation<span class="absolute left-0 bottom-0 h-0.5 w-0 bg-indigo-600 group-hover:w-full transition-all duration-300"></span></a>`,
+    css: `.link-anim { position:relative; font-weight:500; color:#18181b; } .link-anim::after { content:''; position:absolute; left:0; bottom:0; height:2px; width:0; background:#4f46e5; transition:width .3s; } .link-anim:hover::after { width:100%; }`,
+  },
+  {
+    id: 'link-arrow', name: 'Arrow Links', category: 'Links',
+    description: 'Links with animated arrow indicating navigation.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex flex-col gap-2.5">
+          {['Read the docs','View on GitHub','See changelog'].map(l => (
+            <a key={l} className="flex items-center gap-1.5 text-sm font-medium text-indigo-600 cursor-pointer group hover:gap-2.5 transition-all">
+              {l}<span className="transition-transform group-hover:translate-x-1">→</span>
+            </a>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<a class="flex items-center gap-1.5 text-sm font-medium text-indigo-600 cursor-pointer group hover:gap-2.5 transition-all">Read the docs <span class="transition-transform group-hover:translate-x-1">→</span></a>`,
+    css: `.link-arrow { display:inline-flex; align-items:center; gap:.375rem; font-size:.875rem; font-weight:500; color:#4f46e5; transition:gap .2s; } .link-arrow:hover { gap:.625rem; }`,
+  },
+  {
+    id: 'link-external', name: 'External Links', category: 'Links',
+    description: 'External links with open-in-new-tab icon.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex flex-col gap-3">
+          {[['MDN Web Docs','https://'],['Tailwind CSS','https://'],['Vercel Platform','https://']].map(([l]) => (
+            <a key={l} className="flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-800 cursor-pointer underline underline-offset-2 decoration-blue-300 group transition">
+              {l}<span className="text-[10px] opacity-70 group-hover:opacity-100">↗</span>
+            </a>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<a class="flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-800 underline underline-offset-2 decoration-blue-300 group">MDN Web Docs <span class="text-[10px] opacity-70 group-hover:opacity-100">↗</span></a>`,
+    css: `.link-external { display:inline-flex; align-items:center; gap:.375rem; font-size:.875rem; font-weight:500; color:#2563eb; text-decoration:underline; text-underline-offset:2px; }`,
+  },
+  {
+    id: 'link-nav-list', name: 'Navigation Links', category: 'Links',
+    description: 'Sidebar nav links with active and hover states.',
+    Preview: () => {
+      const [active, setActive] = React.useState('Dashboard');
+      return (
+        <PreviewWrap bg="bg-zinc-50">
+          <nav className="flex flex-col gap-1 w-40">
+            {[['🏠','Dashboard'],['📊','Analytics'],['⚙️','Settings'],['📖','Docs']].map(([icon,l]) => (
+              <button key={l} onClick={() => setActive(l)} className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${active===l ? 'bg-indigo-600 text-white' : 'text-zinc-600 hover:bg-white hover:text-zinc-900'}`}>
+                <span>{icon}</span>{l}
+              </button>
+            ))}
+          </nav>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<nav class="flex flex-col gap-1 w-40"><a class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium bg-indigo-600 text-white">🏠 Dashboard</a><a class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-zinc-600 hover:bg-white">📊 Analytics</a></nav>`,
+    css: `.nav-link { display:flex; align-items:center; gap:.625rem; padding:.5rem .75rem; border-radius:.75rem; font-size:.75rem; font-weight:500; transition:all .15s; } .nav-link.active { background:#4f46e5; color:#fff; } .nav-link:not(.active):hover { background:#fff; color:#18181b; }`,
+  },
+  {
+    id: 'link-tag-chips', name: 'Tag/Chip Links', category: 'Links',
+    description: 'Clickable tag chips for filtering and navigation.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex flex-wrap gap-2">
+          {['React','Next.js','TypeScript','Tailwind','Design','UI/UX'].map(t => (
+            <a key={t} className="px-3 py-1 rounded-full bg-zinc-100 text-zinc-600 text-[11px] font-medium cursor-pointer hover:bg-indigo-100 hover:text-indigo-700 transition">{t}</a>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="flex flex-wrap gap-2"><a class="px-3 py-1 rounded-full bg-zinc-100 text-zinc-600 text-[11px] font-medium hover:bg-indigo-100 hover:text-indigo-700 transition cursor-pointer">React</a></div>`,
+    css: `.tag-chip { padding:.25rem .75rem; border-radius:9999px; background:#f4f4f5; color:#52525b; font-size:.6875rem; font-weight:500; cursor:pointer; transition:all .15s; } .tag-chip:hover { background:#e0e7ff; color:#4338ca; }`,
+  },
+  // ── List ─────────────────────────────────────────────────
+  {
+    id: 'list-checklist', name: 'Checklist', category: 'List',
+    description: 'Interactive to-do checklist with strikethrough.',
+    Preview: () => {
+      const [done, setDone] = React.useState<number[]>([0]);
+      const items = ['Design wireframes','Write copy','Build components','Test & QA','Deploy to prod'];
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="w-52 space-y-1.5">
+            {items.map((item,i) => (
+              <label key={i} className="flex items-center gap-2.5 cursor-pointer group">
+                <input type="checkbox" checked={done.includes(i)} onChange={() => setDone(d => d.includes(i) ? d.filter(x=>x!==i) : [...d,i])} className="accent-indigo-600 w-4 h-4" />
+                <span className={`text-xs transition ${done.includes(i) ? 'line-through text-zinc-400' : 'text-zinc-700 group-hover:text-zinc-900'}`}>{item}</span>
+              </label>
+            ))}
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="space-y-1.5"><label class="flex items-center gap-2.5 cursor-pointer"><input type="checkbox" class="accent-indigo-600 w-4 h-4" checked /><span class="text-xs line-through text-zinc-400">Design wireframes</span></label><label class="flex items-center gap-2.5 cursor-pointer"><input type="checkbox" class="accent-indigo-600 w-4 h-4" /><span class="text-xs text-zinc-700">Write copy</span></label></div>`,
+    css: `.checklist { list-style:none; } .checklist li { display:flex; align-items:center; gap:.625rem; font-size:.75rem; } .checklist li.done { text-decoration:line-through; color:#a1a1aa; }`,
+  },
+  {
+    id: 'list-icon-v2', name: 'Icon List', category: 'List',
+    description: 'Feature list with colorful leading icons.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <ul className="space-y-2.5 w-52">
+          {[['⚡','Blazing fast performance'],['🔒','Enterprise security'],['🌐','Global CDN edge'],['💡','Smart caching']].map(([icon,text]) => (
+            <li key={text} className="flex items-start gap-2.5">
+              <span className="w-6 h-6 rounded-lg bg-indigo-100 flex items-center justify-center text-sm shrink-0">{icon}</span>
+              <span className="text-xs text-zinc-700 pt-0.5">{text}</span>
+            </li>
+          ))}
+        </ul>
+      </PreviewWrap>
+    ),
+    tailwind: `<ul class="space-y-2.5"><li class="flex items-start gap-2.5"><span class="w-6 h-6 rounded-lg bg-indigo-100 flex items-center justify-center text-sm shrink-0">⚡</span><span class="text-xs text-zinc-700">Blazing fast performance</span></li></ul>`,
+    css: `.icon-list { list-style:none; } .icon-list li { display:flex; align-items:flex-start; gap:.625rem; font-size:.75rem; } .icon-list-icon { width:1.5rem; height:1.5rem; border-radius:.375rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }`,
+  },
+  {
+    id: 'list-numbered', name: 'Numbered Steps', category: 'List',
+    description: 'Ordered step list with numbered circles.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <ol className="space-y-3 w-52">
+          {['Create an account','Complete your profile','Invite your team','Start building'].map((step,i) => (
+            <li key={step} className="flex items-start gap-3">
+              <span className="w-5 h-5 rounded-full bg-indigo-600 text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">{i+1}</span>
+              <span className="text-xs text-zinc-700">{step}</span>
+            </li>
+          ))}
+        </ol>
+      </PreviewWrap>
+    ),
+    tailwind: `<ol class="space-y-3"><li class="flex items-start gap-3"><span class="w-5 h-5 rounded-full bg-indigo-600 text-white text-[10px] font-bold flex items-center justify-center shrink-0">1</span><span class="text-xs text-zinc-700">Create an account</span></li></ol>`,
+    css: `.step-list { list-style:none; } .step-list li { display:flex; align-items:flex-start; gap:.75rem; font-size:.75rem; } .step-number { width:1.25rem; height:1.25rem; border-radius:50%; background:#4f46e5; color:#fff; font-size:.625rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }`,
+  },
+  {
+    id: 'list-sortable', name: 'Drag Handle List', category: 'List',
+    description: 'List items with drag handles for reordering UI.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="w-52 space-y-1.5">
+          {['Homepage','About Us','Services','Contact'].map(item => (
+            <div key={item} className="flex items-center gap-2.5 p-2.5 bg-zinc-50 rounded-xl border border-zinc-200 cursor-grab hover:border-indigo-300 hover:bg-indigo-50 transition group">
+              <span className="text-zinc-300 group-hover:text-indigo-400 text-sm select-none">⠿</span>
+              <span className="text-xs font-medium text-zinc-700 group-hover:text-indigo-700">{item}</span>
+            </div>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="w-52 space-y-1.5"><div class="flex items-center gap-2.5 p-2.5 bg-zinc-50 rounded-xl border border-zinc-200 cursor-grab hover:border-indigo-300 hover:bg-indigo-50 transition group"><span class="text-zinc-300 group-hover:text-indigo-400 select-none">⠿</span><span class="text-xs font-medium text-zinc-700">Homepage</span></div></div>`,
+    css: `.sortable-item { display:flex; align-items:center; gap:.625rem; padding:.625rem; background:#f9f9f9; border-radius:.75rem; border:1px solid #e4e4e7; cursor:grab; font-size:.75rem; font-weight:500; }`,
+  },
+  {
+    id: 'list-timeline-simple', name: 'Simple Timeline', category: 'List',
+    description: 'Vertical timeline list with date and event.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="relative w-56 pl-4">
+          <div className="absolute left-4 top-2 bottom-2 w-px bg-zinc-200" />
+          {[['Jan 2025','Project kickoff'],['Mar 2025','Beta launch'],['Jun 2025','v1.0 release'],['Now','Scaling 🚀']].map(([date,evt]) => (
+            <div key={date} className="relative flex items-start gap-3 mb-4 last:mb-0">
+              <div className="absolute -left-4 top-1 w-2 h-2 rounded-full bg-indigo-500 ring-2 ring-white" style={{left:'-1.125rem'}} />
+              <div>
+                <p className="text-[10px] text-zinc-400 font-medium">{date}</p>
+                <p className="text-xs font-semibold text-zinc-800">{evt}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="relative pl-4"><div class="absolute left-4 top-2 bottom-2 w-px bg-zinc-200"></div><div class="relative mb-4"><div class="absolute -left-4 top-1 w-2 h-2 rounded-full bg-indigo-500 ring-2 ring-white"></div><p class="text-[10px] text-zinc-400">Jan 2025</p><p class="text-xs font-semibold text-zinc-800">Project kickoff</p></div></div>`,
+    css: `.timeline { position:relative; padding-left:1rem; } .timeline::before { content:''; position:absolute; left:1rem; top:.5rem; bottom:.5rem; width:1px; background:#e4e4e7; } .timeline-dot { position:absolute; left:-1.125rem; top:.25rem; width:.5rem; height:.5rem; border-radius:50%; background:#4f46e5; outline:2px solid #fff; }`,
+  },
+  // ── Modals ───────────────────────────────────────────────
+  {
+    id: 'modal-confirm-v2', name: 'Confirm Dialog', category: 'Modals',
+    description: 'Destructive action confirmation dialog.',
+    Preview: () => {
+      const [open, setOpen] = React.useState(false);
+      return (
+        <PreviewWrap bg="bg-zinc-50">
+          <button onClick={() => setOpen(true)} className="px-4 py-2 rounded-xl bg-red-500 text-white text-xs font-semibold hover:bg-red-600 transition">Delete Item</button>
+          {open && (
+            <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={() => setOpen(false)}>
+              <div className="bg-white rounded-2xl p-6 w-72 shadow-2xl" onClick={e => e.stopPropagation()}>
+                <p className="text-sm font-bold text-zinc-900">Delete this item?</p>
+                <p className="text-xs text-zinc-500 mt-1.5">This action cannot be undone. All data will be permanently removed.</p>
+                <div className="flex gap-2 mt-4">
+                  <button onClick={() => setOpen(false)} className="flex-1 py-2 rounded-xl border border-zinc-200 text-xs font-semibold text-zinc-600 hover:bg-zinc-50">Cancel</button>
+                  <button onClick={() => setOpen(false)} className="flex-1 py-2 rounded-xl bg-red-500 text-white text-xs font-bold hover:bg-red-600">Delete</button>
+                </div>
+              </div>
+            </div>
+          )}
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="bg-white rounded-2xl p-6 w-72 shadow-2xl"><p class="text-sm font-bold text-zinc-900">Delete this item?</p><p class="text-xs text-zinc-500 mt-1.5">This action cannot be undone.</p><div class="flex gap-2 mt-4"><button class="flex-1 py-2 rounded-xl border border-zinc-200 text-xs font-semibold text-zinc-600">Cancel</button><button class="flex-1 py-2 rounded-xl bg-red-500 text-white text-xs font-bold">Delete</button></div></div>`,
+    css: `.confirm-dialog { background:#fff; border-radius:1rem; padding:1.5rem; width:18rem; box-shadow:0 20px 60px rgba(0,0,0,.2); }`,
+  },
+  {
+    id: 'modal-form-v2', name: 'Form Modal', category: 'Modals',
+    description: 'Modal with input fields for data entry.',
+    Preview: () => {
+      const [open, setOpen] = React.useState(false);
+      return (
+        <PreviewWrap bg="bg-zinc-50">
+          <button onClick={() => setOpen(true)} className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-700 transition">Add Member</button>
+          {open && (
+            <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={() => setOpen(false)}>
+              <div className="bg-white rounded-2xl p-5 w-72 shadow-2xl" onClick={e => e.stopPropagation()}>
+                <p className="text-sm font-bold text-zinc-900 mb-3">Add Team Member</p>
+                <div className="space-y-2.5">
+                  <input className="w-full border border-zinc-300 rounded-lg px-3 py-2 text-xs outline-none focus:border-indigo-400" placeholder="Full name" />
+                  <input className="w-full border border-zinc-300 rounded-lg px-3 py-2 text-xs outline-none focus:border-indigo-400" placeholder="Email address" />
+                </div>
+                <div className="flex gap-2 mt-4">
+                  <button onClick={() => setOpen(false)} className="flex-1 py-2 rounded-xl border border-zinc-200 text-xs font-semibold text-zinc-600">Cancel</button>
+                  <button onClick={() => setOpen(false)} className="flex-1 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold">Add</button>
+                </div>
+              </div>
+            </div>
+          )}
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="bg-white rounded-2xl p-5 w-72 shadow-2xl"><p class="text-sm font-bold text-zinc-900 mb-3">Add Team Member</p><input class="w-full border border-zinc-300 rounded-lg px-3 py-2 text-xs mb-2.5" placeholder="Full name" /><input class="w-full border border-zinc-300 rounded-lg px-3 py-2 text-xs" placeholder="Email address" /></div>`,
+    css: `.form-modal { background:#fff; border-radius:1rem; padding:1.25rem; width:18rem; box-shadow:0 20px 60px rgba(0,0,0,.2); }`,
+  },
+  {
+    id: 'modal-success', name: 'Success Modal', category: 'Modals',
+    description: 'Modal with success illustration and CTA.',
+    Preview: () => {
+      const [open, setOpen] = React.useState(false);
+      return (
+        <PreviewWrap bg="bg-zinc-50">
+          <button onClick={() => setOpen(true)} className="px-4 py-2 rounded-xl bg-emerald-500 text-white text-xs font-semibold hover:bg-emerald-600 transition">Complete Order</button>
+          {open && (
+            <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={() => setOpen(false)}>
+              <div className="bg-white rounded-2xl p-6 w-64 shadow-2xl text-center" onClick={e => e.stopPropagation()}>
+                <div className="w-14 h-14 rounded-full bg-emerald-100 flex items-center justify-center text-2xl mx-auto mb-3">✅</div>
+                <p className="text-sm font-bold text-zinc-900">Order Confirmed!</p>
+                <p className="text-xs text-zinc-500 mt-1">Your order #4281 has been placed successfully.</p>
+                <button onClick={() => setOpen(false)} className="mt-4 w-full py-2 rounded-xl bg-emerald-500 text-white text-xs font-bold hover:bg-emerald-600">Track Order</button>
+              </div>
+            </div>
+          )}
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="bg-white rounded-2xl p-6 w-64 shadow-2xl text-center"><div class="w-14 h-14 rounded-full bg-emerald-100 flex items-center justify-center text-2xl mx-auto mb-3">✅</div><p class="text-sm font-bold text-zinc-900">Order Confirmed!</p><button class="mt-4 w-full py-2 rounded-xl bg-emerald-500 text-white text-xs font-bold">Track Order</button></div>`,
+    css: `.success-modal { background:#fff; border-radius:1rem; padding:1.5rem; width:16rem; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,.2); }`,
+  },
+  {
+    id: 'modal-image-preview', name: 'Image Preview Modal', category: 'Modals',
+    description: 'Lightbox-style image preview modal.',
+    Preview: () => {
+      const [open, setOpen] = React.useState(false);
+      return (
+        <PreviewWrap bg="bg-zinc-50">
+          <div onClick={() => setOpen(true)} className="w-40 h-24 rounded-xl bg-gradient-to-br from-indigo-400 to-violet-500 cursor-pointer hover:opacity-90 transition relative shadow">
+            <div className="absolute inset-0 flex items-center justify-center"><span className="text-white text-2xl opacity-80">🔍</span></div>
+          </div>
+          {open && (
+            <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={() => setOpen(false)}>
+              <div className="w-72 h-44 rounded-2xl bg-gradient-to-br from-indigo-400 to-violet-500 shadow-2xl" onClick={e => e.stopPropagation()} />
+            </div>
+          )}
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="w-40 h-24 rounded-xl bg-gradient-to-br from-indigo-400 to-violet-500 cursor-pointer hover:opacity-90 transition relative shadow"><div class="absolute inset-0 flex items-center justify-center"><span class="text-white text-2xl opacity-80">🔍</span></div></div>`,
+    css: `.lightbox-trigger { cursor:pointer; border-radius:.75rem; overflow:hidden; transition:opacity .15s; } .lightbox-overlay { position:fixed; inset:0; background:rgba(0,0,0,.8); display:flex; align-items:center; justify-content:center; z-index:50; }`,
+  },
+  {
+    id: 'modal-side-panel', name: 'Side Panel Modal', category: 'Modals',
+    description: 'Slide-in side drawer panel from the right.',
+    Preview: () => {
+      const [open, setOpen] = React.useState(false);
+      return (
+        <PreviewWrap bg="bg-zinc-50">
+          <button onClick={() => setOpen(true)} className="px-4 py-2 rounded-xl bg-zinc-800 text-white text-xs font-semibold hover:bg-zinc-900 transition">Open Panel</button>
+          {open && (
+            <div className="fixed inset-0 bg-black/30 z-50 flex justify-end" onClick={() => setOpen(false)}>
+              <div className="bg-white w-64 h-full shadow-2xl p-5" onClick={e => e.stopPropagation()}>
+                <div className="flex items-center justify-between mb-4">
+                  <p className="text-sm font-bold text-zinc-900">Filters</p>
+                  <button onClick={() => setOpen(false)} className="text-zinc-400 hover:text-zinc-700">✕</button>
+                </div>
+                {['Category','Price Range','Rating','Availability'].map(f => (
+                  <div key={f} className="py-2.5 border-b border-zinc-100 text-xs text-zinc-600 flex items-center justify-between">
+                    {f}<span className="text-zinc-300">›</span>
+                  </div>
+                ))}
+                <button onClick={() => setOpen(false)} className="mt-4 w-full py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold">Apply</button>
+              </div>
+            </div>
+          )}
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="bg-white w-64 h-full shadow-2xl p-5"><div class="flex items-center justify-between mb-4"><p class="text-sm font-bold text-zinc-900">Filters</p><button class="text-zinc-400">✕</button></div></div>`,
+    css: `.side-panel { position:fixed; top:0; right:0; width:16rem; height:100%; background:#fff; box-shadow:-4px 0 24px rgba(0,0,0,.12); padding:1.25rem; z-index:50; }`,
+  },
+  // ── Notifications ────────────────────────────────────────
+  {
+    id: 'notif-toast-top', name: 'Top Toast', category: 'Notifications',
+    description: 'Top-center toast notification with auto-dismiss.',
+    Preview: () => {
+      const [show, setShow] = React.useState(true);
+      return (
+        <PreviewWrap bg="bg-zinc-50">
+          {show ? (
+            <div className="flex items-center gap-3 bg-zinc-900 text-white px-4 py-3 rounded-xl shadow-xl text-xs font-medium max-w-xs w-full">
+              <span className="text-emerald-400 shrink-0">✔</span>
+              <span className="flex-1">Profile updated successfully!</span>
+              <button onClick={() => setShow(false)} className="text-zinc-400 hover:text-white shrink-0">✕</button>
+            </div>
+          ) : (
+            <button onClick={() => setShow(true)} className="px-4 py-2 rounded-xl bg-zinc-800 text-white text-xs font-semibold">Show Toast</button>
+          )}
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="flex items-center gap-3 bg-zinc-900 text-white px-4 py-3 rounded-xl shadow-xl text-xs font-medium max-w-xs"><span class="text-emerald-400">✔</span><span class="flex-1">Profile updated successfully!</span><button class="text-zinc-400 hover:text-white">✕</button></div>`,
+    css: `.toast { display:flex; align-items:center; gap:.75rem; background:#18181b; color:#fff; padding:.75rem 1rem; border-radius:.75rem; box-shadow:0 8px 24px rgba(0,0,0,.25); font-size:.75rem; font-weight:500; max-width:20rem; }`,
+  },
+  {
+    id: 'notif-inbox', name: 'Notification Inbox', category: 'Notifications',
+    description: 'Dropdown notification list panel.',
+    Preview: () => (
+      <PreviewWrap bg="bg-zinc-50">
+        <div className="w-64 bg-white rounded-2xl border border-zinc-200 shadow-xl overflow-hidden">
+          <div className="px-4 py-3 flex items-center justify-between border-b border-zinc-100">
+            <p className="text-xs font-bold text-zinc-900">Notifications</p>
+            <span className="text-[10px] text-indigo-600 cursor-pointer font-medium">Mark all read</span>
+          </div>
+          {([['🔔','New comment on your post','2m ago',true],['✅','Your PR was merged','1h ago',false],['🎉','You reached 1K followers','3h ago',false]] as [string,string,string,boolean][]).map(([icon,msg,time,unread]) => (
+            <div key={msg} className={`flex items-start gap-3 px-4 py-3 border-b border-zinc-50 hover:bg-zinc-50 cursor-pointer transition ${unread ? 'bg-indigo-50/50' : ''}`}>
+              <span className="text-base shrink-0 mt-0.5">{icon}</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-[11px] font-medium text-zinc-800 leading-snug">{msg}</p>
+                <p className="text-[10px] text-zinc-400 mt-0.5">{time}</p>
+              </div>
+              {unread && <span className="w-2 h-2 rounded-full bg-indigo-500 shrink-0 mt-1" />}
+            </div>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="w-64 bg-white rounded-2xl border border-zinc-200 shadow-xl overflow-hidden"><div class="px-4 py-3 flex items-center justify-between border-b border-zinc-100"><p class="text-xs font-bold text-zinc-900">Notifications</p></div></div>`,
+    css: `.notif-inbox { width:16rem; background:#fff; border-radius:1rem; border:1px solid #e4e4e7; box-shadow:0 8px 24px rgba(0,0,0,.1); overflow:hidden; }`,
+  },
+  {
+    id: 'notif-badge-count', name: 'Badge Count Notification', category: 'Notifications',
+    description: 'Bell icon with unread notification count badge.',
+    Preview: () => {
+      const [count, setCount] = React.useState(7);
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="flex flex-col items-center gap-3">
+            <button onClick={() => setCount(0)} className="relative p-2.5 bg-zinc-100 rounded-xl hover:bg-zinc-200 transition">
+              <span className="text-xl">🔔</span>
+              {count > 0 && <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center px-1">{count > 9 ? '9+' : count}</span>}
+            </button>
+            <span className="text-[10px] text-zinc-400">Click to clear</span>
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="relative p-2.5 bg-zinc-100 rounded-xl"><span class="text-xl">🔔</span><span class="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center px-1">7</span></div>`,
+    css: `.notif-bell { position:relative; padding:.625rem; background:#f4f4f5; border-radius:.75rem; } .notif-bubble { position:absolute; top:-.25rem; right:-.25rem; min-width:1.125rem; height:1.125rem; background:#ef4444; color:#fff; font-size:.5625rem; font-weight:700; border-radius:9999px; display:flex; align-items:center; justify-content:center; }`,
+  },
+  {
+    id: 'notif-action', name: 'Action Notification', category: 'Notifications',
+    description: 'Notification with approve/decline action buttons.',
+    Preview: () => (
+      <PreviewWrap bg="bg-zinc-50">
+        <div className="w-64 bg-white rounded-2xl border border-zinc-200 shadow-md p-4">
+          <div className="flex items-start gap-3">
+            <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white text-xs font-bold shrink-0">SA</div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold text-zinc-800">Sarah sent you a friend request</p>
+              <p className="text-[10px] text-zinc-400 mt-0.5">5 minutes ago</p>
+              <div className="flex gap-2 mt-2.5">
+                <button className="flex-1 py-1.5 rounded-lg bg-indigo-600 text-white text-[11px] font-semibold hover:bg-indigo-700 transition">Accept</button>
+                <button className="flex-1 py-1.5 rounded-lg border border-zinc-200 text-zinc-600 text-[11px] font-semibold hover:bg-zinc-50 transition">Decline</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="w-64 bg-white rounded-2xl border border-zinc-200 shadow-md p-4"><div class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white text-xs font-bold">SA</div><div><p class="text-xs font-semibold text-zinc-800">Sarah sent a friend request</p><div class="flex gap-2 mt-2.5"><button class="flex-1 py-1.5 rounded-lg bg-indigo-600 text-white text-[11px] font-semibold">Accept</button><button class="flex-1 py-1.5 rounded-lg border border-zinc-200 text-[11px]">Decline</button></div></div></div></div>`,
+    css: `.action-notif { background:#fff; border-radius:1rem; border:1px solid #e4e4e7; box-shadow:0 2px 8px rgba(0,0,0,.08); padding:1rem; }`,
+  },
+  {
+    id: 'notif-progress', name: 'Progress Notification', category: 'Notifications',
+    description: 'Upload or task progress notification bar.',
+    Preview: () => {
+      const [pct, setPct] = React.useState(65);
+      return (
+        <PreviewWrap bg="bg-zinc-50">
+          <div className="w-64 bg-white rounded-2xl border border-zinc-200 shadow-md p-4 space-y-2.5">
+            <div className="flex items-start gap-3">
+              <span className="text-xl shrink-0">📁</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-zinc-800">Uploading design-assets.zip</p>
+                <p className="text-[10px] text-zinc-400 mt-0.5">{pct}% complete</p>
+              </div>
+              <button onClick={() => setPct(100)} className="text-zinc-400 hover:text-zinc-700 text-[10px] shrink-0">{pct<100?'Cancel':'✓'}</button>
+            </div>
+            <div className="h-1.5 bg-zinc-100 rounded-full overflow-hidden">
+              <div className="h-full bg-indigo-500 rounded-full transition-all duration-500" style={{width:`${pct}%`}} />
+            </div>
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="w-64 bg-white rounded-2xl border border-zinc-200 shadow-md p-4"><div class="flex items-start gap-3 mb-2.5"><span class="text-xl">📁</span><div><p class="text-xs font-semibold text-zinc-800">Uploading design-assets.zip</p><p class="text-[10px] text-zinc-400">65% complete</p></div></div><div class="h-1.5 bg-zinc-100 rounded-full"><div class="h-full bg-indigo-500 rounded-full" style="width:65%"></div></div></div>`,
+    css: `.progress-notif { background:#fff; border-radius:1rem; border:1px solid #e4e4e7; padding:1rem; } .progress-notif-bar { height:.375rem; background:#e4e4e7; border-radius:9999px; overflow:hidden; }`,
+  },
+  // ── Pagination ───────────────────────────────────────────
+  {
+    id: 'pagination-simple-v2', name: 'Simple Pagination', category: 'Pagination',
+    description: 'Prev/Next pagination with page count display.',
+    Preview: () => {
+      const [page, setPage] = React.useState(3);
+      const total = 10;
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="flex items-center gap-3">
+            <button onClick={() => setPage(Math.max(1,page-1))} disabled={page===1} className="px-3 py-1.5 rounded-lg border border-zinc-200 text-xs font-semibold text-zinc-600 hover:bg-zinc-50 disabled:opacity-40 transition">← Prev</button>
+            <span className="text-xs text-zinc-500">Page <span className="font-bold text-zinc-800">{page}</span> of {total}</span>
+            <button onClick={() => setPage(Math.min(total,page+1))} disabled={page===total} className="px-3 py-1.5 rounded-lg border border-zinc-200 text-xs font-semibold text-zinc-600 hover:bg-zinc-50 disabled:opacity-40 transition">Next →</button>
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="flex items-center gap-3"><button class="px-3 py-1.5 rounded-lg border border-zinc-200 text-xs font-semibold text-zinc-600 hover:bg-zinc-50">← Prev</button><span class="text-xs text-zinc-500">Page <span class="font-bold text-zinc-800">3</span> of 10</span><button class="px-3 py-1.5 rounded-lg border border-zinc-200 text-xs font-semibold text-zinc-600 hover:bg-zinc-50">Next →</button></div>`,
+    css: `.pagination-simple { display:flex; align-items:center; gap:.75rem; } .pagination-btn { padding:.375rem .75rem; border-radius:.5rem; border:1px solid #e4e4e7; font-size:.75rem; font-weight:600; color:#52525b; transition:background .15s; }`,
+  },
+  {
+    id: 'pagination-numbered', name: 'Numbered Pagination', category: 'Pagination',
+    description: 'Classic numbered page buttons with active state.',
+    Preview: () => {
+      const [page, setPage] = React.useState(3);
+      const pages = [1,2,3,4,5];
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="flex items-center gap-1">
+            <button onClick={() => setPage(Math.max(1,page-1))} className="w-8 h-8 flex items-center justify-center rounded-lg border border-zinc-200 text-xs text-zinc-500 hover:bg-zinc-50 transition">‹</button>
+            {pages.map(p => (
+              <button key={p} onClick={() => setPage(p)} className={`w-8 h-8 flex items-center justify-center rounded-lg text-xs font-semibold transition ${page===p ? 'bg-indigo-600 text-white shadow-sm' : 'border border-zinc-200 text-zinc-600 hover:bg-zinc-50'}`}>{p}</button>
+            ))}
+            <button onClick={() => setPage(Math.min(10,page+1))} className="w-8 h-8 flex items-center justify-center rounded-lg border border-zinc-200 text-xs text-zinc-500 hover:bg-zinc-50 transition">›</button>
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="flex items-center gap-1"><button class="w-8 h-8 flex items-center justify-center rounded-lg border border-zinc-200 text-xs text-zinc-500">‹</button><button class="w-8 h-8 flex items-center justify-center rounded-lg bg-indigo-600 text-white text-xs font-semibold">3</button><button class="w-8 h-8 flex items-center justify-center rounded-lg border border-zinc-200 text-xs text-zinc-600">4</button><button class="w-8 h-8 flex items-center justify-center rounded-lg border border-zinc-200 text-xs text-zinc-500">›</button></div>`,
+    css: `.pagination-numbered { display:flex; align-items:center; gap:.25rem; } .page-btn { width:2rem; height:2rem; display:flex; align-items:center; justify-content:center; border-radius:.5rem; font-size:.75rem; font-weight:600; border:1px solid #e4e4e7; } .page-btn.active { background:#4f46e5; color:#fff; border-color:#4f46e5; }`,
+  },
+  {
+    id: 'pagination-load-more', name: 'Load More Button', category: 'Pagination',
+    description: 'Infinite scroll "load more" pagination pattern.',
+    Preview: () => {
+      const [count, setCount] = React.useState(3);
+      const total = 12;
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="flex flex-col items-center gap-3 w-56">
+            {Array.from({length:count}).map((_,i) => (
+              <div key={i} className="w-full h-8 bg-zinc-100 rounded-lg animate-none flex items-center px-3 gap-2">
+                <div className="w-5 h-5 rounded bg-zinc-200 shrink-0" />
+                <div className="h-2 bg-zinc-200 rounded-full flex-1" />
+              </div>
+            ))}
+            {count < total && <button onClick={() => setCount(Math.min(total, count+3))} className="px-5 py-2 rounded-xl border border-zinc-300 text-xs font-semibold text-zinc-600 hover:bg-zinc-50 transition">Load more ({total-count} left)</button>}
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="flex flex-col items-center gap-3"><div class="w-full h-8 bg-zinc-100 rounded-lg"></div><button class="px-5 py-2 rounded-xl border border-zinc-300 text-xs font-semibold text-zinc-600 hover:bg-zinc-50">Load more</button></div>`,
+    css: `.load-more-btn { padding:.5rem 1.25rem; border-radius:.75rem; border:1px solid #d4d4d8; font-size:.75rem; font-weight:600; color:#52525b; transition:background .15s; }`,
+  },
+  {
+    id: 'pagination-dots-v2', name: 'Dot Pagination', category: 'Pagination',
+    description: 'Compact dot-style pagination for carousels and slides.',
+    Preview: () => {
+      const [page, setPage] = React.useState(1);
+      const total = 5;
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="flex flex-col items-center gap-4">
+            <div className={`w-40 h-16 rounded-xl bg-gradient-to-r ${['from-indigo-400 to-violet-500','from-rose-400 to-pink-500','from-emerald-400 to-teal-500','from-amber-400 to-orange-400','from-blue-400 to-cyan-500'][page]} flex items-center justify-center text-white font-bold text-sm shadow`}>Slide {page+1}</div>
+            <div className="flex gap-2">
+              {Array.from({length:total}).map((_,i) => <button key={i} onClick={() => setPage(i)} className={`rounded-full transition-all duration-300 ${i===page ? 'w-5 h-2 bg-indigo-600' : 'w-2 h-2 bg-zinc-300 hover:bg-zinc-400'}`} />)}
+            </div>
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="flex gap-2"><span class="w-5 h-2 rounded-full bg-indigo-600"></span><span class="w-2 h-2 rounded-full bg-zinc-300"></span><span class="w-2 h-2 rounded-full bg-zinc-300"></span></div>`,
+    css: `.dot-pagination { display:flex; gap:.5rem; align-items:center; } .dot-page { width:.5rem; height:.5rem; border-radius:9999px; background:#d4d4d8; transition:all .3s; } .dot-page.active { width:1.25rem; background:#4f46e5; }`,
+  },
+  {
+    id: 'pagination-jumper', name: 'Page Jumper', category: 'Pagination',
+    description: 'Pagination with direct page number input.',
+    Preview: () => {
+      const [page, setPage] = React.useState(5);
+      const [input, setInput] = React.useState('5');
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="flex items-center gap-2">
+            <button onClick={() => { setPage(Math.max(1,page-1)); setInput(String(Math.max(1,page-1))); }} className="w-8 h-8 flex items-center justify-center rounded-lg border border-zinc-200 text-zinc-500 text-xs hover:bg-zinc-50">‹</button>
+            <span className="text-xs text-zinc-500">Go to</span>
+            <input value={input} onChange={e => setInput(e.target.value)} onBlur={() => { const n=Math.min(20,Math.max(1,parseInt(input)||1)); setPage(n); setInput(String(n)); }} className="w-10 h-8 border border-zinc-300 rounded-lg text-center text-xs font-bold text-zinc-800 outline-none focus:border-indigo-400" />
+            <span className="text-xs text-zinc-500">of 20</span>
+            <button onClick={() => { setPage(Math.min(20,page+1)); setInput(String(Math.min(20,page+1))); }} className="w-8 h-8 flex items-center justify-center rounded-lg border border-zinc-200 text-zinc-500 text-xs hover:bg-zinc-50">›</button>
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="flex items-center gap-2"><button class="w-8 h-8 flex items-center justify-center rounded-lg border border-zinc-200 text-zinc-500 text-xs">‹</button><span class="text-xs text-zinc-500">Go to</span><input class="w-10 h-8 border border-zinc-300 rounded-lg text-center text-xs font-bold" value="5" /><span class="text-xs text-zinc-500">of 20</span><button class="w-8 h-8 flex items-center justify-center rounded-lg border border-zinc-200 text-zinc-500 text-xs">›</button></div>`,
+    css: `.page-jumper { display:flex; align-items:center; gap:.5rem; font-size:.75rem; } .page-input { width:2.5rem; height:2rem; border:1px solid #d4d4d8; border-radius:.5rem; text-align:center; font-size:.75rem; font-weight:700; }`,
+  },
+  // ── Popovers ─────────────────────────────────────────────
+  {
+    id: 'popover-info', name: 'Info Popover', category: 'Popovers',
+    description: 'Hover info popover with description text.',
+    Preview: () => {
+      const [open, setOpen] = React.useState(false);
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="relative inline-block">
+            <button onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)} className="w-5 h-5 rounded-full bg-zinc-200 text-zinc-600 text-[11px] font-bold flex items-center justify-center hover:bg-indigo-100 hover:text-indigo-700 transition cursor-help">?</button>
+            {open && (
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-zinc-900 text-white text-[11px] rounded-xl px-3 py-2.5 shadow-xl z-10">
+                <p className="font-semibold mb-0.5">Pro Plan</p>
+                <p className="text-zinc-300 leading-relaxed">Includes unlimited projects, priority support, and analytics.</p>
+                <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-zinc-900" />
+              </div>
+            )}
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="relative inline-block"><button class="w-5 h-5 rounded-full bg-zinc-200 text-zinc-600 text-[11px] font-bold flex items-center justify-center cursor-help">?</button><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-zinc-900 text-white text-[11px] rounded-xl px-3 py-2.5 shadow-xl"><p class="font-semibold">Pro Plan</p><p class="text-zinc-300">Unlimited projects, priority support.</p></div></div>`,
+    css: `.popover { position:relative; display:inline-block; } .popover-content { position:absolute; bottom:calc(100% + .5rem); left:50%; transform:translateX(-50%); background:#18181b; color:#fff; font-size:.6875rem; border-radius:.75rem; padding:.625rem .75rem; box-shadow:0 8px 24px rgba(0,0,0,.2); white-space:nowrap; z-index:10; }`,
+  },
+  {
+    id: 'popover-user-card', name: 'User Card Popover', category: 'Popovers',
+    description: 'Rich user profile card popover on hover.',
+    Preview: () => {
+      const [open, setOpen] = React.useState(false);
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="relative">
+            <button onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)} className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-100 hover:bg-zinc-200 transition text-xs font-medium text-zinc-700">
+              <div className="w-5 h-5 rounded-full bg-indigo-500 flex items-center justify-center text-white text-[9px] font-bold">JD</div>
+              @janedoe
+            </button>
+            {open && (
+              <div className="absolute top-full left-0 mt-2 w-56 bg-white border border-zinc-200 rounded-2xl shadow-xl z-10 p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center text-white font-bold">JD</div>
+                  <div><p className="text-xs font-bold text-zinc-900">Jane Doe</p><p className="text-[10px] text-zinc-400">Product Designer</p></div>
+                </div>
+                <p className="text-[11px] text-zinc-600 mb-3">Creating beautiful interfaces that delight users.</p>
+                <div className="flex gap-2">
+                  <button className="flex-1 py-1.5 rounded-lg bg-indigo-600 text-white text-[11px] font-semibold">Follow</button>
+                  <button className="flex-1 py-1.5 rounded-lg border border-zinc-200 text-[11px] font-semibold text-zinc-600">Message</button>
+                </div>
+              </div>
+            )}
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="w-56 bg-white border border-zinc-200 rounded-2xl shadow-xl p-4"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center text-white font-bold">JD</div><div><p class="text-xs font-bold text-zinc-900">Jane Doe</p><p class="text-[10px] text-zinc-400">Product Designer</p></div></div></div>`,
+    css: `.user-card-popover { background:#fff; border:1px solid #e4e4e7; border-radius:1rem; box-shadow:0 8px 24px rgba(0,0,0,.12); padding:1rem; width:14rem; }`,
+  },
+  {
+    id: 'popover-action-menu', name: 'Action Menu Popover', category: 'Popovers',
+    description: 'Three-dot more menu action popover.',
+    Preview: () => {
+      const [open, setOpen] = React.useState(false);
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="relative">
+            <button onClick={() => setOpen(!open)} className="w-8 h-8 flex items-center justify-center rounded-lg bg-zinc-100 hover:bg-zinc-200 transition text-zinc-600 text-lg font-bold">⋯</button>
+            {open && (
+              <div className="absolute top-full right-0 mt-1 w-40 bg-white border border-zinc-200 rounded-xl shadow-xl z-10 py-1">
+                {[['✏️','Edit'],['📋','Duplicate'],['🔗','Copy link'],['🗑️','Delete']].map(([icon,label],i) => (
+                  <button key={label} onClick={() => setOpen(false)} className={`w-full text-left px-3 py-2 text-xs flex items-center gap-2 transition ${i===3 ? 'text-red-500 hover:bg-red-50' : 'text-zinc-700 hover:bg-zinc-50'}`}>
+                    <span>{icon}</span>{label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="w-40 bg-white border border-zinc-200 rounded-xl shadow-xl py-1"><button class="w-full text-left px-3 py-2 text-xs flex items-center gap-2 text-zinc-700 hover:bg-zinc-50">✏️ Edit</button><button class="w-full text-left px-3 py-2 text-xs flex items-center gap-2 text-red-500 hover:bg-red-50">🗑️ Delete</button></div>`,
+    css: `.action-popover { background:#fff; border:1px solid #e4e4e7; border-radius:.75rem; box-shadow:0 8px 24px rgba(0,0,0,.1); padding:.25rem 0; width:10rem; }`,
+  },
+  {
+    id: 'popover-emoji', name: 'Emoji Picker Popover', category: 'Popovers',
+    description: 'Quick emoji reaction picker popover.',
+    Preview: () => {
+      const [open, setOpen] = React.useState(false);
+      const [react, setReact] = React.useState('');
+      const emojis = ['👍','❤️','😂','😮','😢','🔥','🎉','💯'];
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="relative">
+            <button onClick={() => setOpen(!open)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-zinc-200 text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition">
+              {react || '😊'} React
+            </button>
+            {open && (
+              <div className="absolute bottom-full left-0 mb-2 bg-white border border-zinc-200 rounded-2xl shadow-xl z-10 p-2 flex gap-1 flex-wrap w-36">
+                {emojis.map(e => (
+                  <button key={e} onClick={() => { setReact(e); setOpen(false); }} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-zinc-100 text-base transition">{e}</button>
+                ))}
+              </div>
+            )}
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="bg-white border border-zinc-200 rounded-2xl shadow-xl p-2 flex gap-1 flex-wrap w-36"><button class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-zinc-100 text-base">👍</button><button class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-zinc-100 text-base">❤️</button></div>`,
+    css: `.emoji-picker { background:#fff; border:1px solid #e4e4e7; border-radius:1rem; padding:.5rem; display:flex; flex-wrap:wrap; gap:.25rem; box-shadow:0 8px 24px rgba(0,0,0,.1); } .emoji-btn { width:1.75rem; height:1.75rem; border-radius:.5rem; display:flex; align-items:center; justify-content:center; font-size:1rem; }`,
+  },
+  {
+    id: 'popover-tooltip-rich', name: 'Rich Tooltip Popover', category: 'Popovers',
+    description: 'Popover with title, body text and a link.',
+    Preview: () => {
+      const [open, setOpen] = React.useState(false);
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="relative inline-block">
+            <button onClick={() => setOpen(!open)} className="px-3.5 py-2 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-semibold border border-indigo-200 hover:bg-indigo-100 transition">What is this? ⓘ</button>
+            {open && (
+              <div className="absolute bottom-full left-0 mb-2 w-56 bg-white border border-zinc-200 rounded-2xl shadow-xl z-10 p-4">
+                <p className="text-xs font-bold text-zinc-900 mb-1">API Rate Limits</p>
+                <p className="text-[11px] text-zinc-500 leading-relaxed">Free tier allows 1000 requests/day. Upgrade to Pro for unlimited access.</p>
+                <a className="text-[11px] text-indigo-600 mt-2 block cursor-pointer hover:underline">Learn more →</a>
+                <button onClick={() => setOpen(false)} className="absolute top-2.5 right-2.5 text-zinc-300 hover:text-zinc-600 text-sm">✕</button>
+              </div>
+            )}
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="w-56 bg-white border border-zinc-200 rounded-2xl shadow-xl p-4"><p class="text-xs font-bold text-zinc-900 mb-1">API Rate Limits</p><p class="text-[11px] text-zinc-500">Free tier: 1000 req/day. Upgrade for unlimited.</p><a class="text-[11px] text-indigo-600 mt-2 block">Learn more →</a></div>`,
+    css: `.rich-popover { background:#fff; border:1px solid #e4e4e7; border-radius:1rem; box-shadow:0 8px 24px rgba(0,0,0,.12); padding:1rem; width:14rem; }`,
+  },
+  // ── Progress Bars ────────────────────────────────────────
+  {
+    id: 'progress-gradient', name: 'Gradient Progress', category: 'Progress Bars',
+    description: 'Progress bar with colorful gradient fill.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="w-56 space-y-4">
+          {[['Design',75,'from-indigo-500 to-violet-500'],['Frontend',55,'from-rose-400 to-pink-500'],['Backend',88,'from-emerald-400 to-teal-500']].map(([label,pct,grad]) => (
+            <div key={label as string}>
+              <div className="flex justify-between mb-1"><span className="text-xs font-medium text-zinc-700">{label}</span><span className="text-xs text-zinc-400">{pct}%</span></div>
+              <div className="h-2 bg-zinc-100 rounded-full overflow-hidden">
+                <div className={`h-full rounded-full bg-gradient-to-r ${grad}`} style={{width:`${pct}%`}} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="w-56"><div class="flex justify-between mb-1"><span class="text-xs font-medium text-zinc-700">Design</span><span class="text-xs text-zinc-400">75%</span></div><div class="h-2 bg-zinc-100 rounded-full overflow-hidden"><div class="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500" style="width:75%"></div></div></div>`,
+    css: `.progress-gradient .bar { height:.5rem; border-radius:9999px; background:linear-gradient(to right,#6366f1,#7c3aed); }`,
+  },
+  {
+    id: 'progress-steps', name: 'Step Progress', category: 'Progress Bars',
+    description: 'Multi-step progress indicator with step labels.',
+    Preview: () => {
+      const [step, setStep] = React.useState(2);
+      const steps = ['Account','Profile','Plan','Payment'];
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="w-64">
+            <div className="flex items-center">
+              {steps.map((s,i) => (
+                <React.Fragment key={s}>
+                  <button onClick={() => setStep(i)} className="flex flex-col items-center gap-1 shrink-0">
+                    <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition ${i < step ? 'bg-indigo-600 text-white' : i === step ? 'bg-indigo-600 text-white ring-4 ring-indigo-100' : 'bg-zinc-100 text-zinc-400'}`}>{i < step ? '✓' : i+1}</div>
+                    <span className={`text-[9px] font-medium ${i <= step ? 'text-indigo-600' : 'text-zinc-400'}`}>{s}</span>
+                  </button>
+                  {i < steps.length-1 && <div className={`flex-1 h-0.5 mb-3.5 ${i < step ? 'bg-indigo-600' : 'bg-zinc-200'} transition`} />}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="flex items-center w-64"><div class="w-7 h-7 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs font-bold">✓</div><div class="flex-1 h-0.5 bg-indigo-600"></div><div class="w-7 h-7 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs font-bold ring-4 ring-indigo-100">2</div><div class="flex-1 h-0.5 bg-zinc-200"></div><div class="w-7 h-7 rounded-full bg-zinc-100 text-zinc-400 flex items-center justify-center text-xs font-bold">3</div></div>`,
+    css: `.step-progress { display:flex; align-items:center; } .step { width:1.75rem; height:1.75rem; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.75rem; font-weight:700; } .step.done { background:#4f46e5; color:#fff; } .step-line { flex:1; height:2px; } .step-line.done { background:#4f46e5; }`,
+  },
+  {
+    id: 'progress-circular-ring', name: 'Circular Ring Progress', category: 'Progress Bars',
+    description: 'SVG circular/ring progress indicators.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex gap-5">
+          {[[75,'#6366f1','Design'],[55,'#f43f5e','Tasks'],[88,'#10b981','Goals']].map(([pct,color,label]) => {
+            const r = 22, circ = 2*Math.PI*r;
+            return (
+              <div key={label as string} className="flex flex-col items-center gap-1">
+                <svg width="56" height="56" viewBox="0 0 56 56">
+                  <circle cx="28" cy="28" r={r} fill="none" stroke="#f4f4f5" strokeWidth="4" />
+                  <circle cx="28" cy="28" r={r} fill="none" stroke={color as string} strokeWidth="4" strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={circ*(1-(pct as number)/100)} transform="rotate(-90 28 28)" />
+                  <text x="28" y="33" textAnchor="middle" fontSize="10" fontWeight="700" fill="#18181b">{pct}%</text>
+                </svg>
+                <span className="text-[10px] text-zinc-500">{label}</span>
+              </div>
+            );
+          })}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<svg width="56" height="56" viewBox="0 0 56 56"><circle cx="28" cy="28" r="22" fill="none" stroke="#f4f4f5" stroke-width="4" /><circle cx="28" cy="28" r="22" fill="none" stroke="#6366f1" stroke-width="4" stroke-linecap="round" stroke-dasharray="138.2" stroke-dashoffset="34.5" transform="rotate(-90 28 28)" /><text x="28" y="33" text-anchor="middle" font-size="10" font-weight="700" fill="#18181b">75%</text></svg>`,
+    css: `.circular-progress { display:inline-block; position:relative; }`,
+  },
+  {
+    id: 'progress-multi-segment', name: 'Multi-Segment Bar', category: 'Progress Bars',
+    description: 'Segmented bar showing breakdown of categories.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="w-56 space-y-3">
+          <div className="flex rounded-full overflow-hidden h-3">
+            {[['bg-indigo-500',40],['bg-violet-400',25],['bg-pink-400',20],['bg-zinc-200',15]].map(([c,w],i) => (
+              <div key={i} className={`${c} h-full`} style={{width:`${w}%`}} />
+            ))}
+          </div>
+          <div className="flex flex-wrap gap-x-3 gap-y-1">
+            {[['bg-indigo-500','Design','40%'],['bg-violet-400','Dev','25%'],['bg-pink-400','Marketing','20%'],['bg-zinc-300','Other','15%']].map(([c,l,p]) => (
+              <div key={l as string} className="flex items-center gap-1.5 text-[10px] text-zinc-600">
+                <span className={`w-2 h-2 rounded-full ${c}`} />{l} {p}
+              </div>
+            ))}
+          </div>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="w-56"><div class="flex rounded-full overflow-hidden h-3"><div class="bg-indigo-500 h-full" style="width:40%"></div><div class="bg-violet-400 h-full" style="width:25%"></div><div class="bg-pink-400 h-full" style="width:20%"></div><div class="bg-zinc-200 h-full" style="width:15%"></div></div></div>`,
+    css: `.multi-bar { display:flex; border-radius:9999px; overflow:hidden; height:.75rem; }`,
+  },
+  {
+    id: 'progress-animated', name: 'Animated Progress', category: 'Progress Bars',
+    description: 'Striped animated progress bar.',
+    Preview: () => {
+      const [pct, setPct] = React.useState(60);
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="w-56 space-y-3">
+            <div className="flex justify-between"><span className="text-xs font-semibold text-zinc-700">Uploading...</span><span className="text-xs text-zinc-400">{pct}%</span></div>
+            <div className="h-3 bg-zinc-100 rounded-full overflow-hidden">
+              <div className="h-full rounded-full bg-indigo-500 relative overflow-hidden transition-all duration-500" style={{width:`${pct}%`}}>
+                <div className="absolute inset-0 bg-stripes opacity-20" style={{backgroundImage:'repeating-linear-gradient(45deg,transparent,transparent 6px,rgba(255,255,255,.5) 6px,rgba(255,255,255,.5) 12px)',backgroundSize:'24px 24px'}} />
+              </div>
+            </div>
+            <button onClick={() => setPct(p => Math.min(100,p+10))} className="px-3 py-1 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-semibold hover:bg-indigo-100 transition">+10%</button>
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="h-3 bg-zinc-100 rounded-full overflow-hidden"><div class="h-full rounded-full bg-indigo-500 relative overflow-hidden" style="width:60%"><div class="absolute inset-0 opacity-20" style="background:repeating-linear-gradient(45deg,transparent,transparent 6px,rgba(255,255,255,.5) 6px,rgba(255,255,255,.5) 12px);background-size:24px 24px"></div></div></div>`,
+    css: `.animated-bar { height:.75rem; background:#e4e4e7; border-radius:9999px; overflow:hidden; } .animated-bar-fill { height:100%; border-radius:9999px; background:#4f46e5; background-image:repeating-linear-gradient(45deg,transparent,transparent 6px,rgba(255,255,255,.3) 6px,rgba(255,255,255,.3) 12px); background-size:24px 24px; }`,
+  },
+  // ── Ribbons ──────────────────────────────────────────────
+  {
+    id: 'ribbon-corner-tl', name: 'Corner Ribbon', category: 'Ribbons',
+    description: 'Top-left diagonal corner ribbon on a card.',
+    Preview: () => (
+      <PreviewWrap bg="bg-zinc-50">
+        <div className="relative w-44 h-28 bg-white rounded-2xl border border-zinc-200 shadow overflow-hidden flex items-center justify-center">
+          <p className="text-xs font-semibold text-zinc-700">Product Card</p>
+          <div className="absolute top-0 left-0 w-16 h-16 overflow-hidden">
+            <div className="absolute bg-indigo-600 text-white text-[9px] font-bold px-4 py-0.5 -left-5 top-3 rotate-[-45deg] shadow-sm">NEW</div>
+          </div>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="relative w-44 h-28 bg-white rounded-2xl border border-zinc-200 shadow overflow-hidden"><div class="absolute top-0 left-0 w-16 h-16 overflow-hidden"><div class="absolute bg-indigo-600 text-white text-[9px] font-bold px-4 py-0.5 -left-5 top-3 rotate-[-45deg] shadow-sm">NEW</div></div></div>`,
+    css: `.ribbon-corner { position:absolute; top:0; left:0; width:4rem; height:4rem; overflow:hidden; } .ribbon-corner-label { position:absolute; background:#4f46e5; color:#fff; font-size:.5625rem; font-weight:700; padding:.125rem 1rem; left:-1.25rem; top:.75rem; transform:rotate(-45deg); box-shadow:0 1px 3px rgba(0,0,0,.2); }`,
+  },
+  {
+    id: 'ribbon-badge-sale', name: 'Sale Ribbon Badge', category: 'Ribbons',
+    description: 'Bold "SALE" badge ribbon for product listings.',
+    Preview: () => (
+      <PreviewWrap bg="bg-zinc-50">
+        <div className="flex gap-3">
+          {[['SALE','bg-red-500'],['NEW','bg-emerald-500'],['HOT','bg-amber-500'],['PRO','bg-indigo-600']].map(([label,bg]) => (
+            <span key={label} className={`${bg} text-white text-[10px] font-extrabold px-2.5 py-1 rounded-lg shadow-sm tracking-wide`}>{label}</span>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="flex gap-2"><span class="bg-red-500 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-lg shadow-sm tracking-wide">SALE</span><span class="bg-emerald-500 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-lg shadow-sm tracking-wide">NEW</span></div>`,
+    css: `.ribbon-badge { display:inline-block; padding:.25rem .625rem; border-radius:.5rem; font-size:.625rem; font-weight:800; letter-spacing:.05em; color:#fff; box-shadow:0 1px 3px rgba(0,0,0,.15); }`,
+  },
+  {
+    id: 'ribbon-banner-top', name: 'Top Banner Ribbon', category: 'Ribbons',
+    description: 'Full-width banner ribbon across the top of a card.',
+    Preview: () => (
+      <PreviewWrap bg="bg-zinc-50">
+        <div className="w-52 bg-white rounded-2xl border border-zinc-200 shadow overflow-hidden">
+          <div className="bg-indigo-600 text-white text-center text-[10px] font-bold py-1.5 tracking-widest uppercase">Limited Offer</div>
+          <div className="p-4">
+            <p className="text-sm font-bold text-zinc-900">Pro Plan</p>
+            <p className="text-xs text-zinc-500 mt-1">Get 3 months free with annual billing.</p>
+            <button className="mt-3 w-full py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 transition">Claim Now</button>
+          </div>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="w-52 bg-white rounded-2xl border border-zinc-200 shadow overflow-hidden"><div class="bg-indigo-600 text-white text-center text-[10px] font-bold py-1.5 tracking-widest uppercase">Limited Offer</div><div class="p-4"><p class="text-sm font-bold text-zinc-900">Pro Plan</p></div></div>`,
+    css: `.ribbon-banner { background:#4f46e5; color:#fff; text-align:center; font-size:.625rem; font-weight:700; padding:.375rem; letter-spacing:.1em; text-transform:uppercase; }`,
+  },
+  {
+    id: 'ribbon-featured', name: 'Featured Ribbon', category: 'Ribbons',
+    description: 'Star-featured card with side ribbon tab.',
+    Preview: () => (
+      <PreviewWrap bg="bg-zinc-50">
+        <div className="relative w-48 bg-white rounded-2xl border border-zinc-200 shadow-md overflow-hidden">
+          <div className="absolute top-3 -right-7 bg-amber-400 text-white text-[9px] font-extrabold px-8 py-1 rotate-[35deg] shadow">★ FEATURED</div>
+          <div className="p-4 pr-8">
+            <p className="text-sm font-bold text-zinc-900">UI Component Kit</p>
+            <p className="text-xs text-zinc-500 mt-1">300+ ready-to-use components</p>
+            <div className="flex items-center gap-1 mt-2"><span className="text-amber-400 text-xs">★★★★★</span><span className="text-[10px] text-zinc-400">(128)</span></div>
+          </div>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="relative w-48 bg-white rounded-2xl border border-zinc-200 shadow-md overflow-hidden"><div class="absolute top-3 -right-7 bg-amber-400 text-white text-[9px] font-extrabold px-8 py-1 rotate-[35deg] shadow">★ FEATURED</div><div class="p-4 pr-8"><p class="text-sm font-bold text-zinc-900">UI Component Kit</p></div></div>`,
+    css: `.featured-ribbon { position:absolute; top:.75rem; right:-1.75rem; background:#fbbf24; color:#fff; font-size:.5625rem; font-weight:800; padding:.25rem 2rem; transform:rotate(35deg); box-shadow:0 1px 3px rgba(0,0,0,.15); }`,
+  },
+  {
+    id: 'ribbon-discount', name: 'Discount Tag Ribbon', category: 'Ribbons',
+    description: 'Price tag shaped discount ribbon.',
+    Preview: () => (
+      <PreviewWrap bg="bg-zinc-50">
+        <div className="flex gap-3 items-center">
+          {[['20%','bg-rose-500'],['50%','bg-indigo-600'],['FREE','bg-emerald-500']].map(([val,bg]) => (
+            <div key={val} className="relative">
+              <div className={`${bg} text-white font-extrabold px-3 py-1.5 rounded-r-lg text-xs relative`}>
+                {val} OFF
+                <div className={`absolute left-0 top-0 w-0 h-0 border-t-[13px] border-b-[13px] border-r-[8px] border-t-transparent border-b-transparent border-r-white`} style={{transform:'translateX(-100%)'}} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="relative"><div class="bg-rose-500 text-white font-extrabold px-3 py-1.5 rounded-r-lg text-xs relative">20% OFF<div class="absolute left-0 top-0 w-0 h-0 border-t-[13px] border-b-[13px] border-r-[8px] border-t-transparent border-b-transparent border-r-white" style="transform:translateX(-100%)"></div></div></div>`,
+    css: `.discount-tag { position:relative; display:inline-block; } .discount-tag-label { background:#f43f5e; color:#fff; font-size:.75rem; font-weight:800; padding:.375rem .75rem; border-radius:0 .5rem .5rem 0; }`,
+  },
+  // ── Spinners ─────────────────────────────────────────────
+  {
+    id: 'spinner-dots', name: 'Dots Spinner', category: 'Spinners',
+    description: 'Three bouncing dots loading animation.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex items-center gap-1.5">
+          {[0,1,2].map(i => (
+            <div key={i} className="w-2.5 h-2.5 rounded-full bg-indigo-500" style={{animation:`bounce 1.2s ease-in-out ${i*0.2}s infinite`, display:'inline-block'}}>
+              <style>{`@keyframes bounce{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}`}</style>
+            </div>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-bounce" style="animation-delay:0ms"></div><div class="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-bounce" style="animation-delay:150ms"></div><div class="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-bounce" style="animation-delay:300ms"></div></div>`,
+    css: `@keyframes bounce{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}} .spinner-dots span { width:.625rem; height:.625rem; border-radius:50%; background:#4f46e5; animation:bounce 1.2s ease-in-out infinite; display:inline-block; }`,
+  },
+  {
+    id: 'spinner-pulse', name: 'Pulse Spinner', category: 'Spinners',
+    description: 'Pulsing ring animation loading indicator.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex items-center gap-5">
+          {[['bg-indigo-500','border-indigo-200'],['bg-rose-500','border-rose-200'],['bg-emerald-500','border-emerald-200']].map(([bg,ring],i) => (
+            <div key={i} className="relative flex items-center justify-center">
+              <div className={`absolute w-10 h-10 rounded-full border-2 ${ring} animate-ping opacity-75`} />
+              <div className={`w-5 h-5 rounded-full ${bg}`} />
+            </div>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="relative flex items-center justify-center"><div class="absolute w-10 h-10 rounded-full border-2 border-indigo-200 animate-ping opacity-75"></div><div class="w-5 h-5 rounded-full bg-indigo-500"></div></div>`,
+    css: `@keyframes ping{75%,100%{transform:scale(2);opacity:0}} .pulse-spinner { position:relative; display:inline-flex; align-items:center; justify-content:center; } .pulse-ring { position:absolute; border-radius:50%; border:2px solid; animation:ping 1s cubic-bezier(0,0,.2,1) infinite; }`,
+  },
+  {
+    id: 'spinner-bars', name: 'Bar Spinner', category: 'Spinners',
+    description: 'Five animated bars forming a wave pattern.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex items-end gap-1" style={{height:32}}>
+          {[0,1,2,3,4].map(i => (
+            <div key={i} className="w-2 bg-indigo-500 rounded-full" style={{animation:`barwave 1s ease-in-out ${i*0.1}s infinite`,height:12}}>
+              <style>{`@keyframes barwave{0%,100%{height:12px}50%{height:28px}}`}</style>
+            </div>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="flex items-end gap-1" style="height:32px"><div class="w-2 bg-indigo-500 rounded-full" style="height:12px;animation:barwave 1s ease-in-out 0ms infinite"></div></div>`,
+    css: `@keyframes barwave{0%,100%{height:12px}50%{height:28px}} .bar-spinner { display:flex; align-items:flex-end; gap:.25rem; height:2rem; } .bar-spinner span { width:.5rem; background:#4f46e5; border-radius:.25rem; animation:barwave 1s ease-in-out infinite; }`,
+  },
+  {
+    id: 'spinner-skeleton-card', name: 'Skeleton Card', category: 'Spinners',
+    description: 'Full card skeleton loader while content loads.',
+    Preview: () => (
+      <PreviewWrap bg="bg-zinc-50">
+        <div className="w-52 bg-white rounded-2xl border border-zinc-100 shadow-sm p-4 space-y-3">
+          <div className="w-full h-24 rounded-xl bg-zinc-200 animate-pulse" />
+          <div className="flex items-start gap-2.5">
+            <div className="w-8 h-8 rounded-full bg-zinc-200 animate-pulse shrink-0" />
+            <div className="flex-1 space-y-2">
+              <div className="h-2.5 bg-zinc-200 rounded-full animate-pulse w-4/5" />
+              <div className="h-2 bg-zinc-200 rounded-full animate-pulse w-3/5" />
+              <div className="h-2 bg-zinc-200 rounded-full animate-pulse w-2/5" />
+            </div>
+          </div>
+          <div className="h-8 bg-zinc-200 rounded-xl animate-pulse w-full" />
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="w-52 bg-white rounded-2xl border border-zinc-100 shadow-sm p-4 space-y-3"><div class="w-full h-24 rounded-xl bg-zinc-200 animate-pulse"></div><div class="h-2.5 bg-zinc-200 rounded-full animate-pulse w-4/5"></div><div class="h-8 bg-zinc-200 rounded-xl animate-pulse"></div></div>`,
+    css: `@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}} .skeleton { background:#e4e4e7; animation:pulse 1.5s ease-in-out infinite; border-radius:.375rem; }`,
+  },
+  {
+    id: 'spinner-ring-multi', name: 'Multi Ring Spinner', category: 'Spinners',
+    description: 'Multiple concentric spinning rings.',
+    Preview: () => (
+      <PreviewWrap bg="bg-white">
+        <div className="flex gap-5 items-center">
+          {[['border-indigo-500',36],['border-rose-500',28],['border-emerald-500',20]].map(([color,size],i) => (
+            <div key={i} className={`rounded-full border-2 border-zinc-100 ${color} border-t-transparent animate-spin`} style={{width:size,height:size}} />
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="flex gap-4 items-center"><div class="w-9 h-9 rounded-full border-2 border-zinc-100 border-t-indigo-500 animate-spin"></div><div class="w-7 h-7 rounded-full border-2 border-zinc-100 border-t-rose-500 animate-spin"></div><div class="w-5 h-5 rounded-full border-2 border-zinc-100 border-t-emerald-500 animate-spin"></div></div>`,
+    css: `@keyframes spin{to{transform:rotate(360deg)}} .ring-spinner { border-radius:50%; border:2px solid #f4f4f5; animation:spin .8s linear infinite; }`,
+  },
+  // ── Tabs ─────────────────────────────────────────────────
+  {
+    id: 'tabs-pill-v2', name: 'Pill Tabs', category: 'Tabs',
+    description: 'Pill-style tabs with background switch.',
+    Preview: () => {
+      const [tab, setTab] = React.useState('Overview');
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="flex flex-col gap-4 w-full">
+            <div className="flex gap-1 bg-zinc-100 p-1 rounded-xl w-fit">
+              {['Overview','Analytics','Settings'].map(t => (
+                <button key={t} onClick={() => setTab(t)} className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${tab===t ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-800'}`}>{t}</button>
+              ))}
+            </div>
+            <div className="text-xs text-zinc-500 px-1">{tab} content displayed here.</div>
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="flex gap-1 bg-zinc-100 p-1 rounded-xl w-fit"><button class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-white text-zinc-900 shadow-sm">Overview</button><button class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-zinc-500 hover:text-zinc-800">Analytics</button></div>`,
+    css: `.pill-tabs { display:flex; gap:.25rem; background:#f4f4f5; padding:.25rem; border-radius:.75rem; } .pill-tab { padding:.375rem .875rem; border-radius:.5rem; font-size:.75rem; font-weight:600; transition:all .15s; } .pill-tab.active { background:#fff; color:#18181b; box-shadow:0 1px 3px rgba(0,0,0,.08); }`,
+  },
+  {
+    id: 'tabs-underline', name: 'Underline Tabs', category: 'Tabs',
+    description: 'Classic underline-style navigation tabs.',
+    Preview: () => {
+      const [tab, setTab] = React.useState(0);
+      const tabs = ['All','Active','Drafts','Archived'];
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="w-full">
+            <div className="flex border-b border-zinc-200">
+              {tabs.map((t,i) => (
+                <button key={t} onClick={() => setTab(i)} className={`px-4 py-2.5 text-xs font-semibold border-b-2 transition-all ${i===tab ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-zinc-500 hover:text-zinc-800'}`}>{t}</button>
+              ))}
+            </div>
+            <p className="text-xs text-zinc-400 mt-3 px-1">{tabs[tab]} items listed here.</p>
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="flex border-b border-zinc-200"><button class="px-4 py-2.5 text-xs font-semibold border-b-2 border-indigo-600 text-indigo-600">All</button><button class="px-4 py-2.5 text-xs font-semibold border-b-2 border-transparent text-zinc-500 hover:text-zinc-800">Active</button></div>`,
+    css: `.underline-tabs { display:flex; border-bottom:1px solid #e4e4e7; } .underline-tab { padding:.625rem 1rem; font-size:.75rem; font-weight:600; border-bottom:2px solid transparent; transition:all .15s; color:#71717a; } .underline-tab.active { border-bottom-color:#4f46e5; color:#4f46e5; }`,
+  },
+  {
+    id: 'tabs-icon-v2', name: 'Icon Tabs', category: 'Tabs',
+    description: 'Tabs with icon and label for richer navigation.',
+    Preview: () => {
+      const [tab, setTab] = React.useState(0);
+      const tabs = [['🏠','Home'],['📊','Stats'],['⚙️','Settings'],['👤','Profile']];
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="flex flex-col gap-3 w-full">
+            <div className="flex gap-0.5 border-b border-zinc-100">
+              {tabs.map(([icon,label],i) => (
+                <button key={label} onClick={() => setTab(i)} className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold transition-all rounded-t-lg border-b-2 ${i===tab ? 'border-indigo-600 text-indigo-600 bg-indigo-50' : 'border-transparent text-zinc-500 hover:text-zinc-700 hover:bg-zinc-50'}`}>
+                  <span>{icon}</span>{label}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-zinc-400 px-1">{tabs[tab][1]} content.</p>
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="flex gap-0.5 border-b border-zinc-100"><button class="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold border-b-2 border-indigo-600 text-indigo-600 bg-indigo-50 rounded-t-lg">🏠 Home</button><button class="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold border-b-2 border-transparent text-zinc-500">📊 Stats</button></div>`,
+    css: `.icon-tab { display:flex; align-items:center; gap:.375rem; padding:.5rem .75rem; font-size:.75rem; font-weight:600; border-bottom:2px solid transparent; transition:all .15s; }`,
+  },
+  {
+    id: 'tabs-count', name: 'Count Badge Tabs', category: 'Tabs',
+    description: 'Tabs with count badges showing item numbers.',
+    Preview: () => {
+      const [tab, setTab] = React.useState(0);
+      const tabs = [['Inbox',12],['Sent',4],['Spam',2],['Trash',0]];
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="flex flex-col gap-3 w-full">
+            <div className="flex gap-1">
+              {tabs.map(([label,count],i) => (
+                <button key={label} onClick={() => setTab(i)} className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition ${i===tab ? 'bg-indigo-600 text-white' : 'text-zinc-600 hover:bg-zinc-100'}`}>
+                  {label}
+                  {(count as number) > 0 && <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${i===tab ? 'bg-indigo-500 text-white' : 'bg-zinc-200 text-zinc-600'}`}>{count}</span>}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-zinc-400 px-1">{tabs[tab][0]}: {tabs[tab][1]} messages.</p>
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="flex gap-1"><button class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white">Inbox <span class="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-indigo-500">12</span></button></div>`,
+    css: `.count-tab { display:flex; align-items:center; gap:.375rem; padding:.5rem .75rem; border-radius:.75rem; font-size:.75rem; font-weight:600; } .tab-count { font-size:.625rem; font-weight:700; padding:.125rem .375rem; border-radius:9999px; }`,
+  },
+  {
+    id: 'tabs-vertical-v2', name: 'Vertical Tabs', category: 'Tabs',
+    description: 'Sidebar-style vertical tabs layout.',
+    Preview: () => {
+      const [tab, setTab] = React.useState('General');
+      const tabs = ['General','Security','Notifications','Billing'];
+      return (
+        <PreviewWrap bg="bg-zinc-50">
+          <div className="flex gap-3 w-64">
+            <div className="flex flex-col gap-1 w-28 shrink-0">
+              {tabs.map(t => (
+                <button key={t} onClick={() => setTab(t)} className={`text-left px-3 py-2 rounded-xl text-xs font-semibold transition ${tab===t ? 'bg-indigo-600 text-white' : 'text-zinc-600 hover:bg-white hover:shadow-sm'}`}>{t}</button>
+              ))}
+            </div>
+            <div className="flex-1 bg-white rounded-xl p-3 border border-zinc-200 shadow-sm">
+              <p className="text-xs font-bold text-zinc-800">{tab}</p>
+              <p className="text-[11px] text-zinc-400 mt-1">Configure your {tab.toLowerCase()} preferences here.</p>
+            </div>
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="flex gap-3"><div class="flex flex-col gap-1 w-28"><button class="text-left px-3 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white">General</button><button class="text-left px-3 py-2 rounded-xl text-xs font-semibold text-zinc-600 hover:bg-white">Security</button></div><div class="flex-1 bg-white rounded-xl p-3 border border-zinc-200"><p class="text-xs font-bold text-zinc-800">General</p></div></div>`,
+    css: `.vertical-tabs { display:flex; gap:.75rem; } .vertical-tab { text-align:left; padding:.5rem .75rem; border-radius:.75rem; font-size:.75rem; font-weight:600; transition:all .15s; } .vertical-tab.active { background:#4f46e5; color:#fff; }`,
+  },
+  // ── Tooltips ─────────────────────────────────────────────
+  {
+    id: 'tooltip-top', name: 'Top Tooltip', category: 'Tooltips',
+    description: 'Tooltip appearing above the trigger element.',
+    Preview: () => {
+      const [show, setShow] = React.useState(false);
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="relative inline-block">
+            <button onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)} className="px-4 py-2 rounded-xl bg-zinc-100 text-zinc-700 text-xs font-semibold hover:bg-zinc-200 transition">Hover me</button>
+            {show && (
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-zinc-900 text-white text-[11px] font-medium rounded-lg whitespace-nowrap shadow-xl z-10">
+                This is a tooltip!
+                <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-zinc-900" />
+              </div>
+            )}
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="relative inline-block"><button class="px-4 py-2 rounded-xl bg-zinc-100 text-zinc-700 text-xs font-semibold">Hover me</button><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-zinc-900 text-white text-[11px] font-medium rounded-lg whitespace-nowrap shadow-xl">This is a tooltip!<div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-zinc-900"></div></div></div>`,
+    css: `.tooltip-top { position:absolute; bottom:calc(100% + .5rem); left:50%; transform:translateX(-50%); padding:.375rem .75rem; background:#18181b; color:#fff; font-size:.6875rem; font-weight:500; border-radius:.5rem; white-space:nowrap; box-shadow:0 4px 12px rgba(0,0,0,.2); }`,
+  },
+  {
+    id: 'tooltip-bottom', name: 'Bottom Tooltip', category: 'Tooltips',
+    description: 'Tooltip appearing below the trigger element.',
+    Preview: () => {
+      const [show, setShow] = React.useState(false);
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="relative inline-block">
+            <button onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)} className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-700 transition">Save</button>
+            {show && (
+              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-3 py-1.5 bg-zinc-800 text-white text-[11px] font-medium rounded-lg whitespace-nowrap shadow-xl z-10">
+                Ctrl+S to save quickly
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-zinc-800" />
+              </div>
+            )}
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="relative inline-block"><button class="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-semibold">Save</button><div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-3 py-1.5 bg-zinc-800 text-white text-[11px] font-medium rounded-lg whitespace-nowrap shadow-xl">Ctrl+S to save<div class="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-zinc-800"></div></div></div>`,
+    css: `.tooltip-bottom { position:absolute; top:calc(100% + .5rem); left:50%; transform:translateX(-50%); padding:.375rem .75rem; background:#27272a; color:#fff; font-size:.6875rem; border-radius:.5rem; white-space:nowrap; box-shadow:0 4px 12px rgba(0,0,0,.2); }`,
+  },
+  {
+    id: 'tooltip-colored', name: 'Colored Tooltips', category: 'Tooltips',
+    description: 'Tooltips in brand colors for different actions.',
+    Preview: () => {
+      const [show, setShow] = React.useState<number|null>(null);
+      const btns = [['Copy','Copied to clipboard!','bg-indigo-600 text-white'],['Like','❤️ Liked!','bg-rose-500 text-white'],['Share','Link copied!','bg-emerald-500 text-white']];
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="flex gap-3">
+            {btns.map(([label,tip,style],i) => (
+              <div key={label} className="relative">
+                <button onMouseEnter={() => setShow(i)} onMouseLeave={() => setShow(null)} className={`px-3 py-1.5 rounded-xl text-xs font-semibold ${style}`}>{label}</button>
+                {show===i && <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1 rounded-lg text-[10px] font-medium whitespace-nowrap shadow-lg z-10 ${style}`}>{tip}</div>}
+              </div>
+            ))}
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="relative"><button class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white">Copy</button><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1 rounded-lg text-[10px] font-medium whitespace-nowrap bg-indigo-600 text-white shadow-lg">Copied to clipboard!</div></div>`,
+    css: `.tooltip-colored { padding:.25rem .625rem; border-radius:.5rem; font-size:.625rem; font-weight:500; white-space:nowrap; box-shadow:0 4px 12px rgba(0,0,0,.15); }`,
+  },
+  {
+    id: 'tooltip-rich-v2', name: 'Rich Tooltip', category: 'Tooltips',
+    description: 'Tooltip with title, body, and keyboard shortcut.',
+    Preview: () => {
+      const [show, setShow] = React.useState(false);
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="relative inline-block">
+            <button onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)} className="px-4 py-2 rounded-xl bg-zinc-100 text-zinc-700 text-xs font-semibold hover:bg-zinc-200 transition">Format Text</button>
+            {show && (
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-44 bg-zinc-900 text-white rounded-xl p-3 shadow-xl z-10">
+                <p className="text-[11px] font-bold mb-0.5">Bold</p>
+                <p className="text-[10px] text-zinc-400">Makes selected text bold.</p>
+                <div className="flex items-center gap-1 mt-2">
+                  <kbd className="px-1.5 py-0.5 bg-zinc-700 rounded text-[9px] font-mono">Ctrl</kbd>
+                  <span className="text-[9px] text-zinc-500">+</span>
+                  <kbd className="px-1.5 py-0.5 bg-zinc-700 rounded text-[9px] font-mono">B</kbd>
+                </div>
+                <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-zinc-900" />
+              </div>
+            )}
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="w-44 bg-zinc-900 text-white rounded-xl p-3 shadow-xl"><p class="text-[11px] font-bold mb-0.5">Bold</p><p class="text-[10px] text-zinc-400">Makes selected text bold.</p><div class="flex items-center gap-1 mt-2"><kbd class="px-1.5 py-0.5 bg-zinc-700 rounded text-[9px] font-mono">Ctrl</kbd><span class="text-[9px] text-zinc-500">+</span><kbd class="px-1.5 py-0.5 bg-zinc-700 rounded text-[9px] font-mono">B</kbd></div></div>`,
+    css: `.rich-tooltip { background:#18181b; color:#fff; border-radius:.75rem; padding:.75rem; width:11rem; box-shadow:0 8px 24px rgba(0,0,0,.3); } kbd { background:#3f3f46; border-radius:.25rem; padding:.125rem .375rem; font-family:monospace; font-size:.5625rem; }`,
+  },
+  {
+    id: 'tooltip-side', name: 'Side Tooltips', category: 'Tooltips',
+    description: 'Left and right side positioned tooltips.',
+    Preview: () => {
+      const [show, setShow] = React.useState<string|null>(null);
+      return (
+        <PreviewWrap bg="bg-white">
+          <div className="flex gap-8">
+            <div className="relative inline-block">
+              <button onMouseEnter={() => setShow('left')} onMouseLeave={() => setShow(null)} className="px-3 py-2 rounded-xl bg-zinc-100 text-xs font-semibold text-zinc-700">← Left</button>
+              {show==='left' && <div className="absolute top-1/2 -translate-y-1/2 right-full mr-2 px-2.5 py-1.5 bg-zinc-900 text-white text-[11px] rounded-lg whitespace-nowrap shadow-xl z-10">Left tooltip<div className="absolute left-full top-1/2 -translate-y-1/2 border-4 border-transparent border-l-zinc-900" /></div>}
+            </div>
+            <div className="relative inline-block">
+              <button onMouseEnter={() => setShow('right')} onMouseLeave={() => setShow(null)} className="px-3 py-2 rounded-xl bg-zinc-100 text-xs font-semibold text-zinc-700">Right →</button>
+              {show==='right' && <div className="absolute top-1/2 -translate-y-1/2 left-full ml-2 px-2.5 py-1.5 bg-zinc-900 text-white text-[11px] rounded-lg whitespace-nowrap shadow-xl z-10">Right tooltip<div className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-zinc-900" /></div>}
+            </div>
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="relative inline-block"><button class="px-3 py-2 rounded-xl bg-zinc-100 text-xs font-semibold">← Left</button><div class="absolute top-1/2 -translate-y-1/2 right-full mr-2 px-2.5 py-1.5 bg-zinc-900 text-white text-[11px] rounded-lg whitespace-nowrap shadow-xl">Left tooltip<div class="absolute left-full top-1/2 -translate-y-1/2 border-4 border-transparent border-l-zinc-900"></div></div></div>`,
+    css: `.tooltip-left { position:absolute; top:50%; transform:translateY(-50%); right:calc(100% + .5rem); padding:.375rem .625rem; background:#18181b; color:#fff; font-size:.6875rem; border-radius:.5rem; white-space:nowrap; }`,
+  },
+  // ── Videos ───────────────────────────────────────────────
+  {
+    id: 'video-player-ui', name: 'Video Player UI', category: 'Videos',
+    description: 'Custom video player interface with controls.',
+    Preview: () => {
+      const [playing, setPlaying] = React.useState(false);
+      const [pct, setPct] = React.useState(35);
+      return (
+        <PreviewWrap bg="bg-zinc-900">
+          <div className="w-64 rounded-2xl overflow-hidden bg-zinc-800 shadow-xl">
+            <div className="relative h-32 bg-gradient-to-br from-indigo-600 to-violet-700 flex items-center justify-center cursor-pointer" onClick={() => setPlaying(!playing)}>
+              <div className={`w-10 h-10 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-white text-xl transition ${playing ? '' : 'hover:bg-white/30'}`}>{playing ? '⏸' : '▶'}</div>
+            </div>
+            <div className="px-3 py-2.5 space-y-2">
+              <p className="text-white text-xs font-semibold truncate">Building with React 2025</p>
+              <div className="flex items-center gap-2">
+                <span className="text-zinc-400 text-[10px]">1:24</span>
+                <div className="flex-1 h-1 bg-zinc-600 rounded-full cursor-pointer" onClick={e => { const rect = e.currentTarget.getBoundingClientRect(); setPct(Math.round(((e.clientX-rect.left)/rect.width)*100)); }}>
+                  <div className="h-full bg-indigo-400 rounded-full" style={{width:`${pct}%`}} />
+                </div>
+                <span className="text-zinc-400 text-[10px]">4:12</span>
+              </div>
+            </div>
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="w-64 rounded-2xl overflow-hidden bg-zinc-800 shadow-xl"><div class="relative h-32 bg-gradient-to-br from-indigo-600 to-violet-700 flex items-center justify-center cursor-pointer"><div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white text-xl">▶</div></div><div class="px-3 py-2.5"><p class="text-white text-xs font-semibold">Building with React 2025</p></div></div>`,
+    css: `.video-player { border-radius:1rem; overflow:hidden; background:#27272a; } .video-controls { padding:.625rem .75rem; } .video-progress { height:.25rem; background:#52525b; border-radius:9999px; cursor:pointer; }`,
+  },
+  {
+    id: 'video-playlist-ui', name: 'Video Playlist', category: 'Videos',
+    description: 'Playlist with active video highlighted.',
+    Preview: () => {
+      const [active, setActive] = React.useState(0);
+      const vids = [['Intro to React','4:32','from-indigo-500 to-violet-600'],['State Management','8:15','from-rose-400 to-pink-500'],['Hooks Deep Dive','6:44','from-emerald-400 to-teal-500'],['Performance Tips','5:20','from-amber-400 to-orange-400']];
+      return (
+        <PreviewWrap bg="bg-zinc-50">
+          <div className="w-64 space-y-1.5">
+            {vids.map(([title,dur,grad],i) => (
+              <button key={title} onClick={() => setActive(i)} className={`w-full flex items-center gap-3 p-2.5 rounded-xl transition ${i===active ? 'bg-indigo-50 border border-indigo-200' : 'bg-white border border-zinc-100 hover:border-zinc-200'}`}>
+                <div className={`w-10 h-7 rounded-lg bg-gradient-to-r ${grad} shrink-0 flex items-center justify-center text-white text-[10px]`}>{i===active?'▶':i+1}</div>
+                <div className="flex-1 text-left min-w-0">
+                  <p className={`text-xs font-semibold truncate ${i===active ? 'text-indigo-700' : 'text-zinc-800'}`}>{title}</p>
+                  <p className="text-[10px] text-zinc-400">{dur}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="w-64 space-y-1.5"><button class="w-full flex items-center gap-3 p-2.5 rounded-xl bg-indigo-50 border border-indigo-200"><div class="w-10 h-7 rounded-lg bg-gradient-to-r from-indigo-500 to-violet-600 flex items-center justify-center text-white text-[10px]">▶</div><div class="flex-1 text-left"><p class="text-xs font-semibold text-indigo-700">Intro to React</p><p class="text-[10px] text-zinc-400">4:32</p></div></button></div>`,
+    css: `.playlist-item { display:flex; align-items:center; gap:.75rem; padding:.625rem; border-radius:.75rem; border:1px solid #f4f4f5; background:#fff; width:100%; transition:all .15s; } .playlist-item.active { background:#eef2ff; border-color:#c7d2fe; }`,
+  },
+  {
+    id: 'video-shorts', name: 'Shorts / Reels', category: 'Videos',
+    description: 'Vertical short-form video card layout.',
+    Preview: () => (
+      <PreviewWrap bg="bg-zinc-900">
+        <div className="flex gap-2.5">
+          {[['from-indigo-500 to-violet-700','React Tips','@devjane','124K'],['from-rose-500 to-pink-600','UI Tricks','@uxbob','89K'],['from-emerald-500 to-teal-600','CSS Magic','@cssking','210K']].map(([g,t,a,v]) => (
+            <div key={t} className={`w-20 h-32 rounded-2xl bg-gradient-to-b ${g} relative overflow-hidden cursor-pointer group shrink-0`}>
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"><div className="w-8 h-8 rounded-full bg-white/30 flex items-center justify-center text-white">▶</div></div>
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2">
+                <p className="text-[9px] text-white font-bold leading-tight">{t}</p>
+                <p className="text-[8px] text-white/70">{a} · {v}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="w-20 h-32 rounded-2xl bg-gradient-to-b from-indigo-500 to-violet-700 relative overflow-hidden cursor-pointer group"><div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2"><p class="text-[9px] text-white font-bold">React Tips</p><p class="text-[8px] text-white/70">@devjane · 124K</p></div></div>`,
+    css: `.short-card { border-radius:1rem; position:relative; overflow:hidden; cursor:pointer; } .short-info { position:absolute; bottom:0; left:0; right:0; background:linear-gradient(to top,rgba(0,0,0,.7),transparent); padding:.5rem; }`,
+  },
+  {
+    id: 'video-thumbnail-hover', name: 'Hover Preview', category: 'Videos',
+    description: 'Video thumbnail that shows duration on hover.',
+    Preview: () => {
+      const [hov, setHov] = React.useState<number|null>(null);
+      const vids = [['from-indigo-400 to-violet-500','3:24'],['from-rose-400 to-pink-500','7:12'],['from-amber-400 to-orange-400','2:05']];
+      return (
+        <PreviewWrap bg="bg-zinc-50">
+          <div className="flex gap-2">
+            {vids.map(([grad,dur],i) => (
+              <div key={i} onMouseEnter={() => setHov(i)} onMouseLeave={() => setHov(null)} className={`relative w-20 h-14 rounded-xl bg-gradient-to-br ${grad} cursor-pointer transition-transform ${hov===i ? 'scale-105 shadow-lg' : ''}`}>
+                <span className="absolute bottom-1 right-1 bg-black/70 text-white text-[9px] font-bold rounded px-1 py-0.5">{dur}</span>
+                {hov===i && <div className="absolute inset-0 flex items-center justify-center"><div className="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center text-white text-xs">▶</div></div>}
+              </div>
+            ))}
+          </div>
+        </PreviewWrap>
+      );
+    },
+    tailwind: `<div class="relative w-20 h-14 rounded-xl bg-gradient-to-br from-indigo-400 to-violet-500 cursor-pointer hover:scale-105 hover:shadow-lg transition-transform"><span class="absolute bottom-1 right-1 bg-black/70 text-white text-[9px] font-bold rounded px-1 py-0.5">3:24</span></div>`,
+    css: `.video-thumb { position:relative; border-radius:.75rem; overflow:hidden; cursor:pointer; transition:transform .2s; } .video-thumb:hover { transform:scale(1.05); } .video-duration { position:absolute; bottom:.25rem; right:.25rem; background:rgba(0,0,0,.7); color:#fff; font-size:.5625rem; font-weight:700; border-radius:.25rem; padding:.125rem .25rem; }`,
+  },
+  {
+    id: 'video-channel', name: 'Channel Card', category: 'Videos',
+    description: 'Creator/channel card with subscriber count.',
+    Preview: () => (
+      <PreviewWrap bg="bg-zinc-50">
+        <div className="w-56 bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden">
+          <div className="h-16 bg-gradient-to-r from-indigo-500 to-violet-600" />
+          <div className="px-4 pb-4">
+            <div className="-mt-6 mb-2">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-rose-400 to-pink-500 border-2 border-white flex items-center justify-center text-white font-extrabold text-sm">JD</div>
+            </div>
+            <p className="text-sm font-bold text-zinc-900">Jane Dev</p>
+            <p className="text-[10px] text-zinc-400 mt-0.5">@janedev · 24.5K subscribers</p>
+            <button className="mt-3 w-full py-1.5 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 transition">Subscribe</button>
+          </div>
+        </div>
+      </PreviewWrap>
+    ),
+    tailwind: `<div class="w-56 bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden"><div class="h-16 bg-gradient-to-r from-indigo-500 to-violet-600"></div><div class="px-4 pb-4"><div class="-mt-6 mb-2"><div class="w-12 h-12 rounded-full bg-gradient-to-br from-rose-400 to-pink-500 border-2 border-white flex items-center justify-center text-white font-extrabold text-sm">JD</div></div><p class="text-sm font-bold text-zinc-900">Jane Dev</p></div></div>`,
+    css: `.channel-card { background:#fff; border-radius:1rem; border:1px solid #f4f4f5; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.06); }`,
   },
 ];
 
@@ -14520,15 +17547,13 @@ const CATEGORIES = ['All', 'Feedback', 'Navigation', 'Forms & Inputs', 'Display'
 /** Categories that render better as a single-column list */
 const SINGLE_COL_CATS = new Set(['Aside Nav', 'AI Tools', 'eCommerce', 'Calendar', 'Alerts', 'Avatars', 'Badge', 'Breadcrumb', 'Button Variants', 'Button Groups', 'Cards', 'Carousel', 'Dropdowns', 'Images', 'Links', 'List', 'Modals', 'Notifications', 'Pagination', 'Popovers', 'Progress Bars', 'Ribbons', 'Spinners', 'Tabs', 'Tooltips', 'Videos']);
 
-/* ─────────────────────────────────────────────
-   Share Toast
-───────────────────────────────────────────── */
-function ShareToast({ visible }: { visible: boolean }) {
+/** Wrapper that forces a full remount whenever the active category changes */
+function ComponentGrid({ filtered, activeCat }: { filtered: ComponentDef[]; activeCat: string }) {
   return (
-    <div className={`pointer-events-none absolute bottom-[72px] left-1/2 -translate-x-1/2 z-50 transition-all duration-200 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
-      <div className="flex items-center gap-2 rounded-full bg-zinc-900 px-4 py-2 text-xs font-semibold text-white shadow-xl whitespace-nowrap">
-        <Check size={12} className="text-emerald-400" /> Link copied to clipboard!
-      </div>
+    <div className="grid grid-cols-1 gap-4 w-full">
+      {filtered.map((comp) => (
+        <ComponentCard key={comp.id} comp={comp} />
+      ))}
     </div>
   );
 }
@@ -14557,72 +17582,71 @@ function ComponentCard({ comp }: { comp: ComponentDef }) {
   }, [comp.id, comp.name, comp.category]);
 
   return (
-    <div id={comp.id} className="relative flex flex-col rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-zinc-200/50 hover:-translate-y-0.5">
+    <div id={comp.id} className="group relative flex flex-col rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md hover:border-zinc-300">
 
       {/* ── Header ── */}
-      <div className="flex items-center gap-3 px-5 py-4 border-b border-zinc-100/80">
-        {/* Category pill */}
-        <span className={`shrink-0 inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-bold ${meta.pill}`}>
-          <span className="text-sm leading-none">{meta.icon}</span>
-          <span>{comp.category}</span>
-        </span>
+      <div className="flex items-center gap-3 px-4 pt-3.5 pb-3 border-b border-zinc-100">
+        {/* Icon badge */}
+        <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-base ${meta.pill}`}>
+          {meta.icon}
+        </div>
 
-        {/* Name + description */}
+        {/* Name + category */}
         <div className="flex-1 min-w-0">
-          <h3 className="font-bold text-[14px] text-zinc-900 leading-tight tracking-[-0.02em] truncate">{comp.name}</h3>
-          <p className="text-[11.5px] text-zinc-400 mt-0.5 leading-relaxed line-clamp-1">{comp.description}</p>
+          <div className="flex items-center gap-2 min-w-0">
+            <h3 className="font-semibold text-[13.5px] text-zinc-900 leading-tight tracking-tight truncate">{comp.name}</h3>
+            <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[9.5px] font-bold shrink-0 ${meta.pill}`}>{comp.category}</span>
+          </div>
+          <p className="text-[11px] text-zinc-400 mt-0.5 truncate leading-relaxed">{comp.description}</p>
         </div>
 
-        {/* Action buttons */}
-        <div className="flex items-center gap-1.5 shrink-0">
-          {/* Share button */}
-          <button
-            onClick={handleShare}
-            title="Share component"
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-400 transition-all hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600"
-          >
-            {shared
-              ? <Check size={13} className="text-emerald-500" />
-              : <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-            }
-          </button>
-        </div>
+        {/* Share button */}
+        <button
+          onClick={handleShare}
+          title="Copy link"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-zinc-200 text-zinc-400 transition-all hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-600 opacity-0 group-hover:opacity-100"
+        >
+          {shared
+            ? <Check size={12} className="text-emerald-500" />
+            : <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+          }
+        </button>
       </div>
 
       {/* ── Live Preview ── */}
-      <div className={`relative flex w-full items-center justify-center overflow-hidden ${meta.accent}`} style={{ minHeight: 320 }}>
-        {/* Dot-grid texture */}
+      <div className={`relative flex h-[280px] w-full items-center justify-center overflow-hidden ${meta.accent}`}>
         <div
-          className="pointer-events-none absolute inset-0"
-          style={{ backgroundImage: 'radial-gradient(circle, #00000008 1px, transparent 1px)', backgroundSize: '18px 18px' }}
+          className="pointer-events-none absolute inset-0 opacity-40"
+          style={{ backgroundImage: 'radial-gradient(circle, #00000008 1px, transparent 1px)', backgroundSize: '22px 22px' }}
         />
-        <div className="relative w-full">
+        <div className="relative w-full h-full flex items-center justify-center">
           <Preview />
         </div>
       </div>
 
       {/* ── Toolbar ── */}
-      <div className="flex items-center border-t border-zinc-100 bg-zinc-50/80 px-4 py-0">
-        {/* Code format tabs */}
-        {(['tailwind', 'css'] as CodeTab[]).map((t) => (
-          <button
-            key={t}
-            onClick={() => { setTab(t); setShowCode(true); }}
-            className={`flex items-center gap-1.5 px-3 py-3 text-[11px] font-bold border-b-2 -mb-px transition-all ${
-              tab === t && showCode
-                ? 'border-zinc-800 text-zinc-900'
-                : 'border-transparent text-zinc-400 hover:text-zinc-700'
-            }`}
-          >
-            <span className="opacity-80">{t === 'tailwind' ? '⚡' : '🎨'}</span>
-            {t === 'tailwind' ? 'Tailwind' : 'CSS'}
-          </button>
-        ))}
+      <div className="flex items-center gap-2 px-4 py-2.5 bg-zinc-50/70">
+        {/* Tab pill switcher */}
+        <div className="flex items-center gap-0.5 rounded-lg bg-zinc-100 p-0.5">
+          {(['tailwind', 'css'] as CodeTab[]).map((t) => (
+            <button
+              key={t}
+              onClick={() => { setTab(t); setShowCode(true); }}
+              className={`flex items-center gap-1 rounded-md px-2.5 py-1 text-[11px] font-semibold transition-all ${
+                tab === t && showCode
+                  ? 'bg-white text-zinc-900 shadow-sm'
+                  : 'text-zinc-400 hover:text-zinc-600'
+              }`}
+            >
+              <span className="text-[10px]">{t === 'tailwind' ? '⚡' : '🎨'}</span>
+              {t === 'tailwind' ? 'Tailwind' : 'CSS'}
+            </button>
+          ))}
+        </div>
 
-        {/* Spacer */}
         <div className="flex-1" />
 
-        {/* Code toggle */}
+        {/* Get Code toggle */}
         <button
           onClick={() => {
             const opening = !showCode;
@@ -14636,28 +17660,34 @@ function ComponentCard({ comp }: { comp: ComponentDef }) {
               });
             }
           }}
-          className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 my-1.5 text-[11px] font-bold transition-all ${
+          className={`flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-[11px] font-bold transition-all duration-150 shadow-sm ${
             showCode
-              ? 'bg-zinc-900 text-white'
-              : 'border border-zinc-200 bg-white text-zinc-500 hover:border-zinc-300 hover:text-zinc-800'
+              ? 'bg-zinc-800 text-white hover:bg-zinc-900'
+              : 'bg-gradient-to-r from-blue-600 to-violet-600 text-white hover:from-blue-700 hover:to-violet-700 hover:shadow-md hover:shadow-blue-200'
           }`}
         >
           {showCode
-            ? <><X size={11} /> Hide</>
-            : <><span className="font-mono text-xs">{'<>'}</span> View Code</>
+            ? <><X size={11} /> Hide Code</>
+            : <><span className="font-mono text-[12px] leading-none opacity-80">{'</>'}</span> Get Code</>
           }
         </button>
       </div>
 
       {/* ── Code panel ── */}
-      <div className={`overflow-hidden transition-all duration-300 ease-out ${showCode ? 'max-h-[300px]' : 'max-h-0'}`}>
-        <div className="p-4">
+      <div className={`overflow-hidden transition-all duration-300 ease-out ${showCode ? 'max-h-[340px]' : 'max-h-0'}`}>
+        <div className="bg-[#0f1117] px-5 py-4">
           <CodeBlock code={tab === 'tailwind' ? comp.tailwind : comp.css} id={comp.id} tab={tab} componentName={comp.name} />
         </div>
       </div>
 
-      {/* Share toast */}
-      <ShareToast visible={shared} />
+      {/* Share success toast */}
+      {shared && (
+        <div className="pointer-events-none absolute bottom-16 left-1/2 -translate-x-1/2 z-50">
+          <div className="flex items-center gap-2 rounded-full bg-zinc-900 px-4 py-2 text-xs font-semibold text-white shadow-xl whitespace-nowrap">
+            <Check size={11} className="text-emerald-400" /> Link copied!
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -14670,20 +17700,77 @@ function SidebarItem({ cat, count, active, onClick }: { cat: string; count: numb
   return (
     <button
       onClick={onClick}
-      className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150 text-left ${
-        active ? 'bg-zinc-900 text-white shadow-sm' : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900'
+      className={`group flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-[12px] font-medium transition-all duration-100 text-left ${
+        active
+          ? 'bg-blue-50 text-blue-700 font-semibold'
+          : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800'
       }`}
     >
-      <span className="w-6 text-center text-[15px] leading-none shrink-0">{meta.icon}</span>
-      <span className="flex-1 truncate">{cat}</span>
-      <span className={`shrink-0 min-w-[28px] rounded-full px-2 py-0.5 text-center text-[10px] font-bold tabular-nums transition-colors ${
-        active ? 'bg-white/15 text-white' : 'bg-zinc-100 text-zinc-400 group-hover:bg-zinc-200'
+      <span className={`text-[12px] leading-none shrink-0 ${active ? 'opacity-100' : 'opacity-60 group-hover:opacity-80'}`}>{meta.icon}</span>
+      <span className="flex-1 truncate">{cat === 'All' ? 'All Components' : cat}</span>
+      <span className={`shrink-0 rounded-full px-1.5 py-px text-[9px] font-bold tabular-nums ${
+        active ? 'bg-blue-100 text-blue-600' : 'bg-zinc-100 text-zinc-400 group-hover:bg-zinc-200'
       }`}>
         {count}
       </span>
     </button>
   );
 }
+
+/* ─────────────────────────────────────────────
+   Sidebar section groups
+───────────────────────────────────────────── */
+const SIDEBAR_SECTIONS: { label: string | null; cats: string[] }[] = [
+  { label: null, cats: ['All'] },
+  { label: 'FEEDBACK', cats: ['Feedback', 'Alerts', 'Notifications', 'Modals', 'Overlay', 'Popovers', 'Tooltips', 'Spinners', 'Progress Bars'] },
+  { label: 'NAVIGATION', cats: ['Navigation', 'Aside Nav', 'Breadcrumb', 'Tabs', 'Links', 'Pagination'] },
+  { label: 'FORMS & DATA', cats: ['Forms & Inputs', 'Tables', 'Charts'] },
+  { label: 'DISPLAY', cats: ['Display', 'Images', 'Videos', 'Carousel', 'Cards'] },
+  { label: 'INTERACTIVE', cats: ['Button Variants', 'Button Groups', 'Dropdowns', 'Badge', 'Avatars', 'Ribbons'] },
+  { label: 'CONTENT', cats: ['Layout', 'List'] },
+  { label: 'SPECIALIZED', cats: ['eCommerce', 'AI Tools', 'Calendar'] },
+];
+
+/* ─────────────────────────────────────────────
+   Category descriptions
+───────────────────────────────────────────── */
+const CATEGORY_DESC: Record<string, string> = {
+  'All': 'Every component in one place',
+  'Feedback': 'Alerts, toasts, banners & feedback UI',
+  'Alerts': 'Dismissible notices and status banners',
+  'Notifications': 'Toast alerts, inboxes & badge counts',
+  'Modals': 'Dialogs, drawers & overlay panels',
+  'Overlay': 'Modals, tooltips & overlay UI',
+  'Popovers': 'Floating cards, menus & info bubbles',
+  'Tooltips': 'Hover tips in every direction',
+  'Spinners': 'Loading indicators & skeleton screens',
+  'Progress Bars': 'Linear, circular & step progress',
+  'Navigation': 'Top navs, menus & nav bars',
+  'Aside Nav': 'Sidebar & drawer navigation',
+  'Breadcrumb': 'Path breadcrumbs in every style',
+  'Tabs': 'Tab bars, pills & vertical tabs',
+  'Links': 'Styled link variants & nav links',
+  'Pagination': 'Page controls, dots & load more',
+  'Forms & Inputs': 'Text fields, selects & form controls',
+  'Tables': 'Data tables with sorting & actions',
+  'Charts': 'Bar, line, pie & donut charts',
+  'Display': 'Hero sections, feature blocks & more',
+  'Images': 'Galleries, skeletons & image layouts',
+  'Videos': 'Players, playlists & video cards',
+  'Carousel': 'Slides, dots & card carousels',
+  'Cards': 'Product, pricing & info cards',
+  'Button Variants': 'Every button style and shape',
+  'Button Groups': 'Grouped & segmented buttons',
+  'Dropdowns': 'Menus, selects & multi-select',
+  'Badge': 'Pill badges, dots & counters',
+  'Avatars': 'User avatars in every variation',
+  'Ribbons': 'Corner ribbons & badge labels',
+  'Layout': 'Page shells, grids & containers',
+  'List': 'Checklists, timelines & icon lists',
+  'eCommerce': 'Product cards, carts & shop UI',
+  'AI Tools': 'Chat UI, prompts & AI widgets',
+  'Calendar': 'Date pickers & calendar views',
+};
 
 /* ─────────────────────────────────────────────
    Main Export
@@ -14695,8 +17782,13 @@ export default function UIComponentsClient() {
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
     return COMPONENTS.filter((c) => {
-      const matchCat = activeCat === 'All' || c.category === activeCat;
-      const matchSearch = !q || c.name.toLowerCase().includes(q) || c.description.toLowerCase().includes(q);
+      // When searching, ignore category filter — search across everything
+      const matchCat = q ? true : (activeCat === 'All' || c.category === activeCat);
+      const matchSearch = !q ||
+        c.name.toLowerCase().includes(q) ||
+        c.description.toLowerCase().includes(q) ||
+        c.category.toLowerCase().includes(q) ||
+        c.id.toLowerCase().includes(q);
       return matchCat && matchSearch;
     });
   }, [activeCat, search]);
@@ -14708,190 +17800,186 @@ export default function UIComponentsClient() {
     ])), []);
 
   return (
-    <div className="min-h-screen bg-[#F2F3F5]">
+    <div className="min-h-screen bg-zinc-50">
 
       {/* ══════════ HERO ══════════ */}
-      <div className="relative overflow-hidden border-b border-zinc-200 bg-white">
-        <div className="pointer-events-none absolute inset-0 opacity-[0.025]"
-          style={{ backgroundImage: 'linear-gradient(#000 1px,transparent 1px),linear-gradient(90deg,#000 1px,transparent 1px)', backgroundSize: '32px 32px' }} />
-        <div className="pointer-events-none absolute -top-32 left-1/4 h-80 w-80 rounded-full bg-blue-400/25 blur-3xl" />
-        <div className="pointer-events-none absolute -top-32 right-1/4 h-80 w-80 rounded-full bg-violet-400/25 blur-3xl" />
+      <div className="relative overflow-hidden bg-white border-b border-zinc-200">
+        {/* Subtle grid bg */}
+        <div className="pointer-events-none absolute inset-0"
+          style={{ backgroundImage: 'linear-gradient(to right, #f4f4f580 1px, transparent 1px), linear-gradient(to bottom, #f4f4f580 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+        {/* Glow orbs */}
+        <div className="pointer-events-none absolute -top-40 left-1/3 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl" />
+        <div className="pointer-events-none absolute -top-40 right-1/3 h-96 w-96 rounded-full bg-violet-500/10 blur-3xl" />
 
-        <div className="relative mx-auto max-w-4xl px-6 py-16 text-center sm:py-20">
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-gradient-to-r from-blue-50 to-violet-50 px-5 py-2 text-xs font-semibold text-blue-700 shadow-sm">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500" />
-            {COMPONENTS.length}+ Production-Ready Components · Free Forever
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-violet-500" />
+        <div className="relative mx-auto max-w-3xl px-6 py-14 text-center sm:py-18">
+          {/* Badge */}
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-zinc-50 px-4 py-1.5 text-[11px] font-semibold text-zinc-600 shadow-sm">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            {COMPONENTS.length}+ Free Components · Tailwind + CSS
           </div>
 
-          <h1 className="text-[clamp(2.2rem,4.5vw,3.5rem)] font-black tracking-[-0.04em] text-zinc-900 leading-[1.08]">
-            CSS UI{' '}
-            <span className="bg-gradient-to-r from-blue-600 via-violet-600 to-purple-600 bg-clip-text text-transparent">
-              Component Library
+          <h1 className="text-[clamp(2rem,5vw,3.25rem)] font-black tracking-[-0.04em] text-zinc-900 leading-[1.1]">
+            CSS UI Component{' '}
+            <span className="bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
+              Library
             </span>
           </h1>
-          <p className="mx-auto mt-4 max-w-xl text-[15px] text-zinc-500 leading-relaxed">
-            Live interactive previews with Tailwind & plain CSS code. Copy-paste into any project — no signup, no dependencies.
+          <p className="mx-auto mt-4 max-w-lg text-[15px] text-zinc-500 leading-relaxed">
+            Interactive previews with copy-paste Tailwind & CSS code. No signup, no dependencies.
           </p>
 
-          {/* Stats */}
-          <div className="mt-8 flex flex-wrap items-stretch justify-center gap-3">
-            {[
-              { n: `${COMPONENTS.length}+`, l: 'Components', icon: '⊞', c: 'from-blue-500 to-blue-600' },
-              { n: '6',     l: 'Categories',   icon: '🗂️', c: 'from-violet-500 to-violet-600' },
-              { n: '2',     l: 'Code formats', icon: '💻', c: 'from-emerald-500 to-emerald-600' },
-              { n: '100%',  l: 'Free forever', icon: '🎁', c: 'from-amber-500 to-orange-500' },
-            ].map((s) => (
-              <div key={s.l} className="flex items-center gap-3 rounded-2xl border border-zinc-200 bg-white px-5 py-3 shadow-sm">
-                <span className="text-xl">{s.icon}</span>
-                <div className="text-left">
-                  <p className={`text-lg font-black tabular-nums bg-gradient-to-br ${s.c} bg-clip-text text-transparent leading-none`}>{s.n}</p>
-                  <p className="text-[11px] text-zinc-400 font-medium mt-0.5">{s.l}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
           {/* Search */}
-          <div className="relative mx-auto mt-7 max-w-lg">
-            <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" />
+          <div className="relative mx-auto mt-8 max-w-xl">
+            <Search size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder={`Search ${COMPONENTS.length} components… button, modal, chart…`}
-              className="w-full rounded-2xl border border-zinc-200 bg-white py-3.5 pl-11 pr-12 text-sm text-zinc-800 placeholder-zinc-400 shadow-md outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100/60"
+              placeholder={`Search ${COMPONENTS.length} components…`}
+              className="w-full rounded-xl border border-zinc-200 bg-white py-3 pl-10 pr-12 text-sm text-zinc-800 placeholder-zinc-400 shadow-sm outline-none transition-all focus:border-blue-300 focus:ring-4 focus:ring-blue-100/50"
             />
             {search ? (
-              <button onClick={() => setSearch('')} className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 transition">
-                <X size={14} />
+              <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-1 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 transition">
+                <X size={13} />
               </button>
             ) : (
-              <kbd className="absolute right-4 top-1/2 -translate-y-1/2 hidden sm:flex items-center rounded-lg border border-zinc-200 bg-zinc-50 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-400">
+              <kbd className="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-0.5 rounded-md border border-zinc-200 bg-zinc-50 px-1.5 py-0.5 text-[10px] font-medium text-zinc-400">
                 ⌘K
               </kbd>
             )}
+          </div>
+
+          {/* Stats row */}
+          <div className="mt-6 flex items-center justify-center gap-6 text-[12px] text-zinc-400">
+            {[
+              [`${COMPONENTS.length}+`, 'components'],
+              ['2', 'code formats'],
+              ['100%', 'free forever'],
+            ].map(([n, l]) => (
+              <React.Fragment key={l}>
+                <div className="text-center">
+                  <span className="font-bold text-zinc-700 text-sm">{n}</span>
+                  <span className="ml-1">{l}</span>
+                </div>
+              </React.Fragment>
+            ))}
           </div>
         </div>
       </div>
 
       {/* ══════════ BODY ══════════ */}
-      <div className="mx-auto flex max-w-[1600px]">
 
-        {/* Mobile tab bar */}
-        <div className="sticky top-0 z-30 lg:hidden fixed inset-x-0 border-b border-zinc-200 bg-white/95 backdrop-blur-md shadow-sm">
-          <div className="flex items-center gap-1 overflow-x-auto px-3 py-2">
-            {CATEGORIES.map(cat => (
-              <button key={cat} onClick={() => setActiveCat(cat)}
-                className={`shrink-0 flex items-center gap-1 rounded-xl px-3 py-1.5 text-[11px] font-bold transition whitespace-nowrap ${
-                  activeCat === cat ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
-                }`}>
-                {CATEGORY_META[cat]?.icon} {cat}
-                <span className={`ml-0.5 text-[9px] ${activeCat === cat ? 'text-white/60' : 'text-zinc-400'}`}>{catCounts[cat]}</span>
-              </button>
-            ))}
-          </div>
+      {/* Mobile category scrollbar — must be outside the flex row */}
+      <div className="lg:hidden sticky top-0 z-30 w-full border-b border-zinc-200 bg-white/95 backdrop-blur-sm shadow-sm">
+        <div className="flex gap-1.5 overflow-x-auto px-4 py-2.5 [&::-webkit-scrollbar]:hidden" style={{scrollbarWidth:'none'}}>
+          {CATEGORIES.map(cat => (
+            <button key={cat} onClick={() => setActiveCat(cat)}
+              className={`shrink-0 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-semibold transition whitespace-nowrap ${
+                activeCat === cat
+                  ? 'bg-blue-600 text-white shadow-sm shadow-blue-200'
+                  : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
+              }`}>
+              <span className="text-[10px]">{CATEGORY_META[cat]?.icon}</span>{cat}
+            </button>
+          ))}
         </div>
+      </div>
+
+      <div className="mx-auto flex max-w-[1400px]">
 
         {/* ── LEFT SIDEBAR ── */}
-        <aside className="hidden lg:block w-64 xl:w-72 shrink-0 border-r border-zinc-200 bg-white">
-          <div className="sticky top-0 h-screen overflow-y-auto flex flex-col p-5 pt-7 gap-1">
+        <aside
+          className="hidden lg:flex w-56 xl:w-60 shrink-0 flex-col border-r border-zinc-200 bg-white self-start sticky top-0 overflow-y-auto [&::-webkit-scrollbar]:hidden"
+          style={{ height: '100vh', scrollbarWidth: 'none' }}
+        >
+          {/* Sidebar header */}
+          <div className="px-4 pt-5 pb-3 border-b border-zinc-100">
+            <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Components</p>
+          </div>
 
-            {/* Header */}
-            <div className="mb-3 px-1">
-              <p className="text-[10px] font-black uppercase tracking-[0.12em] text-zinc-400">Browse</p>
-              <p className="text-[12px] text-zinc-400 mt-0.5">
-                <span className="font-semibold text-zinc-700">{filtered.length}</span> of <span className="font-semibold text-zinc-700">{COMPONENTS.length}</span> components
-              </p>
-            </div>
-
-            {/* Nav */}
-            <nav className="flex flex-col gap-0.5">
-              {CATEGORIES.map(cat => (
-                <SidebarItem key={cat} cat={cat} count={catCounts[cat]} active={activeCat === cat} onClick={() => setActiveCat(cat)} />
-              ))}
-            </nav>
-
-            <div className="my-5 border-t border-zinc-100" />
-
-            {/* Tips */}
-            <div className="rounded-2xl bg-zinc-50 border border-zinc-100 p-4 space-y-2.5">
-              <p className="text-[11px] font-bold text-zinc-700">💡 Quick tips</p>
-              {[
-                ['<> View Code', 'toggle per card'],
-                ['⚡ / 🎨', 'switch code format'],
-                ['Share icon', 'copy component link'],
-                ['All previews', 'are interactive'],
-              ].map(([a, b]) => (
-                <div key={a} className="flex items-start gap-2">
-                  <span className="text-[10px] font-bold text-zinc-800 shrink-0 mt-px">{a}</span>
-                  <span className="text-[10px] text-zinc-400">{b}</span>
+          {/* Grouped category nav */}
+          <nav className="flex-1 px-3 py-3 space-y-4">
+            {SIDEBAR_SECTIONS.map(({ label, cats }) => (
+              <div key={label ?? 'top'}>
+                {label && (
+                  <p className="px-2 mb-1 text-[9.5px] font-bold uppercase tracking-widest text-zinc-400">{label}</p>
+                )}
+                <div className="flex flex-col gap-0.5">
+                  {cats.filter(c => CATEGORIES.includes(c)).map(cat => (
+                    <SidebarItem key={cat} cat={cat} count={catCounts[cat]} active={activeCat === cat} onClick={() => setActiveCat(cat)} />
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
+          </nav>
 
-            {/* CTA */}
-            <div className="mt-3 rounded-2xl bg-gradient-to-br from-blue-600 to-violet-600 p-4 text-white">
-              <p className="text-xs font-bold leading-snug">🚀 {COMPONENTS.length}+ components</p>
-              <p className="text-[10px] text-white/70 mt-1 leading-relaxed">All free · Tailwind + CSS · No account needed</p>
+          {/* CTA */}
+          <div className="mx-3 mb-4 mt-2 shrink-0">
+            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-600 to-violet-600 p-4 text-white shadow-md cursor-pointer hover:shadow-lg hover:scale-[1.01] transition-all duration-200">
+              <div className="absolute -top-4 -right-4 h-16 w-16 rounded-full bg-white/10" />
+              <p className="relative text-[12px] font-bold leading-snug">🚀 {COMPONENTS.length}+ Components</p>
+              <p className="relative text-[10px] text-white/70 mt-0.5">Tailwind + CSS · Free forever</p>
             </div>
-
           </div>
         </aside>
 
         {/* ── MAIN CONTENT ── */}
-        <main className="flex-1 min-w-0 px-4 pt-6 pb-16 sm:px-6 lg:px-8">
+        <main className="flex-1 min-w-0 px-4 pt-6 pb-20 lg:px-8">
 
-          {/* Toolbar row */}
-          <div className="mb-5 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
+          {/* Section header */}
+          <div className="mb-6 flex items-start justify-between gap-4">
+            <div className="flex items-center gap-3 min-w-0">
+              {activeCat !== 'All' && (
+                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-xl ${CATEGORY_META[activeCat]?.pill ?? 'bg-zinc-100 text-zinc-600'}`}>
+                  {CATEGORY_META[activeCat]?.icon ?? '📦'}
+                </div>
+              )}
               <div>
-                <h2 className="text-base font-bold text-zinc-900 tracking-tight leading-none">
+                <h2 className="text-lg font-bold text-zinc-900 leading-tight">
                   {activeCat === 'All' ? 'All Components' : activeCat}
                 </h2>
-                <p className="text-[12px] text-zinc-400 mt-1">
-                  {filtered.length} component{filtered.length !== 1 ? 's' : ''}
-                  {search && <span className="ml-1 text-blue-500">· "{search}"</span>}
+                <p className="text-[12px] text-zinc-400 mt-0.5">
+                  {CATEGORY_DESC[activeCat] ?? ''}{' '}
+                  <span className="font-semibold text-zinc-500">
+                    {filtered.length} component{filtered.length !== 1 ? 's' : ''}
+                  </span>
+                  {search && <span className="ml-1 text-blue-500 font-medium">· "{search}"</span>}
                 </p>
               </div>
             </div>
             {(search || activeCat !== 'All') && (
               <button
                 onClick={() => { setSearch(''); setActiveCat('All'); }}
-                className="flex items-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3.5 py-2 text-xs font-semibold text-zinc-500 hover:border-zinc-300 hover:bg-zinc-50 transition shadow-sm"
+                className="shrink-0 flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs font-semibold text-zinc-500 hover:border-zinc-300 hover:bg-zinc-50 transition shadow-sm"
               >
-                <X size={11} /> Clear
+                <X size={10} /> Clear
               </button>
             )}
           </div>
 
-          {/* Grid */}
+          {/* Component grid */}
           {filtered.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-40">
-              <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-zinc-100 text-4xl mb-5 shadow-inner">🔍</div>
-              <h3 className="text-base font-bold text-zinc-700">Nothing found</h3>
-              <p className="mt-1.5 text-sm text-zinc-400 text-center max-w-xs">Try different keywords or select a category from the sidebar.</p>
+            <div className="flex flex-col items-center justify-center py-36 text-center">
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-zinc-100 text-3xl">🔍</div>
+              <h3 className="text-sm font-bold text-zinc-700">Nothing found</h3>
+              <p className="mt-1 text-xs text-zinc-400 max-w-xs">Try different keywords or pick a category.</p>
               <button onClick={() => { setSearch(''); setActiveCat('All'); }}
-                className="mt-5 rounded-2xl bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-zinc-800 transition">
-                Browse all components
+                className="mt-4 rounded-xl bg-zinc-900 px-4 py-2 text-xs font-semibold text-white hover:bg-zinc-800 transition">
+                Show all
               </button>
             </div>
           ) : (
-            <div className={`grid gap-5 ${SINGLE_COL_CATS.has(activeCat) ? 'grid-cols-1 max-w-2xl' : 'grid-cols-1 xl:grid-cols-2'}`}>
-              {filtered.map((comp) => (
-                <ComponentCard key={comp.id} comp={comp} />
-              ))}
-            </div>
+            <ComponentGrid key={activeCat} filtered={filtered} activeCat={activeCat} />
           )}
 
-          {/* Footer strip */}
-          <div className="mt-14 rounded-2xl border border-zinc-200 bg-white px-8 py-8 text-center shadow-sm">
-            <p className="text-base font-bold text-zinc-900">All {COMPONENTS.length}+ components — completely free</p>
-            <p className="mt-1.5 text-sm text-zinc-400 max-w-md mx-auto leading-relaxed">
+          {/* Footer */}
+          <div className="mt-16 rounded-2xl border border-zinc-200 bg-white px-8 py-8 text-center">
+            <p className="text-sm font-bold text-zinc-900">{COMPONENTS.length}+ components — completely free</p>
+            <p className="mt-1.5 text-xs text-zinc-400 max-w-xs mx-auto leading-relaxed">
               Copy-paste into any project. Tailwind + plain CSS. No attribution required.
             </p>
             <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-              {['✓ No account', '✓ No watermark', '✓ Commercial OK', '✓ MIT license'].map(t => (
-                <span key={t} className="rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 text-xs font-semibold text-zinc-500">{t}</span>
+              {['No account', 'No watermark', 'Commercial OK', 'MIT license'].map(t => (
+                <span key={t} className="rounded-full border border-zinc-100 bg-zinc-50 px-3 py-1 text-[11px] font-medium text-zinc-500">✓ {t}</span>
               ))}
             </div>
           </div>

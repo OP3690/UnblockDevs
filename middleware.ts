@@ -7,9 +7,11 @@ export function middleware(request: NextRequest) {
   const hostname = request.headers.get('host') || ''
   const isWww = hostname.startsWith('www.')
   const isHttp = request.url.startsWith('http://')
+  const isLocalhost = hostname.startsWith('localhost') || hostname.startsWith('127.0.0.1')
 
   // Single-hop redirect to canonical https + non-www (avoids chains like http→https→www→non-www)
-  if (isWww || isHttp) {
+  // Skip for localhost dev server
+  if (!isLocalhost && (isWww || isHttp)) {
     const canonicalHost = hostname.replace(/^www\./, '')
     const path = request.nextUrl.pathname + request.nextUrl.search
     const canonicalUrl = new URL(path, `https://${canonicalHost}`)
