@@ -133,6 +133,7 @@ function HtmlViewerTool() {
   const [splitPos, setSplitPos]     = useState(42); // editor % of total width
   const [mounted, setMounted]       = useState(false);
   const [maskMsg, setMaskMsg]       = useState('');
+  const [toast, setToast]           = useState<string>('');
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dragRef = useRef(false);
 
@@ -186,13 +187,18 @@ function HtmlViewerTool() {
     a.click(); URL.revokeObjectURL(a.href);
   }, [html, css, js]);
 
+  const showToast = useCallback((msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(''), 3000);
+  }, []);
+
   const share = useCallback(() => {
     try {
       const enc = btoa(encodeURIComponent(JSON.stringify({ html, css, js })));
       navigator.clipboard.writeText(`${location.origin}/html-viewer#c=${enc}`);
-      alert('Share URL copied!');
-    } catch {}
-  }, [html, css, js]);
+      showToast('Share URL copied to clipboard!');
+    } catch { showToast('Failed to copy URL'); }
+  }, [html, css, js, showToast]);
 
   const clearAll = useCallback(() => {
     setHtml(''); setCss(''); setJs('');
@@ -471,6 +477,16 @@ function HtmlViewerTool() {
           </div>
         </div>
       </div>
+
+      {/* ══════════════ TOAST ══════════════ */}
+      {toast && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[99999] flex items-center gap-2.5 rounded-xl border border-emerald-500/30 bg-[#0d1a12] px-5 py-3 shadow-2xl shadow-black/40 animate-in fade-in slide-in-from-bottom-3 duration-200">
+          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500/20">
+            <Check className="h-3 w-3 text-emerald-400" />
+          </span>
+          <span className="text-[13px] font-medium text-emerald-100">{toast}</span>
+        </div>
+      )}
     </div>
   );
 
