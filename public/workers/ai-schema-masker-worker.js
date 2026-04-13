@@ -379,18 +379,53 @@ function resolveQualified(originalToDummy, name) {
 }
 
 // ——— STAGE 5: Transformation engine (rebuild from tokens, no replaceAll) ———
-function transform(tokens, originalToDummy) {
+// opts: { maskStringValues, maskNumericValues }
+// Returns { output, valueMap, numericMap } where the two maps go into reverseMap for restore.
+function transform(tokens, originalToDummy, opts) {
+  const maskStr = !!(opts && opts.maskStringValues);
+  const maskNum = !!(opts && opts.maskNumericValues);
+  const valueMap = new Map();    // raw-string (with quotes) → V_000001
+  const numericMap = new Map();  // raw-number-string        → N_000001
+  const reverseValue = new Map(); // V_000001 → raw-string (with quotes)
+  const reverseNumeric = new Map(); // N_000001 → raw-number-string
+  let vCnt = 1, nCnt = 1;
+
   const out = [];
   for (let i = 0; i < tokens.length; i += 1) {
     const t = tokens[i];
+
     if (t.type === TokenType.IDENTIFIER || t.type === TokenType.QUOTED_IDENTIFIER) {
       const replacement = resolveQualified(originalToDummy, t.value);
       out.push(replacement);
-    } else {
-      out.push(t.raw);
+      continue;
     }
+
+    if (t.type === TokenType.STRING_LITERAL && maskStr) {
+      const raw = t.raw; // e.g. "'COMPLETED'" or "'2026-01-01'"
+      if (!valueMap.has(raw)) {
+        const dummy = 'V_' + pad6(vCnt++);
+        valueMap.set(raw, dummy);
+        reverseValue.set(dummy, raw);
+      }
+      // Output: keep single quotes, replace content → 'V_000001'
+      out.push("'" + valueMap.get(raw) + "'");
+      continue;
+    }
+
+    if (t.type === TokenType.NUMERIC_LITERAL && maskNum) {
+      const raw = t.raw; // e.g. "42" or "3.14"
+      if (!numericMap.has(raw)) {
+        const dummy = 'N_' + pad6(nCnt++);
+        numericMap.set(raw, dummy);
+        reverseNumeric.set(dummy, raw);
+      }
+      out.push(numericMap.get(raw));
+      continue;
+    }
+
+    out.push(t.raw);
   }
-  return out.join('');
+  return { output: out.join(''), valueMap, numericMap, reverseValue, reverseNumeric };
 }
 
 // ——— STAGE 8: Reverse engine (token-based, longest-match safe) ———
@@ -398,18 +433,28 @@ function reverseTransform(tokens, dummyToOriginal) {
   const out = [];
   for (let i = 0; i < tokens.length; i += 1) {
     const t = tokens[i];
+
+    if (t.type === TokenType.STRING_LITERAL) {
+      // inner content may be V_000001 — strip quotes, look up, restore
+      const inner = t.raw.slice(1, -1);
+      const original = dummyToOriginal.get(inner);
+      out.push(original !== undefined ? original : t.raw);
+      continue;
+    }
+
     if (t.type === TokenType.IDENTIFIER || t.type === TokenType.QUOTED_IDENTIFIER) {
+      // May be N_000001 (numeric placeholder) or regular identifier dummy
       const replacement = dummyToOriginal.get(t.value) || t.value;
       out.push(replacement);
-    } else {
-      out.push(t.raw);
+      continue;
     }
+
+    out.push(t.raw);
   }
   return out.join('');
 }
 
-// Restore: re-tokenize masked output (dummy names are plain identifiers), then reverse map.
-// Sort keys by length descending so T_000011 is matched before T_00001.
+// Restore: re-tokenize masked output, then reverse map.
 function restore(maskedText, reverseMap) {
   if (!maskedText || !reverseMap) return maskedText;
   const tokens = tokenize(maskedText);
@@ -418,11 +463,17 @@ function restore(maskedText, reverseMap) {
 }
 
 // ——— Main MASK pipeline ———
-function runMaskPipeline(input) {
+function runMaskPipeline(input, opts) {
   const tokens = tokenize(input);
   const { tableSet, columnSet, aliasSet, schemaSet, cteSet } = extractIdentifiers(tokens);
   const mapping = buildMapping(tableSet, columnSet, aliasSet, schemaSet, cteSet);
-  const maskedQuery = transform(tokens, mapping.originalToDummy);
+
+  const { output: maskedQuery, valueMap, numericMap, reverseValue, reverseNumeric } =
+    transform(tokens, mapping.originalToDummy, opts || {});
+
+  // Merge value & numeric reverse entries into the global reverseMap
+  reverseValue.forEach((orig, dummy) => mapping.dummyToOriginal.set(dummy, orig));
+  reverseNumeric.forEach((orig, dummy) => mapping.dummyToOriginal.set(dummy, orig));
 
   const mappingExport = {
     version: '1.0',
@@ -431,6 +482,8 @@ function runMaskPipeline(input) {
     columnMap: Object.fromEntries(mapping.columnMap.entries()),
     schemaMap: Object.fromEntries(mapping.schemaMap.entries()),
     aliasMap: Object.fromEntries(mapping.aliasMap.entries()),
+    valueMap: Object.fromEntries(valueMap.entries()),
+    numericMap: Object.fromEntries(numericMap.entries()),
     globalMap: Object.fromEntries(mapping.originalToDummy.entries()),
     reverseMap: Object.fromEntries(mapping.dummyToOriginal.entries()),
   };
@@ -440,7 +493,9 @@ function runMaskPipeline(input) {
     columns: mapping.columnMap.size,
     schemas: mapping.schemaMap.size,
     aliases: mapping.aliasMap.size,
-    total: mapping.originalToDummy.size,
+    values: valueMap.size,
+    numerics: numericMap.size,
+    total: mapping.originalToDummy.size + valueMap.size + numericMap.size,
   };
 
   return {
@@ -565,14 +620,16 @@ self.onmessage = function (e) {
 
   try {
     if (data.type === 'MASK') {
-      const { input } = data.payload;
-      const { maskedQuery, mapping, counts } = runMaskPipeline(input);
+      const { input, maskStringValues, maskNumericValues } = data.payload;
+      const opts = { maskStringValues: !!maskStringValues, maskNumericValues: !!maskNumericValues };
+      const { maskedQuery, mapping, counts } = runMaskPipeline(input, opts);
       self.postMessage({
         type: 'MASK_RESULT',
         payload: {
           masked: maskedQuery,
           mapping,
           identifierCount: counts.total,
+          counts,
         },
       });
       return;

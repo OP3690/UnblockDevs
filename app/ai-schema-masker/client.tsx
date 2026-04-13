@@ -29,7 +29,7 @@ const JOIN_TYPE_OPTIONS: { value: JoinType; label: string }[] = [
 
 type MaskRequest = {
   type: 'MASK';
-  payload: { input: string; mode: 'fast' | 'enterprise' };
+  payload: { input: string; mode: 'fast' | 'enterprise'; maskStringValues?: boolean; maskNumericValues?: boolean };
 };
 
 type GeneratePromptRequest = {
@@ -48,8 +48,10 @@ type RestoreRequest = {
 
 type WorkerRequest = MaskRequest | GeneratePromptRequest | RestoreRequest;
 
+type MaskCounts = { tables: number; columns: number; schemas: number; aliases: number; values: number; numerics: number; total: number };
+
 type MaskResponse =
-  | { type: 'MASK_RESULT'; payload: { masked: string; identifierCount: number; mapping: SchemaMaskMapping } }
+  | { type: 'MASK_RESULT'; payload: { masked: string; identifierCount: number; mapping: SchemaMaskMapping; counts?: MaskCounts } }
   | { type: 'PROMPT_RESULT'; payload: { masked: string; identifierCount: number; mapping: SchemaMaskMapping } }
   | { type: 'RESTORE_RESULT'; payload: { restored: string } }
   | { type: 'ERROR'; error: string };
@@ -61,6 +63,8 @@ type SchemaMaskMapping = {
   columnMap: Record<string, string>;
   schemaMap: Record<string, string>;
   aliasMap: Record<string, string>;
+  valueMap: Record<string, string>;
+  numericMap: Record<string, string>;
   globalMap: Record<string, string>;
   reverseMap: Record<string, string>;
 };
@@ -135,6 +139,9 @@ export default function AiSchemaMaskerClient() {
   const [progress, setProgress] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const [saveToSession, setSaveToSession] = useState<boolean>(false);
+  const [maskStringValues, setMaskStringValues] = useState<boolean>(true);
+  const [maskNumericValues, setMaskNumericValues] = useState<boolean>(false);
+  const [maskCounts, setMaskCounts] = useState<MaskCounts | null>(null);
 
   const [structuredTables, setStructuredTables] = useState<TableSchema[]>([
     { id: '1', name: 'my_response_master', columns: ['id', 'user_name', 'email', 'mobile', 'address'] },
@@ -179,6 +186,7 @@ export default function AiSchemaMaskerClient() {
           setMaskedOutput(message.payload.masked);
           setIdentifierCountMask(message.payload.identifierCount);
           setMappingFromMask(message.payload.mapping);
+          if (message.payload.counts) setMaskCounts(message.payload.counts);
           if (saveToSession) {
             try {
               sessionStorage.setItem('aiSchemaMaskerMappingMask', JSON.stringify(message.payload.mapping));
@@ -288,6 +296,8 @@ export default function AiSchemaMaskerClient() {
       payload: {
         input,
         mode: 'fast',
+        maskStringValues,
+        maskNumericValues,
       },
     };
 
@@ -585,6 +595,31 @@ export default function AiSchemaMaskerClient() {
           </div>
           <div className="p-4 space-y-5">
 
+          {/* ── Masking options ─────────────────────────────────────────────── */}
+          <div className="flex flex-wrap items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200">
+            <span className="text-xs font-semibold text-slate-600 uppercase tracking-wider mr-1">Mask:</span>
+            <label className="inline-flex items-center gap-2 cursor-pointer select-none">
+              <input type="checkbox" checked={true} readOnly
+                className="rounded border-slate-300 text-primary-600 focus:ring-primary-500 cursor-not-allowed" />
+              <span className="text-sm text-slate-700 font-medium">Identifiers</span>
+              <span className="text-[10px] text-slate-400">(tables, columns, aliases — always on)</span>
+            </label>
+            <div className="w-px h-4 bg-slate-200 hidden sm:block" />
+            <label className="inline-flex items-center gap-2 cursor-pointer select-none">
+              <input type="checkbox" checked={maskStringValues} onChange={(e) => setMaskStringValues(e.target.checked)}
+                className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500" />
+              <span className="text-sm text-slate-700 font-medium">String values</span>
+              <span className="text-[10px] text-slate-400">(<code className="font-mono">IN</code> clause, <code className="font-mono">WHERE</code> conditions)</span>
+            </label>
+            <div className="w-px h-4 bg-slate-200 hidden sm:block" />
+            <label className="inline-flex items-center gap-2 cursor-pointer select-none">
+              <input type="checkbox" checked={maskNumericValues} onChange={(e) => setMaskNumericValues(e.target.checked)}
+                className="rounded border-slate-300 text-violet-600 focus:ring-violet-500" />
+              <span className="text-sm text-slate-700 font-medium">Numeric values</span>
+              <span className="text-[10px] text-slate-400">(dates, counts, thresholds)</span>
+            </label>
+          </div>
+
           {/* ── Panels + action ─────────────────────────────────────────────── */}
           {/* Mobile: stacked panels with full-width button in between */}
           <div className="flex flex-col gap-3 lg:hidden">
@@ -623,9 +658,20 @@ export default function AiSchemaMaskerClient() {
             </button>
 
             {identifierCountMask > 0 && (
-              <div className="flex items-center justify-center gap-1.5 text-xs text-emerald-700 font-medium">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                {identifierCountMask} identifiers masked
+              <div className="flex flex-col items-center gap-1">
+                <div className="flex items-center gap-1.5 text-xs text-emerald-700 font-medium">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  {identifierCountMask} items masked
+                </div>
+                {maskCounts && (
+                  <div className="flex flex-wrap justify-center gap-2 text-[11px]">
+                    {maskCounts.tables > 0 && <span className="text-blue-600">Tables: {maskCounts.tables}</span>}
+                    {maskCounts.columns > 0 && <span className="text-indigo-600">Columns: {maskCounts.columns}</span>}
+                    {maskCounts.aliases > 0 && <span className="text-violet-600">Aliases: {maskCounts.aliases}</span>}
+                    {maskCounts.values > 0 && <span className="text-emerald-600">Values: {maskCounts.values}</span>}
+                    {maskCounts.numerics > 0 && <span className="text-amber-600">Numbers: {maskCounts.numerics}</span>}
+                  </div>
+                )}
               </div>
             )}
 
@@ -705,10 +751,19 @@ export default function AiSchemaMaskerClient() {
               {/* Bottom connector + status */}
               <div className="flex-1 flex flex-col items-center justify-start pt-4 gap-2">
                 {identifierCountMask > 0 ? (
-                  <div className="flex flex-col items-center gap-0.5 text-center">
+                  <div className="flex flex-col items-center gap-1 text-center px-1">
                     <CheckCircle2 className="w-4 h-4 text-emerald-500" />
                     <span className="text-xs font-bold text-slate-700 tabular-nums">{identifierCountMask}</span>
                     <span className="text-[9px] text-slate-400 leading-tight">masked</span>
+                    {maskCounts && (
+                      <div className="mt-1 flex flex-col gap-0.5 text-[9px] text-slate-500 leading-tight text-left">
+                        {maskCounts.tables > 0 && <span className="text-blue-600">T:{maskCounts.tables}</span>}
+                        {maskCounts.columns > 0 && <span className="text-indigo-600">C:{maskCounts.columns}</span>}
+                        {maskCounts.aliases > 0 && <span className="text-violet-600">A:{maskCounts.aliases}</span>}
+                        {maskCounts.values > 0 && <span className="text-emerald-600">V:{maskCounts.values}</span>}
+                        {maskCounts.numerics > 0 && <span className="text-amber-600">N:{maskCounts.numerics}</span>}
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="w-px flex-1 bg-gradient-to-b from-primary-300/70 via-slate-200 to-transparent" />
@@ -731,9 +786,17 @@ export default function AiSchemaMaskerClient() {
                 </button>
               </div>
               {/* Spacer row to align textarea with input panel */}
-              <div className="h-[41px] border-b border-slate-100 bg-white flex items-center px-4">
+              <div className="h-[41px] border-b border-slate-100 bg-white flex items-center px-4 gap-2">
                 {maskedOutput ? (
-                  <span className="text-[11px] text-emerald-600 font-medium">✓ Ready to paste into ChatGPT / Claude</span>
+                  <>
+                    <span className="text-[11px] text-emerald-600 font-medium">✓ Ready to paste into ChatGPT / Claude</span>
+                    {maskCounts && maskCounts.values > 0 && (
+                      <span className="text-[10px] text-emerald-500">· {maskCounts.values} string value(s) masked</span>
+                    )}
+                    {maskCounts && maskCounts.numerics > 0 && (
+                      <span className="text-[10px] text-amber-500">· {maskCounts.numerics} number(s) masked</span>
+                    )}
+                  </>
                 ) : (
                   <span className="text-[11px] text-slate-400">Masked query will appear here</span>
                 )}
