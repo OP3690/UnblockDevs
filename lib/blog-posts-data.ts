@@ -10,6 +10,33 @@ export type BlogPost = {
 
 export const blogPosts: BlogPost[] = [
     {
+      slug: 'how-to-use-chatgpt-for-sql-safely',
+      title: 'How to Use ChatGPT for SQL Without Exposing Your Database Schema',
+      excerpt: 'ChatGPT writes great SQL — but pasting real table and column names leaks your database architecture. Learn how to mask your schema before sending to AI and restore original names from the AI response.',
+      date: '2026-04-13',
+      readTime: '8 min read',
+      category: 'AI & Security',
+      keywords: ['chatgpt sql safely', 'mask database schema chatgpt', 'ai sql generator security', 'safe sql with ai', 'schema masking chatgpt', 'chatgpt sql privacy'],
+    },
+    {
+      slug: 'sql-schema-security-ai-tools',
+      title: 'SQL Schema Security — Why You Should Never Paste Production Database Names into AI Tools',
+      excerpt: 'Pasting real table and column names into ChatGPT, GitHub Copilot, or Claude exposes your database architecture, violates GDPR and HIPAA, and creates competitive and security risks.',
+      date: '2026-04-13',
+      readTime: '9 min read',
+      category: 'AI & Security',
+      keywords: ['sql schema security ai', 'database schema privacy ai tools', 'chatgpt database security risk', 'sql schema gdpr compliance ai', 'protect database schema ai'],
+    },
+    {
+      slug: 'mask-database-schema-before-ai',
+      title: 'How to Mask Database Schema Before Using AI — Complete Guide to SQL Schema Obfuscation',
+      excerpt: 'Complete guide to SQL schema masking: what it is, why it matters, how DITE (Deterministic Identifier Transformation Engine) works, how to mask identifiers and IN clause values, and how to restore AI-generated SQL to original names.',
+      date: '2026-04-13',
+      readTime: '10 min read',
+      category: 'AI & Security',
+      keywords: ['mask database schema ai', 'sql schema obfuscation', 'DITE sql masking', 'deterministic identifier transformation', 'sql schema anonymization', 'schema masking and restore'],
+    },
+    {
       slug: 'sql-list-to-in-clause',
       title: 'Convert Any List to SQL IN Clause — CSV, Excel, JSON, Newline',
       excerpt: 'Convert a list of IDs from Excel, CSV, JSON, or any format to a SQL IN clause in seconds. Python scripts, JavaScript, Excel formulas, shell one-liners, parameterized queries, and Oracle chunking covered.',
