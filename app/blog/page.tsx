@@ -164,6 +164,14 @@ export default function BlogPage({
             JSON errors, API debugging, curl, schema validation, and safe AI workflows.
             Practical — no fluff, no signup required.
           </p>
+          <p className="mt-3 text-[13px] text-zinc-500 flex items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-zinc-400">
+              🔍 Search + filter below ↓
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-zinc-400">
+              ⌘K to focus search
+            </span>
+          </p>
 
           {/* stats */}
           <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-3">
@@ -183,32 +191,15 @@ export default function BlogPage({
       </section>
 
       {/* ── MAIN CONTENT ───────────────────────────────────────── */}
-      <main className="mx-auto max-w-full px-5 py-10 sm:px-6 sm:py-12 lg:px-8">
+      <main className="mx-auto max-w-full sm:px-0 lg:px-0">
 
-        {/* Page heading */}
-        {currentPage === 1 ? (
-          <div className="mb-6 flex items-end justify-between gap-4">
-            <div>
-              <h2 className="text-[1.15rem] font-bold tracking-tight text-zinc-900">Latest articles</h2>
-              <p className="mt-0.5 text-[13px] text-zinc-500">Most recently published guides</p>
-            </div>
-            <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1 text-[11px] font-medium text-zinc-500 shadow-sm">
-              {blogPosts.length} total articles
-            </span>
-          </div>
-        ) : (
-          <div className="mb-6">
-            <p className="text-[13px] text-zinc-500">Page {currentPage} of {totalPages}</p>
-          </div>
-        )}
-
-        {/* Post grid */}
-        <BlogListClient initialPosts={initialPosts} totalPages={totalPages} currentPage={currentPage} />
+        {/* Post grid + search */}
+        <BlogListClient allPosts={blogPosts} initialPosts={initialPosts} totalPages={totalPages} currentPage={currentPage} />
 
         {/* ── FEATURED GUIDES ──────────────────────────────────── */}
         {currentPage === 1 && (
-          <>
-            <section className="mt-16" aria-labelledby="featured-heading">
+          <div className="mx-auto max-w-full px-5 py-8 sm:px-6 sm:py-10 lg:px-8">
+            <section className="mt-2" aria-labelledby="featured-heading">
               <div className="mb-5 flex items-center justify-between gap-4">
                 <div>
                   <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.13em] text-zinc-400">Handpicked</p>
@@ -272,19 +263,18 @@ export default function BlogPage({
                 </p>
               </div>
             </section>
-          </>
+            {/* Bottom nav */}
+            <div className="mt-12 flex flex-col items-center gap-3">
+              <Link
+                href="/tools/json"
+                className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-5 py-2.5 text-[13px] font-semibold text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 hover:text-zinc-900"
+              >
+                <Zap className="h-3.5 w-3.5 text-amber-500" />
+                Browse all {'{'}developer tools{'}'}
+              </Link>
+            </div>
+          </div>
         )}
-
-        {/* Bottom nav */}
-        <div className="mt-12 flex flex-col items-center gap-3">
-          <Link
-            href="/tools/json"
-            className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-5 py-2.5 text-[13px] font-semibold text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 hover:text-zinc-900"
-          >
-            <Zap className="h-3.5 w-3.5 text-amber-500" />
-            Browse all {'{'}developer tools{'}'}
-          </Link>
-        </div>
       </main>
     </div>
   );
