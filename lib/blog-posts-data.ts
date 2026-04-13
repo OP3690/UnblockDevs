@@ -10,6 +10,33 @@ export type BlogPost = {
 
 export const blogPosts: BlogPost[] = [
     {
+      slug: 'why-pasting-code-into-chatgpt-is-dangerous',
+      title: 'Why Pasting Code into ChatGPT Is Dangerous — API Keys, Secrets & IP Risks',
+      excerpt: 'Every time you paste code into ChatGPT or Copilot you expose API keys, database credentials, proprietary logic, and PII. Learn exactly what risks you are taking and how to eliminate them with code masking.',
+      date: '2026-04-13',
+      readTime: '9 min read',
+      category: 'AI & Security',
+      keywords: ['pasting code into chatgpt dangerous', 'chatgpt api key exposure', 'is it safe to paste code into chatgpt', 'chatgpt see my api keys', 'ai coding assistant security risk'],
+    },
+    {
+      slug: 'how-to-share-code-with-ai-safely',
+      title: 'How to Share Code with AI Safely — Step-by-Step Secure AI Coding Workflow',
+      excerpt: 'Complete guide to sharing code with ChatGPT, Claude, Copilot, and Gemini without exposing secrets, API keys, or proprietary logic. Step-by-step workflow using code masking, AI templates, and safe restore.',
+      date: '2026-04-13',
+      readTime: '10 min read',
+      category: 'AI & Security',
+      keywords: ['how to share code with ai safely', 'safe ai coding workflow', 'mask code before chatgpt', 'secure code review chatgpt', 'hide api keys from ai coding assistant'],
+    },
+    {
+      slug: 'api-key-leak-prevention-ai-tools',
+      title: 'API Key Leak Prevention When Using AI Tools — Complete Developer Security Guide',
+      excerpt: 'API keys leaked to ChatGPT, Copilot, or Claude can be exploited within minutes. Learn how to detect, prevent, and respond to API key leaks when using AI coding assistants.',
+      date: '2026-04-13',
+      readTime: '11 min read',
+      category: 'AI & Security',
+      keywords: ['api key leak prevention ai tools', 'accidentally leaked api key chatgpt', 'how to prevent api key exposure ai', 'rotate api key after leak', 'developer secret management ai'],
+    },
+    {
       slug: 'how-to-use-chatgpt-for-sql-safely',
       title: 'How to Use ChatGPT for SQL Without Exposing Your Database Schema',
       excerpt: 'ChatGPT writes great SQL — but pasting real table and column names leaks your database architecture. Learn how to mask your schema before sending to AI and restore original names from the AI response.',

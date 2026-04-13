@@ -10,7 +10,7 @@ const canonicalUrl = 'https://unblockdevs.com/code-prompt-shield';
 export const metadata: Metadata = {
   title: 'Code Prompt Shield — Mask API Keys, Variables & Secrets Before Sending Code to ChatGPT | UnblockDevs',
   description:
-    'Mask API keys, function names, variables, and PII in your code before sending to ChatGPT or GitHub Copilot. Fully reversible. Free, 100% browser-based, nothing leaves your device.',
+    'Mask API keys, secrets, variables, and PII in your code before sending to ChatGPT, Claude, Copilot, or Gemini. Pre-scan detects risks before you share. 18 languages supported. Fully reversible. 100% browser-based.',
   keywords: [
     'mask code before chatgpt',
     'hide api keys from chatgpt',
@@ -76,10 +76,14 @@ const jsonLd = {
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Mask variables, function names, class names before sending to AI',
-    'Detect and mask API keys, tokens, connection strings, PII',
+    'Detect and mask API keys, JWT tokens, DB connection strings, OAuth tokens, PII',
+    'Pre-scan: analyze risks before masking — see what will be protected',
+    'Custom secret patterns: add your own regex patterns for extra protection',
+    'Strip comments before masking — send cleaner, leaner code to AI',
+    '9 AI prompt templates: code review, bug report, security audit, performance, docs, refactor, tests, explain',
     '100% client-side — no code or mapping sent to any server',
     'Fully reversible — restore AI response with original identifiers',
-    'JavaScript, TypeScript, Python, Java, Go, SQL, JSON, C#, PHP, Rust',
+    '18 languages: JavaScript, TypeScript, Python, Java, Go, SQL, JSON, C#, PHP, Rust, Ruby, Swift, Kotlin, Bash, YAML, TOML, C/C++, XML',
   ],
   aggregateRating: {
     '@type': 'AggregateRating',
@@ -138,7 +142,7 @@ const faqSchema = {
       name: 'What languages does Code Prompt Shield support?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'JavaScript, TypeScript, Python, Java, Go, SQL, JSON, C#, PHP, and Rust — with more being added.',
+        text: '18 languages: JavaScript, TypeScript, Python, Java, Go, SQL, JSON, C#, PHP, Rust, Ruby, Swift, Kotlin, Bash/Shell, YAML, TOML, C/C++, and XML/HTML.',
       },
     },
   ],
@@ -289,10 +293,9 @@ export default function CodePromptShieldPage() {
 
         <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
           <RelatedBlogPosts posts={[
-            { href: '/blog/top-10-json-errors-waste-developer-time', label: 'Code Privacy for AI' },
-            { href: '/blog/json-best-practices-production-guide', label: 'Masking Secrets in Code' },
-            { href: '/blog/why-json-breaks-in-real-world-apis', label: 'Safe AI Code Reviews' },
-            { href: '/blog/fix-json-errors-complete-guide', label: 'AI Prompt Engineering Tips' },
+            { href: '/blog/why-pasting-code-into-chatgpt-is-dangerous', label: 'Why Pasting Code into ChatGPT Is Dangerous' },
+            { href: '/blog/how-to-share-code-with-ai-safely', label: 'How to Share Code with AI Safely' },
+            { href: '/blog/api-key-leak-prevention-ai-tools', label: 'API Key Leak Prevention When Using AI Tools' },
           ]} />
         </SEOSection>
       </ToolSEOContent>
