@@ -26,8 +26,10 @@ const nextConfig = {
       { source: '/json-builder', destination: '/json-beautifier', permanent: true },
       { source: '/json-masking', destination: '/json-prompt-shield', permanent: true },
       { source: '/sql-schema-masking', destination: '/ai-schema-masker', permanent: true },
-      { source: '/convert-list-to-sql-in', destination: '/sql-in-generator', permanent: true },
-      { source: '/comma-separated-list-to-sql', destination: '/sql-in-generator', permanent: true },
+      { source: '/convert-list-to-sql-in', destination: '/sql-in-clause-generator', permanent: true },
+      { source: '/comma-separated-list-to-sql', destination: '/sql-in-clause-generator', permanent: true },
+      { source: '/sql-formatter', destination: '/sql-in-clause-generator', permanent: true },
+      { source: '/sql-in-generator', destination: '/sql-in-clause-generator', permanent: true },
       // Blog 404 fixes: old/mismatched slugs → correct blog or tool
       { source: '/blog/json-comparator', destination: '/json-comparator', permanent: true },
       { source: '/blog/json-schema-generation-complete-guide', destination: '/blog/json-schema-generator-tutorial', permanent: true },

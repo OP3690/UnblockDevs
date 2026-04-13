@@ -117,9 +117,9 @@ export const TOOLS_DIRECTORY: DirectoryTool[] = [
     icon: 'BarChart3',
   },
   {
-    href: '/sql-in-generator',
-    name: 'SQL IN clause formatter',
-    description: 'Add quotes & commas to a list → SQL IN clause. Paste from Excel, CSV, or JSON. MySQL, PostgreSQL, Oracle.',
+    href: '/sql-in-clause-generator',
+    name: 'SQL IN clause generator',
+    description: 'Convert any list of IDs, emails, or UUIDs to a SQL IN clause. Auto-detect CSV, JSON, Excel paste. MySQL, PostgreSQL, Oracle, SQLite.',
     category: 'json',
     icon: 'Database',
   },
@@ -290,11 +290,11 @@ export const TOOLS_DIRECTORY: DirectoryTool[] = [
   },
   // —— Dev utilities ——
   {
-    href: '/sql-formatter',
-    name: 'SQL formatter',
-    description: 'Pretty-print and minify SQL for readability.',
+    href: '/sql-in-clause-generator',
+    name: 'SQL IN clause generator',
+    description: 'Convert any list of IDs, emails, or UUIDs to a SQL IN clause. Auto-detect CSV, JSON, Excel paste. MySQL, PostgreSQL, Oracle, SQLite.',
     category: 'dev',
-    icon: 'AlignLeft',
+    icon: 'Database',
     badge: 'popular',
   },
   {
