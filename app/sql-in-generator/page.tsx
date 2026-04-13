@@ -8,31 +8,76 @@ import SqlInGeneratorClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/sql-in-generator';
 
 export const metadata: Metadata = {
-  title: 'SQL IN Clause Generator | UnblockDevs',
-  description: 'Convert CSV, JSON, or IDs to SQL IN. Chunking, parameterized, range compression, INSERT. MySQL, PostgreSQL, Oracle, SQLite. Free.',
+  title: 'SQL IN Clause Formatter — Add Quotes & Commas to List for SQL | UnblockDevs',
+  description: 'Convert a list of IDs to SQL IN clause instantly — adds single quotes, commas, and parentheses automatically. Paste from Excel, CSV, or JSON. Works with MySQL, PostgreSQL, Oracle, SQLite. Free, 100% client-side.',
   keywords: [
-    'SQL IN clause generator',
-    'convert list to SQL IN',
-    'comma separated list to SQL',
-    'SQL IN clause builder',
-    'convert IDs to SQL IN',
-    'SQL IN clause formatter',
-    'list to SQL IN online',
-    'MySQL IN clause generator',
-    'PostgreSQL IN clause',
-    'parameterized SQL IN',
+    // Core intent — primary keywords
+    'how to format list for sql in clause',
+    'convert list to sql in clause',
+    'add quotes to list for sql query',
+    'format ids for sql in statement',
+    'sql in clause formatter online',
+    'convert values to sql query format',
+    'how to wrap values in quotes for sql',
+    'prepare list for sql in condition',
+    'sql list formatter tool',
+    'convert comma separated values to sql',
+    // Real developer queries — high intent
+    'how to add single quotes to list of values',
+    'how to convert numbers to quoted strings for sql',
+    'format ids into sql in clause quickly',
+    'how to create sql in query from list',
+    'how to pass multiple values in sql in clause',
+    'how to wrap list in single quotes automatically',
+    'convert array to sql in clause format',
+    'format list of ids for database query',
+    'how to convert excel list to sql query',
+    'how to prepare bulk values for sql',
+    // Problem-based — best for traffic
+    'sql in clause not working with list',
+    'how to fix sql in clause formatting',
+    'values not working in sql in statement',
+    'how to clean list before sql query',
+    'formatting error in sql in clause',
+    'how to fix missing quotes in sql query',
+    'sql query failing due to wrong format',
+    'how to debug sql in clause issue',
+    'incorrect list format in sql query',
+    'how to fix comma separated values for sql',
+    // Feature-based — tool keywords
+    'add quotes to each line online',
+    'wrap each value in single quotes',
+    'wrap values in double quotes online',
+    'add comma to each line online',
+    'format text list with commas and quotes',
+    'convert text list to sql format',
+    'bulk add quotes to list',
+    'add delimiter to each line',
+    'format list for database query',
+    'convert plain text to sql values',
+    // Long-tail — low competition, fast ranking
+    'how to convert list of ids to sql in clause with quotes',
+    'tool to add single quotes and commas to list',
+    'format list from excel to sql in statement',
+    'convert newline separated list to sql format',
+    'how to prepare id list for sql query quickly',
+    'best way to format values for sql in clause',
+    'convert copied list into sql query values',
+    'how to bulk format values for sql database',
+    'format large list into sql in clause online',
+    'how to add quotes to multiple lines at once',
   ],
   openGraph: {
-    title: 'SQL IN Clause Generator | UnblockDevs',
-    description: 'Convert any list to SQL IN clause. Auto-detect format, chunking, multi-database, parameterized, range compression. Free and client-side.',
+    title: 'SQL IN Clause Formatter — Add Quotes & Commas to List for SQL | UnblockDevs',
+    description: 'Paste a list of IDs → get instant SQL IN clause with quotes, commas, and parentheses. Works with Excel lists, CSV, JSON arrays. MySQL, PostgreSQL, Oracle, SQLite. Free.',
     type: 'website',
     url: canonicalUrl,
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'SQL IN Generator — Build IN Clauses from Lists | UnblockDevs',
-    description: 'Generate SQL IN clauses from comma-separated lists or JSON arrays. Format for PostgreSQL, MySQL, SQLite. Free, browser-based.',
+    title: 'SQL IN Clause Formatter — Add Quotes to List for SQL | UnblockDevs',
+    description: 'Convert any list to SQL IN clause. Adds single quotes, commas, parentheses automatically. MySQL, PostgreSQL, Oracle, SQLite. Free.',
   },
   alternates: { canonical: canonicalUrl },
 };
@@ -40,14 +85,17 @@ export const metadata: Metadata = {
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
-  name: 'SQL IN Clause Generator',
-  description: 'Convert CSV, JSON, or IDs to SQL IN. Chunking, parameterized, range compression, INSERT. MySQL, PostgreSQL, Oracle, SQLite. Free.',
+  name: 'SQL IN Clause Formatter — Add Quotes & Commas to List for SQL',
+  description: 'Convert a list of IDs or values to a SQL IN clause instantly. Adds single quotes, commas, and parentheses. Paste from Excel, CSV, JSON array, or one per line. MySQL, PostgreSQL, Oracle, SQLite. Free.',
   url: canonicalUrl,
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
+    'Add single quotes or double quotes to every value in a list',
+    'Wrap entire list in parentheses for SQL IN clause',
     'Auto-detect CSV, JSON array, newline, or tab-separated input',
+    'Remove duplicates automatically before formatting',
     'MySQL, PostgreSQL, SQL Server, Oracle, and SQLite dialects',
     'Parameterized query placeholders to prevent SQL injection',
     'Chunked OR blocks for Oracle 1000-item limit',
@@ -126,56 +174,65 @@ export default function SqlInGeneratorPage() {
       <SqlInGeneratorClient />
 
       <ToolSEOContent>
-        <SEOSection id="what" heading="What Is a SQL IN Clause Generator?">
+        <SEOSection id="what" heading="How to Format a List for SQL IN Clause">
           <SEOProse>
-            A <strong>SQL IN clause generator</strong> converts a list of values — IDs, names, codes — into a valid <C>WHERE id IN (1, 2, 3)</C> expression. Developers constantly need this when filtering by a set from a spreadsheet, a CSV export, a JSON array from an API, or a clipboard paste. Manually formatting lists wastes time and introduces errors like trailing commas or incorrect quoting.
+            Every developer hits this situation: you have a list of IDs from a spreadsheet, a CSV export,
+            an API response, or a clipboard paste — and you need to turn them into a{' '}
+            <C>WHERE id IN (1, 2, 3)</C> query. Doing it manually means adding single quotes around each
+            value, commas between them, and wrapping the whole thing in parentheses. For 5 IDs it is
+            annoying; for 500 it is impossible.
           </SEOProse>
           <SEOProse>
-            This tool auto-detects your input format (CSV, newline-delimited, JSON array, tab-separated), removes duplicates, handles quoting for string vs numeric types, and outputs dialect-specific SQL for MySQL, PostgreSQL, SQL Server, Oracle, and SQLite. For large lists, it chunks them into multiple OR-connected IN clauses to stay within Oracle&apos;s 1000-item limit and other query planner constraints.
+            This <strong>SQL IN clause formatter</strong> converts any list — CSV, newline-delimited, JSON
+            array, tab-separated — into a properly quoted and formatted SQL IN clause in one click. It
+            auto-detects whether your values are numeric (no quotes) or strings (single-quoted), removes
+            duplicates automatically, and outputs dialect-correct SQL for MySQL, PostgreSQL, SQL Server,
+            Oracle, and SQLite. For large lists it chunks them into multiple OR-connected IN blocks to
+            stay within Oracle&apos;s 1,000-item limit.
           </SEOProse>
         </SEOSection>
 
-        <SEOSection id="how" eyebrow="How it works" heading="Generate SQL IN Clause in Seconds">
+        <SEOSection id="how" eyebrow="How it works" heading="Add Quotes & Format List for SQL in 3 Steps">
           <HowItWorks steps={[
-            { n: '01', title: 'Paste your list', desc: 'Paste IDs, codes, or names in any format — CSV, JSON array, one per line, or tab-separated. The tool auto-detects the format.' },
-            { n: '02', title: 'Configure options', desc: 'Choose your database dialect, value type (number/string/auto), chunk size for large lists, and whether to use parameterized placeholders.' },
-            { n: '03', title: 'Get SQL output', desc: 'Copy the generated IN clause and paste into your query. Large lists are automatically split into chunked OR blocks to avoid database limits.' },
-            { n: '04', title: 'Export other formats', desc: 'Also export as JSON array, CSV, MongoDB $in, or GraphQL list format for use in other contexts.' },
+            { n: '01', title: 'Paste your list of IDs or values', desc: 'Paste from Excel, CSV, a JSON array, or one value per line. The formatter auto-detects the format — no configuration needed.' },
+            { n: '02', title: 'Choose string or numeric + database', desc: 'Select "String" to add single quotes around each value (\'alice\', \'bob\'). Select "Numeric" for unquoted integers. Pick your database dialect for correct syntax.' },
+            { n: '03', title: 'Copy the SQL IN clause', desc: 'The output is a ready-to-paste SQL IN clause with commas, quotes, and parentheses. Copy it directly into your query editor.' },
+            { n: '04', title: 'Export or parameterize', desc: 'Export as JSON array, CSV, MongoDB $in, or GraphQL. Enable parameterized mode to get ?, $1, @p1 placeholders for prepared statements.' },
           ]} />
         </SEOSection>
 
-        <SEOSection id="uses" eyebrow="Use cases" heading="When Developers Use a SQL IN Generator">
+        <SEOSection id="uses" eyebrow="Use cases" heading="When Developers Need This Tool">
           <UseCases cases={[
-            { icon: '📋', title: 'Filter by Spreadsheet IDs', desc: 'Convert a column of IDs copied from Excel or Google Sheets into a SQL IN clause for a WHERE filter.' },
-            { icon: '🔌', title: 'API Response Filtering', desc: 'Extract IDs from a JSON API response array and generate an IN clause to look up related records.' },
-            { icon: '🗄️', title: 'Bulk Database Queries', desc: 'Query multiple records by ID without writing slow sequential queries or building strings manually.' },
-            { icon: '🔒', title: 'Parameterized Queries', desc: 'Generate safe parameterized placeholders (?, $1, @p1) for prepared statements to prevent SQL injection.' },
-            { icon: '🔄', title: 'Data Migration', desc: 'Generate IN clauses from migration scripts that reference specific record IDs across environments.' },
-            { icon: '🐛', title: 'Debugging & Auditing', desc: 'Quickly query a set of known record IDs when investigating a bug or auditing specific user actions.' },
+            { icon: '📊', title: 'Copy IDs from Excel / Google Sheets', desc: 'Select a column of IDs, paste here, get a SQL IN clause with quotes and commas — without touching a single character manually.' },
+            { icon: '🔌', title: 'Filter by API Response IDs', desc: 'Extract IDs from a JSON API response array and convert them to a WHERE IN filter to look up related records in your database.' },
+            { icon: '🗄️', title: 'Bulk Query Multiple Records', desc: 'Query 50, 500, or 5000 records by ID in one query instead of writing slow sequential lookups or building strings manually.' },
+            { icon: '🔒', title: 'Safe Parameterized Queries', desc: 'Generate ?, $1, @p1 placeholders for prepared statements — prevents SQL injection when user IDs come from untrusted sources.' },
+            { icon: '🔄', title: 'Data Migration Scripts', desc: 'Reference specific record IDs in migration scripts across dev, staging, and production environments.' },
+            { icon: '🐛', title: 'Debug by Known IDs', desc: 'Quickly query a set of known-bad record IDs when investigating a bug or auditing specific user actions — no manual formatting.' },
           ]} />
         </SEOSection>
 
         <SEOSection id="faq" eyebrow="FAQ" heading="Frequently Asked Questions">
           <FAQ items={[
             {
+              q: 'How do I add single quotes to a list of values for SQL?',
+              a: "Paste your values into the SQL IN Formatter, select 'String quoted' as the value type, and choose single quote. The tool wraps every value in single quotes and adds commas automatically: 'alice', 'bob', 'charlie'.",
+            },
+            {
               q: 'How do I convert a list of IDs to a SQL IN clause?',
-              a: 'Paste your IDs (CSV, JSON array, one per line, or tab-separated) into the tool. It auto-detects the format, removes duplicates, and outputs a valid IN clause for your selected database dialect.',
+              a: 'Paste your IDs (CSV, JSON array, one per line, or tab-separated) into the tool. It auto-detects the format, removes duplicates, and outputs a valid IN clause: WHERE id IN (1, 2, 3, 4, 5).',
+            },
+            {
+              q: 'How do I convert an Excel list to SQL format?',
+              a: 'Copy the column of values from Excel (Ctrl+C), paste into the input box, and click Generate. The formatter converts newline-separated Excel data into a properly quoted SQL IN clause instantly.',
             },
             {
               q: 'What is the maximum size of a SQL IN clause?',
-              a: 'Oracle limits IN lists to 1000 items. MySQL and PostgreSQL have no hard limit but performance may degrade for very large lists. Use the chunk size option to split into multiple chunked OR blocks automatically.',
+              a: 'Oracle limits IN lists to 1,000 items per clause. MySQL and PostgreSQL have no hard limit but query planner performance may degrade for very large lists. Enable chunk size to split large lists into multiple chunked OR...IN blocks automatically.',
             },
             {
-              q: 'Can I get a parameterized SQL IN query?',
-              a: 'Yes. Enable "Parameterized" to get placeholders: ? for MySQL/SQLite, $1,$2 for PostgreSQL, @p1 for SQL Server. Use these with prepared statements to prevent SQL injection.',
-            },
-            {
-              q: 'Does this handle string values?',
-              a: "Yes. Select 'String' type and values are automatically single-quoted and escaped. Select 'Auto-detect' and the tool infers whether values are numeric or string based on the input.",
-            },
-            {
-              q: 'Is my data sent to any server?',
-              a: 'No. All processing runs in your browser. Your IDs and values never leave your device.',
+              q: 'Can I get a parameterized SQL IN query to prevent SQL injection?',
+              a: 'Yes. Enable "Parameterized" to get placeholders: ? for MySQL/SQLite, $1,$2,... for PostgreSQL, @p1,@p2,... for SQL Server. Use these with your driver\'s prepared statements for safe queries.',
             },
           ]} />
         </SEOSection>

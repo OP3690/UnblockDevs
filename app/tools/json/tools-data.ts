@@ -118,8 +118,8 @@ export const TOOLS_DIRECTORY: DirectoryTool[] = [
   },
   {
     href: '/sql-in-generator',
-    name: 'SQL IN clause generator',
-    description: 'Paste IDs or values → SQL IN, JSON, MongoDB $in, CSV.',
+    name: 'SQL IN clause formatter',
+    description: 'Add quotes & commas to a list → SQL IN clause. Paste from Excel, CSV, or JSON. MySQL, PostgreSQL, Oracle.',
     category: 'json',
     icon: 'Database',
   },

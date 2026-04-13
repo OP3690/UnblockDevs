@@ -10,6 +10,15 @@ export type BlogPost = {
 
 export const blogPosts: BlogPost[] = [
     {
+      slug: 'how-to-add-quotes-to-list-for-sql',
+      title: 'How to Add Quotes to a List for SQL IN Clause (Instantly)',
+      excerpt: 'You have a list of IDs from Excel or CSV and need them in a SQL IN clause with single quotes and commas. Here\'s how to format any list for SQL in one click — no manual editing.',
+      date: '2026-04-13',
+      readTime: '7 min read',
+      category: 'JSON & Logs',
+      keywords: ['how to add quotes to list for sql', 'convert list to sql in clause', 'add single quotes to list sql', 'format ids for sql in clause', 'excel list to sql in clause', 'sql in clause not working'],
+    },
+    {
       slug: 'how-to-debug-api-request-errors',
       title: 'How to Debug API Request Errors — Common Dev Errors Explained',
       excerpt: 'CORS errors, process.env undefined, maximum call stack exceeded — how to debug the most common API and JavaScript errors developers hit daily, with online tools.',
