@@ -38,18 +38,18 @@ const toSentence= (s: string) => { const t = s.trim(); return t ? t.charAt(0).to
 const toInverse = (s: string) => s.split('').map(c => c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()).join('');
 
 const CASE_FORMATS: { label: string; desc: string; fn: (s: string) => string; badge: string; badgeCls: string }[] = [
-  { label: 'camelCase',          desc: 'JS variables, JSON keys',         fn: toCamel,    badge: 'JS/TS',   badgeCls: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20' },
-  { label: 'PascalCase',         desc: 'Classes, React components',        fn: toPascal,   badge: 'React',   badgeCls: 'text-sky-400 bg-sky-500/10 border-sky-500/20' },
-  { label: 'snake_case',         desc: 'Python, Ruby, DB columns',         fn: toSnake,    badge: 'Python',  badgeCls: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' },
-  { label: 'kebab-case',         desc: 'CSS classes, URLs, HTML attrs',    fn: toKebab,    badge: 'CSS',     badgeCls: 'text-teal-400 bg-teal-500/10 border-teal-500/20' },
-  { label: 'SCREAMING_SNAKE',    desc: 'Constants, env variables',         fn: toScream,   badge: 'Const',   badgeCls: 'text-red-400 bg-red-500/10 border-red-500/20' },
-  { label: 'Title Case',         desc: 'Headings, display names',          fn: toTitle,    badge: 'UI',      badgeCls: 'text-amber-400 bg-amber-500/10 border-amber-500/20' },
-  { label: 'dot.case',           desc: 'Config keys, Java packages',       fn: toDot,      badge: 'Config',  badgeCls: 'text-pink-400 bg-pink-500/10 border-pink-500/20' },
-  { label: 'path/case',          desc: 'File paths, routes',               fn: toPath,     badge: 'Path',    badgeCls: 'text-orange-400 bg-orange-500/10 border-orange-500/20' },
-  { label: 'flatcase',           desc: 'Legacy systems, compact IDs',      fn: toFlat,     badge: 'Legacy',  badgeCls: 'text-indigo-400 bg-indigo-500/10 border-indigo-500/20' },
-  { label: 'COBOL-CASE',         desc: 'COBOL, HTTP headers',              fn: toCobol,    badge: 'COBOL',   badgeCls: 'text-violet-400 bg-violet-500/10 border-violet-500/20' },
-  { label: 'Sentence case',      desc: 'Sentences, descriptions',          fn: toSentence, badge: 'Text',    badgeCls: 'text-lime-400 bg-lime-500/10 border-lime-500/20' },
-  { label: 'iNVERSE cASE',       desc: 'Emphasis / stylistic',             fn: toInverse,  badge: 'Style',   badgeCls: 'text-rose-400 bg-rose-500/10 border-rose-500/20' },
+  { label: 'camelCase',          desc: 'JS variables, JSON keys',         fn: toCamel,    badge: 'JS/TS',   badgeCls: 'text-amber-700 bg-amber-50 border-amber-200' },
+  { label: 'PascalCase',         desc: 'Classes, React components',        fn: toPascal,   badge: 'React',   badgeCls: 'text-sky-700 bg-sky-50 border-sky-200' },
+  { label: 'snake_case',         desc: 'Python, Ruby, DB columns',         fn: toSnake,    badge: 'Python',  badgeCls: 'text-emerald-700 bg-emerald-50 border-emerald-200' },
+  { label: 'kebab-case',         desc: 'CSS classes, URLs, HTML attrs',    fn: toKebab,    badge: 'CSS',     badgeCls: 'text-teal-700 bg-teal-50 border-teal-200' },
+  { label: 'SCREAMING_SNAKE',    desc: 'Constants, env variables',         fn: toScream,   badge: 'Const',   badgeCls: 'text-red-700 bg-red-50 border-red-200' },
+  { label: 'Title Case',         desc: 'Headings, display names',          fn: toTitle,    badge: 'UI',      badgeCls: 'text-amber-700 bg-yellow-50 border-yellow-200' },
+  { label: 'dot.case',           desc: 'Config keys, Java packages',       fn: toDot,      badge: 'Config',  badgeCls: 'text-pink-700 bg-pink-50 border-pink-200' },
+  { label: 'path/case',          desc: 'File paths, routes',               fn: toPath,     badge: 'Path',    badgeCls: 'text-orange-700 bg-orange-50 border-orange-200' },
+  { label: 'flatcase',           desc: 'Legacy systems, compact IDs',      fn: toFlat,     badge: 'Legacy',  badgeCls: 'text-indigo-700 bg-indigo-50 border-indigo-200' },
+  { label: 'COBOL-CASE',         desc: 'COBOL, HTTP headers',              fn: toCobol,    badge: 'COBOL',   badgeCls: 'text-violet-700 bg-violet-50 border-violet-200' },
+  { label: 'Sentence case',      desc: 'Sentences, descriptions',          fn: toSentence, badge: 'Text',    badgeCls: 'text-lime-700 bg-lime-50 border-lime-200' },
+  { label: 'iNVERSE cASE',       desc: 'Emphasis / stylistic',             fn: toInverse,  badge: 'Style',   badgeCls: 'text-rose-700 bg-rose-50 border-rose-200' },
 ];
 
 // ── Text stats ────────────────────────────────────────────────────────────────
@@ -73,6 +73,9 @@ const EXAMPLES: { label: string; emoji: string; text: string }[] = [
   { label: 'Config key',     emoji: '⚙️', text: 'max.retry.attempts' },
   { label: 'Mixed sentence', emoji: '📝', text: 'The Quick-Brown FOX jumps_over the lazy dog' },
   { label: 'Email list',     emoji: '📧', text: 'Contact us at support@example.com or admin@company.co.uk\nVisit https://example.com for more info\nServer IP: 192.168.1.1' },
+  { label: 'API endpoint',   emoji: '🌐', text: 'GET /api/v2/user-profile/{userId}' },
+  { label: 'Error message',  emoji: '❌', text: 'Error: Cannot read property undefined of null in getUserData' },
+  { label: 'CSS class name', emoji: '🎨', text: 'btn--primary-large__icon-left' },
 ];
 
 // ── Extract patterns ──────────────────────────────────────────────────────────
@@ -104,13 +107,13 @@ function CopyBtn({ text, label, icon = false }: { text: string; label?: string; 
   const [ok, setOk] = useState(false);
   const copy = useCallback(async () => { try { await navigator.clipboard.writeText(text); setOk(true); setTimeout(() => setOk(false), 1500); } catch {} }, [text]);
   if (icon) return (
-    <button onClick={copy} className="p-1.5 rounded-lg text-zinc-600 hover:text-zinc-300 hover:bg-zinc-700/60 transition" title="Copy">
-      {ok ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+    <button onClick={copy} className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition" title="Copy">
+      {ok ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
     </button>
   );
   return (
-    <button onClick={copy} className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-700/50 bg-zinc-800/80 px-2.5 py-1.5 text-[12px] font-medium text-zinc-300 transition hover:bg-zinc-700 hover:text-white">
-      {ok ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+    <button onClick={copy} className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-[12px] font-medium text-gray-600 transition hover:bg-gray-50 hover:border-gray-300 shadow-sm">
+      {ok ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
       {ok ? 'Copied!' : (label ?? 'Copy')}
     </button>
   );
@@ -120,20 +123,20 @@ function CopyBtn({ text, label, icon = false }: { text: string; label?: string; 
 
 function CaseCard({ label, desc, value, badge, badgeCls }: { label: string; desc: string; value: string; badge: string; badgeCls: string }) {
   return (
-    <div className="group relative flex flex-col gap-2 rounded-xl border border-zinc-800 bg-zinc-900/60 p-3.5 hover:border-zinc-700 transition">
+    <div className="group flex flex-col gap-2.5 rounded-xl border border-gray-200 bg-white p-4 hover:border-emerald-300 hover:shadow-md transition shadow-sm">
       <div className="flex items-start justify-between gap-2">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-[11px] font-bold text-zinc-300 tracking-tight">{label}</span>
+            <span className="text-sm font-bold text-gray-900 tracking-tight">{label}</span>
             <span className={`rounded-full border px-1.5 py-px text-[9px] font-bold uppercase tracking-wide ${badgeCls}`}>{badge}</span>
           </div>
-          <p className="text-[10px] text-zinc-600 mt-0.5">{desc}</p>
+          <p className="text-xs text-gray-500 mt-0.5">{desc}</p>
         </div>
         <CopyBtn text={value} icon />
       </div>
-      <p className="font-mono text-[13px] text-zinc-100 break-all leading-relaxed min-h-[1.5rem]">
-        {value || <span className="text-zinc-700 italic text-[11px]">—</span>}
-      </p>
+      <div className="font-mono text-sm text-gray-900 font-semibold bg-gray-50 rounded-lg px-3 py-2 break-all leading-relaxed min-h-[2rem]">
+        {value || <span className="text-gray-300 italic text-xs font-normal">—</span>}
+      </div>
     </div>
   );
 }
@@ -295,11 +298,11 @@ export default function StringUtilitiesClient() {
 
       {/* Examples */}
       <div className="space-y-2">
-        <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">Try an example</p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Try an example</p>
         <div className="flex flex-wrap gap-2">
           {EXAMPLES.map(ex => (
             <button key={ex.label} onClick={() => { setInput(ex.text); setLineOutput(''); setTransformOutput(''); setEncodeOutput(''); setExtractResults({}); }}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-700/50 bg-zinc-800/60 px-3 py-1.5 text-[12px] font-medium text-zinc-300 transition hover:border-emerald-500/30 hover:bg-zinc-700/60 hover:text-white">
+              className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 transition font-medium shadow-sm">
               <span>{ex.emoji}</span> {ex.label}
             </button>
           ))}
@@ -309,9 +312,9 @@ export default function StringUtilitiesClient() {
       {/* Input area */}
       <div className="space-y-2.5">
         <div className="flex items-center justify-between">
-          <label className="text-sm font-semibold text-zinc-200">Input</label>
+          <label className="text-sm font-semibold text-gray-700">Input</label>
           {input && (
-            <button onClick={clearAll} className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-300 transition">
+            <button onClick={clearAll} className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-700 transition">
               <X className="h-3 w-3" /> Clear
             </button>
           )}
@@ -319,34 +322,36 @@ export default function StringUtilitiesClient() {
         <textarea value={input} onChange={e => { setInput(e.target.value); setLineOutput(''); setTransformOutput(''); setEncodeOutput(''); }}
           rows={4} spellCheck={false}
           placeholder="Paste any text, variable name, code snippet, or multi-line list..."
-          className="w-full rounded-xl border border-zinc-700/40 bg-zinc-950 px-4 py-3.5 font-mono text-[13px] leading-relaxed text-zinc-200 placeholder-zinc-700 resize-y focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500/40 transition" />
+          className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3.5 font-mono text-sm leading-relaxed text-gray-900 placeholder-gray-300 resize-y focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 shadow-sm min-h-[100px]" />
 
         {/* Stats bar */}
-        <div className="flex flex-wrap gap-1.5">
-          {[
-            { v: stats.chars.toLocaleString(),        l: 'chars' },
-            { v: stats.charsNoSpace.toLocaleString(), l: 'no-space' },
-            { v: stats.words.toLocaleString(),        l: 'words' },
-            { v: stats.lines.toLocaleString(),        l: 'lines' },
-            { v: stats.uniqueWords.toLocaleString(),  l: 'unique' },
-            { v: `~${stats.readingTime}min`,          l: 'read' },
-          ].map(s => (
-            <span key={s.l} className="rounded-lg border border-zinc-800 bg-zinc-900 px-2 py-1 text-[11px] text-zinc-500">
-              <span className="font-semibold text-zinc-300">{s.v}</span> {s.l}
-            </span>
-          ))}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1">
+          <div className="flex gap-1.5 flex-nowrap">
+            {[
+              { v: stats.chars.toLocaleString(),        l: 'chars' },
+              { v: stats.words.toLocaleString(),        l: 'words' },
+              { v: stats.lines.toLocaleString(),        l: 'lines' },
+              { v: stats.uniqueWords.toLocaleString(),  l: 'unique words' },
+              { v: `~${stats.readingTime}min`,          l: 'read time' },
+            ].map(s => (
+              <span key={s.l} className="flex items-baseline gap-1 rounded-lg border border-gray-100 bg-gray-50 px-3 py-1.5 whitespace-nowrap">
+                <span className="text-sm font-bold text-gray-900">{s.v}</span>
+                <span className="text-xs text-gray-500">{s.l}</span>
+              </span>
+            ))}
+          </div>
           {/* Copy all as JSON */}
           {input.trim() && tab === 'cases' && (
-            <CopyBtn text={JSON.stringify(Object.fromEntries(caseResults.map(f => [f.label, f.value])), null, 2)} label="Copy all as JSON" />
+            <CopyBtn text={JSON.stringify(Object.fromEntries(caseResults.map(f => [f.label, f.value])), null, 2)} label="Copy stats as JSON" />
           )}
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-0.5 rounded-xl border border-zinc-800 bg-zinc-950 p-1 overflow-x-auto">
+      <div className="bg-gray-100 rounded-xl p-1 flex gap-1 overflow-x-auto">
         {tabs.map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
-            className={`flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-[12px] font-semibold whitespace-nowrap transition ${tab === t.id ? 'bg-zinc-800 text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-300'}`}>
+            className={`flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-xs font-semibold whitespace-nowrap transition ${tab === t.id ? 'bg-white border border-gray-200 text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700 hover:bg-white/60'}`}>
             {t.icon} {t.label}
           </button>
         ))}
@@ -354,7 +359,7 @@ export default function StringUtilitiesClient() {
 
       {/* ── Case Formats ─────────────────────────────────────────────────────── */}
       {tab === 'cases' && (
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {caseResults.map(f => (
             <CaseCard key={f.label} label={f.label} desc={f.desc} value={f.value} badge={f.badge} badgeCls={f.badgeCls} />
           ))}
@@ -381,7 +386,7 @@ export default function StringUtilitiesClient() {
               { label: '→ lowercase',     op: 'lower',         icon: <Sparkles className="h-3.5 w-3.5" /> },
             ].map(btn => (
               <button key={btn.op} onClick={() => applyLineOp(btn.op)}
-                className="flex items-center gap-1.5 rounded-xl border border-zinc-800 bg-zinc-900/60 px-3 py-2.5 text-[11px] font-semibold text-zinc-300 transition hover:border-emerald-500/30 hover:bg-zinc-800 hover:text-white">
+                className="bg-white border border-gray-200 text-gray-700 text-sm hover:border-emerald-300 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg px-3 py-2 flex items-center gap-1.5 font-medium transition">
                 {btn.icon} {btn.label}
               </button>
             ))}
@@ -389,30 +394,30 @@ export default function StringUtilitiesClient() {
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <div className="flex gap-2">
-              <input value={lineFilter} onChange={e => setLineFilter(e.target.value)} placeholder="Filter: lines containing..." className="flex-1 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-[12px] text-zinc-200 placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-emerald-500/40" />
-              <button onClick={() => applyLineOp('filter')} className="rounded-xl bg-zinc-700 px-3 py-2 text-[12px] font-semibold text-zinc-200 hover:bg-zinc-600 transition whitespace-nowrap">Keep</button>
+              <input value={lineFilter} onChange={e => setLineFilter(e.target.value)} placeholder="Filter: lines containing..." className="flex-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400" />
+              <button onClick={() => applyLineOp('filter')} className="rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700 transition whitespace-nowrap">Keep</button>
             </div>
             <div className="flex gap-2">
-              <input value={lineExclude} onChange={e => setLineExclude(e.target.value)} placeholder="Remove: lines containing..." className="flex-1 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-[12px] text-zinc-200 placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-red-500/40" />
-              <button onClick={() => applyLineOp('exclude')} className="rounded-xl bg-red-900/60 border border-red-500/20 px-3 py-2 text-[12px] font-semibold text-red-300 hover:bg-red-900 transition whitespace-nowrap">Remove</button>
+              <input value={lineExclude} onChange={e => setLineExclude(e.target.value)} placeholder="Remove: lines containing..." className="flex-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-300" />
+              <button onClick={() => applyLineOp('exclude')} className="rounded-lg bg-red-50 border border-red-200 px-3 py-2 text-sm font-semibold text-red-700 hover:bg-red-100 transition whitespace-nowrap">Remove</button>
             </div>
             <div className="flex gap-2">
-              <input value={joinSep} onChange={e => setJoinSep(e.target.value)} placeholder="Join separator (default: , )" className="flex-1 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-[12px] font-mono text-zinc-200 placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-emerald-500/40" />
-              <button onClick={() => applyLineOp('join')} className="rounded-xl bg-zinc-700 px-3 py-2 text-[12px] font-semibold text-zinc-200 hover:bg-zinc-600 transition">Join</button>
+              <input value={joinSep} onChange={e => setJoinSep(e.target.value)} placeholder="Join separator (default: , )" className="flex-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-mono text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400" />
+              <button onClick={() => applyLineOp('join')} className="rounded-lg bg-white border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition">Join</button>
             </div>
           </div>
 
           {lineOutput && (
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-zinc-500">{lineOutput.split('\n').length} lines in result</span>
+                <span className="text-xs font-semibold text-gray-600">{lineOutput.split('\n').length} lines in result</span>
                 <div className="flex gap-2">
-                  <button onClick={() => setInput(lineOutput)} className="text-[11px] text-emerald-400 hover:text-emerald-300 transition font-medium">Use as input ↑</button>
+                  <button onClick={() => setInput(lineOutput)} className="text-xs text-emerald-700 hover:text-emerald-800 bg-white border border-emerald-200 hover:bg-emerald-50 transition font-semibold rounded-lg px-2.5 py-1">Use as Input ↑</button>
                   <CopyBtn text={lineOutput} />
                 </div>
               </div>
               <textarea readOnly value={lineOutput} rows={8}
-                className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 font-mono text-[12px] leading-relaxed text-zinc-200 resize-y focus:outline-none" />
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 font-mono text-sm leading-relaxed text-gray-900 resize-y focus:outline-none" />
             </div>
           )}
         </div>
@@ -422,8 +427,8 @@ export default function StringUtilitiesClient() {
       {tab === 'extract' && (
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <p className="text-[12px] text-zinc-500">Extract patterns from your input text</p>
-            <button onClick={extractAll} className="flex items-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2 text-[12px] font-semibold text-white hover:bg-emerald-500 transition">
+            <p className="text-sm text-gray-600">Extract patterns from your input text</p>
+            <button onClick={extractAll} className="flex items-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition">
               <Search className="h-3.5 w-3.5" /> Extract All
             </button>
           </div>
@@ -431,35 +436,35 @@ export default function StringUtilitiesClient() {
             {EXTRACT_PATTERNS.map(p => {
               const results = extractResults[p.label];
               return (
-                <div key={p.label} className="rounded-xl border border-zinc-800 bg-zinc-900/40 overflow-hidden">
+                <div key={p.label} className="rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm">
                   <div className="flex items-center justify-between px-4 py-3">
                     <div className="flex items-center gap-2">
                       <span className="text-base">{p.emoji}</span>
-                      <span className="text-[13px] font-semibold text-zinc-200">{p.label}</span>
+                      <span className="text-sm font-semibold text-gray-900">{p.label}</span>
                       {results !== undefined && (
-                        <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${results.length > 0 ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' : 'text-zinc-600 bg-zinc-800 border-zinc-700/50'}`}>
+                        <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${results.length > 0 ? 'text-emerald-700 bg-emerald-50 border-emerald-200' : 'text-gray-500 bg-gray-100 border-gray-200'}`}>
                           {results.length} found
                         </span>
                       )}
                     </div>
                     <div className="flex gap-2">
                       {results && results.length > 0 && <CopyBtn text={results.join('\n')} label="Copy All" />}
-                      <button onClick={() => extractOne(p.label, p.regex)} className="rounded-lg border border-zinc-700/50 bg-zinc-800 px-3 py-1.5 text-[12px] font-medium text-zinc-300 hover:bg-zinc-700 transition">Extract</button>
+                      <button onClick={() => extractOne(p.label, p.regex)} className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 hover:border-emerald-300 hover:bg-emerald-50 font-medium transition">Extract</button>
                     </div>
                   </div>
                   {results !== undefined && results.length > 0 && (
-                    <div className="border-t border-zinc-800 px-4 py-3 flex flex-wrap gap-2">
+                    <div className="border-t border-gray-100 bg-gray-50 px-4 py-3 flex flex-wrap gap-2">
                       {results.map((r, i) => (
-                        <div key={i} className="flex items-center gap-1.5 rounded-lg border border-zinc-700/40 bg-zinc-900 px-2.5 py-1">
-                          <span className="font-mono text-[11px] text-zinc-200">{r}</span>
+                        <div key={i} className="flex items-center gap-1.5 bg-white rounded-lg border border-gray-200 p-2">
+                          <span className="font-mono text-sm text-gray-900">{r}</span>
                           <CopyBtn text={r} icon />
                         </div>
                       ))}
                     </div>
                   )}
                   {results !== undefined && results.length === 0 && (
-                    <div className="border-t border-zinc-800 px-4 py-2.5">
-                      <p className="text-[11px] text-zinc-600 italic">No matches found.</p>
+                    <div className="border-t border-gray-100 bg-gray-50 px-4 py-2.5">
+                      <p className="text-xs text-gray-400 italic">No matches found.</p>
                     </div>
                   )}
                 </div>
@@ -485,7 +490,7 @@ export default function StringUtilitiesClient() {
               { label: 'Reverse lines',         op: 'reverse-lines' },
             ].map(btn => (
               <button key={btn.op} onClick={() => applyTransform(btn.op)}
-                className="rounded-xl border border-zinc-800 bg-zinc-900/60 px-3 py-2.5 text-left text-[12px] font-medium text-zinc-300 transition hover:border-emerald-500/30 hover:bg-zinc-800 hover:text-white">
+                className="bg-white border border-gray-200 text-gray-700 text-sm hover:border-emerald-300 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg px-3 py-2.5 text-left font-medium transition">
                 {btn.label}
               </button>
             ))}
@@ -493,26 +498,26 @@ export default function StringUtilitiesClient() {
 
           {/* Word wrap */}
           <div className="flex items-center gap-2">
-            <span className="text-[12px] text-zinc-400 whitespace-nowrap">Word wrap at</span>
+            <span className="text-sm text-gray-600 whitespace-nowrap">Word wrap at</span>
             <input value={lineWrap} onChange={e => setLineWrap(e.target.value)} type="number" min="20" max="200"
-              className="w-20 rounded-lg border border-zinc-800 bg-zinc-950 px-2 py-1.5 text-[12px] font-mono text-zinc-200 focus:outline-none focus:ring-1 focus:ring-emerald-500/40" />
-            <span className="text-[12px] text-zinc-400">chars</span>
-            <button onClick={() => applyTransform('wrap')} className="rounded-lg bg-zinc-700 px-3 py-1.5 text-[12px] font-medium text-zinc-200 hover:bg-zinc-600 transition">Wrap</button>
+              className="w-20 rounded-lg border border-gray-200 bg-white px-2 py-1.5 text-sm font-mono text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400" />
+            <span className="text-sm text-gray-600">chars</span>
+            <button onClick={() => applyTransform('wrap')} className="rounded-lg bg-white border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition">Wrap</button>
           </div>
 
           {/* Find & Replace */}
-          <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-4 space-y-3">
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">Find & Replace</p>
+          <div className="rounded-xl border border-gray-100 bg-gray-50 p-4 space-y-3">
+            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Find &amp; Replace</p>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-              <input value={findStr} onChange={e => setFindStr(e.target.value)} placeholder="Find..." className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-[12px] font-mono text-zinc-200 placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-emerald-500/40" />
-              <input value={replaceStr} onChange={e => setReplaceStr(e.target.value)} placeholder="Replace with..." className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-[12px] font-mono text-zinc-200 placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-emerald-500/40" />
+              <input value={findStr} onChange={e => setFindStr(e.target.value)} placeholder="Find..." className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-mono text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400" />
+              <input value={replaceStr} onChange={e => setReplaceStr(e.target.value)} placeholder="Replace with..." className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-mono text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400" />
             </div>
             <div className="flex items-center gap-3">
-              <label className="flex items-center gap-1.5 text-[12px] text-zinc-400 cursor-pointer">
+              <label className="flex items-center gap-1.5 text-sm text-gray-600 cursor-pointer">
                 <input type="checkbox" checked={useRegex} onChange={e => setUseRegex(e.target.checked)} className="accent-emerald-500 rounded" />
                 Use regex
               </label>
-              <button onClick={() => applyTransform('replace')} className="rounded-xl bg-emerald-600 px-4 py-1.5 text-[12px] font-semibold text-white hover:bg-emerald-500 transition">
+              <button onClick={() => applyTransform('replace')} className="rounded-xl bg-emerald-600 hover:bg-emerald-700 px-4 py-1.5 text-sm font-semibold text-white transition">
                 Replace All
               </button>
             </div>
@@ -521,14 +526,14 @@ export default function StringUtilitiesClient() {
           {transformOutput && (
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-zinc-500">Result</span>
+                <span className="text-xs font-semibold text-gray-600">Result</span>
                 <div className="flex gap-2">
-                  <button onClick={() => setInput(transformOutput)} className="text-[11px] text-emerald-400 hover:text-emerald-300 transition font-medium">Use as input ↑</button>
+                  <button onClick={() => setInput(transformOutput)} className="text-xs text-emerald-700 hover:text-emerald-800 bg-white border border-emerald-200 hover:bg-emerald-50 transition font-semibold rounded-lg px-2.5 py-1">Use as Input ↑</button>
                   <CopyBtn text={transformOutput} />
                 </div>
               </div>
               <textarea readOnly value={transformOutput} rows={6}
-                className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 font-mono text-[12px] leading-relaxed text-zinc-200 resize-y focus:outline-none" />
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 font-mono text-sm leading-relaxed text-gray-900 resize-y focus:outline-none" />
             </div>
           )}
         </div>
@@ -547,40 +552,41 @@ export default function StringUtilitiesClient() {
               { label: 'Binary',        encOp: 'bin-enc',    decOp: 'bin-dec',    icon: <Binary className="h-4 w-4" />,  desc: 'UTF-8 bytes as 8-bit binary' },
               { label: 'Morse Code',    encOp: 'morse-enc',  decOp: '',           icon: <Mail className="h-4 w-4" />,    desc: 'Text to Morse' },
             ].map(op => (
-              <div key={op.label} className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-3.5 space-y-2.5">
+              <div key={op.label} className="rounded-xl border border-gray-200 bg-white p-3.5 space-y-2.5 shadow-sm">
                 <div className="flex items-center gap-2">
-                  <span className="text-zinc-400">{op.icon}</span>
+                  <span className="text-gray-500">{op.icon}</span>
                   <div>
-                    <p className="text-[13px] font-semibold text-zinc-200">{op.label}</p>
-                    <p className="text-[10px] text-zinc-600">{op.desc}</p>
+                    <p className="text-sm font-semibold text-gray-900">{op.label}</p>
+                    <p className="text-xs text-gray-500">{op.desc}</p>
                   </div>
                 </div>
                 <div className="flex gap-1.5">
-                  <button onClick={() => applyEncode(op.encOp, `${op.label} → Encoded`)} className="flex-1 rounded-lg bg-zinc-700 py-1.5 text-[12px] font-semibold text-zinc-200 hover:bg-zinc-600 transition">Encode</button>
-                  {op.decOp && <button onClick={() => applyEncode(op.decOp, `${op.label} → Decoded`)} className="flex-1 rounded-lg border border-zinc-700/50 py-1.5 text-[12px] font-semibold text-zinc-300 hover:bg-zinc-700 transition">Decode</button>}
+                  <button onClick={() => applyEncode(op.encOp, `${op.label} → Encoded`)} className="flex-1 rounded-lg bg-white border border-gray-200 py-1.5 text-sm font-semibold text-gray-700 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 transition">Encode</button>
+                  {op.decOp && <button onClick={() => applyEncode(op.decOp, `${op.label} → Decoded`)} className="flex-1 rounded-lg border border-gray-200 bg-white py-1.5 text-sm font-semibold text-gray-700 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 transition">Decode</button>}
                 </div>
               </div>
             ))}
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-3.5 space-y-2.5">
+            <div className="rounded-xl border border-gray-200 bg-white p-3.5 space-y-2.5 shadow-sm">
               <div className="flex items-center gap-2">
-                <Shuffle className="h-4 w-4 text-zinc-400" />
-                <div><p className="text-[13px] font-semibold text-zinc-200">ROT13</p><p className="text-[10px] text-zinc-600">Symmetric — encode = decode</p></div>
+                <Shuffle className="h-4 w-4 text-gray-500" />
+                <div><p className="text-sm font-semibold text-gray-900">ROT13</p><p className="text-xs text-gray-500">Symmetric — encode = decode</p></div>
               </div>
-              <button onClick={() => applyEncode('rot13', 'ROT13')} className="w-full rounded-lg bg-zinc-700 py-1.5 text-[12px] font-semibold text-zinc-200 hover:bg-zinc-600 transition">ROT13</button>
+              <button onClick={() => applyEncode('rot13', 'ROT13')} className="w-full rounded-lg bg-white border border-gray-200 py-1.5 text-sm font-semibold text-gray-700 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 transition">ROT13</button>
             </div>
           </div>
 
           {encodeOutput && (
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-[12px] font-semibold text-zinc-400">{encodeLabel}</span>
+                <span className="text-sm font-semibold text-gray-700">{encodeLabel}</span>
                 <div className="flex gap-2">
-                  <button onClick={() => setInput(encodeOutput)} className="text-[11px] text-emerald-400 hover:text-emerald-300 transition font-medium">Use as input ↑</button>
+                  <button onClick={() => setInput(encodeOutput)} className="text-xs text-emerald-700 hover:text-emerald-800 bg-white border border-emerald-200 hover:bg-emerald-50 transition font-semibold rounded-lg px-2.5 py-1">Use as Input ↑</button>
                   <CopyBtn text={encodeOutput} />
                 </div>
               </div>
-              <textarea readOnly value={encodeOutput} rows={5}
-                className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 font-mono text-[12px] leading-relaxed text-zinc-200 resize-y focus:outline-none" />
+              <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
+                <p className="font-mono text-sm text-gray-900 break-all leading-relaxed whitespace-pre-wrap">{encodeOutput}</p>
+              </div>
             </div>
           )}
         </div>
@@ -591,8 +597,8 @@ export default function StringUtilitiesClient() {
   return (
     <ToolPageShell
       title="String Utilities"
-      subtitle="12 case formats simultaneously · extract emails/URLs/IPs · Base64, URL & HTML encode · line sort, dedupe, filter"
-      icon="✂️"
+      subtitle="Case conversion, line tools, text extraction, encode/decode — all in one place"
+      icon="✏️"
       tool={tool}
     />
   );

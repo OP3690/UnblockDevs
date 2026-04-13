@@ -85,6 +85,28 @@ x-powered-by: PHP/8.1.0
 date: Mon, 01 Apr 2026 12:00:00 GMT
 content-length: 4821`,
   },
+  {
+    label: 'CDN Edge',
+    description: 'Cloudflare-style edge headers',
+    emoji: '☁️',
+    headers: `HTTP/2 200 OK
+content-type: text/html; charset=utf-8
+strict-transport-security: max-age=63072000; includeSubDomains; preload
+content-security-policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; object-src 'none'; frame-ancestors 'none'
+x-frame-options: DENY
+x-content-type-options: nosniff
+referrer-policy: strict-origin-when-cross-origin
+permissions-policy: camera=(), microphone=(), geolocation=(), payment=()
+x-xss-protection: 0
+cross-origin-opener-policy: same-origin
+cross-origin-embedder-policy: require-corp
+cross-origin-resource-policy: same-site
+cache-control: public, max-age=0, must-revalidate
+cf-cache-status: DYNAMIC
+cf-ray: 8a1b2c3d4e5f6789-SJC
+server: cloudflare
+vary: Accept-Encoding`,
+  },
 ];
 
 // ── Header DB ─────────────────────────────────────────────────────────────────
@@ -233,12 +255,12 @@ function assessHeaders(headers: ParsedHeader[]): { assessments: HeaderAssessment
 }
 
 function getGrade(score: number) {
-  if (score >= 95) return { grade: 'A+', label: 'Excellent', color: 'text-emerald-400', ring: 'ring-emerald-500/40', bg: 'bg-emerald-500/10', border: 'border-emerald-500/30', bar: 'bg-emerald-500' };
-  if (score >= 85) return { grade: 'A', label: 'Strong', color: 'text-emerald-400', ring: 'ring-emerald-500/40', bg: 'bg-emerald-500/10', border: 'border-emerald-500/30', bar: 'bg-emerald-500' };
-  if (score >= 70) return { grade: 'B', label: 'Good', color: 'text-teal-400', ring: 'ring-teal-500/40', bg: 'bg-teal-500/10', border: 'border-teal-500/30', bar: 'bg-teal-500' };
-  if (score >= 55) return { grade: 'C', label: 'Fair', color: 'text-yellow-400', ring: 'ring-yellow-500/40', bg: 'bg-yellow-500/10', border: 'border-yellow-500/30', bar: 'bg-yellow-500' };
-  if (score >= 40) return { grade: 'D', label: 'Weak', color: 'text-orange-400', ring: 'ring-orange-500/40', bg: 'bg-orange-500/10', border: 'border-orange-500/30', bar: 'bg-orange-500' };
-  return { grade: 'F', label: 'Critical', color: 'text-red-400', ring: 'ring-red-500/40', bg: 'bg-red-500/10', border: 'border-red-500/30', bar: 'bg-red-500' };
+  if (score >= 95) return { grade: 'A+', label: 'Excellent', color: 'text-emerald-700', ring: 'ring-emerald-200', bg: 'bg-emerald-50', border: 'border-emerald-200', bar: 'bg-emerald-500' };
+  if (score >= 85) return { grade: 'A', label: 'Strong', color: 'text-emerald-600', ring: 'ring-emerald-200', bg: 'bg-emerald-50', border: 'border-emerald-200', bar: 'bg-emerald-500' };
+  if (score >= 70) return { grade: 'B', label: 'Good', color: 'text-blue-700', ring: 'ring-blue-200', bg: 'bg-blue-50', border: 'border-blue-200', bar: 'bg-blue-500' };
+  if (score >= 55) return { grade: 'C', label: 'Fair', color: 'text-amber-700', ring: 'ring-amber-200', bg: 'bg-amber-50', border: 'border-amber-200', bar: 'bg-amber-500' };
+  if (score >= 40) return { grade: 'D', label: 'Weak', color: 'text-orange-700', ring: 'ring-orange-200', bg: 'bg-orange-50', border: 'border-orange-200', bar: 'bg-orange-500' };
+  return { grade: 'F', label: 'Critical', color: 'text-red-700', ring: 'ring-red-200', bg: 'bg-red-50', border: 'border-red-200', bar: 'bg-red-500' };
 }
 
 function parseHeaders(raw: string): ParsedHeader[] {
@@ -352,14 +374,19 @@ module.exports = nextConfig;`;
 // ── Reusable components ───────────────────────────────────────────────────────
 
 function StatusIcon({ status }: { status: HeaderStatus }) {
-  if (status === 'secure') return <ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0" />;
-  if (status === 'warning') return <ShieldAlert className="h-4 w-4 text-yellow-400 shrink-0" />;
-  if (status === 'missing') return <ShieldOff className="h-4 w-4 text-red-400 shrink-0" />;
-  return <Shield className="h-4 w-4 text-sky-400 shrink-0" />;
+  if (status === 'secure') return <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />;
+  if (status === 'warning') return <ShieldAlert className="h-4 w-4 text-amber-600 shrink-0" />;
+  if (status === 'missing') return <ShieldOff className="h-4 w-4 text-red-600 shrink-0" />;
+  return <Shield className="h-4 w-4 text-sky-600 shrink-0" />;
 }
 
 function StatusBadge({ status }: { status: HeaderStatus }) {
-  const s = { secure: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20', warning: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20', missing: 'bg-red-500/10 text-red-400 border-red-500/20', info: 'bg-sky-500/10 text-sky-400 border-sky-500/20' };
+  const s = {
+    secure: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    warning: 'bg-amber-50 text-amber-700 border-amber-200',
+    missing: 'bg-red-50 text-red-700 border-red-200',
+    info: 'bg-sky-50 text-sky-700 border-sky-200',
+  };
   const l = { secure: '✓ Secure', warning: '⚠ Warning', missing: '✕ Missing', info: 'ℹ Info' };
   return <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${s[status]}`}>{l[status]}</span>;
 }
@@ -368,13 +395,13 @@ function CopyBtn({ text, label = 'Copy', size = 'md' }: { text: string; label?: 
   const [ok, setOk] = useState(false);
   const copy = useCallback(async () => { try { await navigator.clipboard.writeText(text); setOk(true); setTimeout(() => setOk(false), 1800); } catch {} }, [text]);
   if (size === 'sm') return (
-    <button onClick={copy} className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-300 hover:bg-zinc-700/50 transition" title="Copy">
-      {ok ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+    <button onClick={copy} className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition" title="Copy">
+      {ok ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
     </button>
   );
   return (
-    <button onClick={copy} className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-700/50 bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-300 transition hover:bg-zinc-700 hover:text-white">
-      {ok ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+    <button onClick={copy} className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 transition hover:bg-gray-50 hover:border-gray-300">
+      {ok ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
       {ok ? 'Copied!' : label}
     </button>
   );
@@ -385,44 +412,44 @@ function AssessmentCard({ a }: { a: HeaderAssessment }) {
   const pct = a.maxScore > 0 ? (a.score / a.maxScore) * 100 : 0;
   return (
     <div className={`rounded-xl border overflow-hidden transition-all ${
-      a.status === 'secure' ? 'border-emerald-500/20 bg-emerald-500/[0.03]' :
-      a.status === 'warning' ? 'border-yellow-500/20 bg-yellow-500/[0.03]' :
-      a.status === 'missing' ? 'border-red-500/20 bg-red-500/[0.03]' :
-      'border-sky-500/20 bg-sky-500/[0.03]'
+      a.status === 'secure' ? 'border-emerald-200 bg-emerald-50/30' :
+      a.status === 'warning' ? 'border-amber-200 bg-amber-50/30' :
+      a.status === 'missing' ? 'border-red-200 bg-red-50/30' :
+      'border-sky-200 bg-sky-50/30'
     }`}>
-      <button onClick={() => setOpen(o => !o)} className="flex w-full items-start gap-3 px-4 py-3.5 text-left hover:bg-white/[0.02] transition">
+      <button onClick={() => setOpen(o => !o)} className="flex w-full items-start gap-3 px-4 py-3.5 text-left hover:bg-white/60 transition">
         <div className="mt-0.5"><StatusIcon status={a.status} /></div>
         <div className="flex-1 min-w-0 space-y-1">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="font-mono text-[13px] font-semibold text-zinc-100 tracking-tight">{a.name}</span>
+            <span className="font-mono text-[13px] font-semibold text-gray-900 tracking-tight">{a.name}</span>
             <StatusBadge status={a.status} />
-            {a.maxScore > 0 && <span className="text-[10px] text-zinc-600 font-mono">{a.score}/{a.maxScore}pts</span>}
-            {a.attack && <span className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-500 border border-zinc-700/50">Prevents: {a.attack}</span>}
+            {a.maxScore > 0 && <span className="text-[10px] text-gray-400 font-mono">{a.score}/{a.maxScore}pts</span>}
+            {a.attack && <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-500 border border-gray-200">Prevents: {a.attack}</span>}
           </div>
-          {a.value && <p className="font-mono text-[11px] text-zinc-500 truncate leading-relaxed">{a.value}</p>}
+          {a.value && <p className="font-mono text-[11px] text-gray-500 truncate leading-relaxed">{a.value}</p>}
           {a.maxScore > 0 && (
-            <div className="h-1 w-full max-w-[120px] rounded-full bg-zinc-800 overflow-hidden">
-              <div className={`h-full rounded-full transition-all ${pct >= 100 ? 'bg-emerald-500' : pct >= 60 ? 'bg-yellow-500' : 'bg-red-500'}`} style={{ width: `${pct}%` }} />
+            <div className="h-1 w-full max-w-[120px] rounded-full bg-gray-200 overflow-hidden">
+              <div className={`h-full rounded-full transition-all ${pct >= 100 ? 'bg-emerald-500' : pct >= 60 ? 'bg-amber-500' : 'bg-red-500'}`} style={{ width: `${pct}%` }} />
             </div>
           )}
         </div>
-        <div className="shrink-0 mt-0.5 text-zinc-600">{open ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}</div>
+        <div className="shrink-0 mt-0.5 text-gray-400">{open ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}</div>
       </button>
       {open && (
-        <div className="border-t border-zinc-800 px-4 py-4 space-y-3">
-          <p className="text-[13px] text-zinc-400 leading-relaxed">{a.description}</p>
+        <div className="border-t border-gray-100 px-4 py-4 space-y-3 bg-white/40">
+          <p className="text-[13px] text-gray-600 leading-relaxed">{a.description}</p>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            <div className="rounded-lg bg-zinc-900 border border-zinc-800 p-3 space-y-1">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-600">Assessment</p>
-              <p className="text-[12px] text-zinc-300 leading-relaxed">{a.assessment}</p>
+            <div className="rounded-lg bg-gray-50 border border-gray-100 p-3 space-y-1">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">Assessment</p>
+              <p className="text-[12px] text-gray-700 leading-relaxed">{a.assessment}</p>
             </div>
-            <div className="rounded-lg bg-zinc-900 border border-zinc-800 p-3 space-y-1">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-600">Fix</p>
-              <p className="font-mono text-[11px] text-emerald-300 break-all leading-relaxed">{a.recommendation}</p>
+            <div className="rounded-lg bg-emerald-50 border border-emerald-100 p-3 space-y-1">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-emerald-600">Fix</p>
+              <p className="font-mono text-[11px] text-emerald-800 break-all leading-relaxed">{a.recommendation}</p>
             </div>
           </div>
           {a.mdn && (
-            <a href={a.mdn} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[11px] text-sky-400 hover:text-sky-300 transition">
+            <a href={a.mdn} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[11px] text-sky-600 hover:text-sky-700 transition">
               <ExternalLink className="h-3 w-3" /> MDN Reference
             </a>
           )}
@@ -444,10 +471,10 @@ function CorsAnalysis({ headers }: { headers: ParsedHeader[] }) {
   const vary = map.get('vary');
 
   if (!acao && !acam && !acah) return (
-    <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-8 text-center space-y-2">
-      <Globe className="mx-auto h-10 w-10 text-zinc-700" />
-      <p className="text-zinc-400 font-medium">No CORS headers detected</p>
-      <p className="text-zinc-600 text-sm">CORS headers are only needed for APIs accessed from browsers across origins.</p>
+    <div className="rounded-xl border border-gray-200 bg-gray-50 p-8 text-center space-y-2">
+      <Globe className="mx-auto h-10 w-10 text-gray-300" />
+      <p className="text-gray-600 font-medium">No CORS headers detected</p>
+      <p className="text-gray-400 text-sm">CORS headers are only needed for APIs accessed from browsers across origins.</p>
     </div>
   );
 
@@ -464,15 +491,15 @@ function CorsAnalysis({ headers }: { headers: ParsedHeader[] }) {
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {[['Allow-Origin', acao], ['Allow-Methods', acam], ['Allow-Headers', acah], ['Allow-Credentials', acac], ['Max-Age', acma], ['Vary', vary]].map(([label, value]) => (
-          <div key={label as string} className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-3">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-600 mb-1">{label}</p>
-            <p className={`font-mono text-xs break-all leading-relaxed ${value ? 'text-zinc-200' : 'text-zinc-700 italic'}`}>{value || 'not set'}</p>
+          <div key={label as string} className="rounded-xl border border-gray-200 bg-gray-50 p-3">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-1">{label}</p>
+            <p className={`font-mono text-xs break-all leading-relaxed ${value ? 'text-gray-800' : 'text-gray-300 italic'}`}>{value || 'not set'}</p>
           </div>
         ))}
       </div>
       <div className="space-y-2">
-        {issues.map((i, idx) => <div key={idx} className="flex gap-2.5 rounded-xl border border-red-500/20 bg-red-500/5 px-4 py-3"><AlertTriangle className="h-4 w-4 text-red-400 shrink-0 mt-0.5" /><p className="text-sm text-red-300">{i}</p></div>)}
-        {ok.map((o, idx) => <div key={idx} className="flex gap-2.5 rounded-xl border border-emerald-500/20 bg-emerald-500/5 px-4 py-3"><ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" /><p className="text-sm text-emerald-300">{o}</p></div>)}
+        {issues.map((i, idx) => <div key={idx} className="flex gap-2.5 rounded-xl border border-red-200 bg-red-50 px-4 py-3"><AlertTriangle className="h-4 w-4 text-red-500 shrink-0 mt-0.5" /><p className="text-sm text-red-800">{i}</p></div>)}
+        {ok.map((o, idx) => <div key={idx} className="flex gap-2.5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3"><ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" /><p className="text-sm text-emerald-800">{o}</p></div>)}
       </div>
     </div>
   );
@@ -511,14 +538,14 @@ export default function HttpHeadersAnalyzerClient() {
 
       {/* Examples strip */}
       <div className="space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Load an example</p>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Load an example</p>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
           {EXAMPLES.map(ex => (
             <button key={ex.label} onClick={() => { setRaw(ex.headers); setAnalyzed(ex.headers); }}
-              className="flex flex-col items-start gap-1 rounded-xl border border-zinc-700/50 bg-zinc-800/50 px-3 py-2.5 text-left transition hover:border-emerald-500/30 hover:bg-zinc-700/50">
-              <span className="text-base">{ex.emoji}</span>
-              <span className="text-xs font-semibold text-zinc-200 leading-tight">{ex.label}</span>
-              <span className="text-[10px] text-zinc-500 leading-tight">{ex.description}</span>
+              className="flex flex-col items-start gap-1 rounded-xl border border-gray-200 bg-white px-3 py-3 text-left shadow-sm transition hover:border-emerald-300 hover:shadow-md hover:bg-emerald-50/30">
+              <span className="text-xl">{ex.emoji}</span>
+              <span className="text-sm font-semibold text-gray-900 leading-tight">{ex.label}</span>
+              <span className="text-xs text-gray-500 leading-tight">{ex.description}</span>
             </button>
           ))}
         </div>
@@ -527,24 +554,24 @@ export default function HttpHeadersAnalyzerClient() {
       {/* Input */}
       <div className="space-y-2.5">
         <div className="flex items-center justify-between">
-          <label className="text-sm font-semibold text-zinc-200">HTTP Response Headers</label>
+          <label className="text-sm font-semibold text-gray-700">HTTP Response Headers</label>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-zinc-600">Tip: DevTools → Network → any request → Response Headers</span>
-            {raw && <button onClick={clear} className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-300 transition"><X className="h-3 w-3" /> Clear</button>}
+            <span className="text-xs text-gray-400">Tip: DevTools → Network → any request → Response Headers</span>
+            {raw && <button onClick={clear} className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-700 transition"><X className="h-3 w-3" /> Clear</button>}
           </div>
         </div>
         <textarea value={raw} onChange={e => setRaw(e.target.value)} rows={7} spellCheck={false}
           placeholder={`HTTP/2 200 OK\ncontent-type: text/html; charset=utf-8\nstrict-transport-security: max-age=31536000\n...\n\nPaste raw headers here`}
-          className="w-full rounded-xl border border-zinc-700/40 bg-zinc-950 px-4 py-3.5 font-mono text-[13px] leading-relaxed text-zinc-200 placeholder-zinc-700 resize-y focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500/40 transition" />
+          className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3.5 font-mono text-sm leading-relaxed text-gray-800 placeholder-gray-300 resize-y focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 shadow-sm transition" />
         <button onClick={analyze}
-          className="flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-500 active:scale-[0.98] shadow-lg shadow-emerald-900/30">
+          className="flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 active:scale-[0.98] shadow-sm">
           <Zap className="h-4 w-4" /> Analyze Headers
         </button>
       </div>
 
       {/* Score panel */}
       {headers.length > 0 && (
-        <div className={`rounded-2xl border ${grade.border} ${grade.bg} p-5`}>
+        <div className={`rounded-2xl border ${grade.border} ${grade.bg} p-6`}>
           <div className="flex flex-wrap items-center gap-5">
             {/* Grade circle */}
             <div className={`flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl ring-4 ${grade.ring} ${grade.bg} border ${grade.border}`}>
@@ -556,19 +583,19 @@ export default function HttpHeadersAnalyzerClient() {
             {/* Score bar */}
             <div className="flex-1 min-w-[180px] space-y-2">
               <div className="flex justify-between items-baseline">
-                <span className="text-sm font-semibold text-zinc-300">Security Score</span>
-                <span className={`text-2xl font-black ${grade.color}`}>{totalScore}<span className="text-sm text-zinc-500 font-normal">/{maxScore}</span></span>
+                <span className="text-sm font-semibold text-gray-700">Security Score</span>
+                <span className={`text-2xl font-black ${grade.color}`}>{totalScore}<span className="text-sm text-gray-400 font-normal">/{maxScore}</span></span>
               </div>
-              <div className="h-2.5 w-full rounded-full bg-zinc-900 overflow-hidden">
+              <div className="h-2.5 w-full rounded-full bg-gray-200 overflow-hidden">
                 <div className={`h-full rounded-full transition-all duration-1000 ${grade.bar}`} style={{ width: `${(totalScore / maxScore) * 100}%` }} />
               </div>
             </div>
             {/* Counts */}
             <div className="flex gap-5">
-              {[['✓', secureCount, 'text-emerald-400', 'Secure'], ['⚠', warnCount, 'text-yellow-400', 'Warnings'], ['✕', missingCount, 'text-red-400', 'Missing']].map(([icon, n, cls, lbl]) => (
+              {[['✓', secureCount, 'text-emerald-700', 'Secure'], ['⚠', warnCount, 'text-amber-700', 'Warnings'], ['✕', missingCount, 'text-red-700', 'Missing']].map(([icon, n, cls, lbl]) => (
                 <div key={lbl as string} className="text-center">
                   <div className={`text-2xl font-black ${cls}`}>{n as number}</div>
-                  <div className="text-[10px] text-zinc-600 font-medium">{lbl}</div>
+                  <div className="text-[10px] text-gray-500 font-medium">{lbl}</div>
                 </div>
               ))}
             </div>
@@ -576,11 +603,11 @@ export default function HttpHeadersAnalyzerClient() {
 
           {/* Quick fixes */}
           {missingCritical.length > 0 && (
-            <div className="mt-4 pt-4 border-t border-zinc-800">
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500 mb-2">Critical missing headers</p>
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-500 mb-2">Critical missing headers</p>
               <div className="flex flex-wrap gap-2">
                 {missingCritical.map(a => (
-                  <span key={a.name} className="inline-flex items-center gap-1 rounded-lg border border-red-500/20 bg-red-500/5 px-2.5 py-1 font-mono text-[11px] text-red-300">
+                  <span key={a.name} className="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-2.5 py-1 font-mono text-[11px] text-red-700">
                     <ShieldOff className="h-3 w-3" /> {a.name}
                   </span>
                 ))}
@@ -593,12 +620,20 @@ export default function HttpHeadersAnalyzerClient() {
       {/* Tabs + content */}
       {headers.length > 0 && (
         <div className="space-y-4">
-          <div className="flex gap-1 rounded-xl border border-zinc-800 bg-zinc-950 p-1 overflow-x-auto">
+          <div className="flex gap-1 rounded-xl border border-gray-200 bg-gray-50 p-1 overflow-x-auto">
             {tabs.map(t => (
               <button key={t.id} onClick={() => setTab(t.id)}
-                className={`flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-[12px] font-semibold whitespace-nowrap transition ${tab === t.id ? 'bg-zinc-800 text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-300'}`}>
+                className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm whitespace-nowrap transition ${
+                  tab === t.id
+                    ? 'bg-white border border-gray-200 text-gray-900 font-semibold shadow-sm'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}>
                 {t.icon} {t.label}
-                {t.count !== undefined && <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold ${tab === t.id ? 'bg-zinc-700 text-zinc-300' : 'bg-zinc-900 text-zinc-600'}`}>{t.count}</span>}
+                {t.count !== undefined && (
+                  <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold ${
+                    tab === t.id ? 'bg-gray-100 text-gray-600' : 'bg-gray-200 text-gray-400'
+                  }`}>{t.count}</span>
+                )}
               </button>
             ))}
           </div>
@@ -608,21 +643,28 @@ export default function HttpHeadersAnalyzerClient() {
 
           {/* Overview tab */}
           {tab === 'overview' && (
-            <div className="rounded-xl border border-zinc-800 overflow-hidden">
+            <div className="rounded-xl border border-gray-200 overflow-hidden shadow-sm">
               <table className="w-full text-sm">
-                <thead><tr className="border-b border-zinc-800 bg-zinc-900">
-                  <th className="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-zinc-500">Header</th>
-                  <th className="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-zinc-500">Value</th>
-                  <th className="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-zinc-500">Category</th>
+                <thead><tr className="border-b border-gray-200 bg-gray-50">
+                  <th className="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-gray-500">Header</th>
+                  <th className="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-gray-500">Value</th>
+                  <th className="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-gray-500">Category</th>
                 </tr></thead>
                 <tbody>
                   {headers.map((h, i) => {
                     const cat = HEADER_DB[h.lname]?.category ?? 'other';
-                    const catCls: Record<string, string> = { security: 'text-emerald-400 bg-emerald-500/8 border-emerald-500/20', cors: 'text-sky-400 bg-sky-500/8 border-sky-500/20', caching: 'text-yellow-400 bg-yellow-500/8 border-yellow-500/20', content: 'text-violet-400 bg-violet-500/8 border-violet-500/20', info: 'text-zinc-400 bg-zinc-800 border-zinc-700/50', other: 'text-zinc-400 bg-zinc-800 border-zinc-700/50' };
+                    const catCls: Record<string, string> = {
+                      security: 'text-emerald-700 bg-emerald-50 border-emerald-200',
+                      cors: 'text-sky-700 bg-sky-50 border-sky-200',
+                      caching: 'text-amber-700 bg-amber-50 border-amber-200',
+                      content: 'text-violet-700 bg-violet-50 border-violet-200',
+                      info: 'text-gray-600 bg-gray-100 border-gray-200',
+                      other: 'text-gray-600 bg-gray-100 border-gray-200',
+                    };
                     return (
-                      <tr key={i} className="border-b border-zinc-800/50 hover:bg-zinc-900/40 transition">
-                        <td className="px-4 py-3 font-mono text-[12px] font-semibold text-zinc-200">{h.name}</td>
-                        <td className="px-4 py-3 font-mono text-[11px] text-zinc-400 max-w-xs truncate">{h.value}</td>
+                      <tr key={i} className="border-b border-gray-100 hover:bg-gray-50 transition">
+                        <td className="px-4 py-3 font-mono text-[12px] font-semibold text-gray-900">{h.name}</td>
+                        <td className="px-4 py-3 font-mono text-[11px] text-gray-500 max-w-xs truncate">{h.value}</td>
                         <td className="px-4 py-3"><span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold capitalize ${catCls[cat]}`}>{cat}</span></td>
                       </tr>
                     );
@@ -638,20 +680,24 @@ export default function HttpHeadersAnalyzerClient() {
           {/* Config tab */}
           {tab === 'config' && (
             <div className="space-y-4">
-              <div className="flex gap-2 flex-wrap">
+              <div className="flex gap-1 bg-gray-100 rounded-lg p-1 flex-wrap">
                 {(['express', 'nginx', 'apache', 'nextjs'] as ConfigLang[]).map(lang => (
                   <button key={lang} onClick={() => setConfigLang(lang)}
-                    className={`rounded-xl px-4 py-2 text-sm font-semibold capitalize transition ${configLang === lang ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/30' : 'border border-zinc-700/50 bg-zinc-800/60 text-zinc-300 hover:bg-zinc-700'}`}>
+                    className={`rounded-md px-4 py-1.5 text-sm font-semibold capitalize transition ${
+                      configLang === lang
+                        ? 'bg-white text-gray-900 shadow-sm border border-gray-200'
+                        : 'text-gray-500 hover:text-gray-700'
+                    }`}>
                     {lang === 'nextjs' ? 'Next.js' : lang === 'express' ? 'Express.js' : lang.charAt(0).toUpperCase() + lang.slice(1)}
                   </button>
                 ))}
               </div>
-              <div className="rounded-xl border border-zinc-800 bg-zinc-950 overflow-hidden">
-                <div className="flex items-center justify-between border-b border-zinc-800 px-4 py-2.5 bg-zinc-900">
-                  <span className="font-mono text-xs text-zinc-500">{configLang === 'nextjs' ? 'next.config.js' : configLang === 'express' ? 'middleware.js' : configLang === 'nginx' ? 'nginx.conf' : '.htaccess'}</span>
+              <div className="rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+                <div className="flex items-center justify-between border-b border-gray-200 px-4 py-2.5 bg-gray-50">
+                  <span className="font-mono text-xs text-gray-500">{configLang === 'nextjs' ? 'next.config.js' : configLang === 'express' ? 'middleware.js' : configLang === 'nginx' ? 'nginx.conf' : '.htaccess'}</span>
                   <CopyBtn text={configCode} />
                 </div>
-                <pre className="overflow-x-auto p-4 text-[12px] leading-relaxed text-zinc-300 font-mono whitespace-pre">{configCode}</pre>
+                <pre className="overflow-x-auto bg-gray-900 p-5 text-[12px] leading-relaxed text-gray-100 font-mono whitespace-pre">{configCode}</pre>
               </div>
             </div>
           )}
@@ -660,10 +706,10 @@ export default function HttpHeadersAnalyzerClient() {
 
       {/* Empty state */}
       {headers.length === 0 && analyzed.trim() && (
-        <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-8 text-center">
-          <ShieldOff className="mx-auto h-10 w-10 text-zinc-700 mb-3" />
-          <p className="text-zinc-400 font-medium">No headers could be parsed</p>
-          <p className="text-zinc-600 text-sm mt-1">Expected format: <code className="font-mono text-zinc-500">Header-Name: value</code> (one per line)</p>
+        <div className="rounded-xl border border-gray-200 bg-gray-50 p-8 text-center">
+          <ShieldOff className="mx-auto h-10 w-10 text-gray-300 mb-3" />
+          <p className="text-gray-600 font-medium">No headers could be parsed</p>
+          <p className="text-gray-400 text-sm mt-1">Expected format: <code className="font-mono text-gray-600">Header-Name: value</code> (one per line)</p>
         </div>
       )}
     </div>
@@ -671,8 +717,8 @@ export default function HttpHeadersAnalyzerClient() {
 
   return (
     <ToolPageShell
-      title="HTTP Headers Analyzer"
-      subtitle="Paste response headers → instant A+ to F security grade, per-header assessment, and server config generation"
+      title="HTTP Security Headers Analyzer"
+      subtitle="Paste HTTP response headers, get an A+ to F security grade, detect vulnerabilities, and generate server configs"
       icon="🔒"
       tool={tool}
     />
