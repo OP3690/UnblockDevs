@@ -10,6 +10,51 @@ export type BlogPost = {
 
 export const blogPosts: BlogPost[] = [
     {
+      slug: 'how-to-debug-api-request-errors',
+      title: 'How to Debug API Request Errors — Common Dev Errors Explained',
+      excerpt: 'CORS errors, process.env undefined, maximum call stack exceeded — how to debug the most common API and JavaScript errors developers hit daily, with online tools.',
+      date: '2026-04-13',
+      readTime: '9 min read',
+      category: 'JSON & Logs',
+      keywords: ['how to debug api request errors', 'cors error fix', 'process env undefined nodejs', 'maximum call stack exceeded', 'api request failing', 'test api without postman']
+    },
+    {
+      slug: 'how-to-copy-request-as-curl-in-chrome',
+      title: 'How to Copy a Request as cURL in Chrome — DevTools Guide',
+      excerpt: 'Step-by-step: where to find "Copy as cURL" in Chrome DevTools, how to use it, and how to export all requests at once from a HAR file when copy as cURL is not enough.',
+      date: '2026-04-13',
+      readTime: '7 min read',
+      category: 'JSON & Logs',
+      keywords: ['how to copy request as curl in chrome', 'copy as curl devtools', 'where is copy as curl chrome', 'export api request as curl', 'har to curl', 'convert network request to curl']
+    },
+    {
+      slug: 'how-to-beautify-html-code-online',
+      title: 'How to Beautify HTML Code Online — Formatter, Live Preview & Indenter',
+      excerpt: 'Messy HTML from a CMS, email template, or minified file? Here\'s how to beautify HTML code online instantly — format, indent properly, and preview it live in the browser.',
+      date: '2026-04-13',
+      readTime: '6 min read',
+      category: 'JSON & Logs',
+      keywords: ['how to beautify html code online', 'html formatter online free', 'html viewer live preview', 'format html online', 'html beautifier', 'indent html code properly']
+    },
+    {
+      slug: 'how-to-fix-json-parse-error-step-by-step',
+      title: 'How to Fix JSON Parse Error — Step by Step (With Examples)',
+      excerpt: 'Getting a JSON parse error or unexpected token? Here\'s exactly how to find and fix the most common JSON syntax errors — trailing commas, single quotes, unquoted keys, and more.',
+      date: '2026-04-13',
+      readTime: '8 min read',
+      category: 'JSON & Logs',
+      keywords: ['how to fix json parse error', 'unexpected token json', 'json syntax error fix', 'common json errors', 'json error checker online', 'repair corrupted json']
+    },
+    {
+      slug: 'how-to-view-json-in-readable-format',
+      title: 'How to View JSON in Readable Format (Free Online Tool)',
+      excerpt: 'JSON looking like a wall of text? Here\'s how to view JSON in a readable format instantly — with a tree viewer, formatter, and syntax highlighting. Free, no signup required.',
+      date: '2026-04-13',
+      readTime: '6 min read',
+      category: 'JSON & Logs',
+      keywords: ['how to view json in readable format', 'json formatter online free', 'json beautifier online', 'json tree viewer', 'pretty print json online', 'format json instantly']
+    },
+    {
       slug: 'why-does-my-json-have-backslashes',
       title: 'Why Does My JSON Have Backslashes? (Explained Simply)',
       excerpt: 'JSON uses backslashes to escape special characters like quotes inside strings. Learn why you see double backslashes, how to fix confusion, and when to use a JSON beautifier.',
