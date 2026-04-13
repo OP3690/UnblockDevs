@@ -5,12 +5,61 @@ import {
   Copy, Check, RotateCcw, ArrowUpDown, Hash, Link2,
   Mail, Phone, Shuffle, Binary, Code2, Braces, X,
   ChevronDown, Sparkles, FileText, Search, Wand2,
+  Download, Table2, SplitSquareHorizontal,
 } from 'lucide-react';
 import ToolPageShell from '@/components/tools/ToolPageShell';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
 type MainTab = 'cases' | 'lines' | 'extract' | 'transform' | 'encode';
+type SeparatorType = 'auto' | 'newline' | 'comma' | 'pipe' | 'space' | 'tab' | 'semicolon' | 'colon';
+
+// ── Separator splitting ───────────────────────────────────────────────────────
+
+const SEPARATOR_OPTIONS: { value: SeparatorType; label: string; char: string }[] = [
+  { value: 'auto',      label: 'Auto-detect',  char: '?' },
+  { value: 'newline',   label: 'New line',      char: '↵' },
+  { value: 'comma',     label: 'Comma',         char: ',' },
+  { value: 'pipe',      label: 'Pipe',          char: '|' },
+  { value: 'space',     label: 'Space',         char: '␣' },
+  { value: 'tab',       label: 'Tab',           char: '→' },
+  { value: 'semicolon', label: 'Semicolon',     char: ';' },
+  { value: 'colon',     label: 'Colon',         char: ':' },
+];
+
+function splitBySeparator(input: string, sep: SeparatorType): string[] {
+  if (!input.trim()) return [];
+  let tokens: string[];
+  switch (sep) {
+    case 'auto': {
+      // Detect priority: newline > pipe > comma > semicolon > space
+      if (/\n/.test(input)) tokens = input.split('\n');
+      else if (/\|/.test(input)) tokens = input.split('|');
+      else if (/,/.test(input)) tokens = input.split(',');
+      else if (/;/.test(input)) tokens = input.split(';');
+      else tokens = input.split(/\s+/);
+      break;
+    }
+    case 'newline':   tokens = input.split('\n'); break;
+    case 'comma':     tokens = input.split(','); break;
+    case 'pipe':      tokens = input.split('|'); break;
+    case 'space':     tokens = input.split(/\s+/); break;
+    case 'tab':       tokens = input.split('\t'); break;
+    case 'semicolon': tokens = input.split(';'); break;
+    case 'colon':     tokens = input.split(':'); break;
+    default:          tokens = input.split('\n');
+  }
+  return tokens.map(t => t.trim()).filter(Boolean);
+}
+
+function detectSeparator(input: string): SeparatorType {
+  if (/\n/.test(input)) return 'newline';
+  if (/\|/.test(input)) return 'pipe';
+  if (/,/.test(input)) return 'comma';
+  if (/;/.test(input)) return 'semicolon';
+  if (/\t/.test(input)) return 'tab';
+  return 'space';
+}
 
 // ── Case conversion ──────────────────────────────────────────────────────────
 
@@ -67,15 +116,17 @@ function computeStats(text: string) {
 
 // ── Examples ─────────────────────────────────────────────────────────────────
 
-const EXAMPLES: { label: string; emoji: string; text: string }[] = [
-  { label: 'Variable name',  emoji: '📦', text: 'getUserProfileData' },
-  { label: 'DB column',      emoji: '🗄️', text: 'created_at_timestamp' },
-  { label: 'Config key',     emoji: '⚙️', text: 'max.retry.attempts' },
-  { label: 'Mixed sentence', emoji: '📝', text: 'The Quick-Brown FOX jumps_over the lazy dog' },
-  { label: 'Email list',     emoji: '📧', text: 'Contact us at support@example.com or admin@company.co.uk\nVisit https://example.com for more info\nServer IP: 192.168.1.1' },
-  { label: 'API endpoint',   emoji: '🌐', text: 'GET /api/v2/user-profile/{userId}' },
-  { label: 'Error message',  emoji: '❌', text: 'Error: Cannot read property undefined of null in getUserData' },
-  { label: 'CSS class name', emoji: '🎨', text: 'btn--primary-large__icon-left' },
+const EXAMPLES: { label: string; emoji: string; text: string; bulk?: boolean }[] = [
+  { label: 'Variable name',      emoji: '📦', text: 'getUserProfileData' },
+  { label: 'DB column',          emoji: '🗄️', text: 'created_at_timestamp' },
+  { label: 'Config key',         emoji: '⚙️', text: 'max.retry.attempts' },
+  { label: 'CSS class name',     emoji: '🎨', text: 'btn--primary-large__icon-left' },
+  { label: 'Bulk — comma',       emoji: '📋', text: 'userId,firstName,lastName,emailAddress,phoneNumber', bulk: true },
+  { label: 'Bulk — pipe',        emoji: '🔀', text: 'user_id|created_at|updated_at|deleted_at|is_active', bulk: true },
+  { label: 'Bulk — newline',     emoji: '📄', text: 'getProductById\ncreateNewOrder\nupdateUserProfile\ndeleteExpiredSessions', bulk: true },
+  { label: 'Bulk — space',       emoji: '🔠', text: 'firstName lastName emailAddress phoneNumber dateOfBirth', bulk: true },
+  { label: 'Mixed sentence',     emoji: '📝', text: 'The Quick-Brown FOX jumps_over the lazy dog' },
+  { label: 'API endpoint',       emoji: '🌐', text: 'GET /api/v2/user-profile/{userId}' },
 ];
 
 // ── Extract patterns ──────────────────────────────────────────────────────────
@@ -146,6 +197,7 @@ function CaseCard({ label, desc, value, badge, badgeCls }: { label: string; desc
 export default function StringUtilitiesClient() {
   const [input, setInput] = useState('getUserProfileData');
   const [tab, setTab] = useState<MainTab>('cases');
+  const [separator, setSeparator] = useState<SeparatorType>('auto');
 
   // Line tools
   const [lineOutput, setLineOutput] = useState('');
@@ -168,6 +220,39 @@ export default function StringUtilitiesClient() {
   const [encodeLabel, setEncodeLabel] = useState('');
 
   const stats = useMemo(() => computeStats(input), [input]);
+
+  // ── Bulk mode ────────────────────────────────────────────────────────────────
+  const bulkTokens = useMemo(() => splitBySeparator(input, separator), [input, separator]);
+  const isBulk = bulkTokens.length > 1;
+  const detectedSep = useMemo(() => detectSeparator(input), [input]);
+
+  const bulkResults = useMemo(() => {
+    if (!isBulk) return [];
+    return bulkTokens.map(token => ({
+      original: token,
+      cases: CASE_FORMATS.map(f => ({ label: f.label, badge: f.badge, value: f.fn(token) })),
+    }));
+  }, [bulkTokens, isBulk]);
+
+  const downloadCSV = useCallback(() => {
+    const headers = ['Original', ...CASE_FORMATS.map(f => f.label)];
+    const rows = bulkResults.map(r => [r.original, ...r.cases.map(c => c.value)]);
+    const csv = [headers, ...rows]
+      .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+      .join('\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'string-cases-bulk.csv'; a.click();
+    URL.revokeObjectURL(url);
+  }, [bulkResults]);
+
+  const copyBulkCSV = useCallback(() => {
+    const headers = ['Original', ...CASE_FORMATS.map(f => f.label)];
+    const rows = bulkResults.map(r => [r.original, ...r.cases.map(c => c.value)]);
+    const csv = [headers, ...rows].map(row => row.join('\t')).join('\n');
+    navigator.clipboard.writeText(csv);
+  }, [bulkResults]);
 
   const caseResults = useMemo(() =>
     CASE_FORMATS.map(f => ({ ...f, value: input.trim() ? f.fn(input) : '' })),
@@ -298,11 +383,18 @@ export default function StringUtilitiesClient() {
 
       {/* Examples */}
       <div className="space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Try an example</p>
+        <div className="flex items-center gap-3">
+          <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Try an example</p>
+          <span className="text-[10px] text-gray-400 bg-gray-100 rounded-full px-2 py-0.5">Examples marked 📋🔀📄🔠 activate Bulk Mode</span>
+        </div>
         <div className="flex flex-wrap gap-2">
           {EXAMPLES.map(ex => (
             <button key={ex.label} onClick={() => { setInput(ex.text); setLineOutput(''); setTransformOutput(''); setEncodeOutput(''); setExtractResults({}); }}
-              className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 transition font-medium shadow-sm">
+              className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium shadow-sm transition ${
+                ex.bulk
+                  ? 'border-emerald-200 bg-emerald-50 text-emerald-700 hover:border-emerald-400 hover:bg-emerald-100'
+                  : 'border-gray-200 bg-white text-gray-700 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700'
+              }`}>
               <span>{ex.emoji}</span> {ex.label}
             </button>
           ))}
@@ -321,7 +413,7 @@ export default function StringUtilitiesClient() {
         </div>
         <textarea value={input} onChange={e => { setInput(e.target.value); setLineOutput(''); setTransformOutput(''); setEncodeOutput(''); }}
           rows={4} spellCheck={false}
-          placeholder="Paste any text, variable name, code snippet, or multi-line list..."
+          placeholder="Paste one token — or multiple separated by comma, pipe (|), newline, space, semicolon for Bulk Mode..."
           className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3.5 font-mono text-sm leading-relaxed text-gray-900 placeholder-gray-300 resize-y focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 shadow-sm min-h-[100px]" />
 
         {/* Stats bar */}
@@ -359,10 +451,109 @@ export default function StringUtilitiesClient() {
 
       {/* ── Case Formats ─────────────────────────────────────────────────────── */}
       {tab === 'cases' && (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {caseResults.map(f => (
-            <CaseCard key={f.label} label={f.label} desc={f.desc} value={f.value} badge={f.badge} badgeCls={f.badgeCls} />
-          ))}
+        <div className="space-y-4">
+
+          {/* Separator selector — always visible */}
+          <div className="flex flex-wrap items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
+            <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider shrink-0">
+              <SplitSquareHorizontal className="h-3.5 w-3.5" />
+              Separator
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {SEPARATOR_OPTIONS.map(s => (
+                <button key={s.value} onClick={() => setSeparator(s.value)}
+                  className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-semibold transition ${
+                    separator === s.value
+                      ? 'border-emerald-300 bg-emerald-50 text-emerald-700'
+                      : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50'
+                  }`}>
+                  <span className="font-mono text-[10px] bg-gray-100 rounded px-1">{s.char}</span>
+                  {s.label}
+                  {s.value === 'auto' && input.trim() && (
+                    <span className="text-[9px] text-gray-400 font-normal">→ {detectedSep}</span>
+                  )}
+                </button>
+              ))}
+            </div>
+            {isBulk && (
+              <span className="ml-auto flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-full px-2.5 py-1 shrink-0">
+                <Table2 className="h-3 w-3" />
+                {bulkTokens.length} tokens detected — Bulk Mode
+              </span>
+            )}
+          </div>
+
+          {/* BULK MODE — table view */}
+          {isBulk ? (
+            <div className="space-y-3">
+              {/* Actions bar */}
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <p className="text-sm text-gray-600">
+                  <span className="font-semibold text-gray-900">{bulkTokens.length} tokens</span> — each converted to all 12 case formats
+                </p>
+                <div className="flex gap-2">
+                  <button onClick={copyBulkCSV}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:border-gray-300 hover:bg-gray-50 shadow-sm transition">
+                    <Copy className="h-3.5 w-3.5" /> Copy as TSV
+                  </button>
+                  <button onClick={downloadCSV}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 px-4 py-1.5 text-sm font-semibold text-white shadow-sm transition">
+                    <Download className="h-3.5 w-3.5" /> Download CSV
+                  </button>
+                </div>
+              </div>
+
+              {/* Scrollable table */}
+              <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+                <table className="w-full text-left text-sm border-collapse">
+                  <thead>
+                    <tr className="bg-gray-50 border-b border-gray-200">
+                      <th className="sticky left-0 z-10 bg-gray-50 px-4 py-3 font-semibold text-gray-700 border-r border-gray-200 whitespace-nowrap min-w-[140px]">
+                        Original
+                      </th>
+                      {CASE_FORMATS.map(f => (
+                        <th key={f.label} className="px-3 py-3 font-semibold text-gray-700 whitespace-nowrap border-r border-gray-100 last:border-r-0">
+                          <div className="flex items-center gap-1.5">
+                            <span>{f.label}</span>
+                            <span className={`rounded-full border px-1 py-px text-[8px] font-bold uppercase tracking-wide ${f.badgeCls}`}>{f.badge}</span>
+                          </div>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {bulkResults.map((row, ri) => (
+                      <tr key={ri} className={`group hover:bg-emerald-50/40 transition ${ri % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
+                        <td className="sticky left-0 z-10 bg-inherit px-4 py-2.5 border-r border-gray-200">
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-xs font-bold text-gray-900 break-all">{row.original}</span>
+                          </div>
+                        </td>
+                        {row.cases.map((c, ci) => (
+                          <td key={ci} className="px-3 py-2.5 border-r border-gray-100 last:border-r-0">
+                            <div className="flex items-center gap-1.5 min-w-[120px]">
+                              <span className="font-mono text-xs text-gray-800 break-all">{c.value}</span>
+                              <CopyBtn text={c.value} icon />
+                            </div>
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mini cards still shown below for quick access */}
+              <p className="text-xs text-gray-400 pt-1">Scroll right to see all formats · Click any copy icon to copy individual values</p>
+            </div>
+          ) : (
+            /* SINGLE MODE — card grid */
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {caseResults.map(f => (
+                <CaseCard key={f.label} label={f.label} desc={f.desc} value={f.value} badge={f.badge} badgeCls={f.badgeCls} />
+              ))}
+            </div>
+          )}
         </div>
       )}
 
