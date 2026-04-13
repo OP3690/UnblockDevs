@@ -428,6 +428,22 @@ export const TOOLS_DIRECTORY: DirectoryTool[] = [
     icon: 'Monitor',
     badge: 'new',
   },
+  {
+    href: '/http-headers-analyzer',
+    name: 'HTTP headers analyzer',
+    description: 'Paste HTTP response headers and get an A+ to F security grade. Checks CSP, HSTS, CORS and generates Express/Nginx/Apache config.',
+    category: 'dev',
+    icon: 'Shield',
+    badge: 'new',
+  },
+  {
+    href: '/string-utilities',
+    name: 'String utilities',
+    description: 'All 12 case formats simultaneously (camelCase, snake_case, PascalCase…), extract emails/URLs/IPs, Base64/URL/HTML encode, line tools.',
+    category: 'dev',
+    icon: 'Type',
+    badge: 'new',
+  },
 ];
 
 export const TOOL_COUNT = TOOLS_DIRECTORY.length;

@@ -3,149 +3,113 @@
 import { useState, useMemo, useCallback } from 'react';
 import {
   ShieldCheck, ShieldAlert, ShieldOff, Shield, Copy, Check,
-  ChevronDown, ChevronUp, Globe, Server, Zap, Info,
+  ChevronDown, ChevronUp, Globe, Server, Zap, Info, X,
+  AlertTriangle, ExternalLink, Lock, Eye, Cpu, BarChart3,
 } from 'lucide-react';
 import ToolPageShell from '@/components/tools/ToolPageShell';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
 type HeaderStatus = 'secure' | 'warning' | 'missing' | 'info';
+type Tab = 'security' | 'overview' | 'cors' | 'config';
+type ConfigLang = 'express' | 'nginx' | 'apache' | 'nextjs';
 
 interface ParsedHeader { name: string; value: string; lname: string; }
 
 interface HeaderAssessment {
-  name: string;
-  lname: string;
-  status: HeaderStatus;
-  value?: string;
-  score: number;
-  maxScore: number;
-  title: string;
-  description: string;
-  assessment: string;
-  recommendation: string;
-  mdn?: string;
+  name: string; lname: string; status: HeaderStatus;
+  value?: string; score: number; maxScore: number;
+  title: string; description: string; assessment: string;
+  recommendation: string; mdn?: string; attack?: string;
 }
 
-type Tab = 'overview' | 'security' | 'cors' | 'config';
-type ConfigLang = 'express' | 'nginx' | 'apache';
+// ── Examples ─────────────────────────────────────────────────────────────────
 
-// ── Header database ──────────────────────────────────────────────────────────
+const EXAMPLES: { label: string; description: string; emoji: string; headers: string }[] = [
+  {
+    label: 'A+ Grade Site',
+    description: 'Fully hardened production headers',
+    emoji: '🏆',
+    headers: `HTTP/2 200 OK
+content-type: text/html; charset=utf-8
+strict-transport-security: max-age=63072000; includeSubDomains; preload
+content-security-policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; object-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests
+x-frame-options: DENY
+x-content-type-options: nosniff
+referrer-policy: strict-origin-when-cross-origin
+permissions-policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+x-xss-protection: 0
+cross-origin-opener-policy: same-origin
+cross-origin-embedder-policy: require-corp
+cross-origin-resource-policy: same-origin
+cache-control: no-store, must-revalidate`,
+  },
+  {
+    label: 'Typical Web App',
+    description: 'Common headers — room to improve',
+    emoji: '⚠️',
+    headers: `HTTP/1.1 200 OK
+content-type: text/html; charset=utf-8
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+strict-transport-security: max-age=31536000; includeSubDomains
+cache-control: no-cache, no-store, must-revalidate
+content-security-policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'
+server: nginx/1.18.0
+x-powered-by: Express`,
+  },
+  {
+    label: 'REST API Server',
+    description: 'JSON API with CORS headers',
+    emoji: '🔌',
+    headers: `HTTP/2 200 OK
+content-type: application/json; charset=utf-8
+access-control-allow-origin: https://app.example.com
+access-control-allow-methods: GET, POST, PUT, DELETE, OPTIONS
+access-control-allow-headers: Content-Type, Authorization, X-Requested-With
+access-control-allow-credentials: true
+access-control-max-age: 86400
+x-content-type-options: nosniff
+x-frame-options: DENY
+cache-control: no-store
+vary: Origin`,
+  },
+  {
+    label: 'Vulnerable Site',
+    description: 'Missing critical security headers',
+    emoji: '🚨',
+    headers: `HTTP/1.1 200 OK
+content-type: text/html
+server: Apache/2.4.51 (Ubuntu)
+x-powered-by: PHP/8.1.0
+date: Mon, 01 Apr 2026 12:00:00 GMT
+content-length: 4821`,
+  },
+];
 
-interface HeaderDef {
-  title: string;
-  description: string;
-  mdn?: string;
-  category: 'security' | 'cors' | 'caching' | 'content' | 'info';
-}
+// ── Header DB ─────────────────────────────────────────────────────────────────
 
-const HEADER_DB: Record<string, HeaderDef> = {
-  'content-security-policy': {
-    title: 'Content-Security-Policy',
-    description: 'Controls which resources the browser can load. Prevents XSS attacks by defining trusted sources for scripts, styles, images, and more.',
-    mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy',
-    category: 'security',
-  },
-  'strict-transport-security': {
-    title: 'Strict-Transport-Security',
-    description: 'Forces browsers to use HTTPS for your domain. Prevents SSL stripping attacks and mixed content issues.',
-    mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security',
-    category: 'security',
-  },
-  'x-frame-options': {
-    title: 'X-Frame-Options',
-    description: 'Controls whether your page can be embedded in an iframe. Prevents clickjacking attacks.',
-    mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options',
-    category: 'security',
-  },
-  'x-content-type-options': {
-    title: 'X-Content-Type-Options',
-    description: 'Prevents browsers from MIME-type sniffing. Stops browsers from interpreting files as a different MIME type.',
-    mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options',
-    category: 'security',
-  },
-  'referrer-policy': {
-    title: 'Referrer-Policy',
-    description: 'Controls how much referrer information is included with requests. Protects user privacy and prevents information leakage.',
-    mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy',
-    category: 'security',
-  },
-  'permissions-policy': {
-    title: 'Permissions-Policy',
-    description: 'Controls which browser features and APIs can be used on your page (camera, microphone, geolocation, etc.).',
-    mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Permissions-Policy',
-    category: 'security',
-  },
-  'x-xss-protection': {
-    title: 'X-XSS-Protection',
-    description: 'Legacy XSS filter header (deprecated in modern browsers). Setting to 0 disables the buggy filter; CSP is preferred.',
-    mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection',
-    category: 'security',
-  },
-  'cross-origin-opener-policy': {
-    title: 'Cross-Origin-Opener-Policy',
-    description: 'Isolates your browsing context from cross-origin windows. Required for SharedArrayBuffer and high-resolution timers.',
-    mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cross-Origin-Opener-Policy',
-    category: 'security',
-  },
-  'cross-origin-embedder-policy': {
-    title: 'Cross-Origin-Embedder-Policy',
-    description: 'Prevents a document from loading cross-origin resources that don\'t grant explicit permission.',
-    mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cross-Origin-Embedder-Policy',
-    category: 'security',
-  },
-  'cross-origin-resource-policy': {
-    title: 'Cross-Origin-Resource-Policy',
-    description: 'Prevents cross-origin read of your resources (images, JSON, etc.) to protect against Spectre-like attacks.',
-    mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cross-Origin-Resource-Policy',
-    category: 'security',
-  },
-  'cache-control': {
-    title: 'Cache-Control',
-    description: 'Controls how, and for how long, the browser and intermediate caches store the response.',
-    mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control',
-    category: 'caching',
-  },
-  'access-control-allow-origin': {
-    title: 'Access-Control-Allow-Origin',
-    description: 'Specifies which origins are permitted to read the response. Part of the CORS protocol.',
-    mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin',
-    category: 'cors',
-  },
-  'access-control-allow-methods': {
-    title: 'Access-Control-Allow-Methods',
-    description: 'Specifies HTTP methods allowed in CORS requests.',
-    mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Methods',
-    category: 'cors',
-  },
-  'access-control-allow-headers': {
-    title: 'Access-Control-Allow-Headers',
-    description: 'Specifies which HTTP headers can be used in CORS requests.',
-    mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Headers',
-    category: 'cors',
-  },
-  'access-control-allow-credentials': {
-    title: 'Access-Control-Allow-Credentials',
-    description: 'Indicates whether the response can be shared with requesting code when credentials are included.',
-    category: 'cors',
-  },
-  'content-type': {
-    title: 'Content-Type',
-    description: 'Indicates the media type of the resource. Important for correct content interpretation.',
-    mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type',
-    category: 'content',
-  },
-  'server': {
-    title: 'Server',
-    description: 'Identifies the server software. Consider removing or masking to reduce information exposure.',
-    mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Server',
-    category: 'info',
-  },
-  'x-powered-by': {
-    title: 'X-Powered-By',
-    description: 'Identifies the technology powering the site. Should be removed to reduce information leakage.',
-    category: 'info',
-  },
+const HEADER_DB: Record<string, { title: string; description: string; mdn?: string; category: string; attack?: string }> = {
+  'content-security-policy': { title: 'Content-Security-Policy', description: 'Defines trusted sources for scripts, styles, images, and other resources. The #1 defense against XSS attacks.', mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy', category: 'security', attack: 'Cross-Site Scripting (XSS)' },
+  'strict-transport-security': { title: 'Strict-Transport-Security', description: 'Forces browsers to use HTTPS, preventing SSL stripping attacks and unencrypted connections.', mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security', category: 'security', attack: 'SSL Stripping, MITM' },
+  'x-frame-options': { title: 'X-Frame-Options', description: 'Prevents your page from being embedded in iframes on other domains. Stops clickjacking attacks.', mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options', category: 'security', attack: 'Clickjacking' },
+  'x-content-type-options': { title: 'X-Content-Type-Options', description: 'Stops browsers from guessing the content type. Prevents MIME-sniffing attacks.', mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options', category: 'security', attack: 'MIME Sniffing' },
+  'referrer-policy': { title: 'Referrer-Policy', description: 'Controls how much URL information is sent when navigating away. Protects user privacy.', mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy', category: 'security', attack: 'Information Leakage' },
+  'permissions-policy': { title: 'Permissions-Policy', description: 'Restricts browser features like camera, microphone, geolocation, and payment API access.', mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Permissions-Policy', category: 'security', attack: 'Feature Abuse' },
+  'x-xss-protection': { title: 'X-XSS-Protection', description: 'Legacy XSS filter (deprecated). Setting to 0 disables the buggy IE/Chrome filter; prefer CSP.', mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection', category: 'security' },
+  'cross-origin-opener-policy': { title: 'Cross-Origin-Opener-Policy', description: 'Isolates browsing context from cross-origin windows. Enables SharedArrayBuffer and high-res timers.', mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cross-Origin-Opener-Policy', category: 'security', attack: 'Cross-Window Attack' },
+  'cross-origin-embedder-policy': { title: 'Cross-Origin-Embedder-Policy', description: 'Requires explicit permission from cross-origin resources before loading them.', mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cross-Origin-Embedder-Policy', category: 'security', attack: 'Spectre' },
+  'cross-origin-resource-policy': { title: 'Cross-Origin-Resource-Policy', description: 'Prevents cross-origin reads of your resources, protecting against Spectre-like timing attacks.', mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cross-Origin-Resource-Policy', category: 'security', attack: 'Cross-Origin Read' },
+  'cache-control': { title: 'Cache-Control', description: 'Controls caching behavior. Critical for sensitive pages — use no-store to prevent caching of auth/personal data.', mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control', category: 'caching' },
+  'access-control-allow-origin': { title: 'Access-Control-Allow-Origin', description: 'Specifies which origins can read the response in cross-origin requests.', mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin', category: 'cors' },
+  'access-control-allow-methods': { title: 'Access-Control-Allow-Methods', description: 'HTTP methods allowed in CORS requests.', category: 'cors' },
+  'access-control-allow-headers': { title: 'Access-Control-Allow-Headers', description: 'HTTP headers allowed in CORS requests.', category: 'cors' },
+  'access-control-allow-credentials': { title: 'Access-Control-Allow-Credentials', description: 'Whether cookies/auth headers are included in cross-origin requests.', category: 'cors' },
+  'content-type': { title: 'Content-Type', description: 'Media type of the response. Important for correct content interpretation and XSS prevention.', mdn: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type', category: 'content' },
+  'server': { title: 'Server', description: 'Identifies server software. Exposing version numbers helps attackers target known vulnerabilities.', category: 'info' },
+  'x-powered-by': { title: 'X-Powered-By', description: 'Reveals framework/runtime. Remove this — attackers use it to find version-specific exploits.', category: 'info' },
+  'vary': { title: 'Vary', description: 'Tells caches which request headers affect the response. Important for correct cache behavior.', category: 'caching' },
+  'etag': { title: 'ETag', description: 'Validator for conditional requests. Used for cache validation and efficient bandwidth use.', category: 'caching' },
 };
 
 // ── Security scoring ──────────────────────────────────────────────────────────
@@ -156,22 +120,19 @@ function assessHeaders(headers: ParsedHeader[]): { assessments: HeaderAssessment
   let totalScore = 0;
   const maxScore = 100;
 
-  // Content-Security-Policy — 20 pts
+  const push = (a: HeaderAssessment) => { assessments.push(a); totalScore += a.score; };
+
+  // CSP — 20 pts
   {
     const v = map.get('content-security-policy');
-    const def = HEADER_DB['content-security-policy'];
-    if (!v) {
-      assessments.push({ name: 'Content-Security-Policy', lname: 'content-security-policy', status: 'missing', score: 0, maxScore: 20, title: def.title, description: def.description, assessment: 'Missing. No XSS protection from CSP.', recommendation: "Add CSP: default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'", mdn: def.mdn });
+    const d = HEADER_DB['content-security-policy'];
+    if (!v) { push({ name: 'Content-Security-Policy', lname: 'content-security-policy', status: 'missing', score: 0, maxScore: 20, ...d, assessment: 'Missing. Pages have no XSS protection from CSP. Browsers allow any resource to load.', recommendation: "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; object-src 'none'; frame-ancestors 'none'" });
     } else {
-      const hasUnsafeInline = v.includes("'unsafe-inline'");
-      const hasUnsafeEval = v.includes("'unsafe-eval'");
-      const hasWildcard = /script-src[^;]*\*/.test(v);
-      if (hasUnsafeInline || hasUnsafeEval || hasWildcard) {
-        assessments.push({ name: 'Content-Security-Policy', lname: 'content-security-policy', status: 'warning', value: v, score: 10, maxScore: 20, title: def.title, description: def.description, assessment: `CSP present but weakened by: ${[hasUnsafeInline && "'unsafe-inline'", hasUnsafeEval && "'unsafe-eval'", hasWildcard && 'wildcard in script-src'].filter(Boolean).join(', ')}.`, recommendation: "Remove 'unsafe-inline' and 'unsafe-eval'. Use nonces or hashes instead.", mdn: def.mdn });
-        totalScore += 10;
+      const unsafe = v.includes("'unsafe-inline'"), unsafeEval = v.includes("'unsafe-eval'"), wildcard = /script-src[^;]*\*/.test(v);
+      if (unsafe || unsafeEval || wildcard) {
+        push({ name: 'Content-Security-Policy', lname: 'content-security-policy', status: 'warning', value: v, score: 10, maxScore: 20, ...d, assessment: `CSP weakened by: ${[unsafe && "'unsafe-inline'", unsafeEval && "'unsafe-eval'", wildcard && 'wildcard'].filter(Boolean).join(', ')}. These allow inline scripts/styles which XSS exploits.`, recommendation: "Remove 'unsafe-inline'/'unsafe-eval'. Use nonces (nonce-abc123) or hashes instead." });
       } else {
-        assessments.push({ name: 'Content-Security-Policy', lname: 'content-security-policy', status: 'secure', value: v, score: 20, maxScore: 20, title: def.title, description: def.description, assessment: 'CSP is present and does not use unsafe directives. Excellent.', recommendation: 'Consider adding report-uri or report-to for violation monitoring.', mdn: def.mdn });
-        totalScore += 20;
+        push({ name: 'Content-Security-Policy', lname: 'content-security-policy', status: 'secure', value: v, score: 20, maxScore: 20, ...d, assessment: 'CSP is present with no unsafe directives. Strong XSS protection active.', recommendation: 'Add report-to directive for real-time violation monitoring in production.' });
       }
     }
   }
@@ -179,283 +140,216 @@ function assessHeaders(headers: ParsedHeader[]): { assessments: HeaderAssessment
   // HSTS — 15 pts
   {
     const v = map.get('strict-transport-security');
-    const def = HEADER_DB['strict-transport-security'];
-    if (!v) {
-      assessments.push({ name: 'Strict-Transport-Security', lname: 'strict-transport-security', status: 'missing', score: 0, maxScore: 15, title: def.title, description: def.description, assessment: 'Missing. Browsers may fall back to HTTP.', recommendation: 'Add: Strict-Transport-Security: max-age=63072000; includeSubDomains; preload', mdn: def.mdn });
+    const d = HEADER_DB['strict-transport-security'];
+    if (!v) { push({ name: 'Strict-Transport-Security', lname: 'strict-transport-security', status: 'missing', score: 0, maxScore: 15, ...d, assessment: 'Missing. Browsers can connect over HTTP. SSL stripping attacks are possible.', recommendation: 'max-age=63072000; includeSubDomains; preload' });
     } else {
-      const maxAgeMatch = v.match(/max-age=(\d+)/i);
-      const maxAge = maxAgeMatch ? parseInt(maxAgeMatch[1]) : 0;
-      const hasSubDomains = v.toLowerCase().includes('includesubdomains');
-      const hasPreload = v.toLowerCase().includes('preload');
-      if (maxAge < 31536000) {
-        assessments.push({ name: 'Strict-Transport-Security', lname: 'strict-transport-security', status: 'warning', value: v, score: 8, maxScore: 15, title: def.title, description: def.description, assessment: `max-age is ${maxAge}s (${Math.round(maxAge/86400)} days). Recommended minimum is 31536000s (1 year).`, recommendation: 'Set max-age=63072000; includeSubDomains; preload for maximum protection.', mdn: def.mdn });
-        totalScore += 8;
-      } else if (!hasSubDomains || !hasPreload) {
-        assessments.push({ name: 'Strict-Transport-Security', lname: 'strict-transport-security', status: 'warning', value: v, score: 12, maxScore: 15, title: def.title, description: def.description, assessment: `HSTS configured but missing: ${[!hasSubDomains && 'includeSubDomains', !hasPreload && 'preload'].filter(Boolean).join(', ')}.`, recommendation: 'Add includeSubDomains and preload directives for full protection.', mdn: def.mdn });
-        totalScore += 12;
-      } else {
-        assessments.push({ name: 'Strict-Transport-Security', lname: 'strict-transport-security', status: 'secure', value: v, score: 15, maxScore: 15, title: def.title, description: def.description, assessment: 'HSTS is fully configured with includeSubDomains and preload. Excellent.', recommendation: 'Consider submitting your domain to the HTTPS preload list.', mdn: def.mdn });
-        totalScore += 15;
-      }
+      const ageMatch = v.match(/max-age=(\d+)/i), maxAge = ageMatch ? parseInt(ageMatch[1]) : 0;
+      const subD = v.toLowerCase().includes('includesubdomains'), preload = v.toLowerCase().includes('preload');
+      if (maxAge < 31536000) { push({ name: 'Strict-Transport-Security', lname: 'strict-transport-security', status: 'warning', value: v, score: 8, maxScore: 15, ...d, assessment: `max-age=${maxAge}s (${Math.round(maxAge/86400)} days). Minimum recommended: 31536000s (1 year).`, recommendation: 'Set max-age=63072000; includeSubDomains; preload' });
+      } else if (!subD || !preload) { push({ name: 'Strict-Transport-Security', lname: 'strict-transport-security', status: 'warning', value: v, score: 12, maxScore: 15, ...d, assessment: `HSTS set but missing: ${[!subD && 'includeSubDomains', !preload && 'preload'].filter(Boolean).join(', ')}.`, recommendation: 'Add includeSubDomains; preload for maximum HTTPS enforcement.' });
+      } else { push({ name: 'Strict-Transport-Security', lname: 'strict-transport-security', status: 'secure', value: v, score: 15, maxScore: 15, ...d, assessment: 'Perfect. Long max-age with includeSubDomains and preload. HTTPS enforced for all sub-domains.', recommendation: 'Submit to the HTTPS Preload List at hstspreload.org for browser-level enforcement.' }); }
     }
   }
 
   // X-Frame-Options — 10 pts
   {
     const v = map.get('x-frame-options');
-    const def = HEADER_DB['x-frame-options'];
-    if (!v) {
-      assessments.push({ name: 'X-Frame-Options', lname: 'x-frame-options', status: 'missing', score: 0, maxScore: 10, title: def.title, description: def.description, assessment: 'Missing. Page may be embeddable in iframes on other sites (clickjacking risk).', recommendation: "Add: X-Frame-Options: DENY (or SAMEORIGIN if you need same-origin iframes)", mdn: def.mdn });
+    const d = HEADER_DB['x-frame-options'];
+    if (!v) { push({ name: 'X-Frame-Options', lname: 'x-frame-options', status: 'missing', score: 0, maxScore: 10, ...d, assessment: 'Missing. Your page can be embedded in iframes on any site — clickjacking is possible.', recommendation: 'DENY (or SAMEORIGIN if you embed your own content in iframes)' });
     } else {
       const upper = v.toUpperCase().trim();
-      if (upper === 'DENY' || upper === 'SAMEORIGIN') {
-        assessments.push({ name: 'X-Frame-Options', lname: 'x-frame-options', status: 'secure', value: v, score: 10, maxScore: 10, title: def.title, description: def.description, assessment: `Set to ${upper}. Clickjacking protection is active.`, recommendation: 'Consider also adding frame-ancestors directive in CSP for modern browsers.', mdn: def.mdn });
-        totalScore += 10;
-      } else {
-        assessments.push({ name: 'X-Frame-Options', lname: 'x-frame-options', status: 'warning', value: v, score: 5, maxScore: 10, title: def.title, description: def.description, assessment: 'Value is not DENY or SAMEORIGIN. Limited protection.', recommendation: "Use DENY or SAMEORIGIN instead.", mdn: def.mdn });
-        totalScore += 5;
-      }
+      if (upper === 'DENY' || upper === 'SAMEORIGIN') { push({ name: 'X-Frame-Options', lname: 'x-frame-options', status: 'secure', value: v, score: 10, maxScore: 10, ...d, assessment: `${upper} — clickjacking protection is active.`, recommendation: "Also add frame-ancestors 'none' to CSP for modern browser support." });
+      } else { push({ name: 'X-Frame-Options', lname: 'x-frame-options', status: 'warning', value: v, score: 5, maxScore: 10, ...d, assessment: `Unknown value "${v}". Should be DENY or SAMEORIGIN.`, recommendation: 'Set to DENY unless you need same-origin iframe embedding.' }); }
     }
   }
 
   // X-Content-Type-Options — 10 pts
   {
     const v = map.get('x-content-type-options');
-    const def = HEADER_DB['x-content-type-options'];
-    if (!v) {
-      assessments.push({ name: 'X-Content-Type-Options', lname: 'x-content-type-options', status: 'missing', score: 0, maxScore: 10, title: def.title, description: def.description, assessment: 'Missing. Browsers may MIME-sniff responses.', recommendation: 'Add: X-Content-Type-Options: nosniff', mdn: def.mdn });
-    } else if (v.toLowerCase().trim() === 'nosniff') {
-      assessments.push({ name: 'X-Content-Type-Options', lname: 'x-content-type-options', status: 'secure', value: v, score: 10, maxScore: 10, title: def.title, description: def.description, assessment: 'Set to nosniff. MIME type sniffing is blocked.', recommendation: 'No action needed.', mdn: def.mdn });
-      totalScore += 10;
-    } else {
-      assessments.push({ name: 'X-Content-Type-Options', lname: 'x-content-type-options', status: 'warning', value: v, score: 5, maxScore: 10, title: def.title, description: def.description, assessment: 'Value should be exactly "nosniff".', recommendation: 'Set to: X-Content-Type-Options: nosniff', mdn: def.mdn });
-      totalScore += 5;
-    }
+    const d = HEADER_DB['x-content-type-options'];
+    if (!v) { push({ name: 'X-Content-Type-Options', lname: 'x-content-type-options', status: 'missing', score: 0, maxScore: 10, ...d, assessment: 'Missing. Browser may guess content type — scripts disguised as images could execute.', recommendation: 'nosniff' });
+    } else if (v.toLowerCase().trim() === 'nosniff') { push({ name: 'X-Content-Type-Options', lname: 'x-content-type-options', status: 'secure', value: v, score: 10, maxScore: 10, ...d, assessment: 'nosniff is set. MIME-type sniffing is disabled.', recommendation: 'No action needed.' });
+    } else { push({ name: 'X-Content-Type-Options', lname: 'x-content-type-options', status: 'warning', value: v, score: 5, maxScore: 10, ...d, assessment: `Value should be exactly "nosniff". Got: "${v}".`, recommendation: 'Set to: nosniff' }); }
   }
 
   // Referrer-Policy — 10 pts
   {
     const v = map.get('referrer-policy');
-    const def = HEADER_DB['referrer-policy'];
-    const strictPolicies = ['no-referrer', 'no-referrer-when-downgrade', 'strict-origin', 'strict-origin-when-cross-origin', 'same-origin'];
-    if (!v) {
-      assessments.push({ name: 'Referrer-Policy', lname: 'referrer-policy', status: 'missing', score: 0, maxScore: 10, title: def.title, description: def.description, assessment: 'Missing. Browser defaults may send full URL as referrer.', recommendation: 'Add: Referrer-Policy: strict-origin-when-cross-origin', mdn: def.mdn });
-    } else if (strictPolicies.includes(v.toLowerCase().trim())) {
-      assessments.push({ name: 'Referrer-Policy', lname: 'referrer-policy', status: 'secure', value: v, score: 10, maxScore: 10, title: def.title, description: def.description, assessment: `Set to "${v}". Referrer information is properly controlled.`, recommendation: 'No action needed.', mdn: def.mdn });
-      totalScore += 10;
-    } else {
-      assessments.push({ name: 'Referrer-Policy', lname: 'referrer-policy', status: 'warning', value: v, score: 5, maxScore: 10, title: def.title, description: def.description, assessment: `"${v}" may leak referrer data. Consider a stricter policy.`, recommendation: 'Use: strict-origin-when-cross-origin or no-referrer', mdn: def.mdn });
-      totalScore += 5;
-    }
+    const d = HEADER_DB['referrer-policy'];
+    const strict = ['no-referrer', 'no-referrer-when-downgrade', 'strict-origin', 'strict-origin-when-cross-origin', 'same-origin'];
+    if (!v) { push({ name: 'Referrer-Policy', lname: 'referrer-policy', status: 'missing', score: 0, maxScore: 10, ...d, assessment: 'Missing. Full URL including query strings may be sent as referrer to third-party sites.', recommendation: 'strict-origin-when-cross-origin' });
+    } else if (strict.includes(v.toLowerCase().trim())) { push({ name: 'Referrer-Policy', lname: 'referrer-policy', status: 'secure', value: v, score: 10, maxScore: 10, ...d, assessment: `"${v}" — referrer is properly restricted.`, recommendation: 'No action needed.' });
+    } else { push({ name: 'Referrer-Policy', lname: 'referrer-policy', status: 'warning', value: v, score: 5, maxScore: 10, ...d, assessment: `"${v}" may send full URL as referrer. Use a stricter policy.`, recommendation: 'Use strict-origin-when-cross-origin or no-referrer' }); }
   }
 
   // Permissions-Policy — 10 pts
   {
     const v = map.get('permissions-policy');
-    const def = HEADER_DB['permissions-policy'];
-    if (!v) {
-      assessments.push({ name: 'Permissions-Policy', lname: 'permissions-policy', status: 'missing', score: 0, maxScore: 10, title: def.title, description: def.description, assessment: 'Missing. No restrictions on browser features like camera and microphone.', recommendation: "Add: Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()", mdn: def.mdn });
-    } else {
-      assessments.push({ name: 'Permissions-Policy', lname: 'permissions-policy', status: 'secure', value: v, score: 10, maxScore: 10, title: def.title, description: def.description, assessment: 'Permissions-Policy is configured. Browser features are restricted.', recommendation: 'Review which features you have allowed and restrict any you don\'t use.', mdn: def.mdn });
-      totalScore += 10;
-    }
+    const d = HEADER_DB['permissions-policy'];
+    if (!v) { push({ name: 'Permissions-Policy', lname: 'permissions-policy', status: 'missing', score: 0, maxScore: 10, ...d, assessment: 'Missing. No restrictions on camera, microphone, geolocation, or payment API access.', recommendation: "camera=(), microphone=(), geolocation=(), payment=(), usb=()" });
+    } else { push({ name: 'Permissions-Policy', lname: 'permissions-policy', status: 'secure', value: v, score: 10, maxScore: 10, ...d, assessment: 'Permissions-Policy is set. Browser feature access is restricted.', recommendation: 'Review each allowed feature — only grant access to features your app uses.' }); }
   }
 
-  // X-XSS-Protection — 5 pts (deprecated, 0 = best)
+  // X-XSS-Protection — 5 pts
   {
     const v = map.get('x-xss-protection');
-    const def = HEADER_DB['x-xss-protection'];
-    if (!v) {
-      assessments.push({ name: 'X-XSS-Protection', lname: 'x-xss-protection', status: 'info', score: 3, maxScore: 5, title: def.title, description: def.description, assessment: 'Not set. This header is deprecated — modern browsers use CSP instead.', recommendation: 'Set to 0 to disable the buggy legacy filter: X-XSS-Protection: 0', mdn: def.mdn });
-      totalScore += 3;
-    } else if (v.trim() === '0') {
-      assessments.push({ name: 'X-XSS-Protection', lname: 'x-xss-protection', status: 'secure', value: v, score: 5, maxScore: 5, title: def.title, description: def.description, assessment: 'Set to 0 (disabled). Correct for modern sites that use CSP.', recommendation: 'No action needed. Ensure you have a strong CSP instead.', mdn: def.mdn });
-      totalScore += 5;
-    } else {
-      assessments.push({ name: 'X-XSS-Protection', lname: 'x-xss-protection', status: 'info', value: v, score: 3, maxScore: 5, title: def.title, description: def.description, assessment: 'This legacy header is deprecated. Rely on CSP for XSS protection instead.', recommendation: 'Set to 0: X-XSS-Protection: 0', mdn: def.mdn });
-      totalScore += 3;
-    }
+    const d = HEADER_DB['x-xss-protection'];
+    if (!v) { push({ name: 'X-XSS-Protection', lname: 'x-xss-protection', status: 'info', score: 3, maxScore: 5, ...d, assessment: 'Not set. This legacy header is deprecated — use CSP instead.', recommendation: 'Set to 0 to disable the buggy legacy XSS filter.' });
+    } else if (v.trim() === '0') { push({ name: 'X-XSS-Protection', lname: 'x-xss-protection', status: 'secure', value: v, score: 5, maxScore: 5, ...d, assessment: 'Set to 0 (disabled). Correct — disable the legacy filter and rely on CSP.', recommendation: 'No action needed. Ensure CSP is properly configured.' });
+    } else { push({ name: 'X-XSS-Protection', lname: 'x-xss-protection', status: 'info', value: v, score: 3, maxScore: 5, ...d, assessment: `Legacy header set to "${v}". Can cause issues — set to 0 and use CSP instead.`, recommendation: 'Set to: 0' }); }
   }
 
-  // Cross-Origin-Opener-Policy — 5 pts
+  // COOP — 5 pts
   {
     const v = map.get('cross-origin-opener-policy');
-    const def = HEADER_DB['cross-origin-opener-policy'];
-    if (!v) {
-      assessments.push({ name: 'Cross-Origin-Opener-Policy', lname: 'cross-origin-opener-policy', status: 'missing', score: 0, maxScore: 5, title: def.title, description: def.description, assessment: 'Missing. Required for cross-origin isolation and SharedArrayBuffer access.', recommendation: 'Add: Cross-Origin-Opener-Policy: same-origin', mdn: def.mdn });
-    } else {
-      assessments.push({ name: 'Cross-Origin-Opener-Policy', lname: 'cross-origin-opener-policy', status: 'secure', value: v, score: 5, maxScore: 5, title: def.title, description: def.description, assessment: 'COOP is configured. Browsing context is isolated.', recommendation: 'No action needed.', mdn: def.mdn });
-      totalScore += 5;
-    }
+    const d = HEADER_DB['cross-origin-opener-policy'];
+    if (!v) { push({ name: 'Cross-Origin-Opener-Policy', lname: 'cross-origin-opener-policy', status: 'missing', score: 0, maxScore: 5, ...d, assessment: 'Missing. Your window object is accessible from cross-origin windows.', recommendation: 'same-origin' });
+    } else { push({ name: 'Cross-Origin-Opener-Policy', lname: 'cross-origin-opener-policy', status: 'secure', value: v, score: 5, maxScore: 5, ...d, assessment: 'COOP is configured. Browsing context is isolated from cross-origin windows.', recommendation: 'No action needed.' }); }
   }
 
-  // Cross-Origin-Embedder-Policy — 5 pts
+  // COEP — 5 pts
   {
     const v = map.get('cross-origin-embedder-policy');
-    const def = HEADER_DB['cross-origin-embedder-policy'];
-    if (!v) {
-      assessments.push({ name: 'Cross-Origin-Embedder-Policy', lname: 'cross-origin-embedder-policy', status: 'missing', score: 0, maxScore: 5, title: def.title, description: def.description, assessment: 'Missing. Cross-origin resources can be loaded without explicit permission.', recommendation: 'Add: Cross-Origin-Embedder-Policy: require-corp', mdn: def.mdn });
-    } else {
-      assessments.push({ name: 'Cross-Origin-Embedder-Policy', lname: 'cross-origin-embedder-policy', status: 'secure', value: v, score: 5, maxScore: 5, title: def.title, description: def.description, assessment: 'COEP is configured.', recommendation: 'No action needed.', mdn: def.mdn });
-      totalScore += 5;
-    }
+    const d = HEADER_DB['cross-origin-embedder-policy'];
+    if (!v) { push({ name: 'Cross-Origin-Embedder-Policy', lname: 'cross-origin-embedder-policy', status: 'missing', score: 0, maxScore: 5, ...d, assessment: 'Missing. Cross-origin resources can load without explicit CORS permission.', recommendation: 'require-corp' });
+    } else { push({ name: 'Cross-Origin-Embedder-Policy', lname: 'cross-origin-embedder-policy', status: 'secure', value: v, score: 5, maxScore: 5, ...d, assessment: 'COEP is configured.', recommendation: 'No action needed.' }); }
   }
 
-  // Cross-Origin-Resource-Policy — 5 pts
+  // CORP — 5 pts
   {
     const v = map.get('cross-origin-resource-policy');
-    const def = HEADER_DB['cross-origin-resource-policy'];
-    if (!v) {
-      assessments.push({ name: 'Cross-Origin-Resource-Policy', lname: 'cross-origin-resource-policy', status: 'missing', score: 0, maxScore: 5, title: def.title, description: def.description, assessment: 'Missing. Resources can be read by cross-origin requests.', recommendation: 'Add: Cross-Origin-Resource-Policy: same-origin (or same-site)', mdn: def.mdn });
-    } else {
-      assessments.push({ name: 'Cross-Origin-Resource-Policy', lname: 'cross-origin-resource-policy', status: 'secure', value: v, score: 5, maxScore: 5, title: def.title, description: def.description, assessment: 'CORP is configured.', recommendation: 'No action needed.', mdn: def.mdn });
-      totalScore += 5;
-    }
+    const d = HEADER_DB['cross-origin-resource-policy'];
+    if (!v) { push({ name: 'Cross-Origin-Resource-Policy', lname: 'cross-origin-resource-policy', status: 'missing', score: 0, maxScore: 5, ...d, assessment: 'Missing. Your resources can be loaded by cross-origin pages.', recommendation: 'same-origin (or same-site for CDN assets)' });
+    } else { push({ name: 'Cross-Origin-Resource-Policy', lname: 'cross-origin-resource-policy', status: 'secure', value: v, score: 5, maxScore: 5, ...d, assessment: 'CORP is configured.', recommendation: 'No action needed.' }); }
   }
 
-  // Bonus: warn about Server / X-Powered-By info leakage
-  const serverVal = map.get('server');
-  if (serverVal) {
-    assessments.push({ name: 'Server', lname: 'server', status: 'info', value: serverVal, score: 0, maxScore: 0, title: HEADER_DB['server'].title, description: HEADER_DB['server'].description, assessment: `Server header reveals: "${serverVal}". Consider removing or masking this.`, recommendation: 'Remove the Server header or set it to a generic value to reduce fingerprinting.' });
-  }
-  const xpbVal = map.get('x-powered-by');
-  if (xpbVal) {
-    assessments.push({ name: 'X-Powered-By', lname: 'x-powered-by', status: 'warning', value: xpbVal, score: 0, maxScore: 0, title: HEADER_DB['x-powered-by'].title, description: HEADER_DB['x-powered-by'].description, assessment: `X-Powered-By reveals: "${xpbVal}". Attackers can target known vulnerabilities in this framework.`, recommendation: 'Remove this header. In Express.js: app.disable("x-powered-by")' });
-  }
+  // Warn about info leakage
+  const sv = map.get('server');
+  if (sv) assessments.push({ name: 'Server', lname: 'server', status: 'warning', value: sv, score: 0, maxScore: 0, ...HEADER_DB['server'], assessment: `Reveals: "${sv}". Version numbers help attackers look up CVEs.`, recommendation: 'Remove or set to a generic value: Server: web' });
+  const xpb = map.get('x-powered-by');
+  if (xpb) assessments.push({ name: 'X-Powered-By', lname: 'x-powered-by', status: 'warning', value: xpb, score: 0, maxScore: 0, ...HEADER_DB['x-powered-by'], assessment: `Reveals: "${xpb}". Remove to prevent framework fingerprinting.`, recommendation: "Express: app.disable('x-powered-by'). Nginx: more_clear_headers 'X-Powered-By'" });
 
   return { assessments, totalScore: Math.min(totalScore, maxScore), maxScore };
 }
 
-function getGrade(score: number): { grade: string; color: string; bg: string; border: string } {
-  if (score >= 95) return { grade: 'A+', color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/30' };
-  if (score >= 85) return { grade: 'A', color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/30' };
-  if (score >= 70) return { grade: 'B', color: 'text-teal-400', bg: 'bg-teal-500/10', border: 'border-teal-500/30' };
-  if (score >= 55) return { grade: 'C', color: 'text-yellow-400', bg: 'bg-yellow-500/10', border: 'border-yellow-500/30' };
-  if (score >= 40) return { grade: 'D', color: 'text-orange-400', bg: 'bg-orange-500/10', border: 'border-orange-500/30' };
-  return { grade: 'F', color: 'text-red-400', bg: 'bg-red-500/10', border: 'border-red-500/30' };
+function getGrade(score: number) {
+  if (score >= 95) return { grade: 'A+', label: 'Excellent', color: 'text-emerald-400', ring: 'ring-emerald-500/40', bg: 'bg-emerald-500/10', border: 'border-emerald-500/30', bar: 'bg-emerald-500' };
+  if (score >= 85) return { grade: 'A', label: 'Strong', color: 'text-emerald-400', ring: 'ring-emerald-500/40', bg: 'bg-emerald-500/10', border: 'border-emerald-500/30', bar: 'bg-emerald-500' };
+  if (score >= 70) return { grade: 'B', label: 'Good', color: 'text-teal-400', ring: 'ring-teal-500/40', bg: 'bg-teal-500/10', border: 'border-teal-500/30', bar: 'bg-teal-500' };
+  if (score >= 55) return { grade: 'C', label: 'Fair', color: 'text-yellow-400', ring: 'ring-yellow-500/40', bg: 'bg-yellow-500/10', border: 'border-yellow-500/30', bar: 'bg-yellow-500' };
+  if (score >= 40) return { grade: 'D', label: 'Weak', color: 'text-orange-400', ring: 'ring-orange-500/40', bg: 'bg-orange-500/10', border: 'border-orange-500/30', bar: 'bg-orange-500' };
+  return { grade: 'F', label: 'Critical', color: 'text-red-400', ring: 'ring-red-500/40', bg: 'bg-red-500/10', border: 'border-red-500/30', bar: 'bg-red-500' };
 }
 
-// ── Header parser ─────────────────────────────────────────────────────────────
-
 function parseHeaders(raw: string): ParsedHeader[] {
-  const lines = raw.split(/\r?\n/);
-  const headers: ParsedHeader[] = [];
-  for (const line of lines) {
-    const trimmed = line.trim();
-    if (!trimmed) continue;
-    // Skip HTTP status line
-    if (/^HTTP\/[\d.]+ \d+/.test(trimmed)) continue;
-    const colonIdx = trimmed.indexOf(':');
-    if (colonIdx === -1) continue;
-    const name = trimmed.slice(0, colonIdx).trim();
-    const value = trimmed.slice(colonIdx + 1).trim();
-    if (name && value !== undefined) {
-      headers.push({ name, value, lname: name.toLowerCase() });
-    }
-  }
-  return headers;
+  return raw.split(/\r?\n/).flatMap(line => {
+    const t = line.trim();
+    if (!t || /^HTTP\/[\d.]+ \d+/.test(t)) return [];
+    const i = t.indexOf(':');
+    if (i === -1) return [];
+    return [{ name: t.slice(0, i).trim(), value: t.slice(i + 1).trim(), lname: t.slice(0, i).trim().toLowerCase() }];
+  });
 }
 
 // ── Config generators ─────────────────────────────────────────────────────────
 
-function generateExpressConfig(assessments: HeaderAssessment[]): string {
-  const missing = assessments.filter(a => a.status === 'missing' || a.status === 'warning');
-  const recommendations: Record<string, string> = {
-    'content-security-policy': "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; object-src 'none'; frame-ancestors 'none'",
-    'strict-transport-security': 'max-age=63072000; includeSubDomains; preload',
-    'x-frame-options': 'DENY',
-    'x-content-type-options': 'nosniff',
-    'referrer-policy': 'strict-origin-when-cross-origin',
-    'permissions-policy': 'camera=(), microphone=(), geolocation=(), payment=()',
-    'x-xss-protection': '0',
-    'cross-origin-opener-policy': 'same-origin',
-    'cross-origin-embedder-policy': 'require-corp',
-    'cross-origin-resource-policy': 'same-origin',
-  };
+const RECOMMENDED_HEADERS: Record<string, string> = {
+  'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; object-src 'none'; frame-ancestors 'none'",
+  'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
+  'X-Frame-Options': 'DENY',
+  'X-Content-Type-Options': 'nosniff',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': "camera=(), microphone=(), geolocation=(), payment=()",
+  'X-XSS-Protection': '0',
+  'Cross-Origin-Opener-Policy': 'same-origin',
+  'Cross-Origin-Embedder-Policy': 'require-corp',
+  'Cross-Origin-Resource-Policy': 'same-origin',
+};
 
-  const entries = Object.entries(recommendations)
-    .map(([h, v]) => `  res.setHeader('${HEADER_DB[h]?.title || h}', '${v}');`)
-    .join('\n');
-
-  return `// Express.js — Security Headers Middleware
-// Install helmet for a production-ready solution: npm install helmet
-// Or use this manual approach:
+function generateConfig(lang: ConfigLang): string {
+  const h = RECOMMENDED_HEADERS;
+  if (lang === 'express') return `// Express.js — Security Headers Middleware
+// npm install helmet  ←  production-ready alternative
+app.disable('x-powered-by');
 
 app.use((req, res, next) => {
-${entries}
+  res.setHeader('Content-Security-Policy', "${h['Content-Security-Policy']}");
+  res.setHeader('Strict-Transport-Security', '${h['Strict-Transport-Security']}');
+  res.setHeader('X-Frame-Options', '${h['X-Frame-Options']}');
+  res.setHeader('X-Content-Type-Options', '${h['X-Content-Type-Options']}');
+  res.setHeader('Referrer-Policy', '${h['Referrer-Policy']}');
+  res.setHeader('Permissions-Policy', '${h['Permissions-Policy']}');
+  res.setHeader('X-XSS-Protection', '${h['X-XSS-Protection']}');
+  res.setHeader('Cross-Origin-Opener-Policy', '${h['Cross-Origin-Opener-Policy']}');
+  res.setHeader('Cross-Origin-Embedder-Policy', '${h['Cross-Origin-Embedder-Policy']}');
+  res.setHeader('Cross-Origin-Resource-Policy', '${h['Cross-Origin-Resource-Policy']}');
   next();
-});
+});`;
 
-// Also disable the X-Powered-By header:
-app.disable('x-powered-by');`;
-}
+  if (lang === 'nginx') return `# Nginx — Security Headers
+# Place inside server {} or location {} block
 
-function generateNginxConfig(assessments: HeaderAssessment[]): string {
-  const recommendations: Record<string, string> = {
-    'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; object-src 'none'; frame-ancestors 'none'",
-    'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
-    'X-Frame-Options': 'DENY',
-    'X-Content-Type-Options': 'nosniff',
-    'Referrer-Policy': 'strict-origin-when-cross-origin',
-    'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=()',
-    'X-XSS-Protection': '0',
-    'Cross-Origin-Opener-Policy': 'same-origin',
-    'Cross-Origin-Embedder-Policy': 'require-corp',
-    'Cross-Origin-Resource-Policy': 'same-origin',
-  };
+server_tokens off;
 
-  const entries = Object.entries(recommendations)
-    .map(([h, v]) => `    add_header ${h} "${v}" always;`)
-    .join('\n');
+add_header Content-Security-Policy "${h['Content-Security-Policy']}" always;
+add_header Strict-Transport-Security "${h['Strict-Transport-Security']}" always;
+add_header X-Frame-Options "${h['X-Frame-Options']}" always;
+add_header X-Content-Type-Options "${h['X-Content-Type-Options']}" always;
+add_header Referrer-Policy "${h['Referrer-Policy']}" always;
+add_header Permissions-Policy "${h['Permissions-Policy']}" always;
+add_header X-XSS-Protection "${h['X-XSS-Protection']}" always;
+add_header Cross-Origin-Opener-Policy "${h['Cross-Origin-Opener-Policy']}" always;
+add_header Cross-Origin-Embedder-Policy "${h['Cross-Origin-Embedder-Policy']}" always;
+add_header Cross-Origin-Resource-Policy "${h['Cross-Origin-Resource-Policy']}" always;
+more_clear_headers 'X-Powered-By' 'Server';`;
 
-  return `# Nginx — Security Headers Configuration
-# Add to your server {} or location {} block:
-
-server {
-    # ... your existing config ...
-
-${entries}
-
-    # Hide server version
-    server_tokens off;
-    # Remove X-Powered-By
-    more_clear_headers 'X-Powered-By';
-}`;
-}
-
-function generateApacheConfig(assessments: HeaderAssessment[]): string {
-  const recommendations: Record<string, string> = {
-    'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; object-src 'none'; frame-ancestors 'none'",
-    'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
-    'X-Frame-Options': 'DENY',
-    'X-Content-Type-Options': 'nosniff',
-    'Referrer-Policy': 'strict-origin-when-cross-origin',
-    'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=()',
-    'X-XSS-Protection': '0',
-    'Cross-Origin-Opener-Policy': 'same-origin',
-    'Cross-Origin-Embedder-Policy': 'require-corp',
-    'Cross-Origin-Resource-Policy': 'same-origin',
-  };
-
-  const entries = Object.entries(recommendations)
-    .map(([h, v]) => `    Header always set ${h} "${v}"`)
-    .join('\n');
-
-  return `# Apache — Security Headers Configuration (.htaccess or VirtualHost)
-# Requires mod_headers to be enabled: a2enmod headers
+  if (lang === 'apache') return `# Apache — Security Headers
+# Requires: a2enmod headers
 
 <IfModule mod_headers.c>
-${entries}
-    Header always unset X-Powered-By
-    Header always unset Server
+  Header always set Content-Security-Policy "${h['Content-Security-Policy']}"
+  Header always set Strict-Transport-Security "${h['Strict-Transport-Security']}"
+  Header always set X-Frame-Options "${h['X-Frame-Options']}"
+  Header always set X-Content-Type-Options "${h['X-Content-Type-Options']}"
+  Header always set Referrer-Policy "${h['Referrer-Policy']}"
+  Header always set Permissions-Policy "${h['Permissions-Policy']}"
+  Header always set X-XSS-Protection "${h['X-XSS-Protection']}"
+  Header always set Cross-Origin-Opener-Policy "${h['Cross-Origin-Opener-Policy']}"
+  Header always set Cross-Origin-Embedder-Policy "${h['Cross-Origin-Embedder-Policy']}"
+  Header always set Cross-Origin-Resource-Policy "${h['Cross-Origin-Resource-Policy']}"
+  Header always unset X-Powered-By
+  Header always unset Server
 </IfModule>
+# Also: ServerTokens Prod + ServerSignature Off in httpd.conf`;
 
-# Also add in httpd.conf or apache2.conf:
-# ServerTokens Prod
-# ServerSignature Off`;
+  // next.js
+  return `// next.config.js — Security Headers
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'Content-Security-Policy', value: "${h['Content-Security-Policy']}" },
+          { key: 'Strict-Transport-Security', value: '${h['Strict-Transport-Security']}' },
+          { key: 'X-Frame-Options', value: '${h['X-Frame-Options']}' },
+          { key: 'X-Content-Type-Options', value: '${h['X-Content-Type-Options']}' },
+          { key: 'Referrer-Policy', value: '${h['Referrer-Policy']}' },
+          { key: 'Permissions-Policy', value: '${h['Permissions-Policy']}' },
+          { key: 'X-XSS-Protection', value: '${h['X-XSS-Protection']}' },
+          { key: 'Cross-Origin-Opener-Policy', value: '${h['Cross-Origin-Opener-Policy']}' },
+          { key: 'Cross-Origin-Embedder-Policy', value: '${h['Cross-Origin-Embedder-Policy']}' },
+          { key: 'Cross-Origin-Resource-Policy', value: '${h['Cross-Origin-Resource-Policy']}' },
+        ],
+      },
+    ];
+  },
+};
+module.exports = nextConfig;`;
 }
 
-// ── Sub-components ────────────────────────────────────────────────────────────
+// ── Reusable components ───────────────────────────────────────────────────────
 
 function StatusIcon({ status }: { status: HeaderStatus }) {
   if (status === 'secure') return <ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0" />;
@@ -465,72 +359,71 @@ function StatusIcon({ status }: { status: HeaderStatus }) {
 }
 
 function StatusBadge({ status }: { status: HeaderStatus }) {
-  const map = {
-    secure: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-    warning: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
-    missing: 'bg-red-500/10 text-red-400 border-red-500/20',
-    info: 'bg-sky-500/10 text-sky-400 border-sky-500/20',
-  };
-  const label = { secure: 'Secure', warning: 'Warning', missing: 'Missing', info: 'Info' };
-  return (
-    <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${map[status]}`}>
-      {label[status]}
-    </span>
-  );
+  const s = { secure: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20', warning: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20', missing: 'bg-red-500/10 text-red-400 border-red-500/20', info: 'bg-sky-500/10 text-sky-400 border-sky-500/20' };
+  const l = { secure: '✓ Secure', warning: '⚠ Warning', missing: '✕ Missing', info: 'ℹ Info' };
+  return <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${s[status]}`}>{l[status]}</span>;
 }
 
-function CopyBtn({ text, label = 'Copy' }: { text: string; label?: string }) {
-  const [copied, setCopied] = useState(false);
-  const copy = useCallback(async () => {
-    try { await navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 1800); } catch {}
-  }, [text]);
+function CopyBtn({ text, label = 'Copy', size = 'md' }: { text: string; label?: string; size?: 'sm' | 'md' }) {
+  const [ok, setOk] = useState(false);
+  const copy = useCallback(async () => { try { await navigator.clipboard.writeText(text); setOk(true); setTimeout(() => setOk(false), 1800); } catch {} }, [text]);
+  if (size === 'sm') return (
+    <button onClick={copy} className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-300 hover:bg-zinc-700/50 transition" title="Copy">
+      {ok ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+    </button>
+  );
   return (
     <button onClick={copy} className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-700/50 bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-300 transition hover:bg-zinc-700 hover:text-white">
-      {copied ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
-      {copied ? 'Copied!' : label}
+      {ok ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+      {ok ? 'Copied!' : label}
     </button>
   );
 }
 
 function AssessmentCard({ a }: { a: HeaderAssessment }) {
   const [open, setOpen] = useState(false);
+  const pct = a.maxScore > 0 ? (a.score / a.maxScore) * 100 : 0;
   return (
-    <div className="rounded-xl border border-zinc-700/40 bg-zinc-800/50 overflow-hidden">
-      <button
-        onClick={() => setOpen(o => !o)}
-        className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-zinc-700/20 transition"
-      >
-        <StatusIcon status={a.status} />
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-mono text-sm font-medium text-zinc-200">{a.name}</span>
+    <div className={`rounded-xl border overflow-hidden transition-all ${
+      a.status === 'secure' ? 'border-emerald-500/20 bg-emerald-500/[0.03]' :
+      a.status === 'warning' ? 'border-yellow-500/20 bg-yellow-500/[0.03]' :
+      a.status === 'missing' ? 'border-red-500/20 bg-red-500/[0.03]' :
+      'border-sky-500/20 bg-sky-500/[0.03]'
+    }`}>
+      <button onClick={() => setOpen(o => !o)} className="flex w-full items-start gap-3 px-4 py-3.5 text-left hover:bg-white/[0.02] transition">
+        <div className="mt-0.5"><StatusIcon status={a.status} /></div>
+        <div className="flex-1 min-w-0 space-y-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-mono text-[13px] font-semibold text-zinc-100 tracking-tight">{a.name}</span>
             <StatusBadge status={a.status} />
-            {a.maxScore > 0 && (
-              <span className="text-[10px] text-zinc-500">{a.score}/{a.maxScore} pts</span>
-            )}
+            {a.maxScore > 0 && <span className="text-[10px] text-zinc-600 font-mono">{a.score}/{a.maxScore}pts</span>}
+            {a.attack && <span className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-500 border border-zinc-700/50">Prevents: {a.attack}</span>}
           </div>
-          {a.value && (
-            <p className="mt-0.5 font-mono text-[11px] text-zinc-400 truncate">{a.value}</p>
+          {a.value && <p className="font-mono text-[11px] text-zinc-500 truncate leading-relaxed">{a.value}</p>}
+          {a.maxScore > 0 && (
+            <div className="h-1 w-full max-w-[120px] rounded-full bg-zinc-800 overflow-hidden">
+              <div className={`h-full rounded-full transition-all ${pct >= 100 ? 'bg-emerald-500' : pct >= 60 ? 'bg-yellow-500' : 'bg-red-500'}`} style={{ width: `${pct}%` }} />
+            </div>
           )}
         </div>
-        {open ? <ChevronUp className="h-4 w-4 text-zinc-500 shrink-0" /> : <ChevronDown className="h-4 w-4 text-zinc-500 shrink-0" />}
+        <div className="shrink-0 mt-0.5 text-zinc-600">{open ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}</div>
       </button>
       {open && (
-        <div className="border-t border-zinc-700/40 px-4 py-3 space-y-3 bg-zinc-900/40">
-          <p className="text-xs text-zinc-400 leading-relaxed">{a.description}</p>
-          <div className="rounded-lg bg-zinc-800 p-3 space-y-2">
-            <div>
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">Assessment</span>
-              <p className="mt-0.5 text-xs text-zinc-300">{a.assessment}</p>
+        <div className="border-t border-zinc-800 px-4 py-4 space-y-3">
+          <p className="text-[13px] text-zinc-400 leading-relaxed">{a.description}</p>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <div className="rounded-lg bg-zinc-900 border border-zinc-800 p-3 space-y-1">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-600">Assessment</p>
+              <p className="text-[12px] text-zinc-300 leading-relaxed">{a.assessment}</p>
             </div>
-            <div>
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">Recommendation</span>
-              <p className="mt-0.5 font-mono text-[11px] text-emerald-300 break-all">{a.recommendation}</p>
+            <div className="rounded-lg bg-zinc-900 border border-zinc-800 p-3 space-y-1">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-600">Fix</p>
+              <p className="font-mono text-[11px] text-emerald-300 break-all leading-relaxed">{a.recommendation}</p>
             </div>
           </div>
           {a.mdn && (
             <a href={a.mdn} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[11px] text-sky-400 hover:text-sky-300 transition">
-              <Globe className="h-3 w-3" /> MDN Documentation
+              <ExternalLink className="h-3 w-3" /> MDN Reference
             </a>
           )}
         </div>
@@ -539,7 +432,7 @@ function AssessmentCard({ a }: { a: HeaderAssessment }) {
   );
 }
 
-// ── CORS Analyzer ─────────────────────────────────────────────────────────────
+// ── CORS Analysis ─────────────────────────────────────────────────────────────
 
 function CorsAnalysis({ headers }: { headers: ParsedHeader[] }) {
   const map = new Map(headers.map(h => [h.lname, h.value]));
@@ -548,97 +441,48 @@ function CorsAnalysis({ headers }: { headers: ParsedHeader[] }) {
   const acah = map.get('access-control-allow-headers');
   const acac = map.get('access-control-allow-credentials');
   const acma = map.get('access-control-max-age');
+  const vary = map.get('vary');
 
-  if (!acao && !acam && !acah) {
-    return (
-      <div className="rounded-xl border border-zinc-700/40 bg-zinc-800/30 p-6 text-center">
-        <Globe className="mx-auto h-8 w-8 text-zinc-500 mb-2" />
-        <p className="text-zinc-400 text-sm">No CORS headers detected in these headers.</p>
-        <p className="text-zinc-500 text-xs mt-1">CORS headers are typically only needed for APIs accessed from browsers.</p>
-      </div>
-    );
-  }
+  if (!acao && !acam && !acah) return (
+    <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-8 text-center space-y-2">
+      <Globe className="mx-auto h-10 w-10 text-zinc-700" />
+      <p className="text-zinc-400 font-medium">No CORS headers detected</p>
+      <p className="text-zinc-600 text-sm">CORS headers are only needed for APIs accessed from browsers across origins.</p>
+    </div>
+  );
 
-  const issues: string[] = [];
-  const ok: string[] = [];
-
-  if (acao === '*') {
-    issues.push("Access-Control-Allow-Origin: * allows any origin. Combined with credentials, this is a security risk.");
-  } else if (acao) {
-    ok.push(`Access-Control-Allow-Origin is restricted to: ${acao}`);
-  }
-
-  if (acac === 'true' && acao === '*') {
-    issues.push("Credentials (cookies, auth) with wildcard origin (*) is invalid and rejected by browsers.");
-  } else if (acac === 'true') {
-    ok.push("Credentials are allowed. Ensure ACAO is a specific origin, not *.");
-  }
-
-  if (acam) {
-    const methods = acam.split(',').map(m => m.trim().toUpperCase());
-    if (methods.includes('*')) {
-      issues.push("Access-Control-Allow-Methods: * is overly permissive. List only required methods.");
-    } else {
-      ok.push(`Allowed methods: ${methods.join(', ')}`);
-    }
-  }
+  const issues: string[] = [], ok: string[] = [];
+  if (acao === '*') issues.push("Access-Control-Allow-Origin: * — any origin can read responses. Dangerous with credentials.");
+  else if (acao) ok.push(`Origin restricted to: ${acao}`);
+  if (acac === 'true' && acao === '*') issues.push("Credentials + wildcard origin is invalid — browsers will reject this combination.");
+  else if (acac === 'true') ok.push("Credentials allowed. Origin must be a specific domain, not *.");
+  if (acam?.includes('*')) issues.push("Access-Control-Allow-Methods: * is overly permissive. List only required methods.");
+  else if (acam) ok.push(`Allowed methods: ${acam}`);
+  if (!vary?.toLowerCase().includes('origin') && acao) issues.push("Missing Vary: Origin header. Proxies may cache CORS responses incorrectly.");
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {[
-          { label: 'Allow-Origin', value: acao, key: 'acao' },
-          { label: 'Allow-Methods', value: acam, key: 'acam' },
-          { label: 'Allow-Headers', value: acah, key: 'acah' },
-          { label: 'Allow-Credentials', value: acac, key: 'acac' },
-          { label: 'Max-Age', value: acma, key: 'acma' },
-        ].map(({ label, value, key }) => (
-          <div key={key} className="rounded-lg border border-zinc-700/40 bg-zinc-800/50 p-3">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">{label}</p>
-            <p className={`mt-1 font-mono text-sm break-all ${value ? 'text-zinc-200' : 'text-zinc-600 italic'}`}>
-              {value || 'not set'}
-            </p>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        {[['Allow-Origin', acao], ['Allow-Methods', acam], ['Allow-Headers', acah], ['Allow-Credentials', acac], ['Max-Age', acma], ['Vary', vary]].map(([label, value]) => (
+          <div key={label as string} className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-3">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-600 mb-1">{label}</p>
+            <p className={`font-mono text-xs break-all leading-relaxed ${value ? 'text-zinc-200' : 'text-zinc-700 italic'}`}>{value || 'not set'}</p>
           </div>
         ))}
       </div>
-
-      {(issues.length > 0 || ok.length > 0) && (
-        <div className="space-y-2">
-          {issues.map((issue, i) => (
-            <div key={i} className="flex items-start gap-2 rounded-lg bg-red-500/5 border border-red-500/20 p-3">
-              <ShieldOff className="h-4 w-4 text-red-400 shrink-0 mt-0.5" />
-              <p className="text-xs text-red-300">{issue}</p>
-            </div>
-          ))}
-          {ok.map((note, i) => (
-            <div key={i} className="flex items-start gap-2 rounded-lg bg-emerald-500/5 border border-emerald-500/20 p-3">
-              <ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
-              <p className="text-xs text-emerald-300">{note}</p>
-            </div>
-          ))}
-        </div>
-      )}
+      <div className="space-y-2">
+        {issues.map((i, idx) => <div key={idx} className="flex gap-2.5 rounded-xl border border-red-500/20 bg-red-500/5 px-4 py-3"><AlertTriangle className="h-4 w-4 text-red-400 shrink-0 mt-0.5" /><p className="text-sm text-red-300">{i}</p></div>)}
+        {ok.map((o, idx) => <div key={idx} className="flex gap-2.5 rounded-xl border border-emerald-500/20 bg-emerald-500/5 px-4 py-3"><ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" /><p className="text-sm text-emerald-300">{o}</p></div>)}
+      </div>
     </div>
   );
 }
 
-// ── Default sample ────────────────────────────────────────────────────────────
-
-const SAMPLE_HEADERS = `HTTP/2 200 OK
-content-type: text/html; charset=utf-8
-x-content-type-options: nosniff
-x-frame-options: SAMEORIGIN
-strict-transport-security: max-age=31536000; includeSubDomains
-cache-control: no-cache, no-store, must-revalidate
-content-security-policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'
-server: nginx/1.18.0
-x-powered-by: Express`;
-
-// ── Main client component ─────────────────────────────────────────────────────
+// ── Main component ────────────────────────────────────────────────────────────
 
 export default function HttpHeadersAnalyzerClient() {
-  const [raw, setRaw] = useState(SAMPLE_HEADERS);
-  const [analyzed, setAnalyzed] = useState<string>(SAMPLE_HEADERS);
+  const [raw, setRaw] = useState(EXAMPLES[1].headers);
+  const [analyzed, setAnalyzed] = useState(EXAMPLES[1].headers);
   const [tab, setTab] = useState<Tab>('security');
   const [configLang, setConfigLang] = useState<ConfigLang>('express');
 
@@ -649,145 +493,142 @@ export default function HttpHeadersAnalyzerClient() {
   const secureCount = assessments.filter(a => a.status === 'secure').length;
   const warnCount = assessments.filter(a => a.status === 'warning').length;
   const missingCount = assessments.filter(a => a.status === 'missing').length;
-
-  const configCode = useMemo(() => {
-    if (configLang === 'express') return generateExpressConfig(assessments);
-    if (configLang === 'nginx') return generateNginxConfig(assessments);
-    return generateApacheConfig(assessments);
-  }, [configLang, assessments]);
+  const missingCritical = assessments.filter(a => a.status === 'missing' && a.maxScore >= 10);
+  const configCode = useMemo(() => generateConfig(configLang), [configLang]);
 
   const analyze = useCallback(() => setAnalyzed(raw), [raw]);
+  const clear = useCallback(() => { setRaw(''); setAnalyzed(''); }, []);
 
-  const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
-    { id: 'overview', label: 'All Headers', icon: <Info className="h-3.5 w-3.5" /> },
-    { id: 'security', label: 'Security Analysis', icon: <ShieldCheck className="h-3.5 w-3.5" /> },
+  const tabs: { id: Tab; label: string; icon: React.ReactNode; count?: number }[] = [
+    { id: 'security', label: 'Security Analysis', icon: <Shield className="h-3.5 w-3.5" />, count: assessments.length },
+    { id: 'overview', label: 'All Headers', icon: <BarChart3 className="h-3.5 w-3.5" />, count: headers.length },
     { id: 'cors', label: 'CORS', icon: <Globe className="h-3.5 w-3.5" /> },
     { id: 'config', label: 'Config Generator', icon: <Server className="h-3.5 w-3.5" /> },
   ];
 
   const tool = (
-    <div className="space-y-5">
-      {/* Input */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <label className="text-sm font-medium text-zinc-300">Paste Raw HTTP Response Headers</label>
-          <button onClick={() => setRaw(SAMPLE_HEADERS)} className="text-xs text-zinc-500 hover:text-zinc-300 transition">Load example</button>
-        </div>
-        <textarea
-          value={raw}
-          onChange={e => setRaw(e.target.value)}
-          rows={8}
-          spellCheck={false}
-          placeholder={`HTTP/2 200 OK\ncontent-type: text/html\nstrict-transport-security: max-age=31536000\n...`}
-          className="w-full rounded-xl border border-zinc-700/50 bg-zinc-900/80 px-4 py-3 font-mono text-sm text-zinc-200 placeholder-zinc-600 resize-y focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50"
-        />
-        <div className="flex items-center gap-2">
-          <button
-            onClick={analyze}
-            className="flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-500 active:scale-95"
-          >
-            <Zap className="h-4 w-4" /> Analyze Headers
-          </button>
-          <p className="text-xs text-zinc-500">
-            Get headers: DevTools → Network → any request → Response Headers
-          </p>
+    <div className="space-y-6">
+
+      {/* Examples strip */}
+      <div className="space-y-2">
+        <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Load an example</p>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {EXAMPLES.map(ex => (
+            <button key={ex.label} onClick={() => { setRaw(ex.headers); setAnalyzed(ex.headers); }}
+              className="flex flex-col items-start gap-1 rounded-xl border border-zinc-700/50 bg-zinc-800/50 px-3 py-2.5 text-left transition hover:border-emerald-500/30 hover:bg-zinc-700/50">
+              <span className="text-base">{ex.emoji}</span>
+              <span className="text-xs font-semibold text-zinc-200 leading-tight">{ex.label}</span>
+              <span className="text-[10px] text-zinc-500 leading-tight">{ex.description}</span>
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Score bar */}
+      {/* Input */}
+      <div className="space-y-2.5">
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-semibold text-zinc-200">HTTP Response Headers</label>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-zinc-600">Tip: DevTools → Network → any request → Response Headers</span>
+            {raw && <button onClick={clear} className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-300 transition"><X className="h-3 w-3" /> Clear</button>}
+          </div>
+        </div>
+        <textarea value={raw} onChange={e => setRaw(e.target.value)} rows={7} spellCheck={false}
+          placeholder={`HTTP/2 200 OK\ncontent-type: text/html; charset=utf-8\nstrict-transport-security: max-age=31536000\n...\n\nPaste raw headers here`}
+          className="w-full rounded-xl border border-zinc-700/40 bg-zinc-950 px-4 py-3.5 font-mono text-[13px] leading-relaxed text-zinc-200 placeholder-zinc-700 resize-y focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500/40 transition" />
+        <button onClick={analyze}
+          className="flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-500 active:scale-[0.98] shadow-lg shadow-emerald-900/30">
+          <Zap className="h-4 w-4" /> Analyze Headers
+        </button>
+      </div>
+
+      {/* Score panel */}
       {headers.length > 0 && (
-        <div className={`flex flex-wrap items-center gap-4 rounded-xl border ${grade.border} ${grade.bg} p-4`}>
-          <div className="text-center">
-            <div className={`text-5xl font-black ${grade.color}`}>{grade.grade}</div>
-            <div className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500 mt-0.5">Security Grade</div>
-          </div>
-          <div className="h-12 w-px bg-zinc-700/50 hidden sm:block" />
-          <div className="flex-1 space-y-1.5">
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-zinc-400">Score</span>
-              <span className={`font-bold ${grade.color}`}>{totalScore}/{maxScore}</span>
+        <div className={`rounded-2xl border ${grade.border} ${grade.bg} p-5`}>
+          <div className="flex flex-wrap items-center gap-5">
+            {/* Grade circle */}
+            <div className={`flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl ring-4 ${grade.ring} ${grade.bg} border ${grade.border}`}>
+              <div className="text-center">
+                <div className={`text-3xl font-black leading-none ${grade.color}`}>{grade.grade}</div>
+                <div className={`text-[9px] font-bold uppercase tracking-wider ${grade.color} opacity-70`}>{grade.label}</div>
+              </div>
             </div>
-            <div className="h-2 w-full rounded-full bg-zinc-800 overflow-hidden">
-              <div
-                className={`h-full rounded-full transition-all duration-700 ${
-                  totalScore >= 85 ? 'bg-emerald-500' : totalScore >= 70 ? 'bg-teal-500' : totalScore >= 55 ? 'bg-yellow-500' : totalScore >= 40 ? 'bg-orange-500' : 'bg-red-500'
-                }`}
-                style={{ width: `${(totalScore / maxScore) * 100}%` }}
-              />
+            {/* Score bar */}
+            <div className="flex-1 min-w-[180px] space-y-2">
+              <div className="flex justify-between items-baseline">
+                <span className="text-sm font-semibold text-zinc-300">Security Score</span>
+                <span className={`text-2xl font-black ${grade.color}`}>{totalScore}<span className="text-sm text-zinc-500 font-normal">/{maxScore}</span></span>
+              </div>
+              <div className="h-2.5 w-full rounded-full bg-zinc-900 overflow-hidden">
+                <div className={`h-full rounded-full transition-all duration-1000 ${grade.bar}`} style={{ width: `${(totalScore / maxScore) * 100}%` }} />
+              </div>
+            </div>
+            {/* Counts */}
+            <div className="flex gap-5">
+              {[['✓', secureCount, 'text-emerald-400', 'Secure'], ['⚠', warnCount, 'text-yellow-400', 'Warnings'], ['✕', missingCount, 'text-red-400', 'Missing']].map(([icon, n, cls, lbl]) => (
+                <div key={lbl as string} className="text-center">
+                  <div className={`text-2xl font-black ${cls}`}>{n as number}</div>
+                  <div className="text-[10px] text-zinc-600 font-medium">{lbl}</div>
+                </div>
+              ))}
             </div>
           </div>
-          <div className="flex gap-4 text-center">
-            <div><div className="text-lg font-bold text-emerald-400">{secureCount}</div><div className="text-[10px] text-zinc-500">Secure</div></div>
-            <div><div className="text-lg font-bold text-yellow-400">{warnCount}</div><div className="text-[10px] text-zinc-500">Warnings</div></div>
-            <div><div className="text-lg font-bold text-red-400">{missingCount}</div><div className="text-[10px] text-zinc-500">Missing</div></div>
-          </div>
+
+          {/* Quick fixes */}
+          {missingCritical.length > 0 && (
+            <div className="mt-4 pt-4 border-t border-zinc-800">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500 mb-2">Critical missing headers</p>
+              <div className="flex flex-wrap gap-2">
+                {missingCritical.map(a => (
+                  <span key={a.name} className="inline-flex items-center gap-1 rounded-lg border border-red-500/20 bg-red-500/5 px-2.5 py-1 font-mono text-[11px] text-red-300">
+                    <ShieldOff className="h-3 w-3" /> {a.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
-      {/* Tabs */}
+      {/* Tabs + content */}
       {headers.length > 0 && (
         <div className="space-y-4">
-          <div className="flex gap-1 rounded-xl border border-zinc-700/40 bg-zinc-900/60 p-1 overflow-x-auto">
+          <div className="flex gap-1 rounded-xl border border-zinc-800 bg-zinc-950 p-1 overflow-x-auto">
             {tabs.map(t => (
-              <button
-                key={t.id}
-                onClick={() => setTab(t.id)}
-                className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium whitespace-nowrap transition ${
-                  tab === t.id
-                    ? 'bg-zinc-700 text-white shadow-sm'
-                    : 'text-zinc-400 hover:text-zinc-200'
-                }`}
-              >
+              <button key={t.id} onClick={() => setTab(t.id)}
+                className={`flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-[12px] font-semibold whitespace-nowrap transition ${tab === t.id ? 'bg-zinc-800 text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-300'}`}>
                 {t.icon} {t.label}
+                {t.count !== undefined && <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold ${tab === t.id ? 'bg-zinc-700 text-zinc-300' : 'bg-zinc-900 text-zinc-600'}`}>{t.count}</span>}
               </button>
             ))}
           </div>
 
+          {/* Security tab */}
+          {tab === 'security' && <div className="space-y-2">{assessments.map((a, i) => <AssessmentCard key={i} a={a} />)}</div>}
+
           {/* Overview tab */}
           {tab === 'overview' && (
-            <div className="overflow-x-auto rounded-xl border border-zinc-700/40">
+            <div className="rounded-xl border border-zinc-800 overflow-hidden">
               <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-zinc-700/40 bg-zinc-800/60">
-                    <th className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-wider text-zinc-500">Header</th>
-                    <th className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-wider text-zinc-500">Value</th>
-                    <th className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-wider text-zinc-500">Type</th>
-                  </tr>
-                </thead>
+                <thead><tr className="border-b border-zinc-800 bg-zinc-900">
+                  <th className="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-zinc-500">Header</th>
+                  <th className="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-zinc-500">Value</th>
+                  <th className="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-zinc-500">Category</th>
+                </tr></thead>
                 <tbody>
                   {headers.map((h, i) => {
-                    const def = HEADER_DB[h.lname];
-                    const catColors: Record<string, string> = {
-                      security: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
-                      cors: 'text-sky-400 bg-sky-500/10 border-sky-500/20',
-                      caching: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20',
-                      content: 'text-violet-400 bg-violet-500/10 border-violet-500/20',
-                      info: 'text-zinc-400 bg-zinc-500/10 border-zinc-500/20',
-                    };
-                    const cat = def?.category ?? 'info';
+                    const cat = HEADER_DB[h.lname]?.category ?? 'other';
+                    const catCls: Record<string, string> = { security: 'text-emerald-400 bg-emerald-500/8 border-emerald-500/20', cors: 'text-sky-400 bg-sky-500/8 border-sky-500/20', caching: 'text-yellow-400 bg-yellow-500/8 border-yellow-500/20', content: 'text-violet-400 bg-violet-500/8 border-violet-500/20', info: 'text-zinc-400 bg-zinc-800 border-zinc-700/50', other: 'text-zinc-400 bg-zinc-800 border-zinc-700/50' };
                     return (
-                      <tr key={i} className="border-b border-zinc-700/20 hover:bg-zinc-800/30 transition">
-                        <td className="px-4 py-2.5 font-mono text-xs text-zinc-200 font-medium">{h.name}</td>
-                        <td className="px-4 py-2.5 font-mono text-xs text-zinc-400 max-w-sm truncate">{h.value}</td>
-                        <td className="px-4 py-2.5">
-                          <span className={`inline-block rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase ${catColors[cat]}`}>
-                            {cat}
-                          </span>
-                        </td>
+                      <tr key={i} className="border-b border-zinc-800/50 hover:bg-zinc-900/40 transition">
+                        <td className="px-4 py-3 font-mono text-[12px] font-semibold text-zinc-200">{h.name}</td>
+                        <td className="px-4 py-3 font-mono text-[11px] text-zinc-400 max-w-xs truncate">{h.value}</td>
+                        <td className="px-4 py-3"><span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold capitalize ${catCls[cat]}`}>{cat}</span></td>
                       </tr>
                     );
                   })}
                 </tbody>
               </table>
-            </div>
-          )}
-
-          {/* Security tab */}
-          {tab === 'security' && (
-            <div className="space-y-2">
-              {assessments.map((a, i) => (
-                <AssessmentCard key={i} a={a} />
-              ))}
             </div>
           )}
 
@@ -797,38 +638,32 @@ export default function HttpHeadersAnalyzerClient() {
           {/* Config tab */}
           {tab === 'config' && (
             <div className="space-y-4">
-              <div className="flex gap-2">
-                {(['express', 'nginx', 'apache'] as ConfigLang[]).map(lang => (
-                  <button
-                    key={lang}
-                    onClick={() => setConfigLang(lang)}
-                    className={`rounded-lg px-4 py-2 text-sm font-medium capitalize transition ${
-                      configLang === lang
-                        ? 'bg-emerald-600 text-white'
-                        : 'border border-zinc-700/50 bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-                    }`}
-                  >
-                    {lang === 'express' ? 'Express.js' : lang === 'nginx' ? 'Nginx' : 'Apache'}
+              <div className="flex gap-2 flex-wrap">
+                {(['express', 'nginx', 'apache', 'nextjs'] as ConfigLang[]).map(lang => (
+                  <button key={lang} onClick={() => setConfigLang(lang)}
+                    className={`rounded-xl px-4 py-2 text-sm font-semibold capitalize transition ${configLang === lang ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/30' : 'border border-zinc-700/50 bg-zinc-800/60 text-zinc-300 hover:bg-zinc-700'}`}>
+                    {lang === 'nextjs' ? 'Next.js' : lang === 'express' ? 'Express.js' : lang.charAt(0).toUpperCase() + lang.slice(1)}
                   </button>
                 ))}
               </div>
-              <div className="relative rounded-xl border border-zinc-700/40 bg-zinc-900">
-                <div className="flex items-center justify-between border-b border-zinc-700/40 px-4 py-2">
-                  <span className="font-mono text-xs text-zinc-500">{configLang === 'express' ? 'middleware.js' : configLang === 'nginx' ? 'nginx.conf' : '.htaccess'}</span>
+              <div className="rounded-xl border border-zinc-800 bg-zinc-950 overflow-hidden">
+                <div className="flex items-center justify-between border-b border-zinc-800 px-4 py-2.5 bg-zinc-900">
+                  <span className="font-mono text-xs text-zinc-500">{configLang === 'nextjs' ? 'next.config.js' : configLang === 'express' ? 'middleware.js' : configLang === 'nginx' ? 'nginx.conf' : '.htaccess'}</span>
                   <CopyBtn text={configCode} />
                 </div>
-                <pre className="overflow-x-auto p-4 text-xs leading-relaxed text-zinc-300 font-mono whitespace-pre">{configCode}</pre>
+                <pre className="overflow-x-auto p-4 text-[12px] leading-relaxed text-zinc-300 font-mono whitespace-pre">{configCode}</pre>
               </div>
             </div>
           )}
         </div>
       )}
 
+      {/* Empty state */}
       {headers.length === 0 && analyzed.trim() && (
-        <div className="rounded-xl border border-zinc-700/40 bg-zinc-800/30 p-8 text-center">
-          <ShieldOff className="mx-auto h-8 w-8 text-zinc-500 mb-2" />
-          <p className="text-zinc-400 text-sm">No headers could be parsed from the input.</p>
-          <p className="text-zinc-500 text-xs mt-1">Make sure to paste raw HTTP headers in the format: HeaderName: value</p>
+        <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-8 text-center">
+          <ShieldOff className="mx-auto h-10 w-10 text-zinc-700 mb-3" />
+          <p className="text-zinc-400 font-medium">No headers could be parsed</p>
+          <p className="text-zinc-600 text-sm mt-1">Expected format: <code className="font-mono text-zinc-500">Header-Name: value</code> (one per line)</p>
         </div>
       )}
     </div>
@@ -837,7 +672,7 @@ export default function HttpHeadersAnalyzerClient() {
   return (
     <ToolPageShell
       title="HTTP Headers Analyzer"
-      subtitle="Paste HTTP response headers to get an instant security grade (A+ to F) and generate server configs"
+      subtitle="Paste response headers → instant A+ to F security grade, per-header assessment, and server config generation"
       icon="🔒"
       tool={tool}
     />
