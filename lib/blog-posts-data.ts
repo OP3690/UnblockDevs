@@ -10,6 +10,33 @@ export type BlogPost = {
 
 export const blogPosts: BlogPost[] = [
     {
+      slug: 'json-stringify-special-cases',
+      title: 'JSON.stringify() Edge Cases — undefined, null, Dates, Circular References, BigInt & More',
+      excerpt: 'Why undefined silently disappears from objects, null is preserved, Dates become ISO strings, circular references throw, BigInt throws, NaN becomes null, and Map/Set lose all data — with fixes for every case.',
+      date: '2026-04-13',
+      readTime: '11 min read',
+      category: 'JSON & Logs',
+      keywords: ['json stringify undefined', 'json stringify circular reference', 'json stringify null vs undefined', 'json stringify date', 'json stringify bigint', 'json stringify nan', 'json stringify edge cases'],
+    },
+    {
+      slug: 'how-to-convert-javascript-object-to-json-string',
+      title: 'How to Convert a JavaScript Object to a JSON String — JSON.stringify() Explained',
+      excerpt: 'Every way to convert a JS object to JSON: basic stringify, pretty-print with space, field filtering with replacer, nested objects, arrays — and all real-world scenarios: API requests, localStorage, Node.js files.',
+      date: '2026-04-13',
+      readTime: '9 min read',
+      category: 'JSON & Logs',
+      keywords: ['convert javascript object to json string', 'javascript object to json', 'js object to json string', 'how to stringify an object', 'json stringify object online', 'object to json converter'],
+    },
+    {
+      slug: 'json-stringify-complete-guide',
+      title: 'JSON.stringify() Complete Guide — Options, Replacer, Space & Real-World Examples',
+      excerpt: 'Master JSON.stringify(): the full three-parameter signature, pretty-print vs compact output, replacer array and function, toJSON() custom serialization, practical patterns, and common mistakes with fixes.',
+      date: '2026-04-13',
+      readTime: '10 min read',
+      category: 'JSON & Logs',
+      keywords: ['json stringify guide', 'json stringify options', 'json stringify replacer', 'json stringify space parameter', 'json stringify pretty print', 'json stringify tutorial', 'json stringify online'],
+    },
+    {
       slug: 'how-to-use-curl-command-api-testing',
       title: 'How to Use cURL to Test APIs — Commands, Examples & Convert to Code',
       excerpt: 'Complete cURL guide for API testing: GET, POST with JSON, Bearer token auth, PUT/PATCH/DELETE, debugging flags, and how to convert any cURL command to Python or JavaScript.',

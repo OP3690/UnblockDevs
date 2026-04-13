@@ -1,371 +1,385 @@
 'use client';
 
-import Link from 'next/link';
-import { ArrowLeft, Code, CheckCircle, Copy, ExternalLink } from 'lucide-react';
-import { useState } from 'react';
-import toast from 'react-hot-toast';
-import FAQSchema from '@/components/FAQSchema';
-import BlogSocialShare from '@/components/BlogSocialShare';
 import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
+import {
+  AlertBox,
+  ErrorFix,
+  CodeBlock,
+  FAQAccordion,
+  KeyPointsGrid,
+  StatGrid,
+  SectionHeader,
+  QuickFact,
+  VerticalSteps,
+} from '@/components/blog/BlogVisuals';
 
 export default function JsonStringifyCompleteGuideClient() {
-  const [copiedExample, setCopiedExample] = useState<string | null>(null);
-
-  const copyToClipboard = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedExample(id);
-    toast.success('Copied to clipboard!');
-    setTimeout(() => setCopiedExample(null), 2000);
-  };
-
-  const examples = [
-    {
-      id: 'basic',
-      title: 'Basic Object Stringify',
-      code: `const obj = { name: "John", age: 30, city: "New York" };
-const jsonString = JSON.stringify(obj);
-console.log(jsonString);
-// Output: '{"name":"John","age":30,"city":"New York"}'`,
-    },
-    {
-      id: 'pretty',
-      title: 'Pretty Print with Spaces',
-      code: `const obj = { name: "John", age: 30 };
-const jsonString = JSON.stringify(obj, null, 2);
-console.log(jsonString);
-// Output:
-// {
-//   "name": "John",
-//   "age": 30
-// }`,
-    },
-    {
-      id: 'array',
-      title: 'Stringify Array',
-      code: `const arr = [{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }];
-const jsonString = JSON.stringify(arr);
-console.log(jsonString);
-// Output: '[{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}]'`,
-    },
-    {
-      id: 'replacer',
-      title: 'Using Replacer Function',
-      code: `const obj = { name: "John", age: 30, password: "secret123" };
-const jsonString = JSON.stringify(obj, (key, value) => {
-  if (key === 'password') return undefined; // Exclude password
-  return value;
-});
-console.log(jsonString);
-// Output: '{"name":"John","age":30}'`,
-    },
-  ];
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
-      <header className="bg-white shadow-md border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/blog" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-primary-700 bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 mb-4 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Developer's Study Materials
-          </Link>
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <Code className="w-6 h-6 text-blue-600" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">JSON.stringify() Complete Guide</h1>
-              <p className="text-sm text-gray-500 mt-1">Examples, Syntax & Best Practices</p>
-            </div>
-          </div>
-        </div>
-      </header>
+    <BlogLayoutWithSidebarAds>
+      <h1>JSON.stringify() Complete Guide — Options, Replacer, Space &amp; Real-World Examples</h1>
+      <p className="lead">
+        <code>JSON.stringify()</code> converts JavaScript objects to JSON strings — but most
+        developers only ever use its simplest form. The function takes three parameters, handles
+        a dozen special value types differently, and has a replacer function that can filter and
+        transform your data on the fly. This guide covers everything: the full signature, all
+        three parameters, output formatting, real-world patterns, and the most common mistakes.
+      </p>
 
-      {/* Floating Social Share Bar */}
-      <BlogSocialShare 
-        title="JSON.stringify() Complete Guide"
-        description="Examples, Syntax & Best Practices"
-        variant="floating"
-      />
+      <StatGrid stats={[
+        { value: '3 params', label: 'value, replacer, space — most devs only ever use the first', color: 'blue' },
+        { value: 'undefined', label: 'Silently stripped from objects — the #1 cause of data loss bugs', color: 'red' },
+        { value: '1 tool', label: 'Simulate JSON.stringify() instantly — no Node.js or browser console needed', color: 'violet' },
+      ]} />
 
+      <SectionHeader number={1} title="JSON.stringify() Signature — All Three Parameters" />
+      <p>
+        Most code uses only the first parameter. Understanding all three unlocks formatting
+        control, field filtering, and data transformation that would otherwise require manual
+        loops.
+      </p>
 
-      <BlogLayoutWithSidebarAds>
-        <FAQSchema
-          faqs={[
-            {
-              question: 'What is JSON.stringify() in JavaScript?',
-              answer: 'JSON.stringify() is a built-in JavaScript method that converts JavaScript objects, arrays, or values into JSON strings. It\'s essential for sending data to servers, storing data, and converting objects to strings.',
-            },
-            {
-              question: 'How do I pretty print JSON with stringify?',
-              answer: 'Use the third parameter (space) in JSON.stringify(). For example: JSON.stringify(obj, null, 2) will add 2 spaces for indentation, making the JSON string more readable.',
-            },
-            {
-              question: 'What values cannot be stringified?',
-              answer: 'Functions, undefined, symbols, and circular references cannot be stringified. Functions and undefined are omitted, symbols are converted to null, and circular references throw an error.',
-            },
-            {
-              question: 'Does JSON.stringify omit undefined properties?',
-              answer: 'Yes. In objects, properties with value undefined are omitted from the output. In arrays, undefined elements become null. JSON.stringify(undefined) returns undefined (the value), not a string.',
-            },
-            {
-              question: 'Why does JSON.stringify(undefined) return undefined?',
-              answer: 'JSON has no undefined type. When you pass undefined directly to JSON.stringify(), the return value is the JavaScript value undefined, not the string "undefined". Object properties that are undefined are omitted; array slots that are undefined become null.',
-            },
-            {
-              question: 'Does JSON.stringify omit undefined in nested objects?',
-              answer: 'Yes. At every level, object properties whose value is undefined are omitted. So { a: 1, b: { x: undefined, y: 2 } } becomes \'{"a":1,"b":{"y":2}}\'. Nested objects are stringified recursively with the same rule.',
-            },
-            {
-              question: 'What happens to undefined in a JSON array?',
-              answer: 'In arrays, undefined elements are serialized as null. So JSON.stringify([1, undefined, 3]) returns \'[1,null,3]\'. This is because JSON has no undefined type; null is the JSON way to represent "missing" or empty values in arrays.',
-            },
-            {
-              question: 'What\'s the difference between JSON.stringify() and JSON.parse()?',
-              answer: 'JSON.stringify() converts JavaScript objects to JSON strings, while JSON.parse() converts JSON strings back to JavaScript objects. They are inverse operations of each other.',
-            },
-          ]}
-        />
-        <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          <section className="mb-12">
-            <p className="text-lg text-gray-700 leading-relaxed mb-4">
-              <code className="bg-gray-100 px-1 rounded">JSON.stringify()</code> is one of the most important methods 
-              in JavaScript for working with JSON data. It converts JavaScript objects, arrays, and values into JSON strings, 
-              making them ready for transmission, storage, or file output.
-            </p>
-            <p className="text-gray-700 leading-relaxed">
-              In this comprehensive guide, we'll cover everything you need to know about <code className="bg-gray-100 px-1 rounded">JSON.stringify()</code>, 
-              from basic usage to advanced techniques. Use our free <Link href="/json-stringify-online" className="text-blue-600 hover:underline font-semibold">JSON.stringify() Online tool</Link> to test examples instantly.
-            </p>
-          </section>
+      <CodeBlock lang="javascript" title="Full JSON.stringify() signature">
+{`JSON.stringify(value, replacer, space)
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Syntax</h2>
-            <div className="bg-gray-50 rounded-lg p-5 border border-gray-200 mb-4">
-              <code className="text-sm">
-                JSON.stringify(value, replacer, space)
-              </code>
-            </div>
-            <div className="space-y-3">
-              <div className="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-                <h3 className="font-semibold text-gray-900 mb-1">value (required)</h3>
-                <p className="text-sm text-gray-700">The JavaScript object, array, or value to convert to a JSON string</p>
-              </div>
-              <div className="p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
-                <h3 className="font-semibold text-gray-900 mb-1">replacer (optional)</h3>
-                <p className="text-sm text-gray-700">A function or array to transform or filter values before stringifying</p>
-              </div>
-              <div className="p-4 bg-purple-50 rounded-lg border-l-4 border-purple-500">
-                <h3 className="font-semibold text-gray-900 mb-1">space (optional)</h3>
-                <p className="text-sm text-gray-700">Number of spaces (0-10) for indentation, or a string for custom indentation</p>
-              </div>
-            </div>
-          </section>
+// value    — required: the value to serialize
+//             objects, arrays, strings, numbers, booleans, null
+// replacer — optional: controls which fields are included
+//             Array<string> → whitelist of keys to keep
+//             Function(key, value) → return value to keep, undefined to omit
+// space    — optional: indentation
+//             0 or omit → compact, single-line output
+//             2 → 2-space indent (most common for readability)
+//             4 → 4-space indent
+//             '\\t' → tab indent
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">JSON.stringify() and undefined: omitted in objects, null in arrays</h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              <strong>Object properties</strong> whose value is <code className="bg-gray-100 px-1 rounded">undefined</code> are <strong>omitted</strong> from the JSON string. <strong>Array elements</strong> that are <code className="bg-gray-100 px-1 rounded">undefined</code> are serialized as <code className="bg-gray-100 px-1 rounded">null</code>. If you pass <code className="bg-gray-100 px-1 rounded">undefined</code> itself to <code className="bg-gray-100 px-1 rounded">JSON.stringify()</code>, it returns <code className="bg-gray-100 px-1 rounded">undefined</code> (not a string). This follows the JSON spec (RFC 8259): JSON has no <code className="bg-gray-100 px-1 rounded">undefined</code> type.
-            </p>
-            <pre className="bg-gray-50 p-4 rounded border border-gray-200 text-sm overflow-x-auto mb-4">
-              <code>{`JSON.stringify({ a: 1, b: undefined, c: 2 });  // "{\\"a\\":1,\\"c\\":2}"
-JSON.stringify([1, undefined, 3]);           // "[1,null,3]"
-JSON.stringify(undefined);                  // undefined`}</code>
-            </pre>
-            <p className="text-gray-700 leading-relaxed">
-              Use the <strong>replacer</strong> function to exclude or replace other values (see the replacer example above). Try this in our <Link href="/json-stringify-online" className="text-blue-600 hover:underline font-semibold">JSON stringify online tool</Link>.
-            </p>
-          </section>
+// Returns: a JSON string, or undefined for top-level undefined/Function/Symbol
+// Throws:  TypeError for circular references or BigInt values`}
+      </CodeBlock>
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Interactive Examples</h2>
-            <div className="space-y-6">
-              {examples.map((example) => (
-                <div key={example.id} className="bg-gray-50 rounded-lg p-5 border border-gray-200">
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-semibold text-gray-900">{example.title}</h3>
-                    <button
-                      onClick={() => copyToClipboard(example.code, example.id)}
-                      className="text-blue-600 hover:text-blue-700"
-                    >
-                      {copiedExample === example.id ? (
-                        <CheckCircle className="w-5 h-5" />
-                      ) : (
-                        <Copy className="w-5 h-5" />
-                      )}
-                    </button>
-                  </div>
-                  <pre className="bg-white p-4 rounded border border-gray-200 text-sm overflow-x-auto">
-                    <code>{example.code}</code>
-                  </pre>
-                </div>
-              ))}
-            </div>
-          </section>
+      <KeyPointsGrid columns={2} items={[
+        {
+          title: 'value (required)',
+          description:
+            'Any JavaScript value. Objects and arrays are recursively serialized. Primitives become their JSON representation. undefined, Symbol, and Function values are stripped from object properties or become null in arrays.',
+        },
+        {
+          title: 'replacer (optional)',
+          description:
+            'An array of strings to whitelist specific keys, or a function called for every key-value pair that returns the value to serialize — or undefined to omit it. Pass null to skip replacer while still using the space parameter.',
+        },
+        {
+          title: 'space (optional)',
+          description:
+            'A number (1–10) of spaces, or a string (up to 10 chars) used as the indent. Omit for compact output. Use 2 for standard pretty-print. Numbers above 10 and strings longer than 10 chars are capped automatically.',
+        },
+        {
+          title: 'Return value',
+          description:
+            'A valid JSON string, or the JavaScript value undefined (not a string) if the top-level input is undefined, a Function, or a Symbol. Throws TypeError for circular references and BigInt values.',
+        },
+      ]} />
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">JSON.stringify() replacer — filter undefined manually</h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              The <strong>replacer</strong> (second argument) can be a function that runs for each key and value. Returning <code className="bg-gray-100 px-1 rounded">undefined</code> from the replacer <strong>omits that property</strong> from the output. So you can filter out undefined, secrets, or any key you don’t want in the JSON string.
-            </p>
-            <pre className="bg-gray-50 p-4 rounded border border-gray-200 text-sm overflow-x-auto mb-4">
-              <code>{`const obj = { name: 'Jane', age: undefined, token: 'secret' };
-const safe = JSON.stringify(obj, (key, value) => {
-  if (value === undefined || key === 'token') return undefined;
+      <SectionHeader number={2} title="Compact vs. Pretty-Print — the space Parameter" />
+      <p>
+        The <code>space</code> parameter controls output format. Compact is smaller — ideal for
+        API payloads, localStorage, and cookies. Pretty is human-readable — ideal for debugging,
+        config files, and log entries.
+      </p>
+
+      <CodeBlock lang="javascript" title="space parameter examples — all formats">
+{`const user = {
+  id: 42,
+  name: 'Alice',
+  roles: ['admin', 'editor'],
+  address: { city: 'London', country: 'UK' },
+};
+
+// Compact — no space argument
+JSON.stringify(user);
+// '{"id":42,"name":"Alice","roles":["admin","editor"],"address":{"city":"London","country":"UK"}}'
+
+// 2-space indent — most common for readability
+JSON.stringify(user, null, 2);
+// {
+//   "id": 42,
+//   "name": "Alice",
+//   "roles": [
+//     "admin",
+//     "editor"
+//   ],
+//   "address": {
+//     "city": "London",
+//     "country": "UK"
+//   }
+// }
+
+// Tab indent — preferred for some config file formats
+JSON.stringify(user, null, '\t');
+
+// space: 0 — explicit compact (same as omitting space)
+JSON.stringify(user, null, 0);`}
+      </CodeBlock>
+
+      <AlertBox type="tip" title="See the output instantly — no code required">
+        Paste any JavaScript object into the{' '}
+        <a href="https://unblockdevs.com/json-stringify-online" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline font-medium">
+          JSON.stringify() online tool
+        </a>{' '}
+        and switch between compact, 2-space, 4-space, and tab output. Also shows byte count
+        so you can see exactly how much space pretty-printing adds.
+      </AlertBox>
+
+      <SectionHeader number={3} title="The replacer Parameter — Filter and Transform Fields" />
+      <p>
+        Pass an array to whitelist keys. Pass a function to apply custom transformation or
+        omission logic to every value, recursively.
+      </p>
+
+      <CodeBlock lang="javascript" title="replacer array — key whitelist">
+{`const user = {
+  id: 42,
+  name: 'Alice',
+  email: 'alice@example.com',
+  passwordHash: '$2b$10$...',
+  apiKey: 'sk-live-xyz789',
+  roles: ['admin', 'editor'],
+};
+
+// Only include id, name, roles — silently omit everything else
+JSON.stringify(user, ['id', 'name', 'roles'], 2);
+// {
+//   "id": 42,
+//   "name": "Alice",
+//   "roles": ["admin", "editor"]
+// }`}
+      </CodeBlock>
+
+      <CodeBlock lang="javascript" title="replacer function — dynamic transform">
+{`const data = {
+  userId: 42,
+  name: 'Alice',
+  password: 'hunter2',
+  apiKey: 'sk-live-xyz789',
+  lastLogin: new Date('2024-11-15T10:30:00Z'),
+  balance: 9.876543,
+};
+
+const safeReplacer = (key, value) => {
+  // Root call always has key === '' — pass through unchanged
+  if (key === '') return value;
+
+  // Omit secrets
+  if (key === 'password' || key === 'apiKey') return undefined;
+
+  // Dates are already serialized to ISO string by Date.toJSON() before
+  // replacer runs — value will be a string like '2024-11-15T10:30:00.000Z'
+
+  // Round floating-point numbers to 2 decimal places
+  if (typeof value === 'number' && !Number.isInteger(value)) {
+    return parseFloat(value.toFixed(2));
+  }
+
   return value;
-});
-// "{\\"name\\":\\"Jane\\"}"`}</code>
-            </pre>
-            <p className="text-gray-700 leading-relaxed">
-              Replacer runs recursively, so you can omit undefined (or other values) at any depth. Try it in our <Link href="/json-stringify-online" className="text-blue-600 hover:underline font-semibold">JSON stringify online</Link> tool.
-            </p>
-          </section>
+};
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">JSON.stringify() vs JSON.parse() — round-trip behavior</h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              <code className="bg-gray-100 px-1 rounded">JSON.stringify()</code> turns a JavaScript value into a JSON string; <code className="bg-gray-100 px-1 rounded">JSON.parse()</code> turns a JSON string back into a JavaScript value. For a round-trip: <code className="bg-gray-100 px-1 rounded">JSON.parse(JSON.stringify(obj))</code> — properties that are <code className="bg-gray-100 px-1 rounded">undefined</code> are lost (omitted by stringify), and array slots that were <code className="bg-gray-100 px-1 rounded">undefined</code> become <code className="bg-gray-100 px-1 rounded">null</code>. Dates become strings. So the result is not always a deep clone; use a proper clone if you need to preserve undefined and other non-JSON types.
-            </p>
-          </section>
+JSON.stringify(data, safeReplacer, 2);
+// {
+//   "userId": 42,
+//   "name": "Alice",
+//   "lastLogin": "2024-11-15T10:30:00.000Z",
+//   "balance": 9.88
+// }`}
+      </CodeBlock>
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">RFC 8259 — why undefined isn’t a valid JSON value</h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              JSON (RFC 8259) only has six value types: object, array, string, number, boolean, and null. There is no <code className="bg-gray-100 px-1 rounded">undefined</code> in JSON. So <code className="bg-gray-100 px-1 rounded">JSON.stringify()</code> must either omit object properties whose value is undefined, or represent “missing” in arrays as <code className="bg-gray-100 px-1 rounded">null</code>. That’s why you see omitted keys and nulls instead of undefined in the serialized string.
-            </p>
-          </section>
+      <QuickFact color="violet" label="Replacer receives all keys recursively">
+        The replacer function is called for every key-value pair at every depth level.
+        For the root object, <code>key</code> is an empty string{' '}
+        (<code>key === ''</code>). Always return <code>value</code> for the root call —
+        returning <code>undefined</code> at the root produces the JavaScript value{' '}
+        <code>undefined</code>, not a JSON string.
+      </QuickFact>
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Real-world examples — API responses, localStorage, logging</h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              In APIs you often send payloads with <code className="bg-gray-100 px-1 rounded">JSON.stringify()</code>; undefined properties are dropped, so the server never sees them. In <code className="bg-gray-100 px-1 rounded">localStorage</code> you can only store strings, so you stringify objects — again, undefined is omitted. When logging, <code className="bg-gray-100 px-1 rounded">console.log(JSON.stringify(obj))</code> gives a compact string; undefined keys won’t appear. In all cases, be aware that undefined is never present in the resulting JSON string.
-            </p>
-          </section>
+      <SectionHeader number={4} title="toJSON() — Custom Serialization per Class" />
+      <p>
+        Objects with a <code>toJSON()</code> method control their own serialization.{' '}
+        <code>JSON.stringify()</code> calls <code>toJSON()</code> and stringifies the return
+        value. This is how <code>Date</code> objects produce ISO strings automatically.
+      </p>
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Common Use Cases</h2>
-            <div className="space-y-4">
-              <div className="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-                <h3 className="font-semibold text-gray-900 mb-2">1. Sending Data to API</h3>
-                <pre className="bg-white p-3 rounded border border-blue-200 text-xs overflow-x-auto mt-2">
-{`fetch('/api/users', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ name: 'John', age: 30 })
-});`}
-                </pre>
-              </div>
-              <div className="p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
-                <h3 className="font-semibold text-gray-900 mb-2">2. Storing in localStorage</h3>
-                <pre className="bg-white p-3 rounded border border-green-200 text-xs overflow-x-auto mt-2">
-{`const user = { name: 'John', preferences: { theme: 'dark' } };
-localStorage.setItem('user', JSON.stringify(user));`}
-                </pre>
-              </div>
-              <div className="p-4 bg-purple-50 rounded-lg border-l-4 border-purple-500">
-                <h3 className="font-semibold text-gray-900 mb-2">3. Creating JSON Files</h3>
-                <pre className="bg-white p-3 rounded border border-purple-200 text-xs overflow-x-auto mt-2">
-{`const data = { users: [{ id: 1, name: 'Alice' }] };
-const jsonContent = JSON.stringify(data, null, 2);
-// Save to file or download`}
-                </pre>
-              </div>
-            </div>
-          </section>
+      <CodeBlock lang="javascript" title="toJSON() examples">
+{`// Date.prototype.toJSON() exists — produces ISO 8601 strings
+const event = { name: 'Launch', at: new Date('2024-11-15T10:00:00Z') };
+JSON.stringify(event);
+// '{"name":"Launch","at":"2024-11-15T10:00:00.000Z"}'
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">What Cannot Be Stringified?</h2>
-            <div className="bg-yellow-50 border-l-4 border-yellow-500 p-5 rounded-r-lg">
-              <p className="text-gray-700 mb-3">Some values are automatically handled or excluded:</p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700">
-                <li><strong>Functions:</strong> Omitted from output</li>
-                <li><strong>undefined:</strong> Omitted from objects, converted to null in arrays</li>
-                <li><strong>Symbols:</strong> Omitted from objects, converted to null in arrays</li>
-                <li><strong>Circular references:</strong> Throws TypeError</li>
-                <li><strong>Date objects:</strong> Converted to ISO string</li>
-              </ul>
-            </div>
-          </section>
+// Custom toJSON() on your own class
+class Price {
+  constructor(cents, currency) {
+    this.cents = cents;
+    this.currency = currency;
+  }
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">JSON.stringify() Without Newlines</h2>
-            <div className="bg-gray-50 rounded-lg p-5 border border-gray-200 mb-6">
-              <p className="text-gray-700 mb-3">
-                By default, <code className="bg-white px-1 rounded">JSON.stringify()</code> creates compact JSON without newlines. 
-                To remove newlines from pretty-printed JSON, set the space parameter to 0 or omit it:
-              </p>
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-gray-900">Compact Output (No Newlines)</h3>
-                <button
-                  onClick={() => copyToClipboard(`const obj = { name: "John", age: 30 };\nconst compact = JSON.stringify(obj);\n// Output: '{"name":"John","age":30}'\n\n// Or explicitly:\nconst noNewlines = JSON.stringify(obj, null, 0);`, 'no-newlines')}
-                  className="text-blue-600 hover:text-blue-700"
-                >
-                  {copiedExample === 'no-newlines' ? <CheckCircle className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
-                </button>
-              </div>
-              <pre className="bg-white p-4 rounded border border-gray-200 text-sm overflow-x-auto">
-                <code>{`const obj = { name: "John", age: 30 };
-const compact = JSON.stringify(obj);
-// Output: '{"name":"John","age":30}'
-
-// Or explicitly:
-const noNewlines = JSON.stringify(obj, null, 0);`}</code>
-              </pre>
-            </div>
-            <p className="text-gray-700 text-sm mb-4">
-              Use our <Link href="/json-stringify-online" className="text-blue-600 hover:underline font-semibold">JSON.stringify() online tool</Link> to test 
-              with different spacing values (0 for no newlines, 2+ for pretty print).
-            </p>
-          </section>
-
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Best Practices</h2>
-            <div className="space-y-3">
-              <div className="flex items-start gap-3 p-4 bg-green-50 rounded-lg border border-green-200">
-                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-1">Use Pretty Print for Debugging</h3>
-                  <p className="text-sm text-gray-700">Use <code className="bg-white px-1 rounded">JSON.stringify(obj, null, 2)</code> to make JSON readable during development</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <CheckCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-1">Filter Sensitive Data</h3>
-                  <p className="text-sm text-gray-700">Use replacer function to exclude passwords, tokens, or sensitive information</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 p-4 bg-purple-50 rounded-lg border border-purple-200">
-                <CheckCircle className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-1">Handle Errors</h3>
-                  <p className="text-sm text-gray-700">Wrap in try-catch for circular references or large objects that might fail</p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="mb-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-8 text-white">
-            <div className="flex items-center gap-4 mb-4">
-              <Code className="w-12 h-12" />
-              <div>
-                <h2 className="text-2xl font-bold mb-2">Try JSON.stringify() Online</h2>
-                <p className="text-blue-100">
-                  Use our free online tool to test JSON.stringify() with any JavaScript object. 
-                  Supports pretty printing, replacer functions, and instant conversion.
-                </p>
-              </div>
-            </div>
-            <Link
-              href="/json-stringify-online"
-              className="inline-flex items-center gap-2 bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
-            >
-              Try JSON.stringify() Tool
-              <ExternalLink className="w-5 h-5" />
-            </Link>
-          </section>
-        </article>
-      </BlogLayoutWithSidebarAds>
-    </div>
-  );
+  toJSON() {
+    // Serialize as a compact single value instead of {cents, currency}
+    return (this.cents / 100).toFixed(2) + ' ' + this.currency;
+  }
 }
 
+const order = { id: 'ORD-1', subtotal: new Price(4999, 'USD') };
+JSON.stringify(order);
+// '{"id":"ORD-1","subtotal":"49.99 USD"}'`}
+      </CodeBlock>
+
+      <SectionHeader number={5} title="Practical Patterns — Real-World JSON.stringify() Usage" />
+
+      <CodeBlock lang="javascript" title="API requests — always stringify the body">
+{`// fetch() requires a string body — JSON.stringify converts the payload
+const response = await fetch('https://api.example.com/users', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ name: 'Alice', email: 'alice@example.com' }),
+});
+
+// Axios does this automatically (pass an object, Axios calls JSON.stringify)
+const { data } = await axios.post('/users', { name: 'Alice', email: 'alice@example.com' });`}
+      </CodeBlock>
+
+      <CodeBlock lang="javascript" title="localStorage — objects must be stringified">
+{`// localStorage only stores strings
+const cart = {
+  items: [{ id: 'SKU-1', qty: 2 }, { id: 'SKU-3', qty: 1 }],
+  coupon: 'SAVE10',
+};
+
+// Save (compact — no need for pretty-print in storage)
+localStorage.setItem('cart', JSON.stringify(cart));
+
+// Retrieve and restore
+const savedCart = JSON.parse(localStorage.getItem('cart') ?? '{}');
+console.log(savedCart.items.length); // 2`}
+      </CodeBlock>
+
+      <CodeBlock lang="javascript" title="Quick deep clone (with caveats)">
+{`// Fast deep clone — works for plain objects with JSON-compatible values
+const original = { name: 'Alice', scores: [10, 20, 30], meta: { active: true } };
+const clone = JSON.parse(JSON.stringify(original));
+
+clone.scores.push(40);
+console.log(original.scores); // [10, 20, 30] — unchanged
+console.log(clone.scores);    // [10, 20, 30, 40]
+
+// Caveats: undefined removed, Date becomes string, no Map/Set/Function
+// For production cloning: use structuredClone() (Node 17+, all modern browsers)
+const betterClone = structuredClone(original); // preserves all types`}
+      </CodeBlock>
+
+      <CodeBlock lang="javascript" title="Readable object logging">
+{`// Avoid [object Object] in string concatenation and some loggers
+const user = { id: 42, name: 'Alice', role: 'admin' };
+
+console.log('User: ' + user);                          // 'User: [object Object]'
+console.log('User:', JSON.stringify(user));             // 'User: {"id":42,...}'
+console.log('User:', JSON.stringify(user, null, 2));   // multi-line, pretty
+
+// Compact for one-liners in structured logs
+logger.info({ event: 'login', user: JSON.stringify(user) });`}
+      </CodeBlock>
+
+      <SectionHeader number={6} title="Common JSON.stringify() Mistakes" />
+
+      <ErrorFix
+        title="Expecting undefined values to be preserved in objects"
+        bad={`const form = {
+  name: 'Alice',
+  middleName: undefined, // user left it blank
+  age: 30,
+};
+
+const body = JSON.stringify(form);
+// '{"name":"Alice","age":30}'
+// middleName is GONE — the PATCH request won't clear it on the server`}
+        good={`// Use null to explicitly represent "no value"
+const form = { name: 'Alice', middleName: null, age: 30 };
+JSON.stringify(form);
+// '{"name":"Alice","middleName":null,"age":30}'
+
+// Or convert undefined to null with a replacer:
+JSON.stringify(form, (k, v) => (v === undefined ? null : v));
+// '{"name":"Alice","middleName":null,"age":30}'`}
+        badLabel="undefined silently dropped — server never sees the field"
+        goodLabel="null preserved — server knows the field was intentionally cleared"
+      />
+
+      <ErrorFix
+        title="Using JSON.stringify() to compare objects with different key insertion order"
+        bad={`const a = { x: 1, y: 2 };
+const b = { y: 2, x: 1 };  // same data, different key order
+
+JSON.stringify(a) === JSON.stringify(b);
+// false — key order differs, even though values are identical`}
+        good={`// Sort keys first for stable, order-independent comparison
+const sortedStringify = (obj) =>
+  JSON.stringify(obj, Object.keys(obj).sort());
+
+sortedStringify(a) === sortedStringify(b); // true
+
+// For production: use a deep equality library
+// import { isEqual } from 'lodash';  → isEqual(a, b) === true`}
+        badLabel="Key order dependent — breaks silently on different data sources"
+        goodLabel="Sort keys first for reliable structural comparison"
+      />
+
+      <SectionHeader number={7} title="Try JSON.stringify() Online" />
+      <p>
+        For quick experiments, debugging, or checking how a specific value serializes — the
+        online tool is faster than opening a browser console.
+      </p>
+
+      <VerticalSteps steps={[
+        {
+          title: 'Paste any JavaScript object or JSON',
+          desc: 'The tool accepts JavaScript object literals (unquoted keys, trailing commas) and strict JSON. It normalizes the input before running stringify.',
+        },
+        {
+          title: 'Choose indent level',
+          desc: 'Switch between compact (0), 2-space, 4-space, and tab. The byte count updates instantly so you can see the cost of pretty-printing.',
+        },
+        {
+          title: 'View the exact output',
+          desc: 'The result is the exact string JSON.stringify() produces — all keys quoted, special characters escaped, undefined removed, null and boolean values serialized correctly.',
+        },
+        {
+          title: 'Copy or download',
+          desc: 'Copy the string to clipboard for use in code, or download as a .json file for use in fixtures, config files, or API mock data.',
+        },
+      ]} />
+
+      <FAQAccordion items={[
+        {
+          question: 'What does JSON.stringify() do in JavaScript?',
+          answer: 'JSON.stringify() converts a JavaScript value — object, array, string, number, boolean, or null — into a JSON string. The output is valid JSON that can be sent over HTTP, stored in localStorage or a file, or passed to JSON.parse() to reconstruct the original value. It takes three parameters: the value to serialize, an optional replacer for filtering or transforming values, and an optional space parameter for indentation.',
+        },
+        {
+          question: 'How do I pretty-print JSON with JSON.stringify()?',
+          answer: 'Pass a number as the third argument: JSON.stringify(obj, null, 2) for 2-space indent, JSON.stringify(obj, null, 4) for 4-space, or JSON.stringify(obj, null, "\\t") for tab indentation. The second argument is null (no replacer). For compact single-line output, omit the third argument entirely or pass 0.',
+        },
+        {
+          question: 'Why does JSON.stringify() remove undefined values?',
+          answer: 'The JSON spec (RFC 8259) has no undefined type — only null, boolean, number, string, array, and object. When JSON.stringify() encounters undefined as an object value, it omits the key entirely. When undefined appears in an array, it becomes null to preserve array indices. To explicitly represent "no value", use null in your data model instead of undefined.',
+        },
+        {
+          question: 'How does the replacer parameter work in JSON.stringify()?',
+          answer: 'The replacer is the second parameter. Pass an array of strings to keep only those property names: JSON.stringify(obj, ["id", "name"]) omits every other key. Pass a function that receives (key, value) — return the value to include it, return undefined to omit it, return a different value to transform it. The function is called for every property at every depth level, starting with a root call where key is an empty string.',
+        },
+        {
+          question: 'Can JSON.stringify() handle circular references?',
+          answer: 'No — JSON.stringify() throws a TypeError ("Converting circular structure to JSON") when it encounters a circular reference. To handle circular references, use a replacer that tracks seen objects, or install a library like flatted (JSON.stringify replacement) or circular-json. Most real objects are not circular, but objects from certain libraries (like error objects or DOM nodes) can be.',
+        },
+        {
+          question: 'Is there a JSON.stringify() online tool?',
+          answer: 'Yes — the JSON.stringify() online tool at unblockdevs.com/json-stringify-online runs entirely in your browser. Paste any JavaScript object or JSON value, choose compact or pretty-print output, and copy or download the result. No account, no Node.js, and your data never leaves your browser.',
+        },
+      ]} />
+    </BlogLayoutWithSidebarAds>
+  );
+}
