@@ -186,13 +186,6 @@ export const TOOLS_DIRECTORY: DirectoryTool[] = [
     icon: 'FileCode',
   },
   {
-    href: '/curl-to-python-requests',
-    name: 'cURL → Python requests',
-    description: 'Generate requests.get/post from raw cURL — copy-paste ready.',
-    category: 'api',
-    icon: 'Code2',
-  },
-  {
     href: '/har-to-curl',
     name: 'HAR → cURL',
     description: 'Extract cURL from browser HAR exports.',

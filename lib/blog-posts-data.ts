@@ -10,6 +10,33 @@ export type BlogPost = {
 
 export const blogPosts: BlogPost[] = [
     {
+      slug: 'how-to-use-curl-command-api-testing',
+      title: 'How to Use cURL to Test APIs — Commands, Examples & Convert to Code',
+      excerpt: 'Complete cURL guide for API testing: GET, POST with JSON, Bearer token auth, PUT/PATCH/DELETE, debugging flags, and how to convert any cURL command to Python or JavaScript.',
+      date: '2026-04-13',
+      readTime: '10 min read',
+      category: 'API & HTTP',
+      keywords: ['how to use curl', 'curl command examples', 'curl api testing', 'curl post json', 'curl bearer token', 'curl -X POST example', 'curl to python', 'curl to javascript'],
+    },
+    {
+      slug: 'curl-to-javascript-fetch-axios',
+      title: 'How to Convert cURL to JavaScript fetch, Axios & Node.js — Complete Guide',
+      excerpt: 'Convert any cURL command to JavaScript fetch(), Axios, or Node.js. GET, POST with JSON, auth headers, form data, file uploads — step-by-step guide with code examples.',
+      date: '2026-04-13',
+      readTime: '9 min read',
+      category: 'API & HTTP',
+      keywords: ['curl to javascript', 'curl to fetch', 'curl to axios', 'convert curl to javascript', 'curl to node.js', 'curl to js online', 'curl to fetch converter'],
+    },
+    {
+      slug: 'curl-to-python-requests-conversion',
+      title: 'How to Convert cURL to Python requests — Complete Step-by-Step Guide',
+      excerpt: 'Convert any cURL command to Python requests code. GET, POST with JSON, auth headers, cookies, form data, file uploads — every flag mapped with examples and a free online converter.',
+      date: '2026-04-13',
+      readTime: '10 min read',
+      category: 'API & HTTP',
+      keywords: ['curl to python', 'convert curl to python requests', 'curl to requests.get', 'curl to python online', 'curl -d to python', 'python requests equivalent of curl'],
+    },
+    {
       slug: 'string-case-converter-guide',
       title: 'String Case Converter Guide — camelCase, snake_case, PascalCase, kebab-case & More',
       excerpt: 'Complete guide to string case conversion — when to use each format, how to convert between them, and a free online converter that handles all 12 formats with bulk CSV export.',
