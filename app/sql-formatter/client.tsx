@@ -15,8 +15,8 @@ export default function SqlFormatterClient() {
   return (
     <ToolPageShell
       showFooterBand={false}
-      title="SQL Formatter"
-      subtitle="Paste → Instant fix. Format messy SQL query — clean SQL queries instantly. MySQL, PostgreSQL, Oracle, Trino & more"
+      title="SQL IN Clause Generator"
+      subtitle="Paste any list of IDs, emails, or UUIDs → get a SQL IN clause instantly. Numeric, string, parameterized, range compression. MySQL, PostgreSQL, SQL Server, Oracle, SQLite."
       toolName="sql_formatter"
       tool={<SqlFormatter />}
     />

@@ -10,6 +10,33 @@ export type BlogPost = {
 
 export const blogPosts: BlogPost[] = [
     {
+      slug: 'sql-list-to-in-clause',
+      title: 'Convert Any List to SQL IN Clause — CSV, Excel, JSON, Newline',
+      excerpt: 'Convert a list of IDs from Excel, CSV, JSON, or any format to a SQL IN clause in seconds. Python scripts, JavaScript, Excel formulas, shell one-liners, parameterized queries, and Oracle chunking covered.',
+      date: '2026-04-13',
+      readTime: '10 min read',
+      category: 'SQL & Databases',
+      keywords: ['convert list to sql in clause', 'csv to sql in clause', 'excel to sql in clause', 'list to sql where in', 'sql in clause generator', 'ids to sql in clause', 'bulk sql in clause'],
+    },
+    {
+      slug: 'how-to-format-sql-online',
+      title: 'How to Format SQL Online — Beautify, Indent & Clean SQL Queries Instantly',
+      excerpt: 'Format messy SQL in one click. SQL indentation rules, keyword casing, IN clause formatting, subquery formatting, ORM output beautifying. MySQL, PostgreSQL, SQL Server. Plus editor plugins and CLI tools.',
+      date: '2026-04-13',
+      readTime: '9 min read',
+      category: 'SQL & Databases',
+      keywords: ['format sql online', 'sql formatter online', 'sql beautifier online', 'sql pretty printer', 'format sql query online free', 'clean sql query', 'mysql query formatter online'],
+    },
+    {
+      slug: 'sql-in-clause-guide',
+      title: 'SQL IN Clause — Complete Guide with Examples for MySQL, PostgreSQL & More',
+      excerpt: 'Complete SQL IN clause guide: syntax, subqueries, NOT IN, NULL pitfalls, performance vs EXISTS vs JOIN, Oracle 1000-item limit, parameterized queries. MySQL, PostgreSQL, SQL Server, Oracle, SQLite examples.',
+      date: '2026-04-13',
+      readTime: '11 min read',
+      category: 'SQL & Databases',
+      keywords: ['sql in clause', 'sql where in clause', 'sql in clause examples', 'sql not in', 'sql in clause performance', 'oracle in clause 1000 limit', 'parameterized in clause', 'mysql in clause'],
+    },
+    {
       slug: 'json-schema-validator-guide',
       title: 'JSON Schema Validation Guide — Draft 7, 2020-12, AJV & OpenAPI Explained',
       excerpt: 'Complete JSON Schema guide: required fields, types, enum, format, pattern. Draft 7 vs 2020-12. AJV in Node.js. allOf/anyOf/oneOf composition. additionalProperties vs unevaluatedProperties. Free online validator.',
