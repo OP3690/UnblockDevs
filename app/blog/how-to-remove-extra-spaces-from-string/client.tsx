@@ -349,7 +349,7 @@ const clean = str.replace(/[^a-zA-Z0-9\s]/g, '');
 const slug = str.replace(/[^a-zA-Z0-9\-_]/g, '');
 
 // Escape for use in a regex pattern (when user input becomes a regex)
-const escaped = str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const escaped = str.replace(/[.*+?^${'${}'}()|[\]\\]/g, '\\$&');
 
 // Escape HTML entities (prevent XSS)
 const escapeHtml = (s) => s

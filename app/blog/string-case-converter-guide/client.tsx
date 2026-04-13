@@ -205,15 +205,15 @@ camelToSnakeAdvanced('parseHTTPSResponse'); // → 'parse_https_response'`}
 
 def camel_to_snake(name):
     # Handle consecutive capitals (acronyms like HTTPS)
-    s1 = re.sub(r'([A-Z]+)([A-Z][a-z])', r'\1_\2', name)
-    return re.sub(r'([a-z\d])([A-Z])', r'\1_\2', s1).lower()
+    s1 = re.sub(r'([A-Z]+)([A-Z][a-z])', r'\\1_\\2', name)
+    return re.sub(r'([a-z\d])([A-Z])', r'\\1_\\2', s1).lower()
 
 camel_to_snake('getUserProfile')       # → 'get_user_profile'
 camel_to_snake('parseHTTPSResponse')   # → 'parse_https_response'
 camel_to_snake('updatePaymentMethod')  # → 'update_payment_method'
 
 # Simpler version (no acronym handling):
-simple = re.sub(r'([A-Z])', r'_\1', 'getUserProfile').lstrip('_').lower()
+simple = re.sub(r'([A-Z])', r'_\\1', 'getUserProfile').lstrip('_').lower()
 # → 'get_user_profile'`}
       </CodeBlock>
 
