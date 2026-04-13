@@ -3,12 +3,12 @@ import HomeServerHero from '@/components/home/HomeServerHero';
 import HomeClient from './page-client';
 
 export const metadata: Metadata = {
-  title: 'UnblockDevs — Free Developer Tools: JSON, SQL, JWT, Base64, cURL & More',
-  description: '40+ free browser-based developer tools for JSON, SQL, JWT, Base64, cURL, regex, and AI workflows. 100% client-side — nothing sent to servers. No signup required.',
+  title: 'UnblockDevs — 60+ Free Developer Tools: JSON, cURL, JWT, Base64, CORS, Regex & More',
+  description: '60+ free browser-based developer tools — JSON formatter, cURL converter, HAR to cURL, CORS tester, JWT decoder, Base64 encoder, regex tester, SQL formatter, and AI data masking. 100% client-side, nothing sent to servers, no signup required.',
   alternates: { canonical: 'https://unblockdevs.com/' },
   openGraph: {
-    title: 'UnblockDevs — 40+ Free Developer Tools',
-    description: 'JSON, SQL, JWT, Base64, cURL, regex, and AI masking tools. All free, all client-side.',
+    title: 'UnblockDevs — 60+ Free Developer Tools',
+    description: 'JSON, cURL converter, HAR to cURL, CORS tester, JWT, Base64, regex, SQL, and AI masking tools. All free, all client-side, no signup.',
     url: 'https://unblockdevs.com/',
     siteName: 'UnblockDevs',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs — Free Developer Tools' }],
@@ -16,8 +16,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'UnblockDevs — 40+ Free Developer Tools',
-    description: 'JSON, SQL, JWT, Base64, cURL, regex tools. Free, client-side, no signup.',
+    title: 'UnblockDevs — 60+ Free Developer Tools',
+    description: 'JSON, cURL, HAR to cURL, CORS tester, JWT, Base64, regex tools. Free, client-side, no signup.',
   },
 };
 
@@ -26,7 +26,7 @@ const websiteSchema = {
   '@type': 'WebSite',
   name: 'UnblockDevs',
   url: 'https://unblockdevs.com',
-  description: '40+ free browser-based developer tools for JSON, SQL, JWT, Base64, cURL, and AI workflows.',
+  description: '60+ free browser-based developer tools for JSON, cURL conversion, HAR to cURL, CORS testing, JWT, Base64, SQL, and AI data masking.',
   potentialAction: {
     '@type': 'SearchAction',
     target: {
