@@ -78,6 +78,8 @@ export default function HomePrivacyFirstSections({
       { label: 'HTML Formatter', cats: ['all', 'dev'], variant: 'new', href: '/html-formatter' },
       { label: 'Image → Base64', cats: ['all', 'encode', 'dev'], variant: 'new', href: '/image-to-base64' },
       { label: 'HTML Viewer', cats: ['all', 'dev'], variant: 'new', href: '/html-viewer' },
+      { label: 'HTTP Headers', cats: ['all', 'dev'], variant: 'new', href: '/http-headers-analyzer' },
+      { label: 'String Utilities', cats: ['all', 'dev'], variant: 'new', href: '/string-utilities' },
     ],
     [toolPageUrls],
   );
