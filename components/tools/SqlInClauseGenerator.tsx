@@ -111,7 +111,7 @@ export default function SqlInClauseGenerator() {
   const [output, setOutput] = useState('');
   const [copied, setCopied] = useState(false);
   const [copiedChunk, setCopiedChunk] = useState<number | null>(null);
-  const [formatType, setFormatType] = useState<'sql' | 'sqlWithIn'>('sqlWithIn');
+  const [formatType, setFormatType] = useState<'sql' | 'sqlWithIn'>('sql');
   const [valueMode, setValueMode] = useState<'numeric' | 'string'>('numeric');
   const [autoDetected, setAutoDetected] = useState(false);
   const [quoteType, setQuoteType] = useState<"'" | '"'>("'");
