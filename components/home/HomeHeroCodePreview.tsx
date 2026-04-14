@@ -815,42 +815,40 @@ function Filmstrip({
 
   return (
     <div
-      className="relative border-b border-zinc-800/60 overflow-hidden transition-colors duration-700"
-      style={{ background: `linear-gradient(180deg, ${scene.accentHex}0d 0%, #0f0f0f 100%)` }}
+      className="relative border-b border-zinc-800/60 overflow-hidden transition-all duration-700"
+      style={{ background: `linear-gradient(180deg, ${scene.accentHex}10 0%, #0c0c0c 100%)` }}
     >
-      {/* Ambient top glow line in accent colour */}
+      {/* Ambient top glow line */}
       <div
         className="absolute inset-x-0 top-0 h-[1.5px] transition-all duration-700"
-        style={{ background: `linear-gradient(90deg, transparent 5%, ${scene.accentHex}90 40%, ${scene.accentHex} 50%, ${scene.accentHex}90 60%, transparent 95%)` }}
+        style={{ background: `linear-gradient(90deg, transparent 5%, ${scene.accentHex}80 35%, ${scene.accentHex} 50%, ${scene.accentHex}80 65%, transparent 95%)` }}
         aria-hidden
       />
 
-      {/* Main row: arrow · cards · arrow */}
-      <div className="flex items-center gap-2 px-3 pt-3 pb-2">
+      {/* Cards row */}
+      <div className="flex items-center gap-2 px-3 pt-3 pb-3">
 
         {/* ← Prev */}
         <button
           type="button"
           onClick={() => onJump(prevIdx)}
           aria-label="Previous tool"
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-zinc-700/60 bg-zinc-800/50 text-zinc-500 transition-all hover:border-zinc-500 hover:bg-zinc-700/60 hover:text-zinc-200 active:scale-90"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-zinc-700/50 bg-zinc-800/60 text-zinc-500 transition-all duration-200 hover:border-zinc-500/80 hover:bg-zinc-700/70 hover:text-zinc-100 active:scale-90"
         >
           <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden>
             <path d="M7.5 2L3.5 6L7.5 10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </button>
 
-        {/* Cards strip */}
+        {/* Cards */}
         <div className="relative flex flex-1 items-end justify-center gap-2 overflow-hidden">
           {slots.map(({ offset, sceneIdx }) => {
             const s = scenes[sceneIdx];
             const isActive = offset === 0;
             const dist = Math.abs(offset);
 
-            /* Progressive fall-off */
-            const opacity   = isActive ? 1 : dist === 1 ? 0.48 : 0.18;
-            const scale     = isActive ? 1 : dist === 1 ? 0.88 : 0.72;
-            const blur      = dist === 2 ? 'blur-[0.5px]' : '';
+            const opacity = isActive ? 1 : dist === 1 ? 0.46 : 0.16;
+            const scale   = isActive ? 1 : dist === 1 ? 0.87 : 0.70;
 
             return (
               <button
@@ -863,41 +861,40 @@ function Filmstrip({
                   opacity,
                   transform: `scale(${scale})`,
                   transformOrigin: 'bottom center',
-                  transition: 'all 0.35s cubic-bezier(0.4,0,0.2,1)',
+                  transition: 'all 0.38s cubic-bezier(0.4,0,0.2,1)',
+                  filter: dist === 2 ? 'blur(0.4px)' : 'none',
                 }}
-                className={`group relative flex shrink-0 flex-col items-center rounded-xl pb-2 pt-2.5 ${blur} ${
-                  isActive ? 'w-[88px] px-3' : 'w-[72px] px-2'
+                className={`group relative flex shrink-0 flex-col items-center rounded-xl pb-2 pt-3 ${
+                  isActive ? 'w-[90px] px-3' : 'w-[72px] px-2'
                 }`}
               >
-                {/* Card background */}
+                {/* Card bg */}
                 <span
-                  className={`absolute inset-0 rounded-xl transition-all duration-300 ${
-                    isActive
-                      ? 'ring-1'
-                      : 'bg-zinc-800/40 ring-1 ring-zinc-700/30 group-hover:bg-zinc-700/50'
-                  }`}
+                  className="absolute inset-0 rounded-xl transition-all duration-400"
                   style={isActive ? {
-                    background: `${scene.accentHex}14`,
-                    boxShadow: `0 0 20px 4px ${scene.accentHex}20, inset 0 1px 0 ${scene.accentHex}40`,
-                    outlineOffset: '0px',
-                    outline: `1px solid ${scene.accentHex}50`,
-                  } : undefined}
+                    background: `linear-gradient(160deg, ${scene.accentHex}1a 0%, ${scene.accentHex}08 100%)`,
+                    boxShadow: `0 0 24px 6px ${scene.accentHex}1a, inset 0 1px 0 ${scene.accentHex}35`,
+                    outline: `1px solid ${scene.accentHex}45`,
+                  } : {
+                    background: 'rgba(39,39,42,0.35)',
+                    outline: '1px solid rgba(63,63,70,0.3)',
+                  }}
                   aria-hidden
                 />
 
-                {/* Accent top border on active */}
+                {/* Active top accent bar */}
                 {isActive && (
                   <span
-                    className="absolute inset-x-4 top-0 h-[2px] rounded-b-full transition-colors duration-500"
-                    style={{ background: scene.accentHex }}
+                    className="absolute inset-x-5 top-0 h-[2px] rounded-full transition-colors duration-500"
+                    style={{ background: `linear-gradient(90deg, ${scene.accentHex}60, ${scene.accentHex}, ${scene.accentHex}60)` }}
                     aria-hidden
                   />
                 )}
 
                 {/* Emoji */}
                 <span
-                  className="relative z-10 select-none transition-all duration-300"
-                  style={{ fontSize: isActive ? '20px' : '15px', lineHeight: 1 }}
+                  className="relative z-10 select-none leading-none transition-all duration-300"
+                  style={{ fontSize: isActive ? '22px' : '14px' }}
                   aria-hidden
                 >
                   {s.emoji}
@@ -905,10 +902,8 @@ function Filmstrip({
 
                 {/* Label */}
                 <span
-                  className={`relative z-10 mt-1.5 block truncate text-center font-semibold leading-tight transition-all duration-300 ${
-                    isActive
-                      ? `text-[10.5px] ${scene.accent}`
-                      : 'text-[9.5px] text-zinc-600'
+                  className={`relative z-10 mt-2 block w-full truncate text-center font-semibold leading-none transition-all duration-300 ${
+                    isActive ? `text-[10px] ${scene.accent}` : 'text-[9px] text-zinc-600'
                   }`}
                 >
                   {s.label}
@@ -917,17 +912,9 @@ function Filmstrip({
             );
           })}
 
-          {/* Edge vignette masks */}
-          <div
-            className="pointer-events-none absolute inset-y-0 left-0 w-10"
-            style={{ background: 'linear-gradient(90deg, #0f0f0f, transparent)' }}
-            aria-hidden
-          />
-          <div
-            className="pointer-events-none absolute inset-y-0 right-0 w-10"
-            style={{ background: 'linear-gradient(270deg, #0f0f0f, transparent)' }}
-            aria-hidden
-          />
+          {/* Edge vignette */}
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-10" style={{ background: 'linear-gradient(90deg,#0c0c0c,transparent)' }} aria-hidden />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-10" style={{ background: 'linear-gradient(270deg,#0c0c0c,transparent)' }} aria-hidden />
         </div>
 
         {/* → Next */}
@@ -935,7 +922,7 @@ function Filmstrip({
           type="button"
           onClick={() => onJump(nextIdx)}
           aria-label="Next tool"
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-zinc-700/60 bg-zinc-800/50 text-zinc-500 transition-all hover:border-zinc-500 hover:bg-zinc-700/60 hover:text-zinc-200 active:scale-90"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-zinc-700/50 bg-zinc-800/60 text-zinc-500 transition-all duration-200 hover:border-zinc-500/80 hover:bg-zinc-700/70 hover:text-zinc-100 active:scale-90"
         >
           <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden>
             <path d="M4.5 2L8.5 6L4.5 10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
@@ -943,27 +930,37 @@ function Filmstrip({
         </button>
       </div>
 
-      {/* Progress micro-dots row */}
-      <div className="flex items-center justify-center gap-1 pb-2.5">
-        {scenes.map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            onClick={() => onJump(i)}
-            aria-label={`Go to scene ${i + 1}`}
-            className="flex items-center justify-center p-0.5"
-          >
-            <span
-              className="block rounded-full transition-all duration-300"
-              style={{
-                width:   i === idx ? '20px' : '4px',
-                height:  '3px',
-                background: i === idx ? scene.accentHex : '#3f3f46',
-                opacity: i === idx ? 1 : 0.5,
-              }}
-            />
-          </button>
-        ))}
+      {/* Segmented chapter track — replaces 11 dots */}
+      {/* Segmented chapter track — thin equal-width bars, no dots */}
+      <div className="flex items-center gap-[3px] px-4 pb-3">
+        {scenes.map((s, i) => {
+          const isActive  = i === idx;
+          const isPast    = i < idx;
+          return (
+            <button
+              key={i}
+              type="button"
+              onClick={() => onJump(i)}
+              aria-label={`Go to ${s.tool}`}
+              title={s.tool}
+              className="group flex-1 py-1"
+            >
+              <span
+                className="block h-[3px] w-full rounded-full transition-all duration-400"
+                style={{
+                  background: isActive
+                    ? `linear-gradient(90deg, ${scene.accentHex}cc, ${scene.accentHex})`
+                    : isPast
+                    ? `${scene.accentHex}35`
+                    : 'rgba(63,63,70,0.45)',
+                  boxShadow: isActive ? `0 0 6px 1px ${scene.accentHex}60` : 'none',
+                  transform: isActive ? 'scaleY(1.4)' : 'scaleY(1)',
+                  transformOrigin: 'center',
+                }}
+              />
+            </button>
+          );
+        })}
       </div>
     </div>
   );
