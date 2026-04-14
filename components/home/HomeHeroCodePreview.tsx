@@ -802,9 +802,8 @@ function Filmstrip({
 }) {
   const n = scenes.length;
   const VISIBLE = 5;
-  const half = Math.floor(VISIBLE / 2); // 2
+  const half = Math.floor(VISIBLE / 2);
 
-  /* Build array of { offset, sceneIdx } centred on current */
   const slots = Array.from({ length: VISIBLE }, (_, k) => {
     const offset = k - half;
     const sceneIdx = ((idx + offset) % n + n) % n;
@@ -815,75 +814,157 @@ function Filmstrip({
   const nextIdx = (idx + 1) % n;
 
   return (
-    <div className="relative flex items-center border-b border-zinc-800/60 bg-[#111111] px-3 py-2.5">
-      {/* Prev arrow */}
-      <button
-        type="button"
-        onClick={() => onJump(prevIdx)}
-        aria-label="Previous tool"
-        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-zinc-600 transition-colors hover:bg-zinc-800 hover:text-zinc-300"
-      >
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
-          <path d="M7.5 2L3.5 6L7.5 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      </button>
+    <div
+      className="relative border-b border-zinc-800/60 overflow-hidden transition-colors duration-700"
+      style={{ background: `linear-gradient(180deg, ${scene.accentHex}0d 0%, #0f0f0f 100%)` }}
+    >
+      {/* Ambient top glow line in accent colour */}
+      <div
+        className="absolute inset-x-0 top-0 h-[1.5px] transition-all duration-700"
+        style={{ background: `linear-gradient(90deg, transparent 5%, ${scene.accentHex}90 40%, ${scene.accentHex} 50%, ${scene.accentHex}90 60%, transparent 95%)` }}
+        aria-hidden
+      />
 
-      {/* Film items */}
-      <div className="relative flex flex-1 items-center justify-center gap-1.5 overflow-hidden">
-        {slots.map(({ offset, sceneIdx }) => {
-          const s = scenes[sceneIdx];
-          const isActive = offset === 0;
-          const dist = Math.abs(offset);
-          /* visual weight by distance */
-          const opacity = isActive ? 1 : dist === 1 ? 0.5 : 0.22;
-          const scale   = isActive ? 1 : dist === 1 ? 0.9 : 0.78;
+      {/* Main row: arrow · cards · arrow */}
+      <div className="flex items-center gap-2 px-3 pt-3 pb-2">
 
-          return (
-            <button
-              key={`${sceneIdx}-${offset}`}
-              type="button"
-              onClick={() => onJump(sceneIdx)}
-              aria-label={`View ${s.tool}`}
-              title={s.tool}
-              style={{ opacity, transform: `scale(${scale})`, transformOrigin: 'center' }}
-              className="flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1.5 transition-all duration-300"
-            >
-              {isActive ? (
-                /* Active slot: accent pill with glow */
+        {/* ← Prev */}
+        <button
+          type="button"
+          onClick={() => onJump(prevIdx)}
+          aria-label="Previous tool"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-zinc-700/60 bg-zinc-800/50 text-zinc-500 transition-all hover:border-zinc-500 hover:bg-zinc-700/60 hover:text-zinc-200 active:scale-90"
+        >
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden>
+            <path d="M7.5 2L3.5 6L7.5 10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+
+        {/* Cards strip */}
+        <div className="relative flex flex-1 items-end justify-center gap-2 overflow-hidden">
+          {slots.map(({ offset, sceneIdx }) => {
+            const s = scenes[sceneIdx];
+            const isActive = offset === 0;
+            const dist = Math.abs(offset);
+
+            /* Progressive fall-off */
+            const opacity   = isActive ? 1 : dist === 1 ? 0.48 : 0.18;
+            const scale     = isActive ? 1 : dist === 1 ? 0.88 : 0.72;
+            const blur      = dist === 2 ? 'blur-[0.5px]' : '';
+
+            return (
+              <button
+                key={`${sceneIdx}-${offset}`}
+                type="button"
+                onClick={() => onJump(sceneIdx)}
+                aria-label={`Switch to ${s.tool}`}
+                title={s.tool}
+                style={{
+                  opacity,
+                  transform: `scale(${scale})`,
+                  transformOrigin: 'bottom center',
+                  transition: 'all 0.35s cubic-bezier(0.4,0,0.2,1)',
+                }}
+                className={`group relative flex shrink-0 flex-col items-center rounded-xl pb-2 pt-2.5 ${blur} ${
+                  isActive ? 'w-[88px] px-3' : 'w-[72px] px-2'
+                }`}
+              >
+                {/* Card background */}
                 <span
-                  className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-bold ring-1 transition-all duration-300 ${scene.bgChip} ${scene.ringChip}`}
-                  style={{ boxShadow: `0 0 12px 2px ${scene.accentHex}30` }}
-                >
-                  <span aria-hidden className="text-[13px]">{s.emoji}</span>
-                  <span className={scene.accent}>{s.label}</span>
-                </span>
-              ) : (
-                /* Inactive slot: plain muted pill */
-                <span className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-800/50 px-2.5 py-1 text-[10.5px] font-medium text-zinc-500 ring-1 ring-zinc-700/40">
-                  <span aria-hidden className="text-[12px]">{s.emoji}</span>
-                  <span className="hidden sm:inline">{s.label}</span>
-                </span>
-              )}
-            </button>
-          );
-        })}
+                  className={`absolute inset-0 rounded-xl transition-all duration-300 ${
+                    isActive
+                      ? 'ring-1'
+                      : 'bg-zinc-800/40 ring-1 ring-zinc-700/30 group-hover:bg-zinc-700/50'
+                  }`}
+                  style={isActive ? {
+                    background: `${scene.accentHex}14`,
+                    boxShadow: `0 0 20px 4px ${scene.accentHex}20, inset 0 1px 0 ${scene.accentHex}40`,
+                    outlineOffset: '0px',
+                    outline: `1px solid ${scene.accentHex}50`,
+                  } : undefined}
+                  aria-hidden
+                />
 
-        {/* Fade-out edge masks so items bleed away */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-[#111111] to-transparent" aria-hidden />
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-[#111111] to-transparent" aria-hidden />
+                {/* Accent top border on active */}
+                {isActive && (
+                  <span
+                    className="absolute inset-x-4 top-0 h-[2px] rounded-b-full transition-colors duration-500"
+                    style={{ background: scene.accentHex }}
+                    aria-hidden
+                  />
+                )}
+
+                {/* Emoji */}
+                <span
+                  className="relative z-10 select-none transition-all duration-300"
+                  style={{ fontSize: isActive ? '20px' : '15px', lineHeight: 1 }}
+                  aria-hidden
+                >
+                  {s.emoji}
+                </span>
+
+                {/* Label */}
+                <span
+                  className={`relative z-10 mt-1.5 block truncate text-center font-semibold leading-tight transition-all duration-300 ${
+                    isActive
+                      ? `text-[10.5px] ${scene.accent}`
+                      : 'text-[9.5px] text-zinc-600'
+                  }`}
+                >
+                  {s.label}
+                </span>
+              </button>
+            );
+          })}
+
+          {/* Edge vignette masks */}
+          <div
+            className="pointer-events-none absolute inset-y-0 left-0 w-10"
+            style={{ background: 'linear-gradient(90deg, #0f0f0f, transparent)' }}
+            aria-hidden
+          />
+          <div
+            className="pointer-events-none absolute inset-y-0 right-0 w-10"
+            style={{ background: 'linear-gradient(270deg, #0f0f0f, transparent)' }}
+            aria-hidden
+          />
+        </div>
+
+        {/* → Next */}
+        <button
+          type="button"
+          onClick={() => onJump(nextIdx)}
+          aria-label="Next tool"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-zinc-700/60 bg-zinc-800/50 text-zinc-500 transition-all hover:border-zinc-500 hover:bg-zinc-700/60 hover:text-zinc-200 active:scale-90"
+        >
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden>
+            <path d="M4.5 2L8.5 6L4.5 10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
       </div>
 
-      {/* Next arrow */}
-      <button
-        type="button"
-        onClick={() => onJump(nextIdx)}
-        aria-label="Next tool"
-        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-zinc-600 transition-colors hover:bg-zinc-800 hover:text-zinc-300"
-      >
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
-          <path d="M4.5 2L8.5 6L4.5 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      </button>
+      {/* Progress micro-dots row */}
+      <div className="flex items-center justify-center gap-1 pb-2.5">
+        {scenes.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => onJump(i)}
+            aria-label={`Go to scene ${i + 1}`}
+            className="flex items-center justify-center p-0.5"
+          >
+            <span
+              className="block rounded-full transition-all duration-300"
+              style={{
+                width:   i === idx ? '20px' : '4px',
+                height:  '3px',
+                background: i === idx ? scene.accentHex : '#3f3f46',
+                opacity: i === idx ? 1 : 0.5,
+              }}
+            />
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
