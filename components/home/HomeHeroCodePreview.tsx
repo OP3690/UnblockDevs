@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Check, ChevronRight, Zap } from 'lucide-react';
 
@@ -605,40 +605,70 @@ function AnimatedShowcase() {
 
   const isAfter = phase === 'after';
 
+  /* jump to scene helper */
+  const jumpTo = (i: number) => {
+    setFade(false);
+    setTimeout(() => { setIdx(i); setPhase('before'); setTyped(0); setReveal(0); setFade(true); }, EXIT_MS);
+  };
+
   return (
     <div
       className="overflow-hidden rounded-2xl border border-zinc-800/80 bg-zinc-950 shadow-2xl shadow-black/50"
       role="img"
       aria-label="Animated demo cycling through UnblockDevs developer tools"
     >
-      {/* ── Window chrome ─────────────────────────────────────── */}
-      <Chrome file={scene.file} accent={scene.accent} animated />
+      {/* ── Window chrome — traffic lights · filename · counter ── */}
+      <div className="relative flex items-center border-b border-zinc-800 bg-[#1a1a1a] px-4 py-2.5 overflow-hidden">
+        <div
+          className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.04] to-transparent bg-[length:200%_100%] animate-hero-title-shimmer"
+          aria-hidden
+        />
+        {/* Traffic lights */}
+        <span className="relative flex shrink-0 gap-1.5" aria-hidden>
+          <span className="h-2.5 w-2.5 rounded-full bg-[#FF5F57]" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#FEBC2E]" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#28C840]" />
+        </span>
+        {/* Filename — centred */}
+        <span className={`relative mx-auto font-mono text-[10.5px] transition-colors duration-300 ${scene.accent}`}>
+          {scene.file}
+        </span>
+        {/* Scene counter — far right */}
+        <span className="relative shrink-0 font-mono text-[10px] text-zinc-600 tabular-nums">
+          {String(idx + 1).padStart(2, '0')}&nbsp;/&nbsp;{SCENES.length}
+        </span>
+      </div>
 
-      {/* ── Tool badge row ────────────────────────────────────── */}
-      <div className="flex items-center justify-between border-b border-zinc-800/60 bg-zinc-900/60 px-4 py-2">
-        <div className="flex items-center gap-2">
-          {/* Scene indicator pills */}
+      {/* ── Dot navigation row ────────────────────────────────── */}
+      <div className="flex items-center gap-2 border-b border-zinc-800/50 bg-zinc-900/40 px-4 py-2">
+        {/* Dot indicators */}
+        <div className="flex items-center gap-1.5">
           {SCENES.map((s, i) => (
             <button
               key={s.id}
               type="button"
-              onClick={() => {
-                setFade(false);
-                setTimeout(() => { setIdx(i); setPhase('before'); setTyped(0); setReveal(0); setFade(true); }, EXIT_MS);
-              }}
+              onClick={() => jumpTo(i)}
               aria-label={`View ${s.tool}`}
-              className="flex items-center"
+              title={s.tool}
+              className="group flex items-center justify-center p-0.5"
             >
-              <span className={`block rounded-full transition-all duration-300 ${
-                i === idx ? 'w-6 h-1.5 bg-emerald-400' : 'w-1.5 h-1.5 bg-zinc-700 hover:bg-zinc-500'
-              }`} />
+              <span
+                className={`block rounded-full transition-all duration-300 ${
+                  i === idx
+                    ? `h-[5px] w-5 ${scene.accent.replace('text-', 'bg-')}`
+                    : 'h-[5px] w-[5px] bg-zinc-700 group-hover:bg-zinc-500'
+                }`}
+              />
             </button>
           ))}
-          <span className="ml-1 font-mono text-[10px] text-zinc-600">{idx + 1}/{SCENES.length}</span>
         </div>
-        {/* Current tool badge */}
-        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-bold ring-1 ${scene.bgChip} ${scene.ringChip}`}>
-          <span>{scene.emoji}</span>
+
+        {/* Divider */}
+        <span className="h-3.5 w-px bg-zinc-700/60 mx-1" aria-hidden />
+
+        {/* Current tool name — full, never clipped */}
+        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10.5px] font-bold ring-1 ${scene.bgChip} ${scene.ringChip}`}>
+          <span aria-hidden>{scene.emoji}</span>
           <span className={scene.accent}>{scene.tool}</span>
         </span>
       </div>
@@ -748,37 +778,44 @@ function AnimatedShowcase() {
         )}
       </div>
 
-      {/* ── Progress bar + bottom strip ───────────────────────── */}
-      <div className="border-t border-zinc-800/60 bg-zinc-950">
-        {/* Progress fill */}
-        <div className="h-[2px] w-full bg-zinc-800/80">
-          {isAfter && (
-            <div
-              key={progKey}
-              className="h-full animate-progress-fill rounded-full"
-              style={{ background: `linear-gradient(90deg, ${scene.accentHex}, ${scene.accentHex}88)` }}
-            />
-          )}
+      {/* ── Progress bar ──────────────────────────────────────── */}
+      <div className="h-[3px] w-full bg-zinc-800/70">
+        {isAfter && (
+          <div
+            key={progKey}
+            className="h-full animate-progress-fill"
+            style={{
+              background: `linear-gradient(90deg, ${scene.accentHex}cc, ${scene.accentHex}, ${scene.accentHex}cc)`,
+              boxShadow: `0 0 8px 1px ${scene.accentHex}60`,
+            }}
+          />
+        )}
+      </div>
+
+      {/* ── Bottom CTA row ────────────────────────────────────── */}
+      <div className="flex items-center justify-between gap-3 border-t border-zinc-800/50 bg-zinc-900/30 px-4 py-3">
+        {/* Left: current tool full info */}
+        <div className="flex min-w-0 items-center gap-2.5">
+          <span
+            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-base ring-1 ${scene.bgChip} ${scene.ringChip}`}
+            aria-hidden
+          >
+            {scene.emoji}
+          </span>
+          <div className="min-w-0">
+            <p className={`text-[12px] font-bold leading-tight truncate ${scene.accent}`}>{scene.tool}</p>
+            <p className="text-[10px] text-zinc-500 leading-tight">100% client-side · free</p>
+          </div>
         </div>
 
-        {/* Tool quick-links */}
-        <div className="flex items-center gap-2 overflow-x-auto px-4 py-2.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {SCENES.map((s, i) => (
-            <Link
-              key={s.id}
-              href={s.href}
-              className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ring-1 transition-all duration-200 ${
-                i === idx
-                  ? `${s.bgChip} ${s.ringChip} ${s.accent} scale-105`
-                  : 'bg-zinc-800/60 ring-zinc-700/40 text-zinc-500 hover:text-zinc-300'
-              }`}
-            >
-              <span>{s.emoji}</span>
-              <span className="hidden sm:inline">{s.tool}</span>
-              {i === idx && <ChevronRight className={`h-2.5 w-2.5 ${s.accent}`} />}
-            </Link>
-          ))}
-        </div>
+        {/* Right: Open tool link */}
+        <Link
+          href={scene.href}
+          className={`inline-flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-[11px] font-bold ring-1 transition-all hover:opacity-90 active:scale-95 ${scene.bgChip} ${scene.ringChip} ${scene.accent}`}
+        >
+          Open tool
+          <ChevronRight className="h-3 w-3" aria-hidden />
+        </Link>
       </div>
     </div>
   );
