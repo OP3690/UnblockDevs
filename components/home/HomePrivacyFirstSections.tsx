@@ -143,6 +143,9 @@ export default function HomePrivacyFirstSections({
       { label: 'HTML Viewer',       cats: ['all','dev'],           icon: Eye,            variant: 'new', href: '/html-viewer' },
       { label: 'HTTP Headers',      cats: ['all','dev'],           icon: Globe,          variant: 'new', href: '/http-headers-analyzer' },
       { label: 'String Utilities',  cats: ['all','dev'],           icon: Type,           variant: 'new', href: '/string-utilities' },
+      { label: 'Log Explorer',      cats: ['all','json','dev'],    icon: FileSearch,     href: toolPageUrls.logs },
+      { label: 'SQL IN Generator',  cats: ['all','json','dev'],    icon: Database,       variant: 'new', href: '/sql-in-generator' },
+      { label: 'AI Schema Masker',  cats: ['all','ai'],            icon: ShieldCheck,    variant: 'ai', href: toolPageUrls.schemamasker },
     ],
     [toolPageUrls],
   );
