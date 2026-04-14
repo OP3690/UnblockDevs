@@ -30,6 +30,7 @@ type Scene = {
   id: string;
   file: string;
   tool: string;
+  label: string;        // short name for filmstrip
   emoji: string;
   href: string;
   accent: string;       // e.g. 'text-emerald-400'
@@ -46,7 +47,7 @@ const SCENES: Scene[] = [
   /* 1 ── AI Schema Masker ────────────────────────────────────── */
   {
     id: 'schema', file: 'query.sql',
-    tool: 'AI Schema Masker', emoji: '🛡️',
+    tool: 'AI Schema Masker', label: 'Schema Masker', emoji: '🛡️',
     href: '/ai-schema-masker',
     accent: 'text-emerald-400', accentHex: '#34d399',
     bgChip: 'bg-emerald-500/15', ringChip: 'ring-emerald-400/40',
@@ -100,7 +101,7 @@ const SCENES: Scene[] = [
   /* 2 ── JSON Formatter ──────────────────────────────────────── */
   {
     id: 'json', file: 'api-response.json',
-    tool: 'JSON Formatter', emoji: '{ }',
+    tool: 'JSON Formatter', label: 'JSON Format', emoji: '{ }',
     href: '/json-formatter',
     accent: 'text-cyan-400', accentHex: '#22d3ee',
     bgChip: 'bg-cyan-500/15', ringChip: 'ring-cyan-400/40',
@@ -149,7 +150,7 @@ const SCENES: Scene[] = [
   /* 3 ── JWT Decoder ─────────────────────────────────────────── */
   {
     id: 'jwt', file: 'auth.jwt',
-    tool: 'JWT Decoder', emoji: '🔑',
+    tool: 'JWT Decoder', label: 'JWT Decode', emoji: '🔑',
     href: '/jwt-decoder',
     accent: 'text-amber-400', accentHex: '#fbbf24',
     bgChip: 'bg-amber-500/15', ringChip: 'ring-amber-400/40',
@@ -201,7 +202,7 @@ const SCENES: Scene[] = [
   /* 4 ── Code Prompt Shield ──────────────────────────────────── */
   {
     id: 'code', file: 'config.ts',
-    tool: 'Code Prompt Shield', emoji: '🔐',
+    tool: 'Code Prompt Shield', label: 'Code Shield', emoji: '🔐',
     href: '/code-prompt-shield',
     accent: 'text-violet-400', accentHex: '#a78bfa',
     bgChip: 'bg-violet-500/15', ringChip: 'ring-violet-400/40',
@@ -251,7 +252,7 @@ const SCENES: Scene[] = [
   /* 5 ── cURL Converter ──────────────────────────────────────── */
   {
     id: 'curl', file: 'request.sh',
-    tool: 'cURL Converter', emoji: '⚡',
+    tool: 'cURL Converter', label: 'cURL Convert', emoji: '⚡',
     href: '/curl-converter',
     accent: 'text-sky-400', accentHex: '#38bdf8',
     bgChip: 'bg-sky-500/15', ringChip: 'ring-sky-400/40',
@@ -294,7 +295,7 @@ const SCENES: Scene[] = [
   /* 6 ── Regex Tester ─────────────────────────────────────────── */
   {
     id: 'regex', file: 'pattern.regex',
-    tool: 'Regex Tester', emoji: '🔍',
+    tool: 'Regex Tester', label: 'Regex Test', emoji: '🔍',
     href: '/regex-tester',
     accent: 'text-pink-400', accentHex: '#f472b6',
     bgChip: 'bg-pink-500/15', ringChip: 'ring-pink-400/40',
@@ -327,7 +328,7 @@ const SCENES: Scene[] = [
   /* 7 ── Base64 Encoder ───────────────────────────────────────── */
   {
     id: 'b64', file: 'encode.b64',
-    tool: 'Base64 Encoder', emoji: '🔗',
+    tool: 'Base64 Encoder', label: 'Base64', emoji: '🔗',
     href: '/base64-encoder',
     accent: 'text-orange-400', accentHex: '#fb923c',
     bgChip: 'bg-orange-500/15', ringChip: 'ring-orange-400/40',
@@ -357,7 +358,7 @@ const SCENES: Scene[] = [
   /* 8 ── Hash Generator ───────────────────────────────────────── */
   {
     id: 'hash', file: 'hash.sha256',
-    tool: 'Hash Generator', emoji: '#️⃣',
+    tool: 'Hash Generator', label: 'Hash Gen', emoji: '#️⃣',
     href: '/hash-generator',
     accent: 'text-teal-400', accentHex: '#2dd4bf',
     bgChip: 'bg-teal-500/15', ringChip: 'ring-teal-400/40',
@@ -387,7 +388,7 @@ const SCENES: Scene[] = [
   /* 9 ── SQL Formatter ────────────────────────────────────────── */
   {
     id: 'sqlfmt', file: 'messy.sql',
-    tool: 'SQL Formatter', emoji: '🗄️',
+    tool: 'SQL Formatter', label: 'SQL Format', emoji: '🗄️',
     href: '/sql-formatter',
     accent: 'text-fuchsia-400', accentHex: '#e879f9',
     bgChip: 'bg-fuchsia-500/15', ringChip: 'ring-fuchsia-400/40',
@@ -429,7 +430,7 @@ const SCENES: Scene[] = [
   /* 10 ── Smart JSON Diff ─────────────────────────────────────── */
   {
     id: 'diff', file: 'compare.json',
-    tool: 'Smart JSON Diff', emoji: '🔀',
+    tool: 'Smart JSON Diff', label: 'JSON Diff', emoji: '🔀',
     href: '/json-comparator',
     accent: 'text-lime-400', accentHex: '#a3e635',
     bgChip: 'bg-lime-500/15', ringChip: 'ring-lime-400/40',
@@ -458,7 +459,7 @@ const SCENES: Scene[] = [
   /* 11 ── JSON Fixer ──────────────────────────────────────────── */
   {
     id: 'fixer', file: 'broken.json',
-    tool: 'JSON Fixer', emoji: '🔧',
+    tool: 'JSON Fixer', label: 'JSON Fixer', emoji: '🔧',
     href: '/json-fixer-online',
     accent: 'text-rose-400', accentHex: '#fb7185',
     bgChip: 'bg-rose-500/15', ringChip: 'ring-rose-400/40',
@@ -639,39 +640,8 @@ function AnimatedShowcase() {
         </span>
       </div>
 
-      {/* ── Dot navigation row ────────────────────────────────── */}
-      <div className="flex items-center gap-2 border-b border-zinc-800/50 bg-zinc-900/40 px-4 py-2">
-        {/* Dot indicators */}
-        <div className="flex items-center gap-1.5">
-          {SCENES.map((s, i) => (
-            <button
-              key={s.id}
-              type="button"
-              onClick={() => jumpTo(i)}
-              aria-label={`View ${s.tool}`}
-              title={s.tool}
-              className="group flex items-center justify-center p-0.5"
-            >
-              <span
-                className={`block rounded-full transition-all duration-300 ${
-                  i === idx
-                    ? `h-[5px] w-5 ${scene.accent.replace('text-', 'bg-')}`
-                    : 'h-[5px] w-[5px] bg-zinc-700 group-hover:bg-zinc-500'
-                }`}
-              />
-            </button>
-          ))}
-        </div>
-
-        {/* Divider */}
-        <span className="h-3.5 w-px bg-zinc-700/60 mx-1" aria-hidden />
-
-        {/* Current tool name — full, never clipped */}
-        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10.5px] font-bold ring-1 ${scene.bgChip} ${scene.ringChip}`}>
-          <span aria-hidden>{scene.emoji}</span>
-          <span className={scene.accent}>{scene.tool}</span>
-        </span>
-      </div>
+      {/* ── Filmstrip carousel ────────────────────────────────── */}
+      <Filmstrip scenes={SCENES} idx={idx} scene={scene} onJump={jumpTo} />
 
       {/* ── Code body ─────────────────────────────────────────── */}
       <div
@@ -817,6 +787,103 @@ function AnimatedShowcase() {
           <ChevronRight className="h-3 w-3" aria-hidden />
         </Link>
       </div>
+    </div>
+  );
+}
+
+/* ─── Filmstrip carousel ──────────────────────────────────────── */
+function Filmstrip({
+  scenes, idx, scene, onJump,
+}: {
+  scenes: Scene[];
+  idx: number;
+  scene: Scene;
+  onJump: (i: number) => void;
+}) {
+  const n = scenes.length;
+  const VISIBLE = 5;
+  const half = Math.floor(VISIBLE / 2); // 2
+
+  /* Build array of { offset, sceneIdx } centred on current */
+  const slots = Array.from({ length: VISIBLE }, (_, k) => {
+    const offset = k - half;
+    const sceneIdx = ((idx + offset) % n + n) % n;
+    return { offset, sceneIdx };
+  });
+
+  const prevIdx = ((idx - 1) % n + n) % n;
+  const nextIdx = (idx + 1) % n;
+
+  return (
+    <div className="relative flex items-center border-b border-zinc-800/60 bg-[#111111] px-3 py-2.5">
+      {/* Prev arrow */}
+      <button
+        type="button"
+        onClick={() => onJump(prevIdx)}
+        aria-label="Previous tool"
+        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-zinc-600 transition-colors hover:bg-zinc-800 hover:text-zinc-300"
+      >
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
+          <path d="M7.5 2L3.5 6L7.5 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+
+      {/* Film items */}
+      <div className="relative flex flex-1 items-center justify-center gap-1.5 overflow-hidden">
+        {slots.map(({ offset, sceneIdx }) => {
+          const s = scenes[sceneIdx];
+          const isActive = offset === 0;
+          const dist = Math.abs(offset);
+          /* visual weight by distance */
+          const opacity = isActive ? 1 : dist === 1 ? 0.5 : 0.22;
+          const scale   = isActive ? 1 : dist === 1 ? 0.9 : 0.78;
+
+          return (
+            <button
+              key={`${sceneIdx}-${offset}`}
+              type="button"
+              onClick={() => onJump(sceneIdx)}
+              aria-label={`View ${s.tool}`}
+              title={s.tool}
+              style={{ opacity, transform: `scale(${scale})`, transformOrigin: 'center' }}
+              className="flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1.5 transition-all duration-300"
+            >
+              {isActive ? (
+                /* Active slot: accent pill with glow */
+                <span
+                  className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-bold ring-1 transition-all duration-300 ${scene.bgChip} ${scene.ringChip}`}
+                  style={{ boxShadow: `0 0 12px 2px ${scene.accentHex}30` }}
+                >
+                  <span aria-hidden className="text-[13px]">{s.emoji}</span>
+                  <span className={scene.accent}>{s.label}</span>
+                </span>
+              ) : (
+                /* Inactive slot: plain muted pill */
+                <span className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-800/50 px-2.5 py-1 text-[10.5px] font-medium text-zinc-500 ring-1 ring-zinc-700/40">
+                  <span aria-hidden className="text-[12px]">{s.emoji}</span>
+                  <span className="hidden sm:inline">{s.label}</span>
+                </span>
+              )}
+            </button>
+          );
+        })}
+
+        {/* Fade-out edge masks so items bleed away */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-[#111111] to-transparent" aria-hidden />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-[#111111] to-transparent" aria-hidden />
+      </div>
+
+      {/* Next arrow */}
+      <button
+        type="button"
+        onClick={() => onJump(nextIdx)}
+        aria-label="Next tool"
+        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-zinc-600 transition-colors hover:bg-zinc-800 hover:text-zinc-300"
+      >
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
+          <path d="M4.5 2L8.5 6L4.5 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
     </div>
   );
 }
