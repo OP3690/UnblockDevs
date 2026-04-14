@@ -383,15 +383,141 @@ const SCENES: Scene[] = [
       [{ t: '//  Also: MD5 · SHA-1 · SHA-512 · HMAC', c: 'text-emerald-500/80' }],
     ],
   },
+
+  /* 9 ── SQL Formatter ────────────────────────────────────────── */
+  {
+    id: 'sqlfmt', file: 'messy.sql',
+    tool: 'SQL Formatter', emoji: '🗄️',
+    href: '/sql-formatter',
+    accent: 'text-fuchsia-400', accentHex: '#e879f9',
+    bgChip: 'bg-fuchsia-500/15', ringChip: 'ring-fuchsia-400/40',
+    stat: '12 lines formatted',
+    before: [
+      [{ t: '-- ⚠️  Unreadable one-liner', c: 'text-zinc-500' }],
+      [],
+      [{ t: 'select u.id,u.name,o.total,o.status', c: 'text-amber-300/80', pulse: true }],
+      [{ t: 'from users u inner join orders o on', c: 'text-amber-300/80', pulse: true }],
+      [{ t: "u.id=o.user_id where o.status='paid'", c: 'text-amber-300/80', pulse: true }],
+      [{ t: 'and o.total>100 order by o.total desc', c: 'text-amber-300/80', pulse: true }],
+    ],
+    after: [
+      [{ t: '-- ✓  Clean, readable SQL', c: 'text-zinc-500' }],
+      [],
+      [{ t: 'SELECT', c: 'text-fuchsia-400' }],
+      [
+        { t: '  u.id, u.name,', c: 'text-zinc-300', glow: true },
+        { t: ' o.total, o.status', c: 'text-zinc-300', glow: true },
+      ],
+      [{ t: 'FROM', c: 'text-fuchsia-400' }, { t: ' users ', c: 'text-zinc-300' }, { t: 'u', c: 'text-sky-400', glow: true }],
+      [
+        { t: 'INNER JOIN', c: 'text-fuchsia-400' },
+        { t: ' orders ', c: 'text-zinc-300' },
+        { t: 'o', c: 'text-sky-400', glow: true },
+        { t: ' ON u.id = o.user_id', c: 'text-zinc-300' },
+      ],
+      [
+        { t: 'WHERE', c: 'text-fuchsia-400' },
+        { t: " o.status = ", c: 'text-zinc-300' },
+        { t: "'paid'", c: 'text-emerald-400', glow: true },
+        { t: ' AND o.total > ', c: 'text-zinc-300' },
+        { t: '100', c: 'text-violet-400', glow: true },
+      ],
+      [{ t: 'ORDER BY', c: 'text-fuchsia-400' }, { t: ' o.total ', c: 'text-zinc-300' }, { t: 'DESC', c: 'text-fuchsia-300', glow: true }],
+    ],
+  },
+
+  /* 10 ── Smart JSON Diff ─────────────────────────────────────── */
+  {
+    id: 'diff', file: 'compare.json',
+    tool: 'Smart JSON Diff', emoji: '🔀',
+    href: '/json-comparator',
+    accent: 'text-lime-400', accentHex: '#a3e635',
+    bgChip: 'bg-lime-500/15', ringChip: 'ring-lime-400/40',
+    stat: '3 changes detected',
+    before: [
+      [{ t: '// Comparing v1 → v2 API response', c: 'text-zinc-500' }],
+      [],
+      [{ t: 'V1: ', c: 'text-zinc-600' }, { t: '{ "plan":"free",  "limit":100,', c: 'text-amber-300/80', pulse: true }],
+      [{ t: '      ', c: 'text-zinc-600' }, { t: '"active":false, "seats":1 }', c: 'text-amber-300/80', pulse: true }],
+      [],
+      [{ t: 'V2: ', c: 'text-zinc-600' }, { t: '{ "plan":"pro",   "limit":5000,', c: 'text-amber-300/80', pulse: true }],
+      [{ t: '      ', c: 'text-zinc-600' }, { t: '"active":true,  "seats":10 }', c: 'text-amber-300/80', pulse: true }],
+    ],
+    after: [
+      [{ t: '// ✓  Exact diff — 3 fields changed', c: 'text-zinc-500' }],
+      [],
+      [{ t: '  plan   ', c: 'text-zinc-500' }, { t: '"free"', c: 'text-rose-400' }, { t: ' → ', c: 'text-zinc-600' }, { t: '"pro"', c: 'text-lime-400', glow: true }],
+      [{ t: '  limit  ', c: 'text-zinc-500' }, { t: '100', c: 'text-rose-400' }, { t: '   → ', c: 'text-zinc-600' }, { t: '5000', c: 'text-lime-400', glow: true }],
+      [{ t: '  active ', c: 'text-zinc-500' }, { t: 'false', c: 'text-rose-400' }, { t: ' → ', c: 'text-zinc-600' }, { t: 'true', c: 'text-lime-400', glow: true }],
+      [{ t: '  seats  ', c: 'text-zinc-500' }, { t: '1', c: 'text-rose-400' }, { t: '     → ', c: 'text-zinc-600' }, { t: '10', c: 'text-lime-400', glow: true }],
+      [],
+      [{ t: '//  Unchanged: 0  Added: 0  Modified: 4', c: 'text-emerald-500/80' }],
+    ],
+  },
+
+  /* 11 ── JSON Fixer ──────────────────────────────────────────── */
+  {
+    id: 'fixer', file: 'broken.json',
+    tool: 'JSON Fixer', emoji: '🔧',
+    href: '/json-fixer-online',
+    accent: 'text-rose-400', accentHex: '#fb7185',
+    bgChip: 'bg-rose-500/15', ringChip: 'ring-rose-400/40',
+    stat: '4 errors auto-fixed',
+    before: [
+      [{ t: '// ⚠️  Broken JSON from AI response', c: 'text-zinc-500' }],
+      [],
+      [{ t: '{', c: 'text-zinc-400' }],
+      [
+        { t: "  'name'", c: 'text-rose-400', pulse: true },
+        { t: ': ', c: 'text-zinc-400' },
+        { t: '"Alice"', c: 'text-emerald-400' },
+        { t: '  // ← single quotes', c: 'text-red-500' },
+      ],
+      [
+        { t: '  "age": ', c: 'text-zinc-300' },
+        { t: '30,', c: 'text-violet-400' },
+        { t: '  // ← trailing comma', c: 'text-red-500', pulse: true },
+      ],
+      [
+        { t: '  "active": ', c: 'text-zinc-300' },
+        { t: 'True', c: 'text-rose-400', pulse: true },
+        { t: '  // ← wrong casing', c: 'text-red-500' },
+      ],
+      [{ t: '}', c: 'text-zinc-400' }],
+    ],
+    after: [
+      [{ t: '// ✓  All errors fixed automatically', c: 'text-zinc-500' }],
+      [],
+      [{ t: '{', c: 'text-zinc-400' }],
+      [
+        { t: '  "name"', c: 'text-sky-300', glow: true },
+        { t: ': ', c: 'text-zinc-400' },
+        { t: '"Alice"', c: 'text-emerald-400', glow: true },
+      ],
+      [
+        { t: '  "age"', c: 'text-sky-300', glow: true },
+        { t: ': ', c: 'text-zinc-400' },
+        { t: '30', c: 'text-violet-400', glow: true },
+      ],
+      [
+        { t: '  "active"', c: 'text-sky-300', glow: true },
+        { t: ': ', c: 'text-zinc-400' },
+        { t: 'true', c: 'text-amber-400', glow: true },
+      ],
+      [{ t: '}', c: 'text-zinc-400' }],
+      [],
+      [{ t: '//  Fixes: quotes · comma · casing · spacing', c: 'text-emerald-500/80' }],
+    ],
+  },
 ];
 
 /* ─── Phase timing ────────────────────────────────────────────── */
 type Phase = 'before' | 'typing' | 'scanning' | 'after' | 'exit';
-const BEFORE_MS   = 1600;
-const CHAR_MS     = 42;
-const SCAN_MS     = 700;
-const AFTER_MS    = 4500;
-const EXIT_MS     = 350;
+const BEFORE_MS   = 1500;
+const CHAR_MS     = 36;    // slightly faster typing
+const SCAN_MS     = 650;
+const AFTER_MS    = 4200;
+const EXIT_MS     = 320;
 
 /* ─── Main export ─────────────────────────────────────────────── */
 export default function HomeHeroCodePreview() {
@@ -522,6 +648,22 @@ function AnimatedShowcase() {
         className="relative min-h-[310px] overflow-hidden p-5 font-mono text-[12.5px] leading-[1.85] transition-opacity duration-300"
         style={{ opacity: fade ? 1 : 0 }}
       >
+        {/* State label — top right corner */}
+        <div className="absolute right-4 top-4 z-10">
+          {(phase === 'before' || phase === 'typing' || phase === 'scanning') && (
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-500/30 bg-rose-500/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-rose-400">
+              <span className="h-1.5 w-1.5 rounded-full bg-rose-400 animate-hero-cursor-blink" />
+              BEFORE
+            </span>
+          )}
+          {isAfter && (
+            <span className={`inline-flex items-center gap-1.5 animate-badge-slide rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest ${scene.bgChip} ${scene.ringChip} ${scene.accent}`}>
+              <Check className="h-2.5 w-2.5" strokeWidth={3} />
+              AFTER
+            </span>
+          )}
+        </div>
+
         {/* BEFORE state */}
         {(phase === 'before' || phase === 'typing' || phase === 'scanning') && (
           <div>
@@ -544,17 +686,30 @@ function AnimatedShowcase() {
           </div>
         )}
 
-        {/* SCAN LINE animation */}
+        {/* SCAN LINE — double beam for drama */}
         {phase === 'scanning' && (
-          <div
-            className="pointer-events-none absolute inset-x-0 h-[2px] animate-scan-line"
-            style={{
-              top: '20%',
-              background: `linear-gradient(90deg, transparent, ${scene.accentHex}80, ${scene.accentHex}, ${scene.accentHex}80, transparent)`,
-              boxShadow: `0 0 12px 2px ${scene.accentHex}60`,
-            }}
-            aria-hidden
-          />
+          <>
+            <div
+              className="pointer-events-none absolute inset-x-0 h-[2px] animate-scan-line"
+              style={{
+                top: '15%',
+                background: `linear-gradient(90deg, transparent, ${scene.accentHex}60, ${scene.accentHex}, ${scene.accentHex}60, transparent)`,
+                boxShadow: `0 0 16px 3px ${scene.accentHex}70`,
+              }}
+              aria-hidden
+            />
+            <div
+              className="pointer-events-none absolute inset-x-0 h-px animate-scan-line"
+              style={{
+                top: '15%',
+                animationDelay: '80ms',
+                background: `linear-gradient(90deg, transparent, ${scene.accentHex}30, ${scene.accentHex}80, ${scene.accentHex}30, transparent)`,
+              }}
+              aria-hidden
+            />
+            {/* dim overlay while scanning */}
+            <div className="pointer-events-none absolute inset-0 bg-zinc-950/40" aria-hidden />
+          </>
         )}
 
         {/* AFTER state — staggered reveal */}
