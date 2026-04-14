@@ -2,495 +2,720 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { Check, ChevronRight } from 'lucide-react';
+import { Check, ChevronRight, Zap } from 'lucide-react';
 
-/* ─── reduced-motion hook ─────────────────────────────────────── */
+/* ─── reduced-motion ──────────────────────────────────────────── */
 function usePrefersReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(false);
+  const [v, setV] = useState(false);
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setReduced(mq.matches);
-    const fn = () => setReduced(mq.matches);
+    setV(mq.matches);
+    const fn = () => setV(mq.matches);
     mq.addEventListener('change', fn);
     return () => mq.removeEventListener('change', fn);
   }, []);
-  return reduced;
+  return v;
 }
 
-/* ─── Scene definitions ───────────────────────────────────────── */
+/* ─── Types ───────────────────────────────────────────────────── */
+type Part = {
+  t: string;            // text
+  c?: string;           // class
+  pulse?: boolean;      // danger red glow
+  glow?: boolean;       // safe token glow (after phase)
+};
+type Line = Part[];
 type Scene = {
   id: string;
   file: string;
   tool: string;
-  toolEmoji: string;
+  emoji: string;
   href: string;
-  accent: string;         // Tailwind text color for accents
-  accentBg: string;       // bg for badge
-  accentRing: string;     // ring for badge
-  trust: string;          // footer line
-  beforeLines: Line[];
-  afterLines: Line[];
+  accent: string;       // e.g. 'text-emerald-400'
+  accentHex: string;    // e.g. '#34d399'  (for glow shadows)
+  bgChip: string;       // badge bg
+  ringChip: string;     // badge ring
+  stat: string;         // "3 identifiers masked"
+  before: Line[];
+  after: Line[];
 };
 
-type Line = {
-  parts: Part[];
-};
-
-type Part = {
-  text: string;
-  cls?: string;           // extra classes
-  pulse?: boolean;        // danger pulse
-  token?: boolean;        // safe-token highlight
-};
-
+/* ─── Scene data ──────────────────────────────────────────────── */
 const SCENES: Scene[] = [
-  /* ── 1. AI Schema Masker ────────────────────────────────────── */
+  /* 1 ── AI Schema Masker ────────────────────────────────────── */
   {
-    id: 'schema',
-    file: 'query.sql',
-    tool: 'AI Schema Masker',
-    toolEmoji: '🛡️',
+    id: 'schema', file: 'query.sql',
+    tool: 'AI Schema Masker', emoji: '🛡️',
     href: '/ai-schema-masker',
-    accent: 'text-emerald-400',
-    accentBg: 'bg-emerald-500/15',
-    accentRing: 'ring-emerald-400/40',
-    trust: 'Schema never leaves your browser',
-    beforeLines: [
-      { parts: [{ text: '// Before: raw SQL — contains PII ⚠️', cls: 'text-zinc-500' }] },
-      { parts: [
-        { text: 'SELECT', cls: 'text-red-400' }, { text: ' ' },
-        { text: 'u.customer_name, u.email, u.credit_score', cls: 'text-zinc-100', pulse: true },
-      ]},
-      { parts: [
-        { text: 'FROM', cls: 'text-red-400' }, { text: ' ' },
-        { text: 'banking.customer_details', cls: 'text-emerald-400', pulse: true }, { text: ' u', cls: 'text-zinc-500' },
-      ]},
-      { parts: [
-        { text: 'WHERE', cls: 'text-red-400' }, { text: ' u.status = ' },
-        { text: "'ACTIVE'", cls: 'text-amber-300' }, { text: ';', cls: 'text-amber-300' },
-      ]},
+    accent: 'text-emerald-400', accentHex: '#34d399',
+    bgChip: 'bg-emerald-500/15', ringChip: 'ring-emerald-400/40',
+    stat: '4 identifiers masked',
+    before: [
+      [{ t: '-- ⚠️  Raw SQL — contains PII', c: 'text-zinc-500' }],
+      [],
+      [
+        { t: 'SELECT ', c: 'text-red-400' },
+        { t: 'u.customer_name, u.email,', c: 'text-zinc-100', pulse: true },
+      ],
+      [
+        { t: '       ', c: 'text-red-400' },
+        { t: 'u.credit_score, u.ssn', c: 'text-zinc-100', pulse: true },
+      ],
+      [
+        { t: 'FROM ', c: 'text-red-400' },
+        { t: 'banking.customer_details ', c: 'text-amber-300', pulse: true },
+        { t: 'u', c: 'text-zinc-500' },
+      ],
+      [
+        { t: 'WHERE ', c: 'text-red-400' },
+        { t: 'u.status = ', c: 'text-zinc-300' },
+        { t: "'ACTIVE';", c: 'text-emerald-400' },
+      ],
     ],
-    afterLines: [
-      { parts: [{ text: '// After: masked — safe for any AI', cls: 'text-zinc-500' }] },
-      { parts: [{ text: '' }] },
-      { parts: [
-        { text: 'SELECT', cls: 'text-red-400' }, { text: ' ' },
-        { text: 'C_00001', cls: 'text-sky-400', token: true }, { text: ', ' },
-        { text: 'C_00002', cls: 'text-sky-400', token: true }, { text: ', ' },
-        { text: 'C_00003', cls: 'text-sky-400', token: true },
-      ]},
-      { parts: [
-        { text: 'FROM', cls: 'text-red-400' }, { text: ' ' },
-        { text: 'T_00001', cls: 'text-violet-400', token: true }, { text: '.', cls: 'text-zinc-500' },
-        { text: 'A_00001', cls: 'text-sky-400', token: true },
-      ]},
-      { parts: [
-        { text: 'WHERE', cls: 'text-red-400' }, { text: ' ' },
-        { text: 'C_00001', cls: 'text-sky-400', token: true }, { text: ' = ' },
-        { text: "'S_00001'", cls: 'text-emerald-400' }, { text: ';', cls: 'text-emerald-400' },
-      ]},
+    after: [
+      [{ t: '-- ✓  Masked — safe for any AI', c: 'text-zinc-500' }],
+      [],
+      [
+        { t: 'SELECT ', c: 'text-sky-400' },
+        { t: 'C_00001, C_00002,', c: 'text-violet-300', glow: true },
+      ],
+      [
+        { t: '       ', c: 'text-sky-400' },
+        { t: 'C_00003, C_00004', c: 'text-violet-300', glow: true },
+      ],
+      [
+        { t: 'FROM ', c: 'text-sky-400' },
+        { t: 'T_00001', c: 'text-violet-400', glow: true },
+        { t: '.', c: 'text-zinc-500' },
+        { t: 'A_00001', c: 'text-sky-400', glow: true },
+      ],
+      [
+        { t: 'WHERE ', c: 'text-sky-400' },
+        { t: "C_00001 = 'S_00001';", c: 'text-emerald-400' },
+      ],
     ],
   },
 
-  /* ── 2. JSON Formatter ──────────────────────────────────────── */
+  /* 2 ── JSON Formatter ──────────────────────────────────────── */
   {
-    id: 'json',
-    file: 'api-response.json',
-    tool: 'JSON Formatter',
-    toolEmoji: '{ }',
+    id: 'json', file: 'api-response.json',
+    tool: 'JSON Formatter', emoji: '{ }',
     href: '/json-formatter',
-    accent: 'text-cyan-400',
-    accentBg: 'bg-cyan-500/15',
-    accentRing: 'ring-cyan-400/40',
-    trust: 'Runs entirely in your browser',
-    beforeLines: [
-      { parts: [{ text: '// Before: minified API response', cls: 'text-zinc-500' }] },
-      { parts: [{ text: '{"user":{"id":1,"name":"Alice","email":', cls: 'text-amber-300' }] },
-      { parts: [{ text: '"alice@acme.io","role":"admin","plan":', cls: 'text-amber-300' }] },
-      { parts: [{ text: '"pro"},"tokens":{"access":"eyJh...","refresh":', cls: 'text-amber-300' }] },
-      { parts: [{ text: '"dGh0..."}}', cls: 'text-amber-300' }] },
+    accent: 'text-cyan-400', accentHex: '#22d3ee',
+    bgChip: 'bg-cyan-500/15', ringChip: 'ring-cyan-400/40',
+    stat: '8 levels indented',
+    before: [
+      [{ t: '// ⚠️  Minified — unreadable API blob', c: 'text-zinc-500' }],
+      [],
+      [{ t: '{"user":{"id":1,"name":"Alice",', c: 'text-amber-300/80' }],
+      [{ t: '"role":"admin","plan":"pro",', c: 'text-amber-300/80' }],
+      [{ t: '"meta":{"created":"2024-01","active":', c: 'text-amber-300/80' }],
+      [{ t: 'true}}}', c: 'text-amber-300/80' }],
     ],
-    afterLines: [
-      { parts: [{ text: '// After: beautifully formatted ✨', cls: 'text-zinc-500' }] },
-      { parts: [{ text: '{', cls: 'text-zinc-300' }] },
-      { parts: [
-        { text: '  ' }, { text: '"user"', cls: 'text-sky-300' }, { text: ': {', cls: 'text-zinc-300' },
-      ]},
-      { parts: [
-        { text: '    ' }, { text: '"id"', cls: 'text-sky-300' }, { text: ': ' }, { text: '1', cls: 'text-violet-400' }, { text: ',' },
-      ]},
-      { parts: [
-        { text: '    ' }, { text: '"name"', cls: 'text-sky-300' }, { text: ': ' }, { text: '"Alice"', cls: 'text-emerald-400' }, { text: ',' },
-      ]},
-      { parts: [
-        { text: '    ' }, { text: '"role"', cls: 'text-sky-300' }, { text: ': ' }, { text: '"admin"', cls: 'text-emerald-400' },
-      ]},
-      { parts: [{ text: '  }', cls: 'text-zinc-300' }] },
-      { parts: [{ text: '}', cls: 'text-zinc-300' }] },
+    after: [
+      [{ t: '// ✓  Beautifully formatted ✨', c: 'text-zinc-500' }],
+      [{ t: '{', c: 'text-zinc-300' }],
+      [
+        { t: '  ' },
+        { t: '"user"', c: 'text-sky-300', glow: true },
+        { t: ': {', c: 'text-zinc-300' },
+      ],
+      [
+        { t: '    ' },
+        { t: '"id"', c: 'text-sky-300' },
+        { t: ': ', c: 'text-zinc-400' },
+        { t: '1', c: 'text-violet-400', glow: true },
+        { t: ',' },
+      ],
+      [
+        { t: '    ' },
+        { t: '"name"', c: 'text-sky-300' },
+        { t: ': ', c: 'text-zinc-400' },
+        { t: '"Alice"', c: 'text-emerald-400', glow: true },
+        { t: ',' },
+      ],
+      [
+        { t: '    ' },
+        { t: '"role"', c: 'text-sky-300' },
+        { t: ': ', c: 'text-zinc-400' },
+        { t: '"admin"', c: 'text-emerald-400', glow: true },
+      ],
+      [{ t: '  }', c: 'text-zinc-300' }],
+      [{ t: '}', c: 'text-zinc-300' }],
     ],
   },
 
-  /* ── 3. JWT Decoder ─────────────────────────────────────────── */
+  /* 3 ── JWT Decoder ─────────────────────────────────────────── */
   {
-    id: 'jwt',
-    file: 'auth-token.jwt',
-    tool: 'JWT Decoder',
-    toolEmoji: '🔑',
+    id: 'jwt', file: 'auth.jwt',
+    tool: 'JWT Decoder', emoji: '🔑',
     href: '/jwt-decoder',
-    accent: 'text-amber-400',
-    accentBg: 'bg-amber-500/15',
-    accentRing: 'ring-amber-400/40',
-    trust: 'Token never sent anywhere',
-    beforeLines: [
-      { parts: [{ text: '// Raw JWT — looks like gibberish', cls: 'text-zinc-500' }] },
-      { parts: [{ text: '' }] },
-      { parts: [
-        { text: 'eyJhbGciOiJIUzI1NiIs', cls: 'text-red-400' },
-        { text: '.', cls: 'text-zinc-500' },
-        { text: 'eyJ1c2VySWQiOjQ', cls: 'text-amber-300' },
-        { text: '.', cls: 'text-zinc-500' },
-        { text: 'SflKxw...', cls: 'text-violet-400' },
-      ]},
+    accent: 'text-amber-400', accentHex: '#fbbf24',
+    bgChip: 'bg-amber-500/15', ringChip: 'ring-amber-400/40',
+    stat: '4 claims decoded',
+    before: [
+      [{ t: '// ⚠️  Encoded JWT — looks like noise', c: 'text-zinc-500' }],
+      [],
+      [
+        { t: 'eyJhbGciOiJIUzI1NiJ9', c: 'text-red-400', pulse: true },
+        { t: '.', c: 'text-zinc-600' },
+      ],
+      [
+        { t: 'eyJ1c2VySWQiOjQyLCJyb2xl', c: 'text-amber-300', pulse: true },
+        { t: '.', c: 'text-zinc-600' },
+      ],
+      [
+        { t: 'SflKxwRJSMeKKF2QT4fwpMeJ...', c: 'text-violet-400', pulse: true },
+      ],
     ],
-    afterLines: [
-      { parts: [{ text: '// Decoded — instant clarity ✓', cls: 'text-zinc-500' }] },
-      { parts: [{ text: '' }] },
-      { parts: [{ text: 'HEADER', cls: 'text-red-400 font-bold' }] },
-      { parts: [
-        { text: '  alg', cls: 'text-sky-300' }, { text: '  → ' }, { text: 'HS256', cls: 'text-emerald-400', token: true },
-      ]},
-      { parts: [{ text: '' }] },
-      { parts: [{ text: 'PAYLOAD', cls: 'text-amber-400 font-bold' }] },
-      { parts: [
-        { text: '  userId', cls: 'text-sky-300' }, { text: ' → ' }, { text: '42', cls: 'text-violet-400', token: true },
-      ]},
-      { parts: [
-        { text: '  role  ', cls: 'text-sky-300' }, { text: ' → ' }, { text: '"admin"', cls: 'text-emerald-400', token: true },
-      ]},
-      { parts: [
-        { text: '  exp   ', cls: 'text-sky-300' }, { text: ' → ' }, { text: '2026-12-31', cls: 'text-amber-400', token: true },
-      ]},
+    after: [
+      [{ t: '// ✓  Decoded — instant clarity', c: 'text-zinc-500' }],
+      [],
+      [{ t: '■ HEADER', c: 'text-red-400' }],
+      [
+        { t: '  alg', c: 'text-sky-300', glow: true },
+        { t: '  →  ' },
+        { t: '"HS256"', c: 'text-emerald-400', glow: true },
+      ],
+      [],
+      [{ t: '■ PAYLOAD', c: 'text-amber-400' }],
+      [
+        { t: '  userId', c: 'text-sky-300', glow: true },
+        { t: ' →  ' },
+        { t: '42', c: 'text-violet-400', glow: true },
+      ],
+      [
+        { t: '  role  ', c: 'text-sky-300', glow: true },
+        { t: ' →  ' },
+        { t: '"admin"', c: 'text-emerald-400', glow: true },
+      ],
+      [
+        { t: '  exp   ', c: 'text-sky-300', glow: true },
+        { t: ' →  ' },
+        { t: '2026-12-31', c: 'text-amber-400', glow: true },
+      ],
     ],
   },
 
-  /* ── 4. Code Prompt Shield ──────────────────────────────────── */
+  /* 4 ── Code Prompt Shield ──────────────────────────────────── */
   {
-    id: 'code',
-    file: 'config.ts',
-    tool: 'Code Prompt Shield',
-    toolEmoji: '🔐',
+    id: 'code', file: 'config.ts',
+    tool: 'Code Prompt Shield', emoji: '🔐',
     href: '/code-prompt-shield',
-    accent: 'text-violet-400',
-    accentBg: 'bg-violet-500/15',
-    accentRing: 'ring-violet-400/40',
-    trust: 'Secrets stay on your machine',
-    beforeLines: [
-      { parts: [{ text: '// Before: real secrets exposed ⚠️', cls: 'text-zinc-500' }] },
-      { parts: [{ text: '' }] },
-      { parts: [
-        { text: 'const ', cls: 'text-red-400' }, { text: 'STRIPE_KEY', cls: 'text-zinc-100' }, { text: ' = ' },
-        { text: '"sk_live_9xKZ..."', cls: 'text-rose-400', pulse: true },
-      ]},
-      { parts: [
-        { text: 'const ', cls: 'text-red-400' }, { text: 'DB_URL', cls: 'text-zinc-100' }, { text: ' = ' },
-        { text: '"postgres://admin:pwd@host/db"', cls: 'text-rose-400', pulse: true },
-      ]},
-      { parts: [
-        { text: 'const ', cls: 'text-red-400' }, { text: 'API_KEY', cls: 'text-zinc-100' }, { text: ' = ' },
-        { text: '"AIzaSy_abc123..."', cls: 'text-rose-400', pulse: true },
-      ]},
+    accent: 'text-violet-400', accentHex: '#a78bfa',
+    bgChip: 'bg-violet-500/15', ringChip: 'ring-violet-400/40',
+    stat: '3 secrets stripped',
+    before: [
+      [{ t: '// ⚠️  Real credentials — never share!', c: 'text-zinc-500' }],
+      [],
+      [
+        { t: 'const ', c: 'text-red-400' },
+        { t: 'STRIPE = ', c: 'text-zinc-300' },
+        { t: '"sk_live_9xKZabc..."', c: 'text-rose-400', pulse: true },
+      ],
+      [
+        { t: 'const ', c: 'text-red-400' },
+        { t: 'DB_URL = ', c: 'text-zinc-300' },
+        { t: '"postgres://admin:pwd@host"', c: 'text-rose-400', pulse: true },
+      ],
+      [
+        { t: 'const ', c: 'text-red-400' },
+        { t: 'GOOG  = ', c: 'text-zinc-300' },
+        { t: '"AIzaSyD_fake123xyz"', c: 'text-rose-400', pulse: true },
+      ],
     ],
-    afterLines: [
-      { parts: [{ text: '// After: safe to share with AI ✓', cls: 'text-zinc-500' }] },
-      { parts: [{ text: '' }] },
-      { parts: [
-        { text: 'const ', cls: 'text-sky-400' }, { text: 'SECRET_1', cls: 'text-zinc-100', token: true }, { text: ' = ' },
-        { text: '"[MASKED]"', cls: 'text-violet-400', token: true },
-      ]},
-      { parts: [
-        { text: 'const ', cls: 'text-sky-400' }, { text: 'SECRET_2', cls: 'text-zinc-100', token: true }, { text: ' = ' },
-        { text: '"[MASKED]"', cls: 'text-violet-400', token: true },
-      ]},
-      { parts: [
-        { text: 'const ', cls: 'text-sky-400' }, { text: 'SECRET_3', cls: 'text-zinc-100', token: true }, { text: ' = ' },
-        { text: '"[MASKED]"', cls: 'text-violet-400', token: true },
-      ]},
-      { parts: [{ text: '' }] },
-      { parts: [
-        { text: '// 3 secrets masked · 18 languages', cls: 'text-emerald-500' },
-      ]},
+    after: [
+      [{ t: '// ✓  Safe to share with AI ✨', c: 'text-zinc-500' }],
+      [],
+      [
+        { t: 'const ', c: 'text-sky-400' },
+        { t: 'STRIPE = ', c: 'text-zinc-300' },
+        { t: '"SECRET_1"', c: 'text-violet-400', glow: true },
+      ],
+      [
+        { t: 'const ', c: 'text-sky-400' },
+        { t: 'DB_URL = ', c: 'text-zinc-300' },
+        { t: '"SECRET_2"', c: 'text-violet-400', glow: true },
+      ],
+      [
+        { t: 'const ', c: 'text-sky-400' },
+        { t: 'GOOG   = ', c: 'text-zinc-300' },
+        { t: '"SECRET_3"', c: 'text-violet-400', glow: true },
+      ],
+      [],
+      [{ t: '// 18 languages · pre-scan · restore', c: 'text-emerald-500/80' }],
     ],
   },
 
-  /* ── 5. cURL Converter ──────────────────────────────────────── */
+  /* 5 ── cURL Converter ──────────────────────────────────────── */
   {
-    id: 'curl',
-    file: 'request.sh',
-    tool: 'cURL Converter',
-    toolEmoji: '⚡',
+    id: 'curl', file: 'request.sh',
+    tool: 'cURL Converter', emoji: '⚡',
     href: '/curl-converter',
-    accent: 'text-sky-400',
-    accentBg: 'bg-sky-500/15',
-    accentRing: 'ring-sky-400/40',
-    trust: 'Converts instantly, client-side',
-    beforeLines: [
-      { parts: [{ text: '# Input: cURL command', cls: 'text-zinc-500' }] },
-      { parts: [{ text: '' }] },
-      { parts: [{ text: 'curl \\', cls: 'text-amber-300' }] },
-      { parts: [{ text: "  -X POST 'https://api.stripe.com/v1/charges' \\", cls: 'text-zinc-100' }] },
-      { parts: [{ text: "  -H 'Authorization: Bearer sk_...' \\", cls: 'text-rose-400', pulse: true }] },
-      { parts: [{ text: "  -d 'amount=2000&currency=usd'", cls: 'text-zinc-400' }] },
+    accent: 'text-sky-400', accentHex: '#38bdf8',
+    bgChip: 'bg-sky-500/15', ringChip: 'ring-sky-400/40',
+    stat: 'Converted to fetch()',
+    before: [
+      [{ t: '# Input: cURL from browser devtools', c: 'text-zinc-500' }],
+      [],
+      [{ t: 'curl -X POST \\', c: 'text-amber-300' }],
+      [{ t: "  'https://api.stripe.com/charges' \\", c: 'text-zinc-300' }],
+      [
+        { t: "  -H 'Authorization: Bearer sk...' \\", c: 'text-rose-400', pulse: true },
+      ],
+      [{ t: "  -d 'amount=2000&currency=usd'", c: 'text-zinc-400' }],
     ],
-    afterLines: [
-      { parts: [{ text: '// Output: fetch() — paste & go ✓', cls: 'text-zinc-500' }] },
-      { parts: [{ text: '' }] },
-      { parts: [
-        { text: 'const ', cls: 'text-red-400' }, { text: 'res', cls: 'text-zinc-100' }, { text: ' = ' },
-        { text: 'await ', cls: 'text-red-400' }, { text: 'fetch', cls: 'text-sky-300' }, { text: '(' },
-      ]},
-      { parts: [{ text: "  'https://api.stripe.com/v1/charges',", cls: 'text-emerald-400' }] },
-      { parts: [{ text: '  { method: ', cls: 'text-zinc-300' }, { text: "'POST'", cls: 'text-amber-300' }, { text: ',', cls: 'text-zinc-300' }]},
-      { parts: [
-        { text: '    headers: { ', cls: 'text-zinc-300' },
-        { text: 'Authorization', cls: 'text-sky-300', token: true },
-        { text: ': ', cls: 'text-zinc-300' },
-        { text: "'Bearer sk_...'", cls: 'text-violet-400' },
-        { text: ' }', cls: 'text-zinc-300' },
-      ]},
-      { parts: [{ text: '  }', cls: 'text-zinc-300' }, { text: ');' }] },
+    after: [
+      [{ t: '// ✓  fetch() — paste & run', c: 'text-zinc-500' }],
+      [],
+      [
+        { t: 'const ', c: 'text-red-400' },
+        { t: 'res ', c: 'text-zinc-100' },
+        { t: '= await ', c: 'text-red-400' },
+        { t: 'fetch', c: 'text-sky-300', glow: true },
+        { t: '(' },
+      ],
+      [{ t: "  'https://api.stripe.com/charges',", c: 'text-emerald-400', glow: true }],
+      [
+        { t: '  { method: ', c: 'text-zinc-300' },
+        { t: "'POST'", c: 'text-amber-300', glow: true },
+        { t: ', headers: {', c: 'text-zinc-300' },
+      ],
+      [
+        { t: '    Authorization', c: 'text-sky-300', glow: true },
+        { t: ": 'Bearer sk...'", c: 'text-violet-400' },
+      ],
+      [{ t: '  }, body: ... }', c: 'text-zinc-300' }],
+      [{ t: ');', c: 'text-zinc-400' }],
+    ],
+  },
+
+  /* 6 ── Regex Tester ─────────────────────────────────────────── */
+  {
+    id: 'regex', file: 'pattern.regex',
+    tool: 'Regex Tester', emoji: '🔍',
+    href: '/regex-tester',
+    accent: 'text-pink-400', accentHex: '#f472b6',
+    bgChip: 'bg-pink-500/15', ringChip: 'ring-pink-400/40',
+    stat: '3 matches found',
+    before: [
+      [{ t: '// Testing email extraction pattern', c: 'text-zinc-500' }],
+      [],
+      [
+        { t: 'pattern ', c: 'text-red-400' },
+        { t: '= ', c: 'text-zinc-400' },
+        { t: '/[\\w.-]+@[\\w.-]+\\.\\w+/g', c: 'text-amber-300', pulse: true },
+      ],
+      [],
+      [{ t: 'text = `', c: 'text-zinc-400' }],
+      [{ t: '  Contact alice@acme.io or', c: 'text-zinc-300' }],
+      [{ t: '  bob@corp.dev or eve@example.com', c: 'text-zinc-300' }],
+      [{ t: '`', c: 'text-zinc-400' }],
+    ],
+    after: [
+      [{ t: '// ✓  3 matches found instantly', c: 'text-zinc-500' }],
+      [],
+      [{ t: 'MATCH  0  →  ', c: 'text-zinc-500' }, { t: 'alice@acme.io', c: 'text-pink-400', glow: true }],
+      [{ t: 'MATCH  1  →  ', c: 'text-zinc-500' }, { t: 'bob@corp.dev', c: 'text-pink-400', glow: true }],
+      [{ t: 'MATCH  2  →  ', c: 'text-zinc-500' }, { t: 'eve@example.com', c: 'text-pink-400', glow: true }],
+      [],
+      [{ t: '//  Flags: global · index · span', c: 'text-emerald-500/80' }],
+    ],
+  },
+
+  /* 7 ── Base64 Encoder ───────────────────────────────────────── */
+  {
+    id: 'b64', file: 'encode.b64',
+    tool: 'Base64 Encoder', emoji: '🔗',
+    href: '/base64-encoder',
+    accent: 'text-orange-400', accentHex: '#fb923c',
+    bgChip: 'bg-orange-500/15', ringChip: 'ring-orange-400/40',
+    stat: '28 chars encoded',
+    before: [
+      [{ t: '// Encode credentials for API header', c: 'text-zinc-500' }],
+      [],
+      [{ t: 'INPUT:', c: 'text-red-400' }],
+      [{ t: '  "admin:myS3cretP@ssword!"', c: 'text-rose-400', pulse: true }],
+      [],
+      [{ t: 'TARGET: Authorization header', c: 'text-zinc-500' }],
+    ],
+    after: [
+      [{ t: '// ✓  Base64 encoded — safe to send', c: 'text-zinc-500' }],
+      [],
+      [{ t: 'OUTPUT:', c: 'text-orange-400' }],
+      [{ t: '  YWRtaW46bXlTM2NyZXRQ', c: 'text-orange-300', glow: true }],
+      [{ t: '  QHNzd29yZCE=', c: 'text-orange-300', glow: true }],
+      [],
+      [
+        { t: 'Authorization: ', c: 'text-sky-300', glow: true },
+        { t: 'Basic YWRtaW4...', c: 'text-emerald-400', glow: true },
+      ],
+    ],
+  },
+
+  /* 8 ── Hash Generator ───────────────────────────────────────── */
+  {
+    id: 'hash', file: 'hash.sha256',
+    tool: 'Hash Generator', emoji: '#️⃣',
+    href: '/hash-generator',
+    accent: 'text-teal-400', accentHex: '#2dd4bf',
+    bgChip: 'bg-teal-500/15', ringChip: 'ring-teal-400/40',
+    stat: 'SHA-256 · 64 chars',
+    before: [
+      [{ t: '// Generate cryptographic digest', c: 'text-zinc-500' }],
+      [],
+      [{ t: 'INPUT:    ', c: 'text-red-400' }, { t: '"myPassword2024!"', c: 'text-rose-400', pulse: true }],
+      [{ t: 'ALGO:     ', c: 'text-zinc-400' }, { t: 'SHA-256', c: 'text-amber-300' }],
+      [{ t: 'ENCODING: ', c: 'text-zinc-400' }, { t: 'hex', c: 'text-zinc-300' }],
+      [],
+      [{ t: 'OUTPUT:  ', c: 'text-zinc-600' }, { t: 'computing...', c: 'text-zinc-600' }],
+    ],
+    after: [
+      [{ t: '// ✓  Cryptographic hash ready', c: 'text-zinc-500' }],
+      [],
+      [{ t: 'SHA-256:', c: 'text-teal-400' }],
+      [{ t: '  a3f2b8c9d4e1f0ab', c: 'text-teal-300', glow: true }],
+      [{ t: '  52c7891023def456', c: 'text-teal-300', glow: true }],
+      [{ t: '  78a9b0c1d2e3f4a5', c: 'text-teal-300', glow: true }],
+      [{ t: '  1b2c3d4e5f6a7b8c', c: 'text-teal-300', glow: true }],
+      [],
+      [{ t: '//  Also: MD5 · SHA-1 · SHA-512 · HMAC', c: 'text-emerald-500/80' }],
     ],
   },
 ];
 
-/* ─── Phase machine ───────────────────────────────────────────── */
-type Phase = 'before' | 'typing' | 'after' | 'exit';
-
-const BEFORE_MS  = 1800;
-const TYPING_MS  = 50;   // ms per char (typing speed)
-const AFTER_MS   = 4200;
-const EXIT_MS    = 400;
+/* ─── Phase timing ────────────────────────────────────────────── */
+type Phase = 'before' | 'typing' | 'scanning' | 'after' | 'exit';
+const BEFORE_MS   = 1600;
+const CHAR_MS     = 42;
+const SCAN_MS     = 700;
+const AFTER_MS    = 4500;
+const EXIT_MS     = 350;
 
 /* ─── Main export ─────────────────────────────────────────────── */
 export default function HomeHeroCodePreview() {
   const reduced = usePrefersReducedMotion();
-  const s = SCENES[0];
-
-  if (reduced) {
-    return (
-      <StaticPreview scene={s} />
-    );
-  }
-
+  if (reduced) return <StaticFallback />;
   return <AnimatedShowcase />;
 }
 
 /* ─── Static fallback ─────────────────────────────────────────── */
-function StaticPreview({ scene }: { scene: Scene }) {
+function StaticFallback() {
+  const s = SCENES[0];
   return (
-    <div className="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 shadow-xl">
-      <Chrome file={scene.file} accent={scene.accent} />
+    <div className="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950 shadow-xl">
+      <Chrome file={s.file} accent={s.accent} />
       <div className="p-5 font-mono text-[13px] leading-[1.8]">
-        <CodeLines lines={scene.afterLines} />
-        <FooterTrust trust={scene.trust} accent={scene.accent} />
+        <RenderLines lines={s.after} />
+        <Trust text={s.stat} accent={s.accent} />
       </div>
     </div>
   );
 }
 
-/* ─── Animated showcase ───────────────────────────────────────── */
+/* ─── Main animated component ─────────────────────────────────── */
 function AnimatedShowcase() {
-  const [sceneIdx, setSceneIdx]   = useState(0);
-  const [phase, setPhase]         = useState<Phase>('before');
-  const [typed, setTyped]         = useState(0);
-  const [visible, setVisible]     = useState(true);
+  const [idx, setIdx]     = useState(0);
+  const [phase, setPhase] = useState<Phase>('before');
+  const [typed, setTyped] = useState(0);
+  const [reveal, setReveal] = useState<number>(0);   // lines revealed (after phase)
+  const [fade, setFade]   = useState(true);           // visibility
+  const [progKey, setProgKey] = useState(0);           // remount progress bar
 
-  const scene = SCENES[sceneIdx];
-  const typingText = `// Using ${scene.tool}…`;
+  const scene      = SCENES[idx];
+  const typingText = `// Analysing with ${scene.tool}…`;
 
-  const nextScene = useCallback(() => {
-    setVisible(false);
+  /* advance to next scene */
+  const advance = useCallback(() => {
+    setFade(false);
     setTimeout(() => {
-      setSceneIdx((i) => (i + 1) % SCENES.length);
+      setIdx(i => (i + 1) % SCENES.length);
       setPhase('before');
       setTyped(0);
-      setVisible(true);
+      setReveal(0);
+      setFade(true);
     }, EXIT_MS);
   }, []);
 
-  /* Phase timer */
+  /* phase timer */
   useEffect(() => {
     if (phase === 'before') {
       const t = setTimeout(() => setPhase('typing'), BEFORE_MS);
       return () => clearTimeout(t);
     }
-    if (phase === 'after') {
-      const t = setTimeout(nextScene, AFTER_MS);
+    if (phase === 'scanning') {
+      const t = setTimeout(() => {
+        setReveal(0);
+        setProgKey(k => k + 1);
+        setPhase('after');
+      }, SCAN_MS);
       return () => clearTimeout(t);
     }
-  }, [phase, nextScene]);
+    if (phase === 'after') {
+      const t = setTimeout(advance, AFTER_MS);
+      return () => clearTimeout(t);
+    }
+  }, [phase, advance]);
 
-  /* Typing */
+  /* typing effect */
   useEffect(() => {
     if (phase !== 'typing') return;
     if (typed >= typingText.length) {
-      const t = setTimeout(() => setPhase('after'), 300);
+      const t = setTimeout(() => setPhase('scanning'), 300);
       return () => clearTimeout(t);
     }
-    const t = setTimeout(() => setTyped((n) => n + 1), TYPING_MS);
+    const t = setTimeout(() => setTyped(n => n + 1), CHAR_MS);
     return () => clearTimeout(t);
   }, [phase, typed, typingText.length]);
 
+  /* staggered line reveal in 'after' phase */
+  useEffect(() => {
+    if (phase !== 'after') return;
+    if (reveal >= scene.after.length) return;
+    const t = setTimeout(() => setReveal(r => r + 1), 90);
+    return () => clearTimeout(t);
+  }, [phase, reveal, scene.after.length]);
+
+  const isAfter = phase === 'after';
+
   return (
     <div
-      className="overflow-hidden rounded-2xl border border-zinc-800/80 bg-zinc-950 shadow-2xl shadow-zinc-900/50"
+      className="overflow-hidden rounded-2xl border border-zinc-800/80 bg-zinc-950 shadow-2xl shadow-black/50"
       role="img"
-      aria-label="Animated demo cycling through UnblockDevs tools"
+      aria-label="Animated demo cycling through UnblockDevs developer tools"
     >
-      {/* Window chrome */}
+      {/* ── Window chrome ─────────────────────────────────────── */}
       <Chrome file={scene.file} accent={scene.accent} animated />
 
-      {/* Code body */}
+      {/* ── Tool badge row ────────────────────────────────────── */}
+      <div className="flex items-center justify-between border-b border-zinc-800/60 bg-zinc-900/60 px-4 py-2">
+        <div className="flex items-center gap-2">
+          {/* Scene indicator pills */}
+          {SCENES.map((s, i) => (
+            <button
+              key={s.id}
+              type="button"
+              onClick={() => {
+                setFade(false);
+                setTimeout(() => { setIdx(i); setPhase('before'); setTyped(0); setReveal(0); setFade(true); }, EXIT_MS);
+              }}
+              aria-label={`View ${s.tool}`}
+              className="flex items-center"
+            >
+              <span className={`block rounded-full transition-all duration-300 ${
+                i === idx ? 'w-6 h-1.5 bg-emerald-400' : 'w-1.5 h-1.5 bg-zinc-700 hover:bg-zinc-500'
+              }`} />
+            </button>
+          ))}
+          <span className="ml-1 font-mono text-[10px] text-zinc-600">{idx + 1}/{SCENES.length}</span>
+        </div>
+        {/* Current tool badge */}
+        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-bold ring-1 ${scene.bgChip} ${scene.ringChip}`}>
+          <span>{scene.emoji}</span>
+          <span className={scene.accent}>{scene.tool}</span>
+        </span>
+      </div>
+
+      {/* ── Code body ─────────────────────────────────────────── */}
       <div
-        className="relative min-h-[300px] p-5 font-mono text-[13px] leading-[1.8] transition-opacity duration-300"
-        style={{ opacity: visible ? 1 : 0 }}
+        className="relative min-h-[310px] overflow-hidden p-5 font-mono text-[12.5px] leading-[1.85] transition-opacity duration-300"
+        style={{ opacity: fade ? 1 : 0 }}
       >
-        {/* BEFORE */}
-        {(phase === 'before' || phase === 'typing') && (
+        {/* BEFORE state */}
+        {(phase === 'before' || phase === 'typing' || phase === 'scanning') && (
           <div>
-            <CodeLines lines={scene.beforeLines} />
+            <RenderLines lines={scene.before} />
             {phase === 'before' && (
-              <div className="mt-1">
+              <div className="mt-0.5">
                 <span className="animate-hero-cursor-blink text-emerald-400">▍</span>
               </div>
             )}
           </div>
         )}
 
-        {/* TYPING line */}
-        {phase === 'typing' && (
-          <div className={`mt-4 text-[13px] leading-relaxed`}>
-            <span className={scene.accent}>
-              {typingText.slice(0, typed)}
-            </span>
-            <span className="animate-hero-cursor-blink text-emerald-400">▍</span>
+        {/* TYPING overlay */}
+        {(phase === 'typing' || phase === 'scanning') && (
+          <div className="mt-4 text-[12.5px] leading-relaxed">
+            <span className={scene.accent}>{typingText.slice(0, typed)}</span>
+            {phase === 'typing' && (
+              <span className="animate-hero-cursor-blink text-emerald-400">▍</span>
+            )}
           </div>
         )}
 
-        {/* AFTER */}
-        {phase === 'after' && (
-          <div className="animate-hero-after-sql-in">
-            {/* Tool badge */}
-            <div className={`mb-3 inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-[11px] font-bold ring-1 ${scene.accentBg} ${scene.accentRing}`}>
-              <span>{scene.toolEmoji}</span>
+        {/* SCAN LINE animation */}
+        {phase === 'scanning' && (
+          <div
+            className="pointer-events-none absolute inset-x-0 h-[2px] animate-scan-line"
+            style={{
+              top: '20%',
+              background: `linear-gradient(90deg, transparent, ${scene.accentHex}80, ${scene.accentHex}, ${scene.accentHex}80, transparent)`,
+              boxShadow: `0 0 12px 2px ${scene.accentHex}60`,
+            }}
+            aria-hidden
+          />
+        )}
+
+        {/* AFTER state — staggered reveal */}
+        {isAfter && (
+          <div>
+            {/* success badge */}
+            <div className={`mb-3 inline-flex animate-badge-slide items-center gap-2 rounded-full px-2.5 py-1 text-[11px] font-bold ring-1 ${scene.bgChip} ${scene.ringChip}`}>
+              <span>{scene.emoji}</span>
               <span className={scene.accent}>{scene.tool}</span>
               <Check className={`h-3 w-3 ${scene.accent}`} strokeWidth={2.5} />
             </div>
-            <CodeLines lines={scene.afterLines} showTokenGlow />
-            <FooterTrust trust={scene.trust} accent={scene.accent} href={scene.href} />
+
+            {scene.after.map((line, li) => (
+              <div
+                key={li}
+                className="transition-all duration-200"
+                style={{
+                  opacity: li < reveal ? 1 : 0,
+                  transform: li < reveal ? 'translateY(0)' : 'translateY(6px)',
+                }}
+              >
+                <RenderAfterLine line={line} accentHex={scene.accentHex} />
+              </div>
+            ))}
+
+            {/* stat pill */}
+            {reveal >= scene.after.length && (
+              <div className="mt-3 animate-badge-slide">
+                <span className={`inline-flex items-center gap-1.5 rounded-md border border-emerald-500/25 bg-emerald-500/10 px-3 py-1.5 text-[11px] font-semibold ${scene.accent}`}>
+                  <Zap className="h-3 w-3" strokeWidth={2} aria-hidden />
+                  {scene.stat}
+                </span>
+              </div>
+            )}
           </div>
         )}
       </div>
 
-      {/* Progress dots + tool pills */}
-      <div className="border-t border-zinc-800/60 bg-zinc-950 px-5 py-3">
-        {/* Dot indicators */}
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            {SCENES.map((s, i) => (
-              <button
-                key={s.id}
-                type="button"
-                onClick={() => { setSceneIdx(i); setPhase('before'); setTyped(0); setVisible(true); }}
-                aria-label={`View ${s.tool} demo`}
-                className="group relative flex items-center"
-              >
-                <span
-                  className={`block h-1.5 rounded-full transition-all duration-300 ${
-                    i === sceneIdx
-                      ? 'w-8 bg-emerald-400'
-                      : 'w-1.5 bg-zinc-700 group-hover:bg-zinc-500'
-                  }`}
-                />
-              </button>
-            ))}
-          </div>
+      {/* ── Progress bar + bottom strip ───────────────────────── */}
+      <div className="border-t border-zinc-800/60 bg-zinc-950">
+        {/* Progress fill */}
+        <div className="h-[2px] w-full bg-zinc-800/80">
+          {isAfter && (
+            <div
+              key={progKey}
+              className="h-full animate-progress-fill rounded-full"
+              style={{ background: `linear-gradient(90deg, ${scene.accentHex}, ${scene.accentHex}88)` }}
+            />
+          )}
+        </div>
 
-          {/* Current tool pill */}
-          <Link
-            href={scene.href}
-            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-semibold ring-1 transition-all hover:opacity-90 ${scene.accentBg} ${scene.accentRing}`}
-          >
-            <span>{scene.toolEmoji}</span>
-            <span className={scene.accent}>{scene.tool}</span>
-            <ChevronRight className={`h-3 w-3 ${scene.accent}`} />
-          </Link>
+        {/* Tool quick-links */}
+        <div className="flex items-center gap-2 overflow-x-auto px-4 py-2.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {SCENES.map((s, i) => (
+            <Link
+              key={s.id}
+              href={s.href}
+              className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ring-1 transition-all duration-200 ${
+                i === idx
+                  ? `${s.bgChip} ${s.ringChip} ${s.accent} scale-105`
+                  : 'bg-zinc-800/60 ring-zinc-700/40 text-zinc-500 hover:text-zinc-300'
+              }`}
+            >
+              <span>{s.emoji}</span>
+              <span className="hidden sm:inline">{s.tool}</span>
+              {i === idx && <ChevronRight className={`h-2.5 w-2.5 ${s.accent}`} />}
+            </Link>
+          ))}
         </div>
       </div>
     </div>
   );
 }
 
-/* ─── Chrome bar ──────────────────────────────────────────────── */
+/* ─── Window chrome ───────────────────────────────────────────── */
 function Chrome({ file, accent, animated = false }: { file: string; accent: string; animated?: boolean }) {
   return (
-    <div className={`flex items-center gap-2 border-b border-zinc-800 bg-[#1C1C1C] px-4 py-3 ${animated ? 'relative overflow-hidden' : ''}`}>
+    <div className={`flex items-center gap-2 border-b border-zinc-800 bg-[#1a1a1a] px-4 py-2.5 ${animated ? 'relative overflow-hidden' : ''}`}>
       {animated && (
         <div
-          className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.05] to-transparent bg-[length:200%_100%] animate-hero-title-shimmer"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.04] to-transparent bg-[length:200%_100%] animate-hero-title-shimmer"
           aria-hidden
         />
       )}
-      <span className="relative flex gap-1.5" aria-hidden>
-        <span className="h-3 w-3 rounded-full bg-[#FF5F57]" />
-        <span className="h-3 w-3 rounded-full bg-[#FEBC2E]" />
-        <span className="h-3 w-3 rounded-full bg-[#28C840]" />
+      <span className="flex gap-1.5" aria-hidden>
+        <span className="h-2.5 w-2.5 rounded-full bg-[#FF5F57]" />
+        <span className="h-2.5 w-2.5 rounded-full bg-[#FEBC2E]" />
+        <span className="h-2.5 w-2.5 rounded-full bg-[#28C840]" />
       </span>
-      <span className={`relative ml-2 font-mono text-[11px] transition-colors duration-300 ${accent}`}>{file}</span>
+      <span className={`ml-2 font-mono text-[10.5px] transition-colors duration-300 ${accent}`}>{file}</span>
     </div>
   );
 }
 
-/* ─── Render code lines ───────────────────────────────────────── */
-function CodeLines({ lines, showTokenGlow = false }: { lines: Line[]; showTokenGlow?: boolean }) {
+/* ─── Render BEFORE lines ─────────────────────────────────────── */
+function RenderLines({ lines }: { lines: Line[] }) {
   return (
     <>
       {lines.map((line, li) => (
-        <div key={li}>
-          {line.parts.length === 0 || (line.parts.length === 1 && line.parts[0].text === '') ? (
-            <br />
-          ) : (
-            line.parts.map((part, pi) => {
-              const base = part.cls ?? 'text-zinc-300';
-              const pulse = part.pulse
-                ? 'rounded bg-rose-500/20 animate-hero-sensitive-pulse px-0.5'
-                : '';
-              const glow = showTokenGlow && part.token
-                ? 'rounded bg-emerald-500/10 ring-1 ring-emerald-500/20 px-0.5'
-                : '';
-              return (
-                <span key={pi} className={`${base} ${pulse} ${glow}`}>
-                  {part.text}
+        <div key={li} className="flex">
+          {/* line number */}
+          <span className="mr-4 select-none text-[10px] text-zinc-700 w-4 shrink-0 text-right pt-px">
+            {li + 1}
+          </span>
+          <span>
+            {line.length === 0
+              ? <br />
+              : line.map((p, pi) => (
+                <span
+                  key={pi}
+                  className={[
+                    p.c ?? 'text-zinc-300',
+                    p.pulse ? 'rounded bg-rose-500/20 px-0.5 animate-hero-sensitive-pulse' : '',
+                  ].join(' ')}
+                >
+                  {p.t}
                 </span>
-              );
-            })
-          )}
+              ))
+            }
+          </span>
         </div>
       ))}
     </>
   );
 }
 
-/* ─── Footer trust pill ───────────────────────────────────────── */
-function FooterTrust({ trust, accent, href }: { trust: string; accent: string; href?: string }) {
-  const inner = (
-    <span className={`inline-flex items-center gap-2 rounded-md border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs ${accent} mt-4 ${href ? 'hover:bg-emerald-500/15 transition-colors' : ''}`}>
-      <Check className="h-3 w-3 shrink-0" strokeWidth={2.5} aria-hidden />
-      {trust}
-    </span>
+/* ─── Render AFTER line (with glow) ──────────────────────────── */
+function RenderAfterLine({ line, accentHex }: { line: Line; accentHex: string }) {
+  return (
+    <div className="flex">
+      <span className="mr-4 select-none text-[10px] text-zinc-700 w-4 shrink-0 text-right pt-px" aria-hidden>·</span>
+      <span>
+        {line.length === 0
+          ? <br />
+          : line.map((p, pi) => (
+            <span
+              key={pi}
+              className={[
+                p.c ?? 'text-zinc-300',
+                p.glow ? 'rounded px-0.5 ring-1' : '',
+              ].join(' ')}
+              style={p.glow ? {
+                background: `${accentHex}12`,
+                boxShadow: `0 0 0 1px ${accentHex}30`,
+              } : undefined}
+            >
+              {p.t}
+            </span>
+          ))
+        }
+      </span>
+    </div>
   );
-  if (href) {
-    return <Link href={href} className="block">{inner}</Link>;
-  }
-  return <p className="block">{inner}</p>;
+}
+
+/* ─── Trust / stat footer ─────────────────────────────────────── */
+function Trust({ text, accent }: { text: string; accent: string }) {
+  return (
+    <p className={`mt-4 inline-flex items-center gap-2 rounded-md border border-emerald-500/25 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold ${accent}`}>
+      <Check className="h-3 w-3 shrink-0" strokeWidth={2.5} aria-hidden />
+      {text}
+    </p>
+  );
 }

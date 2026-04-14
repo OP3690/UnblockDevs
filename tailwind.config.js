@@ -63,6 +63,27 @@ module.exports = {
           '0%, 100%': { opacity: '0.4' },
           '50%': { opacity: '0.8' },
         },
+        'fade-up': {
+          '0%': { opacity: '0', transform: 'translateY(6px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'scan-line': {
+          '0%': { transform: 'translateY(-100%)', opacity: '0.9' },
+          '100%': { transform: 'translateY(600%)', opacity: '0' },
+        },
+        'progress-fill': {
+          '0%': { width: '0%' },
+          '100%': { width: '100%' },
+        },
+        'token-pop': {
+          '0%': { transform: 'scale(0.85)', opacity: '0' },
+          '60%': { transform: 'scale(1.05)' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+        'badge-slide': {
+          '0%': { transform: 'translateY(-4px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
       },
       animation: {
         'hero-code-before': 'hero-code-before 14s ease-in-out infinite',
@@ -77,6 +98,11 @@ module.exports = {
         'progress': 'progress 5s linear forwards',
         'float-y': 'float-y 4s ease-in-out infinite',
         'glow-pulse': 'glow-pulse 2.5s ease-in-out infinite',
+        'fade-up': 'fade-up 0.35s ease-out forwards',
+        'scan-line': 'scan-line 0.7s ease-in forwards',
+        'progress-fill': 'progress-fill 4.5s linear forwards',
+        'token-pop': 'token-pop 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards',
+        'badge-slide': 'badge-slide 0.3s ease-out forwards',
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
