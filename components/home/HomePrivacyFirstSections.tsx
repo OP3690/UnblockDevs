@@ -54,7 +54,7 @@ import type { LucideIcon } from 'lucide-react';
 type Cat = 'all' | 'ai' | 'json' | 'api' | 'encode' | 'dev';
 
 const TABS: { id: Cat; label: string; icon: LucideIcon; color: string; activeColor: string; activeBg: string }[] = [
-  { id: 'all', label: 'All', icon: Sparkles, color: 'text-zinc-500', activeColor: 'text-zinc-900', activeBg: 'bg-zinc-900' },
+  { id: 'all', label: 'All', icon: Sparkles, color: 'text-indigo-500', activeColor: 'text-white', activeBg: 'bg-indigo-600' },
   { id: 'ai', label: 'AI Safety', icon: ShieldCheck, color: 'text-violet-500', activeColor: 'text-white', activeBg: 'bg-violet-600' },
   { id: 'json', label: 'JSON', icon: Code2, color: 'text-emerald-600', activeColor: 'text-white', activeBg: 'bg-emerald-600' },
   { id: 'api', label: 'API & cURL', icon: Network, color: 'text-sky-500', activeColor: 'text-white', activeBg: 'bg-sky-500' },
@@ -179,7 +179,7 @@ export default function HomePrivacyFirstSections({
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 mb-3">
               <TrendingUp className="h-3.5 w-3.5 text-emerald-600" aria-hidden />
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-700">60+ Tools · All Free</span>
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-700">50+ Tools · All Free</span>
             </div>
             <h2 className="text-[28px] font-bold tracking-[-0.025em] text-zinc-900 sm:text-3xl">
               Everything you need, daily
@@ -192,7 +192,7 @@ export default function HomePrivacyFirstSections({
           {/* Quick stats */}
           <div className="flex items-center gap-4 shrink-0">
             {[
-              { n: '60+', sub: 'Free tools' },
+              { n: '50+', sub: 'Free tools' },
               { n: '0', sub: 'Server calls' },
               { n: '∞', sub: 'No signup' },
             ].map((s) => (
@@ -213,7 +213,7 @@ export default function HomePrivacyFirstSections({
               type="search"
               value={search}
               onChange={(e) => { setSearch(e.target.value); if (e.target.value) setCat('all'); }}
-              placeholder="Search 60+ tools…"
+              placeholder="Search 50+ tools…"
               aria-label="Search tools"
               className="h-11 w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-4 text-[13.5px] text-zinc-800 shadow-sm placeholder:text-zinc-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200/60 transition-all"
             />
