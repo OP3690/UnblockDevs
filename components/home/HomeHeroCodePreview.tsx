@@ -606,12 +606,6 @@ function AnimatedShowcase() {
 
   const isAfter = phase === 'after';
 
-  /* jump to scene helper */
-  const jumpTo = (i: number) => {
-    setFade(false);
-    setTimeout(() => { setIdx(i); setPhase('before'); setTyped(0); setReveal(0); setFade(true); }, EXIT_MS);
-  };
-
   return (
     <div
       className="overflow-hidden rounded-2xl border border-zinc-800/80 bg-zinc-950 shadow-2xl shadow-black/50"
@@ -640,8 +634,7 @@ function AnimatedShowcase() {
         </span>
       </div>
 
-      {/* ── Filmstrip carousel ────────────────────────────────── */}
-      <Filmstrip scenes={SCENES} idx={idx} scene={scene} onJump={jumpTo} />
+
 
       {/* ── Code body ─────────────────────────────────────────── */}
       <div
@@ -786,181 +779,6 @@ function AnimatedShowcase() {
           Open tool
           <ChevronRight className="h-3 w-3" aria-hidden />
         </Link>
-      </div>
-    </div>
-  );
-}
-
-/* ─── Filmstrip carousel ──────────────────────────────────────── */
-function Filmstrip({
-  scenes, idx, scene, onJump,
-}: {
-  scenes: Scene[];
-  idx: number;
-  scene: Scene;
-  onJump: (i: number) => void;
-}) {
-  const n = scenes.length;
-  const VISIBLE = 5;
-  const half = Math.floor(VISIBLE / 2);
-
-  const slots = Array.from({ length: VISIBLE }, (_, k) => {
-    const offset = k - half;
-    const sceneIdx = ((idx + offset) % n + n) % n;
-    return { offset, sceneIdx };
-  });
-
-  const prevIdx = ((idx - 1) % n + n) % n;
-  const nextIdx = (idx + 1) % n;
-
-  return (
-    <div
-      className="relative border-b border-zinc-800/60 overflow-hidden transition-all duration-700"
-      style={{ background: `linear-gradient(180deg, ${scene.accentHex}10 0%, #0c0c0c 100%)` }}
-    >
-      {/* Ambient top glow line */}
-      <div
-        className="absolute inset-x-0 top-0 h-[1.5px] transition-all duration-700"
-        style={{ background: `linear-gradient(90deg, transparent 5%, ${scene.accentHex}80 35%, ${scene.accentHex} 50%, ${scene.accentHex}80 65%, transparent 95%)` }}
-        aria-hidden
-      />
-
-      {/* Cards row */}
-      <div className="flex items-center gap-2 px-3 pt-3 pb-3">
-
-        {/* ← Prev */}
-        <button
-          type="button"
-          onClick={() => onJump(prevIdx)}
-          aria-label="Previous tool"
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-zinc-700/50 bg-zinc-800/60 text-zinc-500 transition-all duration-200 hover:border-zinc-500/80 hover:bg-zinc-700/70 hover:text-zinc-100 active:scale-90"
-        >
-          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden>
-            <path d="M7.5 2L3.5 6L7.5 10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-
-        {/* Cards */}
-        <div className="relative flex flex-1 items-end justify-center gap-2 overflow-hidden">
-          {slots.map(({ offset, sceneIdx }) => {
-            const s = scenes[sceneIdx];
-            const isActive = offset === 0;
-            const dist = Math.abs(offset);
-
-            const opacity = isActive ? 1 : dist === 1 ? 0.46 : 0.16;
-            const scale   = isActive ? 1 : dist === 1 ? 0.87 : 0.70;
-
-            return (
-              <button
-                key={`${sceneIdx}-${offset}`}
-                type="button"
-                onClick={() => onJump(sceneIdx)}
-                aria-label={`Switch to ${s.tool}`}
-                title={s.tool}
-                style={{
-                  opacity,
-                  transform: `scale(${scale})`,
-                  transformOrigin: 'bottom center',
-                  transition: 'all 0.38s cubic-bezier(0.4,0,0.2,1)',
-                  filter: dist === 2 ? 'blur(0.4px)' : 'none',
-                }}
-                className={`group relative flex shrink-0 flex-col items-center rounded-xl pb-2 pt-3 ${
-                  isActive ? 'w-[90px] px-3' : 'w-[72px] px-2'
-                }`}
-              >
-                {/* Card bg */}
-                <span
-                  className="absolute inset-0 rounded-xl transition-all duration-400"
-                  style={isActive ? {
-                    background: `linear-gradient(160deg, ${scene.accentHex}1a 0%, ${scene.accentHex}08 100%)`,
-                    boxShadow: `0 0 24px 6px ${scene.accentHex}1a, inset 0 1px 0 ${scene.accentHex}35`,
-                    outline: `1px solid ${scene.accentHex}45`,
-                  } : {
-                    background: 'rgba(39,39,42,0.35)',
-                    outline: '1px solid rgba(63,63,70,0.3)',
-                  }}
-                  aria-hidden
-                />
-
-                {/* Active top accent bar */}
-                {isActive && (
-                  <span
-                    className="absolute inset-x-5 top-0 h-[2px] rounded-full transition-colors duration-500"
-                    style={{ background: `linear-gradient(90deg, ${scene.accentHex}60, ${scene.accentHex}, ${scene.accentHex}60)` }}
-                    aria-hidden
-                  />
-                )}
-
-                {/* Emoji */}
-                <span
-                  className="relative z-10 select-none leading-none transition-all duration-300"
-                  style={{ fontSize: isActive ? '22px' : '14px' }}
-                  aria-hidden
-                >
-                  {s.emoji}
-                </span>
-
-                {/* Label */}
-                <span
-                  className={`relative z-10 mt-2 block w-full truncate text-center font-semibold leading-none transition-all duration-300 ${
-                    isActive ? `text-[10px] ${scene.accent}` : 'text-[9px] text-zinc-600'
-                  }`}
-                >
-                  {s.label}
-                </span>
-              </button>
-            );
-          })}
-
-          {/* Edge vignette */}
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-10" style={{ background: 'linear-gradient(90deg,#0c0c0c,transparent)' }} aria-hidden />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-10" style={{ background: 'linear-gradient(270deg,#0c0c0c,transparent)' }} aria-hidden />
-        </div>
-
-        {/* → Next */}
-        <button
-          type="button"
-          onClick={() => onJump(nextIdx)}
-          aria-label="Next tool"
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-zinc-700/50 bg-zinc-800/60 text-zinc-500 transition-all duration-200 hover:border-zinc-500/80 hover:bg-zinc-700/70 hover:text-zinc-100 active:scale-90"
-        >
-          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden>
-            <path d="M4.5 2L8.5 6L4.5 10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-      </div>
-
-      {/* Segmented chapter track — replaces 11 dots */}
-      {/* Segmented chapter track — thin equal-width bars, no dots */}
-      <div className="flex items-center gap-[3px] px-4 pb-3">
-        {scenes.map((s, i) => {
-          const isActive  = i === idx;
-          const isPast    = i < idx;
-          return (
-            <button
-              key={i}
-              type="button"
-              onClick={() => onJump(i)}
-              aria-label={`Go to ${s.tool}`}
-              title={s.tool}
-              className="group flex-1 py-1"
-            >
-              <span
-                className="block h-[3px] w-full rounded-full transition-all duration-400"
-                style={{
-                  background: isActive
-                    ? `linear-gradient(90deg, ${scene.accentHex}cc, ${scene.accentHex})`
-                    : isPast
-                    ? `${scene.accentHex}35`
-                    : 'rgba(63,63,70,0.45)',
-                  boxShadow: isActive ? `0 0 6px 1px ${scene.accentHex}60` : 'none',
-                  transform: isActive ? 'scaleY(1.4)' : 'scaleY(1)',
-                  transformOrigin: 'center',
-                }}
-              />
-            </button>
-          );
-        })}
       </div>
     </div>
   );
