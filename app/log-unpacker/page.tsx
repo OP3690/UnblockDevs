@@ -41,6 +41,44 @@ export const metadata: Metadata = {
     'what is stringified json in logs',
     'Log Unpacker',
     'log unpacker tool',
+    'json log unescape online',
+    'json unescape online',
+    'json string parse online',
+    'decode escaped json',
+    'unescape json string online',
+    'json string to json object online',
+    'nested json unescaper',
+    'log beautifier online',
+    'log cleaner for ai',
+    'log sanitizer for llm',
+    'log scrubber online',
+    'pii remover from logs',
+    'redact logs for ai',
+    'redact logs for chatgpt',
+    'log privacy tool',
+    'jwt in log file',
+    'detect jwt in logs',
+    'decode base64 jwt',
+    'epoch to datetime converter',
+    'unix timestamp to date online',
+    'unix epoch converter logs',
+    'millisecond epoch converter',
+    'file path scrubber',
+    'file path sanitizer logs',
+    'windows path sanitizer',
+    'remove username from log',
+    'log file pii removal',
+    'stringified json multiple levels',
+    'double escaped json',
+    'triple escaped json',
+    'unescape json string',
+    'json pretty print from logs',
+    'decode production logs',
+    'log cleaner tool',
+    'log sanitizer free',
+    'log pii scrubber',
+    'json log decoder',
+    'epoch timestamp converter logs',
   ],
   openGraph: {
     title: 'Log Unpacker — Unescape JSON, Decode JWTs, Epoch Timestamps & Sanitize for AI | UnblockDevs',
@@ -128,6 +166,62 @@ const faqSchema = {
         text: 'No. Everything runs in your browser. No network requests, no storage, no telemetry. Safe for sensitive production logs.',
       },
     },
+    {
+      '@type': 'Question' as const,
+      name: 'What is stringified JSON in logs?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Stringified JSON occurs when a JSON object is serialized to a string and embedded inside another JSON field — appearing with escaped quotes (\\") and backslashes. This happens when logging libraries serialize inner objects as strings, when HTTP bodies are double-encoded, or when a JSON payload is stored as a string value. Log Unpacker recursively unescapes these strings even when nested multiple levels deep.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I unescape doubly or triply escaped JSON?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Log Unpacker applies recursive unescaping — it detects escaped JSON strings and unescapes them, then checks if the result is still an escaped JSON string and unescapes again, until the innermost value is reached. Paste your multi-level escaped log output and the tool handles 2, 3, or 4 levels of nesting automatically.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I remove PII from logs before sharing with AI?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Enable the "Mask PII" and "Scrub Paths" options before copying the output. The tool redacts JWT claim fields (sub, name, email), replaces Windows/Unix file paths with sanitized versions, and masks common identifier patterns. The resulting output is safe to paste into ChatGPT, Claude, or other AI assistants for debugging help.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I convert a Unix timestamp to a readable date?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Log Unpacker automatically detects 10-digit Unix timestamps (seconds since epoch) and 13-digit timestamps (milliseconds) in your log output and converts them to human-readable ISO 8601 date strings inline. You do not need to identify them manually — the conversion happens as part of the unpacking process.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What is a JWT token in log files?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'A JWT (JSON Web Token) is a Base64URL-encoded token with three parts separated by dots: header.payload.signature. When auth tokens appear in log lines (from Authorization headers, request body logging, or debug output), they look like opaque strings. Log Unpacker detects these patterns and decodes the header and payload to show the claims — without validating the signature.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I sanitize logs for an LLM or AI assistant?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Before pasting logs into ChatGPT, Claude, Gemini, or any AI assistant: enable "Mask PII" to redact JWT identity claims, enable "Scrub Paths" to remove file system paths containing usernames, and review the output for any remaining sensitive data (API keys, database passwords, internal hostnames). Log Unpacker produces an AI-ready, readable version of your logs in one step.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I convert multiple Unix timestamps in a log file at once?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Log Unpacker automatically detects and converts all Unix timestamps found in a pasted log — both seconds-precision (10-digit epoch) and milliseconds-precision (13-digit epoch) — replacing them inline with ISO 8601 UTC strings. Paste your full log block and the tool processes every timestamp in one pass, so you do not need to convert timestamps one at a time.',
+      },
+    },
   ],
 };
 
@@ -212,6 +306,34 @@ export default function LogUnpackerPage() {
             {
               q: 'Does Log Unpacker send my logs to a server?',
               a: 'No. Everything runs in your browser. No network requests, no storage, no telemetry. Safe for sensitive production logs.',
+            },
+            {
+              q: 'What is stringified JSON in logs?',
+              a: <>Stringified JSON is a JSON object serialized into a string — with escaped quotes (<C>{`\\"`}</C>) — embedded inside another JSON field. It happens when logging libraries serialize inner objects as strings. Log Unpacker recursively unescapes these even multiple levels deep.</>,
+            },
+            {
+              q: 'How do I unescape doubly or triply escaped JSON?',
+              a: 'Log Unpacker applies recursive unescaping — it detects escaped JSON, unescapes it, checks if the result is still escaped, and repeats until the innermost value is reached. Handles 2, 3, or 4 levels of nesting automatically.',
+            },
+            {
+              q: 'How do I remove PII from logs before sharing with AI?',
+              a: 'Enable "Mask PII" and "Scrub Paths" options before copying output. The tool redacts JWT identity claims (sub, name, email), sanitizes file paths, and masks common PII patterns — safe to paste into ChatGPT or any AI assistant.',
+            },
+            {
+              q: 'How do I convert a Unix timestamp to a readable date?',
+              a: 'Log Unpacker automatically detects 10-digit (seconds) and 13-digit (milliseconds) Unix timestamps and converts them to ISO 8601 date strings inline. No manual identification needed — conversion happens during unpacking.',
+            },
+            {
+              q: 'What is a JWT token in log files?',
+              a: 'A JWT is a Base64URL-encoded token with three dot-separated parts: header.payload.signature. Log Unpacker detects JWT patterns in log lines and decodes the header and payload to show the claims inline — without validating the signature.',
+            },
+            {
+              q: 'How do I sanitize logs for an LLM or AI assistant?',
+              a: 'Enable Mask PII to redact JWT identity claims, enable Scrub Paths to remove file system paths with usernames, then review the output for remaining sensitive data (API keys, passwords). Log Unpacker produces AI-ready output in one step.',
+            },
+            {
+              q: 'How do I convert multiple Unix timestamps in a log file at once?',
+              a: <>Log Unpacker automatically detects and converts all Unix timestamps in a pasted log — both 10-digit (seconds) and 13-digit (milliseconds) epoch values — replacing them inline with ISO 8601 UTC strings. Paste your full log block and every timestamp is converted in one pass.</>,
             },
           ]} />
         </SEOSection>

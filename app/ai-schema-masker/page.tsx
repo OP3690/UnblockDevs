@@ -47,6 +47,40 @@ export const metadata: Metadata = {
     'soc 2 data masking',
     'pci dss compliant api testing',
     'ccpa compliant tools',
+    'hide schema from ai',
+    'mask table names ai',
+    'anonymize database schema',
+    'schema privacy chatgpt',
+    'schema masker tool',
+    'sql schema anonymizer',
+    'database schema obfuscator',
+    'hide column names chatgpt',
+    'mask schema gpt4',
+    'database privacy ai',
+    'schema before chatgpt',
+    'safe chatgpt sql',
+    'mask database schema online',
+    'anonymize sql schema free',
+    'schema alias generator',
+    'hide sensitive schema',
+    'protect ip database',
+    'schema nda compliance',
+    'database schema security',
+    'mask foreign keys',
+    'table name anonymizer',
+    'column alias generator',
+    'schema mapping file',
+    'schema restore original',
+    'schema round trip',
+    'mask schema openai',
+    'mask schema claude',
+    'mask schema gemini',
+    'ai coding assistant privacy',
+    'cursor ai privacy',
+    'github copilot privacy',
+    'schema masker free',
+    'schema masker browser',
+    'schema privacy tool developer',
   ],
   openGraph: {
     title: "AI SQL Schema Masker — Hide Table & Column Names Before ChatGPT | UnblockDevs",
@@ -170,6 +204,70 @@ const faqSchema = {
         text: 'Yes. The AI Schema Masker runs entirely in your browser—no SQL or schema is sent to any server. That makes it suitable for teams under GDPR, HIPAA, or PCI-DSS who need to use AI for SQL without exposing real identifiers or PII.',
       },
     },
+    {
+      '@type': 'Question' as const,
+      name: 'Why mask my schema before using AI?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'When you paste raw SQL into ChatGPT, the AI provider sees your real table and column names which can reveal your data model, business domain, and naming conventions. Masking replaces identifiers with anonymous tokens so the AI can still help with query logic without seeing your real schema.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How does the schema masker work?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'The masker parses your SQL or schema definition and replaces table names with T_001, T_002 etc. and column names with C_001, C_002 etc. using deterministic mapping — the same name always gets the same token. You send the masked SQL to AI, then use the mapping to restore original names in the AI response.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'Can I use masked schemas with GitHub Copilot?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Yes. Copy the masked SQL and paste it into your Copilot chat or inline prompt. Copilot will work with the placeholder names and generate SQL using T_001, C_001 etc. Paste the generated SQL back into the Restore section to swap all placeholders back to your real identifiers.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I restore original names after AI generates SQL?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Paste the AI-generated SQL (which uses placeholder names like T_001, C_001) into the Restore section. The tool applies the saved mapping and replaces every placeholder with its original table or column name. Download the mapping file first if working across sessions.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'Does it support stored procedures?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'The masker works on the SQL text level, so it can mask table and column references inside stored procedure bodies. However, procedure names and parameter names are also treated as identifiers and can be masked. Test on a small procedure first to verify the output before masking production code.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'Is my schema data sent to any server?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'No. All processing happens in your browser using JavaScript. Your SQL, schema, and mapping data never leave your device. You can verify this by opening browser DevTools and checking network requests — no outbound requests are made when you click Mask.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What is schema IP?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Schema IP (Intellectual Property) refers to the proprietary database design that reflects your business logic, naming conventions, and data relationships. Exposing your schema to AI providers reveals your architecture to a third party. Masking protects this IP while still allowing AI assistance with SQL logic.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'Can I mask multiple schemas at once?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Yes. Paste SQL that references tables from multiple schemas in a single session. The masker maintains a single consistent mapping across all tables in the input, so cross-schema JOINs and references are masked consistently and can be restored from the same mapping file.',
+      },
+    },
   ],
 };
 
@@ -271,6 +369,38 @@ export default function AiSchemaMaskerPage() {
             {
               q: 'Can teams share masking mappings?',
               a: 'Yes. Download the mapping as a JSON file and share it with teammates. Anyone with the file can restore AI-generated SQL to the real identifier names, enabling team workflows where one person masks, one uses AI, and another restores.',
+            },
+            {
+              q: 'Why mask my schema before using AI?',
+              a: 'Pasting raw SQL into ChatGPT exposes your real table and column names to the AI provider. Masking replaces identifiers with anonymous tokens so the AI helps with query logic without seeing your real schema or business domain.',
+            },
+            {
+              q: 'How does the schema masker work?',
+              a: 'The masker replaces table names with T_001, T_002 and column names with C_001, C_002 using deterministic mapping. Send the masked SQL to AI, then use the mapping to restore original names in the AI response.',
+            },
+            {
+              q: 'Can I use masked schemas with GitHub Copilot?',
+              a: 'Yes. Paste masked SQL into your Copilot prompt. Copilot generates SQL using placeholder names. Paste the result into the Restore section to swap all placeholders back to your real identifiers.',
+            },
+            {
+              q: 'How do I restore original names after AI generates SQL?',
+              a: 'Paste the AI-generated SQL into the Restore section. The tool applies the saved mapping and replaces every T_001, C_001 placeholder with the original table or column name.',
+            },
+            {
+              q: 'Does it support stored procedures?',
+              a: 'The masker works at the SQL text level and can mask table and column references inside stored procedure bodies. Test on a small procedure first to verify output before masking production code.',
+            },
+            {
+              q: 'Is my schema data sent to any server?',
+              a: 'No. All processing happens in your browser. Your SQL, schema, and mapping never leave your device. You can verify by checking network requests in browser DevTools — no outbound requests are made.',
+            },
+            {
+              q: 'What is schema IP?',
+              a: 'Schema IP (Intellectual Property) is your proprietary database design that reveals your business logic and naming conventions. Masking protects this IP while still allowing AI assistance with SQL query logic.',
+            },
+            {
+              q: 'Can I mask multiple schemas at once?',
+              a: 'Yes. Paste SQL referencing tables from multiple schemas. The masker maintains a consistent mapping across all tables, so cross-schema JOINs are masked consistently and can be restored from the same mapping file.',
             },
           ]} />
         </SEOSection>

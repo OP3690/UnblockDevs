@@ -83,6 +83,7 @@ export const metadata: Metadata = {
     'generate curl from network request',
     'api request replay',
     'network request replay tool',
+    'har file curl converter online',
   ],
   openGraph: {
     title: 'HAR to cURL Converter — All Browser Requests, Free & Private | UnblockDevs',
@@ -241,6 +242,30 @@ const faqSchema = {
       acceptedAnswer: {
         '@type': 'Answer',
         text: 'Enable the "Mask Secrets" option before converting. The tool automatically replaces values in Authorization headers, Cookie headers, and common API key header names (X-Api-Key, X-Auth-Token, etc.) with placeholder text like [MASKED]. This lets you safely share cURL commands without exposing live credentials.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I export a HAR file from Safari?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'In Safari, first enable the Develop menu (Safari → Settings → Advanced → "Show features for web developers"). Open the Web Inspector with Cmd+Option+I. Go to the Network tab and record your requests. Click the Export button (down arrow icon) in the toolbar to save the .har file, then upload it to this converter.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I generate a bulk cURL shell script from a HAR file?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'After converting your HAR file, click the "Export Shell Script" or "Download All as Script" button. This generates a .sh file containing all cURL commands in sequence — one per line — with proper escaping. You can run the script directly in your terminal or use it as a starting point for automated API testing in CI pipelines.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Can I filter HAR requests by URL or HTTP method?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. Use the filter bar to narrow the converted requests by URL pattern, HTTP method (GET, POST, PUT, DELETE), or HTTP status code. This is useful when a HAR file contains hundreds of requests but you only need the API calls (filter by /api/) or only the failed requests (filter by 4xx or 5xx status codes).',
       },
     },
   ],
@@ -527,6 +552,18 @@ export default function HarToCurl() {
             {
               q: 'What can I do with cURL commands extracted from a HAR?',
               a: 'You can replay requests in the terminal, share reproducible bug reports, run them in CI/CD pipelines, use them in Postman or k6, reverse engineer APIs, or convert them to Python or Go scripts for automation.',
+            },
+            {
+              q: 'How do I export a HAR file from Safari?',
+              a: 'Enable the Develop menu (Safari → Settings → Advanced → "Show features for web developers"). Open Web Inspector (Cmd+Option+I), go to the Network tab, record requests, then click the Export button (down arrow icon) to save the .har file.',
+            },
+            {
+              q: 'How do I generate a bulk cURL shell script from a HAR file?',
+              a: 'After converting your HAR, click "Export Shell Script" or "Download All as Script". This generates a .sh file with all cURL commands in sequence, properly escaped — ready to run in your terminal or use in a CI pipeline.',
+            },
+            {
+              q: 'Can I filter HAR requests by URL or HTTP method?',
+              a: 'Yes. Use the filter bar to narrow results by URL pattern, HTTP method (GET, POST, etc.), or status code. Useful for a HAR with hundreds of requests when you only need the API calls (filter by /api/) or failed requests (filter by 4xx/5xx).',
             },
           ]} />
         </SEOSection>

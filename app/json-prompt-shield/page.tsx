@@ -43,6 +43,42 @@ export const metadata: Metadata = {
     'soc 2 data masking',
     'pci dss chatgpt policy',
     'ccpa data masking',
+    'json privacy ai',
+    'mask json chatgpt',
+    'json anonymizer online',
+    'protect json ai',
+    'json key masker',
+    'json value masker',
+    'json redaction tool',
+    'anonymize json fields',
+    'json pii masker',
+    'json sensitive data',
+    'mask json api response',
+    'json masker free',
+    'json data privacy',
+    'json compliance tool',
+    'gdpr json masker',
+    'hipaa json redaction',
+    'mask json field names',
+    'mask json string values',
+    'mask json nested',
+    'json privacy online',
+    'json secret detector',
+    'json key anonymizer',
+    'json masker browser',
+    'json data scrubber',
+    'json sanitizer online',
+    'mask json payload',
+    'json payload privacy',
+    'json schema privacy',
+    'remove pii json',
+    'json anonymization',
+    'json de-identification',
+    'mask json emails',
+    'mask json phone numbers',
+    'mask json credit card',
+    'json masker no signup',
+    'json redact tool free',
   ],
   openGraph: {
     title: 'JSON Prompt Shield — Mask JSON Keys & Values Before ChatGPT | UnblockDevs',
@@ -152,6 +188,70 @@ const faqSchema = {
         text: 'Yes. Completely free, no signup, runs entirely in your browser. Nothing is sent to any server.',
       },
     },
+    {
+      '@type': 'Question' as const,
+      name: 'Can it detect PII automatically?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'The tool masks all string values and keys by default, which inherently protects any PII in the JSON payload. For targeted PII detection (email addresses, phone numbers, credit card numbers in string values), enable the string masking option to replace all string values with S_00001 placeholders.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'Does it work with deeply nested JSON?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Yes. The masker recursively processes all levels of JSON nesting. Objects within arrays, arrays within objects, and multiple levels of nesting are all fully traversed. Every key and string value at any depth is masked with a consistent placeholder.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I mask only specific JSON fields?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'The current tool masks all keys or all string values depending on your toggle settings. For field-specific masking, you can manually edit the JSON to replace only the sensitive fields before pasting, or mask the full payload and use the mapping to selectively restore the fields that are not sensitive.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'Can I use it for GDPR compliance?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'JSON Prompt Shield helps reduce GDPR risk by preventing personal data from being sent to AI providers. Masking JSON before pasting into ChatGPT means your personal data fields are represented as anonymous placeholders. Consult your Data Protection Officer for full compliance requirements.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What is the difference between redaction and masking?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Redaction permanently removes or replaces data with a fixed marker like [REDACTED], with no way to recover the original. Masking (as used here) replaces data with a reversible placeholder using a mapping table, so the original can be restored. Use masking when you need to share JSON with AI and restore the response.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'Is the JSON sent to any server?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'No. All masking and restoring happens in your browser using JavaScript. Nothing is uploaded or sent to any external server. You can confirm this by disabling your internet connection before masking — the tool works completely offline.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'Can it mask email addresses in JSON?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Yes. Email addresses stored as string values in JSON are masked when you enable string value masking. The email becomes S_00001, S_00002 etc. in the masked output. The original email is stored in the mapping for later restoration after the AI responds.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What is JSON de-identification?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'JSON de-identification is the process of removing or transforming information in a JSON document so it cannot be linked back to a specific individual. This is required under HIPAA for health data and GDPR for personal data. JSON Prompt Shield performs reversible de-identification by replacing values with anonymous placeholders.',
+      },
+    },
   ],
 };
 
@@ -243,6 +343,38 @@ export default function JsonPromptShieldPage() {
             {
               q: 'Does this work for HIPAA or PCI DSS compliance?',
               a: 'JSON Prompt Shield is a practical tool for reducing risk, but not a certified HIPAA or PCI DSS compliance solution. Consult your compliance officer before using AI tools with regulated data.',
+            },
+            {
+              q: 'Can it detect PII automatically?',
+              a: 'The tool masks all string values by default, inherently protecting any PII. Enable string masking to replace all string values with S_00001 placeholders regardless of content type.',
+            },
+            {
+              q: 'Does it work with deeply nested JSON?',
+              a: 'Yes. The masker recursively processes all levels of JSON nesting. Objects within arrays, arrays within objects, and deep nesting are all fully traversed and masked.',
+            },
+            {
+              q: 'How do I mask only specific JSON fields?',
+              a: 'Mask the full payload and use the mapping to selectively restore the fields that are not sensitive, or manually edit the JSON before pasting to remove only the specific sensitive fields.',
+            },
+            {
+              q: 'Can I use it for GDPR compliance?',
+              a: 'JSON Prompt Shield helps reduce GDPR risk by masking personal data before sending to AI providers. Consult your Data Protection Officer for full compliance requirements.',
+            },
+            {
+              q: 'What is the difference between redaction and masking?',
+              a: 'Redaction permanently removes data with no recovery option (e.g. [REDACTED]). Masking replaces data with a reversible placeholder using a mapping table so the original can be restored after AI responds.',
+            },
+            {
+              q: 'Is the JSON sent to any server?',
+              a: 'No. All masking runs in your browser. Nothing is uploaded. You can confirm by disabling your internet before masking — the tool works completely offline.',
+            },
+            {
+              q: 'Can it mask email addresses in JSON?',
+              a: 'Yes. Email addresses stored as string values are masked with S_00001 placeholders when string masking is enabled. The original email is stored in the mapping for later restoration.',
+            },
+            {
+              q: 'What is JSON de-identification?',
+              a: 'JSON de-identification transforms data so it cannot be linked to a specific individual — required under HIPAA and GDPR. JSON Prompt Shield performs reversible de-identification with anonymous placeholders and a mapping for restoration.',
             },
           ]} />
         </SEOSection>

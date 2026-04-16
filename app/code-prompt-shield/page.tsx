@@ -47,6 +47,44 @@ export const metadata: Metadata = {
     'pci compliant developer tools',
     'mask credit card data before ai',
     'ccpa compliance developer',
+    'protect code from ai leaks',
+    'mask code before chatgpt',
+    'anonymize code ai',
+    'code privacy ai tools',
+    'code secret masker',
+    'mask api keys code',
+    'mask passwords code',
+    'mask tokens code',
+    'hide credentials code',
+    'sanitize code before ai',
+    'code before cursor ai',
+    'code before github copilot',
+    'mask environment variables code',
+    'remove secrets from code',
+    'code ai privacy tool',
+    'safe code ai assistant',
+    'code privacy compliance',
+    'soc2 code ai',
+    'gdpr code ai',
+    'mask variable names',
+    'mask function names',
+    'code anonymizer online',
+    'code sanitizer free',
+    'code scrubber tool',
+    'mask hardcoded secrets',
+    'mask jwt code',
+    'mask database url',
+    'mask aws keys',
+    'remove api key from code',
+    'code ai helper safe',
+    'code sharing privacy',
+    'code secret detection',
+    'secret scanner code',
+    'gitleaks alternative',
+    'trufflehog alternative',
+    'detect secrets code',
+    'pre-commit secret scan',
+    'code prompt shield free',
   ],
   openGraph: {
     title: 'Code Prompt Shield — Mask API Keys & Secrets Before ChatGPT | UnblockDevs',
@@ -143,6 +181,70 @@ const faqSchema = {
       acceptedAnswer: {
         '@type': 'Answer' as const,
         text: '18 languages: JavaScript, TypeScript, Python, Java, Go, SQL, JSON, C#, PHP, Rust, Ruby, Swift, Kotlin, Bash/Shell, YAML, TOML, C/C++, and XML/HTML.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What types of secrets does it detect?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'It detects API keys (api_key=, secret=, token=), JWT tokens (eyJ...), AWS access key prefixes (AKIA...), database connection strings (postgres://, mysql://, mongodb://), RSA/EC private key headers, OAuth tokens, webhook secrets, IP addresses, email addresses, and phone numbers.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'Will code still work after masking?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'The masked code is not meant to be executed — it is for sharing with AI only. When you restore the AI response using the mapping, the real identifiers are substituted back, and the restored code will work correctly. The masking step is a one-way transformation for AI communication only.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I use masked code with an AI?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Copy the masked code and paste it into ChatGPT, Claude, or Copilot with your question. The AI will respond using the same placeholder names (SECRET_XXXX, VAR_XXXX). Paste the AI response into the Restore section along with the mapping to get back your real identifier names.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What programming languages are supported?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Code Prompt Shield supports 18 languages: JavaScript, TypeScript, Python, Java, Go, SQL, JSON, C#, PHP, Rust, Ruby, Swift, Kotlin, Bash/Shell, YAML, TOML, C/C++, and XML/HTML. Select the language for accurate identifier and secret detection.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'Does it store my code?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'No. All processing runs entirely in your browser. Your code, secrets, and the masking mapping never leave your device. No data is sent to any server. You can verify by checking DevTools Network tab — no requests are made when you mask.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How is it different from GitLeaks?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'GitLeaks scans Git repositories and history for committed secrets and raises alerts. Code Prompt Shield is a browser-based masking tool for real-time use before sharing code with AI. They are complementary: use GitLeaks in CI/CD to prevent secret commits; use Code Prompt Shield before pasting code into AI tools.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'Can it mask API keys in strings?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Yes. The secret detector scans string literals in your code for patterns matching API keys, tokens, and credentials. String values like "sk-proj-XXXX" or "AKIA..." are detected and masked with a SECRET_XXXX placeholder. The original string value is stored in the mapping for later restoration.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What is prompt injection?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Prompt injection is an attack where malicious content in your input attempts to hijack an AI\'s instructions. When you share code with AI, attackers could embed hidden instructions in comments or strings to manipulate the AI\'s response. Code Prompt Shield\'s comment stripping and content masking reduces this risk.',
       },
     },
   ],
@@ -277,6 +379,38 @@ export default function CodePromptShieldPage() {
             {
               q: 'How do I compare original and masked code?',
               a: 'After masking, use the Original / Masked tab in the output panel to toggle between the two views. This lets you confirm which identifiers were replaced before you send the masked version to AI.',
+            },
+            {
+              q: 'What types of secrets does it detect?',
+              a: 'It detects API keys, JWT tokens (eyJ...), AWS keys (AKIA...), database connection strings, RSA/EC private key headers, OAuth tokens, webhook secrets, IP addresses, email addresses, and phone numbers.',
+            },
+            {
+              q: 'Will code still work after masking?',
+              a: 'The masked code is for sharing with AI only, not for execution. When you restore the AI response using the mapping, real identifiers are substituted back and the code will work correctly.',
+            },
+            {
+              q: 'How do I use masked code with an AI?',
+              a: 'Copy the masked code and paste it into ChatGPT, Claude, or Copilot. The AI responds using placeholder names. Paste the AI response into the Restore section with the mapping to get back your real identifiers.',
+            },
+            {
+              q: 'What programming languages are supported?',
+              a: '18 languages: JavaScript, TypeScript, Python, Java, Go, SQL, JSON, C#, PHP, Rust, Ruby, Swift, Kotlin, Bash/Shell, YAML, TOML, C/C++, and XML/HTML.',
+            },
+            {
+              q: 'Does it store my code?',
+              a: 'No. All processing runs in your browser. Your code, secrets, and mapping never leave your device. No data is sent to any server — verify by checking DevTools Network tab.',
+            },
+            {
+              q: 'How is it different from GitLeaks?',
+              a: 'GitLeaks scans Git repositories for committed secrets. Code Prompt Shield is a browser-based masking tool for use before sharing code with AI. They are complementary tools for different stages.',
+            },
+            {
+              q: 'Can it mask API keys in strings?',
+              a: 'Yes. The secret detector scans string literals for patterns matching API keys and tokens. String values like "sk-proj-XXXX" or "AKIA..." are detected and masked with a SECRET_XXXX placeholder.',
+            },
+            {
+              q: 'What is prompt injection?',
+              a: 'Prompt injection is an attack where malicious content attempts to hijack an AI\'s instructions. Code Prompt Shield\'s comment stripping and masking reduces this risk when sharing code with AI.',
             },
           ]} />
         </SEOSection>

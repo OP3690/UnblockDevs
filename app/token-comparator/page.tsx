@@ -49,6 +49,45 @@ export const metadata: Metadata = {
     'compare jwt',
     'compare jwt token',
     'jwt token compare',
+    'token count comparison',
+    'llm token calculator',
+    'ai token cost',
+    'compare token counts',
+    'token usage optimizer',
+    'reduce tokens ai',
+    'token efficiency',
+    'ai context window',
+    'token limit checker',
+    'gpt-4 token limit',
+    'claude token limit',
+    'gemini token limit',
+    'llama token limit',
+    'gpt token counter',
+    'openai token usage',
+    'claude context length',
+    'token to word ratio',
+    'tokenizer online',
+    'tiktoken online',
+    'cl100k tokenizer',
+    'openai tiktoken',
+    'bpe tokenizer',
+    'wordpiece tokenizer',
+    'token budget ai',
+    'reduce prompt size',
+    'compress prompt',
+    'prompt optimization tokens',
+    'json token count',
+    'code token count',
+    'token pricing openai',
+    'token cost calculator',
+    'gpt-4 cost per token',
+    'claude cost per token',
+    'ai api cost estimate',
+    'reduce api cost ai',
+    'token efficient prompts',
+    'system prompt tokens',
+    'rag token count',
+    'llm token tool free',
   ],
   openGraph: {
     title: 'JWT Debugger & Token Comparator — Decode, Compare, Security Audit & Expiry Check | UnblockDevs',
@@ -158,6 +197,54 @@ const faqSchema = {
       acceptedAnswer: {
         '@type': 'Answer' as const,
         text: 'The tool compares character by character with green for matches and red for mismatches, plus totals and match percentage—all processed instantly in your browser.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I reduce token count in prompts?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'To reduce token count: remove redundant context and verbose phrasing, use concise bullet points instead of full sentences, trim system prompts, remove large code comments, and use abbreviations for repeated terms. Token count is roughly 1 token per 3-4 characters for English text.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What is the context window limit for LLMs?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Context window limits vary by model: GPT-4o supports 128K tokens, Claude 3.5 Sonnet supports 200K tokens, Gemini 1.5 Pro supports 1M tokens, and LLaMA 3 supports 128K tokens. Exceeding the limit causes earlier context to be dropped or the request to fail.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How does tokenization differ between GPT-4 and Claude?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'GPT-4 uses the cl100k_base tokenizer (tiktoken) with 100,000+ token vocabulary using Byte Pair Encoding (BPE). Claude uses Anthropic\'s own tokenizer. For the same English text, token counts are similar (within 5-15%), but code, non-English text, and special characters can differ significantly.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I estimate AI API call cost?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Cost = (input tokens × input price per 1M tokens + output tokens × output price per 1M tokens) / 1,000,000. For GPT-4o in 2025: ~$2.50 per 1M input tokens, ~$10 per 1M output tokens. For Claude 3.5 Sonnet: ~$3 per 1M input, ~$15 per 1M output. Longer prompts and responses cost more.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What is BPE tokenization?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Byte Pair Encoding (BPE) is a subword tokenization algorithm used by GPT models. It starts with individual characters and iteratively merges the most frequent pairs to build a vocabulary of common subwords and words. Common English words are typically a single token; rare words and code identifiers are split into multiple tokens.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I manage token limits in a long conversation?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'In long conversations, the total context (system prompt + all messages) must fit within the model\'s limit. Strategies include: summarizing previous context into a compact summary, using RAG to retrieve only relevant chunks, truncating old messages, and compressing system prompts. Monitor token count with each API call.',
       },
     },
   ],
@@ -376,6 +463,30 @@ export default function TokenComparatorLanding() {
               {
                 q: 'Are my tokens stored or sent to a server?',
                 a: 'No. Token Comparator is 100% client-side. All decoding, comparison, and analysis happens in your browser. Your tokens never leave your device and are not stored or logged anywhere.',
+              },
+              {
+                q: 'How do I reduce token count in prompts?',
+                a: 'Remove redundant context, use concise bullet points, trim system prompts, remove large code comments, and abbreviate repeated terms. Token count is roughly 1 token per 3-4 characters for English text.',
+              },
+              {
+                q: 'What is the context window limit for LLMs?',
+                a: 'GPT-4o: 128K tokens. Claude 3.5 Sonnet: 200K tokens. Gemini 1.5 Pro: 1M tokens. LLaMA 3: 128K tokens. Exceeding the limit causes earlier context to be dropped or the request to fail.',
+              },
+              {
+                q: 'How does tokenization differ between GPT-4 and Claude?',
+                a: 'GPT-4 uses the cl100k_base tokenizer (tiktoken) with BPE. Claude uses Anthropic\'s own tokenizer. For the same English text, token counts are within 5-15%, but code and special characters can differ significantly.',
+              },
+              {
+                q: 'How do I estimate AI API call cost?',
+                a: 'Cost = (input tokens × input price + output tokens × output price) / 1M. For GPT-4o: ~$2.50 per 1M input, ~$10 per 1M output. For Claude 3.5 Sonnet: ~$3 per 1M input, ~$15 per 1M output.',
+              },
+              {
+                q: 'What is BPE tokenization?',
+                a: 'Byte Pair Encoding (BPE) is a subword tokenization algorithm used by GPT models. It iteratively merges frequent character pairs to build common subwords. Common English words are 1 token; rare words are split into multiple tokens.',
+              },
+              {
+                q: 'How do I manage token limits in a long conversation?',
+                a: 'Strategies include: summarizing previous context into a compact summary, using RAG to retrieve only relevant chunks, truncating old messages, and compressing system prompts. Monitor total token count with each API call.',
               },
             ]}
           />

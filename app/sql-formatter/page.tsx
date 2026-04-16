@@ -32,6 +32,53 @@ export const metadata: Metadata = {
     'sql insert generator',
     'sql in clause online tool',
     'sql in clause builder',
+    'format sql query',
+    'sql pretty printer',
+    'sql indenter',
+    'sql code formatter',
+    'sql formatter free',
+    'mysql formatter',
+    'postgresql formatter',
+    'sqlite formatter',
+    'mssql formatter',
+    'bigquery sql formatter',
+    'sql formatting rules',
+    'format sql online no signup',
+    'sql query formatter',
+    'sql cte formatter',
+    'sql ddl formatter',
+    'sql minifier',
+    'compact sql',
+    'sql prettify',
+    'sql lint',
+    'sql style guide',
+    'sql best practices formatting',
+    'uppercase sql keywords',
+    'sql indentation',
+    'sql formatter vscode',
+    'sql formatter plugin',
+    'sqlfluff',
+    'sql-formatter npm',
+    'prettier sql',
+    'sql formatter python',
+    'format sql programmatically',
+    'sql code review',
+    'sql readability',
+    'sql formatter free online',
+    'sql beautifier online',
+    'sql minifier online',
+    'sql indenter online',
+    'format mysql query online',
+    'format postgresql query online',
+    'format t-sql online',
+    'sql query cleaner online',
+    'sql format copy paste',
+    'sql statement formatter',
+    'pretty print sql query',
+    'sql code formatter tool',
+    'sql format no upload',
+    'sql formatter browser',
+    'sql format api',
   ],
   openGraph: {
     title: 'SQL IN Clause Generator — Convert Any List to SQL IN | UnblockDevs',
@@ -126,6 +173,70 @@ const faqSchema = {
       acceptedAnswer: {
         '@type': 'Answer',
         text: 'Yes. Use the Chunk Size option (e.g., 1000) to split a large list into multiple IN clauses of that size. This avoids database engine limits on IN clause size — MySQL recommends keeping IN lists under 1000 values per query.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is SQL formatting?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'SQL formatting is the process of restructuring SQL code with consistent indentation, line breaks, and keyword casing to make it more readable and maintainable. Properly formatted SQL is easier to review, debug, and collaborate on. Most style guides recommend uppercasing keywords like SELECT, FROM, WHERE, and JOIN.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Should SQL keywords be uppercase or lowercase?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'By convention, SQL keywords (SELECT, FROM, WHERE, JOIN, GROUP BY, etc.) are written in UPPERCASE and user-defined identifiers (table and column names) are written in lowercase or snake_case. This distinction makes SQL queries easier to scan. Most style guides and linting tools like SQLFluff enforce this convention.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I format SQL with CTEs?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Common Table Expressions (CTEs) should each be formatted on their own indented block. The WITH keyword starts on a new line, each CTE definition is followed by a comma, and the final SELECT query references CTE names. A good SQL formatter automatically indents CTE bodies and aligns the AS keyword for readability.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I format SQL for code review?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Format SQL consistently before committing it to version control. Use consistent indentation (2 or 4 spaces), uppercase keywords, one clause per line (SELECT, FROM, WHERE, ORDER BY each on their own line), and trailing commas for column lists. This produces clean, reviewable diffs and makes SQL changes easy to understand.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is SQLFluff?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'SQLFluff is an open-source SQL linter and auto-formatter written in Python. It supports multiple SQL dialects (BigQuery, PostgreSQL, MySQL, Snowflake, etc.) and can be integrated into CI/CD pipelines to enforce SQL style rules automatically. Run sqlfluff fix to auto-format SQL files.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I format SQL in VS Code?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Install the "SQL Formatter" or "SQLTools" extension from the VS Code marketplace. Right-click in a .sql file and select "Format Document", or configure it as the default formatter for SQL files. You can also use the Prettier plugin with the prettier-plugin-sql package for automatic SQL formatting on save.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Does formatting SQL change how it runs?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'No. SQL formatting only affects whitespace, indentation, and keyword casing — none of which affect query execution. The SQL engine ignores extra spaces and newlines, and keywords are case-insensitive in all major databases. Formatted SQL executes identically to minified SQL.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I minify SQL to one line?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'SQL minification removes all unnecessary whitespace and comments to produce a single-line query string. This is useful for embedding SQL in configuration files, URLs, or application code where multi-line strings are inconvenient. A SQL minifier collapses all whitespace between tokens to a single space.',
       },
     },
   ],
@@ -308,6 +419,38 @@ export default function SqlFormatterPage() {
             {
               q: 'Is my data sent to a server?',
               a: 'No. All processing runs entirely in your browser. Your IDs and data never leave your machine. Safe for production IDs, internal data, and sensitive values.',
+            },
+            {
+              q: 'What is SQL formatting?',
+              a: 'SQL formatting restructures SQL code with consistent indentation, line breaks, and keyword casing to make it more readable. Most style guides recommend uppercasing keywords like SELECT, FROM, WHERE, and JOIN.',
+            },
+            {
+              q: 'Should SQL keywords be uppercase or lowercase?',
+              a: 'By convention, SQL keywords are written in UPPERCASE and user-defined identifiers in lowercase or snake_case. Tools like SQLFluff enforce this convention automatically.',
+            },
+            {
+              q: 'How do I format SQL with CTEs?',
+              a: 'Each CTE should be formatted on its own indented block. The WITH keyword starts on a new line, each CTE is followed by a comma, and the final SELECT references CTE names.',
+            },
+            {
+              q: 'How do I format SQL for code review?',
+              a: 'Use consistent indentation, uppercase keywords, one clause per line (SELECT, FROM, WHERE, ORDER BY), and trailing commas for column lists. This produces clean diffs for review.',
+            },
+            {
+              q: 'What is SQLFluff?',
+              a: 'SQLFluff is an open-source SQL linter and auto-formatter written in Python. It supports multiple SQL dialects and integrates into CI/CD pipelines to enforce SQL style rules automatically.',
+            },
+            {
+              q: 'How do I format SQL in VS Code?',
+              a: 'Install the "SQL Formatter" or "SQLTools" extension. Right-click in a .sql file and select "Format Document". You can also use Prettier with prettier-plugin-sql for automatic formatting on save.',
+            },
+            {
+              q: 'Does formatting SQL change how it runs?',
+              a: 'No. SQL formatting only affects whitespace, indentation, and keyword casing — none of which affect query execution. Keywords are case-insensitive in all major databases.',
+            },
+            {
+              q: 'How do I minify SQL to one line?',
+              a: 'SQL minification removes all unnecessary whitespace and comments to produce a single-line query string. This is useful for embedding SQL in configuration files or application code.',
             },
           ]} />
         </SEOSection>

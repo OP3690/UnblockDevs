@@ -81,6 +81,11 @@ export const metadata: Metadata = {
     'json formatter privacy',
     'json formatter no data upload',
     'json formatter safe',
+    'json pretty print javascript',
+    'json format python',
+    'json stringify pretty print',
+    'json format api response',
+    'json indent formatter',
   ],
   openGraph: {
     title: 'JSON Formatter Online — Free, Instant, 100% Private | UnblockDevs',
@@ -234,6 +239,22 @@ const faqSchema = {
       acceptedAnswer: {
         '@type': 'Answer',
         text: 'Yes. Press Cmd+Enter on Mac or Ctrl+Enter on Windows/Linux to format instantly without clicking the button. This works from anywhere on the page while the input is focused.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I format JSON in JavaScript?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Use JSON.stringify with the space parameter: JSON.stringify(obj, null, 2) outputs JSON with 2-space indentation, and JSON.stringify(obj, null, 4) uses 4 spaces. The second argument (null) is the replacer — pass null to include all properties. To minify, use JSON.stringify(obj) with no space argument.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I format JSON in Python?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Use json.dumps with the indent parameter: json.dumps(data, indent=2) for 2-space indentation or json.dumps(data, indent=4) for 4 spaces. To write formatted JSON to a file: json.dump(data, file, indent=2). To parse a JSON string, use json.loads(json_string). To read from a file: json.load(file).',
       },
     },
   ],
@@ -401,6 +422,14 @@ export default function JsonFormatter() {
             {
               q: 'Is there a keyboard shortcut?',
               a: 'Yes. Press Cmd+Enter on Mac or Ctrl+Enter on Windows/Linux to format instantly without clicking the button.',
+            },
+            {
+              q: 'How do I format JSON in JavaScript?',
+              a: <>Use <C>JSON.stringify(obj, null, 2)</C> for 2-space indentation or <C>JSON.stringify(obj, null, 4)</C> for 4 spaces. To minify, use <C>JSON.stringify(obj)</C> with no space argument.</>,
+            },
+            {
+              q: 'How do I format JSON in Python?',
+              a: <>Use <C>json.dumps(data, indent=2)</C> for 2-space indentation. To write to a file: <C>json.dump(data, file, indent=2)</C>. To parse JSON: <C>json.loads(json_string)</C> or <C>json.load(file)</C>.</>,
             },
           ]} />
         </SEOSection>

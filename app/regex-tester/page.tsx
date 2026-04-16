@@ -34,6 +34,51 @@ export const metadata: Metadata = {
     'regex tester node.js',
     'regex tester react',
     'regex eslint rule tester',
+    'test regular expression',
+    'regex checker free',
+    'python regex tester',
+    'regex101 alternative',
+    'regexr alternative',
+    'regex flags online',
+    'regex global flag',
+    'regex multiline flag',
+    'regex case insensitive',
+    'regex named groups',
+    'regex capture groups',
+    'regex lookahead',
+    'regex lookbehind',
+    'regex non-capturing group',
+    'regex quantifiers',
+    'regex greedy lazy',
+    'regex anchors',
+    'regex character class',
+    'regex metacharacters',
+    'regex escape characters',
+    'regex for email validation',
+    'regex for url validation',
+    'regex for phone number',
+    'regex for date validation',
+    'regex for ip address',
+    'regex for password strength',
+    'regex extract text',
+    'regex replace text',
+    'regex split string',
+    'regex match first',
+    'regex test method javascript',
+    'regex exec method',
+    're.match python',
+    're.findall python',
+    're.sub python',
+    'grep regex',
+    'pcre regex',
+    'regex tutorial',
+    'regex examples',
+    'regex online debugger',
+    'regex tester free online',
+    'regular expression builder',
+    'regex match highlighter',
+    'test regex against string',
+    'regex flags online',
   ],
   openGraph: {
     title:
@@ -122,6 +167,70 @@ const faqSchema = {
       acceptedAnswer: {
         '@type': 'Answer' as const,
         text: '\\d matches any digit character — equivalent to [0-9]. Use \\d+ for one or more digits, \\d{4} for exactly 4 digits. \\D (uppercase) matches any non-digit character.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What is a regular expression?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'A regular expression (regex) is a sequence of characters that defines a search pattern. Regex patterns can match, extract, validate, or replace text. They are supported natively in JavaScript, Python, Java, Go, and most other programming languages, as well as command-line tools like grep and sed.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What is the difference between global and non-global regex flags?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Without the g (global) flag, regex.match() or regex.exec() returns only the first match. With the g flag, all matches are returned. In JavaScript, string.matchAll() requires the g flag and returns an iterator of all matches with capture group details.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I match a regex in JavaScript?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Use str.match(/pattern/g) to return all matches as an array, or regex.exec(str) inside a loop for detailed match info including index and capture groups. The regex.test(str) method returns true/false for a quick yes/no check.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I use regex in Python?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Import the re module. Use re.match() to match at the start of a string, re.search() to match anywhere, re.findall() to return all matches as a list, and re.sub() to replace matches. Compile patterns with re.compile() for repeated use.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I use named capture groups?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Named groups use the syntax (?<name>pattern) in JavaScript (ES2018+) and Python. In JavaScript, access named groups via match.groups.name. In Python, use match.group("name"). Named groups make regex more readable than numbered $1, $2 references.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What is a lookahead in regex?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'A lookahead asserts what must come after the current position without including it in the match. Positive lookahead (?=...) requires the pattern to follow; negative lookahead (?!...) requires it not to follow. For example, \\d+(?= dollars) matches a number only if followed by " dollars".',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I validate an email with regex?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'A common email regex is /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/. This validates basic email format but is intentionally simplified — full RFC 5322 compliance requires a much more complex pattern. For production validation, supplement regex with a DNS MX record lookup.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What is the difference between greedy and lazy quantifiers?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Greedy quantifiers (*, +, {n,m}) match as much text as possible. Lazy quantifiers (*?, +?, {n,m}?) match as little as possible. For example, <.+> matches the longest possible tag, while <.+?> matches each tag individually. Use lazy quantifiers when extracting delimited content.',
       },
     },
   ],
@@ -254,6 +363,38 @@ export default function RegexTesterPage() {
             {
               q: 'How do I make a regex case-insensitive?',
               a: <>Add the <C>i</C> flag. With <C>i</C>, the pattern <C>/hello/i</C> matches "Hello", "HELLO", "hElLo". Toggle it in the flags row above the pattern input.</>,
+            },
+            {
+              q: 'What is a regular expression?',
+              a: 'A regular expression (regex) is a sequence of characters that defines a search pattern. Regex patterns can match, extract, validate, or replace text. They are supported natively in JavaScript, Python, Java, Go, and most other programming languages.',
+            },
+            {
+              q: 'What is the difference between global and non-global regex flags?',
+              a: 'Without the g (global) flag, regex returns only the first match. With g, all matches are returned. In JavaScript, string.matchAll() requires the g flag and returns an iterator of all matches with capture group details.',
+            },
+            {
+              q: 'How do I match a regex in JavaScript?',
+              a: <>Use <C>str.match(/pattern/g)</C> to return all matches, or <C>regex.exec(str)</C> in a loop for match details. <C>regex.test(str)</C> returns a quick true/false.</>,
+            },
+            {
+              q: 'How do I use regex in Python?',
+              a: <>Import the <C>re</C> module. Use <C>re.findall()</C> to return all matches, <C>re.search()</C> to find anywhere, and <C>re.sub()</C> to replace matches.</>,
+            },
+            {
+              q: 'How do I use named capture groups?',
+              a: <>Named groups use <C>{'(?<name>pattern)'}</C> in JavaScript and Python. Access via <C>match.groups.name</C> in JavaScript or <C>match.group("name")</C> in Python.</>,
+            },
+            {
+              q: 'What is a lookahead in regex?',
+              a: <>Positive lookahead <C>{'(?=...)'}</C> asserts what must follow without including it in the match. Negative lookahead <C>{'(?!...)'}</C> asserts what must not follow. They do not consume characters.</>,
+            },
+            {
+              q: 'How do I validate an email with regex?',
+              a: <>A common pattern is <C>/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{'{2,}'}$/</C>. For production validation, supplement regex with a DNS MX record lookup.</>,
+            },
+            {
+              q: 'What is the difference between greedy and lazy quantifiers?',
+              a: <>Greedy quantifiers (<C>*</C>, <C>+</C>) match as much as possible. Lazy quantifiers (<C>*?</C>, <C>+?</C>) match as little as possible. Use lazy when extracting delimited content like HTML tags.</>,
             },
           ]} />
         </SEOSection>

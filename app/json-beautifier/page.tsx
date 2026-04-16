@@ -246,6 +246,22 @@ const faqSchema = {
         text: 'Yes. Press Cmd+Enter on Mac or Ctrl+Enter on Windows/Linux to instantly format and beautify your JSON without clicking the button. This works from anywhere on the page while the input is focused.',
       },
     },
+    {
+      '@type': 'Question',
+      name: 'How do I convert JSON to a SQL INSERT statement?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Paste a JSON array of objects and switch to the SQL tab. The beautifier detects the keys as column names and generates SQL INSERT statements for every object in the array — ready to paste into a database migration or seed script. Specify the table name before copying.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I auto-fix JSON with trailing commas or single quotes?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Paste your broken JSON and click the Auto-Fix button. The tool automatically removes trailing commas after the last array element or object property, replaces single quotes with double quotes, adds missing double quotes around unquoted keys, and repairs other common errors — turning invalid JSON into valid JSON without manual editing.',
+      },
+    },
   ],
 };
 
@@ -459,6 +475,14 @@ export default function JsonBeautifierPage() {
             {
               q: 'Can I minify JSON here too?',
               a: 'Yes. Click Minify to compress your JSON to a single line with no whitespace — the format used in production APIs to minimise payload size.',
+            },
+            {
+              q: 'How do I convert JSON to a SQL INSERT statement?',
+              a: 'Paste a JSON array of objects and switch to the SQL tab. Column names are inferred from the keys and INSERT statements are generated for every row — ready to paste into a database migration or seed script.',
+            },
+            {
+              q: 'How do I auto-fix JSON with trailing commas or single quotes?',
+              a: 'Click Auto-Fix. The tool removes trailing commas, replaces single quotes with double quotes, adds missing quotes around unquoted keys, and repairs other common errors — turning invalid JSON into valid JSON without manual editing.',
             },
           ]} />
         </SEOSection>

@@ -37,6 +37,48 @@ export const metadata: Metadata = {
     'generate test data jest',
     'mock data react testing library',
     'test fixtures node.js',
+    'test data generator free',
+    'generate fake data',
+    'faker data',
+    'realistic test data',
+    'sample data generator',
+    'dummy data creator',
+    'json test data',
+    'api test data',
+    'database test data',
+    'csv test data generator',
+    'test fixtures generator',
+    'seed data generator',
+    'faker.js',
+    'faker python',
+    'bogus c#',
+    'factory_boy python',
+    'laravel factory',
+    'sequelize seed',
+    'prisma seed data',
+    'generate names fake',
+    'fake emails generator',
+    'fake addresses',
+    'fake phone numbers',
+    'fake company names',
+    'random user api',
+    'generate bulk fake data',
+    '1000 fake records',
+    'bulk json generator',
+    'bulk csv generator',
+    'openapi faker',
+    'json schema faker',
+    'graphql faker',
+    'locale specific data',
+    'faker locale',
+    'international test data',
+    'test data no signup',
+    'fake data generator free',
+    'test data export csv',
+    'generate realistic user data',
+    'test data generator api',
+    'synthetic data generator',
+    'generate sample json data',
   ],
   openGraph: {
     title:
@@ -115,6 +157,70 @@ const faqSchema = {
       acceptedAnswer: {
         '@type': 'Answer' as const,
         text: 'Yes. All data is entirely synthetic — no real names, email addresses, phone numbers, or personal information are used. Because no real personal data is involved, GDPR and similar privacy regulations do not apply. It is safe to use in demos, staging environments, and public-facing prototypes.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What is test data generation?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Test data generation is the process of creating synthetic, realistic data — names, emails, addresses, UUIDs, dates — that mimics real production data without exposing actual user information. It is used in software development to seed databases, build fixtures for unit tests, populate UI prototypes, and run performance tests safely.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I generate realistic test data?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Use a test data generator like the one at unblockdevs.com/test-data-generator — select a template (users, invoices, banking, API logs), set the record count, and export as JSON or CSV. For code-based generation, libraries like Faker.js (JavaScript), Faker (Python), or Bogus (C#) let you produce locale-aware realistic data programmatically.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'Can I generate test data from a JSON schema?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Yes. The Custom Schema option accepts any valid JSON Schema and generates data matching your exact property names, types, and nested structures. Tools like json-schema-faker and OpenAPI faker also support schema-driven generation programmatically, making it easy to produce contract-compliant test payloads.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I generate bulk test data?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'The browser tool supports up to 50 records per run. For larger volumes — thousands or millions of records — use Faker.js in a Node.js script, Faker in Python, or dedicated tools like Mockaroo. You can also generate multiple batches using the browser tool and concatenate the JSON arrays or CSV rows.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I seed a database with test data?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Export your generated data as CSV and import it with your database\'s import tool (e.g., psql COPY, MySQL LOAD DATA), or export as JSON and use it with ORM seed scripts like Prisma seed, Sequelize seeders, or Laravel database factories. Most ORMs support reading a JSON file and inserting records in a seed command.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I generate locale-specific test data?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'For locale-specific data (e.g., Japanese names, German addresses, Brazilian phone formats), use Faker.js with a locale setting like `faker.locale = "de"` for German or Faker (Python) with `Faker("ja_JP")` for Japanese. The browser tool currently generates English-locale data, making it ideal for US/UK-based testing.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I export test data to CSV or Excel?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Select CSV as the output format before clicking Generate. The downloaded CSV file opens directly in Excel, Google Sheets, or any spreadsheet application. For JSON output, use an online JSON-to-CSV converter or a tool like jq to transform it before importing into Excel.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I generate test data that matches a specific regex pattern?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'In code-based test data generation, use a library like randexp.js (JavaScript) or rstr (Python) that generates random strings matching a given regular expression. For example, `new RandExp(/[A-Z]{2}[0-9]{6}/).gen()` produces strings like "AB123456". This is useful for generating realistic product codes, postal codes, serial numbers, or any field with a strict format.',
       },
     },
   ],
@@ -246,6 +352,34 @@ export default function TestDataGeneratorPage() {
             {
               q: 'Can I define my own schema?',
               a: 'Yes. Select the Custom Schema option, paste any valid JSON Schema, and the tool generates data that matches your exact property names, types, and nested structures — without writing code.',
+            },
+            {
+              q: 'What is test data generation?',
+              a: 'Test data generation is the process of creating synthetic, realistic data — names, emails, addresses, UUIDs — that mimics real production data without exposing actual user information. It is used to seed databases, build test fixtures, and populate prototypes safely.',
+            },
+            {
+              q: 'How do I generate realistic test data?',
+              a: 'Select a template (users, invoices, banking, API logs), set the record count, and export as JSON or CSV. For code-based generation, libraries like Faker.js (JavaScript), Faker (Python), or Bogus (C#) produce locale-aware realistic data programmatically.',
+            },
+            {
+              q: 'Can I generate test data from a JSON schema?',
+              a: <>Yes. The <strong>Custom Schema</strong> option accepts any valid JSON Schema and generates data matching your exact property names, types, and nested structures — without writing any code. Tools like json-schema-faker support this programmatically too.</>,
+            },
+            {
+              q: 'How do I generate bulk test data?',
+              a: 'The browser tool supports up to 50 records per run. For larger volumes, use Faker.js in Node.js, Faker in Python, or generate multiple batches here and concatenate the JSON arrays or CSV rows.',
+            },
+            {
+              q: 'How do I seed a database with test data?',
+              a: <>Export as CSV and use your database import tool (e.g., <C>psql COPY</C>, MySQL <C>LOAD DATA</C>), or use JSON with ORM seed scripts like Prisma seed, Sequelize seeders, or Laravel database factories.</>,
+            },
+            {
+              q: 'How do I generate locale-specific test data?',
+              a: <>For locale-specific data (Japanese names, German addresses), use Faker.js with <C>faker.locale = "de"</C> or Python Faker with <C>Faker("ja_JP")</C>. The browser tool currently generates English-locale data.</>,
+            },
+            {
+              q: 'How do I export test data to CSV or Excel?',
+              a: 'Select CSV as the output format before clicking Generate. The downloaded CSV file opens directly in Excel or Google Sheets. For JSON output, use a JSON-to-CSV converter before importing into a spreadsheet.',
             },
           ]} />
         </SEOSection>

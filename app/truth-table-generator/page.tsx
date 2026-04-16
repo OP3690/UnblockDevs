@@ -32,6 +32,53 @@ export const metadata: Metadata = {
     'how to simplify boolean expressions',
     'what is a karnaugh map',
     'what is the difference between SOP and POS',
+    'boolean algebra calculator',
+    'logic calculator online',
+    'propositional logic calculator',
+    'logical equivalence checker',
+    'tautology checker',
+    'boolean expression evaluator',
+    'boolean function truth table',
+    'and or not truth table',
+    'xor truth table generator',
+    'nand nor truth table',
+    'implication truth table',
+    'biconditional truth table',
+    'de morgan law calculator',
+    'boolean simplification online',
+    'logic expression solver',
+    'truth table calculator 3 variables',
+    'truth table calculator 4 variables',
+    'truth table 8 variables',
+    'digital electronics truth table',
+    'computer science boolean logic',
+    'discrete math truth table',
+    'propositional calculus solver',
+    'satisfiability checker',
+    'logic gate simulator',
+    'combinational logic truth table',
+    'sum of products calculator',
+    'product of sums calculator',
+    'canonical form boolean',
+    'boolean expression to python',
+    'boolean expression to java',
+    'logic truth table solver',
+    'boolean truth table calculator',
+    'boolean logic calculator online',
+    'truth table 2 variables',
+    'truth table 3 variables',
+    'logic gate truth table generator online',
+    'xnor truth table',
+    'nand gate truth table',
+    'nor gate truth table',
+    'and gate truth table',
+    'or gate truth table',
+    'not gate truth table',
+    'digital logic gate simulator',
+    'sop canonical form calculator',
+    'pos canonical form calculator',
+    'boolean simplifier online',
+    'boolean function simplifier',
   ],
   openGraph: {
     title:
@@ -119,6 +166,62 @@ const faqSchema = {
       acceptedAnswer: {
         '@type': 'Answer' as const,
         text: 'Up to 8 variables, producing truth tables with up to 256 rows. Most classroom problems use 2–4 variables (4–16 rows). The tool handles everything from simple 2-variable expressions to complex 8-variable digital logic circuits.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What is a truth table in digital logic?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'A truth table is a mathematical table that lists all possible input combinations for a boolean expression and their corresponding output values. For n variables, there are 2^n rows. Truth tables are fundamental in digital electronics, computer architecture, and discrete mathematics for describing and verifying the behavior of logic gates and circuits.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I check if two boolean expressions are logically equivalent?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Generate truth tables for both expressions and compare their output columns row by row. If the output values are identical for every input combination, the expressions are logically equivalent. You can also check if their XOR (A ⊕ B) produces a constant 0 — a tautology checker approach used in formal verification.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I use a truth table to simplify a boolean expression?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Generate the truth table to identify all minterms (rows where output is 1). Use the Karnaugh map view to visually group adjacent minterms into rectangles of size 1, 2, 4, or 8. Each rectangle eliminates one or more variables, producing a simplified Sum of Products (SOP) expression with fewer terms.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What is a tautology in propositional logic?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'A tautology is a boolean expression that is always true regardless of the input values — its truth table output column contains only 1s. A contradiction (or unsatisfiable formula) is always false — its output column contains only 0s. An expression that is neither is called a contingency. Generate the truth table and examine the output column to classify your expression.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What is De Morgan\'s law?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'De Morgan\'s laws state that NOT(A AND B) = (NOT A) OR (NOT B), and NOT(A OR B) = (NOT A) AND (NOT B). They are used to push negations inward through AND and OR gates, transform between SOP and POS forms, and simplify NAND/NOR circuit implementations. You can verify De Morgan\'s laws by generating truth tables for both sides and confirming they are identical.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'Can I export the truth table as code?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Yes. After generating the truth table, click the Code Export button and choose your target language — JavaScript, Python, Java, or Go. The tool outputs a working boolean function or if-statement that implements the exact logic of your expression, ready to paste directly into your project.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I enter a boolean expression with AND, OR, and NOT?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Use the operator buttons provided: ∧ for AND, ∨ for OR, ¬ for NOT, ⊕ for XOR, ↑ for NAND, and ↓ for NOR. Variable names are single letters (A, B, C, etc.). You can also type & for AND, | for OR, and ! for NOT. Parentheses are supported for grouping: (A ∨ B) ∧ ¬C.',
       },
     },
   ],
@@ -240,6 +343,34 @@ export default function TruthTableGeneratorPage() {
             {
               q: 'How many variables can this tool handle?',
               a: 'Up to 8 variables, producing tables with up to 256 rows. Most classroom problems use 2–4 variables (4–16 rows).',
+            },
+            {
+              q: 'What is a truth table in digital logic?',
+              a: 'A truth table lists all possible input combinations for a boolean expression and their output values. For n variables there are 2^n rows. Truth tables describe logic gate and circuit behavior in digital electronics and discrete mathematics.',
+            },
+            {
+              q: 'How do I check if two boolean expressions are equivalent?',
+              a: 'Generate truth tables for both expressions and compare their output columns. If outputs match for every input row, the expressions are logically equivalent. The XOR of two equivalent expressions produces constant 0.',
+            },
+            {
+              q: 'How do I simplify a boolean expression using a truth table?',
+              a: 'Generate the truth table to find all minterms (output = 1 rows). Use the Karnaugh map to group adjacent minterms into rectangles of 1, 2, 4, or 8. Each rectangle eliminates variables, producing a minimal SOP expression.',
+            },
+            {
+              q: 'What is a tautology in propositional logic?',
+              a: 'A tautology is a boolean expression always true regardless of inputs — its truth table output column contains only 1s. A contradiction is always false (all 0s). A contingency is sometimes true, sometimes false.',
+            },
+            {
+              q: "What is De Morgan's law?",
+              a: "De Morgan's laws: NOT(A AND B) = (NOT A) OR (NOT B), and NOT(A OR B) = (NOT A) AND (NOT B). They transform between SOP and POS forms and simplify NAND/NOR circuits. Verify by generating truth tables for both sides.",
+            },
+            {
+              q: 'Can I export the truth table as code?',
+              a: 'Yes. Click Code Export and choose JavaScript, Python, Java, or Go. The tool outputs a working boolean function implementing your exact expression — ready to paste into your project.',
+            },
+            {
+              q: 'How do I enter a boolean expression with AND, OR, and NOT?',
+              a: <>Use the operator buttons: ∧ for AND, ∨ for OR, ¬ for NOT, ⊕ for XOR, ↑ for NAND, ↓ for NOR. Or type <C>&</C>, <C>|</C>, and <C>!</C>. Parentheses are supported: <C>(A ∨ B) ∧ ¬C</C>.</>,
             },
           ]} />
         </SEOSection>

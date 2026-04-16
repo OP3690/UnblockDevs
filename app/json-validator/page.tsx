@@ -79,6 +79,11 @@ export const metadata: Metadata = {
     'json required fields validator',
     'json type validator',
     'validate json against schema online',
+    'json schema draft-7 validator',
+    'ajv json validator online',
+    'json lint checker',
+    'check json syntax online',
+    'json validation tool free',
   ],
   openGraph: {
     title: 'JSON Validator Online — Syntax & Schema Checker, Free & Private | UnblockDevs',
@@ -233,6 +238,22 @@ const faqSchema = {
       acceptedAnswer: {
         '@type': 'Answer',
         text: 'Setting "additionalProperties": false disallows any object keys not listed in "properties" or "patternProperties". This enforces strict contracts but can cause issues when composing schemas with allOf. In that case, consider "unevaluatedProperties": false instead, available in Draft 2019-09 and later.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I validate a JSON API response against a schema in JavaScript?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Use the AJV library: npm install ajv, then import Ajv from "ajv"; const ajv = new Ajv(); const validate = ajv.compile(schema); const valid = validate(data); if (!valid) console.log(validate.errors). AJV compiles the schema into an optimised validation function. For Draft 2020-12, use the ajv/dist/2020 import path.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I validate JSON in Python?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'For syntax validation, use json.loads(json_string) — it raises json.JSONDecodeError if the JSON is invalid. For schema validation, use the jsonschema library: pip install jsonschema, then from jsonschema import validate; validate(instance=data, schema=schema). It raises jsonschema.ValidationError with a detailed message when data does not match the schema.',
       },
     },
   ],
@@ -430,6 +451,14 @@ export default function JsonValidatorPage() {
             {
               q: 'Can I validate JSON in real time as I type?',
               a: 'Yes. The validator checks your JSON as you type and updates error indicators in real time, so you see immediately when a fix resolves an error without pressing any button.',
+            },
+            {
+              q: 'How do I validate a JSON API response against a schema in JavaScript?',
+              a: <>Install AJV: <C>npm install ajv</C>. Then: <C>const ajv = new Ajv(); const validate = ajv.compile(schema); const valid = validate(data); if (!valid) console.log(validate.errors)</C>. For Draft 2020-12, use the <C>ajv/dist/2020</C> import.</>,
+            },
+            {
+              q: 'How do I validate JSON in Python?',
+              a: <>For syntax: <C>json.loads(json_string)</C> raises <C>JSONDecodeError</C> if invalid. For schema validation: <C>pip install jsonschema</C>, then <C>from jsonschema import validate; validate(instance=data, schema=schema)</C>. It raises <C>ValidationError</C> with a detailed message when data fails schema.</>,
             },
           ]} />
         </SEOSection>
