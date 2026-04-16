@@ -188,7 +188,7 @@ data = json.loads(text)  # JSONDecodeError: Expecting value`}</pre>
 
 def strip_trailing_commas(text: str) -> str:
     # Remove trailing commas before ] or }
-    return re.sub(r',\s*([}\]])', r'\1', text)
+    return re.sub(r',\\s*([}\\]])', r'\\1', text)
 
 clean = strip_trailing_commas(text)
 data = json.loads(clean)
