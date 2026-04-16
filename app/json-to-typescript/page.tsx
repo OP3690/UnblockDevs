@@ -72,6 +72,9 @@ export const metadata: Metadata = {
     'json to ts types free',
     'typescript types from json response',
     'generate ts interface from json',
+    'json to typescript interface converter', 'typescript type alias generator', 'json schema to typescript',
+    'api response to typescript type', 'nest json typescript interface', 'typescript optional fields json',
+    'partial type typescript json', 'json array to typescript interface', 'convert api json to ts',
   ],
   openGraph: {
     title: 'JSON to TypeScript Types Generator | UnblockDevs',
