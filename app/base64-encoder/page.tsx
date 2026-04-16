@@ -36,6 +36,9 @@ export const metadata: Metadata = {
     'base64 encode large file', 'base64 50mb file', 'base64 encode file upload',
     'decode base64 string', 'base64 encode credentials', 'encode decode online free',
     'base64 rfc 4648', 'base64 string to text', 'base64 encode password',
+    'base64 encode binary data', 'base64 decode to binary', 'base64 encode online no install',
+    'base64 encode pdf', 'base64 decode image', 'base64 data uri generator',
+    'how base64 works', 'base64 overhead size increase', 'base64 vs binary transfer',
   ],
   openGraph: {
     title: 'Base64 Encoder Decoder — Standard, Base64URL, MIME & No-Padding | UnblockDevs',

@@ -31,6 +31,9 @@ export const metadata: Metadata = {
     'uuid namespace', 'uuid sorted', 'uuid indexed performance',
     'uuid generator no signup', 'uuid export csv', 'uuid export sql insert',
     'uuid export json', 'uuid bulk 1000', 'uuid cryptographically secure',
+    'uuid online generator free', 'uuid copy to clipboard', 'uuid without braces',
+    'uuid uppercase generator', 'uuid compare tool', 'short uuid generator',
+    'uuid to int conversion', 'uuid check valid format', 'uuid sql primary key example',
   ],
   openGraph: {
     title: 'UUID / GUID Generator — v1–v8, Validate, Bulk Export | UnblockDevs',

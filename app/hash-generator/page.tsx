@@ -33,6 +33,10 @@ export const metadata: Metadata = {
     'generate md5 from file', 'sha256 file hash', 'hash generator api',
     'scrypt hash generator', 'keccak256 hash', 'ripemd160 hash',
     'hash rate calculator', 'hex hash output', 'base64 hash output',
+    'sha256 text online', 'md5 checksum verifier', 'online hash calculator free',
+    'hmac key generator', 'hash compare online', 'password hash checker',
+    'bcrypt hash cost factor', 'argon2id parameters', 'hash function online no signup',
+    'sha256 file integrity online', 'verify hmac signature online',
   ],
   openGraph: {
     title: 'Hash Generator — MD5, SHA-256, File Hash, HMAC & bcrypt/Argon2 | UnblockDevs',
