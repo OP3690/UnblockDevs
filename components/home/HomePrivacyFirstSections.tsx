@@ -91,7 +91,6 @@ export default function HomePrivacyFirstSections({
   toolPageUrls: Record<string, string>;
 }) {
   const [cat, setCat] = useState<Cat>('all');
-  const [search, setSearch] = useState('');
 
   const miniTools: MiniDef[] = useMemo(
     () => [
@@ -151,11 +150,8 @@ export default function HomePrivacyFirstSections({
   );
 
   const visibleMini = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    let list = cat === 'all' ? miniTools : miniTools.filter((t) => t.cats.includes(cat));
-    if (q) list = list.filter((t) => t.label.toLowerCase().includes(q));
-    return list;
-  }, [cat, miniTools, search]);
+    return cat === 'all' ? miniTools : miniTools.filter((t) => t.cats.includes(cat));
+  }, [cat, miniTools]);
 
   // Count per category
   const counts = useMemo(() => {
@@ -209,17 +205,22 @@ export default function HomePrivacyFirstSections({
 
         {/* Search + category filter row */}
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-          {/* Search */}
+          {/* Search — opens global search popup */}
           <div className="relative flex-1 max-w-sm">
-            <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" aria-hidden />
-            <input
-              type="search"
-              value={search}
-              onChange={(e) => { setSearch(e.target.value); if (e.target.value) setCat('all'); }}
-              placeholder="Search 50+ tools…"
+            <button
+              type="button"
               aria-label="Search tools"
-              className="h-11 w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-4 text-[13.5px] text-zinc-800 shadow-sm placeholder:text-zinc-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200/60 transition-all"
-            />
+              onClick={() => {
+                window.dispatchEvent(
+                  new KeyboardEvent('keydown', { key: 'k', metaKey: true, bubbles: true, cancelable: true })
+                );
+              }}
+              className="flex h-11 w-full items-center gap-2.5 rounded-xl border border-zinc-200 bg-white pl-3.5 pr-4 text-left shadow-sm transition-all hover:border-zinc-300 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-emerald-200/60 cursor-text"
+            >
+              <Search className="h-4 w-4 shrink-0 text-zinc-400" aria-hidden />
+              <span className="flex-1 text-[13.5px] text-zinc-400">Search 50+ tools…</span>
+              <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border border-zinc-200 bg-zinc-50 px-1.5 py-0.5 font-mono text-[10px] text-zinc-400">⌘K</kbd>
+            </button>
           </div>
 
           {/* Category pills */}
@@ -250,7 +251,7 @@ export default function HomePrivacyFirstSections({
         </div>
 
         {/* ── Featured AI cards ───────────────────────────────── */}
-        {!search && (cat === 'all' || cat === 'ai') && (
+        {(cat === 'all' || cat === 'ai') && (
           <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
             {/* AI Schema Masker — hero */}
             <Link
@@ -351,14 +352,13 @@ export default function HomePrivacyFirstSections({
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-100">
               <Search className="h-5 w-5 text-zinc-400" />
             </div>
-            <p className="text-[15px] font-semibold text-zinc-700">No tools found for &ldquo;{search}&rdquo;</p>
-            <p className="text-[13px] text-zinc-400">Try JSON, SQL, cURL, JWT, Base64…</p>
+            <p className="text-[15px] font-semibold text-zinc-700">No tools in this category</p>
             <button
               type="button"
-              onClick={() => { setSearch(''); setCat('all'); }}
+              onClick={() => setCat('all')}
               className="mt-1 rounded-full bg-zinc-900 px-4 py-2 text-[12px] font-semibold text-white transition-opacity hover:opacity-80"
             >
-              Clear search
+              Show all tools
             </button>
           </div>
         ) : (
