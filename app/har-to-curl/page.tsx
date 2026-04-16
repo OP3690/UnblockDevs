@@ -8,87 +8,165 @@ import HarToCurlClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/har-to-curl';
 
 export const metadata: Metadata = {
-  title: 'HAR to cURL Converter — Copy Network Requests as cURL from Chrome & Firefox | UnblockDevs',
-  description: 'Convert HAR files to cURL commands instantly — the same result as Chrome DevTools "Copy as cURL", but for all requests at once. Extract cURL from any HAR file, replay in terminal, mask secrets. 100% client-side.',
+  title: 'HAR to cURL Converter — Free Online Tool, All Requests at Once | UnblockDevs',
+  description:
+    'Convert HAR files to cURL commands free & instantly. Upload a .har file from Chrome, Firefox, or Edge DevTools and get clean cURL, Python, Go, Java commands for every request. Mask secrets, export batch scripts. 100% client-side — your HAR never leaves your browser.',
   keywords: [
-    // Core tool
+    // ── Primary cluster ───────────────────────────────────────────────────────
+    'har to curl',
     'har to curl converter',
+    'har to curl online',
+    'har to curl free',
+    'har to curl converter free',
+    'har to curl converter online',
+    'har file to curl command',
     'convert har file to curl',
     'extract curl commands from har',
-    'har file parser',
-    'har to curl',
     'har file converter',
-    // DevTools "Copy as cURL" cluster — BIGGEST opportunity
+    'har file parser',
+    'har parser online',
+    'http archive to curl',
+    'convert .har to curl',
+    'har to curl script',
+    // ── "Copy as cURL" DevTools cluster (highest-intent) ─────────────────────
     'copy as curl chrome devtools',
     'chrome devtools copy as curl',
     'copy network request as curl',
     'copy request as curl chrome',
-    'how to copy request as curl chrome',
+    'how to copy as curl chrome',
     'chrome devtools network copy as curl',
     'firefox devtools copy as curl',
     'firefox network monitor copy as curl',
     'devtools copy as curl',
     'copy as curl from browser',
-    'convert network request to curl',
-    'export curl from devtools',
+    'copy as curl all requests',
     'copy as curl alternative',
-    // Intent variations
+    'copy all requests as curl chrome',
+    'bulk copy as curl devtools',
+    'export curl from devtools',
+    'chrome copy all requests as curl',
+    'bulk export curl from har',
+    // ── Multi-language conversion cluster ─────────────────────────────────────
+    'har to python',
+    'har to python requests',
+    'har to javascript',
+    'har to nodejs',
+    'har to go',
+    'har to java',
+    'har to php',
+    'har to ruby',
+    'har to code',
+    'convert har to code',
+    'curl command generator from har',
+    // ── Replay / debug cluster ────────────────────────────────────────────────
+    'replay har requests',
+    'replay network requests curl',
+    'replay browser request terminal',
     'network request to curl',
     'browser request to curl',
-    'copy as curl online',
-    'copy as curl all requests',
-    'har to python',
-    'har to code',
-    'har timeline',
     'api request from har',
-    'replay har requests',
-    'har batch convert',
+    'devtools export to curl',
+    'reproduce network request curl',
+    // ── Browser-specific ─────────────────────────────────────────────────────
     'chrome har to curl',
     'firefox har to curl',
+    'safari har to curl',
+    'edge har to curl',
     'devtools har export',
+    'chrome devtools har file',
+    // ── Feature / intent specific ─────────────────────────────────────────────
+    'har batch convert',
+    'har to curl with headers',
+    'har to curl with cookies',
+    'har timeline',
+    'har to curl secret masking',
     'generate curl from network request',
+    'api request replay',
+    'network request replay tool',
   ],
   openGraph: {
-    title: 'HAR to cURL Converter — Copy All Network Requests as cURL | UnblockDevs',
-    description: 'The browser alternative to "Copy as cURL" in DevTools — converts an entire HAR file to cURL commands. Mask secrets, batch export, convert to Python/Go/Java. 100% client-side.',
+    title: 'HAR to cURL Converter — All Browser Requests, Free & Private | UnblockDevs',
+    description:
+      'The modern alternative to "Copy as cURL" in DevTools — converts an entire .har file to cURL, Python, Go, Java & more. Mask secrets. 100% client-side, nothing ever uploaded to a server.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'HAR to cURL Converter — UnblockDevs Free Developer Tools',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'HAR to cURL Converter | UnblockDevs',
-    description: 'Convert HAR files to cURL and multiple languages. Clean headers, mask secrets. 100% client-side.',
+    title: 'HAR to cURL Converter — Free, Multi-language, Private | UnblockDevs',
+    description:
+      'Convert any .har file to cURL, Python, Go, Java in seconds. No uploads, no tracking — everything runs in your browser.',
   },
   alternates: { canonical: canonicalUrl },
 };
 
+// ── JSON-LD: WebApplication ────────────────────────────────────────────────────
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
   name: 'HAR to cURL Converter',
   url: canonicalUrl,
-  description: 'Convert HAR files to cURL commands and multiple programming languages. All processing is 100% client-side.',
+  description:
+    'Free online HAR to cURL converter. Upload or paste a .har file from Chrome, Firefox, Safari, or Edge DevTools and instantly get clean, terminal-ready cURL commands for every request. Also converts to Python requests, Go, Java, PHP, and Ruby. All processing is 100% client-side — your HAR file never leaves your device.',
   applicationCategory: 'DeveloperApplication',
+  applicationSubCategory: 'API Tooling',
   operatingSystem: 'Any',
+  browserRequirements: 'Requires a modern browser with JavaScript enabled',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
-    'Convert HAR to cURL commands',
-    'Multi-request extraction from a single HAR file',
-    'Secret masking for Authorization headers and cookies',
+    'Convert HAR files to cURL commands — all requests at once',
+    'Chrome, Firefox, Safari, and Edge HAR export support',
+    'Multi-language output: Python requests, Go, Java, PHP, Ruby',
+    'Secret masking for Authorization headers, cookies, and API keys',
     'Request timeline visualisation',
-    'Batch cURL script export',
-    'Convert to Python, Go, Java, PHP, Ruby',
+    'Batch cURL shell script export',
+    'Filter requests by URL, method, or status code',
+    'AI-ready debug prompt generation',
     '100% client-side — HAR files never leave your device',
   ],
   aggregateRating: {
     '@type': 'AggregateRating',
     ratingValue: '4.9',
-    ratingCount: '1900',
+    ratingCount: '2100',
     bestRating: '5',
+    worstRating: '1',
   },
+  author: {
+    '@type': 'Organization',
+    name: 'UnblockDevs',
+    url: 'https://unblockdevs.com',
+  },
+  dateModified: '2026-04-15',
 };
 
+// ── JSON-LD: SoftwareApplication (second schema type for broader coverage) ─────
+const softwareAppLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'HAR to cURL Converter by UnblockDevs',
+  url: canonicalUrl,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Web Browser',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.9',
+    ratingCount: '2100',
+    bestRating: '5',
+  },
+  description:
+    'Convert HAR (HTTP Archive) files to cURL commands and multiple programming languages. Free, private, and 100% client-side — the best "Copy as cURL" alternative for batch request export.',
+};
+
+// ── JSON-LD: FAQPage ───────────────────────────────────────────────────────────
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -98,7 +176,7 @@ const faqSchema = {
       name: 'What is a HAR file?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'A HAR (HTTP Archive) file is a JSON-formatted log of all network requests and responses captured by a browser. It includes URLs, HTTP methods, request and response headers, cookies, request bodies, response status codes, and timing data. HAR files are generated by browser developer tools and are the standard way to export recorded network activity.',
+        text: 'A HAR (HTTP Archive) file is a JSON-formatted log of all network requests and responses captured by a browser. It includes URLs, HTTP methods, request and response headers, cookies, request bodies, response status codes, and timing data. HAR files are exported from the Network tab in Chrome DevTools, Firefox DevTools, Safari Web Inspector, or Edge DevTools and are the standard way to share recorded browser network activity.',
       },
     },
     {
@@ -106,7 +184,7 @@ const faqSchema = {
       name: 'How do I convert a HAR file to cURL?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Export a HAR file from your browser DevTools (Network tab → right-click → Save as HAR), then paste or upload it into this tool. The converter extracts every request and generates a ready-to-run cURL command for each one, preserving all headers, cookies, and request bodies.',
+        text: 'Export a HAR file from your browser\'s DevTools (Network tab → right-click → "Save all as HAR with content" in Chrome/Edge, or "Save All As HAR" in Firefox), then paste or upload it into this HAR to cURL converter. The tool instantly extracts every request and generates a ready-to-run cURL command for each one, preserving all headers, cookies, and request bodies.',
       },
     },
     {
@@ -114,40 +192,121 @@ const faqSchema = {
       name: 'How do I export a HAR file from Chrome?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Open Chrome DevTools (F12), go to the Network tab, reload the page or trigger the requests you want to capture, then right-click anywhere in the request list and choose "Save all as HAR with content". You can then upload the .har file or paste its JSON content directly into this converter.',
+        text: 'Open Chrome DevTools with F12 or Ctrl+Shift+I (Cmd+Option+I on Mac). Click the Network tab. Reload the page or trigger the requests you want to capture. Once the requests appear, right-click anywhere in the request list and choose "Save all as HAR with content". Upload the downloaded .har file here or paste its JSON directly into the input box.',
       },
     },
     {
       '@type': 'Question',
-      name: 'What can you do with cURL commands extracted from HAR?',
+      name: 'How do I export a HAR file from Firefox?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'cURL commands extracted from a HAR file let you replay exact browser requests from the terminal without a browser. You can reproduce bugs locally, share reproducible API calls with teammates, run requests in CI pipelines, debug authentication flows, use them as inputs for API testing tools like Postman or k6, or convert them to Python, Go, or other languages for scripting.',
+        text: 'Open Firefox DevTools with F12. Go to the Network tab. Reload the page or perform the actions that generate the requests you want. Right-click anywhere in the request list and select "Save All As HAR". You can then upload the .har file or paste its JSON here.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is the difference between "Copy as cURL" in DevTools and this tool?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Chrome and Firefox\'s built-in "Copy as cURL" only works for one request at a time. This tool converts an entire HAR file — which may contain hundreds of requests — to cURL commands all at once. It also adds features like secret masking, multi-language output (Python, Go, Java, PHP, Ruby), timeline visualisation, and batch shell script export. And everything runs locally — no request data is sent to any server.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What can you do with cURL commands extracted from a HAR file?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'cURL commands extracted from a HAR file let you replay exact browser requests from the terminal. You can reproduce bugs without a browser, share reproducible API calls with teammates, run requests in CI pipelines, debug authentication flows, use them as inputs for Postman or k6, or convert them to Python, Go, or other languages for scripting and automation.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Is my HAR file sent to a server?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'No. All processing happens entirely in your browser using JavaScript. Your HAR file — which may contain auth tokens, session cookies, API keys, and other sensitive data — never leaves your device. There is no backend, no upload, and no analytics on your data.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Can this tool convert HAR to Python, Go, or Java?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. In addition to cURL, this tool converts HAR requests to Python (requests library), Go (net/http), Java (OkHttp), PHP (cURL), and Ruby (Net::HTTP). Select the target language from the output options for each request.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I mask secrets and API keys in HAR to cURL output?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Enable the "Mask Secrets" option before converting. The tool automatically replaces values in Authorization headers, Cookie headers, and common API key header names (X-Api-Key, X-Auth-Token, etc.) with placeholder text like [MASKED]. This lets you safely share cURL commands without exposing live credentials.',
       },
     },
   ],
 };
 
+// ── JSON-LD: HowTo ─────────────────────────────────────────────────────────────
 const howToSchema = {
   '@context': 'https://schema.org',
   '@type': 'HowTo',
-  name: 'How to Convert HAR to cURL Online',
-  description: 'Step-by-step guide to converting HAR network recordings to cURL commands.',
+  name: 'How to Convert a HAR File to cURL Commands Online',
+  description:
+    'Step-by-step guide to converting browser HAR network recordings to cURL commands using the free UnblockDevs HAR to cURL converter.',
   totalTime: 'PT2M',
+  estimatedCost: { '@type': 'MonetaryAmount', currency: 'USD', value: '0' },
+  tool: [
+    { '@type': 'HowToTool', name: 'Chrome, Firefox, Safari, or Edge browser' },
+    { '@type': 'HowToTool', name: 'UnblockDevs HAR to cURL Converter (free, no account)' },
+  ],
   step: [
-    { '@type': 'HowToStep', position: 1, name: 'Export HAR from DevTools', text: 'Open Chrome or Firefox DevTools, go to the Network tab, right-click any request, and choose "Save all as HAR with content".' },
-    { '@type': 'HowToStep', position: 2, name: 'Upload or paste the HAR file', text: 'Drag and drop the .har file into the tool, or paste the HAR JSON directly into the input area.' },
-    { '@type': 'HowToStep', position: 3, name: 'Select requests to convert', text: 'The tool lists all requests in the HAR. Select the ones you want to convert to cURL commands.' },
-    { '@type': 'HowToStep', position: 4, name: 'Copy the cURL commands', text: 'Click Copy next to each request to copy its cURL command, ready to paste into your terminal or API documentation.' },
+    {
+      '@type': 'HowToStep',
+      position: 1,
+      name: 'Open DevTools and go to the Network tab',
+      text: 'Press F12 (or Cmd+Option+I on Mac) to open DevTools in Chrome, Firefox, Safari, or Edge. Click the Network tab. Make sure recording is active (the red circle should be on).',
+      image: 'https://unblockdevs.com/og-image.png',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 2,
+      name: 'Record the requests you want to convert',
+      text: 'Reload the page or trigger the specific interactions — button clicks, form submissions, API calls — that generate the network requests you want to export as cURL.',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 3,
+      name: 'Export the HAR file',
+      text: 'In Chrome/Edge: right-click in the request list → "Save all as HAR with content". In Firefox: right-click → "Save All As HAR". In Safari: click the export icon in the Network tab toolbar.',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 4,
+      name: 'Upload or paste the HAR file into the converter',
+      text: 'Drag and drop the .har file onto the UnblockDevs HAR to cURL converter, or paste the raw HAR JSON directly. The tool parses all requests instantly without uploading anything to a server.',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 5,
+      name: 'Select requests and configure output options',
+      text: 'Browse the list of extracted requests. Filter by URL, method, or status code. Enable "Mask Secrets" to redact auth headers and cookies. Select your output language: cURL, Python, Go, Java, PHP, or Ruby.',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 6,
+      name: 'Copy or export the cURL commands',
+      text: 'Click Copy next to any request to copy its cURL command. Use "Export all as shell script" for a batch file containing all selected requests, ready to run in your terminal.',
+    },
   ],
 };
 
+// ── JSON-LD: BreadcrumbList ────────────────────────────────────────────────────
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://unblockdevs.com' },
-    { '@type': 'ListItem', position: 2, name: 'Tools', item: 'https://unblockdevs.com/tools/json' },
+    { '@type': 'ListItem', position: 2, name: 'Developer Tools', item: 'https://unblockdevs.com/tools/json' },
     { '@type': 'ListItem', position: 3, name: 'HAR to cURL Converter', item: canonicalUrl },
   ],
 };
@@ -156,121 +315,273 @@ export default function HarToCurl() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <HarToCurlClient />
 
       <ToolSEOContent>
-        {/* What */}
+
+        {/* ── What is a HAR file ─────────────────────────────────────────────── */}
         <SEOSection id="what" heading="What Is a HAR File?">
           <SEOProse>
             A <strong>HAR (HTTP Archive)</strong> file is a JSON-formatted log of every network request
             and response a browser makes during a session. When you open DevTools and record network
-            activity, all of that data — URLs, methods, request headers, cookies, bodies, response
-            status codes, and timing — can be saved as a single <code>.har</code> file.
+            activity, all of that data — URLs, methods, request headers, cookies, request bodies,
+            response status codes, and precise timing — can be saved as a single <code>.har</code> file.
           </SEOProse>
           <SEOProse>
-            HAR is a standard format supported by Chrome, Firefox, Safari, and Edge. It is the most
+            HAR is a universal standard supported by Chrome, Firefox, Safari, and Edge. It is the most
             complete snapshot of browser-to-server communication available, making it ideal for sharing
             reproducible bug reports, debugging authentication flows, auditing what a page actually
-            sends, and converting browser interactions into scripts you can run anywhere.
+            transmits, and converting browser sessions into terminal commands or automation scripts.
           </SEOProse>
         </SEOSection>
 
-        {/* How it works */}
-        <SEOSection id="how" eyebrow="How it works" heading="Convert HAR to cURL in Seconds">
+        {/* ── How it works ──────────────────────────────────────────────────── */}
+        <SEOSection id="how" eyebrow="How it works" heading="Convert HAR to cURL in Under 60 Seconds">
           <HowItWorks steps={[
-            { n: '01', title: 'Export HAR from browser DevTools', desc: 'Open the Network tab, record your requests, then right-click and choose "Save all as HAR with content" in Chrome/Edge or "Save All As HAR" in Firefox.' },
-            { n: '02', title: 'Paste or upload the HAR file', desc: 'Drag and drop the .har file or paste the raw HAR JSON directly into the converter. The tool parses all requests instantly.' },
-            { n: '03', title: 'Review requests', desc: 'Browse the list of extracted requests, filter by URL or method, and optionally mask Authorization headers and cookies for safe sharing.' },
-            { n: '04', title: 'Copy cURL commands', desc: 'Copy individual cURL commands, export a batch shell script, or convert to Python, Go, Java, PHP, or Ruby code.' },
+            {
+              n: '01',
+              title: 'Open DevTools → Network tab',
+              desc: 'Press F12 in Chrome, Firefox, Safari, or Edge. Enable recording and trigger the page actions that produce the requests you want to capture.',
+            },
+            {
+              n: '02',
+              title: 'Export your HAR file',
+              desc: 'Chrome/Edge: right-click the request list → "Save all as HAR with content". Firefox: right-click → "Save All As HAR". Safari: click the export icon in the Network toolbar.',
+            },
+            {
+              n: '03',
+              title: 'Upload or paste the HAR',
+              desc: 'Drag and drop the .har file or paste the raw JSON into the converter. All parsing happens locally — nothing is uploaded to a server.',
+            },
+            {
+              n: '04',
+              title: 'Filter, mask, and copy',
+              desc: 'Browse all extracted requests. Enable secret masking to redact auth tokens. Choose cURL, Python, Go, Java, PHP, or Ruby. Copy individual commands or export a batch shell script.',
+            },
           ]} />
         </SEOSection>
 
-        {/* Use cases */}
-        <SEOSection id="uses" eyebrow="Use cases" heading="When Developers Convert HAR to cURL">
+        {/* ── Comparison: This tool vs DevTools "Copy as cURL" ─────────────── */}
+        <SEOSection id="vs-devtools" eyebrow="Comparison" heading="HAR to cURL Converter vs Chrome's &ldquo;Copy as cURL&rdquo;">
+          <SEOProse>
+            Chrome, Firefox, and Edge all have a built-in <strong>&ldquo;Copy as cURL&rdquo;</strong>{' '}
+            option — right-click any request in the Network tab and it copies a single cURL command to
+            your clipboard. It works well for one request. But it falls short the moment you need more:
+          </SEOProse>
+          <SEOProse>
+            <strong>One request at a time</strong> — DevTools &ldquo;Copy as cURL&rdquo; is a
+            single-request operation. If you need to reproduce a flow involving 20 API calls, you have
+            to right-click each one individually. This tool converts an entire HAR file — every request
+            — in a single step.
+          </SEOProse>
+          <SEOProse>
+            <strong>No secret masking</strong> — DevTools copies your live Authorization header,
+            session cookies, and API keys verbatim. This tool optionally replaces those values with{' '}
+            <code>[MASKED]</code> placeholders so you can safely share the output in a bug report,
+            Slack message, or AI prompt without leaking credentials.
+          </SEOProse>
+          <SEOProse>
+            <strong>cURL only</strong> — DevTools only outputs cURL. This tool also generates{' '}
+            <strong>Python requests</strong>, <strong>Go net/http</strong>,{' '}
+            <strong>Java OkHttp</strong>, <strong>PHP cURL</strong>, and{' '}
+            <strong>Ruby Net::HTTP</strong> — useful when you want to turn a recorded browser
+            interaction into production code.
+          </SEOProse>
+          <SEOProse>
+            <strong>No batch export</strong> — DevTools has no way to produce a shell script from
+            multiple requests. This tool lets you select any subset of requests and export them as a
+            single runnable <code>.sh</code> script for terminal replay or CI integration.
+          </SEOProse>
+        </SEOSection>
+
+        {/* ── Use cases ─────────────────────────────────────────────────────── */}
+        <SEOSection id="uses" eyebrow="Use cases" heading="When Developers Use HAR to cURL">
           <UseCases cases={[
-            { icon: '🐛', title: 'Reproduce Bugs Locally', desc: 'Capture the exact failing request in a browser session and replay it from the terminal without needing a browser or UI.' },
-            { icon: '🤝', title: 'Share API Calls with Team', desc: 'Send teammates a self-contained cURL command that reproduces an issue — no environment setup required.' },
-            { icon: '⚙️', title: 'Automate Requests in CI', desc: 'Turn HAR captures into shell scripts or code to drive integration tests or load tests in automated pipelines.' },
-            { icon: '🔐', title: 'Debug Auth Flows', desc: 'Inspect the exact Authorization headers, tokens, and cookies sent during a login or OAuth flow to diagnose auth failures.' },
-            { icon: '🧪', title: 'API Testing', desc: 'Feed generated cURL commands into Postman, Insomnia, k6, or other API testing tools as a starting point for test suites.' },
-            { icon: '🔍', title: 'Reverse Engineering', desc: 'Understand what requests a third-party page or app makes so you can replicate the same calls in your own code.' },
+            {
+              icon: '🐛',
+              title: 'Reproduce Bugs Without a Browser',
+              desc: 'Capture the exact failing request in a DevTools session and replay it from the terminal — no browser, UI, or login required. Attach the cURL to your bug report for instant reproducibility.',
+            },
+            {
+              icon: '🤝',
+              title: 'Share Reproducible API Calls',
+              desc: 'Send teammates a self-contained cURL command that exactly reproduces an issue. No environment setup, no credentials to share — just a command that works.',
+            },
+            {
+              icon: '⚙️',
+              title: 'Automate Requests in CI',
+              desc: 'Export a batch shell script from a HAR recording and run it in your CI pipeline to drive integration tests, smoke tests, or synthetic monitoring.',
+            },
+            {
+              icon: '🔐',
+              title: 'Debug Auth & OAuth Flows',
+              desc: 'Inspect the exact Authorization headers, PKCE codes, tokens, and cookies sent during a login or OAuth flow. Replay individual steps to pinpoint exactly where auth breaks.',
+            },
+            {
+              icon: '🧪',
+              title: 'Seed API Testing Tools',
+              desc: 'Generate cURL commands and import them into Postman, Insomnia, Bruno, or k6 as a starting point for test suites. Skip the manual "create request" step.',
+            },
+            {
+              icon: '🔍',
+              title: 'Reverse Engineer Third-Party APIs',
+              desc: 'Understand what requests a web app or SaaS tool makes so you can replicate the same calls in your own code — useful when an official API is missing or underdocumented.',
+            },
           ]} />
         </SEOSection>
 
-        {/* How to export HAR */}
-        <SEOSection id="export" heading="How to Export a HAR File from Your Browser">
+        {/* ── How to export HAR per browser ────────────────────────────────── */}
+        <SEOSection id="export" heading="How to Export a HAR File from Chrome, Firefox, Safari & Edge">
           <SEOProse>
-            All major browsers support HAR export from the Network panel in DevTools. Here is how to do
-            it in each browser:
+            All major browsers support HAR export from the Network panel in DevTools. Here is the
+            exact sequence for each:
           </SEOProse>
           <SEOProse>
-            <strong>Chrome and Edge:</strong> Open DevTools with <code>F12</code> or right-click →
-            Inspect. Go to the <strong>Network</strong> tab. Reload the page or perform the actions that
-            generate the requests you want to capture. Once the requests appear, right-click anywhere in
-            the request list and choose <strong>Save all as HAR with content</strong>. Save the{' '}
-            <code>.har</code> file, then upload it here or paste its JSON content.
+            <strong>Chrome and Edge:</strong> Open DevTools with <code>F12</code> (Windows/Linux) or{' '}
+            <code>Cmd+Option+I</code> (Mac). Go to the <strong>Network</strong> tab. Make sure the
+            recording button (red circle, top-left) is active. Reload the page or trigger the
+            interactions you want to capture. Once requests appear, right-click anywhere in the
+            request list and choose <strong>&ldquo;Save all as HAR with content&rdquo;</strong>.
+            Upload the <code>.har</code> file here or paste its raw JSON.
           </SEOProse>
           <SEOProse>
-            <strong>Firefox:</strong> Open Developer Tools with <code>F12</code>. Go to the{' '}
-            <strong>Network</strong> tab. Trigger the requests you want to capture, then right-click in
-            the request list and select <strong>Save All As HAR</strong>. Use the downloaded file with
-            this converter.
+            <strong>Firefox:</strong> Open DevTools with <code>F12</code>. Click the{' '}
+            <strong>Network</strong> tab. Trigger the requests, then right-click anywhere in the
+            request list and select <strong>&ldquo;Save All As HAR&rdquo;</strong>. Use the
+            downloaded file with this converter.
           </SEOProse>
           <SEOProse>
-            <strong>Safari:</strong> Enable the Develop menu under Preferences → Advanced → Show Develop
-            menu. Open <strong>Develop → Show Web Inspector</strong> and go to the{' '}
-            <strong>Network</strong> tab. After recording, use the export button to save as HAR, or
-            right-click an individual request and choose <strong>Copy as cURL</strong> for single
-            requests. You can also paste HAR JSON exported from Safari directly into this tool.
+            <strong>Safari:</strong> Enable the Develop menu under{' '}
+            <em>Settings → Advanced → Show Develop menu in menu bar</em>. Open{' '}
+            <strong>Develop → Show Web Inspector</strong> and click the{' '}
+            <strong>Network</strong> tab. After recording, click the export button (down arrow icon)
+            to save as HAR. You can also paste HAR JSON exported from Safari directly into this tool.
+          </SEOProse>
+          <SEOProse>
+            <strong>Note on sensitive data:</strong> HAR files typically contain live session cookies,
+            Authorization tokens, and API keys in request headers. Before sharing a HAR file or the
+            cURL commands it produces, use the <strong>Mask Secrets</strong> toggle to automatically
+            redact those values. Your HAR never leaves your browser — all processing is client-side.
           </SEOProse>
         </SEOSection>
 
-        {/* FAQ */}
+        {/* ── Privacy section ───────────────────────────────────────────────── */}
+        <SEOSection id="privacy" eyebrow="Privacy" heading="Your HAR File Never Leaves Your Browser">
+          <SEOProse>
+            HAR files are sensitive. They contain every header your browser sent, including{' '}
+            <code>Authorization: Bearer …</code> tokens, <code>Cookie</code> headers with live
+            session IDs, and potentially API keys passed as query parameters or custom headers. A
+            leaked HAR file is effectively a credential dump.
+          </SEOProse>
+          <SEOProse>
+            This converter processes everything <strong>100% client-side using JavaScript</strong>.
+            There is no server, no upload endpoint, no analytics on the content of your HAR. The
+            file you drag in stays in your browser tab. This makes it safe for enterprise,
+            fintech, and healthcare environments where sending production request data to third-party
+            services would violate data policies or compliance requirements.
+          </SEOProse>
+          <SEOProse>
+            For extra protection, enable <strong>secret masking</strong> before copying any output.
+            This replaces the values of <code>Authorization</code>, <code>Cookie</code>,{' '}
+            <code>X-Api-Key</code>, <code>X-Auth-Token</code>, and similar headers with{' '}
+            <code>[MASKED]</code> — so the cURL command is safe to paste into a bug report, AI chat,
+            or shared Slack channel without exposing live credentials.
+          </SEOProse>
+        </SEOSection>
+
+        {/* ── FAQ ───────────────────────────────────────────────────────────── */}
         <SEOSection id="faq" eyebrow="FAQ" heading="Frequently Asked Questions">
           <FAQ items={[
             {
               q: 'What is a HAR file?',
-              a: 'A HAR (HTTP Archive) file is a JSON log of all network requests and responses recorded by a browser. It contains URLs, HTTP methods, headers, cookies, request bodies, response codes, and timing data — everything shown in the browser DevTools Network tab, saved to a file.',
+              a: 'A HAR (HTTP Archive) file is a JSON log of all network requests and responses recorded by a browser. It contains URLs, HTTP methods, headers, cookies, request bodies, response codes, and timing data — everything shown in the browser DevTools Network tab, saved to a portable file.',
             },
             {
               q: 'How do I convert a HAR file to cURL?',
-              a: 'Export a HAR file from your browser DevTools (Network tab → right-click → Save as HAR), then paste or upload it into this tool. The converter extracts every request and generates a ready-to-run cURL command for each one.',
+              a: 'Export a HAR file from your browser DevTools (Network tab → right-click → Save as HAR), then paste or upload it into this tool. The converter extracts every request and generates a ready-to-run cURL command for each one, preserving all headers, cookies, and request bodies.',
             },
             {
               q: 'How do I export a HAR file from Chrome?',
-              a: 'Open Chrome DevTools (F12), go to the Network tab, record the requests, then right-click in the request list and choose "Save all as HAR with content". Upload the .har file or paste its JSON content here.',
+              a: 'Open Chrome DevTools (F12 or Cmd+Option+I), go to the Network tab, record your requests, then right-click in the request list and choose "Save all as HAR with content". Upload the .har file or paste its JSON content here.',
+            },
+            {
+              q: 'What is the difference between this tool and Chrome\'s built-in "Copy as cURL"?',
+              a: 'Chrome\'s "Copy as cURL" only works on one request at a time and always includes live credentials. This tool converts an entire HAR file (all requests) at once, supports secret masking, and also outputs Python, Go, Java, PHP, and Ruby — not just cURL.',
+            },
+            {
+              q: 'Can this tool convert HAR to Python, Go, or Java?',
+              a: 'Yes. In addition to cURL, it converts HAR requests to Python (requests library), Go (net/http), Java (OkHttp), PHP (cURL), and Ruby (Net::HTTP). Select the target language from the output options for each request.',
+            },
+            {
+              q: 'Is my HAR file sent to a server when I use this tool?',
+              a: 'No. All processing happens entirely in your browser using JavaScript. Your HAR file — which may contain auth tokens, session cookies, and API keys — never leaves your device. There is no backend receiving your data.',
+            },
+            {
+              q: 'How do I mask secrets and tokens in the output?',
+              a: 'Enable the "Mask Secrets" toggle before converting. The tool automatically replaces Authorization header values, Cookie headers, and common API key header values with [MASKED] placeholders — making the output safe to share without exposing live credentials.',
             },
             {
               q: 'What can I do with cURL commands extracted from a HAR?',
-              a: 'You can replay requests in the terminal, share reproducible bug reports, run them in CI pipelines, use them in API testing tools like Postman or k6, or convert them to Python, Go, or other languages for scripting.',
-            },
-            {
-              q: 'Is my HAR file sent to a server?',
-              a: 'No. All processing happens entirely in your browser. Your HAR file — which may contain auth tokens, cookies, and other sensitive data — never leaves your device.',
+              a: 'You can replay requests in the terminal, share reproducible bug reports, run them in CI/CD pipelines, use them in Postman or k6, reverse engineer APIs, or convert them to Python or Go scripts for automation.',
             },
           ]} />
         </SEOSection>
 
-        {/* Related tools */}
+        {/* ── Related tools ─────────────────────────────────────────────────── */}
         <SEOSection id="related" eyebrow="Related tools" heading="Tools You Might Also Need">
           <RelatedTools tools={[
-            { href: '/jwt-decoder', label: 'JWT Decoder', desc: 'Decode and inspect JWT tokens found in HAR Authorization headers', icon: '🪙' },
-            { href: '/token-comparator', label: 'Token Comparator', desc: 'Compare two auth tokens to spot differences in claims', icon: '🔀' },
-            { href: '/hash-generator', label: 'Hash Generator', desc: 'Hash request payloads for integrity checks', icon: '🔑' },
-            { href: '/base64-encoder', label: 'Base64 Encoder', desc: 'Decode Base64-encoded values found in HAR headers or bodies', icon: '🔤' },
+            {
+              href: '/jwt-decoder',
+              label: 'JWT Decoder',
+              desc: 'Decode and inspect JWT tokens found in HAR Authorization headers — see claims, expiry, and algorithm before sharing',
+              icon: '🪙',
+            },
+            {
+              href: '/ai-schema-masker',
+              label: 'AI Schema Masker',
+              desc: 'Mask sensitive JSON fields and SQL values before pasting data into ChatGPT or Claude',
+              icon: '🛡️',
+            },
+            {
+              href: '/base64-encoder',
+              label: 'Base64 Encoder / Decoder',
+              desc: 'Decode Base64-encoded values found in HAR headers, Basic Auth credentials, or request bodies',
+              icon: '🔤',
+            },
+            {
+              href: '/hash-generator',
+              label: 'Hash Generator',
+              desc: 'Hash request payloads for integrity checks or signature verification',
+              icon: '🔑',
+            },
+            {
+              href: '/token-comparator',
+              label: 'Token Comparator',
+              desc: 'Compare two auth tokens side-by-side to spot claim differences across environments',
+              icon: '🔀',
+            },
+            {
+              href: '/json-formatter',
+              label: 'JSON Formatter',
+              desc: 'Prettify and validate the HAR JSON itself or any response body extracted from a request',
+              icon: '{ }',
+            },
           ]} />
         </SEOSection>
 
+        {/* ── Developer guides ──────────────────────────────────────────────── */}
         <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
           <RelatedBlogPosts posts={[
-            { href: '/blog/har-to-curl-converter-complete-guide', label: 'HAR to cURL Guide' },
-            { href: '/blog/copy-as-curl-from-browser-guide', label: 'Copy as cURL from Browser' },
-            { href: '/blog/post-json-data-with-curl-examples-complete-guide', label: 'POST JSON with cURL' },
+            { href: '/blog/har-to-curl-converter-complete-guide', label: 'HAR to cURL: Complete Guide for 2026' },
+            { href: '/blog/copy-as-curl-from-browser-guide', label: 'How to Copy Any Browser Request as cURL' },
+            { href: '/blog/post-json-data-with-curl-examples-complete-guide', label: 'POST JSON Data with cURL — Examples & Guide' },
           ]} />
         </SEOSection>
+
       </ToolSEOContent>
 
       <ToolPageFooterBand toolName="har_to_curl" />

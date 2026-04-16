@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UnblockDevs – Promo Reel</title>
+<style>
+  /* ============================================================
+     GLOBAL RESET & BASE
+  ============================================================ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #080808;
+    --emerald:   #10b981;
+    --emerald-l: #34d399;
+    --sky:       #38bdf8;
+    --violet:    #a78bfa;
+    --amber:     #fbbf24;
+    --white:     #ffffff;
+    --zinc:      #a1a1aa;
+    --red:       #f87171;
+    --c-green:   #34d399;
+    --c-sky:     #7dd3fc;
+    --c-violet:  #c4b5fd;
+    --c-red:     #f87171;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* ── Viewport scaler ── */
+  #stage {
+    position: relative;
+    width: 1080px;
+    height: 1920px;
+    background: var(--bg);
+    overflow: hidden;
+    transform-origin: top left;
+    /* JS will set transform: scale(X) */
+  }
+
+  /* ============================================================
+     SCENE LAYER SYSTEM
+  ============================================================ */
+  .scene {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    padding: 80px 60px;
+  }
+  .scene.active { opacity: 1; pointer-events: auto; }
+
+  /* ============================================================
+     FLOATING PARTICLES
+  ============================================================ */
+  #particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--emerald);
+    opacity: 0.4;
+    animation: floatY var(--dur, 6s) ease-in-out infinite alternate;
+  }
+  @keyframes floatY {
+    from { transform: translateY(0px); }
+    to   { transform: translateY(var(--dist, -40px)); }
+  }
+
+  /* ============================================================
+     PROGRESS BAR
+  ============================================================ */
+  #progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 6px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--emerald), var(--emerald-l));
+    z-index: 1000;
+    border-radius: 0 3px 3px 0;
+    box-shadow: 0 0 12px var(--emerald);
+    transition: none;
+  }
+
+  /* ============================================================
+     SHARED TYPOGRAPHY
+  ============================================================ */
+  .brand-font { font-family: system-ui, -apple-system, sans-serif; }
+  .mono       { font-family: ui-monospace, Menlo, monospace; }
+
+  .glow-text {
+    text-shadow: 0 0 20px var(--emerald), 0 0 40px var(--emerald-l);
+  }
+
+  /* ============================================================
+     SCENE 1 – BRAND INTRO
+  ============================================================ */
+  #scene1 { gap: 40px; }
+
+  .u-logo {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #0d7a55, var(--emerald));
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: system-ui, sans-serif;
+    font-size: 64px;
+    font-weight: 900;
+    color: #fff;
+    box-shadow: 0 0 60px 20px rgba(16,185,129,0.4),
+                0 0 0 2px rgba(52,211,153,0.3);
+    opacity: 0;
+    transform: scale(0.7);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.175,0.885,0.32,1.275);
+  }
+  .u-logo.show {
+    opacity: 1;
+    transform: scale(1);
+  }
+  @keyframes logoPulse {
+    0%,100% { box-shadow: 0 0 60px 20px rgba(16,185,129,0.4), 0 0 0 2px rgba(52,211,153,0.3); }
+    50%      { box-shadow: 0 0 80px 30px rgba(16,185,129,0.7), 0 0 0 4px rgba(52,211,153,0.6); }
+  }
+  .u-logo.pulsing { animation: logoPulse 1.8s ease-in-out infinite; }
+
+  .brand-name {
+    font-family: system-ui, sans-serif;
+    font-size: 72px;
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: -2px;
+    min-height: 90px;
+  }
+  .brand-name .accent { color: var(--emerald-l); }
+
+  .brand-divider {
+    width: 320px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--emerald), transparent);
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .brand-divider.show { opacity: 1; }
+
+  .tagline {
+    font-family: system-ui, sans-serif;
+    font-size: 32px;
+    color: var(--zinc);
+    text-align: center;
+    line-height: 1.4;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    max-width: 700px;
+  }
+  .tagline.show { opacity: 1; transform: translateY(0); }
+  .tagline .em { color: var(--emerald-l); font-weight: 600; }
+
+  /* ============================================================
+     SCENE 2 – PROBLEM
+  ============================================================ */
+  #scene2 { gap: 48px; justify-content: center; }
+
+  .alert-badge {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(248,113,113,0.12);
+    border: 2px solid rgba(248,113,113,0.5);
+    border-radius: 16px;
+    padding: 20px 36px;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .alert-badge.show { opacity: 1; transform: translateY(0); }
+  .alert-badge .emoji { font-size: 40px; }
+  .alert-badge .alert-text {
+    font-family: system-ui, sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--red);
+    line-height: 1.3;
+    max-width: 560px;
+  }
+
+  .code-panel {
+    width: 100%;
+    background: #0f0f0f;
+    border-radius: 20px;
+    border: 1px solid #1e1e1e;
+    padding: 36px 40px;
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 26px;
+    line-height: 1.8;
+  }
+  .code-panel .line {
+    display: block;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .code-panel .line.show { opacity: 1; transform: translateX(0); }
+
+  .danger-val {
+    color: var(--c-red);
+    animation: dangerPulse 1.2s ease-in-out infinite;
+  }
+  @keyframes dangerPulse {
+    0%,100% { text-shadow: none; opacity: 1; }
+    50%      { text-shadow: 0 0 16px var(--red); opacity: 0.7; }
+  }
+  .kw   { color: var(--c-violet); }
+  .var  { color: var(--c-sky); }
+  .str  { color: var(--c-green); }
+  .cmt  { color: #4a4a5a; }
+
+  .sub-note {
+    font-family: system-ui, sans-serif;
+    font-size: 26px;
+    color: var(--zinc);
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .sub-note.show { opacity: 1; }
+  .sub-note .hi { color: var(--red); font-weight: 700; }
+
+  /* ============================================================
+     SCENE 3 – SCHEMA MASKER
+  ============================================================ */
+  #scene3 { gap: 44px; }
+
+  .scene-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(16,185,129,0.12);
+    border: 2px solid rgba(52,211,153,0.4);
+    border-radius: 100px;
+    padding: 12px 32px;
+    font-family: system-ui, sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--emerald-l);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  .scene-badge.show { opacity: 1; }
+
+  .split-panel {
+    display: flex;
+    gap: 24px;
+    width: 100%;
+  }
+  .split-side {
+    flex: 1;
+    background: #0d0d0d;
+    border-radius: 16px;
+    padding: 32px 28px;
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 22px;
+    line-height: 2;
+    border: 1px solid #1e1e1e;
+    position: relative;
+    overflow: hidden;
+  }
+  .split-side.right { border-color: rgba(52,211,153,0.3); }
+
+  .panel-label {
+    font-family: system-ui, sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #1e1e1e;
+  }
+  .panel-label.before { color: var(--red); }
+  .panel-label.after  { color: var(--emerald-l); }
+
+  .masked-token {
+    color: var(--c-green);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-weight: 700;
+    text-shadow: 0 0 12px var(--emerald);
+  }
+  .masked-token.show { opacity: 1; }
+
+  .scan-line {
+    position: absolute;
+    left: 0; right: 0;
+    height: 4px;
+    top: -4px;
+    background: linear-gradient(90deg,
+      transparent,
+      rgba(16,185,129,0.5),
+      #10b981,
+      rgba(16,185,129,0.5),
+      transparent
+    );
+    box-shadow: 0 0 20px var(--emerald);
+    pointer-events: none;
+  }
+
+  .danger-name {
+    color: var(--c-red);
+    animation: dangerPulse 1.4s ease-in-out infinite;
+  }
+  .sql-kw  { color: var(--c-violet); }
+  .sql-tbl { color: var(--c-sky); }
+
+  /* ============================================================
+     SCENE 4 – JSON FORMATTER
+  ============================================================ */
+  #scene4 { gap: 44px; }
+
+  .json-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(56,189,248,0.12);
+    border: 2px solid rgba(56,189,248,0.4);
+    border-radius: 100px;
+    padding: 12px 32px;
+    font-family: system-ui, sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--sky);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  .json-badge.show { opacity: 1; }
+
+  .json-before, .json-after {
+    width: 100%;
+    background: #0d0d0d;
+    border-radius: 16px;
+    padding: 32px 36px;
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 22px;
+    line-height: 1.9;
+    border: 1px solid #1e1e1e;
+    word-break: break-all;
+    color: var(--zinc);
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .json-before.show, .json-after.show {
+    opacity: 1; transform: translateY(0);
+  }
+  .json-after { border-color: rgba(56,189,248,0.3); }
+  .jk  { color: var(--c-sky); }
+  .jv  { color: var(--c-green); }
+  .jn  { color: var(--amber); }
+  .jb  { color: var(--c-violet); }
+
+  .format-tagline {
+    font-family: system-ui, sans-serif;
+    font-size: 30px;
+    font-weight: 600;
+    color: var(--zinc);
+    opacity: 0;
+    text-align: center;
+    transition: opacity 0.6s ease;
+  }
+  .format-tagline .em { color: var(--sky); }
+  .format-tagline.show { opacity: 1; }
+
+  /* ============================================================
+     SCENE 5 – CODE PROMPT SHIELD
+  ============================================================ */
+  #scene5 { gap: 44px; }
+
+  .shield-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(167,139,250,0.12);
+    border: 2px solid rgba(167,139,250,0.4);
+    border-radius: 100px;
+    padding: 12px 32px;
+    font-family: system-ui, sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--violet);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  .shield-badge.show { opacity: 1; }
+
+  .ts-panel {
+    width: 100%;
+    background: #0d0d0d;
+    border-radius: 20px;
+    padding: 36px 40px;
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 24px;
+    line-height: 1.9;
+    border: 1px solid #1e1e1e;
+    position: relative;
+    overflow: hidden;
+  }
+  .ts-panel.shielded { border-color: rgba(167,139,250,0.4); }
+
+  .shield-token {
+    color: var(--c-violet);
+    font-weight: 700;
+    text-shadow: 0 0 14px var(--violet);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .shield-token.show { opacity: 1; }
+
+  .ts-kw   { color: var(--c-violet); }
+  .ts-str  { color: var(--c-green); }
+  .ts-type { color: var(--sky); }
+  .ts-fn   { color: var(--amber); }
+  .ts-cmt  { color: #4a4a5a; }
+
+  /* ============================================================
+     SCENE 6 – STATS
+  ============================================================ */
+  #scene6 { gap: 60px; }
+
+  .stats-title {
+    font-family: system-ui, sans-serif;
+    font-size: 40px;
+    font-weight: 800;
+    color: var(--white);
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .stats-title.show { opacity: 1; }
+
+  .stats-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+    width: 100%;
+  }
+
+  .stat-card {
+    background: #0f0f0f;
+    border-radius: 20px;
+    border: 1px solid #1e1e1e;
+    padding: 44px 48px;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .stat-card.show { opacity: 1; transform: translateY(0); }
+
+  .stat-icon {
+    font-size: 56px;
+    flex-shrink: 0;
+  }
+  .stat-info { flex: 1; }
+  .stat-number {
+    font-family: system-ui, sans-serif;
+    font-size: 80px;
+    font-weight: 900;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--emerald-l), var(--sky));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .stat-label {
+    font-family: system-ui, sans-serif;
+    font-size: 26px;
+    color: var(--zinc);
+    margin-top: 6px;
+    font-weight: 500;
+  }
+
+  /* ============================================================
+     SCENE 7 – TRUST WALL
+  ============================================================ */
+  #scene7 { gap: 50px; }
+
+  .trust-title {
+    font-family: system-ui, sans-serif;
+    font-size: 44px;
+    font-weight: 800;
+    color: var(--white);
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .trust-title.show { opacity: 1; }
+
+  .trust-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 100%;
+  }
+
+  .trust-card {
+    background: linear-gradient(135deg, #0f1a14, #0a0f0a);
+    border-radius: 20px;
+    border: 1px solid rgba(16,185,129,0.25);
+    padding: 40px 48px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    box-shadow: 0 0 30px rgba(16,185,129,0.05) inset;
+  }
+  .trust-card.show { opacity: 1; transform: translateY(0); }
+
+  .trust-icon {
+    font-size: 52px;
+    flex-shrink: 0;
+  }
+  .trust-text h3 {
+    font-family: system-ui, sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--emerald-l);
+    margin-bottom: 6px;
+  }
+  .trust-text p {
+    font-family: system-ui, sans-serif;
+    font-size: 22px;
+    color: var(--zinc);
+  }
+
+  .privacy-stmt {
+    background: rgba(16,185,129,0.08);
+    border: 1px solid rgba(52,211,153,0.3);
+    border-radius: 16px;
+    padding: 32px 40px;
+    font-family: system-ui, sans-serif;
+    font-size: 26px;
+    line-height: 1.6;
+    color: var(--white);
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.7s ease;
+  }
+  .privacy-stmt.show { opacity: 1; }
+  .privacy-stmt .em { color: var(--emerald-l); font-weight: 800; }
+
+  /* ============================================================
+     SCENE 8 – CTA
+  ============================================================ */
+  #scene8 { gap: 56px; }
+
+  .cta-logo {
+    width: 160px;
+    height: 160px;
+    background: linear-gradient(135deg, #0d7a55, var(--emerald));
+    border-radius: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: system-ui, sans-serif;
+    font-size: 88px;
+    font-weight: 900;
+    color: #fff;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.175,0.885,0.32,1.275);
+  }
+  .cta-logo.show {
+    opacity: 1;
+    transform: scale(1);
+    animation: logoPulse 1.8s ease-in-out infinite;
+  }
+
+  .cta-url {
+    font-family: system-ui, sans-serif;
+    font-size: 64px;
+    font-weight: 800;
+    color: var(--emerald-l);
+    letter-spacing: -1px;
+    text-shadow: 0 0 24px var(--emerald);
+    min-height: 80px;
+    text-align: center;
+  }
+
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, var(--emerald), var(--emerald-l));
+    border-radius: 100px;
+    padding: 28px 72px;
+    font-family: system-ui, sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    color: #000;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    box-shadow: 0 0 40px rgba(16,185,129,0.4);
+    white-space: nowrap;
+  }
+  .cta-button.show {
+    opacity: 1;
+    transform: scale(1);
+    animation: btnPulse 2s ease-in-out infinite;
+  }
+  @keyframes btnPulse {
+    0%,100% { box-shadow: 0 0 40px rgba(16,185,129,0.4); }
+    50%      { box-shadow: 0 0 70px rgba(16,185,129,0.8), 0 0 100px rgba(52,211,153,0.3); }
+  }
+
+  .cta-sub {
+    font-family: system-ui, sans-serif;
+    font-size: 26px;
+    color: var(--zinc);
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .cta-sub.show { opacity: 1; }
+
+  /* ============================================================
+     SCAN LINE ANIMATION (scene 3)
+  ============================================================ */
+  @keyframes scanDown {
+    from { top: 0; }
+    to   { top: 100%; }
+  }
+  .scan-line.animating {
+    animation: scanDown 0.9s ease-in-out forwards;
+  }
+
+  /* ============================================================
+     ARROW / TRANSFORM INDICATOR
+  ============================================================ */
+  .transform-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: var(--emerald);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    padding: 0 8px;
+    flex-shrink: 0;
+  }
+  .transform-arrow.show { opacity: 1; }
+
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     STAGE: 1080×1920 scaled to viewport
+============================================================ -->
+<div id="stage">
+
+  <!-- FLOATING PARTICLES -->
+  <div id="particles"></div>
+
+  <!-- PROGRESS BAR -->
+  <div id="progress-bar"></div>
+
+  <!-- ===========================================================
+       SCENE 1 – BRAND INTRO (0–4s)
+  =========================================================== -->
+  <div id="scene1" class="scene">
+    <div class="u-logo" id="s1-logo">U</div>
+    <div class="brand-name" id="s1-name"></div>
+    <div class="brand-divider" id="s1-divider"></div>
+    <div class="tagline" id="s1-tagline">
+      Developer tools that<br><span class="em">respect your data</span>
+    </div>
+  </div>
+
+  <!-- ===========================================================
+       SCENE 2 – PROBLEM (4–9s)
+  =========================================================== -->
+  <div id="scene2" class="scene">
+    <div class="alert-badge" id="s2-badge">
+      <span class="emoji">⚠️</span>
+      <div class="alert-text">You paste sensitive data<br>into AI every day</div>
+    </div>
+
+    <div class="code-panel">
+      <span class="line" id="s2-l1">
+        <span class="kw">const</span> <span class="var">STRIPE_KEY</span> = <span class="danger-val">"sk_live_9xKZ4mP2qRt8nB..."</span> <span class="cmt">// ← leaked</span>
+      </span>
+      <span class="line" id="s2-l2">
+        <span class="kw">const</span> <span class="var">DB_URL</span> &nbsp;&nbsp;&nbsp;= <span class="danger-val">"postgres://admin:pw@db"</span>
+      </span>
+      <span class="line" id="s2-l3">
+        <span class="kw">const</span> <span class="var">SSN</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <span class="danger-val">"521-40-1234"</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cmt">// ← PII</span>
+      </span>
+    </div>
+
+    <div class="sub-note" id="s2-note">
+      Pasted into ChatGPT <span class="hi">10,000+</span> times today alone
+    </div>
+  </div>
+
+  <!-- ===========================================================
+       SCENE 3 – AI SCHEMA MASKER (9–15s)
+  =========================================================== -->
+  <div id="scene3" class="scene">
+    <div class="scene-badge" id="s3-badge">🛡️ AI Schema Masker</div>
+
+    <div class="split-panel">
+      <!-- BEFORE panel -->
+      <div class="split-side left" id="s3-before">
+        <div class="scan-line" id="s3-scan"></div>
+        <div class="panel-label before">BEFORE</div>
+        <div class="mono">
+          <span class="sql-kw">SELECT</span> <span class="danger-name">customer_name</span>,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="danger-name">email</span>,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="danger-name">credit_score</span><br>
+          <span class="sql-kw">FROM</span> <span class="danger-name">banking.users</span><br>
+          <span class="sql-kw">WHERE</span> <span class="sql-tbl">active</span> = <span class="jb">true</span>
+        </div>
+      </div>
+
+      <!-- AFTER panel -->
+      <div class="split-side right" id="s3-after">
+        <div class="panel-label after">AFTER</div>
+        <div class="mono">
+          <span class="sql-kw">SELECT</span> <span class="masked-token" id="m1">C_00001</span>,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="masked-token" id="m2">C_00002</span>,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="masked-token" id="m3">C_00003</span><br>
+          <span class="sql-kw">FROM</span> <span class="masked-token" id="m4">T_00001</span><br>
+          <span class="sql-kw">WHERE</span> <span class="sql-tbl">C_00004</span> = <span class="jb">true</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="scene-badge" id="s3-sub" style="background:rgba(16,185,129,0.08); font-size:22px; margin-top:0;">
+      Real schema stays local · AI never sees your table names
+    </div>
+  </div>
+
+  <!-- ===========================================================
+       SCENE 4 – JSON FORMATTER (15–20s)
+  =========================================================== -->
+  <div id="scene4" class="scene">
+    <div class="json-badge" id="s4-badge">{ } JSON Formatter</div>
+
+    <div class="json-before" id="s4-before">
+      <span style="color:#4a4a5a">// Minified — unreadable</span><br>
+      <span style="color:var(--zinc)">{"user":{"id":42,"name":"Ada","roles":["admin","dev"],"meta":{"plan":"pro","active":true}}}</span>
+    </div>
+
+    <div style="font-size:44px; text-align:center; color:var(--sky); opacity:0; transition:opacity 0.4s ease;" id="s4-arrow">↓ beautify</div>
+
+    <div class="json-after" id="s4-after">
+      <span class="jk">"user"</span>: {<br>
+      &nbsp;&nbsp;<span class="jk">"id"</span>: <span class="jn">42</span>,<br>
+      &nbsp;&nbsp;<span class="jk">"name"</span>: <span class="jv">"Ada"</span>,<br>
+      &nbsp;&nbsp;<span class="jk">"roles"</span>: [<span class="jv">"admin"</span>, <span class="jv">"dev"</span>],<br>
+      &nbsp;&nbsp;<span class="jk">"meta"</span>: { <span class="jk">"plan"</span>: <span class="jv">"pro"</span>, <span class="jk">"active"</span>: <span class="jb">true</span> }<br>
+      }
+    </div>
+
+    <div class="format-tagline" id="s4-tagline">
+      <span class="em">Instant.</span> Beautiful. Free.
+    </div>
+  </div>
+
+  <!-- ===========================================================
+       SCENE 5 – CODE PROMPT SHIELD (20–25s)
+  =========================================================== -->
+  <div id="scene5" class="scene">
+    <div class="shield-badge" id="s5-badge">🔐 Code Prompt Shield · 18 languages</div>
+
+    <!-- BEFORE -->
+    <div class="ts-panel" id="s5-before">
+      <div style="font-family:system-ui;font-size:18px;color:#4a4a5a;margin-bottom:12px;letter-spacing:2px;">BEFORE · TYPESCRIPT</div>
+      <span class="ts-kw">const</span> stripe = <span class="ts-fn">new</span> Stripe(<span class="danger-val">"sk_live_9xKZ4mP2qRt8nB3j"</span>);<br>
+      <span class="ts-kw">const</span> db: <span class="ts-type">Pool</span> = <span class="ts-fn">createPool</span>({<br>
+      &nbsp;&nbsp;connectionString: <span class="danger-val">"postgres://admin:s3cr3t@prod"</span><br>
+      });<br>
+      <span class="ts-kw">const</span> <span class="ts-type">API_KEY</span> = <span class="danger-val">"AIzaSyB_7f3kP9xQ2mN"</span>;
+    </div>
+
+    <!-- AFTER -->
+    <div class="ts-panel shielded" id="s5-after" style="opacity:0;transform:translateY(12px);transition:opacity 0.5s ease,transform 0.5s ease;">
+      <div style="font-family:system-ui;font-size:18px;color:var(--violet);margin-bottom:12px;letter-spacing:2px;">AFTER · SHIELDED</div>
+      <span class="ts-kw">const</span> stripe = <span class="ts-fn">new</span> Stripe(<span class="shield-token" id="st1">SECRET_1</span>);<br>
+      <span class="ts-kw">const</span> db: <span class="ts-type">Pool</span> = <span class="ts-fn">createPool</span>({<br>
+      &nbsp;&nbsp;connectionString: <span class="shield-token" id="st2">SECRET_2</span><br>
+      });<br>
+      <span class="ts-kw">const</span> <span class="ts-type">API_KEY</span> = <span class="shield-token" id="st3">SECRET_3</span>;
+    </div>
+  </div>
+
+  <!-- ===========================================================
+       SCENE 6 – STATS (25–30s)
+  =========================================================== -->
+  <div id="scene6" class="scene">
+    <div class="stats-title" id="s6-title">Built for developers. Built for privacy.</div>
+
+    <div class="stats-grid">
+      <div class="stat-card" id="s6-c1">
+        <div class="stat-icon">🧰</div>
+        <div class="stat-info">
+          <div class="stat-number" id="cnt1">0</div>
+          <div class="stat-label">Developer Tools</div>
+        </div>
+      </div>
+      <div class="stat-card" id="s6-c2">
+        <div class="stat-icon">💻</div>
+        <div class="stat-info">
+          <div class="stat-number" id="cnt2">0</div>
+          <div class="stat-label">Client-Side Processing</div>
+        </div>
+      </div>
+      <div class="stat-card" id="s6-c3">
+        <div class="stat-icon">🔒</div>
+        <div class="stat-info">
+          <div class="stat-number" id="cnt3">0</div>
+          <div class="stat-label">Bytes Sent to Servers</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===========================================================
+       SCENE 7 – TRUST WALL (30–36s)
+  =========================================================== -->
+  <div id="scene7" class="scene">
+    <div class="trust-title" id="s7-title">Your privacy is non-negotiable.</div>
+
+    <div class="trust-cards">
+      <div class="trust-card" id="s7-card1">
+        <div class="trust-icon">🚫</div>
+        <div class="trust-text">
+          <h3>No Signup Required</h3>
+          <p>Open any tool and start immediately. No account, no email.</p>
+        </div>
+      </div>
+      <div class="trust-card" id="s7-card2">
+        <div class="trust-icon">🗑️</div>
+        <div class="trust-text">
+          <h3>Zero Data Stored</h3>
+          <p>Nothing is saved. Close the tab — it's gone forever.</p>
+        </div>
+      </div>
+      <div class="trust-card" id="s7-card3">
+        <div class="trust-icon">🌐</div>
+        <div class="trust-text">
+          <h3>100% Client-Side</h3>
+          <p>Every computation runs locally in your browser.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="privacy-stmt" id="s7-stmt">
+      Everything runs in <span class="em">YOUR browser.</span><br>
+      <span class="em">Nothing</span> leaves your machine.
+    </div>
+  </div>
+
+  <!-- ===========================================================
+       SCENE 8 – CTA (36–40s)
+  =========================================================== -->
+  <div id="scene8" class="scene">
+    <div class="cta-logo" id="s8-logo">U</div>
+    <div class="cta-url" id="s8-url"></div>
+    <div class="cta-button" id="s8-btn">Start building safely →</div>
+    <div class="cta-sub" id="s8-sub">Free forever. No strings attached.</div>
+  </div>
+
+</div><!-- /#stage -->
+
+<script>
+/* ============================================================
+   PROMO REEL – MAIN CONTROLLER
+   40-second loop, 8 scenes, zero dependencies
+============================================================ */
+
+// ── Stage scaling ──────────────────────────────────────────
+(function scaleStage() {
+  const stage = document.getElementById('stage');
+  function resize() {
+    const scaleX = window.innerWidth  / 1080;
+    const scaleY = window.innerHeight / 1920;
+    const scale  = Math.min(scaleX, scaleY);
+    const offsetX = (window.innerWidth  - 1080 * scale) / 2;
+    const offsetY = (window.innerHeight - 1920 * scale) / 2;
+    stage.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+})();
+
+// ── Floating particles ─────────────────────────────────────
+(function buildParticles() {
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = 2 + Math.random() * 3;
+    const dur  = 4 + Math.random() * 8;
+    const dist = -(20 + Math.random() * 60);
+    p.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      --dur:${dur}s;
+      --dist:${dist}px;
+      animation-delay:${-Math.random()*dur}s;
+      opacity:${0.2 + Math.random()*0.4};
+    `;
+    container.appendChild(p);
+  }
+})();
+
+// ── Typing helper ──────────────────────────────────────────
+function typeText(el, text, speed, cb) {
+  el.textContent = '';
+  let i = 0;
+  const iv = setInterval(() => {
+    el.textContent += text[i++];
+    if (i >= text.length) { clearInterval(iv); if (cb) cb(); }
+  }, speed);
+  return iv;
+}
+
+// ── CountUp helper (rAF easing) ───────────────────────────
+function countUp(el, target, suffix, duration, cb) {
+  const start = performance.now();
+  function tick(now) {
+    const t = Math.min((now - start) / duration, 1);
+    // easeOutExpo
+    const ease = t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+    const val  = Math.round(ease * target);
+    el.textContent = val + suffix;
+    if (t < 1) { requestAnimationFrame(tick); }
+    else { el.textContent = target + suffix; if (cb) cb(); }
+  }
+  requestAnimationFrame(tick);
+}
+
+// ── Show/hide helper ───────────────────────────────────────
+function show(id)  { const el = document.getElementById(id); if (el) el.classList.add('show'); }
+function hide(id)  { const el = document.getElementById(id); if (el) el.classList.remove('show'); }
+
+// ── Delay helper ──────────────────────────────────────────
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ============================================================
+// SCENE STATE
+// ============================================================
+const scenes     = [1,2,3,4,5,6,7,8];
+const sceneEls   = {};
+scenes.forEach(n => { sceneEls[n] = document.getElementById('scene'+n); });
+
+let startTime    = null;
+let currentScene = 0;
+let loopTimer    = null;
+let sceneTimers  = []; // clearable scene-specific timers
+
+// Scene start times (seconds)
+const SCENE_TIMES = [0, 4, 9, 15, 20, 25, 30, 36, 40];
+
+// ── Progress bar ───────────────────────────────────────────
+const progressBar = document.getElementById('progress-bar');
+function updateProgress() {
+  const elapsed = (Date.now() - startTime) / 1000;
+  const pct     = Math.min(elapsed / 40, 1) * 100;
+  progressBar.style.width = pct + '%';
+}
+
+// ── Activate scene ────────────────────────────────────────
+function activateScene(n) {
+  scenes.forEach(s => {
+    const el = sceneEls[s];
+    if (s === n) { el.classList.add('active'); }
+    else         { el.classList.remove('active'); }
+  });
+  currentScene = n;
+
+  // Kick off scene-specific animations
+  switch (n) {
+    case 1: initScene1(); break;
+    case 2: initScene2(); break;
+    case 3: initScene3(); break;
+    case 4: initScene4(); break;
+    case 5: initScene5(); break;
+    case 6: initScene6(); break;
+    case 7: initScene7(); break;
+    case 8: initScene8(); break;
+  }
+}
+
+// ── Scene manager loop ────────────────────────────────────
+function tick() {
+  if (!startTime) return;
+  const elapsed = (Date.now() - startTime) / 1000;
+
+  // Find correct scene
+  let sceneIdx = 0;
+  for (let i = 0; i < SCENE_TIMES.length - 1; i++) {
+    if (elapsed >= SCENE_TIMES[i] && elapsed < SCENE_TIMES[i+1]) {
+      sceneIdx = i + 1; break;
+    }
+  }
+
+  if (sceneIdx !== currentScene && sceneIdx >= 1 && sceneIdx <= 8) {
+    activateScene(sceneIdx);
+  }
+
+  updateProgress();
+
+  if (elapsed >= 40) {
+    restart();
+  }
+}
+
+function restart() {
+  clearInterval(loopTimer);
+  // Reset all scenes
+  scenes.forEach(n => sceneEls[n].classList.remove('active'));
+  // Reset scene-specific elements
+  resetAllScenes();
+  startTime = Date.now();
+  currentScene = 0;
+  progressBar.style.width = '0%';
+  loopTimer = setInterval(tick, 100);
+}
+
+function start() {
+  startTime = Date.now();
+  loopTimer = setInterval(tick, 100);
+}
+
+// ============================================================
+// SCENE 1 – BRAND INTRO (0–4s)
+// ============================================================
+let s1Init = false;
+async function initScene1() {
+  if (s1Init) return;
+  s1Init = true;
+
+  const logo   = document.getElementById('s1-logo');
+  const name   = document.getElementById('s1-name');
+  const div    = document.getElementById('s1-divider');
+  const tag    = document.getElementById('s1-tagline');
+
+  // Logo pulse in
+  await delay(200);
+  logo.classList.add('show');
+
+  await delay(600);
+  logo.classList.add('pulsing');
+  div.classList.add('show');
+
+  // Type brand name
+  await delay(300);
+  typeText(name, 'UnblockDevs', 55, () => {
+    // After typing, highlight last part
+    name.innerHTML = '<span style="color:#a1a1aa">Unblock</span><span class="accent">Devs</span>';
+  });
+
+  await delay(1200);
+  tag.classList.add('show');
+}
+
+// ============================================================
+// SCENE 2 – PROBLEM (4–9s)
+// ============================================================
+let s2Init = false;
+async function initScene2() {
+  if (s2Init) return;
+  s2Init = true;
+
+  await delay(300);
+  show('s2-badge');
+  await delay(700);
+  document.getElementById('s2-l1').classList.add('show');
+  await delay(500);
+  document.getElementById('s2-l2').classList.add('show');
+  await delay(500);
+  document.getElementById('s2-l3').classList.add('show');
+  await delay(700);
+  show('s2-note');
+}
+
+// ============================================================
+// SCENE 3 – AI SCHEMA MASKER (9–15s)
+// ============================================================
+let s3Init = false;
+async function initScene3() {
+  if (s3Init) return;
+  s3Init = true;
+
+  await delay(300);
+  show('s3-badge');
+  await delay(500);
+
+  // Scan line animation
+  const scan = document.getElementById('s3-scan');
+  scan.classList.add('animating');
+
+  // Reveal masked tokens staggered
+  await delay(500);
+  ['m1','m2','m3','m4'].forEach((id, i) => {
+    setTimeout(() => show(id), i * 250);
+  });
+
+  await delay(1500);
+  show('s3-sub');
+}
+
+// ============================================================
+// SCENE 4 – JSON FORMATTER (15–20s)
+// ============================================================
+let s4Init = false;
+async function initScene4() {
+  if (s4Init) return;
+  s4Init = true;
+
+  await delay(300);
+  show('s4-badge');
+  await delay(500);
+  document.getElementById('s4-before').classList.add('show');
+  await delay(800);
+
+  // Arrow appears
+  const arrow = document.getElementById('s4-arrow');
+  arrow.style.opacity = '1';
+  await delay(600);
+
+  // Before fades, after appears
+  document.getElementById('s4-before').style.opacity = '0.3';
+  document.getElementById('s4-after').classList.add('show');
+  await delay(700);
+
+  show('s4-tagline');
+}
+
+// ============================================================
+// SCENE 5 – CODE PROMPT SHIELD (20–25s)
+// ============================================================
+let s5Init = false;
+async function initScene5() {
+  if (s5Init) return;
+  s5Init = true;
+
+  await delay(300);
+  show('s5-badge');
+  await delay(600);
+
+  // Before panel already visible (opacity:1 default in scene)
+  const before = document.getElementById('s5-before');
+  before.style.opacity = '1';
+
+  await delay(1000);
+
+  // Transition
+  before.style.opacity = '0.25';
+  before.style.transition = 'opacity 0.5s ease';
+
+  const after = document.getElementById('s5-after');
+  after.style.opacity = '1';
+  after.style.transform = 'translateY(0)';
+
+  await delay(500);
+  ['st1','st2','st3'].forEach((id, i) => {
+    setTimeout(() => show(id), i * 300);
+  });
+}
+
+// ============================================================
+// SCENE 6 – STATS (25–30s)
+// ============================================================
+let s6Init = false;
+async function initScene6() {
+  if (s6Init) return;
+  s6Init = true;
+
+  await delay(300);
+  show('s6-title');
+
+  await delay(500);
+  document.getElementById('s6-c1').classList.add('show');
+  countUp(document.getElementById('cnt1'), 60, '+', 1500);
+
+  await delay(350);
+  document.getElementById('s6-c2').classList.add('show');
+  countUp(document.getElementById('cnt2'), 100, '%', 1500);
+
+  await delay(350);
+  document.getElementById('s6-c3').classList.add('show');
+  countUp(document.getElementById('cnt3'), 0, ' Bytes', 1000);
+}
+
+// ============================================================
+// SCENE 7 – TRUST WALL (30–36s)
+// ============================================================
+let s7Init = false;
+async function initScene7() {
+  if (s7Init) return;
+  s7Init = true;
+
+  await delay(300);
+  show('s7-title');
+
+  await delay(500);
+  show('s7-card1');
+  await delay(300);
+  show('s7-card2');
+  await delay(300);
+  show('s7-card3');
+
+  await delay(700);
+  show('s7-stmt');
+}
+
+// ============================================================
+// SCENE 8 – CTA (36–40s)
+// ============================================================
+let s8Init = false;
+async function initScene8() {
+  if (s8Init) return;
+  s8Init = true;
+
+  const logo = document.getElementById('s8-logo');
+  const url  = document.getElementById('s8-url');
+  const btn  = document.getElementById('s8-btn');
+  const sub  = document.getElementById('s8-sub');
+
+  await delay(200);
+  logo.classList.add('show');
+
+  await delay(700);
+  typeText(url, 'unblockdevs.com', 55);
+
+  await delay(1100);
+  btn.classList.add('show');
+
+  await delay(400);
+  sub.classList.add('show');
+}
+
+// ============================================================
+// RESET – called before each loop
+// ============================================================
+function resetAllScenes() {
+  // Scene 1
+  s1Init = false;
+  document.getElementById('s1-logo').className = 'u-logo';
+  document.getElementById('s1-name').textContent = '';
+  document.getElementById('s1-divider').classList.remove('show');
+  document.getElementById('s1-tagline').classList.remove('show');
+
+  // Scene 2
+  s2Init = false;
+  ['s2-badge','s2-l1','s2-l2','s2-l3','s2-note'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('show');
+  });
+
+  // Scene 3
+  s3Init = false;
+  document.getElementById('s3-badge').classList.remove('show');
+  document.getElementById('s3-sub').classList.remove('show');
+  document.getElementById('s3-scan').classList.remove('animating');
+  ['m1','m2','m3','m4'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('show');
+  });
+  // Reset scan line by cloning to clear animation
+  const oldScan = document.getElementById('s3-scan');
+  const newScan = oldScan.cloneNode(true);
+  oldScan.parentNode.replaceChild(newScan, oldScan);
+
+  // Scene 4
+  s4Init = false;
+  document.getElementById('s4-badge').classList.remove('show');
+  document.getElementById('s4-before').classList.remove('show');
+  document.getElementById('s4-before').style.opacity = '';
+  document.getElementById('s4-after').classList.remove('show');
+  document.getElementById('s4-arrow').style.opacity = '0';
+  document.getElementById('s4-tagline').classList.remove('show');
+
+  // Scene 5
+  s5Init = false;
+  document.getElementById('s5-badge').classList.remove('show');
+  const b5 = document.getElementById('s5-before');
+  b5.style.opacity = ''; b5.style.transition = '';
+  const a5 = document.getElementById('s5-after');
+  a5.style.opacity = '0'; a5.style.transform = 'translateY(12px)';
+  ['st1','st2','st3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('show');
+  });
+
+  // Scene 6
+  s6Init = false;
+  document.getElementById('s6-title').classList.remove('show');
+  ['s6-c1','s6-c2','s6-c3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('show');
+  });
+  document.getElementById('cnt1').textContent = '0+';
+  document.getElementById('cnt2').textContent = '0%';
+  document.getElementById('cnt3').textContent = '0 Bytes';
+
+  // Scene 7
+  s7Init = false;
+  ['s7-title','s7-card1','s7-card2','s7-card3','s7-stmt'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('show');
+  });
+
+  // Scene 8
+  s8Init = false;
+  document.getElementById('s8-logo').className = 'cta-logo';
+  document.getElementById('s8-url').textContent = '';
+  document.getElementById('s8-btn').classList.remove('show');
+  document.getElementById('s8-sub').classList.remove('show');
+}
+
+// ── Kick off ───────────────────────────────────────────────
+start();
+</script>
+
+</body>
+</html>
