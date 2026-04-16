@@ -31,6 +31,54 @@ export const metadata: Metadata = {
     'api data to excel',
     'convert json to xlsx free',
     'json to csv converter free',
+    'json to excel converter',
+    'convert json to excel free',
+    'json to xlsx online',
+    'json to csv converter',
+    'json data to excel table',
+    'json to excel no signup',
+    'json to xls converter',
+    'json excel download',
+    'json to google sheets',
+    'import json excel',
+    'flatten json to excel',
+    'json to excel python',
+    'pandas json to excel',
+    'json to excel javascript',
+    'xlsx json converter',
+    'json to excel nodejs',
+    'json export excel',
+    'json flat table',
+    'json to tabular data',
+    'convert api response to excel',
+    'json report to excel',
+    'json logs to excel',
+    'json analytics excel',
+    'json pivot table',
+    'json to excel vba',
+    'power query json excel',
+    'excel import json',
+    'excel get json data',
+    'excel power automate json',
+    'json to excel formula',
+    'json array flatten excel',
+    'json nested flatten',
+    'json to row column excel',
+    'json multi level excel',
+    'json excel template',
+    'export data excel browser',
+    'client side excel generation',
+    'sheetjs json',
+    'excel js json',
+    'json to excel bulk',
+    'large json to excel',
+    'json to excel free tool',
+    'json to excel online tool',
+    'json to word converter',
+    'convert json table excel',
+    'json to spreadsheet online',
+    'json table export',
+    'json to xlsx download',
   ],
   openGraph: {
     title:
@@ -128,6 +176,70 @@ const faqSchema = {
         text: 'Yes. All conversion runs in your browser using JavaScript — no JSON data is sent to any server, logged, or stored. Safe for sensitive API responses, financial data, and confidential business records.',
       },
     },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I convert nested JSON to Excel?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'This tool automatically flattens nested JSON objects into column headers using dot or underscore notation. For example, {"address": {"city": "Paris"}} becomes the column address_city. Select your preferred separator before exporting to XLSX or CSV.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What is the maximum file size I can convert?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Since all processing happens in your browser, the practical limit depends on your device memory. Most modern devices handle JSON files up to several megabytes without issue. For very large files (hundreds of MB) consider splitting them or using a server-side tool like pandas in Python.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I convert JSON to CSV instead of Excel?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Select CSV as the export format before downloading. CSV is plain text with values separated by commas, compatible with Google Sheets, LibreOffice Calc, and any spreadsheet application. TSV (tab-separated) is also available if your data contains commas.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I import JSON into Excel using Power Query?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'In Excel, go to Data > Get Data > From File > From JSON. Select your .json file and use the Power Query editor to expand nested records and lists into columns. Alternatively, use this tool to pre-flatten the JSON and download a ready-to-open XLSX file in seconds.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I convert JSON to Excel in Python?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Use pandas: import pandas as pd; df = pd.read_json("data.json"); df.to_excel("output.xlsx", index=False). For nested JSON, use pd.json_normalize(data) to flatten nested objects into columns before calling to_excel().',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I use SheetJS to export JSON to Excel?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Install SheetJS (xlsx): npm install xlsx. Then: const ws = XLSX.utils.json_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Sheet1"); XLSX.writeFile(wb, "output.xlsx");. SheetJS supports multiple sheets, cell formatting, and both Node.js and browser environments.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I export multiple JSON arrays to separate Excel sheets?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Use multi-sheet mode in this tool — when your JSON root object contains multiple arrays (e.g. {"users": [...], "orders": [...]}), each array is placed on its own worksheet tab. In SheetJS you can do this by appending multiple sheets: XLSX.utils.book_append_sheet(wb, ws1, "Users"); XLSX.utils.book_append_sheet(wb, ws2, "Orders");',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I convert JSON to Google Sheets?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Convert your JSON to CSV using this tool, then import the CSV into Google Sheets via File > Import. Alternatively, use the Google Sheets IMPORTDATA() or IMPORTJSON() functions for live API data. For complex JSON, download the XLSX from this tool and open it in Google Drive.',
+      },
+    },
   ],
 };
 
@@ -215,6 +327,34 @@ export default function JsonToExcelPage() {
             {
               q: 'Is my data safe?',
               a: 'Yes. All conversion runs in your browser — no JSON data is sent to any server. Safe for API responses, financial records, and confidential business data.',
+            },
+            {
+              q: 'How do I convert nested JSON to Excel?',
+              a: <>This tool automatically flattens nested JSON objects into column headers using dot or underscore notation. For example, <C>{`{"address": {"city": "Paris"}}`}</C> becomes the column <C>address_city</C>. Select your preferred separator before exporting.</>,
+            },
+            {
+              q: 'What is the maximum file size I can convert?',
+              a: 'Since all processing happens in your browser, the practical limit depends on your device memory. Most devices handle JSON files up to several megabytes without issue. For very large files consider splitting them or using pandas in Python.',
+            },
+            {
+              q: 'How do I convert JSON to CSV instead of Excel?',
+              a: 'Select CSV as the export format before downloading. CSV is plain text compatible with Google Sheets, LibreOffice Calc, and any spreadsheet application. TSV is also available if your data contains commas.',
+            },
+            {
+              q: 'How do I import JSON into Excel using Power Query?',
+              a: 'In Excel, go to Data > Get Data > From File > From JSON. Select your .json file and use the Power Query editor to expand nested records into columns. Or use this tool to pre-flatten the JSON and download a ready-to-open XLSX in seconds.',
+            },
+            {
+              q: 'How do I convert JSON to Excel in Python?',
+              a: <>Use pandas: <C>df = pd.read_json("data.json"); df.to_excel("output.xlsx", index=False)</C>. For nested JSON, use <C>pd.json_normalize(data)</C> to flatten nested objects into columns before calling <C>to_excel()</C>.</>,
+            },
+            {
+              q: 'How do I use SheetJS to export JSON to Excel?',
+              a: <>Install SheetJS (xlsx) with npm. Then: <C>const ws = XLSX.utils.json_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Sheet1"); XLSX.writeFile(wb, "output.xlsx");</C> — works in both Node.js and browser environments.</>,
+            },
+            {
+              q: 'How do I convert JSON to Google Sheets?',
+              a: 'Convert your JSON to CSV using this tool, then import the CSV into Google Sheets via File > Import. Alternatively, use IMPORTDATA() or IMPORTJSON() functions for live API data. For complex JSON, download the XLSX and open it in Google Drive.',
             },
           ]} />
         </SEOSection>

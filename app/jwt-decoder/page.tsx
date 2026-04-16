@@ -20,6 +20,21 @@ export const metadata: Metadata = {
     'how to check if jwt token is expired', 'debug jwt authentication',
     'aws cognito jwt decoder', 'auth0 jwt decoder', 'firebase jwt decoder',
     'compare jwt', 'compare jwt token', 'jwt token compare',
+    // extended keyword cluster
+    'jwt decode free', 'jwt token viewer', 'jwt payload decoder', 'jwt header decoder',
+    'jwt online tool', 'jwt decode without secret', 'jwt verify signature online',
+    'jwt debugger', 'jwt inspector', 'jwt decode bearer token',
+    'jwt decode authorization header', 'jwt rs256 decode', 'jwt hs256 verify', 'jwt hs512',
+    'jwt token structure', 'jwt iss sub aud exp claims', 'jwt nbf claim', 'jwt iat claim',
+    'jwt decode react', 'jwt decode node js', 'jwt decode python', 'decode jwt python',
+    'jsonwebtoken decode', 'jwt-decode npm', 'jwt parse online', 'jwt validator free',
+    'jwt refresh token', 'jwt access token', 'jwt vs session', 'jwt security audit',
+    'jwt algorithm check', 'jwt none algorithm attack', 'jwt secret weak',
+    'jwt expired error fix', 'jwt invalid signature fix', 'jwt malformed error',
+    'jwt token expired fix', 'jwt token invalid', 'decode jwt without verification',
+    'jwt payload base64url', 'jwt decode cli', 'jwt bearer token format',
+    'jwt authorization header decode', 'jwt structure explained', 'jwt claims reference',
+    'jwt rfc 7519', 'jwt okta decoder',
   ],
   openGraph: {
     title: 'JWT Decoder — Decode, Verify, Check Expiry & Security Audit Online Free | UnblockDevs',
@@ -69,6 +84,14 @@ const faqSchema = {
     { '@type': 'Question', name: 'Is it safe to paste JWT tokens into online decoders?', acceptedAnswer: { '@type': 'Answer', text: 'Only if the tool is 100% client-side. This JWT Decoder processes everything in your browser — no network request is made and your token never leaves your device. Safe for production tokens and sensitive credentials.' } },
     { '@type': 'Question', name: 'How do I check if a JWT token is expired?', acceptedAnswer: { '@type': 'Answer', text: 'Paste your JWT. The decoder reads the exp claim and shows the exact expiration datetime, whether the token is currently valid, and how much lifetime remains or how long ago it expired.' } },
     { '@type': 'Question', name: 'What is the JWT none algorithm vulnerability?', acceptedAnswer: { '@type': 'Answer', text: 'The alg:none attack strips the JWT signature so vulnerable servers accept any payload without verification. This JWT Decoder\'s built-in security analysis detects this vulnerability automatically.' } },
+    { '@type': 'Question', name: 'What is a JWT token?', acceptedAnswer: { '@type': 'Answer', text: 'A JWT (JSON Web Token) is an open standard (RFC 7519) for securely transmitting information as a compact URL-safe string. It has three Base64URL-encoded parts — header, payload, and signature — separated by dots.' } },
+    { '@type': 'Question', name: 'How do I decode a JWT without a secret?', acceptedAnswer: { '@type': 'Answer', text: 'The header and payload are just Base64URL-encoded JSON — no secret is needed to decode them. Only signature verification requires the secret or public key. Paste the JWT and read the claims freely.' } },
+    { '@type': 'Question', name: 'What is the difference between HS256 and RS256?', acceptedAnswer: { '@type': 'Answer', text: 'HS256 uses a shared HMAC secret (symmetric) — both signer and verifier use the same key. RS256 uses an RSA key pair (asymmetric) — the server signs with a private key and clients verify with a public key. RS256 is safer for distributed systems.' } },
+    { '@type': 'Question', name: 'What claims are in a JWT payload?', acceptedAnswer: { '@type': 'Answer', text: 'Standard claims include: iss (issuer), sub (subject/user ID), aud (audience), exp (expiration), nbf (not before), iat (issued at), and jti (JWT ID). Applications can also include custom claims like roles, email, or permissions.' } },
+    { '@type': 'Question', name: 'How do I verify a JWT signature online?', acceptedAnswer: { '@type': 'Answer', text: 'Enter your HMAC secret in the Verify tab. The decoder runs HMAC-SHA256/384/512 locally in your browser and confirms whether the signature matches — no server involved.' } },
+    { '@type': 'Question', name: 'What does a JWT malformed error mean?', acceptedAnswer: { '@type': 'Answer', text: 'A "malformed" JWT error means the token does not have the expected three dot-separated parts, or a part is not valid Base64URL. Common causes: truncated token, extra whitespace, or URL encoding that changed + to space.' } },
+    { '@type': 'Question', name: 'How do I decode a JWT in JavaScript?', acceptedAnswer: { '@type': 'Answer', text: 'Use the jwt-decode library: import jwtDecode from "jwt-decode"; const payload = jwtDecode(token). Or manually: JSON.parse(atob(token.split(".")[1].replace(/-/g,"+").replace(/_/g,"/"))).' } },
+    { '@type': 'Question', name: 'How do I decode a JWT in Python?', acceptedAnswer: { '@type': 'Answer', text: 'Use PyJWT: import jwt; payload = jwt.decode(token, options={"verify_signature": False}). Or manually: import base64, json; json.loads(base64.b64decode(token.split(".")[1] + "==")).' } },
   ],
 };
 
@@ -215,6 +238,30 @@ export default function JWTDecoderPage() {
             {
               q: 'What does a JWT token look like?',
               a: <>A JWT has three Base64URL-encoded parts separated by dots. The first starts with <C>eyJ</C> (the encoded <C>{'{"'}</C>), making most JWTs recognizable by that prefix. The third part is the cryptographic signature and cannot be decoded without the secret.</>,
+            },
+            {
+              q: 'What is a JWT token?',
+              a: 'A JWT (JSON Web Token) is an open standard (RFC 7519) for securely transmitting information as a compact URL-safe string. It has three Base64URL-encoded parts — header, payload, and signature — separated by dots.',
+            },
+            {
+              q: 'How do I decode a JWT without a secret?',
+              a: 'The header and payload are just Base64URL-encoded JSON — no secret is needed to decode them. Only signature verification requires the secret or public key. Paste the JWT and read the claims freely.',
+            },
+            {
+              q: 'What is the difference between HS256 and RS256?',
+              a: 'HS256 uses a shared HMAC secret (symmetric) — both signer and verifier use the same key. RS256 uses an RSA key pair (asymmetric) — the server signs with a private key and clients verify with a public key. RS256 is safer for distributed systems.',
+            },
+            {
+              q: 'What claims are in a JWT payload?',
+              a: <>Standard claims: <C>iss</C> (issuer), <C>sub</C> (subject/user ID), <C>aud</C> (audience), <C>exp</C> (expiration), <C>nbf</C> (not before), <C>iat</C> (issued at), <C>jti</C> (JWT ID). Apps also add custom claims like roles, email, or permissions.</>,
+            },
+            {
+              q: 'What does a JWT malformed error mean?',
+              a: 'A "malformed" JWT error means the token does not have the expected three dot-separated parts, or a part is not valid Base64URL. Common causes: truncated token, extra whitespace, or URL-encoding that changed + to a space.',
+            },
+            {
+              q: 'How do I decode a JWT in JavaScript?',
+              a: <>Use <C>jwt-decode</C>: <C>jwtDecode(token)</C>. Or manually: <C>JSON.parse(atob(token.split(&quot;.&quot;)[1].replace(/-/g,&quot;+&quot;).replace(/_/g,&quot;/&quot;)))</C>.</>,
             },
           ]} />
         </SEOSection>

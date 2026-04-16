@@ -66,6 +66,54 @@ export const metadata: Metadata = {
     'what is same origin policy',
     'access-control-allow-credentials cors',
     'how to fix no access-control-allow-origin',
+    // Extended keyword cluster
+    'cors policy blocked fetch',
+    'cors error api request',
+    'cors tester tool free',
+    'cors header missing',
+    'cors misconfiguration',
+    'cors credentials mode',
+    'cors wildcard origin',
+    'cors allow all origins',
+    'cors error production',
+    'cors error development',
+    'cors error nextjs api route',
+    'cors api gateway aws',
+    'cors cloudflare workers',
+    'cors vercel functions',
+    'cors netlify functions',
+    'cors error express fix',
+    'cors error fastapi fix',
+    'cors error django fix',
+    'cors error rails fix',
+    'cors error spring boot',
+    'cors header checker',
+    'cors test curl',
+    'cors test postman',
+    'cors debug tool',
+    'cors error chrome fix',
+    'cors error firefox fix',
+    'cors error safari',
+    'cors options request',
+    'cors simple request',
+    'cors complex request',
+    'what is preflight request',
+    'cors error same origin policy',
+    'access-control-allow-methods',
+    'access-control-allow-headers',
+    'access-control-max-age',
+    'access-control-expose-headers',
+    'cors with cookies',
+    'cors with authorization',
+    'cors error mobile app',
+    'cors proxy server',
+    'cors tester online free',
+    'cors tester no signup',
+    'cors checker free',
+    'how to test cors',
+    'cors header test',
+    'cors response headers',
+    'cors debug online',
   ],
   openGraph: {
     title: 'CORS Tester — Fix "Blocked by CORS Policy" Error Instantly | UnblockDevs',
@@ -143,6 +191,86 @@ const faqSchema = {
       acceptedAnswer: {
         '@type': 'Answer' as const,
         text: "CORS (Cross-Origin Resource Sharing) is a browser security mechanism that restricts which origins can read responses from cross-origin requests. CSRF (Cross-Site Request Forgery) is an attack where a malicious site tricks a user's browser into making requests to another site where the user is authenticated. CORS headers can limit who reads responses; CSRF tokens prevent unauthorized state-changing requests.",
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'Why does CORS work in Postman but not the browser?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: "Postman is not a browser and does not enforce the Same Origin Policy, so it sends requests regardless of CORS headers. Browsers enforce CORS strictly: if the server does not return the correct Access-Control-Allow-Origin header, the browser blocks the response even though the server received and processed the request. The fix must be made on the server, not the client.",
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I fix CORS in Express.js?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: "Install the cors npm package and add it as middleware: const cors = require('cors'); app.use(cors({ origin: 'https://yourfrontend.com' })). For credentials, also set credentials: true. You can whitelist multiple origins using a function for the origin option. Always restart your server after changes and verify with CORS Tester.",
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I allow all origins in CORS (and is it safe)?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: "Setting Access-Control-Allow-Origin: * allows any origin to read responses, which is safe for fully public APIs with no authentication. However, wildcard origins cannot be combined with Access-Control-Allow-Credentials: true — browsers will block such responses. For authenticated APIs, always specify exact allowed origins instead of using a wildcard.",
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I test CORS from the command line with curl?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: "Run: curl -H 'Origin: https://yourfrontend.com' -H 'Access-Control-Request-Method: GET' -X OPTIONS -v https://api.example.com/endpoint. The -v flag shows all response headers. Look for Access-Control-Allow-Origin in the response — its presence and value determine whether the browser would allow the request.",
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'Why does CORS error only happen in production?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: "In development, many frameworks proxy API requests through the dev server (e.g. Vite, Create React App) to the same origin, bypassing CORS entirely. In production, the frontend and API are on different domains, so CORS headers are required. This is why the error only surfaces after deployment. Check that your production server returns the same CORS headers your dev proxy was silently adding.",
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I fix CORS in AWS API Gateway?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: "In the AWS Console, open your API Gateway, select the resource, and enable CORS under Actions → Enable CORS. This adds the Access-Control-Allow-Origin, Access-Control-Allow-Methods, and Access-Control-Allow-Headers headers to the OPTIONS response. For Lambda integrations, your Lambda function must also return CORS headers in its response body alongside the status code.",
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I enable CORS in Cloudflare Workers?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: "In your Cloudflare Worker, add CORS headers to every response: response.headers.set('Access-Control-Allow-Origin', '*'). For preflight requests, handle the OPTIONS method explicitly and return a 200 response with Access-Control-Allow-Methods and Access-Control-Allow-Headers. Cloudflare does not add CORS headers automatically — your Worker script must handle them.",
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What is the difference between simple and preflighted requests?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: "Simple requests use methods GET, POST, or HEAD with only standard headers (Content-Type limited to text/plain, application/x-www-form-urlencoded, or multipart/form-data) and do not trigger a preflight. Preflighted requests use methods like PUT, DELETE, PATCH, or include custom headers like Authorization or Content-Type: application/json — these cause the browser to send an OPTIONS request first to verify server permissions.",
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I fix CORS with credentials/cookies?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: "Set Access-Control-Allow-Credentials: true on the server and Access-Control-Allow-Origin to the exact frontend origin (not *). On the client side, set credentials: 'include' in your fetch call, or withCredentials: true in Axios. All three conditions must be met simultaneously — missing any one will cause the browser to block the credentialed request.",
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What does Access-Control-Max-Age do?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: "Access-Control-Max-Age specifies how many seconds the browser may cache the preflight response. For example, Access-Control-Max-Age: 86400 allows the browser to skip the OPTIONS preflight for 24 hours for the same request pattern. This reduces latency and server load by avoiding redundant preflight round-trips on every request.",
       },
     },
   ],
@@ -377,6 +505,86 @@ export default function CorsTesterPage() {
                     proxy service) forwards the request server-side, bypassing browser enforcement entirely.
                     Proxies are a common workaround during development, but the correct production fix is
                     adding proper CORS headers on the target server.
+                  </>
+                ),
+              },
+              {
+                q: 'Why does CORS work in Postman but not the browser?',
+                a: (
+                  <>
+                    Postman is not a browser and does not enforce the Same Origin Policy, so it sends
+                    requests regardless of CORS headers. Browsers enforce CORS strictly — if the server
+                    does not return the correct <C>Access-Control-Allow-Origin</C> header, the browser
+                    blocks the response even though the server received and processed the request. The
+                    fix must always be made on the server side.
+                  </>
+                ),
+              },
+              {
+                q: 'How do I fix CORS in Express.js?',
+                a: (
+                  <>
+                    Install the <C>cors</C> npm package and add it as middleware:{' '}
+                    <C>app.use(cors({'{'} origin: 'https://yourfrontend.com' {'}'})).</C> For credentials,
+                    also set <C>credentials: true</C>. You can whitelist multiple origins using a function
+                    for the origin option. Always restart your server after changes and verify with CORS Tester.
+                  </>
+                ),
+              },
+              {
+                q: 'How do I allow all origins in CORS (and is it safe)?',
+                a: (
+                  <>
+                    Setting <C>Access-Control-Allow-Origin: *</C> allows any origin to read responses,
+                    which is safe for fully public APIs with no authentication. However, wildcard origins
+                    cannot be combined with <C>Access-Control-Allow-Credentials: true</C> — browsers
+                    will block such responses. For authenticated APIs, always specify exact allowed origins.
+                  </>
+                ),
+              },
+              {
+                q: 'How do I test CORS from the command line with curl?',
+                a: (
+                  <>
+                    Run:{' '}
+                    <C>{`curl -H 'Origin: https://yourfrontend.com' -H 'Access-Control-Request-Method: GET' -X OPTIONS -v https://api.example.com/endpoint`}</C>.
+                    The <C>-v</C> flag shows all response headers. Look for{' '}
+                    <C>Access-Control-Allow-Origin</C> in the output — its presence and value determine
+                    whether the browser would allow the request.
+                  </>
+                ),
+              },
+              {
+                q: 'Why does CORS error only happen in production?',
+                a: (
+                  <>
+                    In development, many frameworks proxy API requests through the dev server (e.g. Vite,
+                    Create React App) to the same origin, bypassing CORS entirely. In production, the
+                    frontend and API are on different domains, so CORS headers are required. Check that your
+                    production server returns the same CORS headers your dev proxy was silently adding.
+                  </>
+                ),
+              },
+              {
+                q: 'How do I fix CORS in AWS API Gateway?',
+                a: (
+                  <>
+                    In the AWS Console, open your API Gateway, select the resource, and enable CORS under
+                    Actions → Enable CORS. This adds the <C>Access-Control-Allow-Origin</C>,{' '}
+                    <C>Access-Control-Allow-Methods</C>, and <C>Access-Control-Allow-Headers</C> headers
+                    to the OPTIONS response. For Lambda integrations, your Lambda function must also return
+                    CORS headers in its response.
+                  </>
+                ),
+              },
+              {
+                q: 'What does Access-Control-Max-Age do?',
+                a: (
+                  <>
+                    <C>Access-Control-Max-Age</C> specifies how many seconds the browser may cache the
+                    preflight response. For example, <C>Access-Control-Max-Age: 86400</C> allows the
+                    browser to skip the OPTIONS preflight for 24 hours for the same request pattern.
+                    This reduces latency and server load by avoiding redundant preflight round-trips.
                   </>
                 ),
               },

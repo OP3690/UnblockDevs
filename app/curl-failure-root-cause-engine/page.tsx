@@ -46,6 +46,55 @@ export const metadata: Metadata = {
     'how to fix curl 400 bad request',
     'how to fix missing authorization header in curl',
     'cURL Failure Root-Cause Engine',
+    // Extended keyword cluster
+    'curl error fix',
+    'curl command not working',
+    'curl connection refused',
+    'curl ssl error',
+    'curl timeout error',
+    'curl 403 error',
+    'curl 401 error',
+    'curl 404 error',
+    'curl 500 error',
+    'curl empty response',
+    'curl no response',
+    'curl certificate error',
+    'curl ssl verify peer',
+    'curl handshake failed',
+    'curl could not resolve host',
+    'curl operation timed out',
+    'curl max time exceeded',
+    'curl send failure',
+    'curl upload error',
+    'curl download error',
+    'curl proxy error',
+    'curl authentication failed',
+    'curl basic auth error',
+    'curl content type error',
+    'curl json error',
+    'curl malformed url',
+    'curl port error',
+    'curl connection reset',
+    'curl network unreachable',
+    'curl debug with -v',
+    'curl verbose output',
+    'curl error codes explained',
+    'curl exit code 6',
+    'curl exit code 7',
+    'curl exit code 28',
+    'curl exit code 35',
+    'curl exit code 52',
+    'curl exit code 56',
+    'curl error 60',
+    'troubleshoot curl',
+    'curl command help',
+    'curl diagnostic tool',
+    'curl request debugger',
+    'curl failure analysis',
+    'curl root cause',
+    'diagnose curl error',
+    'curl not working fix',
+    'curl ssl certificate error fix',
   ],
   openGraph: {
     title: 'cURL Failure Root-Cause Engine — Debug API Errors, Fix 401 400 404 | UnblockDevs',
@@ -122,6 +171,94 @@ const faqSchema = {
       acceptedAnswer: {
         '@type': 'Answer' as const,
         text: "It's a free browser-based tool that analyzes failed cURL API calls. Paste your cURL command and HTTP status code — it returns ranked root causes with confidence scores, specific fix instructions, and corrected cURL commands. Nothing is sent to any server.",
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What does curl error 6 (Could not resolve host) mean?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: "Curl error 6 means DNS resolution failed — the hostname in your URL could not be resolved to an IP address. Common causes: typo in the URL, DNS server not reachable, no network connection, or the hostname does not exist. Try ping yourhostname.com to verify DNS works. On corporate networks, check proxy settings.",
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I fix a curl SSL certificate error?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: "An SSL certificate error (curl error 60) means the server's certificate cannot be verified. For testing, add -k to skip verification. For production, the real fix is ensuring your CA bundle is up to date (update curl or the ca-certificates package), or providing the correct certificate chain with --cacert /path/to/ca.pem.",
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What does curl exit code 28 mean?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: "Curl exit code 28 means the operation timed out — curl did not receive a response within the allotted time. Add --max-time 30 to set a 30-second global timeout or --connect-timeout 10 to limit only the connection phase. Check if the server is slow, overloaded, or if a firewall is silently dropping your packets.",
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I debug a curl request with -v?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: "Add the -v flag to see the full request and response exchange: curl -v https://api.example.com. The output shows the TLS handshake, request headers (prefixed with >), response headers (prefixed with <), and any error details. For even more detail, use --trace - which outputs a hex dump of every byte transferred.",
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: "How do I fix 'curl: (7) Failed to connect'?",
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: "Curl error 7 means the connection was refused or the host was unreachable. Check that: the server is running and listening on the correct port, the URL uses the right scheme (http vs https), no firewall is blocking the port, and you are using the correct hostname. Run curl -v to see the exact connection attempt details.",
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I fix curl authentication errors?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: "For 401 errors: verify your token is correct and not expired, check the auth scheme (Bearer vs Basic vs Token), and ensure the Authorization header is spelled correctly. Use -H 'Authorization: Bearer YOUR_TOKEN' for Bearer auth. For Basic auth, use -u username:password. The Root-Cause Engine will identify which pattern your command is missing.",
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What causes curl to return an empty response?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: "An empty response can mean: the server returned a 204 No Content (valid empty response), a redirect was not followed (add -L), the server closed the connection without a body, or a firewall returned a TCP RST. Run curl -v to see the HTTP status code and headers — a 204 is intentional, while a 0-byte response with a 200 suggests a server bug.",
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I fix a curl timeout error?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: "Add --max-time 60 to give the server 60 seconds to respond, or --connect-timeout 10 to limit connection time. If the timeout persists, the server may be genuinely slow, a firewall may be silently dropping packets, or your network route may have high latency. Use curl -v to see where in the exchange the timeout occurs.",
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I fix a 403 error in curl?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: "A 403 Forbidden means authentication succeeded but the request is not authorized. Check: your API key has the required scopes or permissions, your IP is not blocked by an allowlist, the API endpoint requires a specific subscription tier, and you are not hitting a rate-limited resource. Paste the command into the Root-Cause Engine for a ranked diagnosis.",
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I send a POST request with curl?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: "Use -X POST with -d for the body: curl -X POST https://api.example.com/data -H 'Content-Type: application/json' -d '{\"key\":\"value\"}'. For form data, use -d 'field=value' without the Content-Type header (curl sets it automatically). Omitting -H 'Content-Type: application/json' is one of the most common causes of 400 errors with JSON APIs.",
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I add custom headers to a curl request?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: "Use the -H flag for each header: curl -H 'Authorization: Bearer TOKEN' -H 'X-Custom-Header: value' https://api.example.com. Each -H flag adds one header. Headers are case-insensitive in HTTP but must include the colon separator. Multiple -H flags can be chained on the same command.",
       },
     },
   ],
@@ -218,15 +355,47 @@ export default function CurlFailureRootCausePage() {
             },
             {
               q: 'How do I fix a 401 Unauthorized cURL error?',
-              a: <>Common causes: missing <C>-H &quot;Authorization: Bearer YOUR_TOKEN&quot;</C>, expired token, wrong scheme (Basic vs Bearer), or the token string having extra spaces. Paste your command and the engine will rank the most likely cause with a fix.</>,
+              a: <>Common causes: missing <C>-H &quot;Authorization: Bearer YOUR_TOKEN&quot;</C>, expired token, wrong scheme (Basic vs Bearer), or extra spaces in the token string. Paste your command and the engine will rank the most likely cause with a corrected command.</>,
             },
             {
               q: 'How do I fix a 400 Bad Request cURL error?',
-              a: <>Usually a missing <C>-H &quot;Content-Type: application/json&quot;</C> header, malformed JSON in the <C>-d</C> body, or a missing required field. The engine analyzes your command for these patterns.</>,
+              a: <>Usually a missing <C>-H &quot;Content-Type: application/json&quot;</C> header, malformed JSON in the <C>-d</C> body, or a missing required field. The engine analyzes your command for these patterns and shows the most likely fix.</>,
             },
             {
               q: 'Is my cURL command sent to any server?',
               a: 'No. All analysis runs in your browser. Your cURL commands, URLs, and headers never leave your device.',
+            },
+            {
+              q: 'What does curl error 6 (Could not resolve host) mean?',
+              a: <>Curl error 6 means DNS resolution failed — the hostname could not be resolved to an IP address. Check for a typo in the URL, verify your DNS server is reachable, and confirm the hostname exists. Try <C>ping yourhostname.com</C> to test DNS outside of curl.</>,
+            },
+            {
+              q: 'How do I fix a curl SSL certificate error?',
+              a: <>SSL certificate errors (curl error 60) mean the server certificate cannot be verified. For local testing add <C>-k</C> to skip verification. For production, update your CA bundle with the correct certificate chain using <C>--cacert /path/to/ca.pem</C>.</>,
+            },
+            {
+              q: 'What does curl exit code 28 mean?',
+              a: <>Curl exit code 28 is an operation timeout. Add <C>--max-time 30</C> to set a 30-second global timeout or <C>--connect-timeout 10</C> to limit just the connection phase. Check whether a firewall is silently dropping packets if timeouts persist.</>,
+            },
+            {
+              q: 'How do I debug a curl request with -v?',
+              a: <>Add <C>-v</C> to see the full TLS handshake, request headers (prefixed with <C>&gt;</C>), and response headers (prefixed with <C>&lt;</C>). For a complete hex dump of every byte, use <C>--trace -</C>. The verbose output usually makes the root cause immediately obvious.</>,
+            },
+            {
+              q: "How do I fix 'curl: (7) Failed to connect'?",
+              a: <>Curl error 7 means the connection was refused or the host was unreachable. Verify the server is running on the correct port, the URL scheme is correct (http vs https), and no firewall is blocking the connection. Run <C>curl -v</C> to see the exact connection attempt details.</>,
+            },
+            {
+              q: 'How do I fix a 403 error in curl?',
+              a: <>A 403 Forbidden means authentication passed but the request lacks the required permissions. Check that your API key has the needed scopes, your IP is not on a block list, and you are not hitting a rate-limited or subscription-gated endpoint.</>,
+            },
+            {
+              q: 'How do I send a POST request with curl?',
+              a: <>Use <C>-X POST</C> with <C>-d</C> for the body: <C>{`curl -X POST https://api.example.com -H 'Content-Type: application/json' -d '{"key":"value"}'`}</C>. Omitting the Content-Type header is the most common cause of 400 errors with JSON APIs.</>,
+            },
+            {
+              q: 'How do I add custom headers to a curl request?',
+              a: <>Use the <C>-H</C> flag for each header: <C>{`curl -H 'Authorization: Bearer TOKEN' -H 'X-Custom-Header: value' https://api.example.com`}</C>. Multiple <C>-H</C> flags can be chained. Each flag adds exactly one header.</>,
             },
           ]} />
         </SEOSection>

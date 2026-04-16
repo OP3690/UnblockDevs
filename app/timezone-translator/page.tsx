@@ -38,6 +38,54 @@ export const metadata: Metadata = {
     'schedule meetings across timezones',
     'remote team meeting scheduler',
     'developer timezone tool',
+    'timezone converter online',
+    'convert utc to local time',
+    'utc to gmt',
+    'utc to cet',
+    'utc to jst',
+    'utc to aest',
+    'utc to cst',
+    'pst to est converter',
+    'time zone converter free',
+    'dst aware timezone',
+    'iana timezone',
+    'timezone list',
+    'timezone names',
+    'america new york timezone',
+    'europe london timezone',
+    'asia tokyo timezone',
+    'australia sydney timezone',
+    'meeting planner timezone',
+    'schedule across timezones',
+    'timezone overlap finder',
+    'best meeting time timezone',
+    'convert time for meeting',
+    'timezone api',
+    'moment timezone',
+    'luxon timezone',
+    'dayjs timezone',
+    'date-fns-tz',
+    'pytz python timezone',
+    'java timezone',
+    'joda time',
+    'timezone database',
+    'tzdata',
+    'posix timezone',
+    'timezone format',
+    'timezone offset',
+    'utc offset',
+    'time zone abbreviation',
+    'timezone localization',
+    'i18n timezone',
+    'Intl.DateTimeFormat',
+    'toLocaleString timezone',
+    'timezone free tool',
+    'time zone tool no signup',
+    'world time converter',
+    'time zone list all',
+    'timezone converter no signup',
+    'utc to local time converter',
+    'timezone offset calculator',
   ],
   openGraph: {
     title: 'Timezone Translator — Convert Time Between Timezones | UnblockDevs',
@@ -116,6 +164,78 @@ const faqSchema = {
       acceptedAnswer: {
         '@type': 'Answer' as const,
         text: 'For globally distributed teams, UTC is the neutral reference timezone — it never observes DST and is unambiguous. When finding overlap hours, aim for 9 AM–12 PM UTC which covers afternoon in Europe and morning on the US East Coast. For US-only teams, Eastern Time (ET) is the de facto standard. For US + India, mid-morning ET (9-10 AM ET = 7-8 PM IST) is the common overlap window.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What is UTC and why is it used?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'UTC (Coordinated Universal Time) is the primary time standard by which the world regulates clocks and time. It is derived from International Atomic Time with leap seconds added to stay in sync with Earth\'s rotation. Developers use UTC as the canonical reference for storing and transmitting timestamps because it is unambiguous, never observes DST, and is the same everywhere on Earth.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What is the difference between UTC and GMT?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'UTC and GMT share the same offset (+0:00) but are conceptually different. GMT is a timezone (used in the UK and West Africa during winter), while UTC is the international time standard that all other timezones are defined relative to. In practice they display the same time, but software should always use UTC as the reference and store timestamps in UTC, not GMT.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I schedule a meeting across multiple time zones?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Enter the meeting time in your local timezone in this tool, then add each attendee\'s timezone to the target list. The tool shows the equivalent time for all timezones simultaneously, accounting for DST. For finding overlap windows, look for times that fall within business hours (9 AM–5 PM) across all regions. For US East Coast + India, 9–11 AM ET (6:30–8:30 PM IST) is the most common overlap.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I convert time zones in JavaScript?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Use the Intl.DateTimeFormat API: new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", dateStyle: "full", timeStyle: "long" }).format(new Date()). Alternatively, use a library like Luxon: DateTime.now().setZone("Asia/Kolkata").toISO(). Avoid using manual UTC offset arithmetic because it breaks during DST transitions.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I convert time zones in Python?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Use the pytz library: from pytz import timezone; from datetime import datetime; eastern = timezone("America/New_York"); dt = datetime.now(eastern). In Python 3.9+, use the built-in zoneinfo module: from zoneinfo import ZoneInfo; dt = datetime.now(ZoneInfo("America/New_York")). Always use IANA timezone names rather than abbreviations for accurate DST handling.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What is the IANA timezone database?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'The IANA timezone database (also called tzdata or the Olson database) is the canonical source of timezone rules worldwide. It contains historical and current timezone definitions, DST transition rules, and UTC offsets for all regions, identified by names like America/New_York, Europe/London, or Asia/Tokyo. It is updated several times per year as countries change their timezone rules.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I handle DST-aware timestamps in code?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Always store timestamps in UTC (as Unix integers or ISO 8601 strings with a Z suffix), and convert to local time only at display time. Use IANA timezone names (never raw UTC offsets) for conversions so that DST transitions are applied correctly based on the historical rules for that region. In JavaScript, use Luxon or date-fns-tz; in Python, use the zoneinfo module or pytz.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I find the best meeting time for a global team?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Add all your team\'s timezones to the target list in this tool and look for a time that falls between 9 AM and 5 PM in as many of them as possible. For a US + Europe team, 2–4 PM UTC covers morning on the US East Coast and afternoon in Central Europe. For US + Asia, there is rarely a comfortable overlap — typically 7–9 AM PST (UTC-8) is 11 PM–1 AM JST (UTC+9), so one side needs to flex.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What timezone should I use to store dates in a database?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Always store dates in UTC. UTC is unambiguous, never observes DST, and avoids bugs when server timezones change or when users access data from different regions. Use a TIMESTAMP WITH TIME ZONE column in PostgreSQL, DATETIME with UTC-aware handling in MySQL 8+, or store as a Unix integer (seconds since epoch) which is inherently UTC. Convert to the user\'s local timezone only at the presentation layer.',
       },
     },
   ],
@@ -348,6 +468,79 @@ export default function TimezoneTranslatorPage() {
                     are supported natively by every modern programming language.
                   </>
                 ),
+              },
+              {
+                q: 'How do I convert between time zones?',
+                a: (
+                  <>
+                    Select the source timezone and enter a time, then add one or more target timezones. The tool
+                    instantly shows the converted time for each, applying DST rules automatically based on the
+                    specific date. You can search timezones by city name, abbreviation (EST, JST), or IANA name
+                    (America/New_York).
+                  </>
+                ),
+              },
+              {
+                q: 'What is UTC and why is it used?',
+                a: 'UTC (Coordinated Universal Time) is the primary global time standard. It never observes Daylight Saving Time and is the same everywhere on Earth, making it the canonical reference for storing and transmitting timestamps in software. All other timezones are defined as positive or negative offsets from UTC.',
+              },
+              {
+                q: 'How does Daylight Saving Time affect timezone conversion?',
+                a: (
+                  <>
+                    DST causes some timezones to shift their UTC offset by +1 hour in summer. For example, EST
+                    (UTC-5) becomes EDT (UTC-4), and PST (UTC-8) becomes PDT (UTC-7). Countries like India (
+                    <C>Asia/Kolkata</C>) and Japan (<C>Asia/Tokyo</C>) never observe DST. This tool always uses
+                    the correct offset for the specific date entered by looking up the IANA timezone database.
+                  </>
+                ),
+              },
+              {
+                q: 'How do I schedule a meeting across multiple time zones?',
+                a: 'Enter the proposed meeting time in your timezone, then add all attendees\' timezones to the target list. The tool shows each equivalent time simultaneously. Look for a window where all timezones fall between 9 AM and 5 PM. For US East + India, 9–11 AM ET (6:30–8:30 PM IST) is the most common overlap window.',
+              },
+              {
+                q: 'How do I convert time zones in JavaScript?',
+                a: (
+                  <>
+                    Use the built-in <C>Intl.DateTimeFormat</C> API:{' '}
+                    <C>new Intl.DateTimeFormat(&quot;en-US&quot;, {'{'} timeZone: &quot;America/New_York&quot; {'}'}).format(new Date())</C>.
+                    For full manipulation, use Luxon: <C>DateTime.now().setZone(&quot;Asia/Kolkata&quot;).toISO()</C>.
+                    Avoid manual UTC offset arithmetic — it breaks during DST transitions.
+                  </>
+                ),
+              },
+              {
+                q: 'How do I convert time zones in Python?',
+                a: (
+                  <>
+                    In Python 3.9+, use the built-in <C>zoneinfo</C> module:{' '}
+                    <C>from zoneinfo import ZoneInfo; dt = datetime.now(ZoneInfo(&quot;America/New_York&quot;))</C>.
+                    For older Python, use the <C>pytz</C> library:{' '}
+                    <C>from pytz import timezone; eastern = timezone(&quot;America/New_York&quot;)</C>.
+                    Always use IANA timezone names rather than abbreviations.
+                  </>
+                ),
+              },
+              {
+                q: 'What is the IANA timezone database?',
+                a: 'The IANA timezone database (tzdata / Olson database) is the canonical source of timezone rules worldwide, containing historical and current UTC offsets, DST transition rules, and timezone names like America/New_York and Asia/Tokyo. It is updated several times per year and used by every major operating system and programming language.',
+              },
+              {
+                q: 'What is UTC offset?',
+                a: 'A UTC offset is the number of hours (and sometimes minutes) by which a timezone differs from UTC. For example, UTC-5 means 5 hours behind UTC (US Eastern Standard Time), and UTC+5:30 means 5 hours and 30 minutes ahead (India Standard Time). Offsets can change seasonally due to DST in regions that observe it.',
+              },
+              {
+                q: 'How do I handle DST-aware timestamps in code?',
+                a: 'Store all timestamps in UTC and convert to local time only at display time. Use IANA timezone names for conversions rather than raw UTC offsets, so that DST transitions are handled correctly. In JavaScript, use Luxon or date-fns-tz. In Python, use the zoneinfo module (Python 3.9+) or pytz. Never hardcode UTC offset values.',
+              },
+              {
+                q: 'How do I find the best meeting time for a global team?',
+                a: 'Add all your team timezones to this tool and look for a proposed time where all zones fall within 9 AM–5 PM. For US + Europe overlap, 2–4 PM UTC (10 AM–12 PM ET / 3–5 PM London) works well. For US + Asia-Pacific, there is rarely a comfortable overlap — early morning US time or late evening Asia-Pacific is usually required.',
+              },
+              {
+                q: 'What timezone should I use to store dates in a database?',
+                a: 'Always store dates in UTC. Use a TIMESTAMP WITH TIME ZONE column in PostgreSQL, UTC-normalized DATETIME in MySQL 8+, or a Unix integer (seconds since epoch). UTC avoids bugs when server timezones change or when users access data from different regions. Convert to local timezone only at the presentation layer.',
               },
             ]}
           />

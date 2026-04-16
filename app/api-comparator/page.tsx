@@ -24,6 +24,58 @@ export const metadata: Metadata = {
     'json diff tool online',
     'api versioning diff',
     'debug api changes',
+    // Extended keyword cluster
+    'api response comparator',
+    'compare api responses',
+    'api diff tool',
+    'api output comparison',
+    'json response diff',
+    'compare api versions',
+    'api regression testing',
+    'api change detection',
+    'compare rest api responses',
+    'api response validator',
+    'before after api comparison',
+    'api upgrade testing',
+    'api migration comparison',
+    'compare json responses online',
+    'json diff tool',
+    'api testing tool',
+    'api response checker',
+    'compare api endpoints',
+    'api version diff',
+    'graphql diff',
+    'rest api comparator',
+    'api monitoring',
+    'api response schema change',
+    'breaking change detection',
+    'api backward compatibility',
+    'api deprecation check',
+    'compare staging production api',
+    'environment comparison api',
+    'compare api headers',
+    'response header diff',
+    'http status comparison',
+    'api latency comparison',
+    'api response time diff',
+    'compare json arrays',
+    'compare json objects',
+    'nested json diff',
+    'api payload diff',
+    'api contract testing',
+    'swagger diff',
+    'openapi diff',
+    'api versioning strategy',
+    'api changelog',
+    'api response format change',
+    'api field comparison',
+    'api data type change',
+    'compare curl responses',
+    'compare postman runs',
+    'api test automation',
+    'api response comparator free',
+    'api diff no signup',
+    'compare api outputs online',
   ],
   openGraph: {
     title: 'API Comparator — Compare API Responses & Detect Breaking Changes Online | UnblockDevs',
@@ -91,6 +143,102 @@ const faqSchema = {
       acceptedAnswer: {
         '@type': 'Answer',
         text: 'No. All comparison logic runs entirely in your browser. Your API responses never leave your device, making it safe for production data, auth tokens, and sensitive payloads.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is API response comparison?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'API response comparison is the process of diffing two JSON responses from the same endpoint — typically from different versions, environments, or points in time — to identify structural and value changes. It detects added fields, removed fields, type changes, and value differences at every level of nesting.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I detect breaking changes in an API?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Breaking changes include: removing a field that clients depend on, changing a field type (e.g. string to integer), renaming a key, changing the HTTP status code, or making a previously optional field required. Paste the old API response on the left and the new one on the right — the comparator highlights breaking changes in red.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I compare staging vs production API responses?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: "Make the same API call against both environments using curl or Postman, then paste each response into the respective panels. The semantic diff will show exactly which fields or values differ between staging and production, helping you diagnose environment-specific bugs before they affect users.",
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is API contract testing?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'API contract testing verifies that a service meets the agreed-upon interface — field names, types, and response structure — that consumers depend on. It is typically run in CI/CD pipelines to catch breaking changes before deployment. The API Comparator provides a manual contract check by letting you visually diff the expected and actual responses.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I compare two JSON responses automatically?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Paste both JSON responses into the left and right panels and click Compare. The tool performs a recursive semantic diff — matching object keys (not just text lines) — and highlights every addition, deletion, and change with its full JSON path. No manual inspection of nested structures is required.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is the difference between API versioning strategies?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'The three main strategies are: URL versioning (/v1/ vs /v2/), header versioning (Accept: application/vnd.api+json; version=2), and query parameter versioning (?version=2). URL versioning is the most common and easiest to test. The API Comparator works with all three — just call each version and paste the responses.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I test API backwards compatibility?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Collect the response from the current stable API version and the new version. Paste them into the comparator. Focus on fields highlighted in red (removed) and yellow (type-changed) — these are the changes most likely to break existing clients. Additions highlighted in green are generally backwards-compatible.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I compare API response headers?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Paste the response headers as plain text into each panel to diff HTTP headers between two API calls. This is useful for detecting when CORS headers, caching directives, or security headers change between API versions or environments — differences that would not appear in the response body diff.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What tools can I use for API regression testing?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'For automated regression testing, use tools like Dredd, Pact, or Postman Collection Runner. For quick manual checks between two responses, this API Comparator provides instant semantic diffing with no setup required. Combine both: automated tests in CI/CD and manual spot checks with the comparator during development.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I find what changed between two API versions?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Make the same API call against both versions and paste the responses into the comparator. The diff output lists every change with the full JSON path (e.g. $.user.roles[0].permissions), the old value, and the new value. Copy the diff summary to include in your changelog or PR description.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I compare GraphQL responses?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'GraphQL responses are standard JSON with a data key. Paste two GraphQL responses directly into the comparator panels. The semantic diff correctly handles nested objects and arrays in the data field, making it easy to see when a schema change adds, removes, or alters fields in a query response.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is an API diff and when should I use one?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'An API diff compares two API responses to show structural and value differences. Use it when: migrating to a new API version, debugging why a feature behaves differently in staging vs production, reviewing a third-party API for silent changes, or generating a changelog entry for an API update your team maintains.',
       },
     },
   ],
@@ -171,11 +319,43 @@ export default function ApiComparatorPage() {
             },
             {
               q: 'Can this compare nested objects and arrays?',
-              a: 'Yes. The diff is fully recursive — it matches nested object keys and array elements by index. Changes deep inside nested structures are shown with their full path.',
+              a: 'Yes. The diff is fully recursive — it matches nested object keys and array elements by index. Changes deep inside nested structures are shown with their full JSON path (e.g. $.user.roles[0]).',
             },
             {
               q: 'Is my API data sent to any server?',
               a: 'No. All comparison logic runs entirely in your browser. Your API responses never leave your device, making it safe for production tokens, PII, and sensitive payloads.',
+            },
+            {
+              q: 'What is API response comparison?',
+              a: 'API response comparison diffs two JSON responses from the same endpoint — typically from different versions or environments — to identify structural and value changes: added fields, removed fields, type changes, and value differences at every level of nesting.',
+            },
+            {
+              q: 'How do I detect breaking changes in an API?',
+              a: 'Breaking changes include removing a field, changing a field type, renaming a key, or altering the HTTP status code. Paste the old response on the left and the new one on the right — removed fields and type changes are highlighted in red as the highest-risk differences.',
+            },
+            {
+              q: 'How do I compare staging vs production API responses?',
+              a: 'Make the same API call against both environments using curl or Postman, then paste each JSON response into the respective panels. The diff shows exactly which fields or values differ, helping you diagnose environment-specific bugs before they reach users.',
+            },
+            {
+              q: 'What is API contract testing?',
+              a: 'API contract testing verifies that a service meets the agreed-upon interface — field names, types, and structure — that consumers depend on. The API Comparator provides quick manual contract checks by letting you visually diff expected vs actual responses.',
+            },
+            {
+              q: 'How do I test API backwards compatibility?',
+              a: 'Collect responses from the current and new API versions, then compare them. Focus on fields highlighted in red (removed) and yellow (type-changed) — these break existing clients. Additions in green are generally safe and backwards-compatible.',
+            },
+            {
+              q: 'How do I find what changed between two API versions?',
+              a: 'Make the same API call against both versions and paste the responses into the comparator. The output lists every change with the full JSON path, old value, and new value — ready to copy into a PR description or changelog.',
+            },
+            {
+              q: 'How do I compare GraphQL responses?',
+              a: 'GraphQL responses are standard JSON with a data key. Paste two GraphQL query results directly into the comparator. The semantic diff handles nested objects and arrays in the data field, making schema changes immediately visible.',
+            },
+            {
+              q: 'What is an API diff and when should I use one?',
+              a: 'An API diff compares two API responses to show structural and value differences. Use it when migrating API versions, debugging staging vs production discrepancies, monitoring third-party API changes, or generating changelogs for APIs your team maintains.',
             },
           ]} />
         </SEOSection>

@@ -18,6 +18,24 @@ export const metadata: Metadata = {
     'image to base64 converter', 'base64 encode http basic auth',
     'mime base64 encoder', 'base64 security checker', 'what is base64 encoding',
     'how to encode base64 online', 'is base64 the same as encryption',
+    // extended keyword cluster
+    'base64 encode decode online', 'base64 encoder free', 'base64 decode string',
+    'base64 encode file', 'base64 encode image', 'base64 to text', 'text to base64',
+    'base64 encode javascript', 'base64 decode javascript', 'atob btoa javascript',
+    'base64 url safe', 'base64url encode decode', 'jwt base64 decode',
+    'base64 encode api', 'base64 encode curl', 'base64 encode python', 'base64 decode python',
+    'python base64', 'java base64 encode', 'base64 encode c#', 'base64 encode golang',
+    'base64 encode binary', 'base64 encode utf8', 'base64 encode unicode',
+    'base64 file to text', 'base64 image data uri', 'base64 css background',
+    'base64 email attachment mime', 'base64 mime encode', 'no padding base64',
+    'base64 without padding', 'base64 vs hex encoding', 'base64 decode error fix',
+    'base64 invalid character', 'base64 online tool free', 'base64 encode no signup',
+    'base64 decoder browser', 'base64 encode node js', 'basic auth header base64',
+    'base64 encode authorization header', 'base64 private no server',
+    'base64 alphabet characters', 'base64 padding equals sign',
+    'base64 encode large file', 'base64 50mb file', 'base64 encode file upload',
+    'decode base64 string', 'base64 encode credentials', 'encode decode online free',
+    'base64 rfc 4648', 'base64 string to text', 'base64 encode password',
   ],
   openGraph: {
     title: 'Base64 Encoder Decoder — Standard, Base64URL, MIME & No-Padding | UnblockDevs',
@@ -67,6 +85,14 @@ const faqSchema = {
     { '@type': 'Question', name: 'What is the difference between Base64 and Base64URL?', acceptedAnswer: { '@type': 'Answer', text: 'Standard Base64 uses + and / with optional = padding. Base64URL replaces + with - and / with _ and omits padding, making it safe in URLs and JWTs.' } },
     { '@type': 'Question', name: 'Is Base64 the same as encryption?', acceptedAnswer: { '@type': 'Answer', text: 'No. Base64 is encoding, not encryption. Anyone can decode it instantly. Never rely on Base64 for security.' } },
     { '@type': 'Question', name: 'Is it safe to paste sensitive data here?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Everything runs in your browser. Nothing is uploaded to any server. Your data never leaves your device.' } },
+    { '@type': 'Question', name: 'How do I encode HTTP Basic Auth credentials in Base64?', acceptedAnswer: { '@type': 'Answer', text: 'Format credentials as username:password (e.g. alice:s3cr3t), paste into the tool, choose Encode → Standard. Copy the result and prefix it with "Basic " in your Authorization header.' } },
+    { '@type': 'Question', name: 'How do I decode a JWT token using Base64?', acceptedAnswer: { '@type': 'Answer', text: 'JWTs have three dot-separated parts; the header and payload are Base64URL-encoded. Paste the full JWT or one part, select Decode → Base64URL. For full JWT validation use the JWT Decoder tool.' } },
+    { '@type': 'Question', name: 'Can I encode large files to Base64 in the browser?', acceptedAnswer: { '@type': 'Answer', text: 'Yes — up to 50 MB. Files over 5 MB are processed in a background task so the page stays responsive.' } },
+    { '@type': 'Question', name: 'Why does Base64 output end with = or ==?', acceptedAnswer: { '@type': 'Answer', text: '= padding makes the string length a multiple of 4 so decoders work correctly. One = means 2 padding bytes are needed; == means 1. Base64URL and No-Padding variants omit them.' } },
+    { '@type': 'Question', name: 'How do I encode an image to Base64 for HTML or CSS?', acceptedAnswer: { '@type': 'Answer', text: 'Switch to File mode, drag and drop your image (PNG, JPG, GIF, WebP, SVG). The result can be used as data:image/png;base64,<result> in an img src or CSS background-image: url(...).' } },
+    { '@type': 'Question', name: 'What is MIME Base64 used for?', acceptedAnswer: { '@type': 'Answer', text: 'MIME Base64 wraps output at 76 characters per line, which is required for email attachments (RFC 2045). Choose the MIME variant when encoding files for email clients.' } },
+    { '@type': 'Question', name: 'How do I encode Base64 in JavaScript?', acceptedAnswer: { '@type': 'Answer', text: 'Use btoa() for ASCII strings: btoa("hello") → "aGVsbG8=". For binary data use TextEncoder + Uint8Array. For Base64URL use the Web Crypto API or replace +/ with -_ and strip = padding.' } },
+    { '@type': 'Question', name: 'What is the difference between Base64 and hex encoding?', acceptedAnswer: { '@type': 'Answer', text: 'Both represent binary data as ASCII. Hex uses 2 characters per byte (16 symbols: 0-9, a-f), making output 2× larger than input. Base64 uses 4 characters per 3 bytes (~33% overhead), making it more compact. Base64 is used for text transport; hex is common in cryptography and debugging.' } },
   ],
 };
 
@@ -175,7 +201,7 @@ export default function Base64EncoderPage() {
             },
             {
               q: 'How do I encode HTTP Basic Auth credentials in Base64?',
-              a: 'Format credentials as username:password (e.g. alice:s3cr3t), paste into the tool, choose Encode → Standard. Copy the result and prefix it with Basic in your Authorization header.',
+              a: 'Format credentials as username:password (e.g. alice:s3cr3t), paste into the tool, choose Encode → Standard. Copy the result and prefix it with "Basic " in your Authorization header.',
             },
             {
               q: 'How do I decode a JWT token using Base64?',
@@ -192,6 +218,22 @@ export default function Base64EncoderPage() {
             {
               q: 'Why does Base64 output end with = or ==?',
               a: '= padding makes the string length a multiple of 4 so decoders work correctly. One = means 2 padding bytes needed; == means 1. Base64URL and No-Padding variants omit them.',
+            },
+            {
+              q: 'How do I encode an image to Base64 for HTML or CSS?',
+              a: 'Switch to File mode and drag in your image (PNG, JPG, GIF, WebP, SVG). Copy the output and use it as data:image/png;base64,<result> in an img src or CSS background-image: url(...).',
+            },
+            {
+              q: 'What is MIME Base64 used for?',
+              a: 'MIME Base64 wraps output at 76 characters per line as required for email attachments (RFC 2045). Choose the MIME variant when encoding files for email clients.',
+            },
+            {
+              q: 'How do I encode Base64 in JavaScript?',
+              a: 'Use btoa() for ASCII strings: btoa("hello") → "aGVsbG8=". For binary data use FileReader or TextEncoder. For Base64URL replace +/ with -_ and strip = padding.',
+            },
+            {
+              q: 'What is the difference between Base64 and hex encoding?',
+              a: 'Hex uses 2 characters per byte (~100% overhead). Base64 uses 4 characters per 3 bytes (~33% overhead), making it more compact. Base64 is preferred for text transport; hex is common in cryptography output.',
             },
           ]} />
         </SEOSection>

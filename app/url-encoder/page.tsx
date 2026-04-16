@@ -48,6 +48,45 @@ export const metadata: Metadata = {
     'percent encode query string',
     'url encode special characters',
     'url encoding reference',
+    'url encode decode free',
+    'percent encode url',
+    'url encode string',
+    'url decode string',
+    'url encode online tool',
+    'query string encoder',
+    'url encode spaces',
+    'url encode plus sign',
+    'url encode ampersand',
+    'url encode hash',
+    'encode url javascript',
+    'decodeURIComponent',
+    'url encode python',
+    'urllib quote python',
+    'url encode curl',
+    'url encode api request',
+    'url encode query params',
+    'url encode form data',
+    'percent encoding rfc 3986',
+    'url safe characters',
+    'url unsafe characters',
+    'url encode slash',
+    'url encode question mark',
+    'url encode colon',
+    'url encode at sign',
+    'percent encode online',
+    'html url encoding',
+    'url decode malformed',
+    'fix url encoding',
+    'url encode for api',
+    'url encode headers',
+    'url encode bearer token',
+    'url encode redirect url',
+    'url encode callback url',
+    'double url encoding',
+    'url decode twice',
+    'url encode space as plus or %20',
+    'query parameter encoding',
+    'url encode online free no signup',
   ],
   openGraph: {
     title: 'URL Encoder Decoder — Percent Encode, Decode URL Components & Query Strings | UnblockDevs',
@@ -134,6 +173,62 @@ const faqSchema = {
       acceptedAnswer: {
         '@type': 'Answer' as const,
         text: 'Double encoding happens when a URL is percent-encoded twice — %20 becomes %2520 because the % itself gets encoded to %25. Paste the double-encoded string into this URL Decoder; it detects double encoding automatically and decodes it back to the original value in one step.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What is URL encoding (percent encoding)?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'URL encoding, formally called percent-encoding, converts characters that are not allowed or that carry special meaning in a URL into a safe %XX hexadecimal representation. For example, a space becomes %20, an ampersand becomes %26, and a hash becomes %23. This ensures that special characters inside query strings or path segments do not break the URL structure.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'When should I use encodeURIComponent vs encodeURI in JavaScript?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Use encodeURIComponent when encoding individual query parameter values or path segments — it encodes all reserved characters including /, ?, #, and &. Use encodeURI only when encoding a complete URL that already has its structure in place, because it leaves structural characters unencoded. In practice, encodeURIComponent is almost always the right choice for API development.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I URL encode a space — %20 or +?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'It depends on the context. RFC 3986 (the standard for URLs) requires spaces to be encoded as %20. The application/x-www-form-urlencoded format (used by HTML form submissions) encodes spaces as +. If you are building a REST API URL or query string programmatically, use %20. If you are submitting an HTML form, the browser handles it automatically using + encoding.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I URL encode a string in JavaScript?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Use encodeURIComponent(str) to encode a string for use as a query parameter value: const encoded = encodeURIComponent("hello world & more"); // "hello%20world%20%26%20more". To decode, use decodeURIComponent(encoded). Never use escape() or unescape() — they are deprecated and do not handle Unicode correctly.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I URL encode in Python?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Use urllib.parse.quote() to encode a string: from urllib.parse import quote; encoded = quote("hello world"). By default, quote() leaves / unencoded; use quote(s, safe="") to encode everything. For encoding a dictionary of query parameters, use urllib.parse.urlencode({"key": "value with spaces"}).',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'How do I URL encode in curl?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'In curl, use --data-urlencode to encode a parameter value: curl -G "https://api.example.com/search" --data-urlencode "q=hello world & more". Alternatively, use the --get flag with --data-urlencode to send encoded parameters as a query string. You can also pre-encode values with Python or the jq tool and pass them as strings.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'What characters must be percent encoded in a URL?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Any character that is not an unreserved character (A–Z, a–z, 0–9, -, _, ., ~) must be percent-encoded when used inside a URL component such as a query parameter value. This includes spaces (%20), &(%26), =(%3D), +(%2B), /(%2F), ?(%3F), #(%23), @(%40), :(%3A), and all non-ASCII Unicode characters which must first be UTF-8 encoded and then each byte percent-encoded.',
       },
     },
   ],
@@ -380,6 +475,87 @@ export default function UrlEncoderPage() {
                     <C>%2520</C> after a second pass. Paste the double-encoded string into this tool — it
                     detects double encoding automatically and decodes back to the original value. You can
                     also use Decode mode manually and apply it twice to step through the layers.
+                  </>
+                ),
+              },
+              {
+                q: 'What is URL encoding (percent encoding)?',
+                a: (
+                  <>
+                    URL encoding, formally called percent-encoding, converts characters that are not allowed
+                    or carry special meaning in a URL into a safe <C>%XX</C> hexadecimal representation.
+                    For example, a space becomes <C>%20</C>, an ampersand becomes <C>%26</C>, and a hash
+                    becomes <C>%23</C>. This ensures that special characters inside query strings or path
+                    segments do not break the URL structure.
+                  </>
+                ),
+              },
+              {
+                q: 'When should I use encodeURIComponent vs encodeURI in JavaScript?',
+                a: (
+                  <>
+                    Use <C>encodeURIComponent</C> when encoding individual query parameter values or path
+                    segments — it encodes all reserved characters including <C>/</C>, <C>?</C>, <C>#</C>,
+                    and <C>&</C>. Use <C>encodeURI</C> only when encoding a complete URL that already has
+                    its structure intact, because it leaves structural characters unencoded. In practice,{' '}
+                    <C>encodeURIComponent</C> is the right choice for almost all API development scenarios.
+                  </>
+                ),
+              },
+              {
+                q: 'How do I URL encode a space — %20 or +?',
+                a: (
+                  <>
+                    It depends on the context. RFC 3986 (the standard for URLs) requires spaces to be
+                    encoded as <C>%20</C>. The <C>application/x-www-form-urlencoded</C> format (used by
+                    HTML form submissions) encodes spaces as <C>+</C>. If you are building a REST API URL
+                    or query string programmatically, use <C>%20</C>. If you are submitting an HTML form,
+                    the browser handles it automatically.
+                  </>
+                ),
+              },
+              {
+                q: 'How do I URL encode a string in JavaScript?',
+                a: (
+                  <>
+                    Use <C>encodeURIComponent(str)</C> to encode a string for use as a query parameter
+                    value. To decode, use <C>decodeURIComponent(encoded)</C>. Never use the deprecated{' '}
+                    <C>escape()</C> or <C>unescape()</C> functions — they do not handle Unicode correctly
+                    and are removed from modern JavaScript standards.
+                  </>
+                ),
+              },
+              {
+                q: 'How do I URL encode in Python?',
+                a: (
+                  <>
+                    Use <C>urllib.parse.quote(s)</C> to encode a string. By default it leaves{' '}
+                    <C>/</C> unencoded; pass <C>safe=&quot;&quot;</C> to encode everything. For encoding a
+                    dictionary of query parameters, use{' '}
+                    <C>urllib.parse.urlencode({'{'}&quot;key&quot;: &quot;value with spaces&quot;{'}'})</C>.
+                  </>
+                ),
+              },
+              {
+                q: 'How do I URL encode in curl?',
+                a: (
+                  <>
+                    Use the <C>--data-urlencode</C> flag:{' '}
+                    <C>curl -G &quot;https://api.example.com/search&quot; --data-urlencode &quot;q=hello world&quot;</C>.
+                    The <C>-G</C> flag sends the data as query parameters. You can also pre-encode values
+                    with a shell command like <C>python3 -c &quot;import urllib.parse; print(urllib.parse.quote('hello world'))&quot;</C>.
+                  </>
+                ),
+              },
+              {
+                q: 'What characters must be percent encoded in a URL?',
+                a: (
+                  <>
+                    Any character outside the unreserved set (A–Z, a–z, 0–9, <C>-</C> <C>_</C> <C>.</C>{' '}
+                    <C>~</C>) must be percent-encoded when used inside a URL component. Key examples:{' '}
+                    space → <C>%20</C>, <C>&</C> → <C>%26</C>, <C>=</C> → <C>%3D</C>, <C>/</C> →{' '}
+                    <C>%2F</C>, <C>?</C> → <C>%3F</C>, <C>#</C> → <C>%23</C>. Non-ASCII characters must
+                    first be UTF-8 encoded and then each byte percent-encoded.
                   </>
                 ),
               },
