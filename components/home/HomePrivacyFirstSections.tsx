@@ -232,7 +232,7 @@ export default function HomePrivacyFirstSections({
                 <button
                   key={t.id}
                   type="button"
-                  onClick={() => { setCat(t.id); setSearch(''); }}
+                  onClick={() => setCat(t.id)}
                   className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-[12px] font-semibold transition-all ${
                     isActive
                       ? `${t.activeBg} ${t.activeColor} border-transparent shadow-sm`
