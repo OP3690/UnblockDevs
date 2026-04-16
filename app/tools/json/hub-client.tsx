@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useRef, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -11,7 +11,7 @@ import {
   Hash, ImageIcon, Key, KeyRound, Layers, Link2, Lock, Monitor, Package, Palette, Regex, Scissors,
   ScrollText, Search, Settings2, Shield, ShieldCheck, Sparkles,
   SplitSquareHorizontal, Square, Star, Table, Terminal, TestTube2, Timer, Webhook,
-  Wrench, X, Zap, LayoutGrid, List, SlidersHorizontal, TrendingUp,
+  Wrench, Zap, LayoutGrid, List, SlidersHorizontal, TrendingUp,
 } from 'lucide-react';
 import type { ToolCategory } from './tools-data';
 import { CATEGORY_LABELS, TOOLS_DIRECTORY, TOOL_COUNT } from './tools-data';
@@ -337,46 +337,31 @@ function CategorySection({
    ═══════════════════════════════════════════════════════════════════════════ */
 export default function ToolsJsonHubClient() {
   const [cat, setCat]         = useState<ToolCategory | 'all'>('all');
-  const [query, setQuery]     = useState('');
   const [viewMode, setView]   = useState<ViewMode>('grid');
-  const searchRef             = useRef<HTMLInputElement>(null);
 
-  /* ⌘K → focus search */
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); searchRef.current?.focus(); }
-      if (e.key === 'Escape' && document.activeElement === searchRef.current) searchRef.current?.blur();
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, []);
+  const openGlobalSearch = () => {
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true, bubbles: true, cancelable: true }));
+  };
 
   const filtered = useMemo(() => {
-    if (query.trim()) {
-      const q = query.toLowerCase();
-      return TOOLS_DIRECTORY.filter(
-        (t) => t.name.toLowerCase().includes(q) || t.description.toLowerCase().includes(q)
-      );
-    }
     return cat === 'all'
       ? TOOLS_DIRECTORY.filter((t) => t.category !== 'ai')
       : TOOLS_DIRECTORY.filter((t) => t.category === cat);
-  }, [cat, query]);
+  }, [cat]);
 
   const aiTools      = useMemo(() => TOOLS_DIRECTORY.filter((t) => t.category === 'ai'), []);
   const popularTools = useMemo(() => TOOLS_DIRECTORY.filter((t) => t.badge === 'popular').slice(0, 8), []);
   const newTools     = useMemo(() => TOOLS_DIRECTORY.filter((t) => t.badge === 'new').slice(0, 6), []);
-  const isSearching  = query.trim().length > 0;
 
   /* Group tools by category for "All" view */
   const groupedTools = useMemo(() => {
-    if (cat !== 'all' || isSearching) return null;
+    if (cat !== 'all') return null;
     const categoryOrder: ToolCategory[] = ['json', 'api', 'encode', 'dev'];
     return categoryOrder.map((id) => ({
       id,
       tools: filtered.filter((t) => t.category === id),
     })).filter(({ tools }) => tools.length > 0);
-  }, [cat, filtered, isSearching]);
+  }, [cat, filtered]);
 
   return (
     <div className="min-h-screen bg-[#F6F7F9]">
@@ -417,26 +402,17 @@ export default function ToolsJsonHubClient() {
                 sensitive data before ChatGPT. No account. Nothing leaves your browser.
               </p>
 
-              {/* Search */}
-              <div className="mt-7 flex w-full max-w-lg items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 ring-1 ring-transparent transition-all focus-within:border-emerald-500/40 focus-within:bg-white/[0.07] focus-within:ring-emerald-500/20">
+              {/* Search — opens global popup */}
+              <button
+                type="button"
+                aria-label="Search all tools"
+                onClick={openGlobalSearch}
+                className="mt-7 flex w-full max-w-lg cursor-text items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 ring-1 ring-transparent transition-all hover:border-emerald-500/40 hover:bg-white/[0.07] hover:ring-emerald-500/20 text-left"
+              >
                 <Search className="h-[18px] w-[18px] shrink-0 text-zinc-400" aria-hidden />
-                <input
-                  ref={searchRef}
-                  type="search"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder={`Search ${TOOL_COUNT}+ tools…`}
-                  className="flex-1 bg-transparent text-[15px] text-white placeholder:text-zinc-500 focus:outline-none"
-                  aria-label="Search all tools"
-                />
-                {query ? (
-                  <button type="button" onClick={() => setQuery('')} className="rounded-full p-1 text-zinc-500 hover:bg-white/10 hover:text-zinc-300 transition-colors" aria-label="Clear">
-                    <X className="h-4 w-4" />
-                  </button>
-                ) : (
-                  <kbd className="hidden items-center rounded border border-white/10 bg-white/5 px-1.5 py-1 font-mono text-[10px] text-zinc-500 sm:flex">⌘K</kbd>
-                )}
-              </div>
+                <span className="flex-1 text-[15px] text-zinc-500">{`Search ${TOOL_COUNT}+ tools…`}</span>
+                <kbd className="hidden items-center rounded border border-white/10 bg-white/5 px-1.5 py-1 font-mono text-[10px] text-zinc-500 sm:flex">⌘K</kbd>
+              </button>
 
               {/* Stats */}
               <div className="mt-8 grid grid-cols-2 gap-x-6 gap-y-3 sm:flex sm:flex-wrap sm:items-center sm:gap-x-7">
@@ -463,7 +439,7 @@ export default function ToolsJsonHubClient() {
       </section>
 
       {/* ══ POPULAR STRIP ═════════════════════════════════════════════════════ */}
-      {!isSearching && (
+      {(
         <div className="border-b border-zinc-200/80 bg-white shadow-[0_1px_0_rgba(0,0,0,0.03)]">
           <div className="mx-auto max-w-[1200px] px-5 sm:px-6 lg:px-8">
             <div className="flex items-center gap-3 overflow-x-auto py-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -495,7 +471,7 @@ export default function ToolsJsonHubClient() {
       <div className="mx-auto max-w-[1200px] px-5 py-10 sm:px-6 sm:py-12 lg:px-8">
 
         {/* ══ AI SAFETY SPOTLIGHT ═══════════════════════════════════════════════ */}
-        {!isSearching && cat === 'all' && (
+        {cat === 'all' && (
           <section className="mb-12" aria-labelledby="ai-strip-heading">
             <div className="mb-5 flex items-end justify-between gap-4">
               <div className="flex items-center gap-3">
@@ -511,7 +487,7 @@ export default function ToolsJsonHubClient() {
               </div>
               <button
                 type="button"
-                onClick={() => { setCat('ai'); setQuery(''); }}
+                onClick={() => setCat('ai')}
                 className="hidden shrink-0 items-center gap-1.5 rounded-xl border border-violet-200 bg-violet-50 px-4 py-2 text-[12.5px] font-semibold text-violet-700 transition-all hover:bg-violet-100 sm:flex"
               >
                 See all AI tools <ChevronRight className="h-3.5 w-3.5" />
@@ -560,7 +536,7 @@ export default function ToolsJsonHubClient() {
         )}
 
         {/* ══ NEW TOOLS SECTION ════════════════════════════════════════════════ */}
-        {!isSearching && cat === 'all' && newTools.length > 0 && (
+        {cat === 'all' && newTools.length > 0 && (
           <section className="mb-12">
             <div className="mb-5 flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-100 ring-1 ring-emerald-200/60">
@@ -590,7 +566,7 @@ export default function ToolsJsonHubClient() {
               >
                 {CATEGORIES.map((id) => {
                   const Icon = CAT_ICON[id];
-                  const isActive = cat === id && !isSearching;
+                  const isActive = cat === id;
                   const col = id !== 'all' ? CAT_COLOR[id as ToolCategory] : null;
                   return (
                     <button
@@ -598,7 +574,7 @@ export default function ToolsJsonHubClient() {
                       type="button"
                       role="tab"
                       aria-selected={isActive}
-                      onClick={() => { setCat(id); setQuery(''); }}
+                      onClick={() => setCat(id)}
                       className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[12.5px] font-semibold transition-all ${
                         isActive
                           ? col
@@ -620,13 +596,8 @@ export default function ToolsJsonHubClient() {
                 })}
               </div>
 
-              {/* Right controls: search result count + view toggle */}
+              {/* Right controls: view toggle */}
               <div className="flex shrink-0 items-center gap-2">
-                {isSearching && (
-                  <p className="text-[12.5px] text-zinc-500">
-                    <span className="font-semibold text-zinc-900">{filtered.length}</span> result{filtered.length !== 1 ? 's' : ''}
-                  </p>
-                )}
                 <div className="flex items-center rounded-lg border border-zinc-200 bg-white p-0.5 shadow-sm">
                   <button
                     type="button"
@@ -652,28 +623,8 @@ export default function ToolsJsonHubClient() {
           </div>
         </div>
 
-        {/* ══ SEARCH RESULT HEADER ═════════════════════════════════════════════ */}
-        {isSearching && (
-          <div className="mb-5 mt-8 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Search className="h-4 w-4 text-zinc-400" />
-              <p className="text-[14px] text-zinc-600">
-                <span className="font-bold text-zinc-900">{filtered.length}</span> result{filtered.length !== 1 ? 's' : ''} for{' '}
-                <span className="font-bold text-zinc-900">&ldquo;{query}&rdquo;</span>
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => setQuery('')}
-              className="flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-[12.5px] font-medium text-zinc-500 hover:text-zinc-800 hover:border-zinc-300 transition-colors shadow-sm"
-            >
-              <X className="h-3.5 w-3.5" /> Clear search
-            </button>
-          </div>
-        )}
-
-        {/* ══ TOOL GRID — GROUPED (All, no search) ══════════════════════════════ */}
-        {groupedTools && !isSearching && (
+        {/* ══ TOOL GRID — GROUPED (All) ═══════════════════════════════════════ */}
+        {groupedTools && (
           <div className="mt-8 space-y-10">
             {groupedTools.map(({ id, tools }) => (
               <CategorySection key={id} categoryId={id} tools={tools} viewMode={viewMode} />
@@ -681,8 +632,8 @@ export default function ToolsJsonHubClient() {
           </div>
         )}
 
-        {/* ══ TOOL GRID — FLAT (single category or search results) ══════════════ */}
-        {(!groupedTools || isSearching) && filtered.length > 0 && (
+        {/* ══ TOOL GRID — FLAT (single category) ═══════════════════════════════ */}
+        {!groupedTools && filtered.length > 0 && (
           <div
             className={`mt-8 ${
               viewMode === 'grid'
@@ -707,29 +658,16 @@ export default function ToolsJsonHubClient() {
               <Search className="h-7 w-7 text-zinc-400" />
             </div>
             <div>
-              <p className="text-[16px] font-bold text-zinc-900">No tools found for &ldquo;{query}&rdquo;</p>
+              <p className="text-[16px] font-bold text-zinc-900">No tools in this category</p>
               <p className="mt-1 text-[13.5px] text-zinc-500">
-                Try a different search term or{' '}
                 <button
                   type="button"
-                  onClick={() => { setQuery(''); setCat('all'); }}
+                  onClick={() => setCat('all')}
                   className="font-semibold text-emerald-700 underline-offset-2 hover:underline"
                 >
-                  browse all tools
+                  Browse all tools
                 </button>
               </p>
-            </div>
-            <div className="flex flex-wrap justify-center gap-2">
-              {['JSON', 'JWT', 'API', 'SQL', 'UUID', 'Base64'].map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  onClick={() => setQuery(s)}
-                  className="rounded-full border border-zinc-200 bg-white px-3 py-1 text-[12px] font-medium text-zinc-600 hover:bg-zinc-50 transition-colors"
-                >
-                  {s}
-                </button>
-              ))}
             </div>
           </div>
         )}
