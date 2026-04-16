@@ -76,6 +76,9 @@ export const metadata: Metadata = {
     'api response comparator free',
     'api diff no signup',
     'compare api outputs online',
+    'api json diff tool', 'rest api response diff', 'compare two api calls',
+    'api breaking change detector', 'api schema change detector', 'api field diff checker',
+    'compare json payloads online', 'api versioning diff', 'api response comparator no login',
   ],
   openGraph: {
     title: 'API Comparator — Compare API Responses & Detect Breaking Changes Online | UnblockDevs',

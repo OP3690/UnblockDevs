@@ -8,7 +8,7 @@ export type ValueMode = 'numeric' | 'string';
 
 const INVALID_ID_REGEX = /[^\w\-.,@:\s]/g;
 
-/** Parse input from CSV, JSON array, newline, tab, or mixed. Returns raw string values. */
+/** Parse input from CSV, JSON array, newline, tab, pipe, space, or any separator. Returns raw string values. */
 export function parseInput(raw: string): string[] {
   const trimmed = raw.trim();
   if (!trimmed) return [];
@@ -24,12 +24,20 @@ export function parseInput(raw: string): string[] {
     }
   }
 
-  // Split by newlines, tabs, commas, semicolons, pipes; trim and filter empty
-  const values = trimmed
-    .split(/[\n\t,;|]+/)
+  // Primary delimiters: newlines, tabs, commas, semicolons, pipes
+  const PRIMARY_DELIMS = /[\n\t,;|]+/;
+  if (PRIMARY_DELIMS.test(trimmed)) {
+    return trimmed
+      .split(PRIMARY_DELIMS)
+      .map((v) => v.trim())
+      .filter((v) => v.length > 0);
+  }
+
+  // Fallback: split by whitespace — handles space-separated, tab-separated, or any whitespace-delimited input
+  return trimmed
+    .split(/\s+/)
     .map((v) => v.trim())
     .filter((v) => v.length > 0);
-  return values;
 }
 
 /** Remove duplicates, trim, strip invalid characters. */

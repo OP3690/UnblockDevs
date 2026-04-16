@@ -16,7 +16,7 @@ export default function SqlInClauseGeneratorClient() {
     <ToolPageShell
       showFooterBand={false}
       title="SQL IN Clause Generator"
-      subtitle="Paste any list of IDs, emails, or UUIDs → get a SQL IN clause instantly. Auto-detect CSV, JSON, Excel paste, newline. MySQL, PostgreSQL, SQL Server, Oracle, SQLite."
+      subtitle="Paste any list of IDs, emails, or UUIDs → get a SQL IN clause instantly. Auto-detect comma, space, tab, pipe, newline, JSON array — any separator. MySQL, PostgreSQL, SQL Server, Oracle, SQLite."
       toolName="sql_in_clause_generator"
       tool={<SqlInClauseGenerator />}
     />

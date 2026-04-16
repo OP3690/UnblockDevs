@@ -77,6 +77,9 @@ export const metadata: Metadata = {
     'http headers no signup',
     'check response headers online',
     'http headers tool free',
+    'http header security audit', 'analyze http response headers', 'security headers report',
+    'http headers scanner free', 'website security headers grade', 'cors preflight headers',
+    'feature-policy header', 'cross-origin-opener-policy', 'cross-origin-resource-policy',
   ],
   openGraph: {
     title: 'HTTP Security Headers Analyzer — Free Security Grade Tool',

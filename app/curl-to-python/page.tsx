@@ -96,6 +96,10 @@ export const metadata: Metadata = {
     'curl to code generator',
     'python requests free tool',
     'curl python converter online',
+    'curl to requests library', 'convert curl command python free', 'curl http get python',
+    'curl http post python', 'curl bearer token python requests', 'curl headers to python dict',
+    'python requests session', 'requests.get requests.post example', 'httpx python convert curl',
+    'curl multipart python', 'curl timeout python requests',
   ],
   openGraph: {
     title: 'Convert cURL to Python Requests — Free Online Converter',

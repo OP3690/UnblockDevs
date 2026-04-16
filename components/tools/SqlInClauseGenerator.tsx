@@ -342,7 +342,7 @@ export default function SqlInClauseGenerator() {
                 </span>
               </h2>
               <p className="text-sm text-gray-600 mt-0.5">
-                Paste any list or drag &amp; drop a .txt, .csv, .json file — auto-detect handles CSV, JSON array, Excel paste, newline, tab.
+                Paste any list or drag &amp; drop a .txt, .csv, .json file — auto-detect handles comma, newline, tab, space, pipe <code className="text-xs bg-gray-100 px-1 rounded">|</code>, semicolon, and JSON array.
               </p>
             </div>
           </div>
@@ -378,7 +378,7 @@ export default function SqlInClauseGenerator() {
               id="sql-in-input"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder={"Paste IDs, emails, UUIDs...\n1, 2, 3  or  [1,2,3]  or  one per line\n\nOr drag & drop a .txt, .csv, .json file"}
+              placeholder={"Paste IDs, emails, UUIDs...\n1, 2, 3  or  1 2 3  or  1|2|3  or  [1,2,3]  or  one per line\n\nOr drag & drop a .txt, .csv, .json file"}
               className="w-full h-36 p-4 border border-gray-200 rounded-xl font-mono text-sm resize-y min-h-[110px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-400 bg-gray-50 transition-shadow"
               aria-label="Paste IDs or list"
             />
