@@ -47,7 +47,6 @@ import {
   Fingerprint,
   ChevronRight,
   Sparkles,
-  TrendingUp,
   Package,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -177,15 +176,8 @@ export default function HomePrivacyFirstSections({
         {/* Header */}
         <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 mb-3">
-              <TrendingUp className="h-3.5 w-3.5 text-emerald-600" aria-hidden />
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-700">50+ Tools · All Free</span>
-            </div>
-            <p className="text-[13px] font-semibold tracking-wide text-emerald-600 mb-1">
-              👋 Hello, Devs!
-            </p>
             <h2 className="text-[28px] font-bold tracking-[-0.025em] text-zinc-900 sm:text-3xl">
-              Here&rsquo;s everything you need,{' '}
+              👋 Hello Devs! Here&rsquo;s everything you need,{' '}
               <span className="relative inline-block">
                 <span className="relative z-10 text-emerald-600">daily</span>
                 <span className="absolute bottom-0.5 left-0 h-[6px] w-full rounded-full bg-emerald-100" aria-hidden />
