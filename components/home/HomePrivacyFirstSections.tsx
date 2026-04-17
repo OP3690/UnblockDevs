@@ -182,10 +182,14 @@ export default function HomePrivacyFirstSections({
               <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-700">50+ Tools · All Free</span>
             </div>
             <h2 className="text-[28px] font-bold tracking-[-0.025em] text-zinc-900 sm:text-3xl">
-              Everything you need, daily
+              Your browser tab for{' '}
+              <span className="relative inline-block">
+                <span className="relative z-10 text-emerald-600">dev work</span>
+                <span className="absolute bottom-0.5 left-0 h-[6px] w-full rounded-full bg-emerald-100" aria-hidden />
+              </span>
             </h2>
             <p className="mt-2 max-w-[500px] text-[15px] leading-relaxed text-zinc-500">
-              From JSON formatting to AI-safe masking. 100% client-side — nothing leaves your browser.
+              50+ tools that open instantly, run privately, and never ask you to sign up.
             </p>
           </div>
 
