@@ -87,3 +87,40 @@ export function trackTabVisible(metadata?: Record<string, unknown>): void {
     ...metadata,
   });
 }
+
+// ── Search events ─────────────────────────────────────────────────────────────
+
+/** Fired when the global search popup is opened. `source` identifies the trigger. */
+export function trackSearchOpened(
+  source: 'header_button' | 'homepage_search' | 'hub_search' | 'keyboard_shortcut' | 'slash_key'
+): void {
+  trackEvent('search_opened', { source });
+}
+
+/** Fired (debounced) when the user types a query in the search popup. */
+export function trackSearchQuery(query: string, result_count: number): void {
+  trackEvent('search_query', { query: query.toLowerCase().trim(), result_count });
+}
+
+/** Fired when the user clicks/selects a result from the search popup. */
+export function trackSearchResultClick(
+  tool_name: string,
+  position: number,
+  query: string
+): void {
+  trackEvent('search_result_click', {
+    tool_name,
+    position,
+    query: query.toLowerCase().trim(),
+  });
+}
+
+/** Fired when the search popup is dismissed without selecting a result. */
+export function trackSearchClosed(query: string, result_count: number): void {
+  if (!query.trim()) return; // skip empty-state dismissals (not useful signal)
+  trackEvent('search_closed', {
+    query: query.toLowerCase().trim(),
+    result_count,
+    selected: false,
+  });
+}

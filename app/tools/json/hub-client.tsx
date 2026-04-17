@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { trackSearchOpened } from '@/lib/analytics';
 import type { LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -340,6 +341,7 @@ export default function ToolsJsonHubClient() {
   const [viewMode, setView]   = useState<ViewMode>('grid');
 
   const openGlobalSearch = () => {
+    trackSearchOpened('hub_search');
     window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true, bubbles: true, cancelable: true }));
   };
 

@@ -4,6 +4,9 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Menu, X, Search, ArrowRight, Clock } from 'lucide-react';
+import {
+  trackSearchOpened, trackSearchQuery, trackSearchResultClick, trackSearchClosed,
+} from '@/lib/analytics';
 
 const NAV_LINKS = [
   { href: '/tools/json', label: 'Tools' },
@@ -148,43 +151,66 @@ export default function SiteHeader() {
 
   const results = searchQ.trim() ? smartSearch(searchQ) : ALL_TOOLS.filter((t) => POPULAR.includes(t.href));
   const showResults = searchOpen;
+  const queryDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const openSearch = useCallback(() => {
+  const openSearch = useCallback((source: Parameters<typeof trackSearchOpened>[0] = 'header_button') => {
     setSearchOpen(true);
     setSearchQ('');
     setSelectedIdx(0);
+    trackSearchOpened(source);
     setTimeout(() => searchRef.current?.focus(), 50);
   }, []);
 
-  const closeSearch = useCallback(() => {
+  const closeSearch = useCallback((query = '', resultCount = 0) => {
+    trackSearchClosed(query, resultCount);
     setSearchOpen(false);
     setSearchQ('');
     setSelectedIdx(0);
   }, []);
 
-  const navigate = useCallback((href: string) => {
+  const navigate = useCallback((href: string, toolName: string, position: number, query: string) => {
+    trackSearchResultClick(toolName, position, query);
     router.push(href);
-    closeSearch();
-  }, [router, closeSearch]);
+    setSearchOpen(false);
+    setSearchQ('');
+    setSelectedIdx(0);
+  }, [router]);
 
   // Keyboard shortcuts
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') { closeSearch(); return; }
+      if (e.key === 'Escape') { closeSearch(searchQ, results.length); return; }
       const isMeta = e.metaKey || e.ctrlKey;
-      if (isMeta && e.key === 'k') { e.preventDefault(); searchOpen ? closeSearch() : openSearch(); return; }
+      if (isMeta && e.key === 'k') {
+        e.preventDefault();
+        searchOpen ? closeSearch(searchQ, results.length) : openSearch('keyboard_shortcut');
+        return;
+      }
       if (e.key === '/' && !searchOpen && !(e.target instanceof HTMLInputElement) && !(e.target instanceof HTMLTextAreaElement)) {
-        e.preventDefault(); openSearch();
+        e.preventDefault(); openSearch('slash_key');
       }
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [searchOpen, openSearch, closeSearch]);
+  }, [searchOpen, searchQ, results.length, openSearch, closeSearch]);
+
+  // Debounced query tracking — fires 600ms after user stops typing
+  useEffect(() => {
+    if (!searchQ.trim()) return;
+    if (queryDebounceRef.current) clearTimeout(queryDebounceRef.current);
+    queryDebounceRef.current = setTimeout(() => {
+      trackSearchQuery(searchQ, results.length);
+    }, 600);
+    return () => { if (queryDebounceRef.current) clearTimeout(queryDebounceRef.current); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQ]);
 
   function handleSearchKey(e: React.KeyboardEvent) {
     if (e.key === 'ArrowDown') { e.preventDefault(); setSelectedIdx((i) => Math.min(i + 1, results.length - 1)); }
     if (e.key === 'ArrowUp') { e.preventDefault(); setSelectedIdx((i) => Math.max(i - 1, 0)); }
-    if (e.key === 'Enter' && results[selectedIdx]) { navigate(results[selectedIdx].href); }
+    if (e.key === 'Enter' && results[selectedIdx]) {
+      navigate(results[selectedIdx].href, results[selectedIdx].label, selectedIdx, searchQ);
+    }
   }
 
   function isActive(href: string) {
@@ -276,10 +302,10 @@ export default function SiteHeader() {
         <div
           ref={overlayRef}
           className="fixed inset-0 z-50 flex items-start justify-center pt-[10vh] px-4"
-          onClick={(e) => { if (e.target === overlayRef.current) closeSearch(); }}
+          onClick={(e) => { if (e.target === overlayRef.current) closeSearch(searchQ, results.length); }}
         >
           {/* Backdrop */}
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={closeSearch} />
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => closeSearch(searchQ, results.length)} />
 
           {/* Modal */}
           <div className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-2xl">
@@ -327,7 +353,7 @@ export default function SiteHeader() {
                         <li key={tool.href}>
                           <button
                             type="button"
-                            onClick={() => navigate(tool.href)}
+                            onClick={() => navigate(tool.href, tool.label, i, searchQ)}
                             onMouseEnter={() => setSelectedIdx(i)}
                             className={`flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors ${i === selectedIdx ? 'bg-zinc-50' : 'hover:bg-zinc-50'}`}
                           >

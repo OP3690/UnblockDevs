@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useMemo } from 'react';
+import { trackSearchOpened } from '@/lib/analytics';
 import {
   ArrowRight,
   Check,
@@ -211,6 +212,7 @@ export default function HomePrivacyFirstSections({
               type="button"
               aria-label="Search tools"
               onClick={() => {
+                trackSearchOpened('homepage_search');
                 window.dispatchEvent(
                   new KeyboardEvent('keydown', { key: 'k', metaKey: true, bubbles: true, cancelable: true })
                 );
