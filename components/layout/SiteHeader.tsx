@@ -245,7 +245,7 @@ export default function SiteHeader() {
             {/* Search trigger */}
             <button
               type="button"
-              onClick={openSearch}
+              onClick={() => openSearch('header_button')}
               title="Search tools (⌘K or /)"
               aria-label="Search tools"
               className="flex h-8 items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-700 hover:border-zinc-300"
