@@ -84,6 +84,10 @@ module.exports = {
           '0%': { transform: 'translateY(-4px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
+        'caret': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0' },
+        },
       },
       animation: {
         'hero-code-before': 'hero-code-before 14s ease-in-out infinite',
@@ -103,6 +107,7 @@ module.exports = {
         'progress-fill': 'progress-fill 4.5s linear forwards',
         'token-pop': 'token-pop 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards',
         'badge-slide': 'badge-slide 0.3s ease-out forwards',
+        'caret': 'caret 1s step-end infinite',
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],

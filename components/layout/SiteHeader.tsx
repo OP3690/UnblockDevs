@@ -138,6 +138,65 @@ const CAT_COLORS: Record<string, string> = {
   CSS: 'bg-pink-50 text-pink-700 border-pink-200',
 };
 
+// ── Typewriter placeholder ────────────────────────────────────────────────────
+const SEARCH_PHRASES = [
+  'json formatter',
+  'jwt decoder',
+  'base64 encode',
+  'cors tester',
+  'uuid generator',
+  'sql in clause',
+  'regex tester',
+  'hash generator',
+  'curl converter',
+  'css gradient',
+];
+
+function SearchPlaceholder() {
+  const [displayed, setDisplayed] = useState('');
+  const [phraseIdx, setPhraseIdx] = useState(0);
+  const [charIdx, setCharIdx] = useState(0);
+  const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    const phrase = SEARCH_PHRASES[phraseIdx];
+    let delay: number;
+
+    if (!deleting && charIdx < phrase.length) {
+      // Typing
+      delay = 65 + Math.random() * 40;
+      const t = setTimeout(() => {
+        setDisplayed(phrase.slice(0, charIdx + 1));
+        setCharIdx((c) => c + 1);
+      }, delay);
+      return () => clearTimeout(t);
+    } else if (!deleting && charIdx === phrase.length) {
+      // Pause at full word
+      const t = setTimeout(() => setDeleting(true), 1600);
+      return () => clearTimeout(t);
+    } else if (deleting && charIdx > 0) {
+      // Deleting
+      delay = 35;
+      const t = setTimeout(() => {
+        setDisplayed(phrase.slice(0, charIdx - 1));
+        setCharIdx((c) => c - 1);
+      }, delay);
+      return () => clearTimeout(t);
+    } else if (deleting && charIdx === 0) {
+      // Move to next phrase
+      setDeleting(false);
+      setPhraseIdx((i) => (i + 1) % SEARCH_PHRASES.length);
+    }
+  }, [charIdx, deleting, phraseIdx]);
+
+  return (
+    <span className="flex-1 text-left text-[12.5px] text-zinc-400">
+      {displayed || <span className="opacity-0">|</span>}
+      <span className="ml-px inline-block w-[1.5px] animate-[caret_1s_step-end_infinite] bg-zinc-400 align-[-1px]" style={{ height: '11px' }} />
+    </span>
+  );
+}
+
 export default function SiteHeader() {
   const pathname = usePathname();
   const router = useRouter();
@@ -251,7 +310,9 @@ export default function SiteHeader() {
               className="group flex h-9 items-center gap-2.5 rounded-xl border border-zinc-200 bg-white px-3.5 text-zinc-400 shadow-sm ring-1 ring-transparent transition-all duration-150 hover:border-zinc-300 hover:text-zinc-600 hover:shadow-md hover:ring-zinc-100 sm:w-52 lg:w-64"
             >
               <Search className="h-3.5 w-3.5 shrink-0 text-zinc-400 transition-colors group-hover:text-zinc-500" />
-              <span className="hidden flex-1 text-left text-[12.5px] text-zinc-400 group-hover:text-zinc-500 sm:block">Search 50+ tools…</span>
+              <span className="hidden sm:flex flex-1 items-center gap-0">
+                <SearchPlaceholder />
+              </span>
               <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded-md border border-zinc-200 bg-zinc-50 px-1.5 py-0.5 font-mono text-[10px] text-zinc-400 shadow-[inset_0_-1px_0_0_rgba(0,0,0,0.08)] transition-colors group-hover:border-zinc-300 group-hover:bg-zinc-100">
                 ⌘K
               </kbd>
