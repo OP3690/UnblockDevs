@@ -394,7 +394,7 @@ services:
       - NODE_ENV=development
 
       # Variable substitution: reads from host shell environment
-      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_URL=\${DATABASE_URL}
 
       # Or set literal values directly
       - REDIS_URL=redis://redis:6379
@@ -409,13 +409,13 @@ services:
     environment:
       - POSTGRES_DB=myapp_dev
       - POSTGRES_USER=myuser
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}  # from host env or .env
+      - POSTGRES_PASSWORD=\${POSTGRES_PASSWORD}  # from host env or .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
   redis:
     image: redis:7-alpine
-    command: redis-server --requirepass ${REDIS_PASSWORD}
+    command: redis-server --requirepass \${REDIS_PASSWORD}
 
 volumes:
   postgres_data:`}</code></pre>
@@ -423,13 +423,13 @@ volumes:
               <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-4">
                 <pre className="text-sm"><code>{`# .env (in the same directory as docker-compose.yml)
 # Docker Compose automatically reads this file for variable substitution
-# in the compose file itself (the ${VAR} syntax above)
+# in the compose file itself (the \${VAR} syntax above)
 
 POSTGRES_PASSWORD=dev-password-local
 REDIS_PASSWORD=redis-local-secret
 DATABASE_URL=postgresql://myuser:dev-password-local@db/myapp_dev
 
-# Note: Docker Compose reads .env for ${VAR} substitution in the YAML.
+# Note: Docker Compose reads .env for \${VAR} substitution in the YAML.
 # For actual container env vars, use env_file: or environment: in the service.`}</code></pre>
               </div>
               <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-4">
