@@ -294,6 +294,13 @@ export default function RootLayout({
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon.png" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="manifest" href="/manifest.json" />
+        {/* Microsoft Clarity — placed in <head> per manual install instructions */}
+        <script
+          type="text/javascript"
+          dangerouslySetInnerHTML={{
+            __html: `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","wga2c8iwtm");`,
+          }}
+        />
       </head>
       <body
         className="font-sans antialiased text-zinc-900 bg-[#FAFAFA] selection:bg-emerald-200/50 selection:text-zinc-900"
@@ -345,10 +352,6 @@ export default function RootLayout({
         <Script id="ga4-js" strategy="afterInteractive" src="https://www.googletagmanager.com/gtag/js?id=G-N6DF8NPHY8" />
         <Script id="ga4-config" strategy="afterInteractive">
           {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config','G-N6DF8NPHY8',{page_path:window.location.pathname,allow_enhanced_conversions:true});`}
-        </Script>
-        {/* Microsoft Clarity */}
-        <Script id="clarity" strategy="afterInteractive">
-          {`(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","wga2c8iwtm");`}
         </Script>
       </body>
     </html>
