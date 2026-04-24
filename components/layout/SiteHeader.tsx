@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useDeferredValue, useMemo } from 'react';
 import { Menu, X, Search, ArrowRight, Clock } from 'lucide-react';
 import {
   trackSearchOpened, trackSearchQuery, trackSearchResultClick, trackSearchClosed,
@@ -208,7 +208,15 @@ export default function SiteHeader() {
   const searchRef = useRef<HTMLInputElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
-  const results = searchQ.trim() ? smartSearch(searchQ) : ALL_TOOLS.filter((t) => POPULAR.includes(t.href));
+  // useDeferredValue lets React keep the input responsive while deferring
+  // the expensive smartSearch computation to a lower-priority render.
+  // This directly cuts INP by yielding the main thread back to the browser
+  // before committing search results.
+  const deferredQ = useDeferredValue(searchQ);
+  const results = useMemo(
+    () => deferredQ.trim() ? smartSearch(deferredQ) : ALL_TOOLS.filter((t) => POPULAR.includes(t.href)),
+    [deferredQ]
+  );
   const showResults = searchOpen;
   const queryDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
