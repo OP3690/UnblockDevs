@@ -120,109 +120,6 @@ const jsonLd = {
   },
 };
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'What is JSON.stringify() in JavaScript?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'JSON.stringify() is a built-in JavaScript function that converts a value — object, array, number, string, boolean, or null — into a JSON-formatted string. It is the standard way to serialize data for sending over a network, storing in localStorage, or writing to a file.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How do I pretty-print JSON with JSON.stringify()?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Pass a number as the third argument (the space parameter) to JSON.stringify(). For example, JSON.stringify(obj, null, 2) produces output indented with 2 spaces. Use JSON.stringify(obj, null, "\\t") for tab indentation.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How do I handle circular references in JSON.stringify()?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'A circular reference error (TypeError: Converting circular structure to JSON) occurs when an object references itself. To handle this, use a custom replacer function that tracks seen objects, or use a library like flatted or json-stringify-safe which serialize circular structures safely.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Why does JSON.stringify() return undefined for some values?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'JSON.stringify() returns undefined (not the string "undefined") when passed a function, a Symbol, or an undefined value at the top level. For object properties with these types, the property is silently omitted. For array elements with undefined, null is substituted to preserve index positions.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How do I stringify a JavaScript Date object?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'JSON.stringify() calls toISOString() on Date objects automatically, producing a string like "2024-01-15T12:00:00.000Z". When parsing back with JSON.parse(), the value is returned as a string — not a Date object. You need to convert it back manually or use a reviver function.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How do I use the replacer parameter in JSON.stringify()?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'The replacer is the second argument to JSON.stringify(). Pass an array of key names to include only those keys: JSON.stringify(obj, ["name", "age"]). Pass a function to transform values: JSON.stringify(obj, (key, value) => value === undefined ? null : value). This lets you filter or transform data during serialization.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'What is the difference between JSON.stringify() and JSON.parse()?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'JSON.stringify() serializes a JavaScript value into a JSON string. JSON.parse() does the reverse — it deserializes a JSON string back into a JavaScript value. Together they form the basis of JSON serialization/deserialization in JavaScript.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How do I stringify JSON in Python?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Use json.dumps() from the built-in json module. For pretty-printing: json.dumps(obj, indent=2). To sort keys: json.dumps(obj, sort_keys=True). To handle non-serializable types, pass a default function: json.dumps(obj, default=str).',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How do I stringify JSON in Java?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Use Jackson: ObjectMapper mapper = new ObjectMapper(); String json = mapper.writeValueAsString(obj);. For pretty printing: mapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj). Gson is another popular option: new Gson().toJson(obj).',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How do I minify JSON with JSON.stringify()?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Call JSON.stringify() with no space argument (or null): JSON.stringify(obj) or JSON.stringify(obj, null, 0). This produces compact JSON with no whitespace, which is ideal for network transmission to reduce payload size.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How do I stringify JSON without escaping Unicode?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'By default JSON.stringify() does not escape ASCII-safe Unicode characters. Non-ASCII characters like emojis or accented letters are included as-is. Only characters that must be escaped in JSON strings (like control characters and quotes) are escaped. If you need to escape all non-ASCII characters, you need a custom replacer or a library.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How do I stringify a BigInt in JSON?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'JSON.stringify() throws a TypeError for BigInt values by default. Workarounds include: (1) use a replacer function that converts BigInt to string; (2) add a BigInt.prototype.toJSON method; or (3) convert BigInt values to strings or numbers before serializing.',
-      },
-    },
-  ],
-};
-
 const howToSchema = {
   '@context': 'https://schema.org',
   '@type': 'HowTo',
@@ -251,7 +148,6 @@ export default function JsonStringifyOnline() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <JsonStringifyOnlineClient />

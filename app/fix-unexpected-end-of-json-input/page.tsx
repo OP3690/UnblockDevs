@@ -85,42 +85,11 @@ const howToSchema = {
   ],
 };
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'What causes "Unexpected end of JSON input"?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'The JSON was truncated before it was complete. Common causes: missing closing brackets or braces at the end of the document, a partial API response due to a network timeout, or passing an empty string to JSON.parse().',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How do I find the missing closing brackets in JSON?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Paste your JSON into the fixer above. It counts opening and closing brackets and braces to identify which ones are missing and at what nesting level.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'What happens if I call JSON.parse(\'\') with an empty string?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'JSON.parse(\'\') throws "Unexpected end of JSON input" because an empty string is not valid JSON. Always check that your string is non-empty before parsing. Use a try/catch block and validate that the input is a non-empty string first.',
-      },
-    },
-  ],
-};
 
 export default function FixUnexpectedEndOfJsonInput() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <FixUnexpectedEndOfJsonInputClient />
 

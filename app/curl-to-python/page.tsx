@@ -116,108 +116,6 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://unblockdevs.com/curl-to-python' },
 };
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'How do I convert a curl command to Python?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Paste your curl command into the input box above and the tool instantly generates the equivalent Python requests code. All flags are parsed automatically: -H headers become a headers dict, -d or --data-raw becomes json= or data=, -u becomes auth=, and -X sets the HTTP method.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Does the converter support all curl flags?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'The converter handles the most common curl flags used in API calls: -X (method), -H (headers), -d and --data-raw (body), -u (basic auth), -b (cookies), -k (SSL skip), -L (follow redirects), --compressed, and --max-time (timeout). Complex flags like --cert for client certificates are noted but may require manual adjustment.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How do I send JSON in Python requests?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: "Use the json= parameter: requests.post(url, json={'key': 'value'}, headers=headers). Python requests automatically sets Content-Type: application/json and serializes the dict to JSON. Alternatively, use data=json.dumps({'key': 'value'}) and set the Content-Type header manually if you need more control.",
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How do I add Authorization headers in Python requests?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: "Pass a headers dict: requests.get(url, headers={'Authorization': 'Bearer YOUR_TOKEN'}). For Basic auth, use the auth parameter: requests.get(url, auth=('username', 'password')). For API keys, add them as a header or query parameter depending on what the API requires.",
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How do I handle SSL verification in Python requests?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: "By default, Python requests verifies SSL certificates. To disable verification (equivalent to curl -k), pass verify=False: requests.get(url, verify=False). For production, never disable SSL verification — instead point to a custom CA bundle with verify='/path/to/ca-bundle.crt' if you have certificate issues.",
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How do I set a timeout in Python requests?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: "Pass a timeout parameter in seconds: requests.get(url, timeout=30). You can also set separate connect and read timeouts as a tuple: requests.get(url, timeout=(5, 30)) — 5 seconds to connect, 30 seconds to read. Without a timeout, requests will hang indefinitely if the server does not respond.",
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How do I send form data in Python requests?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: "Use the data= parameter with a dict for application/x-www-form-urlencoded: requests.post(url, data={'field': 'value'}). For multipart/form-data (file uploads), use the files= parameter instead. Python requests sets the correct Content-Type automatically for both cases.",
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How do I upload a file with Python requests?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: "Open the file in binary mode and pass it via files=: with open('file.pdf', 'rb') as f: requests.post(url, files={'file': f}). For multiple files, add more entries to the files dict. You can also include additional form fields alongside the file by combining files= and data= parameters.",
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How do I follow redirects in Python requests?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: "Python requests follows redirects automatically by default (equivalent to curl -L). To disable redirect following, pass allow_redirects=False. You can check how many redirects occurred via response.history, which is a list of the intermediate responses encountered during the redirect chain.",
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How do I handle cookies in Python requests?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: "Pass cookies as a dict to any request: requests.get(url, cookies={'session': 'abc123'}). To persist cookies across multiple requests (like a logged-in session), use a Session object: s = requests.Session(); s.get(login_url); s.get(protected_url). The session automatically stores and sends cookies between requests.",
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'What is the difference between requests.get() and requests.post()?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: "requests.get() sends an HTTP GET request — used to retrieve data. It can include query parameters via params=. requests.post() sends an HTTP POST request — used to send data to create or update a resource. POST supports a request body via json=, data=, or files=. Use the method that matches what the API endpoint expects.",
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How do I debug a Python requests error?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: "Check response.status_code and response.text to see what the server returned. Enable verbose logging with import logging; logging.basicConfig(level=logging.DEBUG) — this shows the full request including headers. Use response.request.headers and response.request.body to inspect exactly what was sent. For SSL errors, the traceback usually shows the certificate problem.",
-      },
-    },
-  ],
-};
 
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
@@ -233,7 +131,6 @@ export default function CurlToPythonPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <CurlToPythonClient />
       <ToolSEOContent>
