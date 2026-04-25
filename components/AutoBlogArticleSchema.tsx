@@ -29,7 +29,7 @@ export default function AutoBlogArticleSchema() {
     return {
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',
-      mainEntityOfPage: canonicalUrl,
+      mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
       headline: title,
       description,
       datePublished,
@@ -37,19 +37,41 @@ export default function AutoBlogArticleSchema() {
       inLanguage: 'en-US',
       author: {
         '@type': 'Organization',
+        '@id': 'https://unblockdevs.com/#organization',
         name: 'UnblockDevs',
+        url: 'https://unblockdevs.com',
+        description: 'Free developer tools and practical debugging guides for JSON, APIs, curl, and AI-safe workflows.',
+        sameAs: [
+          'https://unblockdevs.com/about',
+          'https://unblockdevs.com/blog',
+        ],
       },
       publisher: {
         '@type': 'Organization',
+        '@id': 'https://unblockdevs.com/#organization',
         name: 'UnblockDevs',
+        url: 'https://unblockdevs.com',
         logo: {
           '@type': 'ImageObject',
           url: 'https://unblockdevs.com/icon.png',
+          width: 512,
+          height: 512,
         },
       },
-      image: 'https://unblockdevs.com/og-image.png',
-      keywords,
+      image: {
+        '@type': 'ImageObject',
+        url: 'https://unblockdevs.com/og-image.png',
+        width: 1200,
+        height: 630,
+      },
+      keywords: keywords.join(', '),
       url: canonicalUrl,
+      isPartOf: {
+        '@type': 'Blog',
+        '@id': 'https://unblockdevs.com/blog',
+        name: 'UnblockDevs Blog',
+        publisher: { '@id': 'https://unblockdevs.com/#organization' },
+      },
     };
   }, [pathname]);
 

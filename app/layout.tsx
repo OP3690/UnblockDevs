@@ -260,9 +260,42 @@ export default function RootLayout({
     inLanguage: 'en-US',
     publisher: {
       '@type': 'Organization',
+      '@id': 'https://unblockdevs.com/#organization',
       name: 'UnblockDevs',
       url: 'https://unblockdevs.com',
     },
+  };
+
+  // Site-wide Organization schema — signals E-E-A-T authority to Google.
+  // All BlogPosting schemas reference this via @id.
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': 'https://unblockdevs.com/#organization',
+    name: 'UnblockDevs',
+    url: 'https://unblockdevs.com',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://unblockdevs.com/icon.png',
+      width: 512,
+      height: 512,
+    },
+    description: 'Free developer tools and practical debugging guides — JSON formatter, JWT decoder, cURL converter, CORS tester, and 50+ browser-based tools. No signup required.',
+    sameAs: [
+      'https://unblockdevs.com/about',
+      'https://unblockdevs.com/blog',
+    ],
+    foundingDate: '2024',
+    knowsAbout: [
+      'JSON formatting and validation',
+      'API debugging',
+      'curl command conversion',
+      'JWT decoding',
+      'JavaScript development',
+      'Node.js',
+      'Python development',
+      'AI-safe developer workflows',
+    ],
   };
 
   return (
@@ -280,6 +313,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
         {/* Preconnects — warm up critical origins early to improve LCP on mobile */}
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

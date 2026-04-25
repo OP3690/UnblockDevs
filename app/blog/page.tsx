@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Script from 'next/script';
-import { blogPosts } from '@/lib/blog-posts-data';
+import { blogPosts, indexablePosts } from '@/lib/blog-posts-data';
 import { BlogListClient } from './BlogListClient';
 import { BookOpen, Zap, Sparkles, ArrowRight } from 'lucide-react';
 
@@ -276,6 +276,52 @@ export default function BlogPage({
           </div>
         )}
       </main>
+
+      {/*
+        Complete article archive — server-rendered HTML links.
+        Ensures all indexable posts are discoverable by Google without JS.
+        Grouped by category for topical relevance signals.
+        Rendered on page 1 only so pagination pages don't duplicate it.
+      */}
+      {currentPage === 1 && (() => {
+        const byCategory: Record<string, typeof indexablePosts> = {};
+        for (const post of indexablePosts) {
+          if (!byCategory[post.category]) byCategory[post.category] = [];
+          byCategory[post.category].push(post);
+        }
+        const sorted = Object.entries(byCategory).sort(([a], [b]) => a.localeCompare(b));
+        return (
+          <section
+            className="mx-auto max-w-full px-5 pb-16 pt-2 sm:px-6 lg:px-8"
+            aria-labelledby="article-archive-heading"
+          >
+            <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-[0_1px_4px_rgba(0,0,0,0.04)] sm:p-8">
+              <h2 id="article-archive-heading" className="text-[1.05rem] font-semibold tracking-tight text-zinc-900 mb-6">
+                Complete Article Archive ({indexablePosts.length} guides)
+              </h2>
+              <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                {sorted.map(([category, posts]) => (
+                  <div key={category}>
+                    <h3 className="mb-3 text-[11px] font-bold uppercase tracking-widest text-zinc-400">{category}</h3>
+                    <ul className="space-y-1.5">
+                      {posts.map((post) => (
+                        <li key={post.slug}>
+                          <Link
+                            href={`/blog/${post.slug}`}
+                            className="text-[13px] font-medium text-zinc-600 underline-offset-2 hover:text-zinc-900 hover:underline"
+                          >
+                            {post.title}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      })()}
     </div>
   );
 }

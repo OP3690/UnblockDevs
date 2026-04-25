@@ -1828,3 +1828,65 @@ export const blogPosts: BlogPost[] = [
     keywords: ['curl converter', 'API requests', 'code generation', 'HTTP client']
   }
 ];
+
+/**
+ * Slugs intentionally excluded from Google indexing:
+ * off-topic, duplicate/redirect, or low-E-E-A-T posts.
+ * Shared between sitemap.ts and blog/page.tsx archive section.
+ */
+export const NOINDEX_BLOG_SLUGS = new Set([
+  // AI non-dev / clickbait
+  'can-ai-fall-in-love-understanding-ai-emotions',
+  'will-ai-take-over-the-world-movies-vs-reality',
+  'what-if-ai-disappeared-tomorrow-how-much-life-would-stop',
+  'how-ai-creates-art-music-videos-in-seconds',
+  'how-ai-makes-money-who-getting-rich',
+  '10-real-ways-make-money-with-ai-2026',
+  'how-to-make-1000-month-using-ai-if-started-today',
+  'passive-income-with-ai-is-it-really-possible',
+  'how-students-can-make-money-using-ai-2026',
+  // Off-topic consumer / social media
+  'how-to-cancel-audible-subscription-mobile-desktop',
+  'how-to-cancel-amazon-prime-membership-instantly',
+  'how-to-cancel-netflix-subscription-without-losing-watch-history',
+  'how-to-cancel-spotify-premium-and-get-refund',
+  'how-to-see-deleted-instagram-messages-without-third-party-apps',
+  'how-to-know-if-someone-blocked-you-on-instagram',
+  'how-to-change-instagram-phone-number-email-2026',
+  'how-to-see-instagram-story-without-being-seen',
+  'how-to-change-phone-number-telegram-without-notifying',
+  'how-to-read-whatsapp-messages-without-blue-ticks',
+  'how-to-change-whatsapp-privacy-settings-maximum-security',
+  'instagram-password-reset-email-guide',
+  'how-to-see-instagram-story-without-being-seen',
+  'nintendo-switch-online-gamecube-games',
+  'xbox-game-pass-games-complete-guide',
+  'ces-2026-fire-tv-stick-4k-max-project-ava',
+  // Finance / off-topic
+  'high-impact-tech-stocks-investment-guide',
+  'how-to-invest-consistently-usa-tech-stocks',
+  // Thin / off-topic tech
+  'apple-creator-studio-complete-guide',
+  'most-useful-tech-skills-2026',
+  'must-learn-tech-skills-2030',
+  // Physical AI / niche
+  'physical-ai-complete-guide',
+  'physical-ai-edge-computing-complete-guide',
+  'physical-ai-systems-complete-guide',
+  'ai-security-platforms-complete-guide',
+  'domain-specific-language-models-complete-guide',
+  'multiagent-systems-complete-guide',
+  // Duplicate/redirect slugs
+  'fix-json-parse-error-unexpected-token',
+  'fix-unexpected-token-less-than-in-json-api-returns-html',
+  'why-json-stringify-returns-undefined-fix',
+  'json-stringify-complete-guide',
+  'json-format-standards-complete-guide',
+  'json-schema-generator-validation-guide',
+  'how-to-validate-json-schema-javascript',
+  'how-ai-creates-art-music-videos-seconds',
+  'will-ai-take-over-world-movies-vs-reality',
+]);
+
+/** All blog posts eligible for Google indexing (no noindex/redirect slugs). */
+export const indexablePosts = blogPosts.filter((p) => !NOINDEX_BLOG_SLUGS.has(p.slug));
