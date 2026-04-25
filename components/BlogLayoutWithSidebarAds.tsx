@@ -141,12 +141,14 @@ export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSid
       </div>
 
       {/* In-article ad — after content */}
+      {/* minHeight=200 reserved upfront so ad load doesn't shift content below */}
       <div
         role="region"
         aria-label="Advertisement"
         className="mt-10 overflow-hidden rounded-xl px-4 sm:px-6 lg:px-8"
+        style={{ contain: 'layout' }}
       >
-        <AdUnit slot={SLOT_INARTICLE} format="fluid" layout="in-article" className="rounded-xl overflow-hidden" />
+        <AdUnit slot={SLOT_INARTICLE} format="fluid" layout="in-article" minHeight={200} className="rounded-xl overflow-hidden" />
       </div>
 
       {/* Related posts */}
@@ -155,12 +157,14 @@ export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSid
       </div>
 
       {/* Footer ad */}
+      {/* minHeight=280 matches typical autorelaxed ad — prevents CLS */}
       <div
         role="region"
         aria-label="Advertisement"
         className="mt-10 overflow-hidden rounded-xl bg-zinc-50 px-4 sm:px-6 lg:px-8"
+        style={{ contain: 'layout' }}
       >
-        <AdUnit slot={SLOT_FOOTER} format="autorelaxed" className="rounded-xl overflow-hidden" />
+        <AdUnit slot={SLOT_FOOTER} format="autorelaxed" minHeight={280} className="rounded-xl overflow-hidden" />
       </div>
     </div>
   );

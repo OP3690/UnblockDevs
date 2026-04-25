@@ -281,8 +281,11 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
-        {/* Only 2 preconnects — no gatekeeper, no BMC, no adtrafficquality (~400ms saved on mobile) */}
-        <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
+        {/* Preconnects — warm up critical origins early to improve LCP on mobile */}
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://tpc.googlesyndication.com" />
         <link rel="dns-prefetch" href="https://fundingchoicesmessages.google.com" />
         
         {/* Favicon for Google Search Results - Multiple formats for better compatibility */}
