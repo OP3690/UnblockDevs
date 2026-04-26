@@ -351,10 +351,10 @@ export default function MarkdownPreviewPage() {
 
         <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
           <RelatedBlogPosts posts={[
-            { href: '/blog/github-flavored-markdown-guide', label: 'GitHub Flavored Markdown Complete Guide' },
-            { href: '/blog/markdown-to-html-conversion', label: 'Converting Markdown to HTML' },
-            { href: '/blog/readme-best-practices', label: 'README Best Practices for Open Source Projects' },
-            { href: '/blog/markdown-tables-tips', label: 'Mastering Markdown Tables' },
+            { href: '/blog/how-to-beautify-html-code-online', label: 'How to Beautify HTML Code Online' },
+            { href: '/blog/how-to-manipulate-strings-online', label: 'How to Manipulate Strings Online' },
+            { href: '/blog/string-case-converter-guide', label: 'String Case Converter Guide' },
+            { href: '/blog/how-to-remove-extra-spaces-from-string', label: 'How to Remove Extra Spaces from Text' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

@@ -33,6 +33,9 @@ export const metadata: Metadata = {
     title: 'BFS vs DFS Explained with Examples | UnblockDevs',
     description: 'BFS vs DFS: differences, examples, diagrams. For interviews.',
   },
+  alternates: {
+    canonical: 'https://unblockdevs.com/blog/what-is-bfs-vs-dfs-differences-explained-with-examples',
+  },
 };
 
 import WhatIsBfsVsDfsDifferencesExplainedWithExamplesClient from './client';

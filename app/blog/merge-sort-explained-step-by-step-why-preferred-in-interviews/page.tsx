@@ -33,6 +33,9 @@ export const metadata: Metadata = {
     title: 'Merge Sort Explained – Step-by-Step | UnblockDevs',
     description: 'Merge sort step-by-step: diagrams, code. For interviews.',
   },
+  alternates: {
+    canonical: 'https://unblockdevs.com/blog/merge-sort-explained-step-by-step-why-preferred-in-interviews',
+  },
 };
 
 import MergeSortExplainedStepByStepWhyPreferredInInterviewsClient from './client';

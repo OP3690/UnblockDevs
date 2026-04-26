@@ -33,6 +33,9 @@ export const metadata: Metadata = {
     title: 'Binary Search Explained Like You\'re 5 | UnblockDevs',
     description: 'Binary search explained simply: diagrams, code. For interviews.',
   },
+  alternates: {
+    canonical: 'https://unblockdevs.com/blog/binary-search-explained-like-youre-5-with-code-example',
+  },
 };
 
 import BinarySearchExplainedLikeYoure5WithCodeExampleClient from './client';

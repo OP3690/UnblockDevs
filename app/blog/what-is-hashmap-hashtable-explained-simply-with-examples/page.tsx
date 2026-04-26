@@ -33,6 +33,9 @@ export const metadata: Metadata = {
     title: 'HashMap / HashTable Explained – Examples | UnblockDevs',
     description: 'HashMap and HashTable: simple examples, diagrams, code. For interviews.',
   },
+  alternates: {
+    canonical: 'https://unblockdevs.com/blog/what-is-hashmap-hashtable-explained-simply-with-examples',
+  },
 };
 
 import WhatIsHashMapHashTableExplainedSimplyWithExamplesClient from './client';

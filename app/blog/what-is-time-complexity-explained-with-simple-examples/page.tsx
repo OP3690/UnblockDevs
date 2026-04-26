@@ -33,6 +33,9 @@ export const metadata: Metadata = {
     title: 'Time Complexity Explained – Simple Examples | UnblockDevs',
     description: 'Time complexity: Big O with examples and graphs. For interviews.',
   },
+  alternates: {
+    canonical: 'https://unblockdevs.com/blog/what-is-time-complexity-explained-with-simple-examples',
+  },
 };
 
 import WhatIsTimeComplexityExplainedWithSimpleExamplesClient from './client';

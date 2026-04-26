@@ -33,6 +33,9 @@ export const metadata: Metadata = {
     title: 'Two Pointer Technique Explained | UnblockDevs',
     description: 'Two pointer technique: examples, diagrams, code. For interviews.',
   },
+  alternates: {
+    canonical: 'https://unblockdevs.com/blog/what-is-two-pointer-technique-explained-for-beginners',
+  },
 };
 
 import WhatIsTwoPointerTechniqueExplainedForBeginnersClient from './client';

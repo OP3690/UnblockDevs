@@ -33,6 +33,9 @@ export const metadata: Metadata = {
     title: 'Linked List: Singly vs Doubly Explained | UnblockDevs',
     description: 'Linked list: singly vs doubly. Examples, diagrams, code. For interviews.',
   },
+  alternates: {
+    canonical: 'https://unblockdevs.com/blog/what-is-linked-list-singly-vs-doubly-explained-simply',
+  },
 };
 
 import WhatIsLinkedListSinglyVsDoublyExplainedSimplyClient from './client';

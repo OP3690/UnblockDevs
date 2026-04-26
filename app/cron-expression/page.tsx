@@ -375,10 +375,10 @@ export default function CronExpressionPage() {
 
         <SEOSection id="guides" eyebrow="Learn more" heading="Developer Guides">
           <RelatedBlogPosts posts={[
-            { href: '/blog/cron-expression-cheat-sheet', label: 'Cron Expression Cheat Sheet' },
-            { href: '/blog/cron-job-best-practices', label: 'Cron Job Best Practices' },
-            { href: '/blog/scheduling-tasks-in-nodejs', label: 'Scheduling Tasks in Node.js' },
-            { href: '/blog/github-actions-cron-schedule', label: 'GitHub Actions Cron Schedules' },
+            { href: '/blog/batch-processing-vs-stream-processing-key-differences-explained', label: 'Batch vs Stream Processing: Key Differences' },
+            { href: '/blog/what-is-a-data-pipeline-explained-for-beginners', label: 'What Is a Data Pipeline? Explained for Beginners' },
+            { href: '/blog/how-to-use-curl-command-api-testing', label: 'How to Use cURL for API Testing' },
+            { href: '/blog/how-to-post-json-data-using-curl-complete-guide', label: 'How to POST JSON Data Using cURL' },
           ]} />
         </SEOSection>
       </ToolSEOContent>

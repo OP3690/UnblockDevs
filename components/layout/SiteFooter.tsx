@@ -48,6 +48,14 @@ export default function SiteFooter() {
                 { href: '/json-stringify-online', label: 'JSON Stringify' },
                 { href: '/json-schema-generation', label: 'Schema Generator' },
                 { href: '/json-to-excel', label: 'JSON to Excel' },
+                { href: '/json-escape-characters', label: 'JSON Escape Chars' },
+                { href: '/how-to-fix-broken-json-online', label: 'Fix Broken JSON' },
+                { href: '/fix-unexpected-token-in-json', label: 'Fix Unexpected Token' },
+                { href: '/fix-unexpected-end-of-json-input', label: 'Fix Unexpected End' },
+                { href: '/fix-expected-comma-or-brace-json', label: 'Fix Expected Comma' },
+                { href: '/fix-invalid-control-character-json', label: 'Fix Control Char' },
+                { href: '/fix-unexpected-token-less-than-json', label: 'Fix Token < in JSON' },
+                { href: '/python-json-decode-error', label: 'Python JSON DecodeError' },
               ].map((l) => (
                 <li key={l.href}>
                   <Link href={l.href} className="text-zinc-500 transition-colors hover:text-zinc-200">
@@ -125,6 +133,33 @@ export default function SiteFooter() {
                 { href: '/timezone-translator', label: 'Timezone Translator' },
                 { href: '/curl-converter', label: 'cURL Converter' },
                 { href: '/curl-failure-root-cause-engine', label: 'cURL Failure Analyzer' },
+                { href: '/curl-post-json-example', label: 'cURL POST JSON Examples' },
+                { href: '/convert-curl-to-http-request', label: 'cURL to HTTP Request' },
+              ].map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className="text-zinc-500 transition-colors hover:text-zinc-200">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Error fix guides */}
+          <div>
+            <p className="mb-4 text-[12px] font-semibold uppercase tracking-widest text-zinc-400">
+              Error fixes
+            </p>
+            <ul className="flex flex-col gap-2.5 text-[13px]">
+              {[
+                { href: '/python-keyerror-fix', label: 'Fix Python KeyError' },
+                { href: '/react-state-not-updating', label: 'React State Not Updating' },
+                { href: '/cannot-read-property-undefined', label: "Fix Cannot Read Property" },
+                { href: '/sql-syntax-error-fix', label: 'Fix SQL Syntax Error' },
+                { href: '/http-403-error-fix', label: 'Fix HTTP 403 Error' },
+                { href: '/useeffect-not-working', label: 'useEffect Not Working' },
+                { href: '/fetch-api-not-working', label: 'Fetch API Not Working' },
+                { href: '/nodejs-port-already-in-use', label: 'Fix Port Already in Use' },
               ].map((l) => (
                 <li key={l.href}>
                   <Link href={l.href} className="text-zinc-500 transition-colors hover:text-zinc-200">

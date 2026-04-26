@@ -973,7 +973,7 @@ export const env = result.data;
               <Link href="/blog/how-to-securely-store-api-keys-nodejs-env-best-practices" className="text-primary-600 hover:underline">How to Securely Store API Keys in Node.js</Link>
               <Link href="/blog/why-process-env-is-undefined-nodejs-and-how-to-fix-it" className="text-primary-600 hover:underline">Fix process.env undefined in Node.js</Link>
               <Link href="/blog/fix-error-listen-eaddrinuse-nodejs-port-already-in-use" className="text-primary-600 hover:underline">Fix EADDRINUSE port error</Link>
-              <Link href="/env-variable-viewer" className="text-primary-600 hover:underline">Env Variable Viewer Tool</Link>
+              <Link href="/blog/process-env-undefined-docker-nodejs-fix" className="text-primary-600 hover:underline">Fix process.env Undefined in Docker</Link>
               <Link href="/json-beautifier" className="text-primary-600 hover:underline">JSON Beautifier</Link>
             </div>
           </section>

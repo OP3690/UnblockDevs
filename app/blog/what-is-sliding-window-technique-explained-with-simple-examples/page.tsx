@@ -33,6 +33,9 @@ export const metadata: Metadata = {
     title: 'Sliding Window Technique Explained | UnblockDevs',
     description: 'Sliding window: examples, diagrams, code. For interviews.',
   },
+  alternates: {
+    canonical: 'https://unblockdevs.com/blog/what-is-sliding-window-technique-explained-with-simple-examples',
+  },
 };
 
 import WhatIsSlidingWindowTechniqueExplainedWithSimpleExamplesClient from './client';

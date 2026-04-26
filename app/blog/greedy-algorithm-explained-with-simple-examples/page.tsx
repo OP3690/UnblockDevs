@@ -33,6 +33,9 @@ export const metadata: Metadata = {
     title: 'Greedy Algorithm Explained with Simple Examples | Complete Guide 2026',
     description: 'Greedy algorithm: examples, diagrams, code. For interviews.',
   },
+  alternates: {
+    canonical: 'https://unblockdevs.com/blog/greedy-algorithm-explained-with-simple-examples',
+  },
 };
 
 import GreedyAlgorithmExplainedWithSimpleExamplesClient from './client';

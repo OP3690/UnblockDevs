@@ -10,6 +10,42 @@ export type BlogPost = {
 
 export const blogPosts: BlogPost[] = [
     {
+      slug: 'css-components-every-developer-needs',
+      title: '10 CSS Components Every Web Developer Needs (With Code)',
+      excerpt: 'The 10 CSS components every web developer needs — buttons, cards, modals, navbars, tooltips, and more. Copy-paste code included.',
+      date: '2026-01-15',
+      readTime: '8 min read',
+      category: 'CSS & Frontend',
+      keywords: ['css components every developer needs', 'css component library', 'css ui components code', 'css copy paste components', 'web developer css toolkit'],
+    },
+    {
+      slug: 'css-ui-components-free-copy-paste',
+      title: '401+ Free CSS UI Components to Copy and Paste (2026)',
+      excerpt: '401+ free CSS UI components — forms, alerts, badges, tabs, accordions, and more. All copy-paste ready with no dependencies.',
+      date: '2026-01-20',
+      readTime: '10 min read',
+      category: 'CSS & Frontend',
+      keywords: ['free css ui components', 'css components copy paste 2026', 'css ui kit free', 'css component examples', 'css components no framework'],
+    },
+    {
+      slug: 'tailwind-css-components-guide',
+      title: 'Tailwind CSS Components: Complete Guide + 401 Free Examples (2026)',
+      excerpt: 'Complete guide to Tailwind CSS components — 401+ free examples for buttons, cards, navbars, forms, modals, and more. All copy-paste ready.',
+      date: '2026-01-25',
+      readTime: '11 min read',
+      category: 'CSS & Frontend',
+      keywords: ['tailwind css components', 'tailwind ui components free', 'tailwind components examples 2026', 'tailwind copy paste components', 'tailwind css component library'],
+    },
+    {
+      slug: 'process-env-undefined-docker-nodejs-fix',
+      title: 'Why process.env Variables Are Undefined in Docker (And How to Fix It)',
+      excerpt: "Your Node.js app works locally but process.env is undefined in Docker. Here's exactly why and 4 ways to fix it — ARG vs ENV, docker-compose, secrets.",
+      date: '2026-03-01',
+      readTime: '9 min read',
+      category: 'Node.js & Backend',
+      keywords: ['process.env undefined docker', 'nodejs process env docker fix', 'docker environment variables nodejs', 'docker compose env file', 'dockerfile ARG vs ENV nodejs'],
+    },
+    {
       slug: 'what-is-mythos-ai-anthropic-complete-guide',
       title: "What Is Mythos AI? Anthropic's Claude Mythos Model Explained (2026)",
       excerpt: "Complete guide to Anthropic's Claude Mythos AI — what it is, how it scored 93.9% on SWE-bench, found 2,000+ zero-day vulnerabilities in 7 weeks, and why it is locked behind Project Glasswing.",

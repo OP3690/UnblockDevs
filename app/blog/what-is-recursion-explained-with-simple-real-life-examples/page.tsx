@@ -33,6 +33,9 @@ export const metadata: Metadata = {
     title: 'Recursion Explained – Real-Life Examples | UnblockDevs',
     description: 'Recursion: examples, diagrams, code. For interviews.',
   },
+  alternates: {
+    canonical: 'https://unblockdevs.com/blog/what-is-recursion-explained-with-simple-real-life-examples',
+  },
 };
 
 import WhatIsRecursionExplainedWithSimpleRealLifeExamplesClient from './client';

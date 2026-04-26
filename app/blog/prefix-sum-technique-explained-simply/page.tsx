@@ -33,6 +33,9 @@ export const metadata: Metadata = {
     title: 'Prefix Sum Technique Explained Simply | Complete Guide 2026',
     description: 'Prefix sum technique: simple examples, diagrams, code. For interviews.',
   },
+  alternates: {
+    canonical: 'https://unblockdevs.com/blog/prefix-sum-technique-explained-simply',
+  },
 };
 
 import PrefixSumTechniqueExplainedSimplyClient from './client';

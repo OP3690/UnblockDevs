@@ -33,6 +33,9 @@ export const metadata: Metadata = {
     title: 'Stack vs Queue Explained | UnblockDevs',
     description: 'Stack vs queue: examples, diagrams, code. For interviews.',
   },
+  alternates: {
+    canonical: 'https://unblockdevs.com/blog/what-is-stack-vs-queue-explained-with-real-life-examples',
+  },
 };
 
 import WhatIsStackVsQueueExplainedWithRealLifeExamplesClient from './client';

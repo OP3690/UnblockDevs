@@ -33,6 +33,9 @@ export const metadata: Metadata = {
     title: 'Read Error Messages as a Beginner 2026 | UnblockDevs',
     description: 'Read error messages as a beginner. Error types, stack traces, fixing common errors.',
   },
+  alternates: {
+    canonical: 'https://unblockdevs.com/blog/how-to-read-error-messages-properly-as-beginner-programmer',
+  },
 };
 
 import HowToReadErrorMessagesProperlyAsBeginnerProgrammerClient from './client';
