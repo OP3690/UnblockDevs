@@ -105,6 +105,12 @@ export default function SiteFooter() {
                 { href: '/regex-tester', label: 'Regex Tester' },
                 { href: '/password-generator', label: 'Password Generator' },
                 { href: '/har-to-curl', label: 'HAR to cURL' },
+                { href: '/html-viewer', label: 'HTML Viewer' },
+                { href: '/http-headers-analyzer', label: 'HTTP Headers Analyzer' },
+                { href: '/json-builder', label: 'JSON Builder' },
+                { href: '/string-utilities', label: 'String Utilities' },
+                { href: '/sql-in-clause-generator', label: 'SQL IN Clause Generator' },
+                { href: '/ui-components', label: 'CSS UI Components' },
               ].map((l) => (
                 <li key={l.href}>
                   <Link href={l.href} className="text-zinc-500 transition-colors hover:text-zinc-200">
@@ -154,12 +160,20 @@ export default function SiteFooter() {
               {[
                 { href: '/python-keyerror-fix', label: 'Fix Python KeyError' },
                 { href: '/react-state-not-updating', label: 'React State Not Updating' },
-                { href: '/cannot-read-property-undefined', label: "Fix Cannot Read Property" },
+                { href: '/cannot-read-property-undefined', label: 'Fix Cannot Read Property' },
                 { href: '/sql-syntax-error-fix', label: 'Fix SQL Syntax Error' },
                 { href: '/http-403-error-fix', label: 'Fix HTTP 403 Error' },
                 { href: '/useeffect-not-working', label: 'useEffect Not Working' },
                 { href: '/fetch-api-not-working', label: 'Fetch API Not Working' },
                 { href: '/nodejs-port-already-in-use', label: 'Fix Port Already in Use' },
+                { href: '/cors-error-fix', label: 'Fix CORS Error' },
+                { href: '/dotenv-not-loading', label: 'dotenv Not Loading' },
+                { href: '/express-request-body-undefined', label: 'Express req.body Undefined' },
+                { href: '/fix-json-parse-error-javascript', label: 'Fix JSON.parse() Error' },
+                { href: '/process-env-undefined', label: 'process.env Not Working' },
+                { href: '/curl-to-python', label: 'cURL to Python' },
+                { href: '/curl-to-python-requests', label: 'cURL to Python Requests' },
+                { href: '/curl-to-requests', label: 'cURL to Code' },
               ].map((l) => (
                 <li key={l.href}>
                   <Link href={l.href} className="text-zinc-500 transition-colors hover:text-zinc-200">
