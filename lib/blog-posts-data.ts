@@ -10,6 +10,33 @@ export type BlogPost = {
 
 export const blogPosts: BlogPost[] = [
     {
+      slug: 'what-is-mythos-ai-anthropic-complete-guide',
+      title: "What Is Mythos AI? Anthropic's Claude Mythos Model Explained (2026)",
+      excerpt: "Complete guide to Anthropic's Claude Mythos AI — what it is, how it scored 93.9% on SWE-bench, found 2,000+ zero-day vulnerabilities in 7 weeks, and why it is locked behind Project Glasswing.",
+      date: '2026-04-23',
+      readTime: '12 min read',
+      category: 'AI & Security',
+      keywords: ['what is mythos ai', 'anthropic mythos ai', 'claude mythos model', 'mythos ai 2026', 'project glasswing anthropic', 'claude mythos cybersecurity', 'mythos ai zero day vulnerabilities'],
+    },
+    {
+      slug: 'claude-mythos-ai-benchmarks-complete-analysis-2026',
+      title: 'Claude Mythos AI Benchmarks: 93.9% SWE-bench, 97.6% USAMO & Every Record Broken (2026)',
+      excerpt: 'Deep-dive benchmark analysis of Claude Mythos Preview — SWE-bench 93.9%, USAMO 97.6%, SWE-bench Pro 77.8%, and multimodal coding 59.0%. Every score explained, compared to Opus 4.6 and GPT-5.4.',
+      date: '2026-04-23',
+      readTime: '13 min read',
+      category: 'AI & Security',
+      keywords: ['claude mythos benchmarks', 'mythos ai swe-bench 93.9', 'claude mythos usamo score', 'anthropic mythos benchmark results', 'claude mythos vs opus 4.6', 'claude mythos vs gpt 5.4', 'swe-bench pro claude mythos'],
+    },
+    {
+      slug: 'project-glasswing-anthropic-mythos-ai-cybersecurity-explained',
+      title: 'Project Glasswing Explained: How Anthropic Is Using Mythos AI to Secure Critical Infrastructure (2026)',
+      excerpt: "Complete guide to Project Glasswing — Anthropic's $100M initiative using Claude Mythos to find and fix zero-day vulnerabilities in critical software. Partners, use cases, findings, and what it means for cybersecurity.",
+      date: '2026-04-23',
+      readTime: '14 min read',
+      category: 'AI & Security',
+      keywords: ['project glasswing anthropic', 'what is project glasswing', 'anthropic glasswing cybersecurity', 'claude mythos project glasswing', 'project glasswing partners', 'mythos ai critical infrastructure security'],
+    },
+    {
       slug: 'why-pasting-code-into-chatgpt-is-dangerous',
       title: 'Why Pasting Code into ChatGPT Is Dangerous — API Keys, Secrets & IP Risks',
       excerpt: 'Every time you paste code into ChatGPT or Copilot you expose API keys, database credentials, proprietary logic, and PII. Learn exactly what risks you are taking and how to eliminate them with code masking.',
