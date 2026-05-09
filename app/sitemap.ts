@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 import path from 'path'
 import fs from 'fs'
-import { blogPosts } from '@/lib/blog-posts-data'
+import { blogPosts, NOINDEX_BLOG_SLUGS } from '@/lib/blog-posts-data'
 
 const BLOG_PER_PAGE = 6
 
@@ -9,76 +9,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://unblockdevs.com'
   const currentDate = new Date().toISOString().split('T')[0]
 
-  // Blog slugs from filesystem: every app/blog/<slug>/ with page.tsx is in sitemap
-  // Exclude slugs that redirect (canonical or off-topic 301 to homepage)
-  const redirectOnlyBlogSlugs = [
-    'how-ai-creates-art-music-videos-seconds',
-    'will-ai-take-over-world-movies-vs-reality',
-    'fix-json-parse-error-unexpected-token',
-    'fix-unexpected-token-less-than-in-json-api-returns-html',
-    'why-json-stringify-returns-undefined-fix',
-    'json-stringify-complete-guide',
-    'json-format-standards-complete-guide',
-    'json-schema-generator-validation-guide',
-    'how-to-validate-json-schema-javascript',
-  ]
-  const offTopicBlogSlugs = [
-    'how-to-cancel-audible-subscription-mobile-desktop',
-    'how-to-see-deleted-instagram-messages-without-third-party-apps',
-    'instagram-password-reset-email-guide',
-    'how-to-invest-consistently-usa-tech-stocks',
-    'apple-creator-studio-complete-guide',
-    'how-to-cancel-amazon-prime-membership-instantly',
-    'how-to-cancel-netflix-subscription-without-losing-watch-history',
-    'how-to-cancel-spotify-premium-and-get-refund',
-    'xbox-game-pass-games-complete-guide',
-    'ces-2026-fire-tv-stick-4k-max-project-ava',
-  ]
-  // Noindex + exclude from sitemap: off-topic (saves crawl budget, keeps topical authority)
-  const noindexBlogSlugs = [
-    'can-ai-fall-in-love-understanding-ai-emotions',
-    'will-ai-take-over-the-world-movies-vs-reality',
-    'what-if-ai-disappeared-tomorrow-how-much-life-would-stop',
-    'how-ai-creates-art-music-videos-in-seconds',
-    'how-ai-makes-money-who-getting-rich',
-    '10-real-ways-make-money-with-ai-2026',
-    'how-to-make-1000-month-using-ai-if-started-today',
-    'passive-income-with-ai-is-it-really-possible',
-    'how-students-can-make-money-using-ai-2026',
-    // Off-topic (audible, instagram, whatsapp, finance, CES, tech skills, physical AI, etc.)
-    'how-to-cancel-audible-subscription-mobile-desktop',
-    'how-to-see-deleted-instagram-messages-without-third-party-apps',
-    'how-to-change-whatsapp-privacy-settings-maximum-security',
-    'instagram-password-reset-email-guide',
-    'high-impact-tech-stocks-investment-guide',
-    'how-to-invest-consistently-usa-tech-stocks',
-    'apple-creator-studio-complete-guide',
-    'ces-2026-fire-tv-stick-4k-max-project-ava',
-    'most-useful-tech-skills-2026',
-    'must-learn-tech-skills-2030',
-    'physical-ai-complete-guide',
-    'physical-ai-edge-computing-complete-guide',
-    'physical-ai-systems-complete-guide',
-    'ai-security-platforms-complete-guide',
-    'domain-specific-language-models-complete-guide',
-    'multiagent-systems-complete-guide',
-  ]
-  // Old duplicate JSON article slugs (301 to consolidated guides; exclude from sitemap)
-  const duplicateJsonRedirectSlugs = [
-    'fix-json-parse-error-unexpected-token',
-    'fix-unexpected-token-less-than-in-json-api-returns-html',
-    'why-json-stringify-returns-undefined-fix',
-    'json-stringify-complete-guide',
-    'json-format-standards-complete-guide',
-    'json-schema-generator-validation-guide',
-    'how-to-validate-json-schema-javascript',
-  ]
+  // Build date lookup so each blog post gets its actual publication date as lastModified.
+  // Google uses lastModified to prioritise crawling fresh content — using today's date
+  // for all posts gives Google no signal about which posts are actually new.
+  const blogDateMap = new Map(blogPosts.map((p) => [p.slug, p.date]))
+
+  // Single source of truth: NOINDEX_BLOG_SLUGS (from lib/blog-posts-data.ts).
+  // Any slug in that set is excluded from the sitemap to preserve crawl budget.
   const blogDir = path.join(process.cwd(), 'app/blog')
   const blogSlugs = fs
     .readdirSync(blogDir, { withFileTypes: true })
     .filter((d) => d.isDirectory() && fs.existsSync(path.join(blogDir, d.name, 'page.tsx')))
     .map((d) => d.name)
-    .filter((slug) => !redirectOnlyBlogSlugs.includes(slug) && !offTopicBlogSlugs.includes(slug) && !noindexBlogSlugs.includes(slug) && !duplicateJsonRedirectSlugs.includes(slug))
+    .filter((slug) => !NOINDEX_BLOG_SLUGS.has(slug))
 
   // Discover all non-blog app routes from filesystem so no page is ever missing
   function discoverAppRoutes(dir: string, prefix: string): string[] {
@@ -445,13 +388,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
         changeFrequency: 'monthly' as const,
         priority: 0.7,
       })),
-    // Blog posts (all posts from blog listing)
+    // Blog posts — use actual publication date so Google can prioritise fresh content
     ...blogSlugs.map((slug) => ({
       url: `${baseUrl}/blog/${slug}`,
-      lastModified: currentDate,
+      lastModified: blogDateMap.get(slug) ?? currentDate,
       changeFrequency: 'monthly' as const,
       priority: getBlogPriority(slug),
     })),
+    // RSS feed — help feed readers and search engines discover the feed
+    { url: `${baseUrl}/feed.xml`, lastModified: currentDate, changeFrequency: 'daily' as const, priority: 0.5 },
     // Omit blog?page=2+ from sitemap (those URLs are noindex); keep crawl budget for /blog and post URLs
   ].filter((e) => isPageUrl(e.url))
 

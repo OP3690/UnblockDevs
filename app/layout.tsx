@@ -14,6 +14,7 @@ import HomeBookmarkStrip from '@/components/HomeBookmarkStrip'
 import SiteHeader from '@/components/layout/SiteHeader'
 import SiteFooter from '@/components/layout/SiteFooter'
 import VisitTracker from '@/components/VisitTracker'
+import AutoToolSchema from '@/components/AutoToolSchema'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap', preload: true })
 const firaCode = Fira_Code({ subsets: ['latin'], variable: '--font-fira-code', display: 'swap', preload: true })
@@ -193,9 +194,6 @@ export const metadata: Metadata = {
   classification: 'Web Application',
   verification: {
     google: 'Y5HAW7dJrOgoSP6ycSbnbNWeKIeHH-fwCM4p5Fgh11I',
-    other: {
-      'msvalidate.01': 'your-bing-verification-code', // Replace with actual Bing code when you have it
-    },
   },
 }
 
@@ -273,19 +271,29 @@ export default function RootLayout({
     '@type': 'Organization',
     '@id': 'https://unblockdevs.com/#organization',
     name: 'UnblockDevs',
+    alternateName: 'Unblock Devs',
     url: 'https://unblockdevs.com',
     logo: {
       '@type': 'ImageObject',
+      '@id': 'https://unblockdevs.com/#logo',
       url: 'https://unblockdevs.com/icon.png',
       width: 512,
       height: 512,
+      caption: 'UnblockDevs logo',
     },
+    image: 'https://unblockdevs.com/og-image.png',
     description: 'Free developer tools and practical debugging guides — JSON formatter, JWT decoder, cURL converter, CORS tester, and 50+ browser-based tools. No signup required.',
     sameAs: [
       'https://unblockdevs.com/about',
       'https://unblockdevs.com/blog',
+      'https://unblockdevs.com/tools/json',
     ],
     foundingDate: '2024',
+    areaServed: 'Worldwide',
+    audience: {
+      '@type': 'Audience',
+      audienceType: 'Software Developers',
+    },
     knowsAbout: [
       'JSON formatting and validation',
       'API debugging',
@@ -295,7 +303,21 @@ export default function RootLayout({
       'Node.js',
       'Python development',
       'AI-safe developer workflows',
+      'SQL formatting',
+      'CORS error debugging',
+      'HTTP header analysis',
     ],
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Free Developer Tools',
+      itemListElement: [
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'JSON Formatter & Beautifier', url: 'https://unblockdevs.com/json-beautifier' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'cURL Converter', url: 'https://unblockdevs.com/curl-converter' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'JWT Decoder', url: 'https://unblockdevs.com/jwt-decoder' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'CORS Tester', url: 'https://unblockdevs.com/cors-tester' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'SQL Formatter', url: 'https://unblockdevs.com/sql-formatter' } },
+      ],
+    },
   };
 
   return (
@@ -318,6 +340,10 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
+        {/* Per-tool SoftwareApplication + BreadcrumbList schemas — rendered client-side from pathname */}
+        <AutoToolSchema />
+        {/* RSS feed autodiscovery — tells browsers and feed readers the feed exists */}
+        <link rel="alternate" type="application/rss+xml" title="UnblockDevs Blog — Developer Tools &amp; Guides" href="https://unblockdevs.com/feed.xml" />
         {/* Preconnects — warm up critical origins early to improve LCP on mobile */}
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />

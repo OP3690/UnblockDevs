@@ -7,7 +7,7 @@ import { blogPosts } from '@/lib/blog-posts-data';
 export default function AutoBlogArticleSchema() {
   const pathname = usePathname();
 
-  const schema = useMemo(() => {
+  const schemas = useMemo(() => {
     if (!pathname || !pathname.startsWith('/blog/')) return null;
 
     const slug = pathname.replace('/blog/', '').split('/')[0];
@@ -25,16 +25,21 @@ export default function AutoBlogArticleSchema() {
         : 'Developer troubleshooting and implementation guide.');
     const datePublished = post?.date ?? '2026-01-01';
     const keywords = post?.keywords ?? [];
+    const category = post?.category ?? 'Developer Guides';
+    const readTime = post?.readTime ?? '8 min read';
 
-    return {
+    const articleSchema = {
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',
+      '@id': `${canonicalUrl}#article`,
       mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
       headline: title,
       description,
       datePublished,
       dateModified: datePublished,
+      timeRequired: readTime.replace(' read', '').replace(' min', 'M').replace(/^(\d+)M$/, 'PT$1M'),
       inLanguage: 'en-US',
+      articleSection: category,
       author: {
         '@type': 'Organization',
         '@id': 'https://unblockdevs.com/#organization',
@@ -63,6 +68,7 @@ export default function AutoBlogArticleSchema() {
         url: 'https://unblockdevs.com/og-image.png',
         width: 1200,
         height: 630,
+        caption: title,
       },
       keywords: keywords.join(', '),
       url: canonicalUrl,
@@ -70,17 +76,56 @@ export default function AutoBlogArticleSchema() {
         '@type': 'Blog',
         '@id': 'https://unblockdevs.com/blog',
         name: 'UnblockDevs Blog',
+        description: 'Practical developer guides covering JSON, APIs, Node.js, Python, AI tools, and debugging.',
         publisher: { '@id': 'https://unblockdevs.com/#organization' },
       },
+      about: {
+        '@type': 'Thing',
+        name: category,
+      },
     };
+
+    // BreadcrumbList — enables breadcrumb display in Google search results
+    const breadcrumbSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      '@id': `${canonicalUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: 'https://unblockdevs.com',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Blog',
+          item: 'https://unblockdevs.com/blog',
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: title,
+          item: canonicalUrl,
+        },
+      ],
+    };
+
+    return [articleSchema, breadcrumbSchema];
   }, [pathname]);
 
-  if (!schema) return null;
+  if (!schemas) return null;
 
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
+    <>
+      {schemas.map((schema, i) => (
+        <script
+          key={i}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
+    </>
   );
 }

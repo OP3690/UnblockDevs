@@ -126,11 +126,46 @@ export default function BlogPage({
       name: post.title,
     })),
   };
+  // Blog CollectionPage — tells Google this is a curated collection of developer articles
+  const blogCollectionSchema = currentPage <= 1 ? {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    '@id': 'https://unblockdevs.com/blog',
+    name: 'UnblockDevs Developer Blog',
+    description: 'Practical developer guides covering JSON errors, API debugging, Node.js, Python, cURL, AI-safe workflows, and more. All articles are free.',
+    url: 'https://unblockdevs.com/blog',
+    inLanguage: 'en-US',
+    isPartOf: { '@type': 'WebSite', url: 'https://unblockdevs.com' },
+    publisher: {
+      '@type': 'Organization',
+      '@id': 'https://unblockdevs.com/#organization',
+      name: 'UnblockDevs',
+      url: 'https://unblockdevs.com',
+    },
+    about: [
+      { '@type': 'Thing', name: 'JSON debugging' },
+      { '@type': 'Thing', name: 'API development' },
+      { '@type': 'Thing', name: 'Node.js' },
+      { '@type': 'Thing', name: 'Python' },
+      { '@type': 'Thing', name: 'cURL' },
+      { '@type': 'Thing', name: 'AI developer tools' },
+    ],
+    blogPost: initialPosts.slice(0, 6).map((post) => ({
+      '@type': 'BlogPosting',
+      headline: post.title,
+      description: post.excerpt,
+      url: `https://unblockdevs.com/blog/${post.slug}`,
+      datePublished: post.date,
+      keywords: post.keywords.slice(0, 5).join(', '),
+      author: { '@id': 'https://unblockdevs.com/#organization' },
+    })),
+  } : null;
 
   return (
     <div className="min-h-screen bg-[#F8F8F8]">
       <Script id={`blog-breadcrumb-schema-${currentPage}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsSchema) }} />
       <Script id={`blog-itemlist-schema-${currentPage}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
+      {blogCollectionSchema && <Script id="blog-collection-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogCollectionSchema) }} />}
 
       {/* ── HERO ───────────────────────────────────────────────── */}
       <section className="relative overflow-hidden bg-zinc-950 pb-14 pt-10 sm:pb-16 sm:pt-12">
