@@ -129,6 +129,11 @@ const TOOL_CONFIG: Record<string, ToolConfig> = {
     description: 'Analyze and grade HTTP security headers for any URL. Check Content-Security-Policy, HSTS, X-Frame-Options, and more.',
     featureList: ['Security header analysis', 'Grade scoring', 'CSP analysis', 'HSTS check', 'Missing header detection'],
   },
+  'image-to-text': {
+    name: 'Image to Text — OCR Online',
+    description: 'Extract text from images, photos, and scanned documents with advanced OCR. Supports JPEG, PNG, WebP, TIFF. 18 languages, table detection, confidence scoring. 100% browser-based.',
+    featureList: ['Image OCR', 'Scanned document support', '18 languages', 'Table detection', 'Confidence scoring', 'Bounding box overlay', 'Batch processing', 'Export TXT & JSON'],
+  },
 };
 
 export default function AutoToolSchema() {

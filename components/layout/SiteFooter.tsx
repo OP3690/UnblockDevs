@@ -128,6 +128,7 @@ export default function SiteFooter() {
             </p>
             <ul className="flex flex-col gap-2.5 text-[13px]">
               {[
+                { href: '/image-to-text', label: 'Image to Text (OCR)' },
                 { href: '/cron-expression', label: 'Cron Expression Builder' },
                 { href: '/markdown-preview', label: 'Markdown Preview' },
                 { href: '/svg-to-image', label: 'SVG to Image' },
