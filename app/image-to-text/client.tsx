@@ -865,9 +865,13 @@ interface StructuredBlock {
 /** Returns true if a line looks like a field label (short, no terminal punctuation, no long numbers) */
 function looksLikeLabel(line: string): boolean {
   if (line.length > 45 || line.length < 2) return false;
-  if (/[.!?;]$/.test(line)) return false;
-  if (/\d{5,}/.test(line)) return false;
-  return /^[A-Za-z][A-Za-z0-9\s'()./&-]+$/.test(line);
+  if (/[.!?;,]$/.test(line)) return false;          // ends with sentence punctuation
+  if (/\d{5,}/.test(line)) return false;             // long number sequences
+  // ALL-CAPS lines are headings, not field labels — never treat them as KV keys
+  const letters = line.replace(/[^a-zA-Z]/g, '');
+  if (letters.length >= 3 && letters === letters.toUpperCase()) return false;
+  // Must look like a readable label word (no mid-sentence punctuation)
+  return /^[A-Za-z][A-Za-z0-9\s'()./&-]+$/.test(line) && line.split(' ').length <= 6;
 }
 
 function parseStructuredBlocks(text: string): StructuredBlock[] {
@@ -966,45 +970,131 @@ const DOC_TYPE_META: Record<DocType, { icon: string; label: string; cls: string 
 };
 
 // ── Rich structured block renderer ────────────────────────────────────────────
+//
+// Pre-processing pipeline before render:
+//   1. Merge consecutive paragraph/listItem blocks into "prose sections"
+//      so book-page OCR output reads as flowing text instead of fragments.
+//   2. Group consecutive KV blocks into unified field tables.
+//
+type RenderedSection =
+  | { kind: 'prose';  lines: string[] }          // merged paragraphs
+  | { kind: 'kv';    items: StructuredBlock[] }  // field table
+  | { kind: 'block'; block: StructuredBlock };   // heading, highlight, divider
+
+function buildSections(blocks: StructuredBlock[]): RenderedSection[] {
+  const sections: RenderedSection[] = [];
+  let proseLines: string[] = [];
+  let kvItems:   StructuredBlock[] = [];
+
+  const flushProse = () => {
+    if (proseLines.length) { sections.push({ kind: 'prose', lines: [...proseLines] }); proseLines = []; }
+  };
+  const flushKv = () => {
+    if (kvItems.length)    { sections.push({ kind: 'kv',    items: [...kvItems] });   kvItems = []; }
+  };
+
+  for (const b of blocks) {
+    if (b.type === 'paragraph' || b.type === 'listItem') {
+      flushKv();
+      proseLines.push(b.type === 'listItem' ? `• ${b.content}` : b.content);
+    } else if (b.type === 'kv') {
+      flushProse();
+      kvItems.push(b);
+    } else {
+      flushProse();
+      flushKv();
+      sections.push({ kind: 'block', block: b });
+    }
+  }
+  flushProse();
+  flushKv();
+  return sections;
+}
+
+/** Join OCR line fragments into readable prose paragraphs.
+ *  Lines ending with sentence-terminal punctuation start a new paragraph;
+ *  otherwise they're joined with a space to form a continuous sentence. */
+function joinProseLines(lines: string[]): string[] {
+  const paras: string[] = [];
+  let current = '';
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+    if (!current) {
+      current = trimmed;
+    } else if (/[.!?]$/.test(current)) {
+      // Previous segment was sentence-complete → new paragraph
+      paras.push(current);
+      current = trimmed;
+    } else {
+      // Continue same sentence/paragraph
+      current += ' ' + trimmed;
+    }
+  }
+  if (current) paras.push(current);
+  return paras;
+}
+
 function StructuredBlockView({ blocks }: { blocks: StructuredBlock[] }) {
   if (blocks.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-32 text-center gap-2">
-        <span className="text-3xl">📄</span>
-        <p className="text-sm text-zinc-400">No structured content found</p>
-        <p className="text-xs text-zinc-300">Switch to the Plain tab to see raw extracted text</p>
+      <div className="flex flex-col items-center justify-center h-36 text-center gap-2">
+        <span className="text-4xl opacity-30">📄</span>
+        <p className="text-sm font-medium text-zinc-400">No structured content detected</p>
+        <p className="text-xs text-zinc-300">Switch to Plain to see the raw extracted text</p>
       </div>
     );
   }
 
-  // Group consecutive KV blocks so they render as one unified field table
-  type Grouped = { kind: 'kv'; items: StructuredBlock[] } | { kind: 'single'; block: StructuredBlock };
-  const grouped: Grouped[] = [];
-  let kvRun: StructuredBlock[] = [];
-  const flushKv = () => {
-    if (kvRun.length) { grouped.push({ kind: 'kv', items: [...kvRun] }); kvRun = []; }
-  };
-  for (const b of blocks) {
-    if (b.type === 'kv') { kvRun.push(b); } else { flushKv(); grouped.push({ kind: 'single', block: b }); }
-  }
-  flushKv();
+  const kvCount   = blocks.filter(b => b.type === 'kv').length;
+  const paraCount = blocks.filter(b => b.type === 'paragraph' || b.type === 'listItem').length;
+  const isMostlyProse = paraCount > kvCount * 2;
+
+  const sections = buildSections(blocks);
 
   return (
-    <div className="space-y-3 py-1">
-      {grouped.map((g, gi) => {
-        // ── KV field table ────────────────────────────────────────────────────
-        if (g.kind === 'kv') {
+    <div className="space-y-4">
+      {/* Context hint strip */}
+      <div className="flex items-center gap-2 pb-2 border-b border-zinc-100">
+        <span className="text-xs text-zinc-400">
+          {kvCount > 0   && <span className="mr-2">🗂 <strong>{kvCount}</strong> field{kvCount !== 1 ? 's' : ''}</span>}
+          {paraCount > 0 && <span>📝 <strong>{paraCount}</strong> text block{paraCount !== 1 ? 's' : ''}</span>}
+        </span>
+        {isMostlyProse && (
+          <span className="ml-auto text-[11px] text-zinc-300 italic">Prose merged for readability</span>
+        )}
+      </div>
+
+      {sections.map((sec, si) => {
+        /* ── Merged prose paragraphs ──────────────────────────────────────── */
+        if (sec.kind === 'prose') {
+          const paras = joinProseLines(sec.lines);
           return (
-            <div key={gi} className="rounded-2xl border border-zinc-200 bg-white overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.06)]">
-              {g.items.map((b, bi) => (
+            <div key={si} className="space-y-3">
+              {paras.map((para, pi) => (
+                <p key={pi} className="text-[14px] text-zinc-800 leading-[1.75] tracking-[0.01em]">
+                  {para}
+                </p>
+              ))}
+            </div>
+          );
+        }
+
+        /* ── KV field table ───────────────────────────────────────────────── */
+        if (sec.kind === 'kv') {
+          return (
+            <div key={si} className="rounded-2xl border border-zinc-200 bg-white overflow-hidden shadow-[0_1px_6px_rgba(0,0,0,0.05)]">
+              {sec.items.map((b, bi) => (
                 <div
                   key={bi}
-                  className={`flex items-start gap-4 px-4 py-2.5 ${bi > 0 ? 'border-t border-zinc-100' : ''} hover:bg-violet-50/40 transition-colors`}
+                  className={`flex items-start gap-4 px-4 py-3 ${bi > 0 ? 'border-t border-zinc-100' : ''} hover:bg-violet-50/50 transition-colors group`}
                 >
-                  <span className="text-[11px] font-semibold uppercase tracking-wide text-zinc-400 w-[130px] shrink-0 leading-5 select-none pt-px">
+                  {/* Field label */}
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-400 w-[125px] shrink-0 leading-5 select-none pt-[2px] group-hover:text-violet-500 transition-colors">
                     {b.key}
                   </span>
-                  <span className="text-sm font-medium text-zinc-900 leading-5 break-words min-w-0 flex-1">
+                  {/* Field value */}
+                  <span className="text-[14px] font-semibold text-zinc-900 leading-5 break-words min-w-0 flex-1">
                     {b.value}
                   </span>
                 </div>
@@ -1013,60 +1103,41 @@ function StructuredBlockView({ blocks }: { blocks: StructuredBlock[] }) {
           );
         }
 
-        const b = g.block;
+        /* ── Individual block ─────────────────────────────────────────────── */
+        const b = sec.block;
 
-        // ── Section heading ───────────────────────────────────────────────────
         if (b.type === 'heading') {
           return (
-            <div key={gi} className="flex items-center gap-3 pt-2 pb-0.5">
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent to-zinc-200" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-500 shrink-0 px-1">
+            <div key={si} className="flex items-center gap-3">
+              <div className="h-px flex-1 bg-gradient-to-r from-zinc-100 via-zinc-200 to-zinc-100" />
+              <span className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-zinc-500 shrink-0 px-2">
                 {b.content}
               </span>
-              <div className="h-px flex-1 bg-gradient-to-l from-transparent to-zinc-200" />
+              <div className="h-px flex-1 bg-gradient-to-r from-zinc-100 via-zinc-200 to-zinc-100" />
             </div>
           );
         }
 
-        // ── Sub-heading ───────────────────────────────────────────────────────
         if (b.type === 'subheading') {
           return (
-            <h4 key={gi} className="text-sm font-bold text-zinc-800 border-l-[3px] border-violet-500 pl-3 py-0.5">
+            <h4 key={si} className="flex items-center gap-2.5 text-base font-bold text-zinc-900">
+              <span className="w-1 h-5 rounded-full bg-violet-500 shrink-0" />
               {b.content}
             </h4>
           );
         }
 
-        // ── Body paragraph ────────────────────────────────────────────────────
-        if (b.type === 'paragraph') {
-          return (
-            <p key={gi} className="text-sm text-zinc-700 leading-relaxed">
-              {b.content}
-            </p>
-          );
-        }
-
-        // ── List item ─────────────────────────────────────────────────────────
-        if (b.type === 'listItem') {
-          return (
-            <div key={gi} className="flex gap-2.5 text-sm text-zinc-700 leading-relaxed">
-              <span className="text-violet-400 font-bold shrink-0 mt-0.5">•</span>
-              <span>{b.content}</span>
-            </div>
-          );
-        }
-
-        // ── Visual divider ────────────────────────────────────────────────────
         if (b.type === 'divider') {
-          return <div key={gi} className="border-t border-dashed border-zinc-200 my-1" />;
+          return <div key={si} className="border-t border-dashed border-zinc-200" />;
         }
 
-        // ── Highlighted amount / total ────────────────────────────────────────
         if (b.type === 'highlight') {
           return (
-            <div key={gi} className="rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 border border-emerald-200 px-4 py-3 flex items-center gap-3">
-              <span className="text-xl shrink-0">💰</span>
-              <span className="text-base font-bold text-emerald-800">{b.content}</span>
+            <div key={si} className="rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 border border-emerald-200 px-5 py-4 flex items-center gap-4">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-lg">
+                💰
+              </div>
+              <span className="text-[15px] font-bold text-emerald-800">{b.content}</span>
             </div>
           );
         }
