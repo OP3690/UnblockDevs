@@ -265,6 +265,15 @@ app.use(express.json());  // no manual buffering needed`}
           answer: 'Use a wrapper function: function safeJsonParse(str, fallback = null) { if (!str || typeof str !== "string" || !str.trim()) return fallback; try { return JSON.parse(str); } catch (e) { logger.error("JSON parse failed", { input: str.slice(0, 200), error: e.message }); return fallback; } }. This handles all edge cases (null, undefined, empty string, invalid JSON), logs failures with context for debugging, and returns a sensible default instead of crashing the application.',
         },
       ]} />
+    
+      {/* ── AI JSON Error Explainer CTA ── */}
+      <div className="my-8 rounded-2xl border border-violet-200 bg-gradient-to-r from-violet-50 to-indigo-50 p-6 text-center">
+        <p className="text-sm font-semibold text-violet-900 mb-1">🔍 AI JSON Error Explainer — New Tool</p>
+        <p className="text-sm text-zinc-600 mb-4">Paste broken JSON and instantly get clear explanations of every error — trailing commas, Python True/False/None, invalid escapes, duplicate keys — with one-click auto-fix and RFC spec references.</p>
+        <a href="/json-error-explainer" className="inline-flex items-center gap-2 rounded-xl bg-violet-600 hover:bg-violet-700 px-6 py-3 text-sm font-semibold text-white transition-colors">
+          Explain My JSON Errors →
+        </a>
+      </div>
     </BlogLayoutWithSidebarAds>
   );
 }

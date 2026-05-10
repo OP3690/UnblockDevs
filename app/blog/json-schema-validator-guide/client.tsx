@@ -389,6 +389,15 @@ function validateAndCreate(data) {
           answer: 'Yes — the JSON Validator at unblockdevs.com/json-validator lets you paste JSON in one panel and a JSON Schema in another. Select the draft (7, 2020-12, etc.) and get instant validation results — every error with JSON path, constraint, and actual value. Supports Draft 4, 6, 7, 2019-09, and 2020-12. All processing runs in your browser, no account required.',
         },
       ]} />
+    
+      {/* ── AI JSON Error Explainer CTA ── */}
+      <div className="my-8 rounded-2xl border border-violet-200 bg-gradient-to-r from-violet-50 to-indigo-50 p-6 text-center">
+        <p className="text-sm font-semibold text-violet-900 mb-1">🔍 AI JSON Error Explainer — New Tool</p>
+        <p className="text-sm text-zinc-600 mb-4">Paste broken JSON and instantly get clear explanations of every error — trailing commas, Python True/False/None, invalid escapes, duplicate keys — with one-click auto-fix and RFC spec references.</p>
+        <a href="/json-error-explainer" className="inline-flex items-center gap-2 rounded-xl bg-violet-600 hover:bg-violet-700 px-6 py-3 text-sm font-semibold text-white transition-colors">
+          Explain My JSON Errors →
+        </a>
+      </div>
     </BlogLayoutWithSidebarAds>
   );
 }

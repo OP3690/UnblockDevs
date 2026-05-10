@@ -301,6 +301,15 @@ const repaired = repairJson(broken);
           answer: 'The JSON spec (RFC 8259) has no defined limit. In practice, limits are set by the parser: Node.js can handle JSON files up to ~500MB before memory becomes an issue. V8\'s string size limit is ~1GB. Browser JSON.parse() can handle files up to several hundred MB. For very large JSON (>50MB), use streaming parsers like jsonstream or clarinet instead of parsing the entire string at once.',
         },
       ]} />
+    
+      {/* ── AI JSON Error Explainer CTA ── */}
+      <div className="my-8 rounded-2xl border border-violet-200 bg-gradient-to-r from-violet-50 to-indigo-50 p-6 text-center">
+        <p className="text-sm font-semibold text-violet-900 mb-1">🔍 AI JSON Error Explainer — New Tool</p>
+        <p className="text-sm text-zinc-600 mb-4">Paste broken JSON and instantly get clear explanations of every error — trailing commas, Python True/False/None, invalid escapes, duplicate keys — with one-click auto-fix and RFC spec references.</p>
+        <a href="/json-error-explainer" className="inline-flex items-center gap-2 rounded-xl bg-violet-600 hover:bg-violet-700 px-6 py-3 text-sm font-semibold text-white transition-colors">
+          Explain My JSON Errors →
+        </a>
+      </div>
     </BlogLayoutWithSidebarAds>
   );
 }

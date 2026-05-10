@@ -345,6 +345,15 @@ print(json.dumps(schema2, indent=2))`}
           answer: '"format" uses predefined format names like "email", "date-time", "uri", "uuid" — validators know the rules for these. "pattern" is a regex you define. Format is more readable and maintainable; pattern is more flexible. Note: in JSON Schema Draft 2020-12, "format" is an annotation only by default (not validated) — you must configure your validator to enforce it. In Ajv: new Ajv({formats: "fast"}) or addFormats(ajv). Always test that format validation is actually running in your stack.',
         },
       ]} />
+    
+      {/* ── AI JSON Error Explainer CTA ── */}
+      <div className="my-8 rounded-2xl border border-violet-200 bg-gradient-to-r from-violet-50 to-indigo-50 p-6 text-center">
+        <p className="text-sm font-semibold text-violet-900 mb-1">🔍 AI JSON Error Explainer — New Tool</p>
+        <p className="text-sm text-zinc-600 mb-4">Paste broken JSON and instantly get clear explanations of every error — trailing commas, Python True/False/None, invalid escapes, duplicate keys — with one-click auto-fix and RFC spec references.</p>
+        <a href="/json-error-explainer" className="inline-flex items-center gap-2 rounded-xl bg-violet-600 hover:bg-violet-700 px-6 py-3 text-sm font-semibold text-white transition-colors">
+          Explain My JSON Errors →
+        </a>
+      </div>
     </BlogLayoutWithSidebarAds>
   );
 }

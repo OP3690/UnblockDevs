@@ -353,6 +353,15 @@ const payload = { id, name: formData.get('name') };
           answer: 'Yes — the JSON Validator at unblockdevs.com/json-validator validates JSON syntax and structure (against a JSON Schema) entirely in your browser. No account, no upload — your data never leaves your machine. Supports JSON Schema Draft 4, 6, 7, 2019-09, and 2020-12. Reports exact error positions with line and column numbers.',
         },
       ]} />
+    
+      {/* ── AI JSON Error Explainer CTA ── */}
+      <div className="my-8 rounded-2xl border border-violet-200 bg-gradient-to-r from-violet-50 to-indigo-50 p-6 text-center">
+        <p className="text-sm font-semibold text-violet-900 mb-1">🔍 AI JSON Error Explainer — New Tool</p>
+        <p className="text-sm text-zinc-600 mb-4">Paste broken JSON and instantly get clear explanations of every error — trailing commas, Python True/False/None, invalid escapes, duplicate keys — with one-click auto-fix and RFC spec references.</p>
+        <a href="/json-error-explainer" className="inline-flex items-center gap-2 rounded-xl bg-violet-600 hover:bg-violet-700 px-6 py-3 text-sm font-semibold text-white transition-colors">
+          Explain My JSON Errors →
+        </a>
+      </div>
     </BlogLayoutWithSidebarAds>
   );
 }

@@ -130,6 +130,7 @@ export default function HomePrivacyFirstSections({
       { label: 'API Comparator',    cats: ['all','api'],           icon: ArrowLeftRight, href: toolPageUrls.comparator },
       { label: 'Config Compare',    cats: ['all','api','dev'],     icon: Settings,       href: toolPageUrls.config },
       { label: 'JSON Fixer',        cats: ['all','json'],          icon: Wrench,         href: '/json-fixer-online' },
+      { label: 'JSON Error Explainer', cats: ['all','json','ai'],  icon: Sparkles,       variant: 'ai', href: '/json-error-explainer' },
       { label: 'PDF to Excel',      cats: ['all','dev'],           icon: FileSpreadsheet,variant: 'new', href: '/pdf-to-excel-word' },
       { label: 'Cron Builder',      cats: ['all','dev'],           icon: CalendarClock,  variant: 'new', href: '/cron-expression' },
       { label: 'Markdown Preview',  cats: ['all','dev'],           icon: FileText,       variant: 'new', href: '/markdown-preview' },

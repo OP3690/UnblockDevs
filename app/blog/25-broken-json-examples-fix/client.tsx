@@ -359,6 +359,15 @@ console.log('Problem area:', snippet);
       <AlertBox type="success" title="Summary">
         JSON errors fall into 5 categories: quote errors, comma errors, bracket errors, invalid values, and structural errors. Memorize the key rule: JSON is stricter than JavaScript. Double quotes everywhere, no trailing commas, no comments, no undefined/NaN/Infinity, and exactly one root value.
       </AlertBox>
+    
+      {/* ── AI JSON Error Explainer CTA ── */}
+      <div className="my-8 rounded-2xl border border-violet-200 bg-gradient-to-r from-violet-50 to-indigo-50 p-6 text-center">
+        <p className="text-sm font-semibold text-violet-900 mb-1">🔍 AI JSON Error Explainer — New Tool</p>
+        <p className="text-sm text-zinc-600 mb-4">Paste broken JSON and instantly get clear explanations of every error — trailing commas, Python True/False/None, invalid escapes, duplicate keys — with one-click auto-fix and RFC spec references.</p>
+        <a href="/json-error-explainer" className="inline-flex items-center gap-2 rounded-xl bg-violet-600 hover:bg-violet-700 px-6 py-3 text-sm font-semibold text-white transition-colors">
+          Explain My JSON Errors →
+        </a>
+      </div>
     </BlogLayoutWithSidebarAds>
   );
 }
