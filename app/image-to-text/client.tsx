@@ -57,6 +57,7 @@ interface OcrResult {
   suggestLang: string | null;    // suggested language switch if garbling detected
   docType: DocType;              // detected document category
   structuredBlocks: StructuredBlock[]; // parsed semantic blocks
+  file: File;                    // original File — kept for re-run with new settings
 }
 
 interface Options {
@@ -764,6 +765,7 @@ async function runOCR(
     suggestLang,
     docType,
     structuredBlocks,
+    file,
   };
 }
 
@@ -1547,6 +1549,7 @@ export default function ImageToTextClient() {
   const [error, setError] = useState('');
   const [dragging, setDragging] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
+  const [appliedOptions, setAppliedOptions] = useState<Options | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [options, setOptions] = useState<Options>({
@@ -1567,7 +1570,8 @@ export default function ImageToTextClient() {
     showBboxOverlay: false,
   });
 
-  const processFiles = useCallback(async (files: File[]) => {
+  const processFiles = useCallback(async (files: File[], optsOverride?: Options) => {
+    const optsToUse = optsOverride ?? options;
     const valid = files.filter(f => ACCEPT_MIME.includes(f.type) || /\.(tiff?|bmp)$/i.test(f.name));
     if (!valid.length) {
       setError('Please select image files (JPEG, PNG, WebP, BMP, TIFF, GIF).');
@@ -1578,6 +1582,7 @@ export default function ImageToTextClient() {
       return;
     }
     setError('');
+    setAppliedOptions(optsToUse);
 
     for (const file of valid) {
       setQueue(q => [...q, { file, status: 'Queued…' }]);
@@ -1586,7 +1591,7 @@ export default function ImageToTextClient() {
         const updateStatus = (status: string) =>
           setQueue(q => q.map(item => item.file === file ? { ...item, status } : item));
 
-        const result = await runOCR(file, options, updateStatus);
+        const result = await runOCR(file, optsToUse, updateStatus);
         setResults(prev => [result, ...prev]);
       } catch (e) {
         setError(`Failed to process "${file.name}": ${e instanceof Error ? e.message : String(e)}`);
@@ -1595,6 +1600,13 @@ export default function ImageToTextClient() {
       }
     }
   }, [options]);
+
+  const rerunAll = useCallback(async () => {
+    if (results.length === 0) return;
+    const files = results.map(r => r.file);
+    setResults([]);
+    await processFiles(files, options);
+  }, [results, options, processFiles]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -1615,6 +1627,8 @@ export default function ImageToTextClient() {
   };
 
   const isProcessing = queue.length > 0;
+  const settingsChanged = appliedOptions !== null &&
+    JSON.stringify(options) !== JSON.stringify(appliedOptions);
 
   return (
     <div className="min-h-screen bg-[#F8F8F8]">
@@ -1688,36 +1702,88 @@ export default function ImageToTextClient() {
         )}
 
         {/* Options panel */}
-        <div className="rounded-xl border border-zinc-200 bg-white shadow-sm">
+        <div className={`rounded-2xl border bg-white shadow-sm transition-all duration-200 ${settingsChanged ? 'border-violet-300 ring-2 ring-violet-100' : 'border-zinc-200'}`}>
+          {/* Panel header */}
           <button
             data-ocr-settings
             onClick={() => setShowOptions(o => !o)}
-            className="flex w-full items-center justify-between px-5 py-4 text-sm font-semibold text-zinc-700"
+            className="flex w-full items-center justify-between px-5 py-4 text-sm font-semibold text-zinc-700 hover:bg-zinc-50/60 rounded-2xl transition-colors"
           >
-            <span className="flex items-center gap-2">
-              <Settings2 className="h-4 w-4 text-zinc-400" /> OCR Settings
+            <span className="flex items-center gap-2.5">
+              <span className={`flex h-7 w-7 items-center justify-center rounded-lg ${settingsChanged ? 'bg-violet-100' : 'bg-zinc-100'}`}>
+                <Settings2 className={`h-3.5 w-3.5 ${settingsChanged ? 'text-violet-600' : 'text-zinc-400'}`} />
+              </span>
+              <span className="text-zinc-800">OCR Settings</span>
+              {settingsChanged && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-violet-600 px-2 py-0.5 text-[10px] font-bold text-white tracking-wide">
+                  ● CHANGED
+                </span>
+              )}
             </span>
-            {showOptions
-              ? <ChevronUp className="h-4 w-4 text-zinc-400" />
-              : <ChevronDown className="h-4 w-4 text-zinc-400" />}
+            <div className="flex items-center gap-2">
+              {!showOptions && settingsChanged && results.length > 0 && (
+                <span className="text-xs text-violet-600 font-medium">Open to re-run ↓</span>
+              )}
+              {showOptions
+                ? <ChevronUp className="h-4 w-4 text-zinc-400" />
+                : <ChevronDown className="h-4 w-4 text-zinc-400" />}
+            </div>
           </button>
 
           {showOptions && (
-            <div className="border-t border-zinc-100 px-5 py-5 space-y-6">
+            <div className="border-t border-zinc-100">
 
-              {/* Row 1: Language + PSM */}
-              <div className="grid gap-5 sm:grid-cols-2">
+              {/* ── Section 1: Quick Presets ─────────────────────────────────── */}
+              <div className="px-5 pt-5 pb-4">
+                <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.1em] text-zinc-400 flex items-center gap-2">
+                  <span className="flex-1 border-t border-zinc-100" />
+                  Quick Presets
+                  <span className="flex-1 border-t border-zinc-100" />
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                  {([
+                    { emoji: '📖', label: 'Book Page',      color: 'amber',   opts: { language: 'eng', psm: '6', multiPass: true, preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: true } } },
+                    { emoji: '🏥', label: 'Medical Bill',   color: 'red',     opts: { language: 'eng', psm: '3', multiPass: true, preprocess: { grayscale: true, contrast: true, sharpen: false, upscale: true, threshold: false, denoise: false } } },
+                    { emoji: '🪪', label: 'ID Card',        color: 'blue',    opts: { language: 'eng', psm: '3', multiPass: true, preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: false } } },
+                    { emoji: '📋', label: 'Insurance',      color: 'indigo',  opts: { language: 'eng', psm: '3', multiPass: true, preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: false } } },
+                    { emoji: '🧾', label: 'Receipt',        color: 'emerald', opts: { language: 'eng', psm: '4', multiPass: true, preprocess: { grayscale: true, contrast: true, sharpen: false, upscale: true, threshold: false, denoise: false } } },
+                  ] as const).map(({ emoji, label, color, opts }) => {
+                    const colorMap: Record<string, string> = {
+                      amber:   'border-amber-200   bg-amber-50   text-amber-800   hover:bg-amber-100   hover:border-amber-300',
+                      red:     'border-red-200     bg-red-50     text-red-800     hover:bg-red-100     hover:border-red-300',
+                      blue:    'border-blue-200    bg-blue-50    text-blue-800    hover:bg-blue-100    hover:border-blue-300',
+                      indigo:  'border-indigo-200  bg-indigo-50  text-indigo-800  hover:bg-indigo-100  hover:border-indigo-300',
+                      emerald: 'border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 hover:border-emerald-300',
+                    };
+                    return (
+                      <button
+                        key={label}
+                        onClick={() => setOptions(o => ({ ...o, ...opts }))}
+                        className={`flex flex-col items-center gap-1.5 rounded-xl border px-3 py-3 text-xs font-semibold transition-all duration-150 ${colorMap[color]}`}
+                      >
+                        <span className="text-xl leading-none">{emoji}</span>
+                        <span>{label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="mx-5 border-t border-zinc-100" />
+
+              {/* ── Section 2: Language & Layout ──────────────────────────────── */}
+              <div className="px-5 py-4 grid gap-4 sm:grid-cols-2">
                 <div>
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 flex items-center gap-1.5">
-                    <Languages className="h-3.5 w-3.5 text-violet-500" /> Language
+                  <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.1em] text-zinc-400 flex items-center gap-1.5">
+                    <Languages className="h-3 w-3 text-violet-400" /> Language
                   </p>
                   <select
                     value={options.language}
                     onChange={e => setOptions(o => ({ ...o, language: e.target.value }))}
-                    className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-700 bg-white focus:outline-none focus:ring-2 focus:ring-violet-300"
+                    className="w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-700 bg-white focus:outline-none focus:ring-2 focus:ring-violet-300 focus:border-transparent"
                   >
                     <option value="eng">English</option>
-                    <optgroup label="South Asian Languages">
+                    <optgroup label="South Asian">
                       <option value="eng+hin">English + Hindi</option>
                       <option value="eng+guj">English + Gujarati</option>
                       <option value="eng+ben">English + Bengali</option>
@@ -1728,15 +1794,15 @@ export default function ImageToTextClient() {
                       <option value="eng+mar">English + Marathi</option>
                       <option value="eng+pan">English + Punjabi</option>
                       <option value="eng+urd">English + Urdu</option>
-                      <option value="hin">Hindi</option>
-                      <option value="guj">Gujarati</option>
-                      <option value="ben">Bengali</option>
-                      <option value="tam">Tamil</option>
-                      <option value="tel">Telugu</option>
-                      <option value="kan">Kannada</option>
-                      <option value="mal">Malayalam</option>
-                      <option value="mar">Marathi</option>
-                      <option value="pan">Punjabi</option>
+                      <option value="hin">Hindi only</option>
+                      <option value="guj">Gujarati only</option>
+                      <option value="ben">Bengali only</option>
+                      <option value="tam">Tamil only</option>
+                      <option value="tel">Telugu only</option>
+                      <option value="kan">Kannada only</option>
+                      <option value="mal">Malayalam only</option>
+                      <option value="mar">Marathi only</option>
+                      <option value="pan">Punjabi only</option>
                     </optgroup>
                     <optgroup label="Middle East">
                       <option value="eng+ara">English + Arabic</option>
@@ -1751,7 +1817,7 @@ export default function ImageToTextClient() {
                       <option value="ita">Italian</option>
                       <option value="nld">Dutch</option>
                       <option value="pol">Polish</option>
-                      <option value="rus">Russian</option>
+                      <option value="rus">Russian only</option>
                       <option value="ukr">Ukrainian</option>
                       <option value="tur">Turkish</option>
                     </optgroup>
@@ -1767,155 +1833,96 @@ export default function ImageToTextClient() {
                       <option value="vie">Vietnamese</option>
                     </optgroup>
                   </select>
-                  <p className="mt-1 text-[11px] text-zinc-400">
-                    For documents with non-Latin scripts, pick a bilingual option (e.g. "English + Arabic") — it eliminates garbled character artifacts.
+                  <p className="mt-1.5 text-[11px] text-zinc-400 leading-relaxed">
+                    Use a bilingual mode (e.g. "English + Arabic") for mixed-script documents to avoid garbled characters.
                   </p>
                 </div>
 
                 <div>
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 flex items-center gap-1.5">
-                    <AlignLeft className="h-3.5 w-3.5 text-violet-500" /> Page layout mode
+                  <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.1em] text-zinc-400 flex items-center gap-1.5">
+                    <AlignLeft className="h-3 w-3 text-violet-400" /> Page Layout Mode
                   </p>
                   <select
                     value={options.psm}
                     onChange={e => setOptions(o => ({ ...o, psm: e.target.value }))}
-                    className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-700 bg-white focus:outline-none focus:ring-2 focus:ring-violet-300"
+                    className="w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-700 bg-white focus:outline-none focus:ring-2 focus:ring-violet-300 focus:border-transparent"
                   >
                     {PSM_MODES.map(m => (
                       <option key={m.value} value={m.value}>{m.label} — {m.desc}</option>
                     ))}
                   </select>
+                  <p className="mt-1.5 text-[11px] text-zinc-400 leading-relaxed">
+                    Auto-detect works for most documents. Use "Single block" for dense paragraphs, "Sparse" for forms.
+                  </p>
                 </div>
               </div>
 
-              {/* Row 2: Multi-pass + Document mode */}
-              <div className="flex flex-wrap items-center gap-3">
-                {/* Multi-pass toggle */}
-                <div className="flex-1 min-w-[200px]">
-                  <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-500 flex items-center gap-1.5">
-                    <Layers className="h-3.5 w-3.5 text-violet-500" /> Multi-pass scan
-                  </p>
+              <div className="mx-5 border-t border-zinc-100" />
+
+              {/* ── Section 3: Processing ──────────────────────────────────────── */}
+              <div className="px-5 py-4 space-y-3">
+                <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-zinc-400 flex items-center gap-1.5">
+                  <Layers className="h-3 w-3 text-violet-400" /> Processing
+                </p>
+
+                {/* Multi-pass */}
+                <div className="flex items-start gap-3">
                   <button
                     onClick={() => setOptions(o => ({ ...o, multiPass: !o.multiPass }))}
-                    className={`flex items-center gap-2 rounded-xl border px-3 py-2 text-xs font-medium transition-colors ${
-                      options.multiPass
-                        ? 'border-violet-300 bg-violet-50 text-violet-800'
-                        : 'border-zinc-200 bg-white text-zinc-500 hover:bg-zinc-50'
+                    className={`mt-0.5 flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 transition-colors duration-200 ${
+                      options.multiPass ? 'border-violet-500 bg-violet-500' : 'border-zinc-300 bg-zinc-200'
                     }`}
+                    role="switch"
+                    aria-checked={options.multiPass}
                   >
-                    {options.multiPass ? '✓ On — 2 passes merged' : 'Off — single pass'}
+                    <span className={`block h-3.5 w-3.5 rounded-full bg-white shadow-sm transition-transform duration-200 ${options.multiPass ? 'translate-x-3.5' : 'translate-x-0.5'}`} />
                   </button>
-                  <p className="mt-1 text-[11px] text-zinc-400">
-                    Runs Auto + Sparse passes, merges high-confidence finds. Catches codes, IDs, and text that layout analysis misses — without adding noise.
-                  </p>
-                </div>
-
-                {/* Document mode preset */}
-                <div>
-                  <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-500">Quick preset</p>
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      onClick={() => setOptions(o => ({
-                        ...o,
-                        language: 'eng',
-                        psm: '6',
-                        multiPass: true,
-                        preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: true }
-                      }))}
-                      className="rounded-xl border border-amber-300 bg-amber-50 px-3 py-2 text-xs font-medium text-amber-800 hover:bg-amber-100 transition-colors"
-                    >
-                      📖 Book Page
-                    </button>
-                    <button
-                      onClick={() => setOptions(o => ({
-                        ...o,
-                        language: 'eng',
-                        psm: '3',
-                        multiPass: true,
-                        preprocess: { grayscale: true, contrast: true, sharpen: false, upscale: true, threshold: false, denoise: false }
-                      }))}
-                      className="rounded-xl border border-red-300 bg-red-50 px-3 py-2 text-xs font-medium text-red-800 hover:bg-red-100 transition-colors"
-                    >
-                      🏥 Medical Bill
-                    </button>
-                    <button
-                      onClick={() => setOptions(o => ({
-                        ...o,
-                        language: 'eng',
-                        psm: '3',
-                        multiPass: true,
-                        preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: false }
-                      }))}
-                      className="rounded-xl border border-blue-300 bg-blue-50 px-3 py-2 text-xs font-medium text-blue-800 hover:bg-blue-100 transition-colors"
-                    >
-                      🪪 ID Card
-                    </button>
-                    <button
-                      onClick={() => setOptions(o => ({
-                        ...o,
-                        language: 'eng',
-                        psm: '3',
-                        multiPass: true,
-                        preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: false }
-                      }))}
-                      className="rounded-xl border border-indigo-300 bg-indigo-50 px-3 py-2 text-xs font-medium text-indigo-800 hover:bg-indigo-100 transition-colors"
-                    >
-                      📋 Insurance
-                    </button>
-                    <button
-                      onClick={() => setOptions(o => ({
-                        ...o,
-                        language: 'eng',
-                        psm: '4',
-                        multiPass: true,
-                        preprocess: { grayscale: true, contrast: true, sharpen: false, upscale: true, threshold: false, denoise: false }
-                      }))}
-                      className="rounded-xl border border-emerald-300 bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-800 hover:bg-emerald-100 transition-colors"
-                    >
-                      🧾 Receipt / Invoice
-                    </button>
+                  <div>
+                    <p className="text-sm font-semibold text-zinc-700 leading-none">Multi-pass scan</p>
+                    <p className="mt-1 text-[11px] text-zinc-400 leading-relaxed">
+                      Runs Auto + Sparse passes and merges high-confidence results. Catches IDs, codes, and text that a single pass misses.
+                    </p>
                   </div>
-                  <p className="mt-1 text-[11px] text-zinc-400">Presets tune language model, PSM layout mode, and image preprocessing for each document type.</p>
                 </div>
-              </div>
 
-              {/* Row 3: Pre-processing toggles */}
-              <div>
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">
-                  Image Pre-processing
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {([
-                    { key: 'grayscale', label: 'Grayscale',      desc: 'Convert to B&W — essential for coloured or gradient backgrounds' },
-                    { key: 'contrast',  label: 'Boost contrast',  desc: 'Stronger contrast (1.8×) improves text on gradient/coloured backgrounds' },
-                    { key: 'sharpen',   label: 'Sharpen',         desc: 'Unsharp mask — helps with slightly blurry or compressed images' },
-                    { key: 'upscale',   label: 'Smart upscale',   desc: '3× for tiny images, 2× for small — greatly improves small text accuracy' },
-                    { key: 'denoise',   label: 'Denoise',         desc: '3×3 median blur — reduces noise before OCR on grainy scans' },
-                    { key: 'threshold', label: 'Binarize (Otsu)', desc: 'Converts to pure black & white using Otsu thresholding' },
-                  ] as { key: keyof Options['preprocess']; label: string; desc: string }[]).map(({ key, label, desc }) => (
-                    <button
-                      key={key}
-                      title={desc}
-                      onClick={() => setOptions(o => ({
-                        ...o, preprocess: { ...o.preprocess, [key]: !o.preprocess[key] }
-                      }))}
-                      className={`rounded-xl border px-3 py-1.5 text-xs font-medium transition-colors ${
-                        options.preprocess[key]
-                          ? 'border-violet-300 bg-violet-50 text-violet-800'
-                          : 'border-zinc-200 bg-white text-zinc-500 hover:bg-zinc-50'
-                      }`}
-                    >
-                      {options.preprocess[key] ? '✓ ' : ''}{label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Row 3: Output options */}
-              <div className="grid gap-5 sm:grid-cols-2">
+                {/* Preprocessing toggles */}
                 <div>
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 flex items-center gap-1.5">
-                    <BarChart2 className="h-3.5 w-3.5 text-violet-500" /> Confidence filter
+                  <p className="mb-2 text-[11px] text-zinc-500 font-medium">Image pre-processing</p>
+                  <div className="flex flex-wrap gap-2">
+                    {([
+                      { key: 'grayscale', label: 'Grayscale',     desc: 'Convert to B&W — essential for coloured or gradient backgrounds' },
+                      { key: 'contrast',  label: 'Boost contrast', desc: 'Stronger contrast (1.8×) improves text on gradient/coloured backgrounds' },
+                      { key: 'sharpen',   label: 'Sharpen',        desc: 'Unsharp mask — helps with slightly blurry or compressed images' },
+                      { key: 'upscale',   label: 'Smart upscale',  desc: '3× for tiny images, 2× for small — greatly improves small text accuracy' },
+                      { key: 'denoise',   label: 'Denoise',        desc: '3×3 median blur — reduces noise before OCR on grainy scans' },
+                      { key: 'threshold', label: 'Binarize',       desc: 'Converts to pure black & white using Otsu thresholding' },
+                    ] as { key: keyof Options['preprocess']; label: string; desc: string }[]).map(({ key, label, desc }) => (
+                      <button
+                        key={key}
+                        title={desc}
+                        onClick={() => setOptions(o => ({
+                          ...o, preprocess: { ...o.preprocess, [key]: !o.preprocess[key] }
+                        }))}
+                        className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-all duration-150 ${
+                          options.preprocess[key]
+                            ? 'border-violet-300 bg-violet-50 text-violet-700 shadow-sm'
+                            : 'border-zinc-200 bg-white text-zinc-500 hover:border-zinc-300 hover:bg-zinc-50'
+                        }`}
+                      >
+                        {options.preprocess[key] && <span className="mr-1 text-violet-500">✓</span>}{label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mx-5 border-t border-zinc-100" />
+
+              {/* ── Section 4: Output ─────────────────────────────────────────── */}
+              <div className="px-5 py-4 grid gap-4 sm:grid-cols-2">
+                <div>
+                  <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.1em] text-zinc-400 flex items-center gap-1.5">
+                    <BarChart2 className="h-3 w-3 text-violet-400" /> Confidence Filter
                   </p>
                   <div className="flex items-center gap-3">
                     <input
@@ -1924,31 +1931,65 @@ export default function ImageToTextClient() {
                       onChange={e => setOptions(o => ({ ...o, confidenceFilter: +e.target.value }))}
                       className="flex-1 accent-violet-500"
                     />
-                    <span className="text-sm font-semibold text-zinc-700 w-14 text-right">
+                    <span className="min-w-[42px] rounded-lg bg-zinc-100 px-2 py-1 text-center text-xs font-bold text-zinc-700">
                       ≥{options.confidenceFilter}%
                     </span>
                   </div>
-                  <p className="mt-1 text-[11px] text-zinc-400">Hide words below this confidence in the Confidence tab</p>
+                  <p className="mt-1 text-[11px] text-zinc-400">Hides low-confidence words in the Confidence view</p>
                 </div>
 
                 <div>
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 flex items-center gap-1.5">
-                    <Eye className="h-3.5 w-3.5 text-violet-500" /> Word bounding boxes
+                  <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.1em] text-zinc-400 flex items-center gap-1.5">
+                    <Eye className="h-3 w-3 text-violet-400" /> Bounding Boxes
                   </p>
-                  <button
-                    onClick={() => setOptions(o => ({ ...o, showBboxOverlay: !o.showBboxOverlay }))}
-                    className={`flex items-center gap-2 rounded-xl border px-3 py-2 text-xs font-medium transition-colors ${
-                      options.showBboxOverlay
-                        ? 'border-violet-300 bg-violet-50 text-violet-800'
-                        : 'border-zinc-200 bg-white text-zinc-500 hover:bg-zinc-50'
-                    }`}
-                  >
-                    {options.showBboxOverlay ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}
-                    {options.showBboxOverlay ? 'Overlays on' : 'Overlays off'}
-                  </button>
-                  <p className="mt-1 text-[11px] text-zinc-400">Color-coded bounding boxes by confidence</p>
+                  <div className="flex items-start gap-3">
+                    <button
+                      onClick={() => setOptions(o => ({ ...o, showBboxOverlay: !o.showBboxOverlay }))}
+                      className={`mt-0.5 flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 transition-colors duration-200 ${
+                        options.showBboxOverlay ? 'border-violet-500 bg-violet-500' : 'border-zinc-300 bg-zinc-200'
+                      }`}
+                      role="switch"
+                      aria-checked={options.showBboxOverlay}
+                    >
+                      <span className={`block h-3.5 w-3.5 rounded-full bg-white shadow-sm transition-transform duration-200 ${options.showBboxOverlay ? 'translate-x-3.5' : 'translate-x-0.5'}`} />
+                    </button>
+                    <div>
+                      <p className="text-sm font-semibold text-zinc-700 leading-none">{options.showBboxOverlay ? 'Overlays on' : 'Overlays off'}</p>
+                      <p className="mt-1 text-[11px] text-zinc-400">Color-coded word boxes by confidence score</p>
+                    </div>
+                  </div>
                 </div>
               </div>
+
+              {/* ── CTA Footer ────────────────────────────────────────────────── */}
+              {results.length > 0 && (
+                <div className={`border-t px-5 py-4 flex items-center justify-between gap-4 rounded-b-2xl transition-colors ${settingsChanged ? 'border-violet-100 bg-violet-50/60' : 'border-zinc-100 bg-zinc-50/60'}`}>
+                  <div>
+                    {settingsChanged ? (
+                      <p className="text-sm font-semibold text-violet-800">Settings changed</p>
+                    ) : (
+                      <p className="text-sm font-semibold text-zinc-600">Settings applied</p>
+                    )}
+                    <p className="text-[11px] text-zinc-400 mt-0.5">
+                      {settingsChanged
+                        ? `Re-run OCR on ${results.length} image${results.length > 1 ? 's' : ''} with the new settings`
+                        : 'Current results used these settings'}
+                    </p>
+                  </div>
+                  <button
+                    onClick={async () => { setShowOptions(false); await rerunAll(); }}
+                    disabled={isProcessing}
+                    className={`flex shrink-0 items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold shadow-sm transition-all duration-150 ${
+                      settingsChanged
+                        ? 'bg-violet-600 text-white hover:bg-violet-700 hover:shadow-md active:scale-95'
+                        : 'bg-zinc-200 text-zinc-500 hover:bg-zinc-300'
+                    } disabled:opacity-50 disabled:cursor-not-allowed`}
+                  >
+                    <RefreshCw className={`h-3.5 w-3.5 ${isProcessing ? 'animate-spin' : ''}`} />
+                    {settingsChanged ? 'Apply & Re-run OCR' : 'Re-run OCR'}
+                  </button>
+                </div>
+              )}
 
             </div>
           )}
