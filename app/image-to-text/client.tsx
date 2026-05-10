@@ -53,6 +53,8 @@ interface OcrResult {
   hasTable: boolean;
   tableData?: string[][];
   preprocessApplied: string[];
+  garbledRatio: number;      // fraction of words detected as garbled (0–1)
+  suggestLang: string | null; // suggested language switch if garbling detected
 }
 
 interface Options {
@@ -75,31 +77,63 @@ interface Options {
 
 // ── Language / PSM maps ───────────────────────────────────────────────────────
 
-const LANGUAGES: { code: string; label: string; hint?: string }[] = [
-  { code: 'eng',         label: 'English' },
-  // ── Bilingual combos (recommended for mixed-script documents) ──
-  { code: 'eng+hin',     label: '🇮🇳 English + Hindi',   hint: 'Best for PAN card, Aadhaar, Indian govt docs' },
-  { code: 'eng+ara',     label: '🌍 English + Arabic',   hint: 'Best for Arabic-English bilingual documents' },
-  { code: 'eng+rus',     label: '🇷🇺 English + Russian',  hint: 'Best for documents with Cyrillic + English' },
-  { code: 'eng+chi_sim', label: '🇨🇳 English + Chinese',  hint: 'Best for Chinese-English bilingual docs' },
-  // ── Single languages ──
-  { code: 'fra',         label: 'French' },
-  { code: 'deu',         label: 'German' },
-  { code: 'spa',         label: 'Spanish' },
-  { code: 'por',         label: 'Portuguese' },
-  { code: 'ita',         label: 'Italian' },
-  { code: 'nld',         label: 'Dutch' },
-  { code: 'pol',         label: 'Polish' },
-  { code: 'rus',         label: 'Russian' },
-  { code: 'ara',         label: 'Arabic' },
-  { code: 'hin',         label: 'Hindi only' },
+export interface LangOption { code: string; label: string; hint?: string; }
+
+const LANGUAGES: LangOption[] = [
+  // ── English only ──
+  { code: 'eng', label: 'English only' },
+
+  // ── 🇮🇳 Indian languages (bilingual with English) ──────────────────────────
+  { code: 'eng+hin',     label: '🇮🇳 English + Hindi',     hint: 'PAN card, Aadhaar, most Indian central govt docs' },
+  { code: 'eng+guj',     label: '🇮🇳 English + Gujarati',  hint: 'Gujarat state docs, Gujarati business documents' },
+  { code: 'eng+ben',     label: '🇮🇳 English + Bengali',   hint: 'West Bengal / Bangladesh documents' },
+  { code: 'eng+tam',     label: '🇮🇳 English + Tamil',     hint: 'Tamil Nadu state documents' },
+  { code: 'eng+tel',     label: '🇮🇳 English + Telugu',    hint: 'Andhra Pradesh / Telangana documents' },
+  { code: 'eng+kan',     label: '🇮🇳 English + Kannada',   hint: 'Karnataka state documents' },
+  { code: 'eng+mal',     label: '🇮🇳 English + Malayalam', hint: 'Kerala state documents' },
+  { code: 'eng+mar',     label: '🇮🇳 English + Marathi',   hint: 'Maharashtra documents (uses Devanagari)' },
+  { code: 'eng+pan',     label: '🇮🇳 English + Punjabi',   hint: 'Punjab documents (Gurmukhi script)' },
+  { code: 'eng+hin+guj', label: '🇮🇳 Hindi + Gujarati + English', hint: 'Documents mixing both scripts' },
+  { code: 'eng+urd',     label: '🇮🇳 English + Urdu',      hint: 'Urdu documents (Nastaliq script)' },
+
+  // ── Middle East / Africa ───────────────────────────────────────────────────
+  { code: 'eng+ara', label: '🌍 English + Arabic',  hint: 'Arabic-English bilingual documents' },
+  { code: 'ara',     label: 'Arabic' },
+
+  // ── Europe ────────────────────────────────────────────────────────────────
+  { code: 'eng+rus', label: '🇷🇺 English + Russian', hint: 'Documents with Cyrillic + Latin text' },
+  { code: 'fra',     label: 'French' },
+  { code: 'deu',     label: 'German' },
+  { code: 'spa',     label: 'Spanish' },
+  { code: 'por',     label: 'Portuguese' },
+  { code: 'ita',     label: 'Italian' },
+  { code: 'nld',     label: 'Dutch' },
+  { code: 'pol',     label: 'Polish' },
+  { code: 'rus',     label: 'Russian only' },
+  { code: 'ukr',     label: 'Ukrainian' },
+  { code: 'tur',     label: 'Turkish' },
+
+  // ── East Asia ─────────────────────────────────────────────────────────────
+  { code: 'eng+chi_sim', label: '🇨🇳 English + Chinese (Simplified)',  hint: 'Chinese-English bilingual' },
+  { code: 'eng+chi_tra', label: '🇹🇼 English + Chinese (Traditional)', hint: 'Traditional Chinese + English' },
+  { code: 'eng+jpn',     label: '🇯🇵 English + Japanese',              hint: 'Japanese-English documents' },
+  { code: 'eng+kor',     label: '🇰🇷 English + Korean',                hint: 'Korean-English documents' },
   { code: 'chi_sim',     label: 'Chinese (Simplified)' },
   { code: 'chi_tra',     label: 'Chinese (Traditional)' },
   { code: 'jpn',         label: 'Japanese' },
   { code: 'kor',         label: 'Korean' },
   { code: 'vie',         label: 'Vietnamese' },
-  { code: 'tur',         label: 'Turkish' },
-  { code: 'ukr',         label: 'Ukrainian' },
+
+  // ── Indian single-language ────────────────────────────────────────────────
+  { code: 'hin', label: 'Hindi only' },
+  { code: 'guj', label: 'Gujarati only' },
+  { code: 'ben', label: 'Bengali only' },
+  { code: 'tam', label: 'Tamil only' },
+  { code: 'tel', label: 'Telugu only' },
+  { code: 'kan', label: 'Kannada only' },
+  { code: 'mal', label: 'Malayalam only' },
+  { code: 'mar', label: 'Marathi only' },
+  { code: 'pan', label: 'Punjabi only' },
 ];
 
 const PSM_MODES: { value: string; label: string; desc: string }[] = [
@@ -289,78 +323,147 @@ function isUsableWord(w: OcrWord, minConf = 0, minLen = 1): boolean {
   return alphaNum >= 1 && alphaNum / t.length >= 0.5;
 }
 
-// ── Garbled-word detector ──────────────────────────────────────────────────────
-// Detects ASCII noise produced when the English OCR engine is forced to read
-// non-Latin scripts (Devanagari, Arabic, Cyrillic) that it wasn't trained on.
-// Pattern: short ALL-CAPS clusters with almost no vowels (e.g. HTH, FET, TET, FH).
-const VOWELS_SET = new Set(['A','E','I','O','U']);
-// Common short English words that should NOT be filtered
-const SHORT_ENG_WORDS = new Set([
+// ── Garbled-word detector ─────────────────────────────────────────────────────
+// Detects ASCII noise produced when an English-only OCR engine reads non-Latin
+// scripts: Devanagari, Gujarati, Bengali, Arabic, Cyrillic, Tamil, etc.
+//
+// Two patterns are caught:
+//  A) ALL-CAPS consonant clusters  → e.g. "HTH", "FET", "TET", "FH", "FEATET"
+//  B) Mixed-case short noise        → e.g. "faa", "lA", "Fas", "dE", "wt"
+//     (these come from curves/strokes of Indic scripts read as Latin letters)
+
+const VOWELS_SET = new Set(['A','E','I','O','U','a','e','i','o','u']);
+
+// Whitelisted short tokens that are real English/abbreviations — never garbled
+const SAFE_WORDS = new Set([
+  // articles / prepositions / conjunctions
   'THE','AND','FOR','ARE','BUT','NOT','YOU','ALL','CAN','HER','WAS','ONE',
-  'OUR','OUT','HIS','ITS','NEW','MAY','HI','IN','OF','TO','BE','IS','IT',
-  'ON','AT','AS','BY','DO','GO','NO','UP','OR','AN','AM','US','ID','MR',
-  'MS','DR','NA','OK','II','PAN','DOB','UID','DOC','TAX','GST','KYC',
-  'PIN','ATM','SIM','OTP','EMI','ETA','PDF','OCR','QR',
+  'OUR','OUT','HIS','ITS','NEW','MAY','HIM','SHE','HIM','HAD','HAS','HIM',
+  // common 2-letter English
+  'IN','OF','TO','BE','IS','IT','ON','AT','AS','BY','DO','GO','NO','UP',
+  'OR','AN','AM','US','IF','SO','MY','WE','HI','OK','OH','AH',
+  // document / ID abbreviations
+  'ID','MR','MS','DR','NA','II','PAN','DOB','UID','DOC','TAX','GST','KYC',
+  'PIN','ATM','SIM','OTP','EMI','ETA','PDF','OCR','QR','NO','DIN','TIN',
+  'PF','EPF','NPS','UAN','ESIC',
 ]);
+
 function isGarbledWord(word: string): boolean {
+  // Strip everything except letters for analysis
   const t = word.replace(/[^a-zA-Z]/g, '');
-  if (t.length < 2 || t.length > 7) return false;     // only 2–7 char tokens
-  if (t !== t.toUpperCase()) return false;             // must be ALL_CAPS
-  if (SHORT_ENG_WORDS.has(t)) return false;            // skip known real words
-  if (/[0-9]/.test(word)) return false;               // skip tokens with digits
+  if (t.length < 2 || t.length > 9) return false;
+  if (/[0-9]/.test(word)) return false;                        // keep tokens with digits
+  if (SAFE_WORDS.has(t.toUpperCase())) return false;           // keep whitelisted words
+  if (/^[A-Z][a-z]{2,}$/.test(t)) return false;               // keep Title-case (Name, Father, Date…)
+
   const vowels = [...t].filter(c => VOWELS_SET.has(c)).length;
-  return (t.length - vowels) / t.length > 0.64;       // >64% consonants → garbled
+  const consonantRatio = (t.length - vowels) / t.length;
+
+  // Pattern A: ALL-CAPS tokens with >60% consonants
+  if (t === t.toUpperCase() && consonantRatio > 0.60) return true;
+
+  // Pattern B: mixed-case short tokens (2–5 chars) with >55% consonants
+  // These come from curves/strokes of Indic scripts read as random Latin letters.
+  // Title-case already excluded above; this catches "faa", "lA", "Fas", "dE", "wt"
+  const hasUpper = /[A-Z]/.test(t);
+  const hasLower = /[a-z]/.test(t);
+  if (t.length <= 5 && hasUpper && hasLower && consonantRatio > 0.55) return true;
+
+  // Pattern C: all-lowercase 2-4 char clusters with >60% consonants and no known vowel pair
+  // "wt", "fh", "rn", "kl" etc. — random strokes from non-Latin scripts
+  if (t === t.toLowerCase() && t.length <= 4 && consonantRatio > 0.60) return true;
+
+  return false;
 }
 
-// ── Junk-line cleaner ─────────────────────────────────────────────────────────
-// 1. Strips garbled consonant-cluster words from each line
-// 2. Drops lines where <40% chars are alphanumeric (decorative borders)
-// 3. Removes exact-duplicate lines
-function cleanOcrText(text: string): string {
+// ── Line-confidence score (from OcrWords) ────────────────────────────────────
+function lineAvgConf(words: OcrWord[]): number {
+  if (!words.length) return 0;
+  return words.reduce((s, w) => s + w.confidence, 0) / words.length;
+}
+
+// ── Build clean text directly from OcrWord array ──────────────────────────────
+// Merges reconstruct + clean into one confidence-aware pass:
+// 1. Sort words by visual reading order (top→bottom, left→right)
+// 2. Group into visual lines
+// 3. Drop entire lines whose average confidence < LINE_CONF_THRESHOLD
+// 4. Strip per-word garbled tokens from each line
+// 5. Drop lines that become empty or are <40% alphanumeric after filtering
+// 6. Deduplicate identical lines
+function buildCleanText(words: OcrWord[], isMultiLang = false): string {
+  if (!words.length) return '';
+
+  // 1. Sort
+  const sorted = [...words].sort((a, b) => {
+    const yDiff = a.bbox.y0 - b.bbox.y0;
+    if (Math.abs(yDiff) > 14) return yDiff;
+    return a.bbox.x0 - b.bbox.x0;
+  });
+
+  // 2. Group into visual lines (18px Y tolerance)
+  const lineGroups: OcrWord[][] = [];
+  for (const word of sorted) {
+    const last = lineGroups[lineGroups.length - 1];
+    if (!last || Math.abs(word.bbox.y0 - last[0].bbox.y0) > 18) lineGroups.push([word]);
+    else last.push(word);
+  }
+
+  // 3-6. Filter and clean
+  // When multi-language model loaded, Tesseract handles non-Latin correctly —
+  // we relax garbled-word stripping so native script words aren't wrongly removed.
+  const LINE_CONF_MIN = 20; // drop lines below this avg confidence
+  const ALPHA_RATIO_MIN = 0.38;
   const seen = new Set<string>();
-  return text
-    .split('\n')
-    .map(l => l.trim())
-    // Step 1: strip garbled words from the line
-    .map(l =>
-      l.split(/\s+/)
-        .filter(w => w && !isGarbledWord(w))
-        .join(' ')
-        .trim()
-    )
+
+  return lineGroups
+    .filter(lg => lineAvgConf(lg) >= LINE_CONF_MIN)
+    .map(lg => {
+      const words = isMultiLang
+        ? lg.map(w => w.text)                                 // multi-lang: trust Tesseract
+        : lg.filter(w => !isGarbledWord(w.text)).map(w => w.text); // english-only: strip garble
+      return words.join(' ').trim();
+    })
     .filter(l => {
       if (!l) return false;
       const key = l.toLowerCase().replace(/\s+/g, ' ');
-      if (seen.has(key)) return false;              // remove exact duplicates
+      if (seen.has(key)) return false;
       seen.add(key);
       const alphaNum = (l.match(/[a-zA-Z0-9]/g) ?? []).length;
-      if (alphaNum === 0) return false;
-      // Keep line only if ≥40% alphanumeric
-      return (alphaNum / l.length) >= 0.40;
+      if (!alphaNum) return false;
+      return (alphaNum / l.length) >= ALPHA_RATIO_MIN;
     })
     .join('\n');
 }
 
-// ── Reconstruct readable text from sorted word positions ─────────────────────
-// Tesseract's raw data.text can miss words from low-confidence blocks.
-// This rebuilds the text from every word bbox — much more complete.
+// ── Garbled-word ratio (for language auto-suggestion) ────────────────────────
+function computeGarbledRatio(words: OcrWord[]): number {
+  if (!words.length) return 0;
+  const garbled = words.filter(w => isGarbledWord(w.text)).length;
+  return garbled / words.length;
+}
+
+// ── Suggest language from garbled ratio + current lang ────────────────────────
+function suggestLanguage(currentLang: string, garbledRatio: number, avgConf: number): string | null {
+  if (currentLang !== 'eng') return null;              // only suggest when eng-only is active
+  if (garbledRatio < 0.12 && avgConf >= 55) return null; // result looks clean enough
+  // Generic suggestion based on degree of garbling
+  return 'eng+hin'; // default to most common bilingual Indian combo
+}
+
+// reconstructTextFromWords is superseded by buildCleanText above.
+// Kept as a simple fallback for internal use only.
 function reconstructTextFromWords(words: OcrWord[]): string {
   if (!words.length) return '';
-  // Sort top-to-bottom first, then left-to-right within the same row
   const sorted = [...words].sort((a, b) => {
     const yDiff = a.bbox.y0 - b.bbox.y0;
-    if (Math.abs(yDiff) > 12) return yDiff;
+    if (Math.abs(yDiff) > 14) return yDiff;
     return a.bbox.x0 - b.bbox.x0;
   });
-  // Group into visual lines (words whose y0 is within 18px of each other)
   const lines: OcrWord[][] = [];
   for (const word of sorted) {
     const last = lines[lines.length - 1];
-    if (!last || Math.abs(word.bbox.y0 - last[0].bbox.y0) > 18) {
-      lines.push([word]);
-    } else {
-      last.push(word);
-    }
+    if (!last || Math.abs(word.bbox.y0 - last[0].bbox.y0) > 18) lines.push([word]);
+    else last.push(word);
   }
   return lines.map(ln => ln.map(w => w.text).join(' ')).join('\n');
 }
@@ -612,16 +715,22 @@ async function runOCR(
   const filteredWords = allWords.filter(
     w => w.confidence >= options.confidenceFilter && isUsableWord(w, 0, 1)
   );
+  const wordsForText = filteredWords.length ? filteredWords : allWords;
 
-  // Rebuild text from word positions, then strip junk lines.
-  // cleanOcrText removes: duplicate lines, pure-symbol lines, lines where
-  // <38% of chars are alphanumeric (decorative borders, garbled non-latin).
-  const rawText = reconstructTextFromWords(filteredWords.length ? filteredWords : allWords);
-  const text = cleanOcrText(rawText);
+  // Detect if multi-language model is active — if so, trust Tesseract's output
+  // for non-Latin scripts rather than stripping "garbled" words.
+  const isMultiLang = options.language.includes('+');
+
+  // Build clean text: confidence-aware line filtering + garbled-word stripping
+  const text = buildCleanText(wordsForText, isMultiLang);
 
   const confidence = allWords.length
     ? Math.round(allWords.reduce((s, w) => s + w.confidence, 0) / allWords.length)
     : 0;
+
+  // Garbling analysis — used to show language suggestion in the UI
+  const garbledRatio = isMultiLang ? 0 : computeGarbledRatio(allWords);
+  const suggestLang = suggestLanguage(options.language, garbledRatio, confidence);
 
   const tableData = detectTableFromWords(filteredWords, img.naturalHeight);
   const hasTable = tableData !== null && tableData.length >= 3;
@@ -645,6 +754,8 @@ async function runOCR(
     hasTable,
     tableData: hasTable ? tableData! : undefined,
     preprocessApplied,
+    garbledRatio,
+    suggestLang,
   };
 }
 
@@ -762,12 +873,14 @@ function ResultCard({
   confidenceFilter,
   showBboxOverlay,
   onRemove,
+  onSwitchLang,
 }: {
   result: OcrResult;
   outputMode: Options['outputMode'];
   confidenceFilter: number;
   showBboxOverlay: boolean;
   onRemove: () => void;
+  onSwitchLang?: (lang: string) => void;
 }) {
   const [copied, setCopied] = useState(false);
   const [zoom, setZoom] = useState(1);
@@ -883,6 +996,42 @@ function ResultCard({
                   {p}
                 </span>
               ))}
+            </div>
+          )}
+
+          {/* Language suggestion banner — shown when garbling is detected */}
+          {result.suggestLang && result.garbledRatio > 0.10 && (
+            <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5">
+              <div className="flex items-start gap-2">
+                <span className="text-amber-500 text-sm mt-0.5">⚠️</span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold text-amber-800">
+                    Non-English script detected ({Math.round(result.garbledRatio * 100)}% garbled words)
+                  </p>
+                  <p className="text-[11px] text-amber-700 mt-0.5">
+                    The output contains noise from Hindi/Gujarati/other scripts. Switch to a bilingual language for clean results.
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {[
+                      { code: 'eng+hin', label: '🇮🇳 Hindi' },
+                      { code: 'eng+guj', label: '🇮🇳 Gujarati' },
+                      { code: 'eng+ben', label: '🇮🇳 Bengali' },
+                      { code: 'eng+tam', label: '🇮🇳 Tamil' },
+                      { code: 'eng+tel', label: '🇮🇳 Telugu' },
+                      { code: 'eng+ara', label: '🌍 Arabic' },
+                    ].map(({ code, label }) => (
+                      <button
+                        key={code}
+                        type="button"
+                        onClick={() => onSwitchLang?.(code)}
+                        className="rounded-lg border border-amber-300 bg-white px-2.5 py-1 text-[11px] font-semibold text-amber-800 hover:bg-amber-100 transition-colors"
+                      >
+                        Try {label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -1200,6 +1349,7 @@ export default function ImageToTextClient() {
         {/* Options panel */}
         <div className="rounded-xl border border-zinc-200 bg-white shadow-sm">
           <button
+            data-ocr-settings
             onClick={() => setShowOptions(o => !o)}
             className="flex w-full items-center justify-between px-5 py-4 text-sm font-semibold text-zinc-700"
           >
@@ -1225,18 +1375,68 @@ export default function ImageToTextClient() {
                     onChange={e => setOptions(o => ({ ...o, language: e.target.value }))}
                     className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-700 bg-white focus:outline-none focus:ring-2 focus:ring-violet-300"
                   >
-                    {LANGUAGES.map(l => (
-                      <option key={l.code} value={l.code}>{l.label}</option>
-                    ))}
+                    <option value="eng">English only</option>
+                    <optgroup label="🇮🇳 Indian Languages (bilingual with English)">
+                      <option value="eng+hin">English + Hindi (PAN, Aadhaar, central govt)</option>
+                      <option value="eng+guj">English + Gujarati (Gujarat state docs)</option>
+                      <option value="eng+ben">English + Bengali (West Bengal / Bangladesh)</option>
+                      <option value="eng+tam">English + Tamil (Tamil Nadu)</option>
+                      <option value="eng+tel">English + Telugu (Andhra / Telangana)</option>
+                      <option value="eng+kan">English + Kannada (Karnataka)</option>
+                      <option value="eng+mal">English + Malayalam (Kerala)</option>
+                      <option value="eng+mar">English + Marathi (Maharashtra)</option>
+                      <option value="eng+pan">English + Punjabi (Punjab)</option>
+                      <option value="eng+hin+guj">Hindi + Gujarati + English (mixed docs)</option>
+                      <option value="eng+urd">English + Urdu</option>
+                    </optgroup>
+                    <optgroup label="🌍 Middle East / Africa">
+                      <option value="eng+ara">English + Arabic</option>
+                      <option value="ara">Arabic only</option>
+                    </optgroup>
+                    <optgroup label="🇷🇺 Europe">
+                      <option value="eng+rus">English + Russian</option>
+                      <option value="fra">French</option>
+                      <option value="deu">German</option>
+                      <option value="spa">Spanish</option>
+                      <option value="por">Portuguese</option>
+                      <option value="ita">Italian</option>
+                      <option value="nld">Dutch</option>
+                      <option value="pol">Polish</option>
+                      <option value="rus">Russian only</option>
+                      <option value="ukr">Ukrainian</option>
+                      <option value="tur">Turkish</option>
+                    </optgroup>
+                    <optgroup label="🇨🇳 East Asia">
+                      <option value="eng+chi_sim">English + Chinese (Simplified)</option>
+                      <option value="eng+chi_tra">English + Chinese (Traditional)</option>
+                      <option value="eng+jpn">English + Japanese</option>
+                      <option value="eng+kor">English + Korean</option>
+                      <option value="chi_sim">Chinese (Simplified)</option>
+                      <option value="chi_tra">Chinese (Traditional)</option>
+                      <option value="jpn">Japanese</option>
+                      <option value="kor">Korean</option>
+                      <option value="vie">Vietnamese</option>
+                    </optgroup>
+                    <optgroup label="🇮🇳 Indian Languages (single language)">
+                      <option value="hin">Hindi only</option>
+                      <option value="guj">Gujarati only</option>
+                      <option value="ben">Bengali only</option>
+                      <option value="tam">Tamil only</option>
+                      <option value="tel">Telugu only</option>
+                      <option value="kan">Kannada only</option>
+                      <option value="mal">Malayalam only</option>
+                      <option value="mar">Marathi only</option>
+                      <option value="pan">Punjabi only</option>
+                    </optgroup>
                   </select>
-                  {/* Show hint for the selected bilingual option */}
+                  {/* Hint for the selected language */}
                   {LANGUAGES.find(l => l.code === options.language)?.hint && (
-                    <p className="mt-1 text-[11px] font-medium text-violet-600">
+                    <p className="mt-1 text-[11px] font-semibold text-violet-600">
                       ✓ {LANGUAGES.find(l => l.code === options.language)!.hint}
                     </p>
                   )}
                   <p className="mt-1 text-[11px] text-zinc-400">
-                    For bilingual docs (Indian IDs, Arabic forms), pick an "English +" option above — it eliminates garbled script artifacts.
+                    For mixed-script documents, always pick a bilingual option (e.g. "English + Hindi") — it eliminates garbled non-Latin artifacts entirely.
                   </p>
                 </div>
 
@@ -1293,15 +1493,28 @@ export default function ImageToTextClient() {
                       📄 Document / ID card
                     </button>
                     <button
+                      onClick={() => {
+                        setOptions(o => ({
+                          ...o,
+                          language: 'eng+hin',
+                          multiPass: true,
+                          preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: false }
+                        }));
+                      }}
+                      className="rounded-xl border border-orange-300 bg-orange-50 px-3 py-2 text-xs font-medium text-orange-800 hover:bg-orange-100 transition-colors"
+                    >
+                      🇮🇳 PAN / Aadhaar card
+                    </button>
+                    <button
                       onClick={() => setOptions(o => ({
                         ...o,
-                        language: 'eng+hin',
+                        language: 'eng+guj',
                         multiPass: true,
                         preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: false }
                       }))}
-                      className="rounded-xl border border-orange-300 bg-orange-50 px-3 py-2 text-xs font-medium text-orange-800 hover:bg-orange-100 transition-colors"
+                      className="rounded-xl border border-blue-300 bg-blue-50 px-3 py-2 text-xs font-medium text-blue-800 hover:bg-blue-100 transition-colors"
                     >
-                      🇮🇳 Indian ID (PAN / Aadhaar)
+                      🇮🇳 Gujarati document
                     </button>
                   </div>
                   <p className="mt-1 text-[11px] text-zinc-400">Indian ID preset switches to English+Hindi language — eliminates garbled Hindi artifacts</p>
@@ -1397,6 +1610,11 @@ export default function ImageToTextClient() {
             confidenceFilter={options.confidenceFilter}
             showBboxOverlay={options.showBboxOverlay}
             onRemove={() => removeResult(result.id)}
+            onSwitchLang={(lang) => {
+              setOptions(o => ({ ...o, language: lang }));
+              // Scroll to settings so user sees the language changed
+              document.querySelector('[data-ocr-settings]')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }}
           />
         ))}
 
