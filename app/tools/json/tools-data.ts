@@ -186,6 +186,20 @@ export const TOOLS_DIRECTORY: DirectoryTool[] = [
     icon: 'FileCode',
   },
   {
+    href: '/curl-to-requests',
+    name: 'cURL → any language',
+    description: 'Convert cURL to Python requests, JS fetch, PHP, Ruby, Go, Java, C# and more.',
+    category: 'api',
+    icon: 'Code2',
+  },
+  {
+    href: '/convert-curl-to-http-request',
+    name: 'cURL → HTTP request',
+    description: 'Convert cURL commands to raw HTTP request format for debugging and documentation.',
+    category: 'api',
+    icon: 'Webhook',
+  },
+  {
     href: '/har-to-curl',
     name: 'HAR → cURL',
     description: 'Extract cURL from browser HAR exports.',
@@ -296,6 +310,27 @@ export const TOOLS_DIRECTORY: DirectoryTool[] = [
     category: 'dev',
     icon: 'Database',
     badge: 'popular',
+  },
+  {
+    href: '/sql-in-generator',
+    name: 'SQL IN generator (advanced)',
+    description: 'Advanced SQL IN clause builder with chunking, parameterized queries, and multi-dialect support.',
+    category: 'dev',
+    icon: 'Database',
+  },
+  {
+    href: '/sql-formatter',
+    name: 'SQL formatter & beautifier',
+    description: 'Format and indent SQL queries for MySQL, PostgreSQL, SQLite. Keyword casing, indentation control.',
+    category: 'dev',
+    icon: 'ScrollText',
+  },
+  {
+    href: '/json-formatter',
+    name: 'JSON formatter',
+    description: 'Format and prettify JSON with syntax highlighting, indentation control and minify option.',
+    category: 'json',
+    icon: 'FileJson',
   },
   {
     href: '/regex-tester',

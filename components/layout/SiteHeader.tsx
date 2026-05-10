@@ -80,6 +80,13 @@ const ALL_TOOLS: Tool[] = [
   { label: 'CSS Box Shadow', href: '/css-box-shadow', desc: 'Build CSS box-shadow visually', tags: 'css box shadow generator builder', cat: 'CSS', icon: '🟦' },
   { label: 'CSS Gradient Generator', href: '/css-gradient-generator', desc: 'Build linear, radial and conic CSS gradients', tags: 'css gradient linear radial conic background', cat: 'CSS', icon: '🎨' },
   { label: 'HTML Formatter', href: '/html-formatter', desc: 'Beautify or minify HTML code', tags: 'html format beautify minify indent', cat: 'Dev', icon: '🗂️' },
+  { label: 'HTML Viewer', href: '/html-viewer', desc: 'Live HTML/CSS/JS sandbox with instant preview', tags: 'html viewer live sandbox preview css js', cat: 'Dev', icon: '👁️' },
+  { label: 'HTTP Headers Analyzer', href: '/http-headers-analyzer', desc: 'Analyze and grade HTTP security headers', tags: 'http headers security csp hsts cors grade analyze', cat: 'Dev', icon: '🌐' },
+  { label: 'String Utilities', href: '/string-utilities', desc: 'Case convert, encode, extract emails/URLs from text', tags: 'string case camelcase snake pascal encode extract url email', cat: 'Dev', icon: '🔤' },
+  { label: 'cURL to Python', href: '/curl-to-python', desc: 'Convert cURL commands to Python requests code', tags: 'curl python requests convert code', cat: 'API', icon: '🐍' },
+  { label: 'cURL to Requests', href: '/curl-to-requests', desc: 'Convert cURL to Python, JS, PHP, Ruby, Go, Java', tags: 'curl convert code requests fetch php ruby go java', cat: 'API', icon: '🔄' },
+  { label: 'Convert cURL to HTTP', href: '/convert-curl-to-http-request', desc: 'Convert cURL command to raw HTTP request format', tags: 'curl http request convert raw format', cat: 'API', icon: '📡' },
+  { label: 'SQL IN Clause Generator', href: '/sql-in-clause-generator', desc: 'Convert a list to SQL IN() clause instantly', tags: 'sql in clause list generate database query', cat: 'Dev', icon: '🗃️' },
   { label: 'Image to Base64', href: '/image-to-base64', desc: 'Convert images to Base64 data URIs', tags: 'image base64 encode data uri png jpg svg', cat: 'Encode', icon: '🖼️' },
   { label: 'CSS UI Components', href: '/css-ui-components', desc: 'Browse and copy CSS UI components', tags: 'css ui components copy paste button card nav', cat: 'CSS', icon: '🧩' },
 ];

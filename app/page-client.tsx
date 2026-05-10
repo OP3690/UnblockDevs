@@ -202,6 +202,21 @@ function HomeClient({ hero }: { hero: ReactNode }) {
                 ['/http-headers-analyzer', 'HTTP Headers Analyzer'],
                 ['/string-utilities', 'String Utilities'],
                 ['/image-to-text', 'Image to Text (OCR)'],
+                ['/html-viewer', 'HTML Viewer'],
+                ['/html-formatter', 'HTML Formatter'],
+                ['/color-picker', 'Color Picker'],
+                ['/css-box-shadow', 'CSS Box Shadow'],
+                ['/css-gradient-generator', 'CSS Gradient Generator'],
+                ['/text-diff', 'Text Diff'],
+                ['/timestamp-converter', 'Timestamp Converter'],
+                ['/image-to-base64', 'Image to Base64'],
+                ['/json-to-typescript', 'JSON to TypeScript'],
+                ['/curl-to-python', 'cURL to Python'],
+                ['/curl-to-requests', 'cURL to Requests'],
+                ['/convert-curl-to-http-request', 'Convert cURL to HTTP'],
+                ['/sql-formatter', 'SQL Formatter'],
+                ['/sql-in-clause-generator', 'SQL IN Clause Generator'],
+                ['/json-formatter', 'JSON Formatter'],
               ].map(([href, label]) => (
                 <Link key={href} href={href} className="text-emerald-800 hover:text-emerald-950 hover:underline">
                   ✓ {label}

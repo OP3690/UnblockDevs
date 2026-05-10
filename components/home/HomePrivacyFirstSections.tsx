@@ -48,6 +48,8 @@ import {
   ChevronRight,
   Sparkles,
   Package,
+  Download,
+  Code,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -146,6 +148,20 @@ export default function HomePrivacyFirstSections({
       { label: 'SQL IN Generator',  cats: ['all','json','dev'],    icon: Database,       variant: 'new', href: '/sql-in-generator' },
       { label: 'AI Schema Masker',  cats: ['all','ai'],            icon: ShieldCheck,    variant: 'ai', href: toolPageUrls.schemamasker },
       { label: 'Image to Text',     cats: ['all','dev'],           icon: FileSearch,     variant: 'new', href: '/image-to-text' },
+      { label: 'Color Picker',      cats: ['all','dev'],           icon: Palette,        variant: 'new', href: '/color-picker' },
+      { label: 'Regex Tester',      cats: ['all','dev'],           icon: Search,         href: toolPageUrls.regextester },
+      { label: 'JSON Comparator',   cats: ['all','json'],          icon: GitCompare,     href: '/json-comparator' },
+      { label: 'API Comparator',    cats: ['all','api'],           icon: ArrowLeftRight, href: toolPageUrls.comparator },
+      { label: 'JSON Schema Gen',   cats: ['all','json'],          icon: FileCode,       href: '/json-schema-generation' },
+      { label: 'Mock API',          cats: ['all','api'],           icon: Server,         href: toolPageUrls.mock },
+      { label: 'Test Data Gen',     cats: ['all','api'],           icon: FlaskConical,   href: toolPageUrls.testdata },
+      { label: 'Log Explorer',      cats: ['all','json','dev'],    icon: FileSearch,     href: toolPageUrls.logs },
+      { label: 'Payload Analyzer',  cats: ['all','api'],           icon: BarChart2,      href: toolPageUrls.payload },
+      { label: 'Config Compare',    cats: ['all','api','dev'],     icon: Settings,       href: toolPageUrls.config },
+      { label: 'cURL Converter',    cats: ['all','api'],           icon: Code,           href: '/curl-converter' },
+      { label: 'HAR to cURL',       cats: ['all','api'],           icon: Download,       href: '/har-to-curl' },
+      { label: 'AI Prompt Shield',  cats: ['all','ai'],            icon: ShieldCheck,    variant: 'ai', href: toolPageUrls.jsonpromptshield },
+      { label: 'Token Compare',     cats: ['all','encode'],        icon: Key,            href: toolPageUrls.tokencompare },
     ],
     [toolPageUrls],
   );
