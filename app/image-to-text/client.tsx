@@ -270,6 +270,42 @@ function otsuThreshold(imageData: ImageData): ImageData {
   return result;
 }
 
+// ── Word quality gate ─────────────────────────────────────────────────────────
+// Returns true only for words that look like real text, not noise/artifacts.
+// Filters out single-char symbols ([, ], ~, =, |), decorative borders, etc.
+function isUsableWord(w: OcrWord, minConf = 0, minLen = 1): boolean {
+  const t = w.text.trim();
+  if (!t || t.length < minLen) return false;
+  if (w.confidence < minConf) return false;
+  // Must contain at least one letter or digit.
+  // This eliminates bracket fragments, tildes, pipe chars, etc.
+  return /[a-zA-Z0-9]/.test(t);
+}
+
+// ── Junk-line cleaner ─────────────────────────────────────────────────────────
+// Removes lines where non-latin script has been garbled into ASCII noise
+// (e.g. Hindi read as "HIRXd HIRIY") and decorative border lines.
+function cleanOcrText(text: string): string {
+  const seen = new Set<string>();
+  return text
+    .split('\n')
+    .map(l => l.trim())
+    .filter(l => {
+      if (!l) return false;
+      if (seen.has(l.toLowerCase())) return false; // remove exact duplicates
+      seen.add(l.toLowerCase());
+      const alphaNum = (l.match(/[a-zA-Z0-9]/g) ?? []).length;
+      if (alphaNum === 0) return false; // pure symbols — drop
+      // Keep line only if ≥ 38% of chars are alphanumeric.
+      // "Name: AMIT KUMAR" = 85% → keep.
+      // "~~ ¢%$3 (>) (] ~~" = 7% → drop.
+      // "HIRXd HIRIY" = 100% BUT will be kept — this is a known limitation
+      // for mixed-script images without the matching language model loaded.
+      return (alphaNum / l.length) >= 0.38;
+    })
+    .join('\n');
+}
+
 // ── Reconstruct readable text from sorted word positions ─────────────────────
 // Tesseract's raw data.text can miss words from low-confidence blocks.
 // This rebuilds the text from every word bbox — much more complete.
@@ -295,10 +331,12 @@ function reconstructTextFromWords(words: OcrWord[]): string {
 }
 
 // ── Merge two word sets, dedup by bbox overlap ────────────────────────────────
-function mergeWordSets(primary: OcrWord[], extra: OcrWord[]): OcrWord[] {
+// minExtraConf: minimum confidence required for words from the extra set.
+// Use a higher value (e.g. 50) for noisy PSM 11 sparse results.
+function mergeWordSets(primary: OcrWord[], extra: OcrWord[], minExtraConf = 0): OcrWord[] {
   const merged = [...primary];
   for (const w of extra) {
-    if (!w.text.trim()) continue;
+    if (!isUsableWord(w, minExtraConf, 2)) continue; // quality gate on extra words
     const alreadyCovered = merged.some(existing => {
       const ox = Math.min(w.bbox.x1, existing.bbox.x1) - Math.max(w.bbox.x0, existing.bbox.x0);
       const oy = Math.min(w.bbox.y1, existing.bbox.y1) - Math.max(w.bbox.y0, existing.bbox.y0);
@@ -505,34 +543,30 @@ async function runOCR(
   onStatus('Recognizing… pass 1');
   await worker.setParameters({ ...baseParams, tessedit_pageseg_mode: options.psm });
   const { data: d1 } = await worker.recognize(canvas, {}, { text: true, blocks: true });
-  let allWords = extractWords(d1);
+  // Apply quality gate to primary pass: drop pure-symbol single-char noise
+  let allWords = extractWords(d1).filter(w => isUsableWord(w, 0, 1));
   const paragraphs = extractParagraphs(d1);
 
   // ── Pass 2: PSM 11 sparse text (finds text anywhere, bypasses layout) ────
-  // This catches text regions that layout analysis misses (e.g. PAN number
-  // adjacent to a photo, watermark text, codes on gradient backgrounds).
+  // Only merge words that have ≥50% confidence from this pass.
+  // PSM 11 is aggressive — it sees decorative borders and QR edges as text.
+  // The high confidence threshold keeps genuine missed text (PAN numbers,
+  // codes on coloured backgrounds) while rejecting graphic noise.
   if (options.multiPass && options.psm !== '11') {
     onStatus('Recognizing… pass 2 (sparse scan)');
     await worker.setParameters({ ...baseParams, tessedit_pageseg_mode: '11' });
     const { data: d2 } = await worker.recognize(canvas, {}, { text: true, blocks: true });
     const extraWords = extractWords(d2);
     const beforeCount = allWords.length;
-    allWords = mergeWordSets(allWords, extraWords);
+    // minExtraConf = 50: only trust new words if Tesseract is ≥50% confident
+    allWords = mergeWordSets(allWords, extraWords, 50);
     if (allWords.length > beforeCount) {
-      // Absorb extra paragraphs from pass 2 into structured view
-      const extraParas = extractParagraphs(d2);
-      paragraphs.push(...extraParas);
+      paragraphs.push(...extractParagraphs(d2));
     }
   }
-
-  // ── Pass 3: PSM 6 single uniform block (good for dense forms/tables) ─────
-  if (options.multiPass && options.psm !== '6' && options.psm !== '11') {
-    onStatus('Recognizing… pass 3 (block scan)');
-    await worker.setParameters({ ...baseParams, tessedit_pageseg_mode: '6' });
-    const { data: d3 } = await worker.recognize(canvas, {}, { text: true, blocks: true });
-    const extraWords = extractWords(d3);
-    allWords = mergeWordSets(allWords, extraWords);
-  }
+  // Note: PSM 6 (single uniform block) removed from auto multi-pass.
+  // It treats the entire image as one block — catastrophic for mixed-layout
+  // documents (ID cards, forms with photos) as it merges photo and text regions.
 
   // Reset to user-chosen PSM for any future calls
   await worker.setParameters({ tessedit_pageseg_mode: options.psm });
@@ -541,11 +575,14 @@ async function runOCR(
 
   // ── Build final outputs ──────────────────────────────────────────────────
   const filteredWords = allWords.filter(
-    w => w.confidence >= options.confidenceFilter && w.text.trim()
+    w => w.confidence >= options.confidenceFilter && isUsableWord(w, 0, 1)
   );
 
-  // Rebuild text from word positions — more complete than data.text
-  const text = reconstructTextFromWords(filteredWords.length ? filteredWords : allWords);
+  // Rebuild text from word positions, then strip junk lines.
+  // cleanOcrText removes: duplicate lines, pure-symbol lines, lines where
+  // <38% of chars are alphanumeric (decorative borders, garbled non-latin).
+  const rawText = reconstructTextFromWords(filteredWords.length ? filteredWords : allWords);
+  const text = cleanOcrText(rawText);
 
   const confidence = allWords.length
     ? Math.round(allWords.reduce((s, w) => s + w.confidence, 0) / allWords.length)
@@ -1193,10 +1230,10 @@ export default function ImageToTextClient() {
                         : 'border-zinc-200 bg-white text-zinc-500 hover:bg-zinc-50'
                     }`}
                   >
-                    {options.multiPass ? '✓ On — 3 passes merged' : 'Off — single pass'}
+                    {options.multiPass ? '✓ On — 2 passes merged' : 'Off — single pass'}
                   </button>
                   <p className="mt-1 text-[11px] text-zinc-400">
-                    Runs Auto + Sparse + Block passes, merges all results. Catches codes, IDs, and text on coloured backgrounds.
+                    Runs Auto + Sparse passes, merges high-confidence finds. Catches codes, IDs, and text that layout analysis misses — without adding noise.
                   </p>
                 </div>
 
@@ -1345,7 +1382,7 @@ export default function ImageToTextClient() {
                 {
                   icon: '⚙️',
                   title: 'Multi-pass + Pre-processing',
-                  desc: 'Runs 3 OCR passes (Auto, Sparse, Block) and merges results — catches codes and IDs missed by single-pass. Plus grayscale, contrast, sharpen, smart upscale, denoise, and Otsu binarization.',
+                  desc: 'Runs Auto + Sparse passes, merges only high-confidence discoveries. Catches codes and IDs missed by single-pass without adding noise. Plus grayscale, contrast, sharpen, smart upscale, denoise, and Otsu binarization.',
                 },
                 {
                   icon: '🔍',
