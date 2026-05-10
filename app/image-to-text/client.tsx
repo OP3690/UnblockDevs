@@ -59,13 +59,14 @@ interface Options {
   language: string;
   psm: string;
   oem: number;
+  multiPass: boolean;       // run PSM 3 + PSM 11 sparse, merge results
   preprocess: {
     grayscale: boolean;
     contrast: boolean;    // enhance contrast
     sharpen: boolean;     // unsharp mask
-    upscale: boolean;     // 2× upscale for small images
-    threshold: boolean;   // binarize
-    denoise: boolean;     // median blur
+    upscale: boolean;     // smart upscale for small images
+    threshold: boolean;   // binarize (Otsu)
+    denoise: boolean;     // 3×3 median blur
   };
   outputMode: 'plain' | 'structured' | 'confidence' | 'table';
   confidenceFilter: number; // hide words below this %
@@ -113,10 +114,12 @@ function applyPreprocessing(
 ): { canvas: HTMLCanvasElement; applied: string[] } {
   const applied: string[] = [];
 
+  // Smart upscale: 3× for tiny (<800px), 2× for small (<1600px), 1× otherwise
   let scale = 1;
-  if (opts.upscale && (img.naturalWidth < 1200 || img.naturalHeight < 900)) {
-    scale = 2;
-    applied.push('2× upscale');
+  if (opts.upscale) {
+    const maxDim = Math.max(img.naturalWidth, img.naturalHeight);
+    if (maxDim < 800)       { scale = 3; applied.push('3× upscale'); }
+    else if (maxDim < 1600) { scale = 2; applied.push('2× upscale'); }
   }
 
   const w = img.naturalWidth * scale;
@@ -125,21 +128,28 @@ function applyPreprocessing(
   const canvas = document.createElement('canvas');
   canvas.width = w;
   canvas.height = h;
-  const ctx = canvas.getContext('2d')!;
+  const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
 
   // White background (important for transparent PNGs)
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, w, h);
   ctx.drawImage(img, 0, 0, w, h);
 
-  // Apply CSS filter chain via offscreen approach
+  // CSS filter chain
   const filters: string[] = [];
-  if (opts.grayscale) { filters.push('grayscale(1)'); applied.push('Grayscale'); }
-  if (opts.contrast)  { filters.push('contrast(1.4) brightness(1.05)'); applied.push('Contrast+'); }
-  if (opts.sharpen)   { applied.push('Sharpen'); } // handled via convolution below
+  if (opts.grayscale) {
+    // Use saturate(0) for more accurate luminance-based grayscale
+    filters.push('saturate(0)');
+    applied.push('Grayscale');
+  }
+  if (opts.contrast) {
+    // Stronger contrast helps with coloured / gradient document backgrounds
+    filters.push('contrast(1.8) brightness(1.08)');
+    applied.push('Contrast+');
+  }
+  if (opts.sharpen) { applied.push('Sharpen'); }
 
   if (filters.length) {
-    // Re-draw with CSS filter using a temp canvas
     const tmp = document.createElement('canvas');
     tmp.width = w; tmp.height = h;
     const tmpCtx = tmp.getContext('2d')!;
@@ -151,6 +161,14 @@ function applyPreprocessing(
     ctx.drawImage(tmp, 0, 0);
   }
 
+  // Denoise: 3×3 median blur (run before sharpen to avoid amplifying noise)
+  if (opts.denoise) {
+    const imageData = ctx.getImageData(0, 0, w, h);
+    const denoised = medianBlur(imageData);
+    ctx.putImageData(denoised, 0, 0);
+    applied.push('Denoise');
+  }
+
   // Sharpen via unsharp mask convolution
   if (opts.sharpen) {
     const imageData = ctx.getImageData(0, 0, w, h);
@@ -158,7 +176,7 @@ function applyPreprocessing(
     ctx.putImageData(sharpened, 0, 0);
   }
 
-  // Threshold (binarize)
+  // Threshold (binarize using Otsu's method)
   if (opts.threshold) {
     const imageData = ctx.getImageData(0, 0, w, h);
     const binarized = otsuThreshold(imageData);
@@ -167,6 +185,27 @@ function applyPreprocessing(
   }
 
   return { canvas, applied };
+}
+
+// ── 3×3 median blur (noise reduction) ────────────────────────────────────────
+function medianBlur(imageData: ImageData): ImageData {
+  const { data, width, height } = imageData;
+  const result = new Uint8ClampedArray(data);
+  const vals: number[] = new Array(9);
+  for (let y = 1; y < height - 1; y++) {
+    for (let x = 1; x < width - 1; x++) {
+      for (let c = 0; c < 3; c++) {
+        let vi = 0;
+        for (let dy = -1; dy <= 1; dy++)
+          for (let dx = -1; dx <= 1; dx++)
+            vals[vi++] = data[((y + dy) * width + (x + dx)) * 4 + c];
+        vals.sort((a, b) => a - b);
+        result[(y * width + x) * 4 + c] = vals[4];
+      }
+      result[(y * width + x) * 4 + 3] = 255;
+    }
+  }
+  return new ImageData(result, width, height);
 }
 
 function unsharpenMask(imageData: ImageData, amount: number): ImageData {
@@ -229,6 +268,47 @@ function otsuThreshold(imageData: ImageData): ImageData {
     result.data[i + 3] = 255;
   }
   return result;
+}
+
+// ── Reconstruct readable text from sorted word positions ─────────────────────
+// Tesseract's raw data.text can miss words from low-confidence blocks.
+// This rebuilds the text from every word bbox — much more complete.
+function reconstructTextFromWords(words: OcrWord[]): string {
+  if (!words.length) return '';
+  // Sort top-to-bottom first, then left-to-right within the same row
+  const sorted = [...words].sort((a, b) => {
+    const yDiff = a.bbox.y0 - b.bbox.y0;
+    if (Math.abs(yDiff) > 12) return yDiff;
+    return a.bbox.x0 - b.bbox.x0;
+  });
+  // Group into visual lines (words whose y0 is within 18px of each other)
+  const lines: OcrWord[][] = [];
+  for (const word of sorted) {
+    const last = lines[lines.length - 1];
+    if (!last || Math.abs(word.bbox.y0 - last[0].bbox.y0) > 18) {
+      lines.push([word]);
+    } else {
+      last.push(word);
+    }
+  }
+  return lines.map(ln => ln.map(w => w.text).join(' ')).join('\n');
+}
+
+// ── Merge two word sets, dedup by bbox overlap ────────────────────────────────
+function mergeWordSets(primary: OcrWord[], extra: OcrWord[]): OcrWord[] {
+  const merged = [...primary];
+  for (const w of extra) {
+    if (!w.text.trim()) continue;
+    const alreadyCovered = merged.some(existing => {
+      const ox = Math.min(w.bbox.x1, existing.bbox.x1) - Math.max(w.bbox.x0, existing.bbox.x0);
+      const oy = Math.min(w.bbox.y1, existing.bbox.y1) - Math.max(w.bbox.y0, existing.bbox.y0);
+      if (ox <= 0 || oy <= 0) return false;
+      const wArea = Math.max(1, (w.bbox.x1 - w.bbox.x0) * (w.bbox.y1 - w.bbox.y0));
+      return (ox * oy) / wArea > 0.4; // >40% bbox overlap = same word
+    });
+    if (!alreadyCovered) merged.push(w);
+  }
+  return merged;
 }
 
 // ── Table detection from OCR words ───────────────────────────────────────────
@@ -345,46 +425,30 @@ let tesseractReady = false;
 
 // ── OCR runner ────────────────────────────────────────────────────────────────
 
-async function runOCR(
-  file: File,
-  options: Options,
-  onStatus: (msg: string) => void,
-): Promise<OcrResult> {
-  const t0 = performance.now();
-  const imageUrl = URL.createObjectURL(file);
+/** Extract OcrWord[] from a Tesseract data response */
+function extractWords(data: any): OcrWord[] {
+  const words: OcrWord[] = [];
+  for (const block of data.blocks ?? []) {
+    for (const para of block.paragraphs ?? []) {
+      for (const line of para.lines ?? []) {
+        for (const w of line.words ?? []) {
+          const text = (w.text ?? '').trim();
+          if (!text) continue;
+          words.push({
+            text,
+            confidence: w.confidence ?? 0,
+            bbox: w.bbox ?? { x0: 0, y0: 0, x1: 0, y1: 0 },
+          });
+        }
+      }
+    }
+  }
+  return words;
+}
 
-  // Load image to canvas for preprocessing
-  const img = await new Promise<HTMLImageElement>((resolve, reject) => {
-    const el = document.createElement('img');
-    el.onload = () => resolve(el);
-    el.onerror = reject;
-    el.src = imageUrl;
-  });
-
-  onStatus('Pre-processing image…');
-  const { canvas, applied: preprocessApplied } = applyPreprocessing(img, options.preprocess);
-
-  onStatus('Starting OCR…');
-  const worker = await getWorker(options.language, options.oem, onStatus);
-
-  // Set page segmentation mode
-  await worker.setParameters({ tessedit_pageseg_mode: options.psm });
-
-  const psmLabel = PSM_MODES.find(p => p.value === options.psm)?.label ?? 'Auto';
-
-  onStatus('Recognizing text…');
-  const { data } = await worker.recognize(canvas, {}, {
-    text: true,
-    hocr: false,
-    tsv: false,
-    blocks: true,
-    layoutBlocks: false,
-  });
-
-  const t1 = performance.now();
-
-  // Build structured data
-  const paragraphs: OcrParagraph[] = (data.blocks ?? []).flatMap((block: any) =>
+/** Extract OcrParagraph[] from a Tesseract data response */
+function extractParagraphs(data: any): OcrParagraph[] {
+  return (data.blocks ?? []).flatMap((block: any) =>
     (block.paragraphs ?? []).map((para: any) => ({
       text: para.text ?? '',
       confidence: para.confidence ?? 0,
@@ -401,15 +465,92 @@ async function runOCR(
       })),
     }))
   );
+}
 
-  const words: OcrWord[] = paragraphs.flatMap(p => p.lines.flatMap(l => l.words));
-  const filteredWords = words.filter(w => w.confidence >= options.confidenceFilter && w.text.trim());
-  const text = data.text ?? '';
-  const confidence = words.length
-    ? Math.round(words.reduce((s, w) => s + w.confidence, 0) / words.length)
+async function runOCR(
+  file: File,
+  options: Options,
+  onStatus: (msg: string) => void,
+): Promise<OcrResult> {
+  const t0 = performance.now();
+  const imageUrl = URL.createObjectURL(file);
+
+  // Load image
+  const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+    const el = document.createElement('img');
+    el.onload = () => resolve(el);
+    el.onerror = reject;
+    el.src = imageUrl;
+  });
+
+  onStatus('Pre-processing image…');
+  const { canvas, applied: preprocessApplied } = applyPreprocessing(img, options.preprocess);
+
+  onStatus('Starting OCR engine…');
+  const worker = await getWorker(options.language, options.oem, onStatus);
+
+  // ── Tesseract parameters ─────────────────────────────────────────────────
+  // Disable dictionary-based filtering so alphanumeric codes (PAN, IDs,
+  // serial numbers) are not silently dropped as "not a real word".
+  const baseParams = {
+    preserve_interword_spaces: '1',
+    tessedit_do_invert:        '0',
+    load_system_dawg:          '0',   // no English word list filtering
+    load_freq_dawg:            '0',   // no frequency-list filtering
+  };
+
+  const psmLabel = PSM_MODES.find(p => p.value === options.psm)?.label ?? 'Auto';
+
+  // ── Pass 1: user-selected PSM ────────────────────────────────────────────
+  onStatus('Recognizing… pass 1');
+  await worker.setParameters({ ...baseParams, tessedit_pageseg_mode: options.psm });
+  const { data: d1 } = await worker.recognize(canvas, {}, { text: true, blocks: true });
+  let allWords = extractWords(d1);
+  const paragraphs = extractParagraphs(d1);
+
+  // ── Pass 2: PSM 11 sparse text (finds text anywhere, bypasses layout) ────
+  // This catches text regions that layout analysis misses (e.g. PAN number
+  // adjacent to a photo, watermark text, codes on gradient backgrounds).
+  if (options.multiPass && options.psm !== '11') {
+    onStatus('Recognizing… pass 2 (sparse scan)');
+    await worker.setParameters({ ...baseParams, tessedit_pageseg_mode: '11' });
+    const { data: d2 } = await worker.recognize(canvas, {}, { text: true, blocks: true });
+    const extraWords = extractWords(d2);
+    const beforeCount = allWords.length;
+    allWords = mergeWordSets(allWords, extraWords);
+    if (allWords.length > beforeCount) {
+      // Absorb extra paragraphs from pass 2 into structured view
+      const extraParas = extractParagraphs(d2);
+      paragraphs.push(...extraParas);
+    }
+  }
+
+  // ── Pass 3: PSM 6 single uniform block (good for dense forms/tables) ─────
+  if (options.multiPass && options.psm !== '6' && options.psm !== '11') {
+    onStatus('Recognizing… pass 3 (block scan)');
+    await worker.setParameters({ ...baseParams, tessedit_pageseg_mode: '6' });
+    const { data: d3 } = await worker.recognize(canvas, {}, { text: true, blocks: true });
+    const extraWords = extractWords(d3);
+    allWords = mergeWordSets(allWords, extraWords);
+  }
+
+  // Reset to user-chosen PSM for any future calls
+  await worker.setParameters({ tessedit_pageseg_mode: options.psm });
+
+  const t1 = performance.now();
+
+  // ── Build final outputs ──────────────────────────────────────────────────
+  const filteredWords = allWords.filter(
+    w => w.confidence >= options.confidenceFilter && w.text.trim()
+  );
+
+  // Rebuild text from word positions — more complete than data.text
+  const text = reconstructTextFromWords(filteredWords.length ? filteredWords : allWords);
+
+  const confidence = allWords.length
+    ? Math.round(allWords.reduce((s, w) => s + w.confidence, 0) / allWords.length)
     : 0;
 
-  // Table detection
   const tableData = detectTableFromWords(filteredWords, img.naturalHeight);
   const hasTable = tableData !== null && tableData.length >= 3;
 
@@ -850,8 +991,9 @@ export default function ImageToTextClient() {
     language: 'eng',
     psm: '3',
     oem: 1,
+    multiPass: true,           // runs 3 PSM passes and merges — catches codes on coloured backgrounds
     preprocess: {
-      grayscale: false,
+      grayscale: true,         // converts to B&W — critical for coloured document backgrounds
       contrast: true,
       sharpen: false,
       upscale: true,
@@ -932,7 +1074,7 @@ export default function ImageToTextClient() {
                 Confidence scoring, table detection, 18 languages. 100% in-browser — nothing uploaded.
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
-                {['18 languages', 'Scanned photos', 'Table detection', 'Confidence scoring', 'Batch processing', '100% in-browser'].map(f => (
+                {['18 languages', 'Multi-pass OCR', 'Table detection', 'ID card & document mode', 'Batch processing', '100% in-browser'].map(f => (
                   <span key={f} className="rounded-full border border-violet-200 bg-violet-50 px-2.5 py-0.5 text-[11px] font-semibold text-violet-800">
                     {f}
                   </span>
@@ -1036,18 +1178,58 @@ export default function ImageToTextClient() {
                 </div>
               </div>
 
-              {/* Row 2: Pre-processing */}
+              {/* Row 2: Multi-pass + Document mode */}
+              <div className="flex flex-wrap items-center gap-3">
+                {/* Multi-pass toggle */}
+                <div className="flex-1 min-w-[200px]">
+                  <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-500 flex items-center gap-1.5">
+                    <Layers className="h-3.5 w-3.5 text-violet-500" /> Multi-pass scan
+                  </p>
+                  <button
+                    onClick={() => setOptions(o => ({ ...o, multiPass: !o.multiPass }))}
+                    className={`flex items-center gap-2 rounded-xl border px-3 py-2 text-xs font-medium transition-colors ${
+                      options.multiPass
+                        ? 'border-violet-300 bg-violet-50 text-violet-800'
+                        : 'border-zinc-200 bg-white text-zinc-500 hover:bg-zinc-50'
+                    }`}
+                  >
+                    {options.multiPass ? '✓ On — 3 passes merged' : 'Off — single pass'}
+                  </button>
+                  <p className="mt-1 text-[11px] text-zinc-400">
+                    Runs Auto + Sparse + Block passes, merges all results. Catches codes, IDs, and text on coloured backgrounds.
+                  </p>
+                </div>
+
+                {/* Document mode preset */}
+                <div>
+                  <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-500">Quick preset</p>
+                  <button
+                    onClick={() => setOptions(o => ({
+                      ...o,
+                      multiPass: true,
+                      preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: false }
+                    }))}
+                    className="rounded-xl border border-emerald-300 bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-800 hover:bg-emerald-100 transition-colors"
+                  >
+                    📄 Document / ID card mode
+                  </button>
+                  <p className="mt-1 text-[11px] text-zinc-400">Grayscale + Contrast + Sharpen + Upscale + Multi-pass</p>
+                </div>
+              </div>
+
+              {/* Row 3: Pre-processing toggles */}
               <div>
                 <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">
                   Image Pre-processing
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {([
-                    { key: 'grayscale', label: 'Grayscale', desc: 'Convert to B&W before OCR' },
-                    { key: 'contrast',  label: 'Boost contrast', desc: 'Improves faded or low-contrast scans' },
-                    { key: 'sharpen',   label: 'Sharpen', desc: 'Unsharp mask for blurry images' },
-                    { key: 'upscale',   label: '2× upscale', desc: 'Scale up small images for better accuracy' },
-                    { key: 'threshold', label: 'Binarize (Otsu)', desc: 'Convert to pure black & white using Otsu threshold' },
+                    { key: 'grayscale', label: 'Grayscale',      desc: 'Convert to B&W — essential for coloured backgrounds (PAN, ID cards, etc.)' },
+                    { key: 'contrast',  label: 'Boost contrast',  desc: 'Stronger contrast (1.8×) improves text on gradient/coloured backgrounds' },
+                    { key: 'sharpen',   label: 'Sharpen',         desc: 'Unsharp mask — helps with slightly blurry or compressed images' },
+                    { key: 'upscale',   label: 'Smart upscale',   desc: '3× for tiny images, 2× for small — greatly improves small text accuracy' },
+                    { key: 'denoise',   label: 'Denoise',         desc: '3×3 median blur — reduces noise before OCR on grainy scans' },
+                    { key: 'threshold', label: 'Binarize (Otsu)', desc: 'Converts to pure black & white using Otsu thresholding' },
                   ] as { key: keyof Options['preprocess']; label: string; desc: string }[]).map(({ key, label, desc }) => (
                     <button
                       key={key}
@@ -1162,8 +1344,8 @@ export default function ImageToTextClient() {
                 },
                 {
                   icon: '⚙️',
-                  title: 'Image Pre-processing',
-                  desc: 'Grayscale, contrast boost, sharpening, 2× upscale, and Otsu binarization improve accuracy on difficult images.',
+                  title: 'Multi-pass + Pre-processing',
+                  desc: 'Runs 3 OCR passes (Auto, Sparse, Block) and merges results — catches codes and IDs missed by single-pass. Plus grayscale, contrast, sharpen, smart upscale, denoise, and Otsu binarization.',
                 },
                 {
                   icon: '🔍',
@@ -1204,8 +1386,11 @@ export default function ImageToTextClient() {
             <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-3">Tips for better accuracy</p>
             <ul className="grid gap-1.5 sm:grid-cols-2 text-xs text-zinc-600">
               {[
+                'Use "Document / ID card mode" preset for PAN cards, passports, and ID documents',
+                'Multi-pass scan (default ON) finds codes and IDs that single-pass OCR misses',
+                'Always enable Grayscale for images with coloured or gradient backgrounds',
                 'Enable "Boost contrast" for faded or low-contrast documents',
-                'Use "2× upscale" for small or low-resolution images',
+                'Use "Smart upscale" for small or low-resolution images',
                 'Try "Binarize (Otsu)" for very noisy scanned documents',
                 '"Sparse text" mode works best for labels, screenshots with scattered text',
                 'Use "Single column" for newspaper columns or narrow text layouts',
