@@ -740,7 +740,22 @@ async function runOCR(
 
   const cleanedText = text.trim();
   const docType = detectDocumentType(cleanedText);
-  const structuredBlocks = parseStructuredBlocks(cleanedText);
+
+  // Smart field extraction: regex-based document fields + generic OCR KV blocks
+  const docFields    = extractDocumentFields(cleanedText, docType);
+  const genericBlocks = parseStructuredBlocks(cleanedText);
+  // Deduplicate: drop generic KVs whose key already captured by doc-specific extraction
+  const docFieldKeys = new Set(docFields.map(f => f.key?.toLowerCase().replace(/\s+/g, '')));
+  const filteredGeneric = genericBlocks.filter(b =>
+    b.type !== 'kv' || !docFieldKeys.has(b.key?.toLowerCase().replace(/\s+/g, ''))
+  );
+  // Place docFields after the first heading block (if present) to preserve doc title
+  const firstHeadIdx = filteredGeneric.findIndex(b => b.type === 'heading');
+  const structuredBlocks: StructuredBlock[] = docFields.length
+    ? (firstHeadIdx >= 0
+      ? [...filteredGeneric.slice(0, firstHeadIdx + 1), ...docFields, ...filteredGeneric.slice(firstHeadIdx + 1)]
+      : [...docFields, ...filteredGeneric])
+    : filteredGeneric;
 
   return {
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
@@ -842,17 +857,372 @@ function downloadJson(result: OcrResult) {
 
 // ── Document type detection ───────────────────────────────────────────────────
 
-type DocType = 'id' | 'medical' | 'insurance' | 'book' | 'receipt' | 'general';
+type DocType =
+  | 'aadhaar' | 'pan' | 'passport' | 'driving_license' | 'voter_id'
+  | 'invoice' | 'receipt' | 'medical' | 'insurance' | 'book' | 'general';
 
 function detectDocumentType(text: string): DocType {
   const t = text.toLowerCase();
-  if (/\b(pan\s*card|aadhaar|aadhar|permanent\s*account|passport|voter\s*id|driving\s*licen|date\s*of\s*birth|dob\b|nationality|voter)\b/.test(t)) return 'id';
-  if (/\b(diagnosis|prescription|doctor\b|patient\b|hospital|clinic|rx\b|medicine|tablet|capsule|dosage|mg\b|blood\s*pressure|glucose|laboratory|lab\s*report|test\s*result|admission|discharge)\b/.test(t)) return 'medical';
-  if (/\b(policy\s*no|policy\s*number|insured\b|premium\b|sum\s*assured|maturity\b|nominee\b|coverage|irda|lic\b|endorsement)\b/.test(t)) return 'insurance';
-  if (/\b(chapter\b|section\b|introduction\b|conclusion\b|bibliography|references|isbn|edition|publisher|author\b)\b/.test(t)) return 'book';
-  if (/\b(invoice\b|receipt\b|subtotal\b|cgst|sgst|igst|gst|qty\b|quantity\b|discount\b|upi\b|amount\s+due)\b/.test(t)) return 'receipt';
-  if (/\b(total\b|bill\s*no|item\b|price\b|rate\b)\b/.test(t)) return 'receipt';
+
+  // ── Identity documents — most specific first ───────────────────────────────
+  if (/\b(aadhaar|aadhar|uidai|unique\s+identification\s+authority)\b/i.test(text)) return 'aadhaar';
+  // Aadhaar number: 12 digits in 3 groups of 4
+  if (/\b\d{4}\s\d{4}\s\d{4}\b/.test(text)) return 'aadhaar';
+
+  if (/\b(permanent\s+account\s+number|income[\s-]tax\s+department)\b/i.test(text)) return 'pan';
+  // PAN number pattern: ABCDE1234F, but only if accompanied by PAN context
+  if (/\b[A-Z]{5}\d{4}[A-Z]\b/.test(text) && /\b(income|tax|pan|assessment)\b/i.test(text)) return 'pan';
+
+  if (/\b(passport|republic\s+of\s+india|place\s+of\s+birth|place\s+of\s+issue|nationality)\b/i.test(text)) return 'passport';
+  // MRZ line pattern — two 44-char machine-readable zone lines
+  if (/[A-Z0-9<]{40,}/.test(text)) return 'passport';
+
+  if (/\b(driving\s+licen|dl\s*no\.?|transport\s+dept|motor\s+vehicle|rto\b)\b/i.test(text)) return 'driving_license';
+
+  if (/\b(election\s+commission|elector|epic\s+no|voter\s+id)\b/i.test(text)) return 'voter_id';
+
+  // ── Financial documents ────────────────────────────────────────────────────
+  if (/\b(invoice\b|bill\s+to|ship\s+to|gstin|gst\s*no\.?|invoice\s*no\.?|proforma)\b/i.test(text)) return 'invoice';
+  if (/\b(receipt\b|subtotal|cgst|sgst|igst|qty\b|quantity\b|upi\b|amount\s+due|thank\s+you\s+for)\b/i.test(text)) return 'receipt';
+  if (/\b(total\b|bill\s*no|item\b)\b/i.test(text) && /\b(price\b|rate\b|amount)\b/i.test(text)) return 'receipt';
+
+  // ── Other categories ───────────────────────────────────────────────────────
+  if (/\b(diagnosis|prescription|rx\b|patient\b|doctor\b|hospital|clinic|medicine|tablet|capsule|dosage|mg\b|discharge|laboratory|lab\s+report)\b/i.test(text)) return 'medical';
+  if (/\b(policy\s*no|policy\s*number|insured\b|premium\b|sum\s+assured|nominee\b|coverage|irda|endorsement)\b/i.test(text)) return 'insurance';
+  if (/\b(chapter\b|isbn|edition|publisher|bibliography|references)\b/i.test(text)) return 'book';
+
   return 'general';
+}
+
+// ── Document-specific field extraction ───────────────────────────────────────
+// Extracts known fields using regex patterns for each document type.
+// These supplement (and take precedence over) generic colon/pipe KV detection.
+
+const DATE_PATTERNS = [
+  /\b(\d{2}[\/\-.]\d{2}[\/\-.]\d{4})\b/,
+  /\b(\d{4}[\/\-.]\d{2}[\/\-.]\d{2})\b/,
+  /\b(\d{1,2}\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{4})\b/i,
+  /\b((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2},?\s+\d{4})\b/i,
+  /\b(\d{2}[\/\-.]\d{2}[\/\-.]\d{2})\b/,
+];
+
+function extractFirstDate(str: string): string | null {
+  for (const p of DATE_PATTERNS) { const m = str.match(p); if (m) return m[1]; }
+  return null;
+}
+
+function extractFirstAmount(str: string): string | null {
+  const m = str.match(/(?:₹|Rs\.?\s*|INR\s*|USD\s*|\$\s*|€\s*|£\s*)[\d,]+(?:\.\d{1,2})?/i)
+          ?? str.match(/\b[\d,]+(?:\.\d{1,2})?\s*(?:₹|Rs\.?|INR)\b/i);
+  return m ? m[0].trim() : null;
+}
+
+function extractDocumentFields(text: string, docType: DocType): StructuredBlock[] {
+  const fields: StructuredBlock[] = [];
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+
+  const add = (key: string, value: string) => {
+    const v = value.trim().replace(/^[:\-|]+\s*/, '').trim();
+    if (v) fields.push({ type: 'kv', content: `${key}: ${v}`, key, value: v });
+  };
+
+  /* ── Aadhaar ──────────────────────────────────────────────────────────────── */
+  if (docType === 'aadhaar') {
+    // Aadhaar number — 12 digits, optionally grouped
+    const anMatch = text.match(/\b(\d{4}[\s\-]?\d{4}[\s\-]?\d{4})\b/);
+    if (anMatch) add('Aadhaar No.', anMatch[1].replace(/\s+/g, ' '));
+
+    // VID (16-digit Virtual ID)
+    const vidMatch = text.match(/\b(?:VID|Virtual\s+ID)\s*:?\s*(\d{4}[\s\-]?\d{4}[\s\-]?\d{4}[\s\-]?\d{4})\b/i);
+    if (vidMatch) add('VID', vidMatch[1]);
+
+    // Date of Birth
+    const dobLine = lines.find(l => /\b(dob|date\s+of\s+birth|birth\s+date|yr\s*of\s*birth)\b/i.test(l));
+    if (dobLine) { const d = extractFirstDate(dobLine); if (d) add('Date of Birth', d); }
+    else { const d = lines.map(extractFirstDate).find(Boolean); if (d) add('Date of Birth', d!); }
+
+    // Gender
+    const gLine = lines.find(l => /\b(male|female|third\s+gender)\b/i.test(l));
+    if (gLine) { const g = gLine.match(/\b(male|female|third\s+gender)\b/i); if (g) add('Gender', g[0]); }
+
+    // Name — title-case multi-word line, no digits, not address-like
+    const nameLine = lines.find(l =>
+      /^[A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,3}$/.test(l) &&
+      !/\b(male|female|address|dob|date|village|post|district|state|pin)\b/i.test(l)
+    );
+    if (nameLine) add('Name', nameLine);
+
+    return fields;
+  }
+
+  /* ── PAN Card ─────────────────────────────────────────────────────────────── */
+  if (docType === 'pan') {
+    const panMatch = text.match(/\b([A-Z]{5}\d{4}[A-Z])\b/);
+    if (panMatch) add('PAN Number', panMatch[1]);
+
+    // Date of birth
+    const dobLine = lines.find(l => /\b(dob|date\s+of\s+birth|birth)\b/i.test(l));
+    const dob = dobLine ? extractFirstDate(dobLine) : lines.map(extractFirstDate).find(Boolean);
+    if (dob) add('Date of Birth', dob);
+
+    // Father's name (appears right below holder's name in PAN)
+    const fLine = lines.find(l => /father/i.test(l));
+    if (fLine) {
+      const v = fLine.replace(/father.{0,15}name/i, '').replace(/[:|]/g, '').trim();
+      if (v && v.length > 2) add("Father's Name", v);
+    }
+
+    // Name — title-case, no numbers, not a label
+    const nameLine = lines.find(l =>
+      /^[A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,3}$/.test(l) &&
+      !/\b(father|income|account|department|tax|india)\b/i.test(l)
+    );
+    if (nameLine) add('Name', nameLine);
+
+    return fields;
+  }
+
+  /* ── Passport ─────────────────────────────────────────────────────────────── */
+  if (docType === 'passport') {
+    // Passport number: typically letter + 7 digits
+    const pnoMatch = text.match(/\b([A-Z]\d{7})\b/);
+    if (pnoMatch) add('Passport No.', pnoMatch[1]);
+
+    // Nationality
+    const natLine = lines.find(l => /nationality/i.test(l));
+    if (natLine) {
+      const v = natLine.replace(/nationality/i, '').replace(/[:/]/g, '').trim();
+      if (v) add('Nationality', v);
+    }
+
+    // Date of birth
+    const dobLine = lines.find(l => /date.*birth|dob/i.test(l));
+    if (dobLine) { const d = extractFirstDate(dobLine); if (d) add('Date of Birth', d); }
+
+    // Date of expiry / valid until
+    const expLine = lines.find(l => /expir|valid\s+until|date\s+of\s+expiry/i.test(l));
+    if (expLine) { const d = extractFirstDate(expLine); if (d) add('Date of Expiry', d); }
+
+    // Date of issue
+    const issLine = lines.find(l => /date\s+of\s+issue|issued/i.test(l));
+    if (issLine) { const d = extractFirstDate(issLine); if (d) add('Date of Issue', d); }
+
+    // Place of birth
+    const pobLine = lines.find(l => /place\s+of\s+birth/i.test(l));
+    if (pobLine) {
+      const v = pobLine.replace(/place\s+of\s+birth/i, '').replace(/[:/]/g, '').trim();
+      if (v) add('Place of Birth', v);
+    }
+
+    // Place of issue
+    const poiLine = lines.find(l => /place\s+of\s+issue/i.test(l));
+    if (poiLine) {
+      const v = poiLine.replace(/place\s+of\s+issue/i, '').replace(/[:/]/g, '').trim();
+      if (v) add('Place of Issue', v);
+    }
+
+    // Sex / gender
+    const sexLine = lines.find(l => /\b(sex|gender)\b/i.test(l));
+    if (sexLine) {
+      const g = sexLine.match(/\b(male|female|m\b|f\b)\b/i);
+      if (g) add('Sex', g[0].toUpperCase() === 'M' ? 'Male' : g[0].toUpperCase() === 'F' ? 'Female' : g[0]);
+    }
+
+    // MRZ parsing — two lines of 44 uppercase chars/digits/<
+    const mrzCandidates = lines.filter(l => /^[A-Z0-9<]{30,}$/.test(l.replace(/\s/g, '')));
+    if (mrzCandidates.length >= 2) {
+      try {
+        const m1 = mrzCandidates[0].replace(/\s/g, '');
+        const m2 = mrzCandidates[1].replace(/\s/g, '');
+        // Line 1: names after first 5 chars (type+country)
+        if (m1.length >= 44) {
+          const namePart = m1.slice(5).split('<<');
+          const surname    = namePart[0]?.replace(/</g, ' ').trim();
+          const givenNames = namePart[1]?.replace(/</g, ' ').trim();
+          if (surname    && !fields.find(f => f.key === 'Surname'))     add('Surname', surname);
+          if (givenNames && !fields.find(f => f.key === 'Given Names')) add('Given Names', givenNames);
+        }
+        // Line 2: passportNo(9) + check + nationality(3) + DOB(6) + check + sex(1) + expiry(6)
+        if (m2.length >= 44) {
+          const passNo  = m2.slice(0, 9).replace(/</g, '');
+          const dob6    = m2.slice(13, 19);
+          const sex     = m2.slice(20, 21);
+          const expiry6 = m2.slice(21, 27);
+          const fmt6 = (s: string) => {
+            if (!/^\d{6}$/.test(s)) return null;
+            const yy = parseInt(s.slice(0, 2));
+            const fy = yy > 30 ? `19${s.slice(0, 2)}` : `20${s.slice(0, 2)}`;
+            return `${s.slice(4, 6)}/${s.slice(2, 4)}/${fy}`;
+          };
+          if (passNo  && !fields.find(f => f.key === 'Passport No.')) add('Passport No. (MRZ)', passNo);
+          if (!fields.find(f => f.key === 'Date of Birth'))   { const d = fmt6(dob6);    if (d) add('DOB (MRZ)', d); }
+          if (!fields.find(f => f.key === 'Date of Expiry'))  { const e = fmt6(expiry6); if (e) add('Expiry (MRZ)', e); }
+          if (sex === 'M') add('Sex (MRZ)', 'Male');
+          else if (sex === 'F') add('Sex (MRZ)', 'Female');
+        }
+      } catch { /* MRZ parse failed — skip */ }
+    }
+
+    return fields;
+  }
+
+  /* ── Driving License ──────────────────────────────────────────────────────── */
+  if (docType === 'driving_license') {
+    const dlMatch = text.match(/\b((?:DL|[A-Z]{2})\s*[\s\-]?\d{2}\s*[\s\-]?\d{11}|[A-Z]{2}\d{2}\s*\d{4,11})\b/i);
+    if (dlMatch) add('DL Number', dlMatch[1].replace(/\s+/g, ' '));
+
+    const dobLine = lines.find(l => /\b(dob|date\s+of\s+birth)\b/i.test(l));
+    if (dobLine) { const d = extractFirstDate(dobLine); if (d) add('Date of Birth', d); }
+
+    const validLine = lines.find(l => /valid\s*(till|until|upto)/i.test(l));
+    if (validLine) { const d = extractFirstDate(validLine); if (d) add('Valid Till', d); }
+
+    const bgMatch = text.match(/\b(A|B|AB|O)[+\-]\b/);
+    if (bgMatch) add('Blood Group', bgMatch[0]);
+
+    const classLine = lines.find(l => /class\s+of\s+vehicle|vehicle\s+class|transport|non.?transport/i.test(l));
+    if (classLine) add('Vehicle Class', classLine.replace(/class\s+of\s+vehicle/i, '').replace(/[:/]/g, '').trim());
+
+    return fields;
+  }
+
+  /* ── Voter ID ─────────────────────────────────────────────────────────────── */
+  if (docType === 'voter_id') {
+    const epicMatch = text.match(/\b(?:EPIC|Voter\s*ID)[\s:]*([A-Z]{3}\d{7})\b/i) ?? text.match(/\b([A-Z]{3}\d{7})\b/);
+    if (epicMatch) add('EPIC No.', epicMatch[1]);
+
+    const dobLine = lines.find(l => /\b(dob|date\s+of\s+birth)\b/i.test(l));
+    if (dobLine) { const d = extractFirstDate(dobLine); if (d) add('Date of Birth', d); }
+
+    const gLine = lines.find(l => /\b(male|female)\b/i.test(l));
+    if (gLine) { const g = gLine.match(/\b(male|female)\b/i); if (g) add('Gender', g[0]); }
+
+    return fields;
+  }
+
+  /* ── Invoice ──────────────────────────────────────────────────────────────── */
+  if (docType === 'invoice' || docType === 'receipt') {
+    // Invoice / receipt number
+    const invMatch = text.match(/(?:invoice|bill|receipt|order|ref)[\s.]*(?:no\.?|number|#|id)\s*:?\s*([A-Z0-9\/\-]+)/i)
+                  ?? text.match(/^(?:no\.?|#)\s*:?\s*([A-Z0-9\/\-]{3,})/im);
+    if (invMatch) add(docType === 'invoice' ? 'Invoice No.' : 'Receipt No.', invMatch[1]);
+
+    // Date
+    const dateLine = lines.find(l => /\bdate\b/i.test(l) && extractFirstDate(l));
+    if (dateLine) { const d = extractFirstDate(dateLine); if (d) add('Date', d); }
+
+    // Due date
+    const dueLine = lines.find(l => /due\s+date|payment\s+due/i.test(l));
+    if (dueLine) { const d = extractFirstDate(dueLine); if (d) add('Due Date', d); }
+
+    // GSTIN
+    const gstMatch = text.match(/\b(?:GSTIN|GST\s*No\.?)\s*:?\s*(\d{2}[A-Z]{5}\d{4}[A-Z][1-9A-Z]Z[0-9A-Z])\b/i);
+    if (gstMatch) add('GSTIN', gstMatch[1]);
+
+    // PAN on invoice
+    const panMatch = text.match(/\b(?:PAN\s*(?:no\.?)?)\s*:?\s*([A-Z]{5}\d{4}[A-Z])\b/i);
+    if (panMatch) add('PAN', panMatch[1]);
+
+    // Grand total
+    const totalLines = lines.filter(l => /(?:grand\s+)?total\b/i.test(l));
+    const totalLine = totalLines.find(l => extractFirstAmount(l));
+    if (totalLine) { const a = extractFirstAmount(totalLine); if (a) add('Grand Total', a); }
+
+    // Subtotal
+    const subLine = lines.find(l => /sub[\s-]?total/i.test(l) && extractFirstAmount(l));
+    if (subLine) { const a = extractFirstAmount(subLine); if (a) add('Subtotal', a); }
+
+    // Tax lines (CGST / SGST / IGST / GST)
+    for (const taxKey of ['CGST', 'SGST', 'IGST', 'GST', 'VAT', 'Tax']) {
+      const taxLine = lines.find(l =>
+        new RegExp(`\\b${taxKey}\\b`, 'i').test(l) && extractFirstAmount(l) &&
+        !/grand|total|subtotal/i.test(l)
+      );
+      if (taxLine) { const a = extractFirstAmount(taxLine); if (a) add(taxKey.toUpperCase(), a); }
+    }
+
+    // Discount
+    const discLine = lines.find(l => /discount\b/i.test(l) && extractFirstAmount(l));
+    if (discLine) { const a = extractFirstAmount(discLine); if (a) add('Discount', a); }
+
+    // Payment mode
+    const payLine = lines.find(l => /\b(cash|card|upi|neft|rtgs|cheque|online)\b/i.test(l));
+    if (payLine) { const m = payLine.match(/\b(cash|card|upi|neft|rtgs|cheque|online)\b/i); if (m) add('Payment Mode', m[0]); }
+
+    return fields;
+  }
+
+  /* ── Medical ──────────────────────────────────────────────────────────────── */
+  if (docType === 'medical') {
+    // Patient name
+    const patLine = lines.find(l => /patient[\s.]*(?:name)?/i.test(l));
+    if (patLine) {
+      const v = patLine.replace(/patient[\s.]*(?:name)?/i, '').replace(/[:|]/g, '').trim();
+      if (v && v.length > 2) add('Patient Name', v);
+    }
+
+    // Age
+    const ageLine = lines.find(l => /\bage\s*[:/]?\s*\d+/i.test(l));
+    if (ageLine) {
+      const m = ageLine.match(/\bage\s*[:/]?\s*(\d+\s*(?:yrs?\.?|years?)?)/i);
+      if (m) add('Age', m[1].trim());
+    }
+
+    // Doctor
+    const drLine = lines.find(l => /\bdr\.?\s+[A-Z]/i.test(l) || /doctor[\s.]*name/i.test(l));
+    if (drLine) {
+      const v = drLine.replace(/doctor[\s.]*name/i, '').replace(/[:|]/g, '').trim();
+      if (v) add('Doctor', v);
+    }
+
+    // Date
+    const dateLine = lines.find(l => /\bdate\b/i.test(l) && extractFirstDate(l));
+    if (dateLine) { const d = extractFirstDate(dateLine); if (d) add('Date', d); }
+
+    // Hospital / Clinic name — often in heading
+    const hospLine = lines.find(l => /hospital|clinic|medical\s+cent(re|er)|health\s+care/i.test(l));
+    if (hospLine) add('Hospital / Clinic', hospLine);
+
+    // Prescription Rx number
+    const rxMatch = text.match(/\bRx\s*(?:no\.?|#)?\s*:?\s*([A-Z0-9\-\/]+)/i);
+    if (rxMatch) add('Rx No.', rxMatch[1]);
+
+    return fields;
+  }
+
+  /* ── Insurance ────────────────────────────────────────────────────────────── */
+  if (docType === 'insurance') {
+    const polMatch = text.match(/policy\s*(?:no\.?|number)\s*:?\s*([A-Z0-9\-\/]+)/i);
+    if (polMatch) add('Policy No.', polMatch[1]);
+
+    const insuredLine = lines.find(l => /insured[\s.]*(?:name)?/i.test(l));
+    if (insuredLine) {
+      const v = insuredLine.replace(/insured[\s.]*(?:name)?/i, '').replace(/[:|]/g, '').trim();
+      if (v && v.length > 2) add('Insured Name', v);
+    }
+
+    const premLine = lines.find(l => /premium\b/i.test(l) && extractFirstAmount(l));
+    if (premLine) { const a = extractFirstAmount(premLine); if (a) add('Premium', a); }
+
+    const sumLine = lines.find(l => /sum\s*(assured|insured)\b/i.test(l) && extractFirstAmount(l));
+    if (sumLine) { const a = extractFirstAmount(sumLine); if (a) add('Sum Assured', a); }
+
+    const vfLine = lines.find(l => /valid\s*from|inception|commencement/i.test(l));
+    if (vfLine) { const d = extractFirstDate(vfLine); if (d) add('Valid From', d); }
+
+    const vtLine = lines.find(l => /valid\s*(till|to|until)|expiry/i.test(l));
+    if (vtLine) { const d = extractFirstDate(vtLine); if (d) add('Valid Till', d); }
+
+    const nomLine = lines.find(l => /nominee/i.test(l));
+    if (nomLine) {
+      const v = nomLine.replace(/nominee/i, '').replace(/[:|]/g, '').trim();
+      if (v && v.length > 2) add('Nominee', v);
+    }
+
+    return fields;
+  }
+
+  return fields; // no-op for 'book' and 'general'
 }
 
 // ── Structured block types & parser ──────────────────────────────────────────
@@ -943,12 +1313,17 @@ function blocksToMarkdown(blocks: StructuredBlock[]): string {
 
 // ── Document-type metadata (icon, label, badge colours) ──────────────────────
 const DOC_TYPE_META: Record<DocType, { icon: string; label: string; cls: string }> = {
-  id:        { icon: '🪪', label: 'ID Document',       cls: 'text-blue-700 bg-blue-50 border-blue-200' },
-  medical:   { icon: '🏥', label: 'Medical',           cls: 'text-red-700 bg-red-50 border-red-200' },
-  insurance: { icon: '📋', label: 'Insurance',         cls: 'text-indigo-700 bg-indigo-50 border-indigo-200' },
-  book:      { icon: '📖', label: 'Book / Article',    cls: 'text-amber-700 bg-amber-50 border-amber-200' },
-  receipt:   { icon: '🧾', label: 'Receipt / Invoice', cls: 'text-emerald-700 bg-emerald-50 border-emerald-200' },
-  general:   { icon: '📄', label: 'Document',          cls: 'text-zinc-600 bg-zinc-50 border-zinc-200' },
+  aadhaar:         { icon: '🪪', label: 'Aadhaar Card',     cls: 'text-blue-700 bg-blue-50 border-blue-200' },
+  pan:             { icon: '💳', label: 'PAN Card',          cls: 'text-orange-700 bg-orange-50 border-orange-200' },
+  passport:        { icon: '📘', label: 'Passport',          cls: 'text-indigo-700 bg-indigo-50 border-indigo-200' },
+  driving_license: { icon: '🚗', label: 'Driving License',   cls: 'text-teal-700 bg-teal-50 border-teal-200' },
+  voter_id:        { icon: '🗳️', label: 'Voter ID',           cls: 'text-purple-700 bg-purple-50 border-purple-200' },
+  invoice:         { icon: '🧾', label: 'Invoice',           cls: 'text-emerald-700 bg-emerald-50 border-emerald-200' },
+  receipt:         { icon: '🧾', label: 'Receipt',           cls: 'text-emerald-700 bg-emerald-50 border-emerald-200' },
+  medical:         { icon: '🏥', label: 'Medical',           cls: 'text-red-700 bg-red-50 border-red-200' },
+  insurance:       { icon: '📋', label: 'Insurance',         cls: 'text-violet-700 bg-violet-50 border-violet-200' },
+  book:            { icon: '📖', label: 'Book / Article',    cls: 'text-amber-700 bg-amber-50 border-amber-200' },
+  general:         { icon: '📄', label: 'Document',          cls: 'text-zinc-600 bg-zinc-50 border-zinc-200' },
 };
 
 // ── Structured renderer ───────────────────────────────────────────────────────
@@ -1740,33 +2115,48 @@ export default function ImageToTextClient() {
                   Quick Presets
                   <span className="flex-1 border-t border-zinc-100" />
                 </p>
-                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
                   {([
-                    { emoji: '📖', label: 'Book Page',      color: 'amber',   opts: { language: 'eng', psm: '6', multiPass: true, preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: true } } },
-                    { emoji: '🏥', label: 'Medical Bill',   color: 'red',     opts: { language: 'eng', psm: '3', multiPass: true, preprocess: { grayscale: true, contrast: true, sharpen: false, upscale: true, threshold: false, denoise: false } } },
-                    { emoji: '🪪', label: 'ID Card',        color: 'blue',    opts: { language: 'eng', psm: '3', multiPass: true, preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: false } } },
-                    { emoji: '📋', label: 'Insurance',      color: 'indigo',  opts: { language: 'eng', psm: '3', multiPass: true, preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: false } } },
-                    { emoji: '🧾', label: 'Receipt',        color: 'emerald', opts: { language: 'eng', psm: '4', multiPass: true, preprocess: { grayscale: true, contrast: true, sharpen: false, upscale: true, threshold: false, denoise: false } } },
-                  ] as const).map(({ emoji, label, color, opts }) => {
+                    // Identity documents
+                    { emoji: '🪪', label: 'Aadhaar',    color: 'blue',    hint: 'Best for Aadhaar cards',   opts: { language: 'eng', psm: '3', multiPass: true,  preprocess: { grayscale: true, contrast: true, sharpen: true,  upscale: true, threshold: false, denoise: false } } },
+                    { emoji: '💳', label: 'PAN Card',   color: 'orange',  hint: 'Best for PAN cards',        opts: { language: 'eng', psm: '3', multiPass: true,  preprocess: { grayscale: true, contrast: true, sharpen: true,  upscale: true, threshold: false, denoise: false } } },
+                    { emoji: '📘', label: 'Passport',   color: 'indigo',  hint: 'Best for passports',        opts: { language: 'eng', psm: '3', multiPass: true,  preprocess: { grayscale: true, contrast: true, sharpen: false, upscale: true, threshold: false, denoise: false } } },
+                    { emoji: '🚗', label: 'DL / ID',    color: 'teal',    hint: 'Driving license / Voter ID',opts: { language: 'eng', psm: '3', multiPass: true,  preprocess: { grayscale: true, contrast: true, sharpen: true,  upscale: true, threshold: false, denoise: false } } },
+                    // Financial
+                    { emoji: '🧾', label: 'Invoice',    color: 'emerald', hint: 'Invoice / Bill / Receipt',  opts: { language: 'eng', psm: '3', multiPass: true,  preprocess: { grayscale: true, contrast: true, sharpen: false, upscale: true, threshold: false, denoise: false } } },
+                    { emoji: '📋', label: 'Insurance',  color: 'violet',  hint: 'Insurance policy docs',     opts: { language: 'eng', psm: '3', multiPass: true,  preprocess: { grayscale: true, contrast: true, sharpen: true,  upscale: true, threshold: false, denoise: false } } },
+                    { emoji: '🏥', label: 'Medical',    color: 'red',     hint: 'Medical bills & reports',   opts: { language: 'eng', psm: '3', multiPass: true,  preprocess: { grayscale: true, contrast: false, sharpen: false, upscale: true, threshold: false, denoise: false } } },
+                    // Text / Print
+                    { emoji: '📖', label: 'Book Page',  color: 'amber',   hint: 'Book / article / scan',     opts: { language: 'eng', psm: '6', multiPass: true,  preprocess: { grayscale: true, contrast: true, sharpen: true,  upscale: true, threshold: false, denoise: true  } } },
+                    { emoji: '🖨️', label: 'Typed Doc',  color: 'zinc',    hint: 'Typed letter / form',       opts: { language: 'eng', psm: '3', multiPass: false, preprocess: { grayscale: true, contrast: false, sharpen: false, upscale: false, threshold: false, denoise: false } } },
+                    { emoji: '✍️', label: 'Handwritten',color: 'pink',    hint: 'Handwritten notes (best-effort)', opts: { language: 'eng', psm: '3', multiPass: true, preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: true } } },
+                  ] as const).map(({ emoji, label, color, hint, opts }) => {
                     const colorMap: Record<string, string> = {
-                      amber:   'border-amber-200   bg-amber-50   text-amber-800   hover:bg-amber-100   hover:border-amber-300',
-                      red:     'border-red-200     bg-red-50     text-red-800     hover:bg-red-100     hover:border-red-300',
                       blue:    'border-blue-200    bg-blue-50    text-blue-800    hover:bg-blue-100    hover:border-blue-300',
+                      orange:  'border-orange-200  bg-orange-50  text-orange-800  hover:bg-orange-100  hover:border-orange-300',
                       indigo:  'border-indigo-200  bg-indigo-50  text-indigo-800  hover:bg-indigo-100  hover:border-indigo-300',
+                      teal:    'border-teal-200    bg-teal-50    text-teal-800    hover:bg-teal-100    hover:border-teal-300',
                       emerald: 'border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 hover:border-emerald-300',
+                      violet:  'border-violet-200  bg-violet-50  text-violet-800  hover:bg-violet-100  hover:border-violet-300',
+                      red:     'border-red-200     bg-red-50     text-red-800     hover:bg-red-100     hover:border-red-300',
+                      amber:   'border-amber-200   bg-amber-50   text-amber-800   hover:bg-amber-100   hover:border-amber-300',
+                      zinc:    'border-zinc-200    bg-zinc-50    text-zinc-700    hover:bg-zinc-100    hover:border-zinc-300',
+                      pink:    'border-pink-200    bg-pink-50    text-pink-800    hover:bg-pink-100    hover:border-pink-300',
                     };
                     return (
                       <button
                         key={label}
+                        title={hint}
                         onClick={() => setOptions(o => ({ ...o, ...opts }))}
-                        className={`flex flex-col items-center gap-1.5 rounded-xl border px-3 py-3 text-xs font-semibold transition-all duration-150 ${colorMap[color]}`}
+                        className={`flex flex-col items-center gap-1.5 rounded-xl border px-2 py-3 text-xs font-semibold transition-all duration-150 ${colorMap[color]}`}
                       >
                         <span className="text-xl leading-none">{emoji}</span>
-                        <span>{label}</span>
+                        <span className="text-center leading-tight">{label}</span>
                       </button>
                     );
                   })}
                 </div>
+                <p className="mt-2 text-[11px] text-zinc-400">Each preset tunes language model, PSM layout mode, and preprocessing for that document type.</p>
               </div>
 
               <div className="mx-5 border-t border-zinc-100" />
