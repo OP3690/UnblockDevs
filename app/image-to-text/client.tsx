@@ -53,8 +53,10 @@ interface OcrResult {
   hasTable: boolean;
   tableData?: string[][];
   preprocessApplied: string[];
-  garbledRatio: number;      // fraction of words detected as garbled (0–1)
-  suggestLang: string | null; // suggested language switch if garbling detected
+  garbledRatio: number;          // fraction of words detected as garbled (0–1)
+  suggestLang: string | null;    // suggested language switch if garbling detected
+  docType: DocType;              // detected document category
+  structuredBlocks: StructuredBlock[]; // parsed semantic blocks
 }
 
 interface Options {
@@ -735,6 +737,10 @@ async function runOCR(
   const tableData = detectTableFromWords(filteredWords, img.naturalHeight);
   const hasTable = tableData !== null && tableData.length >= 3;
 
+  const cleanedText = text.trim();
+  const docType = detectDocumentType(cleanedText);
+  const structuredBlocks = parseStructuredBlocks(cleanedText);
+
   return {
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
     fileName: file.name,
@@ -742,12 +748,12 @@ async function runOCR(
     imageUrl,
     naturalWidth: img.naturalWidth,
     naturalHeight: img.naturalHeight,
-    text: text.trim(),
+    text: cleanedText,
     paragraphs,
     words: filteredWords,
     confidence,
-    wordCount: text.split(/\s+/).filter(Boolean).length,
-    charCount: text.replace(/\s/g, '').length,
+    wordCount: cleanedText.split(/\s+/).filter(Boolean).length,
+    charCount: cleanedText.replace(/\s/g, '').length,
     processingMs: Math.round(t1 - t0),
     language: options.language,
     psmLabel,
@@ -756,6 +762,8 @@ async function runOCR(
     preprocessApplied,
     garbledRatio,
     suggestLang,
+    docType,
+    structuredBlocks,
   };
 }
 
@@ -830,6 +838,226 @@ function downloadJson(result: OcrResult) {
   URL.revokeObjectURL(url);
 }
 
+// ── Document type detection ───────────────────────────────────────────────────
+
+type DocType = 'id' | 'medical' | 'insurance' | 'book' | 'receipt' | 'general';
+
+function detectDocumentType(text: string): DocType {
+  const t = text.toLowerCase();
+  if (/\b(pan\s*card|aadhaar|aadhar|permanent\s*account|passport|voter\s*id|driving\s*licen|date\s*of\s*birth|dob\b|nationality|voter)\b/.test(t)) return 'id';
+  if (/\b(diagnosis|prescription|doctor\b|patient\b|hospital|clinic|rx\b|medicine|tablet|capsule|dosage|mg\b|blood\s*pressure|glucose|laboratory|lab\s*report|test\s*result|admission|discharge)\b/.test(t)) return 'medical';
+  if (/\b(policy\s*no|policy\s*number|insured\b|premium\b|sum\s*assured|maturity\b|nominee\b|coverage|irda|lic\b|endorsement)\b/.test(t)) return 'insurance';
+  if (/\b(chapter\b|section\b|introduction\b|conclusion\b|bibliography|references|isbn|edition|publisher|author\b)\b/.test(t)) return 'book';
+  if (/\b(invoice\b|receipt\b|subtotal\b|cgst|sgst|igst|gst|qty\b|quantity\b|discount\b|upi\b|amount\s+due)\b/.test(t)) return 'receipt';
+  if (/\b(total\b|bill\s*no|item\b|price\b|rate\b)\b/.test(t)) return 'receipt';
+  return 'general';
+}
+
+// ── Structured block types & parser ──────────────────────────────────────────
+
+interface StructuredBlock {
+  type: 'heading' | 'subheading' | 'kv' | 'paragraph' | 'listItem' | 'divider' | 'highlight';
+  content: string;
+  key?: string;
+  value?: string;
+}
+
+/** Returns true if a line looks like a field label (short, no terminal punctuation, no long numbers) */
+function looksLikeLabel(line: string): boolean {
+  if (line.length > 45 || line.length < 2) return false;
+  if (/[.!?;]$/.test(line)) return false;
+  if (/\d{5,}/.test(line)) return false;
+  return /^[A-Za-z][A-Za-z0-9\s'()./&-]+$/.test(line);
+}
+
+function parseStructuredBlocks(text: string): StructuredBlock[] {
+  const rawLines = text.split('\n').map(l => l.trim()).filter(l => l.length > 1);
+  const blocks: StructuredBlock[] = [];
+  let i = 0;
+
+  while (i < rawLines.length) {
+    const line = rawLines[i];
+    const next = rawLines[i + 1] ?? '';
+
+    // ── Dividers ──────────────────────────────────────────────────────────────
+    if (/^[-=_*~]{3,}$/.test(line)) {
+      blocks.push({ type: 'divider', content: line });
+      i++; continue;
+    }
+
+    // ── Explicit KV: "Key: Value" or "Key | Value" ────────────────────────────
+    const kvMatch = line.match(/^([^:|]{2,40}?)\s*[:|]\s*(.{1,120})$/);
+    if (kvMatch && kvMatch[1].length <= 40 && !/[.,;!?]/.test(kvMatch[1])) {
+      blocks.push({ type: 'kv', content: line, key: kvMatch[1].trim(), value: kvMatch[2].trim() });
+      i++; continue;
+    }
+
+    // ── Implicit two-line KV: label line then value line ──────────────────────
+    // e.g. Aadhaar / PAN cards often put the label on one line, value on the next
+    if (looksLikeLabel(line) && next.length > 0 && next.length <= 80 && !/^[-=_]{3,}$/.test(next)) {
+      // Only collapse if next line doesn't itself look like a standalone label
+      const nextLooksLikeLabel = looksLikeLabel(next) && next.split(' ').length <= 5;
+      if (!nextLooksLikeLabel) {
+        blocks.push({ type: 'kv', content: `${line}: ${next}`, key: line, value: next });
+        i += 2; continue;
+      }
+    }
+
+    // ── Heading: ALL-CAPS lines ───────────────────────────────────────────────
+    const lettersOnly = line.replace(/[^a-zA-Z]/g, '');
+    if (line.length >= 3 && line.length <= 100 && lettersOnly.length >= 2 &&
+        lettersOnly === lettersOnly.toUpperCase()) {
+      blocks.push({ type: 'heading', content: line });
+      i++; continue;
+    }
+
+    // ── List items ────────────────────────────────────────────────────────────
+    if (/^[•\-*]\s+/.test(line) || /^\d+[.)]\s+/.test(line)) {
+      const content = line.replace(/^[•\-*\d.)\s]+/, '').trim();
+      blocks.push({ type: 'listItem', content });
+      i++; continue;
+    }
+
+    // ── Highlight: total/amount lines ─────────────────────────────────────────
+    if (line.length <= 60 &&
+        /\b(total|grand\s*total|net\s*amount|amount\s*due|rs\.?|inr\b|₹|\$|€|£)/i.test(line)) {
+      blocks.push({ type: 'highlight', content: line });
+      i++; continue;
+    }
+
+    // ── Subheading: Title Case short lines, no digits ─────────────────────────
+    const words = line.split(/\s+/);
+    if (words.length >= 2 && words.length <= 7 && line.length <= 60 &&
+        !/\d/.test(line) && words.every(w => /^[A-Z]/.test(w))) {
+      blocks.push({ type: 'subheading', content: line });
+      i++; continue;
+    }
+
+    // ── Paragraph: everything else ────────────────────────────────────────────
+    blocks.push({ type: 'paragraph', content: line });
+    i++;
+  }
+
+  return blocks;
+}
+
+/** Serialize structured blocks to Markdown */
+function blocksToMarkdown(blocks: StructuredBlock[]): string {
+  return blocks.map(b => {
+    if (b.type === 'heading')    return `# ${b.content}`;
+    if (b.type === 'subheading') return `## ${b.content}`;
+    if (b.type === 'kv')         return `**${b.key}**: ${b.value}`;
+    if (b.type === 'paragraph')  return b.content;
+    if (b.type === 'listItem')   return `- ${b.content}`;
+    if (b.type === 'divider')    return '---';
+    if (b.type === 'highlight')  return `> **${b.content}**`;
+    return b.content;
+  }).join('\n\n');
+}
+
+// ── Document-type metadata (icon, label, badge colours) ──────────────────────
+const DOC_TYPE_META: Record<DocType, { icon: string; label: string; cls: string }> = {
+  id:        { icon: '🪪', label: 'ID Document',       cls: 'text-blue-700 bg-blue-50 border-blue-200' },
+  medical:   { icon: '🏥', label: 'Medical',           cls: 'text-red-700 bg-red-50 border-red-200' },
+  insurance: { icon: '📋', label: 'Insurance',         cls: 'text-indigo-700 bg-indigo-50 border-indigo-200' },
+  book:      { icon: '📖', label: 'Book / Article',    cls: 'text-amber-700 bg-amber-50 border-amber-200' },
+  receipt:   { icon: '🧾', label: 'Receipt / Invoice', cls: 'text-emerald-700 bg-emerald-50 border-emerald-200' },
+  general:   { icon: '📄', label: 'Document',          cls: 'text-zinc-600 bg-zinc-50 border-zinc-200' },
+};
+
+// ── Rich structured block renderer ────────────────────────────────────────────
+function StructuredBlockView({ blocks }: { blocks: StructuredBlock[] }) {
+  if (blocks.length === 0) {
+    return (
+      <p className="text-zinc-400 italic text-xs text-center py-6">
+        No structured content detected — switch to Plain tab to see raw text.
+      </p>
+    );
+  }
+
+  // Group consecutive KV blocks so they render as one unified data table
+  type Grouped = { kind: 'kv'; items: StructuredBlock[] } | { kind: 'single'; block: StructuredBlock };
+  const grouped: Grouped[] = [];
+  let kvRun: StructuredBlock[] = [];
+  const flushKv = () => {
+    if (kvRun.length) { grouped.push({ kind: 'kv', items: [...kvRun] }); kvRun = []; }
+  };
+  for (const b of blocks) {
+    if (b.type === 'kv') { kvRun.push(b); } else { flushKv(); grouped.push({ kind: 'single', block: b }); }
+  }
+  flushKv();
+
+  return (
+    <div className="space-y-2.5">
+      {grouped.map((g, gi) => {
+        if (g.kind === 'kv') {
+          return (
+            <div key={gi} className="rounded-xl border border-zinc-200 bg-white overflow-hidden divide-y divide-zinc-100 shadow-sm">
+              {g.items.map((b, bi) => (
+                <div key={bi} className="flex items-baseline gap-3 px-3 py-2 hover:bg-zinc-50/80 transition-colors">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 w-[108px] shrink-0 leading-none pt-0.5 select-none">
+                    {b.key}
+                  </span>
+                  <span className="text-xs font-semibold text-zinc-900 leading-relaxed break-words min-w-0">
+                    {b.value}
+                  </span>
+                </div>
+              ))}
+            </div>
+          );
+        }
+
+        const b = g.block;
+        if (b.type === 'heading') {
+          return (
+            <div key={gi} className="flex items-center gap-2 py-0.5">
+              <div className="h-px flex-1 bg-zinc-200" />
+              <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 whitespace-nowrap px-1 shrink-0">
+                {b.content}
+              </span>
+              <div className="h-px flex-1 bg-zinc-200" />
+            </div>
+          );
+        }
+        if (b.type === 'subheading') {
+          return (
+            <h4 key={gi} className="text-xs font-bold text-zinc-800 border-l-2 border-violet-400 pl-2.5 py-0.5">
+              {b.content}
+            </h4>
+          );
+        }
+        if (b.type === 'paragraph') {
+          return (
+            <p key={gi} className="text-xs text-zinc-700 leading-relaxed">
+              {b.content}
+            </p>
+          );
+        }
+        if (b.type === 'listItem') {
+          return (
+            <div key={gi} className="flex gap-2 text-xs text-zinc-700 leading-relaxed">
+              <span className="text-violet-400 font-bold shrink-0 mt-px">•</span>
+              <span>{b.content}</span>
+            </div>
+          );
+        }
+        if (b.type === 'divider') {
+          return <div key={gi} className="border-t border-dashed border-zinc-200 my-1" />;
+        }
+        if (b.type === 'highlight') {
+          return (
+            <div key={gi} className="rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 px-4 py-2.5 flex items-center gap-2">
+              <span className="text-emerald-500 text-base shrink-0">💰</span>
+              <span className="text-sm font-bold text-emerald-800">{b.content}</span>
+            </div>
+          );
+        }
+        return null;
+      })}
+    </div>
+  );
+}
+
 // ── BBox Overlay Canvas ───────────────────────────────────────────────────────
 
 function BBoxOverlay({ result, imgDisplayW, imgDisplayH }: {
@@ -887,8 +1115,9 @@ function ResultCard({
   const [imgDisplaySize, setImgDisplaySize] = useState({ w: 0, h: 0 });
   const imgRef = useRef<HTMLImageElement>(null);
   const [showFullImg, setShowFullImg] = useState(false);
+  const [copiedMd, setCopiedMd] = useState(false);
   const [activeTab, setActiveTab] = useState<'text' | 'structured' | 'confidence' | 'table'>(
-    outputMode === 'table' && result.hasTable ? 'table' : 'text'
+    outputMode === 'table' && result.hasTable ? 'table' : 'structured'
   );
 
   useEffect(() => {
@@ -909,6 +1138,13 @@ function ResultCard({
     });
   };
 
+  const handleCopyMarkdown = () => {
+    copyToClipboard(blocksToMarkdown(result.structuredBlocks), () => {
+      setCopiedMd(true);
+      setTimeout(() => setCopiedMd(false), 2000);
+    });
+  };
+
   const visibleWords = result.words.filter(w => w.confidence >= confidenceFilter);
 
   return (
@@ -920,7 +1156,12 @@ function ResultCard({
           <span className="text-sm font-semibold text-zinc-800 truncate">{result.fileName}</span>
           <span className="text-xs text-zinc-400 shrink-0">{formatBytes(result.fileSize)}</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap justify-end">
+          {result.docType !== 'general' && (
+            <span className={`rounded-full border px-2 py-0.5 text-[11px] font-semibold ${DOC_TYPE_META[result.docType].cls}`}>
+              {DOC_TYPE_META[result.docType].icon} {DOC_TYPE_META[result.docType].label}
+            </span>
+          )}
           <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${confidenceColor(result.confidence)}`}>
             {result.confidence}% confident
           </span>
@@ -1058,7 +1299,14 @@ function ResultCard({
                 <Icon className="h-3 w-3" /> {label}
               </button>
             ))}
-            <div className="ml-auto flex items-center gap-1">
+            <div className="ml-auto flex items-center gap-1 flex-wrap">
+              {activeTab === 'structured' && result.structuredBlocks.length > 0 && (
+                <button onClick={handleCopyMarkdown}
+                  className="flex items-center gap-1 rounded-lg border border-violet-200 bg-violet-50 px-2 py-1 text-xs font-medium text-violet-700 hover:bg-violet-100 transition-colors">
+                  {copiedMd ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
+                  {copiedMd ? 'Copied!' : 'Copy MD'}
+                </button>
+              )}
               <button onClick={handleCopy}
                 className="flex items-center gap-1 rounded-lg border border-zinc-200 px-2 py-1 text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition-colors">
                 {copied ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
@@ -1084,20 +1332,7 @@ function ResultCard({
             )}
 
             {activeTab === 'structured' && (
-              <div className="space-y-3">
-                {result.paragraphs.length === 0 && (
-                  <p className="text-zinc-400 italic text-xs">No structured content found</p>
-                )}
-                {result.paragraphs.map((para, pi) => (
-                  <div key={pi} className="border-l-2 border-violet-200 pl-3">
-                    {para.lines.map((line, li) => (
-                      <p key={li} className="text-xs text-zinc-800 leading-relaxed mb-0.5">
-                        {line.text.trim()}
-                      </p>
-                    ))}
-                  </div>
-                ))}
-              </div>
+              <StructuredBlockView blocks={result.structuredBlocks} />
             )}
 
             {activeTab === 'confidence' && (
@@ -1221,7 +1456,7 @@ export default function ImageToTextClient() {
       threshold: false,
       denoise: false,
     },
-    outputMode: 'plain',
+    outputMode: 'structured',
     confidenceFilter: 0,
     showBboxOverlay: false,
   });
@@ -1295,7 +1530,7 @@ export default function ImageToTextClient() {
                 Confidence scoring, table detection, 18 languages. 100% in-browser — nothing uploaded.
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
-                {['18 languages', 'Multi-pass OCR', 'Table detection', 'ID card & document mode', 'Batch processing', '100% in-browser'].map(f => (
+                {['Smart structured view', '40+ language combos', 'Multi-pass OCR', 'ID · Medical · Receipt · Book', 'Markdown export', '100% in-browser'].map(f => (
                   <span key={f} className="rounded-full border border-violet-200 bg-violet-50 px-2.5 py-0.5 text-[11px] font-semibold text-violet-800">
                     {f}
                   </span>
@@ -1485,22 +1720,71 @@ export default function ImageToTextClient() {
                     <button
                       onClick={() => setOptions(o => ({
                         ...o,
+                        language: 'eng',
+                        psm: '6',
+                        multiPass: true,
+                        preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: true }
+                      }))}
+                      className="rounded-xl border border-amber-300 bg-amber-50 px-3 py-2 text-xs font-medium text-amber-800 hover:bg-amber-100 transition-colors"
+                    >
+                      📖 Book Page
+                    </button>
+                    <button
+                      onClick={() => setOptions(o => ({
+                        ...o,
+                        language: 'eng',
+                        psm: '3',
+                        multiPass: true,
+                        preprocess: { grayscale: true, contrast: true, sharpen: false, upscale: true, threshold: false, denoise: false }
+                      }))}
+                      className="rounded-xl border border-red-300 bg-red-50 px-3 py-2 text-xs font-medium text-red-800 hover:bg-red-100 transition-colors"
+                    >
+                      🏥 Medical Bill
+                    </button>
+                    <button
+                      onClick={() => setOptions(o => ({
+                        ...o,
+                        language: 'eng+hin',
+                        psm: '3',
                         multiPass: true,
                         preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: false }
                       }))}
-                      className="rounded-xl border border-emerald-300 bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-800 hover:bg-emerald-100 transition-colors"
+                      className="rounded-xl border border-blue-300 bg-blue-50 px-3 py-2 text-xs font-medium text-blue-800 hover:bg-blue-100 transition-colors"
                     >
-                      📄 Document / ID card
+                      🪪 ID Proof / Aadhaar
                     </button>
                     <button
-                      onClick={() => {
-                        setOptions(o => ({
-                          ...o,
-                          language: 'eng+hin',
-                          multiPass: true,
-                          preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: false }
-                        }));
-                      }}
+                      onClick={() => setOptions(o => ({
+                        ...o,
+                        language: 'eng',
+                        psm: '3',
+                        multiPass: true,
+                        preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: false }
+                      }))}
+                      className="rounded-xl border border-indigo-300 bg-indigo-50 px-3 py-2 text-xs font-medium text-indigo-800 hover:bg-indigo-100 transition-colors"
+                    >
+                      📋 Insurance Copy
+                    </button>
+                    <button
+                      onClick={() => setOptions(o => ({
+                        ...o,
+                        language: 'eng',
+                        psm: '4',
+                        multiPass: true,
+                        preprocess: { grayscale: true, contrast: true, sharpen: false, upscale: true, threshold: false, denoise: false }
+                      }))}
+                      className="rounded-xl border border-emerald-300 bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-800 hover:bg-emerald-100 transition-colors"
+                    >
+                      🧾 Receipt / Invoice
+                    </button>
+                    <button
+                      onClick={() => setOptions(o => ({
+                        ...o,
+                        language: 'eng+hin',
+                        psm: '3',
+                        multiPass: true,
+                        preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: false }
+                      }))}
                       className="rounded-xl border border-orange-300 bg-orange-50 px-3 py-2 text-xs font-medium text-orange-800 hover:bg-orange-100 transition-colors"
                     >
                       🇮🇳 PAN / Aadhaar card
@@ -1509,15 +1793,16 @@ export default function ImageToTextClient() {
                       onClick={() => setOptions(o => ({
                         ...o,
                         language: 'eng+guj',
+                        psm: '3',
                         multiPass: true,
                         preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: false }
                       }))}
-                      className="rounded-xl border border-blue-300 bg-blue-50 px-3 py-2 text-xs font-medium text-blue-800 hover:bg-blue-100 transition-colors"
+                      className="rounded-xl border border-cyan-300 bg-cyan-50 px-3 py-2 text-xs font-medium text-cyan-800 hover:bg-cyan-100 transition-colors"
                     >
-                      🇮🇳 Gujarati document
+                      🇮🇳 Gujarati Document
                     </button>
                   </div>
-                  <p className="mt-1 text-[11px] text-zinc-400">Indian ID preset switches to English+Hindi language — eliminates garbled Hindi artifacts</p>
+                  <p className="mt-1 text-[11px] text-zinc-400">Presets tune language model, PSM layout mode, and image preprocessing for each document type.</p>
                 </div>
               </div>
 
@@ -1627,49 +1912,49 @@ export default function ImageToTextClient() {
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {[
                 {
-                  icon: '📸',
-                  title: 'Photos & Screenshots',
-                  desc: 'Extract text from smartphone photos, screenshots, and digital images with high accuracy.',
+                  icon: '🪪',
+                  title: 'ID Cards & Documents',
+                  desc: 'PAN, Aadhaar, Passport, Driving Licence — extracts all fields, auto-detects document type, shows as labelled key-value pairs.',
                 },
                 {
-                  icon: '🖨️',
-                  title: 'Scanned Documents',
-                  desc: 'Process scanned PDFs, physical document scans, and faxes — even low-quality scans.',
+                  icon: '🏥',
+                  title: 'Medical Bills & Reports',
+                  desc: 'Prescriptions, lab reports, discharge summaries — fields parsed with totals highlighted in an easily scannable layout.',
+                },
+                {
+                  icon: '🧾',
+                  title: 'Receipts & Invoices',
+                  desc: 'GST invoices, store receipts, e-bills — itemised data detected, totals and tax rows highlighted automatically.',
+                },
+                {
+                  icon: '📋',
+                  title: 'Insurance Copies',
+                  desc: 'Policy documents, premium receipts — policy number, insured name, sum assured parsed into a clean structured view.',
+                },
+                {
+                  icon: '📖',
+                  title: 'Book Pages & Articles',
+                  desc: 'Chapter headings, body paragraphs, footnotes — reconstructed as clean readable text with proper heading hierarchy.',
                 },
                 {
                   icon: '🌐',
-                  title: '18 Languages',
-                  desc: 'English, French, German, Spanish, Arabic, Hindi, Chinese, Japanese, Korean and more.',
+                  title: '40+ Language Combinations',
+                  desc: 'English, Hindi, Gujarati, Tamil, Bengali, Arabic, Chinese, Japanese and more. Bilingual combos prevent garbled text from non-Latin scripts.',
                 },
                 {
-                  icon: '📊',
-                  title: 'Table Detection',
-                  desc: 'Automatically detects tables in the image and renders them as a structured grid.',
-                },
-                {
-                  icon: '🎨',
-                  title: 'Confidence Coloring',
-                  desc: 'Every word is color-coded by OCR confidence — instantly spot unreliable results.',
+                  icon: '✨',
+                  title: 'Smart Structured View',
+                  desc: 'Auto-parses OCR output into headings, key-value pairs, lists, highlights and paragraphs. Export directly as Markdown.',
                 },
                 {
                   icon: '⚙️',
                   title: 'Multi-pass + Pre-processing',
-                  desc: 'Runs Auto + Sparse passes, merges only high-confidence discoveries. Catches codes and IDs missed by single-pass without adding noise. Plus grayscale, contrast, sharpen, smart upscale, denoise, and Otsu binarization.',
-                },
-                {
-                  icon: '🔍',
-                  title: 'Bounding Box Overlay',
-                  desc: 'Toggle word-level bounding boxes directly on the image, color-coded by confidence.',
-                },
-                {
-                  icon: '📦',
-                  title: 'Batch Processing',
-                  desc: 'Upload and process up to 10 images at once — each result shown as a separate card.',
+                  desc: 'Auto + Sparse OCR passes merged at high confidence. Grayscale, contrast boost, smart upscale, denoise, and Otsu binarization for difficult scans.',
                 },
                 {
                   icon: '💾',
-                  title: 'Export: TXT & JSON',
-                  desc: 'Download plain text or structured JSON with full word-level data and bounding boxes.',
+                  title: 'Export: TXT · JSON · Markdown',
+                  desc: 'Plain text, full-detail JSON (word-level bboxes + confidence), or copy as clean Markdown — one click.',
                 },
               ].map(f => (
                 <div key={f.title} className="flex gap-3 rounded-xl bg-zinc-50 border border-zinc-100 p-4">
@@ -1695,16 +1980,16 @@ export default function ImageToTextClient() {
             <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-3">Tips for better accuracy</p>
             <ul className="grid gap-1.5 sm:grid-cols-2 text-xs text-zinc-600">
               {[
-                'For PAN card / Aadhaar: use the "🇮🇳 Indian ID" preset — it sets English+Hindi language to eliminate garbled Hindi text',
-                'For any bilingual document, pick an "English + [Language]" option from the Language menu',
-                'Multi-pass scan (default ON) finds codes and IDs that single-pass OCR misses',
-                'Always enable Grayscale for images with coloured or gradient backgrounds',
-                'Enable "Boost contrast" for faded or low-contrast documents',
-                'Use "Smart upscale" for small or low-resolution images',
-                'Try "Binarize (Otsu)" for very noisy scanned documents',
-                '"Sparse text" mode works best for labels, screenshots with scattered text',
-                'Use "Single column" for newspaper columns or narrow text layouts',
-                'For receipts or forms, "Single block" mode often performs better',
+                'Use a document preset (Book Page, Medical Bill, ID Proof, etc.) — each one tunes PSM mode, language, and pre-processing for that document type',
+                'For PAN / Aadhaar: use "🪪 ID Proof / Aadhaar" preset — English+Hindi eliminates garbled Devanagari artifacts',
+                'For any bilingual document, pick an "English + [Language]" option — it prevents noise from non-Latin scripts',
+                'Multi-pass scan (default ON) finds codes, IDs, and fields that single-pass OCR misses on coloured backgrounds',
+                '"Structured" tab (default) auto-parses into key-value pairs, headings, totals — use "Copy MD" to export clean Markdown',
+                'Always enable Grayscale for coloured backgrounds (PAN cards, ID cards, invoices)',
+                'Enable "Boost contrast" for faded, scanned, or low-contrast documents',
+                'Use "Smart upscale" for small or low-resolution images (mobile photos)',
+                'Try "Binarize (Otsu)" + "Denoise" for very noisy or grainy scanned documents',
+                '"Book Page" preset uses Single Block PSM — ideal for full pages of continuous text',
               ].map((tip, i) => (
                 <li key={i} className="flex gap-2 items-start">
                   <span className="text-violet-400 mt-0.5 shrink-0">→</span>
