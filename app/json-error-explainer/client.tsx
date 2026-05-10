@@ -599,7 +599,11 @@ function cn(...cls: (string | false | undefined | null)[]): string { return cls.
 function useCopy() {
   const [copied, setCopied] = useState(false);
   const copy = useCallback((text: string, label?: string) => {
-    navigator.clipboard.writeText(text).then(() => { setCopied(true); toast.success(label ?? 'Copied!', { duration: 1800 }); setTimeout(() => setCopied(false), 2000); });
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      toast.success(label ?? 'Copied!', { duration: 1800 });
+      setTimeout(() => setCopied(false), 2000);
+    });
   }, []);
   return { copied, copy };
 }
@@ -609,26 +613,33 @@ function useCopy() {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function SeverityPill({ severity }: { severity: ErrorSeverity }) {
+  const styles = {
+    critical: 'bg-red-50 text-red-600 border-red-200',
+    warning:  'bg-amber-50 text-amber-600 border-amber-200',
+    info:     'bg-blue-50 text-blue-600 border-blue-200',
+  };
+  const dots = { critical: '●', warning: '◆', info: '○' };
   return (
-    <span className={cn('inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border',
-      severity === 'critical' ? 'bg-red-50 text-red-600 border-red-200' :
-      severity === 'warning'  ? 'bg-amber-50 text-amber-600 border-amber-200' :
-                                'bg-blue-50 text-blue-600 border-blue-200')}>
-      {severity === 'critical' ? '●' : severity === 'warning' ? '◆' : '○'} {severity}
+    <span className={cn('inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border', styles[severity])}>
+      {dots[severity]} {severity}
     </span>
   );
 }
 
 function AutoFixBadge() {
-  return <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full">✦ auto-fix</span>;
+  return (
+    <span className="inline-flex items-center gap-0.5 text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full">
+      ✦ auto-fix
+    </span>
+  );
 }
 
 function CodeBlock({ code, lang }: { code: string; lang: string }) {
   const { copy, copied } = useCopy();
   return (
     <div className="rounded-xl overflow-hidden border border-zinc-800">
-      <div className="flex items-center justify-between bg-zinc-900 px-3 py-2">
-        <span className="text-[11px] text-zinc-400 font-mono font-medium">{lang}</span>
+      <div className="flex items-center justify-between bg-zinc-900 px-3 py-1.5">
+        <span className="text-[11px] text-zinc-400 font-mono">{lang}</span>
         <button onClick={() => copy(code, 'Copied!')} className="text-zinc-500 hover:text-zinc-200 transition-colors p-0.5 rounded">
           {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
         </button>
@@ -638,35 +649,52 @@ function CodeBlock({ code, lang }: { code: string; lang: string }) {
   );
 }
 
+function Section({ label, icon, children }: { label: string; icon: React.ReactNode; children: React.ReactNode }) {
+  return (
+    <div>
+      <p className="flex items-center gap-1 text-[10px] font-bold text-zinc-400 uppercase tracking-[0.1em] mb-1.5">{icon} {label}</p>
+      {children}
+    </div>
+  );
+}
+
 function ErrorCard({ error, expanded, onToggle, onJumpToLine }: {
   error: JsonError; expanded: boolean; onToggle: () => void; onJumpToLine: (line: number) => void;
 }) {
-  const stripe = error.severity === 'critical' ? 'bg-red-500' : error.severity === 'warning' ? 'bg-amber-400' : 'bg-blue-400';
-  const headerBg = expanded
-    ? error.severity === 'critical' ? 'bg-red-50/80' : error.severity === 'warning' ? 'bg-amber-50/80' : 'bg-blue-50/80'
-    : 'bg-white hover:bg-zinc-50/60';
+  const stripeColor = error.severity === 'critical' ? 'bg-red-500' : error.severity === 'warning' ? 'bg-amber-400' : 'bg-blue-400';
+  const expandedBg  = error.severity === 'critical' ? 'bg-red-50/60' : error.severity === 'warning' ? 'bg-amber-50/60' : 'bg-blue-50/60';
 
   return (
-    <div className={cn('relative rounded-xl border overflow-hidden transition-all duration-150',
-      expanded ? 'border-zinc-300 shadow-md' : 'border-zinc-200 shadow-sm hover:border-zinc-300')}>
+    <div className={cn(
+      'relative rounded-xl border overflow-hidden transition-all duration-150',
+      expanded ? 'border-zinc-300 shadow-md' : 'border-zinc-200 shadow-sm hover:border-zinc-300 hover:shadow',
+    )}>
       {/* Left severity stripe */}
-      <div className={cn('absolute left-0 top-0 bottom-0 w-[3px]', stripe)} />
+      <div className={cn('absolute left-0 top-0 bottom-0 w-[3px] z-10', stripeColor)} />
 
-      {/* Header row */}
-      <button onClick={onToggle} className={cn('w-full flex items-start gap-3 pl-4 pr-3 py-3 text-left transition-colors', headerBg)}>
-        <span className="text-base shrink-0 mt-0.5 select-none">{error.icon}</span>
+      {/* Header */}
+      <button
+        onClick={onToggle}
+        className={cn(
+          'w-full flex items-start gap-3 pl-4 pr-3 pt-3 pb-2 text-left transition-colors',
+          expanded ? expandedBg : 'bg-white hover:bg-zinc-50/70',
+        )}
+      >
+        <span className="text-[15px] shrink-0 mt-0.5 select-none leading-none">{error.icon}</span>
         <div className="flex-1 min-w-0">
-          <div className="flex flex-wrap items-center gap-1.5 mb-1">
-            <span className="font-semibold text-[13px] text-zinc-900 leading-tight">{error.title}</span>
-            {error.count && error.count > 1 && (
+          <div className="flex flex-wrap items-center gap-1.5 mb-0.5">
+            <span className="font-semibold text-[13px] text-zinc-900 leading-snug">{error.title}</span>
+            {(error.count ?? 0) > 1 && (
               <span className="text-[10px] font-bold bg-zinc-100 text-zinc-500 border border-zinc-200 px-1.5 py-0.5 rounded-full">×{error.count}</span>
             )}
           </div>
           <p className="text-[11px] text-zinc-500 leading-snug line-clamp-2">{error.message}</p>
         </div>
         <div className="flex flex-col items-end gap-1.5 shrink-0 ml-1">
-          <button onClick={e => { e.stopPropagation(); onJumpToLine(error.line); }}
-            className="text-[10px] font-mono font-semibold text-violet-600 hover:text-violet-800 bg-violet-50 hover:bg-violet-100 border border-violet-200 rounded px-1.5 py-0.5 transition-colors">
+          <button
+            onClick={e => { e.stopPropagation(); onJumpToLine(error.line); }}
+            className="text-[10px] font-mono font-semibold text-violet-600 hover:text-violet-800 bg-violet-50 hover:bg-violet-100 border border-violet-200 rounded px-1.5 py-0.5 transition-colors"
+          >
             L{error.line}
           </button>
           <ChevronDown className={cn('w-3.5 h-3.5 text-zinc-400 transition-transform duration-200', expanded && 'rotate-180')} />
@@ -674,23 +702,23 @@ function ErrorCard({ error, expanded, onToggle, onJumpToLine }: {
       </button>
 
       {/* Badge row */}
-      <div className={cn('flex items-center gap-1.5 pl-[3px] pr-3 pb-2.5 pl-4', headerBg)}>
+      <div className={cn('flex items-center gap-1.5 pl-4 pr-3 pb-2.5', expanded ? expandedBg : 'bg-white')}>
         <SeverityPill severity={error.severity} />
         {error.autoFixable && <AutoFixBadge />}
       </div>
 
       {/* Expanded body */}
       {expanded && (
-        <div className="border-t border-zinc-100 divide-y divide-zinc-50 bg-white">
+        <div className="border-t border-zinc-100 bg-white divide-y divide-zinc-50">
           <div className="px-4 py-3 space-y-3">
             <Section label="What happened" icon={<BookOpen className="w-3 h-3" />}>
-              <p className="text-[13px] text-zinc-700 leading-relaxed">{error.explanation}</p>
+              <p className="text-[12px] text-zinc-700 leading-relaxed">{error.explanation}</p>
             </Section>
             <Section label="JSON Spec" icon={<ExternalLink className="w-3 h-3" />}>
               <p className="text-[11px] text-zinc-500 font-mono bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 leading-relaxed">{error.spec}</p>
             </Section>
             <Section label="How to fix" icon={<Wand2 className="w-3 h-3" />}>
-              <p className="text-[13px] text-zinc-700 leading-relaxed">{error.howToFix}</p>
+              <p className="text-[12px] text-zinc-700 leading-relaxed">{error.howToFix}</p>
             </Section>
           </div>
 
@@ -698,11 +726,11 @@ function ErrorCard({ error, expanded, onToggle, onJumpToLine }: {
             <div className="px-4 py-3 grid grid-cols-2 gap-2">
               <div>
                 <p className="text-[10px] font-bold text-red-500 uppercase tracking-wider mb-1.5">❌ Before</p>
-                <pre className="text-[11px] bg-red-50 border border-red-100 rounded-lg px-3 py-2.5 font-mono text-red-800 overflow-x-auto whitespace-pre-wrap">{error.snippet}</pre>
+                <pre className="text-[11px] bg-red-50 border border-red-100 rounded-lg px-3 py-2 font-mono text-red-800 overflow-x-auto whitespace-pre-wrap">{error.snippet}</pre>
               </div>
               <div>
                 <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1.5">✅ After</p>
-                <pre className="text-[11px] bg-emerald-50 border border-emerald-100 rounded-lg px-3 py-2.5 font-mono text-emerald-800 overflow-x-auto whitespace-pre-wrap">{error.fixedSnippet}</pre>
+                <pre className="text-[11px] bg-emerald-50 border border-emerald-100 rounded-lg px-3 py-2 font-mono text-emerald-800 overflow-x-auto whitespace-pre-wrap">{error.fixedSnippet}</pre>
               </div>
             </div>
           )}
@@ -736,21 +764,12 @@ function ErrorCard({ error, expanded, onToggle, onJumpToLine }: {
   );
 }
 
-function Section({ label, icon, children }: { label: string; icon: React.ReactNode; children: React.ReactNode }) {
-  return (
-    <div>
-      <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.1em] mb-1.5 flex items-center gap-1">{icon} {label}</p>
-      {children}
-    </div>
-  );
-}
-
 function HealthRing({ score }: { score: number }) {
   const color = score === 100 ? '#22c55e' : score >= 60 ? '#f59e0b' : '#ef4444';
   const label = score === 100 ? 'Perfect' : score >= 80 ? 'Good' : score >= 50 ? 'Poor' : 'Critical';
   const r = 20; const circ = 2 * Math.PI * r; const dash = (score / 100) * circ;
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-2.5">
       <div className="relative w-12 h-12 shrink-0">
         <svg className="w-12 h-12 -rotate-90" viewBox="0 0 48 48">
           <circle cx="24" cy="24" r={r} fill="none" stroke="#e4e4e7" strokeWidth="4" />
@@ -761,7 +780,7 @@ function HealthRing({ score }: { score: number }) {
         <span className="absolute inset-0 flex items-center justify-center text-[11px] font-bold" style={{ color }}>{score}</span>
       </div>
       <div>
-        <p className="text-sm font-semibold text-zinc-800">{label}</p>
+        <p className="text-sm font-bold text-zinc-800">{label}</p>
         <p className="text-[11px] text-zinc-400">Health score</p>
       </div>
     </div>
@@ -786,20 +805,33 @@ export default function JsonErrorExplainerClient() {
   const gutterRef = useRef<HTMLDivElement>(null);
 
   const handleEditorScroll = useCallback(() => {
-    if (gutterRef.current && textareaRef.current) gutterRef.current.scrollTop = textareaRef.current.scrollTop;
+    if (gutterRef.current && textareaRef.current)
+      gutterRef.current.scrollTop = textareaRef.current.scrollTop;
   }, []);
 
   const lines = useMemo(() => input.split('\n'), [input]);
 
   const errorLineSet = useMemo(() => {
     const s = new Set<number>();
-    if (result) { for (const e of result.errors) { if (e.severity === 'critical') s.add(e.line); for (const l of e.allLines ?? []) s.add(l); } }
+    if (result) {
+      for (const e of result.errors) {
+        if (e.severity === 'critical') s.add(e.line);
+        for (const l of e.allLines ?? []) s.add(l);
+      }
+    }
     return s;
   }, [result]);
 
   const warningLineSet = useMemo(() => {
     const s = new Set<number>();
-    if (result) { for (const e of result.errors) { if (e.severity === 'warning') { s.add(e.line); for (const l of e.allLines ?? []) s.add(l); } } }
+    if (result) {
+      for (const e of result.errors) {
+        if (e.severity === 'warning') {
+          s.add(e.line);
+          for (const l of e.allLines ?? []) s.add(l);
+        }
+      }
+    }
     return s;
   }, [result]);
 
@@ -832,7 +864,9 @@ export default function JsonErrorExplainerClient() {
 
   const applyFixed = useCallback(() => {
     if (!fixResult) return;
-    setInput(fixResult.fixed); setFixResult(null); setShowFixPanel(false);
+    setInput(fixResult.fixed);
+    setFixResult(null);
+    setShowFixPanel(false);
     toast.success('Fixed JSON loaded into editor');
   }, [fixResult]);
 
@@ -841,8 +875,7 @@ export default function JsonErrorExplainerClient() {
     const lns = ta.value.split('\n'); let offset = 0;
     for (let i = 0; i < line - 1 && i < lns.length; i++) offset += lns[i].length + 1;
     ta.focus(); ta.setSelectionRange(offset, offset + (lns[line - 1]?.length ?? 0));
-    const lineH = 24;
-    ta.scrollTop = Math.max(0, (line - 5) * lineH);
+    ta.scrollTop = Math.max(0, (line - 5) * 24);
     if (gutterRef.current) gutterRef.current.scrollTop = ta.scrollTop;
   }, []);
 
@@ -862,8 +895,8 @@ export default function JsonErrorExplainerClient() {
   }, [result, filterSeverity]);
 
   const autoFixableCount = useMemo(() => result ? result.errors.filter(e => e.autoFixable).length : 0, [result]);
-  const criticalCount = useMemo(() => result ? result.errors.filter(e => e.severity === 'critical').length : 0, [result]);
-  const warningCount = useMemo(() => result ? result.errors.filter(e => e.severity === 'warning').length : 0, [result]);
+  const criticalCount    = useMemo(() => result ? result.errors.filter(e => e.severity === 'critical').length : 0, [result]);
+  const warningCount     = useMemo(() => result ? result.errors.filter(e => e.severity === 'warning').length : 0, [result]);
 
   const { copy: copyFixed, copied: copiedFixed } = useCopy();
 
@@ -872,161 +905,144 @@ export default function JsonErrorExplainerClient() {
     return buildLineDiff(input, fixResult.fixed);
   }, [fixResult, showFixPanel, input]);
 
-  const clearAll = useCallback(() => { setInput(''); setResult(null); setFixResult(null); setShowFixPanel(false); }, []);
+  const clearAll = useCallback(() => {
+    setInput(''); setResult(null); setFixResult(null); setShowFixPanel(false);
+  }, []);
+
+  // ── Render ──────────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen bg-[#f8f9fb]">
+    <div className="min-h-screen bg-[#f5f6f8]">
 
-      {/* ── Top nav bar ──────────────────────────────────────────────── */}
-      <header className="bg-white border-b border-zinc-200/80 sticky top-0 z-40 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
-        <div className="max-w-[1320px] mx-auto px-4 sm:px-6 h-14 flex items-center gap-3">
-          <Link href="/" className="flex items-center gap-1.5 text-zinc-400 hover:text-zinc-700 transition-colors shrink-0 group">
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
-            <span className="text-sm font-medium hidden sm:inline">Home</span>
+      {/* ══ Sticky nav ══════════════════════════════════════════════════════ */}
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-zinc-200 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center gap-2.5">
+          <Link href="/"
+            className="flex items-center gap-1.5 text-zinc-400 hover:text-zinc-700 transition-colors group shrink-0 py-2 -my-2">
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform duration-150" />
+            <span className="text-sm hidden sm:inline">Home</span>
           </Link>
-          <div className="w-px h-5 bg-zinc-200" />
-          <div className="flex-1 min-w-0 flex items-center gap-2.5">
-            <span className="text-sm font-bold text-zinc-900">AI JSON Error Explainer</span>
-            <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-bold bg-violet-100 text-violet-700 border border-violet-200/80 rounded-full px-2 py-0.5 uppercase tracking-wider">
-              <Sparkles className="w-2.5 h-2.5" /> Smart
-            </span>
-            <span className="hidden md:inline text-[11px] text-zinc-400">· Detects all errors at once · One-click fix · 100% client-side</span>
-          </div>
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="hidden sm:flex items-center gap-1.5 text-[11px] text-zinc-400 border border-zinc-200 rounded-lg px-2.5 py-1.5 font-mono bg-zinc-50">
-              <kbd className="font-mono">⌘</kbd><kbd className="font-mono">↵</kbd> to analyse
-            </span>
-          </div>
+          <span className="text-zinc-300 text-lg font-light select-none">/</span>
+          <span className="text-sm font-bold text-zinc-900 truncate">AI JSON Error Explainer</span>
+          <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-bold bg-violet-100 text-violet-700 rounded-full px-2 py-0.5 uppercase tracking-wide shrink-0 select-none">
+            <Sparkles className="w-2.5 h-2.5" /> Smart
+          </span>
+          <div className="flex-1" />
+          <span className="hidden md:flex items-center gap-1 text-[11px] text-zinc-400 font-mono border border-zinc-200 rounded-lg px-2.5 py-1.5 bg-zinc-50 shrink-0">
+            <kbd className="font-mono">⌘</kbd><kbd className="font-mono">↵</kbd>&nbsp;analyse
+          </span>
         </div>
       </header>
 
-      <div className="max-w-[1320px] mx-auto px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* ── Hero ──────────────────────────────────────────────────── */}
-        <div className="pt-8 pb-6">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-            <div className="flex-1 min-w-0">
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-900 leading-tight mb-2">
-                JSON Error Explainer
-              </h1>
-              <p className="text-sm text-zinc-500 max-w-xl leading-relaxed">
-                Paste any broken JSON — every error is detected instantly with plain-English explanations,
-                RFC spec references, and one-click auto-fix.
-              </p>
-              <div className="flex flex-wrap items-center gap-2 mt-3">
-                {[
-                  { icon: <Shield className="w-3 h-3" />, text: '14 error types' },
-                  { icon: <Wand2 className="w-3 h-3" />, text: 'One-click fix' },
-                  { icon: <GitCompare className="w-3 h-3" />, text: 'Diff view' },
-                  { icon: <Zap className="w-3 h-3" />, text: 'Live analysis' },
-                ].map(({ icon, text }) => (
-                  <span key={text} className="inline-flex items-center gap-1 text-[11px] font-medium text-zinc-600 bg-white border border-zinc-200 rounded-full px-2.5 py-1">
-                    {icon} {text}
-                  </span>
-                ))}
-              </div>
-            </div>
+        {/* ══ Hero — centered ═════════════════════════════════════════════ */}
+        <div className="pt-10 pb-7 text-center">
+          {/* Pill badge */}
+          <div className="inline-flex items-center gap-1.5 bg-violet-50 border border-violet-200 rounded-full px-3.5 py-1 text-xs font-semibold text-violet-700 mb-5 select-none">
+            <Sparkles className="w-3 h-3" />
+            14 error types · Auto-fix · RFC spec · 100% browser-only · no upload
+          </div>
 
-            {/* Example picker — always visible, horizontal scroll on mobile */}
-            <div className="shrink-0">
-              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-400 mb-2">Try an example</p>
-              <div className="flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:max-w-[380px]" style={{ scrollbarWidth: 'none' }}>
-                {EXAMPLES.map(ex => (
-                  <button key={ex.name} onClick={() => setInput(ex.json.trim())}
-                    className="flex-none flex flex-col items-center gap-1 bg-white hover:bg-violet-50 border border-zinc-200 hover:border-violet-300 rounded-xl px-3 py-2.5 transition-all group min-w-[72px] sm:min-w-0">
-                    <span className="text-xl group-hover:scale-110 transition-transform select-none">{ex.icon}</span>
-                    <span className="text-[10px] font-semibold text-zinc-600 group-hover:text-violet-700 leading-tight whitespace-nowrap">{ex.name}</span>
-                  </button>
-                ))}
-              </div>
+          <h1 className="text-3xl sm:text-[2.25rem] font-extrabold text-zinc-900 tracking-tight leading-tight mb-3">
+            AI JSON Error Explainer
+          </h1>
+          <p className="text-base text-zinc-500 max-w-lg mx-auto leading-relaxed mb-7">
+            Paste any broken JSON and get instant, plain-English explanations for <em className="not-italic font-semibold text-zinc-600">every</em> error at once — with RFC spec references and one-click auto-fix.
+          </p>
+
+          {/* Feature chips */}
+          <div className="flex flex-wrap justify-center gap-2 mb-8">
+            {[
+              { icon: <Zap className="w-3 h-3" />,          label: 'Live analysis' },
+              { icon: <Wand2 className="w-3 h-3" />,         label: 'One-click fix' },
+              { icon: <GitCompare className="w-3 h-3" />,    label: 'Diff view' },
+              { icon: <Shield className="w-3 h-3" />,        label: '14 error types' },
+              { icon: <CheckCircle2 className="w-3 h-3" />,  label: 'RFC 8259 spec' },
+            ].map(({ icon, label }) => (
+              <span key={label}
+                className="inline-flex items-center gap-1.5 text-[12px] font-medium text-zinc-600 bg-white border border-zinc-200 rounded-full px-3 py-1 shadow-sm select-none">
+                {icon} {label}
+              </span>
+            ))}
+          </div>
+
+          {/* Example picker */}
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400 mb-3 select-none">
+              Try an example →
+            </p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {EXAMPLES.map(ex => (
+                <button key={ex.name} onClick={() => setInput(ex.json.trim())}
+                  className="group flex items-center gap-2.5 bg-white hover:bg-violet-50 border border-zinc-200 hover:border-violet-300 rounded-xl px-3.5 py-2.5 transition-all shadow-sm hover:shadow-md active:scale-[0.97]">
+                  <span className="text-lg select-none group-hover:scale-110 transition-transform duration-150">{ex.icon}</span>
+                  <div className="text-left">
+                    <p className="text-[11px] font-bold text-zinc-700 group-hover:text-violet-700 leading-tight">{ex.name}</p>
+                    <p className="text-[10px] text-zinc-400 group-hover:text-violet-500 leading-tight">{ex.desc}</p>
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* ── Source detection + stats row ─────────────────────────── */}
-        {result && input.trim() && (
-          <div className="mb-4 flex flex-col sm:flex-row gap-3">
-            {/* Source badge */}
-            {result.source && (
-              <div className="flex items-center gap-3 bg-violet-50 border border-violet-200 rounded-2xl px-4 py-3 flex-1 min-w-0">
-                <span className="text-2xl shrink-0 select-none">{result.source.icon}</span>
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-sm font-bold text-violet-900 leading-tight">Source: {result.source.name}</span>
-                    <span className={cn('text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full border',
-                      result.source.confidence === 'high' ? 'bg-emerald-100 text-emerald-700 border-emerald-200' : 'bg-amber-100 text-amber-600 border-amber-200')}>
-                      {result.source.confidence} confidence
-                    </span>
+        {/* ══ Main 2-col grid ═════════════════════════════════════════════ */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-5 items-start pb-12">
+
+          {/* ── Left: Editor + fix output ── */}
+          <div className="flex flex-col gap-4 min-w-0">
+
+            {/* Dark editor card */}
+            <div className="rounded-2xl overflow-hidden border border-zinc-800/90 shadow-[0_8px_40px_rgba(0,0,0,0.22)]">
+
+              {/* Titlebar */}
+              <div className="flex items-center justify-between bg-zinc-900 border-b border-zinc-800 px-4 h-10 shrink-0">
+                <div className="flex items-center gap-3">
+                  {/* macOS dots */}
+                  <div className="flex gap-1.5 select-none">
+                    <span className="w-3 h-3 rounded-full bg-[#ff5f57]" />
+                    <span className="w-3 h-3 rounded-full bg-[#febc2e]" />
+                    <span className="w-3 h-3 rounded-full bg-[#28c840]" />
                   </div>
-                  <p className="text-[11px] text-violet-700/80 mt-0.5 leading-snug truncate">{result.source.tip}</p>
-                </div>
-              </div>
-            )}
-
-            {/* Stats cards */}
-            <div className="grid grid-cols-4 gap-2 shrink-0">
-              {[
-                { n: criticalCount, label: 'Critical', color: criticalCount > 0 ? 'text-red-600 bg-red-50 border-red-200' : 'text-zinc-400 bg-white border-zinc-200', icon: <AlertCircle className="w-3.5 h-3.5" /> },
-                { n: warningCount, label: 'Warnings', color: warningCount > 0 ? 'text-amber-600 bg-amber-50 border-amber-200' : 'text-zinc-400 bg-white border-zinc-200', icon: <AlertTriangle className="w-3.5 h-3.5" /> },
-                { n: autoFixableCount, label: 'Auto-fix', color: autoFixableCount > 0 ? 'text-emerald-600 bg-emerald-50 border-emerald-200' : 'text-zinc-400 bg-white border-zinc-200', icon: <Wand2 className="w-3.5 h-3.5" /> },
-                { n: null, label: result.isValid ? 'Valid ✓' : 'Invalid', color: result.isValid ? 'text-emerald-700 bg-emerald-50 border-emerald-200' : 'text-red-600 bg-red-50 border-red-200', icon: result.isValid ? <CheckCircle2 className="w-3.5 h-3.5" /> : <X className="w-3.5 h-3.5" /> },
-              ].map(({ n, label, color, icon }) => (
-                <div key={label} className={cn('flex flex-col items-center justify-center rounded-2xl border px-3 py-3 text-center min-w-[72px]', color)}>
-                  <div className="flex items-center gap-1 mb-0.5">{icon}<span className="text-base font-extrabold leading-none">{n ?? ''}</span></div>
-                  <span className="text-[10px] font-semibold leading-tight">{label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* ── Main 2-col grid ──────────────────────────────────────── */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-4 items-start">
-
-          {/* ── LEFT: Editor + fix panel ────────────────────────────── */}
-          <div className="flex flex-col gap-4">
-
-            {/* Editor card */}
-            <div className="rounded-2xl overflow-hidden border border-zinc-800/90 shadow-xl bg-zinc-950">
-
-              {/* Editor top bar */}
-              <div className="flex items-center justify-between bg-zinc-900 border-b border-zinc-800 px-4 py-2.5">
-                <div className="flex items-center gap-2.5">
-                  {/* Traffic lights */}
-                  <div className="flex gap-1.5">
-                    <span className="w-3 h-3 rounded-full bg-red-500/70" />
-                    <span className="w-3 h-3 rounded-full bg-amber-500/70" />
-                    <span className="w-3 h-3 rounded-full bg-emerald-500/70" />
-                  </div>
-                  <span className="text-[11px] font-semibold text-zinc-400 font-mono ml-1">JSON Input</span>
+                  <span className="text-[11px] font-medium text-zinc-400 font-mono select-none">JSON Input</span>
                   {analysing && (
-                    <span className="text-[10px] text-violet-400 flex items-center gap-1 animate-pulse">
-                      <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-ping" /> analysing…
+                    <span className="flex items-center gap-1 text-[10px] text-violet-400 animate-pulse select-none">
+                      <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-ping inline-block" />
+                      analysing…
                     </span>
                   )}
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[11px] text-zinc-500 font-mono">{lines.length} lines</span>
+                  <span className="text-[11px] text-zinc-600 font-mono">{lines.length} L</span>
                   {input && (
-                    <button onClick={clearAll} className="flex items-center gap-1 text-[11px] text-zinc-500 hover:text-zinc-200 border border-zinc-700 hover:border-zinc-500 rounded-lg px-2.5 py-1 transition-colors">
+                    <button onClick={clearAll}
+                      className="flex items-center gap-1 text-[11px] text-zinc-500 hover:text-zinc-200 border border-zinc-700 hover:border-zinc-500 rounded-md px-2 py-0.5 transition-colors">
                       <RotateCcw className="w-3 h-3" /> Clear
                     </button>
                   )}
                 </div>
               </div>
 
-              {/* Editor area */}
-              <div className="flex" style={{ height: '480px' }}>
-                {/* Gutter */}
-                <div ref={gutterRef} className="w-12 bg-zinc-900 select-none overflow-hidden flex-shrink-0 font-mono py-4 border-r border-zinc-800" style={{ scrollbarWidth: 'none' }}>
+              {/* Editor body */}
+              <div className="flex" style={{ height: '460px' }}>
+                {/* Line gutter */}
+                <div
+                  ref={gutterRef}
+                  className="w-11 bg-zinc-900/70 select-none overflow-hidden shrink-0 border-r border-zinc-800/60"
+                  style={{ paddingTop: '14px', scrollbarWidth: 'none' }}
+                >
                   {lines.map((_, i) => {
                     const ln = i + 1;
-                    const isErr = errorLineSet.has(ln);
+                    const isErr  = errorLineSet.has(ln);
                     const isWarn = !isErr && warningLineSet.has(ln);
                     return (
-                      <div key={i} className={cn('h-6 text-[11px] leading-6 flex items-center justify-end pr-2.5 transition-colors select-none',
-                        isErr ? 'text-red-400 font-bold' : isWarn ? 'text-amber-400' : 'text-zinc-600')}>
-                        {isErr ? <span className="text-red-400">●</span> : isWarn ? <span className="text-amber-400">◆</span> : ln}
+                      <div key={i}
+                        className={cn(
+                          'h-6 text-[11px] leading-6 flex items-center justify-end pr-2 select-none transition-colors',
+                          isErr  ? 'text-red-400' : isWarn ? 'text-amber-400' : 'text-zinc-600',
+                        )}>
+                        {isErr ? '●' : isWarn ? '◆' : ln}
                       </div>
                     );
                   })}
@@ -1039,71 +1055,75 @@ export default function JsonErrorExplainerClient() {
                   onChange={e => setInput(e.target.value)}
                   onScroll={handleEditorScroll}
                   onKeyDown={handleKeyDown}
-                  placeholder={'Paste your JSON here…\n\nDetects ALL errors at once:\ntrailing commas · Python True/False/None · JS undefined/NaN\nsingle quotes · unquoted keys · duplicate keys · and more\n\n⌘+Enter to force re-analyse'}
+                  placeholder={'Paste your JSON here…\n\nDetects ALL errors at once:\ntrailing commas · Python True/False/None\nundefined / NaN · comments · single quotes\nunquoted keys · duplicates · and 7 more\n\n⌘+Enter to re-analyse'}
                   spellCheck={false} autoCapitalize="off" autoComplete="off" autoCorrect="off"
-                  className="flex-1 bg-zinc-950 text-zinc-100 font-mono text-[13px] leading-6 resize-none outline-none px-4 py-4 placeholder:text-zinc-700 overflow-auto caret-violet-400"
+                  className="flex-1 min-w-0 bg-zinc-950 text-zinc-100 font-mono text-[13px] leading-6 resize-none outline-none px-4 overflow-auto caret-violet-400 placeholder:text-zinc-700"
+                  style={{ paddingTop: '14px', paddingBottom: '14px' }}
                 />
               </div>
 
-              {/* Editor bottom bar */}
-              <div className="flex items-center justify-between bg-zinc-900 border-t border-zinc-800 px-4 py-2">
-                <div className="flex items-center gap-3 font-mono text-[11px] text-zinc-500">
+              {/* Status bar */}
+              <div className="flex items-center justify-between bg-zinc-900 border-t border-zinc-800 px-4 h-8 shrink-0">
+                <div className="flex items-center gap-3 text-[11px] font-mono text-zinc-500">
                   <span>{input.length.toLocaleString()} chars</span>
-                  {result && (<>
-                    <span className="text-zinc-700">·</span>
-                    {result.isValid
-                      ? <span className="text-emerald-400 flex items-center gap-1 font-semibold"><CheckCircle2 className="w-3 h-3" /> Valid JSON</span>
-                      : <span className="text-red-400 flex items-center gap-1 font-semibold"><X className="w-3 h-3" /> {result.errors.length} error{result.errors.length !== 1 ? 's' : ''}</span>}
-                  </>)}
+                  {result && (
+                    <>
+                      <span className="text-zinc-700">·</span>
+                      {result.isValid
+                        ? <span className="text-emerald-400 flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> Valid JSON</span>
+                        : <span className="text-red-400 flex items-center gap-1"><X className="w-3 h-3" /> {result.errors.length} issue{result.errors.length !== 1 ? 's' : ''}</span>
+                      }
+                    </>
+                  )}
                 </div>
-                {!input && <span className="text-[11px] text-zinc-600 font-mono">live analysis · no upload</span>}
+                {!input && <span className="text-[10px] text-zinc-700 font-mono select-none">live · private · no upload</span>}
               </div>
             </div>
 
             {/* Fix output panel */}
             {showFixPanel && fixResult && (
-              <div className="rounded-2xl overflow-hidden border border-zinc-200 bg-white shadow-md">
-                {/* Fix panel header */}
-                <div className="flex items-center justify-between border-b border-zinc-100 px-4 py-3 bg-gradient-to-r from-violet-50 to-indigo-50">
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-violet-600 flex items-center justify-center shrink-0">
-                      <Wand2 className="w-3.5 h-3.5 text-white" />
+              <div className="rounded-2xl overflow-hidden border border-zinc-200 bg-white shadow-sm">
+
+                {/* Fix header */}
+                <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-b border-zinc-100 bg-gradient-to-r from-violet-50 to-indigo-50/50">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-xl bg-violet-600 flex items-center justify-center shrink-0 shadow-sm">
+                      <Wand2 className="w-4 h-4 text-white" />
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="font-bold text-sm text-zinc-900">Fixed JSON</span>
                         {fixResult.isNowValid && (
-                          <span className="text-[10px] bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-full px-2 py-0.5 font-bold uppercase tracking-wide">✓ Valid</span>
+                          <span className="text-[10px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-full px-2 py-0.5 uppercase tracking-wide">✓ Valid</span>
                         )}
                       </div>
                       <p className="text-[11px] text-zinc-500">{fixResult.appliedFixes.length} fix{fixResult.appliedFixes.length !== 1 ? 'es' : ''} applied</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    {/* Tabs */}
                     <div className="flex rounded-lg border border-zinc-200 overflow-hidden text-[11px] bg-white">
                       {(['fixed', 'diff'] as const).map(tab => (
                         <button key={tab} onClick={() => setActiveOutputTab(tab)}
-                          className={cn('px-3 py-1.5 font-semibold transition-colors', activeOutputTab === tab ? 'bg-zinc-900 text-white' : 'text-zinc-500 hover:bg-zinc-50')}>
+                          className={cn('px-3 py-1.5 font-semibold transition-colors',
+                            activeOutputTab === tab ? 'bg-zinc-900 text-white' : 'text-zinc-500 hover:bg-zinc-50')}>
                           {tab === 'diff' ? '± Diff' : '{ } Fixed'}
                         </button>
                       ))}
                     </div>
                     <button onClick={() => copyFixed(fixResult.fixed, 'Fixed JSON copied!')}
-                      className="flex items-center gap-1.5 text-[11px] text-zinc-600 hover:text-zinc-900 border border-zinc-200 hover:border-zinc-300 rounded-lg px-2.5 py-1.5 bg-white transition-colors">
-                      {copiedFixed ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
-                      Copy
+                      className="flex items-center gap-1.5 text-[11px] text-zinc-600 hover:text-zinc-900 border border-zinc-200 rounded-lg px-2.5 py-1.5 bg-white transition-colors">
+                      {copiedFixed ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />} Copy
                     </button>
                     <button onClick={applyFixed}
                       className="flex items-center gap-1.5 text-[11px] text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg px-3 py-1.5 font-semibold transition-colors">
-                      Apply to editor <ChevronRight className="w-3.5 h-3.5" />
+                      Apply <ChevronRight className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>
 
-                {/* Applied fixes chips */}
+                {/* Applied fix chips */}
                 {fixResult.appliedFixes.length > 0 && (
-                  <div className="px-4 py-2.5 border-b border-zinc-100 bg-zinc-50 flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap gap-1.5 px-4 py-2.5 border-b border-zinc-100 bg-zinc-50/60">
                     {fixResult.appliedFixes.map((fix, i) => (
                       <span key={i} className="inline-flex items-center gap-1 text-[10px] font-medium text-zinc-600 bg-white border border-zinc-200 rounded-full px-2.5 py-0.5">
                         <Check className="w-2.5 h-2.5 text-emerald-500" /> {fix}
@@ -1112,18 +1132,22 @@ export default function JsonErrorExplainerClient() {
                   </div>
                 )}
 
-                {/* Content */}
+                {/* Output content */}
                 {activeOutputTab === 'fixed' ? (
-                  <pre className="text-[12px] font-mono text-zinc-800 leading-relaxed p-4 max-h-[320px] overflow-auto whitespace-pre-wrap break-words">{fixResult.fixed}</pre>
+                  <pre className="text-[12px] font-mono text-zinc-800 leading-relaxed p-4 max-h-[300px] overflow-auto whitespace-pre-wrap break-words">
+                    {fixResult.fixed}
+                  </pre>
                 ) : (
-                  <div className="font-mono text-[11px] leading-6 max-h-[320px] overflow-auto p-4 space-y-px">
+                  <div className="font-mono text-[11px] leading-6 max-h-[300px] overflow-auto p-4 space-y-px">
                     {diffLines.map((dl, i) => (
-                      <div key={i} className={cn('px-2 py-0.5 rounded whitespace-pre-wrap break-words',
-                        dl.type === 'removed' && 'bg-red-50 text-red-700 line-through opacity-70',
-                        dl.type === 'added' && 'bg-emerald-50 text-emerald-800',
-                        dl.type === 'same' && 'text-zinc-400')}>
-                        <span className="select-none mr-2 opacity-60 font-bold">{dl.type === 'removed' ? '−' : dl.type === 'added' ? '+' : ' '}</span>
-                        {dl.text || ' '}
+                      <div key={i} className={cn('px-2 rounded whitespace-pre-wrap break-words',
+                        dl.type === 'removed' && 'bg-red-50 text-red-700 line-through opacity-60',
+                        dl.type === 'added'   && 'bg-emerald-50 text-emerald-800',
+                        dl.type === 'same'    && 'text-zinc-400')}>
+                        <span className="select-none mr-2 opacity-50 font-bold">
+                          {dl.type === 'removed' ? '−' : dl.type === 'added' ? '+' : ' '}
+                        </span>
+                        {dl.text || ' '}
                       </div>
                     ))}
                   </div>
@@ -1132,195 +1156,266 @@ export default function JsonErrorExplainerClient() {
             )}
           </div>
 
-          {/* ── RIGHT: Analysis panel (sticky) ─────────────────────── */}
-          <div className="lg:sticky lg:top-[56px]">
-            <div className="flex flex-col rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden" style={{ maxHeight: 'calc(100vh - 76px)' }}>
+          {/* ── Right: Sticky analysis panel ── */}
+          <div className="lg:sticky lg:top-[57px]">
+            <div
+              className="flex flex-col rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden"
+              style={{ maxHeight: 'calc(100vh - 77px)' }}
+            >
 
-              {/* Panel header */}
-              <div className="flex-none flex items-center justify-between border-b border-zinc-100 px-4 py-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-bold text-zinc-900">Error Analysis</span>
+              {/* Panel top: header + stats + source */}
+              <div className="flex-none border-b border-zinc-100">
+
+                {/* Header row */}
+                <div className="flex items-center justify-between px-4 pt-4 pb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-lg bg-violet-100 flex items-center justify-center shrink-0">
+                      <Zap className="w-3 h-3 text-violet-600" />
+                    </div>
+                    <span className="font-bold text-sm text-zinc-900">Analysis</span>
+                    {result && result.errors.length > 0 && (
+                      <span className="text-[11px] text-zinc-400">
+                        · {result.errors.length} issue{result.errors.length !== 1 ? 's' : ''}
+                      </span>
+                    )}
+                  </div>
+                  {/* Severity filter */}
                   {result && result.errors.length > 0 && (
-                    <span className="text-[11px] text-zinc-400 font-mono">{result.errors.length} issue{result.errors.length !== 1 ? 's' : ''}</span>
+                    <div className="flex rounded-lg border border-zinc-200 overflow-hidden text-[10px] bg-zinc-50">
+                      {([['all', 'All'], ['critical', '🔴'], ['warning', '🟡']] as const).map(([val, label]) => (
+                        <button key={val} onClick={() => setFilterSeverity(val)}
+                          className={cn('px-2.5 py-1.5 font-bold transition-colors',
+                            filterSeverity === val ? 'bg-zinc-900 text-white' : 'text-zinc-500 hover:bg-white')}>
+                          {label}
+                        </button>
+                      ))}
+                    </div>
                   )}
                 </div>
-                {/* Severity filter */}
-                {result && result.errors.length > 0 && (
-                  <div className="flex rounded-lg border border-zinc-200 overflow-hidden text-[10px]">
-                    {([['all', 'All'], ['critical', '🔴'], ['warning', '🟡']] as const).map(([val, label]) => (
-                      <button key={val} onClick={() => setFilterSeverity(val)}
-                        className={cn('px-2.5 py-1.5 font-bold transition-colors', filterSeverity === val ? 'bg-zinc-900 text-white' : 'bg-white text-zinc-500 hover:bg-zinc-50')}>
-                        {label}
-                      </button>
+
+                {/* Stats 4-up — always same height when result exists */}
+                {result && input.trim() && (
+                  <div className="grid grid-cols-4 gap-2 px-4 pb-3">
+                    {[
+                      {
+                        value: String(criticalCount), label: 'Critical',
+                        icon: <AlertCircle className="w-3.5 h-3.5" />,
+                        cls: criticalCount > 0 ? 'text-red-600 bg-red-50 border-red-200' : 'text-zinc-400 bg-zinc-50 border-zinc-200',
+                      },
+                      {
+                        value: String(warningCount), label: 'Warnings',
+                        icon: <AlertTriangle className="w-3.5 h-3.5" />,
+                        cls: warningCount > 0 ? 'text-amber-600 bg-amber-50 border-amber-200' : 'text-zinc-400 bg-zinc-50 border-zinc-200',
+                      },
+                      {
+                        value: String(autoFixableCount), label: 'Fixable',
+                        icon: <Wand2 className="w-3.5 h-3.5" />,
+                        cls: autoFixableCount > 0 ? 'text-emerald-600 bg-emerald-50 border-emerald-200' : 'text-zinc-400 bg-zinc-50 border-zinc-200',
+                      },
+                      {
+                        value: result.isValid ? '✓' : '✗', label: result.isValid ? 'Valid' : 'Invalid',
+                        icon: result.isValid ? <CheckCircle2 className="w-3.5 h-3.5" /> : <X className="w-3.5 h-3.5" />,
+                        cls: result.isValid ? 'text-emerald-700 bg-emerald-50 border-emerald-200' : 'text-red-600 bg-red-50 border-red-200',
+                      },
+                    ].map(({ value, label, icon, cls }) => (
+                      <div key={label} className={cn('flex flex-col items-center rounded-xl border px-1.5 py-2 text-center', cls)}>
+                        {icon}
+                        <span className="text-[15px] font-extrabold leading-tight mt-0.5">{value}</span>
+                        <span className="text-[9px] font-semibold uppercase tracking-wide mt-0.5 leading-tight">{label}</span>
+                      </div>
                     ))}
+                  </div>
+                )}
+
+                {/* Source banner */}
+                {result?.source && input.trim() && (
+                  <div className="mx-4 mb-3 flex items-start gap-2.5 rounded-xl bg-violet-50 border border-violet-100 px-3 py-2.5">
+                    <span className="text-xl shrink-0 select-none leading-none mt-px">{result.source.icon}</span>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-[12px] font-bold text-violet-900">Source: {result.source.name}</span>
+                        <span className={cn(
+                          'text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full border',
+                          result.source.confidence === 'high'
+                            ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
+                            : 'bg-amber-100 text-amber-600 border-amber-200',
+                        )}>
+                          {result.source.confidence}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-violet-700/80 mt-0.5 leading-snug">{result.source.tip}</p>
+                    </div>
                   </div>
                 )}
               </div>
 
-              {/* Source banner (inside panel, compact) */}
-              {result?.source && (
-                <div className="flex-none flex items-center gap-2 px-4 py-2 bg-violet-50/80 border-b border-violet-100">
-                  <span className="text-base select-none">{result.source.icon}</span>
-                  <div className="min-w-0">
-                    <span className="text-[11px] font-bold text-violet-800">{result.source.name}</span>
-                    <span className={cn('ml-1.5 text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full border',
-                      result.source.confidence === 'high' ? 'bg-emerald-100 text-emerald-700 border-emerald-200' : 'bg-amber-100 text-amber-600 border-amber-200')}>
-                      {result.source.confidence}
-                    </span>
-                  </div>
-                </div>
-              )}
-
               {/* Scrollable error list */}
               <div className="flex-1 overflow-y-auto min-h-0 p-3 space-y-2">
 
-                {/* Empty / placeholder state */}
+                {/* Empty state */}
                 {!input.trim() && (
-                  <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-                    <div className="w-16 h-16 rounded-2xl bg-zinc-100 flex items-center justify-center mb-4">
-                      <span className="text-3xl select-none">🔍</span>
+                  <div className="flex flex-col items-center justify-center h-full min-h-[260px] text-center px-6 py-10">
+                    <div className="w-20 h-20 rounded-3xl bg-zinc-50 border-2 border-dashed border-zinc-200 flex items-center justify-center mb-5">
+                      <span className="text-4xl select-none">🔍</span>
                     </div>
-                    <p className="font-semibold text-zinc-700 mb-1.5">Paste JSON to begin</p>
-                    <p className="text-[12px] text-zinc-400 leading-relaxed max-w-[220px]">
-                      Every error is found instantly — trailing commas, Python values, bad escapes, and 11 more types.
+                    <p className="font-bold text-zinc-700 text-base mb-2">Paste JSON to begin</p>
+                    <p className="text-[12px] text-zinc-400 leading-relaxed max-w-[200px]">
+                      Every error detected instantly — trailing commas, Python values, bad escapes, and 11 more.
                     </p>
                   </div>
                 )}
 
                 {/* Valid state */}
                 {result?.isValid && input.trim() && (
-                  <div className="flex flex-col items-center justify-center py-14 px-4 text-center">
-                    <div className="w-16 h-16 rounded-2xl bg-emerald-100 flex items-center justify-center mb-4">
-                      <CheckCircle2 className="w-8 h-8 text-emerald-500" />
+                  <div className="flex flex-col items-center justify-center h-full min-h-[220px] text-center px-6 py-10">
+                    <div className="w-20 h-20 rounded-3xl bg-emerald-50 border-2 border-emerald-200 flex items-center justify-center mb-5">
+                      <CheckCircle2 className="w-10 h-10 text-emerald-500" />
                     </div>
-                    <p className="font-bold text-emerald-800 text-base mb-1">Perfect JSON!</p>
-                    <p className="text-[12px] text-emerald-700/80 leading-relaxed mb-3">No errors detected. Fully RFC 8259-compliant.</p>
-                    <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-2 text-[11px] text-emerald-700 font-mono">
-                      JSON.parse() ✓ · RFC 8259 ✓
+                    <p className="font-bold text-emerald-800 text-lg mb-1.5">Perfect JSON!</p>
+                    <p className="text-[12px] text-emerald-700/80 leading-relaxed mb-4">
+                      No errors detected. Fully RFC 8259-compliant.
+                    </p>
+                    <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-2 text-[11px] text-emerald-700 font-mono">
+                      <CheckCircle2 className="w-3.5 h-3.5" /> JSON.parse() ✓ · RFC 8259 ✓
                     </div>
                   </div>
                 )}
 
                 {/* No filter match */}
                 {result && !result.isValid && filteredErrors.length === 0 && filterSeverity !== 'all' && (
-                  <div className="flex flex-col items-center justify-center py-10 text-center">
-                    <p className="text-sm text-zinc-400">No {filterSeverity} errors</p>
+                  <div className="flex flex-col items-center justify-center py-14 text-center">
+                    <p className="text-sm font-medium text-zinc-400">No {filterSeverity} errors</p>
+                    <button onClick={() => setFilterSeverity('all')} className="mt-2 text-xs text-violet-600 hover:underline">Show all</button>
                   </div>
                 )}
 
                 {/* Error cards */}
                 {filteredErrors.map(error => (
-                  <ErrorCard key={error.id} error={error} expanded={expandedIds.has(error.id)}
-                    onToggle={() => setExpandedIds(prev => { const next = new Set(prev); if (next.has(error.id)) next.delete(error.id); else next.add(error.id); return next; })}
-                    onJumpToLine={jumpToLine} />
+                  <ErrorCard
+                    key={error.id}
+                    error={error}
+                    expanded={expandedIds.has(error.id)}
+                    onToggle={() => setExpandedIds(prev => {
+                      const next = new Set(prev);
+                      if (next.has(error.id)) next.delete(error.id); else next.add(error.id);
+                      return next;
+                    })}
+                    onJumpToLine={jumpToLine}
+                  />
                 ))}
               </div>
 
-              {/* Panel footer: health + fix button */}
+              {/* Panel footer — health ring + fix button */}
               {result && input.trim() && (
-                <div className="flex-none border-t border-zinc-100 p-4 space-y-3 bg-zinc-50/60">
-
-                  {/* Health ring + fix button row */}
+                <div className="flex-none border-t border-zinc-100 bg-zinc-50/50 px-4 py-3 space-y-2.5">
                   <div className="flex items-center gap-3">
                     <HealthRing score={result.healthScore} />
-                    {!result.isValid && autoFixableCount > 0 && (
+                    {!result.isValid && autoFixableCount > 0 ? (
                       <button onClick={handleFix}
-                        className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white font-bold text-sm rounded-xl py-3 px-3 transition-all shadow-md hover:shadow-lg active:scale-[0.98]">
+                        className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-br from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white font-bold text-sm rounded-xl py-2.5 transition-all shadow hover:shadow-md active:scale-[0.98]">
                         <Wand2 className="w-4 h-4 shrink-0" />
                         Fix {autoFixableCount} error{autoFixableCount !== 1 ? 's' : ''}
                       </button>
-                    )}
-                    {result.isValid && (
-                      <div className="flex-1 text-center">
-                        <span className="text-sm font-semibold text-emerald-600">All good! ✓</span>
+                    ) : result.isValid ? (
+                      <div className="flex-1 flex items-center justify-center gap-2 text-emerald-600 font-bold text-sm">
+                        <CheckCircle2 className="w-4 h-4" /> All good!
                       </div>
-                    )}
+                    ) : null}
                   </div>
 
-                  {/* Expand / collapse + manual-fix note */}
-                  <div className="flex items-center justify-between text-[11px] text-zinc-400">
-                    {filteredErrors.length > 1 ? (
+                  {filteredErrors.length > 1 && (
+                    <div className="flex items-center justify-between text-[11px] text-zinc-400">
                       <div className="flex items-center gap-3">
-                        <button onClick={() => setExpandedIds(new Set(filteredErrors.map(e => e.id)))} className="flex items-center gap-1 hover:text-zinc-600 transition-colors">
+                        <button
+                          onClick={() => setExpandedIds(new Set(filteredErrors.map(e => e.id)))}
+                          className="flex items-center gap-1 hover:text-zinc-600 transition-colors">
                           <Eye className="w-3 h-3" /> Expand all
                         </button>
                         <span>·</span>
-                        <button onClick={() => setExpandedIds(new Set())} className="flex items-center gap-1 hover:text-zinc-600 transition-colors">
+                        <button
+                          onClick={() => setExpandedIds(new Set())}
+                          className="flex items-center gap-1 hover:text-zinc-600 transition-colors">
                           <EyeOff className="w-3 h-3" /> Collapse
                         </button>
                       </div>
-                    ) : <span />}
-                    {result.errors.filter(e => !e.autoFixable).length > 0 && (
-                      <span className="text-zinc-400">{result.errors.filter(e => !e.autoFixable).length} need manual fix</span>
-                    )}
-                  </div>
+                      {result.errors.filter(e => !e.autoFixable).length > 0 && (
+                        <span>{result.errors.filter(e => !e.autoFixable).length} need manual fix</span>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
           </div>
         </div>
 
-        {/* ── Feature grid ─────────────────────────────────────────── */}
-        <div className="mt-10 mb-2">
-          <div className="rounded-2xl bg-white border border-zinc-200 px-6 py-6">
-            <div className="flex items-center gap-2 mb-5">
-              <div className="w-7 h-7 rounded-lg bg-violet-100 flex items-center justify-center">
-                <Shield className="w-3.5 h-3.5 text-violet-600" />
-              </div>
-              <h2 className="font-bold text-zinc-900">What this tool detects</h2>
-              <span className="text-xs text-zinc-400 ml-1">14 error types</span>
+        {/* ══ Feature grid ════════════════════════════════════════════════ */}
+        <section className="border-t border-zinc-200 py-10">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-7">
+            <div>
+              <h2 className="text-xl font-bold text-zinc-900 leading-tight">What this tool detects</h2>
+              <p className="text-sm text-zinc-500 mt-1">14 error types · auto-fix where possible · plain-English explanations</p>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-2">
-              {[
-                { icon: '⚠️', name: 'Trailing Commas',        fix: true },
-                { icon: '🐍', name: 'Python True/False/None', fix: true },
-                { icon: '🟡', name: 'NaN / undefined',        fix: true },
-                { icon: '💬', name: 'JS Comments',            fix: true },
-                { icon: '🔤', name: 'Single Quotes',          fix: true },
-                { icon: '🔑', name: 'Unquoted Keys',          fix: true },
-                { icon: '0️⃣', name: 'Leading Zeros',          fix: true },
-                { icon: '➕', name: 'Plus Numbers',           fix: true },
-                { icon: '📂', name: 'Unclosed Brackets',      fix: true },
-                { icon: '⚡', name: 'UTF-8 BOM',              fix: true },
-                { icon: '🔀', name: 'Mismatched Brackets',    fix: false },
-                { icon: '🔁', name: 'Duplicate Keys',         fix: false },
-                { icon: '🔴', name: 'Invalid Escapes',        fix: false },
-                { icon: '🔋', name: 'Control Characters',     fix: false },
-              ].map(({ icon, name, fix }) => (
-                <div key={name} className="flex items-center gap-2 rounded-xl bg-zinc-50 border border-zinc-100 px-3 py-2.5">
-                  <span className="text-base shrink-0 select-none">{icon}</span>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[11px] font-medium text-zinc-700 leading-tight truncate">{name}</p>
-                    <p className={cn('text-[9px] font-bold uppercase tracking-wider mt-0.5', fix ? 'text-emerald-600' : 'text-zinc-400')}>
-                      {fix ? '✦ auto-fix' : 'manual'}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <span className="shrink-0 inline-flex items-center gap-1 text-xs font-semibold text-violet-700 bg-violet-50 border border-violet-200 rounded-full px-3 py-1 self-start sm:self-auto">
+              <Shield className="w-3 h-3" /> 14 types
+            </span>
           </div>
-        </div>
-
-        {/* ── Related tools ────────────────────────────────────────── */}
-        <div className="py-8">
-          <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-400 mb-3">Related JSON tools</p>
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
             {[
-              ['/json-beautifier', '✨ JSON Beautifier'],
-              ['/json-fixer-online', '🔧 JSON Fixer'],
-              ['/json-comparator', '🔀 JSON Comparator'],
-              ['/json-schema-generation', '📐 Schema Generator'],
-              ['/json-stringify-online', '📦 JSON Stringify'],
-              ['/json-to-typescript', '🔷 JSON → TypeScript'],
-              ['/json-validator', '✅ JSON Validator'],
-            ].map(([href, label]) => (
+              { icon: '⚠️', name: 'Trailing Commas',        fix: true },
+              { icon: '🐍', name: 'Python True/False/None', fix: true },
+              { icon: '🟡', name: 'NaN / undefined',        fix: true },
+              { icon: '💬', name: 'JS Comments',            fix: true },
+              { icon: '🔤', name: 'Single Quotes',          fix: true },
+              { icon: '🔑', name: 'Unquoted Keys',          fix: true },
+              { icon: '0️⃣', name: 'Leading Zeros',          fix: true },
+              { icon: '➕', name: 'Plus Numbers',           fix: true },
+              { icon: '📂', name: 'Unclosed Brackets',      fix: true },
+              { icon: '⚡', name: 'UTF-8 BOM',              fix: true },
+              { icon: '🔀', name: 'Mismatched Brackets',    fix: false },
+              { icon: '🔁', name: 'Duplicate Keys',         fix: false },
+              { icon: '🔴', name: 'Invalid Escapes',        fix: false },
+              { icon: '🔋', name: 'Control Characters',     fix: false },
+            ].map(({ icon, name, fix }) => (
+              <div key={name}
+                className="group flex flex-col items-center text-center rounded-2xl bg-white border border-zinc-200 px-3 py-4 hover:border-violet-200 hover:bg-violet-50/40 hover:shadow-sm transition-all cursor-default">
+                <span className="text-[26px] mb-2.5 select-none group-hover:scale-110 transition-transform duration-150">{icon}</span>
+                <p className="text-[11px] font-semibold text-zinc-700 leading-tight mb-2 group-hover:text-violet-800">{name}</p>
+                <span className={cn(
+                  'text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border',
+                  fix
+                    ? 'text-emerald-700 bg-emerald-50 border-emerald-200'
+                    : 'text-zinc-400 bg-zinc-50 border-zinc-200',
+                )}>
+                  {fix ? '✦ auto-fix' : 'manual'}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ══ Related tools ═══════════════════════════════════════════════ */}
+        <section className="border-t border-zinc-200 py-8">
+          <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400 mb-4 select-none">
+            Related JSON tools
+          </p>
+          <div className="flex flex-wrap gap-2.5">
+            {[
+              ['/json-beautifier',        '✨', 'JSON Beautifier'],
+              ['/json-fixer-online',      '🔧', 'JSON Fixer'],
+              ['/json-comparator',        '🔀', 'JSON Comparator'],
+              ['/json-schema-generation', '📐', 'Schema Generator'],
+              ['/json-stringify-online',  '📦', 'JSON Stringify'],
+              ['/json-to-typescript',     '🔷', 'JSON → TypeScript'],
+              ['/json-validator',         '✅', 'JSON Validator'],
+            ].map(([href, icon, label]) => (
               <Link key={href} href={href}
-                className="text-xs text-emerald-700 hover:text-emerald-900 bg-white border border-emerald-200 hover:border-emerald-300 rounded-xl px-3 py-2 hover:bg-emerald-50 transition-colors font-medium">
-                {label}
+                className="inline-flex items-center gap-2 text-sm text-zinc-700 hover:text-emerald-800 bg-white border border-zinc-200 hover:border-emerald-200 rounded-xl px-4 py-2 hover:bg-emerald-50/60 hover:shadow-sm transition-all font-medium shadow-sm">
+                <span className="select-none">{icon}</span> {label}
               </Link>
             ))}
           </div>
-        </div>
+        </section>
 
       </div>
     </div>
