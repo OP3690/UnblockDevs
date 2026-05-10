@@ -5,6 +5,7 @@ import {
   Upload, FileText, Download, Table2, Type, Loader2,
   CheckCircle2, AlertCircle, X, ChevronDown, ChevronUp,
   FileSpreadsheet, FileType2, LayoutGrid, Settings2, Eye,
+  Scan, ZoomIn, Columns, BookOpen,
 } from 'lucide-react';
 
 // ── Types ────────────────────────────────────────────────────────────────────
@@ -18,6 +19,8 @@ interface TextItem {
   fontSize: number;
   fontName: string;
   bold: boolean;
+  italic: boolean;
+  color?: string;
 }
 
 interface PageContent {
@@ -25,18 +28,24 @@ interface PageContent {
   items: TextItem[];
   width: number;
   height: number;
+  isOCR?: boolean;
 }
 
 interface Block {
   type: 'heading1' | 'heading2' | 'heading3' | 'paragraph' | 'table' | 'list';
   content: string | string[][] | string[];
   pageNum: number;
+  bold?: boolean;
+  italic?: boolean;
+  fontSize?: number;
+  colWidths?: number[]; // pixel widths per column for proportional sizing
 }
 
 interface ParsedDocument {
   blocks: Block[];
   pageCount: number;
   hasTablesDetected: number;
+  hasOCRPages: boolean;
 }
 
 interface Options {
@@ -48,23 +57,101 @@ interface Options {
   separateSheets: boolean;
   tableThreshold: 'low' | 'medium' | 'high';
   mergeHyphens: boolean;
+  ocrMode: 'auto' | 'always' | 'never';
+  ocrLanguage: string;
+  excelStyle: boolean;
+  wordPreserveLayout: boolean;
+}
+
+// ── OCR ───────────────────────────────────────────────────────────────────────
+
+let tesseractWorker: any = null;
+let tesseractReady = false;
+
+async function initTesseract(lang: string, onProgress: (msg: string) => void): Promise<any> {
+  if (tesseractReady && tesseractWorker) return tesseractWorker;
+
+  onProgress('Loading OCR engine…');
+  // Dynamic import to avoid bundling
+  const Tesseract = await import('tesseract.js');
+  const worker = await Tesseract.createWorker(lang, 1, {
+    workerPath: '/tesseract.worker.min.js',
+    // langPath: CDN directory with traineddata files (e.g. eng.traineddata.gz)
+    langPath: 'https://tessdata.projectnaptha.com/4.0.0',
+    // corePath: CDN directory that contains all 4 WASM builds (Tesseract.js v7 picks best one)
+    corePath: 'https://cdn.jsdelivr.net/npm/tesseract.js-core@6.0.0/',
+    logger: (m: any) => {
+      if (m.status === 'recognizing text' && typeof m.progress === 'number') {
+        onProgress(`OCR: ${Math.round(m.progress * 100)}%`);
+      }
+    },
+  });
+
+  tesseractWorker = worker;
+  tesseractReady = true;
+  return worker;
+}
+
+async function ocrPage(
+  page: any,
+  scale: number,
+  lang: string,
+  onProgress: (msg: string) => void,
+): Promise<TextItem[]> {
+  const worker = await initTesseract(lang, onProgress);
+
+  const viewport = page.getViewport({ scale });
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.floor(viewport.width);
+  canvas.height = Math.floor(viewport.height);
+  const ctx = canvas.getContext('2d')!;
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  await page.render({ canvasContext: ctx, viewport }).promise;
+
+  const { data } = await worker.recognize(canvas);
+
+  const items: TextItem[] = [];
+  for (const word of data.words) {
+    if (!word.text.trim()) continue;
+    const { x0, y0, x1, y1 } = word.bbox;
+    const h = y1 - y0;
+    items.push({
+      text: word.text,
+      x: x0 / scale,
+      y: y0 / scale,
+      width: (x1 - x0) / scale,
+      height: h / scale,
+      fontSize: Math.round(h / scale),
+      fontName: '',
+      bold: false,
+      italic: false,
+    });
+  }
+
+  return items;
 }
 
 // ── PDF Extraction ────────────────────────────────────────────────────────────
+
+function isPageScanned(items: TextItem[], pageWidth: number, pageHeight: number): boolean {
+  // Fewer than 20 characters per 100 pt² area → likely scanned
+  const totalChars = items.reduce((s, i) => s + i.text.length, 0);
+  const area = pageWidth * pageHeight;
+  return totalChars < (area / 100) * 0.2;
+}
 
 async function extractPDFPages(
   file: File,
   onProgress: (pct: number, msg: string) => void,
   options: Options,
 ): Promise<PageContent[]> {
-  // Load pdfjs from /public/pdf.mjs (static file, webpackIgnore) so webpack never
-  // bundles pdfjs-dist — this avoids the options.factory module registry corruption
-  // that occurs when pdfjs-dist v5 ESM chunks are lazy-loaded in Next.js dev mode.
-  // @ts-ignore — webpackIgnore bypasses webpack; type comes from pdfjs-dist
+  // @ts-ignore — webpackIgnore bypasses webpack
   const pdfjsLib = await import(/* webpackIgnore: true */ '/pdf.mjs') as any as typeof import('pdfjs-dist');
   pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
-  onProgress(0.05, 'Loading PDF…');
+  onProgress(0.03, 'Loading PDF…');
   const arrayBuffer = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer, verbosity: 0 }).promise;
 
@@ -75,35 +162,89 @@ async function extractPDFPages(
   const pages: PageContent[] = [];
 
   for (let i = from; i <= to; i++) {
-    onProgress(0.05 + (i - from) / (to - from + 1) * 0.55, `Parsing page ${i} of ${to}…`);
+    const pctBase = 0.03 + (i - from) / (to - from + 1) * 0.60;
+    onProgress(pctBase, `Parsing page ${i} of ${to}…`);
+
     const page = await pdf.getPage(i);
     const viewport = page.getViewport({ scale: 1 });
     const textContent = await page.getTextContent({ includeMarkedContent: false });
 
-    const items: TextItem[] = [];
+    let items: TextItem[] = [];
+
     for (const raw of textContent.items) {
       if (!('str' in raw) || !raw.str.trim()) continue;
-      const [scaleX, , , scaleY, x, y] = (raw as { transform: number[] }).transform;
+      const [scaleX, shearY, shearX, scaleY, x, y] = (raw as any).transform as number[];
       const fontSize = Math.abs(scaleY);
+      const fontName: string = (raw as any).fontName ?? '';
       items.push({
-        text: raw.str,
+        text: (raw as any).str,
         x: Math.round(x * 10) / 10,
         y: Math.round((viewport.height - y) * 10) / 10,
-        width: Math.round(raw.width * 10) / 10,
+        width: Math.round((raw as any).width * 10) / 10,
         height: Math.round(fontSize * 10) / 10,
         fontSize: Math.round(fontSize * 10) / 10,
-        fontName: (raw as { fontName?: string }).fontName ?? '',
-        bold: /bold|heavy|black/i.test((raw as { fontName?: string }).fontName ?? ''),
+        fontName,
+        bold: /bold|heavy|black/i.test(fontName),
+        italic: /italic|oblique/i.test(fontName),
       });
     }
 
-    pages.push({ pageNum: i, items, width: viewport.width, height: viewport.height });
+    // OCR fallback
+    let isOCR = false;
+    if (
+      options.ocrMode === 'always' ||
+      (options.ocrMode === 'auto' && isPageScanned(items, viewport.width, viewport.height))
+    ) {
+      onProgress(pctBase + 0.01, `OCR scanning page ${i}…`);
+      try {
+        const ocrItems = await ocrPage(page, 2, options.ocrLanguage, (msg) =>
+          onProgress(pctBase, msg)
+        );
+        if (ocrItems.length > items.length || items.length < 5) {
+          items = ocrItems;
+          isOCR = true;
+        }
+      } catch (err) {
+        console.warn('OCR failed for page', i, err);
+      }
+    }
+
+    pages.push({ pageNum: i, items, width: viewport.width, height: viewport.height, isOCR });
   }
 
   return pages;
 }
 
-// ── Table Detection ───────────────────────────────────────────────────────────
+// ── Advanced Table Detection ──────────────────────────────────────────────────
+
+function clusterPositions(values: number[], tolerance: number): number[] {
+  const sorted = [...values].sort((a, b) => a - b);
+  const clusters: number[] = [];
+  for (const v of sorted) {
+    const existing = clusters.find(c => Math.abs(c - v) <= tolerance);
+    if (existing === undefined) clusters.push(v);
+  }
+  return clusters;
+}
+
+function detectColumnBoundaries(rows: TextItem[][], pageWidth: number): number[] {
+  // Collect all left edges and right edges
+  const leftEdges: number[] = [];
+  for (const row of rows) for (const item of row) leftEdges.push(item.x);
+
+  // Cluster to find column starts
+  const colStarts = clusterPositions(leftEdges, 12);
+
+  // Score each cluster — how many items align to it?
+  const scored = colStarts.map(start => ({
+    x: start,
+    count: rows.reduce((sum, row) => sum + row.filter(i => Math.abs(i.x - start) <= 12).length, 0),
+  }));
+
+  // Keep columns that appear in at least 20% of rows
+  const threshold = rows.length * 0.2;
+  return scored.filter(c => c.count >= threshold).map(c => c.x);
+}
 
 function detectTableRows(items: TextItem[], tolerance: number): TextItem[][] {
   const rows: TextItem[][] = [];
@@ -111,56 +252,68 @@ function detectTableRows(items: TextItem[], tolerance: number): TextItem[][] {
 
   for (const item of sorted) {
     const existing = rows.find(r => Math.abs(r[0].y - item.y) <= tolerance);
-    if (existing) {
-      existing.push(item);
-    } else {
-      rows.push([item]);
-    }
+    if (existing) existing.push(item);
+    else rows.push([item]);
   }
   rows.forEach(r => r.sort((a, b) => a.x - b.x));
   return rows;
 }
 
-function getColumnPositions(rows: TextItem[][], colTolerance: number): number[] {
-  const positions: number[] = [];
-  for (const row of rows) {
-    for (const item of row) {
-      if (!positions.some(p => Math.abs(p - item.x) <= colTolerance)) {
-        positions.push(item.x);
-      }
-    }
-  }
-  return positions.sort((a, b) => a - b);
-}
-
-function rowToTableCells(row: TextItem[], colPositions: number[], colTolerance: number): string[] {
+function rowToTableCells(
+  row: TextItem[],
+  colPositions: number[],
+  colTolerance: number,
+): string[] {
   const cells: string[] = Array(colPositions.length).fill('');
   for (const item of row) {
-    const colIdx = colPositions.findIndex(p => Math.abs(p - item.x) <= colTolerance * 2);
-    if (colIdx >= 0) {
-      cells[colIdx] = (cells[colIdx] ? cells[colIdx] + ' ' : '') + item.text;
+    // Find nearest column — allow 2× tolerance for cells that drift slightly
+    let bestIdx = -1;
+    let bestDist = Infinity;
+    for (let i = 0; i < colPositions.length; i++) {
+      const dist = Math.abs(item.x - colPositions[i]);
+      if (dist < bestDist && dist <= colTolerance * 2.5) {
+        bestDist = dist;
+        bestIdx = i;
+      }
+    }
+    if (bestIdx >= 0) {
+      cells[bestIdx] = cells[bestIdx] ? `${cells[bestIdx]} ${item.text}` : item.text;
     }
   }
   return cells;
 }
 
+function scoreRowAsTable(row: TextItem[], colPositions: number[], colTol: number): number {
+  if (!row.length || !colPositions.length) return 0;
+  const aligned = row.filter(item =>
+    colPositions.some(p => Math.abs(item.x - p) <= colTol * 2)
+  ).length;
+  return aligned / row.length;
+}
+
 function parsePageBlocks(page: PageContent, thresholdKey: Options['tableThreshold']): Block[] {
-  const { items, pageNum } = page;
+  const { items, pageNum, width: pageWidth } = page;
   if (!items.length) return [];
 
-  const rowTol = thresholdKey === 'low' ? 5 : thresholdKey === 'medium' ? 3 : 1.5;
-  const colTol = thresholdKey === 'low' ? 20 : thresholdKey === 'medium' ? 12 : 6;
-  const minTableCols = thresholdKey === 'low' ? 2 : thresholdKey === 'medium' ? 2 : 3;
-  const minTableRows = thresholdKey === 'low' ? 2 : thresholdKey === 'medium' ? 3 : 3;
+  const rowTol = thresholdKey === 'low' ? 6 : thresholdKey === 'medium' ? 3.5 : 2;
+  const colTol = thresholdKey === 'low' ? 22 : thresholdKey === 'medium' ? 14 : 7;
+  const minTableCols = 2;
+  const minTableRows = thresholdKey === 'low' ? 2 : 3;
+  const tableScoreThreshold = thresholdKey === 'low' ? 0.5 : thresholdKey === 'medium' ? 0.65 : 0.8;
 
   const rows = detectTableRows(items, rowTol);
   const blocks: Block[] = [];
 
-  // Compute average font size for heading detection
-  const avgFontSize = items.reduce((s, i) => s + i.fontSize, 0) / (items.length || 1);
+  // Compute average font size and median for heading detection
+  const fontSizes = items.map(i => i.fontSize).filter(s => s > 0).sort((a, b) => a - b);
+  const medianFontSize = fontSizes[Math.floor(fontSizes.length / 2)] || 12;
+  const avgFontSize = fontSizes.reduce((s, v) => s + v, 0) / (fontSizes.length || 1);
 
-  // Group consecutive rows into table/text blocks
+  // Detect candidate column positions across all rows
+  const allColPositions = detectColumnBoundaries(rows, pageWidth);
+
   let tableBuffer: TextItem[][] = [];
+  let tableColPositions: number[] = [];
 
   const flushTable = () => {
     if (tableBuffer.length < minTableRows) {
@@ -169,44 +322,70 @@ function parsePageBlocks(page: PageContent, thresholdKey: Options['tableThreshol
         if (text.trim()) blocks.push({ type: 'paragraph', content: text, pageNum });
       }
       tableBuffer = [];
+      tableColPositions = [];
       return;
     }
-    const colPositions = getColumnPositions(tableBuffer, colTol);
+
+    const colPositions = tableColPositions.length >= minTableCols
+      ? tableColPositions
+      : detectColumnBoundaries(tableBuffer, pageWidth);
+
     if (colPositions.length < minTableCols) {
       for (const r of tableBuffer) {
         const text = r.map(i => i.text).join(' ');
         if (text.trim()) blocks.push({ type: 'paragraph', content: text, pageNum });
       }
       tableBuffer = [];
+      tableColPositions = [];
       return;
     }
+
+    // Calculate column pixel widths for proportional Word/Excel sizing
+    const colWidths: number[] = [];
+    for (let c = 0; c < colPositions.length; c++) {
+      const next = colPositions[c + 1] ?? pageWidth;
+      colWidths.push(next - colPositions[c]);
+    }
+
     const tableData = tableBuffer.map(r => rowToTableCells(r, colPositions, colTol));
-    blocks.push({ type: 'table', content: tableData, pageNum });
+    blocks.push({ type: 'table', content: tableData, pageNum, colWidths });
     tableBuffer = [];
+    tableColPositions = [];
   };
 
   for (const row of rows) {
-    const colPositions = getColumnPositions([row], colTol);
-    const isTableRow = row.length >= minTableCols && colPositions.length >= minTableCols;
+    // Score this row against global column positions
+    const tableScore = allColPositions.length >= minTableCols
+      ? scoreRowAsTable(row, allColPositions, colTol)
+      : 0;
+    const isTableRow = row.length >= minTableCols && tableScore >= tableScoreThreshold;
 
     if (isTableRow) {
+      if (tableBuffer.length === 0) {
+        // Start new table: use column positions from this row
+        tableColPositions = detectColumnBoundaries([row], pageWidth).filter(p =>
+          allColPositions.some(ap => Math.abs(ap - p) <= colTol * 2)
+        );
+        if (tableColPositions.length < minTableCols) tableColPositions = allColPositions;
+      }
       tableBuffer.push(row);
     } else {
       flushTable();
       const text = row.map(i => i.text).join(' ').trim();
       if (!text) continue;
 
-      const rowFontSize = row[0]?.fontSize ?? avgFontSize;
+      const rowFontSize = row.reduce((mx, i) => Math.max(mx, i.fontSize), 0) || medianFontSize;
       const isBold = row.some(i => i.bold);
-      const ratio = rowFontSize / avgFontSize;
+      const isItalic = row.every(i => i.italic);
+      const ratio = rowFontSize / medianFontSize;
 
       let type: Block['type'] = 'paragraph';
-      if (ratio >= 1.6 || (ratio >= 1.3 && isBold)) type = 'heading1';
+      if (ratio >= 1.7 || (ratio >= 1.3 && isBold)) type = 'heading1';
       else if (ratio >= 1.25 || (ratio >= 1.1 && isBold)) type = 'heading2';
-      else if (ratio >= 1.1 && isBold) type = 'heading3';
-      else if (/^[\u2022\u2023\u25E6\u2043\-\*]\s/.test(text)) type = 'list';
+      else if (ratio >= 1.08 && isBold) type = 'heading3';
+      else if (/^[•‣◦⁃–\-\*•]\s/.test(text)) type = 'list';
 
-      blocks.push({ type, content: text, pageNum });
+      blocks.push({ type, content: text, pageNum, bold: isBold, italic: isItalic, fontSize: rowFontSize });
     }
   }
   flushTable();
@@ -215,162 +394,433 @@ function parsePageBlocks(page: PageContent, thresholdKey: Options['tableThreshol
 
 function parseDocument(pages: PageContent[], options: Options): ParsedDocument {
   const blocks: Block[] = [];
+  let hasOCRPages = false;
+
   for (const page of pages) {
+    if (page.isOCR) hasOCRPages = true;
     blocks.push(...parsePageBlocks(page, options.tableThreshold));
   }
+
+  // Merge hyphenated words across blocks if enabled
+  if (options.mergeHyphens) {
+    for (let i = 0; i < blocks.length - 1; i++) {
+      const curr = blocks[i];
+      const next = blocks[i + 1];
+      if (
+        curr.type === 'paragraph' &&
+        next.type === 'paragraph' &&
+        typeof curr.content === 'string' &&
+        typeof next.content === 'string' &&
+        /\w-$/.test(curr.content)
+      ) {
+        const firstWordOfNext = (next.content as string).split(' ')[0];
+        curr.content = (curr.content as string).slice(0, -1) + firstWordOfNext;
+        next.content = (next.content as string).slice(firstWordOfNext.length).trimStart();
+        if (!next.content) blocks.splice(i + 1, 1);
+      }
+    }
+  }
+
   const tablesCount = blocks.filter(b => b.type === 'table').length;
-  return { blocks, pageCount: pages.length, hasTablesDetected: tablesCount };
+  return { blocks, pageCount: pages.length, hasTablesDetected: tablesCount, hasOCRPages };
 }
 
 // ── Excel Export ──────────────────────────────────────────────────────────────
 
+// Column width from content (in characters, for xlsx)
+function calcColWidth(cells: string[], headerRow?: string[]): number {
+  const allCells = headerRow ? [...cells, ...headerRow] : cells;
+  const maxLen = allCells.reduce((mx, c) => Math.max(mx, (c ?? '').length), 0);
+  return Math.min(Math.max(maxLen + 2, 8), 60);
+}
+
 async function exportExcel(doc: ParsedDocument, fileName: string, options: Options) {
   const XLSX = await import('xlsx');
+
+  // XLSX needs cell styles — use write options bookSST and cellStyles
   const wb = XLSX.utils.book_new();
+
+  // Color palette
+  const HEADER_BG = 'C6EFCE';
+  const HEADER_FG = '006100';
+  const ALT_ROW_BG = 'F2F9F4';
+  const TABLE_BORDER = 'BFBFBF';
+  const TITLE_BG = '305496';
+  const TITLE_FG = 'FFFFFF';
+
+  function makeHeaderStyle(isFirstRow: boolean) {
+    return {
+      font: { bold: true, color: { rgb: isFirstRow ? HEADER_FG : '000000' }, sz: 11 },
+      fill: { fgColor: { rgb: isFirstRow ? HEADER_BG : ALT_ROW_BG }, patternType: 'solid' },
+      border: {
+        top: { style: 'thin', color: { rgb: TABLE_BORDER } },
+        bottom: { style: 'thin', color: { rgb: TABLE_BORDER } },
+        left: { style: 'thin', color: { rgb: TABLE_BORDER } },
+        right: { style: 'thin', color: { rgb: TABLE_BORDER } },
+      },
+      alignment: { vertical: 'center', wrapText: true },
+    };
+  }
+
+  function makeDataStyle(rowIdx: number, isNumber: boolean) {
+    return {
+      font: { sz: 10 },
+      fill: rowIdx % 2 === 0 ? { fgColor: { rgb: ALT_ROW_BG }, patternType: 'solid' } : undefined,
+      border: {
+        top: { style: 'thin', color: { rgb: TABLE_BORDER } },
+        bottom: { style: 'thin', color: { rgb: TABLE_BORDER } },
+        left: { style: 'thin', color: { rgb: TABLE_BORDER } },
+        right: { style: 'thin', color: { rgb: TABLE_BORDER } },
+      },
+      alignment: { vertical: 'top', horizontal: isNumber ? 'right' : 'left', wrapText: true },
+    };
+  }
+
+  function makeTitleStyle() {
+    return {
+      font: { bold: true, color: { rgb: TITLE_FG }, sz: 12 },
+      fill: { fgColor: { rgb: TITLE_BG }, patternType: 'solid' },
+      alignment: { vertical: 'center' },
+    };
+  }
+
+  function makeHeadingStyle(level: number) {
+    const sizes: Record<number, number> = { 1: 16, 2: 13, 3: 11 };
+    return {
+      font: { bold: true, sz: sizes[level] ?? 11 },
+      alignment: { vertical: 'top' },
+    };
+  }
+
+  function applyStylesToSheet(ws: any, rows: any[][], styleMap: Record<string, any>) {
+    for (const [ref, style] of Object.entries(styleMap)) {
+      if (ws[ref]) ws[ref].s = style;
+    }
+  }
+
+  function buildSheet(pageBlocks: Block[]): any {
+    const rows: any[][] = [];
+    const styleMap: Record<string, any> = {};
+    let rowIdx = 0;
+
+    for (const block of pageBlocks) {
+      if (block.type === 'table') {
+        const tableData = block.content as string[][];
+        if (!tableData.length) continue;
+
+        for (let ri = 0; ri < tableData.length; ri++) {
+          const row = tableData[ri];
+          rows.push(row);
+          for (let ci = 0; ci < row.length; ci++) {
+            const ref = XLSX.utils.encode_cell({ r: rowIdx, c: ci });
+            styleMap[ref] = ri === 0 ? makeHeaderStyle(true) : makeDataStyle(ri, /^-?[\d,.]+%?$/.test((row[ci] ?? '').trim()));
+          }
+          rowIdx++;
+        }
+        rows.push([]); // spacer
+        rowIdx++;
+      } else if (block.type === 'heading1' || block.type === 'heading2' || block.type === 'heading3') {
+        const level = parseInt(block.type.slice(-1));
+        rows.push([block.content as string]);
+        const ref = XLSX.utils.encode_cell({ r: rowIdx, c: 0 });
+        styleMap[ref] = makeHeadingStyle(level);
+        rowIdx++;
+        rows.push([]);
+        rowIdx++;
+      } else if (block.type === 'list') {
+        rows.push([`  • ${(block.content as string).replace(/^[•‣◦⁃\-\*•]\s*/, '')}`]);
+        rowIdx++;
+      } else {
+        rows.push([block.content as string]);
+        rowIdx++;
+      }
+    }
+
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    applyStylesToSheet(ws, rows, styleMap);
+    return ws;
+  }
 
   if (options.separateSheets) {
     const pageNums = [...new Set(doc.blocks.map(b => b.pageNum))];
     for (const pageNum of pageNums) {
       const pageBlocks = doc.blocks.filter(b => b.pageNum === pageNum);
-      const rows: string[][] = [];
+      const ws = buildSheet(pageBlocks);
+
+      // Auto column widths
+      const colMax: number[] = [];
       for (const block of pageBlocks) {
         if (block.type === 'table') {
-          for (const row of block.content as string[][]) rows.push(row);
-          rows.push([]);
-        } else if (Array.isArray(block.content)) {
-          rows.push(block.content as string[]);
-        } else {
-          rows.push([block.content as string]);
-          if (block.type.startsWith('heading')) rows.push([]);
+          const tableData = block.content as string[][];
+          for (const row of tableData) {
+            row.forEach((cell, ci) => {
+              colMax[ci] = Math.max(colMax[ci] ?? 6, (cell ?? '').length + 2);
+            });
+          }
         }
       }
-      const ws = XLSX.utils.aoa_to_sheet(rows);
-      // Bold headings
-      let rowIdx = 0;
-      for (const block of pageBlocks) {
-        if (block.type.startsWith('heading')) {
-          const cellRef = XLSX.utils.encode_cell({ r: rowIdx, c: 0 });
-          if (ws[cellRef]) ws[cellRef].s = { font: { bold: true, sz: block.type === 'heading1' ? 16 : 14 } };
-        }
-        if (block.type === 'table') rowIdx += (block.content as string[][]).length + 1;
-        else rowIdx += block.type.startsWith('heading') ? 2 : 1;
-      }
+      ws['!cols'] = colMax.length
+        ? colMax.map(w => ({ wch: Math.min(w, 60) }))
+        : [{ wch: 60 }, ...Array(15).fill({ wch: 20 })];
+
       XLSX.utils.book_append_sheet(wb, ws, `Page ${pageNum}`);
     }
   } else {
-    const allRows: string[][] = [];
-    let tableCount = 0;
-    for (const block of doc.blocks) {
-      if (block.type === 'table') {
-        tableCount++;
-        if (tableCount > 1) allRows.push([]);
-        allRows.push([`── Table ${tableCount} ──`]);
-        for (const row of block.content as string[][]) allRows.push(row);
-        allRows.push([]);
-      } else if (Array.isArray(block.content)) {
-        allRows.push(block.content as string[]);
-      } else {
-        allRows.push([block.content as string]);
-        if (block.type.startsWith('heading')) allRows.push([]);
-      }
-    }
-    const ws = XLSX.utils.aoa_to_sheet(allRows);
-    ws['!cols'] = [{ wch: 60 }, ...Array(10).fill({ wch: 20 })];
+    // Single sheet with all content
+    const ws = buildSheet(doc.blocks);
+    ws['!cols'] = [{ wch: 60 }, ...Array(15).fill({ wch: 22 })];
     XLSX.utils.book_append_sheet(wb, ws, 'Content');
 
-    // Tables on a separate sheet
+    // Separate "Tables" sheet with just extracted tables, richly formatted
     const tableBlocks = doc.blocks.filter(b => b.type === 'table');
-    if (tableBlocks.length > 1) {
-      const tableRows: string[][] = [];
-      tableBlocks.forEach((tb, idx) => {
-        if (idx > 0) tableRows.push([]);
-        tableRows.push([`Table ${idx + 1} (Page ${tb.pageNum})`]);
-        for (const row of tb.content as string[][]) tableRows.push(row);
-      });
+    if (tableBlocks.length) {
+      const tableRows: any[][] = [];
+      const tableStyleMap: Record<string, any> = {};
+      let rowIdx = 0;
+
+      for (let ti = 0; ti < tableBlocks.length; ti++) {
+        const tb = tableBlocks[ti];
+        const tableData = tb.content as string[][];
+        const colCount = Math.max(...tableData.map(r => r.length));
+
+        // Table title row
+        tableRows.push([`Table ${ti + 1}  (Page ${tb.pageNum})`]);
+        const titleRef = XLSX.utils.encode_cell({ r: rowIdx, c: 0 });
+        tableStyleMap[titleRef] = makeTitleStyle();
+        rowIdx++;
+
+        for (let ri = 0; ri < tableData.length; ri++) {
+          const row = tableData[ri];
+          tableRows.push(row);
+          for (let ci = 0; ci < row.length; ci++) {
+            const ref = XLSX.utils.encode_cell({ r: rowIdx, c: ci });
+            tableStyleMap[ref] = ri === 0
+              ? makeHeaderStyle(true)
+              : makeDataStyle(ri, /^-?[\d,.]+%?$/.test((row[ci] ?? '').trim()));
+          }
+          rowIdx++;
+        }
+
+        tableRows.push([], []); // double spacer
+        rowIdx += 2;
+      }
+
       const tws = XLSX.utils.aoa_to_sheet(tableRows);
+      applyStylesToSheet(tws, tableRows, tableStyleMap);
+
+      // Auto-fit column widths for tables sheet
+      const colMax: number[] = [];
+      for (const tb of tableBlocks) {
+        for (const row of tb.content as string[][]) {
+          row.forEach((cell, ci) => {
+            colMax[ci] = Math.max(colMax[ci] ?? 6, (cell ?? '').length + 2);
+          });
+        }
+      }
+      tws['!cols'] = colMax.map(w => ({ wch: Math.min(w, 60) }));
+
       XLSX.utils.book_append_sheet(wb, tws, 'Tables');
     }
   }
 
-  const buf = XLSX.write(wb, { type: 'array', bookType: 'xlsx' });
-  downloadBlob(new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), `${fileName}.xlsx`);
+  const buf = XLSX.write(wb, { type: 'array', bookType: 'xlsx', cellStyles: true });
+  downloadBlob(
+    new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }),
+    `${fileName}.xlsx`,
+  );
 }
 
 // ── Word Export ───────────────────────────────────────────────────────────────
 
-async function exportWord(doc: ParsedDocument, fileName: string) {
-  const { Document, Paragraph, TextRun, Table, TableRow, TableCell, HeadingLevel, Packer,
-    WidthType, BorderStyle, AlignmentType, ShadingType } = await import('docx');
+async function exportWord(doc: ParsedDocument, fileName: string, options: Options) {
+  const {
+    Document, Paragraph, TextRun, Table, TableRow, TableCell,
+    HeadingLevel, Packer, WidthType, BorderStyle, AlignmentType,
+    ShadingType, TableLayoutType,
+  } = await import('docx');
 
-  const children: (typeof Paragraph.prototype | typeof Table.prototype)[] = [];
+  // Compute base font size from median paragraph font size in blocks
+  const fontSizes = doc.blocks
+    .filter(b => b.type === 'paragraph' && typeof b.fontSize === 'number')
+    .map(b => b.fontSize!);
+  const sortedFonts = [...fontSizes].sort((a, b) => a - b);
+  const baseFontPt = sortedFonts[Math.floor(sortedFonts.length / 2)] || 11;
+
+  // Convert PDF pt to docx half-points (1 pt = 2 half-points)
+  const toDocxSize = (pdfPt: number): number => {
+    const ratio = pdfPt / baseFontPt;
+    const docxPt = Math.round(ratio * 11); // normalize to 11pt base
+    return Math.max(16, Math.min(docxPt * 2, 72)); // clamp 8pt–36pt in half-points
+  };
+
+  const children: any[] = [];
 
   for (const block of doc.blocks) {
     switch (block.type) {
       case 'heading1':
-        children.push(new Paragraph({ text: block.content as string, heading: HeadingLevel.HEADING_1 }));
-        break;
-      case 'heading2':
-        children.push(new Paragraph({ text: block.content as string, heading: HeadingLevel.HEADING_2 }));
-        break;
-      case 'heading3':
-        children.push(new Paragraph({ text: block.content as string, heading: HeadingLevel.HEADING_3 }));
-        break;
-      case 'list':
         children.push(new Paragraph({
-          children: [new TextRun({ text: (block.content as string).replace(/^[\u2022\u2023\u25E6\u2043\-\*]\s*/, ''), size: 24 })],
-          bullet: { level: 0 },
+          text: block.content as string,
+          heading: HeadingLevel.HEADING_1,
+          spacing: { before: 240, after: 120 },
         }));
         break;
-      case 'paragraph':
-        children.push(new Paragraph({ children: [new TextRun({ text: block.content as string, size: 24 })] }));
+
+      case 'heading2':
+        children.push(new Paragraph({
+          text: block.content as string,
+          heading: HeadingLevel.HEADING_2,
+          spacing: { before: 200, after: 80 },
+        }));
         break;
+
+      case 'heading3':
+        children.push(new Paragraph({
+          text: block.content as string,
+          heading: HeadingLevel.HEADING_3,
+          spacing: { before: 160, after: 60 },
+        }));
+        break;
+
+      case 'list':
+        children.push(new Paragraph({
+          children: [
+            new TextRun({
+              text: (block.content as string).replace(/^[•‣◦⁃\-\*•]\s*/, ''),
+              size: toDocxSize(block.fontSize ?? baseFontPt),
+              bold: block.bold,
+              italics: block.italic,
+            }),
+          ],
+          bullet: { level: 0 },
+          spacing: { before: 40, after: 40 },
+        }));
+        break;
+
+      case 'paragraph': {
+        const text = block.content as string;
+        const size = toDocxSize(block.fontSize ?? baseFontPt);
+        children.push(new Paragraph({
+          children: [
+            new TextRun({
+              text,
+              size,
+              bold: block.bold,
+              italics: block.italic,
+            }),
+          ],
+          spacing: { before: 60, after: 60, line: 276 },
+        }));
+        break;
+      }
+
       case 'table': {
         const tableData = block.content as string[][];
         if (!tableData.length) break;
         const colCount = Math.max(...tableData.map(r => r.length));
-        const colWidth = Math.floor(9000 / colCount);
+
+        // Proportional column widths (total 9000 DXA = ~6.25 inches)
+        let colWidths: number[];
+        if (block.colWidths && block.colWidths.length === colCount) {
+          const totalPdfWidth = block.colWidths.reduce((s, w) => s + w, 0);
+          colWidths = block.colWidths.map(w => Math.round((w / totalPdfWidth) * 9000));
+        } else {
+          colWidths = Array(colCount).fill(Math.floor(9000 / colCount));
+        }
 
         const tableRows = tableData.map((row, rowIdx) =>
           new TableRow({
-            children: Array(colCount).fill(null).map((_, ci) =>
-              new TableCell({
-                children: [new Paragraph({
-                  children: [new TextRun({
-                    text: row[ci] ?? '',
-                    bold: rowIdx === 0,
-                    size: rowIdx === 0 ? 22 : 20,
-                  })],
-                })],
-                width: { size: colWidth, type: WidthType.DXA },
-                shading: rowIdx === 0 ? { type: ShadingType.CLEAR, fill: 'E8F5E9', color: 'auto' } : undefined,
+            tableHeader: rowIdx === 0,
+            children: Array(colCount).fill(null).map((_, ci) => {
+              const cellText = row[ci] ?? '';
+              const isHeader = rowIdx === 0;
+              const isAltRow = rowIdx % 2 === 0 && rowIdx > 0;
+              return new TableCell({
+                children: [
+                  new Paragraph({
+                    children: [
+                      new TextRun({
+                        text: cellText,
+                        bold: isHeader,
+                        size: isHeader ? 20 : 19,
+                        color: isHeader ? '1F4E79' : '000000',
+                      }),
+                    ],
+                    spacing: { before: 40, after: 40 },
+                  }),
+                ],
+                width: { size: colWidths[ci], type: WidthType.DXA },
+                shading: isHeader
+                  ? { type: ShadingType.CLEAR, fill: 'DDEEFF', color: 'auto' }
+                  : isAltRow
+                  ? { type: ShadingType.CLEAR, fill: 'F5F9FF', color: 'auto' }
+                  : undefined,
                 borders: {
-                  top: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
-                  bottom: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
-                  left: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
-                  right: { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' },
+                  top: { style: BorderStyle.SINGLE, size: 4, color: 'AACCEE' },
+                  bottom: { style: BorderStyle.SINGLE, size: 4, color: 'AACCEE' },
+                  left: { style: BorderStyle.SINGLE, size: 4, color: 'AACCEE' },
+                  right: { style: BorderStyle.SINGLE, size: 4, color: 'AACCEE' },
                 },
-              })
-            ),
+                margins: { top: 40, bottom: 40, left: 80, right: 80 },
+              });
+            }),
           })
         );
 
-        children.push(new Table({ rows: tableRows, width: { size: 100, type: WidthType.PERCENTAGE } }));
-        children.push(new Paragraph({ text: '' }));
+        children.push(
+          new Table({
+            rows: tableRows,
+            width: { size: 100, type: WidthType.PERCENTAGE },
+            layout: TableLayoutType.FIXED,
+          })
+        );
+        children.push(new Paragraph({ text: '', spacing: { before: 120, after: 60 } }));
         break;
       }
     }
   }
 
-  const docx = new Document({
-    sections: [{ children }],
+  const wordDoc = new Document({
+    sections: [
+      {
+        properties: {
+          page: {
+            margin: { top: 1080, bottom: 1080, left: 1080, right: 1080 },
+          },
+        },
+        children,
+      },
+    ],
     styles: {
       default: {
-        document: { run: { font: 'Calibri', size: 24 }, paragraph: { spacing: { line: 276 } } },
+        document: {
+          run: { font: 'Calibri', size: 22, color: '000000' },
+          paragraph: { spacing: { line: 276 } },
+        },
+        heading1: {
+          run: { font: 'Calibri Light', size: 36, bold: true, color: '2F5496' },
+          paragraph: { spacing: { before: 360, after: 120 } },
+        },
+        heading2: {
+          run: { font: 'Calibri Light', size: 28, bold: true, color: '2F5496' },
+          paragraph: { spacing: { before: 280, after: 80 } },
+        },
+        heading3: {
+          run: { font: 'Calibri Light', size: 24, bold: true, color: '2F5496' },
+          paragraph: { spacing: { before: 200, after: 60 } },
+        },
       },
+      paragraphStyles: [
+        {
+          id: 'Normal',
+          name: 'Normal',
+          run: { font: 'Calibri', size: 22 },
+          paragraph: { spacing: { line: 276, before: 60, after: 60 } },
+        },
+      ],
     },
   });
 
-  const blob = await Packer.toBlob(docx);
+  const blob = await Packer.toBlob(wordDoc);
   downloadBlob(blob, `${fileName}.docx`);
 }
 
@@ -415,6 +865,10 @@ export default function PdfConverterClient() {
     separateSheets: false,
     tableThreshold: 'medium',
     mergeHyphens: true,
+    ocrMode: 'auto',
+    ocrLanguage: 'eng',
+    excelStyle: true,
+    wordPreserveLayout: true,
   });
 
   const processFile = useCallback(async (f: File) => {
@@ -431,7 +885,7 @@ export default function PdfConverterClient() {
       };
 
       const pages = await extractPDFPages(f, onProgress, options);
-      onProgress(0.65, 'Detecting tables and structure…');
+      onProgress(0.70, 'Detecting tables and structure…');
       const doc = parseDocument(pages, options);
       onProgress(1, 'Done!');
       setParsedDoc(doc);
@@ -461,7 +915,9 @@ export default function PdfConverterClient() {
     const baseName = file.name.replace(/\.pdf$/i, '');
     try {
       if (type === 'excel') await exportExcel(parsedDoc, baseName, options);
-      else await exportWord(parsedDoc, baseName);
+      else await exportWord(parsedDoc, baseName, options);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Download failed');
     } finally {
       setDownloading(null);
     }
@@ -498,11 +954,11 @@ export default function PdfConverterClient() {
                 PDF to Excel &amp; Word Converter
               </h1>
               <p className="mt-1 text-sm text-zinc-500 sm:text-base">
-                Advanced parser — smart table detection, heading recognition, multi-page support.
-                100% in-browser, no upload.
+                Advanced converter with OCR support — extracts tables, headings, and formatted text.
+                Works on text-based and scanned PDFs. 100% in-browser.
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
-                {['100% in-browser', 'No upload', 'Smart tables', 'Free forever'].map(f => (
+                {['OCR for scanned PDFs', 'Format-preserving', 'Smart table extraction', '100% in-browser', 'Free forever'].map(f => (
                   <span key={f} className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800">
                     {f}
                   </span>
@@ -533,13 +989,16 @@ export default function PdfConverterClient() {
               <Upload className={`h-8 w-8 transition-colors ${dragging ? 'text-emerald-600' : 'text-zinc-400'}`} />
             </div>
             <p className="mt-4 text-lg font-semibold text-zinc-700">Drop your PDF here</p>
-            <p className="mt-1 text-sm text-zinc-400">or click to browse • any PDF supported</p>
+            <p className="mt-1 text-sm text-zinc-400">or click to browse • text PDFs and scanned docs supported</p>
             <div className="mt-6 flex gap-3">
               <span className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-500 shadow-sm">
                 <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-500" /> Excel (.xlsx)
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-500 shadow-sm">
                 <FileType2 className="h-3.5 w-3.5 text-blue-500" /> Word (.docx)
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-500 shadow-sm">
+                <Scan className="h-3.5 w-3.5 text-violet-500" /> OCR ready
               </span>
             </div>
           </div>
@@ -556,32 +1015,64 @@ export default function PdfConverterClient() {
               {showOptions ? <ChevronUp className="h-4 w-4 text-zinc-400" /> : <ChevronDown className="h-4 w-4 text-zinc-400" />}
             </button>
             {showOptions && (
-              <div className="border-t border-zinc-100 px-5 py-4 grid gap-5 sm:grid-cols-2">
+              <div className="border-t border-zinc-100 px-5 py-5 grid gap-6 sm:grid-cols-2">
 
-                {/* Output format */}
-                <div>
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">Output Format</p>
-                  <div className="flex gap-2">
-                    {(['excel', 'word'] as const).map(fmt => (
+                {/* OCR Mode */}
+                <div className="sm:col-span-2">
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 flex items-center gap-1.5">
+                    <Scan className="h-3.5 w-3.5 text-violet-500" /> OCR Mode
+                  </p>
+                  <div className="flex gap-2 flex-wrap">
+                    {([
+                      { val: 'auto', label: 'Auto-detect', desc: 'Use OCR only for scanned pages' },
+                      { val: 'always', label: 'Always OCR', desc: 'Use OCR for all pages (slower)' },
+                      { val: 'never', label: 'Text only', desc: 'Skip OCR — text PDFs only' },
+                    ] as const).map(({ val, label, desc }) => (
                       <button
-                        key={fmt}
-                        onClick={() => setOptions(o => ({ ...o, [`output${fmt === 'excel' ? 'Excel' : 'Word'}` as keyof Options]: !o[`output${fmt === 'excel' ? 'Excel' : 'Word'}` as keyof Options] }))}
-                        className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
-                          options[fmt === 'excel' ? 'outputExcel' : 'outputWord']
-                            ? 'border-emerald-300 bg-emerald-50 text-emerald-800'
-                            : 'border-zinc-200 bg-white text-zinc-500'
+                        key={val}
+                        onClick={() => setOptions(o => ({ ...o, ocrMode: val }))}
+                        className={`flex flex-col items-start rounded-xl border px-3 py-2 text-left transition-colors ${
+                          options.ocrMode === val
+                            ? 'border-violet-300 bg-violet-50 text-violet-900'
+                            : 'border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50'
                         }`}
                       >
-                        {fmt === 'excel' ? <FileSpreadsheet className="h-3.5 w-3.5" /> : <FileType2 className="h-3.5 w-3.5" />}
-                        {fmt === 'excel' ? 'Excel' : 'Word'}
+                        <span className="text-xs font-semibold">{label}</span>
+                        <span className="text-[10px] opacity-70">{desc}</span>
                       </button>
                     ))}
                   </div>
+                  {options.ocrMode !== 'never' && (
+                    <div className="mt-3 flex items-center gap-2">
+                      <label className="text-xs text-zinc-500 font-medium">Language:</label>
+                      <select
+                        value={options.ocrLanguage}
+                        onChange={e => setOptions(o => ({ ...o, ocrLanguage: e.target.value }))}
+                        className="rounded-lg border border-zinc-200 px-2 py-1 text-xs text-zinc-700 bg-white"
+                      >
+                        <option value="eng">English</option>
+                        <option value="fra">French</option>
+                        <option value="deu">German</option>
+                        <option value="spa">Spanish</option>
+                        <option value="por">Portuguese</option>
+                        <option value="ita">Italian</option>
+                        <option value="chi_sim">Chinese (Simplified)</option>
+                        <option value="jpn">Japanese</option>
+                        <option value="kor">Korean</option>
+                        <option value="ara">Arabic</option>
+                        <option value="rus">Russian</option>
+                        <option value="hin">Hindi</option>
+                      </select>
+                      <p className="text-[10px] text-zinc-400">First OCR scan downloads the language model (~5 MB)</p>
+                    </div>
+                  )}
                 </div>
 
                 {/* Table sensitivity */}
                 <div>
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">Table Detection</p>
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 flex items-center gap-1.5">
+                    <Table2 className="h-3.5 w-3.5 text-emerald-500" /> Table Detection
+                  </p>
                   <div className="flex gap-2">
                     {(['low', 'medium', 'high'] as const).map(t => (
                       <button key={t} onClick={() => setOptions(o => ({ ...o, tableThreshold: t }))}
@@ -593,13 +1084,15 @@ export default function PdfConverterClient() {
                       >{t}</button>
                     ))}
                   </div>
-                  <p className="mt-1 text-[11px] text-zinc-400">Low = detect more tables. High = only strict grids.</p>
+                  <p className="mt-1 text-[11px] text-zinc-400">Low = detect more tables. High = strict grids only.</p>
                 </div>
 
                 {/* Page range */}
                 <div>
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">Page Range</p>
-                  <div className="flex gap-2 items-center">
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 flex items-center gap-1.5">
+                    <BookOpen className="h-3.5 w-3.5 text-sky-500" /> Page Range
+                  </p>
+                  <div className="flex gap-2 items-center flex-wrap">
                     <button onClick={() => setOptions(o => ({ ...o, pageRange: 'all' }))}
                       className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${options.pageRange === 'all' ? 'border-emerald-300 bg-emerald-50 text-emerald-800' : 'border-zinc-200 bg-white text-zinc-500'}`}>
                       All pages
@@ -620,9 +1113,11 @@ export default function PdfConverterClient() {
                   </div>
                 </div>
 
-                {/* Separate sheets */}
+                {/* Excel sheets */}
                 <div>
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">Excel Sheets</p>
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 flex items-center gap-1.5">
+                    <Columns className="h-3.5 w-3.5 text-emerald-500" /> Excel Sheets
+                  </p>
                   <div className="flex gap-2">
                     {[false, true].map(v => (
                       <button key={String(v)} onClick={() => setOptions(o => ({ ...o, separateSheets: v }))}
@@ -632,6 +1127,21 @@ export default function PdfConverterClient() {
                     ))}
                   </div>
                 </div>
+
+                {/* Merge hyphens */}
+                <div>
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">Text Options</p>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={options.mergeHyphens}
+                      onChange={e => setOptions(o => ({ ...o, mergeHyphens: e.target.checked }))}
+                      className="rounded"
+                    />
+                    <span className="text-xs text-zinc-600">Merge hyphenated line breaks</span>
+                  </label>
+                </div>
+
               </div>
             )}
           </div>
@@ -656,6 +1166,11 @@ export default function PdfConverterClient() {
               />
             </div>
             <p className="mt-2 text-right text-xs text-zinc-400">{progress}%</p>
+            {progress < 30 && options.ocrMode !== 'never' && (
+              <p className="mt-2 text-xs text-violet-500 flex items-center gap-1">
+                <Scan className="h-3 w-3" /> OCR engine may download language model on first use (~5 MB)
+              </p>
+            )}
           </div>
         )}
 
@@ -678,10 +1193,15 @@ export default function PdfConverterClient() {
           <>
             {/* Stats bar */}
             <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5 text-emerald-600" />
+              <div className="flex items-center gap-2 flex-wrap">
+                <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0" />
                 <span className="font-semibold text-emerald-900">Parsed successfully</span>
                 <span className="text-sm text-emerald-700">· {file.name}</span>
+                {parsedDoc.hasOCRPages && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-violet-100 border border-violet-200 px-2 py-0.5 text-[10px] font-semibold text-violet-800">
+                    <Scan className="h-2.5 w-2.5" /> OCR used
+                  </span>
+                )}
               </div>
               <button onClick={reset} className="rounded-lg border border-emerald-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-50 flex items-center gap-1.5">
                 <X className="h-3.5 w-3.5" /> New file
@@ -730,6 +1250,11 @@ export default function PdfConverterClient() {
                 </button>
               </div>
               <p className="mt-3 text-xs text-zinc-400">Files are generated entirely in your browser. Nothing is uploaded.</p>
+              {parsedDoc.hasTablesDetected > 0 && (
+                <p className="mt-1 text-xs text-emerald-600">
+                  ✓ {parsedDoc.hasTablesDetected} table{parsedDoc.hasTablesDetected !== 1 ? 's' : ''} detected — Excel file includes a dedicated "Tables" sheet with rich formatting.
+                </p>
+              )}
             </div>
 
             {/* Preview */}
@@ -742,8 +1267,8 @@ export default function PdfConverterClient() {
                 {showPreview ? <ChevronUp className="h-4 w-4 text-zinc-400" /> : <ChevronDown className="h-4 w-4 text-zinc-400" />}
               </button>
               {showPreview && (
-                <div className="border-t border-zinc-100 max-h-[520px] overflow-y-auto p-5 space-y-3">
-                  {parsedDoc.blocks.slice(0, 80).map((block, idx) => {
+                <div className="border-t border-zinc-100 max-h-[560px] overflow-y-auto p-5 space-y-3">
+                  {parsedDoc.blocks.slice(0, 100).map((block, idx) => {
                     if (block.type === 'table') {
                       const rows = block.content as string[][];
                       return (
@@ -757,17 +1282,17 @@ export default function PdfConverterClient() {
                           <div className="overflow-x-auto rounded-lg border border-zinc-200">
                             <table className="w-full text-xs border-collapse">
                               <tbody>
-                                {rows.slice(0, 12).map((row, ri) => (
+                                {rows.slice(0, 15).map((row, ri) => (
                                   <tr key={ri} className={ri === 0 ? 'bg-emerald-50 font-semibold' : ri % 2 === 0 ? 'bg-white' : 'bg-zinc-50'}>
                                     {row.map((cell, ci) => (
                                       <td key={ci} className="border border-zinc-200 px-2.5 py-1.5 text-zinc-700 max-w-[200px] truncate">{cell}</td>
                                     ))}
                                   </tr>
                                 ))}
-                                {rows.length > 12 && (
+                                {rows.length > 15 && (
                                   <tr>
                                     <td colSpan={99} className="border border-zinc-200 px-2.5 py-1.5 text-center text-zinc-400 text-[11px]">
-                                      +{rows.length - 12} more rows in export
+                                      +{rows.length - 15} more rows in export
                                     </td>
                                   </tr>
                                 )}
@@ -779,24 +1304,26 @@ export default function PdfConverterClient() {
                     }
 
                     if (block.type === 'heading1') return (
-                      <p key={idx} className="text-lg font-bold text-zinc-900 border-b border-zinc-100 pb-1">{block.content as string}</p>
+                      <p key={idx} className="text-lg font-bold text-zinc-900 border-b border-zinc-100 pb-1 mt-3">{block.content as string}</p>
                     );
                     if (block.type === 'heading2') return (
-                      <p key={idx} className="text-base font-semibold text-zinc-800">{block.content as string}</p>
+                      <p key={idx} className="text-base font-semibold text-zinc-800 mt-2">{block.content as string}</p>
                     );
                     if (block.type === 'heading3') return (
                       <p key={idx} className="text-sm font-semibold text-zinc-700">{block.content as string}</p>
                     );
                     if (block.type === 'list') return (
-                      <p key={idx} className="text-sm text-zinc-600 pl-4">• {(block.content as string).replace(/^[\u2022\-\*]\s*/, '')}</p>
+                      <p key={idx} className="text-sm text-zinc-600 pl-4">• {(block.content as string).replace(/^[•\-\*•]\s*/, '')}</p>
                     );
                     return (
-                      <p key={idx} className="text-sm text-zinc-600 leading-relaxed">{block.content as string}</p>
+                      <p key={idx} className={`text-sm leading-relaxed ${block.bold ? 'font-semibold text-zinc-800' : 'text-zinc-600'} ${block.italic ? 'italic' : ''}`}>
+                        {block.content as string}
+                      </p>
                     );
                   })}
-                  {parsedDoc.blocks.length > 80 && (
+                  {parsedDoc.blocks.length > 100 && (
                     <p className="text-center text-xs text-zinc-400 pt-2">
-                      Showing 80 of {parsedDoc.blocks.length} blocks. Full content in exported files.
+                      Showing 100 of {parsedDoc.blocks.length} blocks. Full content in exported files.
                     </p>
                   )}
                 </div>
@@ -813,15 +1340,42 @@ export default function PdfConverterClient() {
             </h2>
             <div className="grid gap-4 sm:grid-cols-3">
               {[
-                { step: '1', title: 'Upload PDF', desc: 'Drag and drop any PDF — text-based, scanned, form, or report.', icon: '📤' },
-                { step: '2', title: 'Smart parsing', desc: 'AI-powered table detection using text position analysis. Identifies headings, paragraphs, lists, and multi-column tables.', icon: '🔍' },
-                { step: '3', title: 'Download', desc: 'Get a structured Excel file with table sheets, or a formatted Word doc with preserved hierarchy.', icon: '⬇️' },
+                {
+                  step: '1', title: 'Upload PDF', icon: '📤',
+                  desc: 'Drop any PDF — text-based reports, scanned documents, forms, or tables. Up to hundreds of pages.',
+                },
+                {
+                  step: '2', title: 'Smart parsing + OCR', icon: '🔍',
+                  desc: 'Text PDFs are parsed directly for 100% accuracy. Scanned pages are automatically run through OCR (Tesseract engine) to extract text from images.',
+                },
+                {
+                  step: '3', title: 'Download', icon: '⬇️',
+                  desc: 'Excel: tables get their own richly-formatted sheet with bold headers, borders, and auto-fitted columns. Word: headings, paragraphs, and tables with preserved hierarchy.',
+                },
               ].map(s => (
                 <div key={s.step} className="flex gap-3">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-xs font-bold text-zinc-600">{s.step}</div>
                   <div>
                     <p className="text-sm font-semibold text-zinc-900">{s.icon} {s.title}</p>
                     <p className="mt-1 text-xs text-zinc-500 leading-relaxed">{s.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Feature highlights */}
+            <div className="mt-6 grid gap-3 sm:grid-cols-2 border-t border-zinc-100 pt-5">
+              {[
+                { icon: '🖨️', title: 'OCR for scanned PDFs', desc: 'Automatically detects scanned pages and runs Tesseract OCR — supports 12+ languages.' },
+                { icon: '📊', title: 'Advanced table extraction', desc: 'Column alignment scoring identifies complex multi-column tables, not just simple grids.' },
+                { icon: '🎨', title: 'Rich Excel formatting', desc: 'Bold headers, alternating row colors, auto column widths, and a dedicated Tables sheet.' },
+                { icon: '📝', title: 'Format-preserving Word', desc: 'Font size ratios preserved, bold/italic detected, proportional table column widths.' },
+              ].map(f => (
+                <div key={f.title} className="flex gap-3 rounded-xl bg-zinc-50 border border-zinc-100 p-3">
+                  <span className="text-xl shrink-0">{f.icon}</span>
+                  <div>
+                    <p className="text-xs font-semibold text-zinc-900">{f.title}</p>
+                    <p className="text-[11px] text-zinc-500 mt-0.5 leading-relaxed">{f.desc}</p>
                   </div>
                 </div>
               ))}

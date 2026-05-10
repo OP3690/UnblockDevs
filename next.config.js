@@ -2,6 +2,11 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  // Prevent bundling of tesseract.js server-side (it uses browser APIs)
+  // The client imports it dynamically so this only affects server-side builds
+  experimental: {
+    serverComponentsExternalPackages: ['tesseract.js'],
+  },
   images: {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 86400, // 24 hours (was 60s — reduced unnecessary reloads)
