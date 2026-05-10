@@ -98,6 +98,30 @@ const nextConfig = {
         source: '/manifest.json',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=86400' }],
       },
+      // Tesseract.js worker — must be loaded as a script
+      {
+        source: '/tesseract.worker.min.js',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+          { key: 'Content-Type', value: 'application/javascript' },
+        ],
+      },
+      // Tesseract WASM core files — correct MIME type required
+      {
+        source: '/tesseract-core/:file*.wasm',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+          { key: 'Content-Type', value: 'application/wasm' },
+        ],
+      },
+      // Tesseract WASM JS loaders
+      {
+        source: '/tesseract-core/:file*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+          { key: 'Content-Type', value: 'application/javascript' },
+        ],
+      },
       {
         source: '/_next/static/(.*)',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],

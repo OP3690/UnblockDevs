@@ -78,8 +78,8 @@ async function initTesseract(lang: string, onProgress: (msg: string) => void): P
     workerPath: '/tesseract.worker.min.js',
     // langPath: CDN directory with traineddata files (e.g. eng.traineddata.gz)
     langPath: 'https://tessdata.projectnaptha.com/4.0.0',
-    // corePath: CDN directory that contains all 4 WASM builds (Tesseract.js v7 picks best one)
-    corePath: 'https://cdn.jsdelivr.net/npm/tesseract.js-core@6.0.0/',
+    // corePath: local directory served from /public/tesseract-core (all 4 WASM builds)
+    corePath: '/tesseract-core/',
     logger: (m: any) => {
       if (m.status === 'recognizing text' && typeof m.progress === 'number') {
         onProgress(`OCR: ${Math.round(m.progress * 100)}%`);

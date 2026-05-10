@@ -317,7 +317,7 @@ async function getWorker(
   const worker = await Tesseract.createWorker(lang, oem, {
     workerPath: '/tesseract.worker.min.js',
     langPath: 'https://tessdata.projectnaptha.com/4.0.0',
-    corePath: 'https://cdn.jsdelivr.net/npm/tesseract.js-core@6.0.0/',
+    corePath: '/tesseract-core/',
     logger: (m: any) => {
       if (m.status === 'loading tesseract core') onStatus('Loading OCR core…');
       if (m.status === 'loading language traineddata') onStatus(`Downloading ${lang} language model…`);
