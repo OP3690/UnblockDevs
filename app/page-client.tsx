@@ -201,6 +201,7 @@ function HomeClient({ hero }: { hero: ReactNode }) {
                 ['/markdown-preview', 'Markdown Preview'],
                 ['/http-headers-analyzer', 'HTTP Headers Analyzer'],
                 ['/string-utilities', 'String Utilities'],
+                ['/image-to-text', 'Image to Text (OCR)'],
               ].map(([href, label]) => (
                 <Link key={href} href={href} className="text-emerald-800 hover:text-emerald-950 hover:underline">
                   ✓ {label}

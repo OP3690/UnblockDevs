@@ -437,6 +437,14 @@ export const TOOLS_DIRECTORY: DirectoryTool[] = [
     icon: 'Type',
     badge: 'new',
   },
+  {
+    href: '/image-to-text',
+    name: 'Image to Text (OCR)',
+    description: 'Extract text from images, scanned photos, and documents with advanced OCR. 18 languages, table detection, confidence scoring. JPEG, PNG, WebP, TIFF supported.',
+    category: 'dev',
+    icon: 'ScanLine',
+    badge: 'new',
+  },
 ];
 
 export const TOOL_COUNT = TOOLS_DIRECTORY.length;

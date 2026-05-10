@@ -72,6 +72,7 @@ const ALL_TOOLS: Tool[] = [
   { label: 'Data Insights', href: '/data-insights', desc: 'Analyze CSV and data files', tags: 'csv data analyze statistics chart', cat: 'Dev', icon: '📊' },
   { label: 'SVG to Image', href: '/svg-to-image', desc: 'Export SVG as PNG or JPEG', tags: 'svg image png jpg export convert raster', cat: 'Dev', icon: '🖼️' },
   { label: 'PDF to Excel/Word', href: '/pdf-to-excel-word', desc: 'Convert PDF to Excel or Word', tags: 'pdf excel csv word convert', cat: 'Dev', icon: '📄' },
+  { label: 'Image to Text (OCR)', href: '/image-to-text', desc: 'Extract text from images and scanned photos', tags: 'ocr image text extract photo scan jpeg png webp tiff', cat: 'Dev', icon: '🔍' },
   { label: 'Cron Builder', href: '/cron-expression', desc: 'Build and validate cron expressions', tags: 'cron job schedule expression syntax', cat: 'Dev', icon: '⏰' },
   { label: 'Markdown Preview', href: '/markdown-preview', desc: 'Write and preview Markdown', tags: 'markdown md preview github gfm', cat: 'Dev', icon: '📝' },
   { label: 'Color Picker', href: '/color-picker', desc: 'Pick colors and convert formats', tags: 'color picker hex rgb hsl convert', cat: 'CSS', icon: '🎨' },

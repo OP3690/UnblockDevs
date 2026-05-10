@@ -27,6 +27,7 @@ import {
   Sparkles,
   Zap,
   CheckCircle,
+  ScanLine,
 } from 'lucide-react';
 import type { ToolTab } from '@/lib/personalization';
 
@@ -204,6 +205,7 @@ export default function HomeToolDiscovery({
         { href: toolPageUrls.sql, label: 'SQL formatter', hint: 'Pretty-print queries', icon: Database, badge: 'Hot' },
         { href: toolPageUrls.tokencompare, label: 'Token compare', hint: 'JWT & keys side by side', icon: Key },
         { href: '/svg-to-image', label: 'SVG → image', hint: 'PNG / JPEG export', icon: Image },
+        { href: '/image-to-text', label: 'Image → text', hint: 'OCR any photo or scan', icon: ScanLine },
       ],
     },
     {

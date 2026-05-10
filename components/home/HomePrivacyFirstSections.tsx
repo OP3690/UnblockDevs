@@ -145,6 +145,7 @@ export default function HomePrivacyFirstSections({
       { label: 'Log Explorer',      cats: ['all','json','dev'],    icon: FileSearch,     href: toolPageUrls.logs },
       { label: 'SQL IN Generator',  cats: ['all','json','dev'],    icon: Database,       variant: 'new', href: '/sql-in-generator' },
       { label: 'AI Schema Masker',  cats: ['all','ai'],            icon: ShieldCheck,    variant: 'ai', href: toolPageUrls.schemamasker },
+      { label: 'Image to Text',     cats: ['all','dev'],           icon: FileSearch,     variant: 'new', href: '/image-to-text' },
     ],
     [toolPageUrls],
   );
