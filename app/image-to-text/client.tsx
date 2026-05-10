@@ -58,6 +58,7 @@ interface OcrResult {
   docType: DocType;              // detected document category
   structuredBlocks: StructuredBlock[]; // parsed semantic blocks
   file: File;                    // original File — kept for re-run with new settings
+  autoStrategy: string;          // human-readable description of auto-applied OCR strategy
 }
 
 interface Options {
@@ -662,12 +663,6 @@ async function runOCR(
     el.src = imageUrl;
   });
 
-  onStatus('Pre-processing image…');
-  const { canvas, applied: preprocessApplied } = applyPreprocessing(img, options.preprocess);
-
-  onStatus('Starting OCR engine…');
-  const worker = await getWorker(options.language, options.oem, onStatus);
-
   // ── Tesseract parameters ─────────────────────────────────────────────────
   // Disable dictionary-based filtering so alphanumeric codes (PAN, IDs,
   // serial numbers) are not silently dropped as "not a real word".
@@ -678,11 +673,40 @@ async function runOCR(
     load_freq_dawg:            '0',   // no frequency-list filtering
   };
 
-  const psmLabel = PSM_MODES.find(p => p.value === options.psm)?.label ?? 'Auto';
+  onStatus('Starting OCR engine…');
+  const worker = await getWorker(options.language, options.oem, onStatus);
 
-  // ── Pass 1: user-selected PSM ────────────────────────────────────────────
+  // ── Detection pre-pass ───────────────────────────────────────────────────
+  // Fast, minimal-preprocessing scan to detect the document type.
+  // Result is used ONLY for type detection — not kept in final output.
+  onStatus('Detecting document type…');
+  const { canvas: detectCanvas } = applyPreprocessing(img, {
+    grayscale: true, contrast: false, sharpen: false,
+    upscale: true, threshold: false, denoise: false,
+  });
+  await worker.setParameters({ ...baseParams, tessedit_pageseg_mode: '3' });
+  const { data: dDetect } = await worker.recognize(detectCanvas, {}, { text: true });
+  const detectedDocType = detectDocumentType((dDetect.text ?? '').trim());
+
+  // ── Apply optimal strategy for detected doc type ─────────────────────────
+  // Overrides PSM + preprocess + multiPass. Keeps user's language + confidenceFilter.
+  const strategy = DOC_TYPE_OCR_STRATEGY[detectedDocType];
+  const effectiveOptions: Options = {
+    ...options,
+    psm:        strategy.psm,
+    multiPass:  strategy.multiPass,
+    preprocess: strategy.preprocess,
+  };
+
+  onStatus(`Detected: ${DOC_TYPE_META[detectedDocType].label} — applying optimal settings…`);
+
+  // ── Main OCR pass with optimal settings ──────────────────────────────────
+  const { canvas, applied: preprocessApplied } = applyPreprocessing(img, effectiveOptions.preprocess);
+
+  const psmLabel = PSM_MODES.find(p => p.value === effectiveOptions.psm)?.label ?? 'Auto';
+
   onStatus('Recognizing… pass 1');
-  await worker.setParameters({ ...baseParams, tessedit_pageseg_mode: options.psm });
+  await worker.setParameters({ ...baseParams, tessedit_pageseg_mode: effectiveOptions.psm });
   const { data: d1 } = await worker.recognize(canvas, {}, { text: true, blocks: true });
   // Apply quality gate to primary pass: drop pure-symbol single-char noise
   let allWords = extractWords(d1).filter(w => isUsableWord(w, 0, 1));
@@ -693,7 +717,7 @@ async function runOCR(
   // PSM 11 is aggressive — it sees decorative borders and QR edges as text.
   // The high confidence threshold keeps genuine missed text (PAN numbers,
   // codes on coloured backgrounds) while rejecting graphic noise.
-  if (options.multiPass && options.psm !== '11') {
+  if (effectiveOptions.multiPass && effectiveOptions.psm !== '11') {
     onStatus('Recognizing… pass 2 (sparse scan)');
     await worker.setParameters({ ...baseParams, tessedit_pageseg_mode: '11' });
     const { data: d2 } = await worker.recognize(canvas, {}, { text: true, blocks: true });
@@ -705,24 +729,21 @@ async function runOCR(
       paragraphs.push(...extractParagraphs(d2));
     }
   }
-  // Note: PSM 6 (single uniform block) removed from auto multi-pass.
-  // It treats the entire image as one block — catastrophic for mixed-layout
-  // documents (ID cards, forms with photos) as it merges photo and text regions.
 
-  // Reset to user-chosen PSM for any future calls
-  await worker.setParameters({ tessedit_pageseg_mode: options.psm });
+  // Reset to effective PSM for any future calls
+  await worker.setParameters({ tessedit_pageseg_mode: effectiveOptions.psm });
 
   const t1 = performance.now();
 
   // ── Build final outputs ──────────────────────────────────────────────────
   const filteredWords = allWords.filter(
-    w => w.confidence >= options.confidenceFilter && isUsableWord(w, 0, 1)
+    w => w.confidence >= effectiveOptions.confidenceFilter && isUsableWord(w, 0, 1)
   );
   const wordsForText = filteredWords.length ? filteredWords : allWords;
 
   // Detect if multi-language model is active — if so, trust Tesseract's output
   // for non-Latin scripts rather than stripping "garbled" words.
-  const isMultiLang = options.language.includes('+');
+  const isMultiLang = effectiveOptions.language.includes('+');
 
   // Build clean text: confidence-aware line filtering + garbled-word stripping
   const text = buildCleanText(wordsForText, isMultiLang);
@@ -733,7 +754,7 @@ async function runOCR(
 
   // Garbling analysis — used to show language suggestion in the UI
   const garbledRatio = isMultiLang ? 0 : computeGarbledRatio(allWords);
-  const suggestLang = suggestLanguage(options.language, garbledRatio, confidence);
+  const suggestLang = suggestLanguage(effectiveOptions.language, garbledRatio, confidence);
 
   const tableData = detectTableFromWords(filteredWords, img.naturalHeight);
   const hasTable = tableData !== null && tableData.length >= 3;
@@ -771,8 +792,9 @@ async function runOCR(
     wordCount: cleanedText.split(/\s+/).filter(Boolean).length,
     charCount: cleanedText.replace(/\s/g, '').length,
     processingMs: Math.round(t1 - t0),
-    language: options.language,
+    language: effectiveOptions.language,
     psmLabel,
+    autoStrategy: `${DOC_TYPE_META[detectedDocType].icon} ${DOC_TYPE_META[detectedDocType].label} — ${strategy.label}`,
     hasTable,
     tableData: hasTable ? tableData! : undefined,
     preprocessApplied,
@@ -1326,6 +1348,28 @@ const DOC_TYPE_META: Record<DocType, { icon: string; label: string; cls: string 
   general:         { icon: '📄', label: 'Document',          cls: 'text-zinc-600 bg-zinc-50 border-zinc-200' },
 };
 
+// ── Per-document optimal OCR strategy ────────────────────────────────────────
+// Auto-applied after a fast detection pre-pass identifies the document type.
+// Language and confidenceFilter come from user options and are never overridden.
+const DOC_TYPE_OCR_STRATEGY: Record<DocType, {
+  psm: string;
+  multiPass: boolean;
+  preprocess: Options['preprocess'];
+  label: string;
+}> = {
+  aadhaar:         { psm: '3', multiPass: true,  preprocess: { grayscale: true,  contrast: true,  sharpen: true,  upscale: true,  threshold: false, denoise: false }, label: 'ID — high-upscale + contrast + multi-pass'       },
+  pan:             { psm: '3', multiPass: true,  preprocess: { grayscale: true,  contrast: true,  sharpen: true,  upscale: true,  threshold: false, denoise: false }, label: 'ID — high-upscale + contrast + multi-pass'       },
+  passport:        { psm: '3', multiPass: true,  preprocess: { grayscale: true,  contrast: true,  sharpen: false, upscale: true,  threshold: false, denoise: false }, label: 'Passport — MRZ-safe upscale + multi-pass'         },
+  driving_license: { psm: '3', multiPass: true,  preprocess: { grayscale: true,  contrast: true,  sharpen: true,  upscale: true,  threshold: false, denoise: false }, label: 'ID — high-upscale + contrast + multi-pass'       },
+  voter_id:        { psm: '3', multiPass: true,  preprocess: { grayscale: true,  contrast: true,  sharpen: true,  upscale: true,  threshold: false, denoise: false }, label: 'ID — high-upscale + contrast + multi-pass'       },
+  invoice:         { psm: '3', multiPass: true,  preprocess: { grayscale: true,  contrast: true,  sharpen: false, upscale: true,  threshold: false, denoise: false }, label: 'Invoice — table-aware auto layout + multi-pass'   },
+  receipt:         { psm: '4', multiPass: true,  preprocess: { grayscale: true,  contrast: true,  sharpen: false, upscale: true,  threshold: false, denoise: false }, label: 'Receipt — single-column layout + multi-pass'      },
+  medical:         { psm: '3', multiPass: true,  preprocess: { grayscale: true,  contrast: false, sharpen: false, upscale: true,  threshold: false, denoise: false }, label: 'Medical — gentle processing, multi-pass'          },
+  insurance:       { psm: '3', multiPass: true,  preprocess: { grayscale: true,  contrast: true,  sharpen: true,  upscale: true,  threshold: false, denoise: false }, label: 'Document — upscale + contrast + multi-pass'      },
+  book:            { psm: '6', multiPass: true,  preprocess: { grayscale: true,  contrast: true,  sharpen: true,  upscale: true,  threshold: false, denoise: true  }, label: 'Book — uniform-block PSM + denoise + multi-pass'  },
+  general:         { psm: '3', multiPass: true,  preprocess: { grayscale: true,  contrast: true,  sharpen: false, upscale: false, threshold: false, denoise: false }, label: 'Auto — balanced defaults'                        },
+};
+
 // ── Structured renderer ───────────────────────────────────────────────────────
 //
 // Sections pipeline:
@@ -1628,13 +1672,18 @@ function ResultCard({
         </div>
       </div>
 
+      {/* ── Auto-strategy banner ──────────────────────────────────────────────── */}
+      <div className="px-4 py-2 border-b border-zinc-100 bg-gradient-to-r from-violet-50/60 to-indigo-50/40 flex items-center gap-2">
+        <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-violet-500 shrink-0">Auto</span>
+        <span className="text-[11px] text-zinc-500 truncate">{result.autoStrategy}</span>
+      </div>
+
       {/* ── Stats strip ───────────────────────────────────────────────────────── */}
       <div className="flex items-center gap-0 border-b border-zinc-100 divide-x divide-zinc-100 bg-zinc-50/60">
         {[
-          { icon: '📝', label: 'Words',   value: result.wordCount },
-          { icon: '🔤', label: 'Chars',   value: result.charCount },
-          { icon: '⚡', label: 'Engine',  value: result.psmLabel },
-          { icon: '⏱️', label: 'Time',    value: `${(result.processingMs / 1000).toFixed(1)}s` },
+          { icon: '📝', label: 'Words',    value: result.wordCount },
+          { icon: '🔤', label: 'Chars',    value: result.charCount },
+          { icon: '⏱️', label: 'Time',     value: `${(result.processingMs / 1000).toFixed(1)}s` },
           { icon: '🌐', label: 'Language', value: result.language },
         ].map(s => (
           <div key={s.label} className="flex-1 px-3 py-2 text-center min-w-0">
@@ -2108,55 +2157,19 @@ export default function ImageToTextClient() {
           {showOptions && (
             <div className="border-t border-zinc-100">
 
-              {/* ── Section 1: Quick Presets ─────────────────────────────────── */}
-              <div className="px-5 pt-5 pb-4">
-                <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.1em] text-zinc-400 flex items-center gap-2">
-                  <span className="flex-1 border-t border-zinc-100" />
-                  Quick Presets
-                  <span className="flex-1 border-t border-zinc-100" />
-                </p>
-                <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-                  {([
-                    // Identity documents
-                    { emoji: '🪪', label: 'Aadhaar',    color: 'blue',    hint: 'Best for Aadhaar cards',   opts: { language: 'eng', psm: '3', multiPass: true,  preprocess: { grayscale: true, contrast: true, sharpen: true,  upscale: true, threshold: false, denoise: false } } },
-                    { emoji: '💳', label: 'PAN Card',   color: 'orange',  hint: 'Best for PAN cards',        opts: { language: 'eng', psm: '3', multiPass: true,  preprocess: { grayscale: true, contrast: true, sharpen: true,  upscale: true, threshold: false, denoise: false } } },
-                    { emoji: '📘', label: 'Passport',   color: 'indigo',  hint: 'Best for passports',        opts: { language: 'eng', psm: '3', multiPass: true,  preprocess: { grayscale: true, contrast: true, sharpen: false, upscale: true, threshold: false, denoise: false } } },
-                    { emoji: '🚗', label: 'DL / ID',    color: 'teal',    hint: 'Driving license / Voter ID',opts: { language: 'eng', psm: '3', multiPass: true,  preprocess: { grayscale: true, contrast: true, sharpen: true,  upscale: true, threshold: false, denoise: false } } },
-                    // Financial
-                    { emoji: '🧾', label: 'Invoice',    color: 'emerald', hint: 'Invoice / Bill / Receipt',  opts: { language: 'eng', psm: '3', multiPass: true,  preprocess: { grayscale: true, contrast: true, sharpen: false, upscale: true, threshold: false, denoise: false } } },
-                    { emoji: '📋', label: 'Insurance',  color: 'violet',  hint: 'Insurance policy docs',     opts: { language: 'eng', psm: '3', multiPass: true,  preprocess: { grayscale: true, contrast: true, sharpen: true,  upscale: true, threshold: false, denoise: false } } },
-                    { emoji: '🏥', label: 'Medical',    color: 'red',     hint: 'Medical bills & reports',   opts: { language: 'eng', psm: '3', multiPass: true,  preprocess: { grayscale: true, contrast: false, sharpen: false, upscale: true, threshold: false, denoise: false } } },
-                    // Text / Print
-                    { emoji: '📖', label: 'Book Page',  color: 'amber',   hint: 'Book / article / scan',     opts: { language: 'eng', psm: '6', multiPass: true,  preprocess: { grayscale: true, contrast: true, sharpen: true,  upscale: true, threshold: false, denoise: true  } } },
-                    { emoji: '🖨️', label: 'Typed Doc',  color: 'zinc',    hint: 'Typed letter / form',       opts: { language: 'eng', psm: '3', multiPass: false, preprocess: { grayscale: true, contrast: false, sharpen: false, upscale: false, threshold: false, denoise: false } } },
-                    { emoji: '✍️', label: 'Handwritten',color: 'pink',    hint: 'Handwritten notes (best-effort)', opts: { language: 'eng', psm: '3', multiPass: true, preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: true } } },
-                  ] as const).map(({ emoji, label, color, hint, opts }) => {
-                    const colorMap: Record<string, string> = {
-                      blue:    'border-blue-200    bg-blue-50    text-blue-800    hover:bg-blue-100    hover:border-blue-300',
-                      orange:  'border-orange-200  bg-orange-50  text-orange-800  hover:bg-orange-100  hover:border-orange-300',
-                      indigo:  'border-indigo-200  bg-indigo-50  text-indigo-800  hover:bg-indigo-100  hover:border-indigo-300',
-                      teal:    'border-teal-200    bg-teal-50    text-teal-800    hover:bg-teal-100    hover:border-teal-300',
-                      emerald: 'border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 hover:border-emerald-300',
-                      violet:  'border-violet-200  bg-violet-50  text-violet-800  hover:bg-violet-100  hover:border-violet-300',
-                      red:     'border-red-200     bg-red-50     text-red-800     hover:bg-red-100     hover:border-red-300',
-                      amber:   'border-amber-200   bg-amber-50   text-amber-800   hover:bg-amber-100   hover:border-amber-300',
-                      zinc:    'border-zinc-200    bg-zinc-50    text-zinc-700    hover:bg-zinc-100    hover:border-zinc-300',
-                      pink:    'border-pink-200    bg-pink-50    text-pink-800    hover:bg-pink-100    hover:border-pink-300',
-                    };
-                    return (
-                      <button
-                        key={label}
-                        title={hint}
-                        onClick={() => setOptions(o => ({ ...o, ...opts }))}
-                        className={`flex flex-col items-center gap-1.5 rounded-xl border px-2 py-3 text-xs font-semibold transition-all duration-150 ${colorMap[color]}`}
-                      >
-                        <span className="text-xl leading-none">{emoji}</span>
-                        <span className="text-center leading-tight">{label}</span>
-                      </button>
-                    );
-                  })}
+              {/* ── Section 1: Auto-detection info ───────────────────────────── */}
+              <div className="px-5 pt-4 pb-3">
+                <div className="flex items-start gap-3 rounded-xl bg-violet-50 border border-violet-100 px-4 py-3">
+                  <span className="text-lg shrink-0 mt-0.5">✨</span>
+                  <div>
+                    <p className="text-xs font-semibold text-violet-800 leading-tight">Fully automatic — no preset needed</p>
+                    <p className="text-[11px] text-violet-600 mt-0.5 leading-relaxed">
+                      On every upload, a fast detection scan identifies the document type (Aadhaar, PAN, Passport, Invoice, Medical, etc.)
+                      and automatically applies the optimal PSM mode, preprocessing pipeline, and multi-pass strategy.
+                      Just drop your image — it works.
+                    </p>
+                  </div>
                 </div>
-                <p className="mt-2 text-[11px] text-zinc-400">Each preset tunes language model, PSM layout mode, and preprocessing for that document type.</p>
               </div>
 
               <div className="mx-5 border-t border-zinc-100" />
