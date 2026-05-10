@@ -858,7 +858,7 @@ export default function ImageToTextClient() {
       threshold: false,
       denoise: false,
     },
-    outputMode: 'text',
+    outputMode: 'plain',
     confidenceFilter: 0,
     showBboxOverlay: false,
   });
