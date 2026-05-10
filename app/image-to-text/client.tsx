@@ -75,25 +75,31 @@ interface Options {
 
 // ── Language / PSM maps ───────────────────────────────────────────────────────
 
-const LANGUAGES: { code: string; label: string }[] = [
-  { code: 'eng', label: 'English' },
-  { code: 'fra', label: 'French' },
-  { code: 'deu', label: 'German' },
-  { code: 'spa', label: 'Spanish' },
-  { code: 'por', label: 'Portuguese' },
-  { code: 'ita', label: 'Italian' },
-  { code: 'nld', label: 'Dutch' },
-  { code: 'pol', label: 'Polish' },
-  { code: 'rus', label: 'Russian' },
-  { code: 'ara', label: 'Arabic' },
-  { code: 'hin', label: 'Hindi' },
-  { code: 'chi_sim', label: 'Chinese (Simplified)' },
-  { code: 'chi_tra', label: 'Chinese (Traditional)' },
-  { code: 'jpn', label: 'Japanese' },
-  { code: 'kor', label: 'Korean' },
-  { code: 'vie', label: 'Vietnamese' },
-  { code: 'tur', label: 'Turkish' },
-  { code: 'ukr', label: 'Ukrainian' },
+const LANGUAGES: { code: string; label: string; hint?: string }[] = [
+  { code: 'eng',         label: 'English' },
+  // ── Bilingual combos (recommended for mixed-script documents) ──
+  { code: 'eng+hin',     label: '🇮🇳 English + Hindi',   hint: 'Best for PAN card, Aadhaar, Indian govt docs' },
+  { code: 'eng+ara',     label: '🌍 English + Arabic',   hint: 'Best for Arabic-English bilingual documents' },
+  { code: 'eng+rus',     label: '🇷🇺 English + Russian',  hint: 'Best for documents with Cyrillic + English' },
+  { code: 'eng+chi_sim', label: '🇨🇳 English + Chinese',  hint: 'Best for Chinese-English bilingual docs' },
+  // ── Single languages ──
+  { code: 'fra',         label: 'French' },
+  { code: 'deu',         label: 'German' },
+  { code: 'spa',         label: 'Spanish' },
+  { code: 'por',         label: 'Portuguese' },
+  { code: 'ita',         label: 'Italian' },
+  { code: 'nld',         label: 'Dutch' },
+  { code: 'pol',         label: 'Polish' },
+  { code: 'rus',         label: 'Russian' },
+  { code: 'ara',         label: 'Arabic' },
+  { code: 'hin',         label: 'Hindi only' },
+  { code: 'chi_sim',     label: 'Chinese (Simplified)' },
+  { code: 'chi_tra',     label: 'Chinese (Traditional)' },
+  { code: 'jpn',         label: 'Japanese' },
+  { code: 'kor',         label: 'Korean' },
+  { code: 'vie',         label: 'Vietnamese' },
+  { code: 'tur',         label: 'Turkish' },
+  { code: 'ukr',         label: 'Ukrainian' },
 ];
 
 const PSM_MODES: { value: string; label: string; desc: string }[] = [
@@ -272,36 +278,65 @@ function otsuThreshold(imageData: ImageData): ImageData {
 
 // ── Word quality gate ─────────────────────────────────────────────────────────
 // Returns true only for words that look like real text, not noise/artifacts.
-// Filters out single-char symbols ([, ], ~, =, |), decorative borders, etc.
 function isUsableWord(w: OcrWord, minConf = 0, minLen = 1): boolean {
   const t = w.text.trim();
   if (!t || t.length < minLen) return false;
   if (w.confidence < minConf) return false;
-  // Must contain at least one letter or digit.
-  // This eliminates bracket fragments, tildes, pipe chars, etc.
-  return /[a-zA-Z0-9]/.test(t);
+  // Must start with a letter or digit (filters €&35, ~words, [bracket tokens)
+  if (!/^[a-zA-Z0-9]/.test(t)) return false;
+  // Must be ≥50% alphanumeric by character count
+  const alphaNum = (t.match(/[a-zA-Z0-9]/g) ?? []).length;
+  return alphaNum >= 1 && alphaNum / t.length >= 0.5;
+}
+
+// ── Garbled-word detector ──────────────────────────────────────────────────────
+// Detects ASCII noise produced when the English OCR engine is forced to read
+// non-Latin scripts (Devanagari, Arabic, Cyrillic) that it wasn't trained on.
+// Pattern: short ALL-CAPS clusters with almost no vowels (e.g. HTH, FET, TET, FH).
+const VOWELS_SET = new Set(['A','E','I','O','U']);
+// Common short English words that should NOT be filtered
+const SHORT_ENG_WORDS = new Set([
+  'THE','AND','FOR','ARE','BUT','NOT','YOU','ALL','CAN','HER','WAS','ONE',
+  'OUR','OUT','HIS','ITS','NEW','MAY','HI','IN','OF','TO','BE','IS','IT',
+  'ON','AT','AS','BY','DO','GO','NO','UP','OR','AN','AM','US','ID','MR',
+  'MS','DR','NA','OK','II','PAN','DOB','UID','DOC','TAX','GST','KYC',
+  'PIN','ATM','SIM','OTP','EMI','ETA','PDF','OCR','QR',
+]);
+function isGarbledWord(word: string): boolean {
+  const t = word.replace(/[^a-zA-Z]/g, '');
+  if (t.length < 2 || t.length > 7) return false;     // only 2–7 char tokens
+  if (t !== t.toUpperCase()) return false;             // must be ALL_CAPS
+  if (SHORT_ENG_WORDS.has(t)) return false;            // skip known real words
+  if (/[0-9]/.test(word)) return false;               // skip tokens with digits
+  const vowels = [...t].filter(c => VOWELS_SET.has(c)).length;
+  return (t.length - vowels) / t.length > 0.64;       // >64% consonants → garbled
 }
 
 // ── Junk-line cleaner ─────────────────────────────────────────────────────────
-// Removes lines where non-latin script has been garbled into ASCII noise
-// (e.g. Hindi read as "HIRXd HIRIY") and decorative border lines.
+// 1. Strips garbled consonant-cluster words from each line
+// 2. Drops lines where <40% chars are alphanumeric (decorative borders)
+// 3. Removes exact-duplicate lines
 function cleanOcrText(text: string): string {
   const seen = new Set<string>();
   return text
     .split('\n')
     .map(l => l.trim())
+    // Step 1: strip garbled words from the line
+    .map(l =>
+      l.split(/\s+/)
+        .filter(w => w && !isGarbledWord(w))
+        .join(' ')
+        .trim()
+    )
     .filter(l => {
       if (!l) return false;
-      if (seen.has(l.toLowerCase())) return false; // remove exact duplicates
-      seen.add(l.toLowerCase());
+      const key = l.toLowerCase().replace(/\s+/g, ' ');
+      if (seen.has(key)) return false;              // remove exact duplicates
+      seen.add(key);
       const alphaNum = (l.match(/[a-zA-Z0-9]/g) ?? []).length;
-      if (alphaNum === 0) return false; // pure symbols — drop
-      // Keep line only if ≥ 38% of chars are alphanumeric.
-      // "Name: AMIT KUMAR" = 85% → keep.
-      // "~~ ¢%$3 (>) (] ~~" = 7% → drop.
-      // "HIRXd HIRIY" = 100% BUT will be kept — this is a known limitation
-      // for mixed-script images without the matching language model loaded.
-      return (alphaNum / l.length) >= 0.38;
+      if (alphaNum === 0) return false;
+      // Keep line only if ≥40% alphanumeric
+      return (alphaNum / l.length) >= 0.40;
     })
     .join('\n');
 }
@@ -1194,8 +1229,14 @@ export default function ImageToTextClient() {
                       <option key={l.code} value={l.code}>{l.label}</option>
                     ))}
                   </select>
+                  {/* Show hint for the selected bilingual option */}
+                  {LANGUAGES.find(l => l.code === options.language)?.hint && (
+                    <p className="mt-1 text-[11px] font-medium text-violet-600">
+                      ✓ {LANGUAGES.find(l => l.code === options.language)!.hint}
+                    </p>
+                  )}
                   <p className="mt-1 text-[11px] text-zinc-400">
-                    First use downloads the language model (~5–15 MB) from Tesseract CDN.
+                    For bilingual docs (Indian IDs, Arabic forms), pick an "English +" option above — it eliminates garbled script artifacts.
                   </p>
                 </div>
 
@@ -1240,17 +1281,30 @@ export default function ImageToTextClient() {
                 {/* Document mode preset */}
                 <div>
                   <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-500">Quick preset</p>
-                  <button
-                    onClick={() => setOptions(o => ({
-                      ...o,
-                      multiPass: true,
-                      preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: false }
-                    }))}
-                    className="rounded-xl border border-emerald-300 bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-800 hover:bg-emerald-100 transition-colors"
-                  >
-                    📄 Document / ID card mode
-                  </button>
-                  <p className="mt-1 text-[11px] text-zinc-400">Grayscale + Contrast + Sharpen + Upscale + Multi-pass</p>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      onClick={() => setOptions(o => ({
+                        ...o,
+                        multiPass: true,
+                        preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: false }
+                      }))}
+                      className="rounded-xl border border-emerald-300 bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-800 hover:bg-emerald-100 transition-colors"
+                    >
+                      📄 Document / ID card
+                    </button>
+                    <button
+                      onClick={() => setOptions(o => ({
+                        ...o,
+                        language: 'eng+hin',
+                        multiPass: true,
+                        preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: false }
+                      }))}
+                      className="rounded-xl border border-orange-300 bg-orange-50 px-3 py-2 text-xs font-medium text-orange-800 hover:bg-orange-100 transition-colors"
+                    >
+                      🇮🇳 Indian ID (PAN / Aadhaar)
+                    </button>
+                  </div>
+                  <p className="mt-1 text-[11px] text-zinc-400">Indian ID preset switches to English+Hindi language — eliminates garbled Hindi artifacts</p>
                 </div>
               </div>
 
@@ -1423,7 +1477,8 @@ export default function ImageToTextClient() {
             <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-3">Tips for better accuracy</p>
             <ul className="grid gap-1.5 sm:grid-cols-2 text-xs text-zinc-600">
               {[
-                'Use "Document / ID card mode" preset for PAN cards, passports, and ID documents',
+                'For PAN card / Aadhaar: use the "🇮🇳 Indian ID" preset — it sets English+Hindi language to eliminate garbled Hindi text',
+                'For any bilingual document, pick an "English + [Language]" option from the Language menu',
                 'Multi-pass scan (default ON) finds codes and IDs that single-pass OCR misses',
                 'Always enable Grayscale for images with coloured or gradient backgrounds',
                 'Enable "Boost contrast" for faded or low-contrast documents',
