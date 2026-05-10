@@ -969,13 +969,15 @@ const DOC_TYPE_META: Record<DocType, { icon: string; label: string; cls: string 
 function StructuredBlockView({ blocks }: { blocks: StructuredBlock[] }) {
   if (blocks.length === 0) {
     return (
-      <p className="text-zinc-400 italic text-xs text-center py-6">
-        No structured content detected — switch to Plain tab to see raw text.
-      </p>
+      <div className="flex flex-col items-center justify-center h-32 text-center gap-2">
+        <span className="text-3xl">📄</span>
+        <p className="text-sm text-zinc-400">No structured content found</p>
+        <p className="text-xs text-zinc-300">Switch to the Plain tab to see raw extracted text</p>
+      </div>
     );
   }
 
-  // Group consecutive KV blocks so they render as one unified data table
+  // Group consecutive KV blocks so they render as one unified field table
   type Grouped = { kind: 'kv'; items: StructuredBlock[] } | { kind: 'single'; block: StructuredBlock };
   const grouped: Grouped[] = [];
   let kvRun: StructuredBlock[] = [];
@@ -988,17 +990,21 @@ function StructuredBlockView({ blocks }: { blocks: StructuredBlock[] }) {
   flushKv();
 
   return (
-    <div className="space-y-2.5">
+    <div className="space-y-3 py-1">
       {grouped.map((g, gi) => {
+        // ── KV field table ────────────────────────────────────────────────────
         if (g.kind === 'kv') {
           return (
-            <div key={gi} className="rounded-xl border border-zinc-200 bg-white overflow-hidden divide-y divide-zinc-100 shadow-sm">
+            <div key={gi} className="rounded-2xl border border-zinc-200 bg-white overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.06)]">
               {g.items.map((b, bi) => (
-                <div key={bi} className="flex items-baseline gap-3 px-3 py-2 hover:bg-zinc-50/80 transition-colors">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 w-[108px] shrink-0 leading-none pt-0.5 select-none">
+                <div
+                  key={bi}
+                  className={`flex items-start gap-4 px-4 py-2.5 ${bi > 0 ? 'border-t border-zinc-100' : ''} hover:bg-violet-50/40 transition-colors`}
+                >
+                  <span className="text-[11px] font-semibold uppercase tracking-wide text-zinc-400 w-[130px] shrink-0 leading-5 select-none pt-px">
                     {b.key}
                   </span>
-                  <span className="text-xs font-semibold text-zinc-900 leading-relaxed break-words min-w-0">
+                  <span className="text-sm font-medium text-zinc-900 leading-5 break-words min-w-0 flex-1">
                     {b.value}
                   </span>
                 </div>
@@ -1008,50 +1014,63 @@ function StructuredBlockView({ blocks }: { blocks: StructuredBlock[] }) {
         }
 
         const b = g.block;
+
+        // ── Section heading ───────────────────────────────────────────────────
         if (b.type === 'heading') {
           return (
-            <div key={gi} className="flex items-center gap-2 py-0.5">
-              <div className="h-px flex-1 bg-zinc-200" />
-              <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 whitespace-nowrap px-1 shrink-0">
+            <div key={gi} className="flex items-center gap-3 pt-2 pb-0.5">
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent to-zinc-200" />
+              <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-500 shrink-0 px-1">
                 {b.content}
               </span>
-              <div className="h-px flex-1 bg-zinc-200" />
+              <div className="h-px flex-1 bg-gradient-to-l from-transparent to-zinc-200" />
             </div>
           );
         }
+
+        // ── Sub-heading ───────────────────────────────────────────────────────
         if (b.type === 'subheading') {
           return (
-            <h4 key={gi} className="text-xs font-bold text-zinc-800 border-l-2 border-violet-400 pl-2.5 py-0.5">
+            <h4 key={gi} className="text-sm font-bold text-zinc-800 border-l-[3px] border-violet-500 pl-3 py-0.5">
               {b.content}
             </h4>
           );
         }
+
+        // ── Body paragraph ────────────────────────────────────────────────────
         if (b.type === 'paragraph') {
           return (
-            <p key={gi} className="text-xs text-zinc-700 leading-relaxed">
+            <p key={gi} className="text-sm text-zinc-700 leading-relaxed">
               {b.content}
             </p>
           );
         }
+
+        // ── List item ─────────────────────────────────────────────────────────
         if (b.type === 'listItem') {
           return (
-            <div key={gi} className="flex gap-2 text-xs text-zinc-700 leading-relaxed">
-              <span className="text-violet-400 font-bold shrink-0 mt-px">•</span>
+            <div key={gi} className="flex gap-2.5 text-sm text-zinc-700 leading-relaxed">
+              <span className="text-violet-400 font-bold shrink-0 mt-0.5">•</span>
               <span>{b.content}</span>
             </div>
           );
         }
+
+        // ── Visual divider ────────────────────────────────────────────────────
         if (b.type === 'divider') {
           return <div key={gi} className="border-t border-dashed border-zinc-200 my-1" />;
         }
+
+        // ── Highlighted amount / total ────────────────────────────────────────
         if (b.type === 'highlight') {
           return (
-            <div key={gi} className="rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 px-4 py-2.5 flex items-center gap-2">
-              <span className="text-emerald-500 text-base shrink-0">💰</span>
-              <span className="text-sm font-bold text-emerald-800">{b.content}</span>
+            <div key={gi} className="rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 border border-emerald-200 px-4 py-3 flex items-center gap-3">
+              <span className="text-xl shrink-0">💰</span>
+              <span className="text-base font-bold text-emerald-800">{b.content}</span>
             </div>
           );
         }
+
         return null;
       })}
     </div>
@@ -1148,51 +1167,103 @@ function ResultCard({
   const visibleWords = result.words.filter(w => w.confidence >= confidenceFilter);
 
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden">
-      {/* Card header */}
-      <div className="flex items-center justify-between px-5 py-3 border-b border-zinc-100 bg-zinc-50">
-        <div className="flex items-center gap-2 min-w-0">
-          <ImageIcon className="h-4 w-4 text-zinc-400 shrink-0" />
-          <span className="text-sm font-semibold text-zinc-800 truncate">{result.fileName}</span>
-          <span className="text-xs text-zinc-400 shrink-0">{formatBytes(result.fileSize)}</span>
+    <div className="rounded-2xl border border-zinc-200 bg-white shadow-md overflow-hidden">
+
+      {/* ── Card header ───────────────────────────────────────────────────────── */}
+      <div className="flex items-center justify-between px-5 py-3.5 border-b border-zinc-100 bg-gradient-to-r from-zinc-50 to-white">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-100">
+            <ImageIcon className="h-4 w-4 text-violet-600" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-zinc-900 truncate leading-tight">{result.fileName}</p>
+            <p className="text-[11px] text-zinc-400 leading-tight">{formatBytes(result.fileSize)} · {result.naturalWidth}×{result.naturalHeight}px</p>
+          </div>
         </div>
-        <div className="flex items-center gap-2 flex-wrap justify-end">
+        <div className="flex items-center gap-2 flex-wrap justify-end ml-3">
           {result.docType !== 'general' && (
-            <span className={`rounded-full border px-2 py-0.5 text-[11px] font-semibold ${DOC_TYPE_META[result.docType].cls}`}>
+            <span className={`rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${DOC_TYPE_META[result.docType].cls}`}>
               {DOC_TYPE_META[result.docType].icon} {DOC_TYPE_META[result.docType].label}
             </span>
           )}
-          <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${confidenceColor(result.confidence)}`}>
-            {result.confidence}% confident
+          <span className={`rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${confidenceColor(result.confidence)}`}>
+            {result.confidence}% confidence
           </span>
-          <button onClick={onRemove} className="rounded-lg p-1 text-zinc-400 hover:text-red-500 hover:bg-red-50 transition-colors">
+          <button
+            onClick={onRemove}
+            className="ml-1 rounded-lg p-1.5 text-zinc-300 hover:text-red-500 hover:bg-red-50 transition-colors"
+            title="Remove"
+          >
             <X className="h-4 w-4" />
           </button>
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-zinc-100">
-        {/* Left: Image preview */}
-        <div className="p-4">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">Preview</p>
-            <div className="flex items-center gap-1">
-              <button onClick={() => setZoom(z => Math.max(0.5, z - 0.25))}
-                className="rounded p-1 text-zinc-400 hover:bg-zinc-100 transition-colors">
+      {/* ── Stats strip ───────────────────────────────────────────────────────── */}
+      <div className="flex items-center gap-0 border-b border-zinc-100 divide-x divide-zinc-100 bg-zinc-50/60">
+        {[
+          { icon: '📝', label: 'Words',   value: result.wordCount },
+          { icon: '🔤', label: 'Chars',   value: result.charCount },
+          { icon: '⚡', label: 'Engine',  value: result.psmLabel },
+          { icon: '⏱️', label: 'Time',    value: `${(result.processingMs / 1000).toFixed(1)}s` },
+          { icon: '🌐', label: 'Language', value: result.language },
+        ].map(s => (
+          <div key={s.label} className="flex-1 px-3 py-2 text-center min-w-0">
+            <p className="text-xs font-bold text-zinc-800 truncate">{s.value}</p>
+            <p className="text-[10px] text-zinc-400 leading-none mt-0.5">{s.label}</p>
+          </div>
+        ))}
+        {result.preprocessApplied.length > 0 && (
+          <div className="px-3 py-2 flex flex-wrap gap-1 items-center">
+            {result.preprocessApplied.map(p => (
+              <span key={p} className="rounded-full border border-violet-100 bg-violet-50 px-1.5 py-px text-[10px] font-medium text-violet-600">
+                {p}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* ── Two-pane body ─────────────────────────────────────────────────────── */}
+      <div className="grid lg:grid-cols-[5fr_7fr] divide-y lg:divide-y-0 lg:divide-x divide-zinc-100">
+
+        {/* ── Left: Image preview ──────────────────────────────────────────────── */}
+        <div className="p-5 flex flex-col gap-3">
+          {/* Zoom toolbar */}
+          <div className="flex items-center justify-between">
+            <p className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">Original</p>
+            <div className="flex items-center gap-0.5 bg-zinc-100 rounded-lg p-0.5">
+              <button
+                onClick={() => setZoom(z => Math.max(0.5, z - 0.25))}
+                className="rounded-md p-1 text-zinc-500 hover:bg-white hover:shadow-sm transition-all"
+              >
                 <ZoomOut className="h-3.5 w-3.5" />
               </button>
-              <span className="text-xs text-zinc-400 w-10 text-center">{Math.round(zoom * 100)}%</span>
-              <button onClick={() => setZoom(z => Math.min(3, z + 0.25))}
-                className="rounded p-1 text-zinc-400 hover:bg-zinc-100 transition-colors">
+              <span className="text-[11px] font-semibold text-zinc-600 w-10 text-center select-none">
+                {Math.round(zoom * 100)}%
+              </span>
+              <button
+                onClick={() => setZoom(z => Math.min(3, z + 0.25))}
+                className="rounded-md p-1 text-zinc-500 hover:bg-white hover:shadow-sm transition-all"
+              >
                 <ZoomIn className="h-3.5 w-3.5" />
               </button>
-              <button onClick={() => setShowFullImg(true)}
-                className="rounded p-1 text-zinc-400 hover:bg-zinc-100 transition-colors ml-1">
+              <div className="w-px h-4 bg-zinc-200 mx-0.5" />
+              <button
+                onClick={() => setShowFullImg(true)}
+                className="rounded-md p-1 text-zinc-500 hover:bg-white hover:shadow-sm transition-all"
+                title="Full screen"
+              >
                 <Maximize2 className="h-3.5 w-3.5" />
               </button>
             </div>
           </div>
-          <div className="relative overflow-auto rounded-xl bg-zinc-100 border border-zinc-200" style={{ maxHeight: '360px' }}>
+
+          {/* Image area */}
+          <div
+            className="relative overflow-auto rounded-xl bg-[#f4f4f5] border border-zinc-200"
+            style={{ minHeight: '200px', maxHeight: '400px' }}
+          >
             <div style={{ transform: `scale(${zoom})`, transformOrigin: 'top left', display: 'inline-block' }}>
               <div className="relative inline-block">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1201,7 +1272,7 @@ function ResultCard({
                   src={result.imageUrl}
                   alt={result.fileName}
                   className="block max-w-full"
-                  style={{ maxHeight: '340px', objectFit: 'contain' }}
+                  style={{ maxHeight: '380px', objectFit: 'contain' }}
                   onLoad={() => {
                     if (imgRef.current)
                       setImgDisplaySize({ w: imgRef.current.offsetWidth, h: imgRef.current.offsetHeight });
@@ -1217,118 +1288,90 @@ function ResultCard({
               </div>
             </div>
           </div>
-          {/* Stats row */}
-          <div className="mt-3 grid grid-cols-3 gap-2">
-            {[
-              { label: 'Words', value: result.wordCount },
-              { label: 'Chars', value: result.charCount },
-              { label: 'Time', value: `${(result.processingMs / 1000).toFixed(1)}s` },
-            ].map(s => (
-              <div key={s.label} className="rounded-lg bg-zinc-50 border border-zinc-100 px-2 py-1.5 text-center">
-                <div className="text-base font-bold text-zinc-900">{s.value}</div>
-                <div className="text-[10px] text-zinc-400">{s.label}</div>
-              </div>
-            ))}
-          </div>
-          {result.preprocessApplied.length > 0 && (
-            <div className="mt-2 flex flex-wrap gap-1">
-              {result.preprocessApplied.map(p => (
-                <span key={p} className="rounded-full border border-violet-200 bg-violet-50 px-2 py-0.5 text-[10px] font-medium text-violet-700">
-                  {p}
-                </span>
-              ))}
-            </div>
-          )}
-
-          {/* Language suggestion banner — shown when garbling is detected */}
-          {result.suggestLang && result.garbledRatio > 0.10 && (
-            <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5">
-              <div className="flex items-start gap-2">
-                <span className="text-amber-500 text-sm mt-0.5">⚠️</span>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-amber-800">
-                    Non-English script detected ({Math.round(result.garbledRatio * 100)}% garbled words)
-                  </p>
-                  <p className="text-[11px] text-amber-700 mt-0.5">
-                    The output contains noise from Hindi/Gujarati/other scripts. Switch to a bilingual language for clean results.
-                  </p>
-                  <div className="mt-2 flex flex-wrap gap-1.5">
-                    {[
-                      { code: 'eng+hin', label: '🇮🇳 Hindi' },
-                      { code: 'eng+guj', label: '🇮🇳 Gujarati' },
-                      { code: 'eng+ben', label: '🇮🇳 Bengali' },
-                      { code: 'eng+tam', label: '🇮🇳 Tamil' },
-                      { code: 'eng+tel', label: '🇮🇳 Telugu' },
-                      { code: 'eng+ara', label: '🌍 Arabic' },
-                    ].map(({ code, label }) => (
-                      <button
-                        key={code}
-                        type="button"
-                        onClick={() => onSwitchLang?.(code)}
-                        className="rounded-lg border border-amber-300 bg-white px-2.5 py-1 text-[11px] font-semibold text-amber-800 hover:bg-amber-100 transition-colors"
-                      >
-                        Try {label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
 
-        {/* Right: Text output */}
-        <div className="p-4 flex flex-col">
-          {/* Tabs */}
-          <div className="flex gap-1 mb-3 border-b border-zinc-100 pb-2">
-            {([
-              { id: 'text',       label: 'Plain',       icon: AlignLeft },
-              { id: 'structured', label: 'Structured',  icon: Layers },
-              { id: 'confidence', label: 'Confidence',  icon: BarChart2 },
-              ...(result.hasTable ? [{ id: 'table', label: 'Table', icon: Table2 }] : []),
-            ] as { id: string; label: string; icon: any }[]).map(({ id, label, icon: Icon }) => (
-              <button
-                key={id}
-                onClick={() => setActiveTab(id as any)}
-                className={`flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-medium transition-colors ${
-                  activeTab === id
-                    ? 'bg-violet-100 text-violet-800'
-                    : 'text-zinc-500 hover:bg-zinc-100'
-                }`}
-              >
-                <Icon className="h-3 w-3" /> {label}
-              </button>
-            ))}
-            <div className="ml-auto flex items-center gap-1 flex-wrap">
+        {/* ── Right: Extracted text ────────────────────────────────────────────── */}
+        <div className="p-5 flex flex-col gap-3">
+
+          {/* Tab bar + actions */}
+          <div className="flex items-center gap-1.5 flex-wrap">
+            {/* Tabs */}
+            <div className="flex gap-1 p-1 bg-zinc-100 rounded-xl">
+              {([
+                { id: 'text',       label: 'Plain',       icon: AlignLeft },
+                { id: 'structured', label: 'Structured',  icon: Layers },
+                { id: 'confidence', label: 'Confidence',  icon: BarChart2 },
+                ...(result.hasTable ? [{ id: 'table', label: 'Table', icon: Table2 }] : []),
+              ] as { id: string; label: string; icon: any }[]).map(({ id, label, icon: Icon }) => (
+                <button
+                  key={id}
+                  onClick={() => setActiveTab(id as any)}
+                  className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+                    activeTab === id
+                      ? 'bg-white text-violet-700 shadow-sm'
+                      : 'text-zinc-500 hover:text-zinc-700'
+                  }`}
+                >
+                  <Icon className="h-3 w-3" /> {label}
+                </button>
+              ))}
+            </div>
+
+            {/* Export actions */}
+            <div className="ml-auto flex items-center gap-1.5">
               {activeTab === 'structured' && result.structuredBlocks.length > 0 && (
-                <button onClick={handleCopyMarkdown}
-                  className="flex items-center gap-1 rounded-lg border border-violet-200 bg-violet-50 px-2 py-1 text-xs font-medium text-violet-700 hover:bg-violet-100 transition-colors">
-                  {copiedMd ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
+                <button
+                  onClick={handleCopyMarkdown}
+                  className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-all border ${
+                    copiedMd
+                      ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                      : 'border-violet-200 bg-violet-50 text-violet-700 hover:bg-violet-100'
+                  }`}
+                >
+                  {copiedMd ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
                   {copiedMd ? 'Copied!' : 'Copy MD'}
                 </button>
               )}
-              <button onClick={handleCopy}
-                className="flex items-center gap-1 rounded-lg border border-zinc-200 px-2 py-1 text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition-colors">
-                {copied ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
-                {copied ? 'Copied' : 'Copy'}
+              <button
+                onClick={handleCopy}
+                className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-all border ${
+                  copied
+                    ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                    : 'border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50'
+                }`}
+              >
+                {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                {copied ? 'Copied!' : 'Copy'}
               </button>
-              <button onClick={() => downloadText(result.text, result.fileName)}
-                className="flex items-center gap-1 rounded-lg border border-zinc-200 px-2 py-1 text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition-colors">
+              <button
+                onClick={() => downloadText(result.text, result.fileName)}
+                className="flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-zinc-600 hover:bg-zinc-50 transition-all"
+              >
                 <Download className="h-3 w-3" /> TXT
               </button>
-              <button onClick={() => downloadJson(result)}
-                className="flex items-center gap-1 rounded-lg border border-zinc-200 px-2 py-1 text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition-colors">
+              <button
+                onClick={() => downloadJson(result)}
+                className="flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-zinc-600 hover:bg-zinc-50 transition-all"
+              >
                 <Download className="h-3 w-3" /> JSON
               </button>
             </div>
           </div>
 
-          {/* Content */}
-          <div className="flex-1 overflow-y-auto max-h-[300px] rounded-xl bg-zinc-50 border border-zinc-100 p-3 text-sm">
+          {/* ── Content area ──────────────────────────────────────────────────── */}
+          <div className="flex-1 overflow-y-auto rounded-2xl border border-zinc-100 bg-zinc-50/50 p-4" style={{ maxHeight: '440px', minHeight: '220px' }}>
+
             {activeTab === 'text' && (
-              <pre className="whitespace-pre-wrap font-mono text-xs text-zinc-800 leading-relaxed">
-                {result.text || <span className="text-zinc-400 italic">No text extracted</span>}
-              </pre>
+              result.text ? (
+                <pre className="whitespace-pre-wrap font-mono text-[13px] text-zinc-800 leading-relaxed">
+                  {result.text}
+                </pre>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-32 gap-2 text-center">
+                  <span className="text-3xl">🔍</span>
+                  <p className="text-sm text-zinc-400">No text extracted</p>
+                </div>
+              )
             )}
 
             {activeTab === 'structured' && (
@@ -1336,35 +1379,55 @@ function ResultCard({
             )}
 
             {activeTab === 'confidence' && (
-              <div className="flex flex-wrap gap-1 leading-loose">
-                {visibleWords.length === 0 && (
-                  <p className="text-zinc-400 italic text-xs">No words above {confidenceFilter}% confidence</p>
-                )}
-                {visibleWords.map((w, i) => (
-                  <span
-                    key={i}
-                    title={`${Math.round(w.confidence)}% confidence`}
-                    className={`inline-block rounded px-1 py-0.5 text-xs font-mono cursor-default ${
-                      w.confidence >= 90 ? 'bg-emerald-100 text-emerald-800' :
-                      w.confidence >= 70 ? 'bg-yellow-100 text-yellow-800' :
-                      w.confidence >= 50 ? 'bg-orange-100 text-orange-800' :
-                      'bg-red-100 text-red-800'
-                    }`}
-                  >
-                    {w.text}
-                  </span>
-                ))}
-              </div>
+              <>
+                <div className="flex flex-wrap gap-1.5 leading-loose">
+                  {visibleWords.length === 0 ? (
+                    <p className="text-zinc-400 italic text-sm">No words above {confidenceFilter}% confidence</p>
+                  ) : visibleWords.map((w, i) => (
+                    <span
+                      key={i}
+                      title={`${Math.round(w.confidence)}% confidence`}
+                      className={`inline-block rounded-md px-1.5 py-0.5 text-xs font-mono cursor-default ${
+                        w.confidence >= 90 ? 'bg-emerald-100 text-emerald-800' :
+                        w.confidence >= 70 ? 'bg-yellow-100 text-yellow-800' :
+                        w.confidence >= 50 ? 'bg-orange-100 text-orange-800' :
+                        'bg-red-100 text-red-800'
+                      }`}
+                    >
+                      {w.text}
+                    </span>
+                  ))}
+                </div>
+                <div className="mt-4 pt-3 border-t border-zinc-100 flex flex-wrap gap-2">
+                  {[
+                    { label: '≥ 90% · High',   cls: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
+                    { label: '70–89% · Good',   cls: 'bg-yellow-100 text-yellow-700 border-yellow-200' },
+                    { label: '50–69% · Fair',   cls: 'bg-orange-100 text-orange-700 border-orange-200' },
+                    { label: '< 50% · Low',     cls: 'bg-red-100 text-red-700 border-red-200' },
+                  ].map(({ label, cls }) => (
+                    <span key={label} className={`rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${cls}`}>{label}</span>
+                  ))}
+                </div>
+              </>
             )}
 
             {activeTab === 'table' && result.tableData && (
               <div className="overflow-x-auto">
-                <table className="w-full text-xs border-collapse">
+                <table className="w-full text-sm border-collapse">
+                  <thead>
+                    <tr>
+                      {result.tableData[0]?.map((cell, ci) => (
+                        <th key={ci} className="border border-zinc-200 bg-violet-50 px-3 py-2 text-left text-xs font-bold text-violet-800 whitespace-nowrap">
+                          {cell}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
                   <tbody>
-                    {result.tableData.map((row, ri) => (
-                      <tr key={ri} className={ri === 0 ? 'bg-violet-50 font-semibold' : ri % 2 === 0 ? 'bg-white' : 'bg-zinc-50'}>
+                    {result.tableData.slice(1).map((row, ri) => (
+                      <tr key={ri} className={ri % 2 === 0 ? 'bg-white' : 'bg-zinc-50'}>
                         {row.map((cell, ci) => (
-                          <td key={ci} className="border border-zinc-200 px-2 py-1.5 text-zinc-700 max-w-[200px]">
+                          <td key={ci} className="border border-zinc-200 px-3 py-2 text-zinc-700">
                             {cell}
                           </td>
                         ))}
@@ -1375,37 +1438,23 @@ function ResultCard({
               </div>
             )}
           </div>
-
-          {/* Confidence legend */}
-          {activeTab === 'confidence' && (
-            <div className="mt-2 flex flex-wrap gap-2 text-[10px]">
-              {[
-                { label: '≥90% high', cls: 'bg-emerald-100 text-emerald-700' },
-                { label: '70–89% good', cls: 'bg-yellow-100 text-yellow-700' },
-                { label: '50–69% fair', cls: 'bg-orange-100 text-orange-700' },
-                { label: '<50% low', cls: 'bg-red-100 text-red-700' },
-              ].map(({ label, cls }) => (
-                <span key={label} className={`rounded px-1.5 py-0.5 font-medium ${cls}`}>{label}</span>
-              ))}
-            </div>
-          )}
         </div>
       </div>
 
-      {/* Fullscreen image modal */}
+      {/* ── Fullscreen image modal ─────────────────────────────────────────────── */}
       {showFullImg && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm"
           onClick={() => setShowFullImg(false)}
         >
-          <button className="absolute top-4 right-4 rounded-full bg-white/20 p-2 text-white hover:bg-white/30">
+          <button className="absolute top-5 right-5 rounded-full bg-white/20 p-2.5 text-white hover:bg-white/30 transition-colors">
             <X className="h-5 w-5" />
           </button>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={result.imageUrl}
             alt={result.fileName}
-            className="max-w-[90vw] max-h-[90vh] object-contain rounded-xl shadow-2xl"
+            className="max-w-[92vw] max-h-[92vh] object-contain rounded-2xl shadow-2xl"
             onClick={e => e.stopPropagation()}
           />
         </div>
@@ -1418,13 +1467,18 @@ function ResultCard({
 
 function ProcessingCard({ fileName, status }: { fileName: string; status: string }) {
   return (
-    <div className="rounded-2xl border border-violet-200 bg-violet-50 p-5 flex items-center gap-4">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-100">
+    <div className="rounded-2xl border border-violet-200 bg-gradient-to-r from-violet-50 to-indigo-50 p-5 flex items-center gap-4 shadow-sm">
+      <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-violet-100">
         <Loader2 className="h-5 w-5 animate-spin text-violet-600" />
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold text-violet-900 truncate">{fileName}</p>
-        <p className="text-xs text-violet-600 mt-0.5">{status}</p>
+        <div className="flex items-center gap-2 mt-1">
+          <div className="h-1 flex-1 rounded-full bg-violet-100 overflow-hidden">
+            <div className="h-full w-1/2 rounded-full bg-violet-400 animate-pulse" />
+          </div>
+          <p className="text-xs text-violet-600 shrink-0">{status}</p>
+        </div>
       </div>
     </div>
   );
@@ -1610,25 +1664,33 @@ export default function ImageToTextClient() {
                     onChange={e => setOptions(o => ({ ...o, language: e.target.value }))}
                     className="w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-700 bg-white focus:outline-none focus:ring-2 focus:ring-violet-300"
                   >
-                    <option value="eng">English only</option>
-                    <optgroup label="🇮🇳 Indian Languages (bilingual with English)">
-                      <option value="eng+hin">English + Hindi (PAN, Aadhaar, central govt)</option>
-                      <option value="eng+guj">English + Gujarati (Gujarat state docs)</option>
-                      <option value="eng+ben">English + Bengali (West Bengal / Bangladesh)</option>
-                      <option value="eng+tam">English + Tamil (Tamil Nadu)</option>
-                      <option value="eng+tel">English + Telugu (Andhra / Telangana)</option>
-                      <option value="eng+kan">English + Kannada (Karnataka)</option>
-                      <option value="eng+mal">English + Malayalam (Kerala)</option>
-                      <option value="eng+mar">English + Marathi (Maharashtra)</option>
-                      <option value="eng+pan">English + Punjabi (Punjab)</option>
-                      <option value="eng+hin+guj">Hindi + Gujarati + English (mixed docs)</option>
+                    <option value="eng">English</option>
+                    <optgroup label="South Asian Languages">
+                      <option value="eng+hin">English + Hindi</option>
+                      <option value="eng+guj">English + Gujarati</option>
+                      <option value="eng+ben">English + Bengali</option>
+                      <option value="eng+tam">English + Tamil</option>
+                      <option value="eng+tel">English + Telugu</option>
+                      <option value="eng+kan">English + Kannada</option>
+                      <option value="eng+mal">English + Malayalam</option>
+                      <option value="eng+mar">English + Marathi</option>
+                      <option value="eng+pan">English + Punjabi</option>
                       <option value="eng+urd">English + Urdu</option>
+                      <option value="hin">Hindi</option>
+                      <option value="guj">Gujarati</option>
+                      <option value="ben">Bengali</option>
+                      <option value="tam">Tamil</option>
+                      <option value="tel">Telugu</option>
+                      <option value="kan">Kannada</option>
+                      <option value="mal">Malayalam</option>
+                      <option value="mar">Marathi</option>
+                      <option value="pan">Punjabi</option>
                     </optgroup>
-                    <optgroup label="🌍 Middle East / Africa">
+                    <optgroup label="Middle East">
                       <option value="eng+ara">English + Arabic</option>
-                      <option value="ara">Arabic only</option>
+                      <option value="ara">Arabic</option>
                     </optgroup>
-                    <optgroup label="🇷🇺 Europe">
+                    <optgroup label="Europe">
                       <option value="eng+rus">English + Russian</option>
                       <option value="fra">French</option>
                       <option value="deu">German</option>
@@ -1637,11 +1699,11 @@ export default function ImageToTextClient() {
                       <option value="ita">Italian</option>
                       <option value="nld">Dutch</option>
                       <option value="pol">Polish</option>
-                      <option value="rus">Russian only</option>
+                      <option value="rus">Russian</option>
                       <option value="ukr">Ukrainian</option>
                       <option value="tur">Turkish</option>
                     </optgroup>
-                    <optgroup label="🇨🇳 East Asia">
+                    <optgroup label="East Asia">
                       <option value="eng+chi_sim">English + Chinese (Simplified)</option>
                       <option value="eng+chi_tra">English + Chinese (Traditional)</option>
                       <option value="eng+jpn">English + Japanese</option>
@@ -1652,26 +1714,9 @@ export default function ImageToTextClient() {
                       <option value="kor">Korean</option>
                       <option value="vie">Vietnamese</option>
                     </optgroup>
-                    <optgroup label="🇮🇳 Indian Languages (single language)">
-                      <option value="hin">Hindi only</option>
-                      <option value="guj">Gujarati only</option>
-                      <option value="ben">Bengali only</option>
-                      <option value="tam">Tamil only</option>
-                      <option value="tel">Telugu only</option>
-                      <option value="kan">Kannada only</option>
-                      <option value="mal">Malayalam only</option>
-                      <option value="mar">Marathi only</option>
-                      <option value="pan">Punjabi only</option>
-                    </optgroup>
                   </select>
-                  {/* Hint for the selected language */}
-                  {LANGUAGES.find(l => l.code === options.language)?.hint && (
-                    <p className="mt-1 text-[11px] font-semibold text-violet-600">
-                      ✓ {LANGUAGES.find(l => l.code === options.language)!.hint}
-                    </p>
-                  )}
                   <p className="mt-1 text-[11px] text-zinc-400">
-                    For mixed-script documents, always pick a bilingual option (e.g. "English + Hindi") — it eliminates garbled non-Latin artifacts entirely.
+                    For documents with non-Latin scripts, pick a bilingual option (e.g. "English + Arabic") — it eliminates garbled character artifacts.
                   </p>
                 </div>
 
@@ -1744,14 +1789,14 @@ export default function ImageToTextClient() {
                     <button
                       onClick={() => setOptions(o => ({
                         ...o,
-                        language: 'eng+hin',
+                        language: 'eng',
                         psm: '3',
                         multiPass: true,
                         preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: false }
                       }))}
                       className="rounded-xl border border-blue-300 bg-blue-50 px-3 py-2 text-xs font-medium text-blue-800 hover:bg-blue-100 transition-colors"
                     >
-                      🪪 ID Proof / Aadhaar
+                      🪪 ID Card
                     </button>
                     <button
                       onClick={() => setOptions(o => ({
@@ -1763,7 +1808,7 @@ export default function ImageToTextClient() {
                       }))}
                       className="rounded-xl border border-indigo-300 bg-indigo-50 px-3 py-2 text-xs font-medium text-indigo-800 hover:bg-indigo-100 transition-colors"
                     >
-                      📋 Insurance Copy
+                      📋 Insurance
                     </button>
                     <button
                       onClick={() => setOptions(o => ({
@@ -1777,30 +1822,6 @@ export default function ImageToTextClient() {
                     >
                       🧾 Receipt / Invoice
                     </button>
-                    <button
-                      onClick={() => setOptions(o => ({
-                        ...o,
-                        language: 'eng+hin',
-                        psm: '3',
-                        multiPass: true,
-                        preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: false }
-                      }))}
-                      className="rounded-xl border border-orange-300 bg-orange-50 px-3 py-2 text-xs font-medium text-orange-800 hover:bg-orange-100 transition-colors"
-                    >
-                      🇮🇳 PAN / Aadhaar card
-                    </button>
-                    <button
-                      onClick={() => setOptions(o => ({
-                        ...o,
-                        language: 'eng+guj',
-                        psm: '3',
-                        multiPass: true,
-                        preprocess: { grayscale: true, contrast: true, sharpen: true, upscale: true, threshold: false, denoise: false }
-                      }))}
-                      className="rounded-xl border border-cyan-300 bg-cyan-50 px-3 py-2 text-xs font-medium text-cyan-800 hover:bg-cyan-100 transition-colors"
-                    >
-                      🇮🇳 Gujarati Document
-                    </button>
                   </div>
                   <p className="mt-1 text-[11px] text-zinc-400">Presets tune language model, PSM layout mode, and image preprocessing for each document type.</p>
                 </div>
@@ -1813,7 +1834,7 @@ export default function ImageToTextClient() {
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {([
-                    { key: 'grayscale', label: 'Grayscale',      desc: 'Convert to B&W — essential for coloured backgrounds (PAN, ID cards, etc.)' },
+                    { key: 'grayscale', label: 'Grayscale',      desc: 'Convert to B&W — essential for coloured or gradient backgrounds' },
                     { key: 'contrast',  label: 'Boost contrast',  desc: 'Stronger contrast (1.8×) improves text on gradient/coloured backgrounds' },
                     { key: 'sharpen',   label: 'Sharpen',         desc: 'Unsharp mask — helps with slightly blurry or compressed images' },
                     { key: 'upscale',   label: 'Smart upscale',   desc: '3× for tiny images, 2× for small — greatly improves small text accuracy' },
