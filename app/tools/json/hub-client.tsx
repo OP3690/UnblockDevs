@@ -131,7 +131,8 @@ const TOOL_FEATURES: Record<string, string[]> = {
   '/prompt-chunker':                ['Split prompts', 'Token limits', 'Copy chunks'],
   '/curl-converter':                ['JS/Python/fetch', 'Multi-language', 'Copy-paste'],
   '/curl-to-python':                ['Python requests', 'Full headers', 'Instant'],
-  '/curl-to-python-requests':       ['requests.get/.post', 'Raw cURL', 'Copy-ready'],
+  '/curl-to-requests':              ['10+ languages', 'One click', 'Copy-ready'],
+  '/convert-curl-to-http-request':  ['Raw HTTP format', 'Headers & body', 'Debug-ready'],
   '/har-to-curl':                   ['Browser HAR', 'Extract cURL', 'Replay requests'],
   '/curl-failure-root-cause-engine':['TLS/DNS/proxy', 'HTTP diagnosis', 'Root-cause'],
   '/mock-api-generator':            ['Mock JSON APIs', 'Front-end dev', 'Instant'],
@@ -146,10 +147,28 @@ const TOOL_FEATURES: Record<string, string[]> = {
   '/password-audit':                ['Strength check', 'Breach hints', 'Local only'],
   '/token-comparator':              ['Visual JWT diff', 'API compare', 'Long string'],
   '/sql-formatter':                 ['Pretty SQL', 'Minify', 'Copy formatted'],
+  '/sql-in-clause-generator':       ['CSV/JSON/Excel paste', 'Multi-dialect', 'Bulk IDs'],
   '/regex-tester':                  ['Live highlights', 'Flags support', 'Replace preview'],
   '/truth-table-generator':         ['Boolean tables', 'Expression input', 'Export'],
   '/speed-test':                    ['Network latency', 'Throughput', 'Browser-based'],
   '/timezone-translator':           ['Convert timestamps', 'Multi-zone', 'Deploy-friendly'],
+  // ── newly shipped ──────────────────────────────────────────────────────────
+  '/pdf-to-excel-word':             ['PDF → XLSX/DOCX', 'Table detection', '100% in-browser'],
+  '/svg-to-image':                  ['SVG → PNG/JPEG', 'Instant convert', 'No upload'],
+  '/cron-expression':               ['Human-readable', 'Next run times', 'Visual builder'],
+  '/markdown-preview':              ['Live GFM preview', 'Copy as HTML', 'Download .md'],
+  '/color-picker':                  ['HEX↔RGB↔HSL', 'WCAG contrast', 'Tailwind shades'],
+  '/text-diff':                     ['Line & char diff', 'Split/unified', 'Copy changes'],
+  '/json-to-typescript':            ['Interfaces & types', 'Zod schemas', 'Instant'],
+  '/timestamp-converter':           ['Unix ↔ date', 'Any timezone', 'Live clock'],
+  '/css-box-shadow':                ['Multi-layer', '8 presets', 'Live preview'],
+  '/css-gradient-generator':        ['Linear/radial/conic', '15 presets', 'Tailwind output'],
+  '/html-formatter':                ['Beautify & minify', 'Custom indent', 'Size savings'],
+  '/image-to-base64':               ['PNG/JPG/SVG/GIF', 'Data URI output', 'CSS-ready'],
+  '/html-viewer':                   ['Live sandbox', 'HTML/CSS/JS', 'Safe iframe'],
+  '/http-headers-analyzer':         ['A+ to F grade', 'CSP/HSTS/CORS', 'Nginx config'],
+  '/string-utilities':              ['12 case formats', 'Extract emails', 'Base64/HTML'],
+  '/image-to-text':                 ['18 languages', 'Confidence score', 'Table detect'],
 };
 
 const STATS = [
@@ -320,7 +339,7 @@ function CategorySection({
       {/* grid */}
       <div className={
         viewMode === 'grid'
-          ? 'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3'
+          ? 'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
           : 'grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
       }>
         {tools.map((tool) =>
@@ -353,7 +372,7 @@ export default function ToolsJsonHubClient() {
 
   const aiTools      = useMemo(() => TOOLS_DIRECTORY.filter((t) => t.category === 'ai'), []);
   const popularTools = useMemo(() => TOOLS_DIRECTORY.filter((t) => t.badge === 'popular').slice(0, 8), []);
-  const newTools     = useMemo(() => TOOLS_DIRECTORY.filter((t) => t.badge === 'new').slice(0, 6), []);
+  const newTools     = useMemo(() => TOOLS_DIRECTORY.filter((t) => t.badge === 'new'), []);
 
   /* Group tools by category for "All" view */
   const groupedTools = useMemo(() => {
@@ -475,10 +494,13 @@ export default function ToolsJsonHubClient() {
         {/* ══ AI SAFETY SPOTLIGHT ═══════════════════════════════════════════════ */}
         {cat === 'all' && (
           <section className="mb-12" aria-labelledby="ai-strip-heading">
-            <div className="mb-5 flex items-end justify-between gap-4">
+            <div className="mb-5 flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-100 ring-1 ring-violet-200/60">
-                  <Sparkles className="h-4.5 w-4.5 text-violet-700" />
+                <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-violet-100 ring-1 ring-violet-200/60">
+                  <Sparkles className="h-4 w-4 text-violet-700" aria-hidden />
+                  <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-violet-500 font-mono text-[8px] font-bold text-white ring-2 ring-white">
+                    {aiTools.length}
+                  </span>
                 </div>
                 <div>
                   <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-violet-500">AI Safety</p>
@@ -496,7 +518,7 @@ export default function ToolsJsonHubClient() {
               </button>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {aiTools.map((tool) => {
                 const features = TOOL_FEATURES[tool.href];
                 return (
@@ -540,17 +562,42 @@ export default function ToolsJsonHubClient() {
         {/* ══ NEW TOOLS SECTION ════════════════════════════════════════════════ */}
         {cat === 'all' && newTools.length > 0 && (
           <section className="mb-12">
-            <div className="mb-5 flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-100 ring-1 ring-emerald-200/60">
-                <Zap className="h-4.5 w-4.5 text-emerald-700" />
-              </div>
-              <div>
-                <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald-500">Just shipped</p>
-                <h2 className="text-[1.1rem] font-bold tracking-tight text-zinc-900">New tools</h2>
+            {/* Section header banner */}
+            <div className="mb-6 overflow-hidden rounded-2xl border border-emerald-200/70 bg-gradient-to-r from-emerald-50 via-teal-50/60 to-sky-50/30">
+              <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-3.5">
+                  <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-100 ring-1 ring-emerald-200">
+                    <Zap className="h-5 w-5 text-emerald-600" aria-hidden />
+                    <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500 font-mono text-[8px] font-bold text-white ring-2 ring-white">
+                      {newTools.length}
+                    </span>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-600">Just shipped</span>
+                      <span className="rounded-full border border-emerald-200 bg-white px-2 py-0.5 font-mono text-[9px] font-bold text-emerald-700">
+                        {newTools.length} new tools
+                      </span>
+                    </div>
+                    <h2 className="mt-0.5 text-[1.05rem] font-bold tracking-tight text-zinc-900">
+                      Fresh tools — try them first
+                    </h2>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {['100% browser', 'No account', 'Free forever'].map((t) => (
+                    <span key={t} className="inline-flex items-center gap-1 rounded-full border border-emerald-200/80 bg-white/70 px-2.5 py-1 text-[11px] font-medium text-emerald-700">
+                      <CheckCircle className="h-3 w-3 text-emerald-500" aria-hidden />
+                      {t}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-              {newTools.map((tool) => <CompactCard key={tool.href} tool={tool} />)}
+
+            {/* Symmetric grid — same column rhythm as main tool grid */}
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {newTools.map((tool) => <GridCard key={tool.href} tool={tool} />)}
             </div>
           </section>
         )}
@@ -639,7 +686,7 @@ export default function ToolsJsonHubClient() {
           <div
             className={`mt-8 ${
               viewMode === 'grid'
-                ? 'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3'
+                ? 'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
                 : 'grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
             }`}
             role="tabpanel"
