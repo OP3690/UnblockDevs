@@ -202,6 +202,7 @@ function HomeClient({ hero }: { hero: ReactNode }) {
                 ['/http-headers-analyzer', 'HTTP Headers Analyzer'],
                 ['/string-utilities', 'String Utilities'],
                 ['/image-to-text', 'Image to Text (OCR)'],
+                ['/json-error-explainer', 'AI JSON Error Explainer'],
                 ['/html-viewer', 'HTML Viewer'],
                 ['/html-formatter', 'HTML Formatter'],
                 ['/color-picker', 'Color Picker'],
