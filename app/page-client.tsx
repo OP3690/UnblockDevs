@@ -50,6 +50,9 @@ const POPULAR_BLOG_LINKS: { href: string; label: string }[] = [
   { href: '/blog/json-prompt-injection-ai-security-guide', label: 'JSON Prompt Injection' },
   { href: '/blog/json-lines-ndjson-streaming-format-guide', label: 'NDJSON Streaming Guide' },
   { href: '/blog/llm-structured-json-outputs-complete-guide-2026', label: 'LLM Structured Outputs' },
+  { href: '/blog/jwt-json-web-tokens-complete-guide-2026', label: 'JWT Complete Guide' },
+  { href: '/blog/rest-api-json-design-best-practices-2026', label: 'REST API JSON Best Practices' },
+  { href: '/blog/websocket-sse-long-polling-realtime-json-2026', label: 'WebSocket vs SSE vs Polling' },
   { href: '/blog/invalid-json-vs-valid-json-examples', label: 'Invalid vs Valid JSON' },
   { href: '/blog/json-format-standards-complete-guide', label: 'JSON Format Standards' },
   // API & cURL
