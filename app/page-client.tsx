@@ -47,6 +47,9 @@ const POPULAR_BLOG_LINKS: { href: string; label: string }[] = [
   { href: '/blog/why-ai-generated-json-is-always-broken', label: 'Why AI JSON Is Broken' },
   { href: '/blog/json-parse-stringify-complete-guide', label: 'JSON.parse & stringify Guide' },
   { href: '/blog/hidden-json-errors-that-silently-break-apps', label: 'Hidden JSON Errors' },
+  { href: '/blog/json-prompt-injection-ai-security-guide', label: 'JSON Prompt Injection' },
+  { href: '/blog/json-lines-ndjson-streaming-format-guide', label: 'NDJSON Streaming Guide' },
+  { href: '/blog/llm-structured-json-outputs-complete-guide-2026', label: 'LLM Structured Outputs' },
   { href: '/blog/invalid-json-vs-valid-json-examples', label: 'Invalid vs Valid JSON' },
   { href: '/blog/json-format-standards-complete-guide', label: 'JSON Format Standards' },
   // API & cURL
