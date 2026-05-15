@@ -53,6 +53,9 @@ const POPULAR_BLOG_LINKS: { href: string; label: string }[] = [
   { href: '/blog/jwt-json-web-tokens-complete-guide-2026', label: 'JWT Complete Guide' },
   { href: '/blog/rest-api-json-design-best-practices-2026', label: 'REST API JSON Best Practices' },
   { href: '/blog/websocket-sse-long-polling-realtime-json-2026', label: 'WebSocket vs SSE vs Polling' },
+  { href: '/blog/oauth2-complete-guide-2026', label: 'OAuth 2.0 Complete Guide' },
+  { href: '/blog/json-in-databases-postgresql-jsonb-mysql-mongodb', label: 'JSON in Databases Guide' },
+  { href: '/blog/api-rate-limiting-complete-guide-2026', label: 'API Rate Limiting Guide' },
   { href: '/blog/invalid-json-vs-valid-json-examples', label: 'Invalid vs Valid JSON' },
   { href: '/blog/json-format-standards-complete-guide', label: 'JSON Format Standards' },
   // API & cURL
