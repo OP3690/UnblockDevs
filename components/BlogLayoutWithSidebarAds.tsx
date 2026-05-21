@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, Link2, Check } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Link2, Check, Zap, Wrench, Code2 } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 import AdUnit from '@/components/AdUnit';
 import AutoBlogArticleSchema from '@/components/AutoBlogArticleSchema';
 import AutoRelatedBlogPosts from '@/components/AutoRelatedBlogPosts';
+import BlogStickyToolBar from '@/components/BlogStickyToolBar';
 
 function ShareButtons() {
   const [url, setUrl] = useState('');
@@ -84,6 +86,70 @@ function ShareButtons() {
   );
 }
 
+/* ─── Inline tool teaser — shown right below the nav bar ─────────────────── */
+interface TeaserConfig { href: string; label: string; desc: string; icon: 'zap' | 'wrench' | 'code'; accent: string; }
+
+function getTeaserForPath(pathname: string): TeaserConfig {
+  const p = pathname ?? '';
+  if (/\/blog\/jwt/i.test(p))
+    return { href: '/jwt-decoder',          label: 'Decode a JWT',       desc: 'Paste any token — header, payload, and signature decoded instantly', icon: 'code',   accent: 'violet' };
+  if (/\/blog\/(har-to-curl|curl)/i.test(p))
+    return { href: '/curl-converter',        label: 'Convert your cURL',  desc: 'Paste a cURL command — get Python, JS, Go, or Ruby code instantly',  icon: 'code',   accent: 'blue'   };
+  if (/\/blog\/(sql|mysql)/i.test(p))
+    return { href: '/sql-formatter',         label: 'Format your SQL',    desc: 'Paste messy SQL — get beautifully formatted, readable queries',       icon: 'wrench', accent: 'blue'   };
+  if (/\/blog\/oauth/i.test(p))
+    return { href: '/jwt-decoder',           label: 'Decode OAuth Token', desc: 'Paste your access_token or id_token — inspect claims instantly',      icon: 'code',   accent: 'violet' };
+  if (/\/blog\/rest-api/i.test(p))
+    return { href: '/api-comparator',        label: 'Compare API Responses', desc: 'Paste two JSON responses side-by-side — spot every difference',   icon: 'zap',    accent: 'blue'   };
+  if (/\/blog\/websocket/i.test(p))
+    return { href: '/json-beautifier',       label: 'Format JSON',        desc: 'Paste WebSocket or SSE JSON payloads — beautify in one click',        icon: 'wrench', accent: 'emerald' };
+  return   { href: '/json-error-explainer',  label: 'Fix my JSON now',    desc: 'Paste broken JSON — AI detects every error with plain-English fixes', icon: 'zap',    accent: 'emerald' };
+}
+
+const teaserAccentMap: Record<string, { wrap: string; btn: string; icon: string; dot: string }> = {
+  emerald: { wrap: 'bg-emerald-50 border-emerald-200', btn: 'bg-emerald-600 hover:bg-emerald-500 text-white', icon: 'text-emerald-600', dot: 'bg-emerald-500' },
+  violet:  { wrap: 'bg-violet-50  border-violet-200',  btn: 'bg-violet-600  hover:bg-violet-500  text-white', icon: 'text-violet-600',  dot: 'bg-violet-500'  },
+  blue:    { wrap: 'bg-blue-50    border-blue-200',    btn: 'bg-blue-600    hover:bg-blue-500    text-white', icon: 'text-blue-600',    dot: 'bg-blue-500'    },
+  amber:   { wrap: 'bg-amber-50   border-amber-200',   btn: 'bg-amber-500   hover:bg-amber-400   text-zinc-900', icon: 'text-amber-600', dot: 'bg-amber-500' },
+};
+
+function BlogInlineToolTeaser() {
+  const pathname = usePathname();
+  const teaser   = getTeaserForPath(pathname ?? '');
+  const acc      = teaserAccentMap[teaser.accent] ?? teaserAccentMap.emerald;
+  const IconEl   = teaser.icon === 'wrench' ? Wrench : teaser.icon === 'code' ? Code2 : Zap;
+
+  return (
+    <div className={`mb-6 mx-4 sm:mx-6 lg:mx-8 rounded-2xl border ${acc.wrap} px-4 py-3 sm:px-5 sm:py-3.5`}>
+      <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+        {/* Icon */}
+        <div className="flex-shrink-0 h-9 w-9 rounded-xl bg-white/70 border border-white/80 flex items-center justify-center shadow-sm">
+          <IconEl className={`h-4.5 w-4.5 ${acc.icon}`} aria-hidden />
+        </div>
+
+        {/* Text */}
+        <div className="flex-1 min-w-0">
+          <p className="text-[13px] font-bold text-zinc-900 leading-tight">
+            Working on a live error while reading this?
+          </p>
+          <p className="text-xs text-zinc-600 mt-0.5 leading-snug">
+            {teaser.desc}
+          </p>
+        </div>
+
+        {/* CTA */}
+        <Link
+          href={teaser.href}
+          className={`flex-shrink-0 inline-flex items-center gap-1.5 rounded-xl ${acc.btn} px-4 py-2 text-sm font-bold transition-colors shadow-sm`}
+        >
+          <span className={`h-1.5 w-1.5 rounded-full ${acc.dot} flex-shrink-0`} aria-hidden />
+          {teaser.label} →
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 /** AdSense slot IDs (Ads → By ad unit). Env vars override for different environments. */
 const SLOT_INARTICLE =
   typeof process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_INARTICLE === 'string' && process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_INARTICLE
@@ -130,6 +196,9 @@ export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSid
         <ShareButtons />
       </div>
 
+      {/* Inline tool teaser — sits between nav and article; zero-navigation tool access */}
+      <BlogInlineToolTeaser />
+
       {/* Article body — content first, no ads blocking */}
       <div className="blog-article-body px-4 sm:px-6 lg:px-8">
         {children}
@@ -166,6 +235,9 @@ export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSid
       >
         <AdUnit slot={SLOT_FOOTER} format="autorelaxed" minHeight={280} className="rounded-xl overflow-hidden" />
       </div>
+
+      {/* Sticky bottom bar — slides up after scroll, smart tool routing, dismissible */}
+      <BlogStickyToolBar />
     </div>
   );
 }
