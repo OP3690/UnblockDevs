@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { ArrowLeft, Lock, ChevronRight, Share2, Check } from 'lucide-react';
 import type { BreadcrumbItem } from '@/components/Breadcrumb';
 import FeedbackNewsletterSplit from '@/components/home/FeedbackNewsletterSplit';
+import RelatedToolsStrip from '@/components/tools/RelatedToolsStrip';
+import { getRelatedTools } from '@/lib/toolCatalog';
 
 const UD_RECENT_KEY = 'ud_recent_tools';
 const MAX_RECENT = 8;
@@ -22,6 +24,30 @@ function recordToolVisit(title: string) {
   } catch {
     // localStorage may be blocked
   }
+}
+
+/**
+ * Compact "also try" chips shown inside the tool header.
+ * Shows up to 3 sibling tools so users immediately see what else exists.
+ */
+function ToolQuickSwitch({ toolName }: { toolName: string }) {
+  const siblings = getRelatedTools(toolName, 3);
+  if (siblings.length === 0) return null;
+
+  return (
+    <>
+      {siblings.map((t) => (
+        <Link
+          key={t.toolName}
+          href={t.href}
+          className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-2.5 py-1 text-[11.5px] font-medium text-zinc-500 shadow-sm transition-colors hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700"
+        >
+          <span aria-hidden>{t.emoji}</span>
+          {t.label}
+        </Link>
+      ))}
+    </>
+  );
 }
 
 /** Feedback + newsletter + ad slot */
@@ -115,15 +141,20 @@ export default function ToolPageShell({
 
         <div className="mx-auto w-full max-w-[min(100%,96rem)] px-4 sm:px-6 lg:px-8 py-5 sm:py-7">
 
-          {/* Back button */}
-          <Link
-            href={backHref}
-            className="mb-4 inline-flex touch-manipulation items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-[12px] font-medium text-zinc-500 shadow-sm transition-colors hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-800"
-          >
-            <ArrowLeft className="h-3 w-3 shrink-0" aria-hidden />
-            {backLabel}
-            <ChevronRight className="h-3 w-3 text-zinc-300" aria-hidden />
-          </Link>
+          {/* Top nav: back button + sibling tool quick-switch */}
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            <Link
+              href={backHref}
+              className="inline-flex touch-manipulation items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-[12px] font-medium text-zinc-500 shadow-sm transition-colors hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-800"
+            >
+              <ArrowLeft className="h-3 w-3 shrink-0" aria-hidden />
+              {backLabel}
+              <ChevronRight className="h-3 w-3 text-zinc-300" aria-hidden />
+            </Link>
+
+            {/* Related tool quick-switch chips (header) */}
+            {toolName && <ToolQuickSwitch toolName={toolName} />}
+          </div>
 
           {/* Title row — icon + text side by side on all breakpoints */}
           <div className="flex items-start gap-3 sm:gap-4">
@@ -204,6 +235,9 @@ export default function ToolPageShell({
           )}
         </div>
       )}
+
+      {/* ── Related tools strip ───────────────────────────── */}
+      {toolName && <RelatedToolsStrip toolName={toolName} />}
 
       {/* ── Below-card SEO content ─────────────────────── */}
       {belowCard != null && (
