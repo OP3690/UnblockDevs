@@ -6,7 +6,6 @@ import { FileText } from 'lucide-react';
 import HomePrivacyFirstSections from '@/components/home/HomePrivacyFirstSections';
 import FeedbackNewsletterSplit from '@/components/home/FeedbackNewsletterSplit';
 import RecentlyUsedTools from '@/components/home/RecentlyUsedTools';
-import HomePasteRouter from '@/components/home/HomePasteRouter';
 
 // Mapping of tool tabs to their dedicated page URLs (used by HomePrivacyFirstSections)
 const toolPageUrls: Record<string, string> = {
@@ -138,9 +137,6 @@ function HomeClient({ hero }: { hero: ReactNode }) {
 
       {/* Hero */}
       {hero}
-
-      {/* Paste-and-route — new user's zero-navigation path to the right tool */}
-      <HomePasteRouter />
 
       {/* Recently used tools — personalized shortcut strip */}
       <RecentlyUsedTools />
