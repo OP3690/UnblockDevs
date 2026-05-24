@@ -296,7 +296,7 @@ export default function SiteHeader() {
   return (
     <>
       <header className="sticky top-0 z-40 border-b border-zinc-200 bg-white/95 backdrop-blur-md">
-        <div className="mx-auto flex min-h-[68px] max-w-[1400px] items-center gap-4 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex min-h-[60px] max-w-[1400px] items-center gap-4 px-4 sm:px-6 lg:px-8">
           {/* Logo */}
           <Link href="/" className="flex shrink-0 items-center gap-2.5 touch-manipulation">
             <span className="flex h-7 w-7 items-center justify-center rounded-md bg-zinc-900 font-mono text-[13px] font-bold text-white" aria-hidden>U</span>
@@ -317,9 +317,9 @@ export default function SiteHeader() {
 
           {/* Right side */}
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
-            {/* Search trigger — desktop with label above */}
-            <div className="hidden sm:flex flex-col items-start gap-0.5">
-              <span className="pl-1 font-mono text-[10px] leading-none text-zinc-400">
+            {/* Search area — label left of bar on desktop, icon-only on mobile */}
+            <div className="flex items-center gap-2">
+              <span className="hidden lg:block font-mono text-[10.5px] text-zinc-400 whitespace-nowrap">
                 What are you working on?
               </span>
               <button
@@ -327,10 +327,10 @@ export default function SiteHeader() {
                 onClick={() => openSearch('header_button')}
                 title="Search tools (⌘K or /)"
                 aria-label="Search tools"
-                className="group flex h-9 items-center gap-2 rounded-xl border-2 border-emerald-300 bg-white px-3 text-zinc-400 shadow-sm shadow-emerald-50 transition-all duration-150 hover:border-emerald-400 hover:shadow-md hover:shadow-emerald-100 sm:w-64 lg:w-80"
+                className="group flex h-9 items-center gap-2 rounded-xl border-2 border-emerald-300 bg-white px-3 text-zinc-400 shadow-sm shadow-emerald-50 transition-all duration-150 hover:border-emerald-400 hover:shadow-md hover:shadow-emerald-100 w-9 sm:w-52 lg:w-72"
               >
                 <Search className="h-3.5 w-3.5 shrink-0 text-emerald-400 transition-colors group-hover:text-emerald-500" />
-                <span className="flex flex-1 items-center overflow-hidden">
+                <span className="hidden sm:flex flex-1 items-center overflow-hidden">
                   <SearchPlaceholder />
                 </span>
                 <kbd className="hidden sm:inline-flex shrink-0 items-center gap-0.5 rounded-md border border-emerald-200 bg-emerald-50 px-1.5 py-0.5 font-mono text-[10px] text-emerald-500 shadow-[inset_0_-1px_0_0_rgba(0,0,0,0.06)] transition-colors group-hover:border-emerald-300 group-hover:bg-emerald-100">
@@ -338,16 +338,6 @@ export default function SiteHeader() {
                 </kbd>
               </button>
             </div>
-            {/* Search trigger — mobile (no label) */}
-            <button
-              type="button"
-              onClick={() => openSearch('header_button')}
-              title="Search tools"
-              aria-label="Search tools"
-              className="flex sm:hidden h-9 w-9 items-center justify-center rounded-xl border-2 border-emerald-300 bg-white text-emerald-400 shadow-sm transition-all hover:border-emerald-400"
-            >
-              <Search className="h-4 w-4" />
-            </button>
 
             <span className="hidden items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 font-mono text-[11px] font-medium text-emerald-800 sm:inline-flex">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden />
