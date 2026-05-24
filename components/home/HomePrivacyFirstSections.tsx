@@ -509,13 +509,86 @@ export default function HomePrivacyFirstSections({
           </div>
         </div>
 
-        {/* ── Search bar ────────────────────────────────────────────── */}
+        {/* ── Search CTA ────────────────────────────────────────────── */}
         <div className="mb-4">
+
+          {/* Headline */}
+          <div className="mb-3">
+            <div className="mb-2.5 flex flex-wrap items-center gap-3">
+              <h3 className="text-[26px] font-extrabold tracking-[-0.03em] text-zinc-900 sm:text-[30px] leading-none">
+                What are you{' '}
+                <span className="relative">
+                  {/* Gradient text */}
+                  <span className="bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-500 bg-clip-text text-transparent">
+                    working on?
+                  </span>
+                  {/* Underline squiggle */}
+                  <span
+                    className="pointer-events-none absolute -bottom-1 left-0 w-full"
+                    aria-hidden
+                  >
+                    <svg viewBox="0 0 200 8" fill="none" className="w-full" preserveAspectRatio="none">
+                      <path d="M0 6 Q25 1 50 5 Q75 9 100 4 Q125 0 150 5 Q175 9 200 4" stroke="url(#sq)" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
+                      <defs>
+                        <linearGradient id="sq" x1="0" y1="0" x2="200" y2="0" gradientUnits="userSpaceOnUse">
+                          <stop offset="0%"   stopColor="#10b981"/>
+                          <stop offset="50%"  stopColor="#2dd4bf"/>
+                          <stop offset="100%" stopColor="#38bdf8"/>
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                  </span>
+                </span>
+              </h3>
+
+              {/* Live badge */}
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 font-mono text-[11px] font-semibold text-emerald-700">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+                {ALL_TOOLS.length} tools · free forever
+              </span>
+            </div>
+
+            {/* Mono subtitle */}
+            <p className="font-mono text-[12.5px] text-zinc-400">
+              › format · decode · convert · debug · generate · compare
+            </p>
+          </div>
+
+          {/* Search bar */}
           <ToolSearchBar
             query={searchQuery}
             onChange={setSearchQuery}
             onClear={() => setSearchQuery('')}
           />
+
+          {/* Quick keyword chips */}
+          <div className="mt-3 flex flex-wrap items-center gap-1.5">
+            <span className="shrink-0 font-mono text-[11px] text-zinc-400">Try:</span>
+            {([
+              { kw: 'json',   label: '{} json'    },
+              { kw: 'curl',   label: '⚡ curl'    },
+              { kw: 'jwt',    label: '🔑 jwt'     },
+              { kw: 'sql',    label: '🗃️ sql'    },
+              { kw: 'base64', label: '🔤 base64'  },
+              { kw: 'regex',  label: '🎯 regex'   },
+              { kw: 'css',    label: '🎨 css'     },
+              { kw: 'hash',   label: '# hash'     },
+              { kw: 'diff',   label: '⟺ diff'    },
+            ] as const).map(({ kw, label }) => (
+              <button
+                key={kw}
+                type="button"
+                onClick={() => setSearchQuery(kw)}
+                className={`inline-flex items-center rounded-full border px-2.5 py-1 font-mono text-[11.5px] font-medium transition-all duration-150 hover:-translate-y-px ${
+                  searchQuery === kw
+                    ? 'border-emerald-400 bg-emerald-50 text-emerald-700 shadow-sm shadow-emerald-100'
+                    : 'border-zinc-200 bg-white text-zinc-500 shadow-sm hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* ── Category pills ────────────────────────────────────────── */}
