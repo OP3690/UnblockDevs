@@ -504,493 +504,442 @@ export default function AiSchemaMaskerClient() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <header className="bg-white border-b border-slate-200 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
-          <nav className="flex items-center gap-2 text-sm text-slate-500 mb-3" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-primary-600">Home</Link>
-            <span aria-hidden>/</span>
-            <span className="text-slate-700 font-medium">AI Schema Masker</span>
+    <div className="w-full">
+
+      {/* ── Page header ───────────────────────────────────────────── */}
+      <div className="border-b border-zinc-200 bg-gradient-to-b from-zinc-50 to-white">
+        <div className="h-[3px] w-full bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-400" aria-hidden />
+        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-5 sm:py-7">
+          {/* Breadcrumb */}
+          <nav className="flex items-center gap-2 text-xs text-zinc-500 mb-4" aria-label="Breadcrumb">
+            <Link href="/" className="hover:text-emerald-600 transition-colors">Home</Link>
+            <span aria-hidden className="text-zinc-300">/</span>
+            <span className="text-zinc-700 font-medium">AI Schema Masker</span>
           </nav>
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-            <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
-                <ShieldCheck className="w-6 h-6 text-emerald-600 flex-shrink-0" aria-hidden />
-                SQL Schema Masker for AI — Mask Before ChatGPT, Restore After
-              </h1>
-              <p className="mt-1 text-slate-600 text-sm max-w-2xl">
-                Hide table and column names before sending to ChatGPT. Tables → T_001, columns → C_001. Fully reversible, 100% in your browser. No data ever leaves your device.
+          {/* Title row */}
+          <div className="flex items-start gap-4">
+            <div className="flex shrink-0 h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-white text-2xl sm:text-3xl shadow-md">
+              🛡️
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-start justify-between gap-3">
+                <h1 className="text-[1.5rem] sm:text-[1.85rem] font-bold leading-tight tracking-[-0.02em] text-zinc-900">
+                  AI SQL Schema Masker
+                </h1>
+                <label className="hidden sm:inline-flex items-center gap-2 mt-1 text-xs text-zinc-600 cursor-pointer whitespace-nowrap shrink-0">
+                  <input type="checkbox" className="rounded border-zinc-300 text-emerald-600 focus:ring-emerald-500"
+                    checked={saveToSession} onChange={(e) => setSaveToSession(e.target.checked)} />
+                  Keep mapping in tab
+                </label>
+              </div>
+              <p className="mt-1.5 text-[13.5px] sm:text-[14px] text-zinc-500 max-w-2xl leading-relaxed">
+                Hide table &amp; column names before sending to ChatGPT. Tables → T_001, columns → C_001. Fully reversible, 100% in your browser — nothing leaves your device.
               </p>
-            </div>
-            <div className="flex items-center gap-3 flex-shrink-0">
-              <label className="inline-flex items-center gap-2 text-xs text-slate-600 cursor-pointer whitespace-nowrap">
-                <input
-                  type="checkbox"
-                  className="rounded border-slate-300 text-primary-600 focus:ring-primary-500"
-                  checked={saveToSession}
-                  onChange={(e) => setSaveToSession(e.target.checked)}
-                />
-                <span>Keep mapping in tab</span>
-              </label>
-            </div>
-          </div>
-          {/* Trust strip: World's first, 100% Data Security, Client-side only */}
-          <div className="mt-4 pt-4 border-t border-slate-100 flex flex-wrap items-center gap-3 sm:gap-6" role="region" aria-label="Key benefits">
-            <div className="flex items-center gap-2 text-emerald-700">
-              <Award className="w-4 h-4 flex-shrink-0" aria-hidden />
-              <span className="text-sm font-semibold">World&apos;s first</span>
-              <span className="text-xs text-slate-600 font-normal">client-side DITE-based SQL masker</span>
-            </div>
-            <div className="flex items-center gap-2 text-emerald-700">
-              <Lock className="w-4 h-4 flex-shrink-0" aria-hidden />
-              <span className="text-sm font-semibold">100% Data Security</span>
-              <span className="text-xs text-slate-600 font-normal">—nothing sent to servers</span>
-            </div>
-            <div className="flex items-center gap-2 text-emerald-700">
-              <Cpu className="w-4 h-4 flex-shrink-0" aria-hidden />
-              <span className="text-sm font-semibold">Client-side only</span>
-              <span className="text-xs text-slate-600 font-normal">—runs entirely in your browser</span>
+              {/* Trust badges */}
+              <div className="mt-3 flex flex-wrap gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-800">
+                  <Award className="w-3 h-3 shrink-0" />World&apos;s first DITE masker
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-800">
+                  <Lock className="w-3 h-3 shrink-0" />100% in-browser
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-2.5 py-1 text-[11px] font-medium text-zinc-600 shadow-sm">
+                  <Cpu className="w-3 h-3 shrink-0" />No data ever leaves your device
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-2.5 py-1 text-[11px] font-medium text-zinc-600 shadow-sm">
+                  Free forever
+                </span>
+              </div>
             </div>
           </div>
         </div>
-      </header>
+      </div>
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
+      {/* ── Main content ──────────────────────────────────────────── */}
+      <main className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
+
+        {/* Progress bar */}
         {processing && (
-          <div className="flex items-center gap-3 rounded-xl bg-white border border-slate-200 px-4 py-2.5 shadow-sm">
-            <div className="flex-1 h-1.5 rounded-full bg-slate-100 overflow-hidden">
-              <div
-                className="h-full bg-primary-500 rounded-full transition-all duration-300"
-                style={{ width: `${progress}%` }}
-              />
+          <div className="flex items-center gap-3 rounded-xl bg-white border border-zinc-200 px-4 py-2.5 shadow-sm">
+            <div className="flex-1 h-1.5 rounded-full bg-zinc-100 overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full transition-all duration-300"
+                style={{ width: `${progress}%` }} />
             </div>
-            <span className="text-xs font-medium text-slate-600 tabular-nums">{progress}%</span>
+            <span className="text-xs font-semibold text-zinc-600 tabular-nums">{progress}%</span>
           </div>
         )}
 
-        {/* Use case 1: Mask raw SQL */}
-        <section className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+        {/* ── Section 1: Mask raw SQL ──────────────────────────────── */}
+        <section className="rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden">
+          <div className="h-[3px] w-full bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-400" aria-hidden />
+
           {/* Section header */}
-          <div className="flex items-center justify-between gap-4 px-5 py-4 border-b border-slate-100 bg-slate-50/60">
+          <div className="flex items-center justify-between gap-4 px-5 py-4 border-b border-zinc-100 bg-zinc-50/60">
             <div className="flex items-center gap-3">
-              <span className="flex items-center justify-center w-8 h-8 rounded-xl bg-primary-600 text-white shrink-0">
+              <span className="flex items-center justify-center w-8 h-8 rounded-xl bg-emerald-600 text-white shrink-0 shadow-sm">
                 <Shield className="w-4 h-4" />
               </span>
               <div>
-                <h2 className="text-base font-semibold text-slate-900">Mask raw SQL</h2>
-                <p className="text-[11px] text-slate-500 mt-0.5 hidden sm:block">
+                <h2 className="text-[15px] font-bold text-zinc-900">Mask raw SQL</h2>
+                <p className="text-[11px] text-zinc-500 mt-0.5 hidden sm:block">
                   Paste SQL → mask identifiers → send to AI → paste AI reply → restore original names
                 </p>
               </div>
             </div>
             {/* Workflow pills */}
-            <div className="hidden md:flex items-center gap-1.5 text-[10px] font-medium text-slate-500 shrink-0">
-              {['Paste SQL', 'Mask', 'Send to AI', 'Restore'].map((step, i) => (
+            <div className="hidden md:flex items-center gap-1.5 text-[10px] font-semibold shrink-0">
+              {(['Paste SQL', 'Mask', 'Send to AI', 'Restore'] as const).map((step, i) => (
                 <React.Fragment key={step}>
-                  <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">{step}</span>
-                  {i < 3 && <span className="text-slate-300">→</span>}
+                  <span className={`px-2.5 py-1 rounded-full ${
+                    i === 0 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
+                    i === 1 ? 'bg-teal-50 text-teal-700 border border-teal-200' :
+                    i === 2 ? 'bg-sky-50 text-sky-700 border border-sky-200' :
+                    'bg-violet-50 text-violet-700 border border-violet-200'
+                  }`}>{step}</span>
+                  {i < 3 && <span className="text-zinc-300">→</span>}
                 </React.Fragment>
               ))}
             </div>
           </div>
-          <div className="p-4 space-y-5">
 
-          {/* ── Masking options ─────────────────────────────────────────────── */}
-          <div className="flex flex-wrap items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200">
-            <span className="text-xs font-semibold text-slate-600 uppercase tracking-wider mr-1">Mask:</span>
-            <label className="inline-flex items-center gap-2 cursor-pointer select-none">
-              <input type="checkbox" checked={true} readOnly
-                className="rounded border-slate-300 text-primary-600 focus:ring-primary-500 cursor-not-allowed" />
-              <span className="text-sm text-slate-700 font-medium">Identifiers</span>
-              <span className="text-[10px] text-slate-400">(tables, columns, aliases — always on)</span>
-            </label>
-            <div className="w-px h-4 bg-slate-200 hidden sm:block" />
-            <label className="inline-flex items-center gap-2 cursor-pointer select-none">
-              <input type="checkbox" checked={maskStringValues} onChange={(e) => setMaskStringValues(e.target.checked)}
-                className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500" />
-              <span className="text-sm text-slate-700 font-medium">String values</span>
-              <span className="text-[10px] text-slate-400">(<code className="font-mono">IN</code> clause, <code className="font-mono">WHERE</code> conditions)</span>
-            </label>
-            <div className="w-px h-4 bg-slate-200 hidden sm:block" />
-            <label className="inline-flex items-center gap-2 cursor-pointer select-none">
-              <input type="checkbox" checked={maskNumericValues} onChange={(e) => setMaskNumericValues(e.target.checked)}
-                className="rounded border-slate-300 text-violet-600 focus:ring-violet-500" />
-              <span className="text-sm text-slate-700 font-medium">Numeric values</span>
-              <span className="text-[10px] text-slate-400">(dates, counts, thresholds)</span>
-            </label>
-          </div>
+          <div className="p-4 sm:p-5 space-y-5">
 
-          {/* ── Panels + action ─────────────────────────────────────────────── */}
-          {/* Mobile: stacked panels with full-width button in between */}
-          <div className="flex flex-col gap-3 lg:hidden">
-            {/* Input panel */}
-            <div id="schema-masker-input-m" className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-              <div className="flex flex-wrap items-center gap-2 px-4 py-3 border-b border-slate-100 bg-slate-50/60">
-                <span className="text-sm font-semibold text-slate-800 mr-auto">Original input</span>
-                {[
-                  { label: '🔗 JOIN', data: DEFAULT_EXAMPLE },
-                  { label: '📊 CTE', data: SAMPLE_CTE },
-                  { label: '✏️ UPDATE', data: SAMPLE_UPDATE },
-                  { label: '📋 JSON', data: SAMPLE_JSON_SCHEMA },
-                ].map((s) => (
-                  <button key={s.label} type="button"
-                    onClick={() => { trackCtaClick('ai_schema_masker', 'load_example'); setInput(s.data); }}
-                    className="px-2 py-1 rounded-md border border-primary-200 bg-primary-50 text-[11px] font-medium text-primary-700 hover:bg-primary-100 transition-colors">
-                    {s.label}
-                  </button>
-                ))}
-                <button type="button"
-                  onClick={() => { if (input.trim()) setInput(''); else setInput(DEFAULT_EXAMPLE); }}
-                  className="inline-flex items-center gap-1 px-2 py-1 rounded-md border border-slate-200 text-[11px] font-medium text-slate-600 bg-white hover:bg-slate-50">
-                  <RefreshCw className="w-3 h-3" />{input.trim() ? 'Clear' : 'Example'}
-                </button>
-              </div>
-              <TextAreaEditor value={input} onChange={setInput} placeholder="Paste your SQL or JSON here…" />
+            {/* ── Masking options ──────────────────────────────────── */}
+            <div className="flex flex-wrap items-center gap-3 px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-200">
+              <span className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider">Mask options:</span>
+              <label className="inline-flex items-center gap-2 cursor-not-allowed select-none">
+                <input type="checkbox" checked readOnly className="rounded border-zinc-300 text-emerald-600 cursor-not-allowed" />
+                <span className="text-sm text-zinc-700 font-medium">Identifiers</span>
+                <span className="text-[10px] text-zinc-400">(tables, columns — always on)</span>
+              </label>
+              <div className="w-px h-4 bg-zinc-200 hidden sm:block" />
+              <label className="inline-flex items-center gap-2 cursor-pointer select-none">
+                <input type="checkbox" checked={maskStringValues} onChange={(e) => setMaskStringValues(e.target.checked)}
+                  className="rounded border-zinc-300 text-emerald-600 focus:ring-emerald-500" />
+                <span className="text-sm text-zinc-700 font-medium">String values</span>
+                <span className="text-[10px] text-zinc-400">(<code className="font-mono">IN</code>, <code className="font-mono">WHERE</code>)</span>
+              </label>
+              <div className="w-px h-4 bg-zinc-200 hidden sm:block" />
+              <label className="inline-flex items-center gap-2 cursor-pointer select-none">
+                <input type="checkbox" checked={maskNumericValues} onChange={(e) => setMaskNumericValues(e.target.checked)}
+                  className="rounded border-zinc-300 text-violet-600 focus:ring-violet-500" />
+                <span className="text-sm text-zinc-700 font-medium">Numeric values</span>
+                <span className="text-[10px] text-zinc-400">(dates, counts, thresholds)</span>
+              </label>
             </div>
 
-            {/* Mobile CTA */}
-            <button type="button" onClick={handleMask}
-              disabled={!input.trim() || processing}
-              className="inline-flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-primary-600 text-white font-semibold hover:bg-primary-700 disabled:opacity-50 shadow-md transition-colors">
-              <Shield className="w-4 h-4" />
-              {processing ? 'Masking…' : 'Mask identifiers'}
-              <kbd className="rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>
-            </button>
-
-            {identifierCountMask > 0 && (
-              <div className="flex flex-col items-center gap-1">
-                <div className="flex items-center gap-1.5 text-xs text-emerald-700 font-medium">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  {identifierCountMask} items masked
-                </div>
-                {maskCounts && (
-                  <div className="flex flex-wrap justify-center gap-2 text-[11px]">
-                    {maskCounts.tables > 0 && <span className="text-blue-600">Tables: {maskCounts.tables}</span>}
-                    {maskCounts.columns > 0 && <span className="text-indigo-600">Columns: {maskCounts.columns}</span>}
-                    {maskCounts.aliases > 0 && <span className="text-violet-600">Aliases: {maskCounts.aliases}</span>}
-                    {maskCounts.values > 0 && <span className="text-emerald-600">Values: {maskCounts.values}</span>}
-                    {maskCounts.numerics > 0 && <span className="text-amber-600">Numbers: {maskCounts.numerics}</span>}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Output panel */}
-            <div id="schema-masker-output-m" className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-              <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 bg-slate-50/60">
-                <span className="text-sm font-semibold text-slate-800">Masked output</span>
-                <button type="button" onClick={handleCopyMasked} disabled={!maskedOutput}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 disabled:opacity-40 transition-colors">
-                  <Clipboard className="w-3.5 h-3.5" />Copy
-                </button>
-              </div>
-              <TextAreaEditor value={maskedOutput} onChange={setMaskedOutput} placeholder="Masked query appears here" />
-            </div>
-          </div>
-
-          {/* Desktop: 3-column symmetric layout */}
-          <div className="hidden lg:grid lg:grid-cols-[1fr_88px_1fr] lg:gap-0 lg:items-stretch">
-
-            {/* ── Left: Input panel ── */}
-            <div id="schema-masker-input" className="rounded-l-2xl rounded-r-none border border-r-0 border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col min-h-[320px]">
-              {/* Panel header */}
-              <div className="flex items-center gap-2 px-4 py-2.5 border-b border-slate-100 bg-slate-50/60">
-                <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-primary-100 text-primary-700 text-[10px] font-bold shrink-0">1</span>
-                <div className="min-w-0 flex-1">
-                  <span className="text-sm font-semibold text-slate-900">Original input</span>
-                  <span className="ml-2 text-[11px] text-slate-400">SQL · CTE · JSON · up to 5 MB</span>
-                </div>
-              </div>
-              {/* Sample buttons row */}
-              <div className="flex flex-wrap items-center gap-1.5 px-4 py-2 border-b border-slate-100 bg-white">
-                {[
-                  { label: '🔗 JOIN query', data: DEFAULT_EXAMPLE },
-                  { label: '📊 CTE', data: SAMPLE_CTE },
-                  { label: '✏️ UPDATE', data: SAMPLE_UPDATE },
-                  { label: '📋 JSON schema', data: SAMPLE_JSON_SCHEMA },
-                ].map((s) => (
-                  <button key={s.label} type="button"
-                    onClick={() => { trackCtaClick('ai_schema_masker', 'load_example'); setInput(s.data); }}
-                    className="px-2.5 py-1 rounded-lg border border-primary-200 bg-primary-50 text-[11px] font-medium text-primary-700 hover:bg-primary-100 transition-colors">
-                    {s.label}
+            {/* ── Mobile stacked layout ────────────────────────────── */}
+            <div className="flex flex-col gap-3 lg:hidden">
+              <div className="rounded-xl border border-zinc-200 bg-white shadow-sm overflow-hidden">
+                <div className="flex flex-wrap items-center gap-2 px-4 py-3 border-b border-zinc-100 bg-zinc-50/60">
+                  <span className="text-sm font-semibold text-zinc-800 mr-auto">Original SQL</span>
+                  {[
+                    { label: '🔗 JOIN', data: DEFAULT_EXAMPLE },
+                    { label: '📊 CTE', data: SAMPLE_CTE },
+                    { label: '✏️ UPDATE', data: SAMPLE_UPDATE },
+                    { label: '📋 JSON', data: SAMPLE_JSON_SCHEMA },
+                  ].map((s) => (
+                    <button key={s.label} type="button"
+                      onClick={() => { trackCtaClick('ai_schema_masker', 'load_example'); setInput(s.data); }}
+                      className="px-2 py-1 rounded-md border border-emerald-200 bg-emerald-50 text-[11px] font-medium text-emerald-700 hover:bg-emerald-100 transition-colors">
+                      {s.label}
+                    </button>
+                  ))}
+                  <button type="button" onClick={() => { if (input.trim()) setInput(''); else setInput(DEFAULT_EXAMPLE); }}
+                    className="inline-flex items-center gap-1 px-2 py-1 rounded-md border border-zinc-200 text-[11px] font-medium text-zinc-600 bg-white hover:bg-zinc-50">
+                    <RefreshCw className="w-3 h-3" />{input.trim() ? 'Clear' : 'Example'}
                   </button>
-                ))}
-                <button type="button"
-                  onClick={() => { if (input.trim()) setInput(''); else setInput(DEFAULT_EXAMPLE); }}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-slate-200 text-[11px] font-medium text-slate-600 bg-white hover:bg-slate-50 transition-colors ml-auto">
-                  <RefreshCw className="w-3 h-3" />{input.trim() ? 'Clear' : 'Example'}
-                </button>
-              </div>
-              <div className="flex-1 flex flex-col">
+                </div>
                 <TextAreaEditor value={input} onChange={setInput} placeholder="Paste your SQL or JSON here…" />
               </div>
-            </div>
-
-            {/* ── Center: Action column ── */}
-            <div className="flex flex-col items-center justify-center gap-0 border-y border-slate-200 bg-gradient-to-b from-slate-50/80 via-white to-slate-50/80">
-              {/* Top connector */}
-              <div className="flex-1 flex flex-col items-center justify-end pb-4">
-                <div className="w-px flex-1 bg-gradient-to-b from-transparent via-slate-200 to-primary-300/70" />
-              </div>
-
-              {/* The action button */}
-              <button
-                type="button"
-                onClick={handleMask}
-                disabled={!input.trim() || processing}
-                className="flex flex-col items-center gap-2 px-3.5 py-4 rounded-2xl bg-primary-600 text-white shadow-[0_4px_20px_rgba(37,99,235,0.35)] hover:bg-primary-700 hover:shadow-[0_6px_24px_rgba(37,99,235,0.45)] hover:scale-[1.06] active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all duration-150"
-              >
-                <Shield className="w-5 h-5" />
-                <span className="text-[11px] font-bold tracking-wider uppercase leading-none">
-                  {processing ? '…' : 'Mask'}
-                </span>
-                <ArrowRight className="w-4 h-4 opacity-80" />
-                <kbd className="rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[9px]">⌘↵</kbd>
+              <button type="button" onClick={handleMask} disabled={!input.trim() || processing}
+                className="inline-flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-700 disabled:opacity-50 shadow-md shadow-emerald-100 transition-all">
+                <Shield className="w-4 h-4" />
+                {processing ? 'Masking…' : 'Mask identifiers'}
+                <kbd className="rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>
               </button>
-
-              {/* Bottom connector + status */}
-              <div className="flex-1 flex flex-col items-center justify-start pt-4 gap-2">
-                {identifierCountMask > 0 ? (
-                  <div className="flex flex-col items-center gap-1 text-center px-1">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                    <span className="text-xs font-bold text-slate-700 tabular-nums">{identifierCountMask}</span>
-                    <span className="text-[9px] text-slate-400 leading-tight">masked</span>
-                    {maskCounts && (
-                      <div className="mt-1 flex flex-col gap-0.5 text-[9px] text-slate-500 leading-tight text-left">
-                        {maskCounts.tables > 0 && <span className="text-blue-600">T:{maskCounts.tables}</span>}
-                        {maskCounts.columns > 0 && <span className="text-indigo-600">C:{maskCounts.columns}</span>}
-                        {maskCounts.aliases > 0 && <span className="text-violet-600">A:{maskCounts.aliases}</span>}
-                        {maskCounts.values > 0 && <span className="text-emerald-600">V:{maskCounts.values}</span>}
-                        {maskCounts.numerics > 0 && <span className="text-amber-600">N:{maskCounts.numerics}</span>}
-                      </div>
-                    )}
+              {identifierCountMask > 0 && (
+                <div className="flex flex-col items-center gap-1">
+                  <div className="flex items-center gap-1.5 text-xs text-emerald-700 font-semibold">
+                    <CheckCircle2 className="w-3.5 h-3.5" />{identifierCountMask} items masked
                   </div>
-                ) : (
-                  <div className="w-px flex-1 bg-gradient-to-b from-primary-300/70 via-slate-200 to-transparent" />
-                )}
-              </div>
-            </div>
-
-            {/* ── Right: Output panel ── */}
-            <div id="schema-masker-output" className="rounded-r-2xl rounded-l-none border border-l-0 border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col min-h-[260px]">
-              {/* Panel header */}
-              <div className="flex items-center gap-2 px-4 py-2.5 border-b border-slate-100 bg-slate-50/60">
-                <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold shrink-0">2</span>
-                <div className="min-w-0 flex-1">
-                  <span className="text-sm font-semibold text-slate-900">Masked output</span>
-                  <span className="ml-2 text-[11px] text-slate-400">Copy and send to AI</span>
+                  {maskCounts && (
+                    <div className="flex flex-wrap justify-center gap-2 text-[11px] font-medium">
+                      {maskCounts.tables > 0 && <span className="text-sky-600">Tables: {maskCounts.tables}</span>}
+                      {maskCounts.columns > 0 && <span className="text-indigo-600">Columns: {maskCounts.columns}</span>}
+                      {maskCounts.aliases > 0 && <span className="text-violet-600">Aliases: {maskCounts.aliases}</span>}
+                      {maskCounts.values > 0 && <span className="text-emerald-600">Values: {maskCounts.values}</span>}
+                      {maskCounts.numerics > 0 && <span className="text-amber-600">Numbers: {maskCounts.numerics}</span>}
+                    </div>
+                  )}
                 </div>
-                <button type="button" onClick={handleCopyMasked} disabled={!maskedOutput}
-                  className="cta-icon-copy inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0">
-                  <Clipboard className="w-3.5 h-3.5" />Copy
-                </button>
-              </div>
-              {/* Spacer row to align textarea with input panel */}
-              <div className="h-[41px] border-b border-slate-100 bg-white flex items-center px-4 gap-2">
-                {maskedOutput ? (
-                  <>
-                    <span className="text-[11px] text-emerald-600 font-medium">✓ Ready to paste into ChatGPT / Claude</span>
-                    {maskCounts && maskCounts.values > 0 && (
-                      <span className="text-[10px] text-emerald-500">· {maskCounts.values} string value(s) masked</span>
-                    )}
-                    {maskCounts && maskCounts.numerics > 0 && (
-                      <span className="text-[10px] text-amber-500">· {maskCounts.numerics} number(s) masked</span>
-                    )}
-                  </>
-                ) : (
-                  <span className="text-[11px] text-slate-400">Masked query will appear here</span>
-                )}
-              </div>
-              <div className="flex-1 flex flex-col">
+              )}
+              <div className="rounded-xl border border-zinc-200 bg-white shadow-sm overflow-hidden">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100 bg-zinc-50/60">
+                  <span className="text-sm font-semibold text-zinc-800">Masked output</span>
+                  <button type="button" onClick={handleCopyMasked} disabled={!maskedOutput}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 text-xs font-medium text-zinc-700 bg-white hover:bg-zinc-50 disabled:opacity-40 transition-colors">
+                    <Clipboard className="w-3.5 h-3.5" />Copy
+                  </button>
+                </div>
                 <TextAreaEditor value={maskedOutput} onChange={setMaskedOutput} placeholder="Masked query appears here" />
               </div>
             </div>
 
-          </div>
+            {/* ── Desktop 3-column layout ──────────────────────────── */}
+            <div className="hidden lg:grid lg:grid-cols-[1fr_96px_1fr] lg:items-stretch rounded-2xl border border-zinc-200 overflow-hidden shadow-sm">
 
-          {/* ── Restore section ─────────────────────────────────────────────── */}
-          <div className="rounded-xl border border-slate-200 overflow-hidden bg-white shadow-sm">
-
-            {/* Sub-header */}
-            <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-b border-slate-100 bg-gradient-to-r from-emerald-50/60 to-white">
-              <div className="flex items-center gap-2.5">
-                <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 text-[11px] font-bold shrink-0">3</span>
-                <div>
-                  <h3 className="text-sm font-semibold text-slate-900">Restore AI response</h3>
-                  <p className="text-[11px] text-slate-500">Paste the AI&apos;s reply → click Restore → copy the original SQL back</p>
+              {/* Left: Input */}
+              <div id="schema-masker-input" className="bg-white flex flex-col min-h-[340px]">
+                <div className="flex items-center gap-2 px-4 py-2.5 border-b border-zinc-100 bg-zinc-50/60">
+                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold shrink-0">1</span>
+                  <div className="min-w-0 flex-1">
+                    <span className="text-sm font-semibold text-zinc-900">Original SQL</span>
+                    <span className="ml-2 text-[11px] text-zinc-400">SQL · CTE · JSON · up to 5 MB</span>
+                  </div>
                 </div>
-              </div>
-              {/* Utility actions */}
-              <div className="flex flex-wrap items-center gap-2">
-                <button type="button" onClick={() => downloadMapping(mappingFromMask, 'mask')} disabled={!mappingFromMask}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 text-xs font-medium text-slate-600 bg-white hover:bg-slate-50 disabled:opacity-40 transition-colors">
-                  <Download className="w-3.5 h-3.5" />Download mapping
-                </button>
-                <label className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 text-xs font-medium text-slate-600 bg-white hover:bg-slate-50 cursor-pointer transition-colors">
-                  <Upload className="w-3.5 h-3.5" />Load mapping
-                  <input type="file" accept="application/json" className="hidden"
-                    onChange={(e) => loadMappingFile(e, setMappingFromMask, setIdentifierCountMask)} />
-                </label>
-              </div>
-            </div>
-
-            {/* Mobile: stacked */}
-            <div className="flex flex-col gap-3 p-4 lg:hidden">
-              <div className="rounded-xl border border-slate-200 overflow-hidden">
-                <div className="px-4 py-2.5 border-b border-slate-100 bg-slate-50/60 text-[11px] font-medium text-slate-600">
-                  Paste AI reply <span className="text-slate-400">(with T_000001, C_000001, etc.)</span>
-                </div>
-                <TextAreaEditor value={maskRestoreInput} onChange={setMaskRestoreInput} placeholder="Paste AI response here…" />
-              </div>
-              <button type="button" onClick={handleRestoreMask}
-                disabled={!mappingFromMask || !maskRestoreInput.trim() || processing}
-                className="inline-flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-emerald-600 text-white font-semibold hover:bg-emerald-700 disabled:opacity-50 shadow-md transition-colors">
-                <RefreshCw className="w-4 h-4" />Restore original names
-              </button>
-              {restoredFromMask && (
-                <div className="rounded-xl border border-emerald-200 overflow-hidden">
-                  <div className="flex items-center justify-between px-4 py-2.5 border-b border-emerald-100 bg-emerald-50/60">
-                    <span className="text-[11px] font-medium text-emerald-800">✓ Restored SQL</span>
-                    <button type="button" onClick={handleCopyRestored}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-700 transition-colors">
-                      <Clipboard className="w-3.5 h-3.5" />Copy restored
+                <div className="flex flex-wrap items-center gap-1.5 px-4 py-2 border-b border-zinc-100 bg-white">
+                  {[
+                    { label: '🔗 JOIN', data: DEFAULT_EXAMPLE },
+                    { label: '📊 CTE', data: SAMPLE_CTE },
+                    { label: '✏️ UPDATE', data: SAMPLE_UPDATE },
+                    { label: '📋 JSON schema', data: SAMPLE_JSON_SCHEMA },
+                  ].map((s) => (
+                    <button key={s.label} type="button"
+                      onClick={() => { trackCtaClick('ai_schema_masker', 'load_example'); setInput(s.data); }}
+                      className="px-2.5 py-1 rounded-lg border border-emerald-200 bg-emerald-50 text-[11px] font-medium text-emerald-700 hover:bg-emerald-100 transition-colors">
+                      {s.label}
                     </button>
-                  </div>
-                  <TextAreaEditor value={restoredFromMask} onChange={setRestoredFromMask} placeholder="" />
-                </div>
-              )}
-            </div>
-
-            {/* Desktop: 3-column symmetric — matches mask section design */}
-            <div className="hidden lg:grid lg:grid-cols-[1fr_88px_1fr] lg:gap-0 lg:items-stretch">
-
-              {/* Left: paste AI response */}
-              <div className="border-r-0 border border-slate-200 rounded-bl-xl bg-white overflow-hidden flex flex-col min-h-[200px]">
-                <div className="flex items-center gap-2 px-4 py-2.5 border-b border-slate-100 bg-slate-50/60">
-                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-200 text-slate-600 text-[10px] font-bold shrink-0">A</span>
-                  <span className="text-sm font-semibold text-slate-800">Paste AI reply</span>
-                  <span className="text-[11px] text-slate-400 ml-1">with T_000001, C_000001…</span>
-                </div>
-                <div className="flex-1 flex flex-col">
-                  <TextAreaEditor value={maskRestoreInput} onChange={setMaskRestoreInput} placeholder="Paste the AI's response here (it will contain T_000001, C_000001, etc.)…" />
-                </div>
-              </div>
-
-              {/* Center: Restore action */}
-              <div className="flex flex-col items-center justify-center gap-0 border-y border-slate-200 bg-gradient-to-b from-slate-50/80 via-white to-slate-50/80">
-                <div className="flex-1 flex flex-col items-center justify-end pb-4">
-                  <div className="w-px flex-1 bg-gradient-to-b from-transparent via-slate-200 to-emerald-300/70" />
-                </div>
-                <button type="button" onClick={handleRestoreMask}
-                  disabled={!mappingFromMask || !maskRestoreInput.trim() || processing}
-                  className="flex flex-col items-center gap-2 px-3.5 py-4 rounded-2xl bg-emerald-600 text-white shadow-[0_4px_20px_rgba(5,150,105,0.3)] hover:bg-emerald-700 hover:shadow-[0_6px_24px_rgba(5,150,105,0.4)] hover:scale-[1.06] active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all duration-150"
-                >
-                  <RefreshCw className="w-5 h-5" />
-                  <span className="text-[11px] font-bold tracking-wider uppercase leading-none">
-                    {processing ? '…' : 'Restore'}
-                  </span>
-                  <ArrowRight className="w-4 h-4 opacity-80" />
-                </button>
-                <div className="flex-1 flex flex-col items-center justify-start pt-4">
-                  {restoredFromMask ? (
-                    <div className="flex flex-col items-center gap-0.5 text-center">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                      <span className="text-[9px] text-slate-400 leading-tight">done</span>
-                    </div>
-                  ) : (
-                    <div className="w-px flex-1 bg-gradient-to-b from-emerald-300/70 via-slate-200 to-transparent" />
-                  )}
-                </div>
-              </div>
-
-              {/* Right: Restored output + Copy */}
-              <div className="border-l-0 border border-slate-200 rounded-br-xl bg-white overflow-hidden flex flex-col min-h-[200px]">
-                <div className="flex items-center gap-2 px-4 py-2.5 border-b border-slate-100 bg-slate-50/60">
-                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold shrink-0">B</span>
-                  <div className="flex-1 min-w-0">
-                    <span className="text-sm font-semibold text-slate-800">Restored SQL</span>
-                    <span className="ml-2 text-[11px] text-slate-400">original names recovered</span>
-                  </div>
-                  <button type="button" onClick={handleCopyRestored} disabled={!restoredFromMask}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0 shadow-sm">
-                    <Clipboard className="w-3.5 h-3.5" />Copy restored
+                  ))}
+                  <button type="button" onClick={() => { if (input.trim()) setInput(''); else setInput(DEFAULT_EXAMPLE); }}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-zinc-200 text-[11px] font-medium text-zinc-600 bg-white hover:bg-zinc-50 transition-colors ml-auto">
+                    <RefreshCw className="w-3 h-3" />{input.trim() ? 'Clear' : 'Example'}
                   </button>
                 </div>
                 <div className="flex-1 flex flex-col">
-                  <TextAreaEditor
-                    value={restoredFromMask}
-                    onChange={setRestoredFromMask}
-                    placeholder="Restored SQL with original table and column names will appear here…"
-                  />
+                  <TextAreaEditor value={input} onChange={setInput} placeholder="Paste your SQL or JSON here…" />
                 </div>
               </div>
 
+              {/* Center: Mask action */}
+              <div className="flex flex-col items-center justify-center border-x border-zinc-200 bg-gradient-to-b from-zinc-50/80 via-white to-zinc-50/80">
+                <div className="flex-1 flex flex-col items-center justify-end pb-4">
+                  <div className="w-px flex-1 bg-gradient-to-b from-transparent via-zinc-200 to-emerald-300/70" />
+                </div>
+                <button type="button" onClick={handleMask} disabled={!input.trim() || processing}
+                  className="flex flex-col items-center gap-2 px-3.5 py-4 rounded-2xl bg-emerald-600 text-white shadow-[0_4px_20px_rgba(5,150,105,0.35)] hover:bg-emerald-700 hover:shadow-[0_6px_24px_rgba(5,150,105,0.45)] hover:scale-[1.06] active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all duration-150">
+                  <Shield className="w-5 h-5" />
+                  <span className="text-[11px] font-bold tracking-wider uppercase leading-none">
+                    {processing ? '…' : 'Mask'}
+                  </span>
+                  <ArrowRight className="w-4 h-4 opacity-80" />
+                  <kbd className="rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[9px]">⌘↵</kbd>
+                </button>
+                <div className="flex-1 flex flex-col items-center justify-start pt-4 gap-2">
+                  {identifierCountMask > 0 ? (
+                    <div className="flex flex-col items-center gap-1 text-center px-1">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                      <span className="text-xs font-bold text-zinc-700 tabular-nums">{identifierCountMask}</span>
+                      <span className="text-[9px] text-zinc-400 leading-tight">masked</span>
+                      {maskCounts && (
+                        <div className="mt-1 flex flex-col gap-0.5 text-[9px] leading-tight text-left font-medium">
+                          {maskCounts.tables > 0 && <span className="text-sky-600">T:{maskCounts.tables}</span>}
+                          {maskCounts.columns > 0 && <span className="text-indigo-600">C:{maskCounts.columns}</span>}
+                          {maskCounts.aliases > 0 && <span className="text-violet-600">A:{maskCounts.aliases}</span>}
+                          {maskCounts.values > 0 && <span className="text-emerald-600">V:{maskCounts.values}</span>}
+                          {maskCounts.numerics > 0 && <span className="text-amber-600">N:{maskCounts.numerics}</span>}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="w-px flex-1 bg-gradient-to-b from-emerald-300/70 via-zinc-200 to-transparent" />
+                )}
+              </div>
             </div>
-          </div>
 
-          </div>{/* end p-4 space-y-5 */}
+              {/* Right: Masked output */}
+              <div id="schema-masker-output" className="bg-white flex flex-col min-h-[260px]">
+                <div className="flex items-center gap-2 px-4 py-2.5 border-b border-zinc-100 bg-zinc-50/60">
+                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-teal-100 text-teal-700 text-[10px] font-bold shrink-0">2</span>
+                  <div className="min-w-0 flex-1">
+                    <span className="text-sm font-semibold text-zinc-900">Masked output</span>
+                    <span className="ml-2 text-[11px] text-zinc-400">Copy and send to AI</span>
+                  </div>
+                  <button type="button" onClick={handleCopyMasked} disabled={!maskedOutput}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 text-xs font-medium text-zinc-700 bg-white hover:bg-zinc-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0">
+                    <Clipboard className="w-3.5 h-3.5" />Copy
+                  </button>
+                </div>
+                <div className="h-[41px] border-b border-zinc-100 bg-white flex items-center px-4 gap-2">
+                  {maskedOutput ? (
+                    <>
+                      <span className="text-[11px] text-emerald-600 font-semibold">✓ Ready to paste into ChatGPT / Claude</span>
+                      {maskCounts && maskCounts.values > 0 && <span className="text-[10px] text-emerald-500">· {maskCounts.values} string value(s) masked</span>}
+                      {maskCounts && maskCounts.numerics > 0 && <span className="text-[10px] text-amber-500">· {maskCounts.numerics} number(s) masked</span>}
+                    </>
+                  ) : (
+                    <span className="text-[11px] text-zinc-400">Masked query will appear here</span>
+                  )}
+                </div>
+                <div className="flex-1 flex flex-col">
+                  <TextAreaEditor value={maskedOutput} onChange={setMaskedOutput} placeholder="Masked query appears here" />
+                </div>
+              </div>
+
+            </div>{/* end desktop 3-col */}
+
+            {/* ── Restore section ──────────────────────────────────── */}
+            <div className="rounded-xl border border-zinc-200 overflow-hidden bg-white shadow-sm">
+              <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-b border-zinc-100 bg-gradient-to-r from-emerald-50/60 to-white">
+                <div className="flex items-center gap-2.5">
+                  <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 text-[11px] font-bold shrink-0">3</span>
+                  <div>
+                    <h3 className="text-sm font-bold text-zinc-900">Restore AI response</h3>
+                    <p className="text-[11px] text-zinc-500">Paste the AI&apos;s reply → Restore → copy original SQL back</p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <button type="button" onClick={() => downloadMapping(mappingFromMask, 'mask')} disabled={!mappingFromMask}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-zinc-200 text-xs font-medium text-zinc-600 bg-white hover:bg-zinc-50 disabled:opacity-40 transition-colors">
+                    <Download className="w-3.5 h-3.5" />Download mapping
+                  </button>
+                  <label className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-zinc-200 text-xs font-medium text-zinc-600 bg-white hover:bg-zinc-50 cursor-pointer transition-colors">
+                    <Upload className="w-3.5 h-3.5" />Load mapping
+                    <input type="file" accept="application/json" className="hidden" onChange={(e) => loadMappingFile(e, setMappingFromMask, setIdentifierCountMask)} />
+                  </label>
+                </div>
+              </div>
+
+              {/* Mobile */}
+              <div className="flex flex-col gap-3 p-4 lg:hidden">
+                <div className="rounded-xl border border-zinc-200 overflow-hidden">
+                  <div className="px-4 py-2.5 border-b border-zinc-100 bg-zinc-50/60 text-[11px] font-medium text-zinc-600">
+                    Paste AI reply <span className="text-zinc-400">(with T_000001, C_000001, etc.)</span>
+                  </div>
+                  <TextAreaEditor value={maskRestoreInput} onChange={setMaskRestoreInput} placeholder="Paste AI response here…" />
+                </div>
+                <button type="button" onClick={handleRestoreMask} disabled={!mappingFromMask || !maskRestoreInput.trim() || processing}
+                  className="inline-flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-700 disabled:opacity-50 shadow-md transition-all">
+                  <RefreshCw className="w-4 h-4" />Restore original names
+                </button>
+                {restoredFromMask && (
+                  <div className="rounded-xl border border-emerald-200 overflow-hidden">
+                    <div className="flex items-center justify-between px-4 py-2.5 border-b border-emerald-100 bg-emerald-50/60">
+                      <span className="text-[11px] font-semibold text-emerald-800">✓ Restored SQL</span>
+                      <button type="button" onClick={handleCopyRestored}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 transition-colors">
+                        <Clipboard className="w-3.5 h-3.5" />Copy restored
+                      </button>
+                    </div>
+                    <TextAreaEditor value={restoredFromMask} onChange={setRestoredFromMask} placeholder="" />
+                  </div>
+                )}
+              </div>
+
+              {/* Desktop 3-column */}
+              <div className="hidden lg:grid lg:grid-cols-[1fr_96px_1fr] lg:items-stretch">
+                <div className="border-r border-zinc-200 bg-white flex flex-col min-h-[200px]">
+                  <div className="flex items-center gap-2 px-4 py-2.5 border-b border-zinc-100 bg-zinc-50/60">
+                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-zinc-200 text-zinc-600 text-[10px] font-bold shrink-0">A</span>
+                    <span className="text-sm font-semibold text-zinc-800">Paste AI reply</span>
+                    <span className="text-[11px] text-zinc-400 ml-1">with T_000001, C_000001…</span>
+                  </div>
+                  <div className="flex-1 flex flex-col">
+                    <TextAreaEditor value={maskRestoreInput} onChange={setMaskRestoreInput} placeholder="Paste the AI's response here…" />
+                  </div>
+                </div>
+                <div className="flex flex-col items-center justify-center border-x border-zinc-200 bg-gradient-to-b from-zinc-50/80 via-white to-zinc-50/80">
+                  <div className="flex-1 flex flex-col items-center justify-end pb-4">
+                    <div className="w-px flex-1 bg-gradient-to-b from-transparent via-zinc-200 to-emerald-300/70" />
+                  </div>
+                  <button type="button" onClick={handleRestoreMask} disabled={!mappingFromMask || !maskRestoreInput.trim() || processing}
+                    className="flex flex-col items-center gap-2 px-3.5 py-4 rounded-2xl bg-emerald-600 text-white shadow-[0_4px_20px_rgba(5,150,105,0.3)] hover:bg-emerald-700 hover:shadow-[0_6px_24px_rgba(5,150,105,0.4)] hover:scale-[1.06] active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all duration-150">
+                    <RefreshCw className="w-5 h-5" />
+                    <span className="text-[11px] font-bold tracking-wider uppercase leading-none">{processing ? '…' : 'Restore'}</span>
+                    <ArrowRight className="w-4 h-4 opacity-80" />
+                  </button>
+                  <div className="flex-1 flex flex-col items-center justify-start pt-4">
+                    {restoredFromMask ? (
+                      <div className="flex flex-col items-center gap-0.5 text-center">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                        <span className="text-[9px] text-zinc-400 leading-tight">done</span>
+                      </div>
+                    ) : (
+                      <div className="w-px flex-1 bg-gradient-to-b from-emerald-300/70 via-zinc-200 to-transparent" />
+                    )}
+                  </div>
+                </div>
+                <div className="bg-white flex flex-col min-h-[200px]">
+                  <div className="flex items-center gap-2 px-4 py-2.5 border-b border-zinc-100 bg-zinc-50/60">
+                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold shrink-0">B</span>
+                    <div className="flex-1 min-w-0">
+                      <span className="text-sm font-semibold text-zinc-800">Restored SQL</span>
+                      <span className="ml-2 text-[11px] text-zinc-400">original names recovered</span>
+                    </div>
+                    <button type="button" onClick={handleCopyRestored} disabled={!restoredFromMask}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0 shadow-sm">
+                      <Clipboard className="w-3.5 h-3.5" />Copy restored
+                    </button>
+                  </div>
+                  <div className="flex-1 flex flex-col">
+                    <TextAreaEditor value={restoredFromMask} onChange={setRestoredFromMask} placeholder="Restored SQL with original names will appear here…" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
         </section>
 
-        {/* Use case 2: Secure AI Prompt Compiler */}
-        <section className="rounded-2xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50/40 to-white shadow-md overflow-hidden">
-          <div className="px-4 py-4 border-b border-indigo-100 bg-indigo-50/70">
-            <div className="flex items-center gap-2">
-              <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-600 text-white text-sm font-bold">2</span>
+        {/* ── Section 2: Secure AI Prompt Compiler ─────────────────── */}
+        <section className="rounded-2xl border border-indigo-200 bg-white shadow-sm overflow-hidden">
+          <div className="h-[3px] w-full bg-gradient-to-r from-indigo-500 via-violet-400 to-purple-500" aria-hidden />
+          <div className="px-5 py-4 border-b border-indigo-100 bg-indigo-50/40">
+            <div className="flex items-center gap-3">
+              <span className="flex items-center justify-center w-8 h-8 rounded-xl bg-indigo-600 text-white shrink-0 shadow-sm">
+                <FileCode className="w-4 h-4" />
+              </span>
               <div>
-                <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-                  <FileCode className="w-5 h-5 text-indigo-600" />
-                  Secure AI Prompt Compiler
-                </h2>
-                <p className="text-xs text-slate-600 mt-0.5">
-                  Schema + instruction → AI-safe prompt. No raw SQL; you define tables and columns, then restore the AI&apos;s SQL here.
-                </p>
+                <h2 className="text-[15px] font-bold text-zinc-900">Secure AI Prompt Compiler</h2>
+                <p className="text-[11px] text-zinc-500 mt-0.5">Build tables &amp; columns visually → generate an AI-safe masked prompt → restore the AI&apos;s SQL reply</p>
               </div>
             </div>
           </div>
-          <div className="p-4 space-y-4">
+          <div className="p-4 sm:p-5 space-y-4">
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-medium text-slate-700">Tables & columns</span>
-                <button
-                  type="button"
-                  onClick={addTable}
-                  className="cta-add inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-indigo-200 text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  Add table
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs font-bold text-zinc-700 uppercase tracking-wide">Tables &amp; columns</span>
+                <button type="button" onClick={addTable}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-indigo-200 text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 transition-colors">
+                  <Plus className="w-3.5 h-3.5" />Add table
                 </button>
               </div>
               <div className="space-y-3">
                 {structuredTables.map((t) => (
-                  <div key={t.id} className="rounded-lg border border-indigo-100 bg-white p-3 space-y-2">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <input
-                        type="text"
-                        value={t.name}
-                        onChange={(e) => updateTable(t.id, e.target.value, t.columns)}
+                  <div key={t.id} className="rounded-xl border border-zinc-200 bg-zinc-50/50 p-3 space-y-2.5">
+                    <div className="flex items-center gap-2">
+                      <input type="text" value={t.name} onChange={(e) => updateTable(t.id, e.target.value, t.columns)}
                         placeholder="Table name"
-                        className="flex-1 min-w-[120px] px-2.5 py-1.5 text-sm font-mono rounded border border-slate-200 bg-white"
-                      />
-                      <button type="button" onClick={() => removeTable(t.id)} className="cta-icon-remove p-1.5 rounded text-slate-500 hover:bg-red-50 hover:text-red-600" aria-label="Remove table">
+                        className="flex-1 min-w-[120px] px-2.5 py-1.5 text-sm font-mono rounded-lg border border-zinc-200 bg-white focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 outline-none transition-all" />
+                      <button type="button" onClick={() => removeTable(t.id)}
+                        className="p-1.5 rounded-lg text-zinc-400 hover:bg-red-50 hover:text-red-500 transition-colors" aria-label="Remove table">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                     <div className="pl-2 flex flex-wrap gap-1.5 items-center">
                       {t.columns.map((col, idx) => (
                         <span key={idx} className="inline-flex items-center gap-1">
-                          <input
-                            type="text"
-                            value={col}
-                            onChange={(e) => setColumn(t.id, idx, e.target.value)}
-                            placeholder="Column"
-                            className="w-28 px-2 py-1 text-xs font-mono rounded border border-slate-200 bg-white"
-                          />
-                          <button type="button" onClick={() => removeColumn(t.id, idx)} className="cta-icon-remove p-1 text-slate-400 hover:text-red-600 rounded" aria-label="Remove column">
+                          <input type="text" value={col} onChange={(e) => setColumn(t.id, idx, e.target.value)}
+                            placeholder="column"
+                            className="w-28 px-2 py-1 text-xs font-mono rounded-lg border border-zinc-200 bg-white focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 outline-none transition-all" />
+                          <button type="button" onClick={() => removeColumn(t.id, idx)}
+                            className="p-1 text-zinc-300 hover:text-red-500 rounded transition-colors" aria-label="Remove column">
                             <Trash2 className="w-3 h-3" />
                           </button>
                         </span>
                       ))}
-                      <button type="button" onClick={() => addColumn(t.id)} className="cta-add inline-flex items-center gap-1 px-2 py-1 text-xs text-indigo-600 rounded border border-dashed border-indigo-200 hover:bg-indigo-50">
+                      <button type="button" onClick={() => addColumn(t.id)}
+                        className="inline-flex items-center gap-1 px-2 py-1 text-xs text-indigo-600 rounded-lg border border-dashed border-indigo-300 hover:bg-indigo-50 transition-colors font-medium">
                         <Plus className="w-3 h-3" /> Column
                       </button>
                     </div>
@@ -1012,7 +961,7 @@ export default function AiSchemaMaskerClient() {
                   </button>
                 </div>
                 {joins.length === 0 ? (
-                  <p className="text-xs text-slate-500">Add at least one JOIN so the AI knows how to connect tables (e.g. table_a.id = table_b.foreign_id).</p>
+                  <p className="text-xs text-zinc-500">Add at least one JOIN so the AI knows how to connect tables (e.g. table_a.id = table_b.foreign_id).</p>
                 ) : (
                   <div className="space-y-2">
                     {joins.map((j) => (
@@ -1020,7 +969,7 @@ export default function AiSchemaMaskerClient() {
                         <select
                           value={j.joinType}
                           onChange={(e) => updateJoin(j.id, { joinType: e.target.value as JoinType })}
-                          className="px-2 py-1.5 text-sm rounded border border-slate-200 bg-white min-w-[120px]"
+                          className="px-2 py-1.5 text-sm rounded-lg border border-zinc-200 bg-white min-w-[120px] focus:ring-2 focus:ring-indigo-200 outline-none"
                           aria-label="Join type"
                         >
                           {JOIN_TYPE_OPTIONS.map((opt) => (
@@ -1034,7 +983,7 @@ export default function AiSchemaMaskerClient() {
                             const cols = getColumnsForTable(name);
                             updateJoin(j.id, { leftTable: name, leftColumn: cols[0] ?? '' });
                           }}
-                          className="px-2 py-1.5 text-sm font-mono rounded border border-slate-200 bg-white min-w-[100px]"
+                          className="px-2 py-1.5 text-sm font-mono rounded-lg border border-zinc-200 bg-white min-w-[100px] focus:ring-2 focus:ring-indigo-200 outline-none"
                           aria-label="Left table"
                         >
                           {tableNames.map((n) => (
@@ -1044,14 +993,14 @@ export default function AiSchemaMaskerClient() {
                         <select
                           value={j.leftColumn}
                           onChange={(e) => updateJoin(j.id, { leftColumn: e.target.value })}
-                          className="px-2 py-1.5 text-sm font-mono rounded border border-slate-200 bg-white min-w-[90px]"
+                          className="px-2 py-1.5 text-sm font-mono rounded-lg border border-zinc-200 bg-white min-w-[90px] focus:ring-2 focus:ring-indigo-200 outline-none"
                           aria-label="Left column"
                         >
                           {getColumnsForTable(j.leftTable).map((c) => (
                             <option key={c} value={c}>{c}</option>
                           ))}
                         </select>
-                        <span className="text-slate-400 font-medium">=</span>
+                        <span className="text-zinc-400 font-bold text-sm">=</span>
                         <select
                           value={j.rightTable}
                           onChange={(e) => {
@@ -1059,7 +1008,7 @@ export default function AiSchemaMaskerClient() {
                             const cols = getColumnsForTable(name);
                             updateJoin(j.id, { rightTable: name, rightColumn: cols[0] ?? '' });
                           }}
-                          className="px-2 py-1.5 text-sm font-mono rounded border border-slate-200 bg-white min-w-[100px]"
+                          className="px-2 py-1.5 text-sm font-mono rounded-lg border border-zinc-200 bg-white min-w-[100px] focus:ring-2 focus:ring-indigo-200 outline-none"
                           aria-label="Right table"
                         >
                           {tableNames.map((n) => (
@@ -1069,14 +1018,14 @@ export default function AiSchemaMaskerClient() {
                         <select
                           value={j.rightColumn}
                           onChange={(e) => updateJoin(j.id, { rightColumn: e.target.value })}
-                          className="px-2 py-1.5 text-sm font-mono rounded border border-slate-200 bg-white min-w-[90px]"
+                          className="px-2 py-1.5 text-sm font-mono rounded-lg border border-zinc-200 bg-white min-w-[90px] focus:ring-2 focus:ring-indigo-200 outline-none"
                           aria-label="Right column"
                         >
                           {getColumnsForTable(j.rightTable).map((c) => (
                             <option key={c} value={c}>{c}</option>
                           ))}
                         </select>
-                        <button type="button" onClick={() => removeJoin(j.id)} className="cta-icon-remove p-1.5 rounded text-slate-500 hover:bg-red-50 hover:text-red-600" aria-label="Remove JOIN">
+                        <button type="button" onClick={() => removeJoin(j.id)} className="p-1.5 rounded-lg text-zinc-400 hover:bg-red-50 hover:text-red-500 transition-colors" aria-label="Remove JOIN">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -1086,12 +1035,12 @@ export default function AiSchemaMaskerClient() {
               </div>
             )}
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1.5">Instruction (business logic)</label>
+              <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wide mb-2">Instruction (business logic)</label>
               <textarea
                 value={instruction}
                 onChange={(e) => setInstruction(e.target.value)}
                 placeholder="e.g. Create a month wise view considering created_date and count user_name where active_flag is true"
-                className="w-full min-h-[80px] px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white placeholder:text-slate-400"
+                className="w-full min-h-[80px] px-3 py-2 text-sm rounded-xl border border-zinc-200 bg-white placeholder:text-zinc-400 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 outline-none transition-all"
                 spellCheck={false}
               />
             </div>
@@ -1100,86 +1049,75 @@ export default function AiSchemaMaskerClient() {
                 type="button"
                 onClick={handleGeneratePrompt}
                 disabled={processing}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 disabled:opacity-50"
-              >
-                <Shield className="w-4 h-4" />
-                Generate AI-safe prompt
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold hover:bg-indigo-700 disabled:opacity-50 shadow-sm shadow-indigo-200 transition-all">
+              <Shield className="w-4 h-4" />
+              Generate AI-safe prompt
+            </button>
+            {identifierCountPrompt > 0 && (
+              <span className="text-xs text-zinc-500 font-medium">
+                <span className="font-bold text-indigo-700">{identifierCountPrompt}</span> identifiers masked
+              </span>
+            )}
+          </div>
+
+          {/* Generated prompt output */}
+          <div className="rounded-xl border border-indigo-100 bg-white overflow-hidden shadow-sm">
+            <div className="flex items-center justify-between px-4 py-2.5 border-b border-indigo-50 bg-indigo-50/40">
+              <span className="text-xs font-bold text-zinc-700 uppercase tracking-wide">Generated prompt</span>
+              <button type="button" onClick={handleCopyGeneratedPrompt} disabled={!generatedPrompt}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-indigo-600 hover:bg-indigo-50 disabled:opacity-40 transition-colors" aria-label="Copy generated prompt">
+                <Clipboard className="w-3.5 h-3.5" />Copy
               </button>
-              {identifierCountPrompt > 0 && (
-                <span className="text-xs text-slate-500">
-                  <span className="font-medium text-indigo-700">{identifierCountPrompt}</span> identifiers
-                </span>
-              )}
             </div>
+            <textarea readOnly value={generatedPrompt}
+              className="w-full min-h-[140px] px-4 py-3 text-sm font-mono bg-zinc-50/50 border-0 resize-none placeholder:text-zinc-400"
+              placeholder="Generated prompt appears here…" />
+          </div>
 
-            <div className="rounded-xl border border-indigo-100 bg-white overflow-hidden">
-              <div className="flex items-center justify-between px-4 py-2 border-b border-indigo-50">
-                <span className="text-xs font-medium text-slate-700">Generated prompt (copy and send to AI)</span>
-                <button type="button" onClick={handleCopyGeneratedPrompt} disabled={!generatedPrompt} className="cta-icon-copy inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium text-indigo-600 hover:bg-indigo-50 disabled:opacity-40" aria-label="Copy generated prompt">
-                  <Clipboard className="w-3.5 h-3.5" /> Copy
+          {/* Restore AI response (use case 2) */}
+          <div className="rounded-xl border border-indigo-200 bg-white overflow-hidden shadow-sm">
+            <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-b border-indigo-100 bg-indigo-50/40">
+              <div>
+                <h3 className="text-sm font-bold text-zinc-900">Restore AI response</h3>
+                <p className="text-[11px] text-zinc-500 mt-0.5">Paste the AI&apos;s SQL from the prompt you sent above</p>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <button type="button" onClick={handleRestorePrompt} disabled={!mappingFromPrompt || !restoredFromPrompt.trim()}
+                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+                  <RefreshCw className="w-3.5 h-3.5" />Restore
                 </button>
+                <button type="button" onClick={() => downloadMapping(mappingFromPrompt, 'prompt')} disabled={!mappingFromPrompt}
+                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-indigo-200 text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 disabled:opacity-40 transition-colors">
+                  <Download className="w-3.5 h-3.5" />Download mapping
+                </button>
+                <label className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-indigo-200 text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 cursor-pointer transition-colors">
+                  <Upload className="w-3.5 h-3.5" />Load mapping
+                  <input type="file" accept="application/json" className="hidden" onChange={(e) => loadMappingFile(e, setMappingFromPrompt, setIdentifierCountPrompt)} />
+                </label>
               </div>
-              <textarea
-                readOnly
-                value={generatedPrompt}
-                className="w-full min-h-[140px] px-3 py-2 text-sm font-mono bg-slate-50/50 border-0 resize-none placeholder:text-slate-400"
-                placeholder="Generated prompt appears here"
-              />
             </div>
-
-            <div className="rounded-xl border border-indigo-200 bg-white overflow-hidden">
-              <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-b border-indigo-100 bg-indigo-50/50">
-                <div>
-                  <h3 className="text-sm font-semibold text-slate-900">Restore AI response (use case 2)</h3>
-                  <p className="text-xs text-slate-500 mt-0.5">Paste the AI&apos;s SQL reply from the prompt you sent above</p>
-                </div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={handleRestorePrompt}
-                    disabled={!mappingFromPrompt || !restoredFromPrompt.trim()}
-                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                  >
-                    <RefreshCw className="w-3.5 h-3.5" />
-                    Restore
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => downloadMapping(mappingFromPrompt, 'prompt')}
-                    disabled={!mappingFromPrompt}
-                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-indigo-200 text-sm font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 disabled:opacity-40 transition-colors"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    Download mapping
-                  </button>
-                  <label className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-indigo-200 text-sm font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 cursor-pointer transition-colors">
-                    <Upload className="w-3.5 h-3.5" />
-                    Load mapping
-                    <input type="file" accept="application/json" className="hidden" onChange={(e) => loadMappingFile(e, setMappingFromPrompt, setIdentifierCountPrompt)} />
-                  </label>
-                </div>
-              </div>
-              <div className="min-h-[160px] flex flex-col">
-                <TextAreaEditor value={restoredFromPrompt} onChange={setRestoredFromPrompt} placeholder="Paste AI SQL response (with T_000001, C_000001, etc.) here" />
-              </div>
+            <div className="min-h-[160px] flex flex-col">
+              <TextAreaEditor value={restoredFromPrompt} onChange={setRestoredFromPrompt} placeholder="Paste AI SQL response (with T_000001, C_000001, etc.) here…" />
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {error && (
-          <section>
-            <div className="bg-red-50 border border-red-200 text-red-800 rounded-xl px-4 py-3 text-sm">
-              <p className="font-medium">{error}</p>
-            </div>
-          </section>
-        )}
+      {/* Error */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-800 rounded-xl px-4 py-3 text-sm">
+          <p className="font-semibold">{error}</p>
+        </div>
+      )}
 
-        <section className="rounded-xl border border-slate-200 bg-white/80 px-4 py-4 text-center" aria-label="How it works">
-          <h2 className="sr-only">How AI Schema Masker works</h2>
-          <p className="text-slate-600 text-sm max-w-2xl mx-auto">
-            <strong className="text-slate-800">100% data security, client-side only.</strong> The DITE engine (lexer → contextual extraction → deterministic mapping → token-based transform) runs entirely in your browser; no data leaves your device. Web Worker keeps the UI responsive for large inputs. Your SQL and schemas stay private.
-          </p>
-        </section>
+      {/* How it works footer note */}
+      <div className="rounded-2xl border border-zinc-100 bg-white/80 px-6 py-5 text-center shadow-sm">
+        <p className="text-zinc-500 text-sm max-w-2xl mx-auto leading-relaxed">
+          <strong className="text-zinc-800">100% data security, client-side only.</strong>{' '}
+          The DITE engine (lexer → contextual extraction → deterministic mapping → token-based transform) runs entirely in your browser — no data leaves your device. Web Worker keeps the UI responsive for large inputs.
+        </p>
+      </div>
+
       </main>
     </div>
   );
@@ -1194,7 +1132,7 @@ type TextAreaEditorProps = {
 function TextAreaEditor({ value, onChange, placeholder }: TextAreaEditorProps) {
   return (
     <textarea
-      className="w-full flex-1 min-h-[200px] resize-none border-0 focus:ring-2 focus:ring-primary-500/20 focus:outline-none focus:border-primary-400 text-sm font-mono bg-slate-50/80 px-4 py-3 placeholder:text-slate-400"
+      className="w-full flex-1 min-h-[200px] resize-none border-0 focus:ring-2 focus:ring-emerald-500/20 focus:outline-none text-sm font-mono bg-zinc-50/60 px-4 py-3 placeholder:text-zinc-400"
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
