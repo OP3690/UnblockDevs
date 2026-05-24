@@ -317,23 +317,28 @@ export default function SiteHeader() {
 
           {/* Right side */}
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
-            {/* Search area — label left of bar on desktop, icon-only on mobile */}
-            <div className="flex items-center gap-2">
-              <span className="hidden lg:block font-mono text-[10.5px] text-zinc-400 whitespace-nowrap">
-                What are you working on?
+            {/* Search area — gradient label + glowing bar */}
+            <div className="flex items-center gap-2.5">
+              {/* Colorful label — lg+ only */}
+              <span className="hidden lg:inline-flex items-center gap-1.5 whitespace-nowrap">
+                <span className="font-mono text-[11px] font-semibold bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-500 bg-clip-text text-transparent">
+                  What are you working on?
+                </span>
+                <span className="text-zinc-300 font-mono text-[11px]">›</span>
               </span>
+              {/* Search button */}
               <button
                 type="button"
                 onClick={() => openSearch('header_button')}
                 title="Search tools (⌘K or /)"
                 aria-label="Search tools"
-                className="group flex h-9 items-center gap-2 rounded-xl border-2 border-emerald-300 bg-white px-3 text-zinc-400 shadow-sm shadow-emerald-50 transition-all duration-150 hover:border-emerald-400 hover:shadow-md hover:shadow-emerald-100 w-9 sm:w-52 lg:w-72"
+                className="group relative flex h-9 items-center gap-2 rounded-xl border-2 border-emerald-300 bg-gradient-to-r from-emerald-50/60 to-sky-50/40 px-3 text-zinc-400 shadow-sm shadow-emerald-100 transition-all duration-200 hover:border-emerald-400 hover:shadow-md hover:shadow-emerald-200 hover:from-emerald-50 hover:to-sky-50 w-9 sm:w-52 lg:w-64"
               >
-                <Search className="h-3.5 w-3.5 shrink-0 text-emerald-400 transition-colors group-hover:text-emerald-500" />
+                <Search className="h-3.5 w-3.5 shrink-0 text-emerald-500 transition-colors group-hover:text-emerald-600" />
                 <span className="hidden sm:flex flex-1 items-center overflow-hidden">
                   <SearchPlaceholder />
                 </span>
-                <kbd className="hidden sm:inline-flex shrink-0 items-center gap-0.5 rounded-md border border-emerald-200 bg-emerald-50 px-1.5 py-0.5 font-mono text-[10px] text-emerald-500 shadow-[inset_0_-1px_0_0_rgba(0,0,0,0.06)] transition-colors group-hover:border-emerald-300 group-hover:bg-emerald-100">
+                <kbd className="hidden sm:inline-flex shrink-0 items-center gap-0.5 rounded-md border border-emerald-200 bg-white px-1.5 py-0.5 font-mono text-[10px] font-semibold text-emerald-600 shadow-[inset_0_-1px_0_0_rgba(0,0,0,0.06)] transition-colors group-hover:border-emerald-300">
                   ⌘K
                 </kbd>
               </button>
