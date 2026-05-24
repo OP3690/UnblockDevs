@@ -480,35 +480,6 @@ export default function HomePrivacyFirstSections({
       {/* ── Tools Section ──────────────────────────────────────────── */}
       <section id="home-tools" className="mx-auto max-w-[1100px] px-4 sm:px-6 py-12 sm:py-16">
 
-        {/* Section header */}
-        <div className="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h2 className="text-[28px] font-bold tracking-[-0.025em] text-zinc-900 sm:text-3xl">
-              Every tool you need,{' '}
-              <span className="relative inline-block">
-                <span className="relative z-10 text-emerald-600">right here</span>
-                <span className="absolute bottom-0.5 left-0 h-[6px] w-full rounded-full bg-emerald-100" aria-hidden />
-              </span>
-            </h2>
-            <p className="mt-2 max-w-[480px] text-[15px] leading-relaxed text-zinc-500">
-              {ALL_TOOLS.length} tools. Open instantly, run privately in your browser, zero sign-up.
-            </p>
-          </div>
-          {/* Quick stats */}
-          <div className="flex items-center gap-5 shrink-0">
-            {([
-              { n: `${ALL_TOOLS.length}+`, sub: 'Free tools'   },
-              { n: '0',                    sub: 'Server calls'  },
-              { n: '∞',                    sub: 'No login'      },
-            ] as const).map((s) => (
-              <div key={s.sub} className="text-center">
-                <p className="text-lg font-bold text-zinc-900 leading-none">{s.n}</p>
-                <p className="text-[10px] text-zinc-400 mt-0.5 uppercase tracking-wide font-medium">{s.sub}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* ── Search CTA ────────────────────────────────────────────── */}
         <div className="mb-4">
 
