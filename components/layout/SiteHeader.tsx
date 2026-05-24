@@ -317,14 +317,30 @@ export default function SiteHeader() {
 
           {/* Right side */}
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
-            {/* Search area — pill label + glowing search bar */}
-            <div className="flex items-center gap-3">
+            {/* Search area — pill label + arrow + glowing search bar */}
+            <div className="flex items-center gap-2">
               {/* Gradient pill label — lg+ only */}
               <span className="hidden lg:inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-500 px-3 py-1 shadow-sm shadow-emerald-200">
                 <span className="font-mono text-[12px] font-bold text-white tracking-tight drop-shadow-sm">
                   What are you working on?
                 </span>
-                <span className="font-mono text-[13px] text-white/70">›</span>
+              </span>
+              {/* Animated bouncing arrow — lg+ only */}
+              <span
+                className="hidden lg:inline-flex items-center animate-bounce"
+                aria-hidden
+                style={{ animationDuration: '1s' }}
+              >
+                <svg width="28" height="16" viewBox="0 0 28 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="arrowGrad" x1="0" y1="0" x2="28" y2="0" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stopColor="#10b981" />
+                      <stop offset="50%" stopColor="#2dd4bf" />
+                      <stop offset="100%" stopColor="#38bdf8" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M2 8 H22 M17 3 L23 8 L17 13" stroke="url(#arrowGrad)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
               </span>
               {/* Search button */}
               <button
