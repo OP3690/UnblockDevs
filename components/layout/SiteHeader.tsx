@@ -171,36 +171,36 @@ function SearchPlaceholder() {
     let delay: number;
 
     if (!deleting && charIdx < phrase.length) {
-      // Typing
-      delay = 65 + Math.random() * 40;
+      delay = 65 + Math.random() * 35;
       const t = setTimeout(() => {
         setDisplayed(phrase.slice(0, charIdx + 1));
         setCharIdx((c) => c + 1);
       }, delay);
       return () => clearTimeout(t);
     } else if (!deleting && charIdx === phrase.length) {
-      // Pause at full word
-      const t = setTimeout(() => setDeleting(true), 1600);
+      const t = setTimeout(() => setDeleting(true), 1800);
       return () => clearTimeout(t);
     } else if (deleting && charIdx > 0) {
-      // Deleting
-      delay = 35;
+      delay = 28;
       const t = setTimeout(() => {
         setDisplayed(phrase.slice(0, charIdx - 1));
         setCharIdx((c) => c - 1);
       }, delay);
       return () => clearTimeout(t);
     } else if (deleting && charIdx === 0) {
-      // Move to next phrase
       setDeleting(false);
       setPhraseIdx((i) => (i + 1) % SEARCH_PHRASES.length);
     }
   }, [charIdx, deleting, phraseIdx]);
 
   return (
-    <span className="flex-1 text-left text-[12.5px] text-zinc-400">
-      {displayed || <span className="opacity-0">|</span>}
-      <span className="ml-px inline-block w-[1.5px] animate-[caret_1s_step-end_infinite] bg-zinc-400 align-[-1px]" style={{ height: '11px' }} />
+    <span className="flex-1 text-left font-mono text-[12px] text-zinc-400 tracking-tight">
+      <span className="mr-1 text-emerald-500 select-none">›</span>
+      {displayed || <span className="opacity-0">_</span>}
+      <span
+        className="ml-px inline-block w-[1.5px] animate-[caret_1s_step-end_infinite] bg-emerald-400 align-[-1px]"
+        style={{ height: '11px' }}
+      />
     </span>
   );
 }
@@ -323,13 +323,13 @@ export default function SiteHeader() {
               onClick={() => openSearch('header_button')}
               title="Search tools (⌘K or /)"
               aria-label="Search tools"
-              className="group flex h-9 items-center gap-2.5 rounded-xl border border-zinc-200 bg-white px-3.5 text-zinc-400 shadow-sm ring-1 ring-transparent transition-all duration-150 hover:border-zinc-300 hover:text-zinc-600 hover:shadow-md hover:ring-zinc-100 sm:w-52 lg:w-64"
+              className="group flex h-9 items-center gap-2 rounded-xl border-2 border-emerald-300 bg-white px-3 text-zinc-400 shadow-sm shadow-emerald-50 transition-all duration-150 hover:border-emerald-400 hover:shadow-md hover:shadow-emerald-100 sm:w-64 lg:w-80"
             >
-              <Search className="h-3.5 w-3.5 shrink-0 text-zinc-400 transition-colors group-hover:text-zinc-500" />
-              <span className="hidden sm:flex flex-1 items-center gap-0">
+              <Search className="h-3.5 w-3.5 shrink-0 text-emerald-400 transition-colors group-hover:text-emerald-500" />
+              <span className="hidden sm:flex flex-1 items-center overflow-hidden">
                 <SearchPlaceholder />
               </span>
-              <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded-md border border-zinc-200 bg-zinc-50 px-1.5 py-0.5 font-mono text-[10px] text-zinc-400 shadow-[inset_0_-1px_0_0_rgba(0,0,0,0.08)] transition-colors group-hover:border-zinc-300 group-hover:bg-zinc-100">
+              <kbd className="hidden sm:inline-flex shrink-0 items-center gap-0.5 rounded-md border border-emerald-200 bg-emerald-50 px-1.5 py-0.5 font-mono text-[10px] text-emerald-500 shadow-[inset_0_-1px_0_0_rgba(0,0,0,0.06)] transition-colors group-hover:border-emerald-300 group-hover:bg-emerald-100">
                 ⌘K
               </kbd>
             </button>
@@ -395,9 +395,9 @@ export default function SiteHeader() {
                 value={searchQ}
                 onChange={(e) => { setSearchQ(e.target.value); setSelectedIdx(0); }}
                 onKeyDown={handleSearchKey}
-                placeholder="Search 50+ tools — try 'gradient', 'jwt', 'css'…"
+                placeholder="search 'jwt decoder', 'css gradient', 'curl'…"
                 aria-label="Search all tools"
-                className="flex-1 bg-transparent text-[14px] text-zinc-800 placeholder:text-zinc-400 focus:outline-none"
+                className="flex-1 bg-transparent font-mono text-[13.5px] text-zinc-800 placeholder:text-zinc-400 placeholder:font-mono focus:outline-none"
               />
               {searchQ && (
                 <button onClick={() => { setSearchQ(''); setSelectedIdx(0); searchRef.current?.focus(); }}
