@@ -456,7 +456,126 @@ const SCENES: Scene[] = [
     ],
   },
 
-  /* 11 ── JSON Fixer ──────────────────────────────────────────── */
+  /* 11 ── SQL IN Clause Builder ──────────────────────────────── */
+  {
+    id: 'sqlin', file: 'orders.sql',
+    tool: 'SQL Formatter', label: 'SQL IN Clause', emoji: '🗃️',
+    href: '/sql-formatter',
+    accent: 'text-indigo-400', accentHex: '#818cf8',
+    bgChip: 'bg-indigo-500/15', ringChip: 'ring-indigo-400/40',
+    stat: 'IN clause + JOIN optimised',
+    before: [
+      [{ t: '-- ⚠️  Slow: repeated OR conditions', c: 'text-zinc-500' }],
+      [],
+      [{ t: 'SELECT * FROM orders WHERE', c: 'text-amber-300/80', pulse: true }],
+      [{ t: "status='pending' OR status='paid'", c: 'text-rose-400', pulse: true }],
+      [{ t: "OR status='shipped' OR", c: 'text-rose-400', pulse: true }],
+      [{ t: "status='delivered'", c: 'text-rose-400', pulse: true }],
+      [{ t: 'ORDER BY created_at DESC', c: 'text-amber-300/80' }],
+    ],
+    after: [
+      [{ t: '-- ✓  Clean: IN clause + formatted', c: 'text-zinc-500' }],
+      [],
+      [{ t: 'SELECT', c: 'text-indigo-400' }, { t: ' *', c: 'text-zinc-300' }],
+      [{ t: 'FROM', c: 'text-indigo-400' }, { t: ' orders', c: 'text-sky-300', glow: true }],
+      [
+        { t: 'WHERE', c: 'text-indigo-400' },
+        { t: ' status ', c: 'text-zinc-300' },
+        { t: 'IN', c: 'text-indigo-300', glow: true },
+        { t: ' (', c: 'text-zinc-400' },
+      ],
+      [{ t: "  'pending', 'paid',", c: 'text-emerald-400', glow: true }],
+      [{ t: "  'shipped', 'delivered'", c: 'text-emerald-400', glow: true }],
+      [{ t: ')', c: 'text-zinc-400' }],
+      [{ t: 'ORDER BY', c: 'text-indigo-400' }, { t: ' created_at ', c: 'text-zinc-300' }, { t: 'DESC', c: 'text-violet-400', glow: true }],
+    ],
+  },
+
+  /* 12 ── CSS Formatter ───────────────────────────────────────── */
+  {
+    id: 'css', file: 'styles.css',
+    tool: 'CSS Minifier', label: 'CSS Minify', emoji: '🎨',
+    href: '/css-minifier',
+    accent: 'text-pink-400', accentHex: '#f472b6',
+    bgChip: 'bg-pink-500/15', ringChip: 'ring-pink-400/40',
+    stat: '67% smaller · 0 spaces',
+    before: [
+      [{ t: '/* ⚠️  Bloated CSS — wastes bandwidth */', c: 'text-zinc-500' }],
+      [],
+      [{ t: '.btn  {', c: 'text-amber-300/80', pulse: true }],
+      [{ t: '  display    :   flex  ;', c: 'text-amber-300/80', pulse: true }],
+      [{ t: '  padding    :  12px  24px  ;', c: 'text-amber-300/80', pulse: true }],
+      [{ t: '  background : #10b981  ;', c: 'text-amber-300/80', pulse: true }],
+      [{ t: '  border-radius  :   8px;', c: 'text-amber-300/80', pulse: true }],
+      [{ t: '}', c: 'text-amber-300/80' }],
+    ],
+    after: [
+      [{ t: '/* ✓  Minified — production ready */', c: 'text-zinc-500' }],
+      [],
+      [
+        { t: '.btn{', c: 'text-pink-400', glow: true },
+        { t: 'display:flex;', c: 'text-zinc-300', glow: true },
+      ],
+      [
+        { t: 'padding:12px 24px;', c: 'text-zinc-300', glow: true },
+      ],
+      [
+        { t: 'background:', c: 'text-zinc-300', glow: true },
+        { t: '#10b981', c: 'text-emerald-400', glow: true },
+        { t: ';', c: 'text-zinc-400' },
+      ],
+      [
+        { t: 'border-radius:8px}', c: 'text-zinc-300', glow: true },
+      ],
+      [],
+      [{ t: '//  Before: 142 B  →  After: 47 B', c: 'text-emerald-500/80' }],
+    ],
+  },
+
+  /* 13 ── UUID Generator ──────────────────────────────────────── */
+  {
+    id: 'uuid', file: 'ids.txt',
+    tool: 'UUID / GUID Generator', label: 'UUID Gen', emoji: '🆔',
+    href: '/uuid-generator',
+    accent: 'text-cyan-400', accentHex: '#22d3ee',
+    bgChip: 'bg-cyan-500/15', ringChip: 'ring-cyan-400/40',
+    stat: '5 UUIDs · v4 · RFC 4122',
+    before: [
+      [{ t: '// Need unique IDs for new DB rows', c: 'text-zinc-500' }],
+      [],
+      [{ t: 'INSERT INTO sessions (id, user_id)', c: 'text-amber-300/80' }],
+      [{ t: 'VALUES', c: 'text-amber-300/80' }],
+      [{ t: '  (???, 42),', c: 'text-rose-400', pulse: true }],
+      [{ t: '  (???, 87),', c: 'text-rose-400', pulse: true }],
+      [{ t: '  (???, 13);', c: 'text-rose-400', pulse: true }],
+    ],
+    after: [
+      [{ t: '// ✓  RFC-4122 v4 UUIDs injected', c: 'text-zinc-500' }],
+      [],
+      [{ t: 'INSERT INTO sessions (id, user_id)', c: 'text-zinc-300' }],
+      [{ t: 'VALUES', c: 'text-cyan-400' }],
+      [
+        { t: "  ('", c: 'text-zinc-400' },
+        { t: 'a3f7c2d1-09be-4e6a', c: 'text-cyan-300', glow: true },
+        { t: "-b821-...',", c: 'text-cyan-300', glow: true },
+        { t: ' 42),', c: 'text-zinc-400' },
+      ],
+      [
+        { t: "  ('", c: 'text-zinc-400' },
+        { t: 'f08e31ab-cc47-4d9f', c: 'text-cyan-300', glow: true },
+        { t: "-a002-...',", c: 'text-cyan-300', glow: true },
+        { t: ' 87),', c: 'text-zinc-400' },
+      ],
+      [
+        { t: "  ('", c: 'text-zinc-400' },
+        { t: '2b9d50fe-71a3-4c88', c: 'text-cyan-300', glow: true },
+        { t: "-e134-...',", c: 'text-cyan-300', glow: true },
+        { t: ' 13);', c: 'text-zinc-400' },
+      ],
+    ],
+  },
+
+  /* 14 ── JSON Fixer ──────────────────────────────────────────── */
   {
     id: 'fixer', file: 'broken.json',
     tool: 'JSON Fixer', label: 'JSON Fixer', emoji: '🔧',
