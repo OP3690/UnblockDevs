@@ -349,34 +349,53 @@ export default function SiteHeader() {
                 </svg>
               </span>
 
-              {/* Curved hand-drawn arrow — lg+ only */}
-              <span className="hidden lg:inline-block" aria-hidden style={{ transform: 'translateY(3px)' }}>
-                <svg width="38" height="28" viewBox="0 0 38 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              {/* Doodle arrow — lg+ only */}
+              <span className="hidden lg:inline-block" aria-hidden style={{ transform: 'translateY(2px)' }}>
+                <svg width="52" height="32" viewBox="0 0 52 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <defs>
-                    <linearGradient id="crvArrow" x1="0" y1="0" x2="38" y2="28" gradientUnits="userSpaceOnUse">
-                      <stop offset="0%" stopColor="#06b6d4"/>
-                      <stop offset="100%" stopColor="#6366f1"/>
+                    <linearGradient id="crvArrow" x1="0" y1="0" x2="52" y2="32" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stopColor="#10b981"/>
+                      <stop offset="45%" stopColor="#06b6d4"/>
+                      <stop offset="100%" stopColor="#818cf8"/>
                     </linearGradient>
                   </defs>
-                  {/* Curved path going right and slightly down */}
+                  {/* Main swooping curve — thicker, more dramatic */}
                   <path
-                    d="M4 4 C10 2, 24 6, 32 18"
+                    d="M3 6 C8 2, 18 2, 28 8 C36 13, 42 18, 47 22"
                     stroke="url(#crvArrow)"
-                    strokeWidth="2"
+                    strokeWidth="2.6"
                     strokeLinecap="round"
                     fill="none"
-                    strokeDasharray="60"
-                    strokeDashoffset="0"
+                    style={{
+                      strokeDasharray: 70,
+                      strokeDashoffset: 0,
+                      animation: 'drawArrow 0.8s ease-out forwards',
+                    }}
                   />
-                  {/* Arrowhead */}
+                  {/* Bold filled arrowhead */}
                   <path
-                    d="M26 20 L32 18 L28 13"
+                    d="M38 22 L47 22 L43 14"
                     stroke="url(#crvArrow)"
-                    strokeWidth="2"
+                    strokeWidth="2.6"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     fill="none"
                   />
+                  {/* Tiny tail flick for hand-drawn feel */}
+                  <path
+                    d="M3 6 C2 9, 1 12, 3 14"
+                    stroke="url(#crvArrow)"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                    fill="none"
+                    opacity="0.45"
+                  />
+                  <style>{`
+                    @keyframes drawArrow {
+                      from { stroke-dashoffset: 70; }
+                      to   { stroke-dashoffset: 0; }
+                    }
+                  `}</style>
                 </svg>
               </span>
 
