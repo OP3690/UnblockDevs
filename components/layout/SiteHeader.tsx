@@ -317,44 +317,82 @@ export default function SiteHeader() {
 
           {/* Right side */}
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
-            {/* Search area — pill label + arrow + glowing search bar */}
-            <div className="flex items-center gap-2">
-              {/* Gradient pill label — lg+ only */}
-              <span className="hidden lg:inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-500 px-3 py-1 shadow-sm shadow-emerald-200">
-                <span className="font-mono text-[12px] font-bold text-white tracking-tight drop-shadow-sm">
-                  What are you working on?
+            {/* Search area — styled label + curved arrow + search bar */}
+            <div className="flex items-center gap-1.5">
+
+              {/* Label block — lg+ only */}
+              <span className="hidden lg:flex flex-col items-end gap-0 whitespace-nowrap select-none" aria-hidden>
+                {/* Sparkle + text */}
+                <span className="flex items-center gap-1.5">
+                  <span className="text-[15px]">✦</span>
+                  <span
+                    className="font-extrabold text-[13.5px] tracking-[-0.02em]"
+                    style={{
+                      background: 'linear-gradient(90deg,#10b981 0%,#06b6d4 50%,#6366f1 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                    }}
+                  >
+                    What are you working on?
+                  </span>
                 </span>
-              </span>
-              {/* Animated bouncing arrow — lg+ only */}
-              <span
-                className="hidden lg:inline-flex items-center animate-bounce"
-                aria-hidden
-                style={{ animationDuration: '1s' }}
-              >
-                <svg width="28" height="16" viewBox="0 0 28 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* Doodle underline squiggle */}
+                <svg width="172" height="5" viewBox="0 0 172 5" fill="none" className="mr-0.5">
                   <defs>
-                    <linearGradient id="arrowGrad" x1="0" y1="0" x2="28" y2="0" gradientUnits="userSpaceOnUse">
-                      <stop offset="0%" stopColor="#10b981" />
-                      <stop offset="50%" stopColor="#2dd4bf" />
-                      <stop offset="100%" stopColor="#38bdf8" />
+                    <linearGradient id="sqHdr" x1="0" y1="0" x2="172" y2="0" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stopColor="#10b981"/>
+                      <stop offset="50%" stopColor="#06b6d4"/>
+                      <stop offset="100%" stopColor="#6366f1"/>
                     </linearGradient>
                   </defs>
-                  <path d="M2 8 H22 M17 3 L23 8 L17 13" stroke="url(#arrowGrad)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M2 3.5 Q22 1 42 3.5 Q62 6 82 3.5 Q102 1 122 3.5 Q142 6 162 3.5 Q167 3 170 2.5" stroke="url(#sqHdr)" strokeWidth="1.8" strokeLinecap="round" fill="none"/>
                 </svg>
               </span>
+
+              {/* Curved hand-drawn arrow — lg+ only */}
+              <span className="hidden lg:inline-block" aria-hidden style={{ transform: 'translateY(3px)' }}>
+                <svg width="38" height="28" viewBox="0 0 38 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="crvArrow" x1="0" y1="0" x2="38" y2="28" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stopColor="#06b6d4"/>
+                      <stop offset="100%" stopColor="#6366f1"/>
+                    </linearGradient>
+                  </defs>
+                  {/* Curved path going right and slightly down */}
+                  <path
+                    d="M4 4 C10 2, 24 6, 32 18"
+                    stroke="url(#crvArrow)"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    fill="none"
+                    strokeDasharray="60"
+                    strokeDashoffset="0"
+                  />
+                  {/* Arrowhead */}
+                  <path
+                    d="M26 20 L32 18 L28 13"
+                    stroke="url(#crvArrow)"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    fill="none"
+                  />
+                </svg>
+              </span>
+
               {/* Search button */}
               <button
                 type="button"
                 onClick={() => openSearch('header_button')}
                 title="Search tools (⌘K or /)"
                 aria-label="Search tools"
-                className="group relative flex h-10 items-center gap-2 rounded-xl border-2 border-emerald-300 bg-white px-3 text-zinc-400 shadow-[0_2px_12px_-2px_rgba(16,185,129,0.25)] transition-all duration-200 hover:border-emerald-400 hover:shadow-[0_4px_20px_-2px_rgba(16,185,129,0.4)] w-10 sm:w-56 lg:w-68"
+                className="group relative flex h-10 items-center gap-2 rounded-xl border-2 border-emerald-300 bg-white px-3 text-zinc-400 shadow-[0_2px_14px_-2px_rgba(16,185,129,0.3)] transition-all duration-200 hover:border-emerald-400 hover:shadow-[0_4px_22px_-2px_rgba(16,185,129,0.45)] w-10 sm:w-56 lg:w-64"
               >
                 <Search className="h-4 w-4 shrink-0 text-emerald-500 transition-colors group-hover:text-emerald-600" />
                 <span className="hidden sm:flex flex-1 items-center overflow-hidden">
                   <SearchPlaceholder />
                 </span>
-                <kbd className="hidden sm:inline-flex shrink-0 items-center gap-0.5 rounded-md border border-emerald-200 bg-gradient-to-b from-emerald-50 to-emerald-100 px-1.5 py-0.5 font-mono text-[10px] font-bold text-emerald-600 shadow-[inset_0_-1px_0_0_rgba(0,0,0,0.08)] transition-colors group-hover:border-emerald-300 group-hover:from-emerald-100 group-hover:to-emerald-150">
+                <kbd className="hidden sm:inline-flex shrink-0 items-center gap-0.5 rounded-md border border-emerald-200 bg-gradient-to-b from-emerald-50 to-emerald-100 px-1.5 py-0.5 font-mono text-[10px] font-bold text-emerald-600 shadow-[inset_0_-1px_0_0_rgba(0,0,0,0.08)]">
                   ⌘K
                 </kbd>
               </button>
