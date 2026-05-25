@@ -1,6 +1,24 @@
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { LayoutGrid, Plus, ShieldCheck, Lock, Zap } from 'lucide-react';
-import HomeHeroCodePreview from '@/components/home/HomeHeroCodePreview';
+
+/**
+ * Lazy-load the heavy 14-scene animation so it's excluded from the
+ * critical JS bundle — keeps the homepage LCP fast (ssr:false = client-only).
+ */
+const HomeHeroCodePreview = dynamic(
+  () => import('@/components/home/HomeHeroCodePreview'),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        className="h-[420px] w-full rounded-2xl border border-zinc-200 bg-zinc-50"
+        style={{ animation: 'pulse 2s cubic-bezier(0.4,0,0.6,1) infinite' }}
+        aria-hidden
+      />
+    ),
+  },
+);
 
 /**
  * Server-rendered hero + stats — clean two-column layout.

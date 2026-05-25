@@ -126,6 +126,18 @@ const nextConfig = {
         source: '/_next/static/(.*)',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
       },
+      // HTML pages — serve stale while revalidating in background (speeds up repeat visits)
+      // max-age=0 means CDN/browser always checks freshness, but stale-while-revalidate=3600
+      // lets the edge cache serve a cached copy instantly while fetching a fresh one behind the scenes.
+      {
+        source: '/((?!_next|api|static|.*\\..*).*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, must-revalidate, stale-while-revalidate=3600',
+          },
+        ],
+      },
     ]
   },
 }
