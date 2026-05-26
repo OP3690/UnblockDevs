@@ -134,10 +134,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is a JSON syntax error?',
+      name: 'Why does my JSON work in JavaScript but fail in Python\'s json.loads()?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'A JSON syntax error occurs when the JSON text does not follow the JSON specification. Common causes include trailing commas after the last item in an array or object, using single quotes instead of double quotes, leaving keys unquoted, or unclosed brackets and braces.',
+        text: 'JavaScript is more lenient than strict JSON. Code that works as a JS object literal — trailing commas, single quotes, unquoted keys — is invalid JSON and will throw a json.JSONDecodeError in Python. Paste your JSON into this fixer; it detects every violation and repairs them automatically to produce valid, parseable JSON.',
       },
     },
     {
@@ -158,10 +158,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is the most common JSON syntax error?',
+      name: 'My API response passes json.loads() but my application crashes — why?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'The most common JSON syntax error is a trailing comma — a comma placed after the last element of an array or object. Standard JSON parsers reject this. Other very common errors include single-quoted strings instead of double-quoted, unquoted object keys, and JavaScript-style comments.',
+        text: 'Syntax is valid but the structure may not match what your code expects — for example, a field is null when your code assumes a string, or a number is wrapped in quotes. Use this fixer alongside the JSON Validator to check both syntax and schema. Also look for duplicate keys, which parsers silently resolve by keeping only the last value.',
       },
     },
     {
@@ -198,10 +198,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is the difference between JSON and JSON5?',
+      name: 'How do I fix JSON copied from a config file that has comments and trailing commas?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'JSON5 is a superset of JSON that adds ECMAScript 5 features: single-quoted strings, unquoted keys, trailing commas, comments, hexadecimal numbers, and multi-line strings. JSON5 files are typically used in configuration. Standard JSON parsers cannot parse JSON5 — you need the json5 npm package or equivalent.',
+        text: 'Config files often use JSONC or JSON5 format — both allow // comments and trailing commas, but standard JSON.parse() and json.loads() reject them. Paste the config into this fixer; it strips all comments and removes trailing commas automatically, producing valid JSON ready to parse. If you need comment support at runtime, use the jsonc-parser npm package instead.',
       },
     },
     {
@@ -355,8 +355,8 @@ export default function JsonFixerOnline() {
               a: 'Paste your broken JSON into this tool and click Fix. The fixer automatically detects and repairs trailing commas, single quotes, unquoted keys, and missing brackets — then returns valid, parseable JSON.',
             },
             {
-              q: 'What is a JSON syntax error?',
-              a: 'A JSON syntax error occurs when the text does not follow the JSON specification. Common causes include trailing commas after the last array or object item, single quotes instead of double quotes, unquoted keys, and unclosed brackets or braces.',
+              q: 'Why does my JSON work in JavaScript but fail in Python\'s json.loads()?',
+              a: 'JavaScript is more lenient than strict JSON. Trailing commas, single quotes, and unquoted keys work in JS object literals but are invalid JSON and throw JSONDecodeError in Python. Paste your JSON here — the fixer detects and repairs all of these automatically.',
             },
             {
               q: 'How do I fix a trailing comma in JSON?',
@@ -371,8 +371,8 @@ export default function JsonFixerOnline() {
               a: 'No. All fixing runs entirely in your browser. Your JSON is never uploaded or stored anywhere — safe for API keys, tokens, and production payloads.',
             },
             {
-              q: 'What is the most common JSON syntax error?',
-              a: 'The most common JSON syntax error is a trailing comma after the last element of an array or object. Other frequent errors include single-quoted strings, unquoted keys, and JavaScript-style comments, all of which are rejected by standard JSON parsers.',
+              q: 'My API response passes json.loads() but my application crashes — why?',
+              a: 'Syntax is valid but the structure may not match what your code expects — a field is null when your code assumes a string, or a number is wrapped in quotes. Check both syntax and schema with the JSON Validator. Also watch for duplicate keys, which parsers silently resolve by keeping only the last value.',
             },
             {
               q: 'Can JSON have single quotes?',
@@ -391,8 +391,8 @@ export default function JsonFixerOnline() {
               a: 'JSON requires all object keys to be double-quoted. Paste your JSON here and the fixer wraps all unquoted keys in double quotes automatically — useful for JavaScript object literals that need to be converted to strict JSON.',
             },
             {
-              q: 'What is the difference between JSON and JSON5?',
-              a: 'JSON5 extends JSON with ECMAScript 5 features: single-quoted strings, unquoted keys, trailing commas, comments, and multi-line strings. It is popular for configuration files. Standard JSON parsers cannot read JSON5 — you need the json5 npm package or the json5 Python library.',
+              q: 'How do I fix JSON copied from a config file that has comments and trailing commas?',
+              a: 'Config files often use JSONC or JSON5 format — both allow // comments and trailing commas, but standard JSON parsers reject them. Paste the config here; it strips comments and removes trailing commas automatically. If you need comment support at runtime, use the jsonc-parser npm package instead.',
             },
             {
               q: 'How do I find the exact line where a JSON error occurs?',

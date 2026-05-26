@@ -64,10 +64,10 @@ const faqSchema = {
   mainEntity: [
     {
       '@type': 'Question',
-      name: "What causes 'Cannot read properties of undefined'?",
+      name: "Why do I get 'Cannot read properties of undefined' when calling .map() in React?",
       acceptedAnswer: {
         '@type': 'Answer',
-        text: "This error occurs when you try to access a property on a value that is undefined or null. Common causes: an API response that hasn't loaded yet, a typo in a property name, a missing key in a nested object, or calling .map()/.filter() on undefined instead of an array.",
+        text: "This happens when you call .map() on a value that is undefined instead of an array. In React, async data hasn't loaded on the first render, so state variables hold their initial value. Initialize your state as an empty array: const [items, setItems] = useState([]) and your .map() call will work safely from the start.",
       },
     },
     {
@@ -96,10 +96,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is the difference between null and undefined?',
+      name: 'How do I fix "Cannot read property of null" when accessing nested object data from an API?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'undefined means a variable has been declared but not assigned a value. null is an intentional absence of value — explicitly set by the programmer. Both cause "Cannot read properties" errors when you try to access properties on them. Optional chaining handles both: value?.property returns undefined for both null and undefined.',
+        text: 'Use optional chaining combined with a nullish coalescing default: const name = response?.user?.profile?.name ?? "Unknown". This short-circuits the entire chain safely when any level is null or undefined, so you never get a crash even when the API returns incomplete data.',
       },
     },
   ],

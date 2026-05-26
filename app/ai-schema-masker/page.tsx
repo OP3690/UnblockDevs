@@ -158,10 +158,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is SQL schema masking for AI?',
+      name: 'How do I mask only specific tables in a SQL schema before sending to AI?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'SQL schema masking replaces real table and column names with anonymous placeholders before you paste code or schema into an AI. This lets you get help without exposing your real database structure. You can restore AI output to your names using a mapping.',
+        text: 'Paste your full SQL schema and the masker assigns deterministic placeholders to every table and column name. If you only want to share certain tables, paste only those CREATE TABLE statements or the relevant query. The mapping is generated from whatever you paste, so you control exactly which identifiers are masked.',
       },
     },
     {
@@ -190,10 +190,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is SQL identifier masking?',
+      name: 'Can I use this tool before sending my database schema to GPT-4?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'SQL identifier masking replaces real table names, column names, and aliases with anonymous placeholders (e.g. T_001, C_001) so you can share SQL with AI or others without exposing your database structure. A mapping lets you reverse the process and restore original names.',
+        text: 'Yes. Paste your schema into the AI Schema Masker, click Mask, and copy the masked output — table names become T_001, column names become C_001. Paste the masked version into GPT-4, Claude, or any AI. After the AI responds with SQL using placeholders, paste the response into the Restore section to get your real identifiers back.',
       },
     },
     {
@@ -254,10 +254,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is schema IP?',
+      name: 'Why does my company not allow me to paste database schemas into ChatGPT?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'Schema IP (Intellectual Property) refers to the proprietary database design that reflects your business logic, naming conventions, and data relationships. Exposing your schema to AI providers reveals your architecture to a third party. Masking protects this IP while still allowing AI assistance with SQL logic.',
+        text: 'Your database schema reveals your proprietary data model, business domain, naming conventions, and data relationships. When you paste raw SQL into ChatGPT, OpenAI servers see every identifier. AI Schema Masker solves this by replacing real table and column names with anonymous placeholders before anything leaves your device — so you get AI help without exposing your schema.',
       },
     },
     {
@@ -375,8 +375,8 @@ export default function AiSchemaMaskerPage() {
               a: 'Pasting raw SQL into ChatGPT exposes your real table and column names to the AI provider. Masking replaces identifiers with anonymous tokens so the AI helps with query logic without seeing your real schema or business domain.',
             },
             {
-              q: 'How does the schema masker work?',
-              a: 'The masker replaces table names with T_001, T_002 and column names with C_001, C_002 using deterministic mapping. Send the masked SQL to AI, then use the mapping to restore original names in the AI response.',
+              q: 'Can I use this tool before sending my database schema to GPT-4?',
+              a: 'Yes. Paste your schema, click Mask, and copy the masked output — table names become T_001, column names become C_001. Paste the masked version into GPT-4, Claude, or any AI. After the AI responds, paste the result into the Restore section to get your real identifiers back.',
             },
             {
               q: 'Can I use masked schemas with GitHub Copilot?',
@@ -395,8 +395,8 @@ export default function AiSchemaMaskerPage() {
               a: 'No. All processing happens in your browser. Your SQL, schema, and mapping never leave your device. You can verify by checking network requests in browser DevTools — no outbound requests are made.',
             },
             {
-              q: 'What is schema IP?',
-              a: 'Schema IP (Intellectual Property) is your proprietary database design that reveals your business logic and naming conventions. Masking protects this IP while still allowing AI assistance with SQL query logic.',
+              q: 'Why does my company not allow me to paste database schemas into ChatGPT?',
+              a: 'Your database schema reveals your proprietary data model, business domain, naming conventions, and data relationships. Pasting raw SQL into ChatGPT exposes all of this to OpenAI servers. The AI Schema Masker replaces real identifiers with anonymous placeholders so you can get AI help without your company\'s schema leaving your device.',
             },
             {
               q: 'Can I mask multiple schemas at once?',

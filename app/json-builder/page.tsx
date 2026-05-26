@@ -125,10 +125,10 @@ const faqSchema = {
   mainEntity: [
     {
       '@type': 'Question',
-      name: 'What is a JSON builder?',
+      name: 'How do I create a valid JSON object without syntax errors?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'A JSON builder is a visual tool that lets you construct JSON objects and arrays through a graphical interface — adding keys, values, nested objects, and arrays — without needing to write raw JSON text. It is useful for developers who want to quickly create JSON payloads, API request bodies, or configuration files without worrying about syntax errors.',
+        text: 'Use a visual JSON builder instead of typing raw JSON. Click "Add Field", choose the value type (string, number, boolean, null, object, or array), enter the value, and the tool constructs valid, properly quoted JSON automatically. This eliminates trailing commas, unquoted keys, and other common mistakes that break JSON.parse().',
       },
     },
     {
@@ -213,10 +213,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is the difference between a JSON builder and a JSON editor?',
+      name: 'How do I build a Postman or curl request body without writing JSON by hand?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'A JSON builder lets you construct JSON from scratch through a visual interface — adding fields, choosing types, and entering values — without writing raw text. A JSON editor is a text editor with syntax highlighting and validation for existing JSON. Both serve different workflows: builders are great for creating new JSON; editors are better for modifying existing JSON.',
+        text: 'Use this visual JSON builder to construct your API request body: add each field your endpoint expects, set the correct type (string, number, boolean, array, object), and fill in the values. The JSON output updates in real time. Copy it and paste directly into Postman, Insomnia, or a curl --data argument.',
       },
     },
   ],
@@ -296,8 +296,8 @@ export default function JsonBuilderPage() {
         <SEOSection id="faq" eyebrow="FAQ" heading="Frequently Asked Questions">
           <FAQ items={[
             {
-              q: 'What is a JSON builder?',
-              a: 'A JSON builder is a visual tool that lets you construct JSON objects through a graphical interface — adding keys, values, nested objects, and arrays — without writing raw JSON text. It prevents syntax errors and speeds up JSON creation.',
+              q: 'How do I create a valid JSON object without syntax errors?',
+              a: 'Use this visual builder instead of typing raw JSON. Click "Add Field", choose the value type (string, number, boolean, null, object, array), and enter the value. The tool constructs properly quoted, valid JSON automatically — no trailing commas, no unquoted keys.',
             },
             {
               q: 'How do I create a JSON object online?',
@@ -340,8 +340,8 @@ export default function JsonBuilderPage() {
               a: <>Yes. Use the JSON Schema Generator at unblockdevs.com/json-schema-generation to understand the required structure, then use this builder to create sample data that conforms to it. The builder ensures valid JSON at every step.</>,
             },
             {
-              q: 'What is the difference between a JSON builder and a JSON editor?',
-              a: 'A JSON builder constructs JSON from scratch through a visual interface. A JSON editor is a text editor with syntax highlighting for existing JSON. Builders are ideal for creating new JSON; editors are better for modifying existing JSON.',
+              q: 'How do I build a Postman or curl request body without writing JSON by hand?',
+              a: 'Use this visual builder to add each field your API endpoint expects. Set the correct type for each field and fill in the values. The JSON output updates in real time — copy it directly into Postman, Insomnia, or a curl --data argument.',
             },
           ]} />
         </SEOSection>

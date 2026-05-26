@@ -86,10 +86,10 @@ const faqSchema = {
   mainEntity: [
     {
       '@type': 'Question',
-      name: 'What are the most common JSON.parse() errors in JavaScript?',
+      name: 'Why does JSON.parse() throw SyntaxError when my fetch() response looks fine in the Network tab?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'The most common are: passing undefined or null to JSON.parse(), receiving an HTML error page (404/500) instead of JSON, double-encoded JSON (a JSON string inside another JSON string), and truncated API responses. All of these throw SyntaxError.',
+        text: 'If the Network tab shows a 404 or 500 status, the server returned an HTML error page instead of JSON — even if the response body looks short. JSON.parse() throws SyntaxError because HTML starts with "<". Always check response.ok before calling response.json(), and use response.text() to inspect the raw body when debugging unexpected parse errors.',
       },
     },
     {
@@ -139,8 +139,8 @@ export default function FixJsonParseErrorJavascript() {
         <SEOSection id="faq" eyebrow="FAQ" heading="Frequently Asked Questions">
           <FAQ items={[
             {
-              q: 'What are the most common JSON.parse() errors in JavaScript?',
-              a: 'The most common are: passing undefined or null to JSON.parse(), receiving an HTML error page (404/500) instead of JSON, double-encoded JSON (a JSON string inside another JSON string), and truncated API responses. All of these throw SyntaxError.',
+              q: 'Why does JSON.parse() throw SyntaxError when my fetch() response looks fine in the Network tab?',
+              a: 'If the Network tab shows a 404 or 500 status, the server returned an HTML error page instead of JSON. JSON.parse() throws SyntaxError because HTML starts with "<". Always check response.ok before calling response.json(), and use response.text() to inspect the raw body when debugging.',
             },
             {
               q: 'How do I debug when fetch returns HTML instead of JSON?',

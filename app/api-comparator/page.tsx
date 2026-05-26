@@ -134,10 +134,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is a breaking API change?',
+      name: 'Which field changes in an API response will break my frontend or SDK integration?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'A breaking change is any modification that causes existing clients to fail: removing a field, changing a field type, renaming a key, or changing a required field to optional. The API Comparator highlights these automatically.',
+        text: 'Changes that break existing clients: removing a field your code reads, changing a field type (e.g. string to integer causes parse errors), renaming a key, changing a 200 to a 4xx, or making a previously optional field required. The API Comparator highlights these in red (removed) and yellow (type changed). Additions in green are generally safe.',
       },
     },
     {
@@ -150,10 +150,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is API response comparison?',
+      name: 'Why does my API response look different in staging vs production?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'API response comparison is the process of diffing two JSON responses from the same endpoint — typically from different versions, environments, or points in time — to identify structural and value changes. It detects added fields, removed fields, type changes, and value differences at every level of nesting.',
+        text: 'Environment differences are caused by different config values, feature flags, database seeds, or middleware that behaves differently per environment. Paste the staging response on the left and the production response on the right — the comparator pinpoints exactly which fields differ, helping you quickly diagnose whether it is a data issue, a missing env variable, or an unintended code path.',
       },
     },
     {
@@ -174,10 +174,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is API contract testing?',
+      name: 'How do I check if an API upgrade broke anything for my frontend?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'API contract testing verifies that a service meets the agreed-upon interface — field names, types, and response structure — that consumers depend on. It is typically run in CI/CD pipelines to catch breaking changes before deployment. The API Comparator provides a manual contract check by letting you visually diff the expected and actual responses.',
+        text: 'Call the current and new API versions with identical parameters and paste both responses into the comparator. Focus on fields highlighted in red (removed) — these will cause null reference errors in your frontend. Yellow fields (type changes, like string to number) will silently break conditional logic. Run this check before migrating your frontend to catch every regression.',
       },
     },
     {
@@ -190,10 +190,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is the difference between API versioning strategies?',
+      name: 'How do I compare two versions of an API that uses URL versioning vs header versioning?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'The three main strategies are: URL versioning (/v1/ vs /v2/), header versioning (Accept: application/vnd.api+json; version=2), and query parameter versioning (?version=2). URL versioning is the most common and easiest to test. The API Comparator works with all three — just call each version and paste the responses.',
+        text: 'For URL versioning (/v1/ vs /v2/), call both endpoints directly and paste the responses. For header versioning (e.g. Accept: application/vnd.api+json; version=2), use curl or Postman with the appropriate Accept or custom header for each version, then paste both responses into the comparator. The diff highlights what changed regardless of how the version was specified in the request.',
       },
     },
     {
@@ -238,10 +238,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is an API diff and when should I use one?',
+      name: 'How do I detect silent changes in a third-party API I depend on?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'An API diff compares two API responses to show structural and value differences. Use it when: migrating to a new API version, debugging why a feature behaves differently in staging vs production, reviewing a third-party API for silent changes, or generating a changelog entry for an API update your team maintains.',
+        text: 'Third-party APIs sometimes change their response structure without announcing it. Save a known-good response from the API, then make the same call after a suspected update and paste both into the comparator. Any added, removed, or type-changed fields will be immediately visible — so you can update your integration before it breaks in production.',
       },
     },
   ],
@@ -317,8 +317,8 @@ export default function ApiComparatorPage() {
               a: 'Paste the baseline response in the left panel and the new response in the right. The comparator shows added, removed, and changed fields with their full JSON paths instantly.',
             },
             {
-              q: 'What is a breaking API change?',
-              a: 'A breaking change causes existing clients to fail: removing a required field, changing a field type (string → number), renaming a key, or changing a 200 response to a 4xx. The comparator highlights these in red.',
+              q: 'Which field changes in an API response will break my frontend or SDK integration?',
+              a: 'Changes that break existing clients: removing a field your code reads, changing a field type (string to integer causes parse errors), renaming a key, or changing a 200 to a 4xx. The comparator highlights removed fields and type changes in red and yellow — additions in green are generally safe.',
             },
             {
               q: 'Can this compare nested objects and arrays?',
@@ -329,8 +329,8 @@ export default function ApiComparatorPage() {
               a: 'No. All comparison logic runs entirely in your browser. Your API responses never leave your device, making it safe for production tokens, PII, and sensitive payloads.',
             },
             {
-              q: 'What is API response comparison?',
-              a: 'API response comparison diffs two JSON responses from the same endpoint — typically from different versions or environments — to identify structural and value changes: added fields, removed fields, type changes, and value differences at every level of nesting.',
+              q: 'Why does my API response look different in staging vs production?',
+              a: 'Environment differences are caused by different config values, feature flags, database seeds, or middleware that behaves differently per environment. Paste the staging response on the left and the production response on the right — the comparator pinpoints exactly which fields differ, helping you quickly diagnose whether it is a data issue, a missing env variable, or an unintended code path.',
             },
             {
               q: 'How do I detect breaking changes in an API?',
@@ -341,8 +341,8 @@ export default function ApiComparatorPage() {
               a: 'Make the same API call against both environments using curl or Postman, then paste each JSON response into the respective panels. The diff shows exactly which fields or values differ, helping you diagnose environment-specific bugs before they reach users.',
             },
             {
-              q: 'What is API contract testing?',
-              a: 'API contract testing verifies that a service meets the agreed-upon interface — field names, types, and structure — that consumers depend on. The API Comparator provides quick manual contract checks by letting you visually diff expected vs actual responses.',
+              q: 'How do I check if an API upgrade broke anything for my frontend?',
+              a: 'Call the current and new API versions with identical parameters and paste both responses into the comparator. Focus on fields highlighted in red (removed) — these will cause null reference errors in your frontend. Yellow fields (type changes) will silently break conditional logic. Run this check before migrating your frontend to catch every regression.',
             },
             {
               q: 'How do I test API backwards compatibility?',
@@ -357,8 +357,8 @@ export default function ApiComparatorPage() {
               a: 'GraphQL responses are standard JSON with a data key. Paste two GraphQL query results directly into the comparator. The semantic diff handles nested objects and arrays in the data field, making schema changes immediately visible.',
             },
             {
-              q: 'What is an API diff and when should I use one?',
-              a: 'An API diff compares two API responses to show structural and value differences. Use it when migrating API versions, debugging staging vs production discrepancies, monitoring third-party API changes, or generating changelogs for APIs your team maintains.',
+              q: 'How do I detect silent changes in a third-party API I depend on?',
+              a: 'Third-party APIs sometimes change their response structure without announcing it. Save a known-good response from the API, then make the same call after a suspected update and paste both into the comparator. Any added, removed, or type-changed fields will be immediately visible — so you can update your integration before it breaks in production.',
             },
           ]} />
         </SEOSection>

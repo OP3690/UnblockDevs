@@ -163,18 +163,18 @@ const faqSchema = {
   mainEntity: [
     {
       '@type': 'Question',
-      name: 'What is a JSON formatter?',
+      name: 'How do I make a minified API response readable without writing code?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'A JSON formatter (also called a JSON beautifier or JSON pretty-printer) adds indentation, line breaks, and consistent spacing to minified or compact JSON, making it human-readable. It does not change the data — only the whitespace and layout. Use it to inspect API responses, config files, or any JSON string.',
+        text: 'Paste the minified JSON into this formatter and press Ctrl+Enter (or Cmd+Enter on Mac). The tool instantly adds indentation and line breaks to make the compressed response human-readable. Choose 2-space, 4-space, or tab indentation. Nothing is uploaded — all formatting happens in your browser.',
       },
     },
     {
       '@type': 'Question',
-      name: 'What is the difference between JSON formatter and JSON beautifier?',
+      name: 'Why does JSON.stringify return undefined for some values?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'They are the same thing. "JSON formatter" and "JSON beautifier" are two names for the same operation: taking compact or minified JSON and adding indentation and line breaks to make it readable. You may also see "JSON pretty print" or "JSON prettifier" used for the same purpose.',
+        text: 'JSON.stringify() skips properties with values of undefined, Function, or Symbol — they are not valid JSON types. Array elements with these values are serialized as null. If you need to preserve undefined values, consider using a replacer function or converting them to null before stringifying. Use JSON.stringify(obj, null, 2) to get formatted, human-readable output.',
       },
     },
     {
@@ -392,8 +392,12 @@ export default function JsonFormatter() {
         <SEOSection id="faq" eyebrow="FAQ" heading="Frequently Asked Questions">
           <FAQ items={[
             {
-              q: 'What is the difference between JSON formatter and JSON beautifier?',
-              a: 'They are the same thing. "JSON formatter", "JSON beautifier", and "JSON pretty-printer" all describe the same operation: adding indentation and line breaks to compact JSON to make it human-readable.',
+              q: 'How do I make a minified API response readable without writing code?',
+              a: 'Paste the minified JSON here and press Ctrl+Enter (or Cmd+Enter on Mac). The formatter instantly adds indentation and line breaks. Choose 2-space, 4-space, or tab indentation. All formatting runs in your browser — nothing is uploaded.',
+            },
+            {
+              q: 'Why does JSON.stringify return undefined for some values?',
+              a: <>JSON.stringify() skips properties whose values are <C>undefined</C>, <C>Function</C>, or <C>Symbol</C> — these are not valid JSON types. Array elements with these values become <C>null</C>. Use a replacer function to handle them, or convert to <C>null</C> before stringifying. Use <C>JSON.stringify(obj, null, 2)</C> to also get formatted output.</>,
             },
             {
               q: 'Does this JSON formatter upload my data?',

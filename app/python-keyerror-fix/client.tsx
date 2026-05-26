@@ -320,12 +320,14 @@ except Exception as e:
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">What causes a Python KeyError?</h3>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">Why does Python raise KeyError when the key looks like it exists?</h3>
                 <p className="text-gray-700">
-                  A KeyError is raised when you access a dictionary with a key that doesn&apos;t exist —
-                  <code className="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800 mx-1">data[&quot;missing&quot;]</code>
-                  instead of <code className="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800 mx-1">data.get(&quot;missing&quot;)</code>.
-                  It commonly occurs when API responses or JSON objects have optional or variable fields.
+                  Python raises KeyError when the exact key string is not found — even a trailing space, different capitalisation,
+                  or a Unicode lookalike makes it a different key. Print
+                  <code className="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800 mx-1">repr(key)</code> and
+                  <code className="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800 mx-1">list(data.keys())</code> to
+                  compare them character by character. In API responses, the key may also be absent for certain records — use
+                  <code className="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800 mx-1">data.get(&quot;key&quot;)</code> to return None safely.
                 </p>
               </div>
               <div>
@@ -347,11 +349,13 @@ except Exception as e:
                 </p>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">What is defaultdict and when should I use it?</h3>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">How do I stop KeyError when building a counter or grouping dict?</h3>
                 <p className="text-gray-700">
-                  <code className="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800">defaultdict(int)</code> auto-initializes
-                  missing keys to 0, <code className="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800">defaultdict(list)</code> to
-                  an empty list. Use it for counters, grouping, and accumulation patterns where you&apos;d otherwise need to check key existence on every iteration.
+                  Use <code className="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800">defaultdict</code> from collections.
+                  <code className="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800 mx-1">defaultdict(int)</code> auto-initialises
+                  missing keys to 0 — so <code className="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800">counts[key] += 1</code> never
+                  raises KeyError. <code className="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800 mx-1">defaultdict(list)</code> auto-initialises
+                  to an empty list so grouping with <code className="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800">groups[key].append(value)</code> is always safe.
                 </p>
               </div>
               <div>

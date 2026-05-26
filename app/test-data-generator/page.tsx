@@ -145,10 +145,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is the difference between fake data and mock data?',
+      name: 'How do I generate realistic test data that passes real validation logic?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'They mean the same thing in practice. "Fake data" and "mock data" both refer to synthetic data generated for development and testing instead of real production records. "Test data" is the more formal term, and "dummy data" is the colloquial one. All are safe to use in non-production environments.',
+        text: 'Select a template that matches your data type — the Users template produces valid email formats, plausible names, real city/state/ZIP combinations, and properly formatted phone numbers. For custom field formats (e.g. product codes, serial numbers), use the Custom JSON Schema option with a pattern property to enforce a regex-based format. The goal is data that looks real to your UI, validators, and downstream services.',
       },
     },
     {
@@ -161,10 +161,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is test data generation?',
+      name: 'How do I avoid using production data in tests without making tests unrealistic?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'Test data generation is the process of creating synthetic, realistic data — names, emails, addresses, UUIDs, dates — that mimics real production data without exposing actual user information. It is used in software development to seed databases, build fixtures for unit tests, populate UI prototypes, and run performance tests safely.',
+        text: 'Use a test data generator to create synthetic records that are structurally identical to production data — valid email formats, plausible names, real city/state/ZIP patterns, properly formatted UUIDs — without any real personal information. This approach satisfies GDPR, prevents real user data from appearing in logs or snapshots, and lets you safely commit fixtures to version control. Libraries like Faker.js (JavaScript) and Faker (Python) also let you produce locale-aware test data programmatically.',
       },
     },
     {
@@ -354,12 +354,12 @@ export default function TestDataGeneratorPage() {
               a: 'Yes. Select the Custom Schema option, paste any valid JSON Schema, and the tool generates data that matches your exact property names, types, and nested structures — without writing code.',
             },
             {
-              q: 'What is test data generation?',
-              a: 'Test data generation is the process of creating synthetic, realistic data — names, emails, addresses, UUIDs — that mimics real production data without exposing actual user information. It is used to seed databases, build test fixtures, and populate prototypes safely.',
+              q: 'How do I avoid using production data in tests without making tests unrealistic?',
+              a: 'Use a test data generator to create synthetic records that are structurally identical to production data — valid email formats, plausible names, real city/state/ZIP patterns — without any real personal information. This satisfies GDPR, prevents real user data from appearing in logs or snapshots, and lets you safely commit fixtures to version control.',
             },
             {
-              q: 'How do I generate realistic test data?',
-              a: 'Select a template (users, invoices, banking, API logs), set the record count, and export as JSON or CSV. For code-based generation, libraries like Faker.js (JavaScript), Faker (Python), or Bogus (C#) produce locale-aware realistic data programmatically.',
+              q: 'How do I generate realistic test data that passes real validation logic?',
+              a: 'Select a template that matches your data type — the Users template produces valid email formats, plausible names, real city/state/ZIP combinations, and properly formatted phone numbers. For custom field formats, use the Custom JSON Schema option with a pattern property to enforce a regex-based format.',
             },
             {
               q: 'Can I generate test data from a JSON schema?',

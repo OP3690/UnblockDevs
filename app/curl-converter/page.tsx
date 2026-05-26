@@ -149,10 +149,10 @@ const faqSchema = {
   mainEntity: [
     {
       '@type': 'Question',
-      name: 'What is a cURL command?',
+      name: 'How do I turn a cURL command from Chrome DevTools into Python or JavaScript code?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'cURL (Client URL) is a command-line tool for transferring data with URLs. Developers use cURL commands to send HTTP requests directly from the terminal — testing APIs, downloading files, and debugging network calls. A typical cURL command includes flags like -X (method), -H (header), -d (request body), and -u (authentication).',
+        text: 'In Chrome DevTools, open the Network tab, right-click any request, and select Copy → Copy as cURL. This gives you a complete cURL command with all headers, cookies, and body exactly as the browser sent them. Paste it directly into this converter and select your target language — Python (requests), JavaScript fetch or Axios, Go, Java, and more — to get clean, runnable code in seconds.',
       },
     },
     {
@@ -412,8 +412,8 @@ export default function CurlConverterPage() {
         <SEOSection id="faq" eyebrow="FAQ" heading="Frequently Asked Questions">
           <FAQ items={[
             {
-              q: 'What is a cURL command?',
-              a: 'cURL (Client URL) is a command-line tool for sending HTTP requests. It is used to test API endpoints, download files, and debug network calls from the terminal. A cURL command specifies a URL plus flags for the method, headers, body, and authentication.',
+              q: 'How do I turn a cURL command from Chrome DevTools into Python or JavaScript code?',
+              a: 'In Chrome DevTools, open the Network tab, right-click any request, and select Copy → Copy as cURL. Paste the result into this converter and select your target language — Python (requests), JavaScript fetch or Axios, Go, Java, and more — to get clean, runnable code in seconds.',
             },
             {
               q: 'How do I convert cURL to Python?',

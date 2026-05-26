@@ -83,7 +83,7 @@ const faqSchema = {
     { '@type': 'Question', name: 'What is the difference between UUID v4 and v7?', acceptedAnswer: { '@type': 'Answer', text: 'UUID v4 is purely random. UUID v7 encodes a Unix millisecond timestamp making it time-sortable and index-friendly for databases.' } },
     { '@type': 'Question', name: 'Should I use UUID v4 or v7 for database primary keys?', acceptedAnswer: { '@type': 'Answer', text: 'UUID v7 for new applications. Its time-sortable design means records insert in chronological order, dramatically improving index performance vs random v4.' } },
     { '@type': 'Question', name: 'Can two UUIDs ever be the same?', acceptedAnswer: { '@type': 'Answer', text: 'Practically impossible. A v4 UUID has 2^122 possible values. A 50% collision chance requires generating ~2.7 quintillion UUIDs.' } },
-    { '@type': 'Question', name: 'What is a UUID?', acceptedAnswer: { '@type': 'Answer', text: 'A UUID (Universally Unique Identifier) is a 128-bit identifier standardized by RFC 4122. It is represented as 32 hexadecimal digits displayed in 5 groups separated by hyphens: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.' } },
+    { '@type': 'Question', name: 'How do I generate a UUID in Node.js without a library?', acceptedAnswer: { '@type': 'Answer', text: 'In Node.js 14.17+ and all modern browsers, use the built-in crypto.randomUUID() which generates a cryptographically secure v4 UUID with no dependencies: const id = crypto.randomUUID(). For Node.js versions below 14.17, use the uuid npm package: import { v4 as uuidv4 } from "uuid"; uuidv4(). The crypto.randomUUID() approach is preferred for new code as it requires zero dependencies and is natively available.' } },
     { '@type': 'Question', name: 'How do I generate a UUID in JavaScript?', acceptedAnswer: { '@type': 'Answer', text: 'In modern browsers and Node.js 14.17+: crypto.randomUUID() generates a secure v4 UUID. For older environments use the uuid npm package: import { v4 as uuidv4 } from "uuid"; uuidv4().' } },
     { '@type': 'Question', name: 'How do I generate a UUID in Python?', acceptedAnswer: { '@type': 'Answer', text: 'Use the built-in uuid module: import uuid; str(uuid.uuid4()) for v4, or uuid.uuid1() for v1. For v7 (not yet in stdlib), use the uuid6 package: pip install uuid6.' } },
     { '@type': 'Question', name: 'How do I generate a UUID in PostgreSQL?', acceptedAnswer: { '@type': 'Answer', text: 'Use gen_random_uuid() (available since PostgreSQL 13) or the pgcrypto extension: SELECT gen_random_uuid(). For UUID v7 use a custom function or the pg_uuidv7 extension.' } },
@@ -237,6 +237,10 @@ export default function UuidGeneratorPage() {
             {
               q: 'Are the UUIDs generated here cryptographically secure?',
               a: 'Yes. v4 and v7 UUIDs use the Web Crypto API\'s getRandomValues(), which is a cryptographically secure random number generator. Nothing is sent to any server.',
+            },
+            {
+              q: 'How do I generate a UUID in Node.js without a library?',
+              a: <>In Node.js 14.17+ and all modern browsers, use the built-in <C>crypto.randomUUID()</C> — no dependencies needed. For older Node.js, use the <C>uuid</C> npm package: <C>import {'{ v4 as uuidv4 }'} from "uuid"; uuidv4()</C>. The <C>crypto.randomUUID()</C> approach is preferred for new projects.</>,
             },
           ]} />
         </SEOSection>

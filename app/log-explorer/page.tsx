@@ -134,10 +134,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is the difference between JSON logs and plain text logs?',
+      name: 'Why can I not filter my logs by service name or trace ID in the explorer?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'JSON logs encode each entry as a JSON object with named fields (timestamp, level, message, traceId, etc.), making them machine-parseable and easy to filter. Plain text logs (like Apache Common Log Format) use positional or regex-parsed fields, which are human-readable but harder to query programmatically. Structured JSON logging is strongly preferred for production systems.',
+        text: 'Field-level filtering only works when logs have named fields — i.e., when entries are JSON objects with keys like service, traceId, or requestId. Plain text logs (Apache, Nginx, custom formats) use positional fields without names, so only keyword and regex search apply. If your logs lack structure, consider migrating to JSON logging in your application. Log Explorer handles both formats — paste your logs and it parses whatever named fields are available for filtering.',
       },
     },
     {
@@ -150,10 +150,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is structured logging and why does it matter?',
+      name: 'Why can\'t I search my logs reliably and how do I fix it?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'Structured logging means writing each log entry as a machine-parseable format (typically JSON) with consistent field names. This makes logs queryable, alertable, and easier to aggregate in tools like Datadog, CloudWatch, or ELK Stack. Unstructured plain text logs require regex parsing and break when message formats change.',
+        text: 'Plain text logs break keyword search as soon as message formats change, and they cannot be filtered by field without fragile regex. Switching to structured logging (JSON with consistent field names like level, message, traceId) makes logs queryable, alertable, and easy to aggregate in Datadog, CloudWatch, or ELK Stack. Log Explorer handles both formats — paste your logs to filter by level or keyword regardless of format.',
       },
     },
     {
@@ -174,10 +174,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is NDJSON and how is it different from JSON?',
+      name: 'Why do my Docker or Kubernetes logs look like one long escaped string and how do I read them?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'NDJSON (Newline Delimited JSON), also called JSON Lines, is a format where each line is a valid JSON object. Unlike standard JSON (which wraps everything in an array), NDJSON is streamable and append-friendly — each log entry is written as a complete JSON object on its own line. It is the default log format for Docker, Kubernetes, Datadog, and many logging libraries.',
+        text: 'Docker and Kubernetes emit logs in NDJSON format (JSON Lines) — one JSON object per line. When viewed raw or copied from a terminal, nested objects may appear as escaped strings. Paste your log output into Log Explorer: it auto-detects NDJSON, parses each line into structured fields, and renders them as filterable rows so you can search by level, message, or trace ID without manual parsing.',
       },
     },
     {
@@ -214,10 +214,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is the difference between structured and unstructured logs?',
+      name: 'How do I find the root cause of an error when my logs are mixed formats and scattered across services?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'Structured logs are machine-readable records in a consistent format — typically JSON — where every field (timestamp, level, message, traceId) has a defined key. Unstructured logs are free-form text lines like those produced by printf or console.log, requiring regex patterns to extract fields. Log Explorer handles both: it parses JSON and NDJSON automatically and uses heuristics to extract fields from common unstructured formats like Apache Combined Log Format and syslog.',
+        text: 'Paste all your log output — JSON, NDJSON, Apache, Nginx, or plain text — into Log Explorer at once. The tool auto-detects and normalizes the formats into a consistent view. Filter to ERROR level first to remove noise, then use the keyword or regex search to match the error message, and narrow by trace ID if you have distributed tracing. Export the matching entries as JSON or CSV to share with teammates or attach to an incident report.',
       },
     },
   ],
@@ -332,16 +332,16 @@ export default function LogExplorerPage() {
               a: 'No. Log Explorer runs entirely in your browser using JavaScript. Your log data never leaves your machine — no upload, no server-side processing. Safe for sensitive production logs and PII-containing entries.',
             },
             {
-              q: 'What is the difference between JSON logs and plain text logs?',
-              a: <>JSON logs store each entry as a structured object with named fields (<C>level</C>, <C>message</C>, <C>timestamp</C>, <C>traceId</C>). Plain text logs (Apache, Nginx, custom formats) use positional or regex-parsed fields. Structured JSON is strongly preferred for production because it is machine-queryable and does not break when message text changes.</>,
+              q: 'Why can I not filter my logs by service name or trace ID in the explorer?',
+              a: <>Field-level filtering only works when logs have named fields — i.e., JSON objects with keys like <C>service</C>, <C>traceId</C>, or <C>requestId</C>. Plain text logs use positional fields without names, so only keyword and regex search apply. If your logs lack structure, consider migrating to JSON logging. Log Explorer parses whatever named fields are available.</>,
             },
             {
               q: 'How do I filter logs by severity or keyword?',
               a: 'Use the level dropdown to show only ERROR, WARN, INFO, or DEBUG entries. The keyword search bar matches against any field in the parsed entry. For advanced matching, prefix your query with / to use a regex pattern.',
             },
             {
-              q: 'What are log levels and which ones should I monitor?',
-              a: 'Standard log levels in order of severity: DEBUG < INFO < WARN < ERROR < FATAL. In production, monitor ERROR and FATAL actively (they require action), investigate WARN trends, and treat DEBUG/INFO as diagnostic noise. Filter to ERROR first when triaging incidents.',
+              q: 'Why can\'t I search my logs reliably and how do I fix it?',
+              a: 'Plain text logs break keyword search as soon as message formats change and cannot be filtered by field without regex. Switching to structured logging (JSON with consistent fields like level, message, traceId) makes logs queryable and easy to aggregate. Log Explorer handles both formats — paste your logs to filter by level or keyword regardless of format.',
             },
             {
               q: 'Can I use regex to filter log entries?',
@@ -352,8 +352,8 @@ export default function LogExplorerPage() {
               a: <>Run <C>kubectl logs &lt;pod-name&gt;</C> or <C>docker logs &lt;container-name&gt;</C>, copy the output, and paste it here. The tool auto-detects NDJSON (JSON Lines) format and renders each entry as a structured, filterable row.</>,
             },
             {
-              q: 'What is NDJSON (JSON Lines)?',
-              a: 'NDJSON is a format where each line is a valid JSON object. It is streamable and append-friendly — perfect for logging. Docker, Kubernetes, Datadog, and most logging libraries use NDJSON as the default log format.',
+              q: 'Why do my Docker or Kubernetes logs look like one long escaped string and how do I read them?',
+              a: 'Docker and Kubernetes emit logs in NDJSON format — one JSON object per line. When copied from a terminal they may appear as escaped strings. Paste them into Log Explorer: it auto-detects NDJSON, parses each line into structured fields, and renders them as filterable rows so you can search by level, message, or trace ID.',
             },
             {
               q: 'How do I parse Apache or Nginx access logs?',
@@ -372,8 +372,8 @@ export default function LogExplorerPage() {
               a: <>Export CloudWatch logs via the console (Actions → Download) or with <C>aws logs get-log-events</C>. Paste the JSON output here for filtering, search, and timeline analysis without staying in the AWS console.</>,
             },
             {
-              q: 'What is the difference between structured and unstructured logs?',
-              a: 'Structured logs are machine-readable JSON records with defined fields (timestamp, level, message). Unstructured logs are free-form text lines requiring regex to parse. Log Explorer handles both — it parses JSON and NDJSON automatically and extracts fields from common formats like Apache Combined Log and syslog via heuristics.',
+              q: 'How do I find the root cause of an error when my logs are mixed formats and scattered across services?',
+              a: 'Paste all your log output — JSON, NDJSON, Apache, Nginx, or plain text — into Log Explorer at once. The tool auto-detects and normalizes the formats into a consistent view. Filter to ERROR level first, then use keyword or regex search to match the error message, and narrow by trace ID for distributed systems. Export the matching entries as JSON or CSV for your incident report.',
             },
           ]} />
         </SEOSection>

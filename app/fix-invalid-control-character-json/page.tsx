@@ -85,10 +85,10 @@ const faqSchema = {
   mainEntity: [
     {
       '@type': 'Question',
-      name: 'What are control characters in JSON?',
+      name: 'Why does JSON.parse() throw "Invalid control character" when I paste terminal output into a string?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Control characters are ASCII characters with codes 0–31, including tab (\\t), newline (\\n), carriage return (\\r), and null (\\0). JSON requires these to be represented as escape sequences inside strings — raw control characters are not allowed.',
+        text: 'Terminal output and log files often contain raw control characters (ASCII codes 0–31) like newlines, tabs, and null bytes. When you paste this text directly into a JSON string without escaping it, the parser throws an "Invalid control character" error. Always use JSON.stringify() to serialize values containing user or terminal input, as it escapes these characters automatically.',
       },
     },
     {
@@ -138,8 +138,8 @@ export default function FixInvalidControlCharacter() {
         <SEOSection id="faq" eyebrow="FAQ" heading="Frequently Asked Questions">
           <FAQ items={[
             {
-              q: 'What are control characters in JSON?',
-              a: 'Control characters are ASCII characters with codes 0–31, including tab (\\t), newline (\\n), carriage return (\\r), and null (\\0). JSON requires these to be represented as escape sequences — raw control characters are not allowed inside JSON strings.',
+              q: 'Why does JSON.parse() throw "Invalid control character" when I paste terminal output into a string?',
+              a: 'Terminal output and log files often contain raw control characters like newlines, tabs, and null bytes. When pasted directly into a JSON string without escaping, the parser throws this error. Always use JSON.stringify() to serialize values containing user or terminal input — it escapes these characters automatically.',
             },
             {
               q: 'Why does the invalid control character error happen?',

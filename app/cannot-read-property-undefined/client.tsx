@@ -352,8 +352,8 @@ function getUserCity(user) {
             <div className="space-y-6">
               {[
                 {
-                  q: "What causes 'Cannot read properties of undefined'?",
-                  a: "You tried to access a property on a value that is undefined or null. Common causes: API data not yet loaded, typo in property name, array method called on undefined, or missing key in a nested object.",
+                  q: "Why do I get 'Cannot read properties of undefined' when calling .map() in React?",
+                  a: "This happens when you call .map() on a value that is undefined instead of an array. In React, async data hasn't loaded on the first render. Initialize your state as an empty array: const [items, setItems] = useState([]) and your .map() call will work safely from the start.",
                 },
                 {
                   q: 'How does optional chaining fix this?',
@@ -368,8 +368,8 @@ function getUserCity(user) {
                   a: 'On the first render, async data has not loaded yet. Initialize state with a safe default (null or []) and render conditionally: if (!data) return <Loading />.',
                 },
                 {
-                  q: 'What is the difference between null and undefined?',
-                  a: 'undefined is the absence of assignment; null is an intentional empty value. Both cause this error when you access properties on them. Optional chaining handles both.',
+                  q: 'How do I fix "Cannot read property of null" when accessing nested object data from an API?',
+                  a: 'Use optional chaining combined with a nullish coalescing default: const name = response?.user?.profile?.name ?? "Unknown". This short-circuits the entire chain safely when any level is null or undefined, so you never get a crash even with incomplete API data.',
                 },
               ].map(({ q, a }) => (
                 <div key={q} className="border-b border-gray-100 pb-6">

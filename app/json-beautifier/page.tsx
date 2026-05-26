@@ -168,26 +168,26 @@ const faqSchema = {
   mainEntity: [
     {
       '@type': 'Question',
-      name: 'What is the difference between a JSON beautifier and a JSON formatter?',
+      name: 'Why does my JSON look valid but still fail JSON.parse()?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'They are the same thing. A JSON beautifier adds indentation and line breaks to make minified JSON human-readable. A formatter does the same. Both terms describe pretty-printing compact JSON output. You may also see "JSON pretty-printer" or "JSON viewer" used for the same purpose.',
+        text: 'The most common cause is a trailing comma after the last element in an array or object — JSON forbids this even though JavaScript allows it. Other culprits include single-quoted strings, unquoted keys, or JavaScript values like undefined or NaN. Paste your JSON into this beautifier; it highlights the exact line and character of every error and offers one-click Auto-Fix.',
       },
     },
     {
       '@type': 'Question',
-      name: 'What is a JSON tree viewer?',
+      name: 'How do I navigate deeply nested JSON without getting lost?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'A JSON tree viewer displays JSON as a collapsible and expandable tree structure, showing the hierarchy of objects, arrays, keys, and values interactively. Instead of reading raw text, you can click to expand and collapse nested sections, making it easy to navigate large or deeply nested JSON documents.',
+        text: 'Use the Tree View tab. It renders your JSON as a collapsible hierarchy — click any object or array node to expand or collapse it. For large payloads, use the JSONPath query box (e.g. $.users[*].email) to extract only the fields you care about instead of scrolling through hundreds of lines.',
       },
     },
     {
       '@type': 'Question',
-      name: 'What is JSONPath and how do I use it?',
+      name: 'How do I extract a specific field from a large JSON response?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'JSONPath is a query language for JSON, similar to XPath for XML. It lets you extract specific values from a JSON document using a path expression. For example, $.users[*].email extracts the email field from every object in the users array. This tool runs JSONPath queries live as you type and shows the matching results instantly.',
+        text: 'Use the JSONPath query box. JSONPath is a query language for JSON — for example, $.users[*].email extracts the email field from every object in a users array. This tool runs JSONPath queries live as you type and shows matching results instantly, so you can drill into any field without manually searching through hundreds of lines.',
       },
     },
     {
@@ -445,12 +445,12 @@ export default function JsonBeautifierPage() {
         <SEOSection id="faq" eyebrow="FAQ" heading="Frequently Asked Questions">
           <FAQ items={[
             {
-              q: 'What is the difference between JSON beautifier and JSON formatter?',
-              a: 'They are exactly the same thing. Both terms describe pretty-printing JSON — adding indentation and line breaks to make it human-readable. "Beautifier", "formatter", "pretty-printer", and "viewer" are all used interchangeably for the same operation.',
+              q: 'Why does my JSON look valid but still fail JSON.parse()?',
+              a: 'The most common cause is a trailing comma after the last element — JSON forbids this even though JavaScript allows it. Other culprits: single-quoted strings, unquoted keys, or JS values like undefined or NaN. Paste your JSON here; errors are highlighted with exact line numbers and Auto-Fix repairs most of them in one click.',
             },
             {
-              q: 'What is a JSON tree view?',
-              a: 'A JSON tree view displays your JSON as a collapsible hierarchy — objects and arrays you can expand and collapse with a click. It is much easier to navigate large or deeply nested JSON than reading formatted text.',
+              q: 'How do I navigate deeply nested JSON without getting lost?',
+              a: 'Use the Tree View tab. It renders your JSON as a collapsible hierarchy — click any node to expand or collapse it. For large payloads, use the JSONPath query box (e.g. $.users[*].email) to extract only the fields you need instead of scrolling through hundreds of lines.',
             },
             {
               q: 'How do I fix trailing commas in JSON?',
@@ -461,8 +461,8 @@ export default function JsonBeautifierPage() {
               a: 'Yes. Paste any JSON object and switch to the TypeScript tab. The tool infers types and generates a complete, named TypeScript interface tree — useful for typing REST API responses.',
             },
             {
-              q: 'What is JSONPath?',
-              a: 'JSONPath is a query language for JSON, similar to XPath for XML. For example, $.users[*].email extracts email from every user in the array. This tool runs JSONPath live as you type.',
+              q: 'How do I extract a specific field from a large JSON response?',
+              a: 'Use the JSONPath query box. Type a path expression like $.users[*].email to extract the email field from every object in a users array. Results appear live as you type — no need to scroll through hundreds of lines manually.',
             },
             {
               q: 'How does this compare to jsonformatter.org or jsonbeautifier.org?',

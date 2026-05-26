@@ -126,10 +126,10 @@ const faqSchema = {
   mainEntity: [
     {
       '@type': 'Question',
-      name: 'What is JSON Schema?',
+      name: 'How do I validate API responses automatically so my app does not crash on unexpected data?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'JSON Schema is a vocabulary for annotating and validating JSON documents. It describes the structure, types, and constraints of your JSON so tools and APIs can validate data automatically. Draft 7 and OpenAPI-style schemas are widely supported.',
+        text: 'Generate a JSON Schema from a sample API response using this tool, then use AJV (JavaScript) or jsonschema (Python) to validate every incoming response against that schema at runtime. When the API returns an unexpected shape — missing required field, wrong type, extra null — the validator throws before your application code touches the data, preventing hard-to-debug runtime crashes.',
       },
     },
     {
@@ -315,8 +315,8 @@ export default function JsonSchemaGenerationPage() {
         <SEOSection id="faq" eyebrow="FAQ" heading="Frequently Asked Questions">
           <FAQ items={[
             {
-              q: 'What is JSON Schema?',
-              a: 'JSON Schema is a vocabulary for annotating and validating JSON documents. It describes the structure, types, and constraints of your data so tools can validate it automatically. Draft 7 and OpenAPI-style schemas are the most widely supported versions.',
+              q: 'How do I validate API responses automatically so my app does not crash on unexpected data?',
+              a: 'Generate a JSON Schema from a sample API response using this tool, then use AJV (JavaScript) or jsonschema (Python) to validate every incoming response against it at runtime. When the API returns an unexpected shape — missing field, wrong type, extra null — the validator throws before your application code touches the data.',
             },
             {
               q: 'What is the difference between JSON Schema Draft 7 and OpenAPI Schema?',

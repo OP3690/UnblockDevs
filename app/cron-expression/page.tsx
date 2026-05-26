@@ -124,10 +124,10 @@ const faqSchema = {
   mainEntity: [
     {
       '@type': 'Question' as const,
-      name: 'What is a cron expression?',
+      name: 'Why is my cron job running at the wrong time?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'A cron expression is a string of five fields (minute, hour, day-of-month, month, day-of-week) that defines a schedule for recurring tasks. For example, "0 9 * * 1-5" means "at 9:00 AM every weekday". Cron expressions are used in Unix-like systems, cloud schedulers, CI/CD pipelines, and many server-side frameworks.',
+        text: 'The most common cause is a timezone mismatch. Cron daemons run in the server\'s system timezone (usually UTC on cloud servers), so a schedule like "0 9 * * *" fires at 9 AM UTC — which may be 2 AM or 4 AM in your local timezone. Verify your system timezone with "timedatectl" or "date" commands, add CRON_TZ=America/New_York at the top of your crontab to force a specific timezone, and use this tool to preview the next 10 run times in your local time.',
       },
     },
     {
@@ -301,8 +301,8 @@ export default function CronExpressionPage() {
         <SEOSection id="faq" eyebrow="FAQ" heading="Frequently Asked Questions">
           <FAQ items={[
             {
-              q: 'What is a cron expression?',
-              a: 'A cron expression is a 5-field schedule string (minute, hour, day-of-month, month, day-of-week) used to trigger recurring tasks. For example, "0 9 * * 1-5" runs a job at 9 AM every weekday. Cron is used in Linux/Unix crontab, Kubernetes CronJobs, GitHub Actions, and many cloud schedulers.',
+              q: 'Why is my cron job running at the wrong time?',
+              a: 'The most common cause is a timezone mismatch. Cron daemons run in the server\'s system timezone (usually UTC on cloud servers), so "0 9 * * *" fires at 9 AM UTC — which may be 2 AM or 4 AM in your local timezone. Add CRON_TZ=America/New_York at the top of your crontab to force a specific timezone, and use this tool to preview the next 10 run times.',
             },
             {
               q: 'What does */5 mean in cron?',

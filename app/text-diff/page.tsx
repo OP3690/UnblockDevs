@@ -158,10 +158,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is a text diff tool?',
+      name: 'How do I diff two HTML files to find what changed?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'A text diff tool compares two versions of text and highlights exactly what changed — which lines were added, removed, or modified. It is used by developers to review code changes, compare config files, check document revisions, and debug API response differences.',
+        text: 'Format both HTML files first to normalise indentation and whitespace — otherwise minified or inconsistently indented HTML will show the entire file as one changed line. Paste both formatted versions into the two inputs and the diff highlights exactly which tags, attributes, or text changed. Enable "Ignore whitespace" to skip formatting-only differences.',
       },
     },
     {
@@ -174,10 +174,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is unified vs split diff view?',
+      name: 'Why does my diff show the entire file as changed when only one line changed?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Unified diff view interleaves both texts in one column, with + for additions and - for removals — the same format as git diff output. Split diff view shows the original on the left and the modified version on the right, aligned by line number for easy visual comparison.',
+        text: 'This usually means line endings differ between the two versions — Windows uses CRLF (\\r\\n) and Unix/Mac uses LF (\\n). When one file uses CRLF and the other uses LF, every line appears different. Enable "Ignore whitespace" to strip trailing carriage returns and normalise line endings. Another cause is inconsistent indentation (tabs vs spaces) — "Ignore whitespace" handles this too.',
       },
     },
     {
@@ -312,16 +312,16 @@ export default function TextDiffPage() {
               a: 'Yes. Enable "Ignore whitespace" to trim leading and trailing spaces from each line before comparison. Combine with "Ignore case" to focus purely on meaningful content differences.',
             },
             {
-              q: 'What is a text diff tool?',
-              a: 'A text diff tool compares two versions of text and highlights what changed — added, removed, or modified lines. It is used by developers to review code changes, compare config files, and debug API response differences.',
+              q: 'How do I diff two HTML files to find what changed?',
+              a: 'Format both HTML files first to normalise indentation and whitespace — otherwise minified HTML will show the entire file as one changed line. Paste both formatted versions into the two inputs and the diff highlights exactly which tags, attributes, or text changed. Enable "Ignore whitespace" to skip formatting-only differences.',
             },
             {
               q: 'How does a diff algorithm work?',
               a: 'The most common diff algorithm (Myers) finds the shortest edit script to transform one text into another based on the Longest Common Subsequence problem. Git uses a variation of this for git diff output.',
             },
             {
-              q: 'What is unified vs split diff view?',
-              a: 'Unified view interleaves both texts in one column with + for additions and - for removals. Split view shows the original on the left and modified on the right, aligned by line number for easy comparison.',
+              q: 'Why does my diff show the entire file as changed when only one line changed?',
+              a: 'This usually means line endings differ — Windows uses CRLF (\\r\\n) and Unix/Mac uses LF (\\n). When files mix line endings, every line appears different. Enable "Ignore whitespace" to normalise line endings. Inconsistent indentation (tabs vs spaces) causes the same problem.',
             },
             {
               q: 'How do I ignore whitespace in a diff?',

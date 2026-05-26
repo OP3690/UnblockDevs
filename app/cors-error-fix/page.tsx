@@ -102,10 +102,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is a preflight request?',
+      name: 'Why does my preflight pass but the actual POST request still fails with a CORS error?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'A preflight request is an HTTP OPTIONS request that browsers automatically send before certain cross-origin requests (e.g., POST with JSON body or requests with custom headers). The server must respond to the OPTIONS request with the correct Access-Control-Allow-Origin, Access-Control-Allow-Methods, and Access-Control-Allow-Headers headers.',
+        text: 'A passing preflight only means the server responded correctly to the OPTIONS request. The actual POST request fails if the server does not return the same CORS headers on the real response. Check that your server adds Access-Control-Allow-Origin to all responses — not just OPTIONS — and that it is not stripped by a proxy, CDN, or load balancer between the server and the browser.',
       },
     },
   ],

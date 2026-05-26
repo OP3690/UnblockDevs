@@ -84,9 +84,9 @@ const faqSchema = {
   mainEntity: [
     { '@type': 'Question', name: 'How do I verify a SHA-256 checksum?', acceptedAnswer: { '@type': 'Answer', text: 'Switch to File mode, drag your downloaded file in, select SHA-256, and compare the output to the checksum on the download page. An exact match means the file is genuine.' } },
     { '@type': 'Question', name: 'What is the difference between MD5 and SHA-256?', acceptedAnswer: { '@type': 'Answer', text: 'MD5 is 128-bit and cryptographically broken — do not use it for security. SHA-256 is 256-bit and the current recommended standard. Use SHA-256 or SHA-3 for any security-sensitive use case.' } },
-    { '@type': 'Question', name: 'What is HMAC used for?', acceptedAnswer: { '@type': 'Answer', text: 'HMAC (Hash-based Message Authentication Code) adds a shared secret key to a hash. It is used for API request signing, webhook payload verification, and ensuring message integrity.' } },
+    { '@type': 'Question', name: 'How do I verify a GitHub or Stripe webhook signature with HMAC?', acceptedAnswer: { '@type': 'Answer', text: 'Both GitHub and Stripe sign webhook payloads with HMAC-SHA256. Compute HMAC-SHA256 of the raw request body using your webhook secret as the key, then compare the result to the signature in the request header (X-Hub-Signature-256 for GitHub, Stripe-Signature for Stripe). Use the HMAC tab in Hash Generator to compute and verify signatures without writing code.' } },
     { '@type': 'Question', name: 'bcrypt vs Argon2 — which should I use?', acceptedAnswer: { '@type': 'Answer', text: 'Both resist brute force. Argon2 won the Password Hashing Competition in 2015 and is recommended for new applications. bcrypt remains widely used and secure for existing systems.' } },
-    { '@type': 'Question', name: 'What is a rainbow table attack?', acceptedAnswer: { '@type': 'Answer', text: 'A rainbow table is a precomputed lookup table mapping hashes to their original values. Adding a unique random salt per password makes rainbow tables ineffective, which is why bcrypt and Argon2 include salting automatically.' } },
+    { '@type': 'Question', name: 'Why should I not use SHA-256 directly to hash user passwords?', acceptedAnswer: { '@type': 'Answer', text: 'SHA-256 is designed to be fast — modern GPUs can compute billions of SHA-256 hashes per second, making brute force and rainbow table attacks practical. Password hashing algorithms like bcrypt and Argon2 are intentionally slow (thousands of iterations) and include automatic salting, making them computationally infeasible to crack even with GPU hardware.' } },
     { '@type': 'Question', name: 'Can I reverse a hash?', acceptedAnswer: { '@type': 'Answer', text: 'No. Cryptographic hashes are one-way functions — you cannot compute the original input from the hash output. Only brute force or rainbow table attacks can crack weak passwords. Strong passwords with proper salt are computationally infeasible to crack.' } },
     { '@type': 'Question', name: 'How do I verify a file\'s integrity using its checksum?', acceptedAnswer: { '@type': 'Answer', text: 'Download the file, then drag it into the Hash Generator in File mode. Select SHA-256 (or whichever algorithm the publisher used) and compare the output to the published checksum. Any difference means the file may be corrupted or tampered with.' } },
     { '@type': 'Question', name: 'What is the difference between SHA-256 and SHA-512?', acceptedAnswer: { '@type': 'Answer', text: 'SHA-256 produces a 256-bit (32 byte) digest; SHA-512 produces a 512-bit (64 byte) digest. Both are secure. SHA-512 is slightly faster on 64-bit processors but produces a longer output. SHA-256 is the most commonly used standard.' } },
@@ -219,8 +219,8 @@ export default function HashGeneratorPage() {
               a: 'MD5 is 128-bit and cryptographically broken — collision attacks exist. SHA-256 is 256-bit and the current recommended standard for file verification, signing, and TLS. Use SHA-256 for all security-related hashing.',
             },
             {
-              q: 'What is HMAC and when do I need it?',
-              a: 'HMAC adds a secret key to a hash so only someone with the same key can reproduce the value. Use it for API request signing, webhook verification (GitHub, Stripe, Shopify), and anywhere you need integrity plus authenticity.',
+              q: 'How do I verify a GitHub or Stripe webhook signature with HMAC?',
+              a: 'Both GitHub and Stripe sign webhook payloads with HMAC-SHA256. Compute HMAC-SHA256 of the raw request body using your webhook secret as the key, then compare against the signature in the request header. Use the HMAC tab in Hash Generator to compute and verify signatures without writing code.',
             },
             {
               q: 'bcrypt vs Argon2 — which should I use for passwords?',
@@ -231,8 +231,8 @@ export default function HashGeneratorPage() {
               a: 'Yes. All hashing runs entirely in your browser using the Web Crypto API. Your files and text are never uploaded or sent to any server.',
             },
             {
-              q: 'What is constant-time hash comparison?',
-              a: 'Comparing hashes character-by-character leaks timing information (early exit on first mismatch). Constant-time comparison takes the same time regardless of where hashes differ, preventing timing attacks. This tool\'s Verify mode uses constant-time comparison.',
+              q: 'Why should I not use SHA-256 directly to hash user passwords?',
+              a: 'SHA-256 is designed to be fast — modern GPUs can compute billions of hashes per second, making brute force practical. Password hashing algorithms like bcrypt and Argon2 are intentionally slow and automatically add a unique salt per password, making them computationally infeasible to crack even with GPU hardware.',
             },
           ]} />
         </SEOSection>

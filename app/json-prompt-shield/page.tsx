@@ -222,10 +222,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is the difference between redaction and masking?',
+      name: 'How do I ask AI to fix my JSON schema without leaking business logic or field naming conventions?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'Redaction permanently removes or replaces data with a fixed marker like [REDACTED], with no way to recover the original. Masking (as used here) replaces data with a reversible placeholder using a mapping table, so the original can be restored. Use masking when you need to share JSON with AI and restore the response.',
+        text: 'Mask your JSON with JSON Prompt Shield before pasting into ChatGPT or Claude. Keys are replaced with generic K_00001 labels, so the AI helps with structure — required fields, nesting, types — without learning your internal naming conventions or business domain. After the AI responds, use the restore tab to translate its suggestions back to your real field names.',
       },
     },
     {
@@ -246,10 +246,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is JSON de-identification?',
+      name: 'How do I get AI help debugging a JSON structure without exposing real patient or customer data?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'JSON de-identification is the process of removing or transforming information in a JSON document so it cannot be linked back to a specific individual. This is required under HIPAA for health data and GDPR for personal data. JSON Prompt Shield performs reversible de-identification by replacing values with anonymous placeholders.',
+        text: 'Paste your JSON into JSON Prompt Shield, enable "Mask keys" and "Mask strings", and copy the masked output. All field names become K_00001 and string values become S_00001 — the AI sees only the structure and data types, never the actual values. Ask your debugging question, then use the mapping file to restore real names to the AI response.',
       },
     },
   ],
@@ -361,8 +361,8 @@ export default function JsonPromptShieldPage() {
               a: 'JSON Prompt Shield helps reduce GDPR risk by masking personal data before sending to AI providers. Consult your Data Protection Officer for full compliance requirements.',
             },
             {
-              q: 'What is the difference between redaction and masking?',
-              a: 'Redaction permanently removes data with no recovery option (e.g. [REDACTED]). Masking replaces data with a reversible placeholder using a mapping table so the original can be restored after AI responds.',
+              q: 'How do I get AI help debugging a JSON structure without exposing real patient or customer data?',
+              a: 'Paste your JSON into JSON Prompt Shield, enable "Mask keys" and "Mask strings", and copy the masked output. Field names become K_00001 and string values become S_00001. The AI sees only structure and types, never actual values. Use the mapping file to restore real names to the AI response.',
             },
             {
               q: 'Is the JSON sent to any server?',
@@ -373,8 +373,8 @@ export default function JsonPromptShieldPage() {
               a: 'Yes. Email addresses stored as string values are masked with S_00001 placeholders when string masking is enabled. The original email is stored in the mapping for later restoration.',
             },
             {
-              q: 'What is JSON de-identification?',
-              a: 'JSON de-identification transforms data so it cannot be linked to a specific individual — required under HIPAA and GDPR. JSON Prompt Shield performs reversible de-identification with anonymous placeholders and a mapping for restoration.',
+              q: 'How do I ask AI to fix my JSON schema without leaking business logic or field naming conventions?',
+              a: 'Mask your JSON with JSON Prompt Shield before pasting into ChatGPT or Claude. Keys become generic K_00001 labels, so the AI helps with structure without learning your internal naming conventions. After the AI responds, use the restore tab to translate its suggestions back to your real field names.',
             },
           ]} />
         </SEOSection>

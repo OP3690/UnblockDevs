@@ -174,10 +174,10 @@ const faqSchema = {
   mainEntity: [
     {
       '@type': 'Question',
-      name: 'What is a HAR file?',
+      name: 'How do I replay a failing browser request in my terminal or share it with a teammate?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'A HAR (HTTP Archive) file is a JSON-formatted log of all network requests and responses captured by a browser. It includes URLs, HTTP methods, request and response headers, cookies, request bodies, response status codes, and timing data. HAR files are exported from the Network tab in Chrome DevTools, Firefox DevTools, Safari Web Inspector, or Edge DevTools and are the standard way to share recorded browser network activity.',
+        text: 'Export a HAR file from Chrome, Firefox, Safari, or Edge DevTools (Network tab → right-click → Save as HAR). Upload or paste it into this converter and it extracts every request as a ready-to-run cURL command — with all headers, cookies, and body preserved. Enable secret masking to redact auth tokens before sharing. Unlike DevTools "Copy as cURL", this handles the entire session at once.',
       },
     },
     {
@@ -522,8 +522,8 @@ export default function HarToCurl() {
         <SEOSection id="faq" eyebrow="FAQ" heading="Frequently Asked Questions">
           <FAQ items={[
             {
-              q: 'What is a HAR file?',
-              a: 'A HAR (HTTP Archive) file is a JSON log of all network requests and responses recorded by a browser. It contains URLs, HTTP methods, headers, cookies, request bodies, response codes, and timing data — everything shown in the browser DevTools Network tab, saved to a portable file.',
+              q: 'How do I replay a failing browser request in my terminal or share it with a teammate?',
+              a: 'Export a HAR file from Chrome, Firefox, Safari, or Edge DevTools (Network tab → right-click → Save as HAR). Upload or paste it here and the converter extracts every request as a ready-to-run cURL command — with all headers, cookies, and body preserved. Enable secret masking to redact auth tokens before sharing. Unlike DevTools "Copy as cURL", this handles the entire session at once.',
             },
             {
               q: 'How do I convert a HAR file to cURL?',

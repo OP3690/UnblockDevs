@@ -177,10 +177,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is URL encoding (percent encoding)?',
+      name: 'Why does my URL encode spaces as + instead of %20, and how do I fix it?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'URL encoding, formally called percent-encoding, converts characters that are not allowed or that carry special meaning in a URL into a safe %XX hexadecimal representation. For example, a space becomes %20, an ampersand becomes %26, and a hash becomes %23. This ensures that special characters inside query strings or path segments do not break the URL structure.',
+        text: 'Spaces are encoded as + only in the application/x-www-form-urlencoded format, which HTML forms use. RFC 3986 — the standard for URLs — requires spaces to be encoded as %20. If your API or server is receiving + where it expects %20 (or vice versa), you are using the wrong encoding standard. Use encodeURIComponent() in JavaScript or urllib.parse.quote(s, safe="") in Python to get RFC 3986 %20 encoding. Switch to the Form-encoded mode only when POSTing HTML form data.',
       },
     },
     {
@@ -479,14 +479,15 @@ export default function UrlEncoderPage() {
                 ),
               },
               {
-                q: 'What is URL encoding (percent encoding)?',
+                q: 'Why does my URL encode spaces as + instead of %20, and how do I fix it?',
                 a: (
                   <>
-                    URL encoding, formally called percent-encoding, converts characters that are not allowed
-                    or carry special meaning in a URL into a safe <C>%XX</C> hexadecimal representation.
-                    For example, a space becomes <C>%20</C>, an ampersand becomes <C>%26</C>, and a hash
-                    becomes <C>%23</C>. This ensures that special characters inside query strings or path
-                    segments do not break the URL structure.
+                    Spaces are encoded as <C>+</C> only in the <C>application/x-www-form-urlencoded</C>{' '}
+                    format that HTML forms use. RFC 3986 — the standard for URLs — requires spaces to be{' '}
+                    <C>%20</C>. If your API receives <C>+</C> where it expects <C>%20</C>, you are using
+                    the wrong encoding mode. Use <C>encodeURIComponent()</C> in JavaScript or{' '}
+                    <C>urllib.parse.quote(s, safe="")</C> in Python for RFC 3986 encoding. Switch to
+                    Form-encoded mode only when POSTing HTML form data.
                   </>
                 ),
               },

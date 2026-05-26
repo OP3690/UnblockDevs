@@ -172,10 +172,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is the difference between SVG and PNG?',
+      name: 'How do I create an SVG icon and use it as a React component?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'SVG is a vector format described with XML that scales to any size without quality loss, making it ideal for logos, icons, and diagrams. PNG is a raster format made of pixels — it has a fixed resolution and becomes blurry when scaled up. SVG files are typically smaller for simple graphics; PNG is more widely supported across platforms and image viewing tools.',
+        text: 'Paste your SVG markup into a React component and replace the outer svg tag attributes with props. For cross-platform use (email, Slack, PDFs), convert it to PNG first using this tool: set your target size, click Download PNG, and use the exported file as an img src. For React-only UIs, inline SVG or SVGR (which auto-converts SVG files to React components during your build) is the more scalable approach.',
       },
     },
     {
@@ -323,8 +323,8 @@ export default function SvgToImagePage() {
               a: <>Create an <C>HTMLImageElement</C>, set its <C>src</C> to a data URL of the SVG, then draw it to a Canvas and call <C>canvas.toDataURL("image/png")</C>. Libraries like sharp (Node.js) also handle SVG-to-PNG conversion server-side.</>,
             },
             {
-              q: 'What is the difference between SVG and PNG?',
-              a: 'SVG is a vector format that scales to any size without quality loss — ideal for logos and icons. PNG is a raster format made of pixels with a fixed resolution. SVG is not supported everywhere; PNG works universally across platforms, email clients, and image viewers.',
+              q: 'How do I create an SVG icon and use it as a React component?',
+              a: 'Paste your SVG markup into a React component and replace the outer svg tag attributes with props. For cross-platform use — email, Slack, PDFs — convert it to PNG first using this tool: set your target size, click Download PNG, and use the file as an img src. For React-only UIs, inline SVG or SVGR (which converts SVG files to React components at build time) is the more scalable approach.',
             },
             {
               q: 'How do I convert SVG to a PNG app icon?',

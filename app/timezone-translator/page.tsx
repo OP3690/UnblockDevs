@@ -136,10 +136,10 @@ const faqSchema = {
   mainEntity: [
     {
       '@type': 'Question' as const,
-      name: 'What is a UTC offset?',
+      name: 'Why does my timezone conversion show the wrong time after DST changes?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'A UTC offset is the number of hours and minutes a timezone is ahead of or behind Coordinated Universal Time (UTC). For example, EST is UTC-5 (5 hours behind UTC), IST is UTC+5:30 (5 hours 30 minutes ahead), and JST is UTC+9. Offsets can change seasonally due to Daylight Saving Time.',
+        text: 'If you hardcoded a UTC offset like -5 for EST, that offset breaks when the US switches to EDT (UTC-4) in summer. Always use IANA timezone names like America/New_York instead of raw offsets — they encode the full DST transition history and apply the correct rule for the specific date. In JavaScript, use Intl.DateTimeFormat or Luxon with an IANA name. In Python, use the zoneinfo module (Python 3.9+) or pytz.',
       },
     },
     {
@@ -168,10 +168,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is UTC and why is it used?',
+      name: 'Why should I store timestamps in UTC instead of local time?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'UTC (Coordinated Universal Time) is the primary time standard by which the world regulates clocks and time. It is derived from International Atomic Time with leap seconds added to stay in sync with Earth\'s rotation. Developers use UTC as the canonical reference for storing and transmitting timestamps because it is unambiguous, never observes DST, and is the same everywhere on Earth.',
+        text: 'Storing local timestamps creates two categories of bugs: DST transitions (e.g., a timestamp at 2:30 AM on a clocks-back night is ambiguous) and server relocations (changing a server\'s timezone corrupts historical records). UTC is unambiguous and never observes DST. Store all timestamps as UTC in your database — as Unix integers, ISO 8601 strings ending in Z, or a TIMESTAMP WITH TIME ZONE column — then convert to local time only when displaying to the user.',
       },
     },
     {
@@ -481,8 +481,8 @@ export default function TimezoneTranslatorPage() {
                 ),
               },
               {
-                q: 'What is UTC and why is it used?',
-                a: 'UTC (Coordinated Universal Time) is the primary global time standard. It never observes Daylight Saving Time and is the same everywhere on Earth, making it the canonical reference for storing and transmitting timestamps in software. All other timezones are defined as positive or negative offsets from UTC.',
+                q: 'Why should I store timestamps in UTC instead of local time?',
+                a: 'Storing local timestamps creates two categories of bugs: DST transitions (a timestamp at 2:30 AM on a clocks-back night is ambiguous) and server relocations (changing server timezone corrupts historical records). UTC is unambiguous and never observes DST. Store all timestamps as UTC — as Unix integers, ISO 8601 strings ending in Z, or a TIMESTAMP WITH TIME ZONE column — then convert to local time only at display time.',
               },
               {
                 q: 'How does Daylight Saving Time affect timezone conversion?',
@@ -527,8 +527,12 @@ export default function TimezoneTranslatorPage() {
                 a: 'The IANA timezone database (tzdata / Olson database) is the canonical source of timezone rules worldwide, containing historical and current UTC offsets, DST transition rules, and timezone names like America/New_York and Asia/Tokyo. It is updated several times per year and used by every major operating system and programming language.',
               },
               {
-                q: 'What is UTC offset?',
-                a: 'A UTC offset is the number of hours (and sometimes minutes) by which a timezone differs from UTC. For example, UTC-5 means 5 hours behind UTC (US Eastern Standard Time), and UTC+5:30 means 5 hours and 30 minutes ahead (India Standard Time). Offsets can change seasonally due to DST in regions that observe it.',
+                q: 'Why does my timezone conversion show the wrong time after DST changes?',
+                a: (
+                  <>
+                    If you hardcoded a UTC offset like <C>-5</C> for EST, that offset breaks when the US switches to EDT (<C>UTC-4</C>) in summer. Always use IANA timezone names like <C>America/New_York</C> instead of raw offsets — they encode the full DST transition history. In JavaScript, use <C>Intl.DateTimeFormat</C> or Luxon with an IANA name. In Python, use the <C>zoneinfo</C> module (Python 3.9+) or pytz.
+                  </>
+                ),
               },
               {
                 q: 'How do I handle DST-aware timestamps in code?',

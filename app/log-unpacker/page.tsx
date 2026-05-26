@@ -168,10 +168,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is stringified JSON in logs?',
+      name: 'Why do my logs show escaped quotes and backslashes instead of readable JSON?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'Stringified JSON occurs when a JSON object is serialized to a string and embedded inside another JSON field — appearing with escaped quotes (\\") and backslashes. This happens when logging libraries serialize inner objects as strings, when HTTP bodies are double-encoded, or when a JSON payload is stored as a string value. Log Unpacker recursively unescapes these strings even when nested multiple levels deep.',
+        text: 'Your logging library serialized a JSON object into a string before embedding it inside another JSON field — causing the escaped quotes (\\") and backslashes you see. This happens when HTTP bodies, error objects, or nested payloads are logged as strings, or when a JSON payload is double-encoded. Log Unpacker recursively unescapes these strings even when nested multiple levels deep, restoring clean readable JSON.',
       },
     },
     {
@@ -200,10 +200,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is a JWT token in log files?',
+      name: 'How do I read the opaque token strings that appear in my auth-related log lines?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'A JWT (JSON Web Token) is a Base64URL-encoded token with three parts separated by dots: header.payload.signature. When auth tokens appear in log lines (from Authorization headers, request body logging, or debug output), they look like opaque strings. Log Unpacker detects these patterns and decodes the header and payload to show the claims — without validating the signature.',
+        text: 'Those opaque strings are likely JWT (JSON Web Token) tokens — three Base64URL-encoded parts separated by dots: header.payload.signature. They appear in logs when Authorization headers, request bodies, or debug output are logged verbatim. Log Unpacker detects these patterns and decodes the header and payload inline to show the claims (user ID, roles, expiry) without needing to validate the signature or leave your browser.',
       },
     },
     {
@@ -288,8 +288,8 @@ export default function LogUnpackerPage() {
         <SEOSection id="faq" eyebrow="FAQ" heading="Frequently Asked Questions">
           <FAQ items={[
             {
-              q: 'What is stringified JSON in logs?',
-              a: <>Stringified JSON is JSON that has been serialized into a string — with escaped quotes (<C>{`\\"`}</C>) and backslashes — often when one JSON payload is nested inside another. Log Unpacker recursively unescapes these strings so you see clean, readable JSON.</>,
+              q: 'Why do my logs show escaped quotes and backslashes instead of readable JSON?',
+              a: <>Your logging library serialized a JSON object into a string — adding escaped quotes (<C>{`\\"`}</C>) and backslashes — before embedding it in another field. Log Unpacker recursively unescapes these strings, even when nested multiple levels deep, so you see clean readable JSON.</>,
             },
             {
               q: 'How do I decode a JWT token found in log files?',
@@ -308,8 +308,8 @@ export default function LogUnpackerPage() {
               a: 'No. Everything runs in your browser. No network requests, no storage, no telemetry. Safe for sensitive production logs.',
             },
             {
-              q: 'What is stringified JSON in logs?',
-              a: <>Stringified JSON is a JSON object serialized into a string — with escaped quotes (<C>{`\\"`}</C>) — embedded inside another JSON field. It happens when logging libraries serialize inner objects as strings. Log Unpacker recursively unescapes these even multiple levels deep.</>,
+              q: 'Why do my logs show escaped quotes and backslashes instead of readable JSON?',
+              a: <>Your logging library serialized a JSON object into a string before embedding it inside another JSON field — causing the escaped quotes (<C>{`\\"`}</C>) and backslashes you see. This happens when HTTP bodies, error objects, or nested payloads are logged as strings. Log Unpacker recursively unescapes these even when nested multiple levels deep, restoring clean readable JSON.</>,
             },
             {
               q: 'How do I unescape doubly or triply escaped JSON?',
@@ -324,8 +324,8 @@ export default function LogUnpackerPage() {
               a: 'Log Unpacker automatically detects 10-digit (seconds) and 13-digit (milliseconds) Unix timestamps and converts them to ISO 8601 date strings inline. No manual identification needed — conversion happens during unpacking.',
             },
             {
-              q: 'What is a JWT token in log files?',
-              a: 'A JWT is a Base64URL-encoded token with three dot-separated parts: header.payload.signature. Log Unpacker detects JWT patterns in log lines and decodes the header and payload to show the claims inline — without validating the signature.',
+              q: 'How do I read the opaque token strings that appear in my auth-related log lines?',
+              a: 'Those opaque strings are JWT tokens — three Base64URL-encoded parts separated by dots: header.payload.signature. They appear when Authorization headers or request bodies are logged verbatim. Log Unpacker detects and decodes the header and payload inline to show the claims (user ID, roles, expiry) without leaving your browser.',
             },
             {
               q: 'How do I sanitize logs for an LLM or AI assistant?',

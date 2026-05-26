@@ -171,10 +171,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is a regular expression?',
+      name: 'Why does my regex match in regex101 but not in JavaScript?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'A regular expression (regex) is a sequence of characters that defines a search pattern. Regex patterns can match, extract, validate, or replace text. They are supported natively in JavaScript, Python, Java, Go, and most other programming languages, as well as command-line tools like grep and sed.',
+        text: 'regex101 defaults to the PCRE engine which supports features like lookbehind with variable length and possessive quantifiers that JavaScript does not support. JavaScript uses the ECMAScript (ES2018+) engine. Switch regex101 to the "JavaScript" flavor to get accurate results, or test directly here which uses the native JavaScript RegExp engine.',
       },
     },
     {
@@ -365,8 +365,8 @@ export default function RegexTesterPage() {
               a: <>Add the <C>i</C> flag. With <C>i</C>, the pattern <C>/hello/i</C> matches "Hello", "HELLO", "hElLo". Toggle it in the flags row above the pattern input.</>,
             },
             {
-              q: 'What is a regular expression?',
-              a: 'A regular expression (regex) is a sequence of characters that defines a search pattern. Regex patterns can match, extract, validate, or replace text. They are supported natively in JavaScript, Python, Java, Go, and most other programming languages.',
+              q: 'Why does my regex match in regex101 but not in JavaScript?',
+              a: 'regex101 defaults to the PCRE engine which supports features like variable-length lookbehind and possessive quantifiers that JavaScript does not support. Switch regex101 to the "JavaScript" flavor to get accurate results, or test directly here — this tool uses the native JavaScript RegExp engine.',
             },
             {
               q: 'What is the difference between global and non-global regex flags?',

@@ -160,10 +160,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is a JSON comparator?',
+      name: 'Why does my JSON diff show hundreds of changes when almost nothing changed?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'A JSON comparator is a tool that computes the structural and value differences between two JSON documents. It parses both inputs, traverses every key and nested object, and highlights additions, deletions, and modifications — making it far more readable than a plain line-by-line text diff.',
+        text: 'A plain text diff flags every character change including auto-generated values — UUIDs, timestamps, JWTs, and request IDs — that differ on every response but carry no logic change. Enable semantic normalization in this tool: it replaces those dynamic fields with placeholders before comparing, so only real structural and value differences appear in the result.',
       },
     },
     {
@@ -200,10 +200,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is a JSON patch (RFC 6902)?',
+      name: 'How do I verify that a PATCH request only changes what I intended?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'JSON Patch (RFC 6902) is a format for describing changes to a JSON document using a sequence of operations: add, remove, replace, move, copy, and test. It is commonly used in REST APIs that support partial updates via HTTP PATCH. A JSON comparator can help you generate or verify a JSON Patch document.',
+        text: 'Paste the original API response in JSON A and the response after your PATCH in JSON B, then click Compare. The comparator highlights exactly which fields changed, were added, or were removed — making it easy to confirm that your partial update only touched the intended properties and did not cause unintended side effects.',
       },
     },
     {
@@ -248,10 +248,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is JSON merge patch?',
+      name: 'How do I compare two API versions to check for breaking changes?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'JSON Merge Patch (RFC 7396) is a simpler alternative to JSON Patch for partial updates. You send only the fields you want to change; null values indicate deletion. It is less expressive than JSON Patch but easier to construct by hand and widely supported in REST APIs.',
+        text: 'Paste your old API response in JSON A and the new version in JSON B, then enable semantic normalization to suppress noise from dynamic fields. Any remaining differences — removed keys, type changes, renamed fields — are candidates for breaking changes. Review the highlighted diff before publishing or deprecating an API version.',
       },
     },
   ],
@@ -358,8 +358,8 @@ export default function JsonComparatorPage() {
               a: <>Yes. The comparator recursively traverses every level of nesting. For arrays it supports both ordered comparison and unordered set comparison — useful when array item order is not significant.</>,
             },
             {
-              q: 'What is a JSON comparator?',
-              a: 'A JSON comparator is a tool that computes the structural and value differences between two JSON documents. It parses both inputs, traverses every key and nested object, and highlights additions, deletions, and modifications — far more readable than a plain line-by-line text diff.',
+              q: 'Why does my JSON diff show hundreds of changes when almost nothing changed?',
+              a: 'A plain text diff flags every character change including auto-generated values — UUIDs, timestamps, JWTs — that differ on every response. Enable semantic normalization in this tool to replace those dynamic fields with placeholders before comparing, so only real structural and value differences appear.',
             },
             {
               q: 'How do I compare two JSON objects in JavaScript?',
@@ -374,12 +374,12 @@ export default function JsonComparatorPage() {
               a: 'Use ordered array comparison mode, which treats array position as significant. This is the default in most JSON diff tools. If you need unordered set comparison — useful for permission lists or tag arrays — switch to set mode so items are matched by value regardless of position.',
             },
             {
-              q: 'What is a JSON patch (RFC 6902)?',
-              a: 'JSON Patch (RFC 6902) is a format for describing changes to a JSON document using operations: add, remove, replace, move, copy, and test. It is commonly used in REST APIs that support partial updates via HTTP PATCH. A JSON comparator can help you generate or verify a JSON Patch document.',
+              q: 'How do I verify that a PATCH request only changes what I intended?',
+              a: 'Paste the original API response in JSON A and the response after your PATCH in JSON B, then click Compare. The comparator highlights exactly which fields changed, were added, or were removed — confirming your partial update only touched the intended properties.',
             },
             {
-              q: 'How do I compare JSON in Python?',
-              a: 'Load both JSON strings with json.loads() into Python dicts, then compare with == for equality or use the deepdiff library (pip install deepdiff) for a detailed diff that shows added, removed, and changed values including nested structures.',
+              q: 'How do I compare two API versions to check for breaking changes?',
+              a: 'Paste your old API response in JSON A and the new version in JSON B, then enable semantic normalization to suppress noise from dynamic fields. Any remaining differences — removed keys, type changes, renamed fields — are candidates for breaking changes to document or fix.',
             },
           ]} />
         </SEOSection>

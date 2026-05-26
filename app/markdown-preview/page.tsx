@@ -155,18 +155,18 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is Markdown?',
+      name: 'Why does my Markdown table not render correctly?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'Markdown is a lightweight markup language created by John Gruber in 2004. It uses plain text characters like #, *, and ` to denote formatting such as headings, bold, italic, and code. Markdown converts to HTML and is widely used for README files, documentation, blog posts, and notes.',
+        text: 'Markdown tables require a separator row of hyphens between the header and data rows: | Header 1 | Header 2 | on the first line, then | --- | --- | on the second. Missing the separator row, having unequal pipe counts per row, or using a parser that does not support GitHub Flavored Markdown (GFM) will prevent the table from rendering. Paste your table into this preview tool — it uses GFM rendering and shows the output instantly.',
       },
     },
     {
       '@type': 'Question' as const,
-      name: 'What is GitHub Flavored Markdown?',
+      name: 'Why does my Markdown look correct in my editor but wrong on GitHub?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'GitHub Flavored Markdown (GFM) is a superset of standard Markdown that adds tables, task lists (- [ ] / - [x]), strikethrough (~~text~~), and fenced code blocks with syntax highlighting. It is the format used on GitHub, GitLab, and many developer documentation platforms.',
+        text: 'GitHub uses GitHub Flavored Markdown (GFM), which has stricter rules than some editors. Common causes of mismatch: your editor uses CommonMark or MultiMarkdown which handle tables, task lists, and strikethrough differently. Also check for trailing spaces (GitHub strips them), smart quotes vs straight quotes in code blocks, and indented code blocks vs fenced code blocks. Use this preview tool — it renders with GFM rules identical to GitHub.',
       },
     },
     {
@@ -179,10 +179,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'How do I convert Markdown to HTML?',
+      name: 'How do I render Markdown in a React or Next.js project?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'In this tool, type or paste Markdown and click "Copy HTML" to get the rendered HTML output. Programmatically, use the marked library in JavaScript (marked.parse(md)), the markdown-it library, or Pandoc from the command line: pandoc README.md -o README.html.',
+        text: 'Use the react-markdown package: npm install react-markdown. Import and render <ReactMarkdown>{markdownString}</ReactMarkdown>. Add the remark-gfm plugin for GitHub Flavored Markdown (tables, task lists, strikethrough). For syntax-highlighted code blocks, add rehype-highlight or react-syntax-highlighter as a code renderer component.',
       },
     },
     {
@@ -305,20 +305,20 @@ export default function MarkdownPreviewPage() {
               a: 'The editor supports all GitHub Flavored Markdown: headings H1–H6, bold, italic, strikethrough, inline code, fenced code blocks with language labels, links, images, ordered/unordered/nested lists, blockquotes, tables, horizontal rules, and task lists.',
             },
             {
-              q: 'What is Markdown?',
-              a: 'Markdown is a lightweight markup language that uses plain text characters like #, *, and ` to denote formatting. It converts to HTML and is widely used for README files, documentation, blog posts, and notes.',
+              q: 'Why does my Markdown table not render correctly?',
+              a: 'Markdown tables require a separator row of hyphens between the header and data rows. Missing the separator row, having unequal pipe counts per row, or using a parser that does not support GFM will prevent the table from rendering. Paste your table here to see the output immediately.',
             },
             {
-              q: 'What is GitHub Flavored Markdown?',
-              a: 'GFM adds tables, task lists (- [ ] / - [x]), strikethrough (~~text~~), and fenced code blocks with syntax highlighting to standard Markdown. It is used on GitHub, GitLab, and most developer documentation platforms.',
+              q: 'Why does my Markdown look correct in my editor but wrong on GitHub?',
+              a: 'GitHub uses GitHub Flavored Markdown (GFM), which handles tables, task lists, and strikethrough differently from CommonMark or MultiMarkdown. Check for smart quotes vs straight quotes in code blocks, trailing spaces, and indented vs fenced code blocks. This preview uses GFM rendering identical to GitHub.',
             },
             {
-              q: 'How do I render Markdown in React?',
-              a: 'Use the react-markdown package. Import and render <ReactMarkdown>{markdownString}</ReactMarkdown>. Add remark-gfm for GitHub Flavored Markdown support.',
+              q: 'How do I render Markdown in a React or Next.js project?',
+              a: 'Use the react-markdown package: npm install react-markdown. Add the remark-gfm plugin for tables, task lists, and strikethrough. For syntax-highlighted code blocks, add rehype-highlight as a code renderer component.',
             },
             {
-              q: 'How do I convert Markdown to HTML?',
-              a: 'Type Markdown in the editor and click "Copy HTML" to get the rendered output. Programmatically, use the marked library: marked.parse(md), or Pandoc from the command line.',
+              q: 'How do I convert Markdown to HTML programmatically?',
+              a: 'Use the marked library in JavaScript: marked.parse(md). For Node.js, markdown-it is another popular choice. From the command line, use Pandoc: pandoc README.md -o README.html.',
             },
             {
               q: 'How do I add a table in Markdown?',

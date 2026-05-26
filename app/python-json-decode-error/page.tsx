@@ -70,10 +70,10 @@ const faqSchema = {
   mainEntity: [
     {
       '@type': 'Question',
-      name: 'What is json.JSONDecodeError in Python?',
+      name: 'Why does json.loads fail with "Expecting value" on a string that looks valid?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'json.JSONDecodeError is a subclass of ValueError raised by json.loads() and json.load() when the input is not valid JSON. It includes the position of the error, making it easier to debug. Common causes include receiving an HTML error page instead of JSON, an empty response body, BOM characters, single quotes, or trailing commas.',
+        text: 'json.loads() raises JSONDecodeError with "Expecting value: line 1 column 1" when the input is empty, starts with an HTML character like "<", or contains a BOM (\\ufeff). Print repr(your_string[:200]) to see exactly what is being passed. Common causes: the server returned an HTML error page, the response body is empty, or the string has a UTF-8 BOM prepended.',
       },
     },
     {

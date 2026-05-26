@@ -183,10 +183,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is password entropy?',
+      name: 'How do I generate a cryptographically secure password in JavaScript?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Password entropy measures the unpredictability of a password in bits. A password chosen from a pool of N characters with length L has entropy of L × log2(N) bits. For example, a 16-character password using all 95 printable ASCII characters has about 105 bits of entropy — extremely resistant to brute force.',
+        text: 'Use the Web Crypto API: call window.crypto.getRandomValues(new Uint8Array(32)) to get 32 cryptographically random bytes, then encode them as hex or base64. This is the same source this tool uses. Avoid Math.random() for passwords — it is not cryptographically secure. In Node.js, use crypto.randomBytes(32).toString("hex") from the built-in crypto module.',
       },
     },
     {
@@ -199,18 +199,18 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is a passphrase?',
+      name: 'What makes a password hash different from encryption?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'A passphrase is a password made of multiple random words instead of random characters — for example, "correct-horse-battery-staple". Passphrases can be very high entropy while remaining memorable. A 4-word passphrase from a 7776-word list (Diceware) has about 51 bits of entropy.',
+        text: 'Hashing is a one-way function — you cannot recover the original password from the hash. Encryption is reversible with a key. When storing passwords in a database, always hash (using bcrypt or Argon2) never encrypt — if your encryption key is compromised, all passwords are exposed. If your hash database is stolen, attackers still cannot reverse the hashes without brute force.',
       },
     },
     {
       '@type': 'Question',
-      name: 'What is the NIST password guideline?',
+      name: 'Why does my company force password rotation every 90 days — is that actually more secure?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'NIST SP 800-63B recommends using long passwords (at least 8 characters, no max below 64), checking against breached password lists, allowing all printable characters, and not requiring periodic rotation unless breach is suspected. It also recommends against mandatory complexity rules that lead to predictable patterns.',
+        text: 'No. NIST SP 800-63B explicitly recommends against mandatory periodic password rotation because it leads to predictable patterns — users just increment a number at the end. The current NIST guidance is: use long, unique passwords, check against breach lists, and only require rotation when a breach is confirmed. Forced 90-day resets often make security worse, not better.',
       },
     },
     {
@@ -286,10 +286,10 @@ const seoContent = (
         { q: 'Can I generate API keys or JWT secrets here?', a: 'Yes. The secret key generator section produces hex, base64url, and other encodings suitable for JWT signing, API keys, OAuth secrets, and AES keys. All keys are generated client-side.' },
         { q: 'What is the Have I Been Pwned breach check?', a: "It uses the k-anonymity model from the HaveIBeenPwned API. Only the first 5 characters of your password's SHA-1 hash are sent to the API. Your actual password is never transmitted." },
         { q: 'What makes a password strong?', a: 'High entropy: long length, using uppercase, lowercase, numbers, and symbols, with no predictable patterns or dictionary words. Aim for at least 16 characters for sensitive accounts.' },
-        { q: 'What is password entropy?', a: 'Password entropy measures unpredictability in bits. A 16-character password using 95 printable ASCII characters has about 105 bits of entropy — extremely resistant to brute force.' },
+        { q: 'How do I generate a cryptographically secure password in JavaScript?', a: 'Use window.crypto.getRandomValues(new Uint8Array(32)) and encode the result as hex or base64. This is the same source this tool uses. Never use Math.random() for passwords — it is not cryptographically secure. In Node.js, use crypto.randomBytes(32).toString("hex") from the built-in crypto module.' },
         { q: 'How do I generate a cryptographically secure password?', a: 'This tool uses window.crypto.getRandomValues(), the Web Crypto API built into every modern browser. All passwords are cryptographically secure by default — the same source as TLS key generation.' },
-        { q: 'What is a passphrase?', a: 'A passphrase uses multiple random words instead of random characters — like "correct-horse-battery-staple". Passphrases are high entropy and memorable. A 4-word Diceware passphrase has about 51 bits of entropy.' },
-        { q: 'What is the NIST password guideline?', a: 'NIST SP 800-63B recommends long passwords (at least 8 characters), checking against breached password lists, allowing all printable characters, and not requiring periodic rotation unless breach is suspected.' },
+        { q: 'What makes a password hash different from encryption?', a: 'Hashing is one-way — you cannot recover the original password from the hash. Encryption is reversible with a key. Always hash passwords (with bcrypt or Argon2) rather than encrypting them. If your hash database is stolen, attackers cannot reverse the hashes without brute force — but a compromised encryption key exposes all passwords at once.' },
+        { q: 'Why does my company force password rotation every 90 days — is that actually more secure?', a: 'No. NIST SP 800-63B explicitly recommends against mandatory periodic rotation because it leads to predictable patterns — users just increment a number at the end. Current NIST guidance: use long unique passwords, check against breach lists, and only require rotation when a breach is confirmed.' },
         { q: 'How many characters should a password be?', a: 'Minimum 12 characters for general accounts; 16+ for sensitive accounts. For master passwords, use a 6+ word passphrase. Each additional character exponentially increases brute-force difficulty.' },
         { q: 'How do I generate passwords in bulk?', a: 'Use the Bulk Generate option to create up to 20 passwords at once. Export as JSON, CSV, or TXT for import into password managers, test fixtures, or provisioning scripts.' },
         { q: 'Is my generated password stored?', a: 'No. Generated passwords exist only in your browser memory and are never stored, logged, or sent anywhere. The clipboard is auto-cleared after 30 seconds when you copy a password.' },

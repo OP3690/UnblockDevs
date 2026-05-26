@@ -96,10 +96,10 @@ const faqSchema = {
   mainEntity: [
     {
       '@type': 'Question' as const,
-      name: 'What is a context window in AI models?',
+      name: 'Why does ChatGPT cut off my long document and miss the ending?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'A context window is the maximum amount of text (measured in tokens) that an AI model can process in a single request. GPT-4o supports ~128k tokens, Claude 3.5 Sonnet supports 200k tokens, and Gemini 1.5 Pro supports up to 1M tokens. When input exceeds the context window, content is truncated or rejected.',
+        text: 'ChatGPT has a context window limit — the maximum text it can process in one request. GPT-4o supports ~128k tokens, but if your document exceeds that, the model silently truncates the end. The fix is to split your document into overlapping chunks using a prompt chunker and send them in sequence with consolidation instructions.',
       },
     },
     {
@@ -112,10 +112,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is the difference between tokens and words?',
+      name: 'Why does my prompt use more tokens than I expected?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'Tokens are the units AI models use to process text. On average, 1 token ≈ 0.75 words in English, so 1,000 tokens ≈ 750 words. Punctuation, whitespace, and subword pieces each consume tokens. The exact count depends on the tokenizer (e.g., cl100k_base for GPT-4, Claude\'s tokenizer for Claude models).',
+        text: 'Token counts are often higher than expected because punctuation, whitespace, and rare words each consume extra tokens. Non-Latin scripts (Chinese, Arabic) are especially token-heavy. On average 1,000 tokens ≈ 750 English words, but code, JSON, and special characters can push the ratio much higher. Use the live token counter in Prompt Chunker to see the exact count for your specific text.',
       },
     },
     {
@@ -303,19 +303,12 @@ export default function PromptChunkerLanding() {
           <FAQ
             items={[
               {
-                q: 'What is a token in AI models?',
-                a: (
-                  <>
-                    A token is the smallest unit of text an LLM processes. Tokens are not the same as words — they are
-                    sub-word pieces determined by the model&apos;s tokenizer. In English, 1 token ≈ 0.75 words on
-                    average. Common words like &quot;the&quot; are one token; rare or long words may be split into 2–4
-                    tokens. Punctuation and whitespace also consume tokens.
-                  </>
-                ),
+                q: 'Why does ChatGPT cut off my long document and miss the ending?',
+                a: 'ChatGPT has a context window limit. If your document exceeds it, the model silently truncates content from the end. The fix is to split your document into overlapping chunks and send them in sequence — Prompt Chunker handles the splitting and automatically adds consolidation instructions telling the AI to hold each chunk in memory.',
               },
               {
-                q: 'How many tokens are in a word?',
-                a: 'On average, 1,000 tokens ≈ 750 words in English. So 1 word ≈ 1.33 tokens. This varies by language — non-Latin scripts like Chinese or Arabic are often less efficient and use more tokens per word. Use the live token counter in the tool to get an exact count for your specific text.',
+                q: 'Why does my prompt use more tokens than I expected?',
+                a: 'Token counts are often higher than expected because punctuation, whitespace, and rare words each consume extra tokens. Non-Latin scripts (Chinese, Arabic) are especially token-heavy — 1,000 tokens can be far fewer than 750 words in those languages. Code and JSON are also token-expensive. Use the live token counter to get an exact count for your text.',
               },
               {
                 q: 'What is overlap and why does it help?',

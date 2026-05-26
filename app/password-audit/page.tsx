@@ -159,10 +159,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is a password security audit?',
+      name: 'How do I build a password policy that actually enforces strong passwords?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'A password security audit analyzes a password for strength, entropy, detectable patterns, and breach status. It goes beyond a simple strength bar to give specific feedback: crack time estimate, pattern warnings (keyboard walks, leet speak, years), and recommendations to improve the password.',
+        text: 'Use the Password Policy Builder to set minimum length, required character categories, and banned patterns. The tool generates a live regex and exports ready-to-use validation code in JavaScript, Python, Go, Java, and PHP. Test example passwords against the policy in real time to verify it produces strong passwords before you deploy it.',
       },
     },
     {
@@ -175,10 +175,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is Have I Been Pwned?',
+      name: 'How do I check if my password appeared in the RockYou or other major data breaches?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Have I Been Pwned (HIBP) is a free service by security researcher Troy Hunt that lets you check if a password or email address has appeared in known data breaches. The password database contains billions of passwords from real breaches. Using k-anonymity, you can check your password without sending it to the service.',
+        text: 'Use the Have I Been Pwned (HIBP) check built into the tool. It uses the k-anonymity model — only the first 5 characters of your password\'s SHA-1 hash are sent to the HIBP API, which returns matching hashes for your browser to compare. Your actual password is never transmitted. The HIBP database contains billions of passwords from breaches including RockYou, LinkedIn, and Adobe.',
       },
     },
     {
@@ -191,18 +191,18 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is a dictionary attack?',
+      name: 'Why does "P@ssw0rd!" still fail security audits even though it looks complex?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'A dictionary attack uses a list of common words, names, and known passwords (like the rockyou.txt wordlist with 14 million entries) to guess a password. If your password or a variation of it appears in such a list, it can be cracked in seconds even if it looks complex.',
+        text: 'Leet speak substitutions like @ for a and 0 for o are well-known and included in every modern dictionary attack wordlist. Attackers apply these transformations automatically, so "P@ssw0rd!" is cracked almost as fast as "password". The tool\'s pattern detector flags these substitutions specifically, showing you the real entropy penalty they cause.',
       },
     },
     {
       '@type': 'Question',
-      name: 'What is credential stuffing?',
+      name: 'How do I know if someone is using my old leaked password to access other accounts?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Credential stuffing is an attack where stolen username/password pairs from one breach are automatically tried against other websites. If you reuse passwords across sites, a breach of one service puts all your accounts at risk. Using unique passwords for every account (stored in a password manager) prevents credential stuffing.',
+        text: 'This is called credential stuffing — attackers take leaked username/password pairs from one breach and automatically try them on other services. If your password appeared in a breach, change it everywhere you used it immediately. Use the HIBP breach check in this tool to find out if any of your passwords are in known breach databases, then rotate any that match.',
       },
     },
     {
@@ -376,28 +376,28 @@ export default function PasswordAuditPage() {
               a: 'Only when the tool is fully client-side, as this one is. You can verify by opening browser DevTools > Network tab and confirming zero outbound requests while typing. Never enter passwords into tools that make server requests.',
             },
             {
-              q: 'What is a password security audit?',
-              a: 'A password security audit analyzes strength, entropy, detectable patterns, and breach status. It provides specific feedback: crack time estimate, pattern warnings (keyboard walks, leet speak, years), and improvement recommendations.',
+              q: 'How do I build a password policy that actually enforces strong passwords?',
+              a: 'Use the Password Policy Builder to set minimum length, required character categories, and banned patterns. The tool generates a live regex and exports validation code in JavaScript, Python, Go, Java, and PHP. Test example passwords against the policy in real time before you deploy it.',
             },
             {
               q: 'How do I check if my password has been leaked?',
               a: 'Use the HIBP check. This tool sends only the first 5 characters of your password SHA-1 hash to the HIBP API. The API returns matching hashes; your browser checks if your full hash is in the list. Your actual password is never transmitted.',
             },
             {
-              q: 'What is Have I Been Pwned?',
-              a: 'HIBP is a free service by Troy Hunt that lets you check if a password or email appeared in known data breaches. The password database contains billions of passwords from real breaches, checked via k-anonymity.',
+              q: 'How do I check if my password appeared in the RockYou or other major data breaches?',
+              a: 'Use the HIBP check in this tool. Only the first 5 characters of your password SHA-1 hash are sent to the API — your actual password is never transmitted. The HIBP database contains billions of passwords from breaches including RockYou, LinkedIn, and Adobe.',
             },
             {
               q: 'How is password crack time calculated?',
               a: 'Crack time = 2^(entropy bits) / 1,000,000,000 seconds at 1 billion guesses per second (a realistic GPU offline attack rate). A 72-bit password has ~4.7 quintillion combinations — trillions of years to crack.',
             },
             {
-              q: 'What is a dictionary attack?',
-              a: 'A dictionary attack uses a list of common words and known passwords (like the 14-million-entry rockyou.txt wordlist) to guess a password. If your password or a variation appears in such lists, it can be cracked in seconds.',
+              q: 'Why does "P@ssw0rd!" still fail security audits even though it looks complex?',
+              a: 'Leet speak substitutions like @ for a and 0 for o are included in every modern dictionary attack wordlist. Attackers apply these transformations automatically, so "P@ssw0rd!" is cracked almost as quickly as "password". The tool\'s pattern detector flags these substitutions and shows you the real entropy penalty they cause.',
             },
             {
-              q: 'What is credential stuffing?',
-              a: 'Credential stuffing is an attack where stolen username/password pairs from one breach are tried against other sites. Using unique passwords for every account (stored in a password manager) prevents credential stuffing.',
+              q: 'How do I know if someone is using my old leaked password to access other accounts?',
+              a: 'This is credential stuffing — attackers take leaked username/password pairs and try them on other services. Use the HIBP breach check in this tool to find out if your passwords appear in known breach databases, then rotate any that match immediately.',
             },
             {
               q: 'What makes a password weak?',

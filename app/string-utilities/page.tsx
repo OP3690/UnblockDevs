@@ -131,10 +131,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is snake_case and when should I use it?',
+      name: 'How do I convert a camelCase API response to snake_case for a database?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'snake_case is a naming convention where words are separated by underscores and written in lowercase (e.g. my_variable_name). It is commonly used in Python variables and functions, Ruby methods, database column names, and environment variables. Our tool converts any string to snake_case instantly.',
+        text: 'Paste the camelCase key names into String Utilities — the Case Formats tab instantly shows the snake_case equivalent alongside all other formats. For bulk conversion in code: in Python, re.sub(r"(?<!^)(?=[A-Z])", "_", name).lower() converts camelCase to snake_case. In JavaScript, str.replace(/([A-Z])/g, "_$1").toLowerCase(). Database ORMs like SQLAlchemy and Django ORM typically handle this conversion automatically when mapping between Python snake_case attributes and SQL column names.',
       },
     },
     {
@@ -303,7 +303,7 @@ export default function StringUtilitiesPage() {
 
         <SEOSection id="faq" eyebrow="FAQ" heading="Frequently Asked Questions">
           <FAQ items={[
-            { q: 'What is the difference between camelCase and PascalCase?', a: 'camelCase starts with a lowercase letter and capitalizes each subsequent word (myVariableName). PascalCase (also called UpperCamelCase) capitalizes every word including the first (MyVariableName). camelCase is common in JavaScript/TypeScript variables and functions; PascalCase is used for class names and React components.' },
+            { q: 'How do I convert a camelCase API response to snake_case for a database?', a: 'Paste the camelCase key names into String Utilities — the Case Formats tab instantly shows the snake_case equivalent alongside all other formats. For bulk conversion in code: Python uses re.sub(r"(?<!^)(?=[A-Z])", "_", name).lower(). JavaScript uses str.replace(/([A-Z])/g, "_$1").toLowerCase(). ORMs like SQLAlchemy and Django typically handle this mapping automatically.' },
             { q: 'How does the case conversion algorithm handle acronyms?', a: 'The algorithm splits on common separators (spaces, hyphens, underscores, dots, slashes) and also detects camelCase transitions (lowercase followed by uppercase). Each detected "word" is then joined with the appropriate separator and casing for the target format.' },
             { q: 'Is Base64 encoding encryption?', a: 'No. Base64 is an encoding scheme, not encryption. It converts binary data to ASCII text for safe transmission, but provides no security — anyone can decode it. Use it for encoding data in URLs or HTTP headers, not for hiding sensitive information.' },
             { q: 'What regex is used to extract email addresses?', a: 'The email extractor uses a robust pattern that matches the most common email formats: [a-zA-Z0-9._%+−]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}. It handles subdomains, plus-sign aliases, and international TLDs.' },

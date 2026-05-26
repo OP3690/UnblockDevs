@@ -70,10 +70,10 @@ const faqSchema = {
   mainEntity: [
     {
       '@type': 'Question',
-      name: 'What is the difference between 401 and 403?',
+      name: 'Why does my API return 403 even though I am logged in and sending my token?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: '401 Unauthorized means the request lacks valid authentication credentials — the server does not know who you are. 403 Forbidden means the server knows who you are (authenticated) but you do not have permission to access the resource. Fix 401 by providing credentials; fix 403 by checking permissions or role assignments.',
+        text: 'A 403 when authenticated means the server recognizes you but your account lacks permission for this specific resource — this is different from a 401 (not authenticated at all). Common causes: your token lacks a required scope or role, you are hitting an endpoint restricted to admin users, the resource belongs to a different user, or an IP allowlist or WAF rule is blocking your request. Decode your JWT at jwt.io to verify the roles and scopes it contains.',
       },
     },
     {

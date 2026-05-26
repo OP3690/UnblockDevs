@@ -70,10 +70,10 @@ const faqSchema = {
   mainEntity: [
     {
       '@type': 'Question',
-      name: 'What causes a Python KeyError?',
+      name: 'Why does Python raise KeyError when the key looks like it exists in the dictionary?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'A Python KeyError is raised when you access a dictionary using a key that does not exist in that dictionary. For example, data["missing_key"] raises KeyError if "missing_key" is not a key in data. It commonly occurs when parsing API responses or JSON data where keys may be absent.',
+        text: 'Python raises KeyError when the exact key string is not found — even a single trailing space, different capitalisation, or a Unicode lookalike makes it a different key. Print repr(key) and list(data.keys()) to compare them character by character. In API responses, the key may also be absent for certain records — use data.get("key") to return None safely instead of raising.',
       },
     },
     {
@@ -94,10 +94,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is defaultdict and when should I use it?',
+      name: 'How do I stop KeyError when building a counter or grouping dict in Python?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'defaultdict from the collections module is a dict subclass that automatically creates a default value for missing keys using a factory function. Use it when building counters (defaultdict(int)), grouping items into lists (defaultdict(list)), or any pattern where you need to accumulate values by key without checking existence first.',
+        text: 'Use defaultdict from the collections module. defaultdict(int) auto-initialises missing keys to 0, so counts[key] += 1 never raises KeyError. defaultdict(list) auto-initialises to an empty list, so groups[key].append(value) is safe on the first occurrence of any key. This eliminates the if key not in d: d[key] = 0 boilerplate entirely.',
       },
     },
     {

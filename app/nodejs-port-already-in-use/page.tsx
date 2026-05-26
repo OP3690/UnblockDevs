@@ -67,10 +67,10 @@ const faqSchema = {
   mainEntity: [
     {
       '@type': 'Question',
-      name: 'What causes EADDRINUSE error in Node.js?',
+      name: 'Why do I keep getting EADDRINUSE on port 3000 even after stopping my Node.js server?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'EADDRINUSE means another process is already listening on that port. Common causes include: a previous Node.js server that crashed without releasing the port, another development server running on the same port, or a zombie process from a previous session.',
+        text: 'When a Node.js server crashes or is killed with Ctrl+C without a graceful shutdown, the OS may hold the port in a TIME_WAIT state. A zombie process from the previous session keeps the socket open. Run lsof -ti:3000 | xargs kill -9 on Mac/Linux to force-release it, then add a SIGTERM handler (server.close()) to prevent this in the future.',
       },
     },
     {

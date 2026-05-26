@@ -124,10 +124,10 @@ const faqSchema = {
   mainEntity: [
     {
       '@type': 'Question',
-      name: 'What is an HTTP payload?',
+      name: 'Why does my server receive the request but req.body is undefined or empty?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'An HTTP payload is the body of an HTTP request or response — the actual data being transmitted, separate from the headers. Request payloads carry data sent to a server (such as JSON in a POST request), while response payloads carry the data returned from the server. Common payload formats include JSON, form-urlencoded, multipart/form-data, and XML.',
+        text: "If req.body is undefined in Express, you are missing body-parsing middleware. Add app.use(express.json()) for JSON payloads and app.use(express.urlencoded({ extended: true })) for form data. Also verify the client is sending the correct Content-Type header — sending JSON without Content-Type: application/json means Express won't parse it. Middleware order matters: parsers must be registered before route handlers.",
       },
     },
     {
@@ -156,10 +156,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is an API request payload?',
+      name: 'Why does my API request fail even though the URL and headers look correct?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'An API request payload is the body data sent in an HTTP request — the actual content transmitted to the server, separate from the URL and headers. Common payload types include JSON objects in POST requests, form-encoded data, multipart file uploads, and XML documents. The payload is defined by the Content-Type header.',
+        text: 'When the URL and headers are correct but the request fails, the problem is usually in the request body: the Content-Type does not match the actual payload format, the body is double-encoded (JSON-stringifying an already-stringified object), required fields are missing, or field names do not match what the server expects. Paste the raw request body into this analyzer to inspect its structure and spot the mismatch.',
       },
     },
     {
@@ -212,10 +212,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is the difference between body and payload?',
+      name: 'How do I find which field in my payload is causing the API to reject the request?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'In HTTP, "body" and "payload" are used interchangeably to describe the data sent in an HTTP request or response, separate from the headers. Technically, the payload is the meaningful application data within the body, while the body may include framing or encoding overhead. In practice, API documentation uses both terms to mean the same thing.',
+        text: 'Paste the raw request body into this analyzer to view its full structure — field names, data types, nested objects, and array contents. Compare the output against the API documentation or error message. Common culprits are fields sent as strings instead of numbers, null values where the API expects a value, extra unexpected fields, or camelCase vs snake_case mismatches. The field-level breakdown makes these mismatches immediately obvious.',
       },
     },
     {
@@ -376,8 +376,8 @@ export default function PayloadAnalyzerPage() {
         <SEOSection id="faq" eyebrow="FAQ" heading="Frequently Asked Questions">
           <FAQ items={[
             {
-              q: 'What is an HTTP payload?',
-              a: 'An HTTP payload is the body of a request or response — the actual data being sent, separate from the URL and headers. Request payloads carry data to the server (for example, a JSON object in a POST request), while response payloads carry data back to the client.',
+              q: 'Why does my server receive the request but req.body is undefined or empty?',
+              a: "If req.body is undefined in Express, you are missing body-parsing middleware. Add app.use(express.json()) for JSON payloads and app.use(express.urlencoded({ extended: true })) for form data. Also verify the client sends the correct Content-Type header — sending JSON without Content-Type: application/json means Express won't parse it. Middleware must be registered before route handlers.",
             },
             {
               q: 'What content types does the Payload Analyzer support?',
@@ -396,8 +396,8 @@ export default function PayloadAnalyzerPage() {
               a: 'Yes. Copy the raw webhook body from your server logs, debugging proxy, or request inspector and paste it into the analyzer. The tool will parse and display its structure regardless of content type.',
             },
             {
-              q: 'What is an API request payload?',
-              a: 'An API request payload is the body data sent in an HTTP request — the actual content transmitted to the server, separate from the URL and headers. Common types include JSON objects in POST requests, form-encoded data, multipart file uploads, and XML. The Content-Type header declares the payload format.',
+              q: 'Why does my API request fail even though the URL and headers look correct?',
+              a: 'When the URL and headers are correct but the request fails, the problem is usually in the request body: mismatched Content-Type, double-encoded JSON, missing required fields, or camelCase vs snake_case field name mismatches. Paste the raw request body into this analyzer to inspect its structure and spot the mismatch against the API documentation.',
             },
             {
               q: 'What is the maximum payload size for HTTP requests?',
@@ -420,8 +420,8 @@ export default function PayloadAnalyzerPage() {
               a: 'Replace sensitive fields (passwords, tokens, PII) with redacted placeholders before logging or sharing. Create a sanitizer function that deep-clones the payload and replaces sensitive keys with ***. This analyzer flags common sensitive field names (password, token, ssn, credit_card) to assist in identification.',
             },
             {
-              q: 'How do I debug a missing payload in Express?',
-              a: (<>If <C>req.body</C> is undefined in Express, add body-parsing middleware: <C>app.use(express.json())</C> for JSON and <C>app.use(express.urlencoded({'{'} extended: true {'}'}))</C> for form data. Verify the request has a matching Content-Type header and that the middleware is registered before your route handlers.</>),
+              q: 'How do I find which field in my payload is causing the API to reject the request?',
+              a: 'Paste the raw request body into this analyzer to view its full structure — field names, types, nested objects, and arrays. Compare against the API documentation or error message. Common culprits: fields sent as strings instead of numbers, null values where the API expects a value, extra unexpected fields, or camelCase vs snake_case mismatches.',
             },
           ]} />
         </SEOSection>

@@ -177,10 +177,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is SQL formatting?',
+      name: 'Why does my SQL IN clause fail with more than 1000 items in Oracle?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'SQL formatting is the process of restructuring SQL code with consistent indentation, line breaks, and keyword casing to make it more readable and maintainable. Properly formatted SQL is easier to review, debug, and collaborate on. Most style guides recommend uppercasing keywords like SELECT, FROM, WHERE, and JOIN.',
+        text: 'Oracle raises ORA-01795 when an IN list contains more than 1000 items. The fix is to split the list into multiple IN clauses connected with OR — for example: id IN (1,...,1000) OR id IN (1001,...,2000). Use the Chunk Size option in this tool to generate the split automatically. Alternatively, enable Range Compression to convert consecutive numeric IDs into BETWEEN clauses, which avoids the limit entirely.',
       },
     },
     {
@@ -421,8 +421,8 @@ export default function SqlFormatterPage() {
               a: 'No. All processing runs entirely in your browser. Your IDs and data never leave your machine. Safe for production IDs, internal data, and sensitive values.',
             },
             {
-              q: 'What is SQL formatting?',
-              a: 'SQL formatting restructures SQL code with consistent indentation, line breaks, and keyword casing to make it more readable. Most style guides recommend uppercasing keywords like SELECT, FROM, WHERE, and JOIN.',
+              q: 'Why does my SQL IN clause fail with more than 1000 items in Oracle?',
+              a: 'Oracle raises ORA-01795 when an IN list has more than 1000 items. Split the list into multiple IN clauses connected with OR — e.g. id IN (1,...,1000) OR id IN (1001,...,2000). Use the Chunk Size option to generate this automatically, or enable Range Compression to convert consecutive IDs into BETWEEN clauses which avoids the limit entirely.',
             },
             {
               q: 'Should SQL keywords be uppercase or lowercase?',

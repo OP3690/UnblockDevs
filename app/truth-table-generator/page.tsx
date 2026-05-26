@@ -170,10 +170,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is a truth table in digital logic?',
+      name: 'How do I use a truth table to debug a complex if-else chain?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'A truth table is a mathematical table that lists all possible input combinations for a boolean expression and their corresponding output values. For n variables, there are 2^n rows. Truth tables are fundamental in digital electronics, computer architecture, and discrete mathematics for describing and verifying the behavior of logic gates and circuits.',
+        text: 'Enter your boolean condition as a single expression — for example, (isAdmin ∧ isActive) ∨ (hasPermission ∧ ¬isBlocked) — using A, B, C, D as variable names. The generated truth table shows the output for every combination of true/false inputs, making it easy to spot missing cases, unintended always-true or always-false branches, and logical contradictions in your access control or validation logic.',
       },
     },
     {
@@ -194,10 +194,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is a tautology in propositional logic?',
+      name: 'Why does my boolean expression always return true or always return false?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'A tautology is a boolean expression that is always true regardless of the input values — its truth table output column contains only 1s. A contradiction (or unsatisfiable formula) is always false — its output column contains only 0s. An expression that is neither is called a contingency. Generate the truth table and examine the output column to classify your expression.',
+        text: 'Generate the truth table and examine the output column. If all values are 1, your expression is a tautology — always true regardless of input (often a logic error like A ∨ ¬A). If all values are 0, it is a contradiction — always false (like A ∧ ¬A). Both indicate a bug in your conditional logic. Common causes: negating the wrong variable, using OR when AND was intended, or a short-circuit evaluation side effect masking the bug in code.',
       },
     },
     {
@@ -345,8 +345,8 @@ export default function TruthTableGeneratorPage() {
               a: 'Up to 8 variables, producing tables with up to 256 rows. Most classroom problems use 2–4 variables (4–16 rows).',
             },
             {
-              q: 'What is a truth table in digital logic?',
-              a: 'A truth table lists all possible input combinations for a boolean expression and their output values. For n variables there are 2^n rows. Truth tables describe logic gate and circuit behavior in digital electronics and discrete mathematics.',
+              q: 'How do I use a truth table to debug a complex if-else chain?',
+              a: 'Enter your boolean condition as a single expression using A, B, C, D as variable names. The truth table shows the output for every combination of true/false inputs, making it easy to spot missing cases, unintended always-true/false branches, and logical contradictions in access control or validation logic.',
             },
             {
               q: 'How do I check if two boolean expressions are equivalent?',
@@ -357,8 +357,8 @@ export default function TruthTableGeneratorPage() {
               a: 'Generate the truth table to find all minterms (output = 1 rows). Use the Karnaugh map to group adjacent minterms into rectangles of 1, 2, 4, or 8. Each rectangle eliminates variables, producing a minimal SOP expression.',
             },
             {
-              q: 'What is a tautology in propositional logic?',
-              a: 'A tautology is a boolean expression always true regardless of inputs — its truth table output column contains only 1s. A contradiction is always false (all 0s). A contingency is sometimes true, sometimes false.',
+              q: 'Why does my boolean expression always return true or always return false?',
+              a: 'Generate the truth table and examine the output column. All 1s means your expression is a tautology (always true — often a logic error like A ∨ ¬A). All 0s means it is a contradiction (always false, like A ∧ ¬A). Common causes: negating the wrong variable, using OR when AND was intended, or a short-circuit evaluation side effect masking the bug in code.',
             },
             {
               q: "What is De Morgan's law?",

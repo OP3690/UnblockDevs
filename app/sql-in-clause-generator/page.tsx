@@ -174,10 +174,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is the SQL IN clause?',
+      name: 'How do I convert a comma-separated list to a SQL IN clause in one step?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'The SQL IN clause is used in a WHERE condition to filter rows by matching a column against a list of values. For example: SELECT * FROM users WHERE id IN (1, 2, 3) returns only rows whose id is 1, 2, or 3. It is equivalent to multiple OR conditions but more concise.',
+        text: 'Paste the comma-separated list directly into this tool. It auto-detects comma-separated format, removes duplicates, applies the correct quoting for your database (MySQL, PostgreSQL, Oracle, etc.), and outputs a complete WHERE id IN (...) clause instantly — no manual editing of quotes or commas required. You can also drag and drop a .csv or .txt file.',
       },
     },
     {
@@ -404,8 +404,8 @@ export default function SqlInClauseGeneratorPage() {
               a: 'No. All processing runs in your browser. Your IDs never leave your machine.',
             },
             {
-              q: 'What is the SQL IN clause?',
-              a: 'The SQL IN clause filters rows by matching a column against a list of values. SELECT * FROM users WHERE id IN (1,2,3) returns only rows whose id matches 1, 2, or 3.',
+              q: 'How do I convert a comma-separated list to a SQL IN clause in one step?',
+              a: 'Paste the comma-separated list directly into this tool. It auto-detects the format, removes duplicates, applies the correct quoting for your database, and outputs a complete WHERE id IN (...) clause instantly. You can also drag and drop a .csv or .txt file.',
             },
             {
               q: 'Is there a limit to how many values SQL IN can take?',

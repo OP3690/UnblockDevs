@@ -125,10 +125,10 @@ const faqSchema = {
   mainEntity: [
     {
       '@type': 'Question',
-      name: 'What is a mock API?',
+      name: 'How do I generate mock API data that matches my TypeScript types?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'A mock API is a simulated REST API that returns predefined responses without connecting to a real backend. Developers use mock APIs to build and test frontend applications when the real API is not yet available, unstable, or too expensive to call during development.',
+        text: 'Define your endpoint in Mock API Generator and write a JSON response body that mirrors your TypeScript interface shape — using the same field names, value types (string, number, boolean), and nesting structure. You can also export an OpenAPI spec and use tools like json-schema-to-typescript or Stoplight to derive TypeScript types from the spec automatically, keeping your mock and your types in sync.',
       },
     },
     {
@@ -327,8 +327,8 @@ export default function MockApiGeneratorPage() {
         <SEOSection id="faq" eyebrow="FAQ" heading="Frequently Asked Questions">
           <FAQ items={[
             {
-              q: 'What is a mock API?',
-              a: 'A mock API is a fake REST API that returns predefined responses without a real backend. It is used during frontend development and testing to simulate API behavior when the real service is not available or too costly to call.',
+              q: 'How do I generate mock API data that matches my TypeScript types?',
+              a: 'Write your JSON response body using the same field names and types as your TypeScript interface. You can also export an OpenAPI spec from Mock API Generator and use tools like json-schema-to-typescript to derive TypeScript types from the spec automatically, keeping your mock and your types in sync.',
             },
             {
               q: 'What is the difference between a mock, a stub, and a fake?',

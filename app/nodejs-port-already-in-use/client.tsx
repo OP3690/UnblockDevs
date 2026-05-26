@@ -223,8 +223,8 @@ process.on('SIGINT',  () => shutdown('SIGINT'));  // Ctrl+C`}</pre>
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
             <div className="space-y-6">
               <div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-3">What causes EADDRINUSE in Node.js?</h3>
-                <p className="text-gray-700">Another process is already listening on that port. Common causes include a crashed server that did not release the port, or running two instances of your dev server simultaneously.</p>
+                <h3 className="text-xl font-semibold text-gray-800 mb-3">Why do I keep getting EADDRINUSE on port 3000 even after stopping my Node.js server?</h3>
+                <p className="text-gray-700">When a server crashes or is killed without a graceful shutdown, the OS holds the port in a TIME_WAIT state and a zombie process keeps the socket open. Run <code className="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800">lsof -ti:3000 | xargs kill -9</code> to force-release it, then add a SIGTERM handler calling <code className="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800">server.close()</code> to prevent this in the future.</p>
               </div>
               <div>
                 <h3 className="text-xl font-semibold text-gray-800 mb-3">How do I kill port 3000 on Mac?</h3>

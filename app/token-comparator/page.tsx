@@ -169,10 +169,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is a token comparator?',
+      name: 'Why does my JWT work in development but fail in production?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'A token comparator compares two tokens (JWT, API keys, auth tokens, etc.) character by character, highlights mismatches visually, and shows match statistics—all in your browser.',
+        text: 'The most common cause is a different signing secret, an expired token, or a changed claim like iss or aud between environments. Paste your dev token and production token into Token Comparator for a character-by-character diff — it will highlight the exact claim or character that differs so you can pinpoint the mismatch immediately.',
       },
     },
     {
@@ -233,10 +233,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question' as const,
-      name: 'What is BPE tokenization?',
+      name: 'Why does GPT-4 use more tokens than Claude for the same text?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: 'Byte Pair Encoding (BPE) is a subword tokenization algorithm used by GPT models. It starts with individual characters and iteratively merges the most frequent pairs to build a vocabulary of common subwords and words. Common English words are typically a single token; rare words and code identifiers are split into multiple tokens.',
+        text: 'GPT-4 uses the cl100k_base tokenizer (tiktoken) and Claude uses Anthropic\'s own tokenizer. For the same English text, counts are within 5–15%, but code, non-Latin scripts, and special characters can produce larger differences. When optimizing AI API costs, always measure token counts with each model\'s tokenizer rather than assuming they are the same.',
       },
     },
     {
@@ -429,8 +429,8 @@ export default function TokenComparatorLanding() {
           <FAQ
             items={[
               {
-                q: 'How do I decode a JWT token?',
-                a: 'Paste your JWT into the tool. It auto-detects the JWT format, decodes the header and payload via Base64URL, and displays all claims in readable JSON — entirely in your browser, nothing sent to any server.',
+                q: 'Why does my JWT work in development but fail in production?',
+                a: 'The most common cause is a different signing secret, an expired token, or a mismatched claim like iss or aud. Paste your dev and production tokens into Token Comparator for a character-by-character diff that pinpoints exactly where they differ.',
               },
               {
                 q: 'How do I check if a JWT token is expired?',
@@ -481,8 +481,8 @@ export default function TokenComparatorLanding() {
                 a: 'Cost = (input tokens × input price + output tokens × output price) / 1M. For GPT-4o: ~$2.50 per 1M input, ~$10 per 1M output. For Claude 3.5 Sonnet: ~$3 per 1M input, ~$15 per 1M output.',
               },
               {
-                q: 'What is BPE tokenization?',
-                a: 'Byte Pair Encoding (BPE) is a subword tokenization algorithm used by GPT models. It iteratively merges frequent character pairs to build common subwords. Common English words are 1 token; rare words are split into multiple tokens.',
+                q: 'Why does GPT-4 use more tokens than Claude for the same text?',
+                a: 'GPT-4 uses the cl100k_base tokenizer (tiktoken) while Claude uses Anthropic\'s own tokenizer. For typical English text, counts are within 5–15%, but code and non-Latin scripts can differ significantly. Always measure with each model\'s tokenizer when optimizing API costs.',
               },
               {
                 q: 'How do I manage token limits in a long conversation?',

@@ -163,10 +163,10 @@ const faqSchema = {
   mainEntity: [
     {
       '@type': 'Question' as const,
-      name: 'What is a CORS error?',
+      name: 'Why does my fetch request fail in the browser but work fine in Postman?',
       acceptedAnswer: {
         '@type': 'Answer' as const,
-        text: "A CORS error occurs when a browser blocks a request because the server's response headers don't permit cross-origin access. The most common cause is a missing or incorrect Access-Control-Allow-Origin header.",
+        text: "Postman is not a browser and does not enforce CORS. Browsers block cross-origin responses when the server does not return the correct Access-Control-Allow-Origin header. The server actually receives and processes your request — it is the browser that hides the response. The fix must be made on the server by adding the correct CORS headers. Use CORS Tester to confirm which headers are missing.",
       },
     },
     {
@@ -449,14 +449,14 @@ export default function CorsTesterPage() {
           <FAQ
             items={[
               {
-                q: 'What is a CORS error and why does it happen?',
+                q: 'Why does my fetch request fail in the browser but work fine in Postman?',
                 a: (
                   <>
-                    A CORS error occurs when your browser blocks a cross-origin request because the
-                    server&apos;s response headers do not allow it. The most common cause is a missing or
-                    incorrect <C>Access-Control-Allow-Origin</C> header. The browser enforces this — the
-                    server still receives and processes the request, but the response is hidden from your
-                    JavaScript.
+                    Postman is not a browser and does not enforce CORS. Browsers block cross-origin
+                    responses when the server does not return the correct{' '}
+                    <C>Access-Control-Allow-Origin</C> header. The server actually receives and processes
+                    your request — it is the browser that hides the response. The fix must be made on
+                    the server. Use CORS Tester to confirm exactly which headers are missing.
                   </>
                 ),
               },

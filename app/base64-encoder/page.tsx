@@ -84,7 +84,7 @@ const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
   mainEntity: [
-    { '@type': 'Question', name: 'What is Base64 encoding?', acceptedAnswer: { '@type': 'Answer', text: 'Base64 converts binary or text data into ASCII characters (A–Z, a–z, 0–9, +, /) for safe use in JSON, URLs, or email. Each group of 3 bytes becomes 4 characters.' } },
+    { '@type': 'Question', name: 'Why does Base64 decode give garbled or wrong output?', acceptedAnswer: { '@type': 'Answer', text: 'Garbled Base64 decode output is almost always caused by using the wrong variant. Standard Base64 uses + and / characters, while Base64URL replaces them with - and _. Decoding a Base64URL string with a Standard decoder will produce corrupt bytes. Also check for missing = padding — some decoders require padding while others do not. Select the correct variant (Standard vs Base64URL) and ensure the input has not been truncated.' } },
     { '@type': 'Question', name: 'What is the difference between Base64 and Base64URL?', acceptedAnswer: { '@type': 'Answer', text: 'Standard Base64 uses + and / with optional = padding. Base64URL replaces + with - and / with _ and omits padding, making it safe in URLs and JWTs.' } },
     { '@type': 'Question', name: 'Is Base64 the same as encryption?', acceptedAnswer: { '@type': 'Answer', text: 'No. Base64 is encoding, not encryption. Anyone can decode it instantly. Never rely on Base64 for security.' } },
     { '@type': 'Question', name: 'Is it safe to paste sensitive data here?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Everything runs in your browser. Nothing is uploaded to any server. Your data never leaves your device.' } },
@@ -95,7 +95,7 @@ const faqSchema = {
     { '@type': 'Question', name: 'How do I encode an image to Base64 for HTML or CSS?', acceptedAnswer: { '@type': 'Answer', text: 'Switch to File mode, drag and drop your image (PNG, JPG, GIF, WebP, SVG). The result can be used as data:image/png;base64,<result> in an img src or CSS background-image: url(...).' } },
     { '@type': 'Question', name: 'What is MIME Base64 used for?', acceptedAnswer: { '@type': 'Answer', text: 'MIME Base64 wraps output at 76 characters per line, which is required for email attachments (RFC 2045). Choose the MIME variant when encoding files for email clients.' } },
     { '@type': 'Question', name: 'How do I encode Base64 in JavaScript?', acceptedAnswer: { '@type': 'Answer', text: 'Use btoa() for ASCII strings: btoa("hello") → "aGVsbG8=". For binary data use TextEncoder + Uint8Array. For Base64URL use the Web Crypto API or replace +/ with -_ and strip = padding.' } },
-    { '@type': 'Question', name: 'What is the difference between Base64 and hex encoding?', acceptedAnswer: { '@type': 'Answer', text: 'Both represent binary data as ASCII. Hex uses 2 characters per byte (16 symbols: 0-9, a-f), making output 2× larger than input. Base64 uses 4 characters per 3 bytes (~33% overhead), making it more compact. Base64 is used for text transport; hex is common in cryptography and debugging.' } },
+    { '@type': 'Question', name: 'Why does my Base64 string have %2B or %2F in a URL?', acceptedAnswer: { '@type': 'Answer', text: 'Standard Base64 uses + and / characters, which are special in URLs and get percent-encoded to %2B and %2F when placed in a query string. Switch to Base64URL encoding, which replaces + with - and / with _ and omits = padding — making the string safe in URLs and JWT tokens without any percent-encoding.' } },
   ],
 };
 
@@ -191,8 +191,8 @@ export default function Base64EncoderPage() {
         <SEOSection id="faq" eyebrow="FAQ" heading="Frequently Asked Questions">
           <FAQ items={[
             {
-              q: 'What is Base64 encoding?',
-              a: 'Base64 converts binary or text data into ASCII characters (A–Z, a–z, 0–9, +, /) for safe transport in JSON, URLs, or email. Every 3 bytes become 4 characters; = padding fills the remainder.',
+              q: 'Why does Base64 decode give garbled or wrong output?',
+              a: 'Garbled Base64 decode output is almost always caused by using the wrong variant. Standard Base64 uses + and / characters, while Base64URL replaces them with - and _. Decoding a Base64URL string with a Standard decoder will produce corrupt bytes. Also check for missing = padding — some decoders require it, others do not. Select the correct variant and ensure the input has not been truncated.',
             },
             {
               q: 'What is the difference between Base64 and Base64URL?',
@@ -235,8 +235,8 @@ export default function Base64EncoderPage() {
               a: 'Use btoa() for ASCII strings: btoa("hello") → "aGVsbG8=". For binary data use FileReader or TextEncoder. For Base64URL replace +/ with -_ and strip = padding.',
             },
             {
-              q: 'What is the difference between Base64 and hex encoding?',
-              a: 'Hex uses 2 characters per byte (~100% overhead). Base64 uses 4 characters per 3 bytes (~33% overhead), making it more compact. Base64 is preferred for text transport; hex is common in cryptography output.',
+              q: 'Why does my Base64 string have %2B or %2F in a URL?',
+              a: 'Standard Base64 uses + and / characters, which are special in URLs and get percent-encoded to %2B and %2F when placed in a query string. Switch to Base64URL encoding, which replaces + with - and / with _ and omits = padding — making the string URL-safe in query strings and JWT tokens without any percent-encoding.',
             },
           ]} />
         </SEOSection>

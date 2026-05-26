@@ -312,12 +312,14 @@ def get_json(url: str, **kwargs) -> dict | None:
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">What is json.JSONDecodeError in Python?</h3>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">Why does json.loads fail with &quot;Expecting value&quot; on a string that looks valid?</h3>
                 <p className="text-gray-700">
-                  It is a subclass of <code className="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800">ValueError</code> raised
-                  by <code className="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800">json.loads()</code> when the input
-                  is not valid JSON. It includes the error position via <code className="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800">e.lineno</code> and
-                  <code className="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800 ml-1">e.pos</code>.
+                  <code className="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800">json.loads()</code> raises JSONDecodeError
+                  with &quot;Expecting value: line 1 column 1&quot; when the input is empty, starts with an HTML character like
+                  <code className="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800 mx-1">&lt;</code>, or contains a BOM
+                  (<code className="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800">﻿</code>). Print
+                  <code className="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800 mx-1">repr(your_string[:200])</code> to
+                  see exactly what is being passed.
                 </p>
               </div>
               <div>

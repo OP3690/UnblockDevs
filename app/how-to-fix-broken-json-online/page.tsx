@@ -91,10 +91,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What are the most common JSON errors?',
+      name: 'Why does my JSON work in JavaScript but fail to parse in an API or config tool?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'The most common JSON errors are: trailing commas after the last element, using single quotes instead of double quotes, unquoted object keys, missing closing brackets or braces, and invalid characters like comments or undefined values.',
+        text: 'JavaScript allows trailing commas, single quotes, and unquoted keys, but strict JSON does not. API endpoints and config tools use a strict JSON parser, so these JS-friendly shortcuts cause "SyntaxError: Unexpected token" failures. Run your JSON through a validator or fixer to catch these differences before sending to an API.',
       },
     },
     {

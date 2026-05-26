@@ -148,10 +148,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is a configuration comparator?',
+      name: 'How do I find which config change broke my production deployment?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'A configuration comparator diffs two config files (JSON, YAML, .env, TOML) and highlights exactly what changed — added keys, removed keys, and modified values. It helps developers catch configuration drift between environments before deploying to production.',
+        text: 'Export your config from before the deployment (e.g., the last known good .env or appsettings.json) and paste it in the left panel. Paste the current config in the right panel. The comparator highlights exactly which keys were added, removed, or changed — narrowing down the culprit immediately so you can roll back or fix the right setting.',
       },
     },
     {
@@ -188,10 +188,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is configuration drift?',
+      name: 'Why does my app work in staging but fail in production with no code changes?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Configuration drift is the gradual divergence of configuration settings across environments over time — when staging, QA, and production configs start to differ without a deliberate reason. Drift often causes "works in staging but fails in production" bugs that are hard to diagnose.',
+        text: 'Configuration drift is the most common cause — staging and production configs gradually diverge as keys are added, changed, or forgotten during manual updates. Paste both config files into the comparator to see every difference at a glance: missing keys, changed values, and extra settings that should not be there.',
       },
     },
     {
@@ -314,8 +314,8 @@ export default function ConfigComparatorPage() {
               a: 'The comparator supports JSON, YAML, .env (KEY=VALUE), TOML, and INI files. Paste any of these formats and the tool automatically parses them before diffing.',
             },
             {
-              q: 'What is a configuration comparator?',
-              a: 'A configuration comparator diffs two config files and highlights added keys, removed keys, and modified values. It helps catch configuration drift between environments before deploying to production.',
+              q: 'How do I find which config change broke my production deployment?',
+              a: 'Export your last-known-good config and paste it in the left panel. Paste the current config in the right panel. The comparator highlights exactly which keys changed — narrowing down the culprit immediately so you can roll back or fix the right setting.',
             },
             {
               q: 'How do I compare YAML config files?',
@@ -334,8 +334,8 @@ export default function ConfigComparatorPage() {
               a: 'Paste two package.json files. The semantic diff shows which dependencies were added, removed, or version-bumped in dependencies and devDependencies.',
             },
             {
-              q: 'What is configuration drift?',
-              a: 'Configuration drift is the gradual divergence of settings across environments over time. It causes "works in staging but fails in production" bugs that are hard to diagnose.',
+              q: 'Why does my app work in staging but fail in production with no code changes?',
+              a: 'Configuration drift is the most common cause — staging and production configs gradually diverge as keys are added or changed during manual updates. Paste both config files into the comparator to instantly see every difference: missing keys, changed values, and extra settings.',
             },
             {
               q: 'How do I compare Docker Compose files?',
