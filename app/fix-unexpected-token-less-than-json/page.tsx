@@ -33,14 +33,7 @@ const jsonLd = {
   description: 'Fix "Unexpected token < in JSON" error — HTML returned instead of JSON. Check API endpoints, status codes, and authentication. 100% browser-based.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.7',
-    ratingCount: '720',
-    bestRating: '5',
-  },
-};
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const faqSchema = {
   '@context': 'https://schema.org',

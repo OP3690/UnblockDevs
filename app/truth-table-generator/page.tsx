@@ -115,14 +115,7 @@ const jsonLd = {
     'Minterms, maxterms, SOP and POS canonical forms',
     'Code export in JavaScript, Python, Java, and Go',
     '100% browser-based — no data sent to servers',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.7',
-    ratingCount: '580',
-    bestRating: '5',
-  },
-};
+  ],};
 
 const faqSchema = {
   '@context': 'https://schema.org' as const,

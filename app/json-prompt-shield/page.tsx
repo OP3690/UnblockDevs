@@ -111,14 +111,7 @@ const jsonLd = {
     '100% client-side — no data sent to any server',
     'Fully reversible with mapping — restore AI output to real names',
     'Works with API responses, REST, GraphQL — any JSON',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.9',
-    ratingCount: '780',
-    bestRating: '5',
-  },
-};
+  ],};
 
 const faqSchema = {
   '@context': 'https://schema.org' as const,

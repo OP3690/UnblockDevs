@@ -103,9 +103,7 @@ const jsonLd = {
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  featureList: ['Linear, Radial, and Conic gradients', 'Drag color stops', '20+ gradient presets', 'CSS and Tailwind output', 'Live preview', 'No signup required'],
-  aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.9', ratingCount: '2340', bestRating: '5' },
-};
+  featureList: ['Linear, Radial, and Conic gradients', 'Drag color stops', '20+ gradient presets', 'CSS and Tailwind output', 'Live preview', 'No signup required'],};
 
 const faqSchema = {
   '@context': 'https://schema.org',

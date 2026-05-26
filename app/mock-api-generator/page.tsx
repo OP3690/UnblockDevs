@@ -110,14 +110,7 @@ const jsonLd = {
     'Export to Postman collection',
     'Export to OpenAPI (Swagger) spec',
     '100% client-side — no data leaves your device',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.7',
-    ratingCount: '1050',
-    bestRating: '5',
-  },
-};
+  ],};
 
 const faqSchema = {
   '@context': 'https://schema.org',

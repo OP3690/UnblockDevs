@@ -114,14 +114,7 @@ const jsonLd = {
     'Up to 50 records per run in JSON or CSV',
     '100% browser-based — no data sent to servers',
     'No signup required',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    ratingCount: '1200',
-    bestRating: '5',
-  },
-};
+  ],};
 
 const faqSchema = {
   '@context': 'https://schema.org' as const,

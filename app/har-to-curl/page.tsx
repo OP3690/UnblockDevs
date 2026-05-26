@@ -132,15 +132,7 @@ const jsonLd = {
     'Filter requests by URL, method, or status code',
     'AI-ready debug prompt generation',
     '100% client-side — HAR files never leave your device',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.9',
-    ratingCount: '2100',
-    bestRating: '5',
-    worstRating: '1',
-  },
-  author: {
+  ],  author: {
     '@type': 'Organization',
     name: 'UnblockDevs',
     url: 'https://unblockdevs.com',
@@ -156,14 +148,7 @@ const softwareAppLd = {
   url: canonicalUrl,
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Web Browser',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.9',
-    ratingCount: '2100',
-    bestRating: '5',
-  },
-  description:
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },  description:
     'Convert HAR (HTTP Archive) files to cURL commands and multiple programming languages. Free, private, and 100% client-side — the best "Copy as cURL" alternative for batch request export.',
 };
 

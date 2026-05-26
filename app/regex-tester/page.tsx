@@ -116,14 +116,7 @@ const jsonLd = {
     'All JavaScript flags: g, i, m, s, u, y',
     'Sample patterns: email, URL, phone, capture groups',
     '100% browser-based — nothing sent to server',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    ratingCount: '1650',
-    bestRating: '5',
-  },
-};
+  ],};
 
 const faqSchema = {
   '@context': 'https://schema.org' as const,
@@ -255,7 +248,7 @@ const breadcrumbSchema = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://unblockdevs.com' },
-    { '@type': 'ListItem', position: 2, name: 'Tools', item: 'https://unblockdevs.com/tools/json' },
+    { '@type': 'ListItem', position: 2, name: 'Developer Tools', item: 'https://unblockdevs.com/tools/json' },
     { '@type': 'ListItem', position: 3, name: 'Regex Tester', item: canonicalUrl },
   ],
 };

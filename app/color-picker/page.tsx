@@ -110,14 +110,7 @@ const jsonLd = {
     'Color harmony (complementary, triadic, analogous)',
     'CSS variables snippet',
     '100% client-side — no server upload',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.9',
-    ratingCount: '1240',
-    bestRating: '5',
-  },
-};
+  ],};
 
 const faqSchema = {
   '@context': 'https://schema.org',
@@ -241,7 +234,7 @@ const breadcrumbSchema = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://unblockdevs.com' },
-    { '@type': 'ListItem', position: 2, name: 'Tools', item: 'https://unblockdevs.com/tools/json' },
+    { '@type': 'ListItem', position: 2, name: 'Developer Tools', item: 'https://unblockdevs.com/tools/json' },
     { '@type': 'ListItem', position: 3, name: 'Color Picker & Converter', item: canonicalUrl },
   ],
 };

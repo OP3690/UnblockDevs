@@ -109,14 +109,7 @@ const jsonLd = {
     'Measure payload size and identify large fields',
     'Detect content type automatically',
     'Privacy-first — all processing happens in your browser',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.7',
-    ratingCount: '540',
-    bestRating: '5',
-  },
-};
+  ],};
 
 const faqSchema = {
   '@context': 'https://schema.org',

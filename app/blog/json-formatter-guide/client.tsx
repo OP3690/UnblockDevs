@@ -261,7 +261,7 @@ app.use((req, res, next) => {
 
       <AlertBox type="tip" title="Use the JSON Formatter + Beautifier at unblockdevs.com/json-beautifier">
         The{' '}
-        <a href="https://unblockdevs.com/json-beautifier" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline font-medium">
+        <a href="/json-beautifier" className="text-blue-600 underline font-medium">
           UnblockDevs JSON workbench
         </a>{' '}
         combines formatting, validation, auto-fix, tree view, and TypeScript/SQL generation

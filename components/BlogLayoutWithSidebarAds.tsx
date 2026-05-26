@@ -103,6 +103,8 @@ function getTeaserForPath(pathname: string): TeaserConfig {
     return { href: '/api-comparator',        label: 'Compare API Responses', desc: 'Paste two JSON responses side-by-side — spot every difference',   icon: 'zap',    accent: 'blue'   };
   if (/\/blog\/websocket/i.test(p))
     return { href: '/json-beautifier',       label: 'Format JSON',        desc: 'Paste WebSocket or SSE JSON payloads — beautify in one click',        icon: 'wrench', accent: 'emerald' };
+  if (/cors|cross-origin|access-control/i.test(p))
+    return { href: '/cors-tester',           label: 'Test CORS headers free', desc: 'Paste any URL and see exactly which CORS headers it sends — debug preflight failures instantly.', icon: 'zap', accent: 'blue' };
   return   { href: '/json-error-explainer',  label: 'Fix my JSON now',    desc: 'Paste broken JSON — AI detects every error with plain-English fixes', icon: 'zap',    accent: 'emerald' };
 }
 

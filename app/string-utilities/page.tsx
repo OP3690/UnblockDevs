@@ -113,9 +113,7 @@ const jsonLd = {
     'JSON stringify, ROT13, Hex, Binary',
     'Text statistics (chars, words, lines)',
     'No signup required',
-  ],
-  aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.9', ratingCount: '3120', bestRating: '5' },
-};
+  ],};
 
 const faqSchema = {
   '@context': 'https://schema.org',

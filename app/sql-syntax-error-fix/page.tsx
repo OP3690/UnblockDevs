@@ -55,14 +55,7 @@ const jsonLd = {
     'Complete guide to fixing SQL syntax errors — reserved words, missing quotes, comma mistakes, JOIN errors, WHERE vs HAVING, NULL comparisons, and more.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.9',
-    ratingCount: '1120',
-    bestRating: '5',
-  },
-};
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const faqSchema = {
   '@context': 'https://schema.org',

@@ -111,14 +111,7 @@ const jsonLd = {
     'Smart type detection (email, URI, date formats)',
     'Built-in JSON validator against generated schema',
     '100% client-side — no data sent to any server',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    ratingCount: '960',
-    bestRating: '5',
-  },
-};
+  ],};
 
 const faqSchema = {
   '@context': 'https://schema.org',

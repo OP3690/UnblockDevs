@@ -111,9 +111,7 @@ const jsonLd = {
     'Adjustable border-radius on preview card',
     'One-click CSS copy',
     '100% client-side',
-  ],
-  aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.8', ratingCount: '1560', bestRating: '5' },
-};
+  ],};
 
 const faqSchema = {
   '@context': 'https://schema.org',
@@ -151,7 +149,7 @@ const breadcrumbSchema = {
   '@context': 'https://schema.org', '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://unblockdevs.com' },
-    { '@type': 'ListItem', position: 2, name: 'Tools', item: 'https://unblockdevs.com/tools/json' },
+    { '@type': 'ListItem', position: 2, name: 'Developer Tools', item: 'https://unblockdevs.com/tools/json' },
     { '@type': 'ListItem', position: 3, name: 'CSS Box Shadow Generator', item: canonicalUrl },
   ],
 };

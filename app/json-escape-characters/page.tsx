@@ -55,14 +55,7 @@ const jsonLd = {
     'Complete reference guide for JSON escape characters — backslash, double quote, newline, tab, Unicode, and more. With broken/fixed examples and free formatter.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.9',
-    ratingCount: '740',
-    bestRating: '5',
-  },
-};
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const faqSchema = {
   '@context': 'https://schema.org',

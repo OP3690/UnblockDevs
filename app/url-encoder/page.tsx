@@ -122,14 +122,7 @@ const jsonLd = {
     'Security checks',
     'Code snippets and bulk mode',
     '100% client-side — no URLs sent to any server',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    ratingCount: '1090',
-    bestRating: '5',
-  },
-};
+  ],};
 
 const faqSchema = {
   '@context': 'https://schema.org' as const,
@@ -253,7 +246,7 @@ const breadcrumbSchema = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://unblockdevs.com' },
-    { '@type': 'ListItem', position: 2, name: 'Tools', item: 'https://unblockdevs.com/tools/json' },
+    { '@type': 'ListItem', position: 2, name: 'Developer Tools', item: 'https://unblockdevs.com/tools/json' },
     { '@type': 'ListItem', position: 3, name: 'URL Encoder Decoder', item: canonicalUrl },
   ],
 };

@@ -121,14 +121,7 @@ const jsonLd = {
     'Multiple simultaneous timezone display',
     'Time difference calculator',
     '100% client-side — no data sent to servers',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.7',
-    ratingCount: '950',
-    bestRating: '5',
-  },
-};
+  ],};
 
 const faqSchema = {
   '@context': 'https://schema.org' as const,

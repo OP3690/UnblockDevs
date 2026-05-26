@@ -103,9 +103,7 @@ const jsonLd = {
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  featureList: ['PNG, JPG, SVG, GIF, WebP support', 'Drag and drop upload', 'CSS data URI output', 'HTML img tag output', 'Raw Base64 output', '100% browser-based', 'No file size limit'],
-  aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.9', ratingCount: '4210', bestRating: '5' },
-};
+  featureList: ['PNG, JPG, SVG, GIF, WebP support', 'Drag and drop upload', 'CSS data URI output', 'HTML img tag output', 'Raw Base64 output', '100% browser-based', 'No file size limit'],};
 
 const faqSchema = {
   '@context': 'https://schema.org',

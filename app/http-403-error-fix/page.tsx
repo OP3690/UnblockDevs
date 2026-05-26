@@ -55,14 +55,7 @@ const jsonLd = {
     'Complete guide to diagnosing and fixing HTTP 403 Forbidden errors — missing Bearer tokens, Cloudflare WAF blocks, AWS API Gateway policies, Nginx auth, and more.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    ratingCount: '870',
-    bestRating: '5',
-  },
-};
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const faqSchema = {
   '@context': 'https://schema.org',

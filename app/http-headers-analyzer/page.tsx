@@ -113,9 +113,7 @@ const jsonLd = {
     'Per-header security assessment',
     '40+ header definitions',
     'No signup required',
-  ],
-  aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.9', ratingCount: '1820', bestRating: '5' },
-};
+  ],};
 
 const faqSchema = {
   '@context': 'https://schema.org',

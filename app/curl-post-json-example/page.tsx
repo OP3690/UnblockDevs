@@ -55,9 +55,7 @@ const webAppSchema = {
     'Copy-ready cURL POST JSON commands covering headers, auth tokens, form data, file upload, PUT, DELETE, and verbose debugging.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.9', ratingCount: '2100', bestRating: '5' },
-};
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const faqSchema = {
   '@context': 'https://schema.org',

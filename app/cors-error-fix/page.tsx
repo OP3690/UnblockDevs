@@ -55,14 +55,7 @@ const jsonLd = {
     'Complete guide to fixing CORS errors — blocked by CORS policy, no Access-Control-Allow-Origin header, and preflight failures. Includes a free CORS tester tool.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.9',
-    ratingCount: '1240',
-    bestRating: '5',
-  },
-};
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const faqSchema = {
   '@context': 'https://schema.org',
@@ -156,7 +149,7 @@ const breadcrumbSchema = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://unblockdevs.com' },
-    { '@type': 'ListItem', position: 2, name: 'Tools', item: 'https://unblockdevs.com/tools' },
+    { '@type': 'ListItem', position: 2, name: 'Developer Tools', item: 'https://unblockdevs.com/tools' },
     { '@type': 'ListItem', position: 3, name: 'Fix CORS Error', item: 'https://unblockdevs.com/cors-error-fix' },
   ],
 };

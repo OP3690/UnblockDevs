@@ -36,14 +36,7 @@ const jsonLd = {
   description: 'Fix "Invalid control character" JSON errors instantly. Auto-detect and escape raw control characters in JSON strings. 100% browser-based.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.7',
-    ratingCount: '630',
-    bestRating: '5',
-  },
-};
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const howToSchema = {
   '@context': 'https://schema.org',

@@ -69,14 +69,7 @@ const jsonLd = {
     'HMAC generation for APIs and webhooks',
     'Password hashing: bcrypt, Argon2, PBKDF2, scrypt',
     '100% client-side — no data leaves your device',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    ratingCount: '1240',
-    bestRating: '5',
-  },
-};
+  ],};
 
 const faqSchema = {
   '@context': 'https://schema.org',
@@ -116,7 +109,7 @@ const breadcrumbSchema = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://unblockdevs.com' },
-    { '@type': 'ListItem', position: 2, name: 'Tools', item: 'https://unblockdevs.com/tools/json' },
+    { '@type': 'ListItem', position: 2, name: 'Developer Tools', item: 'https://unblockdevs.com/tools/json' },
     { '@type': 'ListItem', position: 3, name: 'Hash Generator', item: canonicalUrl },
   ],
 };

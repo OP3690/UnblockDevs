@@ -103,9 +103,7 @@ const jsonLd = {
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  featureList: ['Live HTML/CSS/JS preview', 'Sandboxed iframe', '5 starter templates', 'Desktop and mobile viewport', 'Dark preview background', 'Download as HTML file', '100% browser-based'],
-  aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.9', ratingCount: '3850', bestRating: '5' },
-};
+  featureList: ['Live HTML/CSS/JS preview', 'Sandboxed iframe', '5 starter templates', 'Desktop and mobile viewport', 'Dark preview background', 'Download as HTML file', '100% browser-based'],};
 
 const faqSchema = {
   '@context': 'https://schema.org',

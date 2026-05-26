@@ -369,6 +369,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
       changefreq: 'weekly' as const,
     },
+    // High-content tool and guide pages previously missing from mainPages
+    { url: 'sql-in-clause-generator', priority: 0.9, changefreq: 'weekly' as const },
+    { url: 'timestamp-converter', priority: 0.9, changefreq: 'weekly' as const },
+    { url: 'text-diff', priority: 0.9, changefreq: 'weekly' as const },
+    { url: 'color-picker', priority: 0.9, changefreq: 'weekly' as const },
+    { url: 'css-box-shadow', priority: 0.9, changefreq: 'weekly' as const },
+    { url: 'css-gradient-generator', priority: 0.9, changefreq: 'weekly' as const },
+    { url: 'image-to-base64', priority: 0.9, changefreq: 'weekly' as const },
+    { url: 'html-formatter', priority: 0.9, changefreq: 'weekly' as const },
+    { url: 'html-viewer', priority: 0.9, changefreq: 'weekly' as const },
+    { url: 'dotenv-not-loading', priority: 0.85, changefreq: 'weekly' as const },
+    { url: 'cannot-read-property-undefined', priority: 0.85, changefreq: 'weekly' as const },
+    { url: 'express-request-body-undefined', priority: 0.85, changefreq: 'weekly' as const },
+    { url: 'fetch-api-not-working', priority: 0.85, changefreq: 'weekly' as const },
+    { url: 'react-state-not-updating', priority: 0.85, changefreq: 'weekly' as const },
+    { url: 'useeffect-not-working', priority: 0.85, changefreq: 'weekly' as const },
+    { url: 'nodejs-port-already-in-use', priority: 0.85, changefreq: 'weekly' as const },
+    { url: 'python-keyerror-fix', priority: 0.85, changefreq: 'weekly' as const },
+    { url: 'python-json-decode-error', priority: 0.85, changefreq: 'weekly' as const },
+    { url: 'process-env-undefined', priority: 0.85, changefreq: 'weekly' as const },
+    { url: 'http-403-error-fix', priority: 0.85, changefreq: 'weekly' as const },
   ]
 
   const mainUrls = new Set(mainPages.map((p) => p.url))

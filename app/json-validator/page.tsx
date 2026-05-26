@@ -124,15 +124,7 @@ const jsonLd = {
     'Pattern and format keyword checking',
     'Real-time validation as you type',
     '100% client-side — nothing stored or sent to any server',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.9',
-    ratingCount: '2400',
-    bestRating: '5',
-    worstRating: '1',
-  },
-  author: { '@type': 'Organization', name: 'UnblockDevs', url: 'https://unblockdevs.com' },
+  ],  author: { '@type': 'Organization', name: 'UnblockDevs', url: 'https://unblockdevs.com' },
   dateModified: '2026-04-16',
 };
 
@@ -144,14 +136,7 @@ const softwareAppLd = {
   url: canonicalUrl,
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Web Browser',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.9',
-    ratingCount: '2400',
-    bestRating: '5',
-  },
-  description:
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },  description:
     'Free JSON syntax and schema validator. Supports JSON Schema Draft 7 and 2020-12. AJV-compatible. Real-time error highlighting with exact line numbers. 100% private — runs in your browser.',
 };
 

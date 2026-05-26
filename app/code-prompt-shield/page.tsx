@@ -122,14 +122,7 @@ const jsonLd = {
     '100% client-side — no code or mapping sent to any server',
     'Fully reversible — restore AI response with original identifiers',
     '18 languages: JavaScript, TypeScript, Python, Java, Go, SQL, JSON, C#, PHP, Rust, Ruby, Swift, Kotlin, Bash, YAML, TOML, C/C++, XML',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.9',
-    ratingCount: '850',
-    bestRating: '5',
-  },
-};
+  ],};
 
 const faqSchema = {
   '@context': 'https://schema.org' as const,

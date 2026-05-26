@@ -42,14 +42,7 @@ const jsonLd = {
   description: 'Fix "Unexpected end of JSON input" errors instantly. Detect truncated JSON, missing closing brackets, and empty strings passed to JSON.parse(). 100% browser-based.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    ratingCount: '980',
-    bestRating: '5',
-  },
-};
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const howToSchema = {
   '@context': 'https://schema.org',

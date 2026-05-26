@@ -17,14 +17,7 @@ const jsonLd = {
     'Supports GET, POST, PUT, PATCH, DELETE methods',
     'Handles custom headers and authentication',
     '100% client-side — no data sent to any server',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.7',
-    ratingCount: '640',
-    bestRating: '5',
-  },
-};
+  ],};
 
 export const metadata: Metadata = {
   title: 'Free cURL to HTTP Request Converter – Instant Conversion | UnblockDevs',

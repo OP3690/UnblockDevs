@@ -96,14 +96,7 @@ const jsonLd = {
     'Bracket matching and unclosed structure detection',
     'Health score from 0 to 100',
     '100% client-side — nothing uploaded',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.9',
-    ratingCount: '1240',
-    bestRating: '5',
-  },
-};
+  ],};
 
 const faqSchema = {
   '@context': 'https://schema.org',

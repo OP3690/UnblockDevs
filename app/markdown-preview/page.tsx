@@ -108,14 +108,7 @@ const webAppSchema = {
     'Copy HTML or raw Markdown to clipboard',
     'Download as .html or .md file',
     '100% client-side — no data sent to servers',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    ratingCount: '980',
-    bestRating: '5',
-  },
-};
+  ],};
 
 const faqSchema = {
   '@context': 'https://schema.org' as const,

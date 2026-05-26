@@ -108,9 +108,7 @@ const jsonLd = {
     'Array type inference',
     'Optional field detection',
     '100% client-side',
-  ],
-  aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.9', ratingCount: '1870', bestRating: '5' },
-};
+  ],};
 
 const faqSchema = {
   '@context': 'https://schema.org',

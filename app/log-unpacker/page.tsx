@@ -113,14 +113,7 @@ const jsonLd = {
     'Scrub Windows/Unix file paths (usernames redacted)',
     'AI-safe output — ready to paste into ChatGPT or any AI',
     '100% client-side — no data sent to any server',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    ratingCount: '670',
-    bestRating: '5',
-  },
-};
+  ],};
 
 const faqSchema = {
   '@context': 'https://schema.org' as const,

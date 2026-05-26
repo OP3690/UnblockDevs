@@ -111,14 +111,7 @@ const jsonLd = {
     'Ignore whitespace and case options',
     'Show only changed lines filter',
     '100% client-side — no server upload',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    ratingCount: '960',
-    bestRating: '5',
-  },
-};
+  ],};
 
 const faqSchema = {
   '@context': 'https://schema.org',

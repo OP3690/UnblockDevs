@@ -101,14 +101,7 @@ const jsonLd = {
     'Multi-page PDF support',
     '100% client-side — no upload, no server',
     'Instant conversion in your browser',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.7',
-    ratingCount: '890',
-    bestRating: '5',
-  },
-};
+  ],};
 
 const faqSchema = {
   '@context': 'https://schema.org',

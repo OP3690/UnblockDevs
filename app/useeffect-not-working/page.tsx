@@ -54,9 +54,7 @@ const webAppSchema = {
     'Complete guide to fixing useEffect issues: infinite loops, double invocation in React 18, async patterns, cleanup, and dependency arrays.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.9', ratingCount: '1180', bestRating: '5' },
-};
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const faqSchema = {
   '@context': 'https://schema.org',

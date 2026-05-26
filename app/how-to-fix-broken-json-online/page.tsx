@@ -34,14 +34,7 @@ const jsonLd = {
   description: 'Fix broken JSON online instantly. Step-by-step guide with free JSON fixer tool. No signup, 100% browser-based.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    ratingCount: '1120',
-    bestRating: '5',
-  },
-};
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const howToSchema = {
   '@context': 'https://schema.org',

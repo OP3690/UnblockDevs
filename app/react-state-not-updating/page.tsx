@@ -55,9 +55,7 @@ const webAppSchema = {
     'Complete guide to fixing React state not updating. Covers mutation bugs, async setState, stale closures, batching, and more.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.9', ratingCount: '1340', bestRating: '5' },
-};
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const faqSchema = {
   '@context': 'https://schema.org',

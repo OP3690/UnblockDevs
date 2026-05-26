@@ -20,14 +20,7 @@ const jsonLd = {
     'Supports GET, POST, PUT, PATCH, DELETE',
     'Handles headers, authentication, and JSON payloads',
     '100% client-side — no data sent to any server',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.9',
-    ratingCount: '780',
-    bestRating: '5',
-  },
-};
+  ],};
 
 export const metadata: Metadata = {
   title: 'Convert cURL to Python Requests — Free Online Converter | UnblockDevs',

@@ -130,15 +130,7 @@ const jsonLd = {
     'Generate TypeScript interface definitions from any JSON object',
     'Generate SQL INSERT statements from JSON arrays',
     '100% client-side — no data ever leaves your device',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.9',
-    ratingCount: '3400',
-    bestRating: '5',
-    worstRating: '1',
-  },
-  author: { '@type': 'Organization', name: 'UnblockDevs', url: 'https://unblockdevs.com' },
+  ],  author: { '@type': 'Organization', name: 'UnblockDevs', url: 'https://unblockdevs.com' },
   dateModified: '2026-04-16',
 };
 
@@ -150,14 +142,7 @@ const softwareAppLd = {
   url: canonicalUrl,
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Web Browser',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.9',
-    ratingCount: '3400',
-    bestRating: '5',
-  },
-  description:
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },  description:
     'The most complete free JSON beautifier and viewer online. Format, validate, fix, tree view, JSONPath, TypeScript, SQL. 100% private — runs entirely in your browser.',
 };
 

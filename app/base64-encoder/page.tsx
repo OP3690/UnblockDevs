@@ -64,6 +64,7 @@ const webAppSchema = {
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Web Browser',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  dateModified: '2026-05-26T00:00:00Z',
   featureList: [
     'Standard, Base64URL, MIME, No-Padding encoding and decoding',
     'Auto content-type detection (JWT, image, JSON, URL)',
@@ -71,14 +72,7 @@ const webAppSchema = {
     'File encoding up to 50 MB',
     'Built-in security scanner for secrets and PII',
     '100% browser-based, zero data transmission',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    ratingCount: '1320',
-    bestRating: '5',
-  },
-};
+  ],};
 
 const faqSchema = {
   '@context': 'https://schema.org',
@@ -118,7 +112,7 @@ const breadcrumbSchema = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://unblockdevs.com' },
-    { '@type': 'ListItem', position: 2, name: 'Tools', item: 'https://unblockdevs.com/tools/json' },
+    { '@type': 'ListItem', position: 2, name: 'Developer Tools', item: 'https://unblockdevs.com/tools/json' },
     { '@type': 'ListItem', position: 3, name: 'Base64 Encoder', item: canonicalUrl },
   ],
 };

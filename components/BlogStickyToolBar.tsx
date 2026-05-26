@@ -27,6 +27,8 @@ function detectToolForPath(pathname: string): ToolConfig {
     return { href: '/api-comparator', label: 'API Comparator', verb: 'Compare', icon: 'zap', color: 'blue' };
   if (/\/blog\/websocket|sse|polling/i.test(p))
     return { href: '/json-beautifier', label: 'JSON Formatter', verb: 'Format', icon: 'wrench', color: 'emerald' };
+  if (/cors|cross-origin|access-control/i.test(p))
+    return { href: '/cors-tester', label: 'CORS Tester', verb: 'Test', icon: 'zap', color: 'blue' };
   // Default — JSON error fixer for all JSON/AI/general blogs
   return { href: '/json-error-explainer', label: 'AI JSON Fixer', verb: 'Fix', icon: 'zap', color: 'emerald' };
 }

@@ -36,14 +36,7 @@ const jsonLd = {
   description: 'Fix "Expected comma or closing brace" JSON errors instantly. Auto-detect and fix missing commas, trailing commas, and missing brackets. 100% browser-based.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    ratingCount: '780',
-    bestRating: '5',
-  },
-};
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const howToSchema = {
   '@context': 'https://schema.org',

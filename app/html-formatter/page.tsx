@@ -103,9 +103,7 @@ const jsonLd = {
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  featureList: ['Beautify HTML', 'Minify HTML', 'Custom indent size (2/4 spaces or tab)', 'Syntax highlighting', 'Live error detection', 'Copy output', 'No server upload'],
-  aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.8', ratingCount: '3120', bestRating: '5' },
-};
+  featureList: ['Beautify HTML', 'Minify HTML', 'Custom indent size (2/4 spaces or tab)', 'Syntax highlighting', 'Live error detection', 'Copy output', 'No server upload'],};
 
 const faqSchema = {
   '@context': 'https://schema.org',

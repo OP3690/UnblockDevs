@@ -89,7 +89,7 @@ export default function JsonTreeViewExplorerClient() {
 
       <AlertBox type="tip" title="Navigate this response in seconds with tree view">
         In the{' '}
-        <a href="https://unblockdevs.com/json-beautifier" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline font-medium">
+        <a href="/json-beautifier" className="text-blue-600 underline font-medium">
           JSON workbench tree view
         </a>
         , collapse <code>data.users[0].profile</code> to focus on permissions, or collapse

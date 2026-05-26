@@ -60,6 +60,7 @@ const webAppSchema = {
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  dateModified: '2026-05-26T00:00:00Z',
   featureList: [
     'Decode JWT header, payload, and signature',
     'Verify HMAC signatures (HS256, HS384, HS512)',
@@ -67,14 +68,7 @@ const webAppSchema = {
     'Token lifetime and expiration check',
     'Provider detection (Auth0, Cognito, Firebase, Okta)',
     '100% browser-based — no server, token never leaves device',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    ratingCount: '2400',
-    bestRating: '5',
-  },
-};
+  ],};
 
 const faqSchema = {
   '@context': 'https://schema.org',
@@ -114,7 +108,7 @@ const breadcrumbSchema = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://unblockdevs.com' },
-    { '@type': 'ListItem', position: 2, name: 'Tools', item: 'https://unblockdevs.com/tools/json' },
+    { '@type': 'ListItem', position: 2, name: 'Developer Tools', item: 'https://unblockdevs.com/tools/json' },
     { '@type': 'ListItem', position: 3, name: 'JWT Decoder', item: canonicalUrl },
   ],
 };

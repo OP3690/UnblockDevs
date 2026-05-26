@@ -111,14 +111,7 @@ const jsonLd = {
     'Timeline and error-rate visualization',
     'JWT token detection and decoding',
     '100% browser-based — logs never leave your machine',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    ratingCount: '1600',
-    bestRating: '5',
-  },
-};
+  ],};
 
 const faqSchema = {
   '@context': 'https://schema.org' as const,

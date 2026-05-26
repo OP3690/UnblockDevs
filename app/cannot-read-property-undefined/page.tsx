@@ -54,9 +54,7 @@ const webAppSchema = {
     'Complete guide to fixing "Cannot read properties of undefined" errors in JavaScript and React using optional chaining, nullish coalescing, and defensive programming.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.9', ratingCount: '1620', bestRating: '5' },
-};
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const faqSchema = {
   '@context': 'https://schema.org',

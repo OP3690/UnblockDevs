@@ -1,8 +1,0 @@
-# https://unblockdevs.com/robots.txt — allow all crawlers, point to sitemap
-User-agent: *
-Allow: /
-Disallow: /api/
-Disallow: /_next/
-Disallow: /favicon.ico
-
-Sitemap: https://unblockdevs.com/sitemap.xml

@@ -120,14 +120,7 @@ const jsonLd = {
     '@type': 'Offer',
     price: '0',
     priceCurrency: 'USD',
-  },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.9',
-    ratingCount: '2500',
-    bestRating: '5',
-  },
-  featureList: [
+  },  featureList: [
     '100% data security – all processing in your browser',
     'Client-side only – no data sent to any server',
     'World\'s first client-side DITE-based SQL identifier masking',

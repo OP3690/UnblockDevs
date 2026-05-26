@@ -28,9 +28,8 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://unblockdevs.com'),
-  alternates: {
-    canonical: 'https://unblockdevs.com',
-  },
+  // Note: per-page canonical is set in each page's own metadata export.
+  // Do NOT set alternates.canonical here — it bleeds onto every child route.
   title: 'Use AI Safely — JSON Masking & Log Unpacker | UnblockDevs',
   description: 'Mask JSON and SQL before sending to AI. Fix stringified JSON, unpack logs, decode JWTs. Schema masking, formatter, parser—100% in-browser, no signup.',
   keywords: [

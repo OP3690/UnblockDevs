@@ -17,14 +17,7 @@ const jsonLd = {
     'Supports all HTTP methods with headers and auth',
     'Handles JSON body, form data, and query parameters',
     '100% client-side — no data sent to any server',
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    ratingCount: '560',
-    bestRating: '5',
-  },
-};
+  ],};
 
 export const metadata: Metadata = {
   title: 'cURL to Code – Python, JS, PHP & More | UnblockDevs',
