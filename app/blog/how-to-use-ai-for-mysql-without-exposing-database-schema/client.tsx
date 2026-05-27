@@ -4,8 +4,7 @@ import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
 import {
   AlertBox, FlowDiagram, CompareTable, ErrorFix, VerticalSteps,
   CodeBlock, FAQAccordion, KeyPointsGrid, StatGrid, SectionHeader,
-  QuickFact, ArchDiagram,
-} from '@/components/blog/BlogVisuals';
+  QuickFact, ArchDiagram, ToolCTA} from '@/components/blog/BlogVisuals';
 
 export default function UseAIForMySQLBlogClient() {
   return (
@@ -337,6 +336,13 @@ Keep all placeholder names exactly as they appear.
           answer: 'Client-side schema masking significantly reduces your compliance risk by ensuring no real schema identifiers are transmitted to the AI provider. However, compliance is context-dependent. For GDPR, this addresses the "schema as personal data" concern. For HIPAA, masking schema names is one control in a broader security program. Consult your compliance officer or legal team for your specific regulatory context.',
         },
       ]} />
+    
+      <ToolCTA
+        href="/ai-schema-masker"
+        label="Mask Your Schema Before Sharing"
+        desc="Replace real table names and column names with safe placeholders before pasting to any AI assistant."
+        color="emerald"
+      />
     </BlogLayoutWithSidebarAds>
   );
 }

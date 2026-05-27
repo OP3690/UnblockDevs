@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { ToolCTA } from '@/components/blog/BlogVisuals';
 import { ArrowLeft, Code, AlertTriangle, CheckCircle, ExternalLink, Brain } from 'lucide-react';
 
 import BlogSocialShare from '@/components/BlogSocialShare';
@@ -261,6 +262,13 @@ Tokens: {, "name", :, "John", }`}
           Explain My JSON Errors →
         </a>
       </div>
+    
+      <ToolCTA
+        href="/json-fixer-online"
+        label="Try the JSON Fixer"
+        desc="See the repair algorithm in action — paste malformed JSON and watch it fix trailing commas, bad quotes, and missing brackets."
+        color="emerald"
+      />
     </BlogLayoutWithSidebarAds>
     </div>
   );

@@ -26,6 +26,19 @@ export const metadata: Metadata = {
     'physical ai technology',
     'ai hardware systems'
   ],
+  openGraph: {
+    title: 'Physical AI Systems: Complete Guide 2026',
+    description: 'Physical AI systems: robotics, autonomous vehicles, smart manufacturing, edge AI',
+    type: 'article',
+    url: 'https://unblockdevs.com/blog/physical-ai-systems-complete-guide',
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Physical%20AI%20Systems%3A%20Complete%20Guide%202026&emoji=%F0%9F%A4%96&desc=Physical%20AI%20systems%3A%20robotics%2C%20autonomous%20vehicles%2C%20smart%20manufacturing%2C%20edge%20AI', width: 1200, height: 630, alt: 'Physical AI Systems: Complete Guide 2026 — UnblockDevs Blog' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Physical AI Systems: Complete Guide 2026',
+    description: 'Physical AI systems: robotics, autonomous vehicles, smart manufacturing, edge AI',
+    images: ['https://unblockdevs.com/api/og?title=Physical%20AI%20Systems%3A%20Complete%20Guide%202026&emoji=%F0%9F%A4%96&desc=Physical%20AI%20systems%3A%20robotics%2C%20autonomous%20vehicles%2C%20smart%20manufacturing%2C%20edge%20AI'],
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/physical-ai-systems-complete-guide' },
   robots: { index: false, follow: false },
 };

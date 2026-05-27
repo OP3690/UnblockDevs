@@ -7,7 +7,11 @@ const BLOG_PER_PAGE = 6
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://unblockdevs.com'
-  const currentDate = new Date().toISOString().split('T')[0]
+  // Static date for tool / main pages — accurate as of the last bulk SEO update.
+  // Using new Date() here causes every build to report a different lastModified,
+  // which Google's John Mueller confirmed is treated as an inaccurate signal and
+  // can be discounted. Update this string whenever you make content changes.
+  const currentDate = '2026-05-27'
 
   // Build date lookup so each blog post gets its actual publication date as lastModified.
   // Google uses lastModified to prioritise crawling fresh content — using today's date
@@ -291,11 +295,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: 'sql-formatter',
-      priority: 0.9,
-      changefreq: 'weekly' as const,
-    },
-    {
-      url: 'sql-in-generator',
       priority: 0.9,
       changefreq: 'weekly' as const,
     },

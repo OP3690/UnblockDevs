@@ -10,8 +10,7 @@ import {
   StatGrid,
   SectionHeader,
   QuickFact,
-  VerticalSteps,
-} from '@/components/blog/BlogVisuals';
+  VerticalSteps, ToolCTA} from '@/components/blog/BlogVisuals';
 
 export default function HowToUseChatGptForSqlSafelyClient() {
   return (
@@ -268,6 +267,13 @@ Masked output:
           answer: 'Yes. The mapping is cumulative within a session — paste and mask a second query and identifiers from the first query get the same placeholders if they appear again. This ensures consistency across multiple related queries sent to AI in the same session.',
         },
       ]} />
+    
+      <ToolCTA
+        href="/ai-schema-masker"
+        label="Mask Your SQL Schema"
+        desc="Anonymise your schema before sharing with ChatGPT. Restore real names locally after you get the answer."
+        color="emerald"
+      />
     </BlogLayoutWithSidebarAds>
   );
 }

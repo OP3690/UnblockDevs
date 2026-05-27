@@ -3,8 +3,7 @@
 import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
 import {
   AlertBox, CompareTable, CodeBlock, FAQAccordion, KeyPointsGrid,
-  StatGrid, SectionHeader, QuickFact, ErrorFix, VerticalSteps,
-} from '@/components/blog/BlogVisuals';
+  StatGrid, SectionHeader, QuickFact, ErrorFix, VerticalSteps, ToolCTA} from '@/components/blog/BlogVisuals';
 
 export default function CurlVsPythonRequestsComparisonClient() {
   return (
@@ -272,6 +271,13 @@ response = requests.get(url, cert=('client.crt', 'client.key'))`}
           answer: 'requests follows redirects by default (allow_redirects=True). To disable: requests.get(url, allow_redirects=False). To see the redirect chain: response.history — a list of Response objects for each redirect. Note: requests changes POST to GET on 301/302 redirects (matching browser behavior). To preserve the method on redirect, use 307/308 status codes on the server side.',
         },
       ]} />
+    
+      <ToolCTA
+        href="/curl-converter"
+        label="Convert cURL to Python requests"
+        desc="Paste any cURL command and get production-ready Python requests code with headers, auth, body, and cookies handled."
+        color="emerald"
+      />
     </BlogLayoutWithSidebarAds>
   );
 }

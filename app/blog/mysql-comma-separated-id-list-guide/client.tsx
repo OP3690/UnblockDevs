@@ -3,8 +3,7 @@
 import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
 import {
   AlertBox, ErrorFix, CodeBlock, FAQAccordion, KeyPointsGrid,
-  StatGrid, SectionHeader, QuickFact,
-} from '@/components/blog/BlogVisuals';
+  StatGrid, SectionHeader, QuickFact, ToolCTA} from '@/components/blog/BlogVisuals';
 
 export default function MysqlCommaSeparatedIdListGuideClient() {
   return (
@@ -285,6 +284,13 @@ ALTER TABLE articles DROP COLUMN tag_ids;`}
           answer: 'No — standard B-tree indexes cannot help FIND_IN_SET because the index stores the whole string value, not individual elements. MySQL cannot use an index to find rows where a specific substring matches. A FULLTEXT index in MySQL is designed for natural language text, not structured CSV data. The only way to get indexed lookups for individual elements is to use a junction table or JSON column with a multi-valued index (MySQL 8.0+).',
         },
       ]} />
+    
+      <ToolCTA
+        href="/sql-in-clause-generator"
+        label="Convert List to SQL IN()"
+        desc="Paste comma-separated IDs and get a valid SQL IN clause with proper quoting — handles thousands of values instantly."
+        color="emerald"
+      />
     </BlogLayoutWithSidebarAds>
   );
 }

@@ -13,6 +13,19 @@ export const metadata: Metadata = {
     'smart manufacturing',
     'simulation technology'
   ],
+  openGraph: {
+    title: 'Digital Twins: Complete Guide to Virtual Replicas',
+    description: 'Digital Twins: IoT, real-time simulation, predictive maintenance, Industry 4',
+    type: 'article',
+    url: 'https://unblockdevs.com/blog/digital-twins-complete-guide',
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Digital%20Twins%3A%20Complete%20Guide%20to%20Virtual%20Replicas&emoji=%F0%9F%94%97&desc=Digital%20Twins%3A%20IoT%2C%20real-time%20simulation%2C%20predictive%20maintenance%2C%20Industry%204', width: 1200, height: 630, alt: 'Digital Twins: Complete Guide to Virtual Replicas — UnblockDevs Blog' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Digital Twins: Complete Guide to Virtual Replicas',
+    description: 'Digital Twins: IoT, real-time simulation, predictive maintenance, Industry 4',
+    images: ['https://unblockdevs.com/api/og?title=Digital%20Twins%3A%20Complete%20Guide%20to%20Virtual%20Replicas&emoji=%F0%9F%94%97&desc=Digital%20Twins%3A%20IoT%2C%20real-time%20simulation%2C%20predictive%20maintenance%2C%20Industry%204'],
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/digital-twins-complete-guide' },
 
 };

@@ -3,8 +3,7 @@
 import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
 import {
   AlertBox, CompareTable, FAQAccordion, KeyPointsGrid,
-  StatGrid, SectionHeader, QuickFact, VerticalSteps, CodeBlock,
-} from '@/components/blog/BlogVisuals';
+  StatGrid, SectionHeader, QuickFact, VerticalSteps, CodeBlock, ToolCTA} from '@/components/blog/BlogVisuals';
 
 export default function IsItSafeToPasteSqlIntoChatgptClient() {
   return (
@@ -217,6 +216,13 @@ ollama run sqlcoder:7b
           answer: 'No — the "Improve the model for everyone" opt-out in Settings → Data Controls stops your conversations from being used for model training, but your data still goes to OpenAI\'s servers for inference and may be stored and reviewed for safety policy compliance. The opt-out is useful and worth enabling, but it is not a substitute for anonymizing sensitive data before sharing. For true data isolation, use the OpenAI API with ZDR (Zero Data Retention) agreements or run a local model entirely on your infrastructure.',
         },
       ]} />
+    
+      <ToolCTA
+        href="/ai-schema-masker"
+        label="Mask SQL Before Pasting to AI"
+        desc="Replace sensitive table names and column values with safe aliases — restore the real names after the AI responds."
+        color="emerald"
+      />
     </BlogLayoutWithSidebarAds>
   );
 }

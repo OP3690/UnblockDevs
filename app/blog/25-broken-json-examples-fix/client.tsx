@@ -4,8 +4,7 @@ import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
 import {
   AlertBox, FlowDiagram, CompareTable, ErrorFix, VerticalSteps,
   CodeBlock, FAQAccordion, KeyPointsGrid, StatGrid, SectionHeader,
-  QuickFact, TimelineViz, ArchDiagram,
-} from '@/components/blog/BlogVisuals';
+  QuickFact, TimelineViz, ArchDiagram, ToolCTA} from '@/components/blog/BlogVisuals';
 
 export default function BrokenJsonExamplesClient() {
   return (
@@ -368,6 +367,13 @@ console.log('Problem area:', snippet);
           Explain My JSON Errors →
         </a>
       </div>
+    
+      <ToolCTA
+        href="/json-fixer-online"
+        label="Fix Your Broken JSON"
+        desc="Paste any broken JSON — auto-repairs trailing commas, single quotes, unquoted keys, and 20+ other errors instantly."
+        color="emerald"
+      />
     </BlogLayoutWithSidebarAds>
   );
 }

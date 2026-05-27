@@ -3,8 +3,7 @@
 import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
 import {
   AlertBox, ErrorFix, CodeBlock, FAQAccordion,
-  StatGrid, SectionHeader, QuickFact, KeyPointsGrid, VerticalSteps,
-} from '@/components/blog/BlogVisuals';
+  StatGrid, SectionHeader, QuickFact, KeyPointsGrid, VerticalSteps, ToolCTA} from '@/components/blog/BlogVisuals';
 
 export default function WhyDoesMyJsonHaveBackslashesClient() {
   return (
@@ -230,6 +229,13 @@ const result = unwrapJson(raw);
           answer: 'PostgreSQL and MySQL store JSON/JSONB columns as structured data. Some JDBC drivers and ORMs return these as Java Strings or Python dicts depending on configuration. If your ORM returns a JSON column as a String, then you serialize it again in your response handler, you get double encoding. Check your ORM\'s type mapping configuration and ensure JSON columns are mapped to proper object types, not strings.',
         },
       ]} />
+    
+      <ToolCTA
+        href="/log-unpacker"
+        label="Unpack Stringified JSON"
+        desc="Paste double-encoded or stringified JSON and get the clean, readable structure back automatically."
+        color="emerald"
+      />
     </BlogLayoutWithSidebarAds>
   );
 }

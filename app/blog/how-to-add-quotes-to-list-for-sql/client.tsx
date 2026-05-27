@@ -10,8 +10,7 @@ import {
   StatGrid,
   SectionHeader,
   QuickFact,
-  VerticalSteps,
-} from '@/components/blog/BlogVisuals';
+  VerticalSteps, ToolCTA} from '@/components/blog/BlogVisuals';
 
 export default function HowToAddQuotesToListForSqlClient() {
   return (
@@ -264,6 +263,13 @@ WHERE id IN (@p1, @p2, @p3, @p4)`}
               "Yes. In the formatter, select Value type 'String quoted' then click Double \" to switch to double quotes. Note: most SQL databases use single quotes for string literals. Double quotes are typically reserved for column and table identifiers in standard SQL.",
           },
         ]}
+      />
+    
+      <ToolCTA
+        href="/sql-in-clause-generator"
+        label="Generate SQL IN Clause"
+        desc="Paste a list of IDs, emails, or UUIDs and get a properly quoted SQL IN() clause — CSV, newline, and JSON formats supported."
+        color="emerald"
       />
     </BlogLayoutWithSidebarAds>
   );

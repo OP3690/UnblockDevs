@@ -4,8 +4,7 @@ import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
 import {
   AlertBox, CompareTable, ErrorFix, VerticalSteps,
   CodeBlock, FAQAccordion, KeyPointsGrid, StatGrid, SectionHeader,
-  QuickFact,
-} from '@/components/blog/BlogVisuals';
+  QuickFact, ToolCTA} from '@/components/blog/BlogVisuals';
 
 export default function Mysql10MostUsedFunctionsClient() {
   return (
@@ -580,6 +579,13 @@ HAVING cnt > 10;`}
             answer: 'ROUND(3.456, 2) rounds to the nearest value: 3.46. TRUNCATE(3.456, 2) cuts off at the specified decimal without rounding: 3.45. For financial calculations requiring consistent floor behavior (always round down), TRUNCATE or FLOOR may be preferable to ROUND depending on your business rules.',
           },
         ]}
+      />
+    
+      <ToolCTA
+        href="/sql-formatter"
+        label="Try the SQL Formatter"
+        desc="Format MySQL queries for clarity — supports all MySQL functions with instant preview and copy-paste output."
+        color="emerald"
       />
     </BlogLayoutWithSidebarAds>
   );

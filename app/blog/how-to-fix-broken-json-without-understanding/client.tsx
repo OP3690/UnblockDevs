@@ -3,8 +3,7 @@
 import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
 import {
   AlertBox, ErrorFix, CodeBlock, FAQAccordion, CompareTable,
-  StatGrid, SectionHeader, QuickFact, KeyPointsGrid, VerticalSteps,
-} from '@/components/blog/BlogVisuals';
+  StatGrid, SectionHeader, QuickFact, KeyPointsGrid, VerticalSteps, ToolCTA} from '@/components/blog/BlogVisuals';
 
 export default function HowToFixBrokenJsonWithoutUnderstandingClient() {
   return (
@@ -415,6 +414,13 @@ console.log(data.name); // Alice`}
           Explain My JSON Errors →
         </a>
       </div>
+    
+      <ToolCTA
+        href="/json-fixer-online"
+        label="Auto-Fix Your JSON"
+        desc="Paste any broken JSON — the fixer detects and repairs all common issues without needing to understand the error."
+        color="emerald"
+      />
     </BlogLayoutWithSidebarAds>
   );
 }

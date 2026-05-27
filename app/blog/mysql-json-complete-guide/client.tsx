@@ -3,8 +3,7 @@
 import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
 import {
   AlertBox, CodeBlock, FAQAccordion, KeyPointsGrid,
-  StatGrid, SectionHeader, QuickFact,
-} from '@/components/blog/BlogVisuals';
+  StatGrid, SectionHeader, QuickFact, ToolCTA} from '@/components/blog/BlogVisuals';
 
 export default function MysqlJsonCompleteGuideClient() {
   return (
@@ -265,6 +264,13 @@ CREATE INDEX idx_brand_price ON products(brand, price_usd);
           answer: 'Use JSON_ARRAYAGG to collect values into a JSON array, or JSON_OBJECTAGG to build a JSON object. Examples: SELECT JSON_ARRAYAGG(name) FROM products WHERE brand = \'Dell\'; (returns array of names). SELECT JSON_OBJECTAGG(id, name) FROM products LIMIT 10; (returns {id: name, ...} object). These aggregate functions work with GROUP BY for building summary JSON objects per group.',
         },
       ]} />
+    
+      <ToolCTA
+        href="/json-beautifier"
+        label="Format MySQL JSON Output"
+        desc="Paste JSON returned by MySQL JSON_OBJECT() or JSON_ARRAY() functions to format and explore it instantly."
+        color="emerald"
+      />
     </BlogLayoutWithSidebarAds>
   );
 }

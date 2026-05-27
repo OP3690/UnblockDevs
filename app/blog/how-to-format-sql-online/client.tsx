@@ -10,8 +10,7 @@ import {
   StatGrid,
   SectionHeader,
   QuickFact,
-  VerticalSteps,
-} from '@/components/blog/BlogVisuals';
+  VerticalSteps, ToolCTA} from '@/components/blog/BlogVisuals';
 
 export default function HowToFormatSqlOnlineClient() {
   return (
@@ -277,6 +276,13 @@ npm install --save-dev prettier prettier-plugin-sql
           answer: "unblockdevs.com/sql-formatter supports MySQL, PostgreSQL, SQL Server, Oracle, and SQLite. It formats SQL IN clause lists with proper indentation, handles parameterized queries, range compression, and multiple output formats (SQL, JSON, CSV, GraphQL, MongoDB). All processing runs in the browser — no data is sent to any server. It is free and requires no account.",
         },
       ]} />
+    
+      <ToolCTA
+        href="/sql-formatter"
+        label="Format Your SQL Now"
+        desc="Paste raw SQL and get it back perfectly indented — MySQL, PostgreSQL, SQL Server, and standard SQL all supported."
+        color="emerald"
+      />
     </BlogLayoutWithSidebarAds>
   );
 }

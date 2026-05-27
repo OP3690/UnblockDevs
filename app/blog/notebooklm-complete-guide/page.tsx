@@ -22,6 +22,19 @@ export const metadata: Metadata = {
     'notebooklm for research',
     'notebooklm prompts guide'
   ],
+  openGraph: {
+    title: 'NotebookLM Complete Guide',
+    description: 'NotebookLM guide: what it is, how to use, tips',
+    type: 'article',
+    url: 'https://unblockdevs.com/blog/notebooklm-complete-guide',
+    images: [{ url: 'https://unblockdevs.com/api/og?title=NotebookLM%20Complete%20Guide&emoji=%F0%9F%A4%96&desc=NotebookLM%20guide%3A%20what%20it%20is%2C%20how%20to%20use%2C%20tips', width: 1200, height: 630, alt: 'NotebookLM Complete Guide — UnblockDevs Blog' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'NotebookLM Complete Guide',
+    description: 'NotebookLM guide: what it is, how to use, tips',
+    images: ['https://unblockdevs.com/api/og?title=NotebookLM%20Complete%20Guide&emoji=%F0%9F%A4%96&desc=NotebookLM%20guide%3A%20what%20it%20is%2C%20how%20to%20use%2C%20tips'],
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/notebooklm-complete-guide' },
 
 };

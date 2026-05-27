@@ -21,6 +21,19 @@ export const metadata: Metadata = {
     'CES 2026 announcements',
     'Amazon Fire TV features'
   ],
+  openGraph: {
+    title: 'CES 2026: Fire TV Stick 4K Max & Project AVA',
+    description: 'CES 2026: Fire TV Stick 4K Max, Project AVA AI',
+    type: 'article',
+    url: 'https://unblockdevs.com/blog/ces-2026-fire-tv-stick-4k-max-project-ava',
+    images: [{ url: 'https://unblockdevs.com/api/og?title=CES%202026%3A%20Fire%20TV%20Stick%204K%20Max%20%26%20Project%20AVA&emoji=%F0%9F%8E%AE&desc=CES%202026%3A%20Fire%20TV%20Stick%204K%20Max%2C%20Project%20AVA%20AI', width: 1200, height: 630, alt: 'CES 2026: Fire TV Stick 4K Max & Project AVA — UnblockDevs Blog' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'CES 2026: Fire TV Stick 4K Max & Project AVA',
+    description: 'CES 2026: Fire TV Stick 4K Max, Project AVA AI',
+    images: ['https://unblockdevs.com/api/og?title=CES%202026%3A%20Fire%20TV%20Stick%204K%20Max%20%26%20Project%20AVA&emoji=%F0%9F%8E%AE&desc=CES%202026%3A%20Fire%20TV%20Stick%204K%20Max%2C%20Project%20AVA%20AI'],
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/ces-2026-fire-tv-stick-4k-max-project-ava' },
   robots: { index: false, follow: false },
 };

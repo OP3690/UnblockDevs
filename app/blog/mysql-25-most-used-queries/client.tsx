@@ -3,8 +3,7 @@
 import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
 import {
   AlertBox, CodeBlock, FAQAccordion, KeyPointsGrid,
-  StatGrid, SectionHeader, QuickFact,
-} from '@/components/blog/BlogVisuals';
+  StatGrid, SectionHeader, QuickFact, ToolCTA} from '@/components/blog/BlogVisuals';
 
 export default function Mysql25MostUsedQueriesClient() {
   return (
@@ -320,6 +319,13 @@ COMMIT;`}
           answer: 'Use transactions for any multi-step operation that must succeed or fail atomically: money transfers (debit + credit must both succeed), inventory management (check stock + decrement + create order), and any operation where partial completion would leave data inconsistent. Single-statement INSERT, UPDATE, DELETE are implicitly atomic. Always include error handling that calls ROLLBACK on failure. In application code: wrap in try/catch with ROLLBACK in the catch block.',
         },
       ]} />
+    
+      <ToolCTA
+        href="/sql-formatter"
+        label="Format Your MySQL Queries"
+        desc="Paste any MySQL query to get it cleanly formatted with proper indentation, keyword casing, and syntax highlighting."
+        color="emerald"
+      />
     </BlogLayoutWithSidebarAds>
   );
 }

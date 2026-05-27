@@ -3,8 +3,7 @@
 import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
 import {
   AlertBox, CompareTable, CodeBlock, FAQAccordion, KeyPointsGrid,
-  StatGrid, SectionHeader, QuickFact, ErrorFix, VerticalSteps,
-} from '@/components/blog/BlogVisuals';
+  StatGrid, SectionHeader, QuickFact, ErrorFix, VerticalSteps, ToolCTA} from '@/components/blog/BlogVisuals';
 
 export default function Top10JsonErrorsClient() {
   return (
@@ -228,6 +227,13 @@ import json
           Explain My JSON Errors →
         </a>
       </div>
+    
+      <ToolCTA
+        href="/json-error-explainer"
+        label="Fix JSON Errors Instantly"
+        desc="Paste broken JSON and get a plain-English explanation of every error plus one-click auto-fix."
+        color="emerald"
+      />
     </BlogLayoutWithSidebarAds>
   );
 }

@@ -13,6 +13,19 @@ export const metadata: Metadata = {
     'fix json without understanding',
     'simple json fixer'
   ],
+  openGraph: {
+    title: 'Fix Broken JSON Without Understanding It',
+    description: 'Fix broken JSON without coding',
+    type: 'article',
+    url: 'https://unblockdevs.com/blog/how-to-fix-broken-json-without-understanding',
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Fix%20Broken%20JSON%20Without%20Understanding%20It&emoji=%7B%7D&desc=Fix%20broken%20JSON%20without%20coding', width: 1200, height: 630, alt: 'Fix Broken JSON Without Understanding It — UnblockDevs Blog' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Fix Broken JSON Without Understanding It',
+    description: 'Fix broken JSON without coding',
+    images: ['https://unblockdevs.com/api/og?title=Fix%20Broken%20JSON%20Without%20Understanding%20It&emoji=%7B%7D&desc=Fix%20broken%20JSON%20without%20coding'],
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-fix-broken-json-without-understanding' },
 
 };

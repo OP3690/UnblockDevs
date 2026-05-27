@@ -10,8 +10,7 @@ import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
 import {
   AlertBox, FlowDiagram, VerticalSteps, CompareTable, ArchDiagram,
   StatGrid, KeyPointsGrid, CodeBlock, TimelineViz, QuickFact,
-  SectionHeader, FAQAccordion,
-} from '@/components/blog/BlogVisuals';
+  SectionHeader, FAQAccordion, ToolCTA} from '@/components/blog/BlogVisuals';
 
 export default function ApacheKafkaCompleteGuideClient() {
   return (
@@ -264,7 +263,14 @@ startConsuming().catch(console.error);`}
         <section className="mt-10"><BlogSocialShare title="Apache Kafka: Complete Guide" description="Architecture, core concepts, real-world use cases & code examples" variant="full" /></section>
         <section className="mt-8"><NewsletterSignup /></section>
         <section className="mt-8"><FeedbackForm toolName="Apache Kafka Complete Guide" /></section>
-      </BlogLayoutWithSidebarAds>
+      
+      <ToolCTA
+        href="/json-beautifier"
+        label="Inspect Kafka JSON Payloads"
+        desc="Paste Kafka message payloads to format, validate, and explore nested structure with tree view and JSONPath queries."
+        color="emerald"
+      />
+    </BlogLayoutWithSidebarAds>
     </div>
   );
 }
