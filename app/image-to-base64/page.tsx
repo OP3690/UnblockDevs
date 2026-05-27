@@ -84,7 +84,7 @@ export const metadata: Metadata = {
     description: 'Convert images to Base64 data URIs. Get CSS background-image, HTML img src, and raw base64 string. Free, browser-only.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Image to Base64 Converter — UnblockDevs' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Image%20to%20Base64%20Converter%20%E2%80%94%20PNG%2C%20JPG%2C%20SVG&emoji=%F0%9F%94%90&desc=Convert%20images%20to%20Base64%20data%20URIs', width: 1200, height: 630, alt: 'Image to Base64 Converter — PNG, JPG, SVG — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -102,6 +102,7 @@ const jsonLd = {
   description: 'Free online tool to convert PNG, JPG, SVG, GIF, and WebP images to Base64 encoded data URIs. Supports drag-and-drop, outputs CSS background-image, HTML img src, and raw Base64 string.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: ['PNG, JPG, SVG, GIF, WebP support', 'Drag and drop upload', 'CSS data URI output', 'HTML img tag output', 'Raw Base64 output', '100% browser-based', 'No file size limit'],};
 

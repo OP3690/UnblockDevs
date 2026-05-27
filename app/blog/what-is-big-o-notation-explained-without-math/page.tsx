@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     description: 'Learn Big-O notation explained simply without complex math. Understand O(1), O(n), O(log n), O(n²) with real-world examples.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/what-is-big-o-notation-explained-without-math',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=What%20Is%20Big-O%20Notation%3F%20Explained%20Without%20Math%20%28Complete%20Guide%29&emoji=%F0%9F%A4%96&desc=Learn%20Big-O%20notation%20explained%20simply%20without%20complex%20math', width: 1200, height: 630, alt: 'What Is Big-O Notation? Explained Without Math (Complete Guide) — UnblockDevs Blog' }],
 
   },
   alternates: {

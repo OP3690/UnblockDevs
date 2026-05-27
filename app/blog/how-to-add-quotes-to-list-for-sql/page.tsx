@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-add-quotes-to-list-for-sql',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Add%20Quotes%20to%20a%20List%20for%20SQL%20IN%20Clause&emoji=%F0%9F%97%84%EF%B8%8F&desc=Add%20single%20quotes%2C%20commas%2C%20and%20parentheses%20to%20a%20list%20of%20IDs%20for%20SQL%20IN%20clause', width: 1200, height: 630, alt: 'How to Add Quotes to a List for SQL IN Clause — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

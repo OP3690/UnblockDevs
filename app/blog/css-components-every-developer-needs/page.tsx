@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-12T00:00:00Z',
     authors: ['UnblockDevs'],
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: '10 Essential CSS Components — UnblockDevs' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=10%20CSS%20Components%20Every%20Web%20Developer%20Needs%20%E2%80%94%20With%20Full%20Code&emoji=%F0%9F%8E%A8&desc=Buttons%2C%20cards%2C%20modals%2C%20navbars%2C%20tables%2C%20forms', width: 1200, height: 630, alt: '10 CSS Components Every Web Developer Needs — With Full Code — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

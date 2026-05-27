@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     title: "How I Would Make $1,000/Month Using AI (If I Started Today)",
     description: "Pick niche, use AI to produce X, monetize through Y, timeline breakdown. Realistic plan.",
     type: "article",    url: 'https://unblockdevs.com/blog/how-to-make-1000-month-using-ai-if-started-today',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20I%20Would%20Make%20%241%2C000/Month%20Using%20AI%20%28If%20I%20Started%20Today%29&emoji=%F0%9F%A4%96&desc=Pick%20niche%2C%20use%20AI%20to%20produce%20X%2C%20monetize%20through%20Y%2C%20timeline%20breakdown', width: 1200, height: 630, alt: 'How I Would Make $1,000/Month Using AI (If I Started Today) — UnblockDevs Blog' }],
 
   },
   alternates: {

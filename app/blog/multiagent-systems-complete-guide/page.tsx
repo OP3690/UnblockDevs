@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     description: 'Guide to multiagent systems: what they are, when to use them, how they work. Agent-based systems, multi-agent AI, coordination.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/multiagent-systems-complete-guide',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Multiagent%20Systems%3A%20Complete%20Guide%202026&emoji=%F0%9F%93%96&desc=Guide%20to%20multiagent%20systems%3A%20what%20they%20are%2C%20when%20to%20use%20them%2C%20how%20they%20work', width: 1200, height: 630, alt: 'Multiagent Systems: Complete Guide 2026 — UnblockDevs Blog' }],
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/multiagent-systems-complete-guide' },
   robots: { index: false, follow: false },

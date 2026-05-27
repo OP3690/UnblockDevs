@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-cancel-amazon-prime-membership-instantly',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Cancel%20Amazon%20Prime%20Membership%20Instantly%3A%20Complete%20Guide%202026&emoji=%F0%9F%9B%A0%EF%B8%8F&desc=Cancel%20Amazon%20Prime%20instantly', width: 1200, height: 630, alt: 'How to Cancel Amazon Prime Membership Instantly: Complete Guide 2026 — UnblockDevs Blog' }],
 
   },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-cancel-amazon-prime-membership-instantly' },
 

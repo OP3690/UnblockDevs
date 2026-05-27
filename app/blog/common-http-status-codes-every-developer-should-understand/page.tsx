@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     description: 'Learn all HTTP status codes: 200, 400, 404, 500. Understand what each code means and when to use them.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/common-http-status-codes-every-developer-should-understand',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=HTTP%20Status%20Codes%20Every%20Developer%20Should%20Know&emoji=%E2%9A%A1&desc=Learn%20all%20HTTP%20status%20codes%3A%20200%2C%20400%2C%20404%2C%20500', width: 1200, height: 630, alt: 'HTTP Status Codes Every Developer Should Know — UnblockDevs Blog' }],
 
   },
   alternates: {

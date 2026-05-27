@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-use-chatgpt-for-sql-safely',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Use%20ChatGPT%20for%20SQL%20Without%20Exposing%20Your%20Database%20Schema&emoji=%F0%9F%97%84%EF%B8%8F&desc=Mask%20table%20and%20column%20names%20before%20sending%20to%20ChatGPT', width: 1200, height: 630, alt: 'How to Use ChatGPT for SQL Without Exposing Your Database Schema — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

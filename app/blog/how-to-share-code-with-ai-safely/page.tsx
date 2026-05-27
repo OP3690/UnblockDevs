@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-share-code-with-ai-safely',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Share%20Code%20with%20AI%20Safely%20%E2%80%94%20Secure%20AI%20Coding%20Workflow&emoji=%E2%9A%A1&desc=Step-by-step%3A%20mask%20secrets%2C%20use%20AI%20prompt%20templates%2C%20restore%20original%20names', width: 1200, height: 630, alt: 'How to Share Code with AI Safely — Secure AI Coding Workflow — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

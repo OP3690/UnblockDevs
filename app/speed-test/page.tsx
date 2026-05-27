@@ -83,7 +83,7 @@ export const metadata: Metadata = {
       'Test your internet speed instantly. Download, upload, ping, jitter. No account, no data stored. 100% browser-based.',
     type: 'website',
     url: 'https://unblockdevs.com/speed-test',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Internet%20Speed%20Test%20%E2%80%94%20Check%20Download%2C%20Upload%20%26%20Ping%20Free&emoji=%E2%9A%97%EF%B8%8F&desc=Test%20your%20internet%20speed%20instantly', width: 1200, height: 630, alt: 'Internet Speed Test — Check Download, Upload & Ping Free — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -101,6 +101,7 @@ const jsonLd = {
   description: 'Test your internet speed instantly. Check download speed, upload speed, ping, and jitter. 100% browser-based, privacy-first.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Download speed measurement',

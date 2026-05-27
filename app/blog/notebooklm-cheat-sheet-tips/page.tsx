@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     description: 'NotebookLM cheat sheet: tips, shortcuts, study guide features, generate checklists. Complete quick reference.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/notebooklm-cheat-sheet-tips',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=NotebookLM%20Cheat%20Sheet%3A%20Tips%2C%20Study%20Guide%20%26%20Effective%20Usage&emoji=%F0%9F%93%96&desc=NotebookLM%20cheat%20sheet%3A%20tips%2C%20shortcuts%2C%20study%20guide%20features%2C%20generate', width: 1200, height: 630, alt: 'NotebookLM Cheat Sheet: Tips, Study Guide & Effective Usage — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

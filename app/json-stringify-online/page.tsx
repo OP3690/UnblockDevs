@@ -85,7 +85,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: canonicalUrl,
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs JSON.stringify() Online' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON.stringify%28%29%20Online%20%E2%80%94%20Convert%20JS%20Object%20to%20JSON%20String&emoji=%7B%7D&desc=Simulate%20JSON', width: 1200, height: 630, alt: 'JSON.stringify() Online — Convert JS Object to JSON String — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -103,6 +103,7 @@ const jsonLd = {
   description: 'Convert JavaScript objects to JSON strings online. Simulate JSON.stringify() with custom indent, escape special characters, remove undefined values.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Convert JavaScript objects to JSON strings',

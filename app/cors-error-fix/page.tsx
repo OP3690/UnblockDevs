@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://unblockdevs.com/cors-error-fix',
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Fix CORS Errors' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=CORS%20Error%20Fix%20%E2%80%94%20How%20to%20Fix%20Cross-Origin%20Errors&emoji=%F0%9F%94%92&desc=Fix%20CORS%20errors%20in%20fetch%2C%20axios%2C%20React%2C%20and%20Node', width: 1200, height: 630, alt: 'CORS Error Fix — How to Fix Cross-Origin Errors — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -55,6 +55,7 @@ const jsonLd = {
     'Complete guide to fixing CORS errors — blocked by CORS policy, no Access-Control-Allow-Origin header, and preflight failures. Includes a free CORS tester tool.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const faqSchema = {

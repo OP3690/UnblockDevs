@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     authors: ['UnblockDevs'],
     tags: ['Developer Tools', 'Free Tools', 'Privacy', 'Web Development'],
     url: 'https://unblockdevs.com/blog/best-free-developer-tools-2026',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Best%20Free%20Online%20Developer%20Tools%20in%202026%20%28Privacy-Focused%20%26%20No%20Signup%20Required%29&emoji=%F0%9F%9B%A0%EF%B8%8F&desc=Best%20free%20developer%20tools%202026', width: 1200, height: 630, alt: 'Best Free Online Developer Tools in 2026 (Privacy-Focused & No Signup Required) — UnblockDevs Blog' }],
 
   },
   twitter: {

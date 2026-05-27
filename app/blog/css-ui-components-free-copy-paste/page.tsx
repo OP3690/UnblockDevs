@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-12T00:00:00Z',
     authors: ['UnblockDevs'],
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Free CSS UI Components — UnblockDevs' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=401%2B%20Free%20CSS%20UI%20Components%20%E2%80%94%20Copy-Paste%20Tailwind%20%26%20CSS&emoji=%F0%9F%8E%A8&desc=Buttons%2C%20cards%2C%20modals%2C%20navbars%2C%20forms%2C%20and%2020%2B%20more%20categories', width: 1200, height: 630, alt: '401+ Free CSS UI Components — Copy-Paste Tailwind & CSS — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

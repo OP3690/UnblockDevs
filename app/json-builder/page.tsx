@@ -83,7 +83,7 @@ export const metadata: Metadata = {
     description: 'Build JSON objects visually. Add keys, values, nested objects, and arrays. 100% browser-based.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON%20Builder%20Online%20%E2%80%94%20Visual%20JSON%20Editor%2C%20Create%20%26%20Edit%20JSON%20Free&emoji=%7B%7D&desc=Build%20JSON%20objects%20visually', width: 1200, height: 630, alt: 'JSON Builder Online — Visual JSON Editor, Create & Edit JSON Free — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -102,6 +102,7 @@ const jsonLd = {
   url: canonicalUrl,
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Visual key-value JSON editor',

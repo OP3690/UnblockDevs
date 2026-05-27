@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/api-key-leak-prevention-ai-tools',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=API%20Key%20Leak%20Prevention%20When%20Using%20AI%20Tools&emoji=%E2%9A%A1&desc=Leaked%20API%20keys%20in%20AI%20prompts%20are%20rotated%20and%20exploited%20within%20hours', width: 1200, height: 630, alt: 'API Key Leak Prevention When Using AI Tools — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

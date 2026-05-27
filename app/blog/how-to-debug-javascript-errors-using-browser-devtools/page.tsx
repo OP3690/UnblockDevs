@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     description: 'Master JavaScript debugging with browser DevTools. Learn to fix errors, use breakpoints, and debug production issues.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/how-to-debug-javascript-errors-using-browser-devtools',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Debug%20JavaScript%20Errors%20Using%20Browser%20DevTools%20%28Complete%20Guide%29&emoji=%E2%9A%A1&desc=Master%20JavaScript%20debugging%20with%20browser%20DevTools', width: 1200, height: 630, alt: 'How to Debug JavaScript Errors Using Browser DevTools (Complete Guide) — UnblockDevs Blog' }],
 
   },
   alternates: {

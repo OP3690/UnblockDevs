@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     authors: ['UnblockDevs'],
     tags: ['cURL', 'API', 'HTTP Requests', 'Code Generation', 'Web Development'],
     url: 'https://unblockdevs.com/blog/curl-to-code-converter-2026',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Convert%20cURL%20Commands%20to%20Code%20in%202026&emoji=%E2%9A%A1&desc=Step-by-step%20guide%20to%20convert%20cURL%20commands%20to%20code%20in%20JavaScript%2C%20Python%2C%20Go%2C', width: 1200, height: 630, alt: 'How to Convert cURL Commands to Code in 2026 — UnblockDevs Blog' }],
 
   },
   twitter: {

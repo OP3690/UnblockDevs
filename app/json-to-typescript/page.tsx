@@ -81,7 +81,7 @@ export const metadata: Metadata = {
     description: 'Convert JSON to TypeScript interfaces, type aliases, or Zod schemas instantly. Handles nesting, arrays, and nulls. 100% browser-based.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs JSON to TypeScript Generator' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON%20to%20TypeScript%20Types%20Generator&emoji=%7B%7D&desc=Convert%20JSON%20to%20TypeScript%20interfaces%2C%20type%20aliases%2C%20or%20Zod%20schemas%20instantly', width: 1200, height: 630, alt: 'JSON to TypeScript Types Generator — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -99,6 +99,7 @@ const jsonLd = {
   description: 'Convert any JSON to TypeScript interfaces, type aliases, or Zod schemas. Handles nested objects, arrays, and optional fields.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Generate TypeScript interfaces from JSON',

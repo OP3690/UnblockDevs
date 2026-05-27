@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     description: 'Learn common data quality issues and how data engineers identify, fix, and prevent data quality problems.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/common-data-quality-issues-and-how-data-engineers-fix-them',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Data%20Quality%20Issues%20%26%20How%20Engineers%20Fix%20Them&emoji=%F0%9F%94%A7&desc=Learn%20common%20data%20quality%20issues%20and%20how%20data%20engineers%20identify%2C%20fix%2C%20and', width: 1200, height: 630, alt: 'Data Quality Issues & How Engineers Fix Them — UnblockDevs Blog' }],
 
   },
   alternates: {

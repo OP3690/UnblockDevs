@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     publishedTime: '2024-01-15T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/complete-guide-json-viewer-parser-beautifier',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Complete%20Guide%20to%20JSON%20Viewer%2C%20Parser%2C%20and%20Beautifier%20Tools&emoji=%7B%7D&desc=JSON%20Viewer%2C%20Parser%2C%20Beautifier%3A%20visualize%2C%20parse%2C%20format%20JSON', width: 1200, height: 630, alt: 'Complete Guide to JSON Viewer, Parser, and Beautifier Tools — UnblockDevs Blog' }],
 
   },  alternates: { canonical: 'https://unblockdevs.com/blog/complete-guide-json-viewer-parser-beautifier' },
 

@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     description: 'Anonymize MySQL schema before AI. Client-side masking, reversible. No server, no logging.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/how-to-use-ai-for-mysql-without-exposing-database-schema',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Use%20AI%20for%20MySQL%20Without%20Exposing%20Your%20Database%20Schema&emoji=%F0%9F%97%84%EF%B8%8F&desc=Anonymize%20MySQL%20schema%20before%20AI', width: 1200, height: 630, alt: 'How to Use AI for MySQL Without Exposing Your Database Schema — UnblockDevs Blog' }],
 
   },
   alternates: {

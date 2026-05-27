@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     title: "How AI Knows What You're Thinking (And Why It Feels So Accurate)",
     description: "Recommendation systems, data tracking, predictive models, and the psychology behind AI predictions.",
     type: "article",    url: 'https://unblockdevs.com/blog/how-ai-knows-what-youre-thinking-why-accurate',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20AI%20Knows%20What%20You&emoji=%F0%9F%A4%96&desc=Recommendation%20systems%2C%20data%20tracking%2C%20predictive%20models%2C%20and%20the%20psychology', width: 1200, height: 630, alt: 'How AI Knows What You — UnblockDevs Blog' }],
 
   },
   alternates: {

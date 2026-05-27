@@ -102,6 +102,7 @@ const jsonLd = {
   description: 'Generate cryptographically secure passwords, passphrases, and API keys. Entropy meter, strength calculator, breach check. 100% client-side.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Cryptographically secure random passwords',

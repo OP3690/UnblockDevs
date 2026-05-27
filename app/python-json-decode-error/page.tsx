@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://unblockdevs.com/python-json-decode-error',
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Fix Python JSONDecodeError' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Fix%20Python%20json.JSONDecodeError%20%E2%80%94%20Causes%20%26%20Solutions&emoji=%7B%7D&desc=Fix%20Python%20json', width: 1200, height: 630, alt: 'Fix Python json.JSONDecodeError — Causes & Solutions — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -55,6 +55,7 @@ const jsonLd = {
     'Complete guide to fixing Python json.JSONDecodeError — HTML responses, BOM characters, empty strings, trailing commas, and safe parsing patterns.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const faqSchema = {

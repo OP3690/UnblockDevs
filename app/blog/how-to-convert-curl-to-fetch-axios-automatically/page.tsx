@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     description: 'Convert cURL to Fetch and Axios. Tools and code examples.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/how-to-convert-curl-to-fetch-axios-automatically',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Convert%20cURL%20to%20Fetch%20/%20Axios%202026&emoji=%E2%9A%A1&desc=Convert%20cURL%20to%20Fetch%20and%20Axios', width: 1200, height: 630, alt: 'Convert cURL to Fetch / Axios 2026 — UnblockDevs Blog' }],
 
   },
   twitter: {

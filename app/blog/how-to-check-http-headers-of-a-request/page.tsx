@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-check-http-headers-of-a-request',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Check%20HTTP%20Headers%20of%20Any%20Request%20%28Browser%2C%20cURL%20%26%20Online%20Tool%29&emoji=%F0%9F%94%92&desc=Step-by-step%3A%20how%20to%20view%20HTTP%20request%20and%20response%20headers%20in%20Chrome%20DevTools%2C', width: 1200, height: 630, alt: 'How to Check HTTP Headers of Any Request (Browser, cURL & Online Tool) — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

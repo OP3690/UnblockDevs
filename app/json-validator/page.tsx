@@ -92,7 +92,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: canonicalUrl,
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'JSON Validator Online — UnblockDevs' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON%20Validator%20Online%20%E2%80%94%20Syntax%20%26%20Schema%20Checker%2C%20Free%20%26%20Private&emoji=%7B%7D&desc=Validate%20JSON%20syntax%20and%20JSON%20Schema%20%28Draft%207%2C%202020-12%2C%20AJV%29', width: 1200, height: 630, alt: 'JSON Validator Online — Syntax & Schema Checker, Free & Private — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',

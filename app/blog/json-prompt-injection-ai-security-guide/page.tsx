@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-05-15T08:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/json-prompt-injection-ai-security-guide',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs — JSON Prompt Injection Security Guide' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON%20Prompt%20Injection%3A%20How%20Attackers%20Manipulate%20AI%20Apps%20Through%20JSON%20Data&emoji=%7B%7D&desc=JSON%20prompt%20injection%20attacks%20let%20hackers%20hijack%20your%20AI%20through%20user-supplied', width: 1200, height: 630, alt: 'JSON Prompt Injection: How Attackers Manipulate AI Apps Through JSON Data — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

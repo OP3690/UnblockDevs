@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-05-15T10:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/llm-structured-json-outputs-complete-guide-2026',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs — LLM Structured JSON Outputs Guide 2026' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=LLM%20Structured%20JSON%20Outputs%20in%202026%3A%20OpenAI%2C%20Anthropic%20%26%20Gemini%20Complete%20Guide&emoji=%7B%7D&desc=Master%20structured%20JSON%20outputs%20for%20every%20major%20LLM%3A%20OpenAI%2C%20Anthropic%2C%20Gemini', width: 1200, height: 630, alt: 'LLM Structured JSON Outputs in 2026: OpenAI, Anthropic & Gemini Complete Guide — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

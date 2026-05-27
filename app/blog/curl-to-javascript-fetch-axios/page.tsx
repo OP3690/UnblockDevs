@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/curl-to-javascript-fetch-axios',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Convert%20cURL%20to%20JavaScript%20fetch%2C%20Axios%20%26%20Node.js&emoji=%E2%9A%A1&desc=Convert%20any%20cURL%20command%20to%20JavaScript%20fetch%28%29%2C%20Axios%2C%20or%20Node', width: 1200, height: 630, alt: 'How to Convert cURL to JavaScript fetch, Axios & Node.js — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

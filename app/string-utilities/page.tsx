@@ -86,7 +86,7 @@ export const metadata: Metadata = {
     description: 'All case conversions simultaneously + extract emails/URLs + Base64/URL encode. The only string tool you need.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'String Utilities — UnblockDevs' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=String%20Utilities%20%E2%80%94%20camelCase%2C%20snake_case%2C%20Base64%20%26%20More&emoji=%F0%9F%93%9D&desc=All%20case%20conversions%20simultaneously%20%2B%20extract%20emails/URLs%20%2B%20Base64/URL%20encode', width: 1200, height: 630, alt: 'String Utilities — camelCase, snake_case, Base64 & More — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -104,6 +104,7 @@ const jsonLd = {
   description: 'Free string utilities: case conversion (camelCase, snake_case, PascalCase, kebab-case), text extraction (emails, URLs, IPs), encoding (Base64, URL, HTML entities), and line tools (sort, dedupe, filter).',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     '12 case format conversions simultaneously',

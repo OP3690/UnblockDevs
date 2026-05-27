@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-debug-api-request-errors',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Debug%20API%20Request%20Errors%20%E2%80%94%20Common%20Dev%20Errors%20Explained&emoji=%E2%9A%A1&desc=CORS%20errors%2C%20process', width: 1200, height: 630, alt: 'How to Debug API Request Errors — Common Dev Errors Explained — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

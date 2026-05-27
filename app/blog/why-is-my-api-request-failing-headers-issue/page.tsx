@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/why-is-my-api-request-failing-headers-issue',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Why%20Is%20My%20API%20Request%20Failing%3F%20Fix%20HTTP%20Header%20Issues%20%28Auth%2C%20CORS%2C%20Content-Type%29&emoji=%F0%9F%94%92&desc=API%20request%20failing%20with%20401%2C%20403%2C%20or%20CORS%20error', width: 1200, height: 630, alt: 'Why Is My API Request Failing? Fix HTTP Header Issues (Auth, CORS, Content-Type) — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

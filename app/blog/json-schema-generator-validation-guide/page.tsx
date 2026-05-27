@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     publishedTime: '2024-01-08T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/json-schema-generator-validation-guide',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON%20Schema%20Generator%20and%20Validation%3A%20Complete%20Guide&emoji=%7B%7D&desc=Learn%20how%20to%20generate%20JSON%20schemas%20automatically%20and%20validate%20JSON%20data%20against', width: 1200, height: 630, alt: 'JSON Schema Generator and Validation: Complete Guide — UnblockDevs Blog' }],
 
   },  alternates: { canonical: 'https://unblockdevs.com/blog/json-schema-generator-validation-guide' },
 

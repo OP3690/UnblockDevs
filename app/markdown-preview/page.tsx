@@ -100,6 +100,7 @@ const webAppSchema = {
   description: 'Preview Markdown live in real time. GitHub Flavored Markdown (GFM) support with tables, task lists, code blocks, and more. Copy HTML, download, 100% browser-based.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Live Markdown preview with 150ms debounce',

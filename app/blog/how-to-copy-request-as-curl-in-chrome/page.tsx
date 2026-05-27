@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-copy-request-as-curl-in-chrome',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Copy%20a%20Request%20as%20cURL%20in%20Chrome%20%E2%80%94%20DevTools%20Guide&emoji=%E2%9A%A1&desc=Step-by-step%3A%20how%20to%20copy%20any%20network%20request%20as%20a%20cURL%20command%20in%20Chrome', width: 1200, height: 630, alt: 'How to Copy a Request as cURL in Chrome — DevTools Guide — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

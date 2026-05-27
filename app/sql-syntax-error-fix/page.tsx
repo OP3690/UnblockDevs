@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://unblockdevs.com/sql-syntax-error-fix',
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Fix SQL Syntax Errors' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Fix%20SQL%20Syntax%20Error%20%E2%80%94%20Common%20Mistakes%20%26%20Solutions&emoji=%F0%9F%97%84%EF%B8%8F&desc=Fix%20SQL%20syntax%20errors%3A%20missing%20quotes%2C%20reserved%20word%20conflicts%2C%20comma%20errors%2C', width: 1200, height: 630, alt: 'Fix SQL Syntax Error — Common Mistakes & Solutions — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -55,6 +55,7 @@ const jsonLd = {
     'Complete guide to fixing SQL syntax errors — reserved words, missing quotes, comma mistakes, JOIN errors, WHERE vs HAVING, NULL comparisons, and more.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const faqSchema = {

@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     description: 'Why async/await not working in JS. Common mistakes, missing await. Fixes and code.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/why-async-await-is-not-working-javascript-common-mistakes',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Why%20async/await%20Not%20Working%20in%20JavaScript%202026&emoji=%E2%9A%A1&desc=Why%20async/await%20not%20working%20in%20JS', width: 1200, height: 630, alt: 'Why async/await Not Working in JavaScript 2026 — UnblockDevs Blog' }],
 
   },
   twitter: {

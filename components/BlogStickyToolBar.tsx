@@ -15,21 +15,46 @@ interface ToolConfig {
 
 function detectToolForPath(pathname: string): ToolConfig {
   const p = pathname ?? '';
-  if (/\/blog\/jwt/i.test(p))
+  // JWT / OAuth / token
+  if (/\/blog\/(jwt|oauth|token)/i.test(p))
     return { href: '/jwt-decoder', label: 'JWT Decoder', verb: 'Decode', icon: 'code', color: 'violet' };
+  // cURL / HAR / HTTP requests
   if (/\/blog\/(har-to-curl|curl)/i.test(p))
     return { href: '/curl-converter', label: 'cURL Converter', verb: 'Convert', icon: 'code', color: 'blue' };
-  if (/\/blog\/(sql|mysql)/i.test(p))
+  // SQL / database
+  if (/\/blog\/(sql|mysql|postgres|database)/i.test(p))
     return { href: '/sql-formatter', label: 'SQL Formatter', verb: 'Format', icon: 'wrench', color: 'blue' };
-  if (/\/blog\/oauth/i.test(p))
-    return { href: '/jwt-decoder', label: 'Token Decoder', verb: 'Decode', icon: 'code', color: 'violet' };
-  if (/\/blog\/rest-api/i.test(p))
-    return { href: '/api-comparator', label: 'API Comparator', verb: 'Compare', icon: 'zap', color: 'blue' };
-  if (/\/blog\/websocket|sse|polling/i.test(p))
-    return { href: '/json-beautifier', label: 'JSON Formatter', verb: 'Format', icon: 'wrench', color: 'emerald' };
+  // CORS / cross-origin
   if (/cors|cross-origin|access-control/i.test(p))
     return { href: '/cors-tester', label: 'CORS Tester', verb: 'Test', icon: 'zap', color: 'blue' };
-  // Default — JSON error fixer for all JSON/AI/general blogs
+  // REST API / API comparator
+  if (/\/blog\/(rest-api|api-versioning|api-design)/i.test(p))
+    return { href: '/api-comparator', label: 'API Comparator', verb: 'Compare', icon: 'zap', color: 'blue' };
+  // Regex
+  if (/\/blog\/(regex|regular-expression)/i.test(p))
+    return { href: '/regex-tester', label: 'Regex Tester', verb: 'Test', icon: 'zap', color: 'violet' };
+  // Base64 / encoding / URL encoding
+  if (/\/blog\/(base64|encoding|url-encode)/i.test(p))
+    return { href: '/base64-encoder', label: 'Base64 Encoder', verb: 'Encode', icon: 'code', color: 'blue' };
+  // Hash / crypto / password
+  if (/\/blog\/(hash|crypto|password|sha|md5)/i.test(p))
+    return { href: '/hash-generator', label: 'Hash Generator', verb: 'Hash', icon: 'code', color: 'violet' };
+  // Markdown
+  if (/\/blog\/(markdown|readme)/i.test(p))
+    return { href: '/markdown-preview', label: 'MD Preview', verb: 'Preview', icon: 'wrench', color: 'blue' };
+  // Cron / scheduling
+  if (/\/blog\/(cron|schedule|job)/i.test(p))
+    return { href: '/cron-expression', label: 'Cron Builder', verb: 'Build', icon: 'zap', color: 'emerald' };
+  // Log / debugging
+  if (/\/blog\/(log|debug|error|exception)/i.test(p))
+    return { href: '/log-unpacker', label: 'Log Unpacker', verb: 'Unpack', icon: 'wrench', color: 'emerald' };
+  // WebSocket / SSE / streaming
+  if (/\/blog\/(websocket|sse|polling|stream)/i.test(p))
+    return { href: '/json-beautifier', label: 'JSON Formatter', verb: 'Format', icon: 'wrench', color: 'emerald' };
+  // AI / prompt engineering / masking
+  if (/\/blog\/(ai|prompt|llm|gpt|claude|schema-mask)/i.test(p))
+    return { href: '/ai-schema-masker', label: 'AI Schema Masker', verb: 'Mask', icon: 'zap', color: 'violet' };
+  // Default — JSON error fixer for all JSON/general blogs
   return { href: '/json-error-explainer', label: 'AI JSON Fixer', verb: 'Fix', icon: 'zap', color: 'emerald' };
 }
 

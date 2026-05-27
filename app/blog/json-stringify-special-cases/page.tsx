@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/json-stringify-special-cases',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON.stringify%28%29%20Edge%20Cases%20%E2%80%94%20undefined%2C%20null%2C%20Dates%2C%20Circular%20Refs%2C%20BigInt&emoji=%7B%7D&desc=Why%20undefined%20disappears%2C%20null%20is%20preserved%2C%20Dates%20become%20ISO%20strings%2C%20circular', width: 1200, height: 630, alt: 'JSON.stringify() Edge Cases — undefined, null, Dates, Circular Refs, BigInt — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

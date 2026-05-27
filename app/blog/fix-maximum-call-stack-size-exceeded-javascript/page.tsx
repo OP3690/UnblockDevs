@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     description: 'Fix "Maximum call stack size exceeded" in JavaScript. Recursion, circular refs. With code.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/fix-maximum-call-stack-size-exceeded-javascript',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Fix%20Maximum%20Call%20Stack%20Exceeded%20in%20JavaScript&emoji=%E2%9A%A1&desc=Developer%20guide%20for%20modern%20web%20applications', width: 1200, height: 630, alt: 'Fix Maximum Call Stack Exceeded in JavaScript — UnblockDevs Blog' }],
 
   },
   twitter: {

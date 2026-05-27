@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://unblockdevs.com/python-keyerror-fix',
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Fix Python KeyError' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Fix%20Python%20KeyError%20%E2%80%94%20Complete%20Guide%20with%20Examples&emoji=%F0%9F%90%9B&desc=Fix%20Python%20KeyError%20exceptions%20safely', width: 1200, height: 630, alt: 'Fix Python KeyError — Complete Guide with Examples — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -55,6 +55,7 @@ const jsonLd = {
     'Complete guide to fixing Python KeyError exceptions — dict.get(), try/except, setdefault, defaultdict, and safe API response parsing.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const faqSchema = {

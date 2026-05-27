@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://unblockdevs.com/fetch-api-not-working',
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Fix Fetch API' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Fetch%20API%20Not%20Working%3F%208%20Common%20Causes%20%26%20Fixes&emoji=%F0%9F%90%9B&desc=Fix%20fetch%20is%20not%20defined%2C%20CORS%20errors%2C%20404s%2C%20and%20JSON%20parse%20failures%20in%20the', width: 1200, height: 630, alt: 'Fetch API Not Working? 8 Common Causes & Fixes — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -55,6 +55,7 @@ const jsonLd = {
     'Complete guide to fixing Fetch API errors — fetch is not defined, CORS failures, missing await, JSON parse errors, and more. Includes free debugging tools.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const faqSchema = {

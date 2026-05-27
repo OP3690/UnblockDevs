@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     authors: ['UnblockDevs'],
     tags: ['HAR', 'cURL', 'Network Requests', 'Browser DevTools', 'API Development'],
     url: 'https://unblockdevs.com/blog/how-to-convert-har-files-to-curl',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Convert%20HAR%20Files%20to%20cURL%3A%20Complete%20Guide&emoji=%E2%9A%A1&desc=Convert%20HAR%20to%20cURL', width: 1200, height: 630, alt: 'How to Convert HAR Files to cURL: Complete Guide — UnblockDevs Blog' }],
 
   },
   twitter: {

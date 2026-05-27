@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/json-syntax-error-fix',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Fix%20JSON%20Syntax%20Errors%20%E2%80%94%20Trailing%20Commas%2C%20Quotes%2C%20Brackets%20%26%20More&emoji=%7B%7D&desc=Every%20common%20JSON%20error%20explained%20and%20fixed%3A%20trailing%20commas%2C%20single%20quotes%2C', width: 1200, height: 630, alt: 'How to Fix JSON Syntax Errors — Trailing Commas, Quotes, Brackets & More — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

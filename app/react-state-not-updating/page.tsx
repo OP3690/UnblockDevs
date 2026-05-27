@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://unblockdevs.com/react-state-not-updating',
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=React%20State%20Not%20Updating%3F%207%20Causes%20%26%20Fixes&emoji=%F0%9F%90%9B&desc=Fix%20React%20state%20not%20re-rendering%2C%20useState%20not%20updating%2C%20and%20setState%20async', width: 1200, height: 630, alt: 'React State Not Updating? 7 Causes & Fixes — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -55,6 +55,7 @@ const webAppSchema = {
     'Complete guide to fixing React state not updating. Covers mutation bugs, async setState, stale closures, batching, and more.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const faqSchema = {

@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-see-instagram-story-without-being-seen',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20See%20Instagram%20Story%20Without%20Being%20Seen%3A%20Complete%20Guide%202026&emoji=%F0%9F%9B%A0%EF%B8%8F&desc=View%20Instagram%20stories%20anonymously', width: 1200, height: 630, alt: 'How to See Instagram Story Without Being Seen: Complete Guide 2026 — UnblockDevs Blog' }],
 
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-see-instagram-story-without-being-seen' },

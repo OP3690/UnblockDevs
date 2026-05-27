@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     description: 'Paste a list of IDs → get instant SQL IN clause with quotes, commas, and parentheses. Works with Excel lists, CSV, JSON arrays. MySQL, PostgreSQL, Oracle, SQLite. Free.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=SQL%20IN%20Clause%20Formatter%20%E2%80%94%20Add%20Quotes%20%26%20Commas%20to%20List%20for%20SQL&emoji=%F0%9F%97%84%EF%B8%8F&desc=Paste%20a%20list%20of%20IDs%20%E2%86%92%20get%20instant%20SQL%20IN%20clause%20with%20quotes%2C%20commas%2C%20and', width: 1200, height: 630, alt: 'SQL IN Clause Formatter — Add Quotes & Commas to List for SQL — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -90,6 +90,7 @@ const jsonLd = {
   url: canonicalUrl,
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Add single quotes or double quotes to every value in a list',

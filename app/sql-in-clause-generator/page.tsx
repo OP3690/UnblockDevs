@@ -104,6 +104,7 @@ const jsonLd = {
   description: 'Convert any list of IDs, emails, or UUIDs into a SQL IN clause. Auto-detect CSV, JSON array, Excel paste, newline. MySQL, PostgreSQL, SQL Server, Oracle, SQLite. 100% browser-based.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Auto-detect CSV, JSON array, Excel paste, newline, tab-separated input',

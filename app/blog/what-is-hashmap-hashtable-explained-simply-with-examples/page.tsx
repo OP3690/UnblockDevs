@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     description: 'HashMap and HashTable: simple examples, diagrams, code. For interviews.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/what-is-hashmap-hashtable-explained-simply-with-examples',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=HashMap%20/%20HashTable%20Explained%20%E2%80%93%20Examples&emoji=%F0%9F%A4%96&desc=HashMap%20and%20HashTable%3A%20simple%20examples%2C%20diagrams%2C%20code', width: 1200, height: 630, alt: 'HashMap / HashTable Explained – Examples — UnblockDevs Blog' }],
 
   },
   twitter: {

@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     authors: ['UnblockDevs'],
     tags: ['JSON', 'API Design', 'REST', 'Web Development'],
     url: 'https://unblockdevs.com/blog/json-api-design-patterns',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON%20API%20Design%20Patterns%3A%20RESTful%20Best%20Practices%20%26%20Examples&emoji=%7B%7D&desc=JSON%20API%20design%3A%20RESTful%20patterns%2C%20response%20structure%2C%20industry%20standards', width: 1200, height: 630, alt: 'JSON API Design Patterns: RESTful Best Practices & Examples — UnblockDevs Blog' }],
 
   },
   twitter: {

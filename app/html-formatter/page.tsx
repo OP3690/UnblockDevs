@@ -84,7 +84,7 @@ export const metadata: Metadata = {
     description: 'Clean messy HTML instantly. Beautify with proper indentation or minify for production. 100% client-side, no signup.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'HTML Formatter — UnblockDevs' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=HTML%20Formatter%20%E2%80%94%20Beautify%20%26%20Minify%20HTML%20Online&emoji=%F0%9F%93%9D&desc=Clean%20messy%20HTML%20instantly', width: 1200, height: 630, alt: 'HTML Formatter — Beautify & Minify HTML Online — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -102,6 +102,7 @@ const jsonLd = {
   description: 'Free online HTML formatter that beautifies and minifies HTML code in the browser. Supports indent size selection, attribute formatting, and one-click minification.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: ['Beautify HTML', 'Minify HTML', 'Custom indent size (2/4 spaces or tab)', 'Syntax highlighting', 'Live error detection', 'Copy output', 'No server upload'],};
 

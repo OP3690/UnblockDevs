@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-use-curl-command-api-testing',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Use%20cURL%20to%20Test%20APIs%20%E2%80%94%20Commands%2C%20Examples%20%26%20Convert%20to%20Code&emoji=%E2%9A%A1&desc=Complete%20cURL%20guide%3A%20GET%2C%20POST%20with%20JSON%2C%20Bearer%20token%2C%20PUT/PATCH/DELETE%2C', width: 1200, height: 630, alt: 'How to Use cURL to Test APIs — Commands, Examples & Convert to Code — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

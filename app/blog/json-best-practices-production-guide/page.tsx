@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     authors: ['UnblockDevs'],
     tags: ['JSON', 'Best Practices', 'Production', 'Web Development'],
     url: 'https://unblockdevs.com/blog/json-best-practices-production-guide',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON%20Best%20Practices%3A%20Production-Ready%20Guide%20for%20Developers&emoji=%7B%7D&desc=JSON%20best%20practices%20for%20production%3A%20structure%2C%20errors%2C%20performance%2C%20security', width: 1200, height: 630, alt: 'JSON Best Practices: Production-Ready Guide for Developers — UnblockDevs Blog' }],
 
   },
   twitter: {

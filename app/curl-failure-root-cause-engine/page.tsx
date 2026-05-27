@@ -102,7 +102,7 @@ export const metadata: Metadata = {
       'Paste your failed cURL and status code. Get ranked root causes, confidence scores, fix suggestions, and corrected cURL commands. Free, 100% in your browser.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=cURL%20Failure%20Root-Cause%20Engine%20%E2%80%94%20Debug%20API%20Errors%2C%20Fix%20401%20400%20404&emoji=%E2%9A%A1&desc=Paste%20your%20failed%20cURL%20and%20status%20code', width: 1200, height: 630, alt: 'cURL Failure Root-Cause Engine — Debug API Errors, Fix 401 400 404 — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -121,6 +121,7 @@ const jsonLd = {
   url: canonicalUrl,
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Parse cURL command (method, headers, body, URL)',

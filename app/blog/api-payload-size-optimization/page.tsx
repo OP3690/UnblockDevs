@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     publishedTime: '2024-01-03T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/api-payload-size-optimization',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=API%20Payload%20Size%20Optimization%3A%20Performance%20Best%20Practices&emoji=%E2%9A%A1&desc=Learn%20how%20to%20analyze%20and%20optimize%20API%20payload%20sizes', width: 1200, height: 630, alt: 'API Payload Size Optimization: Performance Best Practices — UnblockDevs Blog' }],
 
   },  alternates: { canonical: 'https://unblockdevs.com/blog/api-payload-size-optimization' },
 

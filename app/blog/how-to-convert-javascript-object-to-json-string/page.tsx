@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-convert-javascript-object-to-json-string',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Convert%20a%20JavaScript%20Object%20to%20a%20JSON%20String&emoji=%7B%7D&desc=Complete%20guide%20to%20converting%20JavaScript%20objects%20to%20JSON%20strings%3A%20JSON', width: 1200, height: 630, alt: 'How to Convert a JavaScript Object to a JSON String — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

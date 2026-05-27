@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     description: 'Learn Breadth-First Search (BFS) algorithm with simple tree examples, step-by-step visualizations, and code examples.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/breadth-first-search-explained-with-easy-tree-examples',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Breadth-First%20Search%20Explained&emoji=%F0%9F%A4%96&desc=Learn%20Breadth-First%20Search%20%28BFS%29%20algorithm%20with%20simple%20tree%20examples%2C', width: 1200, height: 630, alt: 'Breadth-First Search Explained — UnblockDevs Blog' }],
 
   },
   alternates: {

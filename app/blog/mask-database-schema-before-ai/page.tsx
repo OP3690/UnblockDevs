@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/mask-database-schema-before-ai',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Mask%20Database%20Schema%20Before%20Using%20AI%20%E2%80%94%20Complete%20SQL%20Schema%20Obfuscation...&emoji=%F0%9F%97%84%EF%B8%8F&desc=SQL%20schema%20masking%20explained%3A%20DITE%20engine%2C%20identifier%20masking%2C%20IN%20clause%20value', width: 1200, height: 630, alt: 'How to Mask Database Schema Before Using AI — Complete SQL Schema Obfuscation... — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

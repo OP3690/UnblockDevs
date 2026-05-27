@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     title: "Machine Learning vs Deep Learning vs AI: What's the Difference?",
     description: "Simple definitions, comparison table, when to use each, and real-world use cases for AI, ML, and DL.",
     type: "article",    url: 'https://unblockdevs.com/blog/machine-learning-vs-deep-learning-vs-ai-difference',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Machine%20Learning%20vs%20Deep%20Learning%20vs%20AI%3A%20What&emoji=%F0%9F%A4%96&desc=Simple%20definitions%2C%20comparison%20table%2C%20when%20to%20use%20each%2C%20and%20real-world%20use', width: 1200, height: 630, alt: 'Machine Learning vs Deep Learning vs AI: What — UnblockDevs Blog' }],
 
   },
   alternates: {

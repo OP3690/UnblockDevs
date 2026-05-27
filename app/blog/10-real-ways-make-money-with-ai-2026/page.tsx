@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     description: "AI content creation, automation, prompts, YouTube, freelancing, SaaS. Beginner to advanced.",
     type: "article",
     url: "https://unblockdevs.com/blog/10-real-ways-make-money-with-ai-2026",
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=10%20Real%20Ways%20to%20Make%20Money%20with%20AI%20in%202026%20%28Beginner%20to%20Advanced%29&emoji=%F0%9F%A4%96&desc=AI%20content%20creation%2C%20automation%2C%20prompts%2C%20YouTube%2C%20freelancing%2C%20SaaS', width: 1200, height: 630, alt: '10 Real Ways to Make Money with AI in 2026 (Beginner to Advanced) — UnblockDevs Blog' }],
   },
   alternates: {
     canonical: "https://unblockdevs.com/blog/10-real-ways-make-money-with-ai-2026",

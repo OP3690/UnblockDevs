@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-change-email-address-google-account-safely',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Change%20Email%20Address%20in%20Google%20Account%20Safely%3A%20Complete%20Guide%202026&emoji=%F0%9F%A4%96&desc=Change%20Google%20account%20email%20safely', width: 1200, height: 630, alt: 'How to Change Email Address in Google Account Safely: Complete Guide 2026 — UnblockDevs Blog' }],
 
   },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-change-email-address-google-account-safely' },
 

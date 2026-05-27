@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-05-15T14:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/rest-api-json-design-best-practices-2026',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs — REST API JSON Best Practices 2026' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=REST%20API%20JSON%20Design%20Best%20Practices%202026%3A%208%20Rules%20Every%20Developer%20Must%20Follow&emoji=%7B%7D&desc=Response%20envelopes%2C%20error%20formats%2C%20status%20codes%2C%20pagination%2C%20ISO%20dates%2C%20API', width: 1200, height: 630, alt: 'REST API JSON Design Best Practices 2026: 8 Rules Every Developer Must Follow — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

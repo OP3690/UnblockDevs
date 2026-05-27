@@ -86,7 +86,7 @@ export const metadata: Metadata = {
       'Generate truth tables from any boolean expression. Karnaugh map, minterms, maxterms, SOP/POS, code export in JS, Python, Java, Go. Up to 8 variables. Free, browser-based.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Truth%20Table%20Generator%20%E2%80%94%20Boolean%20Logic%20Online&emoji=%F0%9F%93%8A&desc=Generate%20truth%20tables%20from%20any%20boolean%20expression', width: 1200, height: 630, alt: 'Truth Table Generator — Boolean Logic Online — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -106,6 +106,7 @@ const jsonLd = {
   url: canonicalUrl,
   applicationCategory: 'EducationalApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Parse any boolean expression — AND, OR, NOT, XOR, NAND, NOR, implication, biconditional',

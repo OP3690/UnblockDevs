@@ -11,6 +11,7 @@ const jsonLd = {
   description: 'Convert cURL commands to HTTP request format. All methods, headers, auth. Free, in-browser.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Convert cURL to raw HTTP request format',
@@ -41,7 +42,7 @@ export const metadata: Metadata = {
     description: 'Convert cURL commands to HTTP request format instantly. Free online converter supporting all HTTP methods, headers, and authentication. No signup, no login, works in your browser.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Free%20cURL%20to%20HTTP%20Request%20Converter%20%E2%80%93%20Instant%20Conversion&emoji=%E2%9A%A1&desc=Convert%20cURL%20commands%20to%20HTTP%20request%20format%20instantly', width: 1200, height: 630, alt: 'Free cURL to HTTP Request Converter – Instant Conversion — UnblockDevs' }],
   },
 };
 

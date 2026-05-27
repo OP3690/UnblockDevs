@@ -84,7 +84,7 @@ export const metadata: Metadata = {
     description: 'Create linear, radial, and conic CSS gradients with drag-and-drop color stops. Copy CSS or Tailwind code instantly. 20+ presets.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'CSS Gradient Generator — UnblockDevs' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=CSS%20Gradient%20Generator%20%E2%80%94%20Linear%2C%20Radial%20%26%20Conic&emoji=%F0%9F%8E%A8&desc=Create%20linear%2C%20radial%2C%20and%20conic%20CSS%20gradients%20with%20drag-and-drop%20color%20stops', width: 1200, height: 630, alt: 'CSS Gradient Generator — Linear, Radial & Conic — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -102,6 +102,7 @@ const jsonLd = {
   description: 'Free online CSS gradient generator with live preview, drag-and-drop color stops, linear/radial/conic gradient types, and instant CSS and Tailwind code output.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: ['Linear, Radial, and Conic gradients', 'Drag color stops', '20+ gradient presets', 'CSS and Tailwind output', 'Live preview', 'No signup required'],};
 

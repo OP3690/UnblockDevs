@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://unblockdevs.com/curl-post-json-example',
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=cURL%20POST%20JSON%20Request%20%E2%80%94%20Complete%20Examples%20Guide&emoji=%7B%7D&desc=cURL%20POST%20JSON%20examples%20with%20headers%2C%20auth%20tokens%2C%20form%20data%2C%20and%20error%20handling', width: 1200, height: 630, alt: 'cURL POST JSON Request — Complete Examples Guide — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -55,6 +55,7 @@ const webAppSchema = {
     'Copy-ready cURL POST JSON commands covering headers, auth tokens, form data, file upload, PUT, DELETE, and verbose debugging.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const faqSchema = {

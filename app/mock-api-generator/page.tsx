@@ -83,7 +83,7 @@ export const metadata: Metadata = {
     description: 'Dynamic mock APIs with auth, rate limit, latency. Export Postman & OpenAPI. No signup.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Mock%20API%20Generator%20%E2%80%94%20Fake%20REST%20APIs%20Online&emoji=%E2%9A%97%EF%B8%8F&desc=Dynamic%20mock%20APIs%20with%20auth%2C%20rate%20limit%2C%20latency', width: 1200, height: 630, alt: 'Mock API Generator — Fake REST APIs Online — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -101,6 +101,7 @@ const jsonLd = {
   description: 'Generate fake REST API endpoints and JSON mock data for frontend development and testing. All processing is 100% client-side.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Generate fake REST API endpoints',

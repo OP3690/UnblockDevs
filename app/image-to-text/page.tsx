@@ -40,12 +40,14 @@ export const metadata: Metadata = {
       'Extract text from images and scanned photos with advanced OCR. Supports 12+ languages, batch processing, confidence scoring, and table detection. Free, in-browser.',
     url: canonicalUrl,
     type: 'website',
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Image%20to%20Text%20%E2%80%94%20OCR%20Online&emoji=%F0%9F%96%BC%EF%B8%8F&desc=Extract%20text%20from%20images%20with%20advanced%20OCR', width: 1200, height: 630, alt: 'Image to Text — OCR Online — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Image to Text — Advanced OCR | UnblockDevs',
     description:
       'Free OCR tool to extract text from images, photos, and scanned documents. 12+ languages, table detection, confidence coloring.',
+    images: ['https://unblockdevs.com/api/og?title=Image%20to%20Text%20%E2%80%94%20OCR%20Online&emoji=%F0%9F%96%BC%EF%B8%8F&desc=Extract%20text%20from%20images%20with%20advanced%20OCR'],
   },
 };
 

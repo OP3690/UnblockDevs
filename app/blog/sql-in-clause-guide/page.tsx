@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/sql-in-clause-guide',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=SQL%20IN%20Clause%20%E2%80%94%20Complete%20Guide%20with%20Examples&emoji=%F0%9F%97%84%EF%B8%8F&desc=SQL%20IN%20clause%3A%20syntax%2C%20subqueries%2C%20NOT%20IN%2C%20NULL%20pitfalls%2C%20performance%2C%20Oracle', width: 1200, height: 630, alt: 'SQL IN Clause — Complete Guide with Examples — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

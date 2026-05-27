@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     description: 'Generate and validate JSON Schema. Step-by-step with examples.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/json-schema-generator-tutorial',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON%20Schema%20Generator%20Tutorial%3A%20Create%20Schemas%20from%20JSON&emoji=%7B%7D&desc=Generate%20and%20validate%20JSON%20Schema', width: 1200, height: 630, alt: 'JSON Schema Generator Tutorial: Create Schemas from JSON — UnblockDevs Blog' }],
 
   },  alternates: { canonical: 'https://unblockdevs.com/blog/json-schema-generator-tutorial' },
 

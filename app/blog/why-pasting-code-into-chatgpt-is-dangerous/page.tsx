@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/why-pasting-code-into-chatgpt-is-dangerous',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Why%20Pasting%20Code%20into%20ChatGPT%20Is%20Dangerous%20%E2%80%94%20API%20Keys%2C%20Secrets%20%26%20IP%20Risks&emoji=%F0%9F%A4%96&desc=API%20keys%2C%20database%20credentials%2C%20proprietary%20logic%2C%20PII', width: 1200, height: 630, alt: 'Why Pasting Code into ChatGPT Is Dangerous — API Keys, Secrets & IP Risks — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     description: 'Learn the difference between batch processing and stream processing. Understand when to use each and real-world examples.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/batch-processing-vs-stream-processing-key-differences-explained',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Batch%20vs%20Stream%20Processing%20Explained&emoji=%F0%9F%A4%96&desc=Learn%20the%20difference%20between%20batch%20processing%20and%20stream%20processing', width: 1200, height: 630, alt: 'Batch vs Stream Processing Explained — UnblockDevs Blog' }],
 
   },
   alternates: {

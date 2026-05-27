@@ -84,7 +84,7 @@ export const metadata: Metadata = {
     description: 'Convert SVG to PNG or JPEG in your browser. Set custom size and scale, preview before export. No uploads, no signup.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs SVG to PNG/JPEG Converter' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=SVG%20to%20PNG/JPEG%20Converter%20%E2%80%94%20Convert%20SVG%20to%20Image%20Online%20Free&emoji=%F0%9F%8E%A8&desc=Convert%20SVG%20to%20PNG%20or%20JPEG%20in%20your%20browser', width: 1200, height: 630, alt: 'SVG to PNG/JPEG Converter — Convert SVG to Image Online Free — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -102,6 +102,7 @@ const jsonLd = {
   description: 'Convert SVG code or files to PNG or JPEG instantly. Set custom size and scale, preview before export. 100% browser-based.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Convert SVG to PNG or JPEG',

@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://unblockdevs.com/fix-json-parse-error-javascript',
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Fix%20JSON.parse%28%29%20Errors%20in%20JavaScript&emoji=%7B%7D&desc=Learn%20how%20to%20fix%20JSON', width: 1200, height: 630, alt: 'Fix JSON.parse() Errors in JavaScript — UnblockDevs' }],
   },
   twitter: { card: 'summary_large_image', title: 'Fix JSON.parse() Errors in JavaScript | UnblockDevs', description: 'Learn how to fix JSON.parse() errors in JavaScript. Complete guide with examples and free JSON fixer tool.' },
   alternates: { canonical: 'https://unblockdevs.com/fix-json-parse-error-javascript' },
@@ -37,6 +37,7 @@ const jsonLd = {
   description: 'Fix JavaScript JSON.parse() SyntaxError instantly. Identify and repair malformed JSON caused by undefined values, HTML responses, double-encoding, or truncation. 100% browser-based.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const howToSchema = {

@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     publishedTime: '2024-01-22T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/advanced-html5-apis-guide',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Advanced%20HTML5%20APIs%3A%20Complete%20Guide%20with%20Examples&emoji=%F0%9F%93%96&desc=Master%20advanced%20HTML5%20APIs%20including%20Geolocation%2C%20Web%20Storage%2C%20Canvas%2C%20Web', width: 1200, height: 630, alt: 'Advanced HTML5 APIs: Complete Guide with Examples — UnblockDevs Blog' }],
 
   },  alternates: { canonical: 'https://unblockdevs.com/blog/advanced-html5-apis-guide' },
 

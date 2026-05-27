@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/sql-schema-security-ai-tools',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=SQL%20Schema%20Security%20%E2%80%94%20Never%20Paste%20Production%20Database%20Names%20into%20AI%20Tools&emoji=%F0%9F%94%92&desc=Real%20table%20and%20column%20names%20in%20AI%20prompts%20expose%20your%20architecture%2C%20violate', width: 1200, height: 630, alt: 'SQL Schema Security — Never Paste Production Database Names into AI Tools — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

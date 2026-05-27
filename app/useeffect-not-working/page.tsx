@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://unblockdevs.com/useeffect-not-working',
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=useEffect%20Not%20Working%3F%20Common%20Issues%20%26%20Fixes&emoji=%F0%9F%90%9B&desc=Fix%20useEffect%20not%20running%2C%20running%20too%20many%20times%2C%20or%20causing%20infinite%20loops%20in', width: 1200, height: 630, alt: 'useEffect Not Working? Common Issues & Fixes — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -54,6 +54,7 @@ const webAppSchema = {
     'Complete guide to fixing useEffect issues: infinite loops, double invocation in React 18, async patterns, cleanup, and dependency arrays.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const faqSchema = {

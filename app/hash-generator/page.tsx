@@ -61,6 +61,7 @@ const jsonLd = {
   description: 'Generate MD5, SHA-256, SHA3, BLAKE2. File drag-and-drop. HMAC, bcrypt, Argon2. 100% browser-based.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'MD5, SHA-1, SHA-256, SHA3, BLAKE2 and more',

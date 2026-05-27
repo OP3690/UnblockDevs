@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-convert-curl-command-to-javascript-fetch',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Convert%20cURL%20Command%20to%20JavaScript%20Fetch%3A%20Complete%20Guide%202026&emoji=%E2%9A%A1&desc=Convert%20cURL%20to%20JavaScript%20fetch', width: 1200, height: 630, alt: 'How to Convert cURL Command to JavaScript Fetch: Complete Guide 2026 — UnblockDevs Blog' }],
 
   },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-convert-curl-command-to-javascript-fetch' },
 

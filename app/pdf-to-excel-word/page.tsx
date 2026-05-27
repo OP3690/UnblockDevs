@@ -77,7 +77,7 @@ export const metadata: Metadata = {
     description: 'Convert any PDF to Excel or Word. Smart table detection. 100% in-browser.',
     url: canonicalUrl,
     type: 'website',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs PDF to Excel & Word Converter' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=PDF%20to%20Excel%20%26%20Word%20Converter&emoji=%F0%9F%93%9D&desc=Convert%20any%20PDF%20to%20Excel%20or%20Word', width: 1200, height: 630, alt: 'PDF to Excel & Word Converter — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -94,6 +94,7 @@ const jsonLd = {
   description: 'Convert any PDF to Excel (.xlsx) or Word (.docx) online. Smart table detection, heading recognition, multi-page support. 100% in-browser.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Convert PDF to Excel (.xlsx) with smart table detection',

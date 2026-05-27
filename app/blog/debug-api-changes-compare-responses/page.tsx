@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     authors: ['UnblockDevs'],
     tags: ['API', 'Debugging', 'API Testing', 'Web Development'],
     url: 'https://unblockdevs.com/blog/debug-api-changes-compare-responses',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Debug%20API%20Changes%20Faster%3A%20How%20to%20Compare%20Two%20API%20Responses%20Visually&emoji=%F0%9F%94%A7&desc=Compare%20API%20responses%20visually', width: 1200, height: 630, alt: 'Debug API Changes Faster: How to Compare Two API Responses Visually — UnblockDevs Blog' }],
 
   },
   twitter: {

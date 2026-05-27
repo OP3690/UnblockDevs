@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     authors: ['UnblockDevs'],
     tags: ['Mock API', 'Frontend Development', 'API Testing', 'Web Development'],
     url: 'https://unblockdevs.com/blog/free-mock-api-generator-guide',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Free%20Mock%20API%20in%20Seconds%3A%20Generate%20Fake%20Endpoints%20for%20Frontend%20Development&emoji=%F0%9F%93%96&desc=Free%20mock%20APIs%20for%20frontend', width: 1200, height: 630, alt: 'Free Mock API in Seconds: Generate Fake Endpoints for Frontend Development — UnblockDevs Blog' }],
 
   },
   twitter: {

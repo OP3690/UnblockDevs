@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-see-deleted-instagram-messages-without-third-party-apps',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20See%20Deleted%20Instagram%20Messages%20Without%20Third-Party%20Apps%3A%20Complete%20Guid...&emoji=%F0%9F%9B%A0%EF%B8%8F&desc=View%20deleted%20Instagram%20messages%20without%20third-party%20apps', width: 1200, height: 630, alt: 'How to See Deleted Instagram Messages Without Third-Party Apps: Complete Guid... — UnblockDevs Blog' }],
 
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-see-deleted-instagram-messages-without-third-party-apps' },

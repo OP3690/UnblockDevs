@@ -84,7 +84,7 @@ export const metadata: Metadata = {
     description: 'Build multi-layer CSS box shadows visually. 8 presets, live preview, instant CSS copy. 100% browser-based.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs CSS Box Shadow Generator' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=CSS%20Box%20Shadow%20Generator%20%E2%80%94%20Visual%20Builder&emoji=%F0%9F%8E%A8&desc=Build%20multi-layer%20CSS%20box%20shadows%20visually', width: 1200, height: 630, alt: 'CSS Box Shadow Generator — Visual Builder — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -102,6 +102,7 @@ const jsonLd = {
   description: 'Build beautiful CSS box shadows visually. Multi-layer support, live preview, 8 presets, and instant CSS copy.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Visual box shadow builder with sliders',

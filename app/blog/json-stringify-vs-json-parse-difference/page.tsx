@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     description: 'How JSON.stringify() handles undefined properties (omits them), undefined in arrays (becomes null), and when it returns undefined. Complete guide.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/json-stringify-vs-json-parse-difference',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON.stringify%28%29%20undefined%20Behavior%20%26%20vs%20JSON.parse%28%29&emoji=%7B%7D&desc=Developer%20guide%20for%20modern%20web%20applications', width: 1200, height: 630, alt: 'JSON.stringify() undefined Behavior & vs JSON.parse() — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

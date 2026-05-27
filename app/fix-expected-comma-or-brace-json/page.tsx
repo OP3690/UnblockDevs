@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://unblockdevs.com/fix-expected-comma-or-brace-json',
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Free%20Guide%3A%20Fix&emoji=%7B%7D&desc=Step-by-step%20guide%20to%20fixing%20missing%20or%20extra%20commas%20in%20JSON', width: 1200, height: 630, alt: 'Free Guide: Fix — UnblockDevs' }],
   },
   twitter: { card: 'summary_large_image', title: 'Fix Expected Comma or Brace JSON Error | UnblockDevs', description: 'Fix "Expected comma or closing brace" JSON error instantly. Free guide with examples and JSON fixer tool.' },
   alternates: { canonical: 'https://unblockdevs.com/fix-expected-comma-or-brace-json' },
@@ -36,6 +36,7 @@ const jsonLd = {
   description: 'Fix "Expected comma or closing brace" JSON errors instantly. Auto-detect and fix missing commas, trailing commas, and missing brackets. 100% browser-based.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const howToSchema = {

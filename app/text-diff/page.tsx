@@ -85,7 +85,7 @@ export const metadata: Metadata = {
     description: 'Compare two texts or code files with line-level and character-level diffs. Unified and side-by-side view. 100% browser-based.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs Text & Code Diff Checker' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Text%20%26%20Code%20Diff%20Checker%20%E2%80%94%20Compare%20Files%20Online&emoji=%F0%9F%93%9D&desc=Compare%20two%20texts%20or%20code%20files%20with%20line-level%20and%20character-level%20diffs', width: 1200, height: 630, alt: 'Text & Code Diff Checker — Compare Files Online — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -103,6 +103,7 @@ const jsonLd = {
   description: 'Instantly compare two texts or code files. Line-level and inline character diff, unified and side-by-side view. 100% browser-based.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Line-level LCS diff algorithm',

@@ -92,7 +92,7 @@ export const metadata: Metadata = {
       'Convert times between UTC, EST, PST, IST and 500+ IANA timezones. DST-aware, free, no signup.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Timezone%20Translator%20%E2%80%94%20Convert%20Time%20Between%20Timezones&emoji=%F0%9F%95%90&desc=Convert%20times%20between%20UTC%2C%20EST%2C%20PST%2C%20IST%20and%20500%2B%20IANA%20timezones', width: 1200, height: 630, alt: 'Timezone Translator — Convert Time Between Timezones — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -113,6 +113,7 @@ const jsonLd = {
   url: canonicalUrl,
   applicationCategory: 'UtilitiesApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     '500+ IANA timezone support',

@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://unblockdevs.com/fix-invalid-control-character-json',
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Free%20Guide%3A%20Fix&emoji=%7B%7D&desc=Step-by-step%20guide%20to%20fixing%20unescaped%20control%20characters%20in%20JSON%20strings', width: 1200, height: 630, alt: 'Free Guide: Fix — UnblockDevs' }],
   },
   twitter: { card: 'summary_large_image', title: 'Fix Invalid Control Character JSON Error | UnblockDevs', description: 'Fix "Invalid control character" JSON error instantly. Free guide with examples and JSON fixer tool.' },
   alternates: { canonical: 'https://unblockdevs.com/fix-invalid-control-character-json' },
@@ -36,6 +36,7 @@ const jsonLd = {
   description: 'Fix "Invalid control character" JSON errors instantly. Auto-detect and escape raw control characters in JSON strings. 100% browser-based.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const howToSchema = {

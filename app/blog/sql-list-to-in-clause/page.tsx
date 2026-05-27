@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/sql-list-to-in-clause',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Convert%20Any%20List%20to%20SQL%20IN%20Clause%20%E2%80%94%20CSV%2C%20Excel%2C%20JSON&emoji=%F0%9F%97%84%EF%B8%8F&desc=Convert%20CSV%2C%20Excel%2C%20JSON%2C%20or%20newline-separated%20IDs%20into%20a%20SQL%20IN%20clause', width: 1200, height: 630, alt: 'Convert Any List to SQL IN Clause — CSV, Excel, JSON — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

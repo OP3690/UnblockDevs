@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://unblockdevs.com/dotenv-not-loading',
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Fix dotenv Not Loading' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=dotenv%20Not%20Loading%20Variables%3F%207%20Fixes%20That%20Work&emoji=%F0%9F%90%9B&desc=Fix%20dotenv%20not%20loading', width: 1200, height: 630, alt: 'dotenv Not Loading Variables? 7 Fixes That Work — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -52,6 +52,7 @@ const jsonLd = {
   description: 'Complete guide to diagnosing and fixing dotenv not loading .env variables in Node.js, TypeScript, and ES module projects.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const faqSchema = {

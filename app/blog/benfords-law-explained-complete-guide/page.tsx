@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     description: 'Learn what Benford\'s Law is, how it works, and why it matters. Complete guide with real-world examples and applications.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/benfords-law-explained-complete-guide',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Benford%5C&emoji=%F0%9F%A4%96&desc=Learn%20what%20Benford%5C', width: 1200, height: 630, alt: 'Benford\ — UnblockDevs Blog' }],
 
   },
   twitter: {

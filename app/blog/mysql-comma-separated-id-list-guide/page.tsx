@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     authors: ['UnblockDevs'],
     tags: ['MySQL', 'SQL', 'Database', 'SQL Formatter'],
     url: 'https://unblockdevs.com/blog/mysql-comma-separated-id-list-guide',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=MySQL%20Comma%20Separated%20ID%20List%20for%20IN%20Clause&emoji=%F0%9F%97%84%EF%B8%8F&desc=Learn%20how%20to%20create%20comma%20separated%20ID%20lists%20for%20MySQL%20IN%20clause', width: 1200, height: 630, alt: 'MySQL Comma Separated ID List for IN Clause — UnblockDevs Blog' }],
 
   },
   twitter: {

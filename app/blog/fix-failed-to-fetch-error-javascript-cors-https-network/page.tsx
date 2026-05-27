@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     description: 'Fix "Failed to fetch" in JavaScript. CORS, HTTPS, network. Solutions.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/fix-failed-to-fetch-error-javascript-cors-https-network',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Fix%20Failed%20to%20Fetch%20Error%20in%20JavaScript%202026&emoji=%F0%9F%94%92&desc=Developer%20guide%20for%20modern%20web%20applications', width: 1200, height: 630, alt: 'Fix Failed to Fetch Error in JavaScript 2026 — UnblockDevs Blog' }],
 
   },
   twitter: {

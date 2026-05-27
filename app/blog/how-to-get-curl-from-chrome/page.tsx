@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     description: 'Step-by-step guide to copy any Chrome DevTools network request as a cURL command for debugging and API testing.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/how-to-get-curl-from-chrome',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Chrome%20DevTools%20Copy%20as%20cURL%3A%20How%20to%20Export%20Network%20Requests&emoji=%E2%9A%A1&desc=Step-by-step%20guide%20to%20copy%20any%20Chrome%20DevTools%20network%20request%20as%20a%20cURL', width: 1200, height: 630, alt: 'Chrome DevTools Copy as cURL: How to Export Network Requests — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

@@ -84,7 +84,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: canonicalUrl,
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON%20Fixer%20Online%20%E2%80%94%20Fix%20Invalid%20JSON%20Instantly&emoji=%7B%7D&desc=Paste%20%E2%86%92%20instant%20fix', width: 1200, height: 630, alt: 'JSON Fixer Online — Fix Invalid JSON Instantly — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -102,6 +102,7 @@ const jsonLd = {
   description: 'Fix invalid JSON instantly. Repair trailing commas, single quotes, unquoted keys, and unexpected tokens. 100% browser-based.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Auto-fix trailing commas in JSON',

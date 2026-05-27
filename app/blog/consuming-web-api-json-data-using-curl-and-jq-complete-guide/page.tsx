@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     description: 'Learn how to consume Web API JSON data using curl and jq. Complete guide with examples, best practices, and step-by-step tutorials.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/consuming-web-api-json-data-using-curl-and-jq-complete-guide',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Consuming%20Web%20API%20JSON%20Data%20Using%20curl%20and%20jq%3A%20Complete%20Guide%202026&emoji=%7B%7D&desc=Learn%20how%20to%20consume%20Web%20API%20JSON%20data%20using%20curl%20and%20jq', width: 1200, height: 630, alt: 'Consuming Web API JSON Data Using curl and jq: Complete Guide 2026 — UnblockDevs Blog' }],
 
   },
   twitter: {

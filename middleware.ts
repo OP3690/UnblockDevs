@@ -76,6 +76,13 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(TAB_REDIRECTS[tab], origin), PERMANENT)
   }
 
+  // ── 2b. Duplicate-content redirect: sql-in-generator → sql-in-clause-generator ─
+  // Both pages cover the same feature set. sql-in-clause-generator is canonical;
+  // redirecting the older slug consolidates all ranking signal into one URL.
+  if (pathname === '/sql-in-generator') {
+    return NextResponse.redirect(new URL('/sql-in-clause-generator', origin), PERMANENT)
+  }
+
   // ── 3. Strip tracking/campaign params → clean canonical URL ──────────────
   // Prevents Google from treating ad-tagged URLs as "alternate pages"
   const hasTracking = [...searchParams.keys()].some(k => TRACKING_PARAMS.has(k))

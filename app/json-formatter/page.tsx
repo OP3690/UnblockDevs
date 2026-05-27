@@ -94,7 +94,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: canonicalUrl,
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'JSON Formatter Online — UnblockDevs' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON%20Formatter%20Online%20%E2%80%94%20Free%2C%20Instant%2C%20100%25%20Private&emoji=%7B%7D&desc=Format%2C%20validate%2C%20and%20beautify%20JSON%20instantly', width: 1200, height: 630, alt: 'JSON Formatter Online — Free, Instant, 100% Private — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',

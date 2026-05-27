@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://unblockdevs.com/cannot-read-property-undefined',
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Cannot%20Read%20Property%20of%20Undefined%20%E2%80%94%20JS%20Fix&emoji=%F0%9F%94%A7&desc=Fix%20undefined%20property%20errors%20in%20JavaScript%20and%20React%20with%20optional%20chaining', width: 1200, height: 630, alt: 'Cannot Read Property of Undefined — JS Fix — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -54,6 +54,7 @@ const webAppSchema = {
     'Complete guide to fixing "Cannot read properties of undefined" errors in JavaScript and React using optional chaining, nullish coalescing, and defensive programming.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const faqSchema = {

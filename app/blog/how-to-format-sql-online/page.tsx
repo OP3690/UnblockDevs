@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-format-sql-online',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Format%20SQL%20Online%20%E2%80%94%20Beautify%20SQL%20Queries%20Instantly&emoji=%F0%9F%97%84%EF%B8%8F&desc=Format%20messy%20SQL%20in%20one%20click', width: 1200, height: 630, alt: 'How to Format SQL Online — Beautify SQL Queries Instantly — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

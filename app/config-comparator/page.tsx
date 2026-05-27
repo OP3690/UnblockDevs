@@ -84,7 +84,7 @@ export const metadata: Metadata = {
     description: 'Compare any two configuration files side by side. Detect added, removed, and changed settings. Free, 100% browser-based.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs Config File Comparator' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Config%20File%20Comparator%20%E2%80%94%20Diff%20JSON%2C%20YAML%2C%20ENV%2C%20TOML%20%26%20Config%20Files&emoji=%E2%9A%97%EF%B8%8F&desc=Compare%20any%20two%20configuration%20files%20side%20by%20side', width: 1200, height: 630, alt: 'Config File Comparator — Diff JSON, YAML, ENV, TOML & Config Files — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -102,6 +102,7 @@ const jsonLd = {
   description: 'Compare any two configuration files side by side. Supports JSON, YAML, .env, TOML, INI formats. 100% browser-based.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Side-by-side config file diff',

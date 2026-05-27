@@ -85,7 +85,7 @@ export const metadata: Metadata = {
     description: 'Semantic diff two API JSON responses. Detect breaking changes, added/removed fields, type changes. Free, 100% browser-based.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs API Comparator' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=API%20Comparator%20%E2%80%94%20Diff%20API%20Responses%20Online&emoji=%E2%9A%97%EF%B8%8F&desc=Semantic%20diff%20two%20API%20JSON%20responses', width: 1200, height: 630, alt: 'API Comparator — Diff API Responses Online — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -103,6 +103,7 @@ const jsonLd = {
   description: 'Compare two API JSON responses side-by-side. Semantic diff, detect breaking changes, added/removed fields, type changes. Free, 100% browser-based.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Semantic JSON diff of two API responses',

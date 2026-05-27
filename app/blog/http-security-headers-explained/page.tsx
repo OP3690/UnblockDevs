@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/http-security-headers-explained',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=HTTP%20Security%20Headers%20Explained%20%E2%80%94%20CSP%2C%20HSTS%2C%20X-Frame-Options%20%26%20How%20to%20Get%20an%20...&emoji=%F0%9F%94%92&desc=Complete%20guide%20to%20HTTP%20security%20headers%3A%20CSP%2C%20HSTS%2C%20X-Frame-Options%2C', width: 1200, height: 630, alt: 'HTTP Security Headers Explained — CSP, HSTS, X-Frame-Options & How to Get an ... — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

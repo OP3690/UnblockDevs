@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     description: 'Git commands cheat sheet: useful commands, tips, tricks. Essential Git for daily dev and productivity.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/git-commands-cheat-sheet-tips-tricks',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Git%20Commands%20Cheat%20Sheet%3A%20Most%20Useful%20Commands%2C%20Tips%20%26%20Tricks&emoji=%F0%9F%93%96&desc=Git%20commands%20cheat%20sheet%3A%20useful%20commands%2C%20tips%2C%20tricks', width: 1200, height: 630, alt: 'Git Commands Cheat Sheet: Most Useful Commands, Tips & Tricks — UnblockDevs Blog' }],
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/git-commands-cheat-sheet-tips-tricks' },
 };

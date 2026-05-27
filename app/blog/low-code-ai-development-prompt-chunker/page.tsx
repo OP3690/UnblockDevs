@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     publishedTime: '2024-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/low-code-ai-development-prompt-chunker',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Low-Code%20AI%20%26%20Prompt%20Chunker%20Guide&emoji=%F0%9F%A4%96&desc=Low-code%20AI%3A%20Prompt%20Chunker%20and%20tools%20for%20non-devs', width: 1200, height: 630, alt: 'Low-Code AI & Prompt Chunker Guide — UnblockDevs Blog' }],
 
   },  alternates: { canonical: 'https://unblockdevs.com/blog/low-code-ai-development-prompt-chunker' },
 

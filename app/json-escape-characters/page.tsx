@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://unblockdevs.com/json-escape-characters',
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - JSON Escape Characters' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON%20Escape%20Characters%20%E2%80%94%20Complete%20Reference%20%26%20Fixer&emoji=%7B%7D&desc=Learn%20which%20characters%20must%20be%20escaped%20in%20JSON%20strings', width: 1200, height: 630, alt: 'JSON Escape Characters — Complete Reference & Fixer — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -55,6 +55,7 @@ const jsonLd = {
     'Complete reference guide for JSON escape characters — backslash, double quote, newline, tab, Unicode, and more. With broken/fixed examples and free formatter.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const faqSchema = {

@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     description: 'Validate JSON with JSON Schema in JavaScript. Examples and best practices.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/how-to-validate-json-schema-javascript',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Validate%20JSON%20Schema%20in%20JavaScript%20%7C%20Complete%20Guide%202026&emoji=%7B%7D&desc=Validate%20JSON%20with%20JSON%20Schema%20in%20JavaScript', width: 1200, height: 630, alt: 'How to Validate JSON Schema in JavaScript | Complete Guide 2026 — UnblockDevs Blog' }],
 
   },
   twitter: {

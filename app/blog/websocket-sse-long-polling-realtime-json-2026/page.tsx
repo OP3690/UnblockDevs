@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-05-15T15:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/websocket-sse-long-polling-realtime-json-2026',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs — WebSocket vs SSE vs Long Polling Guide 2026' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=WebSocket%20vs%20SSE%20vs%20Long%20Polling%3A%20Real-Time%20JSON%20Guide%202026&emoji=%7B%7D&desc=Every%20real-time%20web%20technology%20compared%3A%20protocol%2C%20direction%2C%20browser%20support%2C', width: 1200, height: 630, alt: 'WebSocket vs SSE vs Long Polling: Real-Time JSON Guide 2026 — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

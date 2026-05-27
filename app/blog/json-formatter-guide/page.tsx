@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/json-formatter-guide',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON%20Formatter%20Guide%20%E2%80%94%20Format%2C%20Validate%2C%20Auto-Fix%20%26%20Minify%20JSON&emoji=%7B%7D&desc=Format%2C%20validate%2C%20auto-fix%2C%20and%20minify%20JSON', width: 1200, height: 630, alt: 'JSON Formatter Guide — Format, Validate, Auto-Fix & Minify JSON — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

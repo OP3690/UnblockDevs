@@ -84,7 +84,7 @@ export const metadata: Metadata = {
     description: 'Convert colors between HEX, RGB, HSL, HSV, and CMYK. WCAG contrast checker, Tailwind shades, and color harmony palettes. 100% browser-based.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs Color Picker & Converter' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Color%20Picker%20%26%20Converter%20%E2%80%94%20HEX%2C%20RGB%2C%20HSL%2C%20CMYK&emoji=%F0%9F%8E%A8&desc=Convert%20colors%20between%20HEX%2C%20RGB%2C%20HSL%2C%20HSV%2C%20and%20CMYK', width: 1200, height: 630, alt: 'Color Picker & Converter — HEX, RGB, HSL, CMYK — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -102,6 +102,7 @@ const jsonLd = {
   description: 'Pick any color and instantly convert between HEX, RGB, HSL, HSV, and CMYK. WCAG contrast ratios, Tailwind shades, and color harmony palettes.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'HEX, RGB, HSL, HSV, CMYK conversion',

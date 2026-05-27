@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-05-10T10:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/hidden-json-errors-that-silently-break-apps',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs — Hidden JSON Errors Guide' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Hidden%20JSON%20Errors%20That%20Silently%20Break%20Your%20App&emoji=%7B%7D&desc=The%20sneaky%20JSON%20bugs%20that%20never%20throw%20exceptions%20but%20corrupt%20your%20data%3A', width: 1200, height: 630, alt: 'Hidden JSON Errors That Silently Break Your App — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-read-whatsapp-messages-without-blue-ticks',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Read%20WhatsApp%20Messages%20Without%20Blue%20Ticks%3A%20Complete%20Guide%202026&emoji=%F0%9F%9B%A0%EF%B8%8F&desc=Read%20WhatsApp%20without%20blue%20ticks', width: 1200, height: 630, alt: 'How to Read WhatsApp Messages Without Blue Ticks: Complete Guide 2026 — UnblockDevs Blog' }],
 
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-read-whatsapp-messages-without-blue-ticks' },

@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://unblockdevs.com/express-request-body-undefined',
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Fix Express req.body Undefined' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Express%20req.body%20Undefined%3F%20Here%5C&emoji=%F0%9F%90%9B&desc=Free%20browser-based%20developer%20tool%20%E2%80%94%20no%20signup%20required', width: 1200, height: 630, alt: 'Express req.body Undefined? Here\ — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -52,6 +52,7 @@ const jsonLd = {
   description: 'Complete guide to fixing req.body returning undefined in Express.js, covering middleware setup, Content-Type headers, and multipart form data.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const faqSchema = {

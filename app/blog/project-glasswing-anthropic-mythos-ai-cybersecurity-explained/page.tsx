@@ -28,7 +28,7 @@ export const metadata: Metadata = {
       'What is Project Glasswing? How Claude Mythos AI is finding zero-days in Firefox and critical infrastructure — partners, use cases, and findings.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/project-glasswing-anthropic-mythos-ai-cybersecurity-explained',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Project Glasswing Explained' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Project%20Glasswing%3A%20Anthropic%5C&emoji=%F0%9F%94%92&desc=What%20is%20Project%20Glasswing', width: 1200, height: 630, alt: 'Project Glasswing: Anthropic\ — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

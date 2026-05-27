@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-fix-nullpointerexception-java-beginner-friendly',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Fix&emoji=%F0%9F%94%A7&desc=Fix%20NullPointerException%20in%20Java', width: 1200, height: 630, alt: 'How to Fix — UnblockDevs Blog' }],
 
   },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-fix-nullpointerexception-java-beginner-friendly' },
 

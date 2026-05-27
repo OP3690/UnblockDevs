@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-12T00:00:00Z',
     authors: ['UnblockDevs'],
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Tailwind CSS Components Guide — UnblockDevs' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Tailwind%20CSS%20Components%3A%20Complete%20Guide%20%2B%20401%20Free%20Examples&emoji=%F0%9F%A4%96&desc=Learn%20Tailwind%20component%20patterns%20for%20buttons%2C%20cards%2C%20navbars%2C%20modals%2C%20and%20more', width: 1200, height: 630, alt: 'Tailwind CSS Components: Complete Guide + 401 Free Examples — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

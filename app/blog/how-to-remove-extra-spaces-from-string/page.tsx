@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-remove-extra-spaces-from-string',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Remove%20Extra%20Spaces%2C%20Trim%20%26%20Clean%20String%20Formatting%20Issues%20Online&emoji=%F0%9F%9B%A0%EF%B8%8F&desc=Extra%20spaces%2C%20wrong%20case%2C%20special%20characters', width: 1200, height: 630, alt: 'How to Remove Extra Spaces, Trim & Clean String Formatting Issues Online — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

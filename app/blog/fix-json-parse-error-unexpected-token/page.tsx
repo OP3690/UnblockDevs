@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/fix-json-parse-error-unexpected-token',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Fix%3A%20JSON%20Parse%20Error%20%E2%80%93%20Unexpected%20Token%20%28With%20Examples%29%3A%20Complete%20Guide%202026&emoji=%7B%7D&desc=Fix%20JSON%20parse%20unexpected%20token', width: 1200, height: 630, alt: 'Fix: JSON Parse Error – Unexpected Token (With Examples): Complete Guide 2026 — UnblockDevs Blog' }],
 
   },  alternates: { canonical: 'https://unblockdevs.com/blog/fix-json-parse-error-unexpected-token' },
 

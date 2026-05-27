@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     description: 'Learn everything about Apple Creator Studio - features, how to use it, benefits for content creators, and best practices.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/apple-creator-studio-complete-guide',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Apple%20Creator%20Studio%3A%20Complete%20Guide%202026&emoji=%F0%9F%93%96&desc=Learn%20everything%20about%20Apple%20Creator%20Studio%20-%20features%2C%20how%20to%20use%20it%2C%20benefits', width: 1200, height: 630, alt: 'Apple Creator Studio: Complete Guide 2026 — UnblockDevs Blog' }],
 
   },
   twitter: {

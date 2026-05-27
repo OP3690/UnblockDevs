@@ -104,6 +104,7 @@ const jsonLd = {
   description: 'Free online HTTP security headers analyzer that grades your headers from A+ to F, identifies missing security headers, and generates server config for Express.js, Nginx, and Apache.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'A+ to F security grade',

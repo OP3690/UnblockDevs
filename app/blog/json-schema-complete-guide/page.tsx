@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-03-02T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/json-schema-complete-guide',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON%20Schema%20%26%20Stringify%20Complete%20Guide%20%E2%80%93%20Generate%2C%20Validate%2C%20Format&emoji=%7B%7D&desc=JSON%20Schema%20generation%20and%20validation%2C%20JSON', width: 1200, height: 630, alt: 'JSON Schema & Stringify Complete Guide – Generate, Validate, Format — UnblockDevs Blog' }],
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/json-schema-complete-guide' },
 };

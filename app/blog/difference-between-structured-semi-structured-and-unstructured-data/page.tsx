@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     description: 'Learn the difference between structured, semi-structured, and unstructured data with examples and comparisons.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/difference-between-structured-semi-structured-and-unstructured-data',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Structured%20vs%20Semi-Structured%20vs%20Unstructured%20Data&emoji=%F0%9F%9B%A0%EF%B8%8F&desc=Learn%20the%20difference%20between%20structured%2C%20semi-structured%2C%20and%20unstructured%20data', width: 1200, height: 630, alt: 'Structured vs Semi-Structured vs Unstructured Data — UnblockDevs Blog' }],
 
   },
   alternates: {

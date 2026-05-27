@@ -86,7 +86,7 @@ export const metadata: Metadata = {
       'Compare two JSON objects or API responses. Semantic diff normalizes UUIDs, timestamps, JWTs so only real logic changes show. 100% browser-based.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON%20Comparator%20%E2%80%94%20Diff%20%26%20Compare%20JSON%20Objects&emoji=%7B%7D&desc=Compare%20two%20JSON%20objects%20or%20API%20responses', width: 1200, height: 630, alt: 'JSON Comparator — Diff & Compare JSON Objects — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -105,6 +105,7 @@ const jsonLd = {
   url: canonicalUrl,
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Semantic JSON diff — normalizes UUIDs, timestamps, JWTs, hashes',

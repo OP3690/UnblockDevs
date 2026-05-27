@@ -28,7 +28,7 @@ export const metadata: Metadata = {
       'SWE-bench 93.9%, USAMO 97.6%, multimodal coding 59.0%. Every Claude Mythos benchmark explained and compared to Opus 4.6 and GPT-5.4.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/claude-mythos-ai-benchmarks-complete-analysis-2026',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Claude Mythos Benchmarks' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Claude%20Mythos%20Benchmarks%3A%20Every%20Record%20Broken%20%E2%80%94%20Full%20Analysis%20%282026%29&emoji=%F0%9F%A4%96&desc=SWE-bench%2093', width: 1200, height: 630, alt: 'Claude Mythos Benchmarks: Every Record Broken — Full Analysis (2026) — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

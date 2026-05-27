@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     description: 'Learn the difference between arrays and linked lists with simple examples. Understand when to use each data structure.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/difference-between-array-and-linked-list-explained-simply',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Array%20vs%20Linked%20List%20Explained&emoji=%F0%9F%A4%96&desc=Learn%20the%20difference%20between%20arrays%20and%20linked%20lists%20with%20simple%20examples', width: 1200, height: 630, alt: 'Array vs Linked List Explained — UnblockDevs Blog' }],
 
   },
   alternates: {

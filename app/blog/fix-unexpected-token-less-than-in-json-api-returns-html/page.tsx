@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     description: 'Fix "Unexpected token < in JSON" when API returns HTML. Solutions.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/fix-unexpected-token-less-than-in-json-api-returns-html',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Fix%20Unexpected%20token%20%3C%20in%20JSON%20%28API%20Returns%20HTML%29&emoji=%7B%7D&desc=Developer%20guide%20for%20modern%20web%20applications', width: 1200, height: 630, alt: 'Fix Unexpected token < in JSON (API Returns HTML) — UnblockDevs Blog' }],
 
   },
   twitter: {

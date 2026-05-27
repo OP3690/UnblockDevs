@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://unblockdevs.com/http-403-error-fix',
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Fix HTTP 403 Errors' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=HTTP%20403%20Forbidden%20Error%20%E2%80%94%20Causes%20%26%20Fix%20Guide&emoji=%F0%9F%94%92&desc=Getting%20a%20403%20Forbidden%20error%20from%20an%20API', width: 1200, height: 630, alt: 'HTTP 403 Forbidden Error — Causes & Fix Guide — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -55,6 +55,7 @@ const jsonLd = {
     'Complete guide to diagnosing and fixing HTTP 403 Forbidden errors — missing Bearer tokens, Cloudflare WAF blocks, AWS API Gateway policies, Nginx auth, and more.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const faqSchema = {

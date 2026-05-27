@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-beautify-html-code-online',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Beautify%20HTML%20Code%20Online%20%E2%80%94%20Formatter%2C%20Live%20Preview%20%26%20Indenter&emoji=%F0%9F%8E%A8&desc=Messy%20HTML%20code', width: 1200, height: 630, alt: 'How to Beautify HTML Code Online — Formatter, Live Preview & Indenter — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

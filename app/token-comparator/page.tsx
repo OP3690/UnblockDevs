@@ -95,7 +95,7 @@ export const metadata: Metadata = {
       'Decode JWT, compare tokens, security audit, expiration check, entropy analysis. Free, 100% browser-based. Nothing sent to servers.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JWT%20Debugger%20%26%20Token%20Comparator%20%E2%80%94%20Decode%2C%20Compare%20%26%20Security%20Audit&emoji=%F0%9F%94%90&desc=Decode%20JWT%2C%20compare%20tokens%2C%20security%20audit%2C%20expiration%20check%2C%20entropy%20analysis', width: 1200, height: 630, alt: 'JWT Debugger & Token Comparator — Decode, Compare & Security Audit — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -114,6 +114,7 @@ const jsonLd = {
   url: canonicalUrl,
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Smart token detection (JWT, API key, UUID, Base64)',

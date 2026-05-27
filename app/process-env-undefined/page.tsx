@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://unblockdevs.com/process-env-undefined',
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Fix process.env Undefined' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=process.env%20Not%20Working%20in%20Node.js%3F%206%20Fixes&emoji=%F0%9F%90%9B&desc=Fix%20process', width: 1200, height: 630, alt: 'process.env Not Working in Node.js? 6 Fixes — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -52,6 +52,7 @@ const jsonLd = {
   description: 'Step-by-step guide to fix process.env returning undefined in Node.js, Next.js, and Vite projects.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const faqSchema = {

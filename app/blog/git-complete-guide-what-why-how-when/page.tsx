@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     description: 'Git version control: what it is, why use it, how it works. Fundamentals, workflow, branching, collaboration. Best practices.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/git-complete-guide-what-why-how-when',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Git%20Complete%20Guide%3A%20What%2C%20Why%2C%20How%20%26%20When&emoji=%F0%9F%93%96&desc=Git%20version%20control%3A%20what%20it%20is%2C%20why%20use%20it%2C%20how%20it%20works', width: 1200, height: 630, alt: 'Git Complete Guide: What, Why, How & When — UnblockDevs Blog' }],
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/git-complete-guide-what-why-how-when' },
 };

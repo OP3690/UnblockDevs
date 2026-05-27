@@ -11,6 +11,7 @@ const jsonLd = {
   description: 'Convert cURL to Python Requests instantly. Full auth, headers, JSON. No signup, in-browser.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Convert cURL to Python requests library code',
@@ -37,7 +38,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://unblockdevs.com/curl-to-python-requests',
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=cURL%20to%20Python%20Requests%20Converter&emoji=%E2%9A%A1&desc=Convert%20cURL%20to%20Python%20Requests%20instantly', width: 1200, height: 630, alt: 'cURL to Python Requests Converter — UnblockDevs' }],
   },
   twitter: { card: 'summary_large_image', title: 'cURL to Python Requests Converter | UnblockDevs', description: 'Convert cURL to Python Requests instantly. Full auth, headers, JSON. No signup, in-browser.' },
   alternates: { canonical: 'https://unblockdevs.com/curl-to-python-requests' },

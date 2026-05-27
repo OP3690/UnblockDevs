@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/string-case-converter-guide',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=String%20Case%20Converter%20Guide%20%E2%80%94%20camelCase%2C%20snake_case%2C%20PascalCase%2C%20kebab-case%20%26...&emoji=%F0%9F%93%96&desc=Complete%20guide%20to%20string%20case%20conversion', width: 1200, height: 630, alt: 'String Case Converter Guide — camelCase, snake_case, PascalCase, kebab-case &... — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

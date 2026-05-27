@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     publishedTime: '2024-01-10T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/api-response-comparator-testing-guide',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=API%20Response%20Comparator%3A%20A%20Complete%20Testing%20Guide&emoji=%E2%9A%A1&desc=Discover%20how%20to%20use%20API%20response%20comparators%20to%20detect%20breaking%20changes%2C', width: 1200, height: 630, alt: 'API Response Comparator: A Complete Testing Guide — UnblockDevs Blog' }],
 
   },  alternates: { canonical: 'https://unblockdevs.com/blog/api-response-comparator-testing-guide' },
 

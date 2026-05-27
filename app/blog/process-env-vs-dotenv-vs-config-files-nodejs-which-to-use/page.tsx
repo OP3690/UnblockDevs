@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     description: 'Compare process.env, dotenv, dotenv-flow, node-config, and convict for managing configuration in Node.js. Understand tradeoffs and pick the right tool.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/process-env-vs-dotenv-vs-config-files-nodejs-which-to-use',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=process.env%20vs%20dotenv%20vs%20config%20files%20in%20Node.js%20%E2%80%94%20Which%20to%20Use%3F&emoji=%E2%9A%A1&desc=Compare%20process', width: 1200, height: 630, alt: 'process.env vs dotenv vs config files in Node.js — Which to Use? — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

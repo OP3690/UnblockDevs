@@ -58,6 +58,7 @@ const jsonLd = {
   description: 'Generate UUIDs v1–v8. Validate, analyze, compare, bulk export to JSON/CSV/SQL. 100% browser-based.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Generate UUID v1, v3, v4, v5, v6, v7, v8',

@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/json-schema-validator-guide',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON%20Schema%20Validation%20Guide%20%E2%80%94%20Draft%207%2C%202020-12%2C%20AJV%20%26%20OpenAPI&emoji=%7B%7D&desc=JSON%20Schema%20keywords%2C%20Draft%207%20vs%202020-12%2C%20AJV%20in%20Node', width: 1200, height: 630, alt: 'JSON Schema Validation Guide — Draft 7, 2020-12, AJV & OpenAPI — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

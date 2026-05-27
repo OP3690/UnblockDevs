@@ -102,6 +102,7 @@ const jsonLd = {
   description: 'Convert Unix timestamps to human-readable dates in any timezone, or convert dates back to Unix epoch. Live clock, world clock, and relative time.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Unix timestamp to date conversion',

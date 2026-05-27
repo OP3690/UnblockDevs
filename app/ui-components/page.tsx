@@ -33,7 +33,7 @@ export const metadata: Metadata = {
       'Live preview + instant code copy for 25+ UI components. Buttons, cards, modals, forms, tables, alerts & more — CSS & Tailwind.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs UI Components' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=CSS%20UI%20Components%20%E2%80%94%2025%2B%20Copy-Paste%20Components&emoji=%F0%9F%9B%A0%EF%B8%8F&desc=Live%20preview%20%2B%20instant%20code%20copy%20for%2025%2B%20UI%20components', width: 1200, height: 630, alt: 'CSS UI Components — 25+ Copy-Paste Components — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',

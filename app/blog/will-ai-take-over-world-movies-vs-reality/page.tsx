@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     title: "Will AI Take Over the World? Movies vs Reality",
     description: "Hollywood myths vs real AI capabilities, what AI can't do, and expert opinions.",
     type: "article",    url: 'https://unblockdevs.com/blog/will-ai-take-over-world-movies-vs-reality',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Will%20AI%20Take%20Over%20the%20World%3F%20Movies%20vs%20Reality&emoji=%F0%9F%A4%96&desc=Hollywood%20myths%20vs%20real%20AI%20capabilities%2C%20what%20AI%20can', width: 1200, height: 630, alt: 'Will AI Take Over the World? Movies vs Reality — UnblockDevs Blog' }],
 
   },
   alternates: {

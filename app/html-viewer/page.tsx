@@ -84,7 +84,7 @@ export const metadata: Metadata = {
     description: 'Write HTML, CSS and JS — see it render instantly in a sandboxed preview. 5 starter templates. Free, browser-based, no signup.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'HTML Viewer — UnblockDevs' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=HTML%20Viewer%20%26%20Live%20Editor%20%E2%80%94%20Preview%20HTML%20Online&emoji=%F0%9F%93%9D&desc=Write%20HTML%2C%20CSS%20and%20JS%20%E2%80%94%20see%20it%20render%20instantly%20in%20a%20sandboxed%20preview', width: 1200, height: 630, alt: 'HTML Viewer & Live Editor — Preview HTML Online — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -102,6 +102,7 @@ const jsonLd = {
   description: 'Free online HTML viewer and live editor. Write HTML, CSS, and JavaScript in the browser and see the result render instantly in a safe sandboxed iframe.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: ['Live HTML/CSS/JS preview', 'Sandboxed iframe', '5 starter templates', 'Desktop and mobile viewport', 'Dark preview background', 'Download as HTML file', '100% browser-based'],};
 

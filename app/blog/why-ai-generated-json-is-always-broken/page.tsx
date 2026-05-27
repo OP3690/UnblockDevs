@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-05-10T08:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/why-ai-generated-json-is-always-broken',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs — AI JSON Error Fix Guide' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Why%20AI-Generated%20JSON%20Is%20Always%20Broken%20%E2%80%94%20and%20How%20to%20Fix%20Every%20Error&emoji=%7B%7D&desc=ChatGPT%2C%20Claude%2C%20and%20Gemini%20consistently%20produce%20invalid%20JSON', width: 1200, height: 630, alt: 'Why AI-Generated JSON Is Always Broken — and How to Fix Every Error — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

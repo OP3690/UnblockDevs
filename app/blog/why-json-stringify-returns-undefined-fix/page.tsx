@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     description: 'Why JSON.stringify() returns undefined and how to fix it.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/why-json-stringify-returns-undefined-fix',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Why%20JSON.stringify%28%29%20Returns%20Undefined%20%E2%80%93%20Fix&emoji=%7B%7D&desc=Developer%20guide%20for%20modern%20web%20applications', width: 1200, height: 630, alt: 'Why JSON.stringify() Returns Undefined – Fix — UnblockDevs Blog' }],
 
   },
   twitter: {

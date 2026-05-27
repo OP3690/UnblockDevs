@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-05-15T17:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/json-in-databases-postgresql-jsonb-mysql-mongodb',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs — JSON in Databases Guide 2026' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON%20in%20Databases%202026%3A%20PostgreSQL%20JSONB%20vs%20MySQL%20JSON%20vs%20MongoDB&emoji=%7B%7D&desc=When%20to%20use%20JSON%20columns%2C%20how%20to%20query%20and%20index%20JSONB%2C%20MySQL%20JSON%20operators%2C', width: 1200, height: 630, alt: 'JSON in Databases 2026: PostgreSQL JSONB vs MySQL JSON vs MongoDB — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

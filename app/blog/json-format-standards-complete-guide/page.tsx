@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     authors: ['UnblockDevs'],
     tags: ['JSON', 'RFC 8259', 'JSON Format', 'JSON Standards', 'Web Development'],
     url: 'https://unblockdevs.com/blog/json-format-standards-complete-guide',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON%20Format%20%26%20RFC%208259%20Guide&emoji=%7B%7D&desc=JSON%20format%20%26%20RFC%208259%3A%20syntax%20rules%2C%20fixing%20strategies%2C%20production-grade', width: 1200, height: 630, alt: 'JSON Format & RFC 8259 Guide — UnblockDevs Blog' }],
 
   },
   twitter: {

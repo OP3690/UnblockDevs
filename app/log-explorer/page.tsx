@@ -84,7 +84,7 @@ export const metadata: Metadata = {
     description: 'Parse and analyze JSON, NDJSON, Apache, Nginx, CSV, and plain text logs 100% client-side. Timeline, filters, error analysis, JWT detection.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Log%20Explorer%20%E2%80%94%20Search%20%26%20Filter%20JSON%20Logs&emoji=%F0%9F%AA%B5&desc=Parse%20and%20analyze%20JSON%2C%20NDJSON%2C%20Apache%2C%20Nginx%2C%20CSV%2C%20and%20plain%20text%20logs%20100%25', width: 1200, height: 630, alt: 'Log Explorer — Search & Filter JSON Logs — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -103,6 +103,7 @@ const jsonLd = {
   url: canonicalUrl,
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Supports JSON, NDJSON, Apache, Nginx, CSV, and plain text log formats',

@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-fix-json-parse-error-step-by-step',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Fix%20JSON%20Parse%20Error%20%E2%80%94%20Step%20by%20Step%20%28With%20Examples%29&emoji=%7B%7D&desc=Getting%20a%20JSON%20parse%20error%20or%20unexpected%20token', width: 1200, height: 630, alt: 'How to Fix JSON Parse Error — Step by Step (With Examples) — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

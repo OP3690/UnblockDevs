@@ -125,6 +125,7 @@ const jsonLd = {
   description: 'Convert cURL commands to Python, JavaScript, Go, Java, PHP, C#, Rust and more. All processing is 100% client-side.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Convert cURL to Python requests',

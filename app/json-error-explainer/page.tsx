@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: canonicalUrl,
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=AI%20JSON%20Error%20Explainer%20%E2%80%94%20Understand%20%26%20Fix%20Every%20JSON%20Error&emoji=%7B%7D&desc=Paste%20broken%20JSON%20%E2%86%92%20every%20error%20explained%20with%20deep%20context%2C%20JSON%20spec', width: 1200, height: 630, alt: 'AI JSON Error Explainer — Understand & Fix Every JSON Error — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -84,6 +84,7 @@ const jsonLd = {
     'Detects every JSON error simultaneously with deep explanations, JSON spec references, code fix examples, source detection, and one-click auto-fix. 100% browser-based.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Multi-error detection — all errors at once, not just the first',

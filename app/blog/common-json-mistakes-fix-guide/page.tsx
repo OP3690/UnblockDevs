@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     authors: ['UnblockDevs'],
     tags: ['JSON', 'JSON Errors', 'JSON Fixing', 'Web Development', 'Programming'],
     url: 'https://unblockdevs.com/blog/common-json-mistakes-fix-guide',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=10%20Most%20Common%20JSON%20Mistakes%20Developers%20Make%20%28And%20How%20to%20Fix%20Them%20Instantly%29&emoji=%7B%7D&desc=10%20common%20JSON%20mistakes%20and%20how%20to%20fix%20them', width: 1200, height: 630, alt: '10 Most Common JSON Mistakes Developers Make (And How to Fix Them Instantly) — UnblockDevs Blog' }],
 
   },
   twitter: {

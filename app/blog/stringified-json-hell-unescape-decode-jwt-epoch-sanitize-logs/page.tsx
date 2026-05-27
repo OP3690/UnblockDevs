@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     publishedTime: '2025-03-02T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/stringified-json-hell-unescape-decode-jwt-epoch-sanitize-logs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Stringified%20JSON%20Hell%3A%20Unescape%2C%20Decode%20JWTs%2C%20Convert%20Epoch%20%26%20Sanitize%20Logs%20i...&emoji=%7B%7D&desc=Get%20out%20of%20stringified%20JSON%20hell', width: 1200, height: 630, alt: 'Stringified JSON Hell: Unescape, Decode JWTs, Convert Epoch & Sanitize Logs i... — UnblockDevs Blog' }],
 
   },  alternates: { canonical: 'https://unblockdevs.com/blog/stringified-json-hell-unescape-decode-jwt-epoch-sanitize-logs' },
 

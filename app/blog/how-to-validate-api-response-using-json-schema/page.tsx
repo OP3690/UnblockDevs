@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     description: 'Validate API responses with JSON Schema. JS, Python, Node. Code examples.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/how-to-validate-api-response-using-json-schema',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Validate%20API%20Response%20Using%20JSON%20Schema%20%7C%20Complete%20Guide%202026&emoji=%7B%7D&desc=Validate%20API%20responses%20with%20JSON%20Schema', width: 1200, height: 630, alt: 'How to Validate API Response Using JSON Schema | Complete Guide 2026 — UnblockDevs Blog' }],
 
   },
   twitter: {

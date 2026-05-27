@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     description: 'Binary search explained simply: diagrams, code. For interviews.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/binary-search-explained-like-youre-5-with-code-example',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Binary%20Search%20Explained%20Like%20You%5C&emoji=%F0%9F%A4%96&desc=Binary%20search%20explained%20simply%3A%20diagrams%2C%20code', width: 1200, height: 630, alt: 'Binary Search Explained Like You\ — UnblockDevs Blog' }],
 
   },
   twitter: {

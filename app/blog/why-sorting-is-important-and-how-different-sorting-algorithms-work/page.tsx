@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     description: 'Learn why sorting is important and understand how different sorting algorithms work with examples and comparisons.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/why-sorting-is-important-and-how-different-sorting-algorithms-work',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Sorting%20Algorithms%20Explained&emoji=%F0%9F%9B%A0%EF%B8%8F&desc=Learn%20why%20sorting%20is%20important%20and%20understand%20how%20different%20sorting%20algorithms', width: 1200, height: 630, alt: 'Sorting Algorithms Explained — UnblockDevs Blog' }],
 
   },
   alternates: {

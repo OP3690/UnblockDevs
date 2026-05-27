@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     description: 'Learn why your code works locally but fails on submission. Complete troubleshooting guide for environment differences, dependencies, and submission platform issues.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/why-my-code-works-locally-but-fails-on-submission-common-reasons',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Code%20Works%20Locally%20but%20Fails%20on%20Submission&emoji=%F0%9F%A4%96&desc=Learn%20why%20your%20code%20works%20locally%20but%20fails%20on%20submission', width: 1200, height: 630, alt: 'Code Works Locally but Fails on Submission — UnblockDevs Blog' }],
 
   },
   twitter: {

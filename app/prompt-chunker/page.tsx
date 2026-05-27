@@ -52,7 +52,7 @@ export const metadata: Metadata = {
       'Split long prompts into chunks with overlap, auto consolidation instructions, and token counts. Free, 100% browser-based, no signup.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Prompt%20Chunker%20%E2%80%94%20Split%20Large%20Text%20into%20AI%20Context%20Window%20Chunks&emoji=%F0%9F%A4%96&desc=Split%20long%20prompts%20into%20chunks%20with%20overlap%2C%20auto%20consolidation%20instructions%2C', width: 1200, height: 630, alt: 'Prompt Chunker — Split Large Text into AI Context Window Chunks — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -73,6 +73,7 @@ const jsonLd = {
   url: canonicalUrl,
   applicationCategory: 'ProductivityApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Chunk by words or characters',

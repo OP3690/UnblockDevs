@@ -84,7 +84,7 @@ export const metadata: Metadata = {
     description: 'Check password strength, entropy, crack time and HIBP breach status. Build password policies with regex and export code. 100% browser-based.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs Password Strength Checker' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Password%20Strength%20Checker%20%26%20Audit&emoji=%F0%9F%94%90&desc=Check%20password%20strength%2C%20entropy%2C%20crack%20time%20and%20HIBP%20breach%20status', width: 1200, height: 630, alt: 'Password Strength Checker & Audit — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -102,6 +102,7 @@ const jsonLd = {
   description: 'Audit passwords for strength, entropy, crack time, pattern detection, and HIBP breach status. Build password policies with regex and code export. 100% client-side.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Shannon entropy calculation',

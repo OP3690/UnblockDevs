@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     description: 'Greedy algorithm: examples, diagrams, code. For interviews.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/greedy-algorithm-explained-with-simple-examples',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Greedy%20Algorithm%20Explained%20with%20Simple%20Examples%20%7C%20Complete%20Guide%202026&emoji=%F0%9F%A4%96&desc=Greedy%20algorithm%3A%20examples%2C%20diagrams%2C%20code', width: 1200, height: 630, alt: 'Greedy Algorithm Explained with Simple Examples | Complete Guide 2026 — UnblockDevs Blog' }],
 
   },
   twitter: {

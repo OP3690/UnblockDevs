@@ -85,7 +85,7 @@ export const metadata: Metadata = {
     description: 'Convert any list (CSV, JSON, Excel, newline) to a SQL IN clause, parameterized query, JSON array, or MongoDB filter. MySQL, PostgreSQL, Oracle, SQLite. Free, browser-based.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs SQL IN Clause Generator' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=SQL%20IN%20Clause%20Generator%20%E2%80%94%20Convert%20Any%20List%20to%20SQL%20IN&emoji=%F0%9F%97%84%EF%B8%8F&desc=Convert%20any%20list%20%28CSV%2C%20JSON%2C%20Excel%2C%20newline%29%20to%20a%20SQL%20IN%20clause%2C%20parameterized', width: 1200, height: 630, alt: 'SQL IN Clause Generator — Convert Any List to SQL IN — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -103,6 +103,7 @@ const jsonLd = {
   description: 'Convert any list of IDs, emails, or UUIDs into a SQL IN clause, JSON array, CSV, GraphQL, or MongoDB query. MySQL, PostgreSQL, SQL Server, Oracle, SQLite. 100% browser-based.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Auto-detect CSV, JSON array, newline, tab, or mixed input',

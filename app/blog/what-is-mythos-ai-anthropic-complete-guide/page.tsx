@@ -28,7 +28,7 @@ export const metadata: Metadata = {
       "Complete guide to Claude Mythos — 93.9% SWE-bench, 2,000+ zero-days found, Project Glasswing partners, and why experts are both impressed and alarmed.",
     type: 'article',
     url: 'https://unblockdevs.com/blog/what-is-mythos-ai-anthropic-complete-guide',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'What Is Mythos AI?' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=What%20Is%20Mythos%20AI%3F%20Anthropic&emoji=%F0%9F%A4%96&desc=Complete%20guide%20to%20Claude%20Mythos', width: 1200, height: 630, alt: 'What Is Mythos AI? Anthropic — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

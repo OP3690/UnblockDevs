@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     title: 'Fix "Unexpected end of JSON input" Error - Complete Guide',
     description: 'Learn how to fix "Unexpected end of JSON input" error instantly with examples and free tools.',
     type: 'article',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Fix Unexpected end of JSON input' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Free%20Guide%3A%20Fix&emoji=%7B%7D&desc=Learn%20how%20to%20fix', width: 1200, height: 630, alt: 'Free Guide: Fix — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -42,6 +42,7 @@ const jsonLd = {
   description: 'Fix "Unexpected end of JSON input" errors instantly. Detect truncated JSON, missing closing brackets, and empty strings passed to JSON.parse(). 100% browser-based.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const howToSchema = {

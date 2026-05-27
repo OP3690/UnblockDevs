@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-05-15T16:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/oauth2-complete-guide-2026',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs — OAuth 2.0 Complete Guide 2026' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=OAuth%202.0%20Complete%20Guide%202026%3A%20Every%20Grant%20Type%20Explained%20with%20Code&emoji=%F0%9F%94%90&desc=Authorization%20Code%20%2B%20PKCE%2C%20client%20credentials%2C%20token%20refresh', width: 1200, height: 630, alt: 'OAuth 2.0 Complete Guide 2026: Every Grant Type Explained with Code — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

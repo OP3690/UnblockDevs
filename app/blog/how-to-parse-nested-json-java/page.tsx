@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     description: 'Parse nested JSON in Java. Jackson, Gson. Examples for deep objects and arrays.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/how-to-parse-nested-json-java',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Parse%20Nested%20JSON%20in%20Java%20%7C%20Complete%20Guide%202026&emoji=%7B%7D&desc=Parse%20nested%20JSON%20in%20Java', width: 1200, height: 630, alt: 'How to Parse Nested JSON in Java | Complete Guide 2026 — UnblockDevs Blog' }],
 
   },
   twitter: {

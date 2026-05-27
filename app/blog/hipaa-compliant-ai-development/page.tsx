@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     description: 'Mask SQL, JSON, and code in your browser before sending to AI. No PHI leaves your device. HIPAA-safe workflow for healthcare developers.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/hipaa-compliant-ai-development',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=HIPAA-Compliant%20AI%20Development%20%E2%80%94%20How%20to%20Use%20ChatGPT%20Without%20Exposing%20Patient%20...&emoji=%F0%9F%A4%96&desc=Mask%20SQL%2C%20JSON%2C%20and%20code%20in%20your%20browser%20before%20sending%20to%20AI', width: 1200, height: 630, alt: 'HIPAA-Compliant AI Development — How to Use ChatGPT Without Exposing Patient ... — UnblockDevs Blog' }],
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/hipaa-compliant-ai-development',

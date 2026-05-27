@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     authors: ['UnblockDevs'],
     tags: ['cURL', 'Browser DevTools', 'Network Requests', 'API Testing', 'Web Development'],
     url: 'https://unblockdevs.com/blog/copy-as-curl-from-browser-guide',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Copy%20as%20cURL%20from%20Browser%3A%20Network%20Request%20to%20cURL%20Converter%20Tutorial&emoji=%E2%9A%A1&desc=Learn%20how%20to%20copy%20browser%20network%20requests%20as%20cURL%20commands', width: 1200, height: 630, alt: 'Copy as cURL from Browser: Network Request to cURL Converter Tutorial — UnblockDevs Blog' }],
 
   },
   twitter: {

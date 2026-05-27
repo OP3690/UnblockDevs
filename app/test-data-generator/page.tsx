@@ -86,7 +86,7 @@ export const metadata: Metadata = {
       'Generate realistic test data with 11 templates or custom JSON Schema. Users, invoices, banking, API logs, security events, AI training data. Free, browser-based, no signup.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Test%20Data%20Generator%20%E2%80%94%20Realistic%20Mock%20Data&emoji=%E2%9A%97%EF%B8%8F&desc=Generate%20realistic%20test%20data%20with%2011%20templates%20or%20custom%20JSON%20Schema', width: 1200, height: 630, alt: 'Test Data Generator — Realistic Mock Data — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -106,6 +106,7 @@ const jsonLd = {
   url: canonicalUrl,
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     '11 templates: user, invoice, banking, API logs, security events, AI training data, and more',

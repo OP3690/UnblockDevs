@@ -86,7 +86,7 @@ export const metadata: Metadata = {
       'Mask JSON keys and string values before sending to ChatGPT. K_00001, S_00001 — fully reversible. Free, 100% browser-based. No data leaves your device.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON%20Prompt%20Shield%20%E2%80%94%20Mask%20JSON%20Keys%20%26%20Values%20Before%20ChatGPT&emoji=%7B%7D&desc=Mask%20JSON%20keys%20and%20string%20values%20before%20sending%20to%20ChatGPT', width: 1200, height: 630, alt: 'JSON Prompt Shield — Mask JSON Keys & Values Before ChatGPT — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -105,6 +105,7 @@ const jsonLd = {
   url: canonicalUrl,
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Mask JSON keys to K_00001, string values to S_00001',

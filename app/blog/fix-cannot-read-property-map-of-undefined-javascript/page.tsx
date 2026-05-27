@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     description: 'Fix "Cannot read property \'map\' of undefined" in JavaScript/React. Solutions and examples.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/fix-cannot-read-property-map-of-undefined-javascript',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Fix%20Cannot%20Read%20Property%20map%20of%20Undefined%20in%20JS&emoji=%E2%9A%A1&desc=Developer%20guide%20for%20modern%20web%20applications', width: 1200, height: 630, alt: 'Fix Cannot Read Property map of Undefined in JS — UnblockDevs Blog' }],
 
   },
   twitter: {

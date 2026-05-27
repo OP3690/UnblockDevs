@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-beautify-json-online',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Beautify%20%26%20Format%20JSON%20Online%20%E2%80%94%20Pretty%20Print%2C%20Indent%20%26%20Minify&emoji=%7B%7D&desc=Convert%20compressed%20JSON%20to%20readable%20indented%20format', width: 1200, height: 630, alt: 'How to Beautify & Format JSON Online — Pretty Print, Indent & Minify — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     description: 'Prefix sum technique: simple examples, diagrams, code. For interviews.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/prefix-sum-technique-explained-simply',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Prefix%20Sum%20Technique%20Explained%20Simply%20%7C%20Complete%20Guide%202026&emoji=%F0%9F%A4%96&desc=Prefix%20sum%20technique%3A%20simple%20examples%2C%20diagrams%2C%20code', width: 1200, height: 630, alt: 'Prefix Sum Technique Explained Simply | Complete Guide 2026 — UnblockDevs Blog' }],
 
   },
   twitter: {

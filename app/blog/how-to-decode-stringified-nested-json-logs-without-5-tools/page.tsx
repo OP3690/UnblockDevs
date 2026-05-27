@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     publishedTime: '2025-03-02T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-decode-stringified-nested-json-logs-without-5-tools',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Decode%20Stringified%20Nested%20JSON%20Logs%20Without%205%20Different%20Tools&emoji=%7B%7D&desc=Decode%20and%20parse%20stringified%20nested%20JSON%20logs%20in%20one%20place', width: 1200, height: 630, alt: 'How to Decode Stringified Nested JSON Logs Without 5 Different Tools — UnblockDevs Blog' }],
 
   },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-decode-stringified-nested-json-logs-without-5-tools' },
 

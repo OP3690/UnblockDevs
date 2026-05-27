@@ -47,6 +47,7 @@ const jsonLd = {
   description: 'Analyze JSON and CSV datasets online. Computes count, null rate, unique values, min/max, mean, median, distribution, type inference, and pattern detection. All processing is 100% client-side.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Analyze JSON and CSV datasets',

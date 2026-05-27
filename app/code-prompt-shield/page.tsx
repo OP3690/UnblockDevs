@@ -92,7 +92,7 @@ export const metadata: Metadata = {
       'Mask API keys, variables, and PII in your code before sending to ChatGPT or Copilot. Fully reversible. Free, 100% browser-based. Nothing leaves your device.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Code%20Prompt%20Shield%20%E2%80%94%20Mask%20API%20Keys%20%26%20Secrets%20Before%20ChatGPT&emoji=%F0%9F%A4%96&desc=Mask%20API%20keys%2C%20variables%2C%20and%20PII%20in%20your%20code%20before%20sending%20to%20ChatGPT%20or', width: 1200, height: 630, alt: 'Code Prompt Shield — Mask API Keys & Secrets Before ChatGPT — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -111,6 +111,7 @@ const jsonLd = {
   url: canonicalUrl,
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Mask variables, function names, class names before sending to AI',

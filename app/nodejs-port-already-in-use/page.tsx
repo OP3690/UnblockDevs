@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://unblockdevs.com/nodejs-port-already-in-use',
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Fix Port Already in Use' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Developer%20Tool&emoji=%F0%9F%90%9B&desc=Fix%20EADDRINUSE%3A%20address%20already%20in%20use%20error%20in%20Node', width: 1200, height: 630, alt: 'Developer Tool — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -52,6 +52,7 @@ const jsonLd = {
   description: 'Step-by-step guide to kill processes blocking ports in Node.js on Mac, Linux, and Windows, and prevent EADDRINUSE errors.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const faqSchema = {

@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-05-10T09:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/json-parse-stringify-complete-guide',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs — JSON.parse and JSON.stringify Guide' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON.parse%28%29%20and%20JSON.stringify%28%29%20%E2%80%94%20The%20Complete%20Developer%20Guide&emoji=%7B%7D&desc=Master%20every%20option%2C%20edge%20case%2C%20and%20pattern%20for%20JSON', width: 1200, height: 630, alt: 'JSON.parse() and JSON.stringify() — The Complete Developer Guide — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

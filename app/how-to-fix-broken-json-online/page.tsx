@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://unblockdevs.com/how-to-fix-broken-json-online',
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Fix%20Broken%20JSON%20Online&emoji=%7B%7D&desc=Fix%20broken%20JSON%20online%20with%20our%20step-by-step%20guide', width: 1200, height: 630, alt: 'How to Fix Broken JSON Online — UnblockDevs' }],
   },
   twitter: { card: 'summary_large_image', title: 'How to Fix Broken JSON Online | UnblockDevs', description: 'Fix broken JSON online with our step-by-step guide. Free JSON fixer tool included. No signup required.' },
   alternates: { canonical: 'https://unblockdevs.com/how-to-fix-broken-json-online' },
@@ -34,6 +34,7 @@ const jsonLd = {
   description: 'Fix broken JSON online instantly. Step-by-step guide with free JSON fixer tool. No signup, 100% browser-based.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },};
 
 const howToSchema = {

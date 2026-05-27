@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-validate-json',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Validate%20JSON%20%E2%80%94%20Syntax%20Checking%2C%20Schema%20Validation%20%26%20Error%20Fixes&emoji=%7B%7D&desc=JSON%20syntax%20and%20schema%20validation%3A%20exact%20error%20positions%2C%20required%20fields%2C%20type', width: 1200, height: 630, alt: 'How to Validate JSON — Syntax Checking, Schema Validation & Error Fixes — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',

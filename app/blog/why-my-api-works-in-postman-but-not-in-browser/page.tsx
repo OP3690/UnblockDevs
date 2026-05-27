@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     description: 'Learn why your API works in Postman but fails in browsers. Complete troubleshooting guide for CORS errors, authentication issues, and browser security restrictions.',
     type: 'article',
     url: 'https://unblockdevs.com/blog/why-my-api-works-in-postman-but-not-in-browser',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Why%20My%20API%20Works%20in%20Postman%20but%20Not%20in%20Browser%20%7C%20Fix%20Guide%202026&emoji=%F0%9F%9B%A0%EF%B8%8F&desc=Learn%20why%20your%20API%20works%20in%20Postman%20but%20fails%20in%20browsers', width: 1200, height: 630, alt: 'Why My API Works in Postman but Not in Browser | Fix Guide 2026 — UnblockDevs Blog' }],
 
   },
   twitter: {

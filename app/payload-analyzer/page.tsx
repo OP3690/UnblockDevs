@@ -84,7 +84,7 @@ export const metadata: Metadata = {
     description: 'Analyze HTTP request bodies and API payloads instantly. Supports JSON, form data, XML, and multipart. Free, client-side.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Payload%20Analyzer&emoji=%F0%9F%9B%A0%EF%B8%8F&desc=Analyze%20HTTP%20request%20bodies%20and%20API%20payloads%20instantly', width: 1200, height: 630, alt: 'Payload Analyzer — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -102,6 +102,7 @@ const jsonLd = {
   description: 'Analyze HTTP request bodies and API payloads. Supports JSON, form-encoded, multipart, XML, and plain text. All processing is 100% client-side.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
+  dateModified: '2026-05-27',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   featureList: [
     'Analyze JSON, form-urlencoded, multipart, XML, and plain-text payloads',

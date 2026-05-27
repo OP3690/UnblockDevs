@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-manipulate-strings-online',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Manipulate%20%26%20Format%20Strings%20Online%20%E2%80%94%20Developer%20String%20Utilities&emoji=%F0%9F%9B%A0%EF%B8%8F&desc=Convert%20string%20formats%2C%20clean%20up%20text%20data%2C%20split%2C%20replace%2C%20and%20transform', width: 1200, height: 630, alt: 'How to Manipulate & Format Strings Online — Developer String Utilities — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',
