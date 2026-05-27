@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, startTransition } from 'react';
 import { Copy, Check, Minimize2, Maximize2, RotateCcw, ArrowLeftRight } from 'lucide-react';
 import ToolPageShell from '@/components/tools/ToolPageShell';
 
@@ -175,7 +175,9 @@ function HtmlFormatterTool() {
 
   const handleInput = useCallback((val: string) => {
     setInput(val);
-    process(val, mode, indent);
+    // startTransition defers the heavy HTML parse/reformat to a low-priority
+    // update — the textarea value paints immediately, improving INP.
+    startTransition(() => { process(val, mode, indent); });
   }, [mode, indent, process]);
 
   const handleMode = useCallback((m: typeof mode) => {

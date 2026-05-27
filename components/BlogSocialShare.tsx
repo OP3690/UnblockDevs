@@ -163,7 +163,7 @@ export default function BlogSocialShare({ title, url, description, variant = 'fu
       const handleScroll = () => {
         setIsVisible(window.scrollY > 200);
       };
-      window.addEventListener('scroll', handleScroll);
+      window.addEventListener('scroll', handleScroll, { passive: true });
       return () => window.removeEventListener('scroll', handleScroll);
     } else {
       setIsVisible(true);
