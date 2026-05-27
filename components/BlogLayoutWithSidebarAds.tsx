@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Link2, Check, Zap, Wrench, Code2 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import AdUnit from '@/components/AdUnit';
-import AutoBlogArticleSchema from '@/components/AutoBlogArticleSchema';
 import AutoRelatedBlogPosts from '@/components/AutoRelatedBlogPosts';
 import BlogStickyToolBar from '@/components/BlogStickyToolBar';
 
@@ -175,8 +174,6 @@ interface BlogLayoutWithSidebarAdsProps {
 export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSidebarAdsProps) {
   return (
     <div className="w-full py-6 sm:py-10">
-      <AutoBlogArticleSchema />
-
       {/* Nav bar: Back to Blog + All Tools on left, Share buttons on right */}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-2">

@@ -15,6 +15,7 @@ import SiteHeader from '@/components/layout/SiteHeader'
 import SiteFooter from '@/components/layout/SiteFooter'
 import VisitTracker from '@/components/VisitTracker'
 import AutoToolSchema from '@/components/AutoToolSchema'
+import AutoBlogArticleSchema from '@/components/AutoBlogArticleSchema'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap', preload: true })
 const firaCode = Fira_Code({ subsets: ['latin'], variable: '--font-fira-code', display: 'swap', preload: true })
@@ -341,6 +342,7 @@ export default function RootLayout({
         />
         {/* Per-tool SoftwareApplication + BreadcrumbList schemas — rendered client-side from pathname */}
         <AutoToolSchema />
+        <AutoBlogArticleSchema />
         {/* RSS feed autodiscovery — tells browsers and feed readers the feed exists */}
         <link rel="alternate" type="application/rss+xml" title="UnblockDevs Blog — Developer Tools &amp; Guides" href="https://unblockdevs.com/feed.xml" />
         {/* Preconnects — warm up critical origins early to improve LCP on mobile */}
