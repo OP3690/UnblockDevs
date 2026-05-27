@@ -2,8 +2,11 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useDeferredValue, useMemo } from 'react';
 import { Menu, X, Search, ArrowRight, Clock } from 'lucide-react';
+import {
+  trackSearchOpened, trackSearchQuery, trackSearchResultClick, trackSearchClosed,
+} from '@/lib/analytics';
 
 const NAV_LINKS = [
   { href: '/tools/json', label: 'Tools' },
@@ -69,6 +72,7 @@ const ALL_TOOLS: Tool[] = [
   { label: 'Data Insights', href: '/data-insights', desc: 'Analyze CSV and data files', tags: 'csv data analyze statistics chart', cat: 'Dev', icon: '📊' },
   { label: 'SVG to Image', href: '/svg-to-image', desc: 'Export SVG as PNG or JPEG', tags: 'svg image png jpg export convert raster', cat: 'Dev', icon: '🖼️' },
   { label: 'PDF to Excel/Word', href: '/pdf-to-excel-word', desc: 'Convert PDF to Excel or Word', tags: 'pdf excel csv word convert', cat: 'Dev', icon: '📄' },
+  { label: 'Image to Text (OCR)', href: '/image-to-text', desc: 'Extract text from images and scanned photos', tags: 'ocr image text extract photo scan jpeg png webp tiff', cat: 'Dev', icon: '🔍' },
   { label: 'Cron Builder', href: '/cron-expression', desc: 'Build and validate cron expressions', tags: 'cron job schedule expression syntax', cat: 'Dev', icon: '⏰' },
   { label: 'Markdown Preview', href: '/markdown-preview', desc: 'Write and preview Markdown', tags: 'markdown md preview github gfm', cat: 'Dev', icon: '📝' },
   { label: 'Color Picker', href: '/color-picker', desc: 'Pick colors and convert formats', tags: 'color picker hex rgb hsl convert', cat: 'CSS', icon: '🎨' },
@@ -76,6 +80,13 @@ const ALL_TOOLS: Tool[] = [
   { label: 'CSS Box Shadow', href: '/css-box-shadow', desc: 'Build CSS box-shadow visually', tags: 'css box shadow generator builder', cat: 'CSS', icon: '🟦' },
   { label: 'CSS Gradient Generator', href: '/css-gradient-generator', desc: 'Build linear, radial and conic CSS gradients', tags: 'css gradient linear radial conic background', cat: 'CSS', icon: '🎨' },
   { label: 'HTML Formatter', href: '/html-formatter', desc: 'Beautify or minify HTML code', tags: 'html format beautify minify indent', cat: 'Dev', icon: '🗂️' },
+  { label: 'HTML Viewer', href: '/html-viewer', desc: 'Live HTML/CSS/JS sandbox with instant preview', tags: 'html viewer live sandbox preview css js', cat: 'Dev', icon: '👁️' },
+  { label: 'HTTP Headers Analyzer', href: '/http-headers-analyzer', desc: 'Analyze and grade HTTP security headers', tags: 'http headers security csp hsts cors grade analyze', cat: 'Dev', icon: '🌐' },
+  { label: 'String Utilities', href: '/string-utilities', desc: 'Case convert, encode, extract emails/URLs from text', tags: 'string case camelcase snake pascal encode extract url email', cat: 'Dev', icon: '🔤' },
+  { label: 'cURL to Python', href: '/curl-to-python', desc: 'Convert cURL commands to Python requests code', tags: 'curl python requests convert code', cat: 'API', icon: '🐍' },
+  { label: 'cURL to Requests', href: '/curl-to-requests', desc: 'Convert cURL to Python, JS, PHP, Ruby, Go, Java', tags: 'curl convert code requests fetch php ruby go java', cat: 'API', icon: '🔄' },
+  { label: 'Convert cURL to HTTP', href: '/convert-curl-to-http-request', desc: 'Convert cURL command to raw HTTP request format', tags: 'curl http request convert raw format', cat: 'API', icon: '📡' },
+  { label: 'SQL IN Clause Generator', href: '/sql-in-clause-generator', desc: 'Convert a list to SQL IN() clause instantly', tags: 'sql in clause list generate database query', cat: 'Dev', icon: '🗃️' },
   { label: 'Image to Base64', href: '/image-to-base64', desc: 'Convert images to Base64 data URIs', tags: 'image base64 encode data uri png jpg svg', cat: 'Encode', icon: '🖼️' },
   { label: 'CSS UI Components', href: '/css-ui-components', desc: 'Browse and copy CSS UI components', tags: 'css ui components copy paste button card nav', cat: 'CSS', icon: '🧩' },
 ];
@@ -135,6 +146,65 @@ const CAT_COLORS: Record<string, string> = {
   CSS: 'bg-pink-50 text-pink-700 border-pink-200',
 };
 
+// ── Typewriter placeholder ────────────────────────────────────────────────────
+const SEARCH_PHRASES = [
+  'json formatter',
+  'jwt decoder',
+  'base64 encode',
+  'cors tester',
+  'uuid generator',
+  'sql in clause',
+  'regex tester',
+  'hash generator',
+  'curl converter',
+  'css gradient',
+];
+
+function SearchPlaceholder() {
+  const [displayed, setDisplayed] = useState('');
+  const [phraseIdx, setPhraseIdx] = useState(0);
+  const [charIdx, setCharIdx] = useState(0);
+  const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    const phrase = SEARCH_PHRASES[phraseIdx];
+    let delay: number;
+
+    if (!deleting && charIdx < phrase.length) {
+      delay = 65 + Math.random() * 35;
+      const t = setTimeout(() => {
+        setDisplayed(phrase.slice(0, charIdx + 1));
+        setCharIdx((c) => c + 1);
+      }, delay);
+      return () => clearTimeout(t);
+    } else if (!deleting && charIdx === phrase.length) {
+      const t = setTimeout(() => setDeleting(true), 1800);
+      return () => clearTimeout(t);
+    } else if (deleting && charIdx > 0) {
+      delay = 28;
+      const t = setTimeout(() => {
+        setDisplayed(phrase.slice(0, charIdx - 1));
+        setCharIdx((c) => c - 1);
+      }, delay);
+      return () => clearTimeout(t);
+    } else if (deleting && charIdx === 0) {
+      setDeleting(false);
+      setPhraseIdx((i) => (i + 1) % SEARCH_PHRASES.length);
+    }
+  }, [charIdx, deleting, phraseIdx]);
+
+  return (
+    <span className="flex-1 text-left font-mono text-[12px] text-zinc-400 tracking-tight">
+      <span className="mr-1 text-emerald-500 select-none">›</span>
+      {displayed || <span className="opacity-0">_</span>}
+      <span
+        className="ml-px inline-block w-[1.5px] animate-[caret_1s_step-end_infinite] bg-emerald-400 align-[-1px]"
+        style={{ height: '11px' }}
+      />
+    </span>
+  );
+}
+
 export default function SiteHeader() {
   const pathname = usePathname();
   const router = useRouter();
@@ -146,45 +216,76 @@ export default function SiteHeader() {
   const searchRef = useRef<HTMLInputElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
-  const results = searchQ.trim() ? smartSearch(searchQ) : ALL_TOOLS.filter((t) => POPULAR.includes(t.href));
+  // useDeferredValue lets React keep the input responsive while deferring
+  // the expensive smartSearch computation to a lower-priority render.
+  // This directly cuts INP by yielding the main thread back to the browser
+  // before committing search results.
+  const deferredQ = useDeferredValue(searchQ);
+  const results = useMemo(
+    () => deferredQ.trim() ? smartSearch(deferredQ) : ALL_TOOLS.filter((t) => POPULAR.includes(t.href)),
+    [deferredQ]
+  );
   const showResults = searchOpen;
+  const queryDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const openSearch = useCallback(() => {
+  const openSearch = useCallback((source: Parameters<typeof trackSearchOpened>[0] = 'header_button') => {
     setSearchOpen(true);
     setSearchQ('');
     setSelectedIdx(0);
+    trackSearchOpened(source);
     setTimeout(() => searchRef.current?.focus(), 50);
   }, []);
 
-  const closeSearch = useCallback(() => {
+  const closeSearch = useCallback((query = '', resultCount = 0) => {
+    trackSearchClosed(query, resultCount);
     setSearchOpen(false);
     setSearchQ('');
     setSelectedIdx(0);
   }, []);
 
-  const navigate = useCallback((href: string) => {
+  const navigate = useCallback((href: string, toolName: string, position: number, query: string) => {
+    trackSearchResultClick(toolName, position, query);
     router.push(href);
-    closeSearch();
-  }, [router, closeSearch]);
+    setSearchOpen(false);
+    setSearchQ('');
+    setSelectedIdx(0);
+  }, [router]);
 
   // Keyboard shortcuts
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') { closeSearch(); return; }
+      if (e.key === 'Escape') { closeSearch(searchQ, results.length); return; }
       const isMeta = e.metaKey || e.ctrlKey;
-      if (isMeta && e.key === 'k') { e.preventDefault(); searchOpen ? closeSearch() : openSearch(); return; }
+      if (isMeta && e.key === 'k') {
+        e.preventDefault();
+        searchOpen ? closeSearch(searchQ, results.length) : openSearch('keyboard_shortcut');
+        return;
+      }
       if (e.key === '/' && !searchOpen && !(e.target instanceof HTMLInputElement) && !(e.target instanceof HTMLTextAreaElement)) {
-        e.preventDefault(); openSearch();
+        e.preventDefault(); openSearch('slash_key');
       }
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [searchOpen, openSearch, closeSearch]);
+  }, [searchOpen, searchQ, results.length, openSearch, closeSearch]);
+
+  // Debounced query tracking — fires 600ms after user stops typing
+  useEffect(() => {
+    if (!searchQ.trim()) return;
+    if (queryDebounceRef.current) clearTimeout(queryDebounceRef.current);
+    queryDebounceRef.current = setTimeout(() => {
+      trackSearchQuery(searchQ, results.length);
+    }, 600);
+    return () => { if (queryDebounceRef.current) clearTimeout(queryDebounceRef.current); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQ]);
 
   function handleSearchKey(e: React.KeyboardEvent) {
     if (e.key === 'ArrowDown') { e.preventDefault(); setSelectedIdx((i) => Math.min(i + 1, results.length - 1)); }
     if (e.key === 'ArrowUp') { e.preventDefault(); setSelectedIdx((i) => Math.max(i - 1, 0)); }
-    if (e.key === 'Enter' && results[selectedIdx]) { navigate(results[selectedIdx].href); }
+    if (e.key === 'Enter' && results[selectedIdx]) {
+      navigate(results[selectedIdx].href, results[selectedIdx].label, selectedIdx, searchQ);
+    }
   }
 
   function isActive(href: string) {
@@ -216,20 +317,105 @@ export default function SiteHeader() {
 
           {/* Right side */}
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
-            {/* Search trigger */}
-            <button
-              type="button"
-              onClick={openSearch}
-              title="Search tools (⌘K or /)"
-              aria-label="Search tools"
-              className="flex h-8 items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-700 hover:border-zinc-300"
-            >
-              <Search className="h-3.5 w-3.5 shrink-0" />
-              <span className="hidden sm:inline text-[12px]">Search tools…</span>
-              <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border border-zinc-300 bg-white px-1 py-0.5 font-mono text-[10px] text-zinc-400 shadow-sm">
-                ⌘K
-              </kbd>
-            </button>
+            {/* Search area — styled label + curved arrow + search bar */}
+            <div className="flex items-center gap-1.5">
+
+              {/* Label block — lg+ only */}
+              <span className="hidden lg:flex flex-col items-end gap-0 whitespace-nowrap select-none" aria-hidden>
+                {/* Sparkle + text */}
+                <span className="flex items-center gap-1.5">
+                  <span className="text-[15px]">✦</span>
+                  <span
+                    className="font-extrabold text-[13.5px] tracking-[-0.02em]"
+                    style={{
+                      background: 'linear-gradient(90deg,#10b981 0%,#06b6d4 50%,#6366f1 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                    }}
+                  >
+                    What are you working on?
+                  </span>
+                </span>
+                {/* Doodle underline squiggle */}
+                <svg width="172" height="5" viewBox="0 0 172 5" fill="none" className="mr-0.5">
+                  <defs>
+                    <linearGradient id="sqHdr" x1="0" y1="0" x2="172" y2="0" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stopColor="#10b981"/>
+                      <stop offset="50%" stopColor="#06b6d4"/>
+                      <stop offset="100%" stopColor="#6366f1"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M2 3.5 Q22 1 42 3.5 Q62 6 82 3.5 Q102 1 122 3.5 Q142 6 162 3.5 Q167 3 170 2.5" stroke="url(#sqHdr)" strokeWidth="1.8" strokeLinecap="round" fill="none"/>
+                </svg>
+              </span>
+
+              {/* Doodle arrow — lg+ only */}
+              <span className="hidden lg:inline-block" aria-hidden style={{ transform: 'translateY(2px)' }}>
+                <svg width="52" height="32" viewBox="0 0 52 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="crvArrow" x1="0" y1="0" x2="52" y2="32" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stopColor="#10b981"/>
+                      <stop offset="45%" stopColor="#06b6d4"/>
+                      <stop offset="100%" stopColor="#818cf8"/>
+                    </linearGradient>
+                  </defs>
+                  {/* Main swooping curve — thicker, more dramatic */}
+                  <path
+                    d="M3 6 C8 2, 18 2, 28 8 C36 13, 42 18, 47 22"
+                    stroke="url(#crvArrow)"
+                    strokeWidth="2.6"
+                    strokeLinecap="round"
+                    fill="none"
+                    style={{
+                      strokeDasharray: 70,
+                      strokeDashoffset: 0,
+                      animation: 'drawArrow 0.8s ease-out forwards',
+                    }}
+                  />
+                  {/* Bold filled arrowhead */}
+                  <path
+                    d="M38 22 L47 22 L43 14"
+                    stroke="url(#crvArrow)"
+                    strokeWidth="2.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    fill="none"
+                  />
+                  {/* Tiny tail flick for hand-drawn feel */}
+                  <path
+                    d="M3 6 C2 9, 1 12, 3 14"
+                    stroke="url(#crvArrow)"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                    fill="none"
+                    opacity="0.45"
+                  />
+                  <style>{`
+                    @keyframes drawArrow {
+                      from { stroke-dashoffset: 70; }
+                      to   { stroke-dashoffset: 0; }
+                    }
+                  `}</style>
+                </svg>
+              </span>
+
+              {/* Search button */}
+              <button
+                type="button"
+                onClick={() => openSearch('header_button')}
+                title="Search tools (⌘K or /)"
+                aria-label="Search tools"
+                className="group relative flex h-10 items-center gap-2 rounded-xl border-2 border-emerald-300 bg-white px-3 text-zinc-400 shadow-[0_2px_14px_-2px_rgba(16,185,129,0.3)] transition-all duration-200 hover:border-emerald-400 hover:shadow-[0_4px_22px_-2px_rgba(16,185,129,0.45)] w-10 sm:w-56 lg:w-64"
+              >
+                <Search className="h-4 w-4 shrink-0 text-emerald-500 transition-colors group-hover:text-emerald-600" />
+                <span className="hidden sm:flex flex-1 items-center overflow-hidden">
+                  <SearchPlaceholder />
+                </span>
+                <kbd className="hidden sm:inline-flex shrink-0 items-center gap-0.5 rounded-md border border-emerald-200 bg-gradient-to-b from-emerald-50 to-emerald-100 px-1.5 py-0.5 font-mono text-[10px] font-bold text-emerald-600 shadow-[inset_0_-1px_0_0_rgba(0,0,0,0.08)]">
+                  ⌘K
+                </kbd>
+              </button>
+            </div>
 
             <span className="hidden items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 font-mono text-[11px] font-medium text-emerald-800 sm:inline-flex">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden />
@@ -276,10 +462,10 @@ export default function SiteHeader() {
         <div
           ref={overlayRef}
           className="fixed inset-0 z-50 flex items-start justify-center pt-[10vh] px-4"
-          onClick={(e) => { if (e.target === overlayRef.current) closeSearch(); }}
+          onClick={(e) => { if (e.target === overlayRef.current) closeSearch(searchQ, results.length); }}
         >
           {/* Backdrop */}
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={closeSearch} />
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => closeSearch(searchQ, results.length)} />
 
           {/* Modal */}
           <div className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-2xl">
@@ -292,9 +478,9 @@ export default function SiteHeader() {
                 value={searchQ}
                 onChange={(e) => { setSearchQ(e.target.value); setSelectedIdx(0); }}
                 onKeyDown={handleSearchKey}
-                placeholder="Search 50+ tools… (Esc to close)"
+                placeholder="search 'jwt decoder', 'css gradient', 'curl'…"
                 aria-label="Search all tools"
-                className="flex-1 bg-transparent text-[14px] text-zinc-800 placeholder:text-zinc-400 focus:outline-none"
+                className="flex-1 bg-transparent font-mono text-[13.5px] text-zinc-800 placeholder:text-zinc-400 placeholder:font-mono focus:outline-none"
               />
               {searchQ && (
                 <button onClick={() => { setSearchQ(''); setSelectedIdx(0); searchRef.current?.focus(); }}
@@ -327,7 +513,7 @@ export default function SiteHeader() {
                         <li key={tool.href}>
                           <button
                             type="button"
-                            onClick={() => navigate(tool.href)}
+                            onClick={() => navigate(tool.href, tool.label, i, searchQ)}
                             onMouseEnter={() => setSelectedIdx(i)}
                             className={`flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors ${i === selectedIdx ? 'bg-zinc-50' : 'hover:bg-zinc-50'}`}
                           >
