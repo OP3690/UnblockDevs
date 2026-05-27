@@ -16,6 +16,7 @@ import SiteFooter from '@/components/layout/SiteFooter'
 import VisitTracker from '@/components/VisitTracker'
 import AutoToolSchema from '@/components/AutoToolSchema'
 import AutoBlogArticleSchema from '@/components/AutoBlogArticleSchema'
+import ScrollToTop from '@/components/ScrollToTop'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap', preload: true })
 const firaCode = Fira_Code({ subsets: ['latin'], variable: '--font-fira-code', display: 'swap', preload: true })
@@ -366,31 +367,41 @@ export default function RootLayout({
         className="font-sans antialiased text-zinc-900 bg-[#FAFAFA] selection:bg-emerald-200/50 selection:text-zinc-900"
         suppressHydrationWarning
       >
+        {/* Skip-to-content — keyboard/screen-reader accessibility */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[999] focus:rounded-lg focus:bg-emerald-600 focus:px-4 focus:py-2 focus:text-white focus:font-semibold"
+        >
+          Skip to main content
+        </a>
         <GA4RouteTracker />
         <TabVisibilityTracker />
         <DevModeWrapper>
           <div className="flex min-h-screen flex-col bg-[#FAFAFA] font-sans text-zinc-900 antialiased">
             <HomeBookmarkStrip />
             <SiteHeader />
-            <div className="flex min-h-0 flex-1 flex-col min-w-0" suppressHydrationWarning>
+            <div id="main-content" className="flex min-h-0 flex-1 flex-col min-w-0" suppressHydrationWarning>
               <ToolPagesAdWrap>{children}</ToolPagesAdWrap>
             </div>
             <SiteFooter />
           </div>
           <GlobalAdSlot />
           <BuyMeACoffeeWidget />
+          <ScrollToTop />
         </DevModeWrapper>
-        <Toaster 
-          position="bottom-right"
+        <Toaster
+          position="bottom-center"
           toastOptions={{
-            duration: 3000,
+            duration: 2500,
             style: {
-              background: '#363636',
+              fontSize: '14px',
+              borderRadius: '10px',
+              background: '#18181b',
               color: '#fff',
               marginBottom: '80px', // Space above Buy Me a Coffee widget
             },
             success: {
-              duration: 3000,
+              duration: 2500,
               iconTheme: {
                 primary: '#10b981',
                 secondary: '#fff',

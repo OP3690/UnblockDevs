@@ -1,24 +1,6 @@
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
 import { LayoutGrid, Plus, ShieldCheck, Lock, Zap } from 'lucide-react';
-
-/**
- * Lazy-load the heavy 14-scene animation so it's excluded from the
- * critical JS bundle — keeps the homepage LCP fast (ssr:false = client-only).
- */
-const HomeHeroCodePreview = dynamic(
-  () => import('@/components/home/HomeHeroCodePreview'),
-  {
-    ssr: false,
-    loading: () => (
-      <div
-        className="h-[420px] w-full rounded-2xl border border-zinc-200 bg-zinc-50"
-        style={{ animation: 'pulse 2s cubic-bezier(0.4,0,0.6,1) infinite' }}
-        aria-hidden
-      />
-    ),
-  },
-);
+import HomeHeroCodePreview from '@/components/home/HomeHeroCodePreview';
 
 /**
  * Server-rendered hero + stats — clean two-column layout.
@@ -105,6 +87,25 @@ export default function HomeServerHero() {
                   <p className="text-[10.5px] leading-tight text-amber-600">No hidden fees, ever</p>
                 </div>
               </div>
+            </div>
+
+            {/* Mobile visual — shown instead of code preview on sm/md screens */}
+            <div className="lg:hidden mt-8 grid grid-cols-3 gap-2 sm:grid-cols-4" aria-label="Available tools">
+              {[
+                { emoji: '{}', label: 'JSON Formatter' },
+                { emoji: '🔐', label: 'JWT Decoder' },
+                { emoji: '🔒', label: 'CORS Tester' },
+                { emoji: '⚡', label: 'cURL Converter' },
+                { emoji: '🗄️', label: 'SQL Formatter' },
+                { emoji: '🔍', label: 'Regex Tester' },
+                { emoji: '🔑', label: 'Password Gen' },
+                { emoji: '📝', label: 'Markdown' },
+              ].map(({ emoji, label }) => (
+                <div key={label} className="flex flex-col items-center gap-1.5 rounded-xl border border-zinc-100 bg-white p-3 text-center shadow-sm">
+                  <span className="text-2xl" aria-hidden>{emoji}</span>
+                  <span className="text-[10px] font-medium text-zinc-500 leading-tight">{label}</span>
+                </div>
+              ))}
             </div>
           </div>
 

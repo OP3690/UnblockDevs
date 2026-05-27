@@ -39,7 +39,7 @@ export default function RelatedToolsStrip({ toolName, limit = 5 }: Props) {
             </span>
           </div>
           <Link
-            href="/"
+            href="/tools/json"
             className="flex items-center gap-1 text-[11.5px] font-medium text-zinc-400 transition-colors hover:text-emerald-600"
           >
             Browse all tools
@@ -58,7 +58,7 @@ export default function RelatedToolsStrip({ toolName, limit = 5 }: Props) {
 
           {/* "See all" ghost card */}
           <Link
-            href="/"
+            href="/tools/json"
             role="listitem"
             className="flex shrink-0 flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-zinc-200 bg-white px-4 py-3 text-center transition-all hover:border-emerald-300 hover:bg-emerald-50 min-w-[110px]"
           >

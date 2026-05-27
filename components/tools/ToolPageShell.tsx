@@ -99,7 +99,7 @@ export default function ToolPageShell({
   breadcrumbItems,
   title,
   subtitle,
-  backHref = '/',
+  backHref = '/tools/json',
   backLabel = 'All tools',
   toolName,
   tool,

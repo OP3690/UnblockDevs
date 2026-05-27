@@ -229,7 +229,7 @@ export default function BlogPage({
       <main className="mx-auto max-w-full sm:px-0 lg:px-0">
 
         {/* Post grid + search */}
-        <BlogListClient allPosts={blogPosts} initialPosts={initialPosts} totalPages={totalPages} currentPage={currentPage} />
+        <BlogListClient initialPosts={initialPosts} totalPages={totalPages} currentPage={currentPage} />
 
         {/* ── FEATURED GUIDES ──────────────────────────────────── */}
         {currentPage === 1 && (
