@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import DotenvNotLoadingClient from './client';
 
 export const metadata: Metadata = {
-  title: 'dotenv Not Loading Variables? 7 Fixes That Work | UnblockDevs',
+  title: '.env Not Loading — Fix Node.js dotenv Issues | UnblockDevs',
   description: 'Fix dotenv not loading .env variables in Node.js. Covers file location, require order, .env.local vs .env, and TypeScript path issues.',
   keywords: [
     'dotenv not loading',

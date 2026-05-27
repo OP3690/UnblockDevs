@@ -8,8 +8,7 @@ import JsonToExcelClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/json-to-excel';
 
 export const metadata: Metadata = {
-  title:
-    'JSON to Excel Converter — Convert JSON to XLSX, CSV, Multi-Sheet Export, Flatten Nested JSON Online Free | UnblockDevs',
+  title: 'JSON to Excel Converter — Free Online | UnblockDevs',
   description:
     'Convert JSON to Excel or CSV online. Paste, upload, or fetch from API URL. Flatten nested JSON, export to multiple sheets, apply filters. Free, 100% browser-based, no data sent to servers.',
   keywords: [
@@ -87,7 +86,7 @@ export const metadata: Metadata = {
       'Convert JSON to Excel or CSV. Paste, upload, or fetch from API. Flatten nested JSON, multi-sheet export, filters. Free, 100% browser-based.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON%20to%20Excel%20Converter&emoji=%F0%9F%93%8A&desc=Convert%20JSON%20data%20to%20Excel%20and%20CSV%20files%20online%20free', width: 1200, height: 630, alt: 'JSON to Excel Converter — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',

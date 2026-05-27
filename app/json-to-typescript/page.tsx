@@ -8,7 +8,7 @@ import JsonToTypescriptClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/json-to-typescript';
 
 export const metadata: Metadata = {
-  title: 'JSON to TypeScript Types Generator — Interface, Type, Zod | UnblockDevs',
+  title: 'JSON to TypeScript — Generate Types Online | UnblockDevs',
   description:
     'Instantly convert any JSON to TypeScript interfaces, type aliases, or Zod schemas. Handles nested objects, arrays, null values, and optional fields. 100% browser-based — no signup required.',
   keywords: [

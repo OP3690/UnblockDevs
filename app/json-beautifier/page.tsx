@@ -8,7 +8,7 @@ import JsonBeautifierClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/json-beautifier';
 
 export const metadata: Metadata = {
-  title: 'JSON Beautifier & Viewer — Free Online JSON Formatter | UnblockDevs',
+  title: 'JSON Beautifier & Formatter Online | UnblockDevs',
   description:
     'Free JSON Beautifier and Viewer online. Format, validate, auto-fix, and explore JSON with tree view, JSONPath, TypeScript interface generator, and SQL export. 100% client-side — your JSON never leaves your browser. No signup.',
   keywords: [
@@ -97,7 +97,7 @@ export const metadata: Metadata = {
       'Format, beautify, validate, and explore JSON with tree view, JSONPath, TypeScript generator, and SQL export. 100% client-side — nothing sent to servers. No signup.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'JSON Beautifier & Viewer — UnblockDevs' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON%20Beautifier&emoji=%7B%7D&desc=Format%2C%20validate%20and%20explore%20JSON%20structure%20online', width: 1200, height: 630, alt: 'JSON Beautifier — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',

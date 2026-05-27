@@ -8,7 +8,7 @@ import HttpHeadersAnalyzerClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/http-headers-analyzer';
 
 export const metadata: Metadata = {
-  title: 'HTTP Security Headers Analyzer — Check & Grade Your Headers | UnblockDevs',
+  title: 'HTTP Security Headers Analyzer & Grader | UnblockDevs',
   description:
     'Free HTTP security headers analyzer. Paste response headers to get an instant security grade (A+ to F), identify missing headers like CSP, HSTS, X-Frame-Options, and generate server config for Express, Nginx, and Apache.',
   keywords: [
@@ -86,7 +86,7 @@ export const metadata: Metadata = {
     description: 'Paste HTTP response headers and get an instant A+ to F security grade. Identifies missing headers and generates server config for Express, Nginx, Apache.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'HTTP Headers Analyzer — UnblockDevs' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=HTTP%20Headers%20Analyzer&emoji=%F0%9F%9B%A1%EF%B8%8F&desc=Analyze%20and%20grade%20HTTP%20security%20headers%20for%20any%20URL', width: 1200, height: 630, alt: 'HTTP Headers Analyzer — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',

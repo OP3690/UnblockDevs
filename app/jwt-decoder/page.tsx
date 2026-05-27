@@ -8,7 +8,7 @@ import JWTDecoderClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/jwt-decoder';
 
 export const metadata: Metadata = {
-  title: 'JWT Decoder — Decode JWT Tokens, Verify Signatures, Check Expiry & Security Audit Online Free | UnblockDevs',
+  title: 'JWT Decoder — Decode & Verify JWTs Online | UnblockDevs',
   description:
     'Decode JWT tokens, view header and payload claims, verify HMAC signatures, check expiration, and run security analysis — 100% in your browser. Token never sent to any server. Free, no signup.',
   keywords: [
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     description: 'Decode JWT tokens, verify signatures, check expiration, run security analysis. 100% in your browser. Token never sent to any server.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs JWT Decoder' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JWT%20Decoder&emoji=%F0%9F%94%91&desc=Decode%2C%20verify%20and%20inspect%20JSON%20Web%20Tokens%20online', width: 1200, height: 630, alt: 'JWT Decoder — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',

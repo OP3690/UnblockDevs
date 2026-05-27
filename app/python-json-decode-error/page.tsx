@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import PythonJsonDecodeErrorClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Fix Python json.JSONDecodeError — Causes & Solutions | UnblockDevs',
+  title: 'Python json.loads Error Fix — JSONDecodeError | UnblockDevs',
   description:
     'Fix Python json.loads() JSONDecodeError and ValueError. Covers HTML responses, BOM characters, trailing commas, encoding issues, and safe parsing patterns.',
   keywords: [

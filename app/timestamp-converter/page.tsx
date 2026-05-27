@@ -8,7 +8,7 @@ import TimestampConverterClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/timestamp-converter';
 
 export const metadata: Metadata = {
-  title: 'Unix Timestamp Converter — Epoch to Date, World Clock | UnblockDevs',
+  title: 'Timestamp Converter — Unix & ISO 8601 Online | UnblockDevs',
   description:
     'Convert Unix timestamps to human-readable dates in any timezone, or convert dates back to Unix epoch. Live current time, world clock, relative time, and 9 output formats. 100% browser-based.',
   keywords: [
@@ -84,7 +84,7 @@ export const metadata: Metadata = {
     description: 'Convert Unix timestamps to readable dates in any timezone. Live clock, world clock, relative time, 9 formats. 100% browser-based.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs Unix Timestamp Converter' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Timestamp%20Converter&emoji=%E2%8F%B1%EF%B8%8F&desc=Convert%20Unix%20timestamps%20to%20dates%20and%20between%20time%20formats', width: 1200, height: 630, alt: 'Timestamp Converter — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',

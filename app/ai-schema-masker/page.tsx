@@ -8,7 +8,7 @@ import AiSchemaMaskerClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/ai-schema-masker';
 
 export const metadata: Metadata = {
-  title: "AI SQL Schema Masker — Hide Table & Column Names Before Sending to ChatGPT | UnblockDevs",
+  title: 'SQL Schema Masker — Hide Table Names for AI | UnblockDevs',
   description:
     "Mask SQL identifiers before sending to AI. Tables become T_001, columns C_001 — fully reversible. Free, 100% browser-based, nothing sent to servers.",
   keywords: [
@@ -88,7 +88,7 @@ export const metadata: Metadata = {
       "Mask SQL identifiers before sending to AI. Tables → T_001, columns → C_001. Fully reversible, 100% in your browser. No server, no signup.",
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=SQL%20Schema%20Masker&emoji=%F0%9F%9B%A1%EF%B8%8F&desc=Hide%20table%20and%20column%20names%20before%20sending%20schemas%20to%20ChatGPT', width: 1200, height: 630, alt: 'SQL Schema Masker — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',

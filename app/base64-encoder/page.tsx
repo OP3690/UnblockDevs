@@ -9,7 +9,7 @@ import Base64EncoderClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/base64-encoder';
 
 export const metadata: Metadata = {
-  title: 'Base64 Encoder Decoder — Standard, Base64URL, MIME & No-Padding Online Free | UnblockDevs',
+  title: 'Base64 Encoder Decoder — URL-safe, MIME & More | UnblockDevs',
   description:
     'Encode or decode Base64 in 4 variants: Standard, Base64URL, MIME, No-Padding. Auto-detects JWTs, images, JSON. File upload up to 50 MB. Security scanner. 100% browser-based — nothing sent to servers.',
   keywords: [
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     description: 'Encode/decode Base64 in 4 variants. Auto-detect JWT, images. 50 MB files. Security scanner. 100% in-browser.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs Base64 Encoder' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Base64%20Encoder%20%26%20Decoder&emoji=%F0%9F%94%A4&desc=Encode%20and%20decode%20Base64%20strings%2C%20files%20and%20images%20online', width: 1200, height: 630, alt: 'Base64 Encoder Decoder — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',

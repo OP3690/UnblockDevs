@@ -16,7 +16,7 @@ const canonicalUrl = 'https://unblockdevs.com/url-encoder';
 
 export const metadata: Metadata = {
   title:
-    'URL Encoder Decoder — Percent-Encode, Decode URL Components, Query Strings & Form Data Online Free | UnblockDevs',
+    'URL Encoder & Decoder — Percent-Encode Online | UnblockDevs',
   description:
     'Encode and decode URLs in RFC 3986, form-urlencoded, encodeURI, or encodeURIComponent format. Parse URLs, edit query parameters, detect double encoding, and run security checks. Free, 100% browser-based.',
   keywords: [
@@ -94,7 +94,7 @@ export const metadata: Metadata = {
       'Encode/decode URLs in RFC 3986, form-urlencoded, encodeURI, encodeURIComponent. Parse URLs, edit query params, detect double encoding. 100% browser-based.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=URL%20Encoder%20%26%20Decoder&emoji=%F0%9F%94%97&desc=Percent-encode%20and%20decode%20URLs%20and%20query%20string%20components', width: 1200, height: 630, alt: 'URL Encoder & Decoder — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',

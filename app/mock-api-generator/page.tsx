@@ -8,7 +8,7 @@ import MockApiGeneratorClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/mock-api-generator';
 
 export const metadata: Metadata = {
-  title: 'Mock API Generator — Generate JSON Mock Data, Fake REST API Endpoints & Test Responses Online Free | UnblockDevs',
+  title: 'Mock API Generator — Fake REST APIs Online | UnblockDevs',
   description: 'Create mock REST APIs with dynamic responses, auth, latency, rate limits. Export Postman, OpenAPI. No signup.',
   keywords: [
     'mock api generator',

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import CannotReadPropertyUndefinedClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Fix "Cannot Read Properties of Undefined" in JavaScript | UnblockDevs',
+  title: 'Cannot Read Property of Undefined — JS Fix | UnblockDevs',
   description:
     'Fix "Cannot read properties of undefined (reading \'X\')" and "Cannot read property \'X\' of null" errors in JavaScript and React. Complete guide with optional chaining.',
   keywords: [

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import PythonKeyErrorFixClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Fix Python KeyError — Complete Guide with Examples | UnblockDevs',
+  title: 'Python KeyError Fix — Causes & Solutions | UnblockDevs',
   description:
     'Fix Python KeyError exceptions safely. Learn dict.get(), try/except, setdefault, and how to debug missing keys in API responses and JSON data.',
   keywords: [

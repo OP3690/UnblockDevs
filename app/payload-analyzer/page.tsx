@@ -8,7 +8,7 @@ import PayloadAnalyzerClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/payload-analyzer';
 
 export const metadata: Metadata = {
-  title: 'Payload Analyzer – HTTP Request & API Payload Inspector | UnblockDevs',
+  title: 'Payload Analyzer — Debug HTTP Request Bodies | UnblockDevs',
   description: 'Analyze HTTP request bodies and API payloads instantly. Inspect JSON, form data, XML, and multipart payloads. Free online payload analyzer — no signup.',
   keywords: [
     'payload analyzer',

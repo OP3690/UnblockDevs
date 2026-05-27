@@ -8,8 +8,7 @@ import TruthTableGeneratorClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/truth-table-generator';
 
 export const metadata: Metadata = {
-  title:
-    'Truth Table Generator — Boolean Expression Solver, Karnaugh Map, Minterms, SOP/POS, Code Export Online Free | UnblockDevs',
+  title: 'Truth Table Generator — Boolean Logic Online | UnblockDevs',
   description:
     'Generate truth tables from any boolean expression. Includes Karnaugh map, minterms, maxterms, SOP/POS canonical forms, and code export in JavaScript, Python, Java, and Go. Up to 8 variables. Free, 100% browser-based.',
   keywords: [

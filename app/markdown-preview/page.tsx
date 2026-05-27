@@ -6,7 +6,7 @@ import ToolSEOContent, {
 import MarkdownPreviewClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Markdown Preview & Editor — Live GitHub Markdown Renderer | UnblockDevs',
+  title: 'Markdown Preview & Editor — Live Online | UnblockDevs',
   description: 'Preview Markdown live in real time. GitHub Flavored Markdown (GFM) support with tables, task lists, code blocks, and more. Copy HTML, download, 100% browser-based.',
   keywords: [
     'markdown preview',
@@ -82,7 +82,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://unblockdevs.com/markdown-preview',
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Markdown%20Preview&emoji=%F0%9F%93%9D&desc=Live%20Markdown%20editor%20and%20preview%20with%20GitHub%20Flavored%20Markdown', width: 1200, height: 630, alt: 'Markdown Preview — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',

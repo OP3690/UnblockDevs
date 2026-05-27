@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import CurlPostJsonClient from './client';
 
 export const metadata: Metadata = {
-  title: 'cURL POST JSON Request — Complete Examples Guide | UnblockDevs',
+  title: 'curl POST JSON — Examples for Every Language | UnblockDevs',
   description:
     'cURL POST JSON examples with headers, auth tokens, form data, and error handling. Copy-ready cURL commands for REST APIs. Free cURL converter tool.',
   keywords: [

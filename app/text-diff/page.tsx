@@ -8,7 +8,7 @@ import TextDiffClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/text-diff';
 
 export const metadata: Metadata = {
-  title: 'Text & Code Diff Checker — Compare Two Files Online Free | UnblockDevs',
+  title: 'Text Diff Tool — Compare Text Side by Side | UnblockDevs',
   description:
     'Instantly compare two texts or code files and see exactly what changed. Line-level and inline character diff, unified and side-by-side view. WCAG-friendly color coding. 100% browser-based — nothing leaves your device.',
   keywords: [

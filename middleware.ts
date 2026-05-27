@@ -96,10 +96,16 @@ export function middleware(request: NextRequest) {
   if (pathname === '/blog' && page && parseInt(page, 10) > 1) {
     const res = NextResponse.next()
     res.headers.set('X-Robots-Tag', 'noindex, follow')
+    res.headers.set('x-pathname', pathname)
     return res
   }
 
-  return NextResponse.next()
+  // ── 5. Forward pathname so server components can read it via headers() ────
+  // AutoToolSchema and AutoBlogArticleSchema are now server components that
+  // need the current pathname without usePathname() (which requires 'use client').
+  const res = NextResponse.next()
+  res.headers.set('x-pathname', pathname)
+  return res
 }
 
 export const config = {

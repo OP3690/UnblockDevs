@@ -15,8 +15,7 @@ import CorsTesterClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/cors-tester';
 
 export const metadata: Metadata = {
-  title:
-    'CORS Tester — Fix "Blocked by CORS Policy: No Access-Control-Allow-Origin" Error | UnblockDevs',
+  title: 'CORS Tester — Fix CORS Errors & Test Headers | UnblockDevs',
   description:
     'Getting "blocked by CORS policy: no Access-Control-Allow-Origin header is present"? Test CORS headers instantly — simulate preflight OPTIONS requests, detect misconfigurations, and fix cross-origin errors. Free, 100% browser-based.',
   keywords: [
@@ -121,7 +120,7 @@ export const metadata: Metadata = {
       'Instantly diagnose "blocked by CORS policy: no Access-Control-Allow-Origin header" errors. Simulate preflight OPTIONS, detect misconfigurations, fix cross-origin errors. Free, 100% browser-based.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=CORS%20Tester&emoji=%F0%9F%94%92&desc=Test%20CORS%20headers%2C%20debug%20preflight%20errors%2C%20fix%20cross-origin%20requests', width: 1200, height: 630, alt: 'CORS Tester — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',

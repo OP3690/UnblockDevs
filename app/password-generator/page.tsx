@@ -8,7 +8,7 @@ import PasswordGeneratorClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/password-generator';
 
 export const metadata: Metadata = {
-  title: 'Password Generator — Secure Random Passwords & Passphrases Online | UnblockDevs',
+  title: 'Password Generator — Secure Random Passwords | UnblockDevs',
   description:
     'Generate cryptographically secure passwords, passphrases, and API keys. Entropy meter, strength calculator, breach check, bulk export. 100% in your browser — no password is ever stored or sent.',
   keywords: [
@@ -84,7 +84,7 @@ export const metadata: Metadata = {
     description: 'Cryptographically secure passwords and passphrases. Entropy, strength meter, breach check. 100% browser-based.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs Password Generator' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Password%20Generator&emoji=%F0%9F%94%92&desc=Generate%20cryptographically%20secure%20random%20passwords%20online', width: 1200, height: 630, alt: 'Password Generator — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',

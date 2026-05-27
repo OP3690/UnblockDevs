@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import CorsErrorFixClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Fix "Blocked by CORS Policy" Error — Complete Guide | UnblockDevs',
+  title: 'CORS Error Fix — How to Fix Cross-Origin Errors | UnblockDevs',
   description:
     'Getting "blocked by CORS policy" or "No Access-Control-Allow-Origin header"? Fix CORS errors in fetch, axios, React, and Node.js. Free CORS tester tool included.',
   keywords: [

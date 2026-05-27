@@ -8,7 +8,7 @@ import StringUtilitiesClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/string-utilities';
 
 export const metadata: Metadata = {
-  title: 'String Utilities — Case Converter, Encoder, Extractor & Text Tools | UnblockDevs',
+  title: 'String Utilities — Case Convert, Trim & More | UnblockDevs',
   description:
     'Free string utilities for developers. Convert to camelCase, snake_case, PascalCase, kebab-case instantly. Extract emails, URLs, IPs from text. Base64, URL, HTML entity encode/decode. Sort, dedupe, filter lines.',
   keywords: [

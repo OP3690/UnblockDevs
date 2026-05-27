@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import SqlSyntaxErrorFixClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Fix SQL Syntax Error — Common Mistakes & Solutions | UnblockDevs',
+  title: 'SQL Syntax Error Fix — Debug & Fix SQL Errors | UnblockDevs',
   description:
     'Fix SQL syntax errors: missing quotes, reserved word conflicts, comma errors, and JOIN mistakes. Includes examples for MySQL, PostgreSQL, and SQLite.',
   keywords: [

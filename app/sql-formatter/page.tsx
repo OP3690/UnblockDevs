@@ -8,7 +8,7 @@ import SqlFormatterClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/sql-formatter';
 
 export const metadata: Metadata = {
-  title: 'SQL IN Clause Generator — Convert Any List to SQL IN, JSON, CSV | UnblockDevs',
+  title: 'SQL Formatter — Beautify SQL Queries Online | UnblockDevs',
   description:
     'Convert any list of IDs, emails, or UUIDs into a SQL IN clause, JSON array, CSV, GraphQL, or MongoDB query instantly. MySQL, PostgreSQL, SQL Server, Oracle, SQLite. Parameterized queries, range compression, SQL INSERT — 100% browser-based.',
   keywords: [

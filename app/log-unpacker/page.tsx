@@ -8,8 +8,7 @@ import LogUnpackerClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/log-unpacker';
 
 export const metadata: Metadata = {
-  title:
-    'Log Unpacker — Unescape Stringified JSON, Decode JWTs, Convert Epoch Timestamps & Sanitize Logs for AI | UnblockDevs',
+  title: 'Log Unpacker — Decode Stringified JSON Logs | UnblockDevs',
   description:
     'Recursively unescape nested JSON, decode JWTs, convert epoch timestamps, and scrub file paths from logs — all in your browser. AI-safe output ready to paste into ChatGPT. Free, no signup, nothing sent to servers.',
   keywords: [
@@ -86,7 +85,7 @@ export const metadata: Metadata = {
       'Unescape nested JSON, decode JWTs, convert epochs, scrub paths — all in your browser. AI-safe output for ChatGPT. Free, nothing sent to servers.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Log%20Unpacker&emoji=%F0%9F%93%A6&desc=Decode%20stringified%20JSON%20logs%20and%20fix%20escaped%20log%20output', width: 1200, height: 630, alt: 'Log Unpacker — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',

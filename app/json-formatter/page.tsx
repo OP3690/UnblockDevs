@@ -8,7 +8,7 @@ import JsonFormatterClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/json-formatter';
 
 export const metadata: Metadata = {
-  title: 'JSON Formatter Online — Free, Instant, 100% Private | UnblockDevs',
+  title: 'JSON Formatter — Pretty-Print & Validate Online | UnblockDevs',
   description:
     'Free JSON Formatter online. Paste minified JSON and get clean, indented output instantly — 2-space, 4-space, or tab indent. Validates syntax, highlights errors, no signup, no server — 100% runs in your browser.',
   keywords: [

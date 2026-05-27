@@ -8,7 +8,7 @@ import UuidGeneratorClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/uuid-generator';
 
 export const metadata: Metadata = {
-  title: 'UUID / GUID Generator — v1, v4, v7, Validate, Bulk Export Online Free | UnblockDevs',
+  title: 'UUID Generator — RFC-4122 v4 UUIDs Online | UnblockDevs',
   description:
     'Generate UUID and GUID for all versions v1–v8. Bulk generate up to 1,000, validate, analyze, compare, export to JSON, CSV, or SQL. Free, 100% browser-based, cryptographically secure.',
   keywords: [
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     description: 'Generate UUIDs v1–v8, validate, analyze, bulk export to JSON/CSV/SQL. 100% browser-based.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs UUID Generator' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=UUID%20Generator&emoji=%F0%9F%86%94&desc=Generate%20RFC-4122%20v4%20UUIDs%20instantly%2C%20no%20signup%20needed', width: 1200, height: 630, alt: 'UUID Generator — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',

@@ -8,7 +8,7 @@ import ConfigComparatorClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/config-comparator';
 
 export const metadata: Metadata = {
-  title: 'Config File Comparator — Diff JSON, YAML, ENV, TOML & Config Files Online Free | UnblockDevs',
+  title: 'Config Comparator — Diff Config Files Online | UnblockDevs',
   description:
     'Compare any two configuration files side by side. Supports JSON, YAML, .env, TOML, INI formats. Detect added, removed, and changed settings. Free, 100% browser-based, no data sent to servers.',
   keywords: [

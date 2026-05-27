@@ -15,8 +15,7 @@ import ToolSEOContent, {
 const canonicalUrl = 'https://unblockdevs.com/timezone-translator';
 
 export const metadata: Metadata = {
-  title:
-    'Timezone Translator — Convert Time Between Timezones, UTC, EST, PST, IST & Schedule Meetings Online Free | UnblockDevs',
+  title: 'Timezone Converter — World Clock & DST Online | UnblockDevs',
   description:
     'Convert times between any timezones instantly. Supports UTC, EST, PST, IST, JST, AEST, CET and 500+ IANA timezones. DST-aware, no signup, 100% browser-based.',
   keywords: [

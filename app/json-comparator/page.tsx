@@ -8,8 +8,7 @@ import JsonComparatorClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/json-comparator';
 
 export const metadata: Metadata = {
-  title:
-    'JSON Comparator — Compare Two JSON Objects, Diff API Responses & Detect Semantic Changes Online Free | UnblockDevs',
+  title: 'JSON Comparator — Diff & Compare JSON Objects | UnblockDevs',
   description:
     'Compare two JSON objects or API responses side-by-side. Semantic diff normalizes UUIDs, timestamps, JWTs, and hashes so only real logic changes show. Free, 100% browser-based, no data sent to servers.',
   keywords: [

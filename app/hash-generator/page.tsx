@@ -8,7 +8,7 @@ import HashGeneratorClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/hash-generator';
 
 export const metadata: Metadata = {
-  title: 'Hash Generator — MD5, SHA-256, SHA3, BLAKE2, File Checksum, HMAC & Password Hashing Online Free | UnblockDevs',
+  title: 'Hash Generator — MD5, SHA-256, SHA-512 Online | UnblockDevs',
   description:
     'Generate and verify MD5, SHA-256, SHA3, BLAKE2 hashes. Drag-and-drop file checksums, HMAC for API signing, bcrypt and Argon2 password hashing — all 100% in your browser. Files never leave your device.',
   keywords: [
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     description: 'Generate MD5, SHA-256, SHA3, BLAKE2. Verify file checksums, HMAC, bcrypt/Argon2. 100% browser-based.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs Hash Generator' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Hash%20Generator&emoji=%F0%9F%94%90&desc=Generate%20MD5%2C%20SHA-256%2C%20SHA-512%20and%20HMAC%20hashes%20online', width: 1200, height: 630, alt: 'Hash Generator — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',

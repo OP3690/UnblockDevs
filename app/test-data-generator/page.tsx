@@ -8,8 +8,7 @@ import TestDataGeneratorClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/test-data-generator';
 
 export const metadata: Metadata = {
-  title:
-    'Test Data Generator — Generate Realistic Fake Names, Emails, Addresses, JSON & SQL Online Free | UnblockDevs',
+  title: 'Test Data Generator — Realistic Mock Data | UnblockDevs',
   description:
     'Generate realistic test data instantly. Choose from 11 templates — users, invoices, banking, API logs, security events, AI training data — or define custom JSON Schema. Free, 100% browser-based, no signup.',
   keywords: [

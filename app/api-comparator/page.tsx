@@ -8,7 +8,7 @@ import ApiComparatorClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/api-comparator';
 
 export const metadata: Metadata = {
-  title: 'API Comparator — Compare API Responses Side by Side, Detect Breaking Changes Online Free | UnblockDevs',
+  title: 'API Comparator — Diff API Responses Online | UnblockDevs',
   description:
     'Compare two API responses side-by-side. Semantic JSON diff, detect breaking changes, added or removed fields, type changes. Paste two responses and see the diff instantly. Free, 100% browser-based.',
   keywords: [

@@ -8,7 +8,7 @@ import ImageToBase64Client from './client';
 const canonicalUrl = 'https://unblockdevs.com/image-to-base64';
 
 export const metadata: Metadata = {
-  title: 'Image to Base64 Converter — Encode PNG, JPG, SVG Online | UnblockDevs',
+  title: 'Image to Base64 — Convert PNG/JPG/SVG Online | UnblockDevs',
   description:
     'Convert any image to Base64 instantly. Upload PNG, JPG, SVG, GIF, or WebP and get the Base64 string, data URI, CSS background, and HTML img tag. 100% browser-based.',
   keywords: [

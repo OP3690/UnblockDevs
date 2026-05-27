@@ -8,7 +8,7 @@ import CurlConverterClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/curl-converter';
 
 export const metadata: Metadata = {
-  title: 'cURL Converter — Convert cURL to Python, JavaScript, Go, Java & More | UnblockDevs',
+  title: 'cURL Converter — Convert to Python, JS & Go | UnblockDevs',
   description: 'Convert cURL to Python requests, JavaScript fetch/Axios, Go, Java, PHP, Rust in one click. Handles -H headers, -d JSON body, Bearer auth, cookies. 100% client-side — your API keys never leave your browser.',
   keywords: [
     // Core cURL → language cluster
@@ -107,7 +107,7 @@ export const metadata: Metadata = {
     description: 'Convert cURL to JavaScript, Python, Go, Java, PHP, C#, Rust. Export Postman & OpenAPI. Local only.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=cURL%20Converter&emoji=%E2%9A%A1&desc=Convert%20cURL%20commands%20to%20Python%2C%20JavaScript%2C%20Go%20and%20more', width: 1200, height: 630, alt: 'cURL Converter — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',

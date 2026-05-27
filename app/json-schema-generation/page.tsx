@@ -8,7 +8,7 @@ import JsonSchemaGenerationClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/json-schema-generation';
 
 export const metadata: Metadata = {
-  title: 'Free JSON Schema Generator — Auto-Generate Draft 7 & OpenAPI Schemas | UnblockDevs',
+  title: 'JSON Schema Generator — Infer Schema Online | UnblockDevs',
   description:
     'Generate JSON Schema from sample JSON instantly. Supports Draft 7 and OpenAPI formats. Built-in validator, smart type detection, 100% browser-based. No signup required.',
   keywords: [
@@ -85,7 +85,7 @@ export const metadata: Metadata = {
       'Generate JSON Schema from sample JSON. Supports Draft 7 and OpenAPI. Built-in validator, 100% browser-based. No signup.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON%20Schema%20Generator&emoji=%F0%9F%93%8B&desc=Auto-generate%20JSON%20Schema%20from%20any%20JSON%20sample%20online', width: 1200, height: 630, alt: 'JSON Schema Generator — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',

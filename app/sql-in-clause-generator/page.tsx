@@ -8,7 +8,7 @@ import SqlInClauseGeneratorClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/sql-in-clause-generator';
 
 export const metadata: Metadata = {
-  title: 'SQL IN Clause Generator — Convert Any List to SQL IN, JSON, CSV & More | UnblockDevs',
+  title: 'SQL IN Clause Generator — List to IN() Online | UnblockDevs',
   description:
     'Convert any list of IDs, emails, or UUIDs into a SQL IN clause instantly. Auto-detect format (CSV, JSON, Excel, newline). MySQL, PostgreSQL, SQL Server, Oracle, SQLite. Parameterized queries, range compression, SQL INSERT, chunking. 100% browser-based.',
   keywords: [
@@ -86,7 +86,7 @@ export const metadata: Metadata = {
     description: 'Paste any list (CSV, Excel, JSON, newline) → get a SQL IN clause, parameterized query, JSON array, CSV, GraphQL, or MongoDB filter. MySQL, PostgreSQL, Oracle, SQLite. Free.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs SQL IN Clause Generator' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=SQL%20IN%20Clause%20Generator&emoji=%F0%9F%97%83%EF%B8%8F&desc=Convert%20any%20list%20to%20a%20SQL%20IN%20clause%20instantly%20online', width: 1200, height: 630, alt: 'SQL IN Clause Generator — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',

@@ -8,8 +8,7 @@ import RegexTesterClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/regex-tester';
 
 export const metadata: Metadata = {
-  title:
-    'Regex Tester — Test JavaScript Regular Expressions Online, Capture Groups, Replace & Flags Real-Time Free | UnblockDevs',
+  title: 'Regex Tester — Test JavaScript Regex Online | UnblockDevs',
   description:
     'Test regular expressions in real time. See all matches, capture groups, and match indexes highlighted in your text. Test regex replace with $1 $2 group references. JavaScript RegExp engine, all flags, free online.',
   keywords: [
@@ -87,7 +86,7 @@ export const metadata: Metadata = {
       'Test regex in real time. Matches, capture groups, match index, replace with $1 $2. JavaScript RegExp, all flags (g i m s u y). Free, 100% browser-based.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Regex%20Tester&emoji=%F0%9F%A7%AA&desc=Test%20JavaScript%20regex%20patterns%20with%20live%20match%20highlighting', width: 1200, height: 630, alt: 'Regex Tester — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',

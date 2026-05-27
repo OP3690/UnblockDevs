@@ -8,7 +8,7 @@ import HarToCurlClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/har-to-curl';
 
 export const metadata: Metadata = {
-  title: 'HAR to cURL Converter — Free Online Tool, All Requests at Once | UnblockDevs',
+  title: 'HAR to cURL Converter — Extract & Replay Requests | UnblockDevs',
   description:
     'Convert HAR files to cURL commands free & instantly. Upload a .har file from Chrome, Firefox, or Edge DevTools and get clean cURL, Python, Go, Java commands for every request. Mask secrets, export batch scripts. 100% client-side — your HAR never leaves your browser.',
   keywords: [
@@ -91,14 +91,7 @@ export const metadata: Metadata = {
       'The modern alternative to "Copy as cURL" in DevTools — converts an entire .har file to cURL, Python, Go, Java & more. Mask secrets. 100% client-side, nothing ever uploaded to a server.',
     type: 'website',
     url: canonicalUrl,
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'HAR to cURL Converter — UnblockDevs Free Developer Tools',
-      },
-    ],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=HAR%20to%20cURL%20Converter&emoji=%F0%9F%94%84&desc=Convert%20HAR%20files%20to%20cURL%20commands%20and%20replay%20browser%20requests', width: 1200, height: 630, alt: 'HAR to cURL Converter — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',

@@ -8,7 +8,7 @@ import LogExplorerClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/log-explorer';
 
 export const metadata: Metadata = {
-  title: 'Log Explorer — Parse, Filter & Analyze Log Files, JSON Logs & Structured Logs Online Free | UnblockDevs',
+  title: 'Log Explorer — Search & Filter JSON Logs | UnblockDevs',
   description:
     'Parse, filter, and analyze log files in the browser — JSON, NDJSON, Apache, Nginx, CSV, and plain text. Timeline view, error analysis, JWT detection. 100% client-side, no upload.',
   keywords: [

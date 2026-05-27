@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import FetchApiNotWorkingClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Fetch API Not Working? 8 Common Causes & Fixes | UnblockDevs',
+  title: 'Fetch API Not Working — Fix Common Errors | UnblockDevs',
   description:
     'Fix "fetch is not defined", CORS errors, 404s, and JSON parse failures in the Fetch API. Complete debugging guide with code examples. Free tools included.',
   keywords: [

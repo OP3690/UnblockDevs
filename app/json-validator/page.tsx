@@ -8,7 +8,7 @@ import JsonValidatorClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/json-validator';
 
 export const metadata: Metadata = {
-  title: 'JSON Validator Online — Free Syntax & Schema Checker | UnblockDevs',
+  title: 'JSON Validator — Check Syntax & Schema Online | UnblockDevs',
   description:
     'Free JSON Validator online. Check JSON syntax instantly and validate against JSON Schema (Draft 4/6/7/2019-09/2020-12). Exact error line numbers, AJV-compatible. 100% client-side — your JSON never leaves your browser.',
   keywords: [

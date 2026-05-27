@@ -8,7 +8,7 @@ import JsonFixerOnlineClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/json-fixer-online';
 
 export const metadata: Metadata = {
-  title: 'JSON Fixer Online — Fix Invalid JSON, Repair Syntax Errors Instantly | UnblockDevs',
+  title: 'JSON Fixer — Auto-Repair Malformed JSON Online | UnblockDevs',
   description: 'Fix invalid JSON instantly. Repair trailing commas, single quotes, unquoted keys, unexpected tokens, and more. JSON auto fixer — 100% client-side, nothing uploaded.',
   keywords: [
     'json fixer online',

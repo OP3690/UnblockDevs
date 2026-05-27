@@ -6,7 +6,7 @@ import ToolSEOContent, {
 import CronExpressionClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Cron Expression Builder & Explainer — Cron Job Generator | UnblockDevs',
+  title: 'Cron Expression Builder & Explainer Online | UnblockDevs',
   description: 'Build and explain cron expressions instantly. See next run times, get human-readable descriptions, and generate crontab syntax for any schedule. Free, browser-based.',
   keywords: [
     'cron expression',
@@ -82,7 +82,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://unblockdevs.com/cron-expression',
     siteName: 'UnblockDevs',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Cron%20Expression%20Builder&emoji=%E2%8F%B0&desc=Build%2C%20parse%20and%20explain%20cron%20expressions%20with%20next-run%20preview', width: 1200, height: 630, alt: 'Cron Expression Builder — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',

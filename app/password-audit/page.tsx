@@ -8,7 +8,7 @@ import PasswordAuditClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/password-audit';
 
 export const metadata: Metadata = {
-  title: 'Password Strength Checker & Audit — Check Entropy, HIBP Breach Status, Crack Time & Security Score Online Free | UnblockDevs',
+  title: 'Password Strength Checker & Audit Online | UnblockDevs',
   description:
     'Audit any password for strength, entropy, crack time, pattern detection (keyboard walks, leet speak, years), and HIBP breach status. Build password policies with live regex and code export. 100% in your browser — nothing is sent to any server.',
   keywords: [

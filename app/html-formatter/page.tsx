@@ -8,7 +8,7 @@ import HtmlFormatterClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/html-formatter';
 
 export const metadata: Metadata = {
-  title: 'HTML Formatter — Beautify & Minify HTML Online | UnblockDevs',
+  title: 'HTML Formatter & Minifier — Beautify Online | UnblockDevs',
   description:
     'Format, beautify, and minify HTML code online. Instantly clean up messy HTML, fix indentation, and minify for production. 100% browser-based — your code never leaves your device.',
   keywords: [
