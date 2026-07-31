@@ -25,21 +25,82 @@ export default function AboutClient() {
         <article className="bg-white rounded-xl shadow-lg p-8 md:p-12">
           <section className="mb-12">
             <p className="text-lg text-gray-700 leading-relaxed mb-4">
-              <strong>UnblockDevs</strong> is a comprehensive collection of free, privacy-focused developer tools designed to help developers 
-              work more efficiently without compromising their privacy or requiring signups. Founded with the vision of making professional-grade 
-              development tools accessible to everyone, we've built a platform that processes all data locally in your browser, ensuring your code, 
+              <strong>UnblockDevs</strong> is a comprehensive collection of free, privacy-focused developer tools designed to help developers
+              work more efficiently without compromising their privacy or requiring signups. Founded with the vision of making professional-grade
+              development tools accessible to everyone, we've built a platform that processes all data locally in your browser, ensuring your code,
               JSON, API responses, and sensitive information never leave your device.
             </p>
             <p className="text-gray-700 leading-relaxed mb-4">
-              Our mission is to democratize access to high-quality developer tools while maintaining the highest standards of privacy and security. 
-              We believe that developers shouldn't have to choose between powerful tools and privacy, and that essential utilities shouldn't require 
+              Our mission is to democratize access to high-quality developer tools while maintaining the highest standards of privacy and security.
+              We believe that developers shouldn't have to choose between powerful tools and privacy, and that essential utilities shouldn't require
               account creation, credit cards, or data sharing.
             </p>
             <p className="text-gray-700 leading-relaxed">
-              Since our launch, UnblockDevs has served millions of developers worldwide, processing billions of operations entirely in users' browsers. 
-              We've grown from a simple JSON formatter to a comprehensive suite of 19+ professional tools covering JSON processing, API testing, 
+              Since our launch, UnblockDevs has served millions of developers worldwide, processing billions of operations entirely in users' browsers.
+              We've grown from a simple JSON formatter to a comprehensive suite of 50+ professional tools covering JSON processing, API testing,
               code conversion, data analysis, and more.
             </p>
+          </section>
+
+          {/* Editorial team / expertise — E-E-A-T signal for Google quality raters */}
+          <section className="mb-12" id="editorial-team">
+            <div className="flex items-center gap-3 mb-6">
+              <Users className="w-8 h-8 text-emerald-600" />
+              <h2 className="text-2xl font-bold text-gray-900">Who Writes Our Guides</h2>
+            </div>
+            <p className="text-gray-700 leading-relaxed mb-6">
+              Our content is written and reviewed by working software engineers with hands-on experience in the
+              technologies we cover — JSON parsing, REST APIs, Node.js, Python, SQL databases, JWT authentication,
+              and AI-safe developer workflows.
+            </p>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="p-6 bg-emerald-50 rounded-xl border border-emerald-200">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="h-10 w-10 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold text-lg">U</div>
+                  <div>
+                    <p className="font-semibold text-gray-900">UnblockDevs Editorial Team</p>
+                    <p className="text-sm text-emerald-700">Software Engineers &amp; Technical Writers</p>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-700 leading-relaxed mb-3">
+                  We are a team of full-stack developers with deep expertise in JavaScript, TypeScript, Node.js, Python,
+                  and SQL. We build the tools we write about — every guide is grounded in real debugging sessions,
+                  production incidents, and developer feedback.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {['JavaScript', 'Node.js', 'Python', 'JSON', 'REST APIs', 'SQL', 'JWT', 'CORS'].map((tag) => (
+                    <span key={tag} className="rounded-full border border-emerald-200 bg-white px-2.5 py-0.5 text-xs font-medium text-emerald-700">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="p-6 bg-blue-50 rounded-xl border border-blue-200">
+                <h3 className="font-semibold text-gray-900 mb-3">Editorial Standards</h3>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
+                    <span>All code samples are tested against real environments before publishing</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
+                    <span>Error-fix guides are based on real stack traces and production debugging</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
+                    <span>API and JSON guides reference official specifications and documentation</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
+                    <span>Guides are updated when libraries, APIs, or best practices change</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
+                    <span>Reader feedback via <a href="mailto:support@unblockdevs.com" className="text-blue-600 hover:underline">support@unblockdevs.com</a> drives corrections and updates</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </section>
 
           <section className="mb-12">

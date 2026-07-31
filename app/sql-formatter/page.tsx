@@ -10,7 +10,7 @@ const canonicalUrl = 'https://unblockdevs.com/sql-formatter';
 export const metadata: Metadata = {
   title: 'SQL Formatter — Beautify SQL Queries Online | UnblockDevs',
   description:
-    'Convert any list of IDs, emails, or UUIDs into a SQL IN clause, JSON array, CSV, GraphQL, or MongoDB query instantly. MySQL, PostgreSQL, SQL Server, Oracle, SQLite. Parameterized queries, range compression, SQL INSERT — 100% browser-based.',
+    'Format, beautify and minify SQL queries online. Supports MySQL, PostgreSQL, SQL Server, Oracle, SQLite. Uppercase keywords, consistent indentation, CTE formatting, and SQL IN clause generation — 100% browser-based, no signup.',
   keywords: [
     'sql in clause generator',
     'sql in list generator',
@@ -81,16 +81,16 @@ export const metadata: Metadata = {
     'sql format api',
   ],
   openGraph: {
-    title: 'SQL IN Clause Generator — Convert Any List to SQL IN | UnblockDevs',
-    description: 'Convert any list (CSV, JSON, Excel, newline) to a SQL IN clause, parameterized query, JSON array, or MongoDB filter. MySQL, PostgreSQL, Oracle, SQLite. Free, browser-based.',
+    title: 'SQL Formatter — Beautify SQL Queries Online | UnblockDevs',
+    description: 'Format and beautify SQL queries online. Uppercase keywords, consistent indentation, CTE formatting, SQL IN clause generation. MySQL, PostgreSQL, SQL Server, Oracle, SQLite. Free, browser-based.',
     type: 'website',
     url: canonicalUrl,
-    images: [{ url: 'https://unblockdevs.com/api/og?title=SQL%20IN%20Clause%20Generator%20%E2%80%94%20Convert%20Any%20List%20to%20SQL%20IN&emoji=%F0%9F%97%84%EF%B8%8F&desc=Convert%20any%20list%20%28CSV%2C%20JSON%2C%20Excel%2C%20newline%29%20to%20a%20SQL%20IN%20clause%2C%20parameterized', width: 1200, height: 630, alt: 'SQL IN Clause Generator — Convert Any List to SQL IN — UnblockDevs' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=SQL%20Formatter%20%E2%80%94%20Beautify%20SQL%20Queries%20Online&emoji=%F0%9F%97%84%EF%B8%8F&desc=Format%20and%20beautify%20SQL%20queries%20online.%20MySQL%2C%20PostgreSQL%2C%20SQL%20Server%2C%20Oracle%2C%20SQLite', width: 1200, height: 630, alt: 'SQL Formatter — Beautify SQL Queries Online — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'SQL IN Clause Generator — List to SQL IN Online | UnblockDevs',
-    description: 'Paste any list → get a SQL IN clause, JSON array, CSV, GraphQL, or MongoDB query. Supports MySQL, PostgreSQL, Oracle, SQL Server, SQLite.',
+    title: 'SQL Formatter — Beautify SQL Queries Online | UnblockDevs',
+    description: 'Format and beautify SQL queries online. Consistent indentation, uppercase keywords, CTE formatting, SQL IN clause generation. MySQL, PostgreSQL, Oracle, SQL Server, SQLite.',
   },
   alternates: { canonical: canonicalUrl },
 };
@@ -98,9 +98,9 @@ export const metadata: Metadata = {
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
-  name: 'SQL IN Clause Generator',
+  name: 'SQL Formatter',
   url: canonicalUrl,
-  description: 'Convert any list of IDs, emails, or UUIDs into a SQL IN clause, JSON array, CSV, GraphQL, or MongoDB query. MySQL, PostgreSQL, SQL Server, Oracle, SQLite. 100% browser-based.',
+  description: 'Format, beautify and minify SQL queries online. Uppercase keywords, consistent indentation, CTE formatting, and SQL IN clause generation. MySQL, PostgreSQL, SQL Server, Oracle, SQLite. 100% browser-based.',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any',
   dateModified: '2026-05-27',
@@ -239,8 +239,8 @@ const faqSchema = {
 const howToSchema = {
   '@context': 'https://schema.org',
   '@type': 'HowTo',
-  name: 'How to Convert a List to a SQL IN Clause',
-  description: 'Step-by-step guide to generating a SQL IN clause from any list of IDs, emails, or UUIDs.',
+  name: 'How to Format SQL Queries Online',
+  description: 'Step-by-step guide to formatting, beautifying, and generating SQL IN clauses from any list of IDs, emails, or UUIDs.',
   totalTime: 'PT30S',
   step: [
     { '@type': 'HowToStep', position: 1, name: 'Paste your list', text: 'Paste IDs, emails, or UUIDs in any format — comma-separated, newline, JSON array, Excel paste, or tab-separated.' },
@@ -256,7 +256,7 @@ const breadcrumbSchema = {
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://unblockdevs.com' },
     { '@type': 'ListItem', position: 2, name: 'Developer Tools', item: 'https://unblockdevs.com/tools/json' },
-    { '@type': 'ListItem', position: 3, name: 'SQL IN Clause Generator', item: canonicalUrl },
+    { '@type': 'ListItem', position: 3, name: 'SQL Formatter', item: canonicalUrl },
   ],
 };
 

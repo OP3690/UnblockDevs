@@ -11,7 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Using new Date() here causes every build to report a different lastModified,
   // which Google's John Mueller confirmed is treated as an inaccurate signal and
   // can be discounted. Update this string whenever you make content changes.
-  const currentDate = '2026-05-27'
+  const currentDate = '2026-07-31'
 
   // Build date lookup so each blog post gets its actual publication date as lastModified.
   // Google uses lastModified to prioritise crawling fresh content — using today's date

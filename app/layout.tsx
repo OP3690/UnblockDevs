@@ -265,6 +265,34 @@ export default function RootLayout({
     },
   };
 
+  // Person entity — anchors E-E-A-T author attribution for all blog posts.
+  // Referenced by BlogPosting author[].@id in AutoBlogArticleSchema.
+  const personSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    '@id': 'https://unblockdevs.com/about#author',
+    name: 'UnblockDevs Editorial Team',
+    url: 'https://unblockdevs.com/about',
+    email: 'support@unblockdevs.com',
+    worksFor: {
+      '@type': 'Organization',
+      '@id': 'https://unblockdevs.com/#organization',
+    },
+    knowsAbout: [
+      'JSON formatting and validation',
+      'REST API debugging',
+      'curl command conversion',
+      'JWT tokens',
+      'JavaScript',
+      'Node.js',
+      'Python',
+      'SQL databases',
+      'AI-safe developer workflows',
+      'CORS and HTTP security',
+    ],
+    sameAs: ['https://unblockdevs.com/about'],
+  };
+
   // Site-wide Organization schema — signals E-E-A-T authority to Google.
   // All BlogPosting schemas reference this via @id.
   const organizationSchema = {
@@ -284,6 +312,14 @@ export default function RootLayout({
     },
     image: 'https://unblockdevs.com/og-image.png',
     description: 'Free developer tools and practical debugging guides — JSON formatter, JWT decoder, cURL converter, CORS tester, and 50+ browser-based tools. No signup required.',
+    email: 'support@unblockdevs.com',
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'customer support',
+      email: 'support@unblockdevs.com',
+      url: 'https://unblockdevs.com/contact',
+      availableLanguage: 'English',
+    },
     sameAs: [
       'https://unblockdevs.com/about',
       'https://unblockdevs.com/blog',
@@ -340,6 +376,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
         />
         {/* Per-tool SoftwareApplication + BreadcrumbList schemas — rendered client-side from pathname */}
         <AutoToolSchema />

@@ -33,6 +33,10 @@ export default async function AutoBlogArticleSchema() {
     .replace(' min', 'M')
     .replace(/^(\d+)M$/, 'PT$1M');
 
+  // Estimate word count from read time (avg 200 wpm reading speed)
+  const readMinutes = parseInt(readTime) || 8;
+  const estimatedWordCount = readMinutes * 200;
+
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -44,16 +48,37 @@ export default async function AutoBlogArticleSchema() {
     dateModified: datePublished,
     timeRequired,
     inLanguage: 'en-US',
+    wordCount: estimatedWordCount,
     articleSection: category,
-    author: {
-      '@type': 'Organization',
-      '@id': 'https://unblockdevs.com/#organization',
-      name: 'UnblockDevs',
-      url: 'https://unblockdevs.com',
-      description:
-        'Free developer tools and practical debugging guides for JSON, APIs, curl, and AI-safe workflows.',
-      sameAs: ['https://unblockdevs.com/about', 'https://unblockdevs.com/blog'],
-    },
+    // Person entity: required for E-E-A-T. Google weighs named human authors
+    // more heavily than Organization for expertise signals on technical content.
+    author: [
+      {
+        '@type': 'Person',
+        '@id': 'https://unblockdevs.com/about#author',
+        name: 'UnblockDevs Editorial Team',
+        url: 'https://unblockdevs.com/about',
+        email: 'support@unblockdevs.com',
+        worksFor: { '@id': 'https://unblockdevs.com/#organization' },
+        knowsAbout: [
+          'JSON formatting and validation',
+          'API debugging and testing',
+          'curl command conversion',
+          'JWT tokens and authentication',
+          'JavaScript and Node.js development',
+          'Python development',
+          'SQL databases',
+          'AI-safe developer workflows',
+          'CORS and HTTP headers',
+        ],
+      },
+      {
+        '@type': 'Organization',
+        '@id': 'https://unblockdevs.com/#organization',
+        name: 'UnblockDevs',
+        url: 'https://unblockdevs.com',
+      },
+    ],
     publisher: {
       '@type': 'Organization',
       '@id': 'https://unblockdevs.com/#organization',
@@ -75,6 +100,10 @@ export default async function AutoBlogArticleSchema() {
     },
     keywords: keywords.join(', '),
     url: canonicalUrl,
+    speakable: {
+      '@type': 'SpeakableSpecification',
+      cssSelector: ['h1', 'h2', '.prose p:first-of-type'],
+    },
     isPartOf: {
       '@type': 'Blog',
       '@id': 'https://unblockdevs.com/blog',

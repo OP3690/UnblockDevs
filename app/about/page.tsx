@@ -4,7 +4,7 @@ import AboutClient from './client';
 export const metadata: Metadata = {
   title: 'About UnblockDevs — Free Browser-Based Developer Tools | UnblockDevs',
   description:
-    'UnblockDevs provides 25+ free browser-based developer tools: JSON formatter, CORS tester, JWT decoder, SQL formatter, regex tester, cURL converter, and more. 100% client-side — your data never leaves your device. No signup, no tracking, free forever.',
+    'UnblockDevs is built by software engineers with expertise in JSON, REST APIs, Node.js, Python, SQL, and AI-safe developer workflows. 50+ free browser-based tools — no signup, no data collection, free forever.',
   keywords: [
     'about unblockdevs',
     'free developer tools',
@@ -38,6 +38,40 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://unblockdevs.com/about' },
 };
 
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  '@id': 'https://unblockdevs.com/about#author',
+  name: 'UnblockDevs Editorial Team',
+  url: 'https://unblockdevs.com/about',
+  email: 'support@unblockdevs.com',
+  worksFor: {
+    '@type': 'Organization',
+    '@id': 'https://unblockdevs.com/#organization',
+    name: 'UnblockDevs',
+    url: 'https://unblockdevs.com',
+  },
+  knowsAbout: [
+    'JSON formatting and validation',
+    'REST API debugging',
+    'curl command conversion',
+    'JWT tokens and authentication',
+    'JavaScript and Node.js',
+    'Python development',
+    'SQL databases',
+    'AI-safe developer workflows',
+    'CORS and HTTP security headers',
+  ],
+};
+
 export default function About() {
-  return <AboutClient />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+      />
+      <AboutClient />
+    </>
+  );
 }
