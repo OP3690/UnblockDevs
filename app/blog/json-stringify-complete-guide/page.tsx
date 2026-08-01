@@ -30,18 +30,13 @@ export const metadata: Metadata = {
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/json-stringify-complete-guide',
-    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON.stringify%28%29%20Complete%20Guide%20%E2%80%94%20Options%2C%20Replacer%2C%20Space%20%26%20Examples&emoji=%7B%7D&desc=All%20three%20parameters%2C%20pretty-print%20vs%20compact%2C%20replacer%20for%20field%20filtering%2C', width: 1200, height: 630, alt: 'JSON.stringify() Complete Guide — Options, Replacer, Space & Examples — UnblockDevs Blog' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON.stringify%28%29%20Complete%20Guide%20%E2%80%94%20Options%2C%20Replacer%2C%20Space%20%26%20Examples&emoji=%7B%7D&desc=All%20three%20parameters%2C%20pretty-print%20vs%20compact%2C%20replacer%20for%20field%20filtering%2C', width: 1200, height: 630, alt: 'JSON.stringify() Complete Guide — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'JSON.stringify() Complete Guide — Options, Replacer, Space & Examples',
+    title: 'JSON.stringify() Complete Guide — Options, Replacer, Space & Examples | UnblockDevs',
     description:
-      'Master JSON.stringify(): all three parameters, pretty-print, replacer function, toJSON(), patterns, and common mistakes.',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'JSON.stringify() Complete Guide: Examples, Syntax & Best Practices | UnblockDevs',
-    description: 'Complete guide to JSON.stringify() in JavaScript. Learn syntax, examples, replacer function, space parameter, and common use cases. Includes interactive examples and best practices.',
+      'All three parameters, pretty-print vs compact, replacer for field filtering, toJSON(), real-world patterns, and common mistakes.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/json-stringify-complete-guide' },
 };

@@ -281,15 +281,22 @@ export default function SiteFooter() {
           </div>
 
           {/* Bottom bar */}
-          <div className="mt-12 flex flex-col gap-3 border-t border-zinc-800/60 pt-8 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-[12px] text-zinc-600">
-              © {new Date().getFullYear()} UnblockDevs. All tools are free and open to everyone.
+          <div className="mt-12 border-t border-zinc-800/60 pt-8">
+            <p className="mb-5 max-w-2xl text-[12.5px] leading-relaxed text-zinc-600">
+              <strong className="text-zinc-400">UnblockDevs</strong> is a free, privacy-first developer toolbox — JSON formatter,
+              JWT decoder, cURL converter, CORS tester, SQL formatter, Base64 encoder, and 45+ more tools.
+              Everything runs 100% client-side in your browser. GDPR-safe, no signup, no data stored. Built for developers in the US, EU, and worldwide.
             </p>
-            <div className="flex flex-wrap gap-5 text-[12px]">
-              <Link href="/privacy-policy" className="text-zinc-500 hover:text-zinc-300">Privacy</Link>
-              <Link href="/terms" className="text-zinc-500 hover:text-zinc-300">Terms</Link>
-              <Link href="/about" className="text-zinc-500 hover:text-zinc-300">About</Link>
-              <Link href="/disclaimer" className="text-zinc-500 hover:text-zinc-300">Disclaimer</Link>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-[12px] text-zinc-600">
+                © {new Date().getFullYear()} UnblockDevs. All tools are free and open to everyone.
+              </p>
+              <div className="flex flex-wrap gap-5 text-[12px]">
+                <Link href="/privacy-policy" className="text-zinc-500 hover:text-zinc-300">Privacy</Link>
+                <Link href="/terms" className="text-zinc-500 hover:text-zinc-300">Terms</Link>
+                <Link href="/about" className="text-zinc-500 hover:text-zinc-300">About</Link>
+                <Link href="/disclaimer" className="text-zinc-500 hover:text-zinc-300">Disclaimer</Link>
+              </div>
             </div>
           </div>
         </div>

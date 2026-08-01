@@ -30,10 +30,11 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://unblockdevs.com'),
-  // Note: per-page canonical is set in each page's own metadata export.
-  // Do NOT set alternates.canonical here — it bleeds onto every child route.
-  title: 'Use AI Safely — JSON Masking & Log Unpacker | UnblockDevs',
-  description: 'Mask JSON and SQL before sending to AI. Fix stringified JSON, unpack logs, decode JWTs. Schema masking, formatter, parser—100% in-browser, no signup.',
+  alternates: {
+    canonical: 'https://unblockdevs.com',
+  },
+  title: 'UnblockDevs — Free JSON Formatter, JWT Decoder & 50+ Developer Tools',
+  description: 'Free browser-based developer tools: JSON formatter, JWT decoder, cURL converter, CORS tester, SQL formatter, Base64 encoder, Regex tester. 100% client-side, GDPR-safe, no signup required.',
   keywords: [
     // JSON Viewer Tools
     'json viewer',
@@ -154,8 +155,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://unblockdevs.com',
-    title: 'Use AI Safely — JSON Masking & Log Unpacker | UnblockDevs',
-    description: 'Mask JSON and SQL before sending to AI. Fix stringified JSON, unpack logs. Schema masking, formatter, parser—100% in-browser, no signup.',
+    title: 'UnblockDevs — Free JSON Formatter, JWT Decoder & 50+ Developer Tools',
+    description: 'Free browser-based developer tools: JSON formatter, JWT decoder, cURL converter, CORS tester, SQL formatter, and 45+ more. GDPR-safe, 100% client-side, no signup.',
     siteName: 'UnblockDevs',
       images: [
         {
@@ -168,8 +169,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Use AI Safely — JSON Masking & Log Unpacker | UnblockDevs',
-    description: 'Mask JSON and SQL before sending to AI. Fix stringified JSON, unpack logs. Schema masking—100% in-browser, no signup.',
+    title: 'UnblockDevs — Free JSON Formatter, JWT Decoder & 50+ Developer Tools',
+    description: 'JSON formatter, JWT decoder, cURL converter, CORS tester, SQL formatter. 100% client-side, GDPR-safe, no signup.',
     images: ['/og-image.png'],
   },
   icons: {
@@ -265,102 +266,36 @@ export default function RootLayout({
     },
   };
 
-  // Person entity — anchors E-E-A-T author attribution for all blog posts.
-  // Referenced by BlogPosting author[].@id in AutoBlogArticleSchema.
-  const personSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    '@id': 'https://unblockdevs.com/about#author',
-    name: 'UnblockDevs Editorial Team',
-    url: 'https://unblockdevs.com/about',
-    email: 'support@unblockdevs.com',
-    worksFor: {
-      '@type': 'Organization',
-      '@id': 'https://unblockdevs.com/#organization',
-    },
-    knowsAbout: [
-      'JSON formatting and validation',
-      'REST API debugging',
-      'curl command conversion',
-      'JWT tokens',
-      'JavaScript',
-      'Node.js',
-      'Python',
-      'SQL databases',
-      'AI-safe developer workflows',
-      'CORS and HTTP security',
-    ],
-    sameAs: ['https://unblockdevs.com/about'],
-  };
-
-  // Site-wide Organization schema — signals E-E-A-T authority to Google.
-  // All BlogPosting schemas reference this via @id.
   const organizationSchema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    '@id': 'https://unblockdevs.com/#organization',
     name: 'UnblockDevs',
-    alternateName: 'Unblock Devs',
     url: 'https://unblockdevs.com',
-    logo: {
-      '@type': 'ImageObject',
-      '@id': 'https://unblockdevs.com/#logo',
-      url: 'https://unblockdevs.com/icon.png',
-      width: 512,
-      height: 512,
-      caption: 'UnblockDevs logo',
-    },
-    image: 'https://unblockdevs.com/og-image.png',
-    description: 'Free developer tools and practical debugging guides — JSON formatter, JWT decoder, cURL converter, CORS tester, and 50+ browser-based tools. No signup required.',
-    email: 'support@unblockdevs.com',
+    logo: 'https://unblockdevs.com/icon.png',
+    description: 'Free browser-based developer tools: JSON formatter, JWT decoder, cURL converter, CORS tester, SQL formatter, AI schema masker. 100% client-side, GDPR-safe.',
+    sameAs: [],
     contactPoint: {
       '@type': 'ContactPoint',
-      contactType: 'customer support',
-      email: 'support@unblockdevs.com',
+      contactType: 'Customer Support',
       url: 'https://unblockdevs.com/contact',
-      availableLanguage: 'English',
     },
-    sameAs: [
-      'https://unblockdevs.com/about',
-      'https://unblockdevs.com/blog',
-      'https://unblockdevs.com/tools/json',
-    ],
-    foundingDate: '2024',
-    areaServed: 'Worldwide',
-    audience: {
-      '@type': 'Audience',
-      audienceType: 'Software Developers',
-    },
+    areaServed: ['US', 'GB', 'EU'],
     knowsAbout: [
       'JSON formatting and validation',
-      'API debugging',
-      'curl command conversion',
-      'JWT decoding',
-      'JavaScript development',
-      'Node.js',
-      'Python development',
-      'AI-safe developer workflows',
+      'JWT token decoding',
+      'cURL command conversion',
+      'CORS testing',
       'SQL formatting',
-      'CORS error debugging',
-      'HTTP header analysis',
+      'API debugging',
+      'Data privacy for AI tools',
+      'GDPR-compliant developer tools',
     ],
-    hasOfferCatalog: {
-      '@type': 'OfferCatalog',
-      name: 'Free Developer Tools',
-      itemListElement: [
-        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'JSON Formatter & Beautifier', url: 'https://unblockdevs.com/json-beautifier' } },
-        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'cURL Converter', url: 'https://unblockdevs.com/curl-converter' } },
-        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'JWT Decoder', url: 'https://unblockdevs.com/jwt-decoder' } },
-        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'CORS Tester', url: 'https://unblockdevs.com/cors-tester' } },
-        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'SQL Formatter', url: 'https://unblockdevs.com/sql-formatter' } },
-      ],
-    },
   };
 
   return (
     <html lang="en" className={`${inter.variable} ${firaCode.variable}`}>
       <head>
-        {/* JSON-LD for rich results: WebApplication + SoftwareApplication (crawlers see first) */}
+        {/* JSON-LD for rich results: WebApplication + SoftwareApplication + Organization (crawlers see first) */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
@@ -377,20 +312,8 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
-        />
-        {/* Per-tool SoftwareApplication + BreadcrumbList schemas — rendered client-side from pathname */}
-        <AutoToolSchema />
-        <AutoBlogArticleSchema />
-        {/* RSS feed autodiscovery — tells browsers and feed readers the feed exists */}
-        <link rel="alternate" type="application/rss+xml" title="UnblockDevs Blog — Developer Tools &amp; Guides" href="https://unblockdevs.com/feed.xml" />
-        {/* Preconnects — warm up critical origins early to improve LCP on mobile */}
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://tpc.googlesyndication.com" />
+        {/* Only 2 preconnects — no gatekeeper, no BMC, no adtrafficquality (~400ms saved on mobile) */}
+        <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
         <link rel="dns-prefetch" href="https://fundingchoicesmessages.google.com" />
         
         {/* Favicon for Google Search Results - Multiple formats for better compatibility */}
