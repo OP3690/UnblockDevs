@@ -30,8 +30,8 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://unblockdevs.com',
   },
-  title: 'Use AI Safely — JSON Masking & Log Unpacker | UnblockDevs',
-  description: 'Mask JSON and SQL before sending to AI. Fix stringified JSON, unpack logs, decode JWTs. Schema masking, formatter, parser—100% in-browser, no signup.',
+  title: 'UnblockDevs — Free JSON Formatter, JWT Decoder & 50+ Developer Tools',
+  description: 'Free browser-based developer tools: JSON formatter, JWT decoder, cURL converter, CORS tester, SQL formatter, Base64 encoder, Regex tester. 100% client-side, GDPR-safe, no signup required.',
   keywords: [
     // JSON Viewer Tools
     'json viewer',
@@ -124,8 +124,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://unblockdevs.com',
-    title: 'Use AI Safely — JSON Masking & Log Unpacker | UnblockDevs',
-    description: 'Mask JSON and SQL before sending to AI. Fix stringified JSON, unpack logs. Schema masking, formatter, parser—100% in-browser, no signup.',
+    title: 'UnblockDevs — Free JSON Formatter, JWT Decoder & 50+ Developer Tools',
+    description: 'Free browser-based developer tools: JSON formatter, JWT decoder, cURL converter, CORS tester, SQL formatter, and 45+ more. GDPR-safe, 100% client-side, no signup.',
     siteName: 'UnblockDevs',
       images: [
         {
@@ -138,8 +138,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Use AI Safely — JSON Masking & Log Unpacker | UnblockDevs',
-    description: 'Mask JSON and SQL before sending to AI. Fix stringified JSON, unpack logs. Schema masking—100% in-browser, no signup.',
+    title: 'UnblockDevs — Free JSON Formatter, JWT Decoder & 50+ Developer Tools',
+    description: 'JSON formatter, JWT decoder, cURL converter, CORS tester, SQL formatter. 100% client-side, GDPR-safe, no signup.',
     images: ['/og-image.png'],
   },
   icons: {
@@ -237,10 +237,36 @@ export default function RootLayout({
     },
   };
 
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'UnblockDevs',
+    url: 'https://unblockdevs.com',
+    logo: 'https://unblockdevs.com/icon.png',
+    description: 'Free browser-based developer tools: JSON formatter, JWT decoder, cURL converter, CORS tester, SQL formatter, AI schema masker. 100% client-side, GDPR-safe.',
+    sameAs: [],
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'Customer Support',
+      url: 'https://unblockdevs.com/contact',
+    },
+    areaServed: ['US', 'GB', 'EU'],
+    knowsAbout: [
+      'JSON formatting and validation',
+      'JWT token decoding',
+      'cURL command conversion',
+      'CORS testing',
+      'SQL formatting',
+      'API debugging',
+      'Data privacy for AI tools',
+      'GDPR-compliant developer tools',
+    ],
+  };
+
   return (
     <html lang="en" className={`${inter.variable} ${firaCode.variable}`}>
       <head>
-        {/* JSON-LD for rich results: WebApplication + SoftwareApplication (crawlers see first) */}
+        {/* JSON-LD for rich results: WebApplication + SoftwareApplication + Organization (crawlers see first) */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
@@ -252,6 +278,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
         {/* Only 2 preconnects — no gatekeeper, no BMC, no adtrafficquality (~400ms saved on mobile) */}
         <link rel="preconnect" href="https://pagead2.googlesyndication.com" />

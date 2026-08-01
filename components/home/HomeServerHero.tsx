@@ -1,10 +1,7 @@
 import Link from 'next/link';
-import { LayoutGrid, Plus, ShieldCheck, Lock, Zap } from 'lucide-react';
+import { LayoutGrid, ShieldCheck, Lock, Zap, Globe } from 'lucide-react';
 import HomeHeroCodePreview from '@/components/home/HomeHeroCodePreview';
 
-/**
- * Server-rendered hero + stats — clean two-column layout.
- */
 export default function HomeServerHero() {
   return (
     <>
@@ -14,10 +11,19 @@ export default function HomeServerHero() {
 
           {/* Left: copy */}
           <div className="min-w-0">
-            {/* Badge */}
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3.5 py-1.5 font-mono text-[11px] font-medium text-emerald-800">
-              <span className="flex h-2 w-2 rounded-full bg-emerald-500" aria-hidden />
-              100% client-side — nothing leaves your browser
+            {/* Badges row */}
+            <div className="mb-6 flex flex-wrap items-center gap-2">
+              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3.5 py-1.5 font-mono text-[11px] font-medium text-emerald-800">
+                <span className="flex h-2 w-2 rounded-full bg-emerald-500" aria-hidden />
+                100% client-side
+              </div>
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-violet-200 bg-violet-50 px-3 py-1.5 font-mono text-[11px] font-medium text-violet-700">
+                <Globe className="h-3 w-3" aria-hidden />
+                GDPR-safe
+              </div>
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3 py-1.5 font-mono text-[11px] font-medium text-zinc-600">
+                No signup
+              </div>
             </div>
 
             {/* Headline */}
@@ -33,26 +39,44 @@ export default function HomeServerHero() {
 
             {/* Sub-copy */}
             <p className="mt-5 max-w-[30rem] text-[15px] leading-relaxed text-zinc-500 text-pretty">
-              50+ free browser-based tools for JSON, SQL, APIs, AI, color, diff, and CSS. Mask sensitive data
-              before sending to ChatGPT. Format, debug, and convert — all without uploading anything to a
-              server.
+              JSON formatter, JWT decoder, cURL converter, CORS tester, SQL formatter, and 45+ more — all free,
+              all in your browser. Mask sensitive data before sending to ChatGPT. Nothing is ever uploaded to a server.
             </p>
 
+            {/* Tool quick-links */}
+            <div className="mt-5 flex flex-wrap gap-1.5">
+              {[
+                { label: 'JSON Formatter', href: '/json-formatter' },
+                { label: 'JWT Decoder', href: '/jwt-decoder' },
+                { label: 'cURL Converter', href: '/curl-converter' },
+                { label: 'CORS Tester', href: '/cors-tester' },
+                { label: 'SQL Formatter', href: '/sql-formatter' },
+                { label: 'AI Schema Masker', href: '/ai-schema-masker' },
+              ].map(({ label, href }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="rounded-full border border-zinc-200 bg-white px-2.5 py-1 text-[11.5px] font-medium text-zinc-600 transition-colors hover:border-zinc-300 hover:text-zinc-900"
+                >
+                  {label}
+                </Link>
+              ))}
+            </div>
+
             {/* CTAs */}
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            <div className="mt-7 flex flex-wrap items-center gap-3">
               <Link
                 href="/tools/json"
                 className="inline-flex items-center gap-2 rounded-lg bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
               >
                 <LayoutGrid className="h-4 w-4" aria-hidden />
-                Explore all tools
+                Browse all 50+ tools
               </Link>
               <Link
                 href="/ai-schema-masker"
                 className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-5 py-2.5 text-sm font-medium text-zinc-900 transition-colors hover:border-zinc-400 hover:bg-zinc-50"
               >
-                <Plus className="h-4 w-4" aria-hidden />
-                Mask SQL for AI
+                Mask data for AI
               </Link>
             </div>
 
@@ -74,7 +98,7 @@ export default function HomeServerHero() {
                 </span>
                 <div>
                   <p className="text-[12px] font-bold leading-tight text-sky-900">Zero data stored</p>
-                  <p className="text-[10.5px] leading-tight text-sky-600">100% runs in your browser</p>
+                  <p className="text-[10.5px] leading-tight text-sky-600">GDPR-safe · runs in browser</p>
                 </div>
               </div>
 
@@ -94,11 +118,11 @@ export default function HomeServerHero() {
               {[
                 { emoji: '{}', label: 'JSON Formatter' },
                 { emoji: '🔐', label: 'JWT Decoder' },
-                { emoji: '🔒', label: 'CORS Tester' },
+                { emoji: '🌐', label: 'CORS Tester' },
                 { emoji: '⚡', label: 'cURL Converter' },
                 { emoji: '🗄️', label: 'SQL Formatter' },
                 { emoji: '🔍', label: 'Regex Tester' },
-                { emoji: '🔑', label: 'Password Gen' },
+                { emoji: '🤖', label: 'AI Masker' },
                 { emoji: '📝', label: 'Markdown' },
               ].map(({ emoji, label }) => (
                 <div key={label} className="flex flex-col items-center gap-1.5 rounded-xl border border-zinc-100 bg-white p-3 text-center shadow-sm">
@@ -120,10 +144,10 @@ export default function HomeServerHero() {
       <div className="border-b border-zinc-200 bg-white">
         <div className="mx-auto grid max-w-[1400px] grid-cols-2 sm:grid-cols-4">
           {[
-            { n: '50+', l: 'Developer tools' },
-            { n: '100%', l: 'Client-side processing' },
+            { n: '50+', l: 'Free developer tools' },
+            { n: '100%', l: 'Client-side · GDPR-safe' },
             { n: '0', l: 'Bytes sent to servers' },
-            { n: 'Free', l: 'No account, no limits' },
+            { n: 'Free', l: 'No account · no limits' },
           ].map((s, i) => (
             <div
               key={s.l}
