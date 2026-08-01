@@ -4,7 +4,7 @@ import PythonKeyErrorFixClient from './client';
 export const metadata: Metadata = {
   title: 'Python KeyError Fix — Causes & Solutions | UnblockDevs',
   description:
-    'Fix Python KeyError exceptions safely. Learn dict.get(), try/except, setdefault, and how to debug missing keys in API responses and JSON data.',
+    'Fix Python KeyError exceptions safely. Use dict.get(), try/except, setdefault, and defaultdict to handle missing keys in API responses and JSON data.',
   keywords: [
     'python keyerror fix',
     'python keyerror exception',
@@ -15,24 +15,14 @@ export const metadata: Metadata = {
     'python setdefault',
     'python keyerror api response',
     'python json keyerror',
-    'python dictionary error',
-    'python keyerror 0',
-    'python fix missing key',
-    'python safe dict access',
-    'python keyerror logging',
     'python defaultdict keyerror',
-    'python keyerror nested dict',
-    'python keyerror in loop',
-    'python dict missing key error',
-    'python keyerror traceback',
-    'python collections defaultdict',
     'python handle missing key',
     'python keyerror vs indexerror',
   ],
   openGraph: {
     title: 'Fix Python KeyError — Complete Guide with Examples | UnblockDevs',
     description:
-      'Fix Python KeyError exceptions safely. Learn dict.get(), try/except, setdefault, and how to debug missing keys in API responses and JSON data.',
+      'Fix Python KeyError exceptions safely. Use dict.get(), try/except, setdefault, and defaultdict to handle missing dictionary keys in API responses, nested JSON, and loops. Free guide with examples.',
     type: 'website',
     url: 'https://unblockdevs.com/python-keyerror-fix',
     siteName: 'UnblockDevs',
@@ -41,7 +31,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Fix Python KeyError — Complete Guide | UnblockDevs',
-    description: 'Fix Python KeyError exceptions safely. Learn dict.get(), try/except, setdefault, and debugging missing keys.',
+    description: 'Fix Python KeyError exceptions safely. Master dict.get(), try/except, setdefault, and defaultdict to handle missing keys in APIs and JSON data.',
   },
   alternates: { canonical: 'https://unblockdevs.com/python-keyerror-fix' },
 };

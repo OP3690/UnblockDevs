@@ -21,20 +21,22 @@ const jsonLd = {
   ],};
 
 export const metadata: Metadata = {
-  title: 'Free cURL to HTTP Request Converter – Instant Conversion | UnblockDevs',
-  description: 'Convert cURL to HTTP request format. All methods, headers, auth. Free, in-browser.',
+  title: 'Free cURL to HTTP Request Converter — Instant | UnblockDevs',
+  description: 'Convert cURL commands to raw HTTP request format. Supports all HTTP methods, custom headers, and authentication. Free, in-browser, no signup needed.',
   keywords: [
     'convert curl to http request',
     'curl to http request',
     'convert curl command to http',
     'curl http request converter',
     'curl to http online',
-    'transform curl to http'
+    'transform curl to http',
+    'curl to raw http',
+    'curl to http format online',
   ],
   twitter: {
     card: 'summary_large_image',
     title: 'Convert cURL to HTTP Request | UnblockDevs',
-    description: 'Convert cURL commands to readable HTTP request format. Supports headers, cookies, auth, and body parsing.',
+    description: 'Convert cURL commands to readable HTTP request format. Supports all methods, headers, cookies, auth, and body parsing. Free, browser-based, no signup.',
   },
   alternates: { canonical: canonicalUrl },
   openGraph: {

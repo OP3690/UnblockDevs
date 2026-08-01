@@ -6,7 +6,7 @@ import ToolSEOContent, {
 import FixExpectedCommaOrBraceClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Free Guide: Fix "Expected Comma or Brace" JSON Error | UnblockDevs',
+  title: 'Fix "Expected Comma or Brace" JSON Error | UnblockDevs',
   description: 'Fix "Expected comma or closing brace" JSON error instantly. Free guide with examples and JSON fixer tool. No signup required, works in your browser.',
   keywords: [
     'fix expected comma or brace json',
@@ -14,7 +14,9 @@ export const metadata: Metadata = {
     'json missing comma error',
     'fix json comma error',
     'json syntax error comma',
-    'expected comma json fix'
+    'expected comma json fix',
+    'json trailing comma error',
+    'json fixer tool',
   ],
   openGraph: {
     title: 'Fix "Expected Comma or Brace" JSON Error | UnblockDevs',
@@ -24,7 +26,7 @@ export const metadata: Metadata = {
     siteName: 'UnblockDevs',
     images: [{ url: 'https://unblockdevs.com/api/og?title=Free%20Guide%3A%20Fix&emoji=%7B%7D&desc=Step-by-step%20guide%20to%20fixing%20missing%20or%20extra%20commas%20in%20JSON', width: 1200, height: 630, alt: 'Free Guide: Fix — UnblockDevs' }],
   },
-  twitter: { card: 'summary_large_image', title: 'Fix Expected Comma or Brace JSON Error | UnblockDevs', description: 'Fix "Expected comma or closing brace" JSON error instantly. Free guide with examples and JSON fixer tool.' },
+  twitter: { card: 'summary_large_image', title: 'Fix Expected Comma or Brace JSON Error | UnblockDevs', description: 'Fix "Expected comma or closing brace" JSON error. Learn how to spot missing commas, trailing commas, and mismatched brackets. Free JSON fixer included.' },
   alternates: { canonical: 'https://unblockdevs.com/fix-expected-comma-or-brace-json' },
 };
 

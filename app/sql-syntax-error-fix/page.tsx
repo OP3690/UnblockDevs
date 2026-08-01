@@ -15,19 +15,9 @@ export const metadata: Metadata = {
     'sql reserved word error',
     'sql string not quoted',
     'sql join error',
-    'sql where clause error',
-    'sql group by error',
-    'sql subquery error',
     'sql syntax error line 1',
     'fix sql query',
-    'sql error debugging',
-    'sql invalid column name',
-    'sql having clause',
-    'sql order by error',
     'sql null comparison error',
-    'sql escape single quote',
-    'sql trailing comma error',
-    'sql subquery alias missing',
   ],
   openGraph: {
     title: 'Fix SQL Syntax Error — Common Mistakes & Solutions | UnblockDevs',
@@ -41,7 +31,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Fix SQL Syntax Error — Common Mistakes | UnblockDevs',
-    description: 'Fix SQL syntax errors: missing quotes, reserved words, comma errors, JOIN issues, WHERE vs HAVING, and more.',
+    description: 'Fix SQL syntax errors in MySQL, PostgreSQL, and SQLite. Covers missing quotes, reserved word conflicts, comma errors, JOIN mistakes, and WHERE vs HAVING.',
   },
   alternates: { canonical: 'https://unblockdevs.com/sql-syntax-error-fix' },
 };

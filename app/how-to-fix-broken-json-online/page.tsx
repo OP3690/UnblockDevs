@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import HowToFixBrokenJsonClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Free Guide: How to Fix Broken JSON Online – Step by Step | UnblockDevs',
-  description: 'Fix broken JSON online with our step-by-step guide. Free JSON fixer tool included. No signup required. Works entirely in your browser.',
+  title: 'How to Fix Broken JSON Online — Step-by-Step Guide | UnblockDevs',
+  description: 'Fix broken JSON online with our step-by-step guide. Repair missing commas, unquoted keys, and syntax errors with a free JSON fixer tool. No signup required.',
   keywords: [
     'how to fix broken json online',
     'fix broken json',
@@ -16,13 +16,13 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'How to Fix Broken JSON Online | UnblockDevs',
-    description: 'Fix broken JSON online with our step-by-step guide. Free JSON fixer tool included. No signup required. Works entirely in your browser.',
+    description: 'Fix broken JSON online step by step. Repair missing commas, unquoted keys, trailing commas, and syntax errors with a free JSON fixer tool included. No signup.',
     type: 'website',
     url: 'https://unblockdevs.com/how-to-fix-broken-json-online',
     siteName: 'UnblockDevs',
     images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Fix%20Broken%20JSON%20Online&emoji=%7B%7D&desc=Fix%20broken%20JSON%20online%20with%20our%20step-by-step%20guide', width: 1200, height: 630, alt: 'How to Fix Broken JSON Online — UnblockDevs' }],
   },
-  twitter: { card: 'summary_large_image', title: 'How to Fix Broken JSON Online | UnblockDevs', description: 'Fix broken JSON online with our step-by-step guide. Free JSON fixer tool included. No signup required.' },
+  twitter: { card: 'summary_large_image', title: 'How to Fix Broken JSON Online | UnblockDevs', description: 'Fix broken JSON online step by step. Repair missing commas, unquoted keys, trailing commas, and other JSON syntax errors. Free fixer tool, no signup.' },
   alternates: { canonical: 'https://unblockdevs.com/how-to-fix-broken-json-online' },
 };
 

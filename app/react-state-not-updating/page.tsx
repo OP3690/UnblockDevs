@@ -15,19 +15,9 @@ export const metadata: Metadata = {
     'stale closure react',
     'react state not changing',
     'useState not triggering re-render',
-    'react state update fix',
     'react state mutation bug',
-    'react functional component state',
-    'setState callback',
-    'react state batching',
     'react 18 automatic batching',
-    'react state reference',
-    'react useState hook',
-    'react state update not working',
-    'react component not re-rendering',
     'react state debugging',
-    'react functional updater',
-    'react spread state update',
   ],
   openGraph: {
     title: 'React State Not Updating? 7 Causes & Fixes | UnblockDevs',
@@ -41,7 +31,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'React State Not Updating? 7 Causes & Fixes | UnblockDevs',
-    description: 'Fix React state not re-rendering, useState not updating, and setState async issues.',
+    description: 'Fix React state not re-rendering, useState not updating, and setState async issues. Covers stale closures, batching, and direct mutation bugs.',
   },
   alternates: { canonical: 'https://unblockdevs.com/react-state-not-updating' },
 };

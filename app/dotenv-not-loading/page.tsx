@@ -3,7 +3,7 @@ import DotenvNotLoadingClient from './client';
 
 export const metadata: Metadata = {
   title: '.env Not Loading — Fix Node.js dotenv Issues | UnblockDevs',
-  description: 'Fix dotenv not loading .env variables in Node.js. Covers file location, require order, .env.local vs .env, and TypeScript path issues.',
+  description: 'Fix dotenv not loading .env variables in Node.js. Covers file location, require order, .env.local vs .env, TypeScript path issues, and ESM module compatibility.',
   keywords: [
     'dotenv not loading',
     'dotenv not working',
@@ -15,22 +15,12 @@ export const metadata: Metadata = {
     'dotenv not working typescript',
     'dotenv esm module',
     'env file not found',
-    'dotenv override option',
-    'dotenv debug option',
     'process env undefined after dotenv',
-    'dotenv variables not available',
     '.env not loading nodejs',
-    'dotenv silent fail',
-    'dotenv config path',
-    'dotenv not reading file',
-    'dotenv import config',
-    'env variables undefined node',
-    'dotenv esm import',
-    'docker env dotenv override',
   ],
   openGraph: {
     title: 'dotenv Not Loading Variables? 7 Fixes That Work | UnblockDevs',
-    description: 'Fix dotenv not loading .env variables in Node.js. Covers file location, require order, .env.local vs .env, and TypeScript path issues.',
+    description: 'Fix dotenv not loading .env variables in Node.js. Covers wrong file location, require order, .env.local vs .env differences, TypeScript path issues, and ESM module compatibility. Free guide.',
     type: 'website',
     url: 'https://unblockdevs.com/dotenv-not-loading',
     siteName: 'UnblockDevs',
@@ -39,7 +29,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'dotenv Not Loading Variables? 7 Fixes That Work | UnblockDevs',
-    description: 'Fix dotenv not loading .env variables in Node.js.',
+    description: 'Fix dotenv not loading .env variables in Node.js. Check file location, require order, .env.local vs .env, and TypeScript compatibility issues.',
   },
   alternates: { canonical: 'https://unblockdevs.com/dotenv-not-loading' },
 };

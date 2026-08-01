@@ -4,7 +4,7 @@ import CorsErrorFixClient from './client';
 export const metadata: Metadata = {
   title: 'CORS Error Fix — How to Fix Cross-Origin Errors | UnblockDevs',
   description:
-    'Getting "blocked by CORS policy" or "No Access-Control-Allow-Origin header"? Fix CORS errors in fetch, axios, React, and Node.js. Free CORS tester tool included.',
+    'Getting "blocked by CORS policy" or "No Access-Control-Allow-Origin header"? Fix CORS errors in fetch, axios, React, and Node.js. Free CORS tester included.',
   keywords: [
     'blocked by cors policy fix',
     'no access-control-allow-origin fix',
@@ -13,21 +13,11 @@ export const metadata: Metadata = {
     'cors error react',
     'cors error axios',
     'cors error nodejs',
-    'cors error express',
     'cors localhost fix',
     'preflight request error fix',
-    'cors error chrome',
     'how to fix cors',
     'cors error javascript',
-    'access-control-allow-origin missing',
-    'cors policy error',
-    'fix cors without backend access',
-    'cors error api',
-    'cors headers fix',
     'cors proxy fix',
-    'cross origin resource sharing error',
-    'cors options request fix',
-    'cors credentials error',
   ],
   openGraph: {
     title: 'Fix "Blocked by CORS Policy" Error — Complete Guide | UnblockDevs',
@@ -41,7 +31,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Fix "Blocked by CORS Policy" Error | UnblockDevs',
-    description: 'Fix CORS errors in fetch, axios, React, and Node.js. Free CORS tester tool included.',
+    description: 'Fix "blocked by CORS policy" and "No Access-Control-Allow-Origin" errors in fetch, axios, React, and Node.js. Free CORS testing tool included.',
   },
   alternates: { canonical: 'https://unblockdevs.com/cors-error-fix' },
 };

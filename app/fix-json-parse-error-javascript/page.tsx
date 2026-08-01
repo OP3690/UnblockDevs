@@ -7,7 +7,7 @@ import FixJsonParseErrorJavascriptClient from './client';
 
 export const metadata: Metadata = {
   title: 'Free Guide: Fix JSON.parse() Errors in JavaScript | UnblockDevs',
-  description: 'Learn how to fix JSON.parse() errors in JavaScript. Complete guide with examples, error handling, and free JSON fixer tool. No signup required.',
+  description: 'Learn how to fix JSON.parse() SyntaxError in JavaScript. Covers try/catch patterns, HTML response detection, double encoding, and free JSON fixer tool.',
   keywords: [
     'fix json.parse error javascript',
     'json.parse error handling',
@@ -15,17 +15,18 @@ export const metadata: Metadata = {
     'handle json parse error',
     'json.parse try catch',
     'fix json parse error',
-    'javascript json error'
+    'javascript json error',
+    'json parse syntaxerror',
   ],
   openGraph: {
     title: 'Fix JSON.parse() Errors in JavaScript | UnblockDevs',
-    description: 'Learn how to fix JSON.parse() errors in JavaScript. Complete guide with examples, error handling, and free JSON fixer tool. No signup required.',
+    description: 'Learn how to fix JSON.parse() SyntaxError in JavaScript. Covers try/catch error handling, HTML response detection, double encoding, undefined values, and free JSON fixer tool.',
     type: 'website',
     url: 'https://unblockdevs.com/fix-json-parse-error-javascript',
     siteName: 'UnblockDevs',
     images: [{ url: 'https://unblockdevs.com/api/og?title=Fix%20JSON.parse%28%29%20Errors%20in%20JavaScript&emoji=%7B%7D&desc=Learn%20how%20to%20fix%20JSON', width: 1200, height: 630, alt: 'Fix JSON.parse() Errors in JavaScript — UnblockDevs' }],
   },
-  twitter: { card: 'summary_large_image', title: 'Fix JSON.parse() Errors in JavaScript | UnblockDevs', description: 'Learn how to fix JSON.parse() errors in JavaScript. Complete guide with examples and free JSON fixer tool.' },
+  twitter: { card: 'summary_large_image', title: 'Fix JSON.parse() Errors in JavaScript | UnblockDevs', description: 'Fix JSON.parse() SyntaxError in JavaScript. Use try/catch, detect HTML responses, handle double encoding, and use a free JSON fixer tool.' },
   alternates: { canonical: 'https://unblockdevs.com/fix-json-parse-error-javascript' },
 };
 

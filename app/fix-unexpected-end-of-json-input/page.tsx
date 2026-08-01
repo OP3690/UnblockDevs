@@ -6,8 +6,8 @@ import ToolSEOContent, {
 import FixUnexpectedEndOfJsonInputClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Free Guide: Fix "Unexpected end of JSON input" Error | UnblockDevs',
-  description: 'Fix "Unexpected end of JSON input" error instantly. Free guide with examples and JSON fixer tool. No signup required, works in your browser.',
+  title: 'Fix "Unexpected end of JSON input" Error | UnblockDevs',
+  description: 'Fix "Unexpected end of JSON input" error instantly. Repair truncated JSON, missing closing brackets, and empty JSON.parse() calls. Free guide included.',
   keywords: [
     'fix unexpected end of json input',
     'unexpected end of json input error',
@@ -21,15 +21,15 @@ export const metadata: Metadata = {
     'fix broken json'
   ],
   openGraph: {
-    title: 'Fix "Unexpected end of JSON input" Error - Complete Guide',
-    description: 'Learn how to fix "Unexpected end of JSON input" error instantly with examples and free tools.',
+    title: 'Fix "Unexpected end of JSON input" Error — Complete Guide | UnblockDevs',
+    description: 'Fix "Unexpected end of JSON input" error — repair truncated JSON, missing brackets, and empty strings passed to JSON.parse(). Free guide with examples and interactive fixer tool.',
     type: 'article',
     images: [{ url: 'https://unblockdevs.com/api/og?title=Free%20Guide%3A%20Fix&emoji=%7B%7D&desc=Learn%20how%20to%20fix', width: 1200, height: 630, alt: 'Free Guide: Fix — UnblockDevs' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Fix Unexpected End of JSON Input Error | UnblockDevs',
-    description: 'Fix "Unexpected end of JSON input" errors instantly. Understand the cause, repair truncated JSON, and prevent it in production.',
+    description: 'Fix "Unexpected end of JSON input" errors instantly. Repair truncated JSON, missing closing brackets, and empty strings passed to JSON.parse() in production.',
   },
   alternates: { canonical: 'https://unblockdevs.com/fix-unexpected-end-of-json-input' },
 };

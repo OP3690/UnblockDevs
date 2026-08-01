@@ -6,25 +6,27 @@ import ToolSEOContent, {
 import FixInvalidControlCharacterClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Free Guide: Fix "Invalid Control Character" JSON Error | UnblockDevs',
-  description: 'Fix "Invalid control character" JSON error instantly. Free guide with examples and JSON fixer tool. No signup required, works in your browser.',
+  title: 'Fix "Invalid Control Character" JSON Error | UnblockDevs',
+  description: 'Fix "Invalid control character" JSON error instantly. Escape raw newlines, tabs, and control characters. Free guide with examples and JSON fixer tool.',
   keywords: [
     'fix invalid control character json',
     'invalid control character json error',
     'json control character error',
     'fix json newline error',
     'json escape characters',
-    'invalid control character fix'
+    'invalid control character fix',
+    'json parse error',
+    'json fixer tool',
   ],
   openGraph: {
     title: 'Fix "Invalid Control Character" JSON Error | UnblockDevs',
-    description: 'Fix "Invalid control character" JSON error instantly. Free guide with examples and JSON fixer tool. No signup required, works in your browser.',
+    description: 'Fix the "Invalid control character" JSON error. Learn what causes raw control characters in JSON strings, how to escape them, and use our free JSON fixer tool. Browser-based, no signup.',
     type: 'website',
     url: 'https://unblockdevs.com/fix-invalid-control-character-json',
     siteName: 'UnblockDevs',
     images: [{ url: 'https://unblockdevs.com/api/og?title=Free%20Guide%3A%20Fix&emoji=%7B%7D&desc=Step-by-step%20guide%20to%20fixing%20unescaped%20control%20characters%20in%20JSON%20strings', width: 1200, height: 630, alt: 'Free Guide: Fix — UnblockDevs' }],
   },
-  twitter: { card: 'summary_large_image', title: 'Fix Invalid Control Character JSON Error | UnblockDevs', description: 'Fix "Invalid control character" JSON error instantly. Free guide with examples and JSON fixer tool.' },
+  twitter: { card: 'summary_large_image', title: 'Fix Invalid Control Character JSON Error | UnblockDevs', description: 'Fix "Invalid control character" JSON error. Escape raw newlines, tabs, and special chars in JSON strings. Free fixer tool included, no signup.' },
   alternates: { canonical: 'https://unblockdevs.com/fix-invalid-control-character-json' },
 };
 

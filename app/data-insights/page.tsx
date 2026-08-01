@@ -8,7 +8,7 @@ import DataInsightsClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/data-insights';
 
 export const metadata: Metadata = {
-  title: 'Data Insights – JSON & CSV Data Analyzer, Statistics Online | UnblockDevs',
+  title: 'Free Data Insights — JSON & CSV Analyzer & Stats | UnblockDevs',
   description: 'Explore datasets instantly. Compute statistics, detect patterns, and profile JSON or CSV data online. Free data insights tool — no signup required.',
   keywords: [
     'data insights tool',
@@ -25,16 +25,16 @@ export const metadata: Metadata = {
     'json analytics',
   ],
   openGraph: {
-    title: 'Data Insights | UnblockDevs',
-    description: 'Compute statistics and explore patterns in JSON or CSV data instantly. Free, client-side data profiling tool.',
+    title: 'Free Data Insights — JSON & CSV Data Analyzer with Statistics & Pattern Detection | UnblockDevs',
+    description: 'Analyze JSON and CSV datasets entirely in your browser. Get field-level statistics — count, null rate, unique values, min/max, mean, and distribution. Free, no signup.',
     type: 'website',
     url: canonicalUrl,
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Data Insights | UnblockDevs',
-    description: 'Explore JSON and CSV datasets instantly. Statistics, pattern detection, and type inference — 100% client-side.',
+    title: 'Free Data Insights — JSON & CSV Analyzer & Stats',
+    description: 'Explore JSON and CSV datasets instantly. Get field statistics, type inference, pattern detection, and value distributions. 100% client-side, free.',
   },
   alternates: { canonical: canonicalUrl },
 };

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import FixUnexpectedTokenLessThanClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Free Guide: Fix "Unexpected token < in JSON" Error | UnblockDevs',
+  title: 'Fix "Unexpected token < in JSON" Error | UnblockDevs',
   description: 'Fix "Unexpected token < in JSON" error instantly. This means HTML was returned instead of JSON. Free guide with solutions and JSON fixer tool. No signup required.',
   keywords: [
     'fix unexpected token < in json',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     siteName: 'UnblockDevs',
     images: [{ url: 'https://unblockdevs.com/api/og?title=Free%20Guide%3A%20Fix&emoji=%7B%7D&desc=Step-by-step%20guide%20to%20fixing%20the%20error%20when%20an%20API%20returns%20HTML%20instead%20of%20JSON', width: 1200, height: 630, alt: 'Free Guide: Fix — UnblockDevs' }],
   },
-  twitter: { card: 'summary_large_image', title: 'Fix Unexpected token < in JSON Error | UnblockDevs', description: 'Fix "Unexpected token < in JSON" error. Free guide with solutions and JSON fixer tool.' },
+  twitter: { card: 'summary_large_image', title: 'Fix Unexpected token < in JSON Error | UnblockDevs', description: 'Fix "Unexpected token < in JSON" — your API returned HTML instead of JSON. Check API endpoints, status codes, and authentication. Free guide included.' },
   alternates: { canonical: 'https://unblockdevs.com/fix-unexpected-token-less-than-json' },
 };
 

@@ -14,19 +14,10 @@ export const metadata: Metadata = {
     'useeffect cleanup',
     'useeffect async',
     'useeffect not triggering',
-    'react hooks useeffect',
-    'useeffect on mount only',
-    'useeffect missing dependency',
     'useeffect runs twice react 18',
     'useeffect stale closure',
-    'useeffect with api call',
-    'useeffect fix',
     'useeffect abort controller',
-    'useeffect eslint warning',
     'useeffect exhaustive deps',
-    'useeffect unmounted component',
-    'react useeffect patterns',
-    'useeffect subscription cleanup',
   ],
   openGraph: {
     title: 'useEffect Not Working? Common Issues & Fixes | UnblockDevs',
@@ -40,7 +31,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'useEffect Not Working? Common Issues & Fixes | UnblockDevs',
-    description: 'Fix useEffect not running, infinite loops, or running too many times in React.',
+    description: 'Fix useEffect not running, causing infinite loops, or running too many times in React. Covers dependency array, cleanup, async patterns, and StrictMode double-invoke.',
   },
   alternates: { canonical: 'https://unblockdevs.com/useeffect-not-working' },
 };

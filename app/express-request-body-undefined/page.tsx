@@ -3,7 +3,7 @@ import ExpressRequestBodyUndefinedClient from './client';
 
 export const metadata: Metadata = {
   title: 'Express req.body Undefined? Here\'s the Fix | UnblockDevs',
-  description: 'Fix req.body returning undefined in Express.js. Covers missing body-parser middleware, wrong Content-Type header, and JSON vs form data setup.',
+  description: 'Fix req.body returning undefined in Express.js. Covers body-parser middleware setup, wrong Content-Type header, JSON vs form data, and middleware order issues.',
   keywords: [
     'express req body undefined',
     'express request body undefined',
@@ -13,24 +13,14 @@ export const metadata: Metadata = {
     'express body parser',
     'express post body undefined',
     'express middleware not working',
-    'express req body empty',
     'content-type json express',
-    'express body parser deprecated',
-    'express json parse',
+    'express urlencoded middleware',
     'how to get request body express',
     'req body undefined fix',
-    'express post json',
-    'express urlencoded middleware',
-    'express middleware order',
-    'express multer file upload',
-    'express 4 body parser',
-    'express request body not working',
-    'express json not parsing',
-    'express body undefined route',
   ],
   openGraph: {
     title: 'Express req.body Undefined? Here\'s the Fix | UnblockDevs',
-    description: 'Fix req.body returning undefined in Express.js. Covers missing body-parser middleware, wrong Content-Type header, and JSON vs form data setup.',
+    description: 'Fix req.body returning undefined in Express.js. Add body-parser middleware, set the correct Content-Type header, and handle JSON vs form-encoded data. Free guide with code examples.',
     type: 'website',
     url: 'https://unblockdevs.com/express-request-body-undefined',
     siteName: 'UnblockDevs',
@@ -39,7 +29,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Express req.body Undefined? Here\'s the Fix | UnblockDevs',
-    description: 'Fix req.body returning undefined in Express.js.',
+    description: 'Fix req.body returning undefined in Express.js. Add body-parser middleware, set Content-Type to application/json, and fix middleware order issues.',
   },
   alternates: { canonical: 'https://unblockdevs.com/express-request-body-undefined' },
 };
