@@ -2,29 +2,25 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'JSON Tree View, JSONPath, JSON to TypeScript & SQL — Advanced JSON Exploration | UnblockDevs',
+  title: 'Free JSON Tree View & JSONPath Explorer Online | UnblockDevs',
   description:
-    'Navigate JSON with a collapsible tree view, query values with JSONPath, generate TypeScript interfaces, and convert JSON arrays to SQL INSERT statements. Full guide for advanced JSON workflows.',
+    'Navigate JSON with a collapsible tree view, run JSONPath queries to extract values, and generate TypeScript interfaces or SQL INSERT statements. Free, 100% browser-based.',
   keywords: [
     'json tree view online',
     'json tree viewer',
     'jsonpath online',
-    'json to typescript',
-    'json to typescript generator online',
-    'json to sql generator',
-    'json to sql insert',
-    'json tree explorer',
-    'jsonpath query online',
-    'generate typescript from json',
-    'json to typescript interface',
-    'json explore online',
-    'json workbench online',
+    'json to typescript generator',
     'json to sql converter',
-    'json path query tool',
+    'json explorer online',
+    'jsonpath query tool',
+    'json workbench online',
+    'how to query json with jsonpath',
+    'generate typescript from json',
+    'json to sql insert generator',
   ],
   openGraph: {
-    title: 'JSON Tree View, JSONPath, JSON to TypeScript & SQL | UnblockDevs',
-    description: 'Navigate JSON with tree view, query with JSONPath, generate TypeScript interfaces, convert arrays to SQL — all in one JSON workbench.',
+    title: 'Free JSON Tree View, JSONPath Explorer, JSON to TypeScript & SQL Online | UnblockDevs',
+    description: 'Explore JSON with a collapsible tree, run JSONPath queries to extract values, generate TypeScript interfaces, and convert JSON arrays to SQL INSERT statements. Free, private, browser-based.',
     type: 'article',
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -33,8 +29,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'JSON Tree View, JSONPath, JSON to TypeScript & SQL',
-    description: 'Tree view navigation, JSONPath queries, TypeScript interface generation, and SQL conversion — advanced JSON workflow guide.',
+    title: 'JSON Tree View & JSONPath Explorer — Free Online Tool',
+    description: 'Navigate JSON as a collapsible tree, query with JSONPath, export to TypeScript or SQL. Free online JSON workbench — nothing uploaded.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/json-tree-view-explorer' },
 };

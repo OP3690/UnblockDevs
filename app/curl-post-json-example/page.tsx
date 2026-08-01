@@ -2,37 +2,27 @@ import type { Metadata } from 'next';
 import CurlPostJsonClient from './client';
 
 export const metadata: Metadata = {
-  title: 'curl POST JSON — Examples for Every Language | UnblockDevs',
+  title: 'cURL POST JSON — Copy-Ready Examples for REST APIs | UnblockDevs',
   description:
-    'cURL POST JSON examples with headers, auth tokens, form data, and error handling. Copy-ready cURL commands for REST APIs. Free cURL converter tool.',
+    'cURL POST JSON examples with headers, auth tokens, file upload, and error handling. Copy-ready curl commands for REST APIs. Free cURL converter included.',
   keywords: [
     'curl post json example',
     'curl post request json',
     'curl send json body',
-    'curl post with headers',
+    'curl with headers',
     'curl authorization header',
     'curl bearer token',
     'curl content type json',
-    'curl post form data',
-    'curl put request example',
-    'curl api request',
-    'curl rest api',
-    'curl request examples',
-    'curl post data',
-    'curl command post json',
+    'how to send json with curl',
+    'curl post data example',
+    'curl rest api example',
+    'curl api request json',
     'curl -d json',
-    'curl -H content-type',
-    'curl post multipart',
-    'curl api testing',
-    'curl verbose mode',
-    'curl delete request',
-    'curl x-api-key header',
-    'curl file upload',
   ],
   openGraph: {
-    title: 'cURL POST JSON Request — Complete Examples Guide | UnblockDevs',
+    title: 'cURL POST JSON — Complete Copy-Ready Examples for REST APIs | UnblockDevs',
     description:
-      'cURL POST JSON examples with headers, auth tokens, form data, and error handling. Copy-ready cURL commands for REST APIs.',
+      'Copy-ready cURL POST JSON commands covering headers, auth tokens, Bearer tokens, file upload, PUT, DELETE, and verbose debugging. Free cURL converter tool included.',
     type: 'website',
     url: 'https://unblockdevs.com/curl-post-json-example',
     siteName: 'UnblockDevs',
@@ -40,8 +30,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'cURL POST JSON — Complete Examples | UnblockDevs',
-    description: 'Copy-ready cURL POST JSON commands for REST APIs with auth, headers, and form data.',
+    title: 'cURL POST JSON — Copy-Ready Examples for REST APIs',
+    description: 'Copy-ready cURL POST JSON commands for REST APIs with Bearer auth, headers, file upload, and error handling.',
   },
   alternates: { canonical: 'https://unblockdevs.com/curl-post-json-example' },
 };
