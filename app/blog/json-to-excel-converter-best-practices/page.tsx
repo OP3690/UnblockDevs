@@ -27,6 +27,11 @@ export const metadata: Metadata = {
     images: [{ url: 'https://unblockdevs.com/api/og?title=JSON%20to%20Excel%20Converter%3A%20Best%20Practices%20and%20Use%20Cases&emoji=%7B%7D&desc=Master%20the%20art%20of%20converting%20JSON%20data%20to%20Excel%20format', width: 1200, height: 630, alt: 'JSON to Excel Converter: Best Practices and Use Cases — UnblockDevs Blog' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'JSON to Excel Converter: Best Practices and Use Cases',
+    description: 'Master the art of converting JSON data to Excel format. Learn best practices, common pitfalls, and real-world use cases.',
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/json-to-excel-converter-best-practices' },
 };
 

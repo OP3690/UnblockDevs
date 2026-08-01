@@ -22,6 +22,11 @@ export const metadata: Metadata = {
     images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Start%20an%20AI%20Side%20Hustle%20with%20%240%20%28Step-by-Step%20Guide%29&emoji=%F0%9F%A4%96&desc=Free%20AI%20tools%2C%20how%20to%20find%20clients%2C%20how%20to%20price%20services%2C%20realistic%20income', width: 1200, height: 630, alt: 'How to Start an AI Side Hustle with $0 (Step-by-Step Guide) — UnblockDevs Blog' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How to Start an AI Side Hustle with $0 (Step-by-Step Guide)',
+    description: 'Free AI tools, how to find clients, how to price services, realistic income. Step-by-step.',
+  },
   alternates: {
     canonical: "https://unblockdevs.com/blog/how-to-start-ai-side-hustle-zero-step-by-step",
   },

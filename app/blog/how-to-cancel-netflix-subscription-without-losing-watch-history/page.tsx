@@ -30,7 +30,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/how-to-cancel-netflix-subscription-without-losing-watch-history',
     images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Cancel%20Netflix%20Subscription%20Without%20Losing%20Watch%20History%3A%20Complete%20Gui...&emoji=%F0%9F%9B%A0%EF%B8%8F&desc=Cancel%20Netflix%20without%20losing%20watch%20history', width: 1200, height: 630, alt: 'How to Cancel Netflix Subscription Without Losing Watch History: Complete Gui... — UnblockDevs Blog' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-cancel-netflix-subscription-without-losing-watch-history' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'How to Cancel Netflix Subscription Without Losing Watch History: Complete Guide 2026',
+    description: 'Cancel Netflix without losing watch history. Step-by-step for all devices.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-cancel-netflix-subscription-without-losing-watch-history' },
 
 };
 

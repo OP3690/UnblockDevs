@@ -37,7 +37,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/ultimate-guide-fixing-escaped-json-jwt-epoch-stack-traces-logs',
     images: [{ url: 'https://unblockdevs.com/api/og?title=Ultimate%20Guide%20to%20Fixing%20Escaped%20JSON%2C%20JWTs%2C%20Epoch%20Timestamps%20%26%20Stack%20Traces%20...&emoji=%7B%7D&desc=Fix%20escaped%20JSON%2C%20decode%20JWTs%2C%20convert%20epoch%20time%2C%20and%20clean%20stack%20traces', width: 1200, height: 630, alt: 'Ultimate Guide to Fixing Escaped JSON, JWTs, Epoch Timestamps & Stack Traces ... — UnblockDevs Blog' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/ultimate-guide-fixing-escaped-json-jwt-epoch-stack-traces-logs' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'Ultimate Guide to Fixing Escaped JSON, JWTs, Epoch Timestamps & Stack Traces in Logs',
+    description: 'Fix escaped JSON, decode JWTs, convert epoch time, and clean stack traces—one comprehensive guide.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/ultimate-guide-fixing-escaped-json-jwt-epoch-stack-traces-logs' },
 
 };
 

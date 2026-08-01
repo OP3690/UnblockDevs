@@ -31,6 +31,11 @@ export const metadata: Metadata = {
     images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Change%20Instagram%20Phone%20Number%20or%20Email%3A%20Complete%20Guide%202026&emoji=%F0%9F%A4%96&desc=Change%20Instagram%20phone%20or%20email', width: 1200, height: 630, alt: 'How to Change Instagram Phone Number or Email: Complete Guide 2026 — UnblockDevs Blog' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How to Change Instagram Phone Number or Email: Complete Guide 2026',
+    description: 'Change Instagram phone or email. Step-by-step for all devices.',
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-change-instagram-phone-number-email-2026' },
   robots: { index: false, follow: false },
 };

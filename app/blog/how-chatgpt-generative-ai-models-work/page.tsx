@@ -25,6 +25,11 @@ export const metadata: Metadata = {
     images: [{ url: 'https://unblockdevs.com/api/og?title=How%20ChatGPT%20and%20Generative%20AI%20Models%20Work%20%28Behind%20the%20Scenes%29&emoji=%F0%9F%A4%96&desc=What%20is%20an%20LLM%2C%20training%20data%2C%20tokens%20and%20probability%20prediction%2C%20and%20why%20AI', width: 1200, height: 630, alt: 'How ChatGPT and Generative AI Models Work (Behind the Scenes) — UnblockDevs Blog' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How ChatGPT and Generative AI Models Work (Behind the Scenes)',
+    description: 'What is an LLM, training data, tokens and probability prediction, and why AI sometimes makes mistakes.',
+  },
   alternates: {
     canonical: "https://unblockdevs.com/blog/how-chatgpt-generative-ai-models-work",
   },

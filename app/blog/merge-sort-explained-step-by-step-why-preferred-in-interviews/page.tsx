@@ -24,6 +24,8 @@ export const metadata: Metadata = {
     title: 'Merge Sort Explained – Step-by-Step | UnblockDevs',
     description: 'Merge sort step-by-step: diagrams, code. For interviews.',
     type: 'article',
+    publishedTime: '2026-02-05T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/merge-sort-explained-step-by-step-why-preferred-in-interviews',
     images: [{ url: 'https://unblockdevs.com/api/og?title=Merge%20Sort%20Explained%20%E2%80%93%20Step-by-Step&emoji=%F0%9F%A4%96&desc=Merge%20sort%20step-by-step%3A%20diagrams%2C%20code', width: 1200, height: 630, alt: 'Merge Sort Explained – Step-by-Step — UnblockDevs Blog' }],
 

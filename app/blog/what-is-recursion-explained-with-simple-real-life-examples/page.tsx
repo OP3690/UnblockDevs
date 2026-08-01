@@ -24,6 +24,8 @@ export const metadata: Metadata = {
     title: 'Recursion Explained – Real-Life Examples | UnblockDevs',
     description: 'Recursion: examples, diagrams, code. For interviews.',
     type: 'article',
+    publishedTime: '2026-02-03T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/what-is-recursion-explained-with-simple-real-life-examples',
     images: [{ url: 'https://unblockdevs.com/api/og?title=Recursion%20Explained%20%E2%80%93%20Real-Life%20Examples&emoji=%F0%9F%A4%96&desc=Recursion%3A%20examples%2C%20diagrams%2C%20code', width: 1200, height: 630, alt: 'Recursion Explained – Real-Life Examples — UnblockDevs Blog' }],
 

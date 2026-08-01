@@ -37,22 +37,12 @@ const websiteSchema = {
   },
 };
 
-const organizationSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: 'UnblockDevs',
-  url: 'https://unblockdevs.com',
-  logo: 'https://unblockdevs.com/og-image.png',
-  description: 'Provider of free, privacy-first developer tools. All tools run 100% in the browser.',
-  sameAs: [],
-};
 
 export default function Home() {
   /* Nav must be first (matches redesign); hero is passed into client shell below header */
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
       <HomeClient hero={<HomeServerHero />} />
     </>
   );

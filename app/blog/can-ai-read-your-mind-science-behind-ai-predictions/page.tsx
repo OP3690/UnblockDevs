@@ -23,6 +23,11 @@ export const metadata: Metadata = {
     images: [{ url: 'https://unblockdevs.com/api/og?title=Can%20AI%20Read%20Your%20Mind%3F%20The%20Science%20Behind%20AI%20Predictions&emoji=%F0%9F%A4%96&desc=Pattern%20recognition%2C%20data%20analysis%2C%20behavioral%20prediction%2C%20and%20why%20it%20feels', width: 1200, height: 630, alt: 'Can AI Read Your Mind? The Science Behind AI Predictions — UnblockDevs Blog' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Can AI Read Your Mind? The Science Behind AI Predictions',
+    description: 'Pattern recognition, data analysis, behavioral prediction, and why it feels magical but isn',
+  },
   alternates: {
     canonical: "https://unblockdevs.com/blog/can-ai-read-your-mind-science-behind-ai-predictions",
   },

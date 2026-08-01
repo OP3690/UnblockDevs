@@ -15,8 +15,7 @@ import ToolSEOContent, {
 const canonicalUrl = 'https://unblockdevs.com/prompt-chunker';
 
 export const metadata: Metadata = {
-  title:
-    'Prompt Chunker — Split Large Text into AI Context Window Chunks, Token Counter & LLM Context Optimizer Online Free | UnblockDevs',
+  title: 'Prompt Chunker — Split Long Text for AI Context Windows | UnblockDevs',
   description:
     'Split long prompts into chunks with smart overlap for ChatGPT, Claude, and Gemini. Auto-adds AI consolidation instructions. Simplify and optimize messy prompts. Free, 100% browser-based, no signup.',
   keywords: [

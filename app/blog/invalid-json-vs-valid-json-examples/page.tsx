@@ -18,10 +18,17 @@ export const metadata: Metadata = {
     title: 'Invalid JSON vs Valid JSON: 15 Real Examples',
     description: 'Learn the difference between invalid and valid JSON with real examples developers get wrong.',
     type: 'article',
+    publishedTime: '2025-01-15T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/invalid-json-vs-valid-json-examples',
     images: [{ url: 'https://unblockdevs.com/api/og?title=Invalid%20JSON%20vs%20Valid%20JSON%3A%2015%20Real%20Examples&emoji=%7B%7D&desc=Learn%20the%20difference%20between%20invalid%20and%20valid%20JSON%20with%20real%20examples', width: 1200, height: 630, alt: 'Invalid JSON vs Valid JSON: 15 Real Examples — UnblockDevs Blog' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/invalid-json-vs-valid-json-examples' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'Invalid JSON vs Valid JSON: 15 Real Examples',
+    description: 'Learn the difference between invalid and valid JSON with real examples developers get wrong.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/invalid-json-vs-valid-json-examples' },
 
 };
 

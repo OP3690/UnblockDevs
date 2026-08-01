@@ -25,6 +25,8 @@ export const metadata: Metadata = {
     title: 'How to Manage Multiple .env Files for Dev, Staging & Production in Node.js | UnblockDevs',
     description: 'Master .env.development, .env.staging, .env.production, and .env.local — how to switch environments and keep secrets safe.',
     type: 'article',
+    publishedTime: '2026-03-14T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/manage-multiple-env-files-nodejs-development-staging-production',
     images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Manage%20Multiple%20.env%20Files%20for%20Dev%2C%20Staging%20%26%20Production%20in%20Node.js&emoji=%E2%9A%A1&desc=Developer%20guide%20for%20modern%20web%20applications', width: 1200, height: 630, alt: 'How to Manage Multiple .env Files for Dev, Staging & Production in Node.js — UnblockDevs Blog' }],
   },

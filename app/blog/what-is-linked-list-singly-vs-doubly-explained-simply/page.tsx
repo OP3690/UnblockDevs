@@ -24,6 +24,8 @@ export const metadata: Metadata = {
     title: 'Linked List: Singly vs Doubly Explained | UnblockDevs',
     description: 'Linked list: singly vs doubly. Examples, diagrams, code. For interviews.',
     type: 'article',
+    publishedTime: '2026-02-04T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/what-is-linked-list-singly-vs-doubly-explained-simply',
     images: [{ url: 'https://unblockdevs.com/api/og?title=Linked%20List%3A%20Singly%20vs%20Doubly%20Explained&emoji=%F0%9F%A4%96&desc=Linked%20list%3A%20singly%20vs%20doubly', width: 1200, height: 630, alt: 'Linked List: Singly vs Doubly Explained — UnblockDevs Blog' }],
 

@@ -25,6 +25,8 @@ export const metadata: Metadata = {
     title: 'How to Validate Environment Variables in Node.js with Zod (Crash Early, Not Later)',
     description: 'Use Zod to validate process.env at startup with TypeScript types, defaults, and clear errors.',
     type: 'article',
+    publishedTime: '2026-03-18T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/validate-environment-variables-nodejs-zod',
     images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Validate%20Environment%20Variables%20in%20Node.js%20with%20Zod%20%28Crash%20Early%2C%20Not%20L...&emoji=%E2%9A%A1&desc=Use%20Zod%20to%20validate%20process', width: 1200, height: 630, alt: 'How to Validate Environment Variables in Node.js with Zod (Crash Early, Not L... — UnblockDevs Blog' }],
   },

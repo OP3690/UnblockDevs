@@ -24,8 +24,15 @@ export const metadata: Metadata = {
     title: 'How to Mask JSON Payloads Before Sending Data to AI (Without Breaking Structure)',
     description: 'Anonymize API payloads and JSON for AI. Preserve structure and numbers; restore exactly. Client-side only.',
     type: 'article',
+    publishedTime: '2026-02-28T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-mask-json-payloads-before-sending-to-ai-without-breaking-structure',
     images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Mask%20JSON%20Payloads%20Before%20Sending%20Data%20to%20AI%20%28Without%20Breaking%20Structure%29&emoji=%7B%7D&desc=Anonymize%20API%20payloads%20and%20JSON%20for%20AI', width: 1200, height: 630, alt: 'How to Mask JSON Payloads Before Sending Data to AI (Without Breaking Structure) — UnblockDevs Blog' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How to Mask JSON Payloads Before Sending Data to AI (Without Breaking Structure)',
+    description: 'Anonymize API payloads and JSON for AI. Preserve structure and numbers; restore exactly. Client-side only.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/how-to-mask-json-payloads-before-sending-to-ai-without-breaking-structure',

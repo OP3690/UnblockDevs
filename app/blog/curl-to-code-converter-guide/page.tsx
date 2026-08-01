@@ -26,7 +26,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/curl-to-code-converter-guide',
     images: [{ url: 'https://unblockdevs.com/api/og?title=Curl%20to%20Code%20Converter%3A%20From%20Command%20Line%20to%20Code&emoji=%E2%9A%A1&desc=Transform%20cURL%20to%20code%3A%20JavaScript%2C%20Python%2C%20Java', width: 1200, height: 630, alt: 'Curl to Code Converter: From Command Line to Code — UnblockDevs Blog' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/curl-to-code-converter-guide' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'Curl to Code Converter: From Command Line to Code',
+    description: 'Transform cURL to code: JavaScript, Python, Java.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/curl-to-code-converter-guide' },
 
 };
 

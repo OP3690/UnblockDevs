@@ -23,6 +23,11 @@ export const metadata: Metadata = {
     images: [{ url: 'https://unblockdevs.com/api/og?title=What%20If%20AI%20Disappeared%20Tomorrow%3F&emoji=%F0%9F%A4%96&desc=AI%20in%20search%2C%20social%20media%2C%20banking%2C%20maps%20%26%20ride%20apps', width: 1200, height: 630, alt: 'What If AI Disappeared Tomorrow? — UnblockDevs Blog' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'What If AI Disappeared Tomorrow? | UnblockDevs',
+    description: 'AI in search, social media, banking, maps & ride apps. How much would stop without AI?',
+  },
   alternates: {
     canonical: "https://unblockdevs.com/blog/what-if-ai-disappeared-tomorrow-how-much-life-would-stop",
   },

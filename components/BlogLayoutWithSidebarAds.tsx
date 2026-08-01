@@ -108,7 +108,7 @@ export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSid
     <div className="w-full py-6 sm:py-10">
 
       {/* Nav bar: Back to Blog + All Tools on left, Share buttons on right */}
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 px-4 sm:px-6 lg:px-8 xl:px-0 xl:mx-auto xl:max-w-4xl">
         <div className="flex items-center gap-2">
           <Link
             href="/blog"
@@ -128,13 +128,13 @@ export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSid
         <ShareButtons />
       </div>
 
-      {/* Article body — content first, no ads blocking */}
-      <div className="blog-article-body px-4 sm:px-6 lg:px-8">
+      {/* Article body — centered for comfortable reading width */}
+      <div className="blog-article-body mx-auto px-4 sm:px-6 lg:px-8 xl:px-0">
         {children}
       </div>
 
       {/* Bottom share bar — after reading the article */}
-      <div className="mt-10 border-t border-zinc-100 pt-6 px-4 sm:px-6 lg:px-8">
+      <div className="mt-10 border-t border-zinc-100 pt-6 px-4 sm:px-6 lg:px-8 xl:px-0 xl:mx-auto xl:max-w-4xl">
         <ShareButtons />
       </div>
 
@@ -142,13 +142,13 @@ export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSid
       <div
         role="region"
         aria-label="Advertisement"
-        className="mt-10 overflow-hidden rounded-xl px-4 sm:px-6 lg:px-8"
+        className="mt-10 overflow-hidden rounded-xl px-4 sm:px-6 lg:px-8 xl:px-0 xl:mx-auto xl:max-w-4xl"
       >
         <AdUnit slot={SLOT_INARTICLE} format="fluid" layout="in-article" className="rounded-xl overflow-hidden" />
       </div>
 
       {/* Related posts */}
-      <div className="mt-12 px-4 sm:px-6 lg:px-8">
+      <div className="mt-12 px-4 sm:px-6 lg:px-8 xl:px-0 xl:mx-auto xl:max-w-4xl">
         <AutoRelatedBlogPosts />
       </div>
 
@@ -156,7 +156,7 @@ export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSid
       <div
         role="region"
         aria-label="Advertisement"
-        className="mt-10 overflow-hidden rounded-xl bg-zinc-50 px-4 sm:px-6 lg:px-8"
+        className="mt-10 overflow-hidden rounded-xl bg-zinc-50 px-4 sm:px-6 lg:px-8 xl:px-0 xl:mx-auto xl:max-w-4xl"
       >
         <AdUnit slot={SLOT_FOOTER} format="autorelaxed" className="rounded-xl overflow-hidden" />
       </div>

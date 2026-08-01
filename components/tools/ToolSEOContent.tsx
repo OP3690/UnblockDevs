@@ -231,7 +231,7 @@ export default function ToolSEOContent({
       className={`mx-auto w-full max-w-[min(100%,96rem)] px-4 pb-12 sm:px-6 lg:px-8 ${className}`}
     >
       <div className="space-y-14">{children}</div>
-      <p className="mt-10 text-[11px] text-zinc-400">Last updated: May 2026</p>
+      <p className="mt-10 text-[11.5px] text-zinc-400">Last updated: May 2026</p>
     </div>
   );
 }

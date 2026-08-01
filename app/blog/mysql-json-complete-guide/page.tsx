@@ -23,16 +23,17 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'JSON in MySQL: Complete Guide',
-    description: 'JSON in MySQL: data types, extract from columns, nested queries, 10 examples',
+    description: 'JSON in MySQL: data types, extract from columns, nested queries, 10 examples. Tips for efficient JSON.',
     type: 'article',
+    publishedTime: '2025-01-30T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/mysql-json-complete-guide',
-    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON%20in%20MySQL%3A%20Complete%20Guide&emoji=%7B%7D&desc=JSON%20in%20MySQL%3A%20data%20types%2C%20extract%20from%20columns%2C%20nested%20queries%2C%2010%20examples', width: 1200, height: 630, alt: 'JSON in MySQL: Complete Guide — UnblockDevs Blog' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=JSON%20in%20MySQL%3A%20Complete%20Guide&emoji=%F0%9F%93%9D&desc=JSON%20in%20MySQL%3A%20data%20types%2C%20extract%20from%20columns%2C%20nested%20queries%2C%2010%20examples.%20Ti', width: 1200, height: 630, alt: 'JSON in MySQL: Complete Guide — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'JSON in MySQL: Complete Guide',
-    description: 'JSON in MySQL: data types, extract from columns, nested queries, 10 examples',
-    images: ['https://unblockdevs.com/api/og?title=JSON%20in%20MySQL%3A%20Complete%20Guide&emoji=%7B%7D&desc=JSON%20in%20MySQL%3A%20data%20types%2C%20extract%20from%20columns%2C%20nested%20queries%2C%2010%20examples'],
+    description: 'JSON in MySQL: data types, extract from columns, nested queries, 10 examples. Tips for efficient JSON.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/mysql-json-complete-guide' },
 

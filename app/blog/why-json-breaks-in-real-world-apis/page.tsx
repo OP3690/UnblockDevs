@@ -22,7 +22,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/why-json-breaks-in-real-world-apis',
     images: [{ url: 'https://unblockdevs.com/api/og?title=Why%20JSON%20Breaks%20in%20Real-World%20APIs%20%28And%20How%20to%20Fix%20It%29&emoji=%7B%7D&desc=Learn%20why%20APIs%20return%20broken%20JSON%20in%20production%20and%20how%20to%20fix%20it%20instantly', width: 1200, height: 630, alt: 'Why JSON Breaks in Real-World APIs (And How to Fix It) — UnblockDevs Blog' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/why-json-breaks-in-real-world-apis' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'Why JSON Breaks in Real-World APIs (And How to Fix It)',
+    description: 'Learn why APIs return broken JSON in production and how to fix it instantly.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/why-json-breaks-in-real-world-apis' },
 
 };
 

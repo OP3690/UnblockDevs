@@ -31,6 +31,11 @@ export const metadata: Metadata = {
     images: [{ url: 'https://unblockdevs.com/api/og?title=Instagram%20Password%20Reset%20Email%3A%20Complete%20Guide%20-%20What%2C%20When%2C%20How%20%26%20Why&emoji=%F0%9F%A4%96&desc=Instagram%20password%20reset%3A%20what%2C%20when%2C%20how', width: 1200, height: 630, alt: 'Instagram Password Reset Email: Complete Guide - What, When, How & Why — UnblockDevs Blog' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Instagram Password Reset Email: Complete Guide - What, When, How & Why',
+    description: 'Instagram password reset: what, when, how. Step-by-step guide.',
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/instagram-password-reset-email-guide' },
   robots: { index: false, follow: false },
 };

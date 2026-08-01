@@ -24,6 +24,8 @@ export const metadata: Metadata = {
     title: 'Stack vs Queue Explained | UnblockDevs',
     description: 'Stack vs queue: examples, diagrams, code. For interviews.',
     type: 'article',
+    publishedTime: '2026-02-02T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/what-is-stack-vs-queue-explained-with-real-life-examples',
     images: [{ url: 'https://unblockdevs.com/api/og?title=Stack%20vs%20Queue%20Explained&emoji=%F0%9F%A4%96&desc=Stack%20vs%20queue%3A%20examples%2C%20diagrams%2C%20code', width: 1200, height: 630, alt: 'Stack vs Queue Explained — UnblockDevs Blog' }],
 

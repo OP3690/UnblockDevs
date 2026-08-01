@@ -31,6 +31,11 @@ export const metadata: Metadata = {
     images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Change%20WhatsApp%20Privacy%20Settings%20for%20Maximum%20Security%3A%20Complete%20Guide%20...&emoji=%F0%9F%94%92&desc=WhatsApp%20privacy%20for%20max%20security', width: 1200, height: 630, alt: 'How to Change WhatsApp Privacy Settings for Maximum Security: Complete Guide ... — UnblockDevs Blog' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How to Change WhatsApp Privacy Settings for Maximum Security: Complete Guide 2026',
+    description: 'WhatsApp privacy for max security. Protect profile and messages.',
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-change-whatsapp-privacy-settings-maximum-security' },
   robots: { index: false, follow: false },
 };

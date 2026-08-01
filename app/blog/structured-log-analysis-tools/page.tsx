@@ -26,7 +26,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/structured-log-analysis-tools',
     images: [{ url: 'https://unblockdevs.com/api/og?title=Structured%20Log%20Analysis%3A%20Tools%20and%20Techniques&emoji=%F0%9F%9B%A0%EF%B8%8F&desc=Master%20structured%20log%20analysis%20with%20modern%20tools', width: 1200, height: 630, alt: 'Structured Log Analysis: Tools and Techniques — UnblockDevs Blog' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/structured-log-analysis-tools' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'Structured Log Analysis: Tools and Techniques',
+    description: 'Master structured log analysis with modern tools. Learn how to parse, filter, and analyze logs effectively.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/structured-log-analysis-tools' },
 
 };
 

@@ -7,6 +7,55 @@
       "runtimeArgs": ["-c", "export PATH=/opt/homebrew/bin:$PATH && cd /Users/omprakashutaha/Desktop/unblockdevs/.claude/worktrees/cool-swirles && npm run dev:http"],
       "port": 3000,
       "autoPort": true
+    },
+    {
+      "name": "ais-analytics",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": ["-c", "export PATH=/Users/omprakashutaha/.nvm/versions/node/v22.21.0/bin:/opt/homebrew/bin:$PATH && cd /Users/omprakashutaha/Desktop/ais-analytics-dashboard && npm run dev -- --port 3010 --experimental-https"],
+      "port": 3010,
+      "autoPort": false
+    },
+    {
+      "name": "nse-flow",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": ["-c", "export PATH=/Users/omprakashutaha/.nvm/versions/node/v22.21.0/bin:/opt/homebrew/bin:$PATH && cd /Users/omprakashutaha/Desktop/nse-flow/web && npm run dev:https"],
+      "port": 4321,
+      "autoPort": false
+    },
+    {
+      "name": "nse-http",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": ["-c", "export PATH=/Users/omprakashutaha/.nvm/versions/node/v22.21.0/bin:/opt/homebrew/bin:$PATH && cd /Users/omprakashutaha/Desktop/nse-flow/web && npx next dev -p 4399"],
+      "port": 4399,
+      "autoPort": false
+    },
+    {
+      "name": "nse-json",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": ["-c", "export PATH=/Users/omprakashutaha/.nvm/versions/node/v22.21.0/bin:/opt/homebrew/bin:$PATH && cd /Users/omprakashutaha/Desktop/nse-flow/web && MONGODB_URI= NEXT_PUBLIC_MONGODB_URI= npx next dev -p 4402"],
+      "port": 4402,
+      "autoPort": false
+    },
+    {
+      "name": "money-dashboard",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": ["-c", "cd /Users/omprakashutaha/Desktop/money-dashboard && npm run dev -- -p 4500"],
+      "port": 4500,
+      "autoPort": false
+    },
+    {
+      "name": "life-dashboard",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": ["-c", "cd /Users/omprakashutaha/Desktop/life-dashboard && npm run dev -- -p 4600"],
+      "port": 4600,
+      "autoPort": false
+    },
+    {
+      "name": "transformation-dashboard",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": ["-c", "cd /Users/omprakashutaha/Desktop/transformation-dashboard && npm run dev -- -p 4700"],
+      "port": 4700,
+      "autoPort": false
     }
   ]
 }

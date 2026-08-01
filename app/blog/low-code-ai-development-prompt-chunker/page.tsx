@@ -30,7 +30,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/low-code-ai-development-prompt-chunker',
     images: [{ url: 'https://unblockdevs.com/api/og?title=Low-Code%20AI%20%26%20Prompt%20Chunker%20Guide&emoji=%F0%9F%A4%96&desc=Low-code%20AI%3A%20Prompt%20Chunker%20and%20tools%20for%20non-devs', width: 1200, height: 630, alt: 'Low-Code AI & Prompt Chunker Guide — UnblockDevs Blog' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/low-code-ai-development-prompt-chunker' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'Low-Code AI & Prompt Chunker Guide',
+    description: 'Low-code AI: Prompt Chunker and tools for non-devs. Build AI solutions without coding.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/low-code-ai-development-prompt-chunker' },
 
 };
 

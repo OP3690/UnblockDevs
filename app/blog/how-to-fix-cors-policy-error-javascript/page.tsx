@@ -35,7 +35,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/how-to-fix-cors-policy-error-javascript',
     images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Fix&emoji=%F0%9F%94%92&desc=Fix%20CORS%20policy%20errors%20in%20JavaScript', width: 1200, height: 630, alt: 'How to Fix — UnblockDevs Blog' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-fix-cors-policy-error-javascript' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'How to Fix ',
+    description: 'Fix CORS policy errors in JavaScript. Solutions for Chrome, Firefox, Safari, Edge.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-fix-cors-policy-error-javascript' },
 
 };
 

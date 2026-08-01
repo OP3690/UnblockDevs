@@ -30,7 +30,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/nintendo-switch-online-gamecube-games',
     images: [{ url: 'https://unblockdevs.com/api/og?title=Switch%20Online%20GameCube%20Games%20Guide&emoji=%F0%9F%9B%A0%EF%B8%8F&desc=Switch%20Online%20GameCube%20games%3A%20list%2C%20how%20to%20access', width: 1200, height: 630, alt: 'Switch Online GameCube Games Guide — UnblockDevs Blog' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/nintendo-switch-online-gamecube-games' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'Switch Online GameCube Games Guide',
+    description: 'Switch Online GameCube games: list, how to access.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/nintendo-switch-online-gamecube-games' },
 
 };
 

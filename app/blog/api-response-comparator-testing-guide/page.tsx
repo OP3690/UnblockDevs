@@ -26,7 +26,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/api-response-comparator-testing-guide',
     images: [{ url: 'https://unblockdevs.com/api/og?title=API%20Response%20Comparator%3A%20A%20Complete%20Testing%20Guide&emoji=%E2%9A%A1&desc=Discover%20how%20to%20use%20API%20response%20comparators%20to%20detect%20breaking%20changes%2C', width: 1200, height: 630, alt: 'API Response Comparator: A Complete Testing Guide — UnblockDevs Blog' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/api-response-comparator-testing-guide' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'API Response Comparator: A Complete Testing Guide',
+    description: 'Discover how to use API response comparators to detect breaking changes, validate API versions, and ensure consistent responses.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/api-response-comparator-testing-guide' },
 
 };
 

@@ -175,9 +175,10 @@ function HtmlFormatterTool() {
 
   const handleInput = useCallback((val: string) => {
     setInput(val);
-    // startTransition defers the heavy HTML parse/reformat to a low-priority
-    // update — the textarea value paints immediately, improving INP.
-    startTransition(() => { process(val, mode, indent); });
+    // Defer the heavy HTML parse/format so the textarea update paints first (INP fix)
+    startTransition(() => {
+      process(val, mode, indent);
+    });
   }, [mode, indent, process]);
 
   const handleMode = useCallback((m: typeof mode) => {

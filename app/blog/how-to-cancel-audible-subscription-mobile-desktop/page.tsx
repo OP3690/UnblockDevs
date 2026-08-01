@@ -31,6 +31,11 @@ export const metadata: Metadata = {
     images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Cancel%20Audible%20Subscription%20on%20Mobile%20%26%20Desktop%3A%20Complete%20Guide%202026&emoji=%F0%9F%9B%A0%EF%B8%8F&desc=Complete%20guide%20to%20canceling%20your%20Audible%20subscription%20on%20mobile%20and%20desktop', width: 1200, height: 630, alt: 'How to Cancel Audible Subscription on Mobile & Desktop: Complete Guide 2026 — UnblockDevs Blog' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How to Cancel Audible Subscription on Mobile & Desktop: Complete Guide 2026',
+    description: 'Complete guide to canceling your Audible subscription on mobile and desktop. Step-by-step instructions to cancel without losing your audiobooks.',
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-cancel-audible-subscription-mobile-desktop' },
   robots: { index: false, follow: false },
 };

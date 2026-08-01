@@ -25,6 +25,8 @@ export const metadata: Metadata = {
     title: 'Fix Uncaught (in promise) Error in JavaScript | UnblockDevs',
     description: 'Fix "Uncaught (in promise)" in JavaScript. Promise rejections, error handling.',
     type: 'article',
+    publishedTime: '2026-01-31T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/fix-uncaught-in-promise-error-javascript-explained',
     images: [{ url: 'https://unblockdevs.com/api/og?title=Fix%20Uncaught%20%28in%20promise%29%20Error%20in%20JavaScript&emoji=%E2%9A%A1&desc=Developer%20guide%20for%20modern%20web%20applications', width: 1200, height: 630, alt: 'Fix Uncaught (in promise) Error in JavaScript — UnblockDevs Blog' }],
 

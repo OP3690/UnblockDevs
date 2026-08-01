@@ -33,7 +33,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/how-to-fix-module-not-found-error-nodejs',
     images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Fix&emoji=%E2%9A%A1&desc=Developer%20guide%20for%20modern%20web%20applications', width: 1200, height: 630, alt: 'How to Fix — UnblockDevs Blog' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-fix-module-not-found-error-nodejs' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'How to Fix ',
+    description: 'Fix ',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-fix-module-not-found-error-nodejs' },
 
 };
 

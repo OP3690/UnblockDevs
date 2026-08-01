@@ -4,25 +4,24 @@ import AboutClient from './client';
 export const metadata: Metadata = {
   title: 'About UnblockDevs — Free Browser-Based Developer Tools | UnblockDevs',
   description:
-    'UnblockDevs is built by software engineers with expertise in JSON, REST APIs, Node.js, Python, SQL, and AI-safe developer workflows. 50+ free browser-based tools — no signup, no data collection, free forever.',
+    'UnblockDevs is a free suite of 19+ browser-based developer tools — JSON formatter, CORS tester, SQL formatter, JWT decoder, and more. 100% client-side: your data never leaves your browser. No signup, no account, free forever. Built by developers, for developers since 2024.',
   keywords: [
     'about unblockdevs',
     'free developer tools',
-    'browser based developer tools',
-    'JSON formatter',
-    'CORS tester',
-    'JWT decoder',
-    'SQL formatter',
-    'cURL converter',
+    'browser-based developer tools',
     'client-side tools',
-    'no signup developer tools',
+    'json tools online',
+    'cors tester',
+    'sql formatter online',
+    'jwt decoder',
     'data privacy developers',
-    'AI safe developer tools',
+    'no signup developer tools',
+    'free online developer utilities',
   ],
   openGraph: {
     title: 'About UnblockDevs — Free Browser-Based Developer Tools',
     description:
-      '25+ free browser-based tools: JSON formatter, CORS tester, JWT decoder, SQL formatter, and more. 100% client-side, no signup, no tracking.',
+      'UnblockDevs offers 19+ free developer tools that run entirely in your browser. JSON, CORS, SQL, JWT, and more — no signup, no data sent to servers, free forever.',
     type: 'website',
     url: 'https://unblockdevs.com/about',
     siteName: 'UnblockDevs',
@@ -32,8 +31,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'About UnblockDevs — Free Browser-Based Developer Tools',
     description:
-      '25+ free developer tools — JSON, CORS, JWT, SQL, regex, cURL. 100% in-browser, no signup, no tracking.',
-    images: ['https://unblockdevs.com/api/og?title=About%20UnblockDevs&emoji=%F0%9F%9B%A0%EF%B8%8F&desc=25%2B%20free%20browser-based%20developer%20tools%20%E2%80%94%20no%20signup%20required'],
+      '19+ free developer tools: JSON, CORS, SQL, JWT and more. 100% in-browser — no signup, no data transmitted, free forever.',
   },
   alternates: { canonical: 'https://unblockdevs.com/about' },
 };

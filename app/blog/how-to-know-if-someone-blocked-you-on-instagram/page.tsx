@@ -31,6 +31,11 @@ export const metadata: Metadata = {
     images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Know%20If%20Someone%20Blocked%20You%20on%20Instagram%3A%20Complete%20Guide%202026&emoji=%F0%9F%9B%A0%EF%B8%8F&desc=How%20to%20tell%20if%20someone%20blocked%20you%20on%20Instagram', width: 1200, height: 630, alt: 'How to Know If Someone Blocked You on Instagram: Complete Guide 2026 — UnblockDevs Blog' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How to Know If Someone Blocked You on Instagram: Complete Guide 2026',
+    description: 'How to tell if someone blocked you on Instagram. Signs and how to check.',
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-know-if-someone-blocked-you-on-instagram' },
   robots: { index: false, follow: false },
 };

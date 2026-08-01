@@ -23,6 +23,11 @@ export const metadata: Metadata = {
     images: [{ url: 'https://unblockdevs.com/api/og?title=How%20AI%20Creates%20Art%2C%20Music%2C%20and%20Videos%20in%20Seconds&emoji=%F0%9F%A4%96&desc=Generative%20AI%20basics%2C%20how%20AI%20learns%20patterns%2C%20ethical%20concerns%2C%20and%20the%20future', width: 1200, height: 630, alt: 'How AI Creates Art, Music, and Videos in Seconds — UnblockDevs Blog' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How AI Creates Art, Music, and Videos in Seconds',
+    description: 'Generative AI basics, how AI learns patterns, ethical concerns, and the future of creativity.',
+  },
   alternates: {
     canonical: "https://unblockdevs.com/blog/how-ai-creates-art-music-videos-seconds",
   },

@@ -28,6 +28,11 @@ export const metadata: Metadata = {
     images: [{ url: 'https://unblockdevs.com/api/og?title=How%20AI%20Works%3A%20A%20Simple%20Explanation%20for%20Beginners%20%28With%20Real%20Examples%29&emoji=%F0%9F%A4%96&desc=Learn%20how%20AI%20works%20in%20simple%20terms', width: 1200, height: 630, alt: 'How AI Works: A Simple Explanation for Beginners (With Real Examples) — UnblockDevs Blog' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How AI Works: A Simple Explanation for Beginners (With Real Examples)',
+    description: 'Learn how AI works in simple terms. Machine learning vs deep learning, how models are trained, and real-world examples.',
+  },
   alternates: {
     canonical: "https://unblockdevs.com/blog/how-ai-works-simple-explanation-for-beginners",
   },

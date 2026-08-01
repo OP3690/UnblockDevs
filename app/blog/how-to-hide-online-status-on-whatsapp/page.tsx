@@ -41,6 +41,11 @@ export const metadata: Metadata = {
     images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Hide%20Online%20Status%20on%20WhatsApp%3A%20Complete%20Guide%202026&emoji=%F0%9F%9B%A0%EF%B8%8F&desc=Hide%20online%20status%20on%20WhatsApp', width: 1200, height: 630, alt: 'How to Hide Online Status on WhatsApp: Complete Guide 2026 — UnblockDevs Blog' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How to Hide Online Status on WhatsApp: Complete Guide 2026',
+    description: 'Hide online status on WhatsApp. Appear offline, control privacy.',
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-hide-online-status-on-whatsapp' },
 };
 

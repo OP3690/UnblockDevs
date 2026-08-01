@@ -17,9 +17,16 @@ export const metadata: Metadata = {
     title: 'How to Convert cURL to Python Requests: Complete Guide',
     description: 'Step-by-step guide to convert cURL commands to Python Requests with real examples and best practices.',
     type: 'article',
+    publishedTime: '2025-01-15T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/curl-to-python-requests-complete-guide',
     images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Convert%20cURL%20to%20Python%20Requests%3A%20Complete%20Guide&emoji=%E2%9A%A1&desc=Step-by-step%20guide%20to%20convert%20cURL%20commands%20to%20Python%20Requests%20with%20real', width: 1200, height: 630, alt: 'How to Convert cURL to Python Requests: Complete Guide — UnblockDevs Blog' }],
 
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How to Convert cURL to Python Requests: Complete Guide',
+    description: 'Step-by-step guide to convert cURL commands to Python Requests with real examples and best practices.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/curl-to-python-requests-complete-guide' },
 };

@@ -34,8 +34,15 @@ export const metadata: Metadata = {
     title: 'AI-Native Development Platforms: Complete Guide 2026 | UnblockDevs',
     description: 'Complete guide to AI-native development platforms: what they are, when to use them, how they work. AI-first tools and best practices.',
     type: 'article',
+    publishedTime: '2026-02-03T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/ai-native-development-platforms-complete-guide',
     images: [{ url: 'https://unblockdevs.com/api/og?title=AI-Native%20Development%20Platforms%3A%20Complete%20Guide%202026&emoji=%F0%9F%A4%96&desc=Complete%20guide%20to%20AI-native%20development%20platforms%3A%20what%20they%20are%2C%20when%20to%20use', width: 1200, height: 630, alt: 'AI-Native Development Platforms: Complete Guide 2026 — UnblockDevs Blog' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'AI-Native Development Platforms: Complete Guide 2026 | UnblockDevs',
+    description: 'Complete guide to AI-native development platforms: what they are, when to use them, how they work. AI-first tools and best practices.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/ai-native-development-platforms-complete-guide' },
 };

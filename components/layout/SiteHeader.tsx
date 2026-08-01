@@ -478,7 +478,7 @@ export default function SiteHeader() {
                 value={searchQ}
                 onChange={(e) => { setSearchQ(e.target.value); setSelectedIdx(0); }}
                 onKeyDown={handleSearchKey}
-                placeholder="search 'jwt decoder', 'css gradient', 'curl'…"
+                placeholder="Search 50+ tools… (Esc to close)"
                 aria-label="Search all tools"
                 className="flex-1 bg-transparent font-mono text-[13.5px] text-zinc-800 placeholder:text-zinc-400 placeholder:font-mono focus:outline-none"
               />

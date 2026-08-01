@@ -162,74 +162,46 @@ export default function BlogPage({
   } : null;
 
   return (
-    <div className="min-h-screen bg-[#F8F8F8]">
+    <div className="min-h-screen">
       <Script id={`blog-breadcrumb-schema-${currentPage}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsSchema) }} />
       <Script id={`blog-itemlist-schema-${currentPage}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
       {blogCollectionSchema && <Script id="blog-collection-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogCollectionSchema) }} />}
 
-      {/* ── HERO ───────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-zinc-950 pb-14 pt-10 sm:pb-16 sm:pt-12">
-        {/* Ambient glow */}
-        <div className="pointer-events-none absolute inset-0" aria-hidden>
-          <div className="absolute -left-20 -top-10 h-[400px] w-[500px] rounded-full bg-emerald-600/15 blur-[120px]" />
-          <div className="absolute bottom-0 right-0 h-[300px] w-[400px] rounded-full bg-violet-600/15 blur-[100px]" />
-        </div>
-
-        <div className="relative mx-auto max-w-full px-5 sm:px-6 lg:px-8">
-          {/* eyebrow */}
-          <div className="mb-5 flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-300">
+      <main className="px-5 py-8 sm:px-6 sm:py-10 lg:px-8">
+        {/* ── Blog header ────────────────────────────────────────── */}
+        <div className="mb-8 border-b border-zinc-200 pb-8">
+          <div className="mb-3 flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-emerald-700">
               <BookOpen className="h-3 w-3" />
               Developer Blog
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 font-mono text-[11px] text-zinc-400">
+            <span className="inline-flex items-center gap-1 text-[12px] text-zinc-400">
               <Sparkles className="h-3 w-3 text-violet-400" />
-              {blogPosts.length} articles · free to read
+              {blogPosts.length} articles · free forever
             </span>
           </div>
-
-          {/* headline */}
-          <h1 className="max-w-2xl text-[2rem] font-bold leading-[1.13] tracking-tight text-white sm:text-[2.6rem] lg:text-[3rem]">
-            Guides that{' '}
-            <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
-              unblock developers
-            </span>
-          </h1>
-          <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-zinc-400 sm:text-base">
-            JSON errors, API debugging, curl, schema validation, and safe AI workflows.
-            Practical — no fluff, no signup required.
-          </p>
-          <p className="mt-3 text-[13px] text-zinc-500 flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-zinc-400">
-              🔍 Search + filter below ↓
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-zinc-400">
-              ⌘K to focus search
-            </span>
-          </p>
-
-          {/* stats */}
-          <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-3">
-            {[
-              { value: `${blogPosts.length}`, label: 'articles' },
-              { value: '100%', label: 'free' },
-              { value: 'Zero', label: 'signup required' },
-              { value: 'New', label: 'posts weekly' },
-            ].map((s) => (
-              <div key={s.label} className="flex items-baseline gap-1.5">
-                <span className="text-lg font-bold text-white sm:text-xl">{s.value}</span>
-                <span className="text-[12px] text-zinc-500">{s.label}</span>
-              </div>
-            ))}
-          </div>
+          {currentPage <= 1 ? (
+            <>
+              <h1 className="text-[1.85rem] font-extrabold leading-[1.15] tracking-tight text-zinc-900 sm:text-[2.25rem]">
+                Guides that{' '}
+                <span className="text-emerald-600">unblock</span>{' '}
+                developers
+              </h1>
+              <p className="mt-2.5 max-w-lg text-[14.5px] leading-relaxed text-zinc-500">
+                JSON errors, API debugging, curl, schema validation, and safe AI workflows.
+                No fluff. No signup.
+              </p>
+            </>
+          ) : (
+            <>
+              <h1 className="text-[1.5rem] font-bold text-zinc-900">Developer Blog</h1>
+              <p className="mt-1 text-[13px] text-zinc-400">Page {currentPage}</p>
+            </>
+          )}
         </div>
-      </section>
 
-      {/* ── MAIN CONTENT ───────────────────────────────────────── */}
-      <main className="mx-auto max-w-full sm:px-0 lg:px-0">
-
-        {/* Post grid + search */}
-        <BlogListClient initialPosts={initialPosts} totalPages={totalPages} currentPage={currentPage} />
+        {/* Post grid */}
+        <BlogListClient allPosts={blogPosts} initialPage={currentPage} />
 
         {/* ── FEATURED GUIDES ──────────────────────────────────── */}
         {currentPage === 1 && (

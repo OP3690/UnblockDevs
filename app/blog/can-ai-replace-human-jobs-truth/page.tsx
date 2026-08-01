@@ -25,6 +25,11 @@ export const metadata: Metadata = {
     images: [{ url: 'https://unblockdevs.com/api/og?title=Can%20AI%20Replace%20Human%20Jobs%3F%20The%20Truth%20No%20One%20Tells%20You&emoji=%F0%9F%A4%96&desc=Jobs%20AI%20is%20replacing%20vs%20cannot%20replace%2C%20future-proof%20skills%2C%20and%20what%20students', width: 1200, height: 630, alt: 'Can AI Replace Human Jobs? The Truth No One Tells You — UnblockDevs Blog' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Can AI Replace Human Jobs? The Truth No One Tells You',
+    description: 'Jobs AI is replacing vs cannot replace, future-proof skills, and what students should learn in 2026.',
+  },
   alternates: {
     canonical: "https://unblockdevs.com/blog/can-ai-replace-human-jobs-truth",
   },

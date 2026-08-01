@@ -8,7 +8,7 @@ import AiSchemaMaskerClient from './client';
 const canonicalUrl = 'https://unblockdevs.com/ai-schema-masker';
 
 export const metadata: Metadata = {
-  title: 'SQL Schema Masker — Hide Table Names for AI | UnblockDevs',
+  title: 'AI Schema Masker — Mask SQL & JSON Before Sending to AI | UnblockDevs',
   description:
     "Mask SQL identifiers before sending to AI. Tables become T_001, columns C_001 — fully reversible. Free, 100% browser-based, nothing sent to servers.",
   keywords: [

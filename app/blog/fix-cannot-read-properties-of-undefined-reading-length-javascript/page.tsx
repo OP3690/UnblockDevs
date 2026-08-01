@@ -25,6 +25,8 @@ export const metadata: Metadata = {
     title: 'Fix Undefined reading \'length\' in JavaScript 2026 | UnblockDevs',
     description: 'Fix undefined (reading \'length\') in JavaScript. Null checks, optional chaining. With code.',
     type: 'article',
+    publishedTime: '2026-01-31T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/fix-cannot-read-properties-of-undefined-reading-length-javascript',
     images: [{ url: 'https://unblockdevs.com/api/og?title=Fix%20Undefined%20reading%20%5C&emoji=%E2%9A%A1&desc=Fix%20undefined%20%28reading%20%5C', width: 1200, height: 630, alt: 'Fix Undefined reading \ — UnblockDevs Blog' }],
 

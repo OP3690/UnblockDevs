@@ -33,6 +33,11 @@ export const metadata: Metadata = {
     images: [{ url: 'https://unblockdevs.com/api/og?title=How%20to%20Change%20WhatsApp%20Number%20Without%20Losing%20Chats%3A%20Step-by-Step%20Guide%202026&emoji=%F0%9F%9B%A0%EF%B8%8F&desc=Change%20WhatsApp%20number%20without%20losing%20chats', width: 1200, height: 630, alt: 'How to Change WhatsApp Number Without Losing Chats: Step-by-Step Guide 2026 — UnblockDevs Blog' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How to Change WhatsApp Number Without Losing Chats: Step-by-Step Guide 2026',
+    description: 'Change WhatsApp number without losing chats. Step-by-step for all devices.',
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-change-whatsapp-number-without-losing-chats' },
 };
 

@@ -21,16 +21,17 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'AI-Native Platforms: Complete Guide',
-    description: 'AI-Native Platforms: architecture, implementation, use cases',
+    description: 'AI-Native Platforms: architecture, implementation, use cases. Build AI-first apps. Practical examples.',
     type: 'article',
+    publishedTime: '2025-01-25T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/ai-native-platforms-complete-guide',
-    images: [{ url: 'https://unblockdevs.com/api/og?title=AI-Native%20Platforms%3A%20Complete%20Guide&emoji=%F0%9F%A4%96&desc=AI-Native%20Platforms%3A%20architecture%2C%20implementation%2C%20use%20cases', width: 1200, height: 630, alt: 'AI-Native Platforms: Complete Guide — UnblockDevs Blog' }],
+    images: [{ url: 'https://unblockdevs.com/api/og?title=AI-Native%20Platforms%3A%20Complete%20Guide&emoji=%F0%9F%93%9D&desc=AI-Native%20Platforms%3A%20architecture%2C%20implementation%2C%20use%20cases.%20Build%20AI-first%20app', width: 1200, height: 630, alt: 'AI-Native Platforms: Complete Guide — UnblockDevs Blog' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'AI-Native Platforms: Complete Guide',
-    description: 'AI-Native Platforms: architecture, implementation, use cases',
-    images: ['https://unblockdevs.com/api/og?title=AI-Native%20Platforms%3A%20Complete%20Guide&emoji=%F0%9F%A4%96&desc=AI-Native%20Platforms%3A%20architecture%2C%20implementation%2C%20use%20cases'],
+    description: 'AI-Native Platforms: architecture, implementation, use cases. Build AI-first apps. Practical examples.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/ai-native-platforms-complete-guide' },
 

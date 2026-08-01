@@ -26,7 +26,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/api-payload-size-optimization',
     images: [{ url: 'https://unblockdevs.com/api/og?title=API%20Payload%20Size%20Optimization%3A%20Performance%20Best%20Practices&emoji=%E2%9A%A1&desc=Learn%20how%20to%20analyze%20and%20optimize%20API%20payload%20sizes', width: 1200, height: 630, alt: 'API Payload Size Optimization: Performance Best Practices — UnblockDevs Blog' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/api-payload-size-optimization' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'API Payload Size Optimization: Performance Best Practices',
+    description: 'Learn how to analyze and optimize API payload sizes. Discover techniques to reduce payload size and improve performance.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/api-payload-size-optimization' },
 
 };
 

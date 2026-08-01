@@ -24,7 +24,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/html-interview-questions',
     images: [{ url: 'https://unblockdevs.com/api/og?title=HTML%20Interview%20Questions%3A%20Top%2050%20Questions%20%26%20Answers&emoji=%F0%9F%8E%A8&desc=Prepare%20for%20HTML%20interviews%20with%2050%2B%20commonly%20asked%20questions%20and%20detailed', width: 1200, height: 630, alt: 'HTML Interview Questions: Top 50 Questions & Answers — UnblockDevs Blog' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/html-interview-questions' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'HTML Interview Questions: Top 50 Questions & Answers',
+    description: 'Prepare for HTML interviews with 50+ commonly asked questions and detailed answers.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/html-interview-questions' },
 
 };
 

@@ -23,6 +23,11 @@ export const metadata: Metadata = {
     images: [{ url: 'https://unblockdevs.com/api/og?title=Can%20AI%20Fall%20in%20Love%3F%20Understanding%20AI%20Emotions&emoji=%F0%9F%A4%96&desc=Can%20AI%20feel%20emotions', width: 1200, height: 630, alt: 'Can AI Fall in Love? Understanding AI Emotions — UnblockDevs Blog' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Can AI Fall in Love? Understanding AI Emotions',
+    description: 'Can AI feel emotions? Emotional AI, sentiment analysis, AI companions, and ethical concerns.',
+  },
   alternates: {
     canonical: "https://unblockdevs.com/blog/can-ai-fall-in-love-understanding-ai-emotions",
   },
