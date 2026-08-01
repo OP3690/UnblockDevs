@@ -22,6 +22,11 @@ export const metadata: Metadata = {
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How to Start an AI Side Hustle with $0 (Step-by-Step Guide)',
+    description: 'Free AI tools, how to find clients, how to price services, realistic income. Step-by-step.',
+  },
   alternates: {
     canonical: "https://unblockdevs.com/blog/how-to-start-ai-side-hustle-zero-step-by-step",
   },

@@ -24,6 +24,8 @@ export const metadata: Metadata = {
     title: 'Sliding Window Technique Explained | UnblockDevs',
     description: 'Sliding window: examples, diagrams, code. For interviews.',
     type: 'article',
+    publishedTime: '2026-02-04T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/what-is-sliding-window-technique-explained-with-simple-examples',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 

@@ -21,6 +21,11 @@ export const metadata: Metadata = {
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How I Would Make $1,000/Month Using AI (If I Started Today)',
+    description: 'Pick niche, use AI to produce X, monetize through Y, timeline breakdown. Realistic plan.',
+  },
   alternates: {
     canonical: "https://unblockdevs.com/blog/how-to-make-1000-month-using-ai-if-started-today",
   },

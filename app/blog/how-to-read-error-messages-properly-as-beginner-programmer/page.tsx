@@ -24,6 +24,8 @@ export const metadata: Metadata = {
     title: 'Read Error Messages as a Beginner 2026 | UnblockDevs',
     description: 'Read error messages as a beginner. Error types, stack traces, fixing common errors.',
     type: 'article',
+    publishedTime: '2026-02-01T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-read-error-messages-properly-as-beginner-programmer',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 

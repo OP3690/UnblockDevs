@@ -20,9 +20,16 @@ export const metadata: Metadata = {
     title: 'How to Choose the Right Data Structure for a Problem (Complete Guide)',
     description: 'Learn how to choose the right data structure with decision frameworks, examples, and real-world use cases.',
     type: 'article',
+    publishedTime: '2026-02-05T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-choose-the-right-data-structure-for-a-problem',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How to Choose the Right Data Structure for a Problem (Complete Guide)',
+    description: 'Learn how to choose the right data structure with decision frameworks, examples, and real-world use cases.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/how-to-choose-the-right-data-structure-for-a-problem',

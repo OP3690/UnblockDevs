@@ -17,8 +17,15 @@ export const metadata: Metadata = {
     title: 'Apache Kafka Applications: Real-World Use Cases & Examples | UnblockDevs',
     description: 'Explore real-world Apache Kafka applications: microservices, IoT, real-time analytics, log aggregation, financial systems, and event-driven architectures with practical examples.',
     type: 'article',
+    publishedTime: '2025-01-25T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/apache-kafka-applications',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Apache Kafka Applications: Real-World Use Cases & Examples | UnblockDevs',
+    description: 'Explore real-world Apache Kafka applications: microservices, IoT, real-time analytics, log aggregation, financial systems, and event-driven architectures with practical examples.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/apache-kafka-applications' },
 };

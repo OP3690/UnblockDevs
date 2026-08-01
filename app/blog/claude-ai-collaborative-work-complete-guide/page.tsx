@@ -29,6 +29,8 @@ export const metadata: Metadata = {
     title: 'Claude AI for Collaborative Work: Complete Guide 2026',
     description: 'Learn how to use Claude AI for collaborative work and team productivity. Complete guide with features, best practices, and use cases.',
     type: 'article',
+    publishedTime: '2026-02-09T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/claude-ai-collaborative-work-complete-guide',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 

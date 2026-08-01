@@ -20,6 +20,11 @@ export const metadata: Metadata = {
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Passive Income with AI: Is It Really Possible?',
+    description: 'AI blog automation, YouTube automation, print-on-demand, affiliate marketing, and the truth about automation myths.',
+  },
   alternates: {
     canonical: "https://unblockdevs.com/blog/passive-income-with-ai-is-it-really-possible",
   },

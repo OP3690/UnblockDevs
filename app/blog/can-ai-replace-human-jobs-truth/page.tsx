@@ -25,6 +25,11 @@ export const metadata: Metadata = {
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Can AI Replace Human Jobs? The Truth No One Tells You',
+    description: 'Jobs AI is replacing vs cannot replace, future-proof skills, and what students should learn in 2026.',
+  },
   alternates: {
     canonical: "https://unblockdevs.com/blog/can-ai-replace-human-jobs-truth",
   },

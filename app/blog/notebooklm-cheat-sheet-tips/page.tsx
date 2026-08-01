@@ -26,6 +26,8 @@ export const metadata: Metadata = {
     title: 'NotebookLM Cheat Sheet: Tips, Study Guide & Effective Usage | UnblockDevs',
     description: 'NotebookLM cheat sheet: tips, shortcuts, study guide features, generate checklists. Complete quick reference.',
     type: 'article',
+    publishedTime: '2025-01-28T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/notebooklm-cheat-sheet-tips',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },

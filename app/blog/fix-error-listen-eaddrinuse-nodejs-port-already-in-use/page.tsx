@@ -25,6 +25,8 @@ export const metadata: Metadata = {
     title: 'Fix EADDRINUSE Port in Use – Node.js 2026 | UnblockDevs',
     description: 'Fix "Error: listen EADDRINUSE" in Node.js. Port conflicts, kill process, change port.',
     type: 'article',
+    publishedTime: '2026-02-01T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/fix-error-listen-eaddrinuse-nodejs-port-already-in-use',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 

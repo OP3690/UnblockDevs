@@ -21,8 +21,15 @@ export const metadata: Metadata = {
     title: 'MySQL 25 Most Used Queries: Complete Guide with Examples | UnblockDevs',
     description: 'MySQL 25 most used queries: SELECT, INSERT, UPDATE, DELETE, JOIN, WHERE, GROUP BY. Syntax, examples, best practices.',
     type: 'article',
+    publishedTime: '2025-01-30T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/mysql-25-most-used-queries',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'MySQL 25 Most Used Queries: Complete Guide with Examples | UnblockDevs',
+    description: 'MySQL 25 most used queries: SELECT, INSERT, UPDATE, DELETE, JOIN, WHERE, GROUP BY. Syntax, examples, best practices.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/mysql-25-most-used-queries' },
 };

@@ -18,8 +18,15 @@ export const metadata: Metadata = {
     title: 'How to Safely Mask Table & Column Names Before Sending Queries to AI',
     description: 'Hide database schema from AI, anonymize tables and columns, restore AI output. Client-side, reversible masking.',
     type: 'article',
+    publishedTime: '2026-02-28T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-safely-mask-table-column-names-before-sending-queries-to-ai',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How to Safely Mask Table & Column Names Before Sending Queries to AI',
+    description: 'Hide database schema from AI, anonymize tables and columns, restore AI output. Client-side, reversible masking.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/how-to-safely-mask-table-column-names-before-sending-queries-to-ai',

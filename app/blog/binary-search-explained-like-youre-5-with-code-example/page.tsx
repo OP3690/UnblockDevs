@@ -24,6 +24,8 @@ export const metadata: Metadata = {
     title: 'Binary Search Explained Like You\'re 5 | UnblockDevs',
     description: 'Binary search explained simply: diagrams, code. For interviews.',
     type: 'article',
+    publishedTime: '2026-02-02T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/binary-search-explained-like-youre-5-with-code-example',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 

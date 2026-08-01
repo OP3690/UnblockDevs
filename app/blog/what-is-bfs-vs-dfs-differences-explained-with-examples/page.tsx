@@ -24,6 +24,8 @@ export const metadata: Metadata = {
     title: 'BFS vs DFS Explained with Examples | UnblockDevs',
     description: 'BFS vs DFS: differences, examples, diagrams. For interviews.',
     type: 'article',
+    publishedTime: '2026-02-04T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/what-is-bfs-vs-dfs-differences-explained-with-examples',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 

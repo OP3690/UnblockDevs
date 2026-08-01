@@ -29,6 +29,8 @@ export const metadata: Metadata = {
     title: 'Benford\'s Law Explained: Complete Guide with Examples 2026',
     description: 'Learn what Benford\'s Law is, how it works, and why it matters. Complete guide with real-world examples and applications.',
     type: 'article',
+    publishedTime: '2026-02-09T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/benfords-law-explained-complete-guide',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 

@@ -30,7 +30,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/nintendo-switch-online-gamecube-games',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/nintendo-switch-online-gamecube-games' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'Switch Online GameCube Games Guide',
+    description: 'Switch Online GameCube games: list, how to access.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/nintendo-switch-online-gamecube-games' },
 
 };
 

@@ -24,6 +24,11 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/fix-json-errors-complete-guide',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Fix JSON Errors Complete Guide – Parse, Unexpected Token, Stringify',
+    description: 'Fix JSON parse errors, unexpected token < when API returns HTML, and JSON.stringify undefined. One complete guide with code.',
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/fix-json-errors-complete-guide' },
 };
 

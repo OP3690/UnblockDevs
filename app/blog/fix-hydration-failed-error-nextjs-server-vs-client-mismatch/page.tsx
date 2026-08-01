@@ -25,6 +25,8 @@ export const metadata: Metadata = {
     title: 'Fix Hydration Failed Error in Next.js 2026 | UnblockDevs',
     description: 'Fix "Hydration Failed" in Next.js: server vs client mismatch. Solutions and code.',
     type: 'article',
+    publishedTime: '2026-02-01T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/fix-hydration-failed-error-nextjs-server-vs-client-mismatch',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 

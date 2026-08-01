@@ -23,6 +23,11 @@ export const metadata: Metadata = {
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'What If AI Disappeared Tomorrow? | UnblockDevs',
+    description: 'AI in search, social media, banking, maps & ride apps. How much would stop without AI?',
+  },
   alternates: {
     canonical: "https://unblockdevs.com/blog/what-if-ai-disappeared-tomorrow-how-much-life-would-stop",
   },

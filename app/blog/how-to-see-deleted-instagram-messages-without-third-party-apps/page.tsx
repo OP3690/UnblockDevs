@@ -31,6 +31,11 @@ export const metadata: Metadata = {
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How to See Deleted Instagram Messages Without Third-Party Apps: Complete Guide 2026',
+    description: 'View deleted Instagram messages without third-party apps. Native methods, limitations.',
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-see-deleted-instagram-messages-without-third-party-apps' },
   robots: { index: false, follow: false },
 };

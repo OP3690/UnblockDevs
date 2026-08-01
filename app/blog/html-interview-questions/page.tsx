@@ -24,7 +24,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/html-interview-questions',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/html-interview-questions' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'HTML Interview Questions: Top 50 Questions & Answers',
+    description: 'Prepare for HTML interviews with 50+ commonly asked questions and detailed answers.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/html-interview-questions' },
 
 };
 

@@ -24,6 +24,8 @@ export const metadata: Metadata = {
     title: 'Code Works Locally but Fails on Submission | UnblockDevs',
     description: 'Learn why your code works locally but fails on submission. Complete troubleshooting guide for environment differences, dependencies, and submission platform issues.',
     type: 'article',
+    publishedTime: '2026-02-01T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/why-my-code-works-locally-but-fails-on-submission-common-reasons',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 

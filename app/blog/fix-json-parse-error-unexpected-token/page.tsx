@@ -30,7 +30,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/fix-json-parse-error-unexpected-token',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/fix-json-parse-error-unexpected-token' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'Fix: JSON Parse Error – Unexpected Token (With Examples): Complete Guide 2026',
+    description: 'Fix JSON parse unexpected token. Solutions and code.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/fix-json-parse-error-unexpected-token' },
 
 };
 

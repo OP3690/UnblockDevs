@@ -25,9 +25,16 @@ export const metadata: Metadata = {
     title: 'Sorting Algorithms Explained | UnblockDevs',
     description: 'Learn why sorting is important and understand how different sorting algorithms work with examples and comparisons.',
     type: 'article',
+    publishedTime: '2026-02-06T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/why-sorting-is-important-and-how-different-sorting-algorithms-work',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Sorting Algorithms Explained | UnblockDevs',
+    description: 'Learn why sorting is important and understand how different sorting algorithms work with examples and comparisons.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/why-sorting-is-important-and-how-different-sorting-algorithms-work',

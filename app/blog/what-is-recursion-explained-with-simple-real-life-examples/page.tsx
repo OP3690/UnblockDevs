@@ -24,6 +24,8 @@ export const metadata: Metadata = {
     title: 'Recursion Explained – Real-Life Examples | UnblockDevs',
     description: 'Recursion: examples, diagrams, code. For interviews.',
     type: 'article',
+    publishedTime: '2026-02-03T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/what-is-recursion-explained-with-simple-real-life-examples',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 

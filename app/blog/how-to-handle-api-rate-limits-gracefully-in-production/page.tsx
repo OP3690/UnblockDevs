@@ -24,9 +24,16 @@ export const metadata: Metadata = {
     title: 'Handle API Rate Limits in Production | UnblockDevs',
     description: 'Learn how to handle API rate limits with exponential backoff, retry strategies, and best practices.',
     type: 'article',
+    publishedTime: '2026-02-04T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-handle-api-rate-limits-gracefully-in-production',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Handle API Rate Limits in Production | UnblockDevs',
+    description: 'Learn how to handle API rate limits with exponential backoff, retry strategies, and best practices.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/how-to-handle-api-rate-limits-gracefully-in-production',

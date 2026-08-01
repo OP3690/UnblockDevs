@@ -28,6 +28,8 @@ export const metadata: Metadata = {
     title: 'Fix Unexpected End of JSON Input 2026 | UnblockDevs',
     description: 'Fix "Unexpected end of JSON input". Causes, solutions, code.',
     type: 'article',
+    publishedTime: '2026-01-28T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/fix-unexpected-end-of-json-input-error-explained',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 

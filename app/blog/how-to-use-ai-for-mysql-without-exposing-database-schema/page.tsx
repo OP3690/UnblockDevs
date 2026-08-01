@@ -19,9 +19,16 @@ export const metadata: Metadata = {
     title: 'How to Use AI for MySQL Without Exposing Your Database Schema',
     description: 'Anonymize MySQL schema before AI. Client-side masking, reversible. No server, no logging.',
     type: 'article',
+    publishedTime: '2026-02-28T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-use-ai-for-mysql-without-exposing-database-schema',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How to Use AI for MySQL Without Exposing Your Database Schema',
+    description: 'Anonymize MySQL schema before AI. Client-side masking, reversible. No server, no logging.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/how-to-use-ai-for-mysql-without-exposing-database-schema',

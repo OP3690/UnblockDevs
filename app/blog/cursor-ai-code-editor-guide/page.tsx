@@ -29,8 +29,15 @@ export const metadata: Metadata = {
     title: 'Cursor AI Code Editor: Complete Guide & Best Practices | UnblockDevs',
     description: 'Complete guide to Cursor AI code editor: how to use it, what it does, when to use it, and best practices. Learn Cursor shortcuts, features, and prompt techniques for maximum productivity.',
     type: 'article',
+    publishedTime: '2025-01-28T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/cursor-ai-code-editor-guide',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Cursor AI Code Editor: Complete Guide & Best Practices | UnblockDevs',
+    description: 'Complete guide to Cursor AI code editor: how to use it, what it does, when to use it, and best practices. Learn Cursor shortcuts, features, and prompt techniques for maximum productivity.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/cursor-ai-code-editor-guide' },
 };

@@ -25,6 +25,20 @@ export const metadata: Metadata = {
     'confidential computing use cases',
     'secure multi-party computation'
   ],
+  openGraph: {
+    title: 'Confidential Computing: Complete Guide',
+    description: 'Confidential Computing: TEE, secure enclaves, data protection. How it works and applications.',
+    type: 'article',
+    publishedTime: '2025-01-25T00:00:00Z',
+    authors: ['UnblockDevs'],
+    url: 'https://unblockdevs.com/blog/confidential-computing-complete-guide',
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Confidential%20Computing%3A%20Complete%20Guide&emoji=%F0%9F%93%9D&desc=Confidential%20Computing%3A%20TEE%2C%20secure%20enclaves%2C%20data%20protection.%20How%20it%20works%20and', width: 1200, height: 630, alt: 'Confidential Computing: Complete Guide — UnblockDevs Blog' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Confidential Computing: Complete Guide',
+    description: 'Confidential Computing: TEE, secure enclaves, data protection. How it works and applications.',
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/confidential-computing-complete-guide' },
 
 };

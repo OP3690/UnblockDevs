@@ -26,9 +26,16 @@ export const metadata: Metadata = {
     title: 'Depth-First Search Explained Step by Step (Complete Guide)',
     description: 'Learn Depth-First Search (DFS) algorithm step by step with simple examples, visualizations, and code examples.',
     type: 'article',
+    publishedTime: '2026-02-06T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/depth-first-search-explained-step-by-step',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Depth-First Search Explained Step by Step (Complete Guide)',
+    description: 'Learn Depth-First Search (DFS) algorithm step by step with simple examples, visualizations, and code examples.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/depth-first-search-explained-step-by-step',

@@ -24,6 +24,8 @@ export const metadata: Metadata = {
     title: 'Why process.env Variables Are Undefined in Docker (And How to Fix It) | UnblockDevs',
     description: 'Your Node.js app works locally but process.env is undefined in Docker. Here\'s exactly why and 4 ways to fix it.',
     type: 'article',
+    publishedTime: '2026-03-01T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/process-env-undefined-docker-nodejs-fix',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },

@@ -25,6 +25,8 @@ export const metadata: Metadata = {
     title: 'Convert cURL to Fetch / Axios 2026 | UnblockDevs',
     description: 'Convert cURL to Fetch and Axios. Tools and code examples.',
     type: 'article',
+    publishedTime: '2026-01-28T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-convert-curl-to-fetch-axios-automatically',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 

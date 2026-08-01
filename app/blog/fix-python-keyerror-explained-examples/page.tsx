@@ -35,7 +35,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/fix-python-keyerror-explained-examples',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/fix-python-keyerror-explained-examples' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'Fix: Python KeyError Explained with Examples: Complete Guide 2026',
+    description: 'Fix Python KeyError: causes, solutions, code examples.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/fix-python-keyerror-explained-examples' },
 
 };
 

@@ -40,8 +40,15 @@ export const metadata: Metadata = {
     title: 'Git Commands Cheat Sheet: Most Useful Commands, Tips & Tricks | UnblockDevs',
     description: 'Git commands cheat sheet: useful commands, tips, tricks. Essential Git for daily dev and productivity.',
     type: 'article',
+    publishedTime: '2026-02-01T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/git-commands-cheat-sheet-tips-tricks',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Git Commands Cheat Sheet: Most Useful Commands, Tips & Tricks | UnblockDevs',
+    description: 'Git commands cheat sheet: useful commands, tips, tricks. Essential Git for daily dev and productivity.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/git-commands-cheat-sheet-tips-tricks' },
 };

@@ -26,9 +26,16 @@ export const metadata: Metadata = {
     title: 'Feature Engineering in Machine Learning | UnblockDevs',
     description: 'Learn what feature engineering is in machine learning. Understand feature selection, transformation, and why it\'s crucial for model performance.',
     type: 'article',
+    publishedTime: '2026-02-07T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/what-is-feature-engineering-and-why-it-is-important-in-machine-learning',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Feature Engineering in Machine Learning | UnblockDevs',
+    description: "Learn what feature engineering is in machine learning. Understand feature selection, transformation, and why it's crucial for model performance.",
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/what-is-feature-engineering-and-why-it-is-important-in-machine-learning',

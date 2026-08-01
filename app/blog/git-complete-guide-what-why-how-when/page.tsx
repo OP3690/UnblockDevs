@@ -45,8 +45,15 @@ export const metadata: Metadata = {
     title: 'Git Complete Guide: What, Why, How & When | UnblockDevs',
     description: 'Git version control: what it is, why use it, how it works. Fundamentals, workflow, branching, collaboration. Best practices.',
     type: 'article',
+    publishedTime: '2026-02-01T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/git-complete-guide-what-why-how-when',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Git Complete Guide: What, Why, How & When | UnblockDevs',
+    description: 'Git version control: what it is, why use it, how it works. Fundamentals, workflow, branching, collaboration. Best practices.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/git-complete-guide-what-why-how-when' },
 };

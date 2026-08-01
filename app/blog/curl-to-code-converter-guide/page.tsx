@@ -26,7 +26,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/curl-to-code-converter-guide',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/curl-to-code-converter-guide' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'Curl to Code Converter: From Command Line to Code',
+    description: 'Transform cURL to code: JavaScript, Python, Java.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/curl-to-code-converter-guide' },
 
 };
 

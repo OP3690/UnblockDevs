@@ -25,6 +25,8 @@ export const metadata: Metadata = {
     title: 'Why My API Returns 200 OK but Data Is Empty | Complete Guide 2026',
     description: 'API returns 200 OK but empty data? Troubleshoot empty responses, null data. Solutions and tips.',
     type: 'article',
+    publishedTime: '2026-01-30T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/why-my-api-returns-200-ok-but-data-is-empty',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 

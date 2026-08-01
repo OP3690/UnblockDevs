@@ -25,9 +25,16 @@ export const metadata: Metadata = {
     title: 'What Is a Data Pipeline? Explained for Beginners (Complete Guide)',
     description: 'Learn what a data pipeline is with simple examples. Understand ETL, data processing, and how data pipelines work.',
     type: 'article',
+    publishedTime: '2026-02-07T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/what-is-a-data-pipeline-explained-for-beginners',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'What Is a Data Pipeline? Explained for Beginners (Complete Guide)',
+    description: 'Learn what a data pipeline is with simple examples. Understand ETL, data processing, and how data pipelines work.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/what-is-a-data-pipeline-explained-for-beginners',

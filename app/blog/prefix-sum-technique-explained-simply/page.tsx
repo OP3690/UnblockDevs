@@ -24,6 +24,8 @@ export const metadata: Metadata = {
     title: 'Prefix Sum Technique Explained Simply | Complete Guide 2026',
     description: 'Prefix sum technique: simple examples, diagrams, code. For interviews.',
     type: 'article',
+    publishedTime: '2026-02-05T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/prefix-sum-technique-explained-simply',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 

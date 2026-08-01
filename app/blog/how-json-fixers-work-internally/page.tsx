@@ -13,6 +13,20 @@ export const metadata: Metadata = {
     'resolve json errors',
     'json tokenization',
   ],
+  openGraph: {
+    title: 'How JSON Fixers Work Internally',
+    description: 'How JSON fixers work: tokenization, error recovery, trailing comma and quote fixes. Fix AI JSON.',
+    type: 'article',
+    publishedTime: '2025-01-15T00:00:00Z',
+    authors: ['UnblockDevs'],
+    url: 'https://unblockdevs.com/blog/how-json-fixers-work-internally',
+    images: [{ url: 'https://unblockdevs.com/api/og?title=How%20JSON%20Fixers%20Work%20Internally&emoji=%F0%9F%93%9D&desc=How%20JSON%20fixers%20work%3A%20tokenization%2C%20error%20recovery%2C%20trailing%20comma%20and%20quote%20fix', width: 1200, height: 630, alt: 'How JSON Fixers Work Internally — UnblockDevs Blog' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How JSON Fixers Work Internally',
+    description: 'How JSON fixers work: tokenization, error recovery, trailing comma and quote fixes. Fix AI JSON.',
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-json-fixers-work-internally' },
 
 };

@@ -23,6 +23,11 @@ export const metadata: Metadata = {
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Can AI Fall in Love? Understanding AI Emotions',
+    description: 'Can AI feel emotions? Emotional AI, sentiment analysis, AI companions, and ethical concerns.',
+  },
   alternates: {
     canonical: "https://unblockdevs.com/blog/can-ai-fall-in-love-understanding-ai-emotions",
   },

@@ -39,6 +39,8 @@ export const metadata: Metadata = {
     title: 'Chrome DevTools Copy as cURL: How to Export Network Requests | UnblockDevs',
     description: 'Step-by-step guide to copy any Chrome DevTools network request as a cURL command for debugging and API testing.',
     type: 'article',
+    publishedTime: '2025-01-15T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-get-curl-from-chrome',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },

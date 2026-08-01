@@ -24,6 +24,8 @@ export const metadata: Metadata = {
     title: 'Time Complexity Explained – Simple Examples | UnblockDevs',
     description: 'Time complexity: Big O with examples and graphs. For interviews.',
     type: 'article',
+    publishedTime: '2026-02-02T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/what-is-time-complexity-explained-with-simple-examples',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 

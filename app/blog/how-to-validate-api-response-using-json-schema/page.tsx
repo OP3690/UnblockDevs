@@ -25,6 +25,8 @@ export const metadata: Metadata = {
     title: 'How to Validate API Response Using JSON Schema | Complete Guide 2026',
     description: 'Validate API responses with JSON Schema. JS, Python, Node. Code examples.',
     type: 'article',
+    publishedTime: '2026-01-29T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-validate-api-response-using-json-schema',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 

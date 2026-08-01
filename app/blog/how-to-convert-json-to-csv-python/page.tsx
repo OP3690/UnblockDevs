@@ -25,6 +25,8 @@ export const metadata: Metadata = {
     title: 'How to Convert JSON to CSV in Python | Complete Guide 2026',
     description: 'Learn how to convert JSON to CSV in Python with examples for nested JSON and arrays.',
     type: 'article',
+    publishedTime: '2026-01-26T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-convert-json-to-csv-python',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 

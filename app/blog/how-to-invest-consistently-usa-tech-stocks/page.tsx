@@ -31,6 +31,11 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/how-to-invest-consistently-usa-tech-stocks',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Invest Consistently in USA Tech Stocks 2026 | UnblockDevs',
+    description: 'Consistent investing in USA tech stocks: DCA, long-term strategy, allocation, automation, tax strategies. Build wealth systematically.',
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-invest-consistently-usa-tech-stocks' },
   robots: { index: false, follow: false },
 };

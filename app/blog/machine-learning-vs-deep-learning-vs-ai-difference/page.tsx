@@ -26,6 +26,11 @@ export const metadata: Metadata = {
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Machine Learning vs Deep Learning vs AI: What',
+    description: 'Simple definitions, comparison table, when to use each, and real-world use cases for AI, ML, and DL.',
+  },
   alternates: {
     canonical: "https://unblockdevs.com/blog/machine-learning-vs-deep-learning-vs-ai-difference",
   },

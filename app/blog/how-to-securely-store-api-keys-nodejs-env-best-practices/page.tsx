@@ -25,6 +25,8 @@ export const metadata: Metadata = {
     title: 'How to Securely Store API Keys in Node.js (2026) | UnblockDevs',
     description: 'Stop hardcoding API keys. Learn the secure way to store secrets in Node.js using .env files, environment variables, secret managers, and what never to do.',
     type: 'article',
+    publishedTime: '2026-03-10T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-securely-store-api-keys-nodejs-env-best-practices',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },

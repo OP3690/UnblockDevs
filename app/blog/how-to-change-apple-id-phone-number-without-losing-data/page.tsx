@@ -30,7 +30,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/how-to-change-apple-id-phone-number-without-losing-data',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-change-apple-id-phone-number-without-losing-data' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'How to Change Apple ID Phone Number Without Losing Data: Complete Guide 2026',
+    description: 'Change Apple ID phone number without losing data. Step-by-step for all devices.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-change-apple-id-phone-number-without-losing-data' },
 
 };
 

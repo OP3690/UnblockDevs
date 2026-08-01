@@ -30,7 +30,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/how-to-cancel-spotify-premium-and-get-refund',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-cancel-spotify-premium-and-get-refund' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'How to Cancel Spotify Premium and Get Refund (If Eligible): Complete Guide 2026',
+    description: 'Cancel Spotify Premium and get refund. Step-by-step for all devices.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-cancel-spotify-premium-and-get-refund' },
 
 };
 

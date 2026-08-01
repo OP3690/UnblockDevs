@@ -30,7 +30,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/how-to-convert-curl-command-to-javascript-fetch',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-convert-curl-command-to-javascript-fetch' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'How to Convert cURL Command to JavaScript Fetch: Complete Guide 2026',
+    description: 'Convert cURL to JavaScript fetch. Practical examples.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-convert-curl-command-to-javascript-fetch' },
 
 };
 

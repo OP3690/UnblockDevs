@@ -29,9 +29,16 @@ export const metadata: Metadata = {
     title: 'HTTP Status Codes Every Developer Should Know | UnblockDevs',
     description: 'Learn all HTTP status codes: 200, 400, 404, 500. Understand what each code means and when to use them.',
     type: 'article',
+    publishedTime: '2026-02-04T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/common-http-status-codes-every-developer-should-understand',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'HTTP Status Codes Every Developer Should Know | UnblockDevs',
+    description: 'Learn all HTTP status codes: 200, 400, 404, 500. Understand what each code means and when to use them.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/common-http-status-codes-every-developer-should-understand',

@@ -26,7 +26,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/json-schema-generator-validation-guide',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/json-schema-generator-validation-guide' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'JSON Schema Generator and Validation: Complete Guide',
+    description: 'Learn how to generate JSON schemas automatically and validate JSON data against schemas.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/json-schema-generator-validation-guide' },
 
 };
 

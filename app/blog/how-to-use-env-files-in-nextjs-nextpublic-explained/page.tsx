@@ -25,6 +25,8 @@ export const metadata: Metadata = {
     title: 'How to Use .env Files in Next.js (NEXT_PUBLIC_ and Server Variables Explained)',
     description: 'Complete guide to .env files in Next.js — NEXT_PUBLIC_ prefix, .env.local, server vs client env vars.',
     type: 'article',
+    publishedTime: '2026-03-12T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-use-env-files-in-nextjs-nextpublic-explained',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
   },

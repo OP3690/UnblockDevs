@@ -13,6 +13,20 @@ export const metadata: Metadata = {
     'kafka topics partitions',
     'distributed messaging'
   ],
+  openGraph: {
+    title: 'Apache Kafka: Complete Guide - What, How, Why',
+    description: 'Apache Kafka: architecture, event streaming, topics, partitions, producers/consumers. How it works, best practices.',
+    type: 'article',
+    publishedTime: '2025-01-25T00:00:00Z',
+    authors: ['UnblockDevs'],
+    url: 'https://unblockdevs.com/blog/apache-kafka-complete-guide',
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Apache%20Kafka%3A%20Complete%20Guide%20-%20What%2C%20How%2C%20Why&emoji=%F0%9F%93%9D&desc=Apache%20Kafka%3A%20architecture%2C%20event%20streaming%2C%20topics%2C%20partitions%2C%20producers%2Fconsu', width: 1200, height: 630, alt: 'Apache Kafka: Complete Guide - What, How, Why — UnblockDevs Blog' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Apache Kafka: Complete Guide - What, How, Why',
+    description: 'Apache Kafka: architecture, event streaming, topics, partitions, producers/consumers. How it works, best practices.',
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/apache-kafka-complete-guide' },
 
 };

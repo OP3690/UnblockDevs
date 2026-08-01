@@ -32,6 +32,8 @@ export const metadata: Metadata = {
     title: 'Why process.env Is Undefined in Node.js – Fix | UnblockDevs',
     description: 'Why process.env undefined in Node.js. dotenv, .env, fix and troubleshoot.',
     type: 'article',
+    publishedTime: '2026-02-01T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/why-process-env-is-undefined-nodejs-and-how-to-fix-it',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 

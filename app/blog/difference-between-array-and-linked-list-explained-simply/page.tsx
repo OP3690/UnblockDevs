@@ -20,9 +20,16 @@ export const metadata: Metadata = {
     title: 'Array vs Linked List Explained | UnblockDevs',
     description: 'Learn the difference between arrays and linked lists with simple examples. Understand when to use each data structure.',
     type: 'article',
+    publishedTime: '2026-02-05T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/difference-between-array-and-linked-list-explained-simply',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Array vs Linked List Explained | UnblockDevs',
+    description: 'Learn the difference between arrays and linked lists with simple examples. Understand when to use each data structure.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/difference-between-array-and-linked-list-explained-simply',

@@ -24,6 +24,8 @@ export const metadata: Metadata = {
     title: 'Debug Code Step by Step (Beginner Guide) | UnblockDevs',
     description: 'Learn how to debug code step by step as a beginner. Complete guide to debugging techniques, tools, and strategies for finding and fixing bugs.',
     type: 'article',
+    publishedTime: '2026-02-01T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-debug-code-step-by-step-beginner-friendly-guide',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 

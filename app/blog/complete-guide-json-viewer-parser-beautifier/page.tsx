@@ -33,7 +33,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/complete-guide-json-viewer-parser-beautifier',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/complete-guide-json-viewer-parser-beautifier' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'Complete Guide to JSON Viewer, Parser, and Beautifier Tools',
+    description: 'JSON Viewer, Parser, Beautifier: visualize, parse, format JSON.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/complete-guide-json-viewer-parser-beautifier' },
 
 };
 

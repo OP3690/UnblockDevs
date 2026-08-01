@@ -23,6 +23,11 @@ export const metadata: Metadata = {
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How AI Makes Money (And Who Is Getting Rich From It?)',
+    description: 'AI startups, AI SaaS, big tech profits, and how individuals can monetize AI.',
+  },
   alternates: {
     canonical: "https://unblockdevs.com/blog/how-ai-makes-money-who-getting-rich",
   },

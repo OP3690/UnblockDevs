@@ -27,6 +27,11 @@ export const metadata: Metadata = {
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'JSON to Excel Converter: Best Practices and Use Cases',
+    description: 'Master the art of converting JSON data to Excel format. Learn best practices, common pitfalls, and real-world use cases.',
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/json-to-excel-converter-best-practices' },
 };
 

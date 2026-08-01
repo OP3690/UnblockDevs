@@ -34,6 +34,8 @@ export const metadata: Metadata = {
     title: 'How to Post JSON Data Using cURL: Complete Guide 2026',
     description: 'Learn how to post JSON data using cURL with complete examples. Step-by-step guide for POST requests with JSON payloads.',
     type: 'article',
+    publishedTime: '2026-02-10T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-post-json-data-using-curl-complete-guide',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 

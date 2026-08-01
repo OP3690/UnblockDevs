@@ -38,7 +38,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/how-to-change-phone-number-telegram-without-notifying',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-change-phone-number-telegram-without-notifying' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'How to Change Phone Number in Telegram Without Notifying Contacts: Complete Guide 2026',
+    description: 'Change Telegram number without notifying contacts. Step-by-step for all devices.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-change-phone-number-telegram-without-notifying' },
 
 };
 

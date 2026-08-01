@@ -24,6 +24,8 @@ export const metadata: Metadata = {
     title: 'Two Pointer Technique Explained | UnblockDevs',
     description: 'Two pointer technique: examples, diagrams, code. For interviews.',
     type: 'article',
+    publishedTime: '2026-02-03T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/what-is-two-pointer-technique-explained-for-beginners',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 

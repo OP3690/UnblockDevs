@@ -25,6 +25,8 @@ export const metadata: Metadata = {
     title: 'How to Read JSON File in Python (3 Ways) | Complete Guide 2026',
     description: '3 ways to read JSON in Python. Examples and error handling.',
     type: 'article',
+    publishedTime: '2026-01-26T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-read-json-file-python-3-ways',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 

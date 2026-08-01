@@ -30,6 +30,8 @@ export const metadata: Metadata = {
     title: 'Fix Access-Control-Allow-Origin Missing 2026 | UnblockDevs',
     description: 'Fix Access-Control-Allow-Origin missing. CORS and server-side fixes.',
     type: 'article',
+    publishedTime: '2026-01-27T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/fix-access-control-allow-origin-missing-header-error',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 

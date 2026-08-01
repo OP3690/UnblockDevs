@@ -17,10 +17,17 @@ export const metadata: Metadata = {
     title: 'JSON Schema Generator Tutorial: Create Schemas from JSON',
     description: 'Generate and validate JSON Schema. Step-by-step with examples.',
     type: 'article',
+    publishedTime: '2025-01-15T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/json-schema-generator-tutorial',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/json-schema-generator-tutorial' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'JSON Schema Generator Tutorial: Create Schemas from JSON',
+    description: 'Generate and validate JSON Schema. Step-by-step with examples.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/json-schema-generator-tutorial' },
 
 };
 

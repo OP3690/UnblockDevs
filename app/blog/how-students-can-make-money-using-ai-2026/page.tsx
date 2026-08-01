@@ -21,6 +21,11 @@ export const metadata: Metadata = {
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How Students Can Make Money Using AI in 2026',
+    description: 'AI assignment help, freelancing, selling notes, YouTube shorts, small AI tools. Step-by-step.',
+  },
   alternates: {
     canonical: "https://unblockdevs.com/blog/how-students-can-make-money-using-ai-2026",
   },

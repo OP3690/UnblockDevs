@@ -26,6 +26,18 @@ export const metadata: Metadata = {
     'game pass best games 2026',
     'xbox game pass guide'
   ],
+  openGraph: {
+    title: 'Xbox Game Pass Games – Guide',
+    description: "Xbox Game Pass: best games, tiers, value. What's included, how to get most value. Must-play list.",
+    type: 'article',
+    url: 'https://unblockdevs.com/blog/xbox-game-pass-games-complete-guide',
+    images: [{ url: "https://unblockdevs.com/api/og?title=Xbox%20Game%20Pass%20Games%20%E2%80%93%20Guide&emoji=%F0%9F%93%9D&desc=Xbox%20Game%20Pass%3A%20best%20games%2C%20tiers%2C%20value.%20What's%20included%2C%20how%20to%20get%20most%20valu", width: 1200, height: 630, alt: 'Xbox Game Pass Games – Guide — UnblockDevs Blog' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Xbox Game Pass Games – Guide',
+    description: "Xbox Game Pass: best games, tiers, value. What's included, how to get most value. Must-play list.",
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/xbox-game-pass-games-complete-guide' },
 
 };

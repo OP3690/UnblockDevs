@@ -41,6 +41,11 @@ export const metadata: Metadata = {
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How to Hide Online Status on WhatsApp: Complete Guide 2026',
+    description: 'Hide online status on WhatsApp. Appear offline, control privacy.',
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-hide-online-status-on-whatsapp' },
 };
 

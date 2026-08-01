@@ -25,6 +25,11 @@ export const metadata: Metadata = {
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How ChatGPT and Generative AI Models Work (Behind the Scenes)',
+    description: 'What is an LLM, training data, tokens and probability prediction, and why AI sometimes makes mistakes.',
+  },
   alternates: {
     canonical: "https://unblockdevs.com/blog/how-chatgpt-generative-ai-models-work",
   },

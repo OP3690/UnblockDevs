@@ -26,6 +26,20 @@ export const metadata: Metadata = {
     'ai-powered vehicles',
     'autonomous vehicle sensors ai'
   ],
+  openGraph: {
+    title: 'Physical AI in Autonomous Vehicles 2026',
+    description: 'Physical AI in self-driving cars: sensor fusion, perception, planning, control. What it is, how it works.',
+    type: 'article',
+    publishedTime: '2026-02-05T00:00:00Z',
+    authors: ['UnblockDevs'],
+    url: 'https://unblockdevs.com/blog/physical-ai-autonomous-vehicles-complete-guide',
+    images: [{ url: 'https://unblockdevs.com/api/og?title=Physical%20AI%20in%20Autonomous%20Vehicles%202026&emoji=%F0%9F%93%9D&desc=Physical%20AI%20in%20self-driving%20cars%3A%20sensor%20fusion%2C%20perception%2C%20planning%2C%20control.', width: 1200, height: 630, alt: 'Physical AI in Autonomous Vehicles 2026 — UnblockDevs Blog' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Physical AI in Autonomous Vehicles 2026',
+    description: 'Physical AI in self-driving cars: sensor fusion, perception, planning, control. What it is, how it works.',
+  },
   alternates: { canonical: 'https://unblockdevs.com/blog/physical-ai-autonomous-vehicles-complete-guide' },
 
 };

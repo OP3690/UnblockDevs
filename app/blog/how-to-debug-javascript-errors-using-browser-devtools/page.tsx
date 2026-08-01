@@ -25,9 +25,16 @@ export const metadata: Metadata = {
     title: 'How to Debug JavaScript Errors Using Browser DevTools (Complete Guide)',
     description: 'Master JavaScript debugging with browser DevTools. Learn to fix errors, use breakpoints, and debug production issues.',
     type: 'article',
+    publishedTime: '2026-02-04T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/how-to-debug-javascript-errors-using-browser-devtools',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How to Debug JavaScript Errors Using Browser DevTools (Complete Guide)',
+    description: 'Master JavaScript debugging with browser DevTools. Learn to fix errors, use breakpoints, and debug production issues.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/how-to-debug-javascript-errors-using-browser-devtools',

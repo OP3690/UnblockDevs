@@ -31,7 +31,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/html-tags-explained-guide',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/html-tags-explained-guide' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'HTML Tags Explained: Must‑Do Practices, Hidden Facts & Pro Tips',
+    description: 'HTML tags guide: essentials, best practices, pro tips. Interactive simulator included.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/html-tags-explained-guide' },
 
 };
 

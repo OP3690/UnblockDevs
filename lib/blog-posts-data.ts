@@ -1529,5 +1529,113 @@ export const blogPosts: BlogPost[] = [
     readTime: '5 min read',
     category: 'API Tools',
     keywords: ['curl converter', 'API requests', 'code generation', 'HTTP client']
+  },
+  {
+    slug: 'why-ai-generated-json-is-always-broken',
+    title: 'Why AI-Generated JSON Is Always Broken — and How to Fix Every Error',
+    excerpt: 'ChatGPT, Claude, and Gemini consistently produce invalid JSON. Learn exactly why AI models break JSON, the 8 patterns they get wrong, and how to auto-fix every error.',
+    date: '2026-05-10',
+    readTime: '10 min read',
+    category: 'AI & Development',
+    keywords: ['ai generated json broken', 'chatgpt json errors', 'llm json output invalid', 'fix ai json errors', 'ai json auto fix', 'json from chatgpt fix']
+  },
+  {
+    slug: 'hidden-json-errors-that-silently-break-apps',
+    title: 'Hidden JSON Errors That Silently Break Your App — Duplicate Keys, BOM, Precision Loss',
+    excerpt: 'The sneaky JSON bugs that never throw exceptions but corrupt your data: duplicate keys, BOM characters, number precision loss, deep nesting, and control characters explained.',
+    date: '2026-05-10',
+    readTime: '10 min read',
+    category: 'JSON & APIs',
+    keywords: ['hidden json errors', 'json duplicate keys', 'bom character json', 'json number precision loss', 'silent json bugs', 'json control characters']
+  },
+  {
+    slug: 'json-parse-stringify-complete-guide',
+    title: 'JSON.parse() and JSON.stringify() — The Complete Developer Guide',
+    excerpt: 'Master JSON.parse() and JSON.stringify() in JavaScript. Covers every option, replacer, reviver, error handling, edge cases, performance, and TypeScript-safe patterns.',
+    date: '2026-05-10',
+    readTime: '12 min read',
+    category: 'JSON & APIs',
+    keywords: ['JSON.parse complete guide', 'JSON.stringify options', 'json parse replacer reviver', 'json stringify indent', 'json parse error handling javascript', 'json parse typescript']
+  },
+  {
+    slug: 'jwt-json-web-tokens-complete-guide-2026',
+    title: 'JWT (JSON Web Tokens) Complete Guide 2026: Authentication Explained from Scratch',
+    excerpt: 'Master JSON Web Tokens in 2026: JWT anatomy, sign & verify in Node.js, refresh token rotation, HS256 vs RS256, React auto-refresh hook, and the 5 JWT security traps that get apps compromised.',
+    date: '2026-05-15',
+    readTime: '15 min read',
+    category: 'Node.js & Backend',
+    keywords: ['what is jwt', 'json web token tutorial 2026', 'jwt authentication javascript', 'jwt decode', 'jwt vs session cookies', 'jwt nodejs', 'jwt refresh token', 'jwt security', 'hs256 vs rs256']
+  },
+  {
+    slug: 'api-rate-limiting-complete-guide-2026',
+    title: 'API Rate Limiting Complete Guide 2026: Algorithms, Redis Implementation & 429 Handling',
+    excerpt: 'Master API rate limiting in 2026: token bucket vs sliding window vs fixed window algorithms, Node.js + Redis implementation, standard rate limit headers, and exponential backoff for 429 errors.',
+    date: '2026-05-15',
+    readTime: '15 min read',
+    category: 'Node.js & Backend',
+    keywords: ['api rate limiting 2026', 'rate limiting algorithms', 'token bucket algorithm', 'sliding window rate limiting', 'redis rate limiting nodejs', '429 too many requests', 'exponential backoff retry']
+  },
+  {
+    slug: 'oauth2-complete-guide-2026',
+    title: 'OAuth 2.0 Complete Guide 2026: Authorization Code, PKCE, Client Credentials Explained',
+    excerpt: 'Master OAuth 2.0 in 2026: what it is, all 4 grant types, full Authorization Code + PKCE flow with Node.js code, client credentials for APIs, token refresh, and how OAuth differs from JWT and API keys.',
+    date: '2026-05-15',
+    readTime: '15 min read',
+    category: 'Node.js & Backend',
+    keywords: ['oauth 2.0 guide 2026', 'authorization code flow', 'pkce oauth', 'oauth client credentials', 'oauth vs jwt', 'token refresh oauth', 'oauth nodejs']
+  },
+  {
+    slug: 'rest-api-json-design-best-practices-2026',
+    title: 'REST API JSON Design Best Practices 2026: 8 Rules Every Developer Must Follow',
+    excerpt: 'Build APIs developers love. The 8 REST API JSON design rules covering response envelopes, error format, status codes, pagination, ISO dates, versioning, and naming conventions — with real code.',
+    date: '2026-05-15',
+    readTime: '12 min read',
+    category: 'JSON & APIs',
+    keywords: ['rest api json design', 'api response format best practices', 'api error format json', 'api pagination json', 'api versioning 2026', 'rest api best practices 2026']
+  },
+  {
+    slug: 'json-in-databases-postgresql-jsonb-mysql-mongodb',
+    title: 'JSON in Databases 2026: PostgreSQL JSONB vs MySQL JSON vs MongoDB Complete Guide',
+    excerpt: 'Store, query, and index JSON in PostgreSQL JSONB, MySQL JSON columns, and MongoDB. When to use JSON columns vs normalized tables, GIN indexing, aggregation pipelines, and a full decision framework.',
+    date: '2026-05-15',
+    readTime: '14 min read',
+    category: 'JSON & APIs',
+    keywords: ['postgresql jsonb guide', 'mysql json columns', 'mongodb json documents', 'json in databases 2026', 'jsonb vs mysql json', 'gin index postgresql json']
+  },
+  {
+    slug: 'json-lines-ndjson-streaming-format-guide',
+    title: 'JSON Lines & NDJSON: The Streaming Format Powering Every AI API in 2026',
+    excerpt: 'NDJSON powers OpenAI, Anthropic, and Gemini streaming APIs. Learn JSON Lines format, how to parse streaming LLM responses, build real-time AI UIs, and process massive datasets.',
+    date: '2026-05-15',
+    readTime: '12 min read',
+    category: 'JSON & APIs',
+    keywords: ['json lines format', 'ndjson streaming', 'openai streaming api parse', 'parse ndjson nodejs', 'json lines vs json', 'streaming json llm']
+  },
+  {
+    slug: 'json-prompt-injection-ai-security-guide',
+    title: 'JSON Prompt Injection: How Attackers Manipulate AI Apps Through JSON Data',
+    excerpt: 'JSON prompt injection attacks let hackers hijack your AI app through user-supplied JSON data. Learn how every attack vector works and build a complete defense layer.',
+    date: '2026-05-15',
+    readTime: '12 min read',
+    category: 'Security & AI',
+    keywords: ['json prompt injection', 'ai prompt injection attack', 'prompt injection json data', 'ai security json', 'llm prompt injection defense', 'ai app security']
+  },
+  {
+    slug: 'llm-structured-json-outputs-complete-guide-2026',
+    title: 'LLM Structured JSON Outputs in 2026: OpenAI, Anthropic & Gemini Complete Guide',
+    excerpt: 'Master structured JSON outputs for every major LLM: OpenAI function calling, Anthropic tool use, Gemini response schemas, and open-source alternatives. Full code, benchmarks, and decision guide.',
+    date: '2026-05-15',
+    readTime: '14 min read',
+    category: 'AI & Development',
+    keywords: ['llm structured json output', 'openai function calling 2026', 'anthropic tool use json', 'gemini response schema', 'structured output llm', 'json mode openai']
+  },
+  {
+    slug: 'websocket-sse-long-polling-realtime-json-2026',
+    title: 'WebSocket vs SSE vs Long Polling: Real-Time JSON Guide 2026',
+    excerpt: 'WebSocket vs Server-Sent Events vs Long Polling — every difference explained with Node.js implementation code, React hooks, performance benchmarks, and a clear decision framework for real-time JSON in 2026.',
+    date: '2026-05-15',
+    readTime: '14 min read',
+    category: 'Node.js & Backend',
+    keywords: ['websocket vs sse 2026', 'server-sent events nodejs', 'long polling vs websocket', 'real-time json nodejs', 'websocket nodejs implementation', 'sse react hook']
   }
 ];

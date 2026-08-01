@@ -40,7 +40,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/stringified-json-hell-unescape-decode-jwt-epoch-sanitize-logs',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/stringified-json-hell-unescape-decode-jwt-epoch-sanitize-logs' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'Stringified JSON Hell: Unescape, Decode JWTs, Convert Epoch & Sanitize Logs in Seconds',
+    description: 'Get out of stringified JSON hell—unescape, decode JWTs, convert epoch, and sanitize logs in one go.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/stringified-json-hell-unescape-decode-jwt-epoch-sanitize-logs' },
 
 };
 

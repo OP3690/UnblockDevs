@@ -36,7 +36,12 @@ export const metadata: Metadata = {
     url: 'https://unblockdevs.com/blog/how-to-decode-stringified-nested-json-logs-without-5-tools',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
-  },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-decode-stringified-nested-json-logs-without-5-tools' },
+  },  twitter: {
+    card: 'summary_large_image',
+    title: 'How to Decode Stringified Nested JSON Logs Without 5 Different Tools',
+    description: 'Decode and parse stringified nested JSON logs in one place. No more juggling unescapers, jwt.io, and epoch converters.',
+  },
+  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-decode-stringified-nested-json-logs-without-5-tools' },
 
 };
 

@@ -24,6 +24,8 @@ export const metadata: Metadata = {
     title: 'HashMap / HashTable Explained – Examples | UnblockDevs',
     description: 'HashMap and HashTable: simple examples, diagrams, code. For interviews.',
     type: 'article',
+    publishedTime: '2026-02-03T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/what-is-hashmap-hashtable-explained-simply-with-examples',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 

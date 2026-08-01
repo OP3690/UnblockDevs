@@ -22,9 +22,16 @@ export const metadata: Metadata = {
     title: 'Data Quality Issues & How Engineers Fix Them | UnblockDevs',
     description: 'Learn common data quality issues and how data engineers identify, fix, and prevent data quality problems.',
     type: 'article',
+    publishedTime: '2026-02-08T00:00:00Z',
+    authors: ['UnblockDevs'],
     url: 'https://unblockdevs.com/blog/common-data-quality-issues-and-how-data-engineers-fix-them',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Data Quality Issues & How Engineers Fix Them | UnblockDevs',
+    description: 'Learn common data quality issues and how data engineers identify, fix, and prevent data quality problems.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/common-data-quality-issues-and-how-data-engineers-fix-them',

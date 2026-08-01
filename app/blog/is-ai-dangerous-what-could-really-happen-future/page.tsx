@@ -25,6 +25,11 @@ export const metadata: Metadata = {
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UnblockDevs - Free Developer Tools Suite' }],
 
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Is AI Dangerous? What Could Really Happen in the Future',
+    description: 'AI risks (misinformation, deepfakes), myths vs reality, regulation, and should we be worried?',
+  },
   alternates: {
     canonical: "https://unblockdevs.com/blog/is-ai-dangerous-what-could-really-happen-future",
   },
