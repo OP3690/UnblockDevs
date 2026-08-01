@@ -2,23 +2,26 @@ import type { Metadata } from 'next';
 import AboutClient from './client';
 
 export const metadata: Metadata = {
-  title: 'About UnblockDevs – AI-Safe Tools, Client-Side JSON & SQL | UnblockDevs',
+  title: 'About UnblockDevs — Free Browser-Based Developer Tools | UnblockDevs',
   description:
-    'AI-safe developer tools: JSON Shield, SQL schema masking, 19+ utilities. 100% client-side—no server storage, no signup. Mask before ChatGPT, restore locally.',
+    'UnblockDevs is a free suite of 19+ browser-based developer tools — JSON formatter, CORS tester, SQL formatter, JWT decoder, and more. 100% client-side: your data never leaves your browser. No signup, no account, free forever. Built by developers, for developers since 2024.',
   keywords: [
     'about unblockdevs',
-    'AI safe developer tools',
-    'JSON masking',
-    'SQL schema masker',
-    'client-side tools',
-    'data privacy developers',
     'free developer tools',
-    'json tools',
+    'browser-based developer tools',
+    'client-side tools',
+    'json tools online',
+    'cors tester',
+    'sql formatter online',
+    'jwt decoder',
+    'data privacy developers',
+    'no signup developer tools',
+    'free online developer utilities',
   ],
   openGraph: {
-    title: 'About UnblockDevs | UnblockDevs',
+    title: 'About UnblockDevs — Free Browser-Based Developer Tools',
     description:
-      'AI-safe, client-side tools for JSON and SQL. Data masking, no uploads, compliance-friendly—free forever, no signup.',
+      'UnblockDevs offers 19+ free developer tools that run entirely in your browser. JSON, CORS, SQL, JWT, and more — no signup, no data sent to servers, free forever.',
     type: 'website',
     url: 'https://unblockdevs.com/about',
     siteName: 'UnblockDevs',
@@ -26,9 +29,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'About UnblockDevs | UnblockDevs',
+    title: 'About UnblockDevs — Free Browser-Based Developer Tools',
     description:
-      'AI-safe JSON & SQL tools—client-side only, reversible masking, no signup.',
+      '19+ free developer tools: JSON, CORS, SQL, JWT and more. 100% in-browser — no signup, no data transmitted, free forever.',
   },
   alternates: { canonical: 'https://unblockdevs.com/about' },
 };

@@ -551,6 +551,7 @@ export default function AboutClient() {
                 <span className="text-gray-300">•</span>
                 <Link href="/disclaimer" className="text-blue-600 hover:underline text-sm">Disclaimer</Link>
               </div>
+              <p className="mt-4 text-xs text-gray-400">Last updated: May 2026</p>
             </div>
           </section>
         </article>

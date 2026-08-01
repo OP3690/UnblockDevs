@@ -123,6 +123,34 @@ input, select, textarea {
   contain: layout;
 }
 
+/* ── Accessibility: focus-visible ring ─────────────────────────────────────
+   Provides a consistent, brand-coloured keyboard focus indicator site-wide.
+   Uses :focus-visible so mouse clicks are unaffected (no visible ring on click).
+   Individual components that handle their own focus style can opt out with
+   the .focus-ring-none utility class.
+   ────────────────────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid #10b981; /* emerald-500 — brand focus color */
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+/* Opt-out for elements that manage their own focus treatment */
+.focus-ring-none:focus-visible {
+  outline: none;
+}
+
+/* ── Accessibility: colour contrast note ───────────────────────────────────
+   zinc-400 (#a1a1aa) on white gives only ~2.5:1 contrast — fails WCAG AA.
+   Prefer zinc-500 (#71717a) for body/secondary text on white backgrounds:
+     - zinc-500 on white → ~4.6:1 ✓ passes WCAG AA for normal text
+     - zinc-400 is acceptable for large text (≥18pt/24px) or decorative text
+   Use the .text-body-muted helper class for secondary text instead of
+   directly applying text-zinc-400 in new components.
+   ────────────────────────────────────────────────────────────────────────── */
+.text-body-muted {
+  color: #71717a; /* zinc-500 — 4.6:1 on white, passes WCAG AA */
+}
+
 /* ── Global tool input/textarea border system ───────────────────────────────
    Targets all inputs and textareas inside the #tool wrapper (ToolPageShell).
    Uses ID selector for specificity so it overrides individual Tailwind border-*
@@ -146,6 +174,7 @@ input, select, textarea {
 /* ── Blog article body typography ──────────────────────────────────────── */
 /* Applied via BlogLayoutWithSidebarAds → div.blog-article-body              */
 .blog-article-body {
+  max-width: 720px; /* comfortable reading width — ~70ch */
   color: #374151; /* gray-700 */
   font-size: 0.9375rem; /* 15px */
   line-height: 1.75;
@@ -160,20 +189,20 @@ input, select, textarea {
   margin-bottom: 1rem;
 }
 .blog-article-body h2 {
-  font-size: 1.375rem;
+  font-size: 1.5rem; /* clearly larger than h3 */
   font-weight: 700;
   line-height: 1.25;
-  letter-spacing: -0.015em;
-  color: #111827;
+  letter-spacing: -0.025em;
+  color: #18181b; /* zinc-900 */
   margin-top: 2.5rem;
-  margin-bottom: 0.875rem;
+  margin-bottom: 1rem;
 }
 .blog-article-body h3 {
-  font-size: 1.125rem;
+  font-size: 1.2rem; /* clearly smaller than h2 */
   font-weight: 600;
-  color: #1f2937;
+  color: #27272a; /* zinc-800 */
   margin-top: 2rem;
-  margin-bottom: 0.625rem;
+  margin-bottom: 0.75rem;
 }
 .blog-article-body h4 {
   font-size: 0.9375rem;
@@ -183,6 +212,7 @@ input, select, textarea {
   margin-bottom: 0.5rem;
 }
 .blog-article-body p {
+  line-height: 1.75;
   margin-bottom: 1.25rem;
 }
 .blog-article-body strong {
@@ -214,6 +244,15 @@ input, select, textarea {
   border-radius: 0.3rem;
   padding: 0.15em 0.4em;
   color: #0f172a;
+}
+/* Inline code only — distinguishable from prose with pink accent */
+.blog-article-body code:not(pre code) {
+  background: #f4f4f5; /* zinc-100 */
+  border: 1px solid #e4e4e7; /* zinc-200 */
+  border-radius: 4px;
+  padding: 0.15em 0.4em;
+  font-size: 0.875em;
+  color: #be185d; /* pink-700 */
 }
 .blog-article-body pre {
   background: #0f172a;

@@ -2,10 +2,11 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { Calendar, Clock, ArrowRight, ChevronLeft, ChevronRight, Search, X } from 'lucide-react';
+import { Calendar, Clock, ArrowRight, Search, X, ChevronDown } from 'lucide-react';
 import type { BlogPost } from '@/lib/blog-posts-data';
 
-const PER_PAGE = 9;
+const INITIAL_COUNT = 12;
+const LOAD_MORE_COUNT = 12;
 
 const CAT_COLORS: Record<string, { bg: string; text: string; dot: string; filter: string }> = {
   'JSON & Logs':                    { bg: 'bg-emerald-50',  text: 'text-emerald-700',  dot: 'bg-emerald-500', filter: 'bg-emerald-500' },
@@ -59,24 +60,64 @@ function CategoryBadge({ category }: { category: string }) {
   );
 }
 
-function PostCard({ post, latest = false }: { post: BlogPost; latest?: boolean }) {
+function PostCard({ post, featured = false }: { post: BlogPost; featured?: boolean }) {
   const dateStr = new Date(post.date).toLocaleDateString('en-US', {
     year: 'numeric', month: 'short', day: 'numeric',
   });
   const c = catColor(post.category);
 
+  if (featured) {
+    return (
+      <article className="group col-span-full overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-[0_1px_4px_rgba(0,0,0,0.05)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_32px_rgba(0,0,0,0.09)] hover:border-zinc-300">
+        <div className={`h-[3px] w-full ${c.dot}`} />
+        <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-start sm:gap-6 sm:p-6">
+          <div className="flex-1">
+            <div className="mb-2.5 flex flex-wrap items-center gap-2">
+              <CategoryBadge category={post.category} />
+              <span className="rounded-full bg-zinc-900 px-2 py-0.5 font-mono text-[9.5px] font-bold uppercase tracking-wide text-white">
+                Latest
+              </span>
+            </div>
+            <Link href={`/blog/${post.slug}`} className="focus:outline-none">
+              <h2 className="text-[18px] font-bold leading-snug tracking-tight text-zinc-900 transition-colors group-hover:text-zinc-700 sm:text-[20px]">
+                {post.title}
+              </h2>
+            </Link>
+            <p className="mt-2 text-[13.5px] leading-relaxed text-zinc-500 line-clamp-2 sm:line-clamp-3">
+              {post.excerpt}
+            </p>
+            <div className="mt-4 flex items-center gap-4 text-[11px] text-zinc-400">
+              <span className="flex items-center gap-1">
+                <Calendar className="h-3 w-3" />
+                <time dateTime={post.date}>{dateStr}</time>
+              </span>
+              <span className="flex items-center gap-1">
+                <Clock className="h-3 w-3" />
+                {post.readTime}
+              </span>
+            </div>
+          </div>
+          <div className="flex sm:shrink-0 sm:items-center">
+            <Link
+              href={`/blog/${post.slug}`}
+              aria-label={`Read ${post.title}`}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-900 px-4 py-2.5 text-[13px] font-semibold text-white transition-colors group-hover:bg-zinc-700"
+            >
+              Read guide
+              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden />
+            </Link>
+          </div>
+        </div>
+      </article>
+    );
+  }
+
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-[0_1px_4px_rgba(0,0,0,0.05)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(0,0,0,0.09)] hover:border-zinc-300">
-      {/* Category-colored accent bar */}
       <div className={`h-[3px] w-full ${c.dot}`} />
       <div className="flex flex-1 flex-col p-5">
-        <div className="mb-3 flex flex-wrap items-center gap-2">
+        <div className="mb-3">
           <CategoryBadge category={post.category} />
-          {latest && (
-            <span className="rounded-full bg-zinc-900 px-2 py-0.5 font-mono text-[9.5px] font-bold uppercase tracking-wide text-white">
-              Latest
-            </span>
-          )}
         </div>
         <Link href={`/blog/${post.slug}`} className="focus:outline-none">
           <h2 className="text-[15px] font-bold leading-snug tracking-tight text-zinc-900 transition-colors group-hover:text-zinc-700 line-clamp-2">
@@ -116,12 +157,11 @@ type BlogListClientProps = {
   initialPage?: number;
 };
 
-export function BlogListClient({ allPosts, initialPage = 1 }: BlogListClientProps) {
+export function BlogListClient({ allPosts }: BlogListClientProps) {
   const [selectedCat, setSelectedCat] = useState('');
   const [search, setSearch] = useState('');
-  const [page, setPage] = useState(initialPage);
+  const [visible, setVisible] = useState(INITIAL_COUNT);
 
-  /* Top 8 categories by post count */
   const topCategories = useMemo(() => {
     const counts: Record<string, number> = {};
     for (const p of allPosts) counts[p.category] = (counts[p.category] || 0) + 1;
@@ -131,7 +171,6 @@ export function BlogListClient({ allPosts, initialPage = 1 }: BlogListClientProp
       .map(([cat, count]) => ({ cat, count }));
   }, [allPosts]);
 
-  /* Filtered post list */
   const filtered = useMemo(() => {
     let posts = allPosts;
     if (selectedCat) posts = posts.filter((p) => p.category === selectedCat);
@@ -144,19 +183,19 @@ export function BlogListClient({ allPosts, initialPage = 1 }: BlogListClientProp
     return posts;
   }, [allPosts, selectedCat, search]);
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
-  const safePage = Math.min(page, totalPages);
-  const pagePosts = filtered.slice((safePage - 1) * PER_PAGE, safePage * PER_PAGE);
-  const isFirstPage = safePage === 1 && !selectedCat && !search.trim();
+  const isFiltered = !!(selectedCat || search.trim());
+  const visiblePosts = filtered.slice(0, visible);
+  const hasMore = visible < filtered.length;
+  const remaining = filtered.length - visible;
 
-  function selectCat(cat: string) { setSelectedCat(cat); setPage(1); }
-  function updateSearch(q: string) { setSearch(q); setPage(1); }
+  function selectCat(cat: string) { setSelectedCat(cat); setVisible(INITIAL_COUNT); }
+  function updateSearch(q: string) { setSearch(q); setVisible(INITIAL_COUNT); }
+  function loadMore() { setVisible((v) => v + LOAD_MORE_COUNT); }
 
   return (
     <>
-      {/* ── Filter bar ────────────────────────────────────────────── */}
+      {/* ── Filter bar ─────────────────────────────────────────── */}
       <div className="mb-6 space-y-3">
-        {/* Search */}
         <div className="relative max-w-sm">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-400" />
           <input
@@ -177,7 +216,6 @@ export function BlogListClient({ allPosts, initialPage = 1 }: BlogListClientProp
           )}
         </div>
 
-        {/* Category pills */}
         <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Filter by category">
           <button
             onClick={() => selectCat('')}
@@ -220,12 +258,12 @@ export function BlogListClient({ allPosts, initialPage = 1 }: BlogListClientProp
       <div className="mb-5 flex items-center justify-between gap-2">
         <p className="text-[12px] text-zinc-400 font-medium">
           {filtered.length === 0
-            ? 'No articles found — try a different filter or search term.'
-            : search || selectedCat
+            ? 'No articles found — try a different search.'
+            : isFiltered
             ? `${filtered.length} article${filtered.length !== 1 ? 's' : ''} found${selectedCat ? ` in "${selectedCat}"` : ''}`
-            : `Showing ${pagePosts.length} of ${filtered.length} articles${totalPages > 1 ? ` · Page ${safePage} of ${totalPages}` : ''}`}
+            : `${filtered.length} articles · showing ${Math.min(visible, filtered.length)}`}
         </p>
-        {(search || selectedCat) && (
+        {isFiltered && (
           <button
             onClick={() => { selectCat(''); updateSearch(''); }}
             className="inline-flex items-center gap-1 text-[12px] font-medium text-zinc-500 hover:text-zinc-900"
@@ -236,7 +274,7 @@ export function BlogListClient({ allPosts, initialPage = 1 }: BlogListClientProp
       </div>
 
       {/* Empty state */}
-      {pagePosts.length === 0 ? (
+      {visiblePosts.length === 0 ? (
         <div className="py-16 flex flex-col items-center text-center">
           <div className="mb-4 rounded-full bg-zinc-100 p-4">
             <svg className="h-7 w-7 text-zinc-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden>
@@ -244,9 +282,7 @@ export function BlogListClient({ allPosts, initialPage = 1 }: BlogListClientProp
             </svg>
           </div>
           <h3 className="text-[15px] font-bold text-zinc-900">No articles found</h3>
-          <p className="mt-2 text-[13px] text-zinc-500 max-w-sm">
-            Try a different search term or browse all categories.
-          </p>
+          <p className="mt-2 text-[13px] text-zinc-500 max-w-sm">Try a different search term or browse all categories.</p>
           <button
             onClick={() => { selectCat(''); updateSearch(''); }}
             className="mt-4 inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-4 py-2 text-[13px] font-semibold text-zinc-700 shadow-sm hover:bg-zinc-50"
@@ -255,89 +291,36 @@ export function BlogListClient({ allPosts, initialPage = 1 }: BlogListClientProp
           </button>
         </div>
       ) : (
-        <div
-          className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
-          role="feed"
-          aria-label="Blog posts"
-        >
-          {pagePosts.map((post, i) => (
-            <PostCard key={post.slug} post={post} latest={isFirstPage && i === 0} />
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3" role="feed" aria-label="Blog posts">
+          {visiblePosts.map((post, i) => (
+            <PostCard
+              key={post.slug}
+              post={post}
+              featured={i === 0 && !isFiltered}
+            />
           ))}
         </div>
       )}
 
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <nav
-          className="mt-12 flex flex-wrap items-center justify-center gap-2"
-          aria-label="Blog pagination"
-        >
-          {safePage <= 1 ? (
-            <span className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-zinc-100 px-3 py-2 text-[13px] font-medium text-zinc-400 cursor-not-allowed" aria-disabled>
-              <ChevronLeft className="h-4 w-4" /> Prev
-            </span>
-          ) : (
-            <button
-              onClick={() => setPage(safePage - 1)}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-[13px] font-medium text-zinc-700 transition-colors hover:bg-zinc-50 hover:border-zinc-300"
-              aria-label="Previous page"
-            >
-              <ChevronLeft className="h-4 w-4" /> Prev
-            </button>
-          )}
-
-          <div className="flex items-center gap-1">
-            {Array.from({ length: totalPages }, (_, i) => i + 1)
-              .filter((p) => {
-                if (totalPages <= 7) return true;
-                if (p === 1 || p === totalPages) return true;
-                if (Math.abs(p - safePage) <= 1) return true;
-                return false;
-              })
-              .reduce<number[]>((acc, p, i, arr) => {
-                if (i > 0 && arr[i - 1] !== p - 1) acc.push(-1);
-                acc.push(p);
-                return acc;
-              }, [])
-              .map((p, idx) =>
-                p === -1 ? (
-                  <span key={`ellip-${idx}`} className="px-1.5 text-[13px] text-zinc-400">…</span>
-                ) : (
-                  <button
-                    key={p}
-                    onClick={() => setPage(p)}
-                    aria-current={p === safePage ? 'page' : undefined}
-                    className={
-                      p === safePage
-                        ? 'min-w-[2.25rem] inline-flex items-center justify-center rounded-lg py-2 text-[13px] font-semibold bg-zinc-900 text-white'
-                        : 'min-w-[2.25rem] inline-flex items-center justify-center rounded-lg border border-zinc-200 bg-white py-2 text-[13px] font-medium text-zinc-700 hover:bg-zinc-50 transition-colors'
-                    }
-                  >
-                    {p}
-                  </button>
-                )
-              )}
-          </div>
-
-          {safePage >= totalPages ? (
-            <span className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-zinc-100 px-3 py-2 text-[13px] font-medium text-zinc-400 cursor-not-allowed" aria-disabled>
-              Next <ChevronRight className="h-4 w-4" />
-            </span>
-          ) : (
-            <button
-              onClick={() => setPage(safePage + 1)}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-[13px] font-medium text-zinc-700 transition-colors hover:bg-zinc-50 hover:border-zinc-300"
-              aria-label="Next page"
-            >
-              Next <ChevronRight className="h-4 w-4" />
-            </button>
-          )}
-        </nav>
+      {/* Load more */}
+      {hasMore && (
+        <div className="mt-10 flex flex-col items-center gap-3">
+          <button
+            onClick={loadMore}
+            className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-6 py-2.5 text-[13px] font-semibold text-zinc-700 shadow-sm transition-all hover:-translate-y-0.5 hover:bg-zinc-50 hover:border-zinc-300 hover:shadow-md active:translate-y-0"
+          >
+            <ChevronDown className="h-4 w-4 text-zinc-400" />
+            Load {Math.min(LOAD_MORE_COUNT, remaining)} more article{remaining !== 1 ? 's' : ''}
+          </button>
+          <p className="text-[12px] text-zinc-400">
+            Showing {Math.min(visible, filtered.length)} of {filtered.length} articles
+          </p>
+        </div>
       )}
 
-      {totalPages > 1 && (
-        <p className="mt-3 text-center text-[12px] text-zinc-400">
-          Page {safePage} of {totalPages}
+      {!hasMore && filtered.length > INITIAL_COUNT && (
+        <p className="mt-10 text-center text-[12px] text-zinc-400">
+          All {filtered.length} articles loaded
         </p>
       )}
     </>

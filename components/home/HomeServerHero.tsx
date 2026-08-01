@@ -88,6 +88,25 @@ export default function HomeServerHero() {
                 </div>
               </div>
             </div>
+
+            {/* Mobile visual — shown instead of code preview on sm/md screens */}
+            <div className="lg:hidden mt-8 grid grid-cols-3 gap-2 sm:grid-cols-4" aria-label="Available tools">
+              {[
+                { emoji: '{}', label: 'JSON Formatter' },
+                { emoji: '🔐', label: 'JWT Decoder' },
+                { emoji: '🔒', label: 'CORS Tester' },
+                { emoji: '⚡', label: 'cURL Converter' },
+                { emoji: '🗄️', label: 'SQL Formatter' },
+                { emoji: '🔍', label: 'Regex Tester' },
+                { emoji: '🔑', label: 'Password Gen' },
+                { emoji: '📝', label: 'Markdown' },
+              ].map(({ emoji, label }) => (
+                <div key={label} className="flex flex-col items-center gap-1.5 rounded-xl border border-zinc-100 bg-white p-3 text-center shadow-sm">
+                  <span className="text-2xl" aria-hidden>{emoji}</span>
+                  <span className="text-[10px] font-medium text-zinc-500 leading-tight">{label}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Right: animated code preview — desktop only */}
