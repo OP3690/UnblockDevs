@@ -2,20 +2,25 @@ import type { Metadata } from 'next';
 import HowJsonFixersWorkClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How JSON Fixers Work Internally | UnblockDevs',
-  description: 'How JSON fixers work: tokenization, error recovery, trailing comma and quote fixes. Fix AI JSON.',
+  title: 'How JSON Fixers Work Internally: Tokenization Guide | UnblockDevs',
+  description: 'Learn how JSON fixers work under the hood: tokenization, error recovery, trailing comma removal, and quote repairs. Understand how tools auto-fix invalid and AI-generated JSON.',
   keywords: [
-    'how to fix invalid json from ai',
-    'fix invalid json',
     'how json fixers work',
-    'json fixer algorithm',
     'json error recovery',
-    'resolve json errors',
+    'fix invalid json automatically',
     'json tokenization',
+    'json fixer algorithm',
+    'json parser error recovery',
+    'fix ai generated json',
+    'trailing comma json fix',
+    'auto fix json errors',
+    'how to fix invalid json from ai',
+    'what does a json fixer do internally',
+    'json repair algorithm explained'
   ],
   openGraph: {
-    title: 'How JSON Fixers Work Internally',
-    description: 'How JSON fixers work: tokenization, error recovery, trailing comma and quote fixes. Fix AI JSON.',
+    title: 'How JSON Fixers Work Internally: Tokenization, Error Recovery & AI JSON',
+    description: 'Ever wondered how tools auto-fix broken JSON? This guide explains tokenization, error recovery passes, trailing comma removal, and quote repairs — the exact steps JSON fixers take under the hood.',
     type: 'article',
     publishedTime: '2025-01-15T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -24,8 +29,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'How JSON Fixers Work Internally',
-    description: 'How JSON fixers work: tokenization, error recovery, trailing comma and quote fixes. Fix AI JSON.',
+    title: 'How JSON Fixers Work Internally: Tokenization Guide',
+    description: 'Understand how JSON fixers auto-repair broken JSON: tokenization, error recovery, trailing comma removal, and AI JSON fixes explained clearly.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-json-fixers-work-internally' },
 

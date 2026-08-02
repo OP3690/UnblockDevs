@@ -12,24 +12,25 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Decode Stringified JSON Logs – One Tool | UnblockDevs',
-  description:
-    'Decode stringified JSON logs in one place. Learn what nested stringified JSON is, when it happens, and how to unescape and parse it without juggling multiple tools.',
+  title: 'Decode Stringified Nested JSON Logs in One Tool | UnblockDevs',
+  description: 'Decode stringified nested JSON logs without juggling multiple tools. Learn what nested stringified JSON is, when it appears in logs and APIs, and how to recursively parse it in one step.',
   keywords: [
-    'decode stringified JSON',
-    'stringified JSON logs',
-    'nested JSON decode',
-    'unescape JSON',
-    'parse stringified JSON',
-    'JSON log decoder',
-    'nested JSON parser',
-    'log parsing',
-    'escape JSON',
-    'JSON unescape online',
+    'decode stringified json',
+    'stringified nested json logs',
+    'parse stringified json online',
+    'unescape json logs',
+    'nested json decoder tool',
+    'json log parser',
+    'how to decode stringified json logs',
+    'what is stringified nested json',
+    'how to parse nested json from logs',
+    'decode double encoded json',
+    'json logs recursive parsing',
+    'json unescape and parse online'
   ],
   openGraph: {
-    title: 'How to Decode Stringified Nested JSON Logs Without 5 Different Tools',
-    description: 'Decode and parse stringified nested JSON logs in one place. No more juggling unescapers, jwt.io, and epoch converters.',
+    title: 'Decode Stringified Nested JSON Logs Without Multiple Tools — One-Stop Guide',
+    description: 'Stop juggling unescapers, jwt.io, and epoch converters. This guide explains what stringified nested JSON is, when it appears in logs and API responses, and how to decode all layers in one place.',
     type: 'article',
     publishedTime: '2025-03-02T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -38,8 +39,8 @@ export const metadata: Metadata = {
 
   },  twitter: {
     card: 'summary_large_image',
-    title: 'How to Decode Stringified Nested JSON Logs Without 5 Different Tools',
-    description: 'Decode and parse stringified nested JSON logs in one place. No more juggling unescapers, jwt.io, and epoch converters.',
+    title: 'Decode Stringified Nested JSON Logs in One Tool',
+    description: 'Stop juggling tools to decode stringified JSON logs. Learn what nested stringified JSON is and how to parse every layer recursively in one step.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-decode-stringified-nested-json-logs-without-5-tools' },
 

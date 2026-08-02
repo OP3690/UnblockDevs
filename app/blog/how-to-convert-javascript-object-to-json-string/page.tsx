@@ -2,30 +2,25 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Convert a JavaScript Object to a JSON String — JSON.stringify() Guide | UnblockDevs',
-  description:
-    'Convert any JavaScript object to a JSON string using JSON.stringify(). Covers pretty-print, field filtering, nested objects, arrays, and all scenarios: API requests, localStorage, Node.js file writing, and logging.',
+  title: 'JavaScript Object to JSON: JSON.stringify() Guide | UnblockDevs',
+  description: 'Convert a JavaScript object to a JSON string with JSON.stringify(). Covers pretty-print, field filtering, nested objects, API requests, localStorage, and Node.js use cases.',
   keywords: [
-    'convert javascript object to json string',
-    'javascript object to json',
-    'js object to json string',
-    'how to stringify an object javascript',
-    'json stringify object online',
-    'convert object to json online',
-    'javascript convert object to json',
-    'object to json string javascript',
-    'stringify js object to json',
+    'javascript object to json string',
+    'json stringify object javascript',
+    'convert object to json javascript',
+    'js object to json',
+    'json stringify pretty print',
     'json stringify nested object',
-    'json stringify array',
-    'convert js object to json online',
-    'how to convert object to json in javascript',
-    'json serialize object',
-    'object to json converter online',
+    'javascript stringify object to string',
+    'how to convert javascript object to json',
+    'what does json.stringify do',
+    'json stringify with indentation',
+    'javascript object to json online',
+    'convert js object to json string'
   ],
   openGraph: {
-    title: 'How to Convert a JavaScript Object to a JSON String | UnblockDevs',
-    description:
-      'Complete guide to converting JavaScript objects to JSON strings: JSON.stringify(), pretty-print, field filtering, all scenarios with code examples.',
+    title: 'Convert JavaScript Object to JSON String Using JSON.stringify() — Full Guide',
+    description: 'Everything about JSON.stringify(): convert JavaScript objects to JSON strings with pretty-print, field filtering, nested objects, API requests, localStorage, and Node.js included.',
     type: 'article',
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -34,9 +29,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'How to Convert a JavaScript Object to a JSON String',
-    description:
-      'JSON.stringify() guide: compact, pretty-print, field filtering, nested objects, API requests, localStorage, Node.js file writing.',
+    title: 'JavaScript Object to JSON: JSON.stringify() Guide',
+    description: 'Use JSON.stringify() to convert any JavaScript object to a JSON string. Covers pretty-print, field filtering, nested objects, API requests, and more.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-convert-javascript-object-to-json-string' },
 };

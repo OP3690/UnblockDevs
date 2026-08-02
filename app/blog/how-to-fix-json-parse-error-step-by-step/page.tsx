@@ -2,23 +2,25 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Fix JSON Parse Error — Step by Step (With Examples)',
-  description: 'Getting a JSON parse error or unexpected token? Here\'s exactly how to find and fix the most common JSON syntax errors — with an online fixer and real examples.',
+  title: 'Fix JSON Parse Error Step by Step with Examples | UnblockDevs',
+  description: 'Fix JSON parse errors and unexpected token issues step by step. Find the most common JSON syntax mistakes — missing commas, trailing commas, invalid strings — and repair them with real examples.',
   keywords: [
+    'fix json parse error',
+    'json unexpected token error',
+    'json syntax error fix',
+    'broken json repair',
+    'json error checker',
     'how to fix json parse error step by step',
     'what causes unexpected token in json',
-    'how to debug broken json file',
-    'common json syntax errors and fixes',
-    'how to find missing comma in json',
-    'json error checker online free',
-    'how to validate json data quickly',
-    'why is my json invalid',
-    'how to repair corrupted json file',
+    'how to debug broken json',
+    'common json syntax errors',
     'json formatter with error highlighting',
+    'how to find missing comma in json',
+    'why is my json invalid'
   ],
   openGraph: {
-    title: 'How to Fix JSON Parse Error — Step by Step (With Examples)',
-    description: 'Getting a JSON parse error or unexpected token? Here\'s exactly how to find and fix the most common JSON syntax errors — with an online fixer and real examples.',
+    title: 'How to Fix JSON Parse Error Step by Step — With Code Examples and Online Fixer',
+    description: 'Getting a JSON parse error or unexpected token? Find and fix the most common JSON syntax mistakes — missing commas, invalid quotes, trailing commas — with real examples and a free online fixer.',
     type: 'article',
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -27,8 +29,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'How to Fix JSON Parse Error — Step by Step (With Examples)',
-    description: 'Getting a JSON parse error or unexpected token? Here\'s exactly how to find and fix the most common JSON syntax errors — with an online fixer and real examples.',
+    title: 'Fix JSON Parse Error Step by Step with Examples',
+    description: 'Fix JSON parse errors: find missing commas, bad quotes, and syntax errors step by step with real examples and a free online JSON fixer.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-fix-json-parse-error-step-by-step' },
 };

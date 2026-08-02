@@ -2,28 +2,25 @@ import type { Metadata } from 'next';
 import HowToConvertCurlToJavascriptFetchClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Convert cURL to JavaScript Fetch 2026 | UnblockDevs',
-  description: 'Convert cURL to JavaScript fetch. GET, POST, PUT, DELETE, headers, auth. Step-by-step. 2026.',
+  title: 'Convert cURL to JavaScript Fetch: Complete Guide | UnblockDevs',
+  description: 'Convert any cURL command to JavaScript fetch code. Covers GET, POST, PUT, DELETE, custom headers, authorization tokens, and request bodies with step-by-step examples.',
   keywords: [
     'convert curl to javascript fetch',
-    'curl to fetch api',
-    'convert curl to fetch',
+    'curl to fetch api converter',
     'curl command to javascript',
-    'curl to fetch converter',
     'javascript fetch from curl',
-    'convert curl request to fetch',
-    'curl to fetch api example',
-    'javascript fetch curl',
-    'convert curl to js fetch',
-    'curl to fetch javascript',
-    'fetch api from curl',
-    'curl to fetch conversion',
-    'javascript fetch curl command',
-    'convert curl to fetch api'
+    'curl to fetch code example',
+    'convert curl post to javascript fetch',
+    'curl headers to fetch headers',
+    'how to convert curl to fetch in javascript',
+    'curl command to fetch request',
+    'turn curl into javascript fetch code',
+    'convert curl auth to fetch',
+    'curl to fetch with authorization'
   ],
   openGraph: {
-    title: 'How to Convert cURL Command to JavaScript Fetch: Complete Guide 2026',
-    description: 'Convert cURL to JavaScript fetch. Practical examples.',
+    title: 'Convert cURL to JavaScript Fetch: Headers, Auth, POST & More',
+    description: 'Learn how to translate any cURL command into equivalent JavaScript fetch code — covering GET, POST, PUT, DELETE, custom headers, bearer tokens, and request bodies. With copy-paste examples.',
     type: 'article',
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -32,8 +29,8 @@ export const metadata: Metadata = {
 
   },  twitter: {
     card: 'summary_large_image',
-    title: 'How to Convert cURL Command to JavaScript Fetch: Complete Guide 2026',
-    description: 'Convert cURL to JavaScript fetch. Practical examples.',
+    title: 'Convert cURL to JavaScript Fetch: Complete Guide',
+    description: 'Convert cURL commands to JavaScript fetch — GET, POST, headers, auth, and request bodies. Clear examples for every HTTP method and use case.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-convert-curl-command-to-javascript-fetch' },
 

@@ -2,33 +2,25 @@ import type { Metadata } from 'next';
 import HarToCurlConverterGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'HAR to cURL Converter – Complete Guide | UnblockDevs',
-  description: 'HAR to cURL: convert HAR files, browser requests to cURL. Step-by-step, examples. Free converter.',
+  title: 'HAR to cURL Converter: Convert Browser Requests | UnblockDevs',
+  description: 'Convert HAR files to cURL commands from Chrome, Firefox, or Edge. Learn to export network requests, debug API calls, and replay HTTP sessions with free tools.',
   keywords: [
-    'har to curl',
     'har to curl converter',
-    'convert har to curl',
-    'har file to curl',
-    'browser request to curl',
-    'network request to curl',
-    'http archive to curl',
-    'har converter',
-    'export curl from browser',
-    'chrome har to curl',
-    'firefox har to curl',
-    'devtools to curl',
-    'network tab to curl',
-    'har to curl generator',
-    'convert har file',
-    'har to curl online',
-    'har to curl tool',
-    'har to curl command',
-    'browser network to curl',
-    'har json to curl'
+    'convert har file to curl',
+    'har to curl chrome',
+    'browser network request to curl',
+    'http archive to curl command',
+    'export devtools request as curl',
+    'har file converter online',
+    'how to convert har to curl',
+    'what is a har file and how to use it',
+    'har to curl from chrome devtools',
+    'convert browser request to curl command',
+    'debug api with har file'
   ],
   openGraph: {
-    title: 'HAR to cURL Converter: Complete Guide to Convert Browser Requests to cURL',
-    description: 'HAR to cURL: convert HAR files, browser requests. Step-by-step, free tool.',
+    title: 'HAR to cURL Converter: Export Chrome & Firefox Network Requests as cURL',
+    description: 'Learn how to convert HAR files to cURL commands from Chrome, Firefox, and Edge DevTools. Complete guide with step-by-step instructions, examples, and a free online HAR to cURL converter tool.',
     type: 'article',
     publishedTime: '2025-01-15T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -39,8 +31,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'HAR to cURL Converter: Complete Guide',
-    description: 'HAR to cURL: convert HAR files to cURL instantly. Free tool.',
+    title: 'HAR to cURL Converter: Convert Browser Requests',
+    description: 'Convert HAR files from Chrome, Firefox, or Edge to cURL commands. Debug API calls and replay HTTP sessions with our free converter tool.',
   },  alternates: { canonical: 'https://unblockdevs.com/blog/har-to-curl-converter-complete-guide' },
 
 };

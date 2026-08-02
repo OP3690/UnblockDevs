@@ -2,28 +2,25 @@ import type { Metadata } from 'next';
 import HowToReadJsonFilePythonClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Read JSON File in Python (3 Ways) | Complete Guide 2026',
-  description: 'Read JSON in Python: json.load(), json.loads(), pandas.read_json(). Examples, error handling.',
+  title: 'How to Read a JSON File in Python (3 Ways) | UnblockDevs',
+  description: 'Read JSON files in Python using json.load(), json.loads(), and pandas.read_json(). Learn which method to use when, with error handling, encoding tips, and complete code examples.',
   keywords: [
-    'read JSON file Python',
-    'Python JSON parser',
-    'json.load Python',
-    'json.loads Python',
-    'pandas read JSON',
-    'parse JSON file Python',
-    'Python JSON tutorial',
-    'read JSON data Python',
-    'JSON file handling Python',
-    'Python JSON examples',
-    'load JSON file Python',
-    'Python JSON library',
-    'read JSON from file',
-    'Python JSON parsing',
-    'JSON file Python tutorial'
+    'read json file python',
+    'python json load',
+    'python json loads',
+    'pandas read json python',
+    'python json file parsing',
+    'load json from file python',
+    'python open json file',
+    'how to read json file in python',
+    'python json.load vs json.loads',
+    'parse json file in python',
+    'python read json with error handling',
+    'best way to read json in python'
   ],
   openGraph: {
-    title: 'How to Read JSON File in Python (3 Ways) | Complete Guide 2026',
-    description: '3 ways to read JSON in Python. Examples and error handling.',
+    title: 'How to Read a JSON File in Python: json.load, json.loads & pandas.read_json',
+    description: 'Three ways to read JSON files in Python: json.load() for files, json.loads() for strings, and pandas.read_json() for data analysis. With error handling and complete code examples.',
     type: 'article',
     publishedTime: '2026-01-26T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -33,8 +30,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'How to Read JSON File in Python (3 Ways) | Complete Guide 2026',
-    description: '3 ways to read JSON in Python. Examples and error handling.',
+    title: 'How to Read a JSON File in Python (3 Ways)',
+    description: 'Read JSON files in Python with json.load(), json.loads(), or pandas.read_json(). Learn when to use each method with error handling and code examples.',
   },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-read-json-file-python-3-ways' },
 
 };

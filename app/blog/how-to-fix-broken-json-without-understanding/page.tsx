@@ -3,19 +3,24 @@ import HowToFixBrokenJsonWithoutUnderstandingClient from './client';
 
 export const metadata: Metadata = {
   title: 'Fix Broken JSON Without Understanding It | UnblockDevs',
-  description: 'Fix broken JSON without coding. Step-by-step for non-devs, students. Free JSON Fixer tool.',
+  description: 'Fix broken JSON without knowing how to code. This step-by-step guide helps beginners, non-developers, and students repair invalid JSON quickly using a free online JSON Fixer tool.',
   keywords: [
-    'fix broken json without coding',
-    'fix json for beginners',
-    'repair json no coding',
-    'fix json simple guide',
-    'json fixer for non developers',
+    'fix broken json',
+    'fix json without coding',
+    'json fixer for beginners',
+    'repair invalid json online',
+    'json fixer non developer',
     'fix json without understanding',
-    'simple json fixer'
+    'fix json simple guide',
+    'online json fixer tool',
+    'how to fix broken json file',
+    'what is invalid json',
+    'how do i fix json without knowing code',
+    'beginner json repair guide'
   ],
   openGraph: {
-    title: 'Fix Broken JSON Without Understanding It',
-    description: 'Fix broken JSON without coding. Step-by-step for non-devs, students. Free JSON Fixer tool.',
+    title: 'How to Fix Broken JSON Without Understanding It — Beginner\'s Guide',
+    description: 'Not a developer? No problem. This guide shows non-devs, students, and beginners how to fix broken or invalid JSON step by step — using a free online JSON Fixer tool, no coding required.',
     type: 'article',
     publishedTime: '2025-01-15T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -25,7 +30,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Fix Broken JSON Without Understanding It',
-    description: 'Fix broken JSON without coding. Step-by-step for non-devs, students. Free JSON Fixer tool.',
+    description: 'Fix broken JSON without any coding knowledge. Step-by-step guide for beginners and non-developers using a free online JSON Fixer tool.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-fix-broken-json-without-understanding' },
 

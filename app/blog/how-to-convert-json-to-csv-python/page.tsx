@@ -2,28 +2,25 @@ import type { Metadata } from 'next';
 import HowToConvertJsonToCsvPythonClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Convert JSON to CSV in Python | Complete Guide 2026',
-  description: 'Convert JSON to CSV in Python with pandas, csv module, json_normalize. Nested JSON, arrays, examples.',
+  title: 'Convert JSON to CSV in Python: pandas & csv Module | UnblockDevs',
+  description: 'Convert JSON to CSV in Python using pandas, the csv module, and json_normalize. Covers flat and nested JSON, arrays, and file export with complete code examples.',
   keywords: [
-    'convert JSON to CSV Python',
-    'JSON to CSV Python',
-    'pandas JSON to CSV',
-    'json_normalize Python',
-    'convert JSON CSV',
-    'JSON CSV conversion',
-    'Python JSON CSV',
-    'export JSON to CSV',
-    'JSON to CSV pandas',
-    'convert JSON file CSV',
-    'Python JSON CSV tutorial',
-    'JSON CSV converter',
-    'pandas to_csv JSON',
-    'flatten JSON CSV',
-    'JSON array to CSV'
+    'convert json to csv python',
+    'python json to csv',
+    'pandas json to csv',
+    'json normalize python',
+    'python csv module json',
+    'nested json to csv python',
+    'python export json as csv',
+    'flatten json to csv python',
+    'how to convert json to csv in python',
+    'python pandas read json to csv',
+    'json array to csv python',
+    'convert json file to csv python code'
   ],
   openGraph: {
-    title: 'How to Convert JSON to CSV in Python | Complete Guide 2026',
-    description: 'Learn how to convert JSON to CSV in Python with examples for nested JSON and arrays.',
+    title: 'Convert JSON to CSV in Python: pandas, csv Module & json_normalize',
+    description: 'Three ways to convert JSON to CSV in Python: pandas, the csv module, and json_normalize. Covers nested JSON, arrays, and file export with working code examples.',
     type: 'article',
     publishedTime: '2026-01-26T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -33,8 +30,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'How to Convert JSON to CSV in Python | Complete Guide 2026',
-    description: 'Learn how to convert JSON to CSV in Python with examples for nested JSON and arrays.',
+    title: 'Convert JSON to CSV in Python: pandas & csv Module',
+    description: 'Convert JSON to CSV in Python with pandas, csv module, and json_normalize. Handles nested JSON and arrays with complete code examples.',
   },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-convert-json-to-csv-python' },
 
 };

@@ -2,27 +2,25 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Handle API Rate Limits in Production | UnblockDevs',
-  description: 'Learn how to handle API rate limits: exponential backoff, retry strategies, rate limit headers, circuit breakers, and best practices for production applications. Complete guide with code examples.',
+  title: 'Handle API Rate Limits Gracefully in Production | UnblockDevs',
+  description: 'Handle API rate limits in production with exponential backoff, retry strategies, 429 error handling, rate limit headers, and circuit breaker patterns. Complete guide with code examples.',
   keywords: [
-    'api rate limits',
-    'rate limiting',
-    'handle rate limits',
-    'api throttling',
-    'exponential backoff',
-    'retry strategy',
-    'rate limit headers',
-    '429 too many requests',
-    'api rate limit handling',
-    'production rate limits',
-    'circuit breaker pattern',
-    'api best practices',
-    'rate limit retry',
-    'throttling api calls'
+    'api rate limiting',
+    'handle api rate limits',
+    'exponential backoff retry',
+    '429 too many requests fix',
+    'api throttling handling',
+    'rate limit headers x-ratelimit',
+    'circuit breaker pattern api',
+    'api retry strategy',
+    'how to handle 429 too many requests',
+    'what is exponential backoff',
+    'api rate limit best practices production',
+    'retry api calls after rate limit'
   ],
   openGraph: {
-    title: 'Handle API Rate Limits in Production | UnblockDevs',
-    description: 'Learn how to handle API rate limits with exponential backoff, retry strategies, and best practices.',
+    title: 'Handle API Rate Limits Gracefully in Production: Backoff, Retry & Circuit Breakers',
+    description: 'Stop crashing when APIs rate limit you. Covers exponential backoff, retry strategies, 429 error handling, rate limit header parsing, and circuit breaker patterns with code.',
     type: 'article',
     publishedTime: '2026-02-04T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -32,8 +30,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Handle API Rate Limits in Production | UnblockDevs',
-    description: 'Learn how to handle API rate limits with exponential backoff, retry strategies, and best practices.',
+    title: 'Handle API Rate Limits Gracefully in Production',
+    description: 'Handle 429 rate limit errors in production: exponential backoff, retry strategies, circuit breakers, and rate limit header handling with code examples.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/how-to-handle-api-rate-limits-gracefully-in-production',
