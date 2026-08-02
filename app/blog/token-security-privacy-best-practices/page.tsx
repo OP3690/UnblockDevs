@@ -2,23 +2,26 @@ import type { Metadata } from 'next';
 import TokenSecurityPrivacyBestPracticesClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Token Security & Privacy: Best Practices, Dos & Don\'ts | UnblockDevs',
-  description: 'Token security & privacy: best practices, vulnerabilities, secure storage, rotation. Secure auth tokens.',
+  title: 'Token Security & Privacy: Best Practices Guide | UnblockDevs',
+  description: 'Secure your auth tokens with proven best practices. Learn JWT security, API key storage, token rotation, common vulnerabilities, and what not to do with sensitive tokens.',
   keywords: [
-    'token security',
-    'token privacy',
-    'token best practices',
+    'token security best practices',
     'jwt security',
     'api key security',
-    'token storage',
+    'token storage secure',
     'token rotation',
     'token vulnerabilities',
-    'secure tokens',
-    'token dos and donts'
+    'secure auth tokens',
+    'token privacy best practices',
+    'how to store jwt securely',
+    'api key dos and donts',
+    'token security guide',
+    'bearer token security',
+    'how to secure api tokens'
   ],
   openGraph: {
-    title: "Token Security & Privacy: Best Practices, Dos & Don'ts",
-    description: 'Token security & privacy: best practices, vulnerabilities, secure storage, rotation. Secure auth tokens.',
+    title: "Token Security & Privacy — Best Practices, Dos and Don'ts",
+    description: 'Authentication tokens are the keys to your kingdom. Learn how to store, rotate, and protect JWT tokens and API keys — plus the vulnerabilities developers get wrong most often.',
     type: 'article',
     publishedTime: '2025-01-30T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -27,8 +30,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Token Security & Privacy: Best Practices, Dos & Don'ts",
-    description: 'Token security & privacy: best practices, vulnerabilities, secure storage, rotation. Secure auth tokens.',
+    title: 'Token Security & Privacy: Best Practices Guide',
+    description: 'Learn how to securely store, rotate, and protect JWT tokens and API keys. Covers token vulnerabilities and what every developer should know.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/token-security-privacy-best-practices' },
 

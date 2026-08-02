@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import WhyAiJsonBrokenClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Why AI-Generated JSON Is Always Broken — and How to Fix Every Error | UnblockDevs',
-  description: 'ChatGPT, Claude, and Gemini consistently produce invalid JSON. Learn exactly why AI models break JSON, the 8 patterns they get wrong, and how to auto-fix every error.',
+  title: 'Why AI-Generated JSON Is Broken — Fix Every Error | UnblockDevs',
+  description: 'Learn why AI models like ChatGPT and Gemini produce invalid JSON and how to fix trailing commas, undefined values, and other common AI JSON errors.',
   keywords: [
     'ai generated json broken',
     'chatgpt json errors',
@@ -17,10 +17,12 @@ export const metadata: Metadata = {
     'json llm output broken',
     'fix json from ai',
     'ai produces invalid json',
+    'why does chatgpt produce invalid json',
+    'llm structured output errors'
   ],
   openGraph: {
     title: 'Why AI-Generated JSON Is Always Broken — and How to Fix Every Error',
-    description: 'ChatGPT, Claude, and Gemini consistently produce invalid JSON. Learn exactly why AI breaks JSON and how to fix every error automatically.',
+    description: 'ChatGPT, Claude, and Gemini consistently produce invalid JSON. Learn exactly why AI breaks JSON — 8 common patterns — and how to fix every error automatically with a free JSON fixer.',
     type: 'article',
     publishedTime: '2026-05-10T08:00:00Z',
     authors: ['UnblockDevs'],
@@ -29,8 +31,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Why AI-Generated JSON Is Always Broken — and How to Fix Every Error',
-    description: 'ChatGPT, Claude, and Gemini consistently produce invalid JSON. Learn exactly why and how to fix it.',
+    title: 'Why AI-Generated JSON Is Broken — Fix Every Error',
+    description: 'ChatGPT and Gemini consistently produce invalid JSON. Learn the 8 patterns that break AI output and how to fix every error automatically.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/why-ai-generated-json-is-always-broken' },
 };

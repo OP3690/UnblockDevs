@@ -2,29 +2,25 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Convert Any List to SQL IN Clause — CSV, Excel, JSON, Newline | UnblockDevs',
-  description:
-    'Convert a list of IDs from Excel, CSV, JSON, or any format to a SQL IN clause in seconds. Step-by-step guide for MySQL, PostgreSQL, SQL Server, Oracle. Includes parameterized queries, chunking, and SQL INSERT methods.',
+  title: 'Convert List to SQL IN Clause — CSV, Excel, JSON | UnblockDevs',
+  description: 'Convert a list of IDs from CSV, Excel, JSON, or plain text into a SQL IN clause in seconds. Works with MySQL, PostgreSQL, SQL Server, and Oracle databases.',
   keywords: [
     'convert list to sql in clause',
-    'list to sql in clause',
     'csv to sql in clause',
     'excel to sql in clause',
     'json to sql in clause',
     'ids to sql where in',
-    'sql in clause from spreadsheet',
-    'convert csv to sql query',
-    'paste list into sql in clause',
     'sql in clause generator online',
     'bulk ids sql in clause',
     'sql in list from excel column',
     'convert text to sql in clause',
     'sql where id in list online',
     'generate sql in clause from list',
+    'how to build sql in clause from list'
   ],
   openGraph: {
-    title: 'Convert Any List to SQL IN Clause — CSV, Excel, JSON | UnblockDevs',
-    description: 'Convert CSV, Excel, JSON, or newline-separated IDs into a SQL IN clause. MySQL, PostgreSQL, SQL Server, Oracle. Parameterized queries, chunking, SQL INSERT.',
+    title: 'Convert Any List to SQL IN Clause — CSV, Excel, JSON, Newline Supported',
+    description: 'Stop manually formatting ID lists for SQL. Paste CSV, Excel, JSON, or newline-separated values and get a clean SQL IN clause instantly for MySQL, PostgreSQL, SQL Server, and Oracle.',
     type: 'article',
     publishedTime: '2026-04-13T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -33,8 +29,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Convert Any List (CSV, Excel, JSON) to SQL IN Clause',
-    description: 'Paste IDs from any source → get a SQL IN clause instantly. MySQL, PostgreSQL, Oracle, SQL Server supported.',
+    title: 'Convert List to SQL IN Clause — CSV, Excel, JSON',
+    description: 'Paste IDs from CSV, Excel, JSON, or plain text to get a SQL IN clause in seconds. MySQL, PostgreSQL, SQL Server, and Oracle supported.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/sql-list-to-in-clause' },
 };

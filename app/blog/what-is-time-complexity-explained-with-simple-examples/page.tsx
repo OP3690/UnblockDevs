@@ -2,27 +2,25 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Time Complexity Explained – Simple Examples | UnblockDevs',
-  description: 'Time complexity: Big O, O(1), O(n), O(log n), O(n²). Simple examples, graphs. For interviews.',
+  description: 'Understand Big O notation and time complexity with simple visual examples. Learn O(1), O(n), O(log n), and O(n²) explained clearly for beginners and coding interviews.',
   keywords: [
     'what is time complexity',
     'time complexity explained',
     'big o notation explained',
     'time complexity examples',
-    'o1 on olog n time complexity',
+    'o(1) o(n) o(log n) time complexity',
     'time complexity tutorial',
     'algorithm time complexity',
-    'time complexity graph',
     'big o notation examples',
     'time complexity beginner',
     'coding interview time complexity',
-    'time complexity visualization',
     'algorithm efficiency',
-    'time complexity chart',
-    'big o notation tutorial'
+    'big o notation tutorial',
+    'how to calculate time complexity'
   ],
   openGraph: {
-    title: 'Time Complexity Explained – Simple Examples | UnblockDevs',
-    description: 'Time complexity: Big O with examples and graphs. For interviews.',
+    title: 'Time Complexity and Big O Notation Explained with Simple Examples',
+    description: "Big O notation doesn't have to be intimidating. Learn time complexity step by step — from O(1) constant time to O(n²) quadratic — with visual graphs and real code examples.",
     type: 'article',
     publishedTime: '2026-02-02T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -32,8 +30,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Time Complexity Explained – Simple Examples | UnblockDevs',
-    description: 'Time complexity: Big O with examples and graphs. For interviews.',
+    title: 'Time Complexity Explained – Simple Examples',
+    description: 'Learn Big O notation and time complexity with visual examples. From O(1) to O(n²), understand algorithm efficiency for coding interviews.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/what-is-time-complexity-explained-with-simple-examples',

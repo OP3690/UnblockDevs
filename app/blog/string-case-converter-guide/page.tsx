@@ -2,9 +2,8 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'String Case Converter Guide — camelCase, snake_case, PascalCase, kebab-case & More | UnblockDevs',
-  description:
-    'Complete guide to string case conversion — when to use camelCase vs snake_case vs PascalCase vs kebab-case. Includes a free online converter that handles all 12 formats and bulk conversion with CSV export.',
+  title: 'String Case Converter Guide — camelCase, snake_case | UnblockDevs',
+  description: 'Learn when to use camelCase, snake_case, PascalCase, or kebab-case. Free online converter handles all 12 formats with bulk conversion and CSV export included.',
   keywords: [
     'string case converter online',
     'camelcase to snake case online',
@@ -16,13 +15,12 @@ export const metadata: Metadata = {
     'convert variable name to different case',
     'rename variable case format online',
     'how to convert camelcase to snake case',
-    'string replace tool online',
     'text formatter and string utility tool',
     'how to convert string to lowercase or uppercase',
-    'string case converter online',
+    'what is the difference between camelcase and snake case'
   ],
   openGraph: {
-    title: 'String Case Converter Guide — camelCase, snake_case, PascalCase, kebab-case & More | UnblockDevs',
+    title: 'String Case Converter Guide — camelCase, snake_case, PascalCase & More',
     description:
       'Complete guide to string case conversion — when to use each format, how to convert between them, and a free online converter that handles all 12 formats with bulk CSV export.',
     type: 'article',
@@ -33,7 +31,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'String Case Converter Guide — camelCase, snake_case, PascalCase, kebab-case & More',
+    title: 'String Case Converter Guide — camelCase, snake_case & More',
     description:
       'When to use camelCase vs snake_case vs PascalCase vs kebab-case. Free online converter supporting all 12 formats with bulk conversion and CSV export.',
   },

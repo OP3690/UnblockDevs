@@ -3,28 +3,25 @@ import Link from 'next/link';
 import BlogLayoutWithSidebarAds from '@/components/BlogLayoutWithSidebarAds';
 
 export const metadata: Metadata = {
-  title: 'SQL Schema Security: Never Paste DB Names into AI Tools | UnblockDevs',
-  description:
-    'Pasting real table and column names into ChatGPT, GitHub Copilot, or Claude exposes your database architecture, violates GDPR and HIPAA, and creates competitive and security risks. Learn the threats and how schema masking protects you.',
+  title: 'SQL Schema Security: Stop Pasting DB Names into AI | UnblockDevs',
+  description: 'Sharing real SQL table names with ChatGPT or Copilot exposes your schema, risks GDPR compliance, and leaks competitive intelligence. Learn how to stay safe.',
   keywords: [
     'sql schema security ai',
     'database schema privacy ai tools',
     'chatgpt database security risk',
     'pasting database schema ai danger',
     'sql schema gdpr compliance ai',
-    'database names ai privacy',
     'ai tool sql data leak',
     'schema security chatgpt copilot',
     'production database ai risk',
     'sql ai security best practices',
     'database schema exposure risk',
-    'sql copilot security',
-    'ai sql gdpr hipaa',
     'protect database schema ai',
     'sql schema leak ai tools',
+    'is it safe to paste sql into chatgpt'
   ],
   openGraph: {
-    title: 'SQL Schema Security — Never Paste Production Database Names into AI Tools | UnblockDevs',
+    title: 'SQL Schema Security — Never Paste Production DB Names into AI Tools',
     description: 'Real table and column names in AI prompts expose your architecture, violate compliance, and create security risks. Learn what is at stake and how schema masking protects you.',
     type: 'article',
     publishedTime: '2026-04-13T00:00:00Z',
@@ -34,8 +31,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'SQL Schema Security — Never Paste Production Database Names into AI Tools',
-    description: 'Database schema in AI prompts: real risks, GDPR/HIPAA implications, and how schema masking protects you.',
+    title: 'SQL Schema Security: Stop Pasting DB Names into AI',
+    description: 'Pasting DB table names into AI tools exposes your schema and risks GDPR violations. Learn what gets leaked and how schema masking fixes it.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/sql-schema-security-ai-tools' },
 };

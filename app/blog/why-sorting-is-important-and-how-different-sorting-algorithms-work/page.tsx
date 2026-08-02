@@ -2,28 +2,26 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Sorting Algorithms Explained | UnblockDevs',
-  description: 'Why sorting matters. How Bubble, Quick, Merge, Heap Sort work. Examples, time complexity, when to use each. For coding interviews.',
+  title: 'Why Sorting Matters and How Sorting Algorithms Work | UnblockDevs',
+  description: 'Learn why sorting matters and how Bubble, Quick, Merge, and Heap Sort work. Includes time complexity charts and when to use each sorting algorithm.',
   keywords: [
-    'sorting algorithms',
-    'why sorting is important',
     'sorting algorithms explained',
-    'bubble sort',
-    'quick sort',
-    'merge sort',
-    'heap sort',
+    'why sorting is important',
+    'bubble sort explained',
+    'quick sort explained',
+    'merge sort explained',
+    'heap sort explained',
     'sorting algorithm comparison',
     'best sorting algorithm',
     'sorting algorithms time complexity',
     'when to use which sorting algorithm',
     'sorting algorithms tutorial',
-    'sorting',
-    'sorting in computer science',
-    'algorithm sorting'
+    'how do sorting algorithms work',
+    'sorting algorithms for coding interviews'
   ],
   openGraph: {
-    title: 'Sorting Algorithms Explained | UnblockDevs',
-    description: 'Learn why sorting is important and understand how different sorting algorithms work with examples and comparisons.',
+    title: 'Sorting Algorithms Explained: Bubble, Quick, Merge, Heap Sort',
+    description: 'Sorting is one of the most fundamental problems in computer science. Learn why it matters and how Bubble, Quick, Merge, and Heap Sort work — with diagrams, code, and time complexity comparisons.',
     type: 'article',
     publishedTime: '2026-02-06T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -33,8 +31,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Sorting Algorithms Explained | UnblockDevs',
-    description: 'Learn why sorting is important and understand how different sorting algorithms work with examples and comparisons.',
+    title: 'Why Sorting Matters and How Sorting Algorithms Work',
+    description: 'Learn why sorting is fundamental and how Bubble, Quick, Merge, and Heap Sort work — with time complexity charts and guidance on when to use each.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/why-sorting-is-important-and-how-different-sorting-algorithms-work',
