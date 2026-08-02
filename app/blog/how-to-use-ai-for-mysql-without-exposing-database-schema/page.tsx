@@ -2,22 +2,26 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Use AI for MySQL Without Exposing Schema | UnblockDevs',
+  title: 'Use AI for MySQL Without Exposing Database Schema | UnblockDevs',
   description:
-    'Use ChatGPT with MySQL safely: anonymize MySQL schema, hide column names and table names before AI. Client-side reversible masking, no server storage. Step-by-step with MySQL example.',
+    'Use ChatGPT with MySQL safely by anonymizing schema before sending queries. Client-side masking hides table and column names — no server, no data exposure.',
   keywords: [
-    'clean sql queries instantly',
-    'format messy sql query',
+    'use AI for MySQL safely',
+    'MySQL schema masking AI',
+    'anonymize MySQL schema before AI',
+    'hide MySQL column names from ChatGPT',
+    'ChatGPT MySQL without exposing schema',
+    'client-side MySQL masking',
+    'MySQL table name anonymization AI',
     'secure MySQL AI queries',
-    'anonymize MySQL schema',
-    'use ChatGPT with MySQL safely',
-    'hide column names before AI',
-    'MySQL schema masking',
-    'AI MySQL without exposing schema',
+    'AI MySQL without database exposure',
+    'how to use ChatGPT with MySQL securely',
+    'MySQL schema privacy AI tools',
+    'protect MySQL schema from AI',
   ],
   openGraph: {
     title: 'How to Use AI for MySQL Without Exposing Your Database Schema',
-    description: 'Anonymize MySQL schema before AI. Client-side masking, reversible. No server, no logging.',
+    description: 'Want to get AI help with MySQL queries without exposing sensitive table or column names? This guide shows client-side schema masking that\'s reversible — your schema never leaves your browser.',
     type: 'article',
     publishedTime: '2026-02-28T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -27,8 +31,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'How to Use AI for MySQL Without Exposing Your Database Schema',
-    description: 'Anonymize MySQL schema before AI. Client-side masking, reversible. No server, no logging.',
+    title: 'Use AI for MySQL Without Exposing Database Schema',
+    description: 'Anonymize MySQL schema before sending to ChatGPT. Client-side masking hides table and column names with no server storage required.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/how-to-use-ai-for-mysql-without-exposing-database-schema',

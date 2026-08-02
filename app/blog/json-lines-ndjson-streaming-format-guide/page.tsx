@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import JsonLinesNdjsonClient from './client';
 
 export const metadata: Metadata = {
-  title: 'JSON Lines & NDJSON: The Streaming Format Powering Every AI API in 2026 | UnblockDevs',
-  description: 'NDJSON powers OpenAI, Anthropic, and Gemini streaming APIs. Learn JSON Lines format, how to parse streaming LLM responses, build real-time AI UIs, and process massive datasets.',
+  title: 'JSON Lines & NDJSON Streaming Format Guide | UnblockDevs',
+  description: 'NDJSON powers OpenAI, Anthropic, and Gemini streaming APIs. Learn JSON Lines format, parse streaming LLM responses, and build real-time AI UIs with examples.',
   keywords: [
     'ndjson guide',
     'json lines format',
@@ -13,18 +13,16 @@ export const metadata: Metadata = {
     'ndjson vs json',
     'json lines parsing javascript',
     'streaming llm response',
-    'ndjson python',
-    'json newline delimited',
     'server-sent events json',
-    'claude streaming api',
-    'gemini streaming json',
     'json lines big data',
     'ndjson processing nodejs',
-    'real-time ai json streaming',
+    'how to parse ndjson streaming response',
+    'what is json lines format',
+    'ndjson vs regular json',
   ],
   openGraph: {
-    title: 'JSON Lines & NDJSON: The Streaming Format Powering Every AI API in 2026',
-    description: 'NDJSON powers OpenAI, Anthropic, and Gemini streaming. Master JSON Lines parsing, streaming AI UIs, and massive dataset processing.',
+    title: 'JSON Lines & NDJSON: The Streaming Format Behind Every Major AI API',
+    description: 'NDJSON powers OpenAI, Anthropic, and Gemini streaming APIs. This guide covers JSON Lines format, how to parse streaming LLM responses in JavaScript and Python, and how to build real-time AI UIs.',
     type: 'article',
     publishedTime: '2026-05-15T09:00:00Z',
     authors: ['UnblockDevs'],
@@ -33,8 +31,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'JSON Lines & NDJSON: The Streaming Format Powering Every AI API in 2026',
-    description: 'NDJSON powers ChatGPT, Claude, and Gemini streaming. Master it in 15 minutes.',
+    title: 'JSON Lines & NDJSON Streaming Format Guide',
+    description: 'NDJSON powers ChatGPT, Claude, and Gemini streaming. Learn JSON Lines format, parse LLM responses, and build real-time AI UIs fast.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/json-lines-ndjson-streaming-format-guide' },
 };

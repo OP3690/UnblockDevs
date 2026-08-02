@@ -2,24 +2,25 @@ import type { Metadata } from 'next';
 import Mysql10MostUsedFunctionsClient from './client';
 
 export const metadata: Metadata = {
-  title: 'MySQL 10 Most Used Functions Guide | UnblockDevs',
-  description: 'MySQL 10 most used functions: COUNT, SUM, AVG, MAX, MIN, CONCAT, SUBSTRING, DATE_FORMAT, IF, CASE. Syntax & examples.',
+  title: 'MySQL 10 Most Used Functions with Examples | UnblockDevs',
+  description: 'Master the 10 most used MySQL functions: COUNT, SUM, AVG, MAX, MIN, CONCAT, SUBSTRING, DATE_FORMAT, IF, and CASE — with syntax and practical examples.',
   keywords: [
-    'unblock devs mysql',
-    'unblockdevs mysql',
-    'mysql functions',
     'mysql most used functions',
+    'mysql functions guide',
     'mysql count function',
     'mysql sum function',
-    'mysql date functions',
-    'mysql string functions',
     'mysql aggregate functions',
-    'mysql functions guide',
-    'mysql examples'
+    'mysql string functions',
+    'mysql date functions',
+    'mysql IF CASE functions',
+    'mysql functions examples',
+    'most common mysql functions',
+    'mysql CONCAT SUBSTRING guide',
+    'mysql DATE_FORMAT function',
   ],
   openGraph: {
-    title: 'MySQL 10 Most Used Functions Guide',
-    description: 'MySQL 10 most used functions: COUNT, SUM, AVG, MAX, MIN, CONCAT, SUBSTRING, DATE_FORMAT, IF, CASE. Syntax & examples.',
+    title: "MySQL's 10 Most Used Functions — COUNT, SUM, CONCAT, DATE_FORMAT & More",
+    description: 'Learn the 10 MySQL functions every developer reaches for: COUNT, SUM, AVG, MAX, MIN, CONCAT, SUBSTRING, DATE_FORMAT, IF, and CASE. Each one covered with syntax, examples, and practical use cases.',
     type: 'article',
     publishedTime: '2025-01-30T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -28,8 +29,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'MySQL 10 Most Used Functions Guide',
-    description: 'MySQL 10 most used functions: COUNT, SUM, AVG, MAX, MIN, CONCAT, SUBSTRING, DATE_FORMAT, IF, CASE. Syntax & examples.',
+    title: 'MySQL 10 Most Used Functions with Examples',
+    description: "Master MySQL's 10 most used functions: COUNT, SUM, AVG, CONCAT, DATE_FORMAT, IF, CASE — with syntax and practical examples for each.",
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/mysql-10-most-used-functions' },
 

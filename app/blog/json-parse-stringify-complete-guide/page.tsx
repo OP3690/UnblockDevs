@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import JsonParseStringifyClient from './client';
 
 export const metadata: Metadata = {
-  title: 'JSON.parse() and JSON.stringify() — The Complete Developer Guide | UnblockDevs',
-  description: 'Master JSON.parse() and JSON.stringify() in JavaScript. Covers every option, replacer, reviver, error handling, edge cases, performance, and TypeScript-safe patterns.',
+  title: 'JSON.parse() & JSON.stringify() Complete Guide | UnblockDevs',
+  description: 'Master JSON.parse() and JSON.stringify() in JavaScript. Covers every option, replacer, reviver, error handling, edge cases, and TypeScript-safe patterns.',
   keywords: [
     'JSON.parse complete guide',
     'JSON.stringify options',
@@ -20,8 +20,8 @@ export const metadata: Metadata = {
     'json stringify null replacer',
   ],
   openGraph: {
-    title: 'JSON.parse() and JSON.stringify() — The Complete Developer Guide',
-    description: 'Master every option, edge case, and pattern for JSON.parse() and JSON.stringify() in JavaScript and TypeScript.',
+    title: 'JSON.parse() and JSON.stringify() — The Complete JavaScript Developer Guide',
+    description: 'Master every option, edge case, and pattern for JSON.parse() and JSON.stringify() in JavaScript and TypeScript. Covers replacer, reviver, error handling, BigInt edge cases, and performance tips.',
     type: 'article',
     publishedTime: '2026-05-10T09:00:00Z',
     authors: ['UnblockDevs'],
@@ -30,8 +30,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'JSON.parse() and JSON.stringify() — The Complete Developer Guide',
-    description: 'Master every option, edge case, and pattern for JSON.parse() and JSON.stringify() in JavaScript.',
+    title: 'JSON.parse() & JSON.stringify() Complete Guide',
+    description: 'Master every option, edge case, and pattern for JSON.parse() and JSON.stringify() — replacer, reviver, error handling, BigInt, and performance tips.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/json-parse-stringify-complete-guide' },
 };

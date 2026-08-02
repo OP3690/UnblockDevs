@@ -2,25 +2,25 @@ import type { Metadata } from 'next';
 import JsonApiDesignPatternsClient from './client';
 
 export const metadata: Metadata = {
-  title: 'JSON API Design Patterns | UnblockDevs',
-  description: 'JSON API design: RESTful patterns, response structure, error handling, pagination. Industry standards.',
+  title: 'JSON API Design Patterns: RESTful Best Practices | UnblockDevs',
+  description: 'JSON API design patterns for RESTful services: response structure, error handling, pagination, filtering, and versioning with practical code examples.',
   keywords: [
-    'JSON API design',
-    'RESTful API',
-    'API design patterns',
-    'JSON API structure',
-    'API best practices',
-    'REST API design',
+    'JSON API design patterns',
+    'RESTful API design',
+    'JSON API response structure',
+    'API pagination best practices',
+    'JSON API error handling',
+    'REST API best practices',
     'JSON response format',
-    'API pagination',
-    'API filtering',
+    'API versioning patterns',
     'JSON API standards',
-    'API versioning',
-    'JSON API examples'
+    'API filtering design',
+    'how to design a JSON API',
+    'JSON API design best practices guide',
   ],
   openGraph: {
-    title: 'JSON API Design Patterns: RESTful Best Practices & Examples',
-    description: 'JSON API design: RESTful patterns, response structure, industry standards.',
+    title: 'JSON API Design Patterns: RESTful Best Practices & Examples for Developers',
+    description: 'Learn battle-tested JSON API design patterns: consistent response structure, error handling, cursor pagination, field filtering, and versioning strategies with real code examples.',
     type: 'article',
     publishedTime: '2025-01-31T00:00:00.000Z',
     authors: ['UnblockDevs'],
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'JSON API Design Patterns: RESTful Best Practices',
-    description: 'JSON API design: RESTful patterns, pagination, error handling.',
+    description: 'Master JSON API design: response structure, error handling, pagination, filtering, and versioning with practical real-world examples.',
   },  alternates: { canonical: 'https://unblockdevs.com/blog/json-api-design-patterns' },
 
 };

@@ -2,24 +2,22 @@ import type { Metadata } from 'next';
 import JsonInDatabasesClient from './client';
 
 export const metadata: Metadata = {
-  title: 'JSON in Databases 2026: PostgreSQL JSONB vs MySQL JSON vs MongoDB Complete Guide | UnblockDevs',
-  description: 'Store, query, and index JSON in PostgreSQL JSONB, MySQL JSON columns, and MongoDB. When to use JSON columns vs normalized tables, GIN indexing, aggregation pipelines, and a full decision framework.',
+  title: 'JSON in PostgreSQL JSONB, MySQL & MongoDB Guide | UnblockDevs',
+  description: 'Compare JSON storage in PostgreSQL JSONB, MySQL JSON columns, and MongoDB. Learn querying, indexing, and when to use JSON columns vs normalized tables.',
   keywords: [
     'postgresql jsonb guide',
-    'json in database 2026',
+    'json in database',
     'postgresql jsonb vs json',
     'mysql json column',
     'mongodb json documents',
     'jsonb indexing postgresql',
-    'json column sql',
     'store json in database',
     'postgresql jsonb query',
-    'nosql vs sql json',
     'jsonb gin index',
-    'semi-structured data database',
     'mongodb vs postgresql json',
     'json database design',
-    'dynamic json schema database',
+    'when to use JSON columns vs tables',
+    'postgresql jsonb operators',
   ],
   openGraph: {
     title: 'JSON in Databases 2026: PostgreSQL JSONB vs MySQL JSON vs MongoDB',
@@ -32,8 +30,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'JSON in Databases 2026: PostgreSQL JSONB vs MySQL vs MongoDB',
-    description: 'JSONB queries, GIN indexing, MySQL JSON operators, MongoDB aggregation — everything about JSON storage in databases.',
+    title: 'JSON in PostgreSQL JSONB, MySQL & MongoDB Guide',
+    description: 'JSONB queries, GIN indexing, MySQL JSON operators, MongoDB aggregation pipelines — everything about JSON storage in SQL and NoSQL databases.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/json-in-databases-postgresql-jsonb-mysql-mongodb' },
 };

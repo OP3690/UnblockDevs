@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import HowToValidateApiResponseUsingJsonSchemaClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Validate API Response Using JSON Schema | Complete Guide 2026',
-  description: 'Validate API responses with JSON Schema. JavaScript, Python, Node.js. Libraries, best practices.',
+  title: 'Validate API Response with JSON Schema | UnblockDevs',
+  description: 'Validate API responses with JSON Schema. Learn key libraries, validation patterns, and error handling in JavaScript, Python, and Node.js with real examples.',
   keywords: [
     'validate api response json schema',
     'json schema validation',
@@ -12,18 +12,15 @@ export const metadata: Metadata = {
     'validate api response javascript',
     'json schema api testing',
     'api response schema validation',
-    'json schema validation library',
-    'validate json response',
-    'api response validator',
-    'json schema validator online',
-    'validate api response python',
     'json schema validation nodejs',
+    'validate api response python',
     'api testing json schema',
-    'json schema validation best practices'
+    'how to validate api response with json schema',
+    'json schema api validation best practices',
   ],
   openGraph: {
-    title: 'How to Validate API Response Using JSON Schema | Complete Guide 2026',
-    description: 'Validate API responses with JSON Schema. JS, Python, Node. Code examples.',
+    title: 'How to Validate API Responses Using JSON Schema — Complete 2026 Guide',
+    description: 'Stop trusting API responses blindly. Validate them with JSON Schema in JavaScript, Python, and Node.js — with library examples, error handling patterns, and production-ready validation tips.',
     type: 'article',
     publishedTime: '2026-01-29T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -33,8 +30,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'How to Validate API Response Using JSON Schema | Complete Guide 2026',
-    description: 'Validate API responses with JSON Schema. JS, Python, Node. Code examples.',
+    title: 'Validate API Response with JSON Schema',
+    description: 'Validate API responses using JSON Schema in JavaScript, Python, and Node.js. Libraries, patterns, and error handling examples included.',
   },  alternates: { canonical: 'https://unblockdevs.com/blog/how-to-validate-api-response-using-json-schema' },
 
 };

@@ -2,24 +2,25 @@ import type { Metadata } from 'next';
 import Mysql25MostUsedQueriesClient from './client';
 
 export const metadata: Metadata = {
-  title: 'MySQL 25 Most Used Queries: Complete Guide with Examples | UnblockDevs',
-  description: 'MySQL 25 most used queries: SELECT, INSERT, UPDATE, DELETE, JOIN, WHERE, GROUP BY. Syntax, examples, best practices.',
+  title: 'MySQL 25 Most Used Queries with Examples | UnblockDevs',
+  description: 'The 25 most used MySQL queries explained: SELECT, INSERT, UPDATE, DELETE, JOIN, WHERE, and GROUP BY with syntax, practical examples, and best practices.',
   keywords: [
-    'unblock devs mysql',
-    'unblockdevs mysql',
-    'mysql queries',
     'mysql most used queries',
+    'mysql queries guide',
     'mysql select query',
     'mysql join queries',
     'mysql insert update delete',
     'mysql query examples',
-    'mysql sql queries',
+    'mysql WHERE GROUP BY',
     'mysql database queries',
-    'mysql query guide'
+    'mysql query best practices',
+    'most common mysql queries',
+    'mysql queries for beginners',
+    'mysql SELECT JOIN guide',
   ],
   openGraph: {
-    title: 'MySQL 25 Most Used Queries: Complete Guide with Examples | UnblockDevs',
-    description: 'MySQL 25 most used queries: SELECT, INSERT, UPDATE, DELETE, JOIN, WHERE, GROUP BY. Syntax, examples, best practices.',
+    title: "MySQL's 25 Most Used Queries — SELECT, INSERT, JOIN, GROUP BY & More",
+    description: 'The 25 MySQL queries every developer uses: SELECT, INSERT, UPDATE, DELETE, JOIN, WHERE, GROUP BY, subqueries, and more — each with syntax, real examples, and best practices.',
     type: 'article',
     publishedTime: '2025-01-30T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -28,8 +29,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'MySQL 25 Most Used Queries: Complete Guide with Examples | UnblockDevs',
-    description: 'MySQL 25 most used queries: SELECT, INSERT, UPDATE, DELETE, JOIN, WHERE, GROUP BY. Syntax, examples, best practices.',
+    title: 'MySQL 25 Most Used Queries with Examples',
+    description: 'The 25 most used MySQL queries explained with syntax and real examples: SELECT, INSERT, UPDATE, DELETE, JOIN, WHERE, GROUP BY, and subqueries.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/mysql-25-most-used-queries' },
 };
