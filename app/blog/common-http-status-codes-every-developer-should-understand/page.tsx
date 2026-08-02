@@ -3,31 +3,24 @@ import BlogPostClient from './client';
 
 export const metadata: Metadata = {
   title: 'HTTP Status Codes Every Developer Should Know | UnblockDevs',
-  description: 'HTTP status codes: 200, 201, 400, 401, 403, 404, 500, 502, 503. What each means, when to use, how to handle.',
+  description: 'HTTP status codes explained: 200, 201, 301, 400, 401, 403, 404, 500, 502, 503. What each code means, when it occurs, and how to handle it in your API.',
   keywords: [
     'http status codes',
-    'http status code',
-    'status codes',
-    'http codes',
-    '200 ok',
-    '404 not found',
-    '500 internal server error',
-    'http response codes',
+    'http status code list',
+    'http error codes',
     'api status codes',
     'rest api status codes',
-    'http error codes',
-    'status code meaning',
-    'http status code list',
-    'developer guide http codes',
-    'example of 400 api status code',
+    '404 not found',
+    '500 internal server error',
     '400 bad request example',
-    '400 status code api example',
     '401 unauthorized example',
-    '403 forbidden example'
+    '403 forbidden example',
+    'http response codes explained',
+    'what does 502 mean'
   ],
   openGraph: {
-    title: 'HTTP Status Codes Every Developer Should Know | UnblockDevs',
-    description: 'Learn all HTTP status codes: 200, 400, 404, 500. Understand what each code means and when to use them.',
+    title: 'HTTP Status Codes Every Developer Should Know: 2xx, 3xx, 4xx, 5xx Explained',
+    description: 'A complete HTTP status code reference — 200, 201, 301, 400, 401, 403, 404, 500, 502, 503 and more. Learn what each code means, when it is returned, and how to handle it in your API or web app.',
     type: 'article',
     publishedTime: '2026-02-04T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -37,8 +30,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'HTTP Status Codes Every Developer Should Know | UnblockDevs',
-    description: 'Learn all HTTP status codes: 200, 400, 404, 500. Understand what each code means and when to use them.',
+    title: 'HTTP Status Codes Every Developer Should Know',
+    description: 'HTTP status codes explained: 200, 400, 401, 403, 404, 500, and more. What each code means and how to handle it — quick developer reference.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/common-http-status-codes-every-developer-should-understand',

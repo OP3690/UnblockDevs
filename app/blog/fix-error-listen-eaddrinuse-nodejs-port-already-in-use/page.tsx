@@ -3,27 +3,24 @@ import FixErrorListenEaddrinuseNodejsPortAlreadyInUseClient from './client';
 
 export const metadata: Metadata = {
   title: 'Fix EADDRINUSE Port in Use – Node.js 2026 | UnblockDevs',
-  description: 'Fix "Error: listen EADDRINUSE" in Node.js. Port conflicts, kill process, change port. With code examples.',
+  description: 'Fix "Error: listen EADDRINUSE" in Node.js: how to find and kill the conflicting process, change ports, and prevent port conflicts. With code examples.',
   keywords: [
     'error listen eaddrinuse',
     'fix eaddrinuse nodejs',
     'port already in use nodejs',
     'eaddrinuse error fix',
     'nodejs port conflict',
-    'port already in use error',
     'fix port already in use',
     'nodejs eaddrinuse',
     'kill process on port',
     'change port nodejs',
-    'port already in use solution',
-    'nodejs port error',
     'eaddrinuse address already in use',
     'fix nodejs port error',
-    'port conflict nodejs'
+    'how to free up a port nodejs'
   ],
   openGraph: {
-    title: 'Fix EADDRINUSE Port in Use – Node.js 2026 | UnblockDevs',
-    description: 'Fix "Error: listen EADDRINUSE" in Node.js. Port conflicts, kill process, change port.',
+    title: 'Fix Error listen EADDRINUSE Address Already in Use in Node.js',
+    description: 'Learn how to fix "Error: listen EADDRINUSE" in Node.js — find which process is using the port, kill it, change the port, or prevent conflicts altogether. Code examples included.',
     type: 'article',
     publishedTime: '2026-02-01T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -33,8 +30,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Fix EADDRINUSE Port in Use – Node.js 2026 | UnblockDevs',
-    description: 'Fix "Error: listen EADDRINUSE" in Node.js. Port conflicts, kill process, change port.',
+    title: 'Fix EADDRINUSE Port in Use – Node.js 2026',
+    description: 'Fix Node.js EADDRINUSE: find and kill the conflicting process, change ports, or prevent conflicts. Quick guide with terminal commands.',
   },  alternates: { canonical: 'https://unblockdevs.com/blog/fix-error-listen-eaddrinuse-nodejs-port-already-in-use' },
 
 };

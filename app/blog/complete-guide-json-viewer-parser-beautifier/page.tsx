@@ -4,29 +4,25 @@ import { ArrowLeft, FileText, Code, Eye, CheckCircle } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'JSON Viewer, Parser & Beautifier Guide | UnblockDevs',
-  description: 'JSON Viewer, Parser, Beautifier: visualize, parse, format JSON. Better dev workflow.',
+  description: 'JSON Viewer, Parser, and Beautifier explained: how to visualize, parse, validate, and format JSON data. Improve your dev workflow with the right JSON tools.',
   keywords: [
     'json formatter online free',
-    'json diff tool online',
     'JSON Viewer',
     'JSON Parser',
     'JSON Beautifier',
     'JSON Formatter',
     'JSON tools',
-    'JSON visualization',
-    'JSON structure viewer',
     'JSON tree viewer',
-    'JSON editor',
     'JSON validator',
-    'JSON online tools',
     'how to view JSON',
     'how to parse JSON',
     'how to beautify JSON',
-    'JSON best practices',
+    'json diff tool online',
+    'json online tools free'
   ],
   openGraph: {
-    title: 'Complete Guide to JSON Viewer, Parser, and Beautifier Tools',
-    description: 'JSON Viewer, Parser, Beautifier: visualize, parse, format JSON.',
+    title: 'Complete Guide to JSON Viewer, Parser, and Beautifier: Pick the Right Tool',
+    description: 'Learn the difference between a JSON Viewer, JSON Parser, and JSON Beautifier — what each tool does, when to use it, and how it fits into your development workflow. Free JSON tools included.',
     type: 'article',
     publishedTime: '2024-01-15T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -35,8 +31,8 @@ export const metadata: Metadata = {
 
   },  twitter: {
     card: 'summary_large_image',
-    title: 'Complete Guide to JSON Viewer, Parser, and Beautifier Tools',
-    description: 'JSON Viewer, Parser, Beautifier: visualize, parse, format JSON.',
+    title: 'Complete Guide to JSON Viewer, Parser, and Beautifier',
+    description: 'JSON Viewer, Parser, and Beautifier explained. Learn what each tool does and how to use them to visualize, validate, and format JSON data.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/complete-guide-json-viewer-parser-beautifier' },
 

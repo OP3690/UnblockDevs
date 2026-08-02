@@ -3,7 +3,7 @@ import AgenticAiCompleteGuideClient from './client';
 
 export const metadata: Metadata = {
   title: 'Agentic AI: Complete Guide to Autonomous AI Agents | UnblockDevs',
-  description: 'Agentic AI: autonomous agents, multi-agent systems, real-world apps. How AI agents work and their impact.',
+  description: 'Agentic AI explained: how autonomous AI agents work, multi-agent systems, and real-world applications. Learn what makes AI truly autonomous and agentic in 2026.',
   keywords: [
     'agentic ai',
     'ai agents',
@@ -11,11 +11,17 @@ export const metadata: Metadata = {
     'ai agent systems',
     'multi-agent ai',
     'intelligent agents',
-    'ai agent architecture'
+    'ai agent architecture',
+    'ai planning agents',
+    'what is agentic ai',
+    'how do ai agents work',
+    'agentic ai vs chatbots',
+    'agentic ai examples',
+    'agentic ai use cases'
   ],
   openGraph: {
-    title: 'Agentic AI: Complete Guide to Autonomous AI Agents',
-    description: 'Agentic AI: autonomous agents, multi-agent systems, real-world apps. How AI agents work and their impact.',
+    title: 'Agentic AI Complete Guide: Autonomous Agents, Multi-Agent Systems & Real-World Use Cases',
+    description: 'Learn how agentic AI works — autonomous agents, multi-agent systems, planning, and memory. Discover real-world applications and understand what sets agentic AI apart from regular chatbots.',
     type: 'article',
     publishedTime: '2025-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -25,7 +31,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Agentic AI: Complete Guide to Autonomous AI Agents',
-    description: 'Agentic AI: autonomous agents, multi-agent systems, real-world apps. How AI agents work and their impact.',
+    description: 'Agentic AI explained: autonomous agents, multi-agent systems, and real-world use cases. Learn how AI agents work and what makes them autonomous.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/agentic-ai-complete-guide' },
 

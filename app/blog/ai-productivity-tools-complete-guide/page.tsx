@@ -3,21 +3,24 @@ import AiProductivityToolsCompleteGuideClient from './client';
 
 export const metadata: Metadata = {
   title: 'AI Productivity Tools: Cursor, Claude & More | UnblockDevs',
-  description: 'AI productivity tools: Cursor, Claude, Perplexity. Best prompts and real-world use. Get more done.',
+  description: 'AI productivity tools compared: Cursor, Claude, Perplexity, and more. Best prompts, real-world use cases, and practical tips for getting more done with AI in 2026.',
   keywords: [
-    'unblock devs ai',
-    'unblockdevs ai',
     'ai productivity tools',
     'cursor ai',
     'claude ai',
     'ai coding assistant',
     'ai tools comparison',
-    'best ai tools',
-    'ai assistant tools'
+    'best ai tools 2026',
+    'ai assistant tools',
+    'perplexity ai',
+    'ai tools for developers',
+    'best ai productivity apps',
+    'ai workflow tools',
+    'ai prompts for productivity'
   ],
   openGraph: {
-    title: 'AI Productivity Tools: Cursor, Claude & More',
-    description: 'AI productivity tools: Cursor, Claude, Perplexity. Best prompts and real-world use. Get more done.',
+    title: 'AI Productivity Tools: Cursor, Claude, Perplexity & More — Full Comparison Guide',
+    description: 'Explore the best AI productivity tools — Cursor, Claude, Perplexity, and more. Includes real-world use cases, best prompts, and practical tips for getting more done with AI in 2026.',
     type: 'article',
     publishedTime: '2025-01-28T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -27,7 +30,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'AI Productivity Tools: Cursor, Claude & More',
-    description: 'AI productivity tools: Cursor, Claude, Perplexity. Best prompts and real-world use. Get more done.',
+    description: 'Cursor, Claude, Perplexity — top AI productivity tools ranked. Best prompts and real workflows included. Get more done with AI.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/ai-productivity-tools-complete-guide' },
 

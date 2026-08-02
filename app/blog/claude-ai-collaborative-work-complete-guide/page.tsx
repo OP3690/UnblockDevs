@@ -1,33 +1,25 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Claude AI for Collaborative Work: Complete Guide 2026 | UnblockDevs',
-  description: 'Use Claude AI for collaborative work and team productivity. Features, best practices, use cases. Team collaboration with AI.',
+  title: 'Claude AI for Team Collaboration: Complete Guide | UnblockDevs',
+  description: 'Claude AI for collaborative work: how to use it with teams, best practices, key use cases, and productivity tips. Your complete guide to team AI collaboration.',
   keywords: [
     'claude ai collaborative work',
-    'claude ai teamwork',
     'claude ai for teams',
     'claude ai collaboration',
-    'claude ai cowork',
     'claude ai productivity',
     'claude ai team tools',
     'claude ai workspace',
     'claude ai business',
-    'claude ai enterprise',
     'anthropic claude collaboration',
-    'claude ai features',
     'claude ai use cases',
     'claude ai best practices',
-    'claude ai workflow',
     'ai collaboration tools',
-    'claude ai integration',
-    'claude ai tips',
-    'claude ai guide',
-    'claude ai tutorial'
+    'how to use claude ai for teamwork'
   ],
   openGraph: {
-    title: 'Claude AI for Collaborative Work: Complete Guide 2026',
-    description: 'Learn how to use Claude AI for collaborative work and team productivity. Complete guide with features, best practices, and use cases.',
+    title: 'Claude AI for Collaborative Work: Features, Use Cases & Team Best Practices',
+    description: 'Learn how to use Claude AI for collaborative work — team brainstorming, document drafting, code reviews, and more. Covers best practices, use cases, and practical tips for teams in 2026.',
     type: 'article',
     publishedTime: '2026-02-09T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -37,8 +29,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Claude AI for Collaborative Work: Complete Guide 2026',
-    description: 'Learn how to use Claude AI for collaborative work and team productivity. Complete guide with features, best practices, and use cases.',
+    title: 'Claude AI for Team Collaboration: Complete Guide',
+    description: 'Use Claude AI for team collaboration — brainstorming, writing, code reviews, and more. Best practices and real use cases for productive teams.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/claude-ai-collaborative-work-complete-guide',

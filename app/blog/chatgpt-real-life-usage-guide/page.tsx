@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import ChatgptRealLifeUsageGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'ChatGPT Usage Guide: Best Prompts | UnblockDevs',
-  description: 'ChatGPT in real life: use cases, best prompts, when to use. Prompt engineering for developers and pros.',
+  title: 'ChatGPT Real-World Usage Guide: Best Prompts | UnblockDevs',
+  description: 'ChatGPT real-world usage guide: best prompts, use cases, and when to use it vs other AI tools. Learn prompt engineering for developers and professionals.',
   keywords: [
     'chatgpt real life usage',
     'chatgpt prompts',
@@ -11,11 +11,15 @@ export const metadata: Metadata = {
     'chatgpt for developers',
     'chatgpt best practices',
     'chatgpt examples',
-    'prompt engineering chatgpt'
+    'prompt engineering chatgpt',
+    'chatgpt use cases',
+    'chatgpt tips and tricks',
+    'chatgpt vs claude',
+    'best chatgpt prompts for developers'
   ],
   openGraph: {
-    title: 'ChatGPT Usage Guide: Best Prompts',
-    description: 'ChatGPT in real life: use cases, best prompts, when to use. Prompt engineering for developers and pros.',
+    title: 'ChatGPT Real-World Usage Guide: Best Prompts & Use Cases for Developers',
+    description: 'Learn how to use ChatGPT in real life — the best prompts, practical use cases, when to use it vs other AI tools, and prompt engineering tips for developers and professionals.',
     type: 'article',
     publishedTime: '2025-01-28T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -24,8 +28,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ChatGPT Usage Guide: Best Prompts',
-    description: 'ChatGPT in real life: use cases, best prompts, when to use. Prompt engineering for developers and pros.',
+    title: 'ChatGPT Real-World Usage Guide: Best Prompts',
+    description: 'ChatGPT real-life usage: best prompts, top use cases, and when to use it vs Claude or Perplexity. Practical guide for developers.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/chatgpt-real-life-usage-guide' },
 

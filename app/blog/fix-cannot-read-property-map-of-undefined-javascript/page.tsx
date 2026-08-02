@@ -3,27 +3,23 @@ import FixCannotReadPropertyMapOfUndefinedJavaScriptClient from './client';
 
 export const metadata: Metadata = {
   title: 'Fix Cannot Read Property map of Undefined in JS | UnblockDevs',
-  description: 'Fix "Cannot read property \'map\' of undefined" in JavaScript/React. Solutions and code examples.',
+  description: 'Fix "Cannot read property \'map\' of undefined" in JavaScript and React. Covers null checks, default values, and optional chaining, with clear code examples.',
   keywords: [
     'cannot read property map of undefined',
     'fix map undefined error',
     'javascript map undefined',
     'react map undefined error',
     'cannot read property map',
-    'map undefined javascript',
     'fix map error javascript',
-    'undefined map error',
-    'javascript map undefined fix',
     'react map undefined fix',
     'array map undefined',
-    'fix cannot read property',
     'map undefined solution',
-    'javascript map error',
-    'react map error fix'
+    'javascript map error fix',
+    'react rendering undefined array'
   ],
   openGraph: {
-    title: 'Fix Cannot Read Property map of Undefined in JS | UnblockDevs',
-    description: 'Fix "Cannot read property \'map\' of undefined" in JavaScript/React. Solutions and examples.',
+    title: 'Fix "Cannot read property map of undefined" in JavaScript and React',
+    description: 'Learn to fix "Cannot read property \'map\' of undefined" in JavaScript and React with null checks, default empty arrays, and optional chaining. Code examples included for each solution.',
     type: 'article',
     publishedTime: '2026-01-28T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -33,8 +29,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Fix Cannot Read Property map of Undefined in JS | UnblockDevs',
-    description: 'Fix "Cannot read property \'map\' of undefined" in JavaScript/React. Solutions and examples.',
+    title: 'Fix Cannot Read Property map of Undefined in JS',
+    description: 'Fix "cannot read property map of undefined" in JS/React with null checks, default arrays, and optional chaining. Clear code examples included.',
   },  alternates: { canonical: 'https://unblockdevs.com/blog/fix-cannot-read-property-map-of-undefined-javascript' },
 
 };

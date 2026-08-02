@@ -3,7 +3,7 @@ import ApacheKafkaCompleteGuideClient from './client';
 
 export const metadata: Metadata = {
   title: 'Apache Kafka: Complete Guide - What, How, Why | UnblockDevs',
-  description: 'Apache Kafka: architecture, event streaming, topics, partitions, producers/consumers. How it works, best practices.',
+  description: 'Apache Kafka complete guide: architecture, topics, partitions, producers, and consumers. Learn how Kafka event streaming works and when to use it in practice.',
   keywords: [
     'apache kafka',
     'kafka tutorial',
@@ -11,11 +11,17 @@ export const metadata: Metadata = {
     'event streaming',
     'kafka producer consumer',
     'kafka topics partitions',
-    'distributed messaging'
+    'distributed messaging',
+    'kafka complete guide',
+    'how does kafka work',
+    'kafka brokers',
+    'kafka consumer groups',
+    'apache kafka explained',
+    'when to use kafka'
   ],
   openGraph: {
-    title: 'Apache Kafka: Complete Guide - What, How, Why',
-    description: 'Apache Kafka: architecture, event streaming, topics, partitions, producers/consumers. How it works, best practices.',
+    title: 'Apache Kafka Complete Guide: Architecture, Topics, Producers, Consumers & Event Streaming',
+    description: 'Everything you need to know about Apache Kafka — how event streaming works, Kafka architecture, topics and partitions, producers and consumers, and best practices for real-world deployments.',
     type: 'article',
     publishedTime: '2025-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -25,7 +31,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Apache Kafka: Complete Guide - What, How, Why',
-    description: 'Apache Kafka: architecture, event streaming, topics, partitions, producers/consumers. How it works, best practices.',
+    description: 'Apache Kafka explained: architecture, topics, partitions, producers, consumers, and event streaming. Complete guide with best practices included.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/apache-kafka-complete-guide' },
 

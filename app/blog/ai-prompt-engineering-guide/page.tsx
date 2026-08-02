@@ -2,22 +2,25 @@ import type { Metadata } from 'next';
 import AiPromptEngineeringGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'AI Prompt Engineering Guide | UnblockDevs',
-  description: 'AI prompt engineering: effective prompts, best practices, techniques, templates. ChatGPT, Cursor, and more.',
+  title: 'AI Prompt Engineering: Guide to Better AI Prompts | UnblockDevs',
+  description: 'AI prompt engineering: how to write effective prompts for ChatGPT, Cursor, and more. Learn best practices, proven techniques, and ready-to-use templates for better outputs.',
   keywords: [
-    'unblock devs ai',
-    'unblockdevs ai',
     'ai prompt engineering',
     'how to write ai prompts',
     'best ai prompts',
     'prompt engineering techniques',
     'chatgpt prompts',
     'ai prompt templates',
-    'effective ai prompts'
+    'effective ai prompts',
+    'prompt engineering guide',
+    'ai prompting best practices',
+    'claude prompts',
+    'what is prompt engineering',
+    'how to prompt ai models'
   ],
   openGraph: {
-    title: 'AI Prompt Engineering Guide',
-    description: 'AI prompt engineering: effective prompts, best practices, techniques, templates. ChatGPT, Cursor, and more.',
+    title: 'AI Prompt Engineering Guide: Write Better Prompts for ChatGPT, Claude & Cursor',
+    description: 'Master AI prompt engineering — learn to write clear, effective prompts for ChatGPT, Claude, and Cursor. Includes best practices, proven techniques, and ready-to-use templates for better AI outputs.',
     type: 'article',
     publishedTime: '2025-01-28T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -26,8 +29,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AI Prompt Engineering Guide',
-    description: 'AI prompt engineering: effective prompts, best practices, techniques, templates. ChatGPT, Cursor, and more.',
+    title: 'AI Prompt Engineering: Guide to Better AI Prompts',
+    description: 'Learn AI prompt engineering: effective prompts, best practices, and templates for ChatGPT, Cursor, and more. Get consistently better AI outputs.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/ai-prompt-engineering-guide' },
 

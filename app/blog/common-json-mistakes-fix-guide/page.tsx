@@ -3,29 +3,24 @@ import CommonJsonMistakesGuideClient from './client';
 
 export const metadata: Metadata = {
   title: '10 Common JSON Mistakes & How to Fix | UnblockDevs',
-  description: 'Fix common JSON mistakes: trailing commas, missing quotes, broken arrays. Free JSON Fixer. Paste to fix.',
+  description: 'Fix the 10 most common JSON mistakes: trailing commas, missing quotes, wrong data types, and more. Paste your broken JSON and fix it instantly with our free tool.',
   keywords: [
-    'how to fix invalid json from ai',
+    'common JSON errors',
     'fix invalid json',
     'fix broken JSON online',
-    'common JSON errors',
     'remove trailing comma json',
     'malformed JSON fixer',
     'JSON syntax errors',
-    'JSON validation',
     'JSON repair tool',
-    'fix JSON mistakes',
-    'JSON error fixing',
-    'broken JSON',
-    'invalid JSON',
-    'JSON parser errors',
-    'JSON debugging',
+    'how to fix invalid json from ai',
+    'JSON validation errors',
     'fix JSON online free',
-    'JSON error checker'
+    'json mistake examples',
+    'json debugging guide'
   ],
   openGraph: {
-    title: '10 Most Common JSON Mistakes Developers Make (And How to Fix Them Instantly)',
-    description: '10 common JSON mistakes and how to fix them. Free JSON Fixer.',
+    title: '10 Most Common JSON Mistakes Developers Make — And How to Fix Them Instantly',
+    description: 'Learn the 10 most common JSON mistakes developers make — trailing commas, missing quotes, wrong data types, and more — with clear before-and-after examples and a free JSON fixer to repair them instantly.',
     type: 'article',
     publishedTime: '2025-01-15T00:00:00.000Z',
     authors: ['UnblockDevs'],
@@ -37,7 +32,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: '10 Most Common JSON Mistakes Developers Make',
-    description: 'Fix common JSON errors instantly. Free JSON Fixer.',
+    description: 'The 10 most common JSON mistakes — trailing commas, missing quotes, wrong data types — explained with fixes. Try our free JSON fixer tool.',
   },  alternates: { canonical: 'https://unblockdevs.com/blog/common-json-mistakes-fix-guide' },
 
 };

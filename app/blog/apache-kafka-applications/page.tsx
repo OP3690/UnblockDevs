@@ -3,7 +3,7 @@ import ApacheKafkaApplicationsClient from './client';
 
 export const metadata: Metadata = {
   title: 'Apache Kafka Applications & Examples | UnblockDevs',
-  description: 'Explore real-world Apache Kafka applications: microservices, IoT, real-time analytics, log aggregation, financial systems, and event-driven architectures with practical examples.',
+  description: 'Apache Kafka applications in practice: microservices, IoT, real-time analytics, log aggregation, and event-driven systems. Real-world Kafka use cases with practical examples.',
   keywords: [
     'kafka applications',
     'kafka use cases',
@@ -11,11 +11,17 @@ export const metadata: Metadata = {
     'event streaming applications',
     'kafka microservices',
     'kafka iot',
-    'kafka analytics'
+    'kafka analytics',
+    'kafka log aggregation',
+    'kafka financial systems',
+    'kafka event driven architecture',
+    'apache kafka examples',
+    'what is kafka used for',
+    'kafka real time data'
   ],
   openGraph: {
-    title: 'Apache Kafka Applications: Real-World Use Cases & Examples | UnblockDevs',
-    description: 'Explore real-world Apache Kafka applications: microservices, IoT, real-time analytics, log aggregation, financial systems, and event-driven architectures with practical examples.',
+    title: 'Apache Kafka Applications: Real-World Use Cases & Practical Examples',
+    description: 'Explore how Apache Kafka is used in real-world systems — microservices, IoT, real-time analytics, log aggregation, and event-driven architectures. Includes practical examples for each use case.',
     type: 'article',
     publishedTime: '2025-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -24,8 +30,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Apache Kafka Applications: Real-World Use Cases & Examples | UnblockDevs',
-    description: 'Explore real-world Apache Kafka applications: microservices, IoT, real-time analytics, log aggregation, financial systems, and event-driven architectures with practical examples.',
+    title: 'Apache Kafka Applications & Examples',
+    description: 'Real-world Apache Kafka use cases: microservices, IoT, real-time analytics, log aggregation, and event-driven systems. Practical examples included.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/apache-kafka-applications' },
 };

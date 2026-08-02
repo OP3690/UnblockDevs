@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import CurlToPythonRequestsGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Convert cURL to Python Requests | UnblockDevs',
-  description: 'Learn how to convert cURL commands to Python Requests library. Step-by-step guide with real examples, authentication, headers, JSON data, and error handling. Free converter tool included.',
+  title: 'cURL to Python Requests: Complete Converter Guide | UnblockDevs',
+  description: 'Convert cURL commands to Python Requests: real examples covering authentication, headers, JSON body, and error handling. Free cURL-to-Python converter included.',
   keywords: [
     'curl to python requests',
     'convert curl to python',
@@ -11,11 +11,15 @@ export const metadata: Metadata = {
     'python requests from curl',
     'convert curl command python',
     'curl python converter',
-    'python http requests tutorial'
+    'python http requests tutorial',
+    'curl authentication python',
+    'curl headers python requests',
+    'how to convert curl to python',
+    'curl to python online tool'
   ],
   openGraph: {
-    title: 'How to Convert cURL to Python Requests: Complete Guide',
-    description: 'Step-by-step guide to convert cURL commands to Python Requests with real examples and best practices.',
+    title: 'How to Convert cURL Commands to Python Requests: Step-by-Step Guide',
+    description: 'Learn to convert cURL commands to Python Requests with real examples — authentication, headers, JSON data, file uploads, and error handling. Includes a free online cURL-to-Python converter tool.',
     type: 'article',
     publishedTime: '2025-01-15T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -25,8 +29,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'How to Convert cURL to Python Requests: Complete Guide',
-    description: 'Step-by-step guide to convert cURL commands to Python Requests with real examples and best practices.',
+    title: 'cURL to Python Requests: Complete Converter Guide',
+    description: 'Convert cURL to Python Requests with real examples — auth, headers, JSON body, file uploads, error handling. Free converter tool included.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/curl-to-python-requests-complete-guide' },
 };

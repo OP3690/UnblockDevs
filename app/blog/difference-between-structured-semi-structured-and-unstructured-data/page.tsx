@@ -6,7 +6,7 @@ export const revalidate = 86400; // 24h cache, static at build
 
 export const metadata: Metadata = {
   title: 'Structured vs Semi-Structured vs Unstructured Data | UnblockDevs',
-  description: 'Structured vs semi-structured vs unstructured data. When to use each, storage, processing. Comparison guide.',
+  description: 'Structured vs semi-structured vs unstructured data: definitions, examples, storage, and processing. Learn which data type fits your use case and why it matters.',
   keywords: [
     'structured data',
     'semi structured data',
@@ -22,8 +22,8 @@ export const metadata: Metadata = {
     'unstructured data processing'
   ],
   openGraph: {
-    title: 'Structured vs Semi-Structured vs Unstructured Data | UnblockDevs',
-    description: 'Learn the difference between structured, semi-structured, and unstructured data with examples and comparisons.',
+    title: 'Structured vs Semi-Structured vs Unstructured Data: Full Comparison Guide',
+    description: 'Understand the difference between structured, semi-structured, and unstructured data — with real examples, storage options, and processing approaches for each type. Learn when to use which.',
     type: 'article',
     publishedTime: '2026-02-07T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -33,8 +33,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Structured vs Semi-Structured vs Unstructured Data | UnblockDevs',
-    description: 'Learn the difference between structured, semi-structured, and unstructured data with examples and comparisons.',
+    title: 'Structured vs Semi-Structured vs Unstructured Data',
+    description: 'Structured vs semi-structured vs unstructured data explained — examples, storage, and processing for each type. Learn the differences clearly.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/difference-between-structured-semi-structured-and-unstructured-data',

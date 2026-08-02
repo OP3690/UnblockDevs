@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import CursorAiCodeEditorGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Cursor AI Code Editor: Complete Guide & Best Practices | UnblockDevs',
-  description: 'Complete guide to Cursor AI code editor: how to use it, what it does, when to use it, and best practices. Learn Cursor shortcuts, features, and prompt techniques for maximum productivity.',
+  title: 'Cursor AI Code Editor: Complete Guide & Tips | UnblockDevs',
+  description: 'Cursor AI code editor complete guide: shortcuts, features, prompts, and best practices. Learn how to use Cursor effectively to code faster with AI assistance.',
   keywords: [
     'cursor ai',
     'cursor code editor',
@@ -12,22 +12,16 @@ export const metadata: Metadata = {
     'cursor vs vs code',
     'ai code editor',
     'cursor best practices',
-    'cursor ai code editor official documentation',
-    'cursor ai editor documentation',
-    'cursor code editor documentation',
     'cursor ai features',
-    'cursor ai official docs',
-    'cursor ide',
-    'cursor ai composer',
     'cursor ai shortcuts',
     'cursor ai guide',
     'cursor ai setup',
-    'cursor ai tab completion',
-    'cursor ai chat'
+    'cursor ai composer',
+    'cursor ai tab completion'
   ],
   openGraph: {
-    title: 'Cursor AI Code Editor: Complete Guide & Best Practices | UnblockDevs',
-    description: 'Complete guide to Cursor AI code editor: how to use it, what it does, when to use it, and best practices. Learn Cursor shortcuts, features, and prompt techniques for maximum productivity.',
+    title: 'Cursor AI Code Editor: Complete Guide with Shortcuts, Features & Best Practices',
+    description: 'Everything you need to know about Cursor AI — shortcuts, features, prompt techniques, and how it compares to VS Code. A complete guide to coding faster with AI-powered assistance.',
     type: 'article',
     publishedTime: '2025-01-28T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -36,8 +30,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Cursor AI Code Editor: Complete Guide & Best Practices | UnblockDevs',
-    description: 'Complete guide to Cursor AI code editor: how to use it, what it does, when to use it, and best practices. Learn Cursor shortcuts, features, and prompt techniques for maximum productivity.',
+    title: 'Cursor AI Code Editor: Complete Guide & Tips',
+    description: 'Cursor AI complete guide: shortcuts, features, best practices, and prompts for maximum productivity. Learn how to code faster with Cursor AI.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/cursor-ai-code-editor-guide' },
 };

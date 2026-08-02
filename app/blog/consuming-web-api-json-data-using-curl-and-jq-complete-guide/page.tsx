@@ -1,33 +1,25 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Web API JSON with curl and jq 2026 | UnblockDevs',
-  description: 'Learn how to consume Web API JSON data using curl and jq. Complete guide with examples, best practices, and step-by-step tutorials for API testing and data processing.',
+  title: 'Consume Web API JSON with curl and jq | UnblockDevs',
+  description: 'How to consume Web API JSON data using curl and jq: step-by-step guide with real examples. Learn filtering, extraction, and best practices for API data processing.',
   keywords: [
     'consuming web api json data using curl and jq',
     'curl jq json',
     'curl jq tutorial',
     'curl jq examples',
-    'jq curl command',
-    'curl jq parse json',
     'curl jq filter json',
-    'curl jq pretty print',
     'curl jq api testing',
-    'curl jq json processing',
-    'curl jq command line',
-    'curl jq bash script',
     'curl jq json parsing',
     'curl jq json query',
-    'curl jq json extract',
-    'curl jq json transform',
-    'curl jq json format',
-    'curl jq json manipulation',
-    'curl jq json data',
-    'curl jq api response'
+    'jq command line json',
+    'how to use jq with curl',
+    'parse api json with jq',
+    'curl jq bash script'
   ],
   openGraph: {
-    title: 'Consuming Web API JSON Data Using curl and jq: Complete Guide 2026',
-    description: 'Learn how to consume Web API JSON data using curl and jq. Complete guide with examples, best practices, and step-by-step tutorials.',
+    title: 'Consuming Web API JSON Data with curl and jq: Complete Hands-On Guide',
+    description: 'Learn how to consume Web API JSON data using curl and jq with this step-by-step guide. Includes real examples for fetching, filtering, extracting, and transforming JSON from APIs at the command line.',
     type: 'article',
     publishedTime: '2026-02-10T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -37,8 +29,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Consuming Web API JSON Data Using curl and jq: Complete Guide 2026',
-    description: 'Learn how to consume Web API JSON data using curl and jq. Complete guide with examples, best practices, and step-by-step tutorials.',
+    title: 'Consume Web API JSON with curl and jq',
+    description: 'How to consume Web API JSON with curl and jq — fetch, filter, extract, and transform API responses at the command line. Step-by-step with real examples.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/consuming-web-api-json-data-using-curl-and-jq-complete-guide',
