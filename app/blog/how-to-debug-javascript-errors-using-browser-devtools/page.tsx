@@ -2,28 +2,25 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Debug JavaScript Errors Using Browser DevTools (Complete Guide)',
-  description: 'Debug JavaScript with Chrome, Firefox, Edge DevTools. Fix errors, breakpoints, inspect variables. Step-by-step guide.',
+  title: 'Debug JavaScript Errors with Browser DevTools | UnblockDevs',
+  description: 'Debug JavaScript errors using Chrome, Firefox, and Edge DevTools. Set breakpoints, inspect variables, use the console, and track down production errors. Complete guide with examples.',
   keywords: [
     'debug javascript errors',
-    'browser devtools',
-    'chrome devtools',
-    'firefox devtools',
-    'javascript debugging',
-    'debug javascript',
-    'javascript error handling',
-    'devtools tutorial',
-    'javascript breakpoints',
-    'debug console errors',
-    'javascript debugging guide',
-    'fix javascript errors',
-    'javascript error debugging',
-    'browser debugging tools',
-    'javascript troubleshooting'
+    'browser devtools javascript debugging',
+    'chrome devtools debugging',
+    'javascript breakpoints devtools',
+    'fix javascript errors devtools',
+    'javascript console error debugging',
+    'firefox devtools debugging',
+    'how to debug javascript in chrome',
+    'how to find javascript errors in browser',
+    'what does the console tab in devtools do',
+    'javascript error debugging guide',
+    'debug production javascript errors'
   ],
   openGraph: {
-    title: 'How to Debug JavaScript Errors Using Browser DevTools (Complete Guide)',
-    description: 'Master JavaScript debugging with browser DevTools. Learn to fix errors, use breakpoints, and debug production issues.',
+    title: 'Debug JavaScript Errors with Browser DevTools: Chrome, Firefox & Edge',
+    description: 'Master JavaScript debugging using browser DevTools in Chrome, Firefox, and Edge. Learn to set breakpoints, inspect variables, read console errors, and track down production bugs — step by step.',
     type: 'article',
     publishedTime: '2026-02-04T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -33,8 +30,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'How to Debug JavaScript Errors Using Browser DevTools (Complete Guide)',
-    description: 'Master JavaScript debugging with browser DevTools. Learn to fix errors, use breakpoints, and debug production issues.',
+    title: 'Debug JavaScript Errors with Browser DevTools',
+    description: 'Debug JavaScript errors in Chrome, Firefox, and Edge DevTools. Set breakpoints, inspect variables, and read console errors like a pro.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/how-to-debug-javascript-errors-using-browser-devtools',

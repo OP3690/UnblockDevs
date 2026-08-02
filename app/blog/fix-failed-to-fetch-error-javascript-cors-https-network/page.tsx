@@ -2,28 +2,25 @@ import type { Metadata } from 'next';
 import FixFailedToFetchErrorJavaScriptCorsHttpsNetworkClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Fix Failed to Fetch Error in JavaScript 2026 | UnblockDevs',
-  description: 'Fix "Failed to fetch" in JavaScript. CORS, HTTPS, network. Solutions and code.',
+  title: 'Fix Failed to Fetch Error in JavaScript | UnblockDevs',
+  description: 'Fix the "Failed to fetch" error in JavaScript caused by CORS blocks, HTTPS mismatches, or network failures. Step-by-step solutions with code examples for every scenario.',
   keywords: [
-    'failed to fetch error',
-    'fix failed to fetch',
-    'failed to fetch cors',
-    'failed to fetch javascript',
-    'fetch api error',
-    'failed to fetch network error',
-    'fix fetch error',
-    'failed to fetch https',
-    'cors failed to fetch',
-    'fetch api failed',
-    'javascript fetch error',
-    'failed to fetch solution',
-    'network error fetch',
-    'fetch request failed',
-    'fix fetch api error'
+    'failed to fetch error javascript',
+    'fix failed to fetch error',
+    'failed to fetch cors error',
+    'fetch api network error',
+    'javascript failed to fetch fix',
+    'fetch https error javascript',
+    'cors blocked fetch request',
+    'how to fix failed to fetch in javascript',
+    'why does fetch fail with cors error',
+    'what causes failed to fetch error',
+    'fix fetch request blocked by cors',
+    'javascript fetch error debugging'
   ],
   openGraph: {
-    title: 'Fix Failed to Fetch Error in JavaScript 2026 | UnblockDevs',
-    description: 'Fix "Failed to fetch" in JavaScript. CORS, HTTPS, network. Solutions.',
+    title: 'Fix Failed to Fetch Error in JavaScript: CORS, HTTPS, Network Solutions',
+    description: 'Getting a \'Failed to fetch\' error in JavaScript? Learn how to diagnose and fix CORS blocks, HTTPS mismatches, network failures, and more. Includes real code examples and step-by-step solutions.',
     type: 'article',
     publishedTime: '2026-01-30T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -33,8 +30,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Fix Failed to Fetch Error in JavaScript 2026 | UnblockDevs',
-    description: 'Fix "Failed to fetch" in JavaScript. CORS, HTTPS, network. Solutions.',
+    title: 'Fix Failed to Fetch Error in JavaScript',
+    description: 'Diagnose and fix \'Failed to fetch\' in JavaScript: CORS policy blocks, HTTPS mismatches, network errors. Step-by-step guide with code examples.',
   },  alternates: { canonical: 'https://unblockdevs.com/blog/fix-failed-to-fetch-error-javascript-cors-https-network' },
 
 };

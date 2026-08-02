@@ -1,28 +1,25 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Debug Code Step by Step (Beginner Guide) | UnblockDevs',
-  description: 'Debug code step by step. Techniques, tools, strategies. Beginner-friendly examples for finding and fixing bugs.',
+  title: 'How to Debug Code Step by Step: Beginner Guide | UnblockDevs',
+  description: 'Learn how to debug code step by step as a beginner. Covers debugging techniques, tools, print statements, breakpoints, and strategies for finding and fixing bugs in Python and JavaScript.',
   keywords: [
     'how to debug code',
     'debug code step by step',
-    'debugging guide beginner',
-    'how to debug programming',
-    'code debugging tutorial',
-    'beginner debugging guide',
-    'debug code techniques',
+    'debugging guide for beginners',
+    'debugging techniques',
     'how to find bugs in code',
-    'debugging strategies',
-    'code debugging methods',
-    'debug code python',
-    'debug code javascript',
-    'debugging tools beginner',
-    'fix bugs in code',
-    'debugging process'
+    'code debugging strategies',
+    'debug python code',
+    'debug javascript code',
+    'debugging tools for beginners',
+    'how to use a debugger',
+    'what is debugging in programming',
+    'how do i debug my code step by step'
   ],
   openGraph: {
-    title: 'Debug Code Step by Step (Beginner Guide) | UnblockDevs',
-    description: 'Learn how to debug code step by step as a beginner. Complete guide to debugging techniques, tools, and strategies for finding and fixing bugs.',
+    title: 'How to Debug Code Step by Step: A Beginner-Friendly Complete Guide',
+    description: 'New to debugging? This beginner-friendly guide walks through the debugging process step by step — using print statements, DevTools, breakpoints, and strategies for finding any bug.',
     type: 'article',
     publishedTime: '2026-02-01T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -32,8 +29,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Debug Code Step by Step (Beginner Guide) | UnblockDevs',
-    description: 'Learn how to debug code step by step as a beginner. Complete guide to debugging techniques, tools, and strategies for finding and fixing bugs.',
+    title: 'How to Debug Code Step by Step: Beginner Guide',
+    description: 'Learn to debug code step by step as a beginner. Covers print statements, breakpoints, DevTools, and systematic strategies for finding and fixing bugs.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-debug-code-step-by-step-beginner-friendly-guide' },
 };

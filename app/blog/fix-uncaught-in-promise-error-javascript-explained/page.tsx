@@ -3,27 +3,24 @@ import FixUncaughtInPromiseErrorJavaScriptExplainedClient from './client';
 
 export const metadata: Metadata = {
   title: 'Fix Uncaught (in promise) Error in JavaScript | UnblockDevs',
-  description: 'Fix "Uncaught (in promise)" in JavaScript. Promise rejections, async/await, error catch. Solutions.',
+  description: 'Fix "Uncaught (in promise)" errors in JavaScript. Understand unhandled promise rejections, add .catch(), wrap async/await in try/catch, and prevent silent failures.',
   keywords: [
-    'uncaught in promise error',
-    'fix uncaught in promise',
-    'unhandled promise rejection',
-    'uncaught promise error',
-    'fix promise rejection',
-    'javascript promise error',
-    'uncaught in promise javascript',
-    'promise rejection handling',
-    'async await error handling',
-    'fix promise error',
-    'javascript unhandled rejection',
-    'promise catch error',
-    'uncaught promise rejection fix',
-    'javascript promise catch',
-    'fix async promise error'
+    'uncaught in promise error javascript',
+    'unhandled promise rejection javascript',
+    'fix promise rejection error',
+    'javascript async await error handling',
+    'promise catch not working',
+    'javascript promise error fix',
+    'handle promise rejection javascript',
+    'uncaught in promise typeerror',
+    'how to fix uncaught in promise error',
+    'why does uncaught in promise occur',
+    'javascript promise rejection handling',
+    'async await try catch javascript'
   ],
   openGraph: {
-    title: 'Fix Uncaught (in promise) Error in JavaScript | UnblockDevs',
-    description: 'Fix "Uncaught (in promise)" in JavaScript. Promise rejections, error handling.',
+    title: 'Fix Uncaught (in promise) Error in JavaScript: Promise Rejection Guide',
+    description: 'Getting \'Uncaught (in promise)\' errors in JavaScript? Learn why promises reject silently, how to add .catch() handlers, use async/await with try/catch, and set up global unhandledrejection listeners.',
     type: 'article',
     publishedTime: '2026-01-31T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -33,8 +30,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Fix Uncaught (in promise) Error in JavaScript | UnblockDevs',
-    description: 'Fix "Uncaught (in promise)" in JavaScript. Promise rejections, error handling.',
+    title: 'Fix Uncaught (in promise) Error in JavaScript',
+    description: 'Fix \'Uncaught (in promise)\' JavaScript errors. Add .catch() handlers, wrap async/await in try/catch, and handle promise rejections properly.',
   },  alternates: { canonical: 'https://unblockdevs.com/blog/fix-uncaught-in-promise-error-javascript-explained' },
 
 };

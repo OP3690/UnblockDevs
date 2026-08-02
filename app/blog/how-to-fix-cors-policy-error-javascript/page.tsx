@@ -3,32 +3,24 @@ import HowToFixCorsPolicyErrorClient from './client';
 
 export const metadata: Metadata = {
   title: 'Fix CORS Policy Error in JavaScript 2026 | UnblockDevs',
-  description: 'Fix CORS policy errors in JavaScript. Server-side fixes, proxy, workarounds. Step-by-step with code.',
+  description: 'Fix CORS policy errors in JavaScript for Chrome, Firefox, Safari, and Edge. Covers Access-Control-Allow-Origin headers, proxy workarounds, and server-side CORS configuration with code.',
   keywords: [
-    'cors policy error',
-    'fix cors error javascript',
-    'cors policy error fix',
-    'how to fix cors error',
-    'cors error solution',
-    'javascript cors error',
-    'cors policy blocked',
-    'fix cors chrome',
-    'cors error firefox',
-    'cors error safari',
-    'cors error edge',
-    'cors policy no access control allow origin',
-    'javascript cors fix',
-    'cors error troubleshooting',
+    'cors policy error javascript',
+    'fix cors error',
+    'cors blocked request fix',
+    'access control allow origin error',
     'cors policy error solution',
-    'blocked by cors policy',
-    'public cors proxy',
-    'cors proxy',
-    'cors anywhere',
-    'cors error blocked by cors policy'
+    'cors error chrome fix',
+    'fix cors javascript server',
+    'cors proxy workaround',
+    'how to fix cors policy error',
+    'why is my request blocked by cors',
+    'cors error all browsers fix',
+    'enable cors for javascript fetch'
   ],
   openGraph: {
-    title: 'How to Fix "CORS Policy Error" in JavaScript (All Browsers): Complete Guide 2026',
-    description: 'Fix CORS policy errors in JavaScript. Solutions for Chrome, Firefox, Safari, Edge.',
+    title: 'Fix CORS Policy Error in JavaScript: Server Fixes, Proxy & Workarounds',
+    description: 'Getting \'Blocked by CORS policy\' in JavaScript? This guide explains CORS errors and shows you how to fix them server-side, using a proxy, or with workarounds for Chrome, Firefox, Safari, and Edge.',
     type: 'article',
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -37,8 +29,8 @@ export const metadata: Metadata = {
 
   },  twitter: {
     card: 'summary_large_image',
-    title: 'How to Fix ',
-    description: 'Fix CORS policy errors in JavaScript. Solutions for Chrome, Firefox, Safari, Edge.',
+    title: 'Fix CORS Policy Error in JavaScript',
+    description: 'Fix \'Blocked by CORS policy\' JavaScript errors. Server-side fixes, proxy workarounds, and Access-Control-Allow-Origin solutions — with code.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-fix-cors-policy-error-javascript' },
 

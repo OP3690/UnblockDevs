@@ -2,23 +2,27 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Choose the Right Data Structure for a Problem (Complete Guide)',
-  description: 'Choose the right data structure: arrays, linked lists, stacks, queues, trees, hash maps. Framework, examples, use cases.',
+  title: 'How to Choose the Right Data Structure | UnblockDevs',
+  description: 'Choose the right data structure for any problem. Learn when to use arrays, linked lists, stacks, queues, trees, and hash maps with a clear decision framework and examples.',
   keywords: [
     'choose data structure',
     'which data structure to use',
-    'data structure selection',
+    'data structure selection guide',
     'how to choose data structure',
     'array vs linked list vs hashmap',
-    'data structure decision tree',
+    'data structure decision framework',
     'when to use which data structure',
-    'data structure guide',
     'coding interview data structures',
-    'best data structure for problem'
+    'best data structure for problem',
+    'when to use array vs linked list',
+    'when to use a hash map vs array',
+    'how do i choose the best data structure',
+    'what data structure should i use',
+    'data structure use cases guide'
   ],
   openGraph: {
-    title: 'How to Choose the Right Data Structure for a Problem (Complete Guide)',
-    description: 'Learn how to choose the right data structure with decision frameworks, examples, and real-world use cases.',
+    title: 'How to Choose the Right Data Structure for Any Problem (Complete Guide)',
+    description: 'Not sure which data structure to pick? Get a decision framework for choosing between arrays, linked lists, stacks, queues, trees, and hash maps — with real examples.',
     type: 'article',
     publishedTime: '2026-02-05T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -28,8 +32,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'How to Choose the Right Data Structure for a Problem (Complete Guide)',
-    description: 'Learn how to choose the right data structure with decision frameworks, examples, and real-world use cases.',
+    title: 'How to Choose the Right Data Structure for Any Problem',
+    description: 'Learn when to use arrays, linked lists, stacks, queues, trees, and hash maps. A decision framework for picking the right data structure fast.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/how-to-choose-the-right-data-structure-for-a-problem',
