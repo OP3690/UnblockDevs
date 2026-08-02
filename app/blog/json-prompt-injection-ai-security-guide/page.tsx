@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import JsonPromptInjectionClient from './client';
 
 export const metadata: Metadata = {
-  title: 'JSON Prompt Injection: How Attackers Manipulate AI Apps Through JSON Data | UnblockDevs',
-  description: 'JSON prompt injection attacks let hackers hijack your AI app through user-supplied JSON data. Learn how every attack vector works and build a complete defense layer.',
+  title: 'JSON Prompt Injection — AI Security Guide | UnblockDevs',
+  description: 'JSON prompt injection attacks let hackers hijack your AI app through user-supplied data. Learn every attack vector and build a complete defense layer.',
   keywords: [
     'json prompt injection',
     'ai security json',
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'JSON Prompt Injection: How Attackers Manipulate AI Apps Through JSON Data',
-    description: 'How hackers hijack AI apps through user-supplied JSON — and the complete defense playbook.',
+    description: 'How hackers hijack AI apps through user-supplied JSON data — attack vectors explained and complete defense playbook for AI developers.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/json-prompt-injection-ai-security-guide' },
 };

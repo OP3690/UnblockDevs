@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Convert cURL to JavaScript fetch, Axios & Node.js — Complete Guide | UnblockDevs',
+  title: 'Convert cURL to JavaScript fetch, Axios & Node.js | UnblockDevs',
   description:
-    'Convert any cURL command to JavaScript fetch(), Axios, or Node.js. GET, POST with JSON, auth headers, form data, file uploads — step-by-step guide with code examples and free online converter.',
+    'Convert any cURL command to JavaScript fetch(), Axios, or Node.js. GET, POST, auth headers, form data, and file uploads — step-by-step with code examples.',
   keywords: [
     'curl to javascript',
     'curl to fetch',
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'How to Convert cURL to JavaScript fetch, Axios & Node.js',
     description:
-      'Step-by-step guide: convert cURL GET, POST, auth headers, form data to JavaScript fetch() and Axios with code examples.',
+      'Convert cURL GET, POST, auth headers, and form data to JavaScript fetch() and Axios. Step-by-step guide with code examples and a free online converter.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/curl-to-javascript-fetch-axios' },
 };

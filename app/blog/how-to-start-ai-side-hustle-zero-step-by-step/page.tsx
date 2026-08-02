@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: "Start an AI Side Hustle with $0 | UnblockDevs",
-  description: "Start an AI side hustle with zero budget: free AI tools, how to find clients, how to price services, and realistic income expectations. Step-by-step guide with flow.",
+  title: "Start an AI Side Hustle with $0 — Step-by-Step | UnblockDevs",
+  description: "Start an AI side hustle with zero budget: free AI tools, how to find clients, how to price services, and realistic income expectations. Step-by-step guide.",
   keywords: [
     "AI side hustle $0",
     "start AI side hustle",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'How to Start an AI Side Hustle with $0 (Step-by-Step Guide)',
-    description: 'Free AI tools, how to find clients, how to price services, realistic income. Step-by-step.',
+    description: 'Start an AI side hustle with $0: free AI tools, how to find clients, price your services, and set realistic income expectations. Step-by-step guide.',
   },
   alternates: {
     canonical: "https://unblockdevs.com/blog/how-to-start-ai-side-hustle-zero-step-by-step",

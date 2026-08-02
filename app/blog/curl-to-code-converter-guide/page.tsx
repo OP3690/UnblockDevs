@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { ArrowLeft, Code, CheckCircle } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Curl to Code Converter: From Command Line to Code | UnblockDevs Blog',
-  description: 'Transform cURL to code: JavaScript, Python, Java. Convert API requests efficiently.',
+  title: 'cURL to Code Converter: Convert to JS, Python & Java | UnblockDevs',
+  description: 'Transform cURL commands to JavaScript, Python, or Java code. Convert API requests to reusable code snippets. Free online cURL converter with full header support.',
   keywords: [
     'curl converter',
     'API requests',
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'Curl to Code Converter: From Command Line to Code',
-    description: 'Transform cURL to code: JavaScript, Python, Java.',
+    description: 'Transform cURL commands to JavaScript, Python, or Java code snippets. Convert API requests to reusable code. Free online cURL converter tool.',
     type: 'article',
     publishedTime: '2024-01-01T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   },  twitter: {
     card: 'summary_large_image',
     title: 'Curl to Code Converter: From Command Line to Code',
-    description: 'Transform cURL to code: JavaScript, Python, Java.',
+    description: 'Transform cURL commands to JavaScript, Python, or Java code snippets. Convert API requests to reusable code. Free online cURL converter tool.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/curl-to-code-converter-guide' },
 

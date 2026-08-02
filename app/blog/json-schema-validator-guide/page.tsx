@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'JSON Schema Validation Guide — Draft 7, 2020-12, AJV & OpenAPI | UnblockDevs',
+  title: 'JSON Schema Validation Guide — AJV & OpenAPI | UnblockDevs',
   description:
-    'Complete JSON Schema guide: required fields, types, enum, format, pattern — all core keywords. Draft 7 vs 2020-12 differences. AJV setup in Node.js. Schema composition with allOf, anyOf, oneOf. Free online validator.',
+    'Complete JSON Schema guide: required fields, types, enum, format, and pattern keywords. Draft 7 vs 2020-12 differences. AJV in Node.js. Free online validator.',
   keywords: [
     'json schema validator',
     'json schema validation',
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'JSON Schema Validation Guide — Draft 7, 2020-12, AJV & OpenAPI',
-    description: 'JSON Schema keywords, Draft 7 vs 2020-12, AJV setup, composition, and free online JSON Schema validator.',
+    description: 'JSON Schema keywords, Draft 7 vs 2020-12, AJV setup in Node.js, allOf/anyOf/oneOf composition — with a free online JSON Schema validator.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/json-schema-validator-guide' },
 };

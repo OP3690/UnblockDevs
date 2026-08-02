@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Remove Extra Spaces, Trim & Clean String Formatting Issues Online | UnblockDevs',
+  title: 'Remove Extra Spaces & Fix String Formatting Online | UnblockDevs',
   description:
-    'Extra spaces, wrong case, special characters, missing quotes — here\'s how to fix the most common string formatting problems developers hit daily, with a free online string utility tool.',
+    'Fix extra spaces, wrong case, special characters, and missing quotes — the most common string formatting problems developers hit daily. Free online string utility tool.',
   keywords: [
     'how to remove extra spaces from string',
     'how to convert string to lowercase or uppercase',

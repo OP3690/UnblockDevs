@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Two Pointer Technique Explained | UnblockDevs',
-  description: 'Two pointer technique: sliding window, fast/slow pointers, O(n). Simple examples. For interviews.',
+  title: 'Two Pointer Technique Explained for Beginners | UnblockDevs',
+  description: 'Master the two pointer technique: sliding window, fast/slow pointers, and O(n) solutions. Simple examples with code for DSA interviews and LeetCode.',
   keywords: [
     'two pointer technique',
     'two pointers',
@@ -21,8 +21,8 @@ export const metadata: Metadata = {
     'two pointer leetcode'
   ],
   openGraph: {
-    title: 'Two Pointer Technique Explained | UnblockDevs',
-    description: 'Two pointer technique: examples, diagrams, code. For interviews.',
+    title: 'Two Pointer Technique Explained for Beginners | UnblockDevs',
+    description: 'Master the two pointer technique with examples, diagrams, and code. Learn sliding window, fast/slow pointers, and O(n) approaches for DSA interviews.',
     type: 'article',
     publishedTime: '2026-02-03T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -32,8 +32,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Two Pointer Technique Explained | UnblockDevs',
-    description: 'Two pointer technique: examples, diagrams, code. For interviews.',
+    title: 'Two Pointer Technique Explained for Beginners | UnblockDevs',
+    description: 'Master the two pointer technique with examples, diagrams, and code. Learn sliding window, fast/slow pointers, and O(n) approaches for DSA interviews.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/what-is-two-pointer-technique-explained-for-beginners',

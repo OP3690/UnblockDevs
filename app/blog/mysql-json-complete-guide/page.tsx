@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import MysqlJsonCompleteGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'JSON in MySQL: Complete Guide | UnblockDevs',
-  description: 'JSON in MySQL: data types, extract from columns, nested queries, 10 examples. Tips for efficient JSON.',
+  title: 'MySQL JSON Complete Guide — Functions & Examples | UnblockDevs',
+  description: 'Complete MySQL JSON guide: data types, JSON_EXTRACT, nested queries, JSON_SET and JSON_CONTAINS with 10 practical examples. Indexing and performance tips.',
   keywords: [
     'unblock devs mysql',
     'unblockdevs mysql',
@@ -22,8 +22,8 @@ export const metadata: Metadata = {
     'mysql json column query boolean'
   ],
   openGraph: {
-    title: 'JSON in MySQL: Complete Guide',
-    description: 'JSON in MySQL: data types, extract from columns, nested queries, 10 examples. Tips for efficient JSON.',
+    title: 'MySQL JSON Complete Guide — Functions & Examples | UnblockDevs',
+    description: 'Complete MySQL JSON guide: data types, JSON_EXTRACT, nested queries, JSON_SET and JSON_CONTAINS with 10 practical examples. Indexing and performance tips.',
     type: 'article',
     publishedTime: '2025-01-30T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -32,8 +32,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'JSON in MySQL: Complete Guide',
-    description: 'JSON in MySQL: data types, extract from columns, nested queries, 10 examples. Tips for efficient JSON.',
+    title: 'MySQL JSON Complete Guide — Functions & Examples',
+    description: 'MySQL JSON: data types, JSON_EXTRACT, nested queries, JSON_SET, and JSON_CONTAINS with 10 practical examples and performance tips.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/mysql-json-complete-guide' },
 

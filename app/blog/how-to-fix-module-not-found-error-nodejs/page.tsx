@@ -3,30 +3,22 @@ import HowToFixModuleNotFoundErrorClient from './client';
 
 export const metadata: Metadata = {
   title: 'Fix Module Not Found Error in Node.js 2026 | UnblockDevs',
-  description: 'Fix "Module not found" in Node.js. Causes, solutions, npm/yarn. Step-by-step. 2026.',
+  description: 'Fix "Module not found" and "Cannot find module" errors in Node.js. Covers npm install issues, path resolution, ESM vs CJS, and yarn. Step-by-step guide.',
   keywords: [
     'module not found error nodejs',
     'fix module not found error',
-    'nodejs module not found',
     'cannot find module nodejs',
     'module not found npm',
-    'node module not found',
     'fix cannot find module',
-    'module not found error fix',
     'nodejs module error',
-    'npm module not found',
     'yarn module not found',
+    'err_module_not_found nodejs',
     'node module resolution',
-    'module not found troubleshooting',
     'nodejs require error',
-    'fix module not found',
-    'node.js module_not_found error fix',
-    'module_not_found nodejs',
-    'err_module_not_found nodejs'
   ],
   openGraph: {
-    title: 'How to Fix "Module Not Found" Error in Node.js: Complete Guide 2026',
-    description: 'Fix "Module not found" in Node.js. Solutions and troubleshooting.',
+    title: 'Fix "Module Not Found" Error in Node.js — Complete Guide | UnblockDevs',
+    description: 'Fix "Module not found" and "Cannot find module" errors in Node.js. Covers npm install issues, path resolution, ESM vs CommonJS, and yarn. Step-by-step guide.',
     type: 'article',
     publishedTime: '2026-01-25T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -35,8 +27,8 @@ export const metadata: Metadata = {
 
   },  twitter: {
     card: 'summary_large_image',
-    title: 'How to Fix ',
-    description: 'Fix ',
+    title: 'Fix "Module Not Found" Error in Node.js',
+    description: 'Fix "Module not found" and "Cannot find module" errors in Node.js. Covers npm install, path resolution, ESM vs CommonJS, and yarn fixes.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-fix-module-not-found-error-nodejs' },
 

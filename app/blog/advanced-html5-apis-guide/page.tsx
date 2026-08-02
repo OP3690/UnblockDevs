@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import AdvancedHTML5APIsClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Advanced HTML5 APIs: Complete Guide with Examples | UnblockDevs Blog',
+  title: 'Advanced HTML5 APIs: Complete Guide with Examples | UnblockDevs',
   description: 'Master advanced HTML5 APIs including Geolocation, Web Storage, Canvas, Web Workers, and more. Learn with interactive examples and real-world use cases.',
   keywords: [
     'HTML5 APIs',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'Advanced HTML5 APIs: Complete Guide with Examples',
-    description: 'Master advanced HTML5 APIs including Geolocation, Web Storage, Canvas, Web Workers, and more.',
+    description: 'Master advanced HTML5 APIs: Geolocation, Web Storage, Canvas, Web Workers, WebSockets, and more. Interactive examples and real-world use cases included.',
     type: 'article',
     publishedTime: '2024-01-22T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   },  twitter: {
     card: 'summary_large_image',
     title: 'Advanced HTML5 APIs: Complete Guide with Examples',
-    description: 'Master advanced HTML5 APIs including Geolocation, Web Storage, Canvas, Web Workers, and more.',
+    description: 'Master advanced HTML5 APIs: Geolocation, Web Storage, Canvas, Web Workers, WebSockets, and more. Interactive examples and real-world use cases included.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/advanced-html5-apis-guide' },
 

@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Use ChatGPT for SQL Without Exposing Your Database Schema | UnblockDevs',
+  title: 'Use ChatGPT for SQL Without Exposing Your Schema | UnblockDevs',
   description:
-    'ChatGPT writes great SQL — but pasting real table and column names leaks your database architecture. Learn how to mask your schema before sending to AI and restore original names from the AI response. Step-by-step guide.',
+    'ChatGPT writes great SQL — but pasting real table names leaks your database architecture. Learn how to mask your schema before sending to AI and restore original names.',
   keywords: [
     'chatgpt sql safely',
     'use chatgpt for sql without exposing database',
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'How to Use ChatGPT for SQL Without Exposing Your Database Schema',
-    description: 'Mask schema identifiers before sending to AI. Restore original names from the response. Secure SQL + AI workflow.',
+    description: 'Mask your database schema before sending to ChatGPT and restore original names from the AI response. Step-by-step secure SQL + AI workflow guide.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-use-chatgpt-for-sql-safely' },
 };

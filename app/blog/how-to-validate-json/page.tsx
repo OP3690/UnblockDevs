@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'How to Validate JSON — Syntax Checking, Schema Validation & Error Fixes | UnblockDevs',
+  title: 'How to Validate JSON — Schema & Syntax Checking | UnblockDevs',
   description:
-    'Complete guide to JSON validation: syntax checking with exact error positions, JSON Schema validation with AJV, required fields, type checking, enum constraints — with code examples in JavaScript and Python.',
+    'Validate JSON syntax and schema: check error positions, required fields, type checking, and enum constraints. AJV for JavaScript, jsonschema for Python. Free tool.',
   keywords: [
     'how to validate json',
     'validate json online',
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'How to Validate JSON — Syntax, Schema & Error Fixes',
-    description: 'Validate JSON syntax and structure. AJV, jsonschema, required fields, type checking — with a free online JSON validator.',
+    description: 'Validate JSON syntax and structure with exact error positions. Use AJV for JavaScript or jsonschema for Python. Free online JSON validator included.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/how-to-validate-json' },
 };

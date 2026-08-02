@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { ArrowLeft, FileCode, CheckCircle } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'JSON Schema & Stringify Complete Guide – Generate, Validate, Format | UnblockDevs',
-  description: 'JSON Schema generation and validation, JSON.stringify best practices, and JSON format standards. One guide with examples and free tools.',
+  title: 'JSON Schema Complete Guide — Generate, Validate & Format | UnblockDevs',
+  description: 'JSON Schema generation and validation, JSON.stringify best practices, and format standards in one guide with code examples and free online tools.',
   keywords: [
     'JSON schema',
     'JSON schema generator',
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'JSON Schema & Stringify Complete Guide – Generate, Validate, Format',
-    description: 'JSON Schema generation and validation, JSON.stringify, and format standards. One guide.',
+    description: 'JSON Schema generation and validation, JSON.stringify best practices, and format standards — one guide with examples and free online tools.',
     type: 'article',
     publishedTime: '2026-03-02T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'JSON Schema & Stringify Complete Guide – Generate, Validate, Format',
-    description: 'JSON Schema generation and validation, JSON.stringify, and format standards. One guide.',
+    description: 'JSON Schema generation and validation, JSON.stringify best practices, and format standards — one guide with examples and free online tools.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/json-schema-complete-guide' },
 };

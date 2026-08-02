@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import HipaaCompliantAiClient from './client';
 
 export const metadata: Metadata = {
-  title: 'HIPAA-Compliant AI Development — Use ChatGPT Without Exposing Patient Data | UnblockDevs',
+  title: 'HIPAA-Compliant AI Development — ChatGPT Without PHI | UnblockDevs',
   description:
-    'How healthcare developers can use ChatGPT and AI coding assistants without exposing PHI. Mask SQL, JSON, and code in your browser before sending. Client-side only, no server. HIPAA-safe workflow.',
+    'How healthcare developers can use ChatGPT without exposing PHI. Mask SQL, JSON, and code in your browser before sending to AI. Client-side only, HIPAA-safe workflow.',
   keywords: [
     'hipaa compliant developer tools',
     'hipaa safe api testing',

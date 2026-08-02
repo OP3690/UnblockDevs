@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import ProcessEnvVsDotenvVsConfigFilesNodejsClient from './client';
 
 export const metadata: Metadata = {
-  title: 'process.env vs dotenv vs config files in Node.js — Which to Use? | UnblockDevs',
-  description: 'Compare process.env, dotenv, dotenv-flow, node-config, and convict for managing configuration in Node.js. Understand the tradeoffs and pick the right tool for your project.',
+  title: 'process.env vs dotenv vs Config Files in Node.js | UnblockDevs',
+  description: 'Compare process.env, dotenv, dotenv-flow, node-config, and convict for managing Node.js configuration. Understand tradeoffs and pick the right tool.',
   keywords: [
     'process.env vs dotenv',
     'node-config vs dotenv',
@@ -32,8 +32,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'process.env vs dotenv vs config files in Node.js — Which to Use? | UnblockDevs',
-    description: 'Compare process.env, dotenv, dotenv-flow, node-config, and convict for Node.js configuration management.',
+    title: 'process.env vs dotenv vs Config Files in Node.js',
+    description: 'Compare process.env, dotenv, dotenv-flow, node-config, and convict for Node.js configuration. Understand tradeoffs and pick the right approach.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/process-env-vs-dotenv-vs-config-files-nodejs-which-to-use' },
 };
