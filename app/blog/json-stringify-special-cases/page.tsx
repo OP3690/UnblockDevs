@@ -2,28 +2,27 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'JSON.stringify() Edge Cases — undefined, null, Dates, Circular Refs, BigInt | UnblockDevs',
+  title: 'JSON.stringify() Edge Cases: undefined, null & More | UnblockDevs',
   description:
-    'Complete guide to JSON.stringify() edge cases: why undefined is silently dropped, null vs undefined, Date to ISO string conversion, circular reference TypeError, BigInt TypeError, NaN becomes null, Map and Set lose data, and how to fix each one.',
+    'JSON.stringify() edge cases: undefined, null, Dates, circular references, BigInt, NaN, Map and Set — explained with causes and fixes for each behavior.',
   keywords: [
     'json stringify undefined',
-    'json stringify remove undefined',
     'json stringify null vs undefined',
     'json stringify date',
     'json stringify circular reference',
     'json stringify circular reference fix',
     'json stringify bigint',
     'json stringify nan',
-    'json stringify infinity',
     'json stringify map',
     'json stringify set',
     'json stringify edge cases',
     'json stringify special values',
-    'json stringify undefined becomes null',
     'converting circular structure to json',
+    'json stringify undefined behavior',
+    'why does json stringify drop undefined',
   ],
   openGraph: {
-    title: 'JSON.stringify() Edge Cases — undefined, null, Dates, Circular Refs, BigInt | UnblockDevs',
+    title: 'JSON.stringify() Edge Cases — undefined, null, Dates, Circular Refs, BigInt',
     description:
       'Why undefined disappears, null is preserved, Dates become ISO strings, circular refs throw, BigInt throws, NaN becomes null, and how to fix every case.',
     type: 'article',
@@ -34,7 +33,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'JSON.stringify() Edge Cases — undefined, null, Date, Circular, BigInt',
+    title: 'JSON.stringify() Edge Cases: undefined, null & More',
     description:
       'Complete guide to JSON.stringify() special value behavior: undefined, null, NaN, Date, circular refs, BigInt, Map, Set — with fixes for each.',
   },

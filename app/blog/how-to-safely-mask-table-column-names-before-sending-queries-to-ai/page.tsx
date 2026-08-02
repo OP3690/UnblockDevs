@@ -2,21 +2,26 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Mask Table & Column Names Before Sending to AI | UnblockDevs',
+  title: 'Mask SQL Table & Column Names Before Sending to AI | UnblockDevs',
   description:
-    'Learn how to mask table names and column names before sending SQL to ChatGPT or any AI. Hide database schema from AI, anonymize schema, and restore AI output securely. Step-by-step with examples.',
+    'Learn to mask SQL table and column names before sending queries to AI tools like ChatGPT. Client-side, reversible schema masking with step-by-step examples.',
   keywords: [
-    'mask table name for ChatGPT',
+    'mask table names before AI',
     'hide database schema from AI',
-    'secure SQL before AI',
-    'anonymize database schema',
+    'SQL schema masking ChatGPT',
+    'anonymize SQL before AI',
     'mask column names AI',
+    'client-side schema masking',
     'safe SQL AI prompts',
-    'client-side SQL masking',
+    'protect database schema AI',
+    'how to mask SQL before sending to AI',
+    'SQL query anonymization',
+    'secure database queries AI',
+    'reverse schema masking',
   ],
   openGraph: {
-    title: 'How to Safely Mask Table & Column Names Before Sending Queries to AI',
-    description: 'Hide database schema from AI, anonymize tables and columns, restore AI output. Client-side, reversible masking.',
+    title: 'How to Safely Mask Table & Column Names Before Sending SQL Queries to AI',
+    description: 'Keep your database schema private when using AI tools. Learn how to mask table names, column names, and query structure before sending SQL to ChatGPT, then restore the AI output automatically.',
     type: 'article',
     publishedTime: '2026-02-28T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -25,8 +30,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'How to Safely Mask Table & Column Names Before Sending Queries to AI',
-    description: 'Hide database schema from AI, anonymize tables and columns, restore AI output. Client-side, reversible masking.',
+    title: 'Mask SQL Table & Column Names Before Sending to AI',
+    description: 'Mask SQL table and column names before sending to ChatGPT. Client-side, reversible schema masking — your real schema never leaves your browser.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/how-to-safely-mask-table-column-names-before-sending-queries-to-ai',

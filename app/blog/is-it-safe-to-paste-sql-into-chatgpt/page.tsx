@@ -2,20 +2,25 @@ import type { Metadata } from 'next';
 import IsItSafeToPasteSqlIntoChatgptClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Is It Safe to Paste SQL Into ChatGPT? Risks & How to Mask Data | UnblockDevs',
-  description: 'Is it safe to paste SQL into ChatGPT? Learn the risks of exposing schema and data, and how to mask tables and columns before sending to AI.',
+  title: 'Is It Safe to Paste SQL Into ChatGPT? | UnblockDevs',
+  description: 'Is it safe to paste SQL into ChatGPT? Learn the real risks of exposing your database schema and data, and how to mask tables and columns before sending to AI.',
   keywords: [
     'is it safe to paste sql into chatgpt',
-    'paste sql chatgpt safe',
-    'chatgpt sql schema',
+    'paste sql chatgpt risks',
+    'chatgpt sql schema security',
     'mask sql before chatgpt',
-    'mask database table before chatgpt',
-    'sql chatgpt privacy',
+    'sql chatgpt data privacy',
     'send sql to ai safely',
+    'chatgpt database schema exposure',
+    'sql privacy AI tools',
+    'safely share sql with AI',
+    'sql anonymization before AI',
+    'chatgpt sql safety',
+    'does chatgpt store sql queries',
   ],
   openGraph: {
-    title: 'Is It Safe to Paste SQL Into ChatGPT? Risks & How to Mask Data',
-    description: 'Is it safe to paste SQL into ChatGPT? Learn the risks of exposing schema and data, and how to mask tables and columns before sending to AI.',
+    title: 'Is It Safe to Paste SQL Into ChatGPT? Risks & How to Mask Your Data',
+    description: 'Pasting SQL into ChatGPT can expose your database schema and sensitive data. Learn the real risks, what ChatGPT does with your data, and how to mask tables and columns before you send any query.',
     type: 'article',
     publishedTime: '2026-03-02T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -24,8 +29,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Is It Safe to Paste SQL Into ChatGPT? Risks & How to Mask Data',
-    description: 'Is it safe to paste SQL into ChatGPT? Learn the risks of exposing schema and data, and how to mask tables and columns before sending to AI.',
+    title: 'Is It Safe to Paste SQL Into ChatGPT?',
+    description: 'Pasting SQL into ChatGPT exposes your schema. Learn the risks and how to safely mask tables and columns before sending queries to AI.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/is-it-safe-to-paste-sql-into-chatgpt' },
 };

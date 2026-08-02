@@ -2,21 +2,26 @@ import type { Metadata } from 'next';
 import InvalidJsonVsValidJsonClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Invalid vs Valid JSON: 15 Examples | UnblockDevs',
-  description: 'Invalid vs valid JSON: 15 examples. Single quotes, trailing commas, comments, NaN. Fix instantly.',
+  title: 'Invalid vs Valid JSON: 15 Common Examples | UnblockDevs',
+  description: '15 invalid vs valid JSON examples with fixes: single quotes, trailing commas, comments, NaN, undefined. Spot common JSON errors and repair them in seconds.',
   keywords: [
-    'invalid json vs valid json',
-    'invalid json examples',
-    'valid json examples',
-    'json mistakes',
-    'json errors examples',
-    'invalid json',
-    'valid json',
-    'json validation examples'
+    'invalid vs valid JSON',
+    'invalid JSON examples',
+    'valid JSON examples',
+    'JSON syntax errors',
+    'JSON common mistakes',
+    'fix invalid JSON',
+    'JSON trailing comma error',
+    'single quotes in JSON invalid',
+    'JSON comments not allowed',
+    'JSON NaN undefined invalid',
+    'why is my JSON invalid',
+    'JSON error examples and fixes',
+    'JSON validation examples',
   ],
   openGraph: {
-    title: 'Invalid JSON vs Valid JSON: 15 Real Examples',
-    description: 'Learn the difference between invalid and valid JSON with real examples developers get wrong.',
+    title: 'Invalid JSON vs Valid JSON: 15 Examples Every Developer Gets Wrong',
+    description: 'Confused why your JSON is invalid? This guide walks through 15 real-world invalid vs valid JSON examples — single quotes, trailing commas, comments, NaN, undefined — with an instant fix for each.',
     type: 'article',
     publishedTime: '2025-01-15T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -25,8 +30,8 @@ export const metadata: Metadata = {
 
   },  twitter: {
     card: 'summary_large_image',
-    title: 'Invalid JSON vs Valid JSON: 15 Real Examples',
-    description: 'Learn the difference between invalid and valid JSON with real examples developers get wrong.',
+    title: 'Invalid vs Valid JSON: 15 Common Examples',
+    description: '15 invalid vs valid JSON examples with fixes: single quotes, trailing commas, comments, NaN, undefined. Fix JSON errors in seconds.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/invalid-json-vs-valid-json-examples' },
 

@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import JwtCompleteGuideClient from './client';
 
 export const metadata: Metadata = {
-  title: 'JWT (JSON Web Tokens) Complete Guide 2026: Authentication Explained from Scratch | UnblockDevs',
-  description: 'Master JSON Web Tokens in 2026: JWT anatomy, sign & verify in Node.js, refresh token rotation, HS256 vs RS256, React auto-refresh hook, and the 5 JWT security traps that get apps compromised.',
+  title: 'JWT Complete Guide 2026: JSON Web Tokens Explained | UnblockDevs',
+  description: 'Master JWT in 2026: anatomy, sign and verify in Node.js, refresh token rotation, HS256 vs RS256, React auto-refresh hook, and 5 security traps to avoid.',
   keywords: [
     'what is jwt',
     'json web token tutorial 2026',
@@ -12,18 +12,16 @@ export const metadata: Metadata = {
     'jwt vs session cookies',
     'jwt nodejs',
     'jwt react',
-    'jwt refresh token',
-    'jwt security',
+    'jwt refresh token rotation',
+    'jwt security traps',
     'bearer token jwt',
     'hs256 vs rs256',
-    'jwt claims explained',
-    'jwt expiration',
-    'stateless authentication 2026',
-    'jwt sign verify node',
+    'how jwt authentication works',
+    'jwt sign verify nodejs guide',
   ],
   openGraph: {
     title: 'JWT Complete Guide 2026: JSON Web Tokens from Scratch',
-    description: 'JWT anatomy, full auth flow, Node.js sign/verify, React auto-refresh hook, RS256 vs HS256, refresh token rotation — everything in one guide.',
+    description: 'JWT anatomy, the full authentication flow, Node.js sign/verify code, a React auto-refresh hook, RS256 vs HS256, refresh token rotation, and 5 security traps to avoid — all in one guide.',
     type: 'article',
     publishedTime: '2026-05-15T13:00:00Z',
     authors: ['UnblockDevs'],
@@ -32,8 +30,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'JWT Complete Guide 2026: Auth from Scratch',
-    description: 'Anatomy, auth flow, Node.js code, React hook, RS256 vs HS256, refresh token rotation — all in one guide.',
+    title: 'JWT Complete Guide 2026: JSON Web Tokens Explained',
+    description: 'Anatomy, auth flow, Node.js code, React hook, RS256 vs HS256, refresh token rotation, and 5 JWT security traps to avoid — all in one guide.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/jwt-json-web-tokens-complete-guide-2026' },
 };
