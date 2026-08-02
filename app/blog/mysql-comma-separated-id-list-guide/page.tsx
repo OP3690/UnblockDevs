@@ -3,29 +3,24 @@ import MysqlCommaSeparatedIdListGuideClient from './client';
 
 export const metadata: Metadata = {
   title: 'MySQL Comma Separated ID List for IN Clause | UnblockDevs',
-  description: 'Create comma separated ID lists for MySQL IN clause. Convert IDs, arrays. Examples, free formatter.',
+  description: 'Build a comma-separated ID list for MySQL IN clause in seconds. Convert arrays, JSON, or pasted IDs to SQL-ready format with step-by-step examples and a free formatter.',
   keywords: [
-    'unblock devs mysql',
-    'unblockdevs mysql',
     'comma separated ID list MySQL',
     'MySQL IN clause',
     'comma separated values MySQL',
     'convert IDs to comma separated list',
     'MySQL IN query',
-    'SQL formatter',
     'comma separated IDs MySQL',
     'MySQL WHERE IN clause',
     'format ID list for MySQL',
-    'comma separated list generator',
-    'MySQL query formatter',
+    'MySQL IN clause generator',
     'SQL IN clause formatter',
     'convert array to comma separated MySQL',
-    'MySQL IN clause generator',
-    'comma separated values formatter'
+    'how to create IN clause MySQL'
   ],
   openGraph: {
-    title: 'MySQL Comma Separated ID List for IN Clause',
-    description: 'Learn how to create comma separated ID lists for MySQL IN clause. Complete guide with examples and free SQL formatter tool.',
+    title: 'MySQL Comma Separated ID List for IN Clause — Free SQL Formatter',
+    description: 'Struggling to pass a list of IDs to MySQL IN clause? Learn how to build comma-separated ID lists from arrays, JSON, or plain text, with copy-ready examples and a free online formatter.',
     type: 'article',
     publishedTime: '2025-01-31T00:00:00.000Z',
     authors: ['UnblockDevs'],
@@ -37,7 +32,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'MySQL Comma Separated ID List for IN Clause',
-    description: 'Comma separated ID lists for MySQL IN. Free SQL formatter.',
+    description: 'Convert arrays, JSON, or plain text IDs into a MySQL comma-separated IN clause in seconds. Step-by-step examples and a free online formatter.',
   },  alternates: { canonical: 'https://unblockdevs.com/blog/mysql-comma-separated-id-list-guide' },
 
 };

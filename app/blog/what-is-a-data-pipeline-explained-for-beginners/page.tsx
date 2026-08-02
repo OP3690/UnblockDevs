@@ -2,10 +2,9 @@ import type { Metadata } from 'next';
 import BlogPostClient from './client';
 
 export const metadata: Metadata = {
-  title: 'What Is a Data Pipeline? Explained for Beginners (Complete Guide)',
-  description: 'What a data pipeline is. ETL, data flow, how pipelines work. Beginner-friendly with examples.',
+  title: 'What Is a Data Pipeline? Explained for Beginners | UnblockDevs',
+  description: 'Learn what a data pipeline is with simple examples. Understand ETL, data ingestion, transformation, and how data flows from source to destination in modern architectures.',
   keywords: [
-    'data pipeline',
     'what is data pipeline',
     'data pipeline explained',
     'etl pipeline',
@@ -15,15 +14,14 @@ export const metadata: Metadata = {
     'data engineering pipeline',
     'data pipeline example',
     'data flow pipeline',
-    'data pipeline design',
-    'data pipeline best practices',
-    'data pipeline analytics definition',
-    'analytics data pipeline',
-    'data pipeline definition analytics'
+    'data pipeline for beginners',
+    'how does a data pipeline work',
+    'data pipeline definition',
+    'etl vs data pipeline'
   ],
   openGraph: {
-    title: 'What Is a Data Pipeline? Explained for Beginners (Complete Guide)',
-    description: 'Learn what a data pipeline is with simple examples. Understand ETL, data processing, and how data pipelines work.',
+    title: "What Is a Data Pipeline? Beginner's Guide with Examples",
+    description: 'Data pipelines power every modern data-driven product. Learn what they are, how ETL works, how data flows from source to destination, and what a beginner needs to know to get started.',
     type: 'article',
     publishedTime: '2026-02-07T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -33,8 +31,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'What Is a Data Pipeline? Explained for Beginners (Complete Guide)',
-    description: 'Learn what a data pipeline is with simple examples. Understand ETL, data processing, and how data pipelines work.',
+    title: 'What Is a Data Pipeline? Explained for Beginners',
+    description: 'Learn what a data pipeline is, how ETL works, and how data flows from source to destination — explained with simple, real-world examples.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/what-is-a-data-pipeline-explained-for-beginners',

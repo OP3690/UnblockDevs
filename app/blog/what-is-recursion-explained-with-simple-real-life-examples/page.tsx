@@ -1,28 +1,25 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Recursion Explained – Real-Life Examples | UnblockDevs',
-  description: 'Recursion: simple real-life examples, diagrams, code. Beginner-friendly. For coding interviews.',
+  title: 'Recursion Explained with Real-Life Examples | UnblockDevs',
+  description: 'Understand recursion with simple real-life examples and visual diagrams. Learn base cases, call stacks, and recursive thinking for coding interviews.',
   keywords: [
     'what is recursion',
-    'recursion explained',
-    'recursion examples',
-    'recursion tutorial',
-    'recursion beginner',
-    'recursive function',
-    'recursion in programming',
     'recursion explained simply',
     'recursion real life examples',
-    'recursion visualization',
-    'recursion flow chart',
+    'recursion tutorial',
+    'recursive function',
+    'recursion in programming',
+    'recursion base case',
+    'recursion call stack',
     'recursion diagram',
-    'recursion interview',
+    'recursion interview questions',
     'recursion python',
-    'recursion javascript'
+    'how does recursion work'
   ],
   openGraph: {
-    title: 'Recursion Explained – Real-Life Examples | UnblockDevs',
-    description: 'Recursion: examples, diagrams, code. For interviews.',
+    title: 'Recursion Explained with Simple Real-Life Examples and Diagrams',
+    description: "Recursion confuses most beginners — but it doesn't have to. Learn with real-life analogies, step-by-step diagrams, and code examples in Python and JavaScript. Master base cases and call stacks.",
     type: 'article',
     publishedTime: '2026-02-03T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -32,8 +29,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Recursion Explained – Real-Life Examples | UnblockDevs',
-    description: 'Recursion: examples, diagrams, code. For interviews.',
+    title: 'Recursion Explained with Real-Life Examples',
+    description: 'Recursion explained with real-life examples and diagrams. Learn base cases, call stacks, and recursive thinking for coding interviews.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/what-is-recursion-explained-with-simple-real-life-examples',

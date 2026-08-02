@@ -3,23 +3,26 @@ import Link from 'next/link';
 import { ArrowLeft, FileSearch, CheckCircle } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Structured Log Analysis: Tools and Techniques | UnblockDevs Blog',
+  title: 'Structured Log Analysis: Tools and Techniques | UnblockDevs',
   description: 'Master structured log analysis with modern tools. Learn how to parse, filter, and analyze logs effectively for debugging and monitoring applications.',
   keywords: [
-    'log analysis',
-    'structured logs',
+    'structured log analysis',
+    'log analysis tools',
     'log parser',
-    'debugging tools',
-    'log analyzer',
+    'json log analyzer',
     'log filtering',
-    'application logs',
-    'error logs',
-    'log monitoring',
-    'log search'
+    'application logs debugging',
+    'error log analysis',
+    'log monitoring tools',
+    'log search and filter',
+    'parse structured logs',
+    'best log analyzer tools',
+    'how to analyze application logs',
+    'log level filtering debugging'
   ],
   openGraph: {
-    title: 'Structured Log Analysis: Tools and Techniques',
-    description: 'Master structured log analysis with modern tools. Learn how to parse, filter, and analyze logs effectively.',
+    title: 'Structured Log Analysis: Best Tools, Parsing, and Filtering Techniques',
+    description: 'Effective log analysis starts with structure. Learn how to parse JSON and text logs, filter by level and context, group errors, and choose the right log analysis tools for modern applications.',
     type: 'article',
     publishedTime: '2024-01-05T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -29,7 +32,7 @@ export const metadata: Metadata = {
   },  twitter: {
     card: 'summary_large_image',
     title: 'Structured Log Analysis: Tools and Techniques',
-    description: 'Master structured log analysis with modern tools. Learn how to parse, filter, and analyze logs effectively.',
+    description: 'Learn to parse, filter, and search structured logs with the best tools. Faster debugging through smart log analysis for modern applications.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/structured-log-analysis-tools' },
 

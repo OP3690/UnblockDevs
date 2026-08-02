@@ -2,27 +2,25 @@ import type { Metadata } from 'next';
 import WhyMyApiWorksInPostmanButNotInBrowserClient from './client';
 
 export const metadata: Metadata = {
-  title: 'Why My API Works in Postman but Not in Browser | Fix Guide 2026',
-  description: 'Why API works in Postman but fails in browser. CORS, auth, preflight, browser security. Solutions and code examples.',
+  title: 'Why My API Works in Postman but Not in Browser | UnblockDevs',
+  description: 'Fix APIs that work in Postman but fail in the browser. Learn about CORS errors, preflight requests, auth headers, and browser security restrictions.',
   keywords: [
     'api works in postman but not browser',
     'cors error browser',
     'api not working in browser',
-    'postman vs browser api',
-    'cors policy error',
+    'cors policy error fix',
     'api authentication browser',
     'preflight request failed',
-    'browser api error',
     'api works postman fails browser',
-    'cors browser fix',
-    'api request browser',
-    'browser security api',
     'fetch api cors error',
     'api cors configuration',
-    'browser api troubleshooting'
+    'browser api troubleshooting',
+    'why api fails in browser',
+    'cors headers missing',
+    'postman vs browser differences'
   ],
   openGraph: {
-    title: 'Why My API Works in Postman but Not in Browser | Fix Guide 2026',
+    title: 'Why My API Works in Postman but Fails in the Browser — Fix Guide',
     description: 'Learn why your API works in Postman but fails in browsers. Complete troubleshooting guide for CORS errors, authentication issues, and browser security restrictions.',
     type: 'article',
     publishedTime: '2026-01-29T00:00:00Z',
@@ -33,8 +31,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Why My API Works in Postman but Not in Browser | Fix Guide 2026',
-    description: 'Learn why your API works in Postman but fails in browsers. Complete troubleshooting guide for CORS errors, authentication issues, and browser security restrictions.',
+    title: 'Why My API Works in Postman but Not in Browser',
+    description: 'CORS errors, preflight failures, auth headers — learn exactly why APIs work in Postman but break in the browser and how to fix each issue.',
   },
   alternates: { canonical: 'https://unblockdevs.com/blog/why-my-api-works-in-postman-but-not-in-browser' },
 };

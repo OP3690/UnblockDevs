@@ -1,28 +1,26 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'BFS vs DFS Explained with Examples | UnblockDevs',
-  description: 'BFS vs DFS: differences, simple examples, graph traversal. Visual diagrams. For coding interviews.',
+  title: 'BFS vs DFS Differences Explained with Examples | UnblockDevs',
+  description: 'Learn the differences between BFS and DFS with diagrams, Python code examples, and clear explanations of when to use each traversal algorithm.',
   keywords: [
     'bfs vs dfs',
-    'breadth first search',
-    'depth first search',
+    'breadth first search explained',
+    'depth first search explained',
     'bfs algorithm',
     'dfs algorithm',
-    'graph traversal',
-    'tree traversal',
-    'bfs explained',
-    'dfs explained',
+    'graph traversal algorithms',
     'bfs vs dfs difference',
     'bfs dfs comparison',
-    'bfs interview',
-    'dfs interview',
-    'bfs python',
-    'dfs python'
+    'bfs interview questions',
+    'dfs interview questions',
+    'bfs python example',
+    'when to use bfs vs dfs',
+    'graph traversal tutorial'
   ],
   openGraph: {
-    title: 'BFS vs DFS Explained with Examples | UnblockDevs',
-    description: 'BFS vs DFS: differences, examples, diagrams. For interviews.',
+    title: 'BFS vs DFS Differences Explained with Examples and Diagrams',
+    description: 'BFS explores nodes level by level, DFS dives deep first. Understand the differences with visual diagrams, code examples, and a clear guide to when each graph traversal algorithm shines.',
     type: 'article',
     publishedTime: '2026-02-04T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -32,8 +30,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'BFS vs DFS Explained with Examples | UnblockDevs',
-    description: 'BFS vs DFS: differences, examples, diagrams. For interviews.',
+    title: 'BFS vs DFS Differences Explained with Examples',
+    description: 'BFS vs DFS explained with diagrams and code. Learn which graph traversal algorithm to use and why — perfect for coding interview prep.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/what-is-bfs-vs-dfs-differences-explained-with-examples',

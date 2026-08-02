@@ -1,28 +1,26 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'HashMap / HashTable Explained – Examples | UnblockDevs',
-  description: 'HashMap and HashTable: simple examples, hash functions, collision handling, O(1) lookup. For interviews.',
+  title: 'HashMap / HashTable Explained Simply with Examples | UnblockDevs',
+  description: 'Understand HashMap and HashTable with simple examples. Learn hash functions, collision handling, and O(1) lookups — with Java, Python, and JavaScript code.',
   keywords: [
     'what is hashmap',
     'what is hashtable',
     'hashmap explained',
-    'hashtable explained',
-    'hash map tutorial',
-    'hash table tutorial',
     'hashmap vs hashtable',
-    'hash function',
-    'hash collision',
+    'hash function explained',
+    'hash collision handling',
     'hashmap example',
-    'hashtable example',
     'hashmap java',
     'hashmap python',
     'hashmap javascript',
-    'hashmap interview'
+    'hashmap interview questions',
+    'how does hashmap work',
+    'o1 lookup hashmap'
   ],
   openGraph: {
-    title: 'HashMap / HashTable Explained – Examples | UnblockDevs',
-    description: 'HashMap and HashTable: simple examples, diagrams, code. For interviews.',
+    title: 'HashMap and HashTable Explained Simply with Code Examples',
+    description: 'Learn how HashMap and HashTable work, how they handle collisions, and why they offer O(1) average lookups — with code examples in Java, Python, and JavaScript.',
     type: 'article',
     publishedTime: '2026-02-03T00:00:00Z',
     authors: ['UnblockDevs'],
@@ -32,8 +30,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'HashMap / HashTable Explained – Examples | UnblockDevs',
-    description: 'HashMap and HashTable: simple examples, diagrams, code. For interviews.',
+    title: 'HashMap / HashTable Explained Simply with Examples',
+    description: 'HashMap vs HashTable explained with diagrams and code. Learn O(1) lookups, hash functions, and collision handling for coding interviews.',
   },
   alternates: {
     canonical: 'https://unblockdevs.com/blog/what-is-hashmap-hashtable-explained-simply-with-examples',
