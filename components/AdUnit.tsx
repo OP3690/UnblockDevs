@@ -71,6 +71,9 @@ export default function AdUnit({
     return () => {
       cancelled = true;
       clearTimeout(t);
+      // Remove on unmount so the same slot can push again on the next page/mount.
+      // Each remount creates a new <ins> element, so re-pushing is safe.
+      pushedSlots.delete(slot);
     };
   }, [slot]);
 

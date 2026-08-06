@@ -50,7 +50,7 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
             key={`${key}-left`}
             role="region"
             aria-label="Advertisement"
-            className="sticky top-[4.75rem] hidden w-[200px] flex-shrink-0 self-start min-h-[600px] xl:block"
+            className="sticky top-[4.75rem] hidden w-[200px] flex-shrink-0 self-start min-h-[250px] xl:block"
           >
             <AdUnit slot={SLOT_LEFT} format="auto" minHeight={250} minWidth={0} className="rounded-lg overflow-hidden w-full" />
           </aside>
@@ -65,7 +65,7 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
             key={`${key}-right`}
             role="region"
             aria-label="Advertisement"
-            className="sticky top-[4.75rem] hidden w-[300px] flex-shrink-0 self-start min-h-[600px] xl:block"
+            className="sticky top-[4.75rem] hidden w-[300px] flex-shrink-0 self-start min-h-[250px] xl:block"
           >
             <AdUnit slot={SLOT_RIGHT} format="auto" minHeight={250} minWidth={0} className="rounded-lg overflow-hidden w-full" />
           </aside>
