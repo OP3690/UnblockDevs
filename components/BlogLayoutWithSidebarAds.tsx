@@ -83,15 +83,11 @@ function ShareButtons() {
   );
 }
 
-/** AdSense slot IDs (Ads → By ad unit). Env vars override for different environments. */
-const SLOT_INARTICLE =
-  typeof process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_INARTICLE === 'string' && process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_INARTICLE
-    ? process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_INARTICLE
-    : '6611398233';
-const SLOT_FOOTER =
-  typeof process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_FOOTER === 'string' && process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_FOOTER
-    ? process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_FOOTER
-    : '4987800735';
+/**
+ * ART (6611398233) in-article slot — used here exclusively for mid-article placement.
+ * 4987800735 is intentionally NOT used here; it's used once in blog/layout.tsx footer.
+ */
+const SLOT_INARTICLE = '6611398233';
 interface BlogLayoutWithSidebarAdsProps {
   children: React.ReactNode;
   title?: string;
@@ -133,32 +129,23 @@ export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSid
         {children}
       </div>
 
-      {/* Bottom share bar — after reading the article */}
-      <div className="mt-10 border-t border-zinc-100 pt-6 px-4 sm:px-6 lg:px-8 xl:px-0 xl:mx-auto xl:max-w-4xl">
-        <ShareButtons />
-      </div>
-
-      {/* In-article ad — after content */}
+      {/* In-article ad — placed between content and share bar (highest-visibility position) */}
       <div
         role="region"
         aria-label="Advertisement"
-        className="mt-10 overflow-hidden rounded-xl px-4 sm:px-6 lg:px-8 xl:px-0 xl:mx-auto xl:max-w-4xl"
+        className="mt-8 overflow-hidden rounded-xl px-4 sm:px-6 lg:px-8 xl:px-0 xl:mx-auto xl:max-w-4xl"
       >
         <AdUnit slot={SLOT_INARTICLE} format="fluid" layout="in-article" className="rounded-xl overflow-hidden" />
+      </div>
+
+      {/* Bottom share bar — after reading the article */}
+      <div className="mt-8 border-t border-zinc-100 pt-6 px-4 sm:px-6 lg:px-8 xl:px-0 xl:mx-auto xl:max-w-4xl">
+        <ShareButtons />
       </div>
 
       {/* Related posts */}
       <div className="mt-12 px-4 sm:px-6 lg:px-8 xl:px-0 xl:mx-auto xl:max-w-4xl">
         <AutoRelatedBlogPosts />
-      </div>
-
-      {/* Footer ad */}
-      <div
-        role="region"
-        aria-label="Advertisement"
-        className="mt-10 overflow-hidden rounded-xl bg-zinc-50 px-4 sm:px-6 lg:px-8 xl:px-0 xl:mx-auto xl:max-w-4xl"
-      >
-        <AdUnit slot={SLOT_FOOTER} format="autorelaxed" className="rounded-xl overflow-hidden" />
       </div>
     </div>
   );

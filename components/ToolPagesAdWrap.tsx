@@ -2,12 +2,14 @@
 
 import { usePathname } from 'next/navigation';
 import AdUnit from '@/components/AdUnit';
+import StickyMobileAd from '@/components/StickyMobileAd';
 
-/** AdSense slot IDs — same as blog sidebars (VER left, SQ right). */
-const SLOT_LEFT = '4176806584'; // VER (Display)
-const SLOT_RIGHT = '1255275563'; // SQ (Display)
+/** AdSense slot IDs */
+const SLOT_LEFT = '4176806584';  // VER (Display) — desktop left sidebar
+const SLOT_RIGHT = '1255275563'; // SQ (Display) — desktop right sidebar; also mobile in-content
+const SLOT_MOBILE = '5569779301'; // sitewide autorelaxed — mobile horizontal below tool
 
-/** First path segment that should NOT get left/right sidebar ads. */
+/** First path segment that should NOT get sidebar ads. */
 const NO_SIDEBAR_SEGMENTS = new Set([
   '',
   'blog',
@@ -29,8 +31,10 @@ function useIsToolPage(): boolean {
 }
 
 /**
- * Wraps children with left and right sidebar ad slots on tool pages only.
- * Sidebars appear at xl (1280px+) so desktop users get a proper 3-column layout.
+ * Wraps children with sidebar ads on desktop (xl+) and a horizontal in-content
+ * ad below the tool output on mobile/tablet (< xl, where sidebars are hidden).
+ * Right sidebar is 300px to serve the medium rectangle (300×250) — the highest-CTR
+ * display format. Left is 200px for standard vertical units.
  */
 export default function ToolPagesAdWrap({ children }: { children: React.ReactNode }) {
   const isToolPage = useIsToolPage();
@@ -40,39 +44,61 @@ export default function ToolPagesAdWrap({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-[1600px] flex-col px-3 py-2 sm:py-4 sm:px-5 lg:px-6 xl:flex-row xl:items-start xl:gap-6 xl:px-8">
-      {/* Left sidebar — shows at xl (1280px+) */}
-      <aside
-        role="region"
-        aria-label="Advertisement"
-        className="sticky top-[4.75rem] order-first hidden min-h-[250px] w-[160px] min-w-0 max-w-[160px] flex-shrink-0 overflow-hidden self-start xl:block"
-      >
-        <AdUnit
-          slot={SLOT_LEFT}
-          format="auto"
-          minHeight={250}
-          minWidth={0}
-          className="w-full max-w-full overflow-hidden rounded-lg"
-        />
-      </aside>
+    <>
+      <div className="mx-auto flex w-full max-w-[1600px] flex-col px-3 py-2 sm:py-4 sm:px-5 lg:px-6 xl:flex-row xl:items-start xl:gap-6 xl:px-8">
+        {/* Left sidebar — 200px at xl+ */}
+        <aside
+          role="region"
+          aria-label="Advertisement"
+          className="sticky top-[4.75rem] order-first hidden min-h-[250px] w-[200px] min-w-0 max-w-[200px] flex-shrink-0 overflow-hidden self-start xl:block"
+        >
+          <AdUnit
+            slot={SLOT_LEFT}
+            format="auto"
+            minHeight={250}
+            minWidth={0}
+            className="w-full max-w-full overflow-hidden rounded-lg"
+          />
+        </aside>
 
-      {/* Main content */}
-      <main className="relative z-[1] order-2 min-w-0 flex-1 overflow-x-hidden">{children}</main>
+        {/* Main content */}
+        <div className="relative z-[1] order-2 min-w-0 flex-1 overflow-x-hidden">
+          <main>{children}</main>
 
-      {/* Right sidebar — shows at xl (1280px+) */}
-      <aside
-        role="region"
-        aria-label="Advertisement"
-        className="sticky top-[4.75rem] order-3 hidden min-h-[250px] w-[200px] min-w-0 max-w-[200px] flex-shrink-0 overflow-hidden self-start xl:block"
-      >
-        <AdUnit
-          slot={SLOT_RIGHT}
-          format="auto"
-          minHeight={250}
-          minWidth={0}
-          className="w-full max-w-full overflow-hidden rounded-lg"
-        />
-      </aside>
-    </div>
+          {/* Mobile/tablet in-content ad — below tool output, hidden on xl+ where sidebars appear */}
+          <div
+            role="region"
+            aria-label="Advertisement"
+            className="mt-6 xl:hidden"
+          >
+            <AdUnit
+              slot={SLOT_MOBILE}
+              format="auto"
+              minHeight={90}
+              minWidth={0}
+              className="w-full rounded-lg overflow-hidden"
+            />
+          </div>
+        </div>
+
+        {/* Right sidebar — 300px at xl+ (serves medium rectangle 300×250) */}
+        <aside
+          role="region"
+          aria-label="Advertisement"
+          className="sticky top-[4.75rem] order-3 hidden min-h-[250px] w-[300px] min-w-0 max-w-[300px] flex-shrink-0 overflow-hidden self-start xl:block"
+        >
+          <AdUnit
+            slot={SLOT_RIGHT}
+            format="auto"
+            minHeight={250}
+            minWidth={0}
+            className="w-full max-w-full overflow-hidden rounded-lg"
+          />
+        </aside>
+      </div>
+
+      {/* Sticky bottom banner on mobile/tablet */}
+      <StickyMobileAd />
+    </>
   );
 }

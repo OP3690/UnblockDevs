@@ -2,98 +2,90 @@
 
 import { usePathname } from 'next/navigation';
 import AdUnit from '@/components/AdUnit';
-
-/** AdSense slot IDs — must match Ads → By ad unit in AdSense dashboard. */
-const SLOT_TOP = '1550643245'; // HOR (Display)
-const SLOT_BOTTOM = '4987800735'; // HOR_MULTI (Multiplex)
-const SLOT_LEFT = '4176806584'; // VER (Display)
-const SLOT_RIGHT = '1255275563'; // SQ (Display)
-const SLOT_INCONTENT_TOP = '6611398233'; // ART (In-article)
-const SLOT_INCONTENT_MID = '4987800735'; // HOR_MULTI (Multiplex)
-const SLOT_INCONTENT_BOTTOM = '4987800735'; // HOR_MULTI (Multiplex)
+import StickyMobileAd from '@/components/StickyMobileAd';
 
 /**
- * Blog layout: wraps all /blog and /blog/[...] routes with AdSense units.
- * Multiple sections so ads appear across top, above article, mid, after article, sidebars, and footer.
+ * AdSense slot IDs — each used in exactly ONE position so pushedSlots
+ * deduplication never blocks a render.
+ *
+ * HOR (1550643245)    → top leaderboard banner
+ * VER (4176806584)    → left sidebar (desktop) / sticky mobile bottom
+ * SQ  (1255275563)    → right sidebar (desktop, 300px → medium rectangle)
+ * ART (6611398233)    → in-article (inside BlogLayoutWithSidebarAds, mid content)
+ * MPX (4987800735)    → single footer multiplex (one usage only)
  */
-export default function BlogLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const SLOT_TOP   = '1550643245';
+const SLOT_LEFT  = '4176806584';
+const SLOT_RIGHT = '1255275563';
+const SLOT_FOOTER = '4987800735';
+
+/**
+ * Blog layout: wraps all /blog and /blog/[...] routes.
+ * Each slot ID used exactly once → no silent skips from the pushedSlots guard.
+ * Desktop: top banner + 200px left + 300px right sidebars (medium rectangle).
+ * Mobile: top banner + sticky bottom (via StickyMobileAd).
+ */
+export default function BlogLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const key = pathname ?? 'blog';
 
   return (
     <>
-      {/* Section 1: Top banner */}
+      {/* Top leaderboard — full-width, above article */}
       <div
         key={`${key}-top`}
         role="region"
         aria-label="Advertisement"
-        className="min-h-[50px] flex items-center justify-center bg-gray-50/50 border-b border-gray-100 py-2 px-2 sm:px-0"
+        className="flex items-center justify-center border-b border-zinc-100 bg-zinc-50/60 py-2 px-2 sm:px-0"
+        style={{ minHeight: 60 }}
       >
         <AdUnit slot={SLOT_TOP} format="auto" minHeight={50} className="w-full max-w-full" />
       </div>
-      {/* Ezoic: top of content — no forced min-height so it collapses when empty */}
-      <div
-        id="ezoic-pub-ad-placeholder-104"
-        role="region"
-        aria-label="Advertisement"
-        className="w-full empty:hidden"
-      />
+
       <div className="mx-auto max-w-[1600px] px-3 sm:px-5 lg:px-8 py-4 sm:py-6">
         <div className="flex flex-col xl:flex-row xl:gap-6 2xl:gap-8">
-          {/* Left sidebar ad — visible from xl (1280px) */}
+
+          {/* Left sidebar — 200px at xl+ */}
           <aside
             key={`${key}-left`}
             role="region"
             aria-label="Advertisement"
-            className="sticky top-[4.75rem] hidden w-[160px] flex-shrink-0 self-start min-h-[250px] xl:block"
+            className="sticky top-[4.75rem] hidden w-[200px] flex-shrink-0 self-start min-h-[600px] xl:block"
           >
-            <AdUnit slot={SLOT_LEFT} format="auto" minHeight={250} className="rounded-lg overflow-hidden w-full" />
+            <AdUnit slot={SLOT_LEFT} format="auto" minHeight={250} minWidth={0} className="rounded-lg overflow-hidden w-full" />
           </aside>
+
+          {/* Article content */}
           <main className="flex-1 min-w-0 overflow-x-hidden">
             {children}
-            {/* Section 3: Mid / after article */}
-            <div
-              key={`${key}-in-mid`}
-              role="region"
-              aria-label="Advertisement"
-              className="min-h-[90px] flex items-center justify-center bg-gray-50/40 rounded-lg my-6"
-            >
-              <AdUnit slot={SLOT_INCONTENT_MID} format="autorelaxed" minHeight={90} className="w-full rounded-lg overflow-hidden" />
-            </div>
           </main>
-          {/* Right sidebar ad — visible from xl (1280px) */}
+
+          {/* Right sidebar — 300px at xl+ (medium rectangle 300×250 → highest CTR display) */}
           <aside
             key={`${key}-right`}
             role="region"
             aria-label="Advertisement"
-            className="sticky top-[4.75rem] hidden w-[200px] flex-shrink-0 self-start min-h-[250px] xl:block"
+            className="sticky top-[4.75rem] hidden w-[300px] flex-shrink-0 self-start min-h-[600px] xl:block"
           >
-            <AdUnit slot={SLOT_RIGHT} format="auto" minHeight={250} className="rounded-lg overflow-hidden w-full" />
+            <AdUnit slot={SLOT_RIGHT} format="auto" minHeight={250} minWidth={0} className="rounded-lg overflow-hidden w-full" />
           </aside>
+
         </div>
       </div>
-      {/* AdSense: above footer banner */}
+
+      {/* Footer multiplex — once, below article */}
       <div
-        key={`${key}-above-bottom`}
+        key={`${key}-footer`}
         role="region"
         aria-label="Advertisement"
-        className="min-h-[90px] sm:min-h-[90px] flex items-center justify-center bg-gray-50/40 py-4 px-2"
+        className="flex items-center justify-center border-t border-zinc-100 bg-zinc-50/60 py-4 px-2"
+        style={{ minHeight: 90 }}
       >
-        <AdUnit slot={SLOT_INCONTENT_BOTTOM} format="autorelaxed" minHeight={90} className="w-full max-w-full" />
+        <AdUnit slot={SLOT_FOOTER} format="autorelaxed" minHeight={90} className="w-full max-w-full" />
       </div>
-      {/* Section 4: Bottom banner */}
-      <div
-        key={`${key}-bottom`}
-        role="region"
-        aria-label="Advertisement"
-        className="min-h-[250px] sm:min-h-[90px] flex items-center justify-center bg-gray-50/50 border-t border-gray-100 py-4 sm:py-6 px-2 sm:px-0"
-      >
-        <AdUnit slot={SLOT_BOTTOM} format="autorelaxed" minHeight={90} className="w-full max-w-full" />
-      </div>
+
+      {/* Sticky bottom banner on mobile/tablet (xl:hidden is inside the component) */}
+      <StickyMobileAd />
     </>
   );
 }
