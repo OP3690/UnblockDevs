@@ -7,6 +7,7 @@ import HomePrivacyFirstSections from '@/components/home/HomePrivacyFirstSections
 import FeedbackNewsletterSplit from '@/components/home/FeedbackNewsletterSplit';
 import RecentlyUsedTools from '@/components/home/RecentlyUsedTools';
 import AdUnit from '@/components/AdUnit';
+import StickyMobileAd from '@/components/StickyMobileAd';
 
 // Mapping of tool tabs to their dedicated page URLs (used by HomePrivacyFirstSections)
 const toolPageUrls: Record<string, string> = {
@@ -139,6 +140,13 @@ function HomeClient({ hero }: { hero: ReactNode }) {
       {/* Hero */}
       {hero}
 
+      {/* High-visibility ad — right after hero, before tool tabs (SQ slot unused on homepage) */}
+      <div role="region" aria-label="Advertisement" className="border-b border-zinc-100 bg-white py-2">
+        <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+          <AdUnit slot="1255275563" format="auto" minHeight={90} className="w-full" />
+        </div>
+      </div>
+
       {/* Recently used tools — personalized shortcut strip */}
       <RecentlyUsedTools />
 
@@ -166,6 +174,9 @@ function HomeClient({ hero }: { hero: ReactNode }) {
           <AdUnit slot="4987800735" format="autorelaxed" minHeight={90} className="w-full" />
         </div>
       </div>
+
+      {/* Sticky bottom on mobile — VER slot not used anywhere else on homepage */}
+      <StickyMobileAd />
 
       {/* SEO link hub */}
       <section className="border-t border-zinc-200 bg-white py-8 sm:py-12">
