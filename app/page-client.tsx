@@ -6,6 +6,7 @@ import { FileText } from 'lucide-react';
 import HomePrivacyFirstSections from '@/components/home/HomePrivacyFirstSections';
 import FeedbackNewsletterSplit from '@/components/home/FeedbackNewsletterSplit';
 import RecentlyUsedTools from '@/components/home/RecentlyUsedTools';
+import AdUnit from '@/components/AdUnit';
 
 // Mapping of tool tabs to their dedicated page URLs (used by HomePrivacyFirstSections)
 const toolPageUrls: Record<string, string> = {
@@ -146,17 +147,25 @@ function HomeClient({ hero }: { hero: ReactNode }) {
         <HomePrivacyFirstSections toolPageUrls={toolPageUrls} />
       </main>
 
-      {/* Ad slots */}
-      <div className="ud-content py-0 border-b border-zinc-200/80 bg-white/60">
-        <div id="ezoic-pub-ad-placeholder-101" role="region" aria-label="Advertisement" className="min-h-[50px] w-full flex items-center justify-center" style={{ contain: 'layout' }} />
-        <div id="ezoic-pub-ad-placeholder-111" role="region" aria-label="Advertisement" className="min-h-[90px] w-full flex items-center justify-center" style={{ contain: 'layout' }} />
+      {/* Homepage ad — between tools and newsletter */}
+      <div className="border-b border-zinc-200/80 bg-white/60" style={{ contain: 'layout' }}>
+        <div role="region" aria-label="Advertisement" className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 py-3">
+          <AdUnit slot="1550643245" format="auto" minHeight={60} className="w-full" />
+        </div>
+        <div role="region" aria-label="Advertisement" className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 pb-3">
+          <AdUnit slot="6611398233" format="fluid" layout="in-article" minHeight={90} className="w-full rounded-xl overflow-hidden" />
+        </div>
       </div>
 
       {/* Feedback + newsletter */}
       <FeedbackNewsletterSplit layout="split" />
 
       {/* Before-footer ad */}
-      <div id="ezoic-pub-ad-placeholder-103" role="region" aria-label="Advertisement" className="min-h-[50px] sm:min-h-[90px] w-full" style={{ contain: 'layout' }} />
+      <div role="region" aria-label="Advertisement" className="border-t border-zinc-100 bg-zinc-50/40 py-4" style={{ contain: 'layout' }}>
+        <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+          <AdUnit slot="4987800735" format="autorelaxed" minHeight={90} className="w-full" />
+        </div>
+      </div>
 
       {/* SEO link hub */}
       <section className="border-t border-zinc-200 bg-white py-8 sm:py-12">

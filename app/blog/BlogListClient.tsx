@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { Calendar, Clock, ArrowRight, Search, X, ChevronDown } from 'lucide-react';
 import type { BlogPost } from '@/lib/blog-posts-data';
+import AdUnit from '@/components/AdUnit';
 
 const INITIAL_COUNT = 12;
 const LOAD_MORE_COUNT = 12;
@@ -291,15 +292,24 @@ export function BlogListClient({ allPosts }: BlogListClientProps) {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3" role="feed" aria-label="Blog posts">
-          {visiblePosts.map((post, i) => (
-            <PostCard
-              key={post.slug}
-              post={post}
-              featured={i === 0 && !isFiltered}
-            />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3" role="feed" aria-label="Blog posts">
+            {visiblePosts.map((post, i) => (
+              <PostCard
+                key={post.slug}
+                post={post}
+                featured={i === 0 && !isFiltered}
+              />
+            ))}
+          </div>
+
+          {/* In-feed ad — shown after first 6+ posts are visible */}
+          {visiblePosts.length >= 6 && (
+            <div role="region" aria-label="Advertisement" className="mt-6 overflow-hidden rounded-xl">
+              <AdUnit slot="6611398233" format="fluid" layout="in-article" minHeight={90} className="w-full rounded-xl overflow-hidden" />
+            </div>
+          )}
+        </>
       )}
 
       {/* Load more */}
