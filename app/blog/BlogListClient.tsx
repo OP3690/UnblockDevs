@@ -195,6 +195,11 @@ export function BlogListClient({ allPosts }: BlogListClientProps) {
 
   return (
     <>
+      {/* ART2 banner — above filter bar, high viewability */}
+      <div role="region" aria-label="Advertisement" className="mb-6 overflow-hidden rounded-xl">
+        <AdUnit slot="6289722500" format="fluid" layout="in-article" minHeight={90} className="w-full rounded-xl overflow-hidden" />
+      </div>
+
       {/* ── Filter bar ─────────────────────────────────────────── */}
       <div className="mb-6 space-y-3">
         <div className="relative max-w-sm">
@@ -307,6 +312,13 @@ export function BlogListClient({ allPosts }: BlogListClientProps) {
           {visiblePosts.length >= 6 && (
             <div role="region" aria-label="Advertisement" className="mt-6 overflow-hidden rounded-xl">
               <AdUnit slot="6611398233" format="fluid" layout="in-article" minHeight={90} className="w-full rounded-xl overflow-hidden" />
+            </div>
+          )}
+
+          {/* Second in-feed ad — shown after 18+ posts (load-more users) */}
+          {visiblePosts.length >= 18 && (
+            <div role="region" aria-label="Advertisement" className="mt-6 overflow-hidden rounded-xl">
+              <AdUnit slot="1130443324" format="auto" minHeight={90} className="w-full rounded-xl overflow-hidden" />
             </div>
           )}
         </>

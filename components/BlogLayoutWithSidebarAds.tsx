@@ -84,10 +84,14 @@ function ShareButtons() {
 }
 
 /**
- * ART (6611398233) in-article slot — used here exclusively for mid-article placement.
+ * ART  (6611398233) in-article slot — post-content, before share bar.
+ * ART2 (6289722500) in-article slot — pre-content, top of article body (highest viewability).
+ * HOR2 (1130443324) display auto   — after related posts, end of page.
  * 4987800735 is intentionally NOT used here; it's used once in blog/layout.tsx footer.
  */
-const SLOT_INARTICLE = '6611398233';
+const SLOT_INARTICLE     = '6611398233';
+const SLOT_INARTICLE_TOP = '6289722500';
+const SLOT_HOR2          = '1130443324';
 interface BlogLayoutWithSidebarAdsProps {
   children: React.ReactNode;
   title?: string;
@@ -124,6 +128,15 @@ export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSid
         <ShareButtons />
       </div>
 
+      {/* ART2 in-article — top of article body, highest viewability */}
+      <div
+        role="region"
+        aria-label="Advertisement"
+        className="mb-6 overflow-hidden rounded-xl px-4 sm:px-6 lg:px-8 xl:px-0 xl:mx-auto xl:max-w-4xl"
+      >
+        <AdUnit slot={SLOT_INARTICLE_TOP} format="fluid" layout="in-article" className="rounded-xl overflow-hidden" />
+      </div>
+
       {/* Article body — centered for comfortable reading width */}
       <div className="blog-article-body mx-auto px-4 sm:px-6 lg:px-8 xl:px-0">
         {children}
@@ -146,6 +159,15 @@ export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSid
       {/* Related posts */}
       <div className="mt-12 px-4 sm:px-6 lg:px-8 xl:px-0 xl:mx-auto xl:max-w-4xl">
         <AutoRelatedBlogPosts />
+      </div>
+
+      {/* HOR2 — full-width responsive banner after related posts */}
+      <div
+        role="region"
+        aria-label="Advertisement"
+        className="mt-8 overflow-hidden rounded-xl px-4 sm:px-6 lg:px-8 xl:px-0 xl:mx-auto xl:max-w-4xl"
+      >
+        <AdUnit slot={SLOT_HOR2} format="auto" minHeight={90} className="w-full rounded-xl overflow-hidden" />
       </div>
     </div>
   );

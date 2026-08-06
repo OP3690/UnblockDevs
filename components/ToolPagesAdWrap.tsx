@@ -5,10 +5,11 @@ import AdUnit from '@/components/AdUnit';
 import StickyMobileAd from '@/components/StickyMobileAd';
 
 /** AdSense slot IDs */
-const SLOT_LEFT   = '4176806584';  // VER — desktop left sidebar (desktop) / StickyMobileAd (mobile, safe)
-const SLOT_RIGHT  = '1255275563';  // SQ  — desktop right sidebar (300px, medium rectangle)
-const SLOT_ABOVE  = '4987800735';  // MPX — horizontal banner above tool content (all screens)
-const SLOT_MOBILE = '1550643245';  // HOR — in-content below tool on mobile (<xl); safe: not used on tool pages elsewhere
+const SLOT_LEFT        = '4176806584';  // VER  — desktop left sidebar / StickyMobileAd (mobile, safe)
+const SLOT_RIGHT       = '1255275563';  // SQ   — desktop right sidebar (300px, medium rectangle)
+const SLOT_ABOVE       = '4987800735';  // MPX  — horizontal banner above tool content (all screens)
+const SLOT_MOBILE      = '1550643245';  // HOR  — in-content below tool on mobile (<xl)
+const SLOT_BELOW_DESK  = '1130443324';  // HOR2 — below-tool banner desktop only (xl+)
 
 /** First path segment that should NOT get sidebar ads. */
 const NO_SIDEBAR_SEGMENTS = new Set([
@@ -76,6 +77,17 @@ export default function ToolPagesAdWrap({ children }: { children: React.ReactNod
           </div>
 
           <main>{children}</main>
+
+          {/* HOR2 — below-tool banner, desktop only (xl+), complements mobile in-content below */}
+          <div role="region" aria-label="Advertisement" className="mt-6 hidden xl:block">
+            <AdUnit
+              slot={SLOT_BELOW_DESK}
+              format="auto"
+              minHeight={90}
+              minWidth={0}
+              className="w-full rounded-lg overflow-hidden"
+            />
+          </div>
 
           {/* Mobile/tablet in-content ad — below tool output, hidden on xl+ where sidebars appear */}
           <div role="region" aria-label="Advertisement" className="mt-6 xl:hidden">

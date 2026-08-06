@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { trackSearchOpened } from '@/lib/analytics';
+import AdUnit from '@/components/AdUnit';
 import type { LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -489,6 +490,13 @@ export default function ToolsJsonHubClient() {
         </div>
       )}
 
+      {/* HOR2 banner — below popular strip, before tool sections */}
+      <div role="region" aria-label="Advertisement" className="border-b border-zinc-200/60 bg-white py-3 px-5 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[1200px]">
+          <AdUnit slot="1130443324" format="auto" minHeight={60} minWidth={0} className="w-full rounded-lg overflow-hidden" />
+        </div>
+      </div>
+
       <div className="mx-auto max-w-[1200px] px-5 py-10 sm:px-6 sm:py-12 lg:px-8">
 
         {/* ══ AI SAFETY SPOTLIGHT ═══════════════════════════════════════════════ */}
@@ -600,6 +608,13 @@ export default function ToolsJsonHubClient() {
               {newTools.map((tool) => <GridCard key={tool.href} tool={tool} />)}
             </div>
           </section>
+        )}
+
+        {/* ART2 in-article — between new tools and tool grid */}
+        {cat === 'all' && (
+          <div role="region" aria-label="Advertisement" className="mb-8 overflow-hidden rounded-xl">
+            <AdUnit slot="6289722500" format="fluid" layout="in-article" minHeight={90} className="w-full rounded-xl overflow-hidden" />
+          </div>
         )}
 
         {/* ══ STICKY FILTER BAR ════════════════════════════════════════════════ */}
@@ -738,6 +753,11 @@ export default function ToolsJsonHubClient() {
               ))}
             </div>
           </div>
+        </div>
+
+        {/* MPX autorelaxed — after bottom trust banner */}
+        <div role="region" aria-label="Advertisement" className="mt-8 overflow-hidden rounded-xl">
+          <AdUnit slot="4987800735" format="autorelaxed" minHeight={90} className="w-full rounded-xl overflow-hidden" />
         </div>
 
         <div className="mt-6 flex justify-center">
