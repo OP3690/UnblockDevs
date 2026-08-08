@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Link2, Check } from 'lucide-react';
 import AdUnit from '@/components/AdUnit';
+import AutoBlogArticleSchema from '@/components/AutoBlogArticleSchema';
+import AutoBlogFAQSchema from '@/components/AutoBlogFAQSchema';
 import AutoRelatedBlogPosts from '@/components/AutoRelatedBlogPosts';
 
 function ShareButtons() {
@@ -106,6 +108,8 @@ interface BlogLayoutWithSidebarAdsProps {
 export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSidebarAdsProps) {
   return (
     <div className="w-full py-6 sm:py-10">
+      <AutoBlogArticleSchema />
+      <AutoBlogFAQSchema />
 
       {/* Nav bar: Back to Blog + All Tools on left, Share buttons on right */}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 px-4 sm:px-6 lg:px-8 xl:px-0 xl:mx-auto xl:max-w-4xl">

@@ -180,6 +180,30 @@ const faqSchema = {
         text: 'Use json.dumps with the indent parameter: json.dumps(data, indent=2) for 2-space indentation or json.dumps(data, indent=4) for 4 spaces. To write formatted JSON to a file: json.dump(data, file, indent=2). To parse a JSON string, use json.loads(json_string). To read from a file: json.load(file).',
       },
     },
+    {
+      '@type': 'Question' as const,
+      name: 'What is the best free JSON formatter online that does not send data to a server?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'The UnblockDevs JSON Formatter at unblockdevs.com/json-formatter processes JSON entirely in your browser using JavaScript. Your JSON is never uploaded to any server, making it safe for API responses that contain PII, credentials, or proprietary business data. It also validates JSON, detects and explains syntax errors, offers tree-view and raw modes, and handles large files without size limits.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'UnblockDevs JSON Formatter vs jsonformatter.org — what is the difference?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Both format JSON. The key difference is data handling: UnblockDevs JSON Formatter (unblockdevs.com/json-formatter) runs 100% in the browser — nothing is sent to any server, making it safe for sensitive data, production payloads, and enterprise use. It also integrates with other tools in the UnblockDevs suite: you can immediately pass formatted JSON into the JSON Schema Generator, JSON Comparator, or AI Schema Masker without switching tabs.',
+      },
+    },
+    {
+      '@type': 'Question' as const,
+      name: 'Can I use the JSON Formatter with large JSON files?',
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: 'Yes. Because all processing is in the browser using native JavaScript parsing, the UnblockDevs JSON Formatter handles large JSON files efficiently. There are no server-side upload size limits. For very large files (several hundred MB), performance depends on your device\'s memory and CPU; most modern laptops handle files up to 50 MB without issues.',
+      },
+    },
   ],
 };
 

@@ -121,11 +121,49 @@ const speakableSchema = {
   isPartOf: { '@id': 'https://unblockdevs.com/#website' },
 };
 
+const toolsItemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  '@id': 'https://unblockdevs.com/#tools-list',
+  name: 'Free Developer Tools by UnblockDevs',
+  description: '50+ free browser-based developer tools — no signup, no data upload, GDPR-safe.',
+  url: 'https://unblockdevs.com',
+  numberOfItems: 55,
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'JSON Formatter', url: 'https://unblockdevs.com/json-formatter', description: 'Format, beautify, and validate JSON in your browser — no upload.' },
+    { '@type': 'ListItem', position: 2, name: 'JWT Decoder', url: 'https://unblockdevs.com/jwt-decoder', description: 'Decode JWT tokens client-side — header, payload, expiry, and security audit.' },
+    { '@type': 'ListItem', position: 3, name: 'cURL Converter', url: 'https://unblockdevs.com/curl-converter', description: 'Convert cURL commands to Python, JavaScript, Go, Java, PHP, Ruby, Rust, and more.' },
+    { '@type': 'ListItem', position: 4, name: 'CORS Tester', url: 'https://unblockdevs.com/cors-tester', description: 'Test CORS headers for any API endpoint and diagnose cross-origin errors.' },
+    { '@type': 'ListItem', position: 5, name: 'SQL Formatter', url: 'https://unblockdevs.com/sql-formatter', description: 'Format and indent SQL queries for MySQL, PostgreSQL, SQLite, and T-SQL.' },
+    { '@type': 'ListItem', position: 6, name: 'Base64 Encoder', url: 'https://unblockdevs.com/base64-encoder', description: 'Encode and decode Base64 strings including URL-safe Base64.' },
+    { '@type': 'ListItem', position: 7, name: 'JSON Validator', url: 'https://unblockdevs.com/json-validator', description: 'Validate JSON syntax and structure against RFC 8259 and JSON Schema.' },
+    { '@type': 'ListItem', position: 8, name: 'JSON Beautifier', url: 'https://unblockdevs.com/json-beautifier', description: 'Beautify and pretty-print JSON with syntax highlighting.' },
+    { '@type': 'ListItem', position: 9, name: 'Regex Tester', url: 'https://unblockdevs.com/regex-tester', description: 'Test regular expressions with real-time match highlighting and group capture.' },
+    { '@type': 'ListItem', position: 10, name: 'UUID Generator', url: 'https://unblockdevs.com/uuid-generator', description: 'Generate cryptographically random UUID v4 values in bulk.' },
+    { '@type': 'ListItem', position: 11, name: 'Hash Generator', url: 'https://unblockdevs.com/hash-generator', description: 'Generate MD5, SHA-1, SHA-256, SHA-512 hashes entirely in the browser.' },
+    { '@type': 'ListItem', position: 12, name: 'URL Encoder', url: 'https://unblockdevs.com/url-encoder', description: 'Encode and decode URL components and query string parameters.' },
+    { '@type': 'ListItem', position: 13, name: 'AI Schema Masker', url: 'https://unblockdevs.com/ai-schema-masker', description: 'Mask sensitive field values in JSON before sharing with ChatGPT or other AI tools.' },
+    { '@type': 'ListItem', position: 14, name: 'HAR to cURL', url: 'https://unblockdevs.com/har-to-curl', description: 'Convert browser HAR export files to individual cURL commands.' },
+    { '@type': 'ListItem', position: 15, name: 'JSON to Excel', url: 'https://unblockdevs.com/json-to-excel', description: 'Convert JSON arrays to Excel spreadsheet or CSV format.' },
+    { '@type': 'ListItem', position: 16, name: 'JSON Schema Generator', url: 'https://unblockdevs.com/json-schema-generation', description: 'Generate JSON Schema from sample JSON data automatically.' },
+    { '@type': 'ListItem', position: 17, name: 'Password Generator', url: 'https://unblockdevs.com/password-generator', description: 'Generate secure random passwords with custom length and character sets.' },
+    { '@type': 'ListItem', position: 18, name: 'Timestamp Converter', url: 'https://unblockdevs.com/timestamp-converter', description: 'Convert Unix timestamps to human-readable dates and vice versa.' },
+    { '@type': 'ListItem', position: 19, name: 'Log Unpacker', url: 'https://unblockdevs.com/log-unpacker', description: 'Unpack and decode nested JSON logs, escaped strings, and JWT tokens from logs.' },
+    { '@type': 'ListItem', position: 20, name: 'Text Diff', url: 'https://unblockdevs.com/text-diff', description: 'Compare two text blocks side-by-side and highlight line-level differences.' },
+    { '@type': 'ListItem', position: 21, name: 'JSON Comparator', url: 'https://unblockdevs.com/json-comparator', description: 'Compare two JSON objects and highlight added, removed, and changed keys.' },
+    { '@type': 'ListItem', position: 22, name: 'JSON Fixer', url: 'https://unblockdevs.com/json-fixer', description: 'Auto-fix common JSON syntax errors: trailing commas, single quotes, and more.' },
+    { '@type': 'ListItem', position: 23, name: 'SQL IN Generator', url: 'https://unblockdevs.com/sql-in-generator', description: 'Convert a list of values into a SQL IN clause instantly.' },
+    { '@type': 'ListItem', position: 24, name: 'Number Base Converter', url: 'https://unblockdevs.com/number-base-converter', description: 'Convert between binary, octal, decimal, and hexadecimal number bases.' },
+    { '@type': 'ListItem', position: 25, name: 'Color Converter', url: 'https://unblockdevs.com/color-converter', description: 'Convert colors between HEX, RGB, HSL, and HSV formats.' },
+  ],
+};
+
 export default function Home() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(toolsItemListSchema) }} />
       <HomeClient hero={<HomeServerHero />} />
     </>
   );
