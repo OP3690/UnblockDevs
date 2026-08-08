@@ -39,6 +39,77 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://unblockdevs.com/about' },
 };
 
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What is UnblockDevs?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'UnblockDevs is a free, browser-based suite of 50+ developer tools including a JSON formatter, JWT decoder, cURL converter, CORS tester, SQL formatter, Base64 encoder, regex tester, and UUID generator. All tools run entirely in the browser — no data is ever sent to any server. No signup, no account, and free forever.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Is UnblockDevs free to use?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. Every tool on UnblockDevs is completely free. There are no paid plans, no freemium limits, no account required, and no credit card needed. The tools are supported by non-intrusive advertising.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Does UnblockDevs store or transmit my data?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'No. All processing happens locally in your browser using JavaScript. Your JSON, API keys, SQL queries, JWT tokens, and other sensitive data never leave your device and are never sent to any server. This makes UnblockDevs GDPR-safe and suitable for working with confidential or production data.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What tools are available on UnblockDevs?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'UnblockDevs offers 50+ free developer tools: JSON Formatter & Validator, JSON to CSV/Excel converter, JSON Schema Generator, JWT Decoder, cURL Converter (converts cURL to Python, JavaScript, Go, Java, PHP, Rust), CORS Tester, SQL Formatter, Base64 Encoder/Decoder, Regex Tester, UUID Generator, Timestamp Converter, Hash Generator, URL Encoder, Password Generator, Text Diff, API Response Comparator, Log Unpacker, AI Schema Masker, and many more.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is the best free online JSON formatter?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'UnblockDevs JSON Formatter (unblockdevs.com/json-formatter) is a popular choice because it works entirely in your browser, supports large JSON files, detects and fixes malformed JSON, offers tree-view and raw modes, and requires no signup. It also validates JSON against the RFC 8259 specification and highlights syntax errors with the exact line and position.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I convert a cURL command to Python or JavaScript?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Use the UnblockDevs cURL Converter at unblockdevs.com/curl-converter. Paste any cURL command (including those copied from Chrome DevTools, Postman, or API documentation) and select your target language: Python (requests), JavaScript (fetch or Axios), Go, Java, PHP, Ruby, Rust, C#, or PowerShell. The converter handles all flags including headers (-H), request body (-d), authentication (-u, -H "Authorization: Bearer ..."), cookies (-b), and TLS settings (-k).',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Can I use UnblockDevs to decode a JWT token?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. The UnblockDevs JWT Decoder at unblockdevs.com/jwt-decoder decodes any JWT token and displays the header, payload, and signature in a readable format. It also shows the token expiry, issued-at time, and all standard claims. Since decoding happens entirely in your browser, your JWT token is never transmitted to any server.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What browsers does UnblockDevs support?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'UnblockDevs works in all modern browsers: Google Chrome, Mozilla Firefox, Safari, Microsoft Edge, and Brave. No plugins or extensions are required. All tools are built with standard web APIs and work on both desktop and mobile browsers.',
+      },
+    },
+  ],
+};
+
 const personSchema = {
   '@context': 'https://schema.org',
   '@type': 'Person',
@@ -68,6 +139,10 @@ const personSchema = {
 export default function About() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}

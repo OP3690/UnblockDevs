@@ -204,106 +204,88 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'WebApplication',
-    name: 'UnblockDevs',
-    applicationCategory: 'DeveloperApplication',
-    operatingSystem: 'Web Browser',
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
-    },
-    description: 'Mask JSON and SQL before sending to AI. Sanitize data before ChatGPT—JSON masking, schema masking, log unpacker, JWT decoder. 100% browser-based. Free formatter, parser, validator.',
-    url: 'https://unblockdevs.com',
-    featureList: [
-      'Mask JSON before sending to AI',
-      'JSON masking tool online',
-      'SQL schema masking for AI',
-      'Sanitize data before ChatGPT',
-      'Log unpacker — unescape JSON logs',
-      'JWT decoder online',
-      'Fix stringified JSON',
-      'JSON Formatter & Parser',
-      'JSON to Excel Converter',
-      'API Response Comparator',
-      'JSON Schema Generator',
-      'Smart JSON Data Diff',
-      'Config Comparator',
-      'SQL Formatter',
-      '100% browser-based — no data stored',
-    ],
-    provider: {
-      '@type': 'Organization',
-      name: 'UnblockDevs',
-      url: 'https://unblockdevs.com',
-    },
-  };
-
-  const softwareAppSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name: 'UnblockDevs',
-    applicationCategory: 'DeveloperApplication',
-    operatingSystem: 'Any',
-    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-    description: 'Free online tools to mask JSON and SQL before sending to AI, sanitize data before ChatGPT, fix stringified JSON, and unpack logs. GDPR-friendly; 100% client-side.',
-    url: 'https://unblockdevs.com',
-    featureList: ['JSON masking', 'AI schema masking', 'Log unpacker', 'JWT decoder', 'JSON formatter', 'No signup required'],
-  };
   const websiteSchema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
+    '@id': 'https://unblockdevs.com/#website',
     name: 'UnblockDevs',
     url: 'https://unblockdevs.com',
     inLanguage: 'en-US',
+    description: 'Free browser-based developer tools: JSON formatter, JWT decoder, cURL converter, CORS tester, SQL formatter, and 50+ more. 100% client-side, GDPR-safe, no signup.',
     publisher: {
       '@type': 'Organization',
       '@id': 'https://unblockdevs.com/#organization',
       name: 'UnblockDevs',
       url: 'https://unblockdevs.com',
     },
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: 'https://unblockdevs.com/?q={search_term_string}',
+      },
+      'query-input': 'required name=search_term_string',
+    },
   };
 
   const organizationSchema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
+    '@id': 'https://unblockdevs.com/#organization',
     name: 'UnblockDevs',
+    alternateName: 'Unblock Devs',
     url: 'https://unblockdevs.com',
-    logo: 'https://unblockdevs.com/icon.png',
-    description: 'Free browser-based developer tools: JSON formatter, JWT decoder, cURL converter, CORS tester, SQL formatter, AI schema masker. 100% client-side, GDPR-safe.',
-    sameAs: [],
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://unblockdevs.com/icon.png',
+      width: 512,
+      height: 512,
+    },
+    description: 'UnblockDevs provides 50+ free browser-based developer tools including JSON formatter, JWT decoder, cURL converter, CORS tester, SQL formatter, and AI schema masker. All tools run 100% client-side — no data ever leaves your browser.',
+    foundingDate: '2024',
+    sameAs: [
+      'https://github.com/OP3690',
+    ],
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'Customer Support',
       url: 'https://unblockdevs.com/contact',
+      email: 'support@unblockdevs.com',
+      availableLanguage: 'English',
     },
-    areaServed: ['US', 'GB', 'EU'],
+    areaServed: ['US', 'GB', 'CA', 'AU', 'IN', 'EU'],
     knowsAbout: [
       'JSON formatting and validation',
-      'JWT token decoding',
-      'cURL command conversion',
-      'CORS testing',
-      'SQL formatting',
-      'API debugging',
-      'Data privacy for AI tools',
+      'JWT token decoding and verification',
+      'cURL command conversion to Python, JavaScript, Go, Java',
+      'CORS testing and debugging',
+      'SQL formatting and prettifying',
+      'API debugging and testing',
+      'Base64 encoding and decoding',
+      'Regular expression testing',
+      'UUID generation',
+      'Data privacy tools for AI workflows',
       'GDPR-compliant developer tools',
+      'Browser-based developer utilities',
     ],
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Free Developer Tools',
+      itemListElement: [
+        { '@type': 'Offer', itemOffered: { '@type': 'SoftwareApplication', name: 'JSON Formatter', url: 'https://unblockdevs.com/json-formatter', applicationCategory: 'DeveloperApplication' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'SoftwareApplication', name: 'cURL Converter', url: 'https://unblockdevs.com/curl-converter', applicationCategory: 'DeveloperApplication' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'SoftwareApplication', name: 'JWT Decoder', url: 'https://unblockdevs.com/jwt-decoder', applicationCategory: 'DeveloperApplication' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'SoftwareApplication', name: 'SQL Formatter', url: 'https://unblockdevs.com/sql-formatter', applicationCategory: 'DeveloperApplication' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'SoftwareApplication', name: 'Base64 Encoder', url: 'https://unblockdevs.com/base64-encoder', applicationCategory: 'DeveloperApplication' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'SoftwareApplication', name: 'Regex Tester', url: 'https://unblockdevs.com/regex-tester', applicationCategory: 'DeveloperApplication' } },
+      ],
+    },
   };
 
   return (
     <html lang="en" className={`${inter.variable} ${firaCode.variable}`}>
       <head>
-        {/* JSON-LD for rich results: WebApplication + SoftwareApplication + Organization (crawlers see first) */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }}
-        />
+        {/* JSON-LD: WebSite (with SearchAction) + Organization (with sameAs, catalog, logo) */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}

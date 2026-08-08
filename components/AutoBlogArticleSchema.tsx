@@ -24,9 +24,11 @@ export default async function AutoBlogArticleSchema() {
   const title = post?.title ?? 'Developer Guide';
   const description = post?.excerpt ?? 'Developer troubleshooting and implementation guide.';
   const datePublished = post?.date ?? '2026-01-01';
+  const dateModified = post?.updatedAt ?? post?.date ?? '2026-01-01';
   const keywords = post?.keywords ?? [];
   const category = post?.category ?? 'Developer Guides';
   const readTime = post?.readTime ?? '8 min read';
+  const ogImageUrl = `https://unblockdevs.com/api/og?title=${encodeURIComponent(title)}&desc=${encodeURIComponent(description.slice(0, 80))}`;
 
   const timeRequired = readTime
     .replace(' read', '')
@@ -39,13 +41,13 @@ export default async function AutoBlogArticleSchema() {
 
   const articleSchema = {
     '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
+    '@type': ['BlogPosting', 'TechArticle'],
     '@id': `${canonicalUrl}#article`,
     mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
     headline: title,
     description,
     datePublished,
-    dateModified: datePublished,
+    dateModified,
     timeRequired,
     inLanguage: 'en-US',
     wordCount: estimatedWordCount,
@@ -93,7 +95,7 @@ export default async function AutoBlogArticleSchema() {
     },
     image: {
       '@type': 'ImageObject',
-      url: 'https://unblockdevs.com/og-image.png',
+      url: ogImageUrl,
       width: 1200,
       height: 630,
       caption: title,
