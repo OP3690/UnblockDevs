@@ -124,7 +124,7 @@ const nextConfig = {
       },
       {
         source: '/_next/static/(.*)',
-        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+        headers: [{ key: 'Cache-Control', value: process.env.NODE_ENV === 'production' ? 'public, max-age=31536000, immutable' : 'public, max-age=0, must-revalidate' }],
       },
       // HTML pages — serve stale while revalidating in background (speeds up repeat visits)
       // max-age=0 means CDN/browser always checks freshness, but stale-while-revalidate=3600
