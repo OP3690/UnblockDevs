@@ -24,7 +24,7 @@ export default async function AutoBlogArticleSchema() {
   const title = post?.title ?? 'Developer Guide';
   const description = post?.excerpt ?? 'Developer troubleshooting and implementation guide.';
   const datePublished = post?.date ?? '2026-01-01';
-  const dateModified = post?.updatedAt ?? post?.date ?? '2026-01-01';
+  const dateModified = post?.date ?? '2026-01-01';
   const keywords = post?.keywords ?? [];
   const category = post?.category ?? 'Developer Guides';
   const readTime = post?.readTime ?? '8 min read';
