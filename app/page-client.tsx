@@ -150,12 +150,19 @@ function HomeClient({ hero }: { hero: ReactNode }) {
       {/* Recently used tools — personalized shortcut strip */}
       <RecentlyUsedTools />
 
+      {/* ART2 — between shortcuts and tools grid, high scroll-through viewability */}
+      <div role="region" aria-label="Advertisement" className="border-b border-zinc-100 bg-zinc-50/40 py-2">
+        <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+          <AdUnit slot="6289722500" format="fluid" layout="in-article" minHeight={90} className="w-full rounded-xl overflow-hidden" />
+        </div>
+      </div>
+
       {/* Tools grid + How it works */}
       <main id="main-content">
         <HomePrivacyFirstSections toolPageUrls={toolPageUrls} />
       </main>
 
-      {/* Homepage ad — between tools and newsletter */}
+      {/* Homepage ads — between tools and newsletter */}
       <div className="border-b border-zinc-200/80 bg-white/60" style={{ contain: 'layout' }}>
         <div role="region" aria-label="Advertisement" className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 py-3">
           <AdUnit slot="1550643245" format="auto" minHeight={60} className="w-full" />
@@ -168,7 +175,14 @@ function HomeClient({ hero }: { hero: ReactNode }) {
       {/* Feedback + newsletter */}
       <FeedbackNewsletterSplit layout="split" />
 
-      {/* Before-footer ad */}
+      {/* HOR2 — after newsletter, before footer multiplex */}
+      <div role="region" aria-label="Advertisement" className="border-t border-zinc-100 bg-white py-3">
+        <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+          <AdUnit slot="1130443324" format="auto" minHeight={90} className="w-full" />
+        </div>
+      </div>
+
+      {/* Before-footer multiplex */}
       <div role="region" aria-label="Advertisement" className="border-t border-zinc-100 bg-zinc-50/40 py-4" style={{ contain: 'layout' }}>
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
           <AdUnit slot="4987800735" format="autorelaxed" minHeight={90} className="w-full" />
@@ -301,10 +315,10 @@ function HomeClient({ hero }: { hero: ReactNode }) {
                 ['/terms', 'Terms & Conditions'],
                 ['/disclaimer', 'Disclaimer'],
               ].map(([href, label], i, arr) => (
-                <>
-                  <Link key={href} href={href} className="hover:text-emerald-900 hover:underline transition-colors">{label}</Link>
-                  {i < arr.length - 1 && <span key={`sep-${i}`} className="text-gray-300">•</span>}
-                </>
+                <span key={href} className="inline-flex items-center gap-4">
+                  <Link href={href} className="hover:text-emerald-900 hover:underline transition-colors">{label}</Link>
+                  {i < arr.length - 1 && <span className="text-gray-300">•</span>}
+                </span>
               ))}
             </div>
             <p className="text-sm text-gray-600 text-center">

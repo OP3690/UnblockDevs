@@ -715,6 +715,13 @@ export default function ToolsJsonHubClient() {
           </div>
         )}
 
+        {/* HOR — after flat tool grid */}
+        {!groupedTools && filtered.length > 0 && (
+          <div role="region" aria-label="Advertisement" className="mt-8 overflow-hidden rounded-xl">
+            <AdUnit slot="1550643245" format="auto" minHeight={90} minWidth={0} className="w-full rounded-xl overflow-hidden" />
+          </div>
+        )}
+
         {/* ══ EMPTY STATE ══════════════════════════════════════════════════════ */}
         {filtered.length === 0 && (
           <div className="mt-20 flex flex-col items-center gap-4 py-10 text-center">
@@ -753,6 +760,11 @@ export default function ToolsJsonHubClient() {
               ))}
             </div>
           </div>
+        </div>
+
+        {/* ART — after tool grid, before trust banner */}
+        <div role="region" aria-label="Advertisement" className="mt-8 overflow-hidden rounded-xl">
+          <AdUnit slot="6611398233" format="fluid" layout="in-article" minHeight={90} minWidth={0} className="w-full rounded-xl overflow-hidden" />
         </div>
 
         {/* MPX autorelaxed — after bottom trust banner */}

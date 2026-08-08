@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import AdUnit from '@/components/AdUnit';
+import StickyMobileAd from '@/components/StickyMobileAd';
 import Link from 'next/link';
 import { ArrowLeft, Mail, MessageSquare, HelpCircle, FileText, Heart, Send } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -115,6 +117,10 @@ export default function ContactClient() {
               </button>
             </form>
           </section>
+
+          <div role="region" aria-label="Advertisement" className="mb-8">
+            <AdUnit slot="6289722500" format="fluid" layout="in-article" minHeight={90} minWidth={0} className="w-full rounded-lg overflow-hidden" />
+          </div>
 
           <section className="mb-12 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Get in Touch</h2>
@@ -259,7 +265,12 @@ export default function ContactClient() {
             </div>
           </section>
         </article>
+
+        <div role="region" aria-label="Advertisement" className="mt-4 pb-4">
+          <AdUnit slot="1550643245" format="auto" minHeight={90} minWidth={0} className="w-full rounded-lg overflow-hidden" />
+        </div>
       </main>
+      <StickyMobileAd />
     </div>
   );
 }

@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { Shield, Zap, CheckCircle, Code, Heart, Mail, Users, Target, Globe, Lock, Rocket, Award, TrendingUp, BookOpen, Lightbulb, ArrowLeft } from 'lucide-react';
 import AboutMarketingSections from '@/components/about/AboutMarketingSections';
+import AdUnit from '@/components/AdUnit';
+import StickyMobileAd from '@/components/StickyMobileAd';
 
 export default function AboutClient() {
   return (
@@ -478,6 +480,10 @@ export default function AboutClient() {
             </p>
           </section>
 
+          <div role="region" aria-label="Advertisement" className="my-8">
+            <AdUnit slot="6611398233" format="fluid" layout="in-article" minHeight={90} minWidth={0} className="w-full rounded-lg overflow-hidden" />
+          </div>
+
           <section className="mb-12">
             <div className="flex items-center gap-3 mb-6">
               <Users className="w-8 h-8 text-indigo-600" />
@@ -621,7 +627,12 @@ export default function AboutClient() {
         <div className="mt-12 border-t border-zinc-200/80 pt-12 sm:mt-16 sm:pt-16">
           <AboutMarketingSections />
         </div>
+
+        <div role="region" aria-label="Advertisement" className="mt-8 pb-4">
+          <AdUnit slot="1130443324" format="auto" minHeight={90} minWidth={0} className="w-full rounded-lg overflow-hidden" />
+        </div>
       </main>
+      <StickyMobileAd />
     </div>
   );
 }

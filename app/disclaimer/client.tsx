@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowLeft, AlertTriangle, Info, Shield, FileText } from 'lucide-react';
+import AdUnit from '@/components/AdUnit';
 
 export default function DisclaimerClient() {
   return (
@@ -243,6 +244,10 @@ export default function DisclaimerClient() {
             </div>
           </section>
         </article>
+
+        <div role="region" aria-label="Advertisement" className="mt-6 pb-4">
+          <AdUnit slot="1550643245" format="auto" minHeight={90} minWidth={0} className="w-full rounded-lg overflow-hidden" />
+        </div>
       </main>
     </div>
   );

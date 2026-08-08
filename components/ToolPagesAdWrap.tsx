@@ -8,8 +8,10 @@ import StickyMobileAd from '@/components/StickyMobileAd';
 const SLOT_LEFT        = '4176806584';  // VER  — desktop left sidebar / StickyMobileAd (mobile, safe)
 const SLOT_RIGHT       = '1255275563';  // SQ   — desktop right sidebar (300px, medium rectangle)
 const SLOT_ABOVE       = '4987800735';  // MPX  — horizontal banner above tool content (all screens)
-const SLOT_MOBILE      = '1550643245';  // HOR  — in-content below tool on mobile (<xl)
+const SLOT_MOBILE_PRE  = '6289722500';  // ART2 — mobile-only pre-tool banner (no sidebars on mobile)
+const SLOT_INARTICLE   = '6611398233';  // ART  — after tool output, all screens
 const SLOT_BELOW_DESK  = '1130443324';  // HOR2 — below-tool banner desktop only (xl+)
+const SLOT_MOBILE      = '1550643245';  // HOR  — in-content below tool on mobile (<xl)
 
 /** First path segment that should NOT get sidebar ads. */
 const NO_SIDEBAR_SEGMENTS = new Set([
@@ -76,10 +78,34 @@ export default function ToolPagesAdWrap({ children }: { children: React.ReactNod
             />
           </div>
 
+          {/* ART2 — mobile-only pre-tool banner (sidebars absent on mobile, fills the gap) */}
+          <div role="region" aria-label="Advertisement" className="mb-4 xl:hidden">
+            <AdUnit
+              slot={SLOT_MOBILE_PRE}
+              format="fluid"
+              layout="in-article"
+              minHeight={90}
+              minWidth={0}
+              className="w-full rounded-lg overflow-hidden"
+            />
+          </div>
+
           <main>{children}</main>
 
+          {/* ART — after tool output, all screens (highest post-interaction viewability) */}
+          <div role="region" aria-label="Advertisement" className="mt-6">
+            <AdUnit
+              slot={SLOT_INARTICLE}
+              format="fluid"
+              layout="in-article"
+              minHeight={90}
+              minWidth={0}
+              className="w-full rounded-lg overflow-hidden"
+            />
+          </div>
+
           {/* HOR2 — below-tool banner, desktop only (xl+), complements mobile in-content below */}
-          <div role="region" aria-label="Advertisement" className="mt-6 hidden xl:block">
+          <div role="region" aria-label="Advertisement" className="mt-4 hidden xl:block">
             <AdUnit
               slot={SLOT_BELOW_DESK}
               format="auto"
@@ -89,8 +115,8 @@ export default function ToolPagesAdWrap({ children }: { children: React.ReactNod
             />
           </div>
 
-          {/* Mobile/tablet in-content ad — below tool output, hidden on xl+ where sidebars appear */}
-          <div role="region" aria-label="Advertisement" className="mt-6 xl:hidden">
+          {/* HOR — mobile/tablet in-content, hidden on xl+ where sidebars appear */}
+          <div role="region" aria-label="Advertisement" className="mt-4 xl:hidden">
             <AdUnit
               slot={SLOT_MOBILE}
               format="auto"

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowLeft, Shield, FileText } from 'lucide-react';
+import AdUnit from '@/components/AdUnit';
 
 export default function PrivacyPolicyClient() {
   return (
@@ -219,6 +220,10 @@ export default function PrivacyPolicyClient() {
             <ArrowLeft className="w-4 h-4" />
             Back to Home
           </Link>
+        </div>
+
+        <div role="region" aria-label="Advertisement" className="mt-6 pb-4">
+          <AdUnit slot="6289722500" format="fluid" layout="in-article" minHeight={90} minWidth={0} className="w-full rounded-lg overflow-hidden" />
         </div>
       </main>
     </div>

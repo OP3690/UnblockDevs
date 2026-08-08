@@ -21,6 +21,14 @@ export default function StickyMobileAd() {
     return () => clearTimeout(t);
   }, []);
 
+  // Dismiss only allowed after 30s of visibility
+  const [canDismiss, setCanDismiss] = useState(false);
+  useEffect(() => {
+    if (!visible) return;
+    const t = setTimeout(() => setCanDismiss(true), 30000);
+    return () => clearTimeout(t);
+  }, [visible]);
+
   if (dismissed || !visible) return null;
 
   return (
@@ -29,14 +37,15 @@ export default function StickyMobileAd() {
       style={{ boxShadow: '0 -2px 12px rgba(0,0,0,0.12)' }}
     >
       <div className="relative bg-white border-t border-zinc-200">
-        {/* Close button */}
-        <button
-          onClick={() => setDismissed(true)}
-          aria-label="Close advertisement"
-          className="absolute -top-7 right-2 flex h-6 w-6 items-center justify-center rounded-full bg-zinc-700/80 text-white text-[10px] font-bold hover:bg-zinc-900 z-10"
-        >
-          ✕
-        </button>
+        {canDismiss && (
+          <button
+            onClick={() => setDismissed(true)}
+            aria-label="Close advertisement"
+            className="absolute -top-7 right-2 flex h-6 w-6 items-center justify-center rounded-full bg-zinc-700/80 text-white text-[10px] font-bold hover:bg-zinc-900 z-10"
+          >
+            ✕
+          </button>
+        )}
         <AdUnit
           slot={SLOT_MOBILE_STICKY}
           format="auto"

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowLeft, FileText, Shield, AlertTriangle, CheckCircle } from 'lucide-react';
+import AdUnit from '@/components/AdUnit';
 
 export default function TermsClient() {
   return (
@@ -223,6 +224,10 @@ export default function TermsClient() {
             </div>
           </section>
         </article>
+
+        <div role="region" aria-label="Advertisement" className="mt-6 pb-4">
+          <AdUnit slot="4987800735" format="autorelaxed" minHeight={90} minWidth={0} className="w-full rounded-lg overflow-hidden" />
+        </div>
       </main>
     </div>
   );

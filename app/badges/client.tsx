@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import AdUnit from '@/components/AdUnit';
 import Link from 'next/link';
 import { ArrowLeft, Copy, Check, Code, BadgeCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -150,6 +151,10 @@ export default function BadgesClient() {
           <p className="text-sm text-blue-900">
             <strong>Tip:</strong> The badge links to unblockdevs.com. Use <code className="bg-blue-100 px-1 rounded">target="_blank" rel="noopener noreferrer"</code> so it opens in a new tab. No tracking—just a simple link.
           </p>
+        </div>
+
+        <div role="region" aria-label="Advertisement" className="mt-8">
+          <AdUnit slot="4987800735" format="autorelaxed" minHeight={90} minWidth={0} className="w-full rounded-lg overflow-hidden" />
         </div>
 
         <div className="mt-8 text-center">
