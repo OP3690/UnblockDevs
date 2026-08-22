@@ -1,0 +1,371 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { ArrowLeft, AlertCircle, CheckCircle, Info, ChevronRight } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Upper Back & Cervicogenic Dizziness Exercises | Video Guide',
+  description:
+    'Curated video guide for relieving upper back stiffness, thoracic spine stiffness, and cervicogenic dizziness with expert-led exercises you can do at home.',
+  alternates: { canonical: 'https://unblockdevs.com/upper-back-exercises' },
+  openGraph: {
+    title: 'Upper Back & Cervicogenic Dizziness Exercises — Video Guide',
+    description:
+      'Relief exercises for upper back stiffness, thoracic mobility, and cervicogenic dizziness — categorized and curated for home use.',
+    url: 'https://unblockdevs.com/upper-back-exercises',
+    siteName: 'UnblockDevs',
+    type: 'article',
+  },
+};
+
+interface VideoCard {
+  id: string;
+  title: string;
+  description: string;
+  tag?: string;
+}
+
+const sections: {
+  id: string;
+  emoji: string;
+  heading: string;
+  subheading: string;
+  color: string;
+  videos: VideoCard[];
+}[] = [
+  {
+    id: 'quick-relief',
+    emoji: '⚡',
+    heading: 'Quick Relief',
+    subheading: 'Do these right now — under 2 minutes each',
+    color: 'blue',
+    videos: [
+      {
+        id: '8DoHhAaRxy8',
+        title: 'Relieve a Tight Upper Back in 30 Seconds',
+        description: 'Dr. Rowe demonstrates easy exercises for instant upper back tightness relief.',
+        tag: '30 sec',
+      },
+      {
+        id: 'RTzXF8Zd5aI',
+        title: '4 Exercises to Relieve Upper Back Pain in 60 Seconds',
+        description: 'Simple stretches demonstrated by a physical therapist — no equipment needed.',
+        tag: '60 sec',
+      },
+    ],
+  },
+  {
+    id: 'follow-along',
+    emoji: '🎯',
+    heading: 'Follow-Along Routines',
+    subheading: 'Full routines for daily practice',
+    color: 'indigo',
+    videos: [
+      {
+        id: 'IOukY_GzDFc',
+        title: 'Upper Back Pain Relief Exercises (10 Min)',
+        description: 'A 10-minute routine to stretch stiff neck and upper back muscles.',
+        tag: '10 min',
+      },
+      {
+        id: 'vuGnzLxRvZM',
+        title: '7 Upper Back Stretches for Pain Relief',
+        description: 'Seven stretches to release tightness in upper back, shoulders and neck.',
+        tag: '7 stretches',
+      },
+    ],
+  },
+  {
+    id: 'thoracic',
+    emoji: '🦴',
+    heading: 'Thoracic Spine Mobility',
+    subheading: 'Address the root cause of the cracking and stiffness',
+    color: 'violet',
+    videos: [
+      {
+        id: '5wv670fHuG4',
+        title: 'The Ultimate Thoracic Mobility Routine',
+        description:
+          'Dr. Aaron Horschig covers how to screen your thoracic spine mobility and fix restrictions.',
+        tag: 'Corrective',
+      },
+      {
+        id: 'h54us18qc20',
+        title: '11 Thoracic Spine Rotation Exercises',
+        description: '11 thoracic spine rotation exercises to loosen up stiff mid-back joints.',
+        tag: '11 drills',
+      },
+      {
+        id: 's-7lyvblFNI',
+        title: 'Neck, Shoulder & Upper Back — Yoga Flow',
+        description: 'A 10-minute yoga-inspired routine to reduce tension across neck, shoulders, and upper back.',
+        tag: '10 min yoga',
+      },
+    ],
+  },
+  {
+    id: 'dizziness',
+    emoji: '🌀',
+    heading: 'Cervicogenic Dizziness',
+    subheading: 'Dizziness and balance issues caused by neck / upper back tightness',
+    color: 'teal',
+    videos: [
+      {
+        id: 'TZMKwMJfSKQ',
+        title: 'Stop Cervicogenic Dizziness in 2 Minutes',
+        description:
+          'Explains cervicogenic dizziness, how to identify it, and 3 easy relief exercises.',
+        tag: 'Start here',
+      },
+      {
+        id: 'RCOVz5kD3hs',
+        title: 'BEST Exercise to STOP Cervicogenic Dizziness',
+        description:
+          'The single most effective exercise for neck-related dizziness, clearly demonstrated.',
+        tag: 'High impact',
+      },
+      {
+        id: 'oXpeXX5uYs0',
+        title: 'Cervicogenic Dizziness Relief Exercises',
+        description:
+          'Cervical spine flexor/extensor strengthening plus a balance improvement exercise.',
+        tag: 'Strength',
+      },
+      {
+        id: '29rXWlO-evM',
+        title: '10 Easy Home Exercises for Cervicogenic Vertigo',
+        description: 'Comprehensive 10-exercise home routine targeting cervical musculoskeletal issues.',
+        tag: '10 exercises',
+      },
+      {
+        id: '5UqckZnYXes',
+        title: 'Cervical Vertigo Relief Stretches & Exercises',
+        description: 'Covers disorientation and unsteadiness caused by cervical spine conditions.',
+        tag: 'Stretches',
+      },
+      {
+        id: '1GgQBi7_HZk',
+        title: 'Hidden Shoulder Muscles Causing Dizziness (4 Exercises)',
+        description:
+          "If neck exercises only help temporarily, the problem may be your shoulder blade muscles — often missed.",
+        tag: 'Often missed',
+      },
+      {
+        id: 'wuux0DFEyAc',
+        title: 'Stop Cervicogenic Dizziness — 3 Relief Exercises',
+        description: '3 exercises for cervicogenic dizziness, occipital neuralgia, and cervicogenic headaches.',
+        tag: '3 exercises',
+      },
+    ],
+  },
+];
+
+const colorMap: Record<string, { border: string; badge: string; dot: string; heading: string }> = {
+  blue: {
+    border: 'border-blue-200',
+    badge: 'bg-blue-50 text-blue-700 border border-blue-200',
+    dot: 'bg-blue-500',
+    heading: 'text-blue-700',
+  },
+  indigo: {
+    border: 'border-indigo-200',
+    badge: 'bg-indigo-50 text-indigo-700 border border-indigo-200',
+    dot: 'bg-indigo-500',
+    heading: 'text-indigo-700',
+  },
+  violet: {
+    border: 'border-violet-200',
+    badge: 'bg-violet-50 text-violet-700 border border-violet-200',
+    dot: 'bg-violet-500',
+    heading: 'text-violet-700',
+  },
+  teal: {
+    border: 'border-teal-200',
+    badge: 'bg-teal-50 text-teal-700 border border-teal-200',
+    dot: 'bg-teal-500',
+    heading: 'text-teal-700',
+  },
+};
+
+export default function UpperBackExercisesPage() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/40 to-indigo-50/30">
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center gap-4">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            UnblockDevs Tools
+          </Link>
+          <span className="text-gray-300">|</span>
+          <span className="text-sm text-gray-500">Health Guide</span>
+        </div>
+      </header>
+
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
+        {/* Hero */}
+        <div className="mb-10">
+          <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full border border-blue-200 mb-4">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+            Curated Video Guide
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3 leading-tight">
+            Upper Back Stiffness &amp;<br className="hidden sm:block" /> Cervicogenic Dizziness
+          </h1>
+          <p className="text-lg text-gray-600 max-w-2xl leading-relaxed">
+            If your upper back constantly feels tight, you feel the urge to crack it, and you experience
+            dizziness or balance issues — this guide covers the exercises most likely to help.
+          </p>
+        </div>
+
+        {/* Medical disclaimer */}
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex gap-3 mb-10">
+          <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-semibold text-amber-800 mb-0.5">See a doctor first if you have dizziness</p>
+            <p className="text-sm text-amber-700">
+              Dizziness + balance issues combined with neck or upper back stiffness warrants a professional
+              assessment to rule out other causes. These exercises are educational — not a substitute for
+              medical advice.
+            </p>
+          </div>
+        </div>
+
+        {/* What causes this — brief explainer */}
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 mb-10">
+          <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <Info className="w-5 h-5 text-blue-500" />
+            What's likely happening
+          </h2>
+          <p className="text-gray-600 text-sm leading-relaxed mb-4">
+            Prolonged sitting, screens, and forward head posture shorten the chest muscles, overstretch the
+            upper back muscles, and lock up the thoracic spine joints. When the thoracic spine stiffens, the
+            neck overcompensates — compressing nerves and blood vessels that can trigger{' '}
+            <strong>cervicogenic dizziness</strong> (dizziness caused by neck dysfunction, not the inner ear).
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {[
+              { label: 'Stiffness & cracking', detail: '2–4 weeks to first notice improvement' },
+              { label: 'Significant relief', detail: '6–12 weeks of consistent practice' },
+              { label: 'Full resolution', detail: '3–6 months depending on severity' },
+            ].map((item) => (
+              <div key={item.label} className="bg-gray-50 rounded-lg p-3 border border-gray-100">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <CheckCircle className="w-3.5 h-3.5 text-green-500" />
+                  <span className="text-xs font-semibold text-gray-700">{item.label}</span>
+                </div>
+                <p className="text-xs text-gray-500">{item.detail}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Quick nav */}
+        <div className="flex flex-wrap gap-2 mb-10">
+          {sections.map((s) => (
+            <a
+              key={s.id}
+              href={`#${s.id}`}
+              className="inline-flex items-center gap-1.5 text-sm bg-white border border-gray-200 text-gray-600 hover:text-gray-900 hover:border-gray-400 transition-colors rounded-full px-3 py-1.5 shadow-sm"
+            >
+              <span>{s.emoji}</span>
+              {s.heading}
+              <ChevronRight className="w-3 h-3 text-gray-400" />
+            </a>
+          ))}
+        </div>
+
+        {/* Video sections */}
+        <div className="space-y-14">
+          {sections.map((section) => {
+            const c = colorMap[section.color];
+            return (
+              <section key={section.id} id={section.id} className="scroll-mt-20">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-2xl" role="img" aria-label={section.heading}>
+                    {section.emoji}
+                  </span>
+                  <div>
+                    <h2 className={`text-xl font-bold ${c.heading}`}>{section.heading}</h2>
+                    <p className="text-sm text-gray-500">{section.subheading}</p>
+                  </div>
+                </div>
+
+                <div
+                  className={`border-l-2 ${c.border} pl-4 mb-6`}
+                  aria-hidden="true"
+                  style={{ height: 2 }}
+                />
+
+                <div
+                  className={`grid gap-6 ${
+                    section.videos.length === 1
+                      ? 'grid-cols-1'
+                      : section.videos.length === 2
+                      ? 'grid-cols-1 sm:grid-cols-2'
+                      : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+                  }`}
+                >
+                  {section.videos.map((video) => (
+                    <div
+                      key={video.id}
+                      className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+                    >
+                      {/* YouTube embed */}
+                      <div className="relative w-full aspect-video bg-gray-100">
+                        <iframe
+                          src={`https://www.youtube-nocookie.com/embed/${video.id}?rel=0&modestbranding=1`}
+                          title={video.title}
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                          loading="lazy"
+                          className="absolute inset-0 w-full h-full"
+                        />
+                      </div>
+                      {/* Card body */}
+                      <div className="p-4">
+                        {video.tag && (
+                          <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${c.badge} mb-2 inline-block`}>
+                            {video.tag}
+                          </span>
+                        )}
+                        <h3 className="text-sm font-bold text-gray-900 mb-1 leading-snug">{video.title}</h3>
+                        <p className="text-xs text-gray-500 leading-relaxed">{video.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            );
+          })}
+        </div>
+
+        {/* Tips footer */}
+        <div className="mt-14 bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+          <h2 className="text-base font-bold text-gray-900 mb-4">Tips before you start</h2>
+          <ul className="space-y-2.5">
+            {[
+              'Start with the ⚡ Quick Relief videos — they are safe to do right now with no warm-up.',
+              'Go very slowly with cervicogenic dizziness exercises — fast neck movements can trigger more dizziness.',
+              'Stop immediately if any exercise makes your dizziness significantly worse.',
+              'The "Hidden Shoulder Muscles" video (#4 in the Dizziness section) is particularly useful if neck exercises only help temporarily.',
+              'Consistent daily practice matters more than intensity — 10 minutes every day beats 60 minutes once a week.',
+              'If you experience numbness, tingling in your arms, or severe dizziness, see a physiotherapist or doctor.',
+            ].map((tip, i) => (
+              <li key={i} className="flex gap-2.5 text-sm text-gray-600">
+                <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                {tip}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <p className="text-center text-xs text-gray-400 mt-8">
+          All videos belong to their respective creators on YouTube. This page curates publicly available content for educational purposes.
+        </p>
+      </main>
+    </div>
+  );
+}
