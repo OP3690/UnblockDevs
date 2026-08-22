@@ -1,16 +1,17 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, AlertCircle, CheckCircle, Info, ChevronRight } from 'lucide-react';
+import NeckTiltAnimation from './NeckTiltAnimation';
 
 export const metadata: Metadata = {
-  title: 'Upper Back & Cervicogenic Dizziness Exercises | Video Guide',
+  title: 'Upper Back, Trapezius & Cervicogenic Dizziness Exercises | Video Guide',
   description:
-    'Curated video guide for relieving upper back stiffness, thoracic spine stiffness, and cervicogenic dizziness with expert-led exercises you can do at home.',
+    'Curated video guide for relieving upper back stiffness, tight trapezius muscles, thoracic spine tightness, and cervicogenic dizziness — with an educational animation showing how neck tilt increases spinal load.',
   alternates: { canonical: 'https://unblockdevs.com/upper-back-exercises' },
   openGraph: {
     title: 'Upper Back & Cervicogenic Dizziness Exercises — Video Guide',
     description:
-      'Relief exercises for upper back stiffness, thoracic mobility, and cervicogenic dizziness — categorized and curated for home use.',
+      'Relief exercises for upper back stiffness, trapezius tightness, thoracic mobility, and cervicogenic dizziness — categorized and curated for home use.',
     url: 'https://unblockdevs.com/upper-back-exercises',
     siteName: 'UnblockDevs',
     type: 'article',
@@ -103,6 +104,50 @@ const sections: {
     ],
   },
   {
+    id: 'trapezius',
+    emoji: '💪',
+    heading: 'Upper Trapezius Stiffness',
+    subheading: 'Stretches and exercises for tight trap muscles — the muscle that hunches your shoulders',
+    color: 'rose',
+    videos: [
+      {
+        id: '7hKHOJbJ8_k',
+        title: 'How to Relieve Upper Trapezius Pain FAST',
+        description:
+          'Quick techniques to relieve the tight band of muscle running from neck to shoulder — try this first.',
+        tag: 'Start here',
+      },
+      {
+        id: 'BfeRGHsmwf4',
+        title: 'STOP Upper Trap Pain — Instant Relief & Long-Term Fix',
+        description:
+          'Covers both immediate relief strategies and the strengthening exercises needed for a lasting fix.',
+        tag: 'Instant + fix',
+      },
+      {
+        id: '4D6_sK6hxLQ',
+        title: 'Tight Upper Traps? Try These Exercises',
+        description:
+          'Targeted exercises for upper trapezius tightness — identifies why the trap overworks and how to correct it.',
+        tag: 'Exercises',
+      },
+      {
+        id: 'iwIiqaTXAq4',
+        title: 'RELEASE Upper Trap & Levator Scapulae FOR GOOD',
+        description:
+          'Precision Movement covers the upper trap and levator scapulae together — two muscles that always tighten as a pair.',
+        tag: 'Deep release',
+      },
+      {
+        id: 'nljhvqIq0Tk',
+        title: 'Tight Upper Trap Muscles — Stretches & Exercises',
+        description:
+          'Full stretch and strengthening sequence for shoulder and neck pain driven by tight upper traps.',
+        tag: 'Full routine',
+      },
+    ],
+  },
+  {
     id: 'dizziness',
     emoji: '🌀',
     heading: 'Cervicogenic Dizziness',
@@ -159,32 +204,22 @@ const sections: {
   },
 ];
 
-const colorMap: Record<string, { border: string; badge: string; dot: string; heading: string }> = {
-  blue: {
-    border: 'border-blue-200',
-    badge: 'bg-blue-50 text-blue-700 border border-blue-200',
-    dot: 'bg-blue-500',
-    heading: 'text-blue-700',
-  },
-  indigo: {
-    border: 'border-indigo-200',
-    badge: 'bg-indigo-50 text-indigo-700 border border-indigo-200',
-    dot: 'bg-indigo-500',
-    heading: 'text-indigo-700',
-  },
-  violet: {
-    border: 'border-violet-200',
-    badge: 'bg-violet-50 text-violet-700 border border-violet-200',
-    dot: 'bg-violet-500',
-    heading: 'text-violet-700',
-  },
-  teal: {
-    border: 'border-teal-200',
-    badge: 'bg-teal-50 text-teal-700 border border-teal-200',
-    dot: 'bg-teal-500',
-    heading: 'text-teal-700',
-  },
+const colorMap: Record<string, { border: string; badge: string; heading: string }> = {
+  blue:   { border: 'border-blue-200',   badge: 'bg-blue-50 text-blue-700 border border-blue-200',     heading: 'text-blue-700' },
+  indigo: { border: 'border-indigo-200', badge: 'bg-indigo-50 text-indigo-700 border border-indigo-200', heading: 'text-indigo-700' },
+  violet: { border: 'border-violet-200', badge: 'bg-violet-50 text-violet-700 border border-violet-200', heading: 'text-violet-700' },
+  rose:   { border: 'border-rose-200',   badge: 'bg-rose-50 text-rose-700 border border-rose-200',       heading: 'text-rose-600' },
+  teal:   { border: 'border-teal-200',   badge: 'bg-teal-50 text-teal-700 border border-teal-200',       heading: 'text-teal-700' },
 };
+
+const trapTips = [
+  'Do the levator scapulae stretch daily: tilt your head toward one shoulder, turn the chin 45° toward your armpit, hold 30 sec each side.',
+  'Shrug your shoulders UP toward your ears, hold 2 sec, then let them DROP fully — this resets the trap out of its chronic contraction.',
+  'Avoid "phone shoulder" — holding your phone between ear and shoulder for calls is one of the fastest ways to inflame the upper trap.',
+  'Face pulls (cable or resistance band) directly counteract upper trap tightness by strengthening the opposing rear-delt muscles.',
+  'If you sit at a desk: raise your monitor to eye level and use an external keyboard so your arms stay low — most upper trap tension comes from high keyboard positions.',
+  'When stressed, consciously drop your shoulders away from your ears throughout the day — the trap is one of the first muscles to brace during psychological stress.',
+];
 
 export default function UpperBackExercisesPage() {
   return (
@@ -212,7 +247,7 @@ export default function UpperBackExercisesPage() {
             Curated Video Guide
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3 leading-tight">
-            Upper Back Stiffness &amp;<br className="hidden sm:block" /> Cervicogenic Dizziness
+            Upper Back, Trapezius &amp;<br className="hidden sm:block" /> Cervicogenic Dizziness
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl leading-relaxed">
             If your upper back constantly feels tight, you feel the urge to crack it, and you experience
@@ -220,7 +255,7 @@ export default function UpperBackExercisesPage() {
           </p>
         </div>
 
-        {/* Medical disclaimer */}
+        {/* Disclaimer */}
         <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex gap-3 mb-10">
           <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
           <div>
@@ -233,17 +268,19 @@ export default function UpperBackExercisesPage() {
           </div>
         </div>
 
-        {/* What causes this — brief explainer */}
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 mb-10">
+        {/* Explainer */}
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 mb-8">
           <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
             <Info className="w-5 h-5 text-blue-500" />
-            What's likely happening
+            What&apos;s likely happening
           </h2>
           <p className="text-gray-600 text-sm leading-relaxed mb-4">
             Prolonged sitting, screens, and forward head posture shorten the chest muscles, overstretch the
-            upper back muscles, and lock up the thoracic spine joints. When the thoracic spine stiffens, the
-            neck overcompensates — compressing nerves and blood vessels that can trigger{' '}
-            <strong>cervicogenic dizziness</strong> (dizziness caused by neck dysfunction, not the inner ear).
+            upper back muscles, and lock up the thoracic spine joints. The <strong>upper trapezius</strong> muscle
+            (which runs from the base of your skull down to your shoulder blade) chronically overworks and
+            shortens — causing that constant ache across your neck and shoulders. When the thoracic spine stiffens,
+            the neck overcompensates — compressing nerves and blood vessels that can trigger{' '}
+            <strong>cervicogenic dizziness</strong>.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
@@ -260,6 +297,11 @@ export default function UpperBackExercisesPage() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Neck Tilt Animation */}
+        <div className="mb-10">
+          <NeckTiltAnimation />
         </div>
 
         {/* Quick nav */}
@@ -283,7 +325,7 @@ export default function UpperBackExercisesPage() {
             const c = colorMap[section.color];
             return (
               <section key={section.id} id={section.id} className="scroll-mt-20">
-                <div className="flex items-center gap-3 mb-2">
+                <div className="flex items-center gap-3 mb-3">
                   <span className="text-2xl" role="img" aria-label={section.heading}>
                     {section.emoji}
                   </span>
@@ -293,11 +335,22 @@ export default function UpperBackExercisesPage() {
                   </div>
                 </div>
 
-                <div
-                  className={`border-l-2 ${c.border} pl-4 mb-6`}
-                  aria-hidden="true"
-                  style={{ height: 2 }}
-                />
+                <div className={`border-l-2 ${c.border} mb-6`} style={{ height: 2 }} />
+
+                {/* Trapezius tips inline */}
+                {section.id === 'trapezius' && (
+                  <div className="mb-6 bg-rose-50 border border-rose-200 rounded-xl p-4">
+                    <p className="text-sm font-bold text-rose-800 mb-3">Tips to reduce upper trapezius tightness</p>
+                    <ul className="space-y-2">
+                      {trapTips.map((tip, i) => (
+                        <li key={i} className="flex gap-2 text-sm text-rose-700">
+                          <CheckCircle className="w-4 h-4 text-rose-500 flex-shrink-0 mt-0.5" />
+                          {tip}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
                 <div
                   className={`grid gap-6 ${
@@ -313,7 +366,6 @@ export default function UpperBackExercisesPage() {
                       key={video.id}
                       className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow"
                     >
-                      {/* YouTube embed */}
                       <div className="relative w-full aspect-video bg-gray-100">
                         <iframe
                           src={`https://www.youtube-nocookie.com/embed/${video.id}?rel=0&modestbranding=1`}
@@ -324,7 +376,6 @@ export default function UpperBackExercisesPage() {
                           className="absolute inset-0 w-full h-full"
                         />
                       </div>
-                      {/* Card body */}
                       <div className="p-4">
                         {video.tag && (
                           <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${c.badge} mb-2 inline-block`}>
@@ -344,13 +395,13 @@ export default function UpperBackExercisesPage() {
 
         {/* Tips footer */}
         <div className="mt-14 bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
-          <h2 className="text-base font-bold text-gray-900 mb-4">Tips before you start</h2>
+          <h2 className="text-base font-bold text-gray-900 mb-4">General tips before you start</h2>
           <ul className="space-y-2.5">
             {[
               'Start with the ⚡ Quick Relief videos — they are safe to do right now with no warm-up.',
               'Go very slowly with cervicogenic dizziness exercises — fast neck movements can trigger more dizziness.',
               'Stop immediately if any exercise makes your dizziness significantly worse.',
-              'The "Hidden Shoulder Muscles" video (#4 in the Dizziness section) is particularly useful if neck exercises only help temporarily.',
+              'The "Hidden Shoulder Muscles" video in the Dizziness section is particularly useful if neck exercises only help temporarily.',
               'Consistent daily practice matters more than intensity — 10 minutes every day beats 60 minutes once a week.',
               'If you experience numbness, tingling in your arms, or severe dizziness, see a physiotherapist or doctor.',
             ].map((tip, i) => (
