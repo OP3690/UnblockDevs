@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, AlertCircle, CheckCircle, Info, ChevronRight } from 'lucide-react';
-import NeckTiltAnimation from './NeckTiltAnimation';
 
 export const metadata: Metadata = {
   title: 'Upper Back, Trapezius & Cervicogenic Dizziness Exercises | Video Guide',
@@ -299,9 +298,67 @@ export default function UpperBackExercisesPage() {
           </div>
         </div>
 
-        {/* Neck Tilt Animation */}
-        <div className="mb-10">
-          <NeckTiltAnimation />
+        {/* Head-tilt load table */}
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 mb-10">
+          <div className="flex items-start gap-3 mb-5">
+            <span className="text-2xl mt-0.5">📱</span>
+            <div>
+              <h2 className="text-lg font-bold text-gray-900">The Hidden Cost of Looking Down</h2>
+              <p className="text-sm text-gray-500 mt-0.5">
+                Every degree you tilt your head forward multiplies the effective weight your cervical spine must support.
+              </p>
+            </div>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm border-collapse">
+              <thead>
+                <tr className="border-b-2 border-gray-200">
+                  <th className="text-left py-2.5 pr-4 font-semibold text-gray-700 w-24">Head angle</th>
+                  <th className="text-right py-2.5 pr-4 font-semibold text-gray-700">Load (lbs)</th>
+                  <th className="text-right py-2.5 pr-4 font-semibold text-gray-700">Load (kg)</th>
+                  <th className="text-left py-2.5 pr-4 font-semibold text-gray-700">Typical activity</th>
+                  <th className="text-left py-2.5 font-semibold text-gray-700">Equivalent to…</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { deg: 0,  lbs: 12,  kg: 5.4,  bar: 'bg-emerald-500', badge: 'bg-emerald-50 text-emerald-700 border-emerald-200', activity: 'Looking straight ahead',    equiv: 'A large laptop' },
+                  { deg: 15, lbs: 27,  kg: 12.2, bar: 'bg-yellow-400',  badge: 'bg-yellow-50 text-yellow-700 border-yellow-200',   activity: 'Reading at a desk',         equiv: 'A small dog' },
+                  { deg: 30, lbs: 40,  kg: 18.1, bar: 'bg-orange-500',  badge: 'bg-orange-50 text-orange-700 border-orange-200',   activity: 'Phone held on your lap',    equiv: 'A full hiking backpack' },
+                  { deg: 45, lbs: 49,  kg: 22.2, bar: 'bg-red-500',     badge: 'bg-red-50 text-red-700 border-red-200',            activity: 'Scrolling on the sofa',     equiv: 'A 3-year-old child' },
+                  { deg: 60, lbs: 60,  kg: 27.2, bar: 'bg-red-700',     badge: 'bg-red-100 text-red-800 border-red-300',           activity: 'Head fully dropped',        equiv: 'A large cabin suitcase' },
+                ].map((row) => (
+                  <tr key={row.deg} className="border-b border-gray-100 hover:bg-gray-50/60 transition-colors">
+                    <td className="py-3 pr-4">
+                      <span className={`inline-block text-xs font-bold px-2.5 py-1 rounded-full border ${row.badge}`}>
+                        {row.deg}°
+                      </span>
+                    </td>
+                    <td className="py-3 pr-4 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <div className="w-24 bg-gray-100 rounded-full h-2 hidden sm:block">
+                          <div
+                            className={`h-2 rounded-full ${row.bar}`}
+                            style={{ width: `${(row.lbs / 60) * 100}%` }}
+                          />
+                        </div>
+                        <span className="font-bold text-gray-900 tabular-nums">{row.lbs}</span>
+                      </div>
+                    </td>
+                    <td className="py-3 pr-4 text-right text-gray-500 tabular-nums">{row.kg}</td>
+                    <td className="py-3 pr-4 text-gray-700">{row.activity}</td>
+                    <td className="py-3 text-gray-500">{row.equiv}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p className="text-xs text-gray-400 mt-4 leading-relaxed">
+            Source: Hansraj KK (2014). &ldquo;Assessment of stresses in the cervical spine caused by posture and position of the head.&rdquo;{' '}
+            <em>Surgical Technology International</em>, 25, 277–279.
+          </p>
         </div>
 
         {/* Quick nav */}
