@@ -31,10 +31,13 @@ interface FullData {
   searches:   TimedEntry[];
   links:      TimedEntry[];
   logins:     TimedEntry[];
-  dms:        TimedEntry[];   // all messages timestamped
-  dmSent:     number;         // count of messages sent by user
-  dmThreads:  DmThread[];
-  userName:   string;
+  dms:             TimedEntry[];
+  dmSent:          number;
+  dmSharedReels:   number;
+  dmSharedStories: number;
+  dmSharedPosts:   number;
+  dmThreads:       DmThread[];
+  userName:        string;
   advertiserCount: number;
   followingCount:  number;
   followersCount:  number;
@@ -65,6 +68,18 @@ function fmtTime(seconds: number): string {
 
 function fmtDate(ts: number) {
   return new Date(ts * 1000).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function spanLabel(arr: TimedEntry[]): string {
+  if (arr.length === 0) return '';
+  const ts = arr.map(e => e.timestamp).sort((a, b) => a - b);
+  const days = Math.round((ts[ts.length - 1] - ts[0]) / 86400);
+  if (days < 2)   return 'today';
+  if (days <= 60) return `last ${days}d`;
+  if (days < 365) return `last ${Math.round(days / 30)}mo`;
+  const y0 = new Date(ts[0] * 1000).getFullYear();
+  const y1 = new Date(ts[ts.length - 1] * 1000).getFullYear();
+  return y0 === y1 ? `${y0}` : `${y0}–${y1}`;
 }
 
 // ─── Extract timestamps from any Instagram JSON pattern ──────────────────────
@@ -130,7 +145,8 @@ async function parseZip(file: File): Promise<FullData> {
     videos: [], posts: [], stories: [], ads: [],
     likes: [], saves: [], comments: [], searches: [],
     links: [], logins: [],
-    dms: [], dmSent: 0, dmThreads: [], userName: '',
+    dms: [], dmSent: 0, dmSharedReels: 0, dmSharedStories: 0, dmSharedPosts: 0,
+    dmThreads: [], userName: '',
     advertiserCount: 0, followingCount: 0, followersCount: 0,
     foundFiles: [],
   };
@@ -176,9 +192,9 @@ async function parseZip(file: File): Promise<FullData> {
         const json = JSON.parse(await entry.async('text')) as {
           title?: string;
           participants?: { name: string }[];
-          messages?: { sender_name: string; timestamp_ms: number }[];
+          messages?: { sender_name: string; timestamp_ms: number; share?: { link?: string } }[];
         };
-        const threadKey = name.split('/').slice(0, -1).join('/'); // path without filename
+        const threadKey = name.split('/').slice(0, -1).join('/');
         const title = json.title ?? threadKey.split('/').pop() ?? 'Unknown';
         const messages = json.messages ?? [];
 
@@ -196,6 +212,11 @@ async function parseZip(file: File): Promise<FullData> {
             t.sent++;
             result.dmSent++;
           }
+          // Count shared content type
+          const link = msg.share?.link ?? '';
+          if (link.includes('/reel/'))    result.dmSharedReels++;
+          else if (link.includes('/stories/')) result.dmSharedStories++;
+          else if (link.includes('/p/') || link.includes('/tv/')) result.dmSharedPosts++;
         }
       } catch { /* skip */ }
       continue;
@@ -255,7 +276,8 @@ async function parseJsonFile(file: File): Promise<FullData> {
     videos: [], posts: [], stories: [], ads: [],
     likes: [], saves: [], comments: [], searches: [],
     links: [], logins: [],
-    dms: [], dmSent: 0, dmThreads: [], userName: '',
+    dms: [], dmSent: 0, dmSharedReels: 0, dmSharedStories: 0, dmSharedPosts: 0,
+    dmThreads: [], userName: '',
     advertiserCount: 0, followingCount: 0, followersCount: 0,
     foundFiles: [file.name],
   };
@@ -280,7 +302,7 @@ interface Analysis {
   byYear:  { year: string; likes: number; views: number; dms: number; total: number }[];
   byDow: { day: string; count: number }[];
   byHour: { label: string; count: number }[];
-  engagement: { label: string; value: number; icon: string; color: string }[];
+  engagement: { label: string; value: number; icon: string; color: string; span: string }[];
   activityPie: { name: string; value: number; color: string }[];
   viewingLimited: boolean;
   topThreads: DmThread[];
@@ -368,20 +390,20 @@ function analyse(data: FullData): Analysis {
     count: hMap[h] ?? 0,
   }));
 
-  // Engagement metrics
+  const dmSpan = spanLabel(data.dms);
   const engagement = [
-    { label: 'Videos',        value: data.videos.length,   icon: '🎬', color: '#c026d3' },
-    { label: 'Posts',         value: data.posts.length,    icon: '🖼️', color: '#7c3aed' },
-    { label: 'Stories',       value: data.stories.length,  icon: '⭕', color: '#2563eb' },
-    { label: 'Ads seen',      value: data.ads.length,      icon: '📢', color: '#64748b' },
-    { label: 'Likes',         value: data.likes.length,    icon: '❤️', color: '#e11d48' },
-    { label: 'Saves',         value: data.saves.length,    icon: '🔖', color: '#d97706' },
-    { label: 'Comments',      value: data.comments.length, icon: '💬', color: '#0891b2' },
-    { label: 'DMs sent',      value: data.dmSent,          icon: '✉️', color: '#7c3aed' },
-    { label: 'DMs received',  value: data.dms.length - data.dmSent, icon: '📩', color: '#6366f1' },
-    { label: 'Searches',      value: data.searches.length, icon: '🔍', color: '#4f46e5' },
-    { label: 'Links clicked', value: data.links.length,    icon: '🔗', color: '#059669' },
-    { label: 'Logins',        value: data.logins.length,   icon: '🔐', color: '#0891b2' },
+    { label: 'Videos',        value: data.videos.length,            icon: '🎬', color: '#c026d3', span: spanLabel(data.videos) },
+    { label: 'Posts',         value: data.posts.length,             icon: '🖼️', color: '#7c3aed', span: spanLabel(data.posts) },
+    { label: 'Stories',       value: data.stories.length,           icon: '⭕', color: '#2563eb', span: spanLabel(data.stories) },
+    { label: 'Ads seen',      value: data.ads.length,               icon: '📢', color: '#64748b', span: spanLabel(data.ads) },
+    { label: 'Likes',         value: data.likes.length,             icon: '❤️', color: '#e11d48', span: spanLabel(data.likes) },
+    { label: 'Saves',         value: data.saves.length,             icon: '🔖', color: '#d97706', span: spanLabel(data.saves) },
+    { label: 'Comments',      value: data.comments.length,          icon: '💬', color: '#0891b2', span: spanLabel(data.comments) },
+    { label: 'DMs sent',      value: data.dmSent,                   icon: '✉️', color: '#7c3aed', span: dmSpan },
+    { label: 'DMs received',  value: data.dms.length - data.dmSent, icon: '📩', color: '#6366f1', span: dmSpan },
+    { label: 'Searches',      value: data.searches.length,          icon: '🔍', color: '#4f46e5', span: spanLabel(data.searches) },
+    { label: 'Links clicked', value: data.links.length,             icon: '🔗', color: '#059669', span: spanLabel(data.links) },
+    { label: 'Logins',        value: data.logins.length,            icon: '🔐', color: '#0891b2', span: spanLabel(data.logins) },
   ].filter(e => e.value > 0);
 
   // Activity pie
@@ -570,7 +592,10 @@ function Results({ a }: { a: Analysis }) {
           <div key={e.label} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
             <p className="text-xl mb-1.5">{e.icon}</p>
             <p className="text-2xl font-black tabular-nums" style={{ color: e.color }}>{fmtNum(e.value)}</p>
-            <p className="text-xs text-gray-400 mt-0.5">{e.label}</p>
+            <p className="text-xs text-gray-500 mt-0.5 font-medium">{e.label}</p>
+            {e.span && (
+              <p className="text-[10px] text-gray-400 mt-0.5 leading-none">{e.span}</p>
+            )}
           </div>
         ))}
       </div>
@@ -828,10 +853,10 @@ function Results({ a }: { a: Analysis }) {
           {/* DM stat cards */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { label: 'Total messages',    value: fmtNum(data.dms.length), color: '#7c3aed' },
-              { label: 'Messages sent',     value: fmtNum(data.dmSent),     color: '#c026d3' },
-              { label: 'Messages received', value: fmtNum(data.dms.length - data.dmSent), color: '#2563eb' },
-              { label: 'Conversations',     value: fmtNum(data.dmThreads.length), color: '#0891b2' },
+              { label: 'Total messages',    value: fmtNum(data.dms.length),              color: '#7c3aed' },
+              { label: 'Messages sent',     value: fmtNum(data.dmSent),                  color: '#c026d3' },
+              { label: 'Messages received', value: fmtNum(data.dms.length - data.dmSent),color: '#2563eb' },
+              { label: 'Conversations',     value: fmtNum(data.dmThreads.length),        color: '#0891b2' },
             ].map(s => (
               <div key={s.label} className="rounded-xl border border-gray-100 bg-gray-50 p-4 text-center">
                 <p className="text-2xl font-black tabular-nums" style={{ color: s.color }}>{s.value}</p>
@@ -839,6 +864,26 @@ function Results({ a }: { a: Analysis }) {
               </div>
             ))}
           </div>
+
+          {/* Shared content in DMs */}
+          {(data.dmSharedReels + data.dmSharedStories + data.dmSharedPosts) > 0 && (
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Content shared in DMs</p>
+              <div className="grid grid-cols-3 gap-3">
+                {[
+                  { label: 'Reels shared',   value: data.dmSharedReels,   icon: '🎬', color: '#c026d3' },
+                  { label: 'Stories shared', value: data.dmSharedStories, icon: '⭕', color: '#2563eb' },
+                  { label: 'Posts shared',   value: data.dmSharedPosts,   icon: '🖼️', color: '#7c3aed' },
+                ].filter(s => s.value > 0).map(s => (
+                  <div key={s.label} className="rounded-xl border border-gray-100 bg-gray-50 p-4 text-center">
+                    <p className="text-lg mb-1">{s.icon}</p>
+                    <p className="text-xl font-black tabular-nums" style={{ color: s.color }}>{fmtNum(s.value)}</p>
+                    <p className="text-xs text-gray-400 mt-0.5">{s.label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Top conversations */}
           {a.topThreads.length > 0 && (
