@@ -564,14 +564,51 @@ function UploadZone({ onFile }: { onFile: (f: File) => void }) {
 
 // ─── How-to ───────────────────────────────────────────────────────────────────
 
-const STEPS = [
-  'Open Instagram → <strong>Settings and activity</strong>',
-  'Go to <strong>Accounts Center → Your information and permissions</strong>',
-  'Tap <strong>Download your information</strong>',
-  'Choose your account → <strong>All available information</strong>',
-  'Date range: <strong>All time</strong> · Format: <strong>JSON</strong>',
-  'Request download — Instagram emails you the link',
-  'Download the <strong>.zip</strong> and drop it here',
+const DOWNLOAD_STEPS = [
+  {
+    num: 1,
+    title: 'Open Meta Accounts Center',
+    body: 'Visit <a href="https://accountscenter.facebook.com/info_and_permissions/dyi" target="_blank" rel="noopener" class="font-semibold text-purple-700 underline underline-offset-2">accountscenter.facebook.com</a> or go to <strong>Instagram → Settings → Accounts Center → Your information and permissions → Download your information</strong>.',
+    tip: null,
+  },
+  {
+    num: 2,
+    title: 'Choose "Export to device"',
+    body: 'Select your Instagram account, then tap <strong>Export to device</strong>. Do not choose "Export to external service" — that sends your data to a third party.',
+    tip: null,
+  },
+  {
+    num: 3,
+    title: 'Set Customize information → All available information',
+    body: 'Under <strong>Customize information</strong>, leave it at <strong>All available information</strong> so the export includes reels, stories, DMs, likes, searches, and ad data.',
+    tip: null,
+  },
+  {
+    num: 4,
+    title: 'Pick a Date range',
+    body: '<strong>All time</strong> gives the most complete picture. <strong>Last year</strong> is faster to download and still shows your recent habits. Choose based on what you want to see.',
+    tip: null,
+  },
+  {
+    num: 5,
+    title: 'Set Format to JSON — this is critical',
+    body: 'The default is <strong>HTML</strong>, which this tool cannot read. Tap <strong>Format → JSON</strong>. This analyzer only works with the JSON export.',
+    tip: '⚠️ HTML exports will not work here. You must change this to JSON.',
+    tipColor: 'bg-red-50 border-red-200 text-red-700',
+  },
+  {
+    num: 6,
+    title: 'Tap "Start export" and wait',
+    body: 'Instagram will send an email to your account email when the file is ready. <strong>This can take anywhere from a few hours to several days</strong> depending on your account size and Instagram\'s queue.',
+    tip: '⏳ Large accounts or "All time" exports may take 1–3 days. Check your spam folder if you don\'t see the email.',
+    tipColor: 'bg-amber-50 border-amber-200 text-amber-800',
+  },
+  {
+    num: 7,
+    title: 'Download the ZIP and drop it here',
+    body: 'Click the link in the email → Download the <strong>.zip</strong> file → Drop it directly into this page. No unzipping needed.',
+    tip: null,
+  },
 ];
 
 // ─── Stat card ────────────────────────────────────────────────────────────────
@@ -1181,7 +1218,6 @@ export default function InstagramAnalyzerClient({ hideNav = false }: { hideNav?:
   const [state,    setState]    = useState<State>('idle');
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [error,    setError]    = useState('');
-  const [showSteps, setShowSteps] = useState(false);
 
   const handleFile = useCallback(async (file: File) => {
     setState('loading');
@@ -1237,24 +1273,36 @@ export default function InstagramAnalyzerClient({ hideNav = false }: { hideNav?:
               </div>
             )}
             <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-              <button onClick={() => setShowSteps(s => !s)}
-                className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-gray-50 transition-colors">
-                <span className="font-bold text-gray-900 text-sm">How to download your Instagram data</span>
-                <span className="text-gray-400 text-lg">{showSteps ? '−' : '+'}</span>
-              </button>
-              {showSteps && (
-                <div className="px-6 pb-6 border-t border-gray-100">
-                  <ol className="space-y-3 mt-4">
-                    {STEPS.map((step, i) => (
-                      <li key={i} className="flex gap-3 text-sm text-gray-600">
-                        <span className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white"
-                          style={{ background: '#c026d3' }}>{i + 1}</span>
-                        <span dangerouslySetInnerHTML={{ __html: step }} className="mt-0.5" />
-                      </li>
-                    ))}
-                  </ol>
+              <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+                <div>
+                  <h2 className="font-bold text-gray-900 text-base">How to download your Instagram data</h2>
+                  <p className="text-xs text-gray-500 mt-0.5">Follow these steps exactly — export may take hours to days</p>
                 </div>
-              )}
+                <span className="text-2xl">📥</span>
+              </div>
+              <div className="px-6 py-5">
+                <ol className="space-y-5">
+                  {DOWNLOAD_STEPS.map((step) => (
+                    <li key={step.num} className="flex gap-4">
+                      <span className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-black text-white mt-0.5"
+                        style={{ background: 'linear-gradient(135deg, #c026d3, #9333ea)' }}>{step.num}</span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-gray-900 mb-0.5">{step.title}</p>
+                        <p className="text-sm text-gray-600 leading-relaxed"
+                          dangerouslySetInnerHTML={{ __html: step.body }} />
+                        {step.tip && (
+                          <div className={`mt-2 rounded-lg border px-3 py-2 text-xs leading-relaxed ${step.tipColor}`}>
+                            {step.tip}
+                          </div>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+                <div className="mt-6 rounded-xl border border-purple-100 bg-purple-50 px-4 py-3 text-xs text-purple-800 leading-relaxed">
+                  <strong>After the export arrives:</strong> Download the <strong>.zip</strong> file from the email link and drop it directly onto this page — no unzipping needed. The analysis runs entirely in your browser and nothing is uploaded.
+                </div>
+              </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
