@@ -202,14 +202,17 @@ async function parseJsonFile(file: File): Promise<FullData> {
 interface Analysis {
   data: FullData;
   totalSeconds: number;
-  earliest: number;
+  viewingDays: number; // actual span of viewing data (videos/posts/stories)
+  earliest: number;   // overall earliest across ALL activity
   latest: number;
   spanDays: number;
-  byMonth: { label: string; videos: number; posts: number; stories: number; total: number }[];
+  byMonth: { label: string; videos: number; posts: number; stories: number; likes: number; total: number }[];
+  byYear:  { year: string; likes: number; views: number; total: number }[];
   byDow: { day: string; count: number }[];
   byHour: { label: string; count: number }[];
   engagement: { label: string; value: number; icon: string; color: string }[];
   activityPie: { name: string; value: number; color: string }[];
+  viewingLimited: boolean; // true when views are < 60 days but likes span > 90 days
 }
 
 function analyse(data: FullData): Analysis {
@@ -219,43 +222,74 @@ function analyse(data: FullData): Analysis {
     data.stories.length * AVG.stories +
     data.ads.length     * AVG.ads;
 
-  // Gather all timestamped entries for temporal analysis
-  const all = [
-    ...data.videos.map(e => ({ ...e, type: 'video' as const })),
-    ...data.posts.map(e => ({ ...e, type: 'post' as const })),
-    ...data.stories.map(e => ({ ...e, type: 'story' as const })),
-  ].sort((a, b) => a.timestamp - b.timestamp);
+  // Viewing-only span (videos + posts + stories — these are typically limited by Instagram)
+  const viewingAll = [...data.videos, ...data.posts, ...data.stories].sort((a, b) => a.timestamp - b.timestamp);
+  const viewEarliest = viewingAll.length > 0 ? viewingAll[0].timestamp : Date.now() / 1000 - 86400;
+  const viewLatest   = viewingAll.length > 0 ? viewingAll[viewingAll.length - 1].timestamp : Date.now() / 1000;
+  const viewingDays  = Math.max(1, (viewLatest - viewEarliest) / 86400);
 
-  const earliest = all.length > 0 ? all[0].timestamp : Date.now() / 1000 - 86400;
-  const latest   = all.length > 0 ? all[all.length - 1].timestamp : Date.now() / 1000;
+  // ALL activity (includes likes which may span years)
+  const allActivity = [...data.videos, ...data.posts, ...data.stories, ...data.likes, ...data.saves, ...data.comments]
+    .sort((a, b) => a.timestamp - b.timestamp);
+  const earliest = allActivity.length > 0 ? allActivity[0].timestamp : viewEarliest;
+  const latest   = allActivity.length > 0 ? allActivity[allActivity.length - 1].timestamp : viewLatest;
   const spanDays = Math.max(1, (latest - earliest) / 86400);
 
-  // By month
-  const mMap = new Map<string, { label: string; videos: number; posts: number; stories: number }>();
-  const aggregate = (arr: TimedEntry[], field: 'videos' | 'posts' | 'stories') => {
+  // likes span in days
+  const likesSorted = [...data.likes].sort((a, b) => a.timestamp - b.timestamp);
+  const likeSpanDays = likesSorted.length > 1
+    ? (likesSorted[likesSorted.length - 1].timestamp - likesSorted[0].timestamp) / 86400
+    : 0;
+  const viewingLimited = viewingDays < 60 && likeSpanDays > 90;
+
+  // By month — aggregate ALL activity types
+  type MonthEntry = { label: string; videos: number; posts: number; stories: number; likes: number };
+  const mMap = new Map<string, MonthEntry>();
+  const aggMonth = (arr: TimedEntry[], field: keyof Omit<MonthEntry, 'label'>) => {
     for (const e of arr) {
       const d = new Date(e.timestamp * 1000);
       const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-      if (!mMap.has(key)) mMap.set(key, { label: `${MONTHS[d.getMonth()]} ${d.getFullYear()}`, videos: 0, posts: 0, stories: 0 });
+      if (!mMap.has(key)) mMap.set(key, { label: `${MONTHS[d.getMonth()]} '${String(d.getFullYear()).slice(2)}`, videos: 0, posts: 0, stories: 0, likes: 0 });
       mMap.get(key)![field]++;
     }
   };
-  aggregate(data.videos,  'videos');
-  aggregate(data.posts,   'posts');
-  aggregate(data.stories, 'stories');
+  aggMonth(data.videos,  'videos');
+  aggMonth(data.posts,   'posts');
+  aggMonth(data.stories, 'stories');
+  aggMonth(data.likes,   'likes');
 
   const byMonth = [...mMap.entries()]
     .sort(([a], [b]) => a.localeCompare(b))
-    .map(([, v]) => ({ ...v, total: v.videos + v.posts + v.stories }));
+    .map(([, v]) => ({ ...v, total: v.videos + v.posts + v.stories + v.likes }));
 
-  // By day of week
+  // By year — all activity
+  const yMap = new Map<string, { likes: number; views: number }>();
+  const aggYear = (arr: TimedEntry[], field: 'likes' | 'views') => {
+    for (const e of arr) {
+      const year = String(new Date(e.timestamp * 1000).getFullYear());
+      if (!yMap.has(year)) yMap.set(year, { likes: 0, views: 0 });
+      yMap.get(year)![field]++;
+    }
+  };
+  aggYear(data.likes,   'likes');
+  aggYear(data.saves,   'likes');
+  aggYear(data.comments,'likes');
+  aggYear(data.videos,  'views');
+  aggYear(data.posts,   'views');
+  aggYear(data.stories, 'views');
+
+  const byYear = [...yMap.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([year, v]) => ({ year, ...v, total: v.likes + v.views }));
+
+  // By day of week — use ALL activity for richer patterns
   const dowMap: Record<number, number> = {};
-  for (const e of all) { const d = new Date(e.timestamp * 1000).getDay(); dowMap[d] = (dowMap[d] ?? 0) + 1; }
+  for (const e of allActivity) { const d = new Date(e.timestamp * 1000).getDay(); dowMap[d] = (dowMap[d] ?? 0) + 1; }
   const byDow = DOW.map((day, i) => ({ day, count: dowMap[i] ?? 0 }));
 
-  // By hour
+  // By hour — use ALL activity
   const hMap: Record<number, number> = {};
-  for (const e of all) { const h = new Date(e.timestamp * 1000).getHours(); hMap[h] = (hMap[h] ?? 0) + 1; }
+  for (const e of allActivity) { const h = new Date(e.timestamp * 1000).getHours(); hMap[h] = (hMap[h] ?? 0) + 1; }
   const byHour = Array.from({ length: 24 }, (_, h) => ({
     label: h === 0 ? '12am' : h < 12 ? `${h}am` : h === 12 ? '12pm' : `${h - 12}pm`,
     count: hMap[h] ?? 0,
@@ -283,7 +317,7 @@ function analyse(data: FullData): Analysis {
     { name: 'Ads',     value: data.ads.length,     color: '#94a3b8' },
   ].filter(e => e.value > 0);
 
-  return { data, totalSeconds, earliest, latest, spanDays, byMonth, byDow, byHour, engagement, activityPie };
+  return { data, totalSeconds, viewingDays, earliest, latest, spanDays, byMonth, byYear, byDow, byHour, engagement, activityPie, viewingLimited };
 }
 
 // ─── Custom Tooltip ───────────────────────────────────────────────────────────
@@ -383,7 +417,9 @@ function Results({ a }: { a: Analysis }) {
   const engRate = totalConsumption > 0 ? (totalEngagement / totalConsumption) * 100 : 0;
 
   const peakBar = Math.max(...a.byMonth.map(m => m.total), 1);
-  const recentMonths = a.byMonth.slice(-18);
+  // Show all months (full history) in the main chart
+  const allMonths    = a.byMonth;
+  const recentMonths = a.byMonth.slice(-18); // last 18 for focused view
 
   // Radar data for activity pattern
   const maxDow = Math.max(...a.byDow.map(d => d.count), 1);
@@ -408,6 +444,22 @@ function Results({ a }: { a: Analysis }) {
         </div>
       )}
 
+      {/* ── VIEWING LIMIT DISCLAIMER ── */}
+      {a.viewingLimited && (
+        <div className="rounded-2xl border p-4 flex gap-3 items-start"
+          style={{ background: '#fffbeb', borderColor: '#fde68a' }}>
+          <span className="text-lg mt-0.5">⚠️</span>
+          <div>
+            <p className="text-sm font-bold text-amber-800">Instagram only exports ~30 days of viewing history</p>
+            <p className="text-xs text-amber-700 mt-0.5 leading-relaxed">
+              "All time" in the download settings means <em>account data</em>, not viewing history.
+              Videos, posts, and story views are limited to the last ~30 days by Instagram.
+              Your like history (going back to {fmtDate(a.earliest)}) gives us the full picture of your engagement over time.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* ── HERO ── */}
       <div className="rounded-3xl overflow-hidden"
         style={{ background: 'linear-gradient(135deg, #0f0a1e 0%, #1e0533 50%, #0c1a2e 100%)' }}>
@@ -418,10 +470,12 @@ function Results({ a }: { a: Analysis }) {
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-10">
             {[
-              { label: 'Days wasted',     value: fmtNum(days, 1),            color: '#fb923c', sub: `${fmtNum(hours, 0)} hours total` },
-              { label: 'Content consumed',value: fmtNum(totalConsumption),   color: '#f0abfc', sub: 'videos + posts + stories + ads' },
-              { label: 'Actions taken',   value: fmtNum(totalEngagement),    color: '#67e8f9', sub: 'likes + saves + comments' },
-              { label: 'Engagement rate', value: `${fmtNum(engRate, 1)}%`,   color: '#86efac', sub: 'actions per 100 views' },
+              { label: 'Days wasted', value: fmtNum(days, 1), color: '#fb923c',
+                sub: a.viewingLimited ? `${fmtNum(hours, 0)}h · last ${Math.round(a.viewingDays)} days only` : `${fmtNum(hours, 0)} hours total` },
+              { label: 'Total likes given', value: fmtNum(data.likes.length), color: '#f0abfc',
+                sub: `since ${fmtDate(a.earliest)}` },
+              { label: 'Actions taken',   value: fmtNum(totalEngagement),    color: '#67e8f9', sub: 'likes + saves + comments (all time)' },
+              { label: 'Engagement rate', value: `${fmtNum(engRate, 1)}%`,   color: '#86efac', sub: 'actions per 100 views (last 30d)' },
             ].map(s => (
               <div key={s.label}>
                 <p className="text-3xl sm:text-4xl font-black tabular-nums leading-none" style={{ color: s.color }}>{s.value}</p>
@@ -517,42 +571,72 @@ function Results({ a }: { a: Analysis }) {
         </div>
       </div>
 
-      {/* ── MONTHLY STACKED TREND ── */}
-      {recentMonths.length > 1 && (
+      {/* ── ALL-TIME TREND (uses likes for historical depth) ── */}
+      {allMonths.length > 1 && (
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
           <h2 className="text-base font-bold text-gray-900 mb-1 flex items-center gap-2">
-            <TrendingUp className="w-4 h-4 text-pink-500" /> Monthly Activity Trend
+            <TrendingUp className="w-4 h-4 text-pink-500" /> All-Time Activity Trend
           </h2>
-          <p className="text-xs text-gray-400 mb-5">Last {recentMonths.length} months — stacked by content type</p>
+          <p className="text-xs text-gray-400 mb-4">
+            {allMonths[0]?.label} → {allMonths[allMonths.length - 1]?.label} · {allMonths.length} months
+            {a.viewingLimited && <span className="text-amber-600"> · likes drive the long-term history; views only in last ~30 days</span>}
+          </p>
           <ResponsiveContainer width="100%" height={220}>
-            <AreaChart data={recentMonths} margin={{ top: 4, right: 4, left: -24, bottom: 0 }}>
+            <AreaChart data={allMonths} margin={{ top: 4, right: 4, left: -24, bottom: 0 }}>
               <defs>
                 {[
-                  { id: 'gVideo',   color: '#c026d3' },
-                  { id: 'gPost',    color: '#7c3aed' },
-                  { id: 'gStory',   color: '#2563eb' },
+                  { id: 'gLike',  color: '#e11d48' },
+                  { id: 'gVideo', color: '#c026d3' },
+                  { id: 'gPost',  color: '#7c3aed' },
+                  { id: 'gStory', color: '#2563eb' },
                 ].map(g => (
                   <linearGradient key={g.id} id={g.id} x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={g.color} stopOpacity={0.55} />
+                    <stop offset="0%" stopColor={g.color} stopOpacity={0.5} />
                     <stop offset="100%" stopColor={g.color} stopOpacity={0.02} />
                   </linearGradient>
                 ))}
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-              <XAxis dataKey="label" tick={{ fontSize: 10, fill: '#94a3b8' }}
-                interval={Math.max(0, Math.floor(recentMonths.length / 8) - 1)}
+              <XAxis dataKey="label" tick={{ fontSize: 9, fill: '#94a3b8' }}
+                interval={Math.max(0, Math.floor(allMonths.length / 10) - 1)}
                 tickLine={false} axisLine={false} />
               <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} tickLine={false} axisLine={false} />
               <Tooltip content={<ChartTip />} />
-              {data.videos.length > 0  && <Area type="monotone" dataKey="videos"  name="Videos"  stackId="1" stroke="#c026d3" strokeWidth={2} fill="url(#gVideo)"  dot={false} />}
-              {data.posts.length > 0   && <Area type="monotone" dataKey="posts"   name="Posts"   stackId="1" stroke="#7c3aed" strokeWidth={2} fill="url(#gPost)"   dot={false} />}
-              {data.stories.length > 0 && <Area type="monotone" dataKey="stories" name="Stories" stackId="1" stroke="#2563eb" strokeWidth={2} fill="url(#gStory)"  dot={false} />}
+              {data.likes.length   > 0 && <Area type="monotone" dataKey="likes"   name="Likes"   stackId="1" stroke="#e11d48" strokeWidth={2} fill="url(#gLike)"  dot={false} />}
+              {data.videos.length  > 0 && <Area type="monotone" dataKey="videos"  name="Videos"  stackId="1" stroke="#c026d3" strokeWidth={1} fill="url(#gVideo)" dot={false} />}
+              {data.posts.length   > 0 && <Area type="monotone" dataKey="posts"   name="Posts"   stackId="1" stroke="#7c3aed" strokeWidth={1} fill="url(#gPost)"  dot={false} />}
+              {data.stories.length > 0 && <Area type="monotone" dataKey="stories" name="Stories" stackId="1" stroke="#2563eb" strokeWidth={1} fill="url(#gStory)" dot={false} />}
             </AreaChart>
           </ResponsiveContainer>
-          <div className="flex gap-5 mt-3 text-xs text-gray-500">
+          <div className="flex flex-wrap gap-4 mt-3 text-xs text-gray-500">
+            {data.likes.length   > 0 && <span><span className="inline-block w-2.5 h-2.5 rounded-full mr-1 align-middle bg-rose-600" />Likes (all time)</span>}
             {data.videos.length  > 0 && <span><span className="inline-block w-2.5 h-2.5 rounded-full mr-1 align-middle bg-fuchsia-600" />Videos</span>}
             {data.posts.length   > 0 && <span><span className="inline-block w-2.5 h-2.5 rounded-full mr-1 align-middle bg-violet-600" />Posts</span>}
             {data.stories.length > 0 && <span><span className="inline-block w-2.5 h-2.5 rounded-full mr-1 align-middle bg-blue-600" />Stories</span>}
+          </div>
+        </div>
+      )}
+
+      {/* ── YEARLY SUMMARY ── */}
+      {a.byYear.length > 1 && (
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+          <h2 className="text-base font-bold text-gray-900 mb-1 flex items-center gap-2">
+            <Calendar className="w-4 h-4 text-indigo-500" /> Year-by-Year Activity
+          </h2>
+          <p className="text-xs text-gray-400 mb-4">All-time engagement history</p>
+          <ResponsiveContainer width="100%" height={180}>
+            <BarChart data={a.byYear} margin={{ top: 0, right: 0, left: -24, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+              <XAxis dataKey="year" tick={{ fontSize: 10, fill: '#94a3b8' }} tickLine={false} axisLine={false} />
+              <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} tickLine={false} axisLine={false} />
+              <Tooltip content={<ChartTip />} />
+              <Bar dataKey="likes" name="Likes/Saves/Comments" stackId="a" fill="#e11d48" radius={[0,0,0,0]} />
+              <Bar dataKey="views" name="Views" stackId="a" fill="#c026d3" radius={[4,4,0,0]} />
+            </BarChart>
+          </ResponsiveContainer>
+          <div className="flex gap-5 mt-2 text-xs text-gray-500">
+            <span><span className="inline-block w-2 h-2 rounded-full mr-1 align-middle bg-rose-600" />Likes/Comments</span>
+            <span><span className="inline-block w-2 h-2 rounded-full mr-1 align-middle bg-fuchsia-600" />Views</span>
           </div>
         </div>
       )}
@@ -655,40 +739,47 @@ function Results({ a }: { a: Analysis }) {
         </div>
       )}
 
-      {/* ── MONTHLY TABLE (last 12) ── */}
+      {/* ── MONTHLY TABLE ── */}
       <div className="rounded-2xl p-6"
         style={{ background: 'linear-gradient(135deg, #fdf4ff, #fce7f3)', border: '1px solid #f5d0fe' }}>
-        <h2 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <Calendar className="w-4 h-4 text-pink-500" /> Last 12 months breakdown
+        <h2 className="text-base font-bold text-gray-900 mb-1 flex items-center gap-2">
+          <Calendar className="w-4 h-4 text-pink-500" />
+          {a.viewingLimited ? 'All months with activity' : 'Last 12 months breakdown'}
         </h2>
-        <div className="overflow-x-auto">
+        <p className="text-xs text-gray-500 mb-4">
+          {a.viewingLimited
+            ? `Showing all ${a.byMonth.length} months · likes drive historical data`
+            : 'Showing recent months'}
+        </p>
+        <div className="overflow-x-auto max-h-96 overflow-y-auto">
           <table className="w-full text-sm">
-            <thead>
+            <thead className="sticky top-0" style={{ background: '#fdf4ff' }}>
               <tr className="border-b border-pink-100">
-                {['Month','Videos','Posts','Stories','Total','Hours','Bar'].map(h => (
+                {['Month', ...(data.likes.length > 0 ? ['Likes'] : []),
+                  ...(data.videos.length > 0 ? ['Videos'] : []),
+                  ...(data.posts.length > 0 ? ['Posts'] : []),
+                  ...(data.stories.length > 0 ? ['Stories'] : []),
+                  'Total','Bar'].map(h => (
                   <th key={h} className="text-right first:text-left py-2 pr-3 text-xs font-semibold text-gray-500 uppercase tracking-wide last:text-left">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {a.byMonth.slice(-12).map(m => {
-                const secs = m.videos * AVG.videos + m.posts * AVG.posts + m.stories * AVG.stories;
-                return (
-                  <tr key={m.label} className="border-b border-pink-50">
-                    <td className="py-2 pr-3 font-medium text-gray-800">{m.label}</td>
-                    {data.videos.length  > 0 ? <td className="py-2 pr-3 text-right tabular-nums text-fuchsia-700">{fmtNum(m.videos)}</td>  : null}
-                    {data.posts.length   > 0 ? <td className="py-2 pr-3 text-right tabular-nums text-violet-700">{fmtNum(m.posts)}</td>   : null}
-                    {data.stories.length > 0 ? <td className="py-2 pr-3 text-right tabular-nums text-blue-700">{fmtNum(m.stories)}</td>  : null}
-                    <td className="py-2 pr-3 text-right tabular-nums font-bold text-gray-700">{fmtNum(m.total)}</td>
-                    <td className="py-2 pr-3 text-right tabular-nums text-gray-500">{Math.round(secs / 3600)}h</td>
-                    <td className="py-2">
-                      <div className="h-2 rounded-full bg-pink-100 w-28 overflow-hidden">
-                        <div className="h-full rounded-full" style={{ width: `${(m.total / peakBar) * 100}%`, background: '#c026d3' }} />
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
+              {(a.viewingLimited ? [...a.byMonth].reverse() : a.byMonth.slice(-12).reverse()).map(m => (
+                <tr key={m.label} className="border-b border-pink-50">
+                  <td className="py-2 pr-3 font-medium text-gray-800 whitespace-nowrap">{m.label}</td>
+                  {data.likes.length   > 0 ? <td className="py-2 pr-3 text-right tabular-nums text-rose-700">{fmtNum(m.likes)}</td>    : null}
+                  {data.videos.length  > 0 ? <td className="py-2 pr-3 text-right tabular-nums text-fuchsia-700">{fmtNum(m.videos)}</td> : null}
+                  {data.posts.length   > 0 ? <td className="py-2 pr-3 text-right tabular-nums text-violet-700">{fmtNum(m.posts)}</td>   : null}
+                  {data.stories.length > 0 ? <td className="py-2 pr-3 text-right tabular-nums text-blue-700">{fmtNum(m.stories)}</td>   : null}
+                  <td className="py-2 pr-3 text-right tabular-nums font-bold text-gray-700">{fmtNum(m.total)}</td>
+                  <td className="py-2">
+                    <div className="h-2 rounded-full bg-pink-100 w-24 overflow-hidden">
+                      <div className="h-full rounded-full" style={{ width: `${(m.total / peakBar) * 100}%`, background: '#c026d3' }} />
+                    </div>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
