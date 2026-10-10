@@ -1079,7 +1079,7 @@ function Results({ a }: { a: Analysis }) {
 
 type State = 'idle' | 'loading' | 'done' | 'error';
 
-export default function InstagramAnalyzerClient() {
+export default function InstagramAnalyzerClient({ hideNav = false }: { hideNav?: boolean }) {
   const [state,    setState]    = useState<State>('idle');
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [error,    setError]    = useState('');
@@ -1101,6 +1101,7 @@ export default function InstagramAnalyzerClient() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/30 to-pink-50/20">
 
+      {!hideNav && (
       <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center gap-4">
           <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-medium text-purple-600 hover:text-purple-700">
@@ -1110,6 +1111,7 @@ export default function InstagramAnalyzerClient() {
           <span className="text-sm text-gray-500">Instagram Reels Analyzer</span>
         </div>
       </header>
+      )}
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
 
