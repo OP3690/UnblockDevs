@@ -11,16 +11,16 @@ import { ArrowLeft, Upload, Shield, Clock, TrendingUp, Calendar, Flame, Eye, Hea
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-interface TimedEntry { timestamp: number; }
+export interface TimedEntry { timestamp: number; }
 
-interface DmThread {
+export interface DmThread {
   title: string;
   count: number;
   sent: number;
   isRequest: boolean;
 }
 
-interface FullData {
+export interface FullData {
   videos:     TimedEntry[];
   posts:      TimedEntry[];
   stories:    TimedEntry[];
@@ -89,6 +89,27 @@ export function encodeShare(a: Analysis): string {
 export function decodeShare(encoded: string): ShareSummary | null {
   try { return JSON.parse(decodeURIComponent(escape(atob(encoded)))); }
   catch { return null; }
+}
+
+export function analysisFromShare(s: ShareSummary): Analysis {
+  const empty = (n: number): TimedEntry[] => Array(n).fill({ timestamp: 0 });
+  const data: FullData = {
+    videos: empty(s.nv), posts: empty(s.np), stories: empty(s.ns), ads: empty(s.na),
+    likes: empty(s.nl), saves: empty(s.nsv), comments: empty(s.nc),
+    searches: empty(s.nsr), links: empty(s.nln), logins: empty(s.nlo),
+    dms: empty(s.nd), dmSent: s.nds,
+    dmSharedReelTs: empty(s.ndr), dmSharedStoryTs: empty(s.ndst), dmSharedPostTs: empty(s.ndp),
+    dmThreads: s.topThreads,
+    userName: s.u, advertiserCount: s.nag, followingCount: s.nfw, followersCount: s.nfr,
+    foundFiles: [],
+  };
+  return {
+    data, totalSeconds: s.ts, viewingDays: s.vd, spanDays: s.sd,
+    earliest: s.e0, latest: s.e1, viewingLimited: s.vl,
+    byMonth: s.byMonth, byYear: s.byYear, byDow: s.byDow, byHour: s.byHour,
+    engagement: s.engagement, activityPie: s.activityPie,
+    topThreads: s.topThreads, bySharedMonth: s.bySharedMonth, dmBreakdown: s.dmBreakdown,
+  };
 }
 
 // ─── Time constants (seconds avg per interaction) ─────────────────────────────
@@ -340,7 +361,7 @@ async function parseJsonFile(file: File): Promise<FullData> {
 
 // ─── Analyser ─────────────────────────────────────────────────────────────────
 
-interface Analysis {
+export interface Analysis {
   data: FullData;
   totalSeconds: number;
   viewingDays: number;
@@ -609,7 +630,7 @@ function ShareButton({ a }: { a: Analysis }) {
   );
 }
 
-function Results({ a }: { a: Analysis }) {
+export function Results({ a }: { a: Analysis }) {
   const { data } = a;
   const hours   = a.totalSeconds / 3600;
   const days    = a.totalSeconds / 86400;
