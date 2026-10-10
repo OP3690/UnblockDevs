@@ -8,6 +8,7 @@ import FeedbackNewsletterSplit from '@/components/home/FeedbackNewsletterSplit';
 import RecentlyUsedTools from '@/components/home/RecentlyUsedTools';
 import AdUnit from '@/components/AdUnit';
 import StickyMobileAd from '@/components/StickyMobileAd';
+import SocialMediaViralBanner from '@/components/home/SocialMediaViralBanner';
 
 // Mapping of tool tabs to their dedicated page URLs (used by HomePrivacyFirstSections)
 const toolPageUrls: Record<string, string> = {
@@ -149,6 +150,9 @@ function HomeClient({ hero }: { hero: ReactNode }) {
 
       {/* Recently used tools — personalized shortcut strip */}
       <RecentlyUsedTools />
+
+      {/* Social Media Time Analyzer — viral feature banner */}
+      <SocialMediaViralBanner />
 
       {/* ART2 — between shortcuts and tools grid, high scroll-through viewability */}
       <div role="region" aria-label="Advertisement" className="border-b border-zinc-100 bg-zinc-50/40 py-2">
