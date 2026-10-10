@@ -187,6 +187,29 @@ export default function HowToChangeInstagramPhoneNumberEmail2026Client() {
           answer: 'Yes. Your phone number is used only for login and verification — it is never visible to other users on your profile. Other users can only see your username, display name, bio, and posts unless you share your number directly in your bio text.',
         },
       ]} />
+
+      {/* Social Media Time Analyzer CTA */}
+      <div style={{ background: 'linear-gradient(135deg, #fdf2f8 0%, #faf5ff 50%, #eff6ff 100%)', border: '1px solid #f0abfc', borderRadius: 16, padding: '24px 28px', margin: '32px 0', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'linear-gradient(90deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)' }} />
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
+          <div style={{ width: 44, height: 44, borderRadius: 12, background: 'linear-gradient(135deg, #f09433, #dc2743, #bc1888)', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ color: 'white', fontSize: 20 }}>📸</span>
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#9333ea', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Free Tool — 100% Private</div>
+            <div style={{ fontSize: 17, fontWeight: 800, color: '#111', marginBottom: 6, lineHeight: 1.35 }}>
+              You manage your account carefully — see the full picture of how much time you&apos;ve put into Instagram.
+            </div>
+            <p style={{ fontSize: 14, color: '#6b7280', margin: 0, marginBottom: 14, lineHeight: 1.6 }}>
+              Download your Instagram data (the same archive that stores your contact info) and drop it into our analyzer. You&apos;ll see total days scrolled, reels watched, advertisers tracking you, and your busiest periods — all processed privately in your browser.
+            </p>
+            <a href="/social-media-time-analyzer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, #dc2743, #bc1888)', color: 'white', fontWeight: 700, fontSize: 14, padding: '10px 20px', borderRadius: 10, textDecoration: 'none' }}>
+              See how much time I&apos;ve spent →
+            </a>
+          </div>
+        </div>
+      </div>
+
     </BlogLayoutWithSidebarAds>
   );
 }
