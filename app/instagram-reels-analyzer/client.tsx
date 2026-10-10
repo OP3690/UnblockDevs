@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip,
   ResponsiveContainer, CartesianGrid, Cell, PieChart, Pie,
@@ -42,6 +42,53 @@ interface FullData {
   followingCount:  number;
   followersCount:  number;
   foundFiles: string[];
+}
+
+// ─── Share types & helpers ────────────────────────────────────────────────────
+
+export interface ShareSummary {
+  v: 1;
+  u: string;
+  ts: number; vd: number; sd: number; e0: number; e1: number; vl: boolean;
+  nv: number; np: number; ns: number; na: number;
+  nl: number; nsv: number; nc: number;
+  nsr: number; nln: number; nlo: number;
+  nd: number; nds: number; ndr: number; ndst: number; ndp: number;
+  nag: number; nfw: number; nfr: number;
+  byMonth: Analysis['byMonth'];
+  byYear:  Analysis['byYear'];
+  byDow:   Analysis['byDow'];
+  byHour:  Analysis['byHour'];
+  engagement: Analysis['engagement'];
+  activityPie: Analysis['activityPie'];
+  topThreads: DmThread[];
+  bySharedMonth: Analysis['bySharedMonth'];
+  dmBreakdown:   Analysis['dmBreakdown'];
+}
+
+export function encodeShare(a: Analysis): string {
+  const { data: d } = a;
+  const s: ShareSummary = {
+    v: 1, u: d.userName,
+    ts: a.totalSeconds, vd: a.viewingDays, sd: a.spanDays,
+    e0: a.earliest, e1: a.latest, vl: a.viewingLimited,
+    nv: d.videos.length, np: d.posts.length, ns: d.stories.length, na: d.ads.length,
+    nl: d.likes.length, nsv: d.saves.length, nc: d.comments.length,
+    nsr: d.searches.length, nln: d.links.length, nlo: d.logins.length,
+    nd: d.dms.length, nds: d.dmSent,
+    ndr: d.dmSharedReelTs.length, ndst: d.dmSharedStoryTs.length, ndp: d.dmSharedPostTs.length,
+    nag: d.advertiserCount, nfw: d.followingCount, nfr: d.followersCount,
+    byMonth: a.byMonth.filter(m => m.total > 0),
+    byYear: a.byYear, byDow: a.byDow, byHour: a.byHour,
+    engagement: a.engagement, activityPie: a.activityPie,
+    topThreads: a.topThreads, bySharedMonth: a.bySharedMonth, dmBreakdown: a.dmBreakdown,
+  };
+  return btoa(unescape(encodeURIComponent(JSON.stringify(s))));
+}
+
+export function decodeShare(encoded: string): ShareSummary | null {
+  try { return JSON.parse(decodeURIComponent(escape(atob(encoded)))); }
+  catch { return null; }
 }
 
 // ─── Time constants (seconds avg per interaction) ─────────────────────────────
@@ -531,6 +578,36 @@ const WHAT_ELSE = [
   { icon: '🍳', label: 'New recipes mastered',          perHour: 1      },
   { icon: '🧘', label: 'Yoga/meditation sessions',      perHour: 1      },
 ];
+
+function ShareButton({ a }: { a: Analysis }) {
+  const [status, setStatus] = useState<'idle' | 'copied'>('idle');
+
+  function copy() {
+    const encoded = encodeShare(a);
+    const url = `https://unblockdevs.com/social-media-time-analyzer#share=${encoded}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setStatus('copied');
+      setTimeout(() => setStatus('idle'), 2500);
+    });
+  }
+
+  return (
+    <button
+      onClick={copy}
+      className={`inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition-all
+        ${status === 'copied'
+          ? 'bg-green-500 text-white scale-105'
+          : 'bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white hover:scale-105 hover:shadow-lg hover:shadow-purple-200'
+        }`}
+    >
+      {status === 'copied' ? (
+        <><span>✓</span> Link copied!</>
+      ) : (
+        <><span>🔗</span> Share my results</>
+      )}
+    </button>
+  );
+}
 
 function Results({ a }: { a: Analysis }) {
   const { data } = a;
@@ -1181,10 +1258,13 @@ export default function InstagramAnalyzerClient({ hideNav = false }: { hideNav?:
 
         ) : analysis ? (
           <div className="space-y-6">
-            <button onClick={() => { setAnalysis(null); setState('idle'); }}
-              className="text-sm text-purple-600 hover:text-purple-700 font-medium flex items-center gap-1.5">
-              <ArrowLeft className="w-3.5 h-3.5" /> Analyse another file
-            </button>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <button onClick={() => { setAnalysis(null); setState('idle'); }}
+                className="text-sm text-purple-600 hover:text-purple-700 font-medium flex items-center gap-1.5">
+                <ArrowLeft className="w-3.5 h-3.5" /> Analyse another file
+              </button>
+              <ShareButton a={analysis} />
+            </div>
             <Results a={analysis} />
           </div>
         ) : null}

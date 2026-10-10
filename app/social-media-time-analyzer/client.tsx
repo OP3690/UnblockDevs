@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import InstagramAnalyzerClient from '../instagram-reels-analyzer/client';
+import InstagramAnalyzerClient, { decodeShare } from '../instagram-reels-analyzer/client';
+import type { ShareSummary } from '../instagram-reels-analyzer/client';
+import SharedView from './shared-view';
 
 // ─── Platform config ──────────────────────────────────────────────────────────
 
@@ -189,7 +191,18 @@ function PlatformTabs({ active, onChange }: { active: PlatformId; onChange: (id:
 
 export default function SocialMediaTimeAnalyzerClient() {
   const [platform, setPlatform] = useState<PlatformId>('instagram');
+  const [sharedData, setSharedData] = useState<ShareSummary | null>(null);
   const current = PLATFORMS.find(p => p.id === platform)!;
+
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash.startsWith('#share=')) {
+      const decoded = decodeShare(hash.slice(7));
+      if (decoded) setSharedData(decoded);
+    }
+  }, []);;
+
+  if (sharedData) return <SharedView share={sharedData} />;
 
   return (
     <div className="min-h-screen">
