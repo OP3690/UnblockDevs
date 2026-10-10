@@ -11,7 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Using new Date() here causes every build to report a different lastModified,
   // which Google's John Mueller confirmed is treated as an inaccurate signal and
   // can be discounted. Update this string whenever you make content changes.
-  const currentDate = '2026-07-31'
+  const currentDate = '2026-10-10'
 
   // Build date lookup so each blog post gets its actual publication date as lastModified.
   // Google uses lastModified to prioritise crawling fresh content — using today's date
@@ -42,7 +42,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
     return routes
   }
-  const discoveredRoutes = new Set(discoverAppRoutes('', '').filter((r) => !r.startsWith('blog')))
+  // Pages that exist in the filesystem but only serve 301 redirects — must not appear in sitemap
+  const REDIRECT_ONLY_PAGES = new Set([
+    'instagram-reels-analyzer',
+    'sql-formatter',
+    'ui-components',
+    'json-builder',
+    'sql-in-generator',
+  ])
+
+  const discoveredRoutes = new Set(
+    discoverAppRoutes('', '').filter((r) => !r.startsWith('blog') && !REDIRECT_ONLY_PAGES.has(r))
+  )
 
   // Main pages (explicit list with priorities; discovered routes not in this list get defaults below)
   const mainPages = [
@@ -294,11 +305,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changefreq: 'weekly' as const,
     },
     {
-      url: 'sql-formatter',
-      priority: 0.9,
-      changefreq: 'weekly' as const,
-    },
-    {
       url: 'log-unpacker',
       priority: 0.9,
       changefreq: 'weekly' as const,
@@ -389,6 +395,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: 'python-json-decode-error', priority: 0.85, changefreq: 'weekly' as const },
     { url: 'process-env-undefined', priority: 0.85, changefreq: 'weekly' as const },
     { url: 'http-403-error-fix', priority: 0.85, changefreq: 'weekly' as const },
+    // Social media analyzer — new high-traffic page
+    { url: 'social-media-time-analyzer', priority: 0.9, changefreq: 'weekly' as const },
   ]
 
   const mainUrls = new Set(mainPages.map((p) => p.url))
