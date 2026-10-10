@@ -13,12 +13,12 @@ export default function SharedView({ share }: { share: ShareSummary }) {
       {/* Sticky viral banner */}
       <div className="sticky top-0 z-50 bg-zinc-950 text-white text-center py-3 px-4 border-b border-white/10">
         <p className="text-sm font-medium">
-          Seeing <strong>{name}&apos;s</strong> Instagram report.{' '}
+          <strong>{name}</strong> shared their Instagram screen time report.{' '}
           <Link
             href="/social-media-time-analyzer"
             className="underline font-bold text-pink-400 hover:text-pink-300 transition-colors"
           >
-            Analyze yours too →
+            Find out yours →
           </Link>
           <span className="text-white/40 ml-2 text-xs">free · 100% private · no upload</span>
         </p>
@@ -32,18 +32,18 @@ export default function SharedView({ share }: { share: ShareSummary }) {
             <div className="inline-flex items-center gap-2 text-xs font-semibold px-3 py-1 rounded-full border mb-4"
               style={{ background: '#fdf4ff', color: '#c026d3', borderColor: '#f5d0fe' }}>
               <span className="text-base">📸</span>
-              {name}&apos;s Instagram Activity Report — shared with you
+              {name}&apos;s Instagram screen time report
             </div>
           </div>
 
-          <Results a={analysis} />
+          <Results a={analysis} ownerName={name} />
 
           {/* Bottom CTA */}
           <div className="rounded-3xl overflow-hidden mt-8"
             style={{ background: 'linear-gradient(135deg, #1e0533 0%, #0c1a2e 100%)' }}>
             <div className="px-8 py-10 text-center">
               <p className="text-2xl sm:text-3xl font-black text-white mb-2">
-                Curious about your own numbers?
+                How much time do <em>you</em> spend on Instagram?
               </p>
               <p className="text-gray-400 text-sm mb-6 max-w-md mx-auto">
                 Upload your Instagram data export and see your complete breakdown in seconds.
