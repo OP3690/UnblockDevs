@@ -25,6 +25,12 @@ const nextConfig = {
         destination: '/',
         permanent: true,
       },
+      // Instagram analyzer → new multi-platform URL (301 for SEO equity transfer)
+      {
+        source: '/instagram-reels-analyzer',
+        destination: '/social-media-time-analyzer',
+        permanent: true,
+      },
       // /curl-to-python is now a real page (dedicated SEO for "convert curl to python")
       // Fix 404 tool URLs
       { source: '/ui-components', destination: '/css-ui-components', permanent: true },
