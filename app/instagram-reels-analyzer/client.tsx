@@ -13,6 +13,13 @@ import { ArrowLeft, Upload, Shield, Clock, TrendingUp, Calendar, Flame, Eye, Hea
 
 interface TimedEntry { timestamp: number; }
 
+interface DmThread {
+  title: string;
+  count: number;
+  sent: number;
+  isRequest: boolean;
+}
+
 interface FullData {
   videos:     TimedEntry[];
   posts:      TimedEntry[];
@@ -24,6 +31,10 @@ interface FullData {
   searches:   TimedEntry[];
   links:      TimedEntry[];
   logins:     TimedEntry[];
+  dms:        TimedEntry[];   // all messages timestamped
+  dmSent:     number;         // count of messages sent by user
+  dmThreads:  DmThread[];
+  userName:   string;
   advertiserCount: number;
   followingCount:  number;
   followersCount:  number;
@@ -119,9 +130,27 @@ async function parseZip(file: File): Promise<FullData> {
     videos: [], posts: [], stories: [], ads: [],
     likes: [], saves: [], comments: [], searches: [],
     links: [], logins: [],
+    dms: [], dmSent: 0, dmThreads: [], userName: '',
     advertiserCount: 0, followingCount: 0, followersCount: 0,
     foundFiles: [],
   };
+
+  // First pass: get user's own name from personal_information
+  for (const [name, entry] of Object.entries(zip.files)) {
+    if (entry.dir) continue;
+    if (name.endsWith('personal_information/personal_information.json')) {
+      try {
+        const json = JSON.parse(await entry.async('text')) as Record<string, unknown>;
+        const users = (json['profile_user'] as Record<string, unknown>[]) ?? [];
+        const smd = (users[0]?.string_map_data ?? {}) as Record<string, { value?: string }>;
+        result.userName = smd['Name']?.value ?? '';
+      } catch { /* skip */ }
+      break;
+    }
+  }
+
+  // Accumulate DM threads (keyed by path segment to merge message_1 + message_2)
+  const dmThreadMap = new Map<string, DmThread & { tsList: number[] }>();
 
   for (const [name, entry] of Object.entries(zip.files)) {
     if (entry.dir) continue;
@@ -133,7 +162,40 @@ async function parseZip(file: File): Promise<FullData> {
         const entries = extractTs(json);
         if (entries.length > 0) {
           (result[FILE_MAP[base]] as TimedEntry[]).push(...entries);
-          result.foundFiles.push(base);
+          if (!result.foundFiles.includes(base)) result.foundFiles.push(base);
+        }
+      } catch { /* skip */ }
+      continue;
+    }
+
+    // DM messages — inbox and message_requests
+    const isInbox   = name.includes('/messages/inbox/');
+    const isRequest = name.includes('/messages/message_requests/');
+    if ((isInbox || isRequest) && /message_\d+\.json$/.test(base)) {
+      try {
+        const json = JSON.parse(await entry.async('text')) as {
+          title?: string;
+          participants?: { name: string }[];
+          messages?: { sender_name: string; timestamp_ms: number }[];
+        };
+        const threadKey = name.split('/').slice(0, -1).join('/'); // path without filename
+        const title = json.title ?? threadKey.split('/').pop() ?? 'Unknown';
+        const messages = json.messages ?? [];
+
+        if (!dmThreadMap.has(threadKey)) {
+          dmThreadMap.set(threadKey, { title, count: 0, sent: 0, isRequest, tsList: [] });
+        }
+        const t = dmThreadMap.get(threadKey)!;
+        for (const msg of messages) {
+          if (!msg.timestamp_ms) continue;
+          const ts = Math.floor(msg.timestamp_ms / 1000);
+          result.dms.push({ timestamp: ts });
+          t.tsList.push(ts);
+          t.count++;
+          if (result.userName && msg.sender_name === result.userName) {
+            t.sent++;
+            result.dmSent++;
+          }
         }
       } catch { /* skip */ }
       continue;
@@ -169,11 +231,18 @@ async function parseZip(file: File): Promise<FullData> {
     }
   }
 
+  // Build sorted thread list (top by message count, non-requests first)
+  result.dmThreads = [...dmThreadMap.values()]
+    .map(({ tsList: _, ...t }) => t)
+    .sort((a, b) => b.count - a.count);
+
+  if (result.dms.length > 0) result.foundFiles.push('messages');
+
   const totalActivity = result.videos.length + result.posts.length + result.stories.length +
-    result.likes.length + result.saves.length + result.comments.length;
+    result.likes.length + result.saves.length + result.comments.length + result.dms.length;
 
   if (totalActivity === 0) {
-    throw new Error('No activity data found. This Instagram export may not include viewing history. Try uploading a more complete export with "All available information" selected.');
+    throw new Error('No activity data found. Try uploading a more complete export with "All available information" selected.');
   }
 
   return result;
@@ -186,6 +255,7 @@ async function parseJsonFile(file: File): Promise<FullData> {
     videos: [], posts: [], stories: [], ads: [],
     likes: [], saves: [], comments: [], searches: [],
     links: [], logins: [],
+    dms: [], dmSent: 0, dmThreads: [], userName: '',
     advertiserCount: 0, followingCount: 0, followersCount: 0,
     foundFiles: [file.name],
   };
@@ -202,17 +272,18 @@ async function parseJsonFile(file: File): Promise<FullData> {
 interface Analysis {
   data: FullData;
   totalSeconds: number;
-  viewingDays: number; // actual span of viewing data (videos/posts/stories)
-  earliest: number;   // overall earliest across ALL activity
+  viewingDays: number;
+  earliest: number;
   latest: number;
   spanDays: number;
-  byMonth: { label: string; videos: number; posts: number; stories: number; likes: number; total: number }[];
-  byYear:  { year: string; likes: number; views: number; total: number }[];
+  byMonth: { label: string; videos: number; posts: number; stories: number; likes: number; dms: number; total: number }[];
+  byYear:  { year: string; likes: number; views: number; dms: number; total: number }[];
   byDow: { day: string; count: number }[];
   byHour: { label: string; count: number }[];
   engagement: { label: string; value: number; icon: string; color: string }[];
   activityPie: { name: string; value: number; color: string }[];
-  viewingLimited: boolean; // true when views are < 60 days but likes span > 90 days
+  viewingLimited: boolean;
+  topThreads: DmThread[];
 }
 
 function analyse(data: FullData): Analysis {
@@ -228,8 +299,8 @@ function analyse(data: FullData): Analysis {
   const viewLatest   = viewingAll.length > 0 ? viewingAll[viewingAll.length - 1].timestamp : Date.now() / 1000;
   const viewingDays  = Math.max(1, (viewLatest - viewEarliest) / 86400);
 
-  // ALL activity (includes likes which may span years)
-  const allActivity = [...data.videos, ...data.posts, ...data.stories, ...data.likes, ...data.saves, ...data.comments]
+  // ALL activity (includes likes which may span years, and DMs)
+  const allActivity = [...data.videos, ...data.posts, ...data.stories, ...data.likes, ...data.saves, ...data.comments, ...data.dms]
     .sort((a, b) => a.timestamp - b.timestamp);
   const earliest = allActivity.length > 0 ? allActivity[0].timestamp : viewEarliest;
   const latest   = allActivity.length > 0 ? allActivity[allActivity.length - 1].timestamp : viewLatest;
@@ -242,14 +313,14 @@ function analyse(data: FullData): Analysis {
     : 0;
   const viewingLimited = viewingDays < 60 && likeSpanDays > 90;
 
-  // By month — aggregate ALL activity types
-  type MonthEntry = { label: string; videos: number; posts: number; stories: number; likes: number };
+  // By month — aggregate ALL activity types including DMs
+  type MonthEntry = { label: string; videos: number; posts: number; stories: number; likes: number; dms: number };
   const mMap = new Map<string, MonthEntry>();
   const aggMonth = (arr: TimedEntry[], field: keyof Omit<MonthEntry, 'label'>) => {
     for (const e of arr) {
       const d = new Date(e.timestamp * 1000);
       const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-      if (!mMap.has(key)) mMap.set(key, { label: `${MONTHS[d.getMonth()]} '${String(d.getFullYear()).slice(2)}`, videos: 0, posts: 0, stories: 0, likes: 0 });
+      if (!mMap.has(key)) mMap.set(key, { label: `${MONTHS[d.getMonth()]} '${String(d.getFullYear()).slice(2)}`, videos: 0, posts: 0, stories: 0, likes: 0, dms: 0 });
       mMap.get(key)![field]++;
     }
   };
@@ -257,17 +328,18 @@ function analyse(data: FullData): Analysis {
   aggMonth(data.posts,   'posts');
   aggMonth(data.stories, 'stories');
   aggMonth(data.likes,   'likes');
+  aggMonth(data.dms,     'dms');
 
   const byMonth = [...mMap.entries()]
     .sort(([a], [b]) => a.localeCompare(b))
-    .map(([, v]) => ({ ...v, total: v.videos + v.posts + v.stories + v.likes }));
+    .map(([, v]) => ({ ...v, total: v.videos + v.posts + v.stories + v.likes + v.dms }));
 
-  // By year — all activity
-  const yMap = new Map<string, { likes: number; views: number }>();
-  const aggYear = (arr: TimedEntry[], field: 'likes' | 'views') => {
+  // By year — all activity including DMs
+  const yMap = new Map<string, { likes: number; views: number; dms: number }>();
+  const aggYear = (arr: TimedEntry[], field: 'likes' | 'views' | 'dms') => {
     for (const e of arr) {
       const year = String(new Date(e.timestamp * 1000).getFullYear());
-      if (!yMap.has(year)) yMap.set(year, { likes: 0, views: 0 });
+      if (!yMap.has(year)) yMap.set(year, { likes: 0, views: 0, dms: 0 });
       yMap.get(year)![field]++;
     }
   };
@@ -277,10 +349,11 @@ function analyse(data: FullData): Analysis {
   aggYear(data.videos,  'views');
   aggYear(data.posts,   'views');
   aggYear(data.stories, 'views');
+  aggYear(data.dms,     'dms');
 
   const byYear = [...yMap.entries()]
     .sort(([a], [b]) => a.localeCompare(b))
-    .map(([year, v]) => ({ year, ...v, total: v.likes + v.views }));
+    .map(([year, v]) => ({ year, ...v, total: v.likes + v.views + v.dms }));
 
   // By day of week — use ALL activity for richer patterns
   const dowMap: Record<number, number> = {};
@@ -297,16 +370,18 @@ function analyse(data: FullData): Analysis {
 
   // Engagement metrics
   const engagement = [
-    { label: 'Videos',   value: data.videos.length,   icon: '🎬', color: '#c026d3' },
-    { label: 'Posts',    value: data.posts.length,     icon: '🖼️', color: '#7c3aed' },
-    { label: 'Stories',  value: data.stories.length,   icon: '⭕', color: '#2563eb' },
-    { label: 'Ads seen', value: data.ads.length,       icon: '📢', color: '#64748b' },
-    { label: 'Likes',    value: data.likes.length,     icon: '❤️', color: '#e11d48' },
-    { label: 'Saves',    value: data.saves.length,     icon: '🔖', color: '#d97706' },
-    { label: 'Comments', value: data.comments.length,  icon: '💬', color: '#0891b2' },
-    { label: 'Searches', value: data.searches.length,  icon: '🔍', color: '#4f46e5' },
-    { label: 'Links clicked', value: data.links.length,icon: '🔗', color: '#059669' },
-    { label: 'Logins',   value: data.logins.length,    icon: '🔐', color: '#6366f1' },
+    { label: 'Videos',        value: data.videos.length,   icon: '🎬', color: '#c026d3' },
+    { label: 'Posts',         value: data.posts.length,    icon: '🖼️', color: '#7c3aed' },
+    { label: 'Stories',       value: data.stories.length,  icon: '⭕', color: '#2563eb' },
+    { label: 'Ads seen',      value: data.ads.length,      icon: '📢', color: '#64748b' },
+    { label: 'Likes',         value: data.likes.length,    icon: '❤️', color: '#e11d48' },
+    { label: 'Saves',         value: data.saves.length,    icon: '🔖', color: '#d97706' },
+    { label: 'Comments',      value: data.comments.length, icon: '💬', color: '#0891b2' },
+    { label: 'DMs sent',      value: data.dmSent,          icon: '✉️', color: '#7c3aed' },
+    { label: 'DMs received',  value: data.dms.length - data.dmSent, icon: '📩', color: '#6366f1' },
+    { label: 'Searches',      value: data.searches.length, icon: '🔍', color: '#4f46e5' },
+    { label: 'Links clicked', value: data.links.length,    icon: '🔗', color: '#059669' },
+    { label: 'Logins',        value: data.logins.length,   icon: '🔐', color: '#0891b2' },
   ].filter(e => e.value > 0);
 
   // Activity pie
@@ -317,7 +392,9 @@ function analyse(data: FullData): Analysis {
     { name: 'Ads',     value: data.ads.length,     color: '#94a3b8' },
   ].filter(e => e.value > 0);
 
-  return { data, totalSeconds, viewingDays, earliest, latest, spanDays, byMonth, byYear, byDow, byHour, engagement, activityPie, viewingLimited };
+  const topThreads = data.dmThreads.filter(t => !t.isRequest).slice(0, 8);
+
+  return { data, totalSeconds, viewingDays, earliest, latest, spanDays, byMonth, byYear, byDow, byHour, engagement, activityPie, viewingLimited, topThreads };
 }
 
 // ─── Custom Tooltip ───────────────────────────────────────────────────────────
@@ -631,12 +708,14 @@ function Results({ a }: { a: Analysis }) {
               <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} tickLine={false} axisLine={false} />
               <Tooltip content={<ChartTip />} />
               <Bar dataKey="likes" name="Likes/Saves/Comments" stackId="a" fill="#e11d48" radius={[0,0,0,0]} />
-              <Bar dataKey="views" name="Views" stackId="a" fill="#c026d3" radius={[4,4,0,0]} />
+              <Bar dataKey="views" name="Views" stackId="a" fill="#c026d3" radius={[0,0,0,0]} />
+              <Bar dataKey="dms"   name="DMs"   stackId="a" fill="#7c3aed" radius={[4,4,0,0]} />
             </BarChart>
           </ResponsiveContainer>
-          <div className="flex gap-5 mt-2 text-xs text-gray-500">
+          <div className="flex flex-wrap gap-4 mt-2 text-xs text-gray-500">
             <span><span className="inline-block w-2 h-2 rounded-full mr-1 align-middle bg-rose-600" />Likes/Comments</span>
             <span><span className="inline-block w-2 h-2 rounded-full mr-1 align-middle bg-fuchsia-600" />Views</span>
+            {data.dms.length > 0 && <span><span className="inline-block w-2 h-2 rounded-full mr-1 align-middle bg-violet-600" />DMs</span>}
           </div>
         </div>
       )}
@@ -739,6 +818,83 @@ function Results({ a }: { a: Analysis }) {
         </div>
       )}
 
+      {/* ── DM SECTION ── */}
+      {data.dms.length > 0 && (
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5">
+          <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
+            <MessageSquare className="w-4 h-4 text-violet-500" /> Direct Messages
+          </h2>
+
+          {/* DM stat cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {[
+              { label: 'Total messages',    value: fmtNum(data.dms.length), color: '#7c3aed' },
+              { label: 'Messages sent',     value: fmtNum(data.dmSent),     color: '#c026d3' },
+              { label: 'Messages received', value: fmtNum(data.dms.length - data.dmSent), color: '#2563eb' },
+              { label: 'Conversations',     value: fmtNum(data.dmThreads.length), color: '#0891b2' },
+            ].map(s => (
+              <div key={s.label} className="rounded-xl border border-gray-100 bg-gray-50 p-4 text-center">
+                <p className="text-2xl font-black tabular-nums" style={{ color: s.color }}>{s.value}</p>
+                <p className="text-xs text-gray-400 mt-1">{s.label}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Top conversations */}
+          {a.topThreads.length > 0 && (
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Most active conversations</p>
+              <div className="space-y-2">
+                {(() => {
+                  const maxCount = a.topThreads[0]?.count ?? 1;
+                  return a.topThreads.map((t, i) => (
+                    <div key={t.title} className="flex items-center gap-3">
+                      <span className="text-xs font-bold text-gray-400 w-4 text-right flex-shrink-0">{i + 1}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-sm font-medium text-gray-800 truncate pr-2">{t.title}</span>
+                          <span className="text-xs tabular-nums text-gray-500 flex-shrink-0">{fmtNum(t.count)} msgs</span>
+                        </div>
+                        <div className="h-2 rounded-full bg-violet-50 overflow-hidden">
+                          <div className="h-full rounded-full"
+                            style={{ width: `${(t.count / maxCount) * 100}%`, background: i === 0 ? '#7c3aed' : '#c4b5fd' }} />
+                        </div>
+                      </div>
+                      {data.dmSent > 0 && (
+                        <span className="text-xs text-gray-400 flex-shrink-0 w-14 text-right">
+                          {Math.round((t.sent / t.count) * 100)}% you
+                        </span>
+                      )}
+                    </div>
+                  ));
+                })()}
+              </div>
+            </div>
+          )}
+
+          {/* DM monthly bars (last 24 months that have data) */}
+          {(() => {
+            const dmMonths = a.byMonth.filter(m => m.dms > 0).slice(-24);
+            if (dmMonths.length < 2) return null;
+            return (
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Messages per month</p>
+                <ResponsiveContainer width="100%" height={140}>
+                  <BarChart data={dmMonths} margin={{ top: 0, right: 0, left: -24, bottom: 0 }}>
+                    <XAxis dataKey="label" tick={{ fontSize: 9, fill: '#94a3b8' }}
+                      interval={Math.max(0, Math.floor(dmMonths.length / 8) - 1)}
+                      tickLine={false} axisLine={false} />
+                    <YAxis tick={{ fontSize: 9, fill: '#94a3b8' }} tickLine={false} axisLine={false} />
+                    <Tooltip content={<ChartTip />} />
+                    <Bar dataKey="dms" name="Messages" fill="#7c3aed" radius={[3, 3, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            );
+          })()}
+        </div>
+      )}
+
       {/* ── MONTHLY TABLE ── */}
       <div className="rounded-2xl p-6"
         style={{ background: 'linear-gradient(135deg, #fdf4ff, #fce7f3)', border: '1px solid #f5d0fe' }}>
@@ -759,6 +915,7 @@ function Results({ a }: { a: Analysis }) {
                   ...(data.videos.length > 0 ? ['Videos'] : []),
                   ...(data.posts.length > 0 ? ['Posts'] : []),
                   ...(data.stories.length > 0 ? ['Stories'] : []),
+                  ...(data.dms.length > 0 ? ['DMs'] : []),
                   'Total','Bar'].map(h => (
                   <th key={h} className="text-right first:text-left py-2 pr-3 text-xs font-semibold text-gray-500 uppercase tracking-wide last:text-left">{h}</th>
                 ))}
@@ -772,6 +929,7 @@ function Results({ a }: { a: Analysis }) {
                   {data.videos.length  > 0 ? <td className="py-2 pr-3 text-right tabular-nums text-fuchsia-700">{fmtNum(m.videos)}</td> : null}
                   {data.posts.length   > 0 ? <td className="py-2 pr-3 text-right tabular-nums text-violet-700">{fmtNum(m.posts)}</td>   : null}
                   {data.stories.length > 0 ? <td className="py-2 pr-3 text-right tabular-nums text-blue-700">{fmtNum(m.stories)}</td>   : null}
+                  {data.dms.length     > 0 ? <td className="py-2 pr-3 text-right tabular-nums text-violet-600">{fmtNum(m.dms)}</td>     : null}
                   <td className="py-2 pr-3 text-right tabular-nums font-bold text-gray-700">{fmtNum(m.total)}</td>
                   <td className="py-2">
                     <div className="h-2 rounded-full bg-pink-100 w-24 overflow-hidden">
