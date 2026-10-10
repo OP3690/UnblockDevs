@@ -125,6 +125,29 @@ export default function HowToChangeWhatsappPrivacySettingsMaximumSecurityClient(
           answer: 'Signs of compromise: (1) You receive unexpected verification codes via SMS — someone is trying to register your number. (2) Contacts receive messages you didn\'t send. (3) Unknown linked devices appear in Settings → Linked Devices. (4) WhatsApp shows a notification that your account is active on another device. If compromised: change your password/PIN immediately, remove all linked devices, enable two-step verification if not already enabled, and notify contacts that your account was compromised.',
         },
       ]} />
+
+      {/* Social Media Time Analyzer CTA */}
+      <div style={{ background: 'linear-gradient(135deg, #fdf2f8 0%, #faf5ff 50%, #eff6ff 100%)', border: '1px solid #f0abfc', borderRadius: 16, padding: '24px 28px', margin: '32px 0', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'linear-gradient(90deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)' }} />
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
+          <div style={{ width: 44, height: 44, borderRadius: 12, background: 'linear-gradient(135deg, #f09433, #dc2743, #bc1888)', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ color: 'white', fontSize: 20 }}>🔍</span>
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#9333ea', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Free Tool — 100% Private</div>
+            <div style={{ fontSize: 17, fontWeight: 800, color: '#111', marginBottom: 6, lineHeight: 1.35 }}>
+              You care about your privacy. See exactly what Instagram has collected about how you use it.
+            </div>
+            <p style={{ fontSize: 14, color: '#6b7280', margin: 0, marginBottom: 14, lineHeight: 1.6 }}>
+              Instagram logs every reel, ad, and search. Download your own data export and see the full picture — total days spent scrolling, advertiser count, usage patterns. Everything runs in your browser. Instagram never sees you using this tool.
+            </p>
+            <a href="/social-media-time-analyzer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, #dc2743, #bc1888)', color: 'white', fontWeight: 700, fontSize: 14, padding: '10px 20px', borderRadius: 10, textDecoration: 'none' }}>
+              See what Instagram tracked about me →
+            </a>
+          </div>
+        </div>
+      </div>
+
     </BlogLayoutWithSidebarAds>
   );
 }

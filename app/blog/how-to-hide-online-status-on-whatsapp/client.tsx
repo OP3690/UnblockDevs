@@ -156,6 +156,29 @@ export default function HowToHideOnlineStatusOnWhatsappClient() {
           answer: 'Only if you have them saved as a contact AND your Last Seen/Online is set to "My Contacts" or "Everyone." Setting both Last Seen and Online to "Nobody" means absolutely no one — regardless of relationship — can see your online status or when you were last active.',
         },
       ]} />
+
+      {/* Social Media Time Analyzer CTA */}
+      <div style={{ background: 'linear-gradient(135deg, #fdf2f8 0%, #faf5ff 50%, #eff6ff 100%)', border: '1px solid #f0abfc', borderRadius: 16, padding: '24px 28px', margin: '32px 0', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'linear-gradient(90deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)' }} />
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
+          <div style={{ width: 44, height: 44, borderRadius: 12, background: 'linear-gradient(135deg, #f09433, #dc2743, #bc1888)', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ color: 'white', fontSize: 20 }}>👁</span>
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#9333ea', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Free Tool — 100% Private</div>
+            <div style={{ fontSize: 17, fontWeight: 800, color: '#111', marginBottom: 6, lineHeight: 1.35 }}>
+              You control who sees you online. But Instagram has been watching your usage the whole time.
+            </div>
+            <p style={{ fontSize: 14, color: '#6b7280', margin: 0, marginBottom: 14, lineHeight: 1.6 }}>
+              Download your Instagram data export and see the record Instagram has kept — total days scrolled, reels watched, advertisers targeting you. View it all privately in your browser. Nothing is uploaded or stored anywhere.
+            </p>
+            <a href="/social-media-time-analyzer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, #dc2743, #bc1888)', color: 'white', fontWeight: 700, fontSize: 14, padding: '10px 20px', borderRadius: 10, textDecoration: 'none' }}>
+              See what Instagram tracked about me →
+            </a>
+          </div>
+        </div>
+      </div>
+
     </BlogLayoutWithSidebarAds>
   );
 }
