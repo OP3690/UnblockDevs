@@ -53,19 +53,19 @@ const SCENES: Scene[] = [
     bgChip: 'bg-emerald-500/15', ringChip: 'ring-emerald-400/40',
     stat: '4 identifiers masked',
     before: [
-      [{ t: '-- ⚠️  Raw SQL — contains PII', c: 'text-zinc-500' }],
+      [{ t: '-- ⚠️  Raw SQL — exposes schema', c: 'text-zinc-500' }],
       [],
       [
         { t: 'SELECT ', c: 'text-red-400' },
-        { t: 'u.customer_name, u.email,', c: 'text-zinc-100', pulse: true },
+        { t: 'u.account_owner, u.email,', c: 'text-zinc-100', pulse: true },
       ],
       [
         { t: '       ', c: 'text-red-400' },
-        { t: 'u.credit_score, u.ssn', c: 'text-zinc-100', pulse: true },
+        { t: 'u.risk_score, u.tier_code', c: 'text-zinc-100', pulse: true },
       ],
       [
         { t: 'FROM ', c: 'text-red-400' },
-        { t: 'banking.customer_details ', c: 'text-amber-300', pulse: true },
+        { t: 'finance.client_portfolio ', c: 'text-amber-300', pulse: true },
         { t: 'u', c: 'text-zinc-500' },
       ],
       [

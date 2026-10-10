@@ -210,7 +210,7 @@ function HomeClient({ hero }: { hero: ReactNode }) {
             <div className="grid sm:grid-cols-3 gap-4 mb-8">
               {[
                 { heading: '50+ Tools', body: 'JSON, JWT, cURL, SQL, Base64, regex, UUID, CORS, password, hash, URL encoding, and more — all in one place.' },
-                { heading: '100% Private', body: 'All processing happens in your browser. Nothing is sent to any server. Safe for production data, PII, and regulated environments.' },
+                { heading: '100% Private', body: 'All processing — including AI-branded tools like Schema Masker — runs entirely in your browser. Nothing is sent to any server. Safe for production data, PII, and regulated environments.' },
                 { heading: 'No Signup Required', body: 'Open any tool and start immediately. No account creation, no email, no credit card — ever.' },
               ].map(({ heading, body }) => (
                 <div key={heading} className="rounded-xl border border-zinc-200 bg-white p-4">
@@ -229,7 +229,7 @@ function HomeClient({ hero }: { hero: ReactNode }) {
                 },
                 {
                   q: 'Does UnblockDevs store my data?',
-                  a: 'No. Every tool processes data locally in your browser. Nothing is sent to any server, making it GDPR-safe and suitable for enterprise and production use.',
+                  a: 'No. Every tool — including the AI-branded ones like Schema Masker and JSON Error Explainer — processes data locally in your browser using client-side logic. Nothing is sent to any server, making all tools GDPR-safe and suitable for enterprise and production use.',
                 },
                 {
                   q: 'What is the best free online JSON formatter?',
