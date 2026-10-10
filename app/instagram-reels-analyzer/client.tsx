@@ -630,7 +630,7 @@ function ShareButton({ a }: { a: Analysis }) {
   );
 }
 
-export function Results({ a }: { a: Analysis }) {
+export function Results({ a, ownerName }: { a: Analysis; ownerName?: string }) {
   const { data } = a;
   const hours   = a.totalSeconds / 3600;
   const days    = a.totalSeconds / 86400;
@@ -688,7 +688,7 @@ export function Results({ a }: { a: Analysis }) {
         <div className="px-6 py-8 sm:px-10 sm:py-12">
           <p className="text-xs font-semibold uppercase tracking-widest mb-5"
             style={{ color: '#a855f7' }}>
-            Your Complete Instagram Activity Report · {fmtDate(a.earliest)} → {fmtDate(a.latest)}
+            {ownerName ? `${ownerName}'s` : 'Your'} Instagram Activity Report · {fmtDate(a.earliest)} → {fmtDate(a.latest)}
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-10">
             {[
