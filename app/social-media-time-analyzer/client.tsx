@@ -195,12 +195,20 @@ export default function SocialMediaTimeAnalyzerClient() {
   const current = PLATFORMS.find(p => p.id === platform)!;
 
   useEffect(() => {
+    // New format: ?share= (query param — social bots can crawl for OG preview)
+    const params = new URLSearchParams(window.location.search);
+    const shareParam = params.get('share');
+    if (shareParam) {
+      const decoded = decodeShare(shareParam);
+      if (decoded) { setSharedData(decoded); return; }
+    }
+    // Backward compat: old #share= hash format
     const hash = window.location.hash;
     if (hash.startsWith('#share=')) {
       const decoded = decodeShare(hash.slice(7));
       if (decoded) setSharedData(decoded);
     }
-  }, []);;
+  }, []);
 
   if (sharedData) return <SharedView share={sharedData} />;
 

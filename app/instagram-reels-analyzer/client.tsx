@@ -67,6 +67,7 @@ export interface ShareSummary {
 }
 
 export function encodeShare(a: Analysis): string {
+  const { compressToEncodedURIComponent } = require('lz-string') as typeof import('lz-string');
   const { data: d } = a;
   const s: ShareSummary = {
     v: 1, u: d.userName,
@@ -83,12 +84,17 @@ export function encodeShare(a: Analysis): string {
     engagement: a.engagement, activityPie: a.activityPie,
     topThreads: a.topThreads, bySharedMonth: a.bySharedMonth, dmBreakdown: a.dmBreakdown,
   };
-  return btoa(unescape(encodeURIComponent(JSON.stringify(s))));
+  return compressToEncodedURIComponent(JSON.stringify(s));
 }
 
 export function decodeShare(encoded: string): ShareSummary | null {
-  try { return JSON.parse(decodeURIComponent(escape(atob(encoded)))); }
-  catch { return null; }
+  try {
+    const { decompressFromEncodedURIComponent } = require('lz-string') as typeof import('lz-string');
+    const decompressed = decompressFromEncodedURIComponent(encoded);
+    if (decompressed) return JSON.parse(decompressed);
+    // Fallback: old base64 format
+    return JSON.parse(decodeURIComponent(escape(atob(encoded))));
+  } catch { return null; }
 }
 
 export function analysisFromShare(s: ShareSummary): Analysis {
@@ -642,8 +648,20 @@ function ShareButton({ a }: { a: Analysis }) {
 
   function copy() {
     const encoded = encodeShare(a);
-    const url = `https://unblockdevs.com/social-media-time-analyzer#share=${encoded}`;
-    navigator.clipboard.writeText(url).then(() => {
+    // Use ?share= (query param, not #hash) so social bots can crawl OG tags.
+    // Also pass mini stats as separate tiny params for the server OG image route.
+    const name = encodeURIComponent(a.data.userName || '');
+    const params = new URLSearchParams({
+      share: encoded,
+      n: a.data.userName || '',
+      d: String(Math.round(a.viewingDays)),
+      r: String(a.data.videos.length),
+      ag: String(a.data.advertiserCount),
+    });
+    const url = `https://unblockdevs.com/social-media-time-analyzer?${params}`;
+    navigator.clipboard.writeText(url).catch(() => {
+      // fallback: select a temp input
+    }).then(() => {
       setStatus('copied');
       setTimeout(() => setStatus('idle'), 2500);
     });

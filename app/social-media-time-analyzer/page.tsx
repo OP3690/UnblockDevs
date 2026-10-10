@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
 import SocialMediaTimeAnalyzerClient from './client';
 
-export const metadata: Metadata = {
+const BASE_URL = 'https://unblockdevs.com';
+const PAGE_PATH = '/social-media-time-analyzer';
+
+const defaultMetadata: Metadata = {
   title: 'Social Media Time Analyzer — See How Much Time You Waste Online',
   description:
     'Find out exactly how many hours you spend on Instagram, YouTube, Facebook, TikTok & Twitter. Upload your data export for a 100% private, in-browser breakdown of your social media screen time.',
@@ -19,12 +22,12 @@ export const metadata: Metadata = {
     'social media addiction calculator',
     'digital wellbeing tracker',
   ],
-  alternates: { canonical: 'https://unblockdevs.com/social-media-time-analyzer' },
+  alternates: { canonical: `${BASE_URL}${PAGE_PATH}` },
   openGraph: {
     title: 'Social Media Time Analyzer — Track Time on Instagram, YouTube, TikTok & More',
     description:
       'Upload your Instagram, YouTube, Facebook, TikTok or Twitter data export to see exactly how many days of your life you spent scrolling. 100% private — processed entirely in your browser.',
-    url: 'https://unblockdevs.com/social-media-time-analyzer',
+    url: `${BASE_URL}${PAGE_PATH}`,
     siteName: 'UnblockDevs',
     type: 'website',
   },
@@ -35,6 +38,43 @@ export const metadata: Metadata = {
       'Find your exact Instagram, YouTube, TikTok & Facebook screen time from your own data export. Private, instant, eye-opening.',
   },
 };
+
+type Props = { searchParams: Promise<{ [key: string]: string | undefined }> };
+
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const params = await searchParams;
+  const name = params.n;
+  const days = params.d;
+
+  // No share params → default metadata
+  if (!name || !days) return defaultMetadata;
+
+  const reels = params.r ?? '0';
+  const ads = params.ag ?? '0';
+  const ogImageUrl = `${BASE_URL}/api/og-share?n=${encodeURIComponent(name)}&d=${days}&r=${reels}&ag=${ads}`;
+  const title = `${name}'s Instagram screen time — ${days} days spent scrolling`;
+  const description = `${name} spent ${days} days on Instagram: ${Number(reels).toLocaleString()} reels watched, ${Number(ads).toLocaleString()} advertisers targeting them. Find out your own number — free, 100% private.`;
+
+  return {
+    ...defaultMetadata,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `${BASE_URL}${PAGE_PATH}`,
+      siteName: 'UnblockDevs',
+      type: 'website',
+      images: [{ url: ogImageUrl, width: 1200, height: 630, alt: title }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [ogImageUrl],
+    },
+  };
+}
 
 export default function SocialMediaTimeAnalyzerPage() {
   return <SocialMediaTimeAnalyzerClient />;
