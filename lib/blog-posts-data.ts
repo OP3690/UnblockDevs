@@ -2042,6 +2042,60 @@ export const blogPosts: BlogPost[] = [
     readTime: '14 min read',
     category: 'Node.js & Backend',
     keywords: ['websocket vs sse 2026', 'server-sent events nodejs', 'long polling vs websocket', 'real-time json nodejs', 'websocket nodejs implementation', 'sse react hook']
+  },
+  {
+    slug: 'social-media-mental-health-impact',
+    title: 'How Social Media Affects Your Brain and Mental Health — What Research Reveals (2026)',
+    excerpt: 'Social media is physically changing the brain — prefrontal cortex, amygdala, dopamine pathways. Here\'s what the latest research shows about anxiety, loneliness, FOMO, and who is most at risk.',
+    date: '2026-10-10',
+    readTime: '12 min read',
+    category: 'Social Media & Mental Health',
+    keywords: ['impact of social media on mental health', 'how social media affects the brain', 'social media anxiety depression', 'social media mental health effects', 'social media brain changes 2026', 'is social media bad for mental health']
+  },
+  {
+    slug: 'dopamine-and-social-media-addiction',
+    title: 'Dopamine and Social Media: How Your Brain Gets Hooked on Every Scroll',
+    excerpt: 'Why do you check your phone 150 times a day? Dopamine, variable reward schedules, and deliberate platform design — here\'s the neuroscience behind social media addiction and how to reset.',
+    date: '2026-10-10',
+    readTime: '13 min read',
+    category: 'Social Media & Mental Health',
+    keywords: ['dopamine social media addiction', 'how social media triggers dopamine', 'why social media is addictive neuroscience', 'dopamine hit Instagram scrolling', 'social media dopamine loop', 'variable reward social media']
+  },
+  {
+    slug: 'social-media-trap-dark-patterns',
+    title: 'The Social Media Trap: 8 Design Tricks That Keep You Scrolling for Hours',
+    excerpt: 'Infinite scroll, variable reward notifications, autoplay, streaks — these are not accidents. Here are the 8 deliberate design tricks platforms use to keep you hooked, and how to break free.',
+    date: '2026-10-10',
+    readTime: '11 min read',
+    category: 'Social Media & Mental Health',
+    keywords: ['social media trap', 'dark patterns social media', 'why can\'t stop scrolling social media', 'infinite scroll addiction', 'social media design tricks to keep you engaged', 'social media dark patterns 2026']
+  },
+  {
+    slug: 'social-media-mental-health-statistics-2026',
+    title: 'Social Media Mental Health Statistics 2026: The Data Is Getting Worse',
+    excerpt: '59% of teens say social media harms their mental health. 50% rise in teen hospital self-harm admissions since 2010. The full picture of social media\'s mental health crisis — in numbers.',
+    date: '2026-10-10',
+    readTime: '14 min read',
+    category: 'Social Media & Mental Health',
+    keywords: ['social media mental health statistics 2026', 'social media depression anxiety statistics', 'teen mental health social media data', 'mental health crisis social media research', 'social media statistics teens 2026']
+  },
+  {
+    slug: 'social-media-sleep-deprivation',
+    title: 'Doomscrolling Before Bed: How Social Media Is Destroying Your Sleep (And Your Health)',
+    excerpt: '73% of adults use their phone in bed before sleep. Blue light, cortisol spikes, and dopamine loops are keeping you awake. Here\'s the science — and a 7-step fix.',
+    date: '2026-10-10',
+    readTime: '12 min read',
+    category: 'Social Media & Mental Health',
+    keywords: ['social media sleep deprivation', 'doomscrolling before bed effects', 'phone before bed sleep', 'blue light melatonin social media', 'how social media affects sleep', 'doomscrolling sleep health']
+  },
+  {
+    slug: 'social-media-comparison-trap',
+    title: 'The Comparison Trap: Why Social Media Makes You Feel Like You\'re Never Enough',
+    excerpt: '60% of people feel inadequate after browsing social media. Here\'s the psychology of social comparison, the highlight reel effect, FOMO, and how platforms are engineered to make you feel like you\'re falling behind.',
+    date: '2026-10-10',
+    readTime: '13 min read',
+    category: 'Social Media & Mental Health',
+    keywords: ['social media comparison trap', 'FOMO social media effect', 'social media self-esteem', 'highlight reel effect Instagram', 'why social media makes you feel bad about yourself', 'social comparison theory social media']
   }
 ];
 
