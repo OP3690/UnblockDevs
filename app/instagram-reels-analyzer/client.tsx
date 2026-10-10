@@ -31,12 +31,12 @@ interface FullData {
   searches:   TimedEntry[];
   links:      TimedEntry[];
   logins:     TimedEntry[];
-  dms:             TimedEntry[];
-  dmSent:          number;
-  dmSharedReels:   number;
-  dmSharedStories: number;
-  dmSharedPosts:   number;
-  dmThreads:       DmThread[];
+  dms:              TimedEntry[];
+  dmSent:           number;
+  dmSharedReelTs:   TimedEntry[];
+  dmSharedStoryTs:  TimedEntry[];
+  dmSharedPostTs:   TimedEntry[];
+  dmThreads:        DmThread[];
   userName:        string;
   advertiserCount: number;
   followingCount:  number;
@@ -145,7 +145,8 @@ async function parseZip(file: File): Promise<FullData> {
     videos: [], posts: [], stories: [], ads: [],
     likes: [], saves: [], comments: [], searches: [],
     links: [], logins: [],
-    dms: [], dmSent: 0, dmSharedReels: 0, dmSharedStories: 0, dmSharedPosts: 0,
+    dms: [], dmSent: 0,
+    dmSharedReelTs: [], dmSharedStoryTs: [], dmSharedPostTs: [],
     dmThreads: [], userName: '',
     advertiserCount: 0, followingCount: 0, followersCount: 0,
     foundFiles: [],
@@ -212,11 +213,11 @@ async function parseZip(file: File): Promise<FullData> {
             t.sent++;
             result.dmSent++;
           }
-          // Count shared content type
+          // Track shared content with timestamps
           const link = msg.share?.link ?? '';
-          if (link.includes('/reel/'))    result.dmSharedReels++;
-          else if (link.includes('/stories/')) result.dmSharedStories++;
-          else if (link.includes('/p/') || link.includes('/tv/')) result.dmSharedPosts++;
+          if (link.includes('/reel/'))                            result.dmSharedReelTs.push({ timestamp: ts });
+          else if (link.includes('/stories/'))                    result.dmSharedStoryTs.push({ timestamp: ts });
+          else if (link.includes('/p/') || link.includes('/tv/')) result.dmSharedPostTs.push({ timestamp: ts });
         }
       } catch { /* skip */ }
       continue;
@@ -276,7 +277,8 @@ async function parseJsonFile(file: File): Promise<FullData> {
     videos: [], posts: [], stories: [], ads: [],
     likes: [], saves: [], comments: [], searches: [],
     links: [], logins: [],
-    dms: [], dmSent: 0, dmSharedReels: 0, dmSharedStories: 0, dmSharedPosts: 0,
+    dms: [], dmSent: 0,
+    dmSharedReelTs: [], dmSharedStoryTs: [], dmSharedPostTs: [],
     dmThreads: [], userName: '',
     advertiserCount: 0, followingCount: 0, followersCount: 0,
     foundFiles: [file.name],
@@ -306,6 +308,8 @@ interface Analysis {
   activityPie: { name: string; value: number; color: string }[];
   viewingLimited: boolean;
   topThreads: DmThread[];
+  bySharedMonth: { label: string; reels: number; posts: number; stories: number }[];
+  dmBreakdown: { name: string; value: number; color: string }[];
 }
 
 function analyse(data: FullData): Analysis {
@@ -416,7 +420,28 @@ function analyse(data: FullData): Analysis {
 
   const topThreads = data.dmThreads.filter(t => !t.isRequest).slice(0, 8);
 
-  return { data, totalSeconds, viewingDays, earliest, latest, spanDays, byMonth, byYear, byDow, byHour, engagement, activityPie, viewingLimited, topThreads };
+  // Monthly shared-content breakdown
+  const shMap = new Map<string, { label: string; reels: number; posts: number; stories: number }>();
+  const aggShared = (arr: TimedEntry[], field: 'reels' | 'posts' | 'stories') => {
+    for (const e of arr) {
+      const d = new Date(e.timestamp * 1000);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      if (!shMap.has(key)) shMap.set(key, { label: `${MONTHS[d.getMonth()]} '${String(d.getFullYear()).slice(2)}`, reels: 0, posts: 0, stories: 0 });
+      shMap.get(key)![field]++;
+    }
+  };
+  aggShared(data.dmSharedReelTs,  'reels');
+  aggShared(data.dmSharedPostTs,  'posts');
+  aggShared(data.dmSharedStoryTs, 'stories');
+  const bySharedMonth = [...shMap.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([, v]) => v);
+
+  const dmBreakdown = [
+    { name: 'Reels',   value: data.dmSharedReelTs.length,  color: '#c026d3' },
+    { name: 'Posts',   value: data.dmSharedPostTs.length,  color: '#7c3aed' },
+    { name: 'Stories', value: data.dmSharedStoryTs.length, color: '#2563eb' },
+  ].filter(d => d.value > 0);
+
+  return { data, totalSeconds, viewingDays, earliest, latest, spanDays, byMonth, byYear, byDow, byHour, engagement, activityPie, viewingLimited, topThreads, bySharedMonth, dmBreakdown };
 }
 
 // ─── Custom Tooltip ───────────────────────────────────────────────────────────
@@ -865,23 +890,76 @@ function Results({ a }: { a: Analysis }) {
             ))}
           </div>
 
-          {/* Shared content in DMs */}
-          {(data.dmSharedReels + data.dmSharedStories + data.dmSharedPosts) > 0 && (
-            <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Content shared in DMs</p>
+          {/* Shared content in DMs — donut + trend */}
+          {a.dmBreakdown.length > 0 && (
+            <div className="space-y-4">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Content shared in DMs</p>
+
+              {/* Stat strip */}
               <div className="grid grid-cols-3 gap-3">
                 {[
-                  { label: 'Reels shared',   value: data.dmSharedReels,   icon: '🎬', color: '#c026d3' },
-                  { label: 'Stories shared', value: data.dmSharedStories, icon: '⭕', color: '#2563eb' },
-                  { label: 'Posts shared',   value: data.dmSharedPosts,   icon: '🖼️', color: '#7c3aed' },
+                  { label: 'Reels shared',   value: data.dmSharedReelTs.length,  icon: '🎬', color: '#c026d3', span: spanLabel(data.dmSharedReelTs) },
+                  { label: 'Stories shared', value: data.dmSharedStoryTs.length, icon: '⭕', color: '#2563eb', span: spanLabel(data.dmSharedStoryTs) },
+                  { label: 'Posts shared',   value: data.dmSharedPostTs.length,  icon: '🖼️', color: '#7c3aed', span: spanLabel(data.dmSharedPostTs) },
                 ].filter(s => s.value > 0).map(s => (
                   <div key={s.label} className="rounded-xl border border-gray-100 bg-gray-50 p-4 text-center">
                     <p className="text-lg mb-1">{s.icon}</p>
                     <p className="text-xl font-black tabular-nums" style={{ color: s.color }}>{fmtNum(s.value)}</p>
-                    <p className="text-xs text-gray-400 mt-0.5">{s.label}</p>
+                    <p className="text-xs text-gray-500 mt-0.5">{s.label}</p>
+                    {s.span && <p className="text-[10px] text-gray-400 mt-0.5">{s.span}</p>}
                   </div>
                 ))}
               </div>
+
+              {/* Donut + legend */}
+              <div className="flex items-center gap-6">
+                <ResponsiveContainer width={130} height={130}>
+                  <PieChart>
+                    <Pie data={a.dmBreakdown} cx="50%" cy="50%" innerRadius={35} outerRadius={58}
+                      dataKey="value" stroke="none">
+                      {a.dmBreakdown.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+                    </Pie>
+                    <Tooltip formatter={(v: number | string | undefined) => fmtNum(Number(v ?? 0))} />
+                  </PieChart>
+                </ResponsiveContainer>
+                <div className="space-y-2 flex-1">
+                  {a.dmBreakdown.map(d => (
+                    <div key={d.name} className="flex items-center gap-2 text-sm">
+                      <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: d.color }} />
+                      <span className="text-gray-600 flex-1">{d.name}</span>
+                      <span className="font-bold tabular-nums" style={{ color: d.color }}>{fmtNum(d.value)}</span>
+                      <span className="text-xs text-gray-400">
+                        {Math.round((d.value / a.dmBreakdown.reduce((s, x) => s + x.value, 0)) * 100)}%
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Shared content per month */}
+              {a.bySharedMonth.length > 1 && (
+                <div>
+                  <p className="text-xs text-gray-400 mb-2">Shared per month</p>
+                  <ResponsiveContainer width="100%" height={150}>
+                    <BarChart data={a.bySharedMonth} margin={{ top: 0, right: 0, left: -24, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                      <XAxis dataKey="label" tick={{ fontSize: 9, fill: '#94a3b8' }}
+                        interval={Math.max(0, Math.floor(a.bySharedMonth.length / 8) - 1)}
+                        tickLine={false} axisLine={false} />
+                      <YAxis tick={{ fontSize: 9, fill: '#94a3b8' }} tickLine={false} axisLine={false} />
+                      <Tooltip content={<ChartTip />} />
+                      <Bar dataKey="reels"   name="Reels"   stackId="s" fill="#c026d3" radius={[0,0,0,0]} />
+                      <Bar dataKey="posts"   name="Posts"   stackId="s" fill="#7c3aed" radius={[0,0,0,0]} />
+                      <Bar dataKey="stories" name="Stories" stackId="s" fill="#2563eb" radius={[4,4,0,0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                  <div className="flex gap-4 mt-1 text-xs text-gray-400">
+                    {data.dmSharedReelTs.length  > 0 && <span><span className="inline-block w-2 h-2 rounded-sm mr-1 align-middle bg-fuchsia-600" />Reels</span>}
+                    {data.dmSharedPostTs.length  > 0 && <span><span className="inline-block w-2 h-2 rounded-sm mr-1 align-middle bg-violet-600" />Posts</span>}
+                    {data.dmSharedStoryTs.length > 0 && <span><span className="inline-block w-2 h-2 rounded-sm mr-1 align-middle bg-blue-600" />Stories</span>}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
