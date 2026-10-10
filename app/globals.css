@@ -219,11 +219,11 @@ input, select, textarea {
   font-weight: 600;
   color: #1f2937;
 }
-.blog-article-body a {
+.blog-article-body a:not([class*="bg-"]) {
   color: #2563eb;
   text-underline-offset: 3px;
 }
-.blog-article-body a:hover {
+.blog-article-body a:not([class*="bg-"]):hover {
   color: #1d4ed8;
 }
 .blog-article-body ul,
