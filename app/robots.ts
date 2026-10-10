@@ -9,12 +9,14 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/api/', '/_next/', '/favicon.ico', ...noindexPaths],
+        // Do NOT disallow /_next/ — Google needs /_next/static/ to load CSS, JS, and fonts
+        // for proper page rendering. Blocking it causes indexing failures.
+        disallow: ['/api/', '/favicon.ico', ...noindexPaths],
       },
       {
         userAgent: 'Googlebot',
-        allow: '/',
-        disallow: ['/api/', '/_next/', '/favicon.ico', ...noindexPaths],
+        allow: ['/', '/_next/static/'],
+        disallow: ['/api/', '/favicon.ico', ...noindexPaths],
       },
     ],
     sitemap: 'https://unblockdevs.com/sitemap.xml',
