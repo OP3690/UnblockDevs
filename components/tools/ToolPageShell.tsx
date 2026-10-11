@@ -211,7 +211,7 @@ export default function ToolPageShell({
 
       {/* ── Tool card ─────────────────────────────────────── */}
       {tool != null && (
-        <div className="w-full py-3 sm:py-4">
+        <div className="w-full px-3 py-3 sm:px-5 sm:py-4 lg:px-6 xl:px-0">
           {embedTool ? (
             <div id="tool" className="scroll-mt-20">
               {tool}
@@ -234,7 +234,7 @@ export default function ToolPageShell({
 
       {/* ── Below-card SEO content ─────────────────────── */}
       {belowCard != null && (
-        <div className="w-full pb-10 sm:pb-14">
+        <div className="w-full px-3 pb-10 sm:px-5 sm:pb-14 lg:px-6 xl:px-0">
           <div className="rounded-2xl border border-zinc-100 bg-white px-5 py-7 shadow-sm sm:px-8 sm:py-10 lg:px-12">
             {belowCard}
           </div>

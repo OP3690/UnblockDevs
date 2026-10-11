@@ -49,7 +49,7 @@ export default function ToolPagesAdWrap({ children }: { children: React.ReactNod
 
   return (
     <>
-      <div className="mx-auto flex w-full max-w-[1600px] flex-col px-3 sm:px-5 lg:px-6 xl:flex-row xl:items-start xl:gap-6 xl:px-8">
+      <div className="mx-auto flex w-full max-w-[1600px] flex-col xl:flex-row xl:items-start xl:gap-6 xl:px-8">
         {/* Left sidebar — 200px at xl+ */}
         <aside
           role="region"
