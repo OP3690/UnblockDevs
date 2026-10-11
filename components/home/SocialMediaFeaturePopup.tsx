@@ -25,7 +25,11 @@ export default function SocialMediaFeaturePopup() {
     if (!mounted) return;
     try {
       if (!localStorage.getItem(STORAGE_KEY)) {
-        const t = setTimeout(() => setVisible(true), 1200);
+        const t = setTimeout(() => {
+          setVisible(true);
+          // Mark as seen immediately so refresh / back-navigation never re-shows it
+          localStorage.setItem(STORAGE_KEY, '1');
+        }, 1200);
         return () => clearTimeout(t);
       }
     } catch { /* localStorage blocked */ }
@@ -36,7 +40,6 @@ export default function SocialMediaFeaturePopup() {
     setTimeout(() => {
       setVisible(false);
       setClosing(false);
-      try { localStorage.setItem(STORAGE_KEY, '1'); } catch { /* blocked */ }
     }, 280);
   };
 
