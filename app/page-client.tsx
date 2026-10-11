@@ -9,6 +9,7 @@ import RecentlyUsedTools from '@/components/home/RecentlyUsedTools';
 import AdUnit from '@/components/AdUnit';
 import StickyMobileAd from '@/components/StickyMobileAd';
 import SocialMediaViralBanner from '@/components/home/SocialMediaViralBanner';
+import HomePasteRouter from '@/components/home/HomePasteRouter';
 
 // Mapping of tool tabs to their dedicated page URLs (used by HomePrivacyFirstSections)
 const toolPageUrls: Record<string, string> = {
@@ -141,7 +142,14 @@ function HomeClient({ hero }: { hero: ReactNode }) {
       {/* Hero */}
       {hero}
 
-      {/* High-visibility ad — right after hero, before tool tabs (SQ slot unused on homepage) */}
+      {/* Smart paste router — detect content type and jump to the right tool */}
+      <div className="border-b border-zinc-200 bg-white">
+        <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+          <HomePasteRouter />
+        </div>
+      </div>
+
+      {/* High-visibility ad — right after paste router */}
       <div role="region" aria-label="Advertisement" className="border-b border-zinc-100 bg-white py-2">
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
           <AdUnit slot="1255275563" format="auto" minHeight={90} className="w-full" />
@@ -151,10 +159,7 @@ function HomeClient({ hero }: { hero: ReactNode }) {
       {/* Recently used tools — personalized shortcut strip */}
       <RecentlyUsedTools />
 
-      {/* Social Media Time Analyzer — viral feature banner */}
-      <SocialMediaViralBanner />
-
-      {/* ART2 — between shortcuts and tools grid, high scroll-through viewability */}
+      {/* ART2 — between shortcuts and tools grid */}
       <div role="region" aria-label="Advertisement" className="border-b border-zinc-100 bg-zinc-50/40 py-2">
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
           <AdUnit slot="6289722500" format="fluid" layout="in-article" minHeight={90} className="w-full rounded-xl overflow-hidden" />
@@ -165,6 +170,9 @@ function HomeClient({ hero }: { hero: ReactNode }) {
       <main id="main-content">
         <HomePrivacyFirstSections toolPageUrls={toolPageUrls} />
       </main>
+
+      {/* Social Media Time Analyzer — viral feature banner (after tools, not blocking them) */}
+      <SocialMediaViralBanner />
 
       {/* Homepage ads — between tools and newsletter */}
       <div className="border-b border-zinc-200/80 bg-white/60" style={{ contain: 'layout' }}>

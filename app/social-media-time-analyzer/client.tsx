@@ -491,12 +491,7 @@ function PlatformSelector({ active, onChange }: { active: PlatformId; onChange: 
                       Soon
                     </div>
                   )}
-                  {'beta' in p && p.beta && (
-                    <div className="text-[9px] font-bold mt-0.5 uppercase tracking-wide" style={{ color: p.color }}>
-                      Beta
-                    </div>
-                  )}
-                  {p.available && !('beta' in p && p.beta) && (
+                  {p.available && (
                     <div className="text-[9px] font-bold mt-0.5 uppercase tracking-wide" style={{ color: p.color }}>
                       Available
                     </div>

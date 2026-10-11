@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { LayoutGrid, ShieldCheck, Lock, Zap, Globe } from 'lucide-react';
+import { LayoutGrid, ShieldCheck, Lock, Zap, Globe, ChevronRight } from 'lucide-react';
 import HomeHeroCodePreview from '@/components/home/HomeHeroCodePreview';
 
 export default function HomeServerHero() {
@@ -31,34 +31,34 @@ export default function HomeServerHero() {
               id="home-hero-heading"
               className="text-[clamp(2.1rem,3.8vw,3rem)] font-semibold leading-[1.12] tracking-[-0.03em] text-zinc-900"
             >
-              Developer tools
+              60+ dev tools.
               <br />
-              that{' '}
-              <span className="text-emerald-700">respect your data</span>
+              <span className="text-emerald-700">Paste and go.</span>
             </h1>
 
             {/* Sub-copy */}
             <p className="mt-5 max-w-[30rem] text-[15px] leading-relaxed text-zinc-500 text-pretty">
-              JSON formatter, JWT decoder, cURL converter, CORS tester, SQL formatter, and 45+ more — all free,
-              all in your browser. Mask sensitive data before sending to ChatGPT. Nothing is ever uploaded to a server.
+              JSON formatter, JWT decoder, cURL converter, CORS tester, SQL formatter, regex tester, and 54 more —
+              all free, all running in your browser. Mask sensitive data before sending to any AI. Nothing leaves your machine.
             </p>
 
             {/* Tool quick-links */}
             <div className="mt-5 flex flex-wrap gap-1.5">
               {[
-                { label: 'JSON Formatter', href: '/json-formatter' },
-                { label: 'JWT Decoder', href: '/jwt-decoder' },
-                { label: 'cURL Converter', href: '/curl-converter' },
-                { label: 'CORS Tester', href: '/cors-tester' },
-                { label: 'SQL Formatter', href: '/sql-formatter' },
-                { label: 'AI Schema Masker', href: '/ai-schema-masker' },
-              ].map(({ label, href }) => (
+                { label: 'JSON Formatter',   href: '/json-formatter',   color: 'text-amber-700  bg-amber-50  border-amber-200  hover:border-amber-300' },
+                { label: 'JWT Decoder',       href: '/jwt-decoder',      color: 'text-violet-700 bg-violet-50 border-violet-200 hover:border-violet-300' },
+                { label: 'cURL Converter',    href: '/curl-converter',   color: 'text-blue-700   bg-blue-50   border-blue-200   hover:border-blue-300' },
+                { label: 'Regex Tester',      href: '/regex-tester',     color: 'text-rose-700   bg-rose-50   border-rose-200   hover:border-rose-300' },
+                { label: 'SQL Formatter',     href: '/sql-formatter',    color: 'text-sky-700    bg-sky-50    border-sky-200    hover:border-sky-300' },
+                { label: 'AI Schema Masker',  href: '/ai-schema-masker', color: 'text-emerald-700 bg-emerald-50 border-emerald-200 hover:border-emerald-300' },
+              ].map(({ label, href, color }) => (
                 <Link
                   key={href}
                   href={href}
-                  className="rounded-full border border-zinc-200 bg-white px-2.5 py-1 text-[11.5px] font-medium text-zinc-600 transition-colors hover:border-zinc-300 hover:text-zinc-900"
+                  className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11.5px] font-medium transition-colors ${color}`}
                 >
                   {label}
+                  <ChevronRight className="h-3 w-3 opacity-50" aria-hidden />
                 </Link>
               ))}
             </div>
@@ -66,11 +66,11 @@ export default function HomeServerHero() {
             {/* CTAs */}
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <Link
-                href="/tools/json"
+                href="/#main-content"
                 className="inline-flex items-center gap-2 rounded-lg bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
               >
                 <LayoutGrid className="h-4 w-4" aria-hidden />
-                Browse all 50+ tools
+                Browse all 60+ tools
               </Link>
               <Link
                 href="/ai-schema-masker"
@@ -116,19 +116,23 @@ export default function HomeServerHero() {
             {/* Mobile visual — shown instead of code preview on sm/md screens */}
             <div className="lg:hidden mt-8 grid grid-cols-3 gap-2 sm:grid-cols-4" aria-label="Available tools">
               {[
-                { emoji: '{}', label: 'JSON Formatter' },
-                { emoji: '🔐', label: 'JWT Decoder' },
-                { emoji: '🌐', label: 'CORS Tester' },
-                { emoji: '⚡', label: 'cURL Converter' },
-                { emoji: '🗄️', label: 'SQL Formatter' },
-                { emoji: '🔍', label: 'Regex Tester' },
-                { emoji: '🤖', label: 'AI Masker' },
-                { emoji: '📝', label: 'Markdown' },
-              ].map(({ emoji, label }) => (
-                <div key={label} className="flex flex-col items-center gap-1.5 rounded-xl border border-zinc-100 bg-white p-3 text-center shadow-sm">
+                { emoji: '{}',  label: 'JSON Formatter', href: '/json-formatter'   },
+                { emoji: '🔐', label: 'JWT Decoder',     href: '/jwt-decoder'      },
+                { emoji: '🌐', label: 'CORS Tester',     href: '/cors-tester'      },
+                { emoji: '⚡', label: 'cURL Converter',  href: '/curl-converter'   },
+                { emoji: '🗄️', label: 'SQL Formatter',   href: '/sql-formatter'    },
+                { emoji: '🔍', label: 'Regex Tester',    href: '/regex-tester'     },
+                { emoji: '🤖', label: 'AI Masker',       href: '/ai-schema-masker' },
+                { emoji: '📝', label: 'Markdown',        href: '/markdown-preview' },
+              ].map(({ emoji, label, href }) => (
+                <Link
+                  key={label}
+                  href={href}
+                  className="flex flex-col items-center gap-1.5 rounded-xl border border-zinc-100 bg-white p-3 text-center shadow-sm transition-colors hover:border-zinc-300 hover:shadow-md"
+                >
                   <span className="text-2xl" aria-hidden>{emoji}</span>
                   <span className="text-[10px] font-medium text-zinc-500 leading-tight">{label}</span>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -144,9 +148,9 @@ export default function HomeServerHero() {
       <div className="border-b border-zinc-200 bg-white">
         <div className="mx-auto grid max-w-[1400px] grid-cols-2 sm:grid-cols-4">
           {[
-            { n: '50+', l: 'Free developer tools' },
+            { n: '60+', l: 'Free developer tools' },
             { n: '100%', l: 'Client-side · GDPR-safe' },
-            { n: '0', l: 'Bytes sent to servers' },
+            { n: '6', l: 'Tool categories' },
             { n: 'Free', l: 'No account · no limits' },
           ].map((s, i) => (
             <div
