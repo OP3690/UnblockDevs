@@ -7,6 +7,7 @@ import type { BreadcrumbItem } from '@/components/Breadcrumb';
 import FeedbackNewsletterSplit from '@/components/home/FeedbackNewsletterSplit';
 import RelatedToolsStrip from '@/components/tools/RelatedToolsStrip';
 import { getRelatedTools } from '@/lib/toolCatalog';
+import { trackToolShare } from '@/lib/analytics';
 
 const UD_RECENT_KEY = 'ud_recent_tools';
 const MAX_RECENT = 8;
@@ -124,13 +125,15 @@ export default function ToolPageShell({
     try {
       if (navigator.share) {
         await navigator.share({ title, url });
+        trackToolShare(toolName ?? title, 'native_share');
       } else {
         await navigator.clipboard.writeText(url);
+        trackToolShare(toolName ?? title, 'clipboard');
         setShared(true);
         setTimeout(() => setShared(false), 2000);
       }
     } catch { /* user cancelled or clipboard blocked */ }
-  }, [title]);
+  }, [title, toolName]);
 
   return (
     <div className="w-full">

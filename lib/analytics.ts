@@ -124,3 +124,49 @@ export function trackSearchClosed(query: string, result_count: number): void {
     selected: false,
   });
 }
+
+// ── Blog events ───────────────────────────────────────────────────────────────
+
+/** Fired when a user lands on a blog article page. */
+export function trackBlogRead(slug: string, title?: string): void {
+  trackEvent('blog_article_read', { blog_slug: slug, blog_title: title });
+}
+
+/** Fired at scroll depth milestones (25 / 50 / 75 / 100). */
+export function trackBlogScroll(slug: string, depth_pct: 25 | 50 | 75 | 100): void {
+  trackEvent('blog_scroll_depth', { blog_slug: slug, depth_pct });
+}
+
+// ── Homepage / navigation events ──────────────────────────────────────────────
+
+/** Fired when a hero CTA button is clicked (e.g. "Browse all 60+ tools"). */
+export function trackHeroCta(label: string): void {
+  trackEvent('hero_cta_click', { cta_label: label });
+}
+
+/** Fired when a quick-link chip in the hero is clicked. */
+export function trackHeroQuickLink(tool_name: string): void {
+  trackEvent('hero_quick_link_click', { tool_name });
+}
+
+/** Fired when user selects a category filter tab on the homepage. */
+export function trackCategoryFilter(category: string): void {
+  trackEvent('category_filter_click', { category });
+}
+
+/** Fired when a tool card on the homepage grid is clicked. */
+export function trackHomeToolClick(tool_name: string, category: string): void {
+  trackEvent('home_tool_click', { tool_name, category });
+}
+
+// ── Tool page events ──────────────────────────────────────────────────────────
+
+/** Fired when the share/copy-link button on a tool page is used. */
+export function trackToolShare(tool_name: string, method: 'native_share' | 'clipboard'): void {
+  trackEvent('tool_share', { tool_name, method });
+}
+
+/** Fired when a related tool chip (quick-switch or strip) is clicked. */
+export function trackRelatedToolClick(from_tool: string, to_tool: string): void {
+  trackEvent('related_tool_click', { from_tool, to_tool });
+}

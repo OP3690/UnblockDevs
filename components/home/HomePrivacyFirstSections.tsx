@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { trackCategoryFilter, trackHomeToolClick } from '@/lib/analytics';
 import {
   ArrowRight,
   Check,
@@ -571,7 +572,7 @@ export default function HomePrivacyFirstSections({
               <button
                 key={t.id}
                 type="button"
-                onClick={() => { setCat(t.id); setSearchQuery(''); }}
+                onClick={() => { setCat(t.id); setSearchQuery(''); trackCategoryFilter(t.id); }}
                 className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-[12px] font-semibold transition-all ${
                   isActive
                     ? `${t.activeBg} ${t.activeColor} border-transparent shadow-sm`
@@ -693,6 +694,7 @@ export default function HomePrivacyFirstSections({
                 <Link
                   key={t.href}
                   href={t.href}
+                  onClick={() => trackHomeToolClick(t.label, dom)}
                   className="group relative flex items-center gap-3.5 overflow-hidden rounded-xl border border-zinc-200/80 bg-white px-4 py-4 shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-md hover:shadow-zinc-900/[0.08] active:scale-[0.99]"
                 >
                   {/* Category-colored left accent bar */}

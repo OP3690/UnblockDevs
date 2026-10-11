@@ -1,8 +1,10 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 import AdUnit from '@/components/AdUnit';
 import StickyMobileAd from '@/components/StickyMobileAd';
+import { trackBlogRead, trackBlogScroll } from '@/lib/analytics';
 
 /**
  * AdSense slot IDs — each used in exactly ONE position so pushedSlots
@@ -28,6 +30,37 @@ const SLOT_FOOTER = '4987800735';
 export default function BlogLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const key = pathname ?? 'blog';
+
+  // Derive slug from pathname (e.g. /blog/my-post → my-post; /blog → 'index')
+  const slug = pathname?.replace(/^\/blog\/?/, '') || 'index';
+  const firedMilestones = useRef<Set<number>>(new Set());
+
+  // Track article read on route change
+  useEffect(() => {
+    if (!slug || slug === 'index') return;
+    firedMilestones.current = new Set();
+    trackBlogRead(slug);
+  }, [slug]);
+
+  // Track scroll depth milestones (25 / 50 / 75 / 100)
+  useEffect(() => {
+    if (!slug || slug === 'index') return;
+    const onScroll = () => {
+      const el = document.documentElement;
+      const scrolled = el.scrollTop + el.clientHeight;
+      const total = el.scrollHeight;
+      if (total <= el.clientHeight) return;
+      const pct = (scrolled / total) * 100;
+      ([25, 50, 75, 100] as const).forEach((milestone) => {
+        if (pct >= milestone && !firedMilestones.current.has(milestone)) {
+          firedMilestones.current.add(milestone);
+          trackBlogScroll(slug, milestone);
+        }
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [slug]);
 
   return (
     <>
