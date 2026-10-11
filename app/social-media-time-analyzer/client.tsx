@@ -7,6 +7,7 @@ import InstagramAnalyzerClient, { decodeShare } from '../instagram-reels-analyze
 import type { ShareSummary } from '../instagram-reels-analyzer/client';
 import SharedView from './shared-view';
 import ThreadsAnalyzerClient from '../threads-analyzer/client';
+import FacebookAnalyzerClient from './facebook-client';
 
 // ─── Platform logo SVG components ─────────────────────────────────────────────
 
@@ -135,7 +136,7 @@ const PLATFORMS = [
     color: '#1877F2',
     gradient: 'from-blue-600 to-blue-400',
     bg: 'bg-gradient-to-br from-blue-50 to-indigo-50',
-    available: false,
+    available: true,
     tagline: 'Posts, reactions & messages',
     features: [
       'Posts, reactions & comments history',
@@ -571,6 +572,8 @@ export default function SocialMediaTimeAnalyzerClient() {
         </div>
       ) : platform === 'threads' ? (
         <ThreadsAnalyzerClient hideNav />
+      ) : platform === 'facebook' ? (
+        <FacebookAnalyzerClient hideNav />
       ) : (
         <ComingSoon p={current} />
       )}
