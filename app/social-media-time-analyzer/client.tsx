@@ -8,6 +8,7 @@ import type { ShareSummary } from '../instagram-reels-analyzer/client';
 import SharedView from './shared-view';
 import ThreadsAnalyzerClient from '../threads-analyzer/client';
 import FacebookAnalyzerClient from './facebook-client';
+import TwitterAnalyzerClient from './twitter-client';
 
 // ─── Platform logo SVG components ─────────────────────────────────────────────
 
@@ -154,7 +155,7 @@ const PLATFORMS = [
     color: '#000000',
     gradient: 'from-gray-900 to-gray-600',
     bg: 'bg-gradient-to-br from-gray-50 to-slate-100',
-    available: false,
+    available: true,
     tagline: 'Tweets, likes & browsing time',
     features: [
       'Total tweets posted over the years',
@@ -574,6 +575,8 @@ export default function SocialMediaTimeAnalyzerClient() {
         <ThreadsAnalyzerClient hideNav />
       ) : platform === 'facebook' ? (
         <FacebookAnalyzerClient hideNav />
+      ) : platform === 'twitter' ? (
+        <TwitterAnalyzerClient hideNav />
       ) : (
         <ComingSoon p={current} />
       )}
