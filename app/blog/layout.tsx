@@ -36,13 +36,12 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
         key={`${key}-top`}
         role="region"
         aria-label="Advertisement"
-        className="flex items-center justify-center border-b border-zinc-100 bg-zinc-50/60 py-2 px-2 sm:px-0"
-        style={{ minHeight: 60 }}
+        className="flex items-center justify-center border-b border-zinc-100 bg-zinc-50/60 px-2 sm:px-0"
       >
-        <AdUnit slot={SLOT_TOP} format="auto" minHeight={50} className="w-full max-w-full" />
+        <AdUnit slot={SLOT_TOP} format="auto" minHeight={0} className="w-full max-w-full" />
       </div>
 
-      <div className="mx-auto max-w-[1600px] px-3 sm:px-5 lg:px-8 py-4 sm:py-6">
+      <div className="mx-auto max-w-[1600px] px-3 sm:px-5 lg:px-8">
         <div className="flex flex-col xl:flex-row xl:gap-6 2xl:gap-8">
 
           {/* Left sidebar — 200px at xl+ */}
