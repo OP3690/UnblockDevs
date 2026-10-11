@@ -20,14 +20,14 @@ interface Props {
   limit?: number;
 }
 
-export default function RelatedToolsStrip({ toolName, limit = 5 }: Props) {
+export default function RelatedToolsStrip({ toolName, limit = 6 }: Props) {
   const related = getRelatedTools(toolName, limit);
   if (related.length === 0) return null;
 
   return (
     <section
       aria-label="Related tools"
-      className="w-full border-t border-zinc-100 bg-zinc-50/70 px-3 sm:px-5 lg:px-6 xl:px-8 py-4"
+      className="w-full border-t border-zinc-100 bg-zinc-50/60 px-3 sm:px-5 lg:px-6 xl:px-8 py-4 sm:py-5"
     >
       <div className="mx-auto max-w-[min(100%,96rem)]">
         {/* Header row */}
@@ -39,7 +39,7 @@ export default function RelatedToolsStrip({ toolName, limit = 5 }: Props) {
             </span>
           </div>
           <Link
-            href="/tools/json"
+            href="/#main-content"
             className="flex items-center gap-1 text-[11.5px] font-medium text-zinc-400 transition-colors hover:text-emerald-600"
           >
             Browse all tools
@@ -58,7 +58,7 @@ export default function RelatedToolsStrip({ toolName, limit = 5 }: Props) {
 
           {/* "See all" ghost card */}
           <Link
-            href="/tools/json"
+            href="/#main-content"
             role="listitem"
             className="flex shrink-0 flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-zinc-200 bg-white px-4 py-3 text-center transition-all hover:border-emerald-300 hover:bg-emerald-50 min-w-[110px]"
           >
@@ -78,10 +78,13 @@ function ToolCard({ tool }: { tool: ToolMeta }) {
     <Link
       href={tool.href}
       role="listitem"
-      className="group flex shrink-0 flex-col gap-1 rounded-xl border border-zinc-200 bg-white px-3.5 py-3 shadow-sm transition-all hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-md min-w-[120px] max-w-[148px]"
+      className="group relative flex shrink-0 flex-col gap-1 overflow-hidden rounded-xl border border-zinc-200 bg-white px-3.5 py-3 shadow-sm transition-all hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-md min-w-[128px] max-w-[156px]"
     >
+      {/* Left accent bar — animates in on hover */}
+      <div className="absolute inset-y-0 left-0 w-[3px] origin-center scale-y-0 rounded-r bg-emerald-500 transition-transform duration-200 group-hover:scale-y-100" aria-hidden />
+
       {/* Emoji icon */}
-      <span className="text-xl leading-none" aria-hidden>
+      <span className="text-[1.35rem] leading-none" aria-hidden>
         {tool.emoji}
       </span>
 
