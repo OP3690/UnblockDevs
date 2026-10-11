@@ -10,7 +10,6 @@ import AdUnit from '@/components/AdUnit';
 import StickyMobileAd from '@/components/StickyMobileAd';
 import SocialMediaViralBanner from '@/components/home/SocialMediaViralBanner';
 import SocialMediaShockStrip from '@/components/home/SocialMediaShockStrip';
-import HomePasteRouter from '@/components/home/HomePasteRouter';
 
 // Mapping of tool tabs to their dedicated page URLs (used by HomePrivacyFirstSections)
 const toolPageUrls: Record<string, string> = {
@@ -146,14 +145,7 @@ function HomeClient({ hero }: { hero: ReactNode }) {
       {/* Social Media Shock Strip — compact viral hook, top of page */}
       <SocialMediaShockStrip />
 
-      {/* Smart paste router — detect content type and jump to the right tool */}
-      <div className="border-b border-zinc-200 bg-white">
-        <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-          <HomePasteRouter />
-        </div>
-      </div>
-
-      {/* High-visibility ad — right after paste router */}
+      {/* High-visibility ad */}
       <div role="region" aria-label="Advertisement" className="border-b border-zinc-100 bg-white py-2">
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
           <AdUnit slot="1255275563" format="auto" minHeight={90} className="w-full" />
