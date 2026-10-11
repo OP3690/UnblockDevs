@@ -9,6 +9,7 @@ import RecentlyUsedTools from '@/components/home/RecentlyUsedTools';
 import AdUnit from '@/components/AdUnit';
 import StickyMobileAd from '@/components/StickyMobileAd';
 import SocialMediaViralBanner from '@/components/home/SocialMediaViralBanner';
+import SocialMediaShockStrip from '@/components/home/SocialMediaShockStrip';
 import HomePasteRouter from '@/components/home/HomePasteRouter';
 
 // Mapping of tool tabs to their dedicated page URLs (used by HomePrivacyFirstSections)
@@ -141,6 +142,9 @@ function HomeClient({ hero }: { hero: ReactNode }) {
 
       {/* Hero */}
       {hero}
+
+      {/* Social Media Shock Strip — compact viral hook, top of page */}
+      <SocialMediaShockStrip />
 
       {/* Smart paste router — detect content type and jump to the right tool */}
       <div className="border-b border-zinc-200 bg-white">
