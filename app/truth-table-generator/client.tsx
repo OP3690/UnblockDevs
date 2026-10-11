@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import {
   Copy,
@@ -27,7 +27,149 @@ import {
   getPOSTerms,
   getKMapGrid,
   generateCode,
+  AST,
+  evalAST,
 } from '@/lib/truthTableEngine';
+
+// ─── Quine-McCluskey minimization ───────────────────────────────────────────
+
+interface PrimeImplicant {
+  pattern: string;
+  minterms: number[];
+  term: string;
+}
+
+const GRAY_INV: Record<number, number> = { 0: 0, 1: 1, 2: 3, 3: 2 };
+const PI_COLORS = ['#3b82f6', '#f97316', '#8b5cf6', '#eab308', '#ec4899'];
+
+function mintermToCell(N: number, m: number): [number, number] | null {
+  if (N === 2) return [m >> 1, m & 1];
+  if (N === 3) return [m >> 2, GRAY_INV[m & 3] as number];
+  if (N === 4) return [GRAY_INV[m >> 2] as number, GRAY_INV[m & 3] as number];
+  return null;
+}
+
+function canMerge(a: string, b: string): number {
+  let diffPos = -1, cnt = 0;
+  for (let k = 0; k < a.length; k++) {
+    if (a[k] !== b[k]) { cnt++; diffPos = k; if (cnt > 1) return -1; }
+  }
+  return cnt === 1 && diffPos >= 0 && a[diffPos] !== '_' && b[diffPos] !== '_' ? diffPos : -1;
+}
+
+function piToTerm(pattern: string, vars: string[]): string {
+  const parts: string[] = [];
+  for (let i = 0; i < pattern.length; i++) {
+    if (pattern[i] === '1') parts.push(vars[i]!);
+    else if (pattern[i] === '0') parts.push('¬' + vars[i]!);
+  }
+  return parts.length === 0 ? '1' : parts.join('');
+}
+
+function quineMcCluskey(minterms: number[], nv: number, vars: string[]): PrimeImplicant[] {
+  if (!nv || !minterms.length) return [];
+  if (minterms.length === (1 << nv)) {
+    return [{ pattern: '_'.repeat(nv), minterms: [...minterms], term: '1' }];
+  }
+
+  type Imp = { pattern: string; minterms: number[] };
+  let current: Imp[] = minterms.map(m => ({
+    pattern: m.toString(2).padStart(nv, '0'),
+    minterms: [m],
+  }));
+  const primes: Imp[] = [];
+
+  while (current.length) {
+    const nextMap = new Map<string, Imp>();
+    const used = new Set<number>();
+    for (let i = 0; i < current.length; i++) {
+      for (let j = i + 1; j < current.length; j++) {
+        const pos = canMerge(current[i]!.pattern, current[j]!.pattern);
+        if (pos === -1) continue;
+        const merged = current[i]!.pattern.split('').map((c, k) => k === pos ? '_' : c).join('');
+        if (!nextMap.has(merged)) {
+          const ms = [...new Set([...current[i]!.minterms, ...current[j]!.minterms])].sort((a, b) => a - b);
+          nextMap.set(merged, { pattern: merged, minterms: ms });
+        }
+        used.add(i); used.add(j);
+      }
+    }
+    for (let i = 0; i < current.length; i++) { if (!used.has(i)) primes.push(current[i]!); }
+    current = [...nextMap.values()];
+  }
+
+  const seen = new Set<string>();
+  const uniq = primes.filter(p => { const ok = !seen.has(p.pattern); seen.add(p.pattern); return ok; });
+
+  // Greedy essential PI selection
+  const rem = new Set(minterms);
+  const sel: Imp[] = [];
+  const pick = (p: Imp) => {
+    if (!sel.includes(p)) { sel.push(p); p.minterms.forEach(m => rem.delete(m)); }
+  };
+  for (const m of minterms) {
+    const covers = uniq.filter(p => p.minterms.includes(m));
+    if (covers.length === 1) pick(covers[0]!);
+  }
+  while (rem.size) {
+    let best: Imp | null = null, bc = 0;
+    for (const p of uniq) {
+      if (sel.includes(p)) continue;
+      const c = p.minterms.filter(m => rem.has(m)).length;
+      if (c > bc) { bc = c; best = p; }
+    }
+    if (!best) break;
+    pick(best);
+  }
+
+  return sel.map(p => ({ ...p, term: piToTerm(p.pattern, vars) }));
+}
+
+// ─── Evaluation Trace ────────────────────────────────────────────────────────
+
+interface TraceNode { label: string; result: boolean; children: TraceNode[]; }
+
+function buildTrace(node: AST, asgn: Record<string, boolean>): TraceNode {
+  if (node.t === 'c') return { label: node.v ? 'T' : 'F', result: node.v, children: [] };
+  if (node.t === 'v') {
+    const v = asgn[node.n] ?? false;
+    return { label: `${node.n} = ${v ? 1 : 0}`, result: v, children: [] };
+  }
+  const result = evalAST(node, asgn);
+  if (node.t === 'un') {
+    return { label: `NOT (${astStr(node.e)})`, result, children: [buildTrace(node.e, asgn)] };
+  }
+  if (node.t === 'bin') {
+    const OPS: Record<string, string> = { AND: 'AND', OR: 'OR', XOR: 'XOR', NAND: 'NAND', NOR: 'NOR', IMP: '→', IFF: '↔' };
+    return {
+      label: `(${astStr(node.l)}) ${OPS[node.op] ?? node.op} (${astStr(node.r)})`,
+      result,
+      children: [buildTrace(node.l, asgn), buildTrace(node.r, asgn)],
+    };
+  }
+  throw new Error('Unreachable');
+}
+
+function TraceTree({ node }: { node: TraceNode }) {
+  return (
+    <li className="mt-0.5">
+      <span className={`font-mono text-xs ${node.result ? 'text-emerald-600' : 'text-red-500'}`}>
+        {node.result ? '✓' : '✗'}
+      </span>
+      <span className="font-mono text-xs text-gray-700 ml-1.5">{node.label}</span>
+      <span className={`ml-2 font-mono text-xs font-bold ${node.result ? 'text-emerald-700' : 'text-red-700'}`}>
+        → {node.result ? 'TRUE' : 'FALSE'}
+      </span>
+      {node.children.length > 0 && (
+        <ul className="pl-5 border-l-2 border-gray-200 ml-2 mt-0.5">
+          {node.children.map((c, i) => <TraceTree key={i} node={c} />)}
+        </ul>
+      )}
+    </li>
+  );
+}
+
+// ─── Extra examples ──────────────────────────────────────────────────────────
 
 const EXTRA_EXAMPLES = [
   { lbl: 'NAND', e: 'NOT(A AND B)' },
@@ -42,6 +184,8 @@ const EXTRA_EXAMPLES = [
 const HISTORY_KEY = 'truth-table-history';
 const HISTORY_MAX = 8;
 
+// ─── Main component ──────────────────────────────────────────────────────────
+
 export default function TruthTableGeneratorClient() {
   const [expr, setExpr] = useState('(A AND B) OR NOT C');
   const [error, setError] = useState<string | null>(null);
@@ -51,11 +195,16 @@ export default function TruthTableGeneratorClient() {
   const [codeLang, setCodeLang] = useState('js');
   const [codeOpen, setCodeOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
   // Equivalence checker
   const [exprB, setExprB] = useState('');
   const [equivResult, setEquivResult] = useState<{ equivalent: boolean; diffRows: number } | null>(null);
   const [equivError, setEquivError] = useState<string | null>(null);
   const [equivOpen, setEquivOpen] = useState(false);
+
+  // Evaluation trace
+  const [traceOpen, setTraceOpen] = useState(false);
+  const [traceRow, setTraceRow] = useState(0);
 
   const insertAt = useCallback((sym: string) => {
     const inp = inputRef.current;
@@ -75,10 +224,8 @@ export default function TruthTableGeneratorClient() {
     const trimmed = expr.trim();
     setError(null);
     setResult(null);
-    if (!trimmed) {
-      setError('Enter a boolean expression.');
-      return;
-    }
+    setTraceRow(0);
+    if (!trimmed) { setError('Enter a boolean expression.'); return; }
     trackCtaClick('truth_table_generator', 'generate');
     try {
       const res = generateTable(trimmed);
@@ -88,9 +235,7 @@ export default function TruthTableGeneratorClient() {
         const stored = JSON.parse(localStorage.getItem(HISTORY_KEY) ?? '[]');
         const next = [trimmed, ...(Array.isArray(stored) ? stored : []).filter((x: string) => x !== trimmed)].slice(0, HISTORY_MAX);
         localStorage.setItem(HISTORY_KEY, JSON.stringify(next));
-      } catch {
-        /* ignore */
-      }
+      } catch { /* ignore */ }
       toast.success('Truth table generated');
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
@@ -103,6 +248,7 @@ export default function TruthTableGeneratorClient() {
     setExpr(exampleExpr);
     setError(null);
     setResult(null);
+    setTraceRow(0);
     try {
       const res = generateTable(exampleExpr);
       setResult(res);
@@ -117,10 +263,7 @@ export default function TruthTableGeneratorClient() {
     if (!result) return;
     const hdr = [...result.vars, 'Result'].join('\t');
     const body = result.rows.map((r) => [...result.vars.map((v) => (r.asgn[v] ? '1' : '0')), r.res ? '1' : '0'].join('\t')).join('\n');
-    navigator.clipboard.writeText(hdr + '\n' + body).then(() => {
-      trackCopy('truth_table_generator');
-      toast.success('Table copied');
-    });
+    navigator.clipboard.writeText(hdr + '\n' + body).then(() => { trackCopy('truth_table_generator'); toast.success('Table copied'); });
   };
 
   const exportCSV = () => {
@@ -155,23 +298,15 @@ export default function TruthTableGeneratorClient() {
     toast.success('JSON downloaded');
   };
 
-  const clearAll = () => {
-    setExpr('');
-    setError(null);
-    setResult(null);
-    toast('Cleared');
-  };
+  const clearAll = () => { setExpr(''); setError(null); setResult(null); toast('Cleared'); };
 
   const checkEquivalence = useCallback(() => {
     setEquivError(null);
     setEquivResult(null);
-    const a = expr.trim();
-    const b = exprB.trim();
+    const a = expr.trim(), b = exprB.trim();
     if (!a || !b) { setEquivError('Enter both expressions.'); return; }
     try {
-      const ra = generateTable(a);
-      const rb = generateTable(b);
-      // Align variables
+      const ra = generateTable(a), rb = generateTable(b);
       const allVars = Array.from(new Set([...ra.vars, ...rb.vars])).sort();
       if (allVars.some((v) => !ra.vars.includes(v) && !rb.vars.includes(v))) {
         setEquivError('Expressions use incompatible variable sets.');
@@ -180,8 +315,7 @@ export default function TruthTableGeneratorClient() {
       const rowCount = Math.max(ra.numRows, rb.numRows);
       let diffRows = 0;
       for (let i = 0; i < rowCount; i++) {
-        const rowA = ra.rows[i];
-        const rowB = rb.rows[i];
+        const rowA = ra.rows[i], rowB = rb.rows[i];
         if (!rowA || !rowB || rowA.res !== rowB.res) diffRows++;
       }
       setEquivResult({ equivalent: diffRows === 0, diffRows });
@@ -215,6 +349,36 @@ export default function TruthTableGeneratorClient() {
   const kmap = result ? getKMapGrid(result.vars, result.rows) : null;
   const sop = result ? getSOPTerms(result.vars, result.minterms, result.numRows) : null;
   const pos = result ? getPOSTerms(result.vars, result.maxterms, result.numRows) : null;
+
+  // Quine-McCluskey
+  const qmResult = useMemo(() => {
+    if (!result || !result.vars.length) return null;
+    if (!result.minterms.length) return { type: 'zero' as const, pis: [] as PrimeImplicant[] };
+    if (result.minterms.length === result.numRows) return { type: 'one' as const, pis: [] as PrimeImplicant[] };
+    const pis = quineMcCluskey(result.minterms, result.vars.length, result.vars);
+    return { type: 'terms' as const, pis };
+  }, [result]);
+
+  // K-map highlights: grid[row][col] = color index or null
+  const kmapHighlights = useMemo((): (number | null)[][] | null => {
+    if (!qmResult || qmResult.type !== 'terms' || !result) return null;
+    const N = result.vars.length;
+    if (N < 2 || N > 4) return null;
+    const rows = N === 4 ? 4 : 2;
+    const cols = N === 2 ? 2 : 4;
+    const grid: (number | null)[][] = Array.from({ length: rows }, () => Array<number | null>(cols).fill(null));
+    qmResult.pis.forEach((pi, ci) => {
+      pi.minterms.forEach(m => {
+        const cell = mintermToCell(N, m);
+        if (cell && cell[0] < rows && cell[1] < cols) {
+          grid[cell[0]]![cell[1]] = ci % PI_COLORS.length;
+        }
+      });
+    });
+    return grid;
+  }, [qmResult, result]);
+
+  const safeTraceRow = result ? Math.min(traceRow, result.rows.length - 1) : 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
@@ -386,29 +550,15 @@ export default function TruthTableGeneratorClient() {
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Variables</span>
                   {result.vars.map((v) => (
-                    <span key={v} className="rounded-xl bg-sky-50 border border-sky-200 px-2.5 py-1 text-xs font-mono text-sky-800">
-                      {v}
-                    </span>
+                    <span key={v} className="rounded-xl bg-sky-50 border border-sky-200 px-2.5 py-1 text-xs font-mono text-sky-800">{v}</span>
                   ))}
                 </div>
 
                 {/* Classify */}
                 <div>
-                  {isTaut && (
-                    <div className="inline-flex items-center gap-2 rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800">
-                      ⊤ Tautology — always TRUE
-                    </div>
-                  )}
-                  {isCont && (
-                    <div className="inline-flex items-center gap-2 rounded-xl border border-red-300 bg-red-50 px-4 py-2 text-sm font-semibold text-red-800">
-                      ⊥ Contradiction — always FALSE
-                    </div>
-                  )}
-                  {!isTaut && !isCont && (
-                    <div className="inline-flex items-center gap-2 rounded-xl border border-sky-200 bg-sky-50 px-4 py-2 text-sm font-semibold text-sky-800">
-                      ∼ Contingency — depends on inputs
-                    </div>
-                  )}
+                  {isTaut && <div className="inline-flex items-center gap-2 rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800">⊤ Tautology — always TRUE</div>}
+                  {isCont && <div className="inline-flex items-center gap-2 rounded-xl border border-red-300 bg-red-50 px-4 py-2 text-sm font-semibold text-red-800">⊥ Contradiction — always FALSE</div>}
+                  {!isTaut && !isCont && <div className="inline-flex items-center gap-2 rounded-xl border border-sky-200 bg-sky-50 px-4 py-2 text-sm font-semibold text-sky-800">∼ Contingency — depends on inputs</div>}
                 </div>
 
                 {/* Stats */}
@@ -448,7 +598,11 @@ export default function TruthTableGeneratorClient() {
                       </thead>
                       <tbody>
                         {result.rows.map((row, ri) => (
-                          <tr key={ri} className="hover:bg-gray-50/50">
+                          <tr
+                            key={ri}
+                            className={`hover:bg-gray-50/50 cursor-pointer ${ri === safeTraceRow && traceOpen ? 'ring-2 ring-inset ring-amber-400' : ''}`}
+                            onClick={() => { setTraceRow(ri); setTraceOpen(true); }}
+                          >
                             <td className="px-3 py-1.5 text-gray-400 border-r border-b border-gray-100 text-xs">{ri}</td>
                             {result.vars.map((v) => (
                               <td key={v} className={`px-3 py-1.5 text-center border-r border-b border-gray-100 ${row.asgn[v] ? 'text-emerald-600 font-semibold' : 'text-red-600'}`}>
@@ -463,6 +617,53 @@ export default function TruthTableGeneratorClient() {
                       </tbody>
                     </table>
                   </div>
+                  <p className="mt-1 text-[10px] text-gray-400">Click any row to open its evaluation trace below.</p>
+                </div>
+
+                {/* ── Step-by-Step Evaluation Trace ─────────────────────── */}
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => setTraceOpen((o) => !o)}
+                    className="flex items-center gap-2 rounded-lg py-1.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 w-full text-left"
+                  >
+                    {traceOpen ? <ChevronDown className="w-4 h-4 text-gray-500" /> : <ChevronRight className="w-4 h-4 text-gray-500" />}
+                    <span className="text-gray-500 text-sm">⟳</span>
+                    Step-by-Step Evaluation Trace
+                  </button>
+                  {traceOpen && (
+                    <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50/30 p-4 space-y-3">
+                      <div className="flex flex-wrap items-center gap-3">
+                        <label className="text-xs font-semibold text-gray-600 whitespace-nowrap">Show trace for row:</label>
+                        <select
+                          value={safeTraceRow}
+                          onChange={(e) => setTraceRow(Number(e.target.value))}
+                          className="rounded-lg border border-gray-200 bg-white px-2 py-1 text-xs font-mono focus:ring-2 focus:ring-amber-400 max-w-xs"
+                        >
+                          {result.rows.map((row, i) => (
+                            <option key={i} value={i}>
+                              {i}: {result.vars.map((v) => `${v}=${row.asgn[v] ? 1 : 0}`).join(', ')} → {row.res ? '1' : '0'}
+                            </option>
+                          ))}
+                        </select>
+                        <span className={`text-xs font-bold px-2 py-0.5 rounded-lg border ${result.rows[safeTraceRow]?.res ? 'bg-emerald-50 border-emerald-300 text-emerald-700' : 'bg-red-50 border-red-300 text-red-700'}`}>
+                          Output = {result.rows[safeTraceRow]?.res ? '1 (TRUE)' : '0 (FALSE)'}
+                        </span>
+                      </div>
+                      <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
+                        Expression: <span className="font-mono normal-case text-gray-600">{result.expr}</span>
+                      </div>
+                      <div className="rounded-lg bg-white border border-gray-100 p-3 overflow-x-auto">
+                        <ul className="space-y-0.5">
+                          <TraceTree node={buildTrace(result.ast, result.rows[safeTraceRow]!.asgn)} />
+                        </ul>
+                      </div>
+                      <p className="text-[10px] text-gray-400">
+                        <span className="text-emerald-600 font-bold">✓</span> = sub-expression is TRUE &nbsp;·&nbsp;
+                        <span className="text-red-500 font-bold">✗</span> = FALSE. Tree evaluates innermost sub-expressions first.
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 {/* SOP / POS */}
@@ -523,12 +724,115 @@ export default function TruthTableGeneratorClient() {
                   </div>
                 </div>
 
+                {/* ── Simplified Expression (Quine-McCluskey) ──────────────── */}
+                {qmResult && (
+                  <div className="rounded-2xl border border-violet-200 bg-violet-50/30 p-4 space-y-3">
+                    <div className="flex items-center gap-2">
+                      <span className="w-1 h-4 rounded bg-violet-500" />
+                      <span className="text-sm font-bold text-gray-900">Simplified Expression</span>
+                      <span className="text-[10px] font-semibold text-violet-600 uppercase tracking-wider bg-violet-100 rounded-full px-2 py-0.5">Quine-McCluskey</span>
+                    </div>
+
+                    <div className="rounded-xl bg-white border border-violet-100 px-4 py-3">
+                      <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Minimal SOP</div>
+                      <div className="font-mono text-base font-bold">
+                        {qmResult.type === 'zero' && <span className="text-red-600">0</span>}
+                        {qmResult.type === 'one' && <span className="text-emerald-600">1</span>}
+                        {qmResult.type === 'terms' && (
+                          qmResult.pis.length === 0
+                            ? <span className="text-red-600">0</span>
+                            : qmResult.pis.map((pi, i) => (
+                                <span key={i}>
+                                  {i > 0 && <span className="text-amber-600 mx-1.5">+</span>}
+                                  <span style={{ color: result.vars.length <= 4 ? PI_COLORS[i % PI_COLORS.length] : '#7c3aed' }}>
+                                    {pi.term}
+                                  </span>
+                                </span>
+                              ))
+                        )}
+                      </div>
+                    </div>
+
+                    {qmResult.type === 'terms' && qmResult.pis.length > 0 && (
+                      <div>
+                        <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Prime Implicants</div>
+                        <div className="overflow-x-auto rounded-xl border border-gray-200">
+                          <table className="w-full text-xs border-collapse">
+                            <thead>
+                              <tr className="bg-gray-50">
+                                {result.vars.length <= 4 && (
+                                  <th className="px-2 py-2 text-center text-gray-500 border-b border-r border-gray-200 w-8">Grp</th>
+                                )}
+                                <th className="px-3 py-2 text-left text-gray-500 font-semibold border-b border-r border-gray-200">Pattern</th>
+                                <th className="px-3 py-2 text-left text-gray-500 font-semibold border-b border-r border-gray-200">Minterms</th>
+                                <th className="px-3 py-2 text-left text-gray-500 font-semibold border-b border-gray-200">Term</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {qmResult.pis.map((pi, i) => (
+                                <tr key={i} className="hover:bg-gray-50/50">
+                                  {result.vars.length <= 4 && (
+                                    <td className="px-2 py-1.5 border-r border-b border-gray-100 text-center">
+                                      <span
+                                        style={{
+                                          background: PI_COLORS[i % PI_COLORS.length],
+                                          width: 14, height: 14,
+                                          display: 'inline-block',
+                                          borderRadius: 3,
+                                          verticalAlign: 'middle',
+                                        }}
+                                      />
+                                    </td>
+                                  )}
+                                  <td className="px-3 py-1.5 border-r border-b border-gray-100 font-mono tracking-widest">
+                                    {pi.pattern.split('').map((ch, k) => (
+                                      <span
+                                        key={k}
+                                        className={
+                                          ch === '_' ? 'text-gray-300' :
+                                          ch === '1' ? 'text-emerald-600 font-bold' :
+                                          'text-red-500 font-bold'
+                                        }
+                                      >
+                                        {ch === '_' ? '─' : ch}
+                                      </span>
+                                    ))}
+                                  </td>
+                                  <td className="px-3 py-1.5 border-r border-b border-gray-100 font-mono text-gray-600">
+                                    {pi.minterms.join(', ')}
+                                  </td>
+                                  <td
+                                    className="px-3 py-1.5 border-b border-gray-100 font-mono font-semibold"
+                                    style={{ color: result.vars.length <= 4 ? PI_COLORS[i % PI_COLORS.length] : '#7c3aed' }}
+                                  >
+                                    {pi.term}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                        {result.vars.length <= 4 && (
+                          <p className="mt-1 text-[10px] text-gray-400">
+                            Group colors match the K-map highlights below. Each color covers one prime implicant&apos;s cells.
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {/* K-map */}
                 {kmap && (
                   <div>
                     <h3 className="text-sm font-bold text-gray-900 mb-2 flex items-center gap-2">
                       <span className="w-1 h-4 rounded bg-primary-500" />
                       Karnaugh map
+                      {kmapHighlights && qmResult?.type === 'terms' && qmResult.pis.length > 0 && (
+                        <span className="text-[10px] font-medium text-violet-600 bg-violet-50 border border-violet-200 rounded-full px-2 py-0.5">
+                          Prime implicant groups highlighted
+                        </span>
+                      )}
                     </h3>
                     <div className="overflow-x-auto rounded-xl border border-gray-200 inline-block">
                       <table className="border-collapse text-sm font-mono">
@@ -544,11 +848,21 @@ export default function TruthTableGeneratorClient() {
                           {kmap.cells.map((row, ri) => (
                             <tr key={ri}>
                               <th className="border border-gray-200 bg-gray-100 px-2 py-1 text-sky-700 text-xs">{kmap.headerCol[ri]}</th>
-                              {row.map((cell, ci) => (
-                                <td key={ci} className={`border border-gray-200 px-3 py-2 text-center font-semibold ${cell ? 'bg-emerald-100 text-emerald-800' : 'bg-red-50 text-red-600'}`}>
-                                  {cell}
-                                </td>
-                              ))}
+                              {row.map((cell, ci) => {
+                                const hIdx = kmapHighlights?.[ri]?.[ci] ?? null;
+                                const hlStyle = hIdx !== null
+                                  ? { boxShadow: `inset 0 0 0 3px ${PI_COLORS[hIdx]}` }
+                                  : undefined;
+                                return (
+                                  <td
+                                    key={ci}
+                                    className={`border border-gray-200 px-3 py-2 text-center font-semibold ${cell ? 'bg-emerald-100 text-emerald-800' : 'bg-red-50 text-red-600'}`}
+                                    style={hlStyle}
+                                  >
+                                    {cell}
+                                  </td>
+                                );
+                              })}
                             </tr>
                           ))}
                         </tbody>
@@ -609,7 +923,7 @@ export default function TruthTableGeneratorClient() {
           </div>
         </div>
 
-        {/* SEO: educational content for students and CS audience */}
+        {/* SEO: educational content */}
         <article className="mt-12 rounded-2xl bg-white shadow-xl shadow-gray-200/50 border border-gray-200/80 overflow-hidden p-8 md:p-10">
           <section className="mb-10">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">What Is a Truth Table?</h2>

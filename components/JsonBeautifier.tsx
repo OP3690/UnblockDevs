@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useMemo, useEffect } from 'react';
-import { Upload, FileText, X, Copy, Check, Download, ChevronRight, ChevronDown, Minus, Search, BarChart3, Code2, Eye, ExternalLink, AlertTriangle, Wrench, Shield, GitCompare, Sparkles, Database, FileCode } from 'lucide-react';
+import { Upload, FileText, X, Copy, Check, Download, ChevronRight, ChevronDown, Minus, Search, BarChart3, Code2, AlertTriangle, Wrench, Shield, GitCompare, Sparkles, FileCode, Play } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { validateJson } from '@/lib/jsonParser';
 import { trackCopy, trackCtaClick } from '@/lib/analytics';
@@ -21,6 +21,289 @@ import {
   type ArrayAnalysis,
   type SensitiveMatch,
 } from '@/lib/jsonWorkbench';
+
+// ─── JSONPath Evaluator ───────────────────────────────────────────────────────
+function evaluateJsonPath(root: any, pathStr: string): any[] {
+  const path = pathStr.trim();
+  if (path === '$') return [root];
+  if (!path.startsWith('$')) throw new Error('JSONPath must start with $');
+
+  const segments: Array<{ type: string; value: any }> = [];
+  let i = 1;
+
+  while (i < path.length) {
+    if (path[i] === '.') {
+      if (path[i + 1] === '.') {
+        i += 2;
+        let key = '';
+        while (i < path.length && path[i] !== '.' && path[i] !== '[') key += path[i++];
+        segments.push({ type: 'recursive', value: key || '*' });
+      } else {
+        i++;
+        let key = '';
+        while (i < path.length && path[i] !== '.' && path[i] !== '[') key += path[i++];
+        if (key === '*') segments.push({ type: 'wildcard', value: null });
+        else if (key) segments.push({ type: 'key', value: key });
+      }
+    } else if (path[i] === '[') {
+      i++;
+      let depth = 1, content = '';
+      while (i < path.length && depth > 0) {
+        if (path[i] === '[') depth++;
+        else if (path[i] === ']') { depth--; if (depth === 0) { i++; break; } }
+        content += path[i++];
+      }
+      content = content.trim();
+      if (content === '*') {
+        segments.push({ type: 'wildcard', value: null });
+      } else if (content.startsWith('?')) {
+        segments.push({ type: 'filter', value: content.slice(1).trim() });
+      } else if (content.includes(':') && !/^['"]/.test(content)) {
+        const [s, e] = content.split(':');
+        segments.push({ type: 'slice', value: { start: s.trim() ? parseInt(s) : undefined, end: e.trim() ? parseInt(e) : undefined } });
+      } else if ((content.startsWith("'") && content.endsWith("'")) || (content.startsWith('"') && content.endsWith('"'))) {
+        segments.push({ type: 'key', value: content.slice(1, -1) });
+      } else if (/^-?\d+$/.test(content)) {
+        segments.push({ type: 'index', value: parseInt(content) });
+      } else if (content) {
+        segments.push({ type: 'key', value: content });
+      }
+    } else {
+      i++;
+    }
+  }
+
+  function evalFilter(item: any, expr: string): boolean {
+    const inner = expr.startsWith('(') && expr.endsWith(')') ? expr.slice(1, -1) : expr;
+    const opMatch = inner.match(/^@\.(\w+)\s*(===?|!==?|>=|<=|>|<)\s*(.+)$/);
+    if (opMatch) {
+      const [, field, op, rawVal] = opMatch;
+      const itemVal = (item as Record<string, any>)?.[field];
+      const trimmed = rawVal.trim();
+      let compareVal: any;
+      if (trimmed === 'null') compareVal = null;
+      else if (trimmed === 'true') compareVal = true;
+      else if (trimmed === 'false') compareVal = false;
+      else if ((trimmed.startsWith("'") && trimmed.endsWith("'")) || (trimmed.startsWith('"') && trimmed.endsWith('"')))
+        compareVal = trimmed.slice(1, -1);
+      else compareVal = parseFloat(trimmed);
+      if (op === '==' || op === '===') return itemVal == compareVal;
+      if (op === '!=' || op === '!==') return itemVal != compareVal;
+      if (op === '>') return itemVal > compareVal;
+      if (op === '<') return itemVal < compareVal;
+      if (op === '>=') return itemVal >= compareVal;
+      if (op === '<=') return itemVal <= compareVal;
+    }
+    const existMatch = inner.match(/^@\.(\w+)$/);
+    if (existMatch) return existMatch[1] in ((item as any) ?? {});
+    return false;
+  }
+
+  function applySegment(nodes: any[], seg: { type: string; value: any }): any[] {
+    const out: any[] = [];
+    for (const node of nodes) {
+      if (seg.type === 'key') {
+        if (node !== null && typeof node === 'object' && !Array.isArray(node) && seg.value in node)
+          out.push(node[seg.value]);
+      } else if (seg.type === 'index') {
+        if (Array.isArray(node)) {
+          const idx = seg.value < 0 ? node.length + seg.value : seg.value;
+          if (idx >= 0 && idx < node.length) out.push(node[idx]);
+        }
+      } else if (seg.type === 'wildcard') {
+        if (Array.isArray(node)) out.push(...node);
+        else if (node !== null && typeof node === 'object') out.push(...Object.values(node));
+      } else if (seg.type === 'recursive') {
+        const rec = (n: any): void => {
+          if (n === null || typeof n !== 'object') return;
+          if (seg.value === '*') {
+            const children: any[] = Array.isArray(n) ? n : Object.values(n);
+            children.forEach(c => { out.push(c); rec(c); });
+          } else {
+            if (!Array.isArray(n) && seg.value in n) out.push(n[seg.value]);
+            const children: any[] = Array.isArray(n) ? n : Object.values(n);
+            children.forEach(c => rec(c));
+          }
+        };
+        rec(node);
+      } else if (seg.type === 'filter') {
+        if (Array.isArray(node)) {
+          for (const item of node) {
+            try { if (evalFilter(item, seg.value)) out.push(item); } catch { /* skip */ }
+          }
+        }
+      } else if (seg.type === 'slice') {
+        if (Array.isArray(node)) {
+          const len = node.length;
+          const start = seg.value.start !== undefined ? (seg.value.start < 0 ? len + seg.value.start : seg.value.start) : 0;
+          const end = seg.value.end !== undefined ? (seg.value.end < 0 ? len + seg.value.end : seg.value.end) : len;
+          out.push(...node.slice(start, end));
+        }
+      }
+    }
+    return out;
+  }
+
+  return segments.reduce((nodes, seg) => applySegment(nodes, seg), [root]);
+}
+
+// ─── JSON → YAML ──────────────────────────────────────────────────────────────
+function jsonToYaml(obj: any, indent: number = 0): string {
+  const I = '  '.repeat(indent);
+
+  if (obj === null) return 'null';
+  if (typeof obj === 'boolean') return String(obj);
+  if (typeof obj === 'number') return String(obj);
+  if (typeof obj === 'string') {
+    if (obj === '') return '""';
+    if (obj.includes('\n')) {
+      return `|\n${obj.split('\n').map(line => `${I}  ${line}`).join('\n')}`;
+    }
+    const needsQuote =
+      /[:#{}\[\],&*?|>!'@`]/.test(obj) ||
+      /^\s|\s$/.test(obj) ||
+      /^[-?]/.test(obj) ||
+      /^(true|false|null|yes|no|on|off)$/i.test(obj) ||
+      /^\d/.test(obj);
+    return needsQuote ? `"${obj.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"` : obj;
+  }
+
+  if (Array.isArray(obj)) {
+    if (obj.length === 0) return '[]';
+    return obj.map(item => {
+      if (item !== null && typeof item === 'object' && !Array.isArray(item) && Object.keys(item).length > 0) {
+        const nested = jsonToYaml(item, indent + 1);
+        const lines = nested.split('\n');
+        const prefix = I + '  ';
+        const firstLine = lines[0].startsWith(prefix) ? lines[0].slice(prefix.length) : lines[0].trimStart();
+        const rest = lines.slice(1).join('\n');
+        return `${I}- ${firstLine}${rest ? '\n' + rest : ''}`;
+      }
+      if (Array.isArray(item)) {
+        if (item.length === 0) return `${I}- []`;
+        return `${I}-\n${jsonToYaml(item, indent + 1)}`;
+      }
+      return `${I}- ${jsonToYaml(item, 0)}`;
+    }).join('\n');
+  }
+
+  if (typeof obj === 'object') {
+    if (Object.keys(obj).length === 0) return '{}';
+    return Object.entries(obj).map(([key, val]) => {
+      const yamlKey = /[:#{}\[\],&*?|>!'@`\s]/.test(key) ? `"${key}"` : key;
+      if (val === null || typeof val !== 'object') {
+        return `${I}${yamlKey}: ${jsonToYaml(val, 0)}`;
+      }
+      if (Array.isArray(val)) {
+        if ((val as any[]).length === 0) return `${I}${yamlKey}: []`;
+        return `${I}${yamlKey}:\n${jsonToYaml(val, indent + 1)}`;
+      }
+      if (Object.keys(val as object).length === 0) return `${I}${yamlKey}: {}`;
+      return `${I}${yamlKey}:\n${jsonToYaml(val, indent + 1)}`;
+    }).join('\n');
+  }
+
+  return String(obj);
+}
+
+// ─── Line Diff ────────────────────────────────────────────────────────────────
+type LineDiffEntry = { type: 'added' | 'removed' | 'unchanged'; line: string };
+
+function computeLineDiff(text1: string, text2: string): LineDiffEntry[] {
+  const a = text1.split('\n');
+  const b = text2.split('\n');
+  const MAX = 400;
+  const la = a.slice(0, MAX);
+  const lb = b.slice(0, MAX);
+  const m = la.length, n = lb.length;
+
+  const dp: number[][] = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+  for (let ii = 1; ii <= m; ii++)
+    for (let jj = 1; jj <= n; jj++)
+      dp[ii][jj] = la[ii - 1] === lb[jj - 1] ? dp[ii - 1][jj - 1] + 1 : Math.max(dp[ii - 1][jj], dp[ii][jj - 1]);
+
+  const result: LineDiffEntry[] = [];
+  let i = m, j = n;
+  while (i > 0 || j > 0) {
+    if (i > 0 && j > 0 && la[i - 1] === lb[j - 1]) {
+      result.unshift({ type: 'unchanged', line: la[i - 1] });
+      i--; j--;
+    } else if (j > 0 && (i === 0 || dp[i][j - 1] >= dp[i - 1][j])) {
+      result.unshift({ type: 'added', line: lb[j - 1] });
+      j--;
+    } else {
+      result.unshift({ type: 'removed', line: la[i - 1] });
+      i--;
+    }
+  }
+
+  if (a.length > MAX)
+    for (let k = MAX; k < a.length; k++) result.push({ type: 'unchanged', line: a[k] });
+
+  return result;
+}
+
+// ─── Semantic Diff Summary ────────────────────────────────────────────────────
+interface SemanticDiff { added: number; removed: number; changed: number }
+
+function computeSemanticDiff(a: any, b: any): SemanticDiff {
+  const d: SemanticDiff = { added: 0, removed: 0, changed: 0 };
+  function walk(x: any, y: any) {
+    const xObj = x !== null && typeof x === 'object';
+    const yObj = y !== null && typeof y === 'object';
+    if (!xObj || !yObj) { if (JSON.stringify(x) !== JSON.stringify(y)) d.changed++; return; }
+    if (Array.isArray(x) !== Array.isArray(y)) { d.changed++; return; }
+    if (Array.isArray(x) && Array.isArray(y)) {
+      const max = Math.max(x.length, y.length);
+      for (let i = 0; i < max; i++) {
+        if (i >= x.length) d.added++;
+        else if (i >= y.length) d.removed++;
+        else walk(x[i], y[i]);
+      }
+      return;
+    }
+    const k1 = new Set(Object.keys(x)), k2 = new Set(Object.keys(y));
+    for (const k of k1) { if (!k2.has(k)) d.removed++; else walk(x[k], y[k]); }
+    for (const k of k2) { if (!k1.has(k)) d.added++; }
+  }
+  walk(a, b);
+  return d;
+}
+
+// ─── Common JSONPath Suggestions ──────────────────────────────────────────────
+function generateCommonQueries(json: any): Array<{ label: string; path: string }> {
+  const q: Array<{ label: string; path: string }> = [{ label: 'Entire document ($)', path: '$' }];
+  if (json === null || typeof json !== 'object') return q;
+  if (!Array.isArray(json)) {
+    q.push({ label: 'All top-level values ($.*)', path: '$.*' });
+    Object.entries(json).slice(0, 8).forEach(([key, val]) => {
+      if (Array.isArray(val)) {
+        q.push({ label: `All .${key} items`, path: `$.${key}[*]` });
+        if ((val as any[]).length > 0) {
+          q.push({ label: `First .${key} item`, path: `$.${key}[0]` });
+          if (typeof (val as any[])[0] === 'object' && (val as any[])[0] !== null) {
+            Object.keys((val as any[])[0]).slice(0, 3).forEach(sk =>
+              q.push({ label: `All .${key}[*].${sk}`, path: `$.${key}[*].${sk}` })
+            );
+          }
+        }
+      }
+    });
+  } else {
+    q.push({ label: 'All items ($[*])', path: '$[*]' });
+    q.push({ label: 'First item ($[0])', path: '$[0]' });
+    q.push({ label: 'Last item ($[-1])', path: '$[-1]' });
+    q.push({ label: 'First 5 items ($[0:5])', path: '$[0:5]' });
+    if ((json as any[]).length > 0 && typeof (json as any[])[0] === 'object' && (json as any[])[0] !== null) {
+      Object.keys((json as any[])[0]).slice(0, 5).forEach(k =>
+        q.push({ label: `All .${k} values`, path: `$[*].${k}` })
+      );
+    }
+  }
+  return q;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 interface JsonNode {
   key: string;
@@ -50,7 +333,7 @@ export default function JsonBeautifier() {
   const [copied, setCopied] = useState(false);
   const [indentSize, setIndentSize] = useState(2);
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeTab, setActiveTab] = useState<'beautified' | 'minified' | 'structure' | 'generate'>('beautified');
+  const [activeTab, setActiveTab] = useState<'beautified' | 'minified' | 'structure' | 'query' | 'generate'>('beautified');
   const [highlightNulls, setHighlightNulls] = useState(true);
   const [json2, setJson2] = useState('');
   const [diffMode, setDiffMode] = useState(false);
@@ -61,8 +344,13 @@ export default function JsonBeautifier() {
   const [sensitiveMatches, setSensitiveMatches] = useState<SensitiveMatch[]>([]);
   const [arrayAnalysis, setArrayAnalysis] = useState<ArrayAnalysis | null>(null);
   const [generatedCode, setGeneratedCode] = useState('');
-  const [generateTab, setGenerateTab] = useState<'ts' | 'sql' | 'model' | 'schema'>('ts');
+  const [generateTab, setGenerateTab] = useState<'ts' | 'sql' | 'model' | 'schema' | 'yaml'>('ts');
   const [modelLang, setModelLang] = useState<'typescript' | 'python' | 'go' | 'java' | 'csharp'>('typescript');
+  // JSONPath query state
+  const [jsonPathQuery, setJsonPathQuery] = useState('');
+  const [jsonPathResult, setJsonPathResult] = useState<any[] | null>(null);
+  const [jsonPathError, setJsonPathError] = useState<string | null>(null);
+  const [jsonPathResultCopied, setJsonPathResultCopied] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const resultsSectionRef = useRef<HTMLDivElement>(null);
 
@@ -237,6 +525,11 @@ export default function JsonBeautifier() {
     setArrayAnalysis(null);
     setFileName(null);
     setSearchTerm('');
+    setJson2('');
+    setDiffMode(false);
+    setJsonPathQuery('');
+    setJsonPathResult(null);
+    setJsonPathError(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -321,7 +614,7 @@ export default function JsonBeautifier() {
     toast.success(`Copied ${jpath}`);
   };
 
-  // Update generated code when tab or parsed data changes
+  // Parsed JSON for generate/query tabs
   const parsedForGenerate = useMemo(() => {
     if (!beautifiedJson) return null;
     try {
@@ -330,6 +623,25 @@ export default function JsonBeautifier() {
       return null;
     }
   }, [beautifiedJson]);
+
+  // Diff result (computed when diffMode is on and json2 is provided)
+  const diffResult = useMemo(() => {
+    if (!diffMode || !json2.trim() || !beautifiedJson || !parsedForGenerate) return null;
+    const validation2 = validateJson(json2);
+    if (!validation2.valid) return { error: validation2.error || 'Invalid JSON' } as const;
+    const parsed2 = validation2.data;
+    const indentStr = indentSize === 0 ? '\t' : ' '.repeat(indentSize);
+    const formatted2 = JSON.stringify(parsed2, null, indentStr);
+    const lineDiff = computeLineDiff(beautifiedJson, formatted2);
+    const semantic = computeSemanticDiff(parsedForGenerate, parsed2);
+    return { lineDiff, semantic, formatted2, parsed2 } as const;
+  }, [diffMode, json2, beautifiedJson, parsedForGenerate, indentSize]);
+
+  // Common JSONPath suggestions based on current JSON
+  const commonQueries = useMemo(() => {
+    if (!parsedForGenerate) return [];
+    return generateCommonQueries(parsedForGenerate);
+  }, [parsedForGenerate]);
 
   // ⌘+Enter / Ctrl+Enter keyboard shortcut to format
   useEffect(() => {
@@ -357,6 +669,7 @@ export default function JsonBeautifier() {
       else if (generateTab === 'sql') setGeneratedCode(jsonToSqlTable(parsedForGenerate, 'items'));
       else if (generateTab === 'model') setGeneratedCode(jsonToModel(parsedForGenerate, modelLang, 'Model'));
       else if (generateTab === 'schema') setGeneratedCode(JSON.stringify({ $schema: 'http://json-schema.org/draft-07/schema#', ...jsonToJsonSchema(parsedForGenerate) }, null, 2));
+      else if (generateTab === 'yaml') setGeneratedCode(jsonToYaml(parsedForGenerate));
     } catch {
       setGeneratedCode('Unable to generate');
     }
@@ -376,7 +689,7 @@ export default function JsonBeautifier() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = fileName 
+    a.download = fileName
       ? `${fileName.replace('.json', '')}-${type}.json`
       : `json-${type}-${new Date().toISOString().split('T')[0]}.json`;
     document.body.appendChild(a);
@@ -384,6 +697,19 @@ export default function JsonBeautifier() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     toast.success('File downloaded!');
+  };
+
+  const handleRunJsonPath = () => {
+    if (!parsedForGenerate) { toast.error('Beautify JSON first'); return; }
+    if (!jsonPathQuery.trim()) { setJsonPathResult(null); setJsonPathError(null); return; }
+    try {
+      const results = evaluateJsonPath(parsedForGenerate, jsonPathQuery.trim());
+      setJsonPathResult(results);
+      setJsonPathError(null);
+    } catch (err: any) {
+      setJsonPathResult(null);
+      setJsonPathError(err.message || 'Invalid JSONPath expression');
+    }
   };
 
   const toggleNode = (path: string) => {
@@ -403,19 +729,19 @@ export default function JsonBeautifier() {
 
   const filterNodes = (nodes: JsonNode[], term: string): JsonNode[] => {
     if (!term) return nodes;
-    
+
     return nodes.filter((node) => {
-      const matches = 
+      const matches =
         node.key.toLowerCase().includes(term.toLowerCase()) ||
         node.type.toLowerCase().includes(term.toLowerCase()) ||
         node.path.toLowerCase().includes(term.toLowerCase()) ||
         (typeof node.value === 'string' && node.value.toLowerCase().includes(term.toLowerCase()));
-      
+
       if (node.children) {
         const filteredChildren = filterNodes(node.children, term);
         if (filteredChildren.length > 0) return true;
       }
-      
+
       return matches;
     }).map((node) => {
       if (node.children) {
@@ -460,8 +786,8 @@ export default function JsonBeautifier() {
           <span className="text-purple-600 font-medium text-sm flex-shrink-0">{node.type}</span>
           {!hasChildren && (
             <span className="text-gray-600 ml-2 truncate">
-              {typeof node.value === 'string' 
-                ? `"${String(node.value).substring(0, 80)}${String(node.value).length > 80 ? '...' : ''}"` 
+              {typeof node.value === 'string'
+                ? `"${String(node.value).substring(0, 80)}${String(node.value).length > 80 ? '...' : ''}"`
                 : String(node.value).substring(0, 80)}
             </span>
           )}
@@ -829,7 +1155,7 @@ export default function JsonBeautifier() {
         <div className="rounded-xl border border-zinc-200 bg-white shadow-sm">
           <div className="border-b border-zinc-200">
             <div className="flex items-center justify-between px-6 pt-4">
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <button
                   type="button"
                   onClick={() => setActiveTab('beautified')}
@@ -866,6 +1192,18 @@ export default function JsonBeautifier() {
                 </button>
                 <button
                   type="button"
+                  onClick={() => setActiveTab('query')}
+                  className={`rounded-t-lg px-4 py-2 font-medium transition-colors ${
+                    activeTab === 'query'
+                      ? 'bg-zinc-900 text-white'
+                      : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
+                  }`}
+                >
+                  <Search className="w-4 h-4 inline mr-1" />
+                  Query
+                </button>
+                <button
+                  type="button"
                   onClick={() => setActiveTab('generate')}
                   className={`rounded-t-lg px-4 py-2 font-medium transition-colors ${
                     activeTab === 'generate'
@@ -880,6 +1218,19 @@ export default function JsonBeautifier() {
               <div className="flex gap-2">
                 {activeTab === 'beautified' && beautifiedJson && (
                   <>
+                    <button
+                      type="button"
+                      onClick={() => { setDiffMode(!diffMode); if (diffMode) setJson2(''); }}
+                      className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                        diffMode
+                          ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                          : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
+                      }`}
+                      title="Compare two JSONs"
+                    >
+                      <GitCompare className="w-4 h-4" />
+                      Compare
+                    </button>
                     <button
                       type="button"
                       onClick={() => handleCopy(beautifiedJson)}
@@ -936,6 +1287,22 @@ export default function JsonBeautifier() {
                     </button>
                   </>
                 )}
+                {activeTab === 'query' && jsonPathResult !== null && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const text = JSON.stringify(jsonPathResult, null, 2);
+                      navigator.clipboard.writeText(text);
+                      setJsonPathResultCopied(true);
+                      toast.success('Results copied!');
+                      setTimeout(() => setJsonPathResultCopied(false), 2000);
+                    }}
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                  >
+                    {jsonPathResultCopied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    {jsonPathResultCopied ? 'Copied!' : 'Copy results'}
+                  </button>
+                )}
                 {activeTab === 'generate' && generatedCode && (
                   <button
                     type="button"
@@ -951,17 +1318,104 @@ export default function JsonBeautifier() {
           </div>
 
           <div className="p-6">
+            {/* ── Beautified Tab ── */}
             {activeTab === 'beautified' && beautifiedJson && (
               <div>
                 {diffMode && (
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Compare with JSON 2</label>
+                  <div className="mb-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <label className="block text-sm font-medium text-gray-700">JSON 2 — paste to compare</label>
+                      {json2.trim() && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const tmp = jsonText;
+                            setJsonText(json2);
+                            setJson2(tmp);
+                            beautifyJson(json2, indentSize);
+                          }}
+                          className="text-xs font-medium text-emerald-700 hover:text-emerald-900 flex items-center gap-1 px-2 py-1 rounded hover:bg-emerald-50"
+                        >
+                          ⇄ Swap JSON 1 &amp; 2
+                        </button>
+                      )}
+                    </div>
                     <textarea
                       value={json2}
                       onChange={(e) => setJson2(e.target.value)}
                       placeholder="Paste second JSON for comparison..."
                       className="h-32 w-full resize-none rounded-lg border-2 border-zinc-300 p-4 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600"
                     />
+
+                    {/* Diff result */}
+                    {json2.trim() && diffResult && (
+                      'error' in diffResult ? (
+                        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+                          JSON 2 is invalid: {diffResult.error}
+                        </div>
+                      ) : (
+                        <div className="space-y-3">
+                          {/* Summary bar */}
+                          <div className={`flex flex-wrap items-center gap-3 p-3 rounded-lg border text-sm ${
+                            diffResult.semantic.added === 0 && diffResult.semantic.removed === 0 && diffResult.semantic.changed === 0
+                              ? 'bg-green-50 border-green-200'
+                              : 'bg-amber-50 border-amber-200'
+                          }`}>
+                            {diffResult.semantic.added === 0 && diffResult.semantic.removed === 0 && diffResult.semantic.changed === 0 ? (
+                              <span className="font-medium text-green-700">JSONs are identical</span>
+                            ) : (
+                              <>
+                                <span className="font-medium text-zinc-700">Diff summary:</span>
+                                {diffResult.semantic.added > 0 && (
+                                  <span className="px-2 py-0.5 bg-green-100 text-green-800 rounded font-medium">
+                                    +{diffResult.semantic.added} added
+                                  </span>
+                                )}
+                                {diffResult.semantic.removed > 0 && (
+                                  <span className="px-2 py-0.5 bg-red-100 text-red-800 rounded font-medium">
+                                    -{diffResult.semantic.removed} removed
+                                  </span>
+                                )}
+                                {diffResult.semantic.changed > 0 && (
+                                  <span className="px-2 py-0.5 bg-amber-100 text-amber-800 rounded font-medium">
+                                    ~{diffResult.semantic.changed} changed
+                                  </span>
+                                )}
+                              </>
+                            )}
+                          </div>
+
+                          {/* Line diff */}
+                          {(diffResult.semantic.added > 0 || diffResult.semantic.removed > 0 || diffResult.semantic.changed > 0) && (
+                            <div className="rounded-lg border border-zinc-200 overflow-hidden">
+                              <div className="bg-zinc-100 px-4 py-2 text-xs font-semibold text-zinc-600 border-b border-zinc-200 flex items-center justify-between">
+                                <span>Unified diff — JSON 1 (red) vs JSON 2 (green)</span>
+                                <span className="text-zinc-400 font-normal">{diffResult.lineDiff.filter(l => l.type !== 'unchanged').length} changed lines</span>
+                              </div>
+                              <div className="overflow-x-auto max-h-96 scrollbar-thin font-mono text-xs">
+                                {diffResult.lineDiff.map((entry, idx) => (
+                                  <div
+                                    key={idx}
+                                    className={`flex px-2 py-0.5 whitespace-pre ${
+                                      entry.type === 'added'
+                                        ? 'bg-green-50 text-green-800'
+                                        : entry.type === 'removed'
+                                        ? 'bg-red-50 text-red-800'
+                                        : 'text-zinc-400'
+                                    }`}
+                                  >
+                                    <span className="select-none w-4 flex-shrink-0 mr-2">
+                                      {entry.type === 'added' ? '+' : entry.type === 'removed' ? '-' : ' '}
+                                    </span>
+                                    <span>{entry.line}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )
+                    )}
                   </div>
                 )}
                 <pre className={`bg-gray-50 p-4 rounded-lg border border-gray-200 overflow-x-auto scrollbar-thin text-sm ${highlightNulls ? 'highlight-nulls' : ''}`}>
@@ -970,12 +1424,14 @@ export default function JsonBeautifier() {
               </div>
             )}
 
+            {/* ── Minified Tab ── */}
             {activeTab === 'minified' && minifiedJson && (
               <pre className="bg-gray-50 p-4 rounded-lg border border-gray-200 overflow-x-auto scrollbar-thin text-sm">
                 <code>{minifiedJson}</code>
               </pre>
             )}
 
+            {/* ── Structure Tab ── */}
             {activeTab === 'structure' && jsonStructure.length > 0 && (
               <div>
                 <div className="mb-4">
@@ -1009,10 +1465,117 @@ export default function JsonBeautifier() {
               </div>
             )}
 
+            {/* ── Query Tab ── */}
+            {activeTab === 'query' && (
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-semibold text-zinc-800 mb-1">JSONPath Expression</label>
+                  <p className="text-xs text-zinc-500 mb-3">
+                    Supports: <code className="bg-zinc-100 px-1 rounded">$</code> root,{' '}
+                    <code className="bg-zinc-100 px-1 rounded">.key</code> child,{' '}
+                    <code className="bg-zinc-100 px-1 rounded">[*]</code> wildcard,{' '}
+                    <code className="bg-zinc-100 px-1 rounded">..key</code> recursive,{' '}
+                    <code className="bg-zinc-100 px-1 rounded">[0]</code> / <code className="bg-zinc-100 px-1 rounded">[-1]</code> index,{' '}
+                    <code className="bg-zinc-100 px-1 rounded">[0:3]</code> slice,{' '}
+                    <code className="bg-zinc-100 px-1 rounded">[?(@.price &lt; 10)]</code> filter
+                  </p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={jsonPathQuery}
+                      onChange={(e) => setJsonPathQuery(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === 'Enter') handleRunJsonPath(); }}
+                      placeholder="e.g. $.users[*].name"
+                      className="flex-1 rounded-lg border border-zinc-300 px-4 py-2.5 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleRunJsonPath}
+                      disabled={!parsedForGenerate}
+                      className="flex items-center gap-2 px-5 py-2.5 bg-emerald-700 text-white rounded-lg text-sm font-semibold hover:bg-emerald-800 disabled:bg-zinc-300 disabled:cursor-not-allowed transition-colors"
+                    >
+                      <Play className="w-4 h-4" />
+                      Run
+                    </button>
+                  </div>
+                </div>
+
+                {/* Common queries */}
+                {commonQueries.length > 0 && (
+                  <div>
+                    <label className="block text-xs font-medium text-zinc-600 mb-1.5">Common queries</label>
+                    <div className="flex flex-wrap gap-2">
+                      {commonQueries.slice(0, 14).map((q) => (
+                        <button
+                          key={q.path}
+                          type="button"
+                          onClick={() => {
+                            setJsonPathQuery(q.path);
+                            if (parsedForGenerate) {
+                              try {
+                                const results = evaluateJsonPath(parsedForGenerate, q.path);
+                                setJsonPathResult(results);
+                                setJsonPathError(null);
+                              } catch (err: any) {
+                                setJsonPathResult(null);
+                                setJsonPathError(err.message);
+                              }
+                            }
+                          }}
+                          className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-mono bg-zinc-100 text-zinc-700 rounded-md hover:bg-zinc-200 border border-zinc-200 transition-colors"
+                          title={q.label}
+                        >
+                          {q.path}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Error */}
+                {jsonPathError && (
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 flex items-start gap-2">
+                    <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                    {jsonPathError}
+                  </div>
+                )}
+
+                {/* Results */}
+                {jsonPathResult !== null && !jsonPathError && (
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-zinc-700">
+                        Results
+                        <span className="ml-2 px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full text-xs font-semibold">
+                          {jsonPathResult.length} match{jsonPathResult.length !== 1 ? 'es' : ''}
+                        </span>
+                      </span>
+                    </div>
+                    {jsonPathResult.length === 0 ? (
+                      <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-500 text-center">
+                        No matches found for this expression
+                      </div>
+                    ) : (
+                      <pre className="bg-gray-50 p-4 rounded-lg border border-gray-200 overflow-x-auto scrollbar-thin text-sm font-mono max-h-96">
+                        <code>{JSON.stringify(jsonPathResult, null, 2)}</code>
+                      </pre>
+                    )}
+                  </div>
+                )}
+
+                {jsonPathResult === null && !jsonPathError && (
+                  <div className="p-6 bg-zinc-50 border border-dashed border-zinc-300 rounded-lg text-sm text-zinc-400 text-center">
+                    Enter a JSONPath expression above and press Run (or Enter) to query your JSON
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ── Generate Tab ── */}
             {activeTab === 'generate' && (
               <div>
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {(['ts', 'sql', 'model', 'schema'] as const).map((tab) => (
+                  {(['ts', 'sql', 'model', 'schema', 'yaml'] as const).map((tab) => (
                     <button
                       key={tab}
                       type="button"
@@ -1025,6 +1588,7 @@ export default function JsonBeautifier() {
                       {tab === 'sql' && 'SQL table'}
                       {tab === 'model' && 'API model'}
                       {tab === 'schema' && 'JSON Schema'}
+                      {tab === 'yaml' && 'YAML'}
                     </button>
                   ))}
                   {generateTab === 'model' && (
@@ -1095,4 +1659,3 @@ export default function JsonBeautifier() {
     </div>
   );
 }
-

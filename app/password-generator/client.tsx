@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import {
   Copy, Check, Eye, EyeOff, RefreshCw, Shield, Lock,
   Key, AlertTriangle, ChevronDown, ChevronRight,
-  Zap, Hash, Database,
+  Zap, Hash, Database, QrCode, Download,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy, trackCtaClick } from '@/lib/analytics';
@@ -31,7 +31,72 @@ const STRENGTH_META: Record<StrengthLevel, { bar: string; text: string; pct: num
   'Extreme':   { bar: 'bg-emerald-600', text: 'text-emerald-800', pct: 100 },
 };
 
-/* ─── small helper ────────────────────────────────────────────── */
+/* ─── pronounceable password generator ───────────────────── */
+const CONSONANTS = ['b','c','d','f','g','h','j','k','l','m','n','p','r','s','t','v','w','x','y','z'];
+const VOWELS = ['a','e','i','o','u'];
+const SYMBOLS_LIST = ['!','@','#','$','%','&','*','+','?'];
+
+function cryptoRandInt(max: number): number {
+  const arr = new Uint32Array(1);
+  crypto.getRandomValues(arr);
+  return arr[0] % max;
+}
+
+function generatePronounceable(
+  length: number,
+  format: 'lowercase' | 'capitalize' | 'camelcase',
+  includeNumber: boolean,
+  includeSymbol: boolean,
+): string {
+  // Reserve chars for suffix
+  const suffixLen = (includeNumber ? 2 : 0) + (includeSymbol ? 1 : 0);
+  const baseLen = Math.max(2, length - suffixLen);
+
+  let result = '';
+  // Randomly start with consonant or vowel
+  let useConsonant = cryptoRandInt(2) === 0;
+
+  for (let i = 0; i < baseLen; i++) {
+    if (useConsonant) {
+      result += CONSONANTS[cryptoRandInt(CONSONANTS.length)];
+    } else {
+      result += VOWELS[cryptoRandInt(VOWELS.length)];
+    }
+    useConsonant = !useConsonant;
+  }
+
+  // Apply format
+  if (format === 'capitalize') {
+    result = result.charAt(0).toUpperCase() + result.slice(1);
+  } else if (format === 'camelcase') {
+    // Capitalize every 3–5 chars boundary (syllable-ish)
+    let out = '';
+    let capitalizeNext = true;
+    for (let i = 0; i < result.length; i++) {
+      if (capitalizeNext) {
+        out += result[i].toUpperCase();
+        capitalizeNext = false;
+      } else {
+        out += result[i];
+        // Capitalize roughly every 4 chars
+        if ((i + 1) % 4 === 0) capitalizeNext = true;
+      }
+    }
+    result = out;
+  }
+
+  // Append suffix
+  if (includeSymbol) {
+    result += SYMBOLS_LIST[cryptoRandInt(SYMBOLS_LIST.length)];
+  }
+  if (includeNumber) {
+    result += String(cryptoRandInt(10)) + String(cryptoRandInt(10));
+  }
+
+  return result;
+}
+
+/* ─── small helper ────────────────────────────────────────── */
 function CopyBtn({ value, label = 'Copy' }: { value: string; label?: string }) {
   const [ok, setOk] = useState(false);
   const copy = () => {
@@ -67,6 +132,13 @@ export default function PasswordGeneratorClient() {
   });
   const [pattern, setPattern]   = useState('AAaa11!!');
   const [policy, setPolicy]     = useState({ minNumbers: 1, minSymbols: 1, noRepeating: false });
+
+  /* ── pronounceable state ── */
+  const [pronounceableLen, setPronouncableLen] = useState(12);
+  const [pronounceableFormat, setPronouncableFormat] = useState<'lowercase' | 'capitalize' | 'camelcase'>('lowercase');
+  const [pronounceableNumber, setPronouncableNumber] = useState(true);
+  const [pronounceableSymbol, setPronouncableSymbol] = useState(false);
+
   const [password, setPassword] = useState('');
   const [passwords, setPasswords] = useState<string[]>([]);
   const [count, setCount]       = useState(1);
@@ -79,6 +151,12 @@ export default function PasswordGeneratorClient() {
   const [hashes, setHashes]     = useState<{ sha256: string; sha512: string } | null>(null);
   const [copied, setCopied]     = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+
+  /* ── QR code state ── */
+  const [showQR, setShowQR]     = useState(false);
+  const canvasRef               = useRef<HTMLCanvasElement>(null);
+  const qriousLoadedRef         = useRef(false);
+
   const clipboardTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   /* ── derived ── */
@@ -107,12 +185,20 @@ export default function PasswordGeneratorClient() {
     } else if (mode === 'passphrase') {
       const p = generatePassphrase(passphraseOpts);
       setPassword(p); setPasswords([p]);
-    } else {
+    } else if (mode === 'pattern') {
       const p = generateFromPattern(pattern, charset);
       setPassword(p); setPasswords([p]);
+    } else if (mode === 'pronounceable') {
+      const p = generatePronounceable(pronounceableLen, pronounceableFormat, pronounceableNumber, pronounceableSymbol);
+      const list = [p];
+      for (let i = 1; i < count; i++) {
+        list.push(generatePronounceable(pronounceableLen, pronounceableFormat, pronounceableNumber, pronounceableSymbol));
+      }
+      setPassword(p); setPasswords(list);
     }
     setPwned(null); setHashes(null);
-  }, [mode, length, charset, passphraseOpts, pattern, policy, count]);
+  }, [mode, length, charset, passphraseOpts, pattern, policy, count,
+      pronounceableLen, pronounceableFormat, pronounceableNumber, pronounceableSymbol]);
 
   useEffect(() => { generate(); }, []);
 
@@ -135,6 +221,54 @@ export default function PasswordGeneratorClient() {
       if (raw) setHistory(JSON.parse(raw));
     } catch { /* ignore */ }
   }, []);
+
+  /* ── QR code rendering ── */
+  useEffect(() => {
+    if (!showQR || !password) return;
+
+    const renderQR = () => {
+      if (!canvasRef.current) return;
+      new (window as any).QRious({
+        element: canvasRef.current,
+        value: password,
+        size: 200,
+        background: 'white',
+        foreground: '#1e293b',
+      });
+    };
+
+    if (qriousLoadedRef.current) {
+      // Library already loaded — just re-render
+      renderQR();
+      return;
+    }
+
+    // Check if it's already on the page (e.g. from a previous mount)
+    if ((window as any).QRious) {
+      qriousLoadedRef.current = true;
+      renderQR();
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js';
+    script.onload = () => {
+      qriousLoadedRef.current = true;
+      renderQR();
+    };
+    script.onerror = () => toast.error('Failed to load QR library');
+    document.head.appendChild(script);
+  }, [showQR, password]);
+
+  const downloadQR = () => {
+    if (!canvasRef.current) return;
+    const dataUrl = canvasRef.current.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = 'password-qr.png';
+    a.click();
+    toast.success('QR code downloaded');
+  };
 
   /* ── handlers ── */
   const addToHistory = (p: string) => {
@@ -244,13 +378,13 @@ export default function PasswordGeneratorClient() {
           {/* Mode tabs */}
           <div className="mb-5">
             <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-zinc-400">Mode</p>
-            <div className="flex gap-1.5">
-              {(['random', 'passphrase', 'pattern'] as const).map((m) => (
+            <div className="grid grid-cols-2 gap-1.5">
+              {(['random', 'passphrase', 'pattern', 'pronounceable'] as const).map((m) => (
                 <button
                   key={m}
                   type="button"
                   onClick={() => setMode(m)}
-                  className={`flex-1 rounded-lg px-2 py-2 text-[12.5px] font-semibold capitalize transition-all ${
+                  className={`rounded-lg px-2 py-2 text-[12px] font-semibold capitalize transition-all ${
                     mode === m
                       ? 'bg-zinc-900 text-white shadow-sm'
                       : 'border border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50'
@@ -428,6 +562,88 @@ export default function PasswordGeneratorClient() {
             </div>
           )}
 
+          {/* ── Pronounceable options ── */}
+          {mode === 'pronounceable' && (
+            <div className="space-y-4">
+              {/* Length */}
+              <div>
+                <div className="mb-1.5 flex items-center justify-between">
+                  <p className="text-[12px] font-semibold text-zinc-700">Length</p>
+                  <span className="rounded-md bg-zinc-900 px-2 py-0.5 font-mono text-[12px] font-bold text-white">{pronounceableLen}</span>
+                </div>
+                <input
+                  type="range" min={8} max={24} value={pronounceableLen}
+                  onChange={(e) => setPronouncableLen(parseInt(e.target.value, 10))}
+                  className="w-full accent-emerald-600"
+                />
+                <div className="mt-0.5 flex justify-between text-[10px] text-zinc-400">
+                  <span>8</span><span>24</span>
+                </div>
+              </div>
+
+              {/* Format */}
+              <div>
+                <p className="mb-2 text-[12px] font-semibold text-zinc-700">Format</p>
+                <div className="flex flex-col gap-1.5">
+                  {([
+                    { value: 'lowercase',  label: 'lowercase only' },
+                    { value: 'capitalize', label: 'Capitalize first' },
+                    { value: 'camelcase',  label: 'CamelCase' },
+                  ] as const).map(({ value, label }) => (
+                    <label key={value} className="flex cursor-pointer items-center gap-2 text-[12.5px] text-zinc-700">
+                      <input
+                        type="radio"
+                        name="pronounceable-format"
+                        value={value}
+                        checked={pronounceableFormat === value}
+                        onChange={() => setPronouncableFormat(value)}
+                        className="accent-emerald-600"
+                      />
+                      {label}
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Toggles */}
+              <div className="space-y-2">
+                <label className="flex cursor-pointer items-center gap-2 text-[12.5px] text-zinc-700">
+                  <input
+                    type="checkbox"
+                    checked={pronounceableNumber}
+                    onChange={(e) => setPronouncableNumber(e.target.checked)}
+                    className="rounded border-zinc-300 accent-emerald-600"
+                  />
+                  Append 2 digits
+                </label>
+                <label className="flex cursor-pointer items-center gap-2 text-[12.5px] text-zinc-700">
+                  <input
+                    type="checkbox"
+                    checked={pronounceableSymbol}
+                    onChange={(e) => setPronouncableSymbol(e.target.checked)}
+                    className="rounded border-zinc-300 accent-emerald-600"
+                  />
+                  Append 1 symbol
+                </label>
+              </div>
+
+              {/* Bulk count */}
+              <div className="flex items-center gap-2 text-[12.5px] text-zinc-700">
+                <span>Bulk count:</span>
+                <input
+                  type="number" min={1} max={20} value={count}
+                  onChange={(e) => setCount(Math.min(20, Math.max(1, parseInt(e.target.value, 10) || 1)))}
+                  className="w-14 rounded-lg border border-zinc-200 px-2 py-1.5 text-center text-sm"
+                />
+                <span className="text-zinc-400">/ 20</span>
+              </div>
+
+              <div className="rounded-lg border border-zinc-100 bg-zinc-50 px-3 py-2 text-[11px] text-zinc-500">
+                Generates phonetically pronounceable passwords using consonant-vowel alternation (e.g. <span className="font-mono">givomaruze</span>, <span className="font-mono">Tibonakufi42</span>).
+              </div>
+            </div>
+          )}
+
           {/* Generate button */}
           <button
             type="button"
@@ -467,6 +683,19 @@ export default function PasswordGeneratorClient() {
                 {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
                 {copied ? 'Copied!' : 'Copy'}
               </button>
+              <button
+                type="button"
+                onClick={() => setShowQR((q) => !q)}
+                className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-semibold transition-all ${
+                  showQR
+                    ? 'border-violet-300 bg-violet-50 text-violet-700'
+                    : 'border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50'
+                }`}
+                aria-label={showQR ? 'Hide QR' : 'Show QR'}
+              >
+                <QrCode className="h-3.5 w-3.5" />
+                {showQR ? 'Hide QR' : 'QR'}
+              </button>
             </div>
           </div>
 
@@ -482,6 +711,28 @@ export default function PasswordGeneratorClient() {
             <div className="mt-2.5 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-[12px] text-amber-700">
               <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
               This matches a common weak pattern — consider regenerating.
+            </div>
+          )}
+
+          {/* QR code output */}
+          {showQR && (
+            <div className="mt-4 flex flex-col items-center gap-3 rounded-xl border border-violet-100 bg-violet-50/50 p-4">
+              <p className="self-start text-[11px] font-semibold uppercase tracking-[0.08em] text-violet-500">QR Code</p>
+              <canvas
+                ref={canvasRef}
+                width={200}
+                height={200}
+                className="rounded-lg border border-zinc-200 bg-white shadow-sm"
+              />
+              <button
+                type="button"
+                onClick={downloadQR}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-violet-200 bg-white px-3 py-1.5 text-[12px] font-semibold text-violet-700 transition-colors hover:bg-violet-50"
+              >
+                <Download className="h-3.5 w-3.5" />
+                Download QR
+              </button>
+              <p className="text-[10.5px] text-zinc-400">Scan to fill the password on any device.</p>
             </div>
           )}
         </div>

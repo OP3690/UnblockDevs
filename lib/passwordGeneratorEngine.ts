@@ -31,7 +31,7 @@ const WORDLIST = [
   'node', 'opal', 'peak', 'quill', 'rust', 'spark', 'teal', 'unit', 'veil', 'wave',
 ];
 
-export type GenerationMode = 'random' | 'passphrase' | 'pattern';
+export type GenerationMode = 'random' | 'passphrase' | 'pattern' | 'pronounceable';
 
 export interface CharSetOptions {
   uppercase: boolean;

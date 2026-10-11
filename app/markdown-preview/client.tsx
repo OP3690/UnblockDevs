@@ -12,6 +12,8 @@ import {
   FileText,
   BookOpen,
   RefreshCw,
+  Upload,
+  X,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy, trackCtaClick } from '@/lib/analytics';
@@ -130,8 +132,10 @@ function parseMarkdown(input: string): string {
         const langBadge = lang
           ? `<span class="md-code-lang">${escapeHtml(lang)}</span>`
           : '';
+        // Add language class so highlight.js can identify the language
+        const langClass = lang ? ` class="language-${escapeHtml(lang)}"` : '';
         blocks.push(
-          `<div class="md-code-block">${langBadge}<pre class="md-pre"><code>${codeContent}</code></pre></div>`
+          `<div class="md-code-block">${langBadge}<pre class="md-pre"><code${langClass}>${codeContent}</code></pre></div>`
         );
         continue;
       }
@@ -380,6 +384,10 @@ right here (two trailing spaces).
 Here is a second paragraph with **nested *emphasis* inside bold** text.
 `;
 
+// ── localStorage key ──────────────────────────────────────────────────────
+
+const LS_KEY = 'md-preview-autosave';
+
 // ── View modes ───────────────────────────────────────────────────────────
 
 type ViewMode = 'split' | 'preview' | 'editor';
@@ -391,11 +399,76 @@ export default function MarkdownPreviewClient() {
   const [renderedHtml, setRenderedHtml] = useState('');
   const [viewMode, setViewMode] = useState<ViewMode>('split');
   const [copied, setCopied] = useState<'html' | 'md' | null>(null);
+  const [hljsLoaded, setHljsLoaded] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const autosaveRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const editorRef = useRef<HTMLTextAreaElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
+  const isSyncingScroll = useRef(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const stats = getStats(markdown);
 
-  // Debounced parse
+  // ── Restore from localStorage on mount ──────────────────────────────────
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(LS_KEY);
+      if (saved) {
+        setMarkdown(saved);
+        toast.success('Restored from autosave', { duration: 3000 });
+      }
+    } catch {
+      // localStorage may be unavailable (private browsing, etc.)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // ── Autosave to localStorage (1s debounce) ───────────────────────────────
+  useEffect(() => {
+    if (autosaveRef.current) clearTimeout(autosaveRef.current);
+    autosaveRef.current = setTimeout(() => {
+      try {
+        localStorage.setItem(LS_KEY, markdown);
+      } catch {
+        // ignore
+      }
+    }, 1000);
+    return () => {
+      if (autosaveRef.current) clearTimeout(autosaveRef.current);
+    };
+  }, [markdown]);
+
+  // ── Load highlight.js from CDN ───────────────────────────────────────────
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((window as any).hljs) {
+      setHljsLoaded(true);
+      return;
+    }
+    const script = document.createElement('script');
+    script.src =
+      'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js';
+    script.onload = () => setHljsLoaded(true);
+    script.onerror = () => {
+      // Silently fail — code blocks still render, just without token colors
+    };
+    document.head.appendChild(script);
+  }, []);
+
+  // ── Apply syntax highlighting after each render ───────────────────────────
+  useEffect(() => {
+    if (!hljsLoaded || !renderedHtml) return;
+    // requestAnimationFrame ensures React has committed the DOM update
+    requestAnimationFrame(() => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as any).hljs?.highlightAll();
+    });
+  }, [hljsLoaded, renderedHtml]);
+
+  // ── Debounced markdown parse ─────────────────────────────────────────────
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
@@ -406,7 +479,7 @@ export default function MarkdownPreviewClient() {
     };
   }, [markdown]);
 
-  // ⌘+Enter shortcut → copy HTML
+  // ── ⌘+Enter shortcut → copy HTML ────────────────────────────────────────
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
@@ -419,6 +492,80 @@ export default function MarkdownPreviewClient() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [renderedHtml]);
 
+  // ── Scroll sync (split mode only) ────────────────────────────────────────
+  const handleEditorScroll = useCallback(() => {
+    if (viewMode !== 'split' || isSyncingScroll.current) return;
+    const editor = editorRef.current;
+    const preview = previewRef.current;
+    if (!editor || !preview) return;
+    const maxScroll = editor.scrollHeight - editor.clientHeight;
+    if (maxScroll <= 0) return;
+    const pct = editor.scrollTop / maxScroll;
+    isSyncingScroll.current = true;
+    preview.scrollTop = pct * (preview.scrollHeight - preview.clientHeight);
+    requestAnimationFrame(() => { isSyncingScroll.current = false; });
+  }, [viewMode]);
+
+  const handlePreviewScroll = useCallback(() => {
+    if (viewMode !== 'split' || isSyncingScroll.current) return;
+    const editor = editorRef.current;
+    const preview = previewRef.current;
+    if (!editor || !preview) return;
+    const maxScroll = preview.scrollHeight - preview.clientHeight;
+    if (maxScroll <= 0) return;
+    const pct = preview.scrollTop / maxScroll;
+    isSyncingScroll.current = true;
+    editor.scrollTop = pct * (editor.scrollHeight - editor.clientHeight);
+    requestAnimationFrame(() => { isSyncingScroll.current = false; });
+  }, [viewMode]);
+
+  // ── Drag and drop ─────────────────────────────────────────────────────────
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    const files = Array.from(e.dataTransfer.files);
+    const validFile = files.find((f) => /\.(md|txt|markdown)$/i.test(f.name));
+    if (!validFile) {
+      toast.error('Please drop a .md, .txt, or .markdown file.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const content = ev.target?.result as string;
+      setMarkdown(content ?? '');
+      toast.success(`Loaded: ${validFile.name}`);
+    };
+    reader.readAsText(validFile);
+  }, []);
+
+  const handleFileOpen = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const content = ev.target?.result as string;
+      setMarkdown(content ?? '');
+      toast.success(`Loaded: ${file.name}`);
+    };
+    reader.readAsText(file);
+    // Reset so the same file can be re-opened
+    e.target.value = '';
+  }, []);
+
+  // ── Actions ───────────────────────────────────────────────────────────────
   const handleCopyHtml = useCallback(async () => {
     if (!renderedHtml) {
       toast.error('Nothing to copy — write some Markdown first.');
@@ -487,6 +634,14 @@ export default function MarkdownPreviewClient() {
   const handleClear = useCallback(() => {
     setMarkdown('');
     setRenderedHtml('');
+    try { localStorage.removeItem(LS_KEY); } catch { /* ignore */ }
+  }, []);
+
+  const handleClearSaved = useCallback(() => {
+    try { localStorage.removeItem(LS_KEY); } catch { /* ignore */ }
+    setMarkdown('');
+    setRenderedHtml('');
+    toast.success('Autosave cleared.');
   }, []);
 
   const handleLoadSample = useCallback(() => {
@@ -498,7 +653,7 @@ export default function MarkdownPreviewClient() {
   const showPreview = viewMode === 'split' || viewMode === 'preview';
 
   const toolContent = (<>
-      {/* ── Inline styles for preview ─────────────────────── */}
+      {/* ── Inline styles for preview + hljs GitHub Dark theme ──────────── */}
       <style>{`
         .md-preview h1,.md-h1{font-size:2em;font-weight:700;margin:0.67em 0;color:#18181b;border-bottom:2px solid #e4e4e7;padding-bottom:0.3em;line-height:1.2;}
         .md-preview h2,.md-h2{font-size:1.5em;font-weight:700;margin:0.75em 0 0.5em;color:#18181b;border-bottom:1px solid #e4e4e7;padding-bottom:0.25em;line-height:1.3;}
@@ -513,10 +668,10 @@ export default function MarkdownPreviewClient() {
         .md-preview em{font-style:italic;}
         .md-preview del{text-decoration:line-through;color:#71717a;}
         .md-preview code,.md-inline-code{background:#f4f4f5;border:1px solid #e4e4e7;border-radius:4px;padding:0.15em 0.45em;font-family:'Fira Mono','Courier New',monospace;font-size:0.875em;color:#be185d;}
-        .md-code-block{position:relative;margin:1.2em 0;border-radius:10px;overflow:hidden;background:#18181b;border:1px solid #27272a;}
-        .md-code-lang{position:absolute;top:8px;right:12px;font-size:11px;font-family:monospace;color:#a1a1aa;background:#27272a;padding:2px 8px;border-radius:4px;text-transform:lowercase;letter-spacing:0.05em;}
+        .md-code-block{position:relative;margin:1.2em 0;border-radius:10px;overflow:hidden;background:#0d1117;border:1px solid #30363d;}
+        .md-code-lang{position:absolute;top:8px;right:12px;font-size:11px;font-family:monospace;color:#8b949e;background:#161b22;padding:2px 8px;border-radius:4px;text-transform:lowercase;letter-spacing:0.05em;z-index:1;}
         .md-pre{margin:0;padding:1.25rem 1.25rem 1rem;overflow-x:auto;}
-        .md-pre code{background:transparent;border:none;padding:0;font-size:0.85em;color:#e4e4e7;font-family:'Fira Mono','Cascadia Code','Courier New',monospace;line-height:1.6;}
+        .md-pre code{background:transparent!important;border:none!important;padding:0!important;font-size:0.85em;font-family:'Fira Mono','Cascadia Code','Courier New',monospace;line-height:1.6;}
         .md-blockquote{border-left:4px solid #10b981;margin:1em 0;padding:0.6em 1.2em;background:#f0fdf4;border-radius:0 8px 8px 0;color:#166534;}
         .md-blockquote p{margin:0;color:#166534;}
         .md-ul,.md-ol{margin:0.8em 0;padding-left:1.75em;color:#27272a;}
@@ -534,7 +689,33 @@ export default function MarkdownPreviewClient() {
         .md-tr:hover .md-td{background:#f0fdf4;}
         .md-hr{border:none;border-top:2px solid #e4e4e7;margin:1.5em 0;}
         .md-img{max-width:100%;height:auto;border-radius:8px;margin:0.5em 0;}
+
+        /* ── highlight.js GitHub Dark theme (compact) ── */
+        .hljs{color:#e6edf3;background:transparent}
+        .hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}
+        .hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}
+        .hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}
+        .hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}
+        .hljs-built_in,.hljs-symbol{color:#ffa657}
+        .hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}
+        .hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}
+        .hljs-subst{color:#e6edf3}
+        .hljs-section{color:#1f6feb;font-weight:700}
+        .hljs-bullet{color:#f2cc60}
+        .hljs-emphasis{color:#e6edf3;font-style:italic}
+        .hljs-strong{color:#e6edf3;font-weight:700}
+        .hljs-addition{color:#aff5b4;background-color:#033a16}
+        .hljs-deletion{color:#ffdcd7;background-color:#67060c}
       `}</style>
+
+      {/* Hidden file input for "Open file" */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".md,.txt,.markdown"
+        className="hidden"
+        onChange={handleFileOpen}
+      />
 
       <div className="flex flex-col gap-4">
         {/* ── Toolbar ──────────────────────────────────────── */}
@@ -576,6 +757,17 @@ export default function MarkdownPreviewClient() {
 
           {/* Action buttons */}
           <div className="flex flex-wrap items-center gap-2">
+            {/* Open file */}
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              title="Open .md / .txt / .markdown file"
+              className="flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 shadow-sm transition-all hover:border-zinc-300 hover:bg-zinc-50"
+            >
+              <Upload className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Open file</span>
+            </button>
+
             <button
               type="button"
               onClick={handleCopyHtml}
@@ -614,6 +806,17 @@ export default function MarkdownPreviewClient() {
             >
               <Download className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">.md</span>
+            </button>
+
+            {/* Clear saved (autosave) */}
+            <button
+              type="button"
+              onClick={handleClearSaved}
+              title="Clear autosave and reset editor"
+              className="flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-500 shadow-sm transition-all hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-700"
+            >
+              <X className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Clear saved</span>
             </button>
 
             <button
@@ -662,20 +865,36 @@ export default function MarkdownPreviewClient() {
                 )}
               </div>
 
-              {/* Textarea */}
-              {markdown === '' && (
-                <div className="pointer-events-none absolute inset-0 hidden" />
-              )}
-              <textarea
-                value={markdown}
-                onChange={(e) => setMarkdown(e.target.value)}
-                placeholder="# Start typing Markdown here...\n\nOr click **Load sample** to see a full example."
-                className="flex-1 resize-none bg-zinc-900 p-4 font-mono text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none min-h-[500px] leading-relaxed"
-                spellCheck={false}
-                autoComplete="off"
-                autoCorrect="off"
-                autoCapitalize="off"
-              />
+              {/* Textarea wrapper — drag-and-drop target */}
+              <div
+                className="relative flex-1"
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
+                {/* Drag overlay */}
+                {isDragging && (
+                  <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
+                    <div className="absolute inset-2 rounded-lg border-2 border-dashed border-emerald-400 bg-emerald-950/70 flex items-center justify-center">
+                      <p className="text-emerald-300 text-sm font-medium">
+                        Drop .md / .txt / .markdown to load
+                      </p>
+                    </div>
+                  </div>
+                )}
+                <textarea
+                  ref={editorRef}
+                  value={markdown}
+                  onChange={(e) => setMarkdown(e.target.value)}
+                  onScroll={handleEditorScroll}
+                  placeholder={"# Start typing Markdown here...\n\nOr click **Load sample** to see a full example.\n\nTip: drag and drop a .md or .txt file here."}
+                  className="w-full resize-none bg-zinc-900 p-4 font-mono text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none min-h-[500px] leading-relaxed"
+                  spellCheck={false}
+                  autoComplete="off"
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                />
+              </div>
             </div>
           )}
 
@@ -691,7 +910,11 @@ export default function MarkdownPreviewClient() {
               </div>
 
               {/* Rendered output */}
-              <div className="flex-1 overflow-y-auto p-6 min-h-[500px]">
+              <div
+                ref={previewRef}
+                className="flex-1 overflow-y-auto p-6 min-h-[500px]"
+                onScroll={handlePreviewScroll}
+              >
                 {renderedHtml ? (
                   <div
                     className="md-preview"
@@ -721,7 +944,7 @@ export default function MarkdownPreviewClient() {
 
         {/* ── Keyboard shortcut hint ───────────────────────── */}
         <p className="text-center text-xs text-zinc-400">
-          Press <kbd className="rounded border border-zinc-200 bg-zinc-100 px-1.5 py-0.5 font-mono text-[11px] text-zinc-600">⌘+Enter</kbd> (Mac) or <kbd className="rounded border border-zinc-200 bg-zinc-100 px-1.5 py-0.5 font-mono text-[11px] text-zinc-600">Ctrl+Enter</kbd> (Windows) to copy HTML
+          Press <kbd className="rounded border border-zinc-200 bg-zinc-100 px-1.5 py-0.5 font-mono text-[11px] text-zinc-600">⌘+Enter</kbd> (Mac) or <kbd className="rounded border border-zinc-200 bg-zinc-100 px-1.5 py-0.5 font-mono text-[11px] text-zinc-600">Ctrl+Enter</kbd> (Windows) to copy HTML &nbsp;·&nbsp; Drag &amp; drop .md files onto the editor
         </p>
       </div>
     </>);

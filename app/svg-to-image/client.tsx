@@ -16,6 +16,7 @@ import {
   Download,
   Code2,
   Lock,
+  Copy,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCtaClick } from '@/lib/analytics';
@@ -116,6 +117,95 @@ function replaceColorInSvg(svgString: string, fromHex: string, toHex: string): s
   return svgString.replace(new RegExp(escaped, 'gi'), toHex);
 }
 
+/** Format byte count as human-readable string */
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return bytes + 'B';
+  return (bytes / 1024).toFixed(1) + 'KB';
+}
+
+/** Run basic SVG minification and return result + size info */
+function minifySvgText(svgString: string): { result: string; originalSize: number; minifiedSize: number } {
+  let s = svgString;
+  // 1. Remove XML comments
+  s = s.replace(/<!--[\s\S]*?-->/g, '');
+  // 2. Remove <?xml ...?> processing instruction
+  s = s.replace(/<\?xml[\s\S]*?\?>/gi, '');
+  // 3. Remove <!DOCTYPE ...> declarations
+  s = s.replace(/<!DOCTYPE[\s\S]*?>/gi, '');
+  // 4. Remove empty <g></g> groups (repeat for nested empties)
+  for (let i = 0; i < 3; i++) {
+    s = s.replace(/<g\s*>\s*<\/g>/g, '');
+  }
+  // 5. Remove invisible elements (display:none / visibility:hidden) that have no id or class
+  s = s.replace(
+    /<[a-zA-Z][^>]*style\s*=\s*["'][^"']*(?:display\s*:\s*none|visibility\s*:\s*hidden)[^"']*["'][^>]*(?:\/>|>[\s\S]*?<\/[a-zA-Z][^>]*>)/g,
+    (match) => {
+      if (/\bid\s*=/.test(match) || /\bclass\s*=/.test(match)) return match;
+      return '';
+    }
+  );
+  // 6. Collapse whitespace between tags
+  s = s.replace(/>\s+</g, '><');
+  s = s.replace(/[ \t]{2,}/g, ' ');
+  // 7. Remove SVG default attribute values
+  s = s.replace(/\s+fill="black"/gi, '');
+  s = s.replace(/\s+stroke="none"/gi, '');
+  // Final trim
+  s = s.trim();
+  return { result: s, originalSize: svgString.length, minifiedSize: s.length };
+}
+
+/** Pretty-print SVG with 2-space indentation */
+function prettifySvgText(svgString: string): string {
+  const INDENT = '  ';
+  let indent = 0;
+  let result = '';
+
+  // Normalize: collapse whitespace between tags
+  const normalized = svgString.replace(/>\s+</g, '><').trim();
+
+  // Tokenize: split on tag boundaries
+  const tagRe = /<[^>]*\/?>/g;
+  let lastIndex = 0;
+  const tokens: string[] = [];
+  let match: RegExpExecArray | null;
+  while ((match = tagRe.exec(normalized)) !== null) {
+    if (match.index > lastIndex) {
+      const text = normalized.slice(lastIndex, match.index).trim();
+      if (text) tokens.push(text);
+    }
+    tokens.push(match[0]);
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < normalized.length) {
+    const remaining = normalized.slice(lastIndex).trim();
+    if (remaining) tokens.push(remaining);
+  }
+
+  for (const token of tokens) {
+    const t = token.trim();
+    if (!t) continue;
+
+    if (t.startsWith('</')) {
+      // Closing tag — dedent first
+      indent = Math.max(0, indent - 1);
+      result += INDENT.repeat(indent) + t + '\n';
+    } else if (t.endsWith('/>') || t.startsWith('<?') || t.startsWith('<!')) {
+      // Self-closing tag, PI, or doctype
+      result += INDENT.repeat(indent) + t + '\n';
+    } else if (t.startsWith('<')) {
+      // Opening tag
+      result += INDENT.repeat(indent) + t + '\n';
+      indent++;
+    } else {
+      // Text content
+      result += INDENT.repeat(indent) + t + '\n';
+    }
+  }
+
+  return result.trim();
+}
+
 export interface SvgOverrides {
   fillOverride: boolean;
   fillColor: string;
@@ -207,7 +297,10 @@ export default function SvgToImageClient() {
   const [bgColor, setBgColor] = useState('#ffffff');
   const [bgTransparent, setBgTransparent] = useState(true);
   const [jpegQuality, setJpegQuality] = useState(0.92);
+  const [webpQuality, setWebpQuality] = useState(0.92);
   const [previewStatus, setPreviewStatus] = useState<'success' | 'error' | ''>('');
+  const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'error'>('idle');
+  const [minifyInfo, setMinifyInfo] = useState('');
   const previewWrapRef = useRef<HTMLDivElement>(null);
 
   // Advanced: overrides (colors, lines, borders)
@@ -316,7 +409,7 @@ export default function SvgToImageClient() {
   }, [getPreviewSvgString]);
 
   const exportToCanvas = useCallback(
-    (mimeType: 'image/png' | 'image/jpeg', quality?: number): Promise<HTMLCanvasElement> => {
+    (mimeType: 'image/png' | 'image/jpeg' | 'image/webp', quality?: number): Promise<HTMLCanvasElement> => {
       return new Promise((resolve, reject) => {
         const svgString = getExportSvgString();
         if (!svgString.trim()) {
@@ -344,6 +437,8 @@ export default function SvgToImageClient() {
           reject(new Error('Canvas context not available'));
           return;
         }
+        // JPEG has no alpha channel so we always paint a background.
+        // WebP supports transparency, so respect the bgTransparent setting.
         const useBg = mimeType === 'image/jpeg' || !bgTransparent;
         if (useBg) {
           tempCtx.fillStyle = parseColor(bgColor);
@@ -440,6 +535,66 @@ export default function SvgToImageClient() {
       });
   }, [exportToCanvas, jpegQuality]);
 
+  const handleExportWebp = useCallback(() => {
+    trackCtaClick('svg_to_image', 'export', { format: 'webp' });
+    exportToCanvas('image/webp', webpQuality)
+      .then((canvas) => {
+        downloadBlob(canvas.toDataURL('image/webp', webpQuality), 'image.webp');
+        toast.success('WebP downloaded');
+      })
+      .catch(() => {
+        setPreviewStatus('error');
+        toast.error('Add valid SVG first');
+      });
+  }, [exportToCanvas, webpQuality]);
+
+  const handleCopyPng = useCallback(() => {
+    exportToCanvas('image/png')
+      .then((canvas) => {
+        canvas.toBlob(async (blob) => {
+          if (!blob) {
+            setCopyStatus('error');
+            setTimeout(() => setCopyStatus('idle'), 3000);
+            return;
+          }
+          try {
+            await navigator.clipboard.write([
+              new ClipboardItem({ 'image/png': blob }),
+            ]);
+            setCopyStatus('copied');
+            setTimeout(() => setCopyStatus('idle'), 2000);
+          } catch {
+            setCopyStatus('error');
+            setTimeout(() => setCopyStatus('idle'), 3000);
+          }
+        }, 'image/png');
+      })
+      .catch(() => {
+        setPreviewStatus('error');
+        toast.error('Add valid SVG first');
+      });
+  }, [exportToCanvas]);
+
+  const handleMinify = useCallback(() => {
+    const raw = svgInput.trim();
+    if (!raw) return;
+    const { result, originalSize, minifiedSize } = minifySvgText(raw);
+    setSvgInput(result);
+    const reduction = Math.round((1 - minifiedSize / originalSize) * 100);
+    if (reduction > 0) {
+      setMinifyInfo(`${formatBytes(originalSize)} → ${formatBytes(minifiedSize)} (${reduction}% smaller)`);
+    } else {
+      setMinifyInfo('Already minimal');
+    }
+  }, [svgInput]);
+
+  const handlePrettify = useCallback(() => {
+    const raw = svgInput.trim();
+    if (!raw) return;
+    setSvgInput(prettifySvgText(raw));
+    setMinifyInfo('');
+  }, [svgInput]);
+
   const updateOverride = useCallback(<K extends keyof SvgOverrides>(key: K, value: SvgOverrides[K]) => {
     setOverrides((prev) => ({ ...prev, [key]: value }));
   }, []);
@@ -483,7 +638,7 @@ export default function SvgToImageClient() {
                 </h2>
                 <button
                   type="button"
-                  onClick={() => { setSvgInput(''); setPreviewStatus(''); }}
+                  onClick={() => { setSvgInput(''); setPreviewStatus(''); setMinifyInfo(''); }}
                   className="px-3 py-1.5 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-red-50 hover:border-red-200 hover:text-red-700 transition-colors"
                 >
                   Clear
@@ -494,7 +649,7 @@ export default function SvgToImageClient() {
                 <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wide mr-0.5">Samples:</span>
                 <button
                   type="button"
-                  onClick={() => { trackCtaClick('svg_to_image', 'load_sample'); setSvgInput(SAMPLE_SVG); }}
+                  onClick={() => { trackCtaClick('svg_to_image', 'load_sample'); setSvgInput(SAMPLE_SVG); setMinifyInfo(''); }}
                   className="px-2.5 py-1 text-xs font-medium text-slate-700 bg-slate-50 border border-slate-200 rounded-lg hover:bg-primary-50 hover:border-primary-200 hover:text-primary-700 transition-colors"
                 >
                   ✅ Default
@@ -503,16 +658,41 @@ export default function SvgToImageClient() {
                   <button
                     key={s.label}
                     type="button"
-                    onClick={() => { trackCtaClick('svg_to_image', 'load_sample'); setSvgInput(s.svg); }}
+                    onClick={() => { trackCtaClick('svg_to_image', 'load_sample'); setSvgInput(s.svg); setMinifyInfo(''); }}
                     className="px-2.5 py-1 text-xs font-medium text-slate-700 bg-slate-50 border border-slate-200 rounded-lg hover:bg-primary-50 hover:border-primary-200 hover:text-primary-700 transition-colors"
                   >
                     {s.emoji} {s.label}
                   </button>
                 ))}
               </div>
+              {/* SVG tools row: Minify + Prettify */}
+              <div className="flex flex-wrap items-center gap-2 px-4 py-2 border-b border-slate-100 bg-slate-50/40 shrink-0">
+                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wide mr-0.5">Tools:</span>
+                <button
+                  type="button"
+                  onClick={handleMinify}
+                  disabled={!svgInput.trim()}
+                  className="px-2.5 py-1 text-xs font-medium text-violet-700 bg-violet-50 border border-violet-200 rounded-lg hover:bg-violet-100 hover:border-violet-300 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  Minify SVG
+                </button>
+                <button
+                  type="button"
+                  onClick={handlePrettify}
+                  disabled={!svgInput.trim()}
+                  className="px-2.5 py-1 text-xs font-medium text-teal-700 bg-teal-50 border border-teal-200 rounded-lg hover:bg-teal-100 hover:border-teal-300 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  Prettify SVG
+                </button>
+                {minifyInfo && (
+                  <span className="text-[11px] font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
+                    {minifyInfo}
+                  </span>
+                )}
+              </div>
               <textarea
                 value={svgInput}
-                onChange={(e) => setSvgInput(e.target.value)}
+                onChange={(e) => { setSvgInput(e.target.value); setMinifyInfo(''); }}
                 placeholder="Paste your SVG code here, or click Sample to try an example…"
                 className="w-full flex-1 min-h-[200px] p-4 font-mono text-sm text-slate-800 placeholder:text-slate-400 border-0 focus:ring-2 focus:ring-inset focus:ring-primary-500/20 resize-none custom-scrollbar"
                 spellCheck={false}
@@ -581,7 +761,7 @@ export default function SvgToImageClient() {
                     onChange={(e) => setBgTransparent(e.target.checked)}
                     className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
                   />
-                  Transparent background (PNG only)
+                  Transparent background (PNG / WebP only)
                 </label>
               </div>
               {!bgTransparent && (
@@ -619,6 +799,21 @@ export default function SvgToImageClient() {
                   <span className="text-sm font-medium text-gray-600 w-10">{Math.round(jpegQuality * 100)}%</span>
                 </div>
               </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">WebP quality</label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="range"
+                    min={0.5}
+                    max={1}
+                    step={0.05}
+                    value={webpQuality}
+                    onChange={(e) => setWebpQuality(Number(e.target.value))}
+                    className="flex-1 h-2 rounded-lg appearance-none bg-gray-200 accent-primary-600"
+                  />
+                  <span className="text-sm font-medium text-gray-600 w-10">{Math.round(webpQuality * 100)}%</span>
+                </div>
+              </div>
               <div className="pt-2 space-y-2">
                 <button
                   type="button"
@@ -637,6 +832,38 @@ export default function SvgToImageClient() {
                   <Download className="w-4 h-4" aria-hidden />
                   Export JPEG
                 </button>
+                <div>
+                  <button
+                    type="button"
+                    onClick={handleExportWebp}
+                    className="w-full px-4 py-3 text-sm font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 flex items-center justify-center gap-2"
+                  >
+                    <Download className="w-4 h-4" aria-hidden />
+                    Export WebP
+                  </button>
+                  <p className="text-[11px] text-slate-400 mt-1 text-center">(WebP, PNG fallback in Safari)</p>
+                </div>
+                <div>
+                  <button
+                    type="button"
+                    onClick={handleCopyPng}
+                    className={`w-full px-4 py-3 text-sm font-semibold rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 flex items-center justify-center gap-2 ${
+                      copyStatus === 'copied'
+                        ? 'text-emerald-700 bg-emerald-50 border border-emerald-300 focus:ring-emerald-400'
+                        : copyStatus === 'error'
+                        ? 'text-amber-700 bg-amber-50 border border-amber-200 focus:ring-amber-400'
+                        : 'text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 focus:ring-slate-400'
+                    }`}
+                  >
+                    <Copy className="w-4 h-4" aria-hidden />
+                    {copyStatus === 'copied' ? 'Copied!' : copyStatus === 'error' ? 'Copy failed' : 'Copy as PNG'}
+                  </button>
+                  {copyStatus === 'error' && (
+                    <p className="text-[11px] text-amber-600 mt-1 text-center">
+                      Use Download instead — clipboard copy not supported in this browser
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
-import { Copy, Check, RotateCcw, Plus, Trash2, Shuffle, Repeat2, Share2 } from 'lucide-react';
+import { Copy, Check, RotateCcw, Plus, Trash2, Shuffle, Repeat2, Share2, Download } from 'lucide-react';
 import ToolPageShell from '@/components/tools/ToolPageShell';
 import { createPortal } from 'react-dom';
 
@@ -10,7 +10,8 @@ import { createPortal } from 'react-dom';
 type GradientType = 'linear' | 'radial' | 'conic';
 type PreviewShape = 'rect' | 'circle' | 'pill' | 'button' | 'card' | 'text';
 type RadialSize  = 'farthest-corner' | 'farthest-side' | 'closest-corner' | 'closest-side';
-type ExportTab   = 'css' | 'tailwind' | 'scss' | 'cssvar';
+type ExportTab   = 'css' | 'tailwind' | 'scss' | 'cssvar' | 'animation' | 'svg';
+type AnimStyle   = 'shift' | 'pulse' | 'rotate';
 
 interface ColorStop {
   id: number;
@@ -57,6 +58,150 @@ function buildCss(
   return `${pre}conic-gradient(from ${conicFrom}deg at ${conicX}% ${conicY}%, ${stopsStr})`;
 }
 
+function buildAnimationCss(
+  type: GradientType,
+  stops: ColorStop[],
+  angle: number,
+  radialShape: string,
+  radialSize: RadialSize,
+  radialX: number,
+  radialY: number,
+  conicFrom: number,
+  conicX: number,
+  conicY: number,
+  repeating: boolean,
+  duration: number,
+  animStyle: AnimStyle,
+): string {
+  const sorted = [...stops].sort((a, b) => a.position - b.position);
+
+  if (animStyle === 'shift') {
+    const doubled = [
+      ...sorted.map(s => `${stopColor(s)} ${(s.position / 2).toFixed(1)}%`),
+      ...sorted.map(s => `${stopColor(s)} ${(50 + s.position / 2).toFixed(1)}%`),
+    ].join(', ');
+    let bg: string;
+    if (type === 'linear')      bg = `linear-gradient(${angle}deg, ${doubled})`;
+    else if (type === 'radial') bg = `radial-gradient(${radialShape} ${radialSize} at ${radialX}% ${radialY}%, ${doubled})`;
+    else                        bg = `conic-gradient(from ${conicFrom}deg at ${conicX}% ${conicY}%, ${doubled})`;
+    return `.animated-gradient {
+  background: ${bg};
+  background-size: 200% 100%;
+  animation: gradientShift ${duration}s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}`;
+  }
+
+  if (animStyle === 'pulse') {
+    const baseCss = buildCss(type, stops, angle, radialShape, radialSize, radialX, radialY, conicFrom, conicX, conicY, repeating);
+    return `.animated-gradient {
+  background: ${baseCss};
+  animation: gradientPulse ${duration}s ease-in-out infinite;
+}
+
+@keyframes gradientPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.7; }
+}`;
+  }
+
+  // rotate — linear only
+  if (type === 'linear') {
+    const stopsStr = sorted.map(s => `${stopColor(s)} ${s.position}%`).join(', ');
+    return `.animated-gradient {
+  --grad-angle: ${angle}deg;
+  background: linear-gradient(var(--grad-angle), ${stopsStr});
+  animation: gradientRotate ${duration}s linear infinite;
+}
+
+/* @property enables custom property interpolation */
+@property --grad-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes gradientRotate {
+  0%   { --grad-angle: 0deg; }
+  100% { --grad-angle: 360deg; }
+}`;
+  }
+
+  // Rotate on non-linear: fall back to pulse
+  const baseCss = buildCss(type, stops, angle, radialShape, radialSize, radialX, radialY, conicFrom, conicX, conicY, repeating);
+  return `.animated-gradient {
+  background: ${baseCss};
+  animation: gradientPulse ${duration}s ease-in-out infinite;
+}
+
+/* Note: Rotate only works on linear gradients — falling back to Pulse */
+@keyframes gradientPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.7; }
+}`;
+}
+
+function buildSvgExport(
+  type: GradientType,
+  stops: ColorStop[],
+  angle: number,
+  radialX: number,
+  radialY: number,
+): { svg: string; note: string | null } {
+  const sorted = [...stops].sort((a, b) => a.position - b.position);
+  const stopsXml = sorted
+    .map(s => `      <stop offset="${s.position}%" style="stop-color:${s.color};stop-opacity:${(s.opacity / 100).toFixed(2)}" />`)
+    .join('\n');
+
+  if (type === 'conic') {
+    const s0 = sorted[0];
+    const sN = sorted[sorted.length - 1];
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="${s0.position}%" style="stop-color:${s0.color};stop-opacity:${(s0.opacity / 100).toFixed(2)}" />
+      <stop offset="${sN.position}%" style="stop-color:${sN.color};stop-opacity:${(sN.opacity / 100).toFixed(2)}" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="200" fill="url(#grad)" />
+</svg>`;
+    return { svg, note: 'Conic gradients are not supported in SVG — exported as linear' };
+  }
+
+  if (type === 'linear') {
+    const rad = ((angle - 90) * Math.PI) / 180;
+    const x1 = Math.round((0.5 - Math.sin(rad) * 0.5) * 100);
+    const y1 = Math.round((0.5 - Math.cos(rad) * 0.5) * 100);
+    const x2 = Math.round((0.5 + Math.sin(rad) * 0.5) * 100);
+    const y2 = Math.round((0.5 + Math.cos(rad) * 0.5) * 100);
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200">
+  <defs>
+    <linearGradient id="grad" x1="${x1}%" y1="${y1}%" x2="${x2}%" y2="${y2}%">
+${stopsXml}
+    </linearGradient>
+  </defs>
+  <rect width="400" height="200" fill="url(#grad)" />
+</svg>`;
+    return { svg, note: null };
+  }
+
+  // radial
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200">
+  <defs>
+    <radialGradient id="grad" cx="${radialX}%" cy="${radialY}%" r="50%" fx="${radialX}%" fy="${radialY}%">
+${stopsXml}
+    </radialGradient>
+  </defs>
+  <rect width="400" height="200" fill="url(#grad)" />
+</svg>`;
+  return { svg, note: null };
+}
+
 // ── Presets ──────────────────────────────────────────────────────────────────
 
 interface Preset {
@@ -93,7 +238,6 @@ const PRESETS: Preset[] = [
   { name: 'Conic Soft',   type: 'conic', angle: 45, stops: [{ color: '#a855f7', position: 0, opacity: 100 }, { color: '#ec4899', position: 50, opacity: 100 }, { color: '#a855f7', position: 100, opacity: 100 }] },
 ];
 
-// quick CSS for preset thumbnails
 function presetCss(p: Preset): string {
   return buildCss(p.type, p.stops.map((s, i) => ({ ...s, id: i })), p.angle, 'ellipse', 'farthest-corner', 50, 50, 0, 50, 50, false);
 }
@@ -164,7 +308,6 @@ function GradientBar({ css, stops, onAdd, onUpdate, onRemove }: {
         className="relative h-10 w-full rounded-xl cursor-crosshair select-none border border-zinc-200 shadow-inner"
         style={{ background: css }}
       >
-        {/* Checkerboard underlay for transparency */}
         <div className="absolute inset-0 rounded-xl -z-10"
           style={{ backgroundImage: 'repeating-conic-gradient(#ddd 0% 25%, #fff 0% 50%)', backgroundSize: '12px 12px' }} />
         {stops.map(stop => (
@@ -202,6 +345,64 @@ function GradientTool() {
     { id: uid(), color: '#764ba2', position: 100, opacity: 100 },
   ]);
 
+  // ── Undo/Redo history ─────────────────────────────────────────────────────
+  const histRef    = useRef<ColorStop[][]>([]);
+  const histIdxRef = useRef(-1);
+  const [histMeta, setHistMeta] = useState({ index: 0, total: 1 });
+
+  // Seed history with initial stops on mount
+  useEffect(() => {
+    setStops(prev => {
+      histRef.current    = [prev];
+      histIdxRef.current = 0;
+      setHistMeta({ index: 0, total: 1 });
+      return prev;
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const commitStops = useCallback((updater: ColorStop[] | ((prev: ColorStop[]) => ColorStop[])) => {
+    setStops(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      const trimmed = histRef.current.slice(0, histIdxRef.current + 1);
+      const newHist = [...trimmed, next].slice(-50);
+      histRef.current    = newHist;
+      histIdxRef.current = newHist.length - 1;
+      setHistMeta({ index: histIdxRef.current, total: newHist.length });
+      return next;
+    });
+  }, []);
+
+  const undo = useCallback(() => {
+    if (histIdxRef.current <= 0) return;
+    histIdxRef.current -= 1;
+    setStops(histRef.current[histIdxRef.current]);
+    setHistMeta({ index: histIdxRef.current, total: histRef.current.length });
+  }, []);
+
+  const redo = useCallback(() => {
+    if (histIdxRef.current >= histRef.current.length - 1) return;
+    histIdxRef.current += 1;
+    setStops(histRef.current[histIdxRef.current]);
+    setHistMeta({ index: histIdxRef.current, total: histRef.current.length });
+  }, []);
+
+  // Keyboard shortcuts: Cmd+Z / Cmd+Shift+Z / Cmd+Y
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      const mod = /Mac|iPhone|iPad|iPod/.test(navigator.platform) ? e.metaKey : e.ctrlKey;
+      if (!mod) return;
+      if (e.key === 'z' && !e.shiftKey) { e.preventDefault(); undo(); }
+      if ((e.key === 'z' && e.shiftKey) || e.key === 'y') { e.preventDefault(); redo(); }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [undo, redo]);
+
+  // ── Animation state ───────────────────────────────────────────────────────
+  const [animDuration, setAnimDuration] = useState(4);
+  const [animStyle,    setAnimStyle]    = useState<AnimStyle>('shift');
+  const [animPreview,  setAnimPreview]  = useState(false);
+
   // UI state
   const [previewShape, setPreviewShape] = useState<PreviewShape>('rect');
   const [activePreset, setActivePreset] = useState<string | null>('Ocean Drift');
@@ -218,11 +419,54 @@ function GradientTool() {
   );
 
   const exports = useMemo(() => ({
-    css:     `background: ${css};`,
-    tw:      `bg-[${css.replace(/ /g, '_')}]`,
-    scss:    `$gradient: ${css};\n\n.element {\n  background: $gradient;\n}`,
-    cssvar:  `:root {\n  --gradient: ${css};\n}\n\n.element {\n  background: var(--gradient);\n}`,
+    css:    `background: ${css};`,
+    tw:     `bg-[${css.replace(/ /g, '_')}]`,
+    scss:   `$gradient: ${css};\n\n.element {\n  background: $gradient;\n}`,
+    cssvar: `:root {\n  --gradient: ${css};\n}\n\n.element {\n  background: var(--gradient);\n}`,
   }), [css]);
+
+  const animCss = useMemo(
+    () => buildAnimationCss(type, stops, angle, radialShape, radialSize, radialX, radialY, conicFrom, conicX, conicY, repeating, animDuration, animStyle),
+    [type, stops, angle, radialShape, radialSize, radialX, radialY, conicFrom, conicX, conicY, repeating, animDuration, animStyle],
+  );
+
+  const svgExport = useMemo(
+    () => buildSvgExport(type, stops, angle, radialX, radialY),
+    [type, stops, angle, radialX, radialY],
+  );
+
+  // Animation live-preview inline styles
+  const animPreviewStyle = useMemo((): React.CSSProperties => {
+    if (!animPreview) return { background: css };
+    const sorted = [...stops].sort((a, b) => a.position - b.position);
+
+    if (animStyle === 'shift') {
+      const doubled = [
+        ...sorted.map(s => `${stopColor(s)} ${(s.position / 2).toFixed(1)}%`),
+        ...sorted.map(s => `${stopColor(s)} ${(50 + s.position / 2).toFixed(1)}%`),
+      ].join(', ');
+      let bg: string;
+      if (type === 'linear')      bg = `linear-gradient(${angle}deg, ${doubled})`;
+      else if (type === 'radial') bg = `radial-gradient(${radialShape} ${radialSize} at ${radialX}% ${radialY}%, ${doubled})`;
+      else                        bg = `conic-gradient(from ${conicFrom}deg at ${conicX}% ${conicY}%, ${doubled})`;
+      return { background: bg, backgroundSize: '200% 100%', animation: `liveGradShift ${animDuration}s ease infinite` };
+    }
+
+    if (animStyle === 'pulse') {
+      return { background: css, animation: `liveGradPulse ${animDuration}s ease-in-out infinite` };
+    }
+
+    // rotate
+    if (type === 'linear') {
+      const stopsStr = sorted.map(s => `${stopColor(s)} ${s.position}%`).join(', ');
+      return {
+        background: `linear-gradient(var(--grad-angle-live), ${stopsStr})`,
+        animation: `liveGradRotate ${animDuration}s linear infinite`,
+      } as React.CSSProperties;
+    }
+    // non-linear rotate → pulse fallback
+    return { background: css, animation: `liveGradPulse ${animDuration}s ease-in-out infinite` };
+  }, [animPreview, animStyle, animDuration, stops, type, angle, radialShape, radialSize, radialX, radialY, conicFrom, conicX, conicY, css]);
 
   const showToast = useCallback((msg: string) => {
     setToast(msg);
@@ -233,37 +477,50 @@ function GradientTool() {
   const applyPreset = useCallback((p: Preset) => {
     setType(p.type);
     setAngle(p.angle);
-    setStops(p.stops.map(s => ({ ...s, id: uid() })));
+    commitStops(p.stops.map(s => ({ ...s, id: uid() })));
     setActivePreset(p.name);
     setRepeating(false);
-  }, []);
+  }, [commitStops]);
 
   const addStop = useCallback((position = 50) => {
-    setStops(prev => [...prev, { id: uid(), color: randomHex(), position, opacity: 100 }]);
+    commitStops(prev => [...prev, { id: uid(), color: randomHex(), position, opacity: 100 }]);
     setActivePreset(null);
-  }, []);
+  }, [commitStops]);
 
   const removeStop = useCallback((id: number) => {
-    setStops(prev => prev.length > 2 ? prev.filter(s => s.id !== id) : prev);
-  }, []);
+    commitStops(prev => prev.length > 2 ? prev.filter(s => s.id !== id) : prev);
+  }, [commitStops]);
 
   const updateStop = useCallback((id: number, patch: Partial<ColorStop>) => {
-    setStops(prev => prev.map(s => s.id === id ? { ...s, ...patch } : s));
+    commitStops(prev => prev.map(s => s.id === id ? { ...s, ...patch } : s));
     setActivePreset(null);
-  }, []);
+  }, [commitStops]);
 
   const randomize = useCallback(() => {
-    setStops(prev => prev.map(s => ({ ...s, color: randomHex() })));
+    commitStops(prev => prev.map(s => ({ ...s, color: randomHex() })));
     setActivePreset(null);
-  }, []);
+  }, [commitStops]);
 
   const reverse = useCallback(() => {
-    setStops(prev => {
+    commitStops(prev => {
       const sorted = [...prev].sort((a, b) => a.position - b.position);
       return sorted.map((s, i) => ({ ...s, position: sorted[sorted.length - 1 - i].position }));
     });
     setActivePreset(null);
-  }, []);
+  }, [commitStops]);
+
+  const downloadSvg = useCallback(() => {
+    const { svg } = buildSvgExport(type, stops, angle, radialX, radialY);
+    const blob = new Blob([svg], { type: 'image/svg+xml' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = 'gradient.svg';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, [type, stops, angle, radialX, radialY]);
 
   const handleShare = useCallback(() => {
     try {
@@ -290,7 +547,13 @@ function GradientTool() {
       if (d.conicX !== undefined) setConicX(d.conicX);
       if (d.conicY !== undefined) setConicY(d.conicY);
       if (d.repeating !== undefined) setRepeating(d.repeating);
-      if (Array.isArray(d.stops)) setStops(d.stops.map((s: ColorStop) => ({ ...s, id: uid() })));
+      if (Array.isArray(d.stops)) {
+        const newStops = d.stops.map((s: ColorStop) => ({ ...s, id: uid() }));
+        histRef.current    = [newStops];
+        histIdxRef.current = 0;
+        setHistMeta({ index: 0, total: 1 });
+        setStops(newStops);
+      }
       setActivePreset(null);
     } catch {}
   }, []);
@@ -305,6 +568,18 @@ function GradientTool() {
     else { setConicX(x); setConicY(y); }
     setActivePreset(null);
   }, [type]);
+
+  // Export tab content
+  const exportContent = useMemo(() => {
+    switch (exportTab) {
+      case 'css':       return { text: exports.css,    color: 'text-emerald-400' };
+      case 'tailwind':  return { text: exports.tw,     color: 'text-sky-400' };
+      case 'scss':      return { text: exports.scss,   color: 'text-pink-400' };
+      case 'cssvar':    return { text: exports.cssvar, color: 'text-violet-400' };
+      case 'animation': return { text: animCss,        color: 'text-orange-400' };
+      case 'svg':       return { text: svgExport.svg,  color: 'text-cyan-400' };
+    }
+  }, [exportTab, exports, animCss, svgExport]);
 
   const SHAPES: { id: PreviewShape; label: string }[] = [
     { id: 'rect',   label: '▬ Rect' },
@@ -322,15 +597,41 @@ function GradientTool() {
     { value: 'closest-side',    label: 'Closest Side' },
   ];
 
-  // 3×3 direction grid angles (null = center display)
   const DIR_GRID: (number | null)[] = [315, 0, 45, 270, null, 90, 225, 180, 135];
   const DIR_ARROW = ['↖','↑','↗','←','','→','↙','↓','↘'];
 
-  const exportText = exportTab === 'css' ? exports.css : exportTab === 'tailwind' ? exports.tw : exportTab === 'scss' ? exports.scss : exports.cssvar;
-  const exportColor = exportTab === 'css' ? 'text-emerald-400' : exportTab === 'tailwind' ? 'text-sky-400' : exportTab === 'scss' ? 'text-pink-400' : 'text-violet-400';
+  const canUndo = histMeta.index > 0;
+  const canRedo = histMeta.index < histMeta.total - 1;
+
+  const exportCopyLabel: Record<ExportTab, string> = {
+    css: 'Copy CSS', tailwind: 'Copy Tailwind', scss: 'Copy SCSS',
+    cssvar: 'Copy CSS Var', animation: 'Copy Animation', svg: 'Copy SVG',
+  };
 
   return (
     <div className="divide-y divide-zinc-100">
+
+      {/* Injected keyframes for live animation preview */}
+      <style>{`
+        @keyframes liveGradShift {
+          0%   { background-position: 0% 50%; }
+          50%  { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        @keyframes liveGradPulse {
+          0%, 100% { opacity: 1; }
+          50%       { opacity: 0.7; }
+        }
+        @property --grad-angle-live {
+          syntax: '<angle>';
+          initial-value: 0deg;
+          inherits: false;
+        }
+        @keyframes liveGradRotate {
+          0%   { --grad-angle-live: 0deg; }
+          100% { --grad-angle-live: 360deg; }
+        }
+      `}</style>
 
       {/* ── Presets ── */}
       <div className="bg-zinc-50 px-4 py-3 sm:px-5">
@@ -368,34 +669,40 @@ function GradientTool() {
                 Click to move center
               </div>
             )}
+            {animPreview && (
+              <div className="absolute top-2 left-2 rounded-lg bg-orange-50 border border-orange-200 px-2 py-1 text-[10px] text-orange-600 font-semibold pointer-events-none">
+                ▶ Animating
+              </div>
+            )}
 
             {previewShape === 'rect' && (
-              <div className="w-full max-w-sm h-44 rounded-2xl shadow-xl transition-all duration-300" style={{ background: css }} />
+              <div className="w-full max-w-sm h-44 rounded-2xl shadow-xl" style={animPreviewStyle} />
             )}
             {previewShape === 'circle' && (
-              <div className="h-44 w-44 rounded-full shadow-xl transition-all duration-300" style={{ background: css }} />
+              <div className="h-44 w-44 rounded-full shadow-xl" style={animPreviewStyle} />
             )}
             {previewShape === 'pill' && (
-              <div className="h-14 w-60 rounded-full shadow-xl transition-all duration-300" style={{ background: css }} />
+              <div className="h-14 w-60 rounded-full shadow-xl" style={animPreviewStyle} />
             )}
             {previewShape === 'button' && (
-              <button className="px-8 py-3 rounded-xl text-white font-bold text-lg shadow-xl transition-all duration-300 select-none pointer-events-none" style={{ background: css }}>
+              <button className="px-8 py-3 rounded-xl text-white font-bold text-lg shadow-xl select-none pointer-events-none" style={animPreviewStyle}>
                 Click me
               </button>
             )}
             {previewShape === 'text' && (
-              <div className="text-5xl font-black tracking-tight select-none" style={{ background: css, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              <div className="text-5xl font-black tracking-tight select-none"
+                style={{ ...animPreviewStyle, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                 Hello World
               </div>
             )}
             {previewShape === 'card' && (
               <div className="w-full max-w-xs rounded-2xl shadow-2xl overflow-hidden pointer-events-none">
-                <div className="h-24 transition-all duration-300" style={{ background: css }} />
+                <div className="h-24" style={animPreviewStyle} />
                 <div className="bg-white p-4">
                   <div className="h-3 w-24 rounded-full bg-zinc-200 mb-2" />
                   <div className="h-2 w-40 rounded-full bg-zinc-100 mb-1" />
                   <div className="h-2 w-32 rounded-full bg-zinc-100" />
-                  <div className="mt-3 h-7 w-20 rounded-lg" style={{ background: css }} />
+                  <div className="mt-3 h-7 w-20 rounded-lg" style={animPreviewStyle} />
                 </div>
               </div>
             )}
@@ -419,6 +726,8 @@ function GradientTool() {
           {/* Export */}
           <div className="p-4 space-y-3">
             <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Export</p>
+
+            {/* Tab row 1: CSS / Tailwind / SCSS / CSS Var */}
             <div className="flex items-center gap-1 rounded-lg bg-zinc-100 p-1">
               {(['css','tailwind','scss','cssvar'] as ExportTab[]).map(t => (
                 <button key={t} onClick={() => setExportTab(t)}
@@ -427,10 +736,67 @@ function GradientTool() {
                 </button>
               ))}
             </div>
-            <div className="rounded-lg bg-zinc-950 p-3 font-mono text-[11px] leading-relaxed break-all min-h-[56px]">
-              <span className={`${exportColor} whitespace-pre-wrap`}>{exportText}</span>
+
+            {/* Tab row 2: Animation / SVG */}
+            <div className="flex items-center gap-1 rounded-lg bg-zinc-100 p-1">
+              <button onClick={() => setExportTab('animation')}
+                className={`flex-1 rounded-md py-1 text-[11px] font-semibold transition ${exportTab === 'animation' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}>
+                Animation
+              </button>
+              <button onClick={() => setExportTab('svg')}
+                className={`flex-1 rounded-md py-1 text-[11px] font-semibold transition ${exportTab === 'svg' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}>
+                SVG
+              </button>
             </div>
-            <CopyBtn text={exportText} label={`Copy ${exportTab === 'cssvar' ? 'CSS Var' : exportTab === 'tailwind' ? 'Tailwind' : exportTab.toUpperCase()}`} />
+
+            {/* Animation controls */}
+            {exportTab === 'animation' && (
+              <div className="flex flex-wrap items-center gap-3 rounded-lg bg-zinc-50 border border-zinc-100 px-3 py-2.5">
+                <label className="flex items-center gap-1.5 text-[11px] font-semibold text-zinc-600">
+                  Duration
+                  <input type="number" min={1} max={10} value={animDuration}
+                    onChange={e => setAnimDuration(Math.max(1, Math.min(10, Number(e.target.value))))}
+                    className="w-12 rounded-md border border-zinc-200 bg-white px-1.5 py-0.5 text-[11px] text-center outline-none focus:border-blue-400" />
+                  <span className="text-zinc-400 font-normal">s</span>
+                </label>
+                <label className="flex items-center gap-1.5 text-[11px] font-semibold text-zinc-600">
+                  Style
+                  <select value={animStyle} onChange={e => setAnimStyle(e.target.value as AnimStyle)}
+                    className="rounded-md border border-zinc-200 bg-white px-1.5 py-0.5 text-[11px] outline-none focus:border-blue-400 cursor-pointer">
+                    <option value="shift">Shift</option>
+                    <option value="pulse">Pulse</option>
+                    <option value="rotate">Rotate{type !== 'linear' ? ' (linear only)' : ''}</option>
+                  </select>
+                </label>
+                <button onClick={() => setAnimPreview(v => !v)}
+                  className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-semibold transition ${animPreview ? 'bg-orange-100 text-orange-700' : 'bg-zinc-100 text-zinc-500 hover:bg-zinc-200'}`}>
+                  {animPreview ? '⏸ Stop preview' : '▶ Preview animation'}
+                </button>
+              </div>
+            )}
+
+            {/* SVG conic note */}
+            {exportTab === 'svg' && svgExport.note && (
+              <div className="rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 text-[11px] text-amber-700">
+                ⚠ {svgExport.note}
+              </div>
+            )}
+
+            {/* Code block */}
+            <div className="rounded-lg bg-zinc-950 p-3 font-mono text-[11px] leading-relaxed break-all min-h-[56px] max-h-[220px] overflow-auto">
+              <span className={`${exportContent.color} whitespace-pre-wrap`}>{exportContent.text}</span>
+            </div>
+
+            {/* Action buttons */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <CopyBtn text={exportContent.text} label={exportCopyLabel[exportTab]} />
+              {exportTab === 'svg' && (
+                <button onClick={downloadSvg}
+                  className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] font-semibold bg-cyan-50 text-cyan-700 hover:bg-cyan-100 border border-cyan-200 transition">
+                  <Download className="h-3 w-3" /> Download SVG
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -562,7 +928,20 @@ function GradientTool() {
               <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">
                 Color Stops <span className="text-zinc-300 font-normal">({stops.length})</span>
               </p>
-              <div className="flex gap-1">
+              <div className="flex items-center gap-1">
+                {/* Undo / step count / Redo */}
+                <button onClick={undo} disabled={!canUndo} title="Undo (Cmd+Z)"
+                  className="flex h-6 w-6 items-center justify-center rounded-md bg-zinc-100 text-[13px] text-zinc-500 hover:bg-zinc-200 disabled:opacity-30 transition select-none">
+                  ⟲
+                </button>
+                <span className="text-[9px] text-zinc-400 tabular-nums select-none px-0.5">
+                  {histMeta.index + 1}/{histMeta.total}
+                </span>
+                <button onClick={redo} disabled={!canRedo} title="Redo (Cmd+Shift+Z)"
+                  className="flex h-6 w-6 items-center justify-center rounded-md bg-zinc-100 text-[13px] text-zinc-500 hover:bg-zinc-200 disabled:opacity-30 transition select-none">
+                  ⟳
+                </button>
+                <div className="w-px h-4 bg-zinc-200 mx-0.5" />
                 <button onClick={randomize} title="Randomize colors"
                   className="flex h-6 w-6 items-center justify-center rounded-md bg-zinc-100 text-zinc-500 hover:bg-violet-100 hover:text-violet-600 transition">
                   <Shuffle className="h-3 w-3" />
@@ -652,10 +1031,10 @@ export default function CssGradientGeneratorClient() {
       showFooterBand={false}
       breadcrumbItems={BREADCRUMB}
       title="CSS Gradient Generator"
-      subtitle="Build linear, radial & conic gradients — drag stops, adjust opacity, click preview to move center, export CSS / Tailwind / SCSS"
+      subtitle="Build linear, radial & conic gradients — drag stops, adjust opacity, click preview to move center, export CSS / Tailwind / SCSS / Animation / SVG"
       toolName="css_gradient_generator"
       icon="🎨"
-      features={['Linear · Radial · Conic', 'Repeating gradients', 'Opacity per stop', 'CSS · Tailwind · SCSS · CSS Var']}
+      features={['Linear · Radial · Conic', 'Repeating gradients', 'Opacity per stop', 'CSS · Tailwind · SCSS · CSS Var · Animation · SVG']}
       tool={<GradientTool />}
     />
   );

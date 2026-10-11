@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { Copy, Check, Shuffle, Pipette, ChevronRight } from 'lucide-react';
+import { Copy, Check, Shuffle, Pipette, ChevronRight, ChevronDown } from 'lucide-react';
 import ToolPageShell from '@/components/tools/ToolPageShell';
 
 // ── Color math ─────────────────────────────────────────────────────────────
@@ -104,6 +104,212 @@ function harmony(r: number, g: number, b: number) {
 
 function randomHex() { return '#'+Math.floor(Math.random()*0xFFFFFF).toString(16).padStart(6,'0').toUpperCase(); }
 
+// ── Color Blindness Simulation ─────────────────────────────────────────────
+
+function linearizeCB(c: number): number {
+  return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+}
+
+function delinearizeCB(c: number): number {
+  return c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055;
+}
+
+function applyColorMatrix(r: number, g: number, b: number, matrix: number[][]): string {
+  const rl = linearizeCB(r / 255);
+  const gl = linearizeCB(g / 255);
+  const bl = linearizeCB(b / 255);
+  const rOut = matrix[0][0] * rl + matrix[0][1] * gl + matrix[0][2] * bl;
+  const gOut = matrix[1][0] * rl + matrix[1][1] * gl + matrix[1][2] * bl;
+  const bOut = matrix[2][0] * rl + matrix[2][1] * gl + matrix[2][2] * bl;
+  const ro = Math.round(delinearizeCB(Math.max(0, Math.min(1, rOut))) * 255);
+  const go = Math.round(delinearizeCB(Math.max(0, Math.min(1, gOut))) * 255);
+  const bo = Math.round(delinearizeCB(Math.max(0, Math.min(1, bOut))) * 255);
+  return rgbToHex(ro, go, bo);
+}
+
+const DEUTERANOPIA_M = [
+  [0.367322, 0.860646, -0.227968],
+  [0.280085, 0.672501, 0.047413],
+  [-0.011820, 0.042940, 0.968881],
+];
+
+const PROTANOPIA_M = [
+  [0.152286, 1.052583, -0.204868],
+  [0.114503, 0.786281, 0.099216],
+  [-0.003882, -0.048116, 1.051998],
+];
+
+const TRITANOPIA_M = [
+  [1.255528, -0.076749, -0.178779],
+  [-0.078411, 0.930809, 0.147602],
+  [0.004733, 0.691367, 0.303900],
+];
+
+function simulateAchromatopsia(r: number, g: number, b: number): string {
+  const rl = linearizeCB(r / 255);
+  const gl = linearizeCB(g / 255);
+  const bl = linearizeCB(b / 255);
+  const lum = 0.2126 * rl + 0.7152 * gl + 0.0722 * bl;
+  const v = Math.round(delinearizeCB(Math.max(0, Math.min(1, lum))) * 255);
+  return rgbToHex(v, v, v);
+}
+
+// ── CSS Named Colors ───────────────────────────────────────────────────────
+
+const CSS_NAMED_COLORS: { name: string; r: number; g: number; b: number }[] = [
+  { name: 'aliceblue', r: 240, g: 248, b: 255 },
+  { name: 'antiquewhite', r: 250, g: 235, b: 215 },
+  { name: 'aqua', r: 0, g: 255, b: 255 },
+  { name: 'aquamarine', r: 127, g: 255, b: 212 },
+  { name: 'azure', r: 240, g: 255, b: 255 },
+  { name: 'beige', r: 245, g: 245, b: 220 },
+  { name: 'bisque', r: 255, g: 228, b: 196 },
+  { name: 'black', r: 0, g: 0, b: 0 },
+  { name: 'blanchedalmond', r: 255, g: 235, b: 205 },
+  { name: 'blue', r: 0, g: 0, b: 255 },
+  { name: 'blueviolet', r: 138, g: 43, b: 226 },
+  { name: 'brown', r: 165, g: 42, b: 42 },
+  { name: 'burlywood', r: 222, g: 184, b: 135 },
+  { name: 'cadetblue', r: 95, g: 158, b: 160 },
+  { name: 'chartreuse', r: 127, g: 255, b: 0 },
+  { name: 'chocolate', r: 210, g: 105, b: 30 },
+  { name: 'coral', r: 255, g: 127, b: 80 },
+  { name: 'cornflowerblue', r: 100, g: 149, b: 237 },
+  { name: 'cornsilk', r: 255, g: 248, b: 220 },
+  { name: 'crimson', r: 220, g: 20, b: 60 },
+  { name: 'cyan', r: 0, g: 255, b: 255 },
+  { name: 'darkblue', r: 0, g: 0, b: 139 },
+  { name: 'darkcyan', r: 0, g: 139, b: 139 },
+  { name: 'darkgoldenrod', r: 184, g: 134, b: 11 },
+  { name: 'darkgray', r: 169, g: 169, b: 169 },
+  { name: 'darkgreen', r: 0, g: 100, b: 0 },
+  { name: 'darkkhaki', r: 189, g: 183, b: 107 },
+  { name: 'darkmagenta', r: 139, g: 0, b: 139 },
+  { name: 'darkolivegreen', r: 85, g: 107, b: 47 },
+  { name: 'darkorange', r: 255, g: 140, b: 0 },
+  { name: 'darkorchid', r: 153, g: 50, b: 204 },
+  { name: 'darkred', r: 139, g: 0, b: 0 },
+  { name: 'darksalmon', r: 233, g: 150, b: 122 },
+  { name: 'darkseagreen', r: 143, g: 188, b: 143 },
+  { name: 'darkslateblue', r: 72, g: 61, b: 139 },
+  { name: 'darkslategray', r: 47, g: 79, b: 79 },
+  { name: 'darkturquoise', r: 0, g: 206, b: 209 },
+  { name: 'darkviolet', r: 148, g: 0, b: 211 },
+  { name: 'deeppink', r: 255, g: 20, b: 147 },
+  { name: 'deepskyblue', r: 0, g: 191, b: 255 },
+  { name: 'dimgray', r: 105, g: 105, b: 105 },
+  { name: 'dodgerblue', r: 30, g: 144, b: 255 },
+  { name: 'firebrick', r: 178, g: 34, b: 34 },
+  { name: 'floralwhite', r: 255, g: 250, b: 240 },
+  { name: 'forestgreen', r: 34, g: 139, b: 34 },
+  { name: 'fuchsia', r: 255, g: 0, b: 255 },
+  { name: 'gainsboro', r: 220, g: 220, b: 220 },
+  { name: 'ghostwhite', r: 248, g: 248, b: 255 },
+  { name: 'gold', r: 255, g: 215, b: 0 },
+  { name: 'goldenrod', r: 218, g: 165, b: 32 },
+  { name: 'gray', r: 128, g: 128, b: 128 },
+  { name: 'green', r: 0, g: 128, b: 0 },
+  { name: 'greenyellow', r: 173, g: 255, b: 47 },
+  { name: 'honeydew', r: 240, g: 255, b: 240 },
+  { name: 'hotpink', r: 255, g: 105, b: 180 },
+  { name: 'indianred', r: 205, g: 92, b: 92 },
+  { name: 'indigo', r: 75, g: 0, b: 130 },
+  { name: 'ivory', r: 255, g: 255, b: 240 },
+  { name: 'khaki', r: 240, g: 230, b: 140 },
+  { name: 'lavender', r: 230, g: 230, b: 250 },
+  { name: 'lavenderblush', r: 255, g: 240, b: 245 },
+  { name: 'lawngreen', r: 124, g: 252, b: 0 },
+  { name: 'lemonchiffon', r: 255, g: 250, b: 205 },
+  { name: 'lightblue', r: 173, g: 216, b: 230 },
+  { name: 'lightcoral', r: 240, g: 128, b: 128 },
+  { name: 'lightcyan', r: 224, g: 255, b: 255 },
+  { name: 'lightgoldenrodyellow', r: 250, g: 250, b: 210 },
+  { name: 'lightgray', r: 211, g: 211, b: 211 },
+  { name: 'lightgreen', r: 144, g: 238, b: 144 },
+  { name: 'lightpink', r: 255, g: 182, b: 193 },
+  { name: 'lightsalmon', r: 255, g: 160, b: 122 },
+  { name: 'lightseagreen', r: 32, g: 178, b: 170 },
+  { name: 'lightskyblue', r: 135, g: 206, b: 250 },
+  { name: 'lightslategray', r: 119, g: 136, b: 153 },
+  { name: 'lightsteelblue', r: 176, g: 196, b: 222 },
+  { name: 'lightyellow', r: 255, g: 255, b: 224 },
+  { name: 'lime', r: 0, g: 255, b: 0 },
+  { name: 'limegreen', r: 50, g: 205, b: 50 },
+  { name: 'linen', r: 250, g: 240, b: 230 },
+  { name: 'magenta', r: 255, g: 0, b: 255 },
+  { name: 'maroon', r: 128, g: 0, b: 0 },
+  { name: 'mediumaquamarine', r: 102, g: 205, b: 170 },
+  { name: 'mediumblue', r: 0, g: 0, b: 205 },
+  { name: 'mediumorchid', r: 186, g: 85, b: 211 },
+  { name: 'mediumpurple', r: 147, g: 112, b: 219 },
+  { name: 'mediumseagreen', r: 60, g: 179, b: 113 },
+  { name: 'mediumslateblue', r: 123, g: 104, b: 238 },
+  { name: 'mediumspringgreen', r: 0, g: 250, b: 154 },
+  { name: 'mediumturquoise', r: 72, g: 209, b: 204 },
+  { name: 'mediumvioletred', r: 199, g: 21, b: 133 },
+  { name: 'midnightblue', r: 25, g: 25, b: 112 },
+  { name: 'mintcream', r: 245, g: 255, b: 250 },
+  { name: 'mistyrose', r: 255, g: 228, b: 225 },
+  { name: 'moccasin', r: 255, g: 228, b: 181 },
+  { name: 'navajowhite', r: 255, g: 222, b: 173 },
+  { name: 'navy', r: 0, g: 0, b: 128 },
+  { name: 'oldlace', r: 253, g: 245, b: 230 },
+  { name: 'olive', r: 128, g: 128, b: 0 },
+  { name: 'olivedrab', r: 107, g: 142, b: 35 },
+  { name: 'orange', r: 255, g: 165, b: 0 },
+  { name: 'orangered', r: 255, g: 69, b: 0 },
+  { name: 'orchid', r: 218, g: 112, b: 214 },
+  { name: 'palegoldenrod', r: 238, g: 232, b: 170 },
+  { name: 'palegreen', r: 152, g: 251, b: 152 },
+  { name: 'paleturquoise', r: 175, g: 238, b: 238 },
+  { name: 'palevioletred', r: 219, g: 112, b: 147 },
+  { name: 'papayawhip', r: 255, g: 239, b: 213 },
+  { name: 'peachpuff', r: 255, g: 218, b: 185 },
+  { name: 'peru', r: 205, g: 133, b: 63 },
+  { name: 'pink', r: 255, g: 192, b: 203 },
+  { name: 'plum', r: 221, g: 160, b: 221 },
+  { name: 'powderblue', r: 176, g: 224, b: 230 },
+  { name: 'purple', r: 128, g: 0, b: 128 },
+  { name: 'rebeccapurple', r: 102, g: 51, b: 153 },
+  { name: 'red', r: 255, g: 0, b: 0 },
+  { name: 'rosybrown', r: 188, g: 143, b: 143 },
+  { name: 'royalblue', r: 65, g: 105, b: 225 },
+  { name: 'saddlebrown', r: 139, g: 69, b: 19 },
+  { name: 'salmon', r: 250, g: 128, b: 114 },
+  { name: 'sandybrown', r: 244, g: 164, b: 96 },
+  { name: 'seagreen', r: 46, g: 139, b: 87 },
+  { name: 'seashell', r: 255, g: 245, b: 238 },
+  { name: 'sienna', r: 160, g: 82, b: 45 },
+  { name: 'silver', r: 192, g: 192, b: 192 },
+  { name: 'skyblue', r: 135, g: 206, b: 235 },
+  { name: 'slateblue', r: 106, g: 90, b: 205 },
+  { name: 'slategray', r: 112, g: 128, b: 144 },
+  { name: 'snow', r: 255, g: 250, b: 250 },
+  { name: 'springgreen', r: 0, g: 255, b: 127 },
+  { name: 'steelblue', r: 70, g: 130, b: 180 },
+  { name: 'tan', r: 210, g: 180, b: 140 },
+  { name: 'teal', r: 0, g: 128, b: 128 },
+  { name: 'thistle', r: 216, g: 191, b: 216 },
+  { name: 'tomato', r: 255, g: 99, b: 71 },
+  { name: 'turquoise', r: 64, g: 224, b: 208 },
+  { name: 'violet', r: 238, g: 130, b: 238 },
+  { name: 'wheat', r: 245, g: 222, b: 179 },
+  { name: 'white', r: 255, g: 255, b: 255 },
+  { name: 'whitesmoke', r: 245, g: 245, b: 245 },
+  { name: 'yellow', r: 255, g: 255, b: 0 },
+  { name: 'yellowgreen', r: 154, g: 205, b: 50 },
+];
+
+function findNearestCssColor(r: number, g: number, b: number) {
+  let minDist = Infinity;
+  let nearest = CSS_NAMED_COLORS[0];
+  for (const color of CSS_NAMED_COLORS) {
+    const dist = Math.sqrt((r - color.r) ** 2 + (g - color.g) ** 2 + (b - color.b) ** 2);
+    if (dist < minDist) { minDist = dist; nearest = color; }
+  }
+  return nearest;
+}
+
 // ── Copy button ────────────────────────────────────────────────────────────
 
 function CopyBtn({ value, label, mono = true, className = '' }: { value: string; label?: string; mono?: boolean; className?: string }) {
@@ -163,6 +369,8 @@ function FormatRow({ label, value, accent }: { label: string; value: string; acc
 function ColorPickerTool() {
   const [hex, setHex] = useState('#3B82F6');
   const [hexInput, setHexInput] = useState('#3B82F6');
+  const [alpha, setAlpha] = useState(100);
+  const [showCB, setShowCB] = useState(false);
 
   const rgb = hexToRgb(hex) ?? { r: 59, g: 130, b: 246 };
   const { r, g, b } = rgb;
@@ -172,9 +380,22 @@ function ColorPickerTool() {
   const palette = shades(r, g, b);
   const harmonies = harmony(r, g, b);
 
+  const alphaDecimal = alpha / 100;
+  const hasAlpha = alpha < 100;
+
+  // Color blindness simulations
+  const cbNormal = hex;
+  const cbDeuteranopia = applyColorMatrix(r, g, b, DEUTERANOPIA_M);
+  const cbProtanopia = applyColorMatrix(r, g, b, PROTANOPIA_M);
+  const cbTritanopia = applyColorMatrix(r, g, b, TRITANOPIA_M);
+  const cbAchromatopsia = simulateAchromatopsia(r, g, b);
+
+  // Nearest CSS named color
+  const nearestCss = findNearestCssColor(r, g, b);
+  const nearestCssHex = rgbToHex(nearestCss.r, nearestCss.g, nearestCss.b);
+
   const cw = contrastRatio(r, g, b, 255, 255, 255);
   const cb = contrastRatio(r, g, b, 0, 0, 0);
-  const onWhite = cw > cb;
   const bestRatio = Math.max(cw, cb);
   const wcagAA = bestRatio >= 4.5;
   const wcagAAA = bestRatio >= 7;
@@ -197,6 +418,20 @@ function ColorPickerTool() {
 
   const cssVars = `:root {\n  --color: ${hex};\n  --color-rgb: ${r}, ${g}, ${b};\n  --color-hsl: ${hsl.h}deg ${hsl.s}% ${hsl.l}%;\n}`;
 
+  // Checkerboard background for transparency preview
+  const checkerboardStyle = {
+    backgroundImage: 'conic-gradient(#ccc 25%, white 25% 50%, #ccc 50% 75%, white 75%)',
+    backgroundSize: '16px 16px',
+  };
+
+  const cbSimulations = [
+    { key: 'normal', label: 'Normal Vision', desc: 'As most people see it', hex: cbNormal },
+    { key: 'deuteranopia', label: 'Deuteranopia', desc: 'Red-green (most common)', hex: cbDeuteranopia },
+    { key: 'protanopia', label: 'Protanopia', desc: 'Red-green deficiency', hex: cbProtanopia },
+    { key: 'tritanopia', label: 'Tritanopia', desc: 'Blue-yellow deficiency', hex: cbTritanopia },
+    { key: 'achromatopsia', label: 'Achromatopsia', desc: 'Total colorblindness', hex: cbAchromatopsia },
+  ];
+
   return (
     <div className="divide-y divide-zinc-100">
 
@@ -206,29 +441,32 @@ function ColorPickerTool() {
 
           {/* Swatch */}
           <div className="flex flex-col gap-3">
-            <div
-              className="relative flex h-44 sm:h-52 w-full items-end justify-between overflow-hidden rounded-2xl p-4 shadow-lg transition-colors duration-200"
-              style={{ background: hex }}
-            >
-              {/* Bottom gradient scrim */}
-              <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/30 to-transparent" />
-              <span className="relative z-10 font-mono text-[22px] font-black tracking-wider drop-shadow" style={{ color: textOnColor }}>
-                {hex}
-              </span>
-              <div className="relative z-10 flex gap-1.5">
-                {/* Native picker button */}
-                <label className="flex cursor-pointer items-center gap-1.5 rounded-lg bg-white/20 px-2.5 py-1.5 text-[11px] font-semibold backdrop-blur-sm hover:bg-white/30 transition" style={{ color: textOnColor }}>
-                  <Pipette className="h-3.5 w-3.5" />
-                  <span>Pick</span>
-                  <input type="color" value={hex} onChange={e=>apply(e.target.value)} className="sr-only" />
-                </label>
-                <button
-                  onClick={() => apply(randomHex())}
-                  className="flex items-center gap-1.5 rounded-lg bg-white/20 px-2.5 py-1.5 text-[11px] font-semibold backdrop-blur-sm hover:bg-white/30 transition"
-                  style={{ color: textOnColor }}
-                >
-                  <Shuffle className="h-3.5 w-3.5" />
-                </button>
+            {/* Checkerboard + color overlay for alpha support */}
+            <div className="relative h-44 sm:h-52 w-full overflow-hidden rounded-2xl shadow-lg" style={checkerboardStyle}>
+              <div
+                className="absolute inset-0 flex items-end justify-between p-4 transition-colors duration-200"
+                style={{ background: hasAlpha ? `rgba(${r},${g},${b},${alphaDecimal})` : hex }}
+              >
+                {/* Bottom gradient scrim */}
+                <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/30 to-transparent" />
+                <span className="relative z-10 font-mono text-[22px] font-black tracking-wider drop-shadow" style={{ color: textOnColor }}>
+                  {hex}{hasAlpha ? ` / ${alpha}%` : ''}
+                </span>
+                <div className="relative z-10 flex gap-1.5">
+                  {/* Native picker button */}
+                  <label className="flex cursor-pointer items-center gap-1.5 rounded-lg bg-white/20 px-2.5 py-1.5 text-[11px] font-semibold backdrop-blur-sm hover:bg-white/30 transition" style={{ color: textOnColor }}>
+                    <Pipette className="h-3.5 w-3.5" />
+                    <span>Pick</span>
+                    <input type="color" value={hex} onChange={e=>apply(e.target.value)} className="sr-only" />
+                  </label>
+                  <button
+                    onClick={() => apply(randomHex())}
+                    className="flex items-center gap-1.5 rounded-lg bg-white/20 px-2.5 py-1.5 text-[11px] font-semibold backdrop-blur-sm hover:bg-white/30 transition"
+                    style={{ color: textOnColor }}
+                  >
+                    <Shuffle className="h-3.5 w-3.5" />
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -263,6 +501,17 @@ function ColorPickerTool() {
                   trackStyle={`linear-gradient(to right, rgb(${r},0,${b}), rgb(${r},255,${b}))`} />
                 <ColorSlider label="B" value={b} max={255} onChange={setB2}
                   trackStyle={`linear-gradient(to right, rgb(${r},${g},0), rgb(${r},${g},255))`} />
+                {/* Alpha / Opacity Slider */}
+                <div className="mt-1 border-t border-zinc-200 pt-3">
+                  <ColorSlider
+                    label="A"
+                    value={alpha}
+                    max={100}
+                    onChange={setAlpha}
+                    unit="%"
+                    trackStyle={`linear-gradient(to right, rgba(${r},${g},${b},0), rgb(${r},${g},${b}))`}
+                  />
+                </div>
               </div>
             </div>
 
@@ -295,6 +544,39 @@ function ColorPickerTool() {
           <FormatRow label="HSV" value={`hsv(${hsv.h}, ${hsv.s}%, ${hsv.v}%)`} accent="text-indigo-500" />
           <FormatRow label="CMYK" value={`cmyk(${cmyk.c}%, ${cmyk.m}%, ${cmyk.y}%, ${cmyk.k}%)`} accent="text-amber-600" />
           <FormatRow label="CSS oklch" value={`oklch(${(Math.cbrt(getLuminance(r,g,b))*100).toFixed(1)}% 0.2 ${hsl.h})`} accent="text-emerald-600" />
+          {/* RGBA and HSLA — shown only when alpha < 100 */}
+          {hasAlpha && (
+            <>
+              <FormatRow
+                label="RGBA"
+                value={`rgba(${r}, ${g}, ${b}, ${alphaDecimal.toFixed(2)})`}
+                accent="text-sky-500"
+              />
+              <FormatRow
+                label="HSLA"
+                value={`hsla(${hsl.h}, ${hsl.s}%, ${hsl.l}%, ${alphaDecimal.toFixed(2)})`}
+                accent="text-purple-500"
+              />
+            </>
+          )}
+        </div>
+
+        {/* Nearest CSS Named Color */}
+        <div className="mt-3">
+          <div className="flex items-center gap-3 rounded-xl border border-zinc-100 bg-white px-4 py-2.5 shadow-sm hover:border-zinc-200 transition-colors">
+            <span className="w-14 shrink-0 text-[10px] font-bold uppercase tracking-widest text-rose-500">CSS</span>
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              {/* Named color swatch */}
+              <div
+                className="h-5 w-5 shrink-0 rounded-md border border-zinc-200 shadow-sm"
+                style={{ background: nearestCssHex }}
+                title={nearestCssHex}
+              />
+              <span className="font-mono text-[12.5px] text-zinc-700 truncate">{nearestCss.name}</span>
+              <span className="text-[11px] text-zinc-400 font-mono shrink-0">{nearestCssHex}</span>
+            </div>
+            <CopyBtn value={nearestCss.name} className="text-[11px] text-zinc-400" />
+          </div>
         </div>
       </div>
 
@@ -421,6 +703,44 @@ function ColorPickerTool() {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* ── Color Blindness Simulation ───────────────────────── */}
+      <div className="p-4 sm:p-6">
+        <button
+          onClick={() => setShowCB(v => !v)}
+          className="flex w-full items-center justify-between group"
+        >
+          <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 group-hover:text-zinc-600 transition-colors">
+            Color Blindness Simulation
+          </p>
+          {showCB
+            ? <ChevronDown className="h-4 w-4 text-zinc-400 group-hover:text-zinc-600 transition-colors" />
+            : <ChevronRight className="h-4 w-4 text-zinc-400 group-hover:text-zinc-600 transition-colors" />
+          }
+        </button>
+
+        {showCB && (
+          <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {cbSimulations.map(({ key, label, desc, hex: simHex }) => (
+              <div
+                key={key}
+                className="flex items-center gap-3 rounded-xl border border-zinc-100 bg-white px-3 py-3 shadow-sm"
+              >
+                <div
+                  className="h-9 w-9 shrink-0 rounded-lg border border-zinc-200 shadow-sm"
+                  style={{ background: simHex }}
+                  title={simHex}
+                />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-[12px] font-semibold text-zinc-700">{label}</p>
+                  <p className="truncate text-[10.5px] text-zinc-400">{desc}</p>
+                  <p className="mt-0.5 font-mono text-[10.5px] text-zinc-500">{simHex}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ── CSS Variables Snippet ────────────────────────────── */}
