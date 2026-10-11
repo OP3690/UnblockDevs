@@ -34,6 +34,42 @@ const REACTION_META: Record<string, { emoji: string; color: string; label: strin
   CARE:    { emoji: '🤗', color: '#fb923c', label: 'Care' },
 };
 
+// ─── Sample data ──────────────────────────────────────────────────────────────
+
+const SAMPLE_FB: FBAnalysis = {
+  totalPosts: 2847,
+  totalReactions: 28491,
+  totalComments: 704,
+  totalGroupComments: 188,
+  reactionBreakdown: [
+    { type: 'LIKE', count: 22847, emoji: '👍', color: '#1877F2', label: 'Like' },
+    { type: 'HAHA', count: 3102, emoji: '😂', color: '#f59e0b', label: 'Haha' },
+    { type: 'LOVE', count: 1840, emoji: '❤️', color: '#f43f5e', label: 'Love' },
+    { type: 'WOW', count: 412, emoji: '😮', color: '#8b5cf6', label: 'Wow' },
+    { type: 'SORRY', count: 234, emoji: '😢', color: '#64748b', label: 'Sad' },
+    { type: 'ANGER', count: 56, emoji: '😠', color: '#ef4444', label: 'Angry' },
+  ],
+  byYear: [
+    { year: 2012, count: 234 }, { year: 2013, count: 892 }, { year: 2014, count: 1841 },
+    { year: 2015, count: 2103 }, { year: 2016, count: 2847 }, { year: 2017, count: 3201 },
+    { year: 2018, count: 3842 }, { year: 2019, count: 4203 }, { year: 2020, count: 5841 },
+    { year: 2021, count: 3209 }, { year: 2022, count: 2841 }, { year: 2023, count: 1897 },
+    { year: 2024, count: 947 },
+  ],
+  byHour: Array.from({ length: 24 }, (_, h) => ({
+    hour: h,
+    count: [234,156,89,45,23,34,123,456,789,1023,1456,1234,1678,1456,1234,1123,1389,1567,1823,2345,2789,3241,2876,1456][h],
+  })),
+  earliestYear: 2012,
+  latestYear: 2024,
+  estimatedHours: 1232,
+  estimatedDays: 51,
+  peakHour: 21,
+  peakYear: 2020,
+  userName: '',
+  foundFiles: ['posts', 'reactions', 'comments'],
+};
+
 // ─── ZIP parser ───────────────────────────────────────────────────────────────
 
 async function parseFBZip(file: File): Promise<FBAnalysis> {
@@ -307,10 +343,11 @@ function ReactionBar({ breakdown, total }: { breakdown: FBAnalysis['reactionBrea
 
 // ─── Upload zone ──────────────────────────────────────────────────────────────
 
-function UploadZone({ onFile, loading, error }: {
+function UploadZone({ onFile, loading, error, onSample }: {
   onFile: (f: File) => void;
   loading: boolean;
   error: string;
+  onSample?: () => void;
 }) {
   const ref = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
@@ -394,6 +431,16 @@ function UploadZone({ onFile, loading, error }: {
         <div className="rounded-xl p-4 border border-red-200 bg-red-50 text-sm text-red-700">
           <strong>Error: </strong>{error}
         </div>
+      )}
+
+      {onSample && (
+        <button
+          type="button"
+          onClick={onSample}
+          className="w-full flex items-center justify-center gap-2 rounded-xl border border-blue-200 py-3 text-sm font-semibold text-blue-600 transition-colors hover:bg-blue-50 hover:border-blue-300"
+        >
+          <span>👀</span> See a sample result first
+        </button>
       )}
 
       <p className="text-center text-xs text-gray-400">100% private — everything is processed in your browser. Nothing is uploaded.</p>
@@ -523,10 +570,12 @@ export default function FacebookAnalyzerClient({ hideNav }: { hideNav?: boolean 
   const [state, setState] = useState<'upload' | 'loading' | 'done' | 'error'>('upload');
   const [analysis, setAnalysis] = useState<FBAnalysis | null>(null);
   const [error, setError] = useState('');
+  const [isSample, setIsSample] = useState(false);
 
   function handleFile(file: File) {
     setState('loading');
     setError('');
+    setIsSample(false);
     parseFBZip(file)
       .then(result => { setAnalysis(result); setState('done'); })
       .catch(e => {
@@ -535,8 +584,24 @@ export default function FacebookAnalyzerClient({ hideNav }: { hideNav?: boolean 
       });
   }
 
+  const reset = () => { setState('upload'); setAnalysis(null); setError(''); setIsSample(false); };
+
   if (state === 'done' && analysis) {
-    return <ResultsView data={analysis} onReset={() => { setState('upload'); setAnalysis(null); setError(''); }} />;
+    return (
+      <div>
+        {isSample && (
+          <div className="max-w-2xl mx-auto px-4 pt-4">
+            <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 flex items-center justify-between gap-3 mb-1">
+              <span className="text-sm text-amber-800 font-medium">📊 Sample data — not your real account</span>
+              <button onClick={reset} className="text-xs font-bold text-amber-700 hover:text-amber-900 whitespace-nowrap">
+                Analyze yours →
+              </button>
+            </div>
+          </div>
+        )}
+        <ResultsView data={analysis} onReset={reset} />
+      </div>
+    );
   }
 
   return (
@@ -544,6 +609,7 @@ export default function FacebookAnalyzerClient({ hideNav }: { hideNav?: boolean 
       onFile={handleFile}
       loading={state === 'loading'}
       error={state === 'error' ? error : ''}
+      onSample={() => { setAnalysis(SAMPLE_FB); setState('done'); setIsSample(true); }}
     />
   );
 }

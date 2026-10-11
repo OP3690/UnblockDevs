@@ -55,6 +55,67 @@ interface ThreadsAnalysis {
   mostActiveHour: number;
 }
 
+// ─── Sample data ──────────────────────────────────────────────────────────────
+
+function buildSampleThreads(): ThreadsAnalysis {
+  const todayDate = new Date(); todayDate.setHours(0,0,0,0);
+  const startDate = new Date(todayDate); startDate.setDate(startDate.getDate() - 364);
+  const heatmapData: { dateStr: string; count: number; dow: number; weekIdx: number }[] = [];
+  let dayIdx = 0;
+  let maxCount = 0, maxDateStr = '';
+  for (let cur = new Date(startDate); cur <= todayDate; cur.setDate(cur.getDate() + 1)) {
+    const ds = `${cur.getFullYear()}-${String(cur.getMonth()+1).padStart(2,'0')}-${String(cur.getDate()).padStart(2,'0')}`;
+    const weekIdx = Math.floor(dayIdx / 7);
+    const base = [0, 6].includes(cur.getDay()) ? 15 : 10;
+    const count = Math.max(0, Math.round(base + Math.sin(dayIdx * 0.15) * 7 + Math.sin(dayIdx * 0.7) * 3));
+    if (count > maxCount) { maxCount = count; maxDateStr = ds; }
+    heatmapData.push({ dateStr: ds, count, dow: cur.getDay(), weekIdx });
+    dayIdx++;
+  }
+  const mostActiveDay = maxDateStr
+    ? new Date(maxDateStr + 'T12:00:00').toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'short', year:'numeric' })
+    : 'Saturday, 14 Dec 2024';
+  const joinedDate = 1690848000; // Aug 1, 2023
+  const latestDate = Math.floor(todayDate.getTime() / 1000);
+  const spanDays = Math.max(1, Math.floor((latestDate - joinedDate) / 86400));
+  const totalLikes = 8492;
+  return {
+    data: {
+      username: 'sample_account',
+      displayName: 'Sample User',
+      followers: Array<FollowerEntry>(1847).fill({ username: '', displayName: '', timestamp: 0 }),
+      following: Array<FollowerEntry>(892).fill({ username: '', displayName: '', timestamp: 0 }),
+      likes: Array<LikeEntry>(totalLikes).fill({ author: '', postUrl: '', timestamp: 0 }),
+      blocked: 12, restricted: 8, pendingRequests: 3, recentFollowRequests: 7,
+    },
+    joinedDate, latestDate, spanDays,
+    likesPerDay: totalLikes / spanDays,
+    peakMonthLabel: 'December 2023',
+    peakMonthLikes: 847,
+    byMonth: [
+      { month: 'Aug 2023', likes: 234, following: 156 }, { month: 'Sep 2023', likes: 412, following: 89 },
+      { month: 'Oct 2023', likes: 589, following: 67 }, { month: 'Nov 2023', likes: 734, following: 52 },
+      { month: 'Dec 2023', likes: 847, following: 81 }, { month: 'Jan 2024', likes: 712, following: 43 },
+      { month: 'Feb 2024', likes: 634, following: 38 }, { month: 'Mar 2024', likes: 698, following: 55 },
+      { month: 'Apr 2024', likes: 523, following: 29 }, { month: 'May 2024', likes: 612, following: 47 },
+      { month: 'Jun 2024', likes: 589, following: 33 }, { month: 'Jul 2024', likes: 534, following: 28 },
+      { month: 'Aug 2024', likes: 487, following: 22 }, { month: 'Sep 2024', likes: 456, following: 19 },
+      { month: 'Oct 2024', likes: 431, following: 31 },
+    ],
+    topLikedAccounts: [
+      { name: 'design_inspo', count: 234 }, { name: 'techbuilder', count: 189 },
+      { name: 'mindful_dev', count: 156 }, { name: 'frontend_tips', count: 134 },
+      { name: 'startup_founder', count: 112 }, { name: 'code_daily', count: 98 },
+      { name: 'ux_patterns', count: 87 }, { name: 'nomad_life', count: 76 },
+      { name: 'book_notes_', count: 65 }, { name: 'ai_weekly', count: 58 },
+    ],
+    followingRatio: 892 / 1847,
+    heatmapData, mostActiveDay, mostActiveHour: 21,
+  };
+}
+
+const SAMPLE_THREADS = buildSampleThreads();
+
 // ─── ZIP parser ────────────────────────────────────────────────────────────────
 
 function extractFollowers(raw: unknown): FollowerEntry[] {
@@ -238,7 +299,7 @@ function fmtDate(ts: number) {
 
 // ─── Upload screen ─────────────────────────────────────────────────────────────
 
-function UploadScreen({ onFile }: { onFile: (f: File) => void }) {
+function UploadScreen({ onFile, onSample }: { onFile: (f: File) => void; onSample?: () => void }) {
   const [dragging, setDragging] = useState(false);
 
   const handleFile = useCallback((f: File) => {
@@ -314,6 +375,16 @@ function UploadScreen({ onFile }: { onFile: (f: File) => void }) {
           <p className="text-sm font-bold text-gray-700 mb-1">Drop your Threads ZIP here</p>
           <p className="text-xs text-gray-400">or click to browse · .zip file only</p>
         </div>
+
+        {onSample && (
+          <button
+            type="button"
+            onClick={onSample}
+            className="w-full flex items-center justify-center gap-2 rounded-xl border border-gray-200 py-3 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50 hover:border-gray-300"
+          >
+            <span>👀</span> See a sample result first
+          </button>
+        )}
 
         <p className="text-center text-xs text-gray-400 mt-4">
           100% private — all processing happens in your browser. Nothing is uploaded.
@@ -711,9 +782,11 @@ export default function ThreadsAnalyzerClient({ hideNav }: { hideNav?: boolean }
   const [state, setState] = useState<'upload' | 'parsing' | 'done' | 'error'>('upload');
   const [analysis, setAnalysis] = useState<ThreadsAnalysis | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
+  const [isSample, setIsSample] = useState(false);
 
   const handleFile = useCallback(async (file: File) => {
     setState('parsing');
+    setIsSample(false);
     try {
       const data = await parseThreadsZip(file);
       const result = computeAnalysis(data);
@@ -724,6 +797,8 @@ export default function ThreadsAnalyzerClient({ hideNav }: { hideNav?: boolean }
       setState('error');
     }
   }, []);
+
+  const reset = useCallback(() => { setState('upload'); setAnalysis(null); setErrorMsg(''); setIsSample(false); }, []);
 
   if (state === 'parsing') {
     return (
@@ -747,15 +822,32 @@ export default function ThreadsAnalyzerClient({ hideNav }: { hideNav?: boolean }
         <div className="text-center">
           <p className="text-sm font-bold text-red-600 mb-2">Failed to parse file</p>
           <p className="text-xs text-gray-400 mb-4">{errorMsg}</p>
-          <button onClick={() => setState('upload')} className="text-sm font-bold text-black underline">Try again</button>
+          <button onClick={reset} className="text-sm font-bold text-black underline">Try again</button>
         </div>
       </div>
     );
   }
 
   if (state === 'done' && analysis) {
-    return <ResultsScreen analysis={analysis} />;
+    return (
+      <div>
+        {isSample && (
+          <div className="bg-amber-50 border-b border-amber-200 px-4 py-3 flex items-center justify-between gap-3">
+            <span className="text-sm text-amber-800 font-medium">📊 Sample data — not your real account</span>
+            <button onClick={reset} className="text-xs font-bold text-amber-700 hover:text-amber-900 whitespace-nowrap">
+              Analyze yours →
+            </button>
+          </div>
+        )}
+        <ResultsScreen analysis={analysis} />
+      </div>
+    );
   }
 
-  return <UploadScreen onFile={handleFile} />;
+  return (
+    <UploadScreen
+      onFile={handleFile}
+      onSample={() => { setAnalysis(SAMPLE_THREADS); setState('done'); setIsSample(true); }}
+    />
+  );
 }

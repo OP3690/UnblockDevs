@@ -225,26 +225,70 @@ async function parseJsFiles(files: File[]): Promise<TWAnalysis> {
   return processFileMap(fileMap);
 }
 
-// ─── Parse from ZIP ──────────────────────────────────────────────────────────
+// ─── Parse from ZIP (uses fflate for ZIP64 support) ──────────────────────────
 
 async function parseTWZip(file: File): Promise<TWAnalysis> {
-  const JSZip = (await import('jszip')).default;
-  const zip = await JSZip.loadAsync(file);
-  const fileMap = new Map<string, string>();
+  const { unzip } = await import('fflate');
   const RELEVANT = /\/(account|profile|personalization|tweets|like|follower|following)(-part\d+)?\.js$/;
-  await Promise.all(
-    Object.entries(zip.files)
-      .filter(([name, entry]) => !entry.dir && RELEVANT.test(name))
-      .map(async ([name, entry]) => {
-        fileMap.set(name, await entry.async('text'));
-      })
-  );
+  const zipData = new Uint8Array(await file.arrayBuffer());
+  const extracted = await new Promise<Record<string, Uint8Array>>((resolve, reject) => {
+    unzip(zipData, { filter: (f) => RELEVANT.test(f.name) }, (err, data) => {
+      if (err) reject(new Error(`ZIP parse failed: ${err.message}`));
+      else resolve(data);
+    });
+  });
+  const dec = new TextDecoder();
+  const fileMap = new Map<string, string>();
+  for (const [path, bytes] of Object.entries(extracted)) {
+    const name = path.split('/').pop() ?? path;
+    fileMap.set(name, dec.decode(bytes));
+  }
+  if (fileMap.size === 0) {
+    throw new Error('No relevant .js files found in this ZIP. Make sure it is a valid Twitter/X data archive.');
+  }
   return processFileMap(fileMap);
 }
 
 // ─── Key files the user needs ─────────────────────────────────────────────────
 
 const KEY_FILES = ['account.js', 'tweets.js', 'like.js', 'follower.js', 'following.js', 'profile.js'];
+
+// ─── Sample data ──────────────────────────────────────────────────────────────
+
+const SAMPLE_TW: TWAnalysis = {
+  userName: 'sample_account',
+  displayName: 'Sample User',
+  accountCreatedAt: '2015-03-14T10:30:00Z',
+  accountAgeYears: 9,
+  totalTweets: 4847,
+  totalLikes: 23891,
+  totalFollowers: 2841,
+  totalFollowing: 1204,
+  originalTweets: 2847,
+  replies: 1204,
+  retweets: 796,
+  byYear: [
+    { year: 2015, count: 234 }, { year: 2016, count: 582 }, { year: 2017, count: 847 },
+    { year: 2018, count: 1023 }, { year: 2019, count: 748 }, { year: 2020, count: 892 },
+    { year: 2021, count: 634 }, { year: 2022, count: 411 }, { year: 2023, count: 382 }, { year: 2024, count: 94 },
+  ],
+  byHour: Array.from({ length: 24 }, (_, h) => ({
+    hour: h,
+    count: [45,28,15,8,5,12,56,128,203,287,321,298,267,241,258,282,312,334,378,421,456,489,412,312][h],
+  })),
+  topMentions: [
+    { name: 'elonmusk', count: 47 }, { name: 'naval', count: 32 }, { name: 'paulg', count: 28 },
+    { name: 'sama', count: 24 }, { name: 'balajis', count: 19 }, { name: 'levelsio', count: 17 },
+    { name: 'pmarca', count: 15 }, { name: 'benedictevans', count: 13 },
+  ],
+  avgLikesPerTweet: 4.9,
+  avgRetweetsPerTweet: 1.6,
+  estimatedHours: 241,
+  peakHour: 21,
+  peakYear: 2018,
+  location: 'Mumbai, India',
+  languages: ['en'],
+};
 
 // ─── Stat card ────────────────────────────────────────────────────────────────
 
@@ -289,11 +333,12 @@ function HourHeatmap({ byHour }: { byHour: { hour: number; count: number }[] }) 
 
 // ─── Upload zone (dual mode) ──────────────────────────────────────────────────
 
-function UploadZone({ onJsFiles, onZip, loading, error }: {
+function UploadZone({ onJsFiles, onZip, loading, error, onSample }: {
   onJsFiles: (files: File[]) => void;
   onZip: (file: File) => void;
   loading: boolean;
   error: string;
+  onSample?: () => void;
 }) {
   const jsRef = useRef<HTMLInputElement>(null);
   const zipRef = useRef<HTMLInputElement>(null);
@@ -412,6 +457,16 @@ function UploadZone({ onJsFiles, onZip, loading, error }: {
             Try the <strong>JS files method</strong> — extract the ZIP, open the <code className="bg-red-100 px-1 rounded">data/</code> folder, and select the .js files directly.
           </p>
         </div>
+      )}
+
+      {onSample && (
+        <button
+          type="button"
+          onClick={onSample}
+          className="w-full flex items-center justify-center gap-2 rounded-xl border border-gray-200 py-3 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50 hover:border-gray-300"
+        >
+          <span>👀</span> See a sample result first
+        </button>
       )}
 
       <p className="text-center text-xs text-gray-400">100% private — processed in your browser, nothing uploaded.</p>
@@ -564,10 +619,12 @@ export default function TwitterAnalyzerClient({ hideNav }: { hideNav?: boolean }
   const [state, setState] = useState<'upload' | 'loading' | 'done' | 'error'>('upload');
   const [analysis, setAnalysis] = useState<TWAnalysis | null>(null);
   const [error, setError] = useState('');
+  const [isSample, setIsSample] = useState(false);
 
   function run(promise: Promise<TWAnalysis>) {
     setState('loading');
     setError('');
+    setIsSample(false);
     promise
       .then(result => { setAnalysis(result); setState('done'); })
       .catch(e => {
@@ -576,8 +633,24 @@ export default function TwitterAnalyzerClient({ hideNav }: { hideNav?: boolean }
       });
   }
 
+  const reset = () => { setState('upload'); setAnalysis(null); setError(''); setIsSample(false); };
+
   if (state === 'done' && analysis) {
-    return <ResultsView data={analysis} onReset={() => { setState('upload'); setAnalysis(null); setError(''); }} />;
+    return (
+      <div>
+        {isSample && (
+          <div className="max-w-2xl mx-auto px-4 pt-4">
+            <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 flex items-center justify-between gap-3 mb-1">
+              <span className="text-sm text-amber-800 font-medium">📊 Sample data — not your real account</span>
+              <button onClick={reset} className="text-xs font-bold text-amber-700 hover:text-amber-900 whitespace-nowrap">
+                Analyze yours →
+              </button>
+            </div>
+          </div>
+        )}
+        <ResultsView data={analysis} onReset={reset} />
+      </div>
+    );
   }
 
   return (
@@ -586,6 +659,7 @@ export default function TwitterAnalyzerClient({ hideNav }: { hideNav?: boolean }
       onZip={file => run(parseTWZip(file))}
       loading={state === 'loading'}
       error={state === 'error' ? error : ''}
+      onSample={() => { setAnalysis(SAMPLE_TW); setState('done'); setIsSample(true); }}
     />
   );
 }

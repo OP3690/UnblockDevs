@@ -379,6 +379,110 @@ async function parseJsonFile(file: File): Promise<FullData> {
   return result;
 }
 
+// ─── Sample data ──────────────────────────────────────────────────────────────
+
+function buildSampleIG(): Analysis {
+  const empty = (n: number): TimedEntry[] => Array<TimedEntry>(n).fill({ timestamp: 0 });
+  const data: FullData = {
+    videos: empty(42847), posts: empty(18204), stories: empty(24931), ads: empty(8103),
+    likes: empty(14294), saves: empty(3841), comments: empty(892),
+    searches: empty(4203), links: empty(1847), logins: empty(312),
+    dms: empty(28491), dmSent: 18203,
+    dmSharedReelTs: empty(4291), dmSharedStoryTs: empty(2847), dmSharedPostTs: empty(1203),
+    dmThreads: [],
+    userName: '', advertiserCount: 847, followingCount: 841, followersCount: 1024,
+    foundFiles: ['videos_watched.json', 'posts_viewed.json', 'stories_viewed.json', 'ads_viewed.json', 'liked_posts.json'],
+    likedAuthors: [],
+  };
+  const t0 = 1420070400; // 2015-01-01
+  const t1 = 1728432000; // 2024-10-09
+  const totalSeconds = 42847 * 22 + 18204 * 4 + 24931 * 5 + 8103 * 2;
+  const byHourCounts = [234,156,89,45,23,34,123,456,789,1023,1456,1234,1678,1456,1234,1123,1389,1567,1823,2345,2789,3241,2876,1456];
+  const byHour: Analysis['byHour'] = Array.from({ length: 24 }, (_, h) => ({
+    label: h === 0 ? '12 AM' : h < 12 ? `${h} AM` : h === 12 ? '12 PM' : `${h - 12} PM`,
+    count: byHourCounts[h],
+  }));
+  const byDow: Analysis['byDow'] = [
+    { day: 'Sun', count: 8934 }, { day: 'Mon', count: 6234 }, { day: 'Tue', count: 5823 },
+    { day: 'Wed', count: 6123 }, { day: 'Thu', count: 6456 }, { day: 'Fri', count: 7234 }, { day: 'Sat', count: 9456 },
+  ];
+  const byYear: Analysis['byYear'] = [
+    { year: '2015', likes: 234, views: 456, dms: 89, total: 779 },
+    { year: '2016', likes: 1234, views: 2456, dms: 312, total: 4002 },
+    { year: '2017', likes: 3456, views: 7823, dms: 934, total: 12213 },
+    { year: '2018', likes: 5234, views: 12345, dms: 1456, total: 19035 },
+    { year: '2019', likes: 7823, views: 18934, dms: 2234, total: 28991 },
+    { year: '2020', likes: 9234, views: 23456, dms: 2845, total: 35535 },
+    { year: '2021', likes: 8934, views: 21234, dms: 2634, total: 32802 },
+    { year: '2022', likes: 7456, views: 17823, dms: 2145, total: 27424 },
+    { year: '2023', likes: 6234, views: 14534, dms: 1823, total: 22591 },
+    { year: '2024', likes: 3890, views: 8923, dms: 1134, total: 13947 },
+  ];
+  const mRaw = [
+    ['Jan 2022',1234,456,678,312,134],['Feb 2022',1456,523,712,289,156],['Mar 2022',1678,589,834,334,178],
+    ['Apr 2022',1512,512,756,298,145],['May 2022',1823,634,912,378,198],['Jun 2022',2134,712,1023,423,212],
+    ['Jul 2022',2456,823,1156,489,234],['Aug 2022',2312,789,1089,456,223],['Sep 2022',2089,712,978,412,201],
+    ['Oct 2022',1956,678,912,387,187],['Nov 2022',1834,634,856,356,178],['Dec 2022',2345,823,1089,467,234],
+    ['Jan 2023',2567,912,1234,512,256],['Feb 2023',2234,789,1067,445,223],['Mar 2023',2123,756,1012,423,212],
+    ['Apr 2023',2456,856,1178,489,245],['May 2023',2789,978,1334,556,278],['Jun 2023',3012,1056,1456,601,301],
+    ['Jul 2023',2845,1001,1367,567,284],['Aug 2023',2678,934,1289,534,267],['Sep 2023',2489,867,1189,498,248],
+    ['Oct 2023',2312,801,1101,462,231],['Nov 2023',2145,745,1023,428,214],['Dec 2023',2678,934,1289,534,267],
+    ['Jan 2024',2456,856,1178,489,245],['Feb 2024',2189,756,1034,436,218],['Mar 2024',2034,701,956,405,203],
+    ['Apr 2024',1856,634,867,369,185],['May 2024',1723,589,801,342,172],['Jun 2024',1567,534,723,312,156],
+    ['Jul 2024',1412,478,645,280,141],['Aug 2024',1234,423,567,245,123],['Sep 2024',1089,378,512,218,108],
+    ['Oct 2024',923,312,423,184,92],
+  ] as const;
+  const byMonth: Analysis['byMonth'] = mRaw.map(([label, videos, posts, stories, likes, dms]) => ({
+    label: label as string, videos: videos as number, posts: posts as number,
+    stories: stories as number, likes: likes as number, dms: dms as number,
+    total: (videos as number) + (posts as number) + (stories as number) + (likes as number) + (dms as number),
+  }));
+  const engagement: Analysis['engagement'] = [
+    { label: 'Videos Watched',  value: 42847, icon: '▶️', color: '#a855f7', span: '2015–2024' },
+    { label: 'Posts Viewed',    value: 18204, icon: '🖼️', color: '#3b82f6', span: '2015–2024' },
+    { label: 'Stories Watched', value: 24931, icon: '⭕', color: '#f59e0b', span: '2015–2024' },
+    { label: 'Ads Seen',        value: 8103,  icon: '📢', color: '#ef4444', span: '(last 30d)' },
+    { label: 'Posts Liked',     value: 14294, icon: '❤️', color: '#f43f5e', span: '2015–2024' },
+    { label: 'Posts Saved',     value: 3841,  icon: '🔖', color: '#10b981', span: '2015–2024' },
+    { label: 'Comments Made',   value: 892,   icon: '💬', color: '#6366f1', span: '(last 30d)' },
+    { label: 'DMs Sent',        value: 18203, icon: '📩', color: '#0ea5e9', span: '2015–2024' },
+  ];
+  const activityPie: Analysis['activityPie'] = [
+    { name: 'Videos',  value: 42847, color: '#a855f7' },
+    { name: 'Stories', value: 24931, color: '#f59e0b' },
+    { name: 'Posts',   value: 18204, color: '#3b82f6' },
+    { name: 'Ads',     value: 8103,  color: '#ef4444' },
+  ];
+  const bySharedMonth: Analysis['bySharedMonth'] = byMonth.map(m => ({
+    label: m.label, reels: Math.round(m.videos * 0.3), posts: Math.round(m.posts * 0.2), stories: Math.round(m.stories * 0.1),
+  }));
+  const dmBreakdown: Analysis['dmBreakdown'] = [
+    { name: 'DMs Received', value: 10288, color: '#3b82f6' }, { name: 'DMs Sent', value: 18203, color: '#a855f7' },
+    { name: 'Reels Shared', value: 4291, color: '#f43f5e' }, { name: 'Stories Shared', value: 2847, color: '#f59e0b' },
+    { name: 'Posts Shared', value: 1203, color: '#10b981' },
+  ];
+  return {
+    data, totalSeconds, viewingDays: 30, viewingLimited: true,
+    earliest: t0, latest: t1, spanDays: Math.round((t1 - t0) / 86400),
+    byMonth, byYear, byDow, byHour, engagement, activityPie,
+    topThreads: [], bySharedMonth, dmBreakdown,
+    topCreators: [
+      { name: 'design_inspo', count: 234 }, { name: 'tech_daily', count: 189 },
+      { name: 'mindful_moments', count: 156 }, { name: 'frontend_tips', count: 134 },
+      { name: 'startup_life', count: 112 },
+    ],
+    trendProjection: [
+      { label: 'Jul 2024', total: 2956, projected: false }, { label: 'Aug 2024', total: 2592, projected: false },
+      { label: 'Sep 2024', total: 2305, projected: false }, { label: 'Oct 2024', total: 2100, projected: false },
+      { label: 'Nov 2024', total: 1980, projected: true }, { label: 'Dec 2024', total: 1850, projected: true },
+      { label: 'Jan 2025', total: 1720, projected: true },
+    ],
+    peakDow: 'Saturday', peakHourLabel: '9 PM',
+  };
+}
+
+const SAMPLE_IG = buildSampleIG();
+
 // ─── Analyser ─────────────────────────────────────────────────────────────────
 
 export interface Analysis {
@@ -1395,10 +1499,12 @@ export default function InstagramAnalyzerClient({ hideNav = false }: { hideNav?:
   const [state,    setState]    = useState<State>('idle');
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [error,    setError]    = useState('');
+  const [isSample, setIsSample] = useState(false);
 
   const handleFile = useCallback(async (file: File) => {
     setState('loading');
     setError('');
+    setIsSample(false);
     try {
       const data = file.name.endsWith('.zip') ? await parseZip(file) : await parseJsonFile(file);
       setAnalysis(analyse(data));
@@ -1444,6 +1550,13 @@ export default function InstagramAnalyzerClient({ hideNav = false }: { hideNav?:
         {state === 'idle' || state === 'error' ? (
           <div className="space-y-6">
             <UploadZone onFile={handleFile} />
+            <button
+              type="button"
+              onClick={() => { setAnalysis(SAMPLE_IG); setState('done'); setIsSample(true); }}
+              className="w-full flex items-center justify-center gap-2 rounded-xl border border-purple-200 py-3 text-sm font-semibold text-purple-600 transition-colors hover:bg-purple-50 hover:border-purple-300"
+            >
+              <span>👀</span> See a sample result first
+            </button>
             {state === 'error' && (
               <div className="rounded-xl p-4 border border-red-200 bg-red-50 text-sm text-red-700">
                 <strong>Error:</strong> {error}
@@ -1504,12 +1617,21 @@ export default function InstagramAnalyzerClient({ hideNav = false }: { hideNav?:
 
         ) : analysis ? (
           <div className="space-y-6">
+            {isSample && (
+              <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 flex items-center justify-between gap-3">
+                <span className="text-sm text-amber-800 font-medium">📊 Sample data — not your real account</span>
+                <button onClick={() => { setAnalysis(null); setState('idle'); setIsSample(false); }}
+                  className="text-xs font-bold text-amber-700 hover:text-amber-900 whitespace-nowrap">
+                  Analyze yours →
+                </button>
+              </div>
+            )}
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <button onClick={() => { setAnalysis(null); setState('idle'); }}
+              <button onClick={() => { setAnalysis(null); setState('idle'); setIsSample(false); }}
                 className="text-sm text-purple-600 hover:text-purple-700 font-medium flex items-center gap-1.5">
                 <ArrowLeft className="w-3.5 h-3.5" /> Analyse another file
               </button>
-              <ShareButton a={analysis} />
+              {!isSample && <ShareButton a={analysis} />}
             </div>
             <Results a={analysis} />
           </div>
