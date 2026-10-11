@@ -39,33 +39,20 @@ interface TWAnalysis {
 }
 
 // ─── Parse Twitter JS file format ────────────────────────────────────────────
-// Twitter exports use: window.YTD.xxx.partN = [...]
+// Twitter exports: window.YTD.xxx.partN = [...]
 
 function parseYTDFile(text: string): unknown[] {
   try {
     const m = text.match(/window\.YTD\.\w+\.part\d+\s*=\s*(\[[\s\S]*\])/);
     if (m) return JSON.parse(m[1]) as unknown[];
   } catch { /* skip */ }
-  // Fallback: try raw JSON
   try { return JSON.parse(text) as unknown[]; } catch { /* skip */ }
   return [];
 }
 
-// Parse Twitter date format: "Mon May 01 03:30:49 +0000 2022"
-function parseTwitterDate(dateStr: string): Date | null {
-  try {
-    const d = new Date(dateStr);
-    if (!isNaN(d.getTime())) return d;
-  } catch { /* skip */ }
-  return null;
-}
+// ─── Core processing: fileMap → TWAnalysis ───────────────────────────────────
 
-// ─── ZIP parser ───────────────────────────────────────────────────────────────
-
-async function parseTWZip(file: File): Promise<TWAnalysis> {
-  const JSZip = (await import('jszip')).default;
-  const zip = await JSZip.loadAsync(file);
-
+function processFileMap(fileMap: Map<string, string>): TWAnalysis {
   const tweets: Tweet[] = [];
   let totalLikes = 0;
   let totalFollowers = 0;
@@ -84,16 +71,13 @@ async function parseTWZip(file: File): Promise<TWAnalysis> {
   let replyCount = 0;
   let retweetCount = 0;
 
-  const files = Object.entries(zip.files);
-
-  for (const [name, entry] of files) {
-    if (entry.dir) continue;
+  for (const [name, text] of fileMap) {
     const base = name.split('/').pop()?.toLowerCase() ?? '';
 
     // Account info
     if (base === 'account.js') {
       try {
-        const items = parseYTDFile(await entry.async('text'));
+        const items = parseYTDFile(text);
         const acct = (items[0] as Record<string, unknown>)?.account as Record<string, string> | undefined;
         if (acct) {
           userName = acct.username ?? '';
@@ -104,10 +88,10 @@ async function parseTWZip(file: File): Promise<TWAnalysis> {
       continue;
     }
 
-    // Profile (location)
+    // Profile
     if (base === 'profile.js') {
       try {
-        const items = parseYTDFile(await entry.async('text'));
+        const items = parseYTDFile(text);
         const p = (items[0] as Record<string, unknown>)?.profile as Record<string, unknown> | undefined;
         const desc = p?.description as Record<string, string> | undefined;
         if (desc?.location) location = desc.location;
@@ -115,10 +99,10 @@ async function parseTWZip(file: File): Promise<TWAnalysis> {
       continue;
     }
 
-    // Personalization (languages)
+    // Personalization
     if (base === 'personalization.js') {
       try {
-        const items = parseYTDFile(await entry.async('text'));
+        const items = parseYTDFile(text);
         const p13n = (items[0] as Record<string, unknown>)?.p13nData as Record<string, unknown> | undefined;
         const demo = p13n?.demographics as Record<string, unknown> | undefined;
         const langs = demo?.languages as { language: string }[] | undefined;
@@ -127,43 +111,37 @@ async function parseTWZip(file: File): Promise<TWAnalysis> {
       continue;
     }
 
-    // Tweets (tweets.js, tweets-part1.js, tweets-part2.js, ...)
+    // Tweets
     if (/^tweets(-part\d+)?\.js$/.test(base)) {
       try {
-        const items = parseYTDFile(await entry.async('text'));
+        const items = parseYTDFile(text);
         for (const item of items) {
           const t = (item as Record<string, unknown>).tweet as Tweet | undefined;
           if (!t) continue;
           tweets.push(t);
-
-          const d = parseTwitterDate(t.created_at);
-          if (d) {
-            hourCounts[d.getHours()] = (hourCounts[d.getHours()] ?? 0) + 1;
-            yearCounts[d.getFullYear()] = (yearCounts[d.getFullYear()] ?? 0) + 1;
-          }
-
-          // Type classification
-          const text = t.full_text ?? '';
-          if (t.retweeted_status_id || text.startsWith('RT @')) {
+          try {
+            const d = new Date(t.created_at);
+            if (!isNaN(d.getTime())) {
+              hourCounts[d.getHours()] = (hourCounts[d.getHours()] ?? 0) + 1;
+              yearCounts[d.getFullYear()] = (yearCounts[d.getFullYear()] ?? 0) + 1;
+            }
+          } catch { /* skip */ }
+          const ttext = t.full_text ?? '';
+          if (t.retweeted_status_id || ttext.startsWith('RT @')) {
             retweetCount++;
           } else if (t.in_reply_to_user_id || t.in_reply_to_screen_name) {
             replyCount++;
-            // Extract mention for top mentions
-            const mentioned = t.in_reply_to_screen_name;
-            if (mentioned) mentionCounts[mentioned] = (mentionCounts[mentioned] ?? 0) + 1;
+            if (t.in_reply_to_screen_name) {
+              const h = t.in_reply_to_screen_name;
+              mentionCounts[h] = (mentionCounts[h] ?? 0) + 1;
+            }
           } else {
             originalCount++;
           }
-
-          // Extract @mentions from text
-          const mentionMatches = text.matchAll(/@(\w+)/g);
-          for (const m of mentionMatches) {
-            const handle = m[1].toLowerCase();
-            if (handle !== userName.toLowerCase()) {
-              mentionCounts[handle] = (mentionCounts[handle] ?? 0) + 1;
-            }
+          for (const m of ttext.matchAll(/@(\w+)/g)) {
+            const h = m[1].toLowerCase();
+            if (h !== userName.toLowerCase()) mentionCounts[h] = (mentionCounts[h] ?? 0) + 1;
           }
-
           likesPerTweetSum += Number(t.favorite_count ?? 0);
           retweetsPerTweetSum += Number(t.retweet_count ?? 0);
         }
@@ -174,7 +152,7 @@ async function parseTWZip(file: File): Promise<TWAnalysis> {
     // Likes
     if (/^like(-part\d+)?\.js$/.test(base)) {
       try {
-        const items = parseYTDFile(await entry.async('text'));
+        const items = parseYTDFile(text);
         totalLikes += items.filter(i => (i as Record<string, unknown>).like).length;
       } catch { /* skip */ }
       continue;
@@ -183,7 +161,7 @@ async function parseTWZip(file: File): Promise<TWAnalysis> {
     // Followers
     if (/^follower(-part\d+)?\.js$/.test(base)) {
       try {
-        const items = parseYTDFile(await entry.async('text'));
+        const items = parseYTDFile(text);
         totalFollowers += items.filter(i => (i as Record<string, unknown>).follower).length;
       } catch { /* skip */ }
       continue;
@@ -192,7 +170,7 @@ async function parseTWZip(file: File): Promise<TWAnalysis> {
     // Following
     if (/^following(-part\d+)?\.js$/.test(base)) {
       try {
-        const items = parseYTDFile(await entry.async('text'));
+        const items = parseYTDFile(text);
         totalFollowing += items.filter(i => (i as Record<string, unknown>).following).length;
       } catch { /* skip */ }
       continue;
@@ -201,11 +179,10 @@ async function parseTWZip(file: File): Promise<TWAnalysis> {
 
   if (!userName && !accountCreatedAt) {
     throw new Error(
-      'No Twitter account data found. Make sure you uploaded the correct ZIP — it should contain a "data/" folder with account.js, tweets.js, etc.'
+      'Could not find account data. Make sure you included account.js from the data/ folder.'
     );
   }
 
-  // Build charts
   const byYear = Object.entries(yearCounts)
     .map(([y, c]) => ({ year: Number(y), count: c }))
     .sort((a, b) => a.year - b.year);
@@ -213,27 +190,19 @@ async function parseTWZip(file: File): Promise<TWAnalysis> {
   const byHour = Array.from({ length: 24 }, (_, h) => ({ hour: h, count: hourCounts[h] ?? 0 }));
 
   const topMentions = Object.entries(mentionCounts)
-    .sort(([, a], [, b]) => b - a)
-    .slice(0, 10)
+    .sort(([, a], [, b]) => b - a).slice(0, 10)
     .map(([name, count]) => ({ name, count }));
 
   const totalTweets = tweets.length;
   const avgLikesPerTweet = totalTweets > 0 ? likesPerTweetSum / totalTweets : 0;
   const avgRetweetsPerTweet = totalTweets > 0 ? retweetsPerTweetSum / totalTweets : 0;
-
-  // Time estimate: 8 min per original tweet, 3 min per reply, 1 min per retweet, 30s per like
   const estimatedMinutes = (originalCount * 8) + (replyCount * 3) + (retweetCount * 1) + (totalLikes * 0.5);
   const estimatedHours = Math.max(1, Math.round(estimatedMinutes / 60));
-
   const peakHour = byHour.reduce((a, b) => b.count > a.count ? b : a, { hour: 0, count: 0 }).hour;
-  const peakYear = byYear.length > 0
-    ? byYear.reduce((a, b) => b.count > a.count ? b : a).year
-    : new Date().getFullYear();
-
+  const peakYear = byYear.length > 0 ? byYear.reduce((a, b) => b.count > a.count ? b : a).year : new Date().getFullYear();
   const createdDate = accountCreatedAt ? new Date(accountCreatedAt) : null;
   const accountAgeYears = createdDate
-    ? Math.floor((Date.now() - createdDate.getTime()) / (1000 * 60 * 60 * 24 * 365))
-    : 0;
+    ? Math.floor((Date.now() - createdDate.getTime()) / (1000 * 60 * 60 * 24 * 365)) : 0;
 
   return {
     userName, displayName, accountCreatedAt, accountAgeYears,
@@ -246,6 +215,37 @@ async function parseTWZip(file: File): Promise<TWAnalysis> {
   };
 }
 
+// ─── Parse from multiple JS files ────────────────────────────────────────────
+
+async function parseJsFiles(files: File[]): Promise<TWAnalysis> {
+  const fileMap = new Map<string, string>();
+  await Promise.all(files.map(async f => {
+    fileMap.set(f.name, await f.text());
+  }));
+  return processFileMap(fileMap);
+}
+
+// ─── Parse from ZIP ──────────────────────────────────────────────────────────
+
+async function parseTWZip(file: File): Promise<TWAnalysis> {
+  const JSZip = (await import('jszip')).default;
+  const zip = await JSZip.loadAsync(file);
+  const fileMap = new Map<string, string>();
+  const RELEVANT = /\/(account|profile|personalization|tweets|like|follower|following)(-part\d+)?\.js$/;
+  await Promise.all(
+    Object.entries(zip.files)
+      .filter(([name, entry]) => !entry.dir && RELEVANT.test(name))
+      .map(async ([name, entry]) => {
+        fileMap.set(name, await entry.async('text'));
+      })
+  );
+  return processFileMap(fileMap);
+}
+
+// ─── Key files the user needs ─────────────────────────────────────────────────
+
+const KEY_FILES = ['account.js', 'tweets.js', 'like.js', 'follower.js', 'following.js', 'profile.js'];
+
 // ─── Stat card ────────────────────────────────────────────────────────────────
 
 function StatCard({ label, value, sub }: { label: string; value: string; sub?: string }) {
@@ -257,8 +257,6 @@ function StatCard({ label, value, sub }: { label: string; value: string; sub?: s
     </div>
   );
 }
-
-// ─── Bar chart row ────────────────────────────────────────────────────────────
 
 function BarRow({ label, count, max }: { label: string; count: number; max: number }) {
   const pct = Math.max(2, Math.round((count / Math.max(max, 1)) * 100));
@@ -274,55 +272,46 @@ function BarRow({ label, count, max }: { label: string; count: number; max: numb
   );
 }
 
-// ─── Hour heatmap ─────────────────────────────────────────────────────────────
-
 function HourHeatmap({ byHour }: { byHour: { hour: number; count: number }[] }) {
   const max = Math.max(...byHour.map(h => h.count), 1);
-  const fmt = (h: number) => {
-    if (h === 0) return '12am';
-    if (h < 12) return `${h}am`;
-    if (h === 12) return '12pm';
-    return `${h - 12}pm`;
-  };
+  const fmt = (h: number) => h === 0 ? '12am' : h < 12 ? `${h}am` : h === 12 ? '12pm' : `${h - 12}pm`;
   return (
     <div className="grid grid-cols-12 gap-1">
-      {byHour.map(({ hour, count }) => {
-        const alpha = Math.max(0.07, count / max);
-        return (
-          <div key={hour} title={`${fmt(hour)}: ${count} tweets`} className="flex flex-col items-center gap-1">
-            <div
-              className="w-full aspect-square rounded-md"
-              style={{ background: `rgba(0,0,0,${alpha})` }}
-            />
-            {(hour % 3 === 0) && (
-              <span className="text-[8px] text-gray-400 leading-none">{fmt(hour)}</span>
-            )}
-          </div>
-        );
-      })}
+      {byHour.map(({ hour, count }) => (
+        <div key={hour} title={`${fmt(hour)}: ${count} tweets`} className="flex flex-col items-center gap-1">
+          <div className="w-full aspect-square rounded-md" style={{ background: `rgba(0,0,0,${Math.max(0.07, count / max)})` }} />
+          {hour % 3 === 0 && <span className="text-[8px] text-gray-400 leading-none">{fmt(hour)}</span>}
+        </div>
+      ))}
     </div>
   );
 }
 
-// ─── Upload zone ──────────────────────────────────────────────────────────────
+// ─── Upload zone (dual mode) ──────────────────────────────────────────────────
 
-function UploadZone({ onFile, loading, error }: {
-  onFile: (f: File) => void;
+function UploadZone({ onJsFiles, onZip, loading, error }: {
+  onJsFiles: (files: File[]) => void;
+  onZip: (file: File) => void;
   loading: boolean;
   error: string;
 }) {
-  const ref = useRef<HTMLInputElement>(null);
+  const jsRef = useRef<HTMLInputElement>(null);
+  const zipRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
 
   function handleDrop(e: React.DragEvent) {
     e.preventDefault();
     setDragOver(false);
-    const f = e.dataTransfer.files[0];
-    if (f) onFile(f);
+    const dropped = Array.from(e.dataTransfer.files);
+    const jsFiles = dropped.filter(f => f.name.endsWith('.js'));
+    const zipFile = dropped.find(f => f.name.endsWith('.zip'));
+    if (jsFiles.length > 0) onJsFiles(jsFiles);
+    else if (zipFile) onZip(zipFile);
   }
 
   return (
     <div className="max-w-xl mx-auto px-4 py-10 space-y-6">
+      {/* Header */}
       <div className="text-center space-y-3">
         <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center bg-black">
           <svg width={32} height={32} viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
@@ -334,22 +323,19 @@ function UploadZone({ onFile, loading, error }: {
             Now Live
           </div>
           <h2 className="text-2xl font-black text-gray-900">Twitter / X Analyzer</h2>
-          <p className="text-sm text-gray-500 mt-1">
-            Upload your X data archive to see your complete Twitter history — tweets, likes, and more.
-          </p>
+          <p className="text-sm text-gray-500 mt-1">Upload your X data archive to see your tweet history, likes & more.</p>
         </div>
       </div>
 
       {/* How to export */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-        <p className="text-[10.5px] font-bold text-gray-400 uppercase tracking-wider mb-3">How to export from X (Twitter)</p>
+        <p className="text-[10.5px] font-bold text-gray-400 uppercase tracking-wider mb-3">How to get your data</p>
         <ol className="space-y-3">
           {[
-            { n: 1, t: 'Open X Settings', b: 'Go to x.com → click your profile → Settings and Support → Settings.' },
-            { n: 2, t: 'Your Account', b: 'Click "Your Account" in the left menu.' },
-            { n: 3, t: 'Download an archive', b: 'Click "Download an archive of your data".' },
-            { n: 4, t: 'Verify your identity', b: 'Confirm with your password and verification code.' },
-            { n: 5, t: 'Download and upload here', b: 'X will email you a link. Download the ZIP and drop it below.' },
+            { n: 1, t: 'Request your archive', b: 'Go to x.com → Settings → Your Account → Download an archive of your data.' },
+            { n: 2, t: 'Download the ZIP', b: 'X emails you a link. Download the ZIP file.' },
+            { n: 3, t: 'Extract the ZIP', b: 'Unzip it on your computer. Open the data/ folder inside.' },
+            { n: 4, t: 'Select files below', b: `Pick these files from the data/ folder: ${KEY_FILES.join(', ')}` },
           ].map(s => (
             <li key={s.n} className="flex gap-3">
               <span className="flex-shrink-0 w-5 h-5 rounded-full bg-black text-white text-[10px] font-bold flex items-center justify-center mt-0.5">{s.n}</span>
@@ -362,36 +348,72 @@ function UploadZone({ onFile, loading, error }: {
         </ol>
       </div>
 
-      {/* Drop zone */}
+      {/* Primary upload — JS files */}
       <div
-        className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all ${dragOver ? 'border-gray-800 bg-gray-50 scale-[1.01]' : 'border-gray-200 hover:bg-gray-50 hover:border-gray-300'}`}
-        onClick={() => ref.current?.click()}
+        className={`border-2 border-dashed rounded-2xl p-7 text-center cursor-pointer transition-all ${dragOver ? 'border-gray-800 bg-gray-50 scale-[1.01]' : 'border-gray-300 hover:bg-gray-50 hover:border-gray-400'}`}
+        onClick={() => jsRef.current?.click()}
         onDragOver={e => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
       >
-        <input ref={ref} type="file" accept=".zip" className="hidden"
-          onChange={e => { const f = e.target.files?.[0]; if (f) onFile(f); }} />
+        <input
+          ref={jsRef}
+          type="file"
+          accept=".js"
+          multiple
+          className="hidden"
+          onChange={e => { const fs = Array.from(e.target.files ?? []); if (fs.length) onJsFiles(fs); }}
+        />
         {loading ? (
           <div className="space-y-2">
             <div className="w-8 h-8 border-2 border-gray-800 border-t-transparent rounded-full animate-spin mx-auto" />
-            <p className="text-sm font-medium text-gray-700">Analyzing your X archive…</p>
-            <p className="text-xs text-gray-400">Processing tweet history…</p>
+            <p className="text-sm font-medium text-gray-700">Analyzing your X data…</p>
           </div>
         ) : (
           <>
-            <div className="text-3xl mb-2">🐦</div>
-            <p className="text-sm font-bold text-gray-700">Drop your X / Twitter ZIP here</p>
-            <p className="text-xs text-gray-400 mt-1">or click to browse · .zip files only</p>
+            <div className="text-3xl mb-2">📂</div>
+            <p className="text-sm font-bold text-gray-800">Select .js files from the data/ folder</p>
+            <p className="text-xs text-gray-500 mt-1">Pick multiple files at once · account.js, tweets.js, like.js, etc.</p>
+            <div className="mt-3 flex flex-wrap justify-center gap-1.5">
+              {KEY_FILES.map(f => (
+                <span key={f} className="text-[10px] bg-gray-100 text-gray-500 rounded px-2 py-0.5 font-mono">{f}</span>
+              ))}
+            </div>
           </>
         )}
       </div>
 
-      {error && (
-        <div className="rounded-xl p-4 border border-red-200 bg-red-50 text-sm text-red-700">
-          <strong>Error: </strong>{error}
+      {/* Secondary — try ZIP */}
+      {!loading && (
+        <div className="text-center">
+          <p className="text-xs text-gray-400 mb-1">Or try uploading the ZIP directly</p>
+          <button
+            type="button"
+            onClick={() => zipRef.current?.click()}
+            className="text-xs text-gray-500 underline underline-offset-2 hover:text-gray-700"
+          >
+            Upload ZIP file
+          </button>
+          <input
+            ref={zipRef}
+            type="file"
+            accept=".zip"
+            className="hidden"
+            onChange={e => { const f = e.target.files?.[0]; if (f) onZip(f); }}
+          />
+          <p className="text-[10px] text-gray-400 mt-1">(May fail for large archives — use the JS files method above if it does)</p>
         </div>
       )}
+
+      {error && (
+        <div className="rounded-xl p-4 border border-red-200 bg-red-50 text-sm text-red-700 space-y-2">
+          <p><strong>Error: </strong>{error}</p>
+          <p className="text-xs text-red-600">
+            Try the <strong>JS files method</strong> — extract the ZIP, open the <code className="bg-red-100 px-1 rounded">data/</code> folder, and select the .js files directly.
+          </p>
+        </div>
+      )}
+
       <p className="text-center text-xs text-gray-400">100% private — processed in your browser, nothing uploaded.</p>
     </div>
   );
@@ -402,36 +424,25 @@ function UploadZone({ onFile, loading, error }: {
 function ResultsView({ data, onReset }: { data: TWAnalysis; onReset: () => void }) {
   const maxYear = Math.max(...data.byYear.map(y => y.count), 1);
   const maxMention = data.topMentions[0]?.count ?? 1;
-  const fmtHour = (h: number) => {
-    if (h === 0) return '12 AM';
-    if (h < 12) return `${h} AM`;
-    if (h === 12) return '12 PM';
-    return `${h - 12} PM`;
-  };
+  const fmtHour = (h: number) => h === 0 ? '12 AM' : h < 12 ? `${h} AM` : h === 12 ? '12 PM' : `${h - 12} PM`;
   const createdYear = data.accountCreatedAt ? new Date(data.accountCreatedAt).getFullYear() : null;
   const hasActivity = data.totalTweets > 0 || data.totalLikes > 0;
   const typeTotal = data.originalTweets + data.replies + data.retweets;
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8 space-y-5">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-black text-gray-900">
-            {data.displayName || data.userName || 'Your'} on X
-          </h2>
+          <h2 className="text-xl font-black text-gray-900">{data.displayName || data.userName || 'Your'} on X</h2>
           <p className="text-xs text-gray-400 mt-0.5">
             @{data.userName}
             {createdYear && ` · on X since ${createdYear}`}
             {data.location && ` · ${data.location}`}
           </p>
         </div>
-        <button onClick={onReset} className="text-xs text-gray-500 hover:text-gray-700 font-medium">
-          Analyze another file
-        </button>
+        <button onClick={onReset} className="text-xs text-gray-500 hover:text-gray-700 font-medium">Analyze another file</button>
       </div>
 
-      {/* Shock / summary card */}
       <div className="rounded-2xl p-6 text-center bg-black">
         {data.totalTweets > 0 ? (
           <>
@@ -444,18 +455,13 @@ function ResultsView({ data, onReset }: { data: TWAnalysis; onReset: () => void 
             <p className="text-white/60 text-xs font-bold uppercase tracking-widest mb-2">Account summary</p>
             <p className="text-white text-4xl font-black">{data.accountAgeYears}y old account</p>
             <p className="text-white/70 text-sm mt-2">
-              {data.totalLikes > 0
-                ? `${data.totalLikes} likes · mostly a reader`
-                : 'Light user · mostly browsing'}
+              {data.totalLikes > 0 ? `${data.totalLikes} likes · mostly a reader` : 'Light user · mostly browsing'}
             </p>
           </>
         )}
-        {data.languages.length > 0 && (
-          <p className="text-white/40 text-[10px] mt-3">{data.languages.join(' · ')}</p>
-        )}
+        {data.languages.length > 0 && <p className="text-white/40 text-[10px] mt-3">{data.languages.join(' · ')}</p>}
       </div>
 
-      {/* Stats grid */}
       <div className="grid grid-cols-2 gap-3">
         <StatCard label="Tweets posted" value={data.totalTweets.toLocaleString()} sub={typeTotal > 0 ? `${data.originalTweets} original · ${data.replies} replies · ${data.retweets} RTs` : undefined} />
         <StatCard label="Likes given" value={data.totalLikes.toLocaleString()} sub="tweets you liked" />
@@ -463,7 +469,6 @@ function ResultsView({ data, onReset }: { data: TWAnalysis; onReset: () => void 
         <StatCard label="Following" value={data.totalFollowing.toLocaleString()} />
       </div>
 
-      {/* Tweet type breakdown */}
       {typeTotal > 0 && (
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
           <h3 className="text-sm font-black text-gray-900 mb-4">Your Twitter Personality</h3>
@@ -493,32 +498,25 @@ function ResultsView({ data, onReset }: { data: TWAnalysis; onReset: () => void 
         </div>
       )}
 
-      {/* Activity by year */}
       {data.byYear.length > 0 && (
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
           <h3 className="text-sm font-black text-gray-900 mb-1">Tweets by Year</h3>
           <p className="text-xs text-gray-400 mb-4">Your posting history over time</p>
           <div className="space-y-2">
-            {data.byYear.map(({ year, count }) => (
-              <BarRow key={year} label={String(year)} count={count} max={maxYear} />
-            ))}
+            {data.byYear.map(({ year, count }) => <BarRow key={year} label={String(year)} count={count} max={maxYear} />)}
           </div>
         </div>
       )}
 
-      {/* Hour heatmap */}
-      {hasActivity && data.totalTweets > 0 && (
+      {data.totalTweets > 0 && (
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
           <h3 className="text-sm font-black text-gray-900 mb-1">When You Tweet</h3>
           <p className="text-xs text-gray-400 mb-4">Hour of day — darker = more tweets</p>
           <HourHeatmap byHour={data.byHour} />
-          <p className="text-xs text-gray-500 text-center mt-4">
-            Most active at <strong>{fmtHour(data.peakHour)}</strong>
-          </p>
+          <p className="text-xs text-gray-500 text-center mt-4">Most active at <strong>{fmtHour(data.peakHour)}</strong></p>
         </div>
       )}
 
-      {/* Top mentions */}
       {data.topMentions.length > 0 && (
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
           <h3 className="text-sm font-black text-gray-900 mb-4">People You Talk to Most</h3>
@@ -541,15 +539,11 @@ function ResultsView({ data, onReset }: { data: TWAnalysis; onReset: () => void 
         </div>
       )}
 
-      {/* Light user card */}
       {!hasActivity && (
         <div className="bg-gray-50 rounded-2xl border border-gray-100 p-6 text-center space-y-2">
           <div className="text-3xl">👀</div>
           <h3 className="text-sm font-bold text-gray-900">You&apos;re a lurker</h3>
-          <p className="text-xs text-gray-500">
-            Your archive shows minimal posting activity — you&apos;re on X to read, not to tweet.
-            That&apos;s actually pretty healthy.
-          </p>
+          <p className="text-xs text-gray-500">Your archive shows minimal posting — you&apos;re on X to read, not to tweet. That&apos;s actually healthy.</p>
           {data.accountCreatedAt && (
             <p className="text-xs text-gray-400 mt-2">
               Account created {new Date(data.accountCreatedAt).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })}
@@ -571,13 +565,13 @@ export default function TwitterAnalyzerClient({ hideNav }: { hideNav?: boolean }
   const [analysis, setAnalysis] = useState<TWAnalysis | null>(null);
   const [error, setError] = useState('');
 
-  function handleFile(file: File) {
+  function run(promise: Promise<TWAnalysis>) {
     setState('loading');
     setError('');
-    parseTWZip(file)
+    promise
       .then(result => { setAnalysis(result); setState('done'); })
       .catch(e => {
-        setError(e instanceof Error ? e.message : 'Failed to parse file. Make sure it is a valid X/Twitter data archive ZIP.');
+        setError(e instanceof Error ? e.message : 'Failed to parse. Try uploading the .js files from the data/ folder instead.');
         setState('error');
       });
   }
@@ -588,7 +582,8 @@ export default function TwitterAnalyzerClient({ hideNav }: { hideNav?: boolean }
 
   return (
     <UploadZone
-      onFile={handleFile}
+      onJsFiles={files => run(parseJsFiles(files))}
+      onZip={file => run(parseTWZip(file))}
       loading={state === 'loading'}
       error={state === 'error' ? error : ''}
     />
