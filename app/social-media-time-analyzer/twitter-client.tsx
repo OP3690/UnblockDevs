@@ -225,24 +225,39 @@ async function parseJsFiles(files: File[]): Promise<TWAnalysis> {
   return processFileMap(fileMap);
 }
 
-// ─── Parse from ZIP (uses fflate for ZIP64 support) ──────────────────────────
+// ─── Parse from ZIP (streaming Unzip avoids ZIP64 central-dir allocation bugs) ─
 
 async function parseTWZip(file: File): Promise<TWAnalysis> {
-  const { unzip } = await import('fflate');
+  const { Unzip, UnzipInflate } = await import('fflate');
   const RELEVANT = /\/(account|profile|personalization|tweets|like|follower|following)(-part\d+)?\.js$/;
-  const zipData = new Uint8Array(await file.arrayBuffer());
-  const extracted = await new Promise<Record<string, Uint8Array>>((resolve, reject) => {
-    unzip(zipData, { filter: (f) => RELEVANT.test(f.name) }, (err, data) => {
-      if (err) reject(new Error(`ZIP parse failed: ${err.message}`));
-      else resolve(data);
-    });
-  });
   const dec = new TextDecoder();
   const fileMap = new Map<string, string>();
-  for (const [path, bytes] of Object.entries(extracted)) {
-    const name = path.split('/').pop() ?? path;
-    fileMap.set(name, dec.decode(bytes));
-  }
+
+  const zipData = new Uint8Array(await file.arrayBuffer());
+
+  await new Promise<void>((resolve, reject) => {
+    const uz = new Unzip((stream) => {
+      if (!RELEVANT.test(stream.name)) { stream.terminate(); return; }
+      const chunks: Uint8Array[] = [];
+      stream.ondata = (err: Error | null, data: Uint8Array, final: boolean) => {
+        if (err) { reject(new Error(`Failed reading ${stream.name}: ${err.message}`)); return; }
+        if (data) chunks.push(data);
+        if (final) {
+          const name = stream.name.split('/').pop() ?? stream.name;
+          const total = chunks.reduce((n, c) => n + c.length, 0);
+          const merged = new Uint8Array(total);
+          let off = 0;
+          for (const c of chunks) { merged.set(c, off); off += c.length; }
+          fileMap.set(name, dec.decode(merged));
+        }
+      };
+      stream.start();
+    });
+    uz.register(UnzipInflate);
+    try { uz.push(zipData, true); resolve(); }
+    catch (e) { reject(new Error(`ZIP parse failed: ${e instanceof Error ? e.message : String(e)}`)); }
+  });
+
   if (fileMap.size === 0) {
     throw new Error('No relevant .js files found in this ZIP. Make sure it is a valid Twitter/X data archive.');
   }
