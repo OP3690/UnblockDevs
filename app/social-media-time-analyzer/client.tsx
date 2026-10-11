@@ -120,8 +120,7 @@ const PLATFORMS = [
     color: '#FF0000',
     gradient: 'from-red-600 to-red-400',
     bg: 'bg-gradient-to-br from-red-50 to-orange-50',
-    available: true,
-    beta: true,
+    available: false,
     tagline: 'Watch time & top channels',
     features: [
       'Total videos watched & estimated hours',
@@ -577,8 +576,6 @@ export default function SocialMediaTimeAnalyzerClient() {
         </div>
       ) : platform === 'threads' ? (
         <ThreadsAnalyzerClient hideNav />
-      ) : platform === 'youtube' ? (
-        <YouTubeAnalyzer />
       ) : (
         <ComingSoon p={current} />
       )}
