@@ -17,6 +17,11 @@ import {
   Filter,
   Download,
   Loader2,
+  Plus,
+  GitMerge,
+  Code2,
+  Table2,
+  Trash2,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCtaClick } from '@/lib/analytics';
@@ -106,6 +111,22 @@ export default function JsonToExcelClient() {
   const [statsOpen, setStatsOpen] = useState(false);
   const [privacyOpen, setPrivacyOpen] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
+
+  // ── Formula columns ──────────────────────────────────────────────────────────
+  interface FormulaCol { id: string; name: string; expr: string; }
+  const [formulaCols, setFormulaCols] = useState<FormulaCol[]>([]);
+  const [newFormulaName, setNewFormulaName] = useState('');
+  const [newFormulaExpr, setNewFormulaExpr] = useState('');
+  const [showFormulaForm, setShowFormulaForm] = useState(false);
+
+  // ── Join tab ─────────────────────────────────────────────────────────────────
+  const [dataTab, setDataTab] = useState<'table' | 'join'>('table');
+  const [joinJsonA, setJoinJsonA] = useState('');
+  const [joinJsonB, setJoinJsonB] = useState('');
+  const [joinKeyA, setJoinKeyA] = useState('');
+  const [joinKeyB, setJoinKeyB] = useState('');
+  const [joinResult, setJoinResult] = useState<{ rows: FlattenedRow[]; columns: Column[] } | null>(null);
+  const [joinError, setJoinError] = useState('');
 
   const saveToHistory = useCallback(() => {
     historyManager.push({
@@ -349,6 +370,95 @@ export default function JsonToExcelClient() {
     historyManager.clear();
   };
 
+  // ── Add blank row ─────────────────────────────────────────────────────────
+  const handleAddRow = useCallback(() => {
+    const newRow: FlattenedRow = {};
+    columns.forEach(col => {
+      if (removedColumns.has(col.id)) return;
+      newRow[col.id] = col.type === 'number' ? 0 : col.type === 'boolean' ? false : '';
+    });
+    setRows(prev => [...prev, newRow]);
+    saveToHistory();
+    toast.success('Row added');
+  }, [columns, removedColumns, saveToHistory]);
+
+  // ── Formula columns ───────────────────────────────────────────────────────
+  const handleAddFormula = useCallback(() => {
+    const name = newFormulaName.trim();
+    const expr = newFormulaExpr.trim();
+    if (!name || !expr) { toast.error('Enter a column name and expression.'); return; }
+    // Validate expression
+    try {
+      const testRow = Object.fromEntries(columns.map(c => [c.id, 0]));
+      // eslint-disable-next-line no-new-func
+      new Function('row', `return ${expr}`)(testRow);
+    } catch (e) {
+      toast.error(`Expression error: ${e instanceof Error ? e.message : String(e)}`); return;
+    }
+    const id = `__formula_${Date.now()}`;
+    setFormulaCols(prev => [...prev, { id, name, expr }]);
+    setNewFormulaName(''); setNewFormulaExpr(''); setShowFormulaForm(false);
+    toast.success(`Formula column "${name}" added`);
+  }, [newFormulaName, newFormulaExpr, columns]);
+
+  const formulaColumns = useMemo<Column[]>(() =>
+    formulaCols.map(fc => ({ id: fc.id, name: fc.name, type: 'string' as const })),
+  [formulaCols]);
+
+  const rowsWithFormulas = useMemo(() => {
+    if (formulaCols.length === 0) return filteredRows;
+    return filteredRows.map(row => {
+      const extra: Record<string, any> = {};
+      for (const fc of formulaCols) {
+        try {
+          // eslint-disable-next-line no-new-func
+          extra[fc.id] = new Function('row', `return ${fc.expr}`)(row);
+        } catch {
+          extra[fc.id] = '#ERR';
+        }
+      }
+      return { ...row, ...extra };
+    });
+  }, [filteredRows, formulaCols]);
+
+  // ── Join logic ────────────────────────────────────────────────────────────
+  const handleJoin = useCallback(() => {
+    setJoinError('');
+    try {
+      const dataA: any[] = JSON.parse(joinJsonA);
+      const dataB: any[] = JSON.parse(joinJsonB);
+      if (!Array.isArray(dataA) || !Array.isArray(dataB)) throw new Error('Both inputs must be JSON arrays.');
+      if (!joinKeyA || !joinKeyB) throw new Error('Select join key fields for both datasets.');
+      const mapB = new Map<string, any>();
+      dataB.forEach(row => mapB.set(String(row[joinKeyB] ?? ''), row));
+      const joined = dataA.map(rowA => {
+        const keyVal = String(rowA[joinKeyA] ?? '');
+        const rowB = mapB.get(keyVal) ?? {};
+        const extra: Record<string, any> = {};
+        Object.entries(rowB).forEach(([k, v]) => {
+          if (k === joinKeyB) return; // skip the join key from B
+          const outKey = Object.prototype.hasOwnProperty.call(rowA, k) ? `b_${k}` : k;
+          extra[outKey] = v;
+        });
+        return { ...rowA, ...extra };
+      });
+      const joinedRows = jsonToRows(joined, delimiter);
+      const joinedColumns = extractColumns(joinedRows);
+      setJoinResult({ rows: joinedRows, columns: joinedColumns });
+      toast.success(`Left join complete — ${joinedRows.length} rows`);
+    } catch (e) {
+      setJoinError(e instanceof Error ? e.message : String(e));
+    }
+  }, [joinJsonA, joinJsonB, joinKeyA, joinKeyB, delimiter]);
+
+  // Keys available for join key selectors
+  const joinKeysA = useMemo(() => {
+    try { const d = JSON.parse(joinJsonA); return Array.isArray(d) && d.length ? Object.keys(d[0]) : []; } catch { return []; }
+  }, [joinJsonA]);
+  const joinKeysB = useMemo(() => {
+    try { const d = JSON.parse(joinJsonB); return Array.isArray(d) && d.length ? Object.keys(d[0]) : []; } catch { return []; }
+  }, [joinJsonB]);
+
   // ⌘+Enter / Ctrl+Enter to export
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -363,10 +473,11 @@ export default function JsonToExcelClient() {
   }, []);
 
   const doExport = () => {
-    const columnIds =
+    const baseColumnIds =
       filteredSections.length > 0
         ? filteredSections.flatMap((s) => s.columnIds).filter((id) => !removedColumns.has(id))
         : visibleColumns.map((c) => c.id);
+    const columnIds = [...baseColumnIds, ...formulaCols.map(fc => fc.id)];
     if (columnIds.length === 0) {
       toast.error('No columns to export');
       return;
@@ -374,7 +485,7 @@ export default function JsonToExcelClient() {
     const baseName = `json-export-${new Date().toISOString().split('T')[0]}`;
     if (exportFormat === 'xlsx') {
       trackCtaClick('json_to_excel', 'download', { format: 'xlsx' });
-      exportToExcel(filteredRows, columnIds, {
+      exportToExcel(rowsWithFormulas, columnIds, {
         sections: filteredSections,
         singleSheet: true,
         fileName: `${baseName}.xlsx`,
@@ -382,11 +493,11 @@ export default function JsonToExcelClient() {
       toast.success('Excel file downloaded');
     } else if (exportFormat === 'csv') {
       trackCtaClick('json_to_excel', 'download', { format: 'csv' });
-      exportToCSV(filteredRows, columnIds, `${baseName}.csv`);
+      exportToCSV(rowsWithFormulas, columnIds, `${baseName}.csv`);
       toast.success('CSV file downloaded');
     } else {
       trackCtaClick('json_to_excel', 'download', { format: 'csv' });
-      exportToTSV(filteredRows, columnIds, `${baseName}.tsv`);
+      exportToTSV(rowsWithFormulas, columnIds, `${baseName}.tsv`);
       toast.success('TSV file downloaded');
     }
   };
@@ -788,15 +899,153 @@ export default function JsonToExcelClient() {
               )}
             </section>
 
-            <DataTable
-              rows={filteredRows}
-              columns={visibleColumns}
-              sections={filteredSections}
-              removedColumns={removedColumns}
-              onCellEdit={handleCellEdit}
-              onColumnRename={handleColumnRename}
-              onRowDelete={handleRowDelete}
-            />
+            {/* ── Feature tab switcher ─────────────────────────────────────────── */}
+            <div className="flex gap-0.5 p-1 bg-gray-100 rounded-2xl w-fit">
+              {([
+                { id: 'table', label: 'Data Table', icon: Table2 },
+                { id: 'join',  label: 'Join',        icon: GitMerge },
+              ] as { id: 'table' | 'join'; label: string; icon: any }[]).map(({ id, label, icon: Icon }) => (
+                <button key={id} onClick={() => setDataTab(id)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${dataTab === id ? 'bg-white text-emerald-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}>
+                  <Icon className="w-4 h-4" />{label}
+                </button>
+              ))}
+            </div>
+
+            {dataTab === 'table' && (
+              <>
+                {/* ── Formula columns bar ────────────────────────────────────── */}
+                <section className="bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden">
+                  <div className="px-4 sm:px-5 py-3 flex items-center justify-between flex-wrap gap-2">
+                    <span className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+                      <Code2 className="w-4 h-4 text-emerald-600" />
+                      Formula columns
+                    </span>
+                    <button onClick={() => setShowFormulaForm(v => !v)}
+                      className="text-sm text-emerald-600 hover:text-emerald-700 font-medium flex items-center gap-1.5">
+                      <Plus className="w-3.5 h-3.5" /> Add formula column
+                    </button>
+                  </div>
+                  {showFormulaForm && (
+                    <div className="px-4 sm:px-5 pb-4 space-y-3 border-t border-gray-100">
+                      <p className="text-xs text-gray-400 pt-3">Write a JS expression. Use <code className="font-mono bg-gray-100 px-1 rounded">row.fieldName</code> to reference columns.</p>
+                      <div className="flex flex-wrap gap-2">
+                        <input value={newFormulaName} onChange={e => setNewFormulaName(e.target.value)}
+                          placeholder="Column name" className="border border-gray-200 rounded-xl px-3 py-2 text-sm w-36 focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 outline-none" />
+                        <input value={newFormulaExpr} onChange={e => setNewFormulaExpr(e.target.value)}
+                          placeholder="e.g. row.price * row.qty" className="border border-gray-200 rounded-xl px-3 py-2 text-sm flex-1 min-w-[200px] font-mono focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 outline-none" />
+                        <button onClick={handleAddFormula}
+                          className="px-4 py-2 rounded-xl bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition-colors">
+                          Add
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  {formulaCols.length > 0 && (
+                    <div className="px-4 sm:px-5 pb-3 flex flex-wrap gap-2 border-t border-gray-100">
+                      {formulaCols.map(fc => (
+                        <div key={fc.id} className="flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 px-3 py-1 text-xs font-semibold">
+                          <Code2 className="w-3 h-3" />
+                          <span>{fc.name}</span>
+                          <code className="text-emerald-500 font-mono text-[10px]">= {fc.expr}</code>
+                          <button onClick={() => setFormulaCols(prev => prev.filter(x => x.id !== fc.id))}
+                            className="ml-1 text-emerald-400 hover:text-red-500 transition-colors">
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </section>
+
+                <DataTable
+                  rows={rowsWithFormulas}
+                  columns={[...visibleColumns, ...formulaColumns]}
+                  sections={filteredSections}
+                  removedColumns={removedColumns}
+                  onCellEdit={handleCellEdit}
+                  onColumnRename={handleColumnRename}
+                  onRowDelete={handleRowDelete}
+                />
+
+                {/* ── Add row button ──────────────────────────────────────────── */}
+                <button onClick={handleAddRow}
+                  className="flex items-center gap-2 px-4 py-2.5 border-2 border-dashed border-gray-300 text-gray-500 hover:border-emerald-400 hover:text-emerald-700 hover:bg-emerald-50 rounded-xl text-sm font-medium transition-all w-full justify-center">
+                  <Plus className="w-4 h-4" /> Add row
+                </button>
+              </>
+            )}
+
+            {dataTab === 'join' && (
+              <section className="bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden">
+                <div className="px-5 py-4 border-b border-gray-100">
+                  <p className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+                    <GitMerge className="w-4 h-4 text-emerald-600" /> Left Join two JSON arrays
+                  </p>
+                  <p className="text-xs text-gray-400 mt-0.5">All rows from Dataset A are kept. Matching rows from Dataset B are merged in.</p>
+                </div>
+                <div className="p-5 space-y-4">
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Dataset A (left)</label>
+                      <textarea value={joinJsonA} onChange={e => setJoinJsonA(e.target.value)} rows={6}
+                        placeholder='[{"id":1,"name":"Alice"},...]'
+                        className="w-full font-mono text-xs border border-gray-200 rounded-xl p-3 focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 outline-none resize-y" />
+                      {joinKeysA.length > 0 && (
+                        <select value={joinKeyA} onChange={e => setJoinKeyA(e.target.value)}
+                          className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500/30">
+                          <option value="">— Join key in A —</option>
+                          {joinKeysA.map(k => <option key={k} value={k}>{k}</option>)}
+                        </select>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Dataset B (right)</label>
+                      <textarea value={joinJsonB} onChange={e => setJoinJsonB(e.target.value)} rows={6}
+                        placeholder='[{"userId":1,"score":95},...]'
+                        className="w-full font-mono text-xs border border-gray-200 rounded-xl p-3 focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 outline-none resize-y" />
+                      {joinKeysB.length > 0 && (
+                        <select value={joinKeyB} onChange={e => setJoinKeyB(e.target.value)}
+                          className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500/30">
+                          <option value="">— Join key in B —</option>
+                          {joinKeysB.map(k => <option key={k} value={k}>{k}</option>)}
+                        </select>
+                      )}
+                    </div>
+                  </div>
+                  <button onClick={handleJoin}
+                    disabled={!joinJsonA.trim() || !joinJsonB.trim() || !joinKeyA || !joinKeyB}
+                    className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-medium hover:bg-emerald-700 disabled:opacity-40 transition-colors">
+                    <GitMerge className="w-4 h-4" /> Run left join
+                  </button>
+                  {joinError && <p className="text-sm text-red-600 bg-red-50 rounded-xl px-4 py-2">{joinError}</p>}
+                  {joinResult && (
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm font-semibold text-gray-900">{joinResult.rows.length} rows · {joinResult.columns.length} columns</p>
+                        <button
+                          onClick={() => {
+                            exportToCSV(joinResult.rows, joinResult.columns.map(c => c.id), `join-result-${Date.now()}.csv`);
+                            toast.success('Join result downloaded as CSV');
+                          }}
+                          className="flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 text-sm font-medium rounded-xl text-gray-600 hover:bg-gray-50 transition-colors">
+                          <Download className="w-3.5 h-3.5" /> Export CSV
+                        </button>
+                      </div>
+                      <DataTable
+                        rows={joinResult.rows}
+                        columns={joinResult.columns}
+                        sections={[]}
+                        removedColumns={new Set()}
+                        onCellEdit={() => {}}
+                        onColumnRename={() => {}}
+                        onRowDelete={() => {}}
+                      />
+                    </div>
+                  )}
+                </div>
+              </section>
+            )}
           </div>
         )}
       </main>

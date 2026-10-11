@@ -7,6 +7,174 @@ import { trackCopy, trackCtaClick } from '@/lib/analytics';
 import { validateJson } from '@/lib/jsonParser';
 import Link from 'next/link';
 
+// ─── Enum inference ──────────────────────────────────────────────────────────
+function collectEnumCandidates(items: unknown[]): Map<string, string[]> {
+  const fieldValues = new Map<string, Set<string>>();
+  for (const item of items) {
+    if (!item || typeof item !== 'object' || Array.isArray(item)) continue;
+    for (const [key, val] of Object.entries(item as Record<string, unknown>)) {
+      if (typeof val === 'string') {
+        if (!fieldValues.has(key)) fieldValues.set(key, new Set());
+        fieldValues.get(key)!.add(val);
+      }
+    }
+  }
+  const result = new Map<string, string[]>();
+  for (const [key, values] of fieldValues.entries()) {
+    if (values.size >= 2 && values.size <= 5) {
+      result.set(key, Array.from(values));
+    }
+  }
+  return result;
+}
+
+// ─── $defs extraction ────────────────────────────────────────────────────────
+function extractDefs(schema: any): any {
+  const seen = new Map<string, { count: number; schema: any; name: string }>();
+  let defCounter = 0;
+
+  function traverse(node: any): void {
+    if (!node || typeof node !== 'object') return;
+    if (node.type === 'object' && node.properties && !node.$ref) {
+      const key = JSON.stringify(node.properties);
+      if (seen.has(key)) {
+        seen.get(key)!.count++;
+      } else {
+        const name = `Type${++defCounter}`;
+        seen.set(key, { count: 1, schema: node, name });
+      }
+    }
+    for (const v of Object.values(node)) {
+      if (typeof v === 'object') traverse(v);
+    }
+  }
+  traverse(schema);
+
+  const defs: Record<string, any> = {};
+  const refMap = new Map<string, string>();
+  for (const [key, entry] of seen.entries()) {
+    if (entry.count >= 2) {
+      defs[entry.name] = { ...entry.schema };
+      refMap.set(key, entry.name);
+    }
+  }
+  if (Object.keys(defs).length === 0) return schema;
+
+  function replace(node: any): any {
+    if (!node || typeof node !== 'object') return node;
+    if (Array.isArray(node)) return node.map(replace);
+    if (node.type === 'object' && node.properties && !node.$ref) {
+      const key = JSON.stringify(node.properties);
+      if (refMap.has(key)) return { $ref: `#/$defs/${refMap.get(key)}` };
+    }
+    const result: Record<string, any> = {};
+    for (const [k, v] of Object.entries(node)) {
+      result[k] = replace(v);
+    }
+    return result;
+  }
+
+  const replaced = replace(schema);
+  if (replaced.$defs || Object.keys(defs).length > 0) {
+    replaced.$defs = { ...replaced.$defs, ...defs };
+  }
+  return replaced;
+}
+
+// ─── Enhanced AJV-style validator ────────────────────────────────────────────
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})?)?$/;
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const URI_RE = /^https?:\/\/.+/;
+
+function validateValue(data: unknown, schema: any, path: string, errors: string[]): void {
+  if (!schema || typeof schema !== 'object') return;
+
+  // $ref — skip for now (requires defs context)
+  if (schema.$ref) return;
+
+  // type checking
+  if (schema.type) {
+    const actualType = data === null ? 'null' : Array.isArray(data) ? 'array' : typeof data;
+    const expectedType = schema.type === 'integer' ? 'number' : schema.type;
+    if (actualType !== expectedType) {
+      errors.push(`${path}: expected type '${schema.type}', got '${actualType}'`);
+      return;
+    }
+    if (schema.type === 'integer' && typeof data === 'number' && !Number.isInteger(data)) {
+      errors.push(`${path}: expected integer, got float`);
+    }
+  }
+
+  // enum
+  if (schema.enum && Array.isArray(schema.enum)) {
+    if (!schema.enum.includes(data)) {
+      errors.push(`${path}: value must be one of [${schema.enum.map((v: unknown) => JSON.stringify(v)).join(', ')}]`);
+    }
+  }
+
+  // string-specific
+  if (typeof data === 'string') {
+    if (schema.minLength !== undefined && data.length < schema.minLength) {
+      errors.push(`${path}: string length ${data.length} < minLength ${schema.minLength}`);
+    }
+    if (schema.maxLength !== undefined && data.length > schema.maxLength) {
+      errors.push(`${path}: string length ${data.length} > maxLength ${schema.maxLength}`);
+    }
+    if (schema.format === 'email' && !EMAIL_RE.test(data)) {
+      errors.push(`${path}: expected format 'email'`);
+    }
+    if ((schema.format === 'date' || schema.format === 'date-time') && !ISO_DATE_RE.test(data)) {
+      errors.push(`${path}: expected format '${schema.format}'`);
+    }
+    if (schema.format === 'uri' && !URI_RE.test(data)) {
+      errors.push(`${path}: expected format 'uri'`);
+    }
+    if (schema.format === 'uuid' && !UUID_RE.test(data)) {
+      errors.push(`${path}: expected format 'uuid'`);
+    }
+  }
+
+  // number-specific
+  if (typeof data === 'number') {
+    if (schema.minimum !== undefined && data < schema.minimum) {
+      errors.push(`${path}: value ${data} < minimum ${schema.minimum}`);
+    }
+    if (schema.maximum !== undefined && data > schema.maximum) {
+      errors.push(`${path}: value ${data} > maximum ${schema.maximum}`);
+    }
+  }
+
+  // object
+  if (typeof data === 'object' && data !== null && !Array.isArray(data)) {
+    const obj = data as Record<string, unknown>;
+    // required
+    if (schema.required && Array.isArray(schema.required)) {
+      for (const req of schema.required) {
+        if (!(req in obj)) {
+          errors.push(`${path}: missing required field '${req}'`);
+        }
+      }
+    }
+    // properties
+    if (schema.properties) {
+      for (const [key, propSchema] of Object.entries(schema.properties)) {
+        if (key in obj) {
+          validateValue(obj[key], propSchema, `${path}.${key}`, errors);
+        }
+      }
+    }
+  }
+
+  // array
+  if (Array.isArray(data) && schema.items) {
+    data.forEach((item, idx) => {
+      validateValue(item, schema.items, `${path}[${idx}]`, errors);
+    });
+  }
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 // Generate TypeScript interface from JSON Schema
 function schemaToTypescript(schema: any, name: string = 'Root', indent: number = 0): string {
   const pad = '  '.repeat(indent);
@@ -61,8 +229,10 @@ export default function SchemaGenerator() {
   const [jsonToValidate, setJsonToValidate] = useState('');
   const resultsSectionRef = useRef<HTMLDivElement>(null);
   const [tsInterface, setTsInterface] = useState<string | null>(null);
+  const [inferEnumsEnabled, setInferEnumsEnabled] = useState(true);
+  const [useDefsEnabled, setUseDefsEnabled] = useState(true);
 
-  const generateSchema = (obj: any, required: boolean = true): any => {
+  const generateSchema = (obj: any, required: boolean = true, enumCandidates?: Map<string, string[]>): any => {
     if (obj === null) {
       return { type: 'null' };
     }
@@ -71,13 +241,16 @@ export default function SchemaGenerator() {
       if (obj.length === 0) {
         return { type: 'array', items: {} };
       }
+      // Collect enum candidates from array items if enabled
+      const candidatesForItems = inferEnumsEnabled ? collectEnumCandidates(obj) : new Map<string, string[]>();
+
       // Analyze all items to find common schema
-      const itemSchemas = obj.map(item => generateSchema(item, false));
+      const itemSchemas = obj.map(item => generateSchema(item, false, candidatesForItems));
       const firstItem = itemSchemas[0];
-      
+
       // Check if all items have the same structure
       const allSame = itemSchemas.every(s => JSON.stringify(s) === JSON.stringify(firstItem));
-      
+
       if (allSame) {
         return {
           type: 'array',
@@ -100,8 +273,8 @@ export default function SchemaGenerator() {
 
       for (const key in obj) {
         if (obj.hasOwnProperty(key)) {
-          properties[key] = generateSchema(obj[key], false);
-          
+          properties[key] = generateSchema(obj[key], false, enumCandidates);
+
           // Add description based on key name
           if (key.toLowerCase().includes('email')) {
             properties[key].format = 'email';
@@ -110,7 +283,7 @@ export default function SchemaGenerator() {
           } else if (key.toLowerCase().includes('date') || key.toLowerCase().includes('time')) {
             properties[key].format = 'date-time';
           }
-          
+
           // Mark as required if not null/undefined
           if (obj[key] !== null && obj[key] !== undefined && obj[key] !== '') {
             requiredFields.push(key);
@@ -133,16 +306,23 @@ export default function SchemaGenerator() {
 
     // Handle primitive types with better detection
     if (typeof obj === 'string') {
+      // Check enum candidates first (only when the caller passed candidates)
+      if (enumCandidates) {
+        // Reverse-look-up: this path doesn't have key context, so enum resolution happens at object level
+        // (handled above when processing object properties — see below)
+      }
       const schema: any = { type: 'string' };
       // Detect patterns
-      if (/^\d{4}-\d{2}-\d{2}/.test(obj)) {
-        schema.format = 'date';
-      } else if (/^\d{4}-\d{2}-\d{2}T/.test(obj)) {
+      if (/^\d{4}-\d{2}-\d{2}T/.test(obj)) {
         schema.format = 'date-time';
+      } else if (/^\d{4}-\d{2}-\d{2}$/.test(obj)) {
+        schema.format = 'date';
       } else if (/^https?:\/\//.test(obj)) {
         schema.format = 'uri';
       } else if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(obj)) {
         schema.format = 'email';
+      } else if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(obj)) {
+        schema.format = 'uuid';
       }
       return schema;
     }
@@ -156,6 +336,26 @@ export default function SchemaGenerator() {
     }
 
     return { type: typeof obj };
+  };
+
+  // Apply enum inference to object properties after schema generation
+  const applyEnums = (schema: any, enumCandidates: Map<string, string[]>): any => {
+    if (!schema || typeof schema !== 'object') return schema;
+    if (schema.type === 'object' && schema.properties) {
+      const props: Record<string, any> = {};
+      for (const [key, val] of Object.entries(schema.properties as Record<string, any>)) {
+        if (val.type === 'string' && !val.format && enumCandidates.has(key)) {
+          props[key] = { ...val, enum: enumCandidates.get(key) };
+        } else {
+          props[key] = applyEnums(val, enumCandidates);
+        }
+      }
+      return { ...schema, properties: props };
+    }
+    if (schema.type === 'array' && schema.items) {
+      return { ...schema, items: applyEnums(schema.items, enumCandidates) };
+    }
+    return schema;
   };
 
   // ⌘+Enter / Ctrl+Enter to generate
@@ -179,8 +379,21 @@ export default function SchemaGenerator() {
     }
 
     try {
-      const generatedSchema = generateSchema(validation.data);
-      
+      let generatedSchema = generateSchema(validation.data);
+
+      // Apply enum inference post-processing when input is an array
+      if (inferEnumsEnabled && Array.isArray(validation.data) && validation.data.length > 1) {
+        const enumCandidates = collectEnumCandidates(validation.data);
+        if (generatedSchema.items) {
+          generatedSchema = { ...generatedSchema, items: applyEnums(generatedSchema.items, enumCandidates) };
+        }
+      }
+
+      // Apply $defs extraction
+      if (useDefsEnabled) {
+        generatedSchema = extractDefs(generatedSchema);
+      }
+
       if (schemaFormat === 'openapi') {
         // Convert to OpenAPI schema format
         const openApiSchema = {
@@ -223,49 +436,14 @@ export default function SchemaGenerator() {
 
     try {
       const errors: string[] = [];
-      const data = validation.data;
-
-      // Basic validation against schema
-      if (schema.type === 'object' && typeof data === 'object' && !Array.isArray(data)) {
-        // Check required fields
-        if (schema.required) {
-          for (const field of schema.required) {
-            if (!(field in data)) {
-              errors.push(`Missing required field: ${field}`);
-            }
-          }
-        }
-
-        // Check properties
-        if (schema.properties) {
-          for (const key in data) {
-            if (key in schema.properties) {
-              const propSchema = schema.properties[key];
-              const value = data[key];
-
-              // Type checking
-              if (propSchema.type === 'string' && typeof value !== 'string') {
-                errors.push(`Field '${key}' should be a string`);
-              } else if (propSchema.type === 'integer' && !Number.isInteger(value)) {
-                errors.push(`Field '${key}' should be an integer`);
-              } else if (propSchema.type === 'number' && typeof value !== 'number') {
-                errors.push(`Field '${key}' should be a number`);
-              } else if (propSchema.type === 'boolean' && typeof value !== 'boolean') {
-                errors.push(`Field '${key}' should be a boolean`);
-              } else if (propSchema.type === 'array' && !Array.isArray(value)) {
-                errors.push(`Field '${key}' should be an array`);
-              }
-            }
-          }
-        }
-      }
+      validateValue(validation.data, schema, '$', errors);
 
       if (errors.length === 0) {
         setValidationResult({ valid: true, errors: [] });
         toast.success('JSON is valid against the schema!');
       } else {
         setValidationResult({ valid: false, errors });
-        toast.error('Validation failed');
+        toast.error(`Validation failed: ${errors.length} issue${errors.length > 1 ? 's' : ''}`);
       }
     } catch (err: any) {
       setValidationResult({ valid: false, errors: ['Validation error: ' + err.message] });
@@ -388,16 +566,42 @@ export default function SchemaGenerator() {
           />
         </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Schema Format</label>
-          <select
-            value={schemaFormat}
-            onChange={(e) => setSchemaFormat(e.target.value as 'draft7' | 'openapi')}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-          >
-            <option value="draft7">JSON Schema Draft 7</option>
-            <option value="openapi">OpenAPI Schema</option>
-          </select>
+        <div className="mb-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Schema Format</label>
+            <select
+              value={schemaFormat}
+              onChange={(e) => setSchemaFormat(e.target.value as 'draft7' | 'openapi')}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+            >
+              <option value="draft7">JSON Schema Draft 7</option>
+              <option value="openapi">OpenAPI Schema</option>
+            </select>
+          </div>
+          <div className="flex flex-col justify-end">
+            <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer select-none pb-2">
+              <input
+                type="checkbox"
+                checked={inferEnumsEnabled}
+                onChange={(e) => setInferEnumsEnabled(e.target.checked)}
+                className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              />
+              Infer enums
+              <span className="text-xs text-gray-400">(2–5 distinct values)</span>
+            </label>
+          </div>
+          <div className="flex flex-col justify-end">
+            <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer select-none pb-2">
+              <input
+                type="checkbox"
+                checked={useDefsEnabled}
+                onChange={(e) => setUseDefsEnabled(e.target.checked)}
+                className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              />
+              Use $defs
+              <span className="text-xs text-gray-400">(extract repeated types)</span>
+            </label>
+          </div>
         </div>
 
         <button

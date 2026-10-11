@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useTransition, useEffect } from 'react';
+import { useState, useCallback, useTransition, useEffect, useRef } from 'react';
 import {
   GitCompare,
   Copy,
@@ -19,6 +19,7 @@ import {
   X,
   Download,
   Zap,
+  History,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy, trackCtaClick } from '@/lib/analytics';
@@ -157,6 +158,83 @@ const EXAMPLE_JSON_B = `{
   }
 }`;
 
+// Minimal inline YAML→JSON converter (handles string/number/bool/null, nested objects, arrays)
+function parseYaml(text: string): unknown {
+  function parseVal(s: string): unknown {
+    const t = s.trim();
+    if (t === '' || t === 'null' || t === '~') return null;
+    if (t === 'true') return true;
+    if (t === 'false') return false;
+    if (/^-?\d+(\.\d+)?$/.test(t)) return Number(t);
+    if ((t[0] === '"' && t[t.length - 1] === '"') || (t[0] === "'" && t[t.length - 1] === "'")) return t.slice(1, -1);
+    return t;
+  }
+  function indentOf(line: string) { let n = 0; while (n < line.length && line[n] === ' ') n++; return n; }
+  const lines = text.split('\n');
+
+  function parseBlock(idx: number, baseInd: number): [unknown, number] {
+    // Find first content line
+    let i = idx;
+    while (i < lines.length && (!lines[i].trim() || lines[i].trim().startsWith('#'))) i++;
+    if (i >= lines.length) return [null, i];
+    const firstTrimmed = lines[i].trim();
+    if (firstTrimmed.startsWith('- ') || firstTrimmed === '-') {
+      // Array
+      const arr: unknown[] = [];
+      while (i < lines.length) {
+        const l = lines[i];
+        if (!l.trim() || l.trim().startsWith('#')) { i++; continue; }
+        const ind = indentOf(l);
+        if (ind < baseInd) break;
+        const tr = l.trim();
+        if (!tr.startsWith('- ') && tr !== '-') break;
+        const afterDash = tr.slice(2).trim();
+        if (!afterDash) {
+          const [val, next] = parseBlock(i + 1, ind + 2);
+          arr.push(val); i = next;
+        } else if (afterDash.includes(':') && !afterDash.startsWith('"') && !afterDash.startsWith("'")) {
+          // Inline key: val start after dash — parse as single-item object block starting from this line's key part
+          const ci = afterDash.indexOf(':');
+          const k = afterDash.slice(0, ci).trim().replace(/^["']|["']$/g, '');
+          const rest = afterDash.slice(ci + 1).trim();
+          const obj: Record<string, unknown> = {};
+          if (rest) { obj[k] = parseVal(rest); i++; }
+          else { const [val, next] = parseBlock(i + 1, ind + 2); obj[k] = val; i = next; }
+          arr.push(obj);
+        } else {
+          arr.push(parseVal(afterDash)); i++;
+        }
+      }
+      return [arr, i];
+    } else {
+      // Object
+      const obj: Record<string, unknown> = {};
+      while (i < lines.length) {
+        const l = lines[i];
+        if (!l.trim() || l.trim().startsWith('#')) { i++; continue; }
+        const ind = indentOf(l);
+        if (ind < baseInd) break;
+        const tr = l.trim();
+        if (tr.startsWith('- ')) break;
+        const ci = tr.indexOf(':');
+        if (ci < 0) { i++; continue; }
+        const key = tr.slice(0, ci).trim().replace(/^["']|["']$/g, '');
+        const rest = tr.slice(ci + 1).trim();
+        if (!rest) {
+          const ni = i + 1;
+          if (ni < lines.length && !lines[ni].trim().startsWith('#') && lines[ni].trim() && indentOf(lines[ni]) > ind) {
+            const [val, next] = parseBlock(ni, indentOf(lines[ni]));
+            obj[key] = val; i = next;
+          } else { obj[key] = null; i++; }
+        } else { obj[key] = parseVal(rest); i++; }
+      }
+      return [obj, i];
+    }
+  }
+  const [result] = parseBlock(0, 0);
+  return result;
+}
+
 export default function SmartJsonDiff() {
   const [jsonA, setJsonA] = useState('');
   const [jsonB, setJsonB] = useState('');
@@ -168,6 +246,15 @@ export default function SmartJsonDiff() {
   const [entropyOpen, setEntropyOpen] = useState(false);
   const [metricsOpen, setMetricsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
+  // Live diff (debounced auto-compare)
+  const [liveDiff, setLiveDiff] = useState(false);
+  // Per-panel input format
+  const [inputFormatA, setInputFormatA] = useState<'json' | 'yaml'>('json');
+  const [inputFormatB, setInputFormatB] = useState<'json' | 'yaml'>('json');
+  // Diff history — stack stored in ref, counter state drives re-render
+  const diffHistoryRef = useRef<Array<{ ts: number; a: string; b: string }>>([]);
+  const [historyCount, setHistoryCount] = useState(0);
+  const [historyOpen, setHistoryOpen] = useState(false);
 
   // ⌘+Enter / Ctrl+Enter to compare
   useEffect(() => {
@@ -182,6 +269,16 @@ export default function SmartJsonDiff() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Live diff: debounce 500ms after user stops typing
+  useEffect(() => {
+    if (!liveDiff) return;
+    const id = setTimeout(() => {
+      if (jsonA.trim() && jsonB.trim()) runDiff();
+    }, 500);
+    return () => clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [jsonA, jsonB, liveDiff, config]);
+
   const runDiff = useCallback(() => {
     setError(null);
     setResult(null);
@@ -189,10 +286,23 @@ export default function SmartJsonDiff() {
       setError('Paste JSON in both panels.');
       return;
     }
+    // Push current pair to history (last 5)
+    diffHistoryRef.current = [{ ts: Date.now(), a: jsonA, b: jsonB }, ...diffHistoryRef.current].slice(0, 5);
+    setHistoryCount(diffHistoryRef.current.length);
     trackCtaClick('json_comparator', 'compare');
     startTransition(() => {
       try {
-        const r = smartDiff(jsonA, jsonB, config);
+        let inputA = jsonA;
+        let inputB = jsonB;
+        if (inputFormatA === 'yaml') {
+          try { inputA = JSON.stringify(parseYaml(jsonA), null, 2); }
+          catch { throw new Error('YAML A: could not parse — check indentation and syntax'); }
+        }
+        if (inputFormatB === 'yaml') {
+          try { inputB = JSON.stringify(parseYaml(jsonB), null, 2); }
+          catch { throw new Error('YAML B: could not parse — check indentation and syntax'); }
+        }
+        const r = smartDiff(inputA, inputB, config);
         setResult(r);
         setEntropyOpen(false);
         setMetricsOpen(false);
@@ -206,7 +316,7 @@ export default function SmartJsonDiff() {
         toast.error(msg);
       }
     });
-  }, [jsonA, jsonB, config]);
+  }, [jsonA, jsonB, config, inputFormatA, inputFormatB]);
 
   const applyPreset = useCallback((name: string, presetConfig: NormalizationConfig) => {
     setActivePreset(name);
@@ -418,15 +528,19 @@ export default function SmartJsonDiff() {
         <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-2">
           <div className="flex flex-col">
             <div className="mb-1.5 flex items-center justify-between gap-2">
-              <label className="text-sm font-medium text-gray-700">JSON A</label>
+              <label className="text-sm font-medium text-gray-700">{inputFormatA === 'yaml' ? 'YAML A' : 'JSON A'}</label>
               <div className="flex items-center gap-1.5">
+                <div className="flex rounded-md border border-zinc-200 overflow-hidden text-[11px] font-medium">
+                  <button type="button" onClick={() => setInputFormatA('json')} className={`px-2 py-1 transition-colors ${inputFormatA === 'json' ? 'bg-primary-600 text-white' : 'bg-white text-zinc-600 hover:bg-zinc-50'}`}>JSON</button>
+                  <button type="button" onClick={() => setInputFormatA('yaml')} className={`px-2 py-1 transition-colors ${inputFormatA === 'yaml' ? 'bg-primary-600 text-white' : 'bg-white text-zinc-600 hover:bg-zinc-50'}`}>YAML</button>
+                </div>
                 <span className="text-xs font-medium text-zinc-500">Source / Before</span>
                 <button
                   type="button"
                   onClick={() => { setJsonA(''); setError(null); setResult(null); }}
                   disabled={!jsonA}
                   className="inline-flex items-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50 px-2.5 py-1.5 text-xs font-medium text-amber-800 shadow-sm hover:bg-amber-100 hover:border-amber-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:border-gray-200 disabled:text-gray-400 disabled:hover:bg-gray-50 disabled:hover:border-gray-200"
-                  title="Clear JSON A"
+                  title="Clear A"
                 >
                   <X className="h-3.5 w-3.5" />
                   Clear
@@ -436,22 +550,39 @@ export default function SmartJsonDiff() {
             <textarea
               value={jsonA}
               onChange={(e) => setJsonA(e.target.value)}
-              placeholder='Paste first payload or load example'
+              placeholder={inputFormatA === 'yaml' ? 'Paste YAML or load example' : 'Paste first payload or load example'}
               className="min-h-[200px] w-full resize-y rounded-xl border border-zinc-300 bg-zinc-50 p-3.5 font-mono text-[13px] leading-relaxed text-zinc-800 placeholder:text-zinc-400 focus:border-primary-500 focus:bg-white focus:ring-2 focus:ring-primary-500/20 transition-shadow"
               spellCheck={false}
             />
+            {inputFormatA === 'yaml' && jsonA.trim() && (() => {
+              try {
+                const preview = JSON.stringify(parseYaml(jsonA), null, 2);
+                return (
+                  <details className="mt-2">
+                    <summary className="cursor-pointer text-[11px] text-zinc-500 hover:text-zinc-700 select-none">Parsed as JSON (preview)</summary>
+                    <pre className="mt-1 max-h-32 overflow-auto rounded-lg bg-zinc-900 p-2 font-mono text-[11px] leading-relaxed text-emerald-300">{preview}</pre>
+                  </details>
+                );
+              } catch {
+                return <p className="mt-1 text-[11px] text-red-500">YAML parse error — check indentation and syntax</p>;
+              }
+            })()}
           </div>
           <div className="flex flex-col">
             <div className="mb-1.5 flex items-center justify-between gap-2">
-              <label className="text-sm font-medium text-gray-700">JSON B</label>
+              <label className="text-sm font-medium text-gray-700">{inputFormatB === 'yaml' ? 'YAML B' : 'JSON B'}</label>
               <div className="flex items-center gap-1.5">
+                <div className="flex rounded-md border border-zinc-200 overflow-hidden text-[11px] font-medium">
+                  <button type="button" onClick={() => setInputFormatB('json')} className={`px-2 py-1 transition-colors ${inputFormatB === 'json' ? 'bg-primary-600 text-white' : 'bg-white text-zinc-600 hover:bg-zinc-50'}`}>JSON</button>
+                  <button type="button" onClick={() => setInputFormatB('yaml')} className={`px-2 py-1 transition-colors ${inputFormatB === 'yaml' ? 'bg-primary-600 text-white' : 'bg-white text-zinc-600 hover:bg-zinc-50'}`}>YAML</button>
+                </div>
                 <span className="text-xs font-medium text-zinc-500">Target / After</span>
                 <button
                   type="button"
                   onClick={() => { setJsonB(''); setError(null); setResult(null); }}
                   disabled={!jsonB}
                   className="inline-flex items-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50 px-2.5 py-1.5 text-xs font-medium text-amber-800 shadow-sm hover:bg-amber-100 hover:border-amber-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:border-gray-200 disabled:text-gray-400 disabled:hover:bg-gray-50 disabled:hover:border-gray-200"
-                  title="Clear JSON B"
+                  title="Clear B"
                 >
                   <X className="h-3.5 w-3.5" />
                   Clear
@@ -461,10 +592,23 @@ export default function SmartJsonDiff() {
             <textarea
               value={jsonB}
               onChange={(e) => setJsonB(e.target.value)}
-              placeholder='Paste second payload or load example'
+              placeholder={inputFormatB === 'yaml' ? 'Paste YAML or load example' : 'Paste second payload or load example'}
               className="min-h-[200px] w-full resize-y rounded-xl border border-zinc-300 bg-zinc-50 p-3.5 font-mono text-[13px] leading-relaxed text-zinc-800 placeholder:text-zinc-400 focus:border-primary-500 focus:bg-white focus:ring-2 focus:ring-primary-500/20 transition-shadow"
               spellCheck={false}
             />
+            {inputFormatB === 'yaml' && jsonB.trim() && (() => {
+              try {
+                const preview = JSON.stringify(parseYaml(jsonB), null, 2);
+                return (
+                  <details className="mt-2">
+                    <summary className="cursor-pointer text-[11px] text-zinc-500 hover:text-zinc-700 select-none">Parsed as JSON (preview)</summary>
+                    <pre className="mt-1 max-h-32 overflow-auto rounded-lg bg-zinc-900 p-2 font-mono text-[11px] leading-relaxed text-emerald-300">{preview}</pre>
+                  </details>
+                );
+              } catch {
+                return <p className="mt-1 text-[11px] text-red-500">YAML parse error — check indentation and syntax</p>;
+              }
+            })()}
           </div>
         </div>
 
@@ -553,6 +697,44 @@ export default function SmartJsonDiff() {
             {isPending ? 'Comparing…' : 'Compare'}
             <kbd className="hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>
           </button>
+          {/* Live diff toggle */}
+          <button
+            type="button"
+            onClick={() => setLiveDiff((v) => !v)}
+            className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition-colors ${liveDiff ? 'border-emerald-400 bg-emerald-50 text-emerald-700' : 'border-zinc-300 bg-white text-zinc-600 hover:bg-zinc-50'}`}
+          >
+            <Zap className="h-4 w-4" />
+            {liveDiff ? 'Live: On' : 'Live: Off'}
+          </button>
+          {/* History dropdown */}
+          {historyCount > 0 && (
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setHistoryOpen((v) => !v)}
+                className="inline-flex items-center gap-2 rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-600 hover:bg-zinc-50"
+              >
+                <History className="h-4 w-4" />
+                History ({historyCount})
+              </button>
+              {historyOpen && (
+                <div className="absolute left-0 top-full z-20 mt-1 w-72 rounded-xl border border-zinc-200 bg-white shadow-lg overflow-hidden">
+                  <div className="border-b border-zinc-100 px-3 py-2 text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">Recent diffs</div>
+                  {diffHistoryRef.current.map((entry, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => { setJsonA(entry.a); setJsonB(entry.b); setHistoryOpen(false); toast.success('History entry restored'); }}
+                      className="flex w-full items-center gap-2 border-b border-zinc-50 px-3 py-2.5 text-left text-xs hover:bg-zinc-50 last:border-0"
+                    >
+                      <span className="shrink-0 font-mono text-zinc-400">{new Date(entry.ts).toLocaleTimeString()}</span>
+                      <span className="flex-1 truncate text-zinc-700">{entry.a.slice(0, 35).replace(/\s+/g, ' ')}…</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 

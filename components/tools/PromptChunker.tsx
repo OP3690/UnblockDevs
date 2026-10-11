@@ -23,6 +23,7 @@ interface Chunk {
   charCount: number;
   isFirst: boolean;
   isLast: boolean;
+  tokenCount: number;
 }
 
 type TabMode = 'chunk' | 'simplify';
@@ -32,11 +33,13 @@ export default function PromptChunker() {
   const [prompt, setPrompt] = useState('');
   const [chunks, setChunks] = useState<Chunk[]>([]);
   const [chunkSize, setChunkSize] = useState<number>(500);
-  const [chunkType, setChunkType] = useState<'words' | 'chars'>('words');
+  const [chunkType, setChunkType] = useState<'words' | 'chars' | 'tokens'>('words');
   const [overlap, setOverlap] = useState<number>(50);
   const [showSettings, setShowSettings] = useState(true);
   const [expandedChunks, setExpandedChunks] = useState<Set<number>>(new Set());
   const [copiedChunks, setCopiedChunks] = useState<Set<number>>(new Set());
+  const [respectSentenceBoundaries, setRespectSentenceBoundaries] = useState(false);
+  const [copyChunkIndex, setCopyChunkIndex] = useState<number>(0);
   const resultsSectionRef = useRef<HTMLDivElement>(null);
 
   // Simplifier state
@@ -60,6 +63,27 @@ export default function PromptChunker() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tabMode]);
 
+  const estimateTokens = (text: string): number => {
+    if (!text) return 0;
+    const pieces = text.match(/\w+|[^\w\s]/g) || [];
+    return Math.max(pieces.length, Math.ceil(text.length / 4));
+  };
+
+  const findSentenceBoundary = (text: string, startPos: number, chunkSize: number): number => {
+    const targetEnd = Math.min(startPos + chunkSize, text.length);
+    if (targetEnd >= text.length) return targetEnd;
+    const minPos = Math.max(startPos + 1, startPos + Math.floor(chunkSize * 0.9));
+    const maxPos = Math.min(text.length, startPos + Math.ceil(chunkSize * 1.1));
+    for (let i = Math.min(maxPos, text.length) - 1; i >= minPos; i--) {
+      const c = text[i];
+      if ((c === '.' || c === '!' || c === '?') &&
+          (i + 1 >= text.length || /[\s\n\r]/.test(text[i + 1]))) {
+        return i + 1;
+      }
+    }
+    return targetEnd;
+  };
+
   const splitIntoChunks = () => {
     if (!prompt.trim()) {
       toast.error('Please enter a prompt to chunk');
@@ -68,37 +92,45 @@ export default function PromptChunker() {
 
     const newChunks: Chunk[] = [];
     const rawChunks: string[] = [];
-    
+
     if (chunkType === 'words') {
-      const words = prompt.split(/\s+/);
+      const words = prompt.split(/\s+/).filter(w => w.length > 0);
       const wordsPerChunk = chunkSize;
       const overlapWords = Math.floor((overlap / 100) * wordsPerChunk);
-      
-      for (let i = 0; i < words.length; i += wordsPerChunk - overlapWords) {
-        const chunkWords = words.slice(i, i + wordsPerChunk);
-        const chunkContent = chunkWords.join(' ');
-        
-        if (chunkContent.trim()) {
-          rawChunks.push(chunkContent);
+
+      for (let i = 0; i < words.length; ) {
+        const targetEnd = Math.min(i + wordsPerChunk, words.length);
+        let end = targetEnd;
+
+        if (respectSentenceBoundaries && targetEnd < words.length) {
+          const minEnd = Math.max(i + 1, i + Math.floor(wordsPerChunk * 0.9));
+          const maxEnd = Math.min(words.length, i + Math.ceil(wordsPerChunk * 1.1));
+          for (let j = maxEnd - 1; j >= minEnd; j--) {
+            if (/[.!?]$/.test(words[j - 1])) { end = j; break; }
+          }
         }
-        
-        // Stop if we've reached the end
-        if (i + wordsPerChunk >= words.length) break;
+
+        const chunkContent = words.slice(i, end).join(' ');
+        if (chunkContent.trim()) rawChunks.push(chunkContent);
+        if (end >= words.length) break;
+        i += Math.max(1, (end - i) - overlapWords);
       }
     } else {
-      // Character-based chunking
-      const charsPerChunk = chunkSize;
+      // Character-based (chars) or token-based (tokens: ~4 chars/token)
+      const charsPerChunk = chunkType === 'tokens' ? chunkSize * 4 : chunkSize;
       const overlapChars = Math.floor((overlap / 100) * charsPerChunk);
-      
-      for (let i = 0; i < prompt.length; i += charsPerChunk - overlapChars) {
-        const chunkContent = prompt.slice(i, i + charsPerChunk);
-        
-        if (chunkContent.trim()) {
-          rawChunks.push(chunkContent);
+
+      for (let i = 0; i < prompt.length; ) {
+        let end = Math.min(i + charsPerChunk, prompt.length);
+
+        if (respectSentenceBoundaries && end < prompt.length) {
+          end = findSentenceBoundary(prompt, i, charsPerChunk);
         }
-        
-        // Stop if we've reached the end
-        if (i + charsPerChunk >= prompt.length) break;
+
+        const chunkContent = prompt.slice(i, end);
+        if (chunkContent.trim()) rawChunks.push(chunkContent);
+        if (end >= prompt.length) break;
+        i += Math.max(1, (end - i) - overlapChars);
       }
     }
 
@@ -116,12 +148,13 @@ export default function PromptChunker() {
         finalContent = `${rawContent}\n\n[FINAL CHUNK - This is the last chunk. You have now received all chunks. Please consolidate all the chunks you have stored in memory and use the complete consolidated prompt to generate your final output. Process all the chunks together as one complete prompt and provide your response.]`;
       }
 
-      const words = finalContent.split(/\s+/).filter(w => w.length > 0).length;
+      const wc = finalContent.split(/\s+/).filter(w => w.length > 0).length;
       newChunks.push({
         id: index + 1,
         content: finalContent,
-        wordCount: words,
+        wordCount: wc,
         charCount: finalContent.length,
+        tokenCount: estimateTokens(finalContent),
         isFirst,
         isLast,
       });
@@ -167,9 +200,10 @@ export default function PromptChunker() {
   };
 
   const downloadChunks = () => {
-    const content = chunks.map((chunk, idx) => 
-      `=== Chunk ${chunk.id} ===\nWords: ${chunk.wordCount} | Characters: ${chunk.charCount}\n\n${chunk.content}\n\n`
-    ).join('\n---\n\n');
+    const total = chunks.length;
+    const content = chunks.map((chunk) =>
+      `\n\n--- CHUNK ${chunk.id}/${total} ---\n\n${chunk.content}`
+    ).join('').trimStart();
     
     const blob = new Blob([content], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
@@ -216,11 +250,17 @@ export default function PromptChunker() {
     if (!prompt.trim()) return null;
     const words = prompt.trim().split(/\s+/).length;
     const chars = prompt.length;
+    const tokens = Math.max((prompt.match(/\w+|[^\w\s]/g) || []).length, Math.ceil(chars / 4));
     const effectiveSize = chunkSize * (1 - overlap / 100);
-    const estChunks = chunkType === 'words'
-      ? Math.max(1, Math.ceil(words / effectiveSize))
-      : Math.max(1, Math.ceil(chars / effectiveSize));
-    return { words, chars, estChunks };
+    let estChunks: number;
+    if (chunkType === 'words') {
+      estChunks = Math.max(1, Math.ceil(words / effectiveSize));
+    } else if (chunkType === 'chars') {
+      estChunks = Math.max(1, Math.ceil(chars / effectiveSize));
+    } else {
+      estChunks = Math.max(1, Math.ceil(tokens / effectiveSize));
+    }
+    return { words, chars, tokens, estChunks };
   }, [prompt, chunkSize, chunkType, overlap]);
 
   const runSimplify = () => {
@@ -377,6 +417,7 @@ export default function PromptChunker() {
             </button>
           </div>
           {showSettings && (
+            <>
             <div className="grid sm:grid-cols-3 gap-5 p-5 bg-zinc-50/40">
               <div>
                 <label className="block text-xs font-semibold text-zinc-700 mb-2 uppercase tracking-wide">Chunk Type</label>
@@ -387,17 +428,18 @@ export default function PromptChunker() {
                 >
                   <option value="words">Words</option>
                   <option value="chars">Characters</option>
+                  <option value="tokens">Tokens (~4 chars)</option>
                 </select>
               </div>
               <div>
                 <label className="block text-xs font-semibold text-zinc-700 mb-2 uppercase tracking-wide">
-                  Chunk Size — <span className="text-zinc-900 font-bold">{chunkSize} {chunkType === 'words' ? 'words' : 'chars'}</span>
+                  Chunk Size — <span className="text-zinc-900 font-bold">{chunkSize} {chunkType === 'words' ? 'words' : chunkType === 'tokens' ? 'tokens' : 'chars'}</span>
                 </label>
-                <input type="range" min="100" max={chunkType === 'words' ? '2000' : '5000'} step="50"
+                <input type="range" min="100" max={chunkType === 'words' ? '2000' : chunkType === 'tokens' ? '1000' : '5000'} step="50"
                   value={chunkSize} onChange={(e) => setChunkSize(Number(e.target.value))}
                   className="w-full accent-zinc-900" />
                 <div className="flex justify-between text-[10px] text-zinc-400 mt-1">
-                  <span>100</span><span>{chunkType === 'words' ? '2000' : '5000'}</span>
+                  <span>100</span><span>{chunkType === 'words' ? '2000' : chunkType === 'tokens' ? '1000' : '5000'}</span>
                 </div>
               </div>
               <div>
@@ -413,6 +455,19 @@ export default function PromptChunker() {
                 <p className="text-[11px] text-zinc-500 mt-1.5">Preserves context between chunks</p>
               </div>
             </div>
+            <div className="px-5 pb-4">
+              <label className="inline-flex items-center gap-2.5 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={respectSentenceBoundaries}
+                  onChange={(e) => setRespectSentenceBoundaries(e.target.checked)}
+                  className="h-4 w-4 rounded border-zinc-300 accent-zinc-900"
+                />
+                <span className="text-sm text-zinc-700">Respect sentence boundaries</span>
+                <span className="text-[11px] text-zinc-400">(finds nearest .!? within ±10% of chunk size)</span>
+              </label>
+            </div>
+            </>
           )}
         </div>
       )}
@@ -470,6 +525,12 @@ export default function PromptChunker() {
             <span>{totalWords} words</span>
             <span>·</span>
             <span>{totalChars} chars</span>
+            {liveEstimate?.tokens && (
+              <>
+                <span>·</span>
+                <span>≈{liveEstimate.tokens} tokens</span>
+              </>
+            )}
             {liveEstimate && tabMode === 'chunk' && (
               <>
                 <span>·</span>
@@ -615,6 +676,25 @@ export default function PromptChunker() {
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-900 text-white text-xs font-semibold hover:bg-zinc-800 transition-colors">
                 <Copy className="w-3.5 h-3.5" />Copy all
               </button>
+              <div className="inline-flex items-center">
+                <select
+                  value={copyChunkIndex}
+                  onChange={(e) => setCopyChunkIndex(Number(e.target.value))}
+                  className="px-2 py-1.5 text-xs border border-zinc-200 rounded-l-lg bg-white text-zinc-700 focus:ring-1 focus:ring-zinc-900/10"
+                  aria-label="Select chunk to copy"
+                >
+                  <option value={0}>Copy chunk N…</option>
+                  {chunks.map((c) => <option key={c.id} value={c.id}>Chunk {c.id}</option>)}
+                </select>
+                <button
+                  type="button"
+                  onClick={() => { if (copyChunkIndex > 0) copyChunk(chunks[copyChunkIndex - 1]); }}
+                  disabled={copyChunkIndex === 0}
+                  className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium bg-zinc-100 border border-l-0 border-zinc-200 rounded-r-lg hover:bg-zinc-200 transition-colors disabled:opacity-40"
+                >
+                  <Copy className="w-3 h-3" />Go
+                </button>
+              </div>
               <button type="button" onClick={copyChunksAsJson} title="Copy all chunks as a JSON array"
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 bg-white text-xs font-medium text-zinc-700 hover:bg-zinc-50 transition-colors">
                 <Copy className="w-3.5 h-3.5" />JSON
@@ -658,7 +738,7 @@ export default function PromptChunker() {
                       }`}>
                         {chunk.isFirst ? '🚀 Chunk 1 — Start' : chunk.isLast ? '✅ Final chunk' : `Chunk ${chunk.id}`}
                       </span>
-                      <span className="text-xs text-zinc-500 font-mono">{chunk.wordCount} words · {chunk.charCount} chars</span>
+                      <span className="text-xs text-zinc-500 font-mono">{chunk.wordCount} words · {chunk.charCount} chars · ≈{chunk.tokenCount} tokens</span>
                       {chunk.isFirst && chunks.length > 1 && (
                         <span className="text-[10px] text-sky-600 bg-sky-50 border border-sky-200 px-2 py-0.5 rounded-full">Wait instruction included</span>
                       )}

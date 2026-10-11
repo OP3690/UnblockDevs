@@ -35,12 +35,47 @@ const SAMPLES = [
   },
 ];
 
+// Semantic normalization: returns a type-label if the value is a known dynamic pattern
+function normalizeForSemantic(v: unknown): string | null {
+  if (v === null || v === undefined) return null;
+  const s = String(v);
+  if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s)) return 'UUID';
+  if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(s)) return 'ISO_DATE';
+  if (/^ey[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]*$/.test(s)) return 'JWT';
+  if (typeof v === 'number' && (/^\d{10}$/.test(s) || /^\d{13}$/.test(s))) return 'EPOCH';
+  return null;
+}
+
+// Shallow recursive diff for nested drill-down
+function simpleDiff(a: any, b: any, path = ''): Array<{ path: string; old: any; nw: any }> {
+  const out: Array<{ path: string; old: any; nw: any }> = [];
+  if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) {
+    if (JSON.stringify(a) !== JSON.stringify(b)) out.push({ path: path || 'value', old: a, nw: b });
+    return out;
+  }
+  const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
+  for (const k of keys) {
+    const p = path ? `${path}.${k}` : k;
+    if (!(k in a)) { out.push({ path: p, old: undefined, nw: b[k] }); }
+    else if (!(k in b)) { out.push({ path: p, old: a[k], nw: undefined }); }
+    else if (JSON.stringify(a[k]) !== JSON.stringify(b[k])) {
+      if (typeof a[k] === 'object' && a[k] !== null && typeof b[k] === 'object' && b[k] !== null) {
+        out.push(...simpleDiff(a[k], b[k], p));
+      } else {
+        out.push({ path: p, old: a[k], nw: b[k] });
+      }
+    }
+  }
+  return out;
+}
+
 interface DiffResult {
   key: string;
   status: 'added' | 'removed' | 'changed' | 'unchanged';
   oldValue?: any;
   newValue?: any;
   path: string;
+  semanticMatch?: boolean; // both sides differ only in dynamic pattern (UUID, ISO date, etc.)
 }
 
 type StatusFilter = 'all' | 'changed' | 'added' | 'removed';
@@ -54,6 +89,8 @@ export default function ApiComparator() {
   const [searchTerm, setSearchTerm] = useState('');
   const [highlightedField, setHighlightedField] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [pathFilter, setPathFilter] = useState('');
+  const [expandedPaths, setExpandedPaths] = useState<Set<string>>(new Set());
   const resultsSectionRef = useRef<HTMLDivElement>(null);
 
   const summary = useMemo(() => {
@@ -190,12 +227,16 @@ export default function ApiComparator() {
           });
           breaking.push(`Field removed: ${key}`);
         } else if (JSON.stringify(val1) !== JSON.stringify(val2)) {
+          const sem1 = normalizeForSemantic(val1);
+          const sem2 = normalizeForSemantic(val2);
+          const semanticMatch = sem1 !== null && sem2 !== null && sem1 === sem2;
           results.push({
             key,
             status: 'changed',
             oldValue: val1,
             newValue: val2,
             path: key,
+            semanticMatch,
           });
           if (typeof val1 !== typeof val2) {
             breaking.push(`Type changed: ${key} (${typeof val1} → ${typeof val2})`);
@@ -365,15 +406,27 @@ export default function ApiComparator() {
                 </button>
               ))}
             </div>
-            <div className="relative w-56">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search fields..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
-              />
+            <div className="flex flex-wrap gap-2">
+              <div className="relative w-48">
+                <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search fields..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+                />
+              </div>
+              <div className="relative w-44">
+                <ExternalLink className="w-3.5 h-3.5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Filter by path..."
+                  value={pathFilter}
+                  onChange={(e) => setPathFilter(e.target.value)}
+                  className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+                />
+              </div>
             </div>
           </div>
           <div className="space-y-2 max-h-[600px] overflow-y-auto scrollbar-thin">
@@ -382,6 +435,7 @@ export default function ApiComparator() {
                 if (result.status === 'unchanged' && statusFilter !== 'all') return false;
                 if (statusFilter !== 'all' && result.status !== statusFilter) return false;
                 if (statusFilter === 'all' && result.status === 'unchanged') return false;
+                if (pathFilter && !result.path.toLowerCase().includes(pathFilter.toLowerCase())) return false;
                 return (!searchTerm ||
                   result.path.toLowerCase().includes(searchTerm.toLowerCase()) ||
                   JSON.stringify(result.oldValue || result.newValue).toLowerCase().includes(searchTerm.toLowerCase()));
@@ -453,11 +507,17 @@ export default function ApiComparator() {
                       <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
                         result.status === 'added' ? 'bg-green-200 text-green-800' :
                         result.status === 'removed' ? 'bg-red-200 text-red-800' :
+                        result.status === 'changed' && result.semanticMatch ? 'bg-gray-200 text-gray-600' :
                         result.status === 'changed' ? 'bg-yellow-200 text-yellow-800' :
                         'bg-gray-200 text-gray-800'
                       }`}>
-                        {result.status.toUpperCase()}
+                        {result.status === 'changed' && result.semanticMatch ? 'SEMANTIC EQ' : result.status.toUpperCase()}
                       </span>
+                      {result.status === 'changed' && result.semanticMatch && (
+                        <span className="px-2 py-0.5 rounded text-xs bg-gray-100 text-gray-500 border border-gray-200">
+                          {normalizeForSemantic(result.oldValue)} pattern
+                        </span>
+                      )}
                       {isSpecialField && (
                         <span className="px-3 py-1 bg-orange-500 text-white rounded-md text-xs font-bold animate-pulse shadow-lg">
                           ⚠️ SPECIAL: isConstituents="N"
@@ -499,6 +559,31 @@ export default function ApiComparator() {
                               </code>
                             </div>
                           </div>
+                          {/* Nested drill-down for object/array values */}
+                          {typeof result.oldValue === 'object' && result.oldValue !== null &&
+                           typeof result.newValue === 'object' && result.newValue !== null && (
+                            <div>
+                              <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); setExpandedPaths((prev) => { const s = new Set(prev); s.has(result.path) ? s.delete(result.path) : s.add(result.path); return s; }); }}
+                                className="flex items-center gap-1.5 text-xs font-medium text-blue-600 hover:text-blue-800"
+                              >
+                                <span>{expandedPaths.has(result.path) ? '▼' : '▶'}</span>
+                                {expandedPaths.has(result.path) ? 'Hide' : 'Expand'} nested diff
+                              </button>
+                              {expandedPaths.has(result.path) && (
+                                <div className="mt-2 ml-3 space-y-1 border-l-2 border-blue-200 pl-3">
+                                  {simpleDiff(result.oldValue, result.newValue).map((d, di) => (
+                                    <div key={di} className="text-xs">
+                                      <span className="font-mono text-blue-700">{d.path}</span>
+                                      {d.old !== undefined && <span className="ml-2 line-through text-red-600">{JSON.stringify(d.old)}</span>}
+                                      {d.nw !== undefined && <span className="ml-2 text-green-700">{JSON.stringify(d.nw)}</span>}
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          )}
                         </div>
                       )}
                       {result.status === 'unchanged' && (

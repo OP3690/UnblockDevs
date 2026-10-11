@@ -1,12 +1,39 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Database, Copy, Check, Download, Users, FileText, CreditCard, ShoppingBag, Newspaper, Sparkles, Server, Shield, Brain, Activity, AlertTriangle, TrendingUp } from 'lucide-react';
+import { Database, Copy, Check, Download, Users, FileText, CreditCard, ShoppingBag, Newspaper, Sparkles, Server, Shield, Brain, Activity, AlertTriangle, TrendingUp, Plus, Trash2, Hash } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy } from '@/lib/analytics';
 import { validateJson } from '@/lib/jsonParser';
 
 type PredefinedDataType = 'user' | 'invoice' | 'banking' | 'accessories' | 'news' | 'apiLogs' | 'securityEvents' | 'aiTraining' | 'systemLogs' | 'vulnerabilities' | 'aiMetrics' | 'custom';
+
+type FieldType = 'string' | 'number' | 'boolean' | 'date' | 'uuid' | 'email' | 'url' | 'name' | 'address' | 'phone' | 'custom';
+type ExportFormat = 'json' | 'csv' | 'sql';
+
+interface SchemaField {
+  id: string;
+  name: string;
+  type: FieldType;
+  min?: number;
+  max?: number;
+  minLength?: number;
+  maxLength?: number;
+  dateFrom?: string;
+  dateTo?: string;
+  customValue?: string;
+}
+
+// ─── Seeded PRNG (mulberry32) ────────────────────────────────────────────────
+function mulberry32(a: number): () => number {
+  return function () {
+    a |= 0; a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+// ─────────────────────────────────────────────────────────────────────────────
 
 const firstNames = [
   'James', 'Mary', 'John', 'Patricia', 'Robert', 'Jennifer', 'Michael', 'Linda',
@@ -75,6 +102,73 @@ const cveIds = ['CVE-2024-', 'CVE-2023-', 'CVE-2022-'];
 const remediationStatuses = ['open', 'in_progress', 'patched', 'mitigated', 'false_positive'];
 
 const aiMetricsTypes = ['accuracy', 'precision', 'recall', 'f1_score', 'loss', 'latency', 'throughput', 'token_count', 'cost', 'inference_time'];
+
+// ─── Custom schema field generator ──────────────────────────────────────────
+function generateValueForField(field: SchemaField, rng: () => number): unknown {
+  switch (field.type) {
+    case 'uuid': {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+        const r = Math.floor(rng() * 16);
+        const v = c === 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
+    }
+    case 'email': {
+      const fn = firstNames[Math.floor(rng() * firstNames.length)];
+      const ln = lastNames[Math.floor(rng() * lastNames.length)];
+      const d = domains[Math.floor(rng() * domains.length)];
+      return `${fn.toLowerCase()}.${ln.toLowerCase()}${Math.floor(rng() * 1000)}@${d}`;
+    }
+    case 'name':
+      return `${firstNames[Math.floor(rng() * firstNames.length)]} ${lastNames[Math.floor(rng() * lastNames.length)]}`;
+    case 'string': {
+      const minL = field.minLength ?? 5;
+      const maxL = field.maxLength ?? 15;
+      const len = minL + Math.floor(rng() * (maxL - minL + 1));
+      const chars = 'abcdefghijklmnopqrstuvwxyz';
+      return Array.from({ length: len }, () => chars[Math.floor(rng() * chars.length)]).join('');
+    }
+    case 'number': {
+      const lo = field.min ?? 0;
+      const hi = field.max ?? 1000;
+      return lo + Math.floor(rng() * (hi - lo + 1));
+    }
+    case 'boolean':
+      return rng() > 0.5;
+    case 'date': {
+      const from = field.dateFrom ? new Date(field.dateFrom).getTime() : Date.now() - 365 * 24 * 60 * 60 * 1000;
+      const to = field.dateTo ? new Date(field.dateTo).getTime() : Date.now();
+      return new Date(from + rng() * (to - from)).toISOString().split('T')[0];
+    }
+    case 'url':
+      return `https://example.com/${Math.floor(rng() * 1e9).toString(36)}`;
+    case 'address':
+      return `${Math.floor(rng() * 9000) + 1000} ${['Main St', 'Oak Ave', 'Park Rd', 'Lake Dr'][Math.floor(rng() * 4)]}, ${cities[Math.floor(rng() * cities.length)]}`;
+    case 'phone':
+      return `+1-${Math.floor(rng() * 900) + 100}-${Math.floor(rng() * 900) + 100}-${Math.floor(rng() * 9000) + 1000}`;
+    case 'custom':
+      return field.customValue ?? 'custom_value';
+    default:
+      return null;
+  }
+}
+
+function generateSqlInsert(arr: Record<string, unknown>[], tableName: string): string {
+  if (!arr.length) return '';
+  const keys = Object.keys(arr[0]);
+  const cols = keys.join(', ');
+  const rows = arr.map((row) => {
+    const vals = keys.map((k) => {
+      const v = row[k];
+      if (v === null || v === undefined) return 'NULL';
+      if (typeof v === 'number' || typeof v === 'boolean') return String(v);
+      return `'${String(v).replace(/'/g, "''")}'`;
+    }).join(', ');
+    return `  (${vals})`;
+  }).join(',\n');
+  return `INSERT INTO ${tableName} (${cols})\nVALUES\n${rows};`;
+}
+// ─────────────────────────────────────────────────────────────────────────────
 
 const generateUserData = (count: number) => {
   const users = [];
@@ -458,6 +552,14 @@ const generateAiMetricsData = (count: number) => {
   return metrics;
 };
 
+const DEFAULT_CUSTOM_FIELDS: SchemaField[] = [
+  { id: '1', name: 'id', type: 'uuid' },
+  { id: '2', name: 'name', type: 'name' },
+  { id: '3', name: 'email', type: 'email' },
+  { id: '4', name: 'age', type: 'number', min: 18, max: 65 },
+  { id: '5', name: 'createdAt', type: 'date' },
+];
+
 export default function TestDataGenerator() {
   const [schemaText, setSchemaText] = useState('');
   const [count, setCount] = useState(10);
@@ -465,6 +567,10 @@ export default function TestDataGenerator() {
   const [copied, setCopied] = useState(false);
   const resultsSectionRef = useRef<HTMLDivElement>(null);
   const [dataType, setDataType] = useState<PredefinedDataType>('custom');
+  const [customFields, setCustomFields] = useState<SchemaField[]>(DEFAULT_CUSTOM_FIELDS);
+  const [seed, setSeed] = useState('');
+  const [exportFormat, setExportFormat] = useState<ExportFormat>('json');
+  const [exportTableName, setExportTableName] = useState('test_data');
 
   const generateValue = (type: string, key: string): any => {
     switch (type) {
@@ -533,12 +639,19 @@ export default function TestDataGenerator() {
       let data: any[] = [];
 
       if (dataType === 'custom') {
-        const validation = validateJson(schemaText);
-        if (!validation.valid) {
-          toast.error('Invalid JSON Schema format');
+        const activeFields = customFields.filter((f) => f.name.trim());
+        if (activeFields.length === 0) {
+          toast.error('Add at least one field with a name');
           return;
         }
-        data = generateFromSchema(validation.data, count);
+        const rng = seed.trim() ? mulberry32(parseInt(seed, 10) || 1) : Math.random.bind(Math);
+        data = Array.from({ length: count }, () => {
+          const obj: Record<string, unknown> = {};
+          for (const field of activeFields) {
+            obj[field.name.trim()] = generateValueForField(field, rng);
+          }
+          return obj;
+        });
       } else {
         // Generate predefined data
         switch (dataType) {
@@ -643,6 +756,44 @@ export default function TestDataGenerator() {
     } catch { toast.error('Failed to convert to CSV'); }
   };
 
+  const handleDownloadSql = () => {
+    try {
+      const arr: Record<string, unknown>[] = JSON.parse(generatedData);
+      if (!Array.isArray(arr) || !arr.length) { toast.error('No array data to export as SQL'); return; }
+      const sql = generateSqlInsert(arr, exportTableName || 'test_data');
+      const blob = new Blob([sql], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `test-data-${dataType}-${new Date().toISOString().split('T')[0]}.sql`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast.success('SQL INSERT downloaded!');
+    } catch { toast.error('Failed to convert to SQL'); }
+  };
+
+  const handleExport = () => {
+    if (!generatedData) { toast.error('Generate data first'); return; }
+    if (exportFormat === 'json') handleDownload();
+    else if (exportFormat === 'csv') handleDownloadCsv();
+    else handleDownloadSql();
+  };
+
+  const addCustomField = () => {
+    setCustomFields((prev) => [
+      ...prev,
+      { id: String(Date.now()), name: '', type: 'string' },
+    ]);
+  };
+
+  const removeCustomField = (id: string) => {
+    setCustomFields((prev) => prev.filter((f) => f.id !== id));
+  };
+
+  const updateCustomField = (id: string, patch: Partial<SchemaField>) => {
+    setCustomFields((prev) => prev.map((f) => (f.id === id ? { ...f, ...patch } : f)));
+  };
+
   const predefinedDataTypes = [
     { id: 'user' as PredefinedDataType, name: 'User Data', icon: Users, description: 'Generate user profiles with names, emails, addresses, and registration data' },
     { id: 'invoice' as PredefinedDataType, name: 'Invoice Data', icon: FileText, description: 'Generate invoice records with customer info, items, totals, and payment status' },
@@ -717,46 +868,160 @@ export default function TestDataGenerator() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Record Count (1-50)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Record Count (1-200)</label>
             <input
               type="number"
               value={count}
               onChange={(e) => {
                 const val = parseInt(e.target.value) || 1;
-                setCount(Math.min(Math.max(val, 1), 100));
+                setCount(Math.min(Math.max(val, 1), 200));
               }}
               min="1"
-              max="100"
+              max="200"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
-            <p className="text-xs text-gray-500 mt-1">Up to 100 records for predefined templates</p>
+            <p className="text-xs text-gray-500 mt-1">Up to 200 records</p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
+              <Hash className="w-3.5 h-3.5" /> Seed (optional)
+            </label>
+            <input
+              type="number"
+              value={seed}
+              onChange={(e) => setSeed(e.target.value)}
+              placeholder="e.g. 42"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+            />
+            <p className="text-xs text-gray-500 mt-1">Same seed → same output</p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Export Format</label>
+            <div className="flex gap-1.5">
+              {(['json', 'csv', 'sql'] as ExportFormat[]).map((fmt) => (
+                <button
+                  key={fmt}
+                  type="button"
+                  onClick={() => setExportFormat(fmt)}
+                  className={`flex-1 py-2 rounded-lg text-xs font-semibold uppercase transition-all ${
+                    exportFormat === fmt ? 'bg-primary-600 text-white' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  {fmt}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
+        {exportFormat === 'sql' && (
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Table Name (for SQL INSERT)</label>
+            <input
+              type="text"
+              value={exportTableName}
+              onChange={(e) => setExportTableName(e.target.value || 'test_data')}
+              className="w-full max-w-xs px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+              placeholder="test_data"
+            />
+          </div>
+        )}
+
         {dataType === 'custom' && (
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">JSON Schema</label>
-            <textarea
-              value={schemaText}
-              onChange={(e) => setSchemaText(e.target.value)}
-              placeholder='{"type": "object", "properties": {"name": {"type": "string"}, "age": {"type": "number"}}}'
-              className="w-full h-64 p-4 border-2 border-gray-300 rounded-lg font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary-500"
-            />
-            <div className="mt-2 text-xs text-gray-500">
-              <p className="font-semibold mb-1">Example Schema:</p>
-              <pre className="bg-gray-50 p-2 rounded text-xs overflow-x-auto">
-{`{
-  "type": "object",
-  "properties": {
-    "name": {"type": "string"},
-    "age": {"type": "number"},
-    "email": {"type": "string"},
-    "active": {"type": "boolean"}
-  }
-}`}
-              </pre>
+            <div className="flex items-center justify-between mb-3">
+              <label className="block text-sm font-medium text-gray-700">Schema Builder</label>
+              <button
+                type="button"
+                onClick={addCustomField}
+                className="inline-flex items-center gap-1 px-3 py-1.5 bg-primary-50 text-primary-700 border border-primary-200 rounded-lg text-xs font-semibold hover:bg-primary-100 transition-colors"
+              >
+                <Plus className="w-3.5 h-3.5" /> Add Field
+              </button>
+            </div>
+            <div className="overflow-x-auto rounded-lg border border-gray-200">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
+                  <tr>
+                    <th className="px-3 py-2 text-left font-semibold">Field Name</th>
+                    <th className="px-3 py-2 text-left font-semibold">Type</th>
+                    <th className="px-3 py-2 text-left font-semibold">Options</th>
+                    <th className="px-3 py-2 text-left font-semibold w-10"></th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {customFields.map((field) => (
+                    <tr key={field.id} className="hover:bg-gray-50">
+                      <td className="px-3 py-2">
+                        <input
+                          type="text"
+                          value={field.name}
+                          onChange={(e) => updateCustomField(field.id, { name: e.target.value })}
+                          placeholder="fieldName"
+                          className="w-full px-2 py-1 border border-gray-200 rounded text-xs font-mono focus:outline-none focus:ring-1 focus:ring-primary-400"
+                        />
+                      </td>
+                      <td className="px-3 py-2">
+                        <select
+                          value={field.type}
+                          onChange={(e) => updateCustomField(field.id, { type: e.target.value as FieldType })}
+                          className="w-full px-2 py-1 border border-gray-200 rounded text-xs bg-white focus:outline-none focus:ring-1 focus:ring-primary-400"
+                        >
+                          {(['string', 'number', 'boolean', 'date', 'uuid', 'email', 'url', 'name', 'address', 'phone', 'custom'] as FieldType[]).map((t) => (
+                            <option key={t} value={t}>{t}</option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className="px-3 py-2">
+                        {field.type === 'string' && (
+                          <div className="flex gap-1 items-center text-xs">
+                            <span className="text-gray-400">len</span>
+                            <input type="number" value={field.minLength ?? ''} onChange={(e) => updateCustomField(field.id, { minLength: e.target.value ? Number(e.target.value) : undefined })} placeholder="min" className="w-14 px-1.5 py-1 border border-gray-200 rounded text-xs focus:outline-none" />
+                            <span className="text-gray-300">–</span>
+                            <input type="number" value={field.maxLength ?? ''} onChange={(e) => updateCustomField(field.id, { maxLength: e.target.value ? Number(e.target.value) : undefined })} placeholder="max" className="w-14 px-1.5 py-1 border border-gray-200 rounded text-xs focus:outline-none" />
+                          </div>
+                        )}
+                        {field.type === 'number' && (
+                          <div className="flex gap-1 items-center text-xs">
+                            <span className="text-gray-400">val</span>
+                            <input type="number" value={field.min ?? ''} onChange={(e) => updateCustomField(field.id, { min: e.target.value ? Number(e.target.value) : undefined })} placeholder="min" className="w-14 px-1.5 py-1 border border-gray-200 rounded text-xs focus:outline-none" />
+                            <span className="text-gray-300">–</span>
+                            <input type="number" value={field.max ?? ''} onChange={(e) => updateCustomField(field.id, { max: e.target.value ? Number(e.target.value) : undefined })} placeholder="max" className="w-14 px-1.5 py-1 border border-gray-200 rounded text-xs focus:outline-none" />
+                          </div>
+                        )}
+                        {field.type === 'date' && (
+                          <div className="flex gap-1 items-center text-xs">
+                            <input type="date" value={field.dateFrom ?? ''} onChange={(e) => updateCustomField(field.id, { dateFrom: e.target.value || undefined })} className="px-1.5 py-1 border border-gray-200 rounded text-xs focus:outline-none" />
+                            <span className="text-gray-300">–</span>
+                            <input type="date" value={field.dateTo ?? ''} onChange={(e) => updateCustomField(field.id, { dateTo: e.target.value || undefined })} className="px-1.5 py-1 border border-gray-200 rounded text-xs focus:outline-none" />
+                          </div>
+                        )}
+                        {field.type === 'custom' && (
+                          <input type="text" value={field.customValue ?? ''} onChange={(e) => updateCustomField(field.id, { customValue: e.target.value })} placeholder="fixed value" className="w-full px-1.5 py-1 border border-gray-200 rounded text-xs focus:outline-none" />
+                        )}
+                        {!['string', 'number', 'date', 'custom'].includes(field.type) && (
+                          <span className="text-xs text-gray-400 italic">auto</span>
+                        )}
+                      </td>
+                      <td className="px-3 py-2">
+                        <button
+                          type="button"
+                          onClick={() => removeCustomField(field.id)}
+                          className="p-1 text-gray-400 hover:text-red-500 transition-colors"
+                          aria-label="Remove field"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {customFields.length === 0 && (
+                <p className="text-center text-sm text-gray-400 py-6">No fields yet — click "Add Field" to start</p>
+              )}
             </div>
           </div>
         )}
@@ -773,7 +1038,7 @@ export default function TestDataGenerator() {
 
         <button
           onClick={handleGenerate}
-          disabled={dataType === 'custom' && !schemaText.trim()}
+          disabled={dataType === 'custom' && customFields.filter((f) => f.name.trim()).length === 0}
           className="w-full py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
         >
           <Database className="w-5 h-5" />
@@ -784,10 +1049,17 @@ export default function TestDataGenerator() {
 
       {generatedData && (
         <div ref={resultsSectionRef} className="bg-white rounded-lg shadow-lg p-6 scroll-mt-4">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-bold text-gray-800">
-              Generated Test Data ({dataType !== 'custom' ? predefinedDataTypes.find(t => t.id === dataType)?.name : 'Custom'})
-            </h3>
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h3 className="text-lg font-bold text-gray-800">
+                Generated Test Data ({dataType !== 'custom' ? predefinedDataTypes.find(t => t.id === dataType)?.name : 'Custom Schema'})
+              </h3>
+              {seed.trim() && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-violet-100 px-2.5 py-0.5 text-xs font-semibold text-violet-800">
+                  <Hash className="w-3 h-3" /> Reproducible with seed: {seed}
+                </span>
+              )}
+            </div>
             <div className="flex gap-2">
               <button
                 onClick={handleCopy}
@@ -797,18 +1069,11 @@ export default function TestDataGenerator() {
                 {copied ? 'Copied!' : 'Copy'}
               </button>
               <button
-                onClick={handleDownload}
+                onClick={handleExport}
                 className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
               >
                 <Download className="w-4 h-4" />
-                JSON
-              </button>
-              <button
-                onClick={handleDownloadCsv}
-                className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
-              >
-                <Download className="w-4 h-4" />
-                CSV
+                {exportFormat.toUpperCase()}
               </button>
             </div>
           </div>

@@ -13,6 +13,10 @@ import {
   Sparkles,
   Hash,
   FileCode,
+  MessageSquare,
+  AlertTriangle,
+  CheckCircle2,
+  XCircle,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy, trackCtaClick } from '@/lib/analytics';
@@ -28,6 +32,80 @@ import {
   type DbFlavor,
   type OutputFormatType,
 } from '@/lib/sqlInGenerator';
+
+// ─── SQL validation helpers ────────────────────────────────────────────────
+
+function validateSqlOutput(sql: string): { level: 'valid' | 'warning' | 'error'; issues: string[] } {
+  const issues: string[] = [];
+  let level: 'valid' | 'warning' | 'error' = 'valid';
+
+  const opens = (sql.match(/\(/g) || []).length;
+  const closes = (sql.match(/\)/g) || []).length;
+  if (opens !== closes) {
+    issues.push(`Unmatched parentheses (${opens} open, ${closes} close)`);
+    level = 'error';
+  }
+
+  const stripped = sql.replace(/\\'/g, '');
+  const singleQuotes = (stripped.match(/'/g) || []).length;
+  if (singleQuotes % 2 !== 0) {
+    issues.push('Unmatched single quote detected');
+    if (level !== 'error') level = 'error';
+  }
+
+  const doubleQuotes = (stripped.match(/"/g) || []).length;
+  if (doubleQuotes % 2 !== 0) {
+    issues.push('Unmatched double quote detected');
+    if (level !== 'error') level = 'error';
+  }
+
+  const typos: [RegExp, string][] = [
+    [/\bWEHRE\b/i, 'WEHRE (did you mean WHERE?)'],
+    [/\bSELET\b/i, 'SELET (did you mean SELECT?)'],
+    [/\bFORM\b(?=\s+\w)/i, 'FORM (did you mean FROM?)'],
+  ];
+  for (const [re, msg] of typos) {
+    if (re.test(sql)) {
+      issues.push(`Typo: ${msg}`);
+      if (level !== 'error') level = 'error';
+    }
+  }
+
+  if (/\bSELECT\s+FROM\b/i.test(sql)) {
+    issues.push('SELECT without columns (bare SELECT ... FROM)');
+    if (level === 'valid') level = 'error';
+  }
+
+  if (/\bSELECT\b/i.test(sql) && !/\bFROM\b/i.test(sql)) {
+    issues.push('SELECT without FROM clause');
+    if (level === 'valid') level = 'warning';
+  }
+
+  return { level: issues.length === 0 ? 'valid' : level, issues };
+}
+
+function detectCtes(sql: string): string[] {
+  if (!/\bWITH\b/i.test(sql)) return [];
+  const names: string[] = [];
+  const re = /\b(\w+)\s+AS\s*\(/gi;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(sql)) !== null) {
+    names.push(m[1]);
+  }
+  return [...new Set(names)];
+}
+
+function annotateCtes(sql: string, cteNames: string[]): string {
+  if (cteNames.length === 0) return sql;
+  let annotated = sql;
+  for (const name of cteNames) {
+    const re = new RegExp(`(\\b${name}\\s+AS\\s*\\()`, 'gi');
+    annotated = annotated.replace(re, `-- CTE: ${name}\n$1`);
+  }
+  return annotated;
+}
+
+// ───────────────────────────────────────────────────────────────────────────
 
 const DB_OPTIONS: { value: DbFlavor; label: string }[] = [
   { value: 'mysql', label: 'MySQL' },
@@ -92,6 +170,9 @@ export default function SqlFormatter() {
   const [tableName, setTableName] = useState('temp_ids');
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [ids, setIds] = useState<string[]>([]);
+  const [sqlValidation, setSqlValidation] = useState<{ level: 'valid' | 'warning' | 'error'; issues: string[] } | null>(null);
+  const [cteNames, setCteNames] = useState<string[]>([]);
+  const [validationDismissed, setValidationDismissed] = useState(false);
   const resultsSectionRef = useRef<HTMLDivElement>(null);
   const contextDevMode = useDevMode().devMode;
   const [isDarkFromDOM, setIsDarkFromDOM] = useState(false);
@@ -106,6 +187,19 @@ export default function SqlFormatter() {
   }, []);
 
   const devMode = contextDevMode || isDarkFromDOM;
+
+  // Run SQL validation whenever output changes
+  useEffect(() => {
+    if (!formattedOutput) {
+      setSqlValidation(null);
+      setCteNames([]);
+      setValidationDismissed(false);
+      return;
+    }
+    setSqlValidation(validateSqlOutput(formattedOutput));
+    setCteNames(detectCtes(formattedOutput));
+    setValidationDismissed(false);
+  }, [formattedOutput]);
 
   /* Inline styles when dark mode is on so CTAs are guaranteed visible */
   const dark = devMode ? {
@@ -242,11 +336,26 @@ export default function SqlFormatter() {
     toast.success(`Downloaded .${ext}`);
   };
 
+  const handleCopyAsComment = () => {
+    if (!formattedOutput) {
+      toast.error('Nothing to copy');
+      return;
+    }
+    const lines = formattedOutput.split('\n').map((l) => ` * ${l}`).join('\n');
+    const commented = `/**\n${lines}\n */`;
+    navigator.clipboard.writeText(commented);
+    trackCopy('sql_formatter');
+    toast.success('Copied as SQL comment block!');
+  };
+
   const handleClear = () => {
     setInput('');
     setFormattedOutput('');
     setIds([]);
     setCopied(false);
+    setSqlValidation(null);
+    setCteNames([]);
+    setValidationDismissed(false);
   };
 
   const cleanedCount = cleanIds(parseInput(input)).length;
@@ -608,6 +717,11 @@ export default function SqlFormatter() {
                   {ids.length} ID(s) · {formattedOutput.split('\n').length} line(s)
                 </span>
               )}
+              {cteNames.length > 0 && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-violet-100 px-2 py-0.5 text-xs font-semibold text-violet-800">
+                  CTEs detected: {cteNames.join(', ')}
+                </span>
+              )}
             </h3>
             <div className="flex flex-wrap gap-2">
               <button
@@ -616,6 +730,14 @@ export default function SqlFormatter() {
               >
                 {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                 {copied ? 'Copied!' : 'Copy'}
+              </button>
+              <button
+                onClick={handleCopyAsComment}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+                title="Wrap in /* ... */ comment block"
+              >
+                <MessageSquare className="w-4 h-4" aria-hidden />
+                Copy as Comment
               </button>
               <button
                 onClick={handleShare}
@@ -637,8 +759,55 @@ export default function SqlFormatter() {
               </div>
             </div>
           </div>
+
+          {/* SQL validation banner */}
+          {sqlValidation && !validationDismissed && (
+            <div
+              className={`flex items-start justify-between gap-3 px-5 py-3 border-b text-sm ${
+                sqlValidation.level === 'valid'
+                  ? 'bg-emerald-50 border-emerald-200'
+                  : sqlValidation.level === 'warning'
+                  ? 'bg-amber-50 border-amber-200'
+                  : 'bg-red-50 border-red-200'
+              }`}
+            >
+              <div className="flex items-start gap-2">
+                {sqlValidation.level === 'valid' ? (
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" aria-hidden />
+                ) : sqlValidation.level === 'warning' ? (
+                  <AlertTriangle className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" aria-hidden />
+                ) : (
+                  <XCircle className="w-4 h-4 text-red-600 mt-0.5 shrink-0" aria-hidden />
+                )}
+                <div>
+                  {sqlValidation.level === 'valid' ? (
+                    <span className="font-medium text-emerald-800">SQL looks valid — no issues found</span>
+                  ) : (
+                    <>
+                      <span className={`font-medium ${sqlValidation.level === 'warning' ? 'text-amber-800' : 'text-red-800'}`}>
+                        {sqlValidation.issues.length} issue{sqlValidation.issues.length > 1 ? 's' : ''} found
+                      </span>
+                      <ul className="mt-1 space-y-0.5 list-disc list-inside">
+                        {sqlValidation.issues.map((issue, i) => (
+                          <li key={i} className={`text-xs ${sqlValidation.level === 'warning' ? 'text-amber-700' : 'text-red-700'}`}>{issue}</li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+                </div>
+              </div>
+              <button
+                onClick={() => setValidationDismissed(true)}
+                className="text-gray-400 hover:text-gray-600 shrink-0 text-lg leading-none"
+                aria-label="Dismiss"
+              >
+                ×
+              </button>
+            </div>
+          )}
+
           <pre className="p-5 bg-gray-900 text-gray-100 text-sm overflow-x-auto overflow-y-auto max-h-[420px] font-mono">
-            <code>{formattedOutput}</code>
+            <code>{cteNames.length > 0 ? annotateCtes(formattedOutput, cteNames) : formattedOutput}</code>
           </pre>
           <p className="px-5 pb-4 text-xs text-gray-500">
             Ready for MySQL, PostgreSQL, Oracle, Trino, SQL Server, SQLite. Use with prepared statements when Parameterized is enabled.

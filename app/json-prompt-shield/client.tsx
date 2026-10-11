@@ -1,9 +1,75 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import Link from 'next/link';
-import { Shield, RefreshCw, Clipboard, Download, Upload, Lock, Cpu, ShieldCheck } from 'lucide-react';
+import { Shield, RefreshCw, Clipboard, Download, Upload, Lock, Cpu, ShieldCheck, Plus, Trash2, FileJson, AlertCircle } from 'lucide-react';
 import { trackCopy } from '@/lib/analytics';
+
+// --- Types for new features ---
+type IgnoreRuleMode = 'exact' | 'contains' | 'regex';
+interface IgnoreRule { pattern: string; mode: IgnoreRuleMode; }
+
+interface PreviewTopKey { key: string; valueType: string; willMask: boolean; }
+interface PreviewData { keyCount: number; stringCount: number; boolCount: number; topKeys: PreviewTopKey[]; }
+
+interface BatchFile { name: string; original: string; masked: string | null; error: string | null; }
+interface SharedMaskState { keyMap: Map<string, string>; stringMap: Map<string, string>; keyCounter: number; strCounter: number; }
+
+function matchesIgnoreRule(rule: IgnoreRule, key: string): boolean {
+  try {
+    if (rule.mode === 'exact') return key === rule.pattern;
+    if (rule.mode === 'contains') return key.includes(rule.pattern);
+    if (rule.mode === 'regex') return new RegExp(rule.pattern, 'i').test(key);
+  } catch { /* invalid regex */ }
+  return false;
+}
+
+function computePreviewData(jsonStr: string, opts: { maskKeys: boolean; maskStrings: boolean; maskBooleans: boolean; ignoreRules: IgnoreRule[] }): PreviewData | null {
+  try {
+    const parsed = JSON.parse(jsonStr);
+    let keyCount = 0, stringCount = 0, boolCount = 0;
+    const topKeys: PreviewTopKey[] = [];
+    function traverse(obj: unknown, depth: number) {
+      if (typeof obj !== 'object' || obj === null) return;
+      for (const [k, v] of Object.entries(obj as Record<string, unknown>)) {
+        const ignored = opts.ignoreRules.some(r => matchesIgnoreRule(r, k));
+        if (depth === 0) topKeys.push({ key: k, valueType: Array.isArray(v) ? 'array' : typeof v, willMask: !ignored && (opts.maskKeys || (opts.maskStrings && typeof v === 'string') || (opts.maskBooleans && typeof v === 'boolean')) });
+        if (!ignored) {
+          if (opts.maskKeys) keyCount++;
+          if (opts.maskStrings && typeof v === 'string') stringCount++;
+          if (opts.maskBooleans && typeof v === 'boolean') boolCount++;
+        }
+        if (typeof v === 'object' && v !== null) traverse(v, depth + 1);
+      }
+    }
+    traverse(parsed, 0);
+    return { keyCount, stringCount, boolCount, topKeys };
+  } catch { return null; }
+}
+
+function maskJsonWithSharedMapping(obj: unknown, state: SharedMaskState, opts: { maskKeys: boolean; maskStrings: boolean; maskBooleans: boolean; ignoreRules: IgnoreRule[] }): unknown {
+  if (Array.isArray(obj)) return obj.map(item => maskJsonWithSharedMapping(item, state, opts));
+  if (typeof obj === 'object' && obj !== null) {
+    const result: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(obj as Record<string, unknown>)) {
+      const ignored = opts.ignoreRules.some(r => matchesIgnoreRule(r, k));
+      let maskedKey = k;
+      if (opts.maskKeys && !ignored) {
+        if (!state.keyMap.has(k)) { state.keyCounter++; state.keyMap.set(k, `K_${String(state.keyCounter).padStart(5, '0')}`); }
+        maskedKey = state.keyMap.get(k)!;
+      }
+      let maskedValue: unknown = maskJsonWithSharedMapping(v, state, opts);
+      if (!ignored && opts.maskStrings && typeof v === 'string') {
+        if (!state.stringMap.has(v)) { state.strCounter++; state.stringMap.set(v, `S_${String(state.strCounter).padStart(5, '0')}`); }
+        maskedValue = state.stringMap.get(v)!;
+      }
+      if (!ignored && opts.maskBooleans && typeof v === 'boolean') maskedValue = v ? 'B_TRUE' : 'B_FALSE';
+      result[maskedKey] = maskedValue;
+    }
+    return result;
+  }
+  return obj;
+}
 
 type JsonShieldMapping = {
   version: string;
@@ -82,6 +148,14 @@ export default function JsonPromptShieldClient() {
   const [maskStrings, setMaskStrings] = useState<boolean>(true);
   const [maskBooleans, setMaskBooleans] = useState<boolean>(false);
   const [ignoreKeysText, setIgnoreKeysText] = useState<string>('');
+  const [ignoreRules, setIgnoreRules] = useState<IgnoreRule[]>([]);
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewData, setPreviewData] = useState<PreviewData | null>(null);
+  const [activeTab, setActiveTab] = useState<'single' | 'batch'>('single');
+  const [batchFiles, setBatchFiles] = useState<BatchFile[]>([]);
+  const [activeBatchFile, setActiveBatchFile] = useState<number>(0);
+  const [batchProcessing, setBatchProcessing] = useState(false);
+  const [excludedCount, setExcludedCount] = useState<number>(0);
 
   const workerRef = useRef<Worker | null>(null);
 
@@ -133,14 +207,26 @@ export default function JsonPromptShieldClient() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleMask = () => {
+  // Compute ignoreKeys (string array) from both legacy text input and new ignore rules
+  const computeIgnoreKeys = useCallback((): string[] => {
+    const fromText = ignoreKeysText.split(/[\n,]/).map(k => k.trim()).filter(Boolean);
+    const fromRulesExact = ignoreRules.filter(r => r.mode === 'exact' && r.pattern.trim()).map(r => r.pattern.trim());
+    return [...new Set([...fromText, ...fromRulesExact])];
+  }, [ignoreKeysText, ignoreRules]);
+
+  const requestPreview = () => {
+    if (!input.trim()) return;
+    const preview = computePreviewData(input.trim(), { maskKeys, maskStrings, maskBooleans, ignoreRules });
+    setPreviewData(preview);
+    setShowPreview(true);
+  };
+
+  const handleMask = useCallback(() => {
     if (!input.trim() || !workerRef.current) return;
     setError(null);
     setProcessing(true);
-    const ignoreKeys = ignoreKeysText
-      .split(/[\n,]/)
-      .map((k) => k.trim())
-      .filter(Boolean);
+    setShowPreview(false);
+    const ignoreKeys = computeIgnoreKeys();
     workerRef.current.postMessage({
       type: 'MASK',
       payload: {
@@ -148,7 +234,28 @@ export default function JsonPromptShieldClient() {
         options: { maskKeys, maskStrings, maskBooleans, ignoreKeys },
       },
     });
-  };
+  }, [input, maskKeys, maskStrings, maskBooleans, computeIgnoreKeys]);
+
+  const handleBatchFiles = useCallback((files: FileList | null) => {
+    if (!files) return;
+    const arr = Array.from(files).slice(0, 10);
+    Promise.all(arr.map(f => f.text())).then(texts => {
+      const state: SharedMaskState = { keyMap: new Map(), stringMap: new Map(), keyCounter: 0, strCounter: 0 };
+      const results: BatchFile[] = texts.map((text, i) => {
+        try {
+          const parsed = JSON.parse(text);
+          const masked = maskJsonWithSharedMapping(parsed, state, { maskKeys, maskStrings, maskBooleans, ignoreRules });
+          return { name: arr[i].name, original: text, masked: JSON.stringify(masked, null, 2), error: null };
+        } catch (e) {
+          return { name: arr[i].name, original: text, masked: null, error: e instanceof Error ? e.message : 'Invalid JSON' };
+        }
+      });
+      setBatchFiles(results);
+      setActiveBatchFile(0);
+      const excluded = state.keyMap.size + state.stringMap.size;
+      setExcludedCount(excluded);
+    });
+  }, [maskKeys, maskStrings, maskBooleans, ignoreRules]);
 
   const handleUnmask = () => {
     if (!restored.trim() || !mapping || !workerRef.current) return;
@@ -275,14 +382,51 @@ export default function JsonPromptShieldClient() {
               </label>
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">Ignore keys (optional, comma or newline)</label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-xs font-medium text-slate-700">Ignore keys — exact, contains, or regex</label>
+                {identifierCount > 0 && (
+                  <span className="text-xs font-semibold text-violet-700 bg-violet-50 border border-violet-200 rounded-full px-2 py-0.5">{identifierCount} masked</span>
+                )}
+              </div>
+              {/* Legacy plain text shortcut */}
               <input
                 type="text"
                 value={ignoreKeysText}
                 onChange={(e) => setIgnoreKeysText(e.target.value)}
-                placeholder="e.g. data, meta, status"
-                className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white"
+                placeholder="Quick ignore: comma-separated key names (e.g. data, meta, status)"
+                className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white mb-2"
               />
+              {/* Advanced multi-rule list */}
+              <div className="space-y-1.5">
+                {ignoreRules.map((rule, idx) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <select
+                      value={rule.mode}
+                      onChange={(e) => setIgnoreRules(prev => prev.map((r, i) => i === idx ? { ...r, mode: e.target.value as IgnoreRuleMode } : r))}
+                      className="shrink-0 px-2 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-700"
+                    >
+                      <option value="exact">Exact</option>
+                      <option value="contains">Contains</option>
+                      <option value="regex">Regex</option>
+                    </select>
+                    <input
+                      type="text"
+                      value={rule.pattern}
+                      onChange={(e) => setIgnoreRules(prev => prev.map((r, i) => i === idx ? { ...r, pattern: e.target.value } : r))}
+                      placeholder={rule.mode === 'regex' ? 'e.g. ^(id|uuid)' : 'pattern'}
+                      className="flex-1 px-2 py-1.5 text-xs rounded-lg border border-slate-200 bg-white"
+                    />
+                    <button type="button" onClick={() => setIgnoreRules(prev => prev.filter((_, i) => i !== idx))}
+                      className="shrink-0 p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors">
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+                <button type="button" onClick={() => setIgnoreRules(prev => [...prev, { pattern: '', mode: 'exact' }])}
+                  className="inline-flex items-center gap-1 text-xs text-violet-600 hover:text-violet-800 transition-colors">
+                  <Plus className="w-3.5 h-3.5" />Add rule
+                </button>
+              </div>
             </div>
 
             <div className="grid gap-4 lg:grid-cols-2">
@@ -344,16 +488,55 @@ export default function JsonPromptShieldClient() {
               </div>
             </div>
 
+            {/* Preview panel */}
+            {showPreview && previewData && (
+              <div className="rounded-xl border-2 border-amber-200 bg-amber-50/60 p-4 space-y-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-semibold text-amber-900">Preview — what will be masked</p>
+                    <p className="text-xs text-amber-700 mt-0.5">
+                      Will mask: <strong>{previewData.keyCount}</strong> keys · <strong>{previewData.stringCount}</strong> string values · <strong>{previewData.boolCount}</strong> booleans
+                    </p>
+                  </div>
+                  <button type="button" onClick={() => setShowPreview(false)} className="text-amber-500 hover:text-amber-700 transition-colors text-xs underline">dismiss</button>
+                </div>
+                {previewData.topKeys.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {previewData.topKeys.map(k => (
+                      <span key={k.key} className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-xs font-mono ${
+                        k.willMask ? 'bg-amber-100 border-amber-300 text-amber-800' : 'bg-slate-100 border-slate-200 text-slate-500'
+                      }`}>
+                        {k.key}
+                        <span className="text-[10px] opacity-70">{k.valueType}</span>
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <div className="flex gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={handleMask}
+                    disabled={processing}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 disabled:opacity-50 shadow-sm transition-colors"
+                  >
+                    <Shield className="w-4 h-4" />
+                    {processing ? 'Masking…' : 'Proceed'}
+                  </button>
+                  <button type="button" onClick={() => setShowPreview(false)} className="px-4 py-2 rounded-lg border border-slate-200 text-sm text-slate-600 hover:bg-slate-50 transition-colors">Cancel</button>
+                </div>
+              </div>
+            )}
+
             {/* Primary CTA — always visible, never clipped */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-1">
               <button
                 type="button"
-                onClick={handleMask}
+                onClick={showPreview ? handleMask : requestPreview}
                 disabled={!input.trim() || processing}
                 className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-violet-600 text-white text-base font-semibold hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-md transition-colors w-full sm:w-auto justify-center"
               >
                 <Shield className="w-5 h-5" />
-                {processing ? 'Masking…' : 'Mask JSON'}
+                {processing ? 'Masking…' : showPreview ? 'Proceed' : 'Mask JSON'}
                 <kbd className="hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1.5 py-0.5 font-mono text-[11px]">⌘↵</kbd>
               </button>
               {identifierCount > 0 && (
@@ -410,6 +593,81 @@ export default function JsonPromptShieldClient() {
               Click Restore to unmask keys and string values using the current mapping.
             </div>
           )}
+        </section>
+
+        {/* Batch file masking */}
+        <section className="rounded-2xl border-2 border-violet-200 bg-white overflow-hidden">
+          <div className="px-4 py-3 border-b border-violet-100 bg-violet-50/70 flex items-center gap-2">
+            <FileJson className="w-5 h-5 text-violet-600" />
+            <h2 className="text-lg font-semibold text-slate-900">Batch masking</h2>
+            <span className="text-xs text-slate-500 ml-1">— mask up to 10 .json files with a shared mapping</span>
+          </div>
+          <div className="p-4 space-y-4">
+            <label className="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-violet-200 bg-violet-50/30 px-4 py-8 cursor-pointer hover:bg-violet-50/60 transition-colors">
+              <Upload className="w-6 h-6 text-violet-500" />
+              <span className="text-sm font-medium text-slate-700">Drop .json files here or click to select</span>
+              <span className="text-xs text-slate-400">Up to 10 files · shared mapping keeps tokens consistent</span>
+              <input
+                type="file"
+                accept="application/json,.json"
+                multiple
+                className="hidden"
+                onChange={(e) => handleBatchFiles(e.target.files)}
+              />
+            </label>
+
+            {batchFiles.length > 0 && (
+              <div className="space-y-3">
+                {/* File tabs */}
+                <div className="flex flex-wrap gap-1.5">
+                  {batchFiles.map((f, idx) => (
+                    <button key={idx} type="button"
+                      onClick={() => setActiveBatchFile(idx)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors border ${
+                        activeBatchFile === idx ? 'bg-violet-600 text-white border-violet-600' : 'border-violet-200 bg-violet-50 text-violet-700 hover:bg-violet-100'
+                      }`}>
+                      {f.name}
+                      {f.error && <AlertCircle className="w-3 h-3 ml-1 inline text-red-400" />}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Active file output */}
+                {batchFiles[activeBatchFile] && (
+                  <div className="rounded-xl border border-violet-100 bg-white overflow-hidden">
+                    <div className="flex items-center justify-between px-4 py-2 border-b border-violet-50 bg-violet-50/50">
+                      <span className="text-xs font-semibold text-slate-700">{batchFiles[activeBatchFile].name}</span>
+                      {batchFiles[activeBatchFile].masked && (
+                        <button type="button"
+                          onClick={() => { navigator.clipboard.writeText(batchFiles[activeBatchFile].masked!); trackCopy('json_prompt_shield'); }}
+                          className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium text-violet-600 hover:bg-violet-50">
+                          <Clipboard className="w-3.5 h-3.5" /> Copy
+                        </button>
+                      )}
+                    </div>
+                    {batchFiles[activeBatchFile].error ? (
+                      <p className="p-3 text-sm text-red-700">{batchFiles[activeBatchFile].error}</p>
+                    ) : (
+                      <textarea readOnly value={batchFiles[activeBatchFile].masked ?? ''}
+                        className="w-full min-h-[200px] resize-none border-0 p-3 text-sm font-mono bg-slate-50/50" />
+                    )}
+                  </div>
+                )}
+
+                {/* Copy all */}
+                <button type="button"
+                  onClick={() => {
+                    const all = batchFiles.filter(f => f.masked).map(f => `// === FILE: ${f.name} ===\n${f.masked}`).join('\n\n');
+                    navigator.clipboard.writeText(all);
+                    trackCopy('json_prompt_shield');
+                  }}
+                  disabled={batchFiles.every(f => !f.masked)}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 disabled:opacity-40 transition-colors">
+                  <Clipboard className="w-4 h-4" /> Copy all (separated)
+                </button>
+              </div>
+            )}
+          </div>
         </section>
 
         {error && (

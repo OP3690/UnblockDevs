@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Server, Copy, Check, Download, Play, ChevronDown, ChevronUp, Zap } from 'lucide-react';
+import { Server, Copy, Check, Download, Play, ChevronDown, ChevronUp, Zap, Plus, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy } from '@/lib/analytics';
 import { validateJson } from '@/lib/jsonParser';
@@ -21,12 +21,31 @@ import {
   type ConditionalRule,
 } from '@/lib/mockApiGenerator';
 
+type RouteConfig = MockApiConfig & { requestBodySchema?: string };
+
 const METHODS: HttpMethod[] = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
 const AUTH_TYPES: { value: AuthType; label: string }[] = [
   { value: 'none', label: 'None' },
   { value: 'api_key', label: 'API Key' },
   { value: 'bearer', label: 'Bearer Token' },
   { value: 'basic', label: 'Basic Auth' },
+];
+
+const METHOD_BADGE: Record<HttpMethod, string> = {
+  GET: 'bg-green-100 text-green-700',
+  POST: 'bg-blue-100 text-blue-700',
+  PUT: 'bg-amber-100 text-amber-700',
+  PATCH: 'bg-orange-100 text-orange-700',
+  DELETE: 'bg-red-100 text-red-700',
+};
+
+const LATENCY_PROFILES: { label: string; ms: number }[] = [
+  { label: 'Instant (0 ms)', ms: 0 },
+  { label: 'Fast (50 ms)', ms: 50 },
+  { label: 'Normal (200 ms)', ms: 200 },
+  { label: 'Slow (500 ms)', ms: 500 },
+  { label: 'Very Slow (2 s)', ms: 2000 },
+  { label: 'Custom', ms: -1 },
 ];
 
 const PRESETS: Array<{ name: string; emoji: string; updates: Partial<MockApiConfig> }> = [
@@ -95,34 +114,157 @@ const PRESETS: Array<{ name: string; emoji: string; updates: Partial<MockApiConf
   },
 ];
 
-function buildCurl(config: MockApiConfig): string {
+function buildCurl(config: RouteConfig): string {
   const base = `http://localhost:3001${config.endpoint}`;
   const lines: string[] = [`curl -X ${config.method}`, `  '${base}'`, `  -H 'Content-Type: application/json'`];
   if (config.authType === 'bearer') lines.push(`  -H 'Authorization: Bearer ${config.authHeaderValue || 'demo-token'}'`);
   if (config.authType === 'api_key') lines.push(`  -H 'X-API-Key: ${config.authHeaderValue || 'your-api-key'}'`);
-  if (['POST', 'PUT', 'PATCH'].includes(config.method)) lines.push(`  -d '{"example":"data"}'`);
+  if (['POST', 'PUT', 'PATCH'].includes(config.method)) {
+    const bodyEx = config.requestBodySchema
+      ? config.requestBodySchema.replace(/\s+/g, ' ').slice(0, 120)
+      : '{"example":"data"}';
+    lines.push(`  -d '${bodyEx}'`);
+  }
   return lines.join(' \\\n');
 }
 
+function generateMultiRouteExpress(routes: RouteConfig[]): string {
+  const lines = [
+    "const express = require('express');",
+    "const app = express();",
+    "app.use(express.json());",
+    "",
+  ];
+  for (const route of routes) {
+    const method = route.method.toLowerCase();
+    lines.push(`// ---- ${route.method} ${route.endpoint} ----`);
+    lines.push(`app.${method}('${route.endpoint}', (req, res) => {`);
+    if (route.requestBodySchema && ['POST', 'PUT', 'PATCH'].includes(route.method)) {
+      try {
+        const schema = JSON.parse(route.requestBodySchema);
+        const keys = Object.keys(schema);
+        if (keys.length > 0) {
+          lines.push(`  const { ${keys.join(', ')} } = req.body;`);
+          lines.push(`  // Validate required fields`);
+          for (const k of keys) {
+            lines.push(`  if (${k} === undefined) return res.status(400).json({ error: 'Missing field: ${k}' });`);
+          }
+          lines.push('');
+        }
+      } catch { /* invalid schema JSON — skip */ }
+    }
+    const responseStr = route.responseJson || '{}';
+    if ((route.latencyMs ?? 0) > 0) {
+      lines.push(`  setTimeout(() => {`);
+      lines.push(`    res.status(${route.statusCode}).json(${responseStr});`);
+      lines.push(`  }, ${route.latencyMs});`);
+    } else {
+      lines.push(`  res.status(${route.statusCode}).json(${responseStr});`);
+    }
+    lines.push('});');
+    lines.push('');
+  }
+  lines.push("app.listen(3001, () => console.log('Mock API server running on http://localhost:3001'));");
+  return lines.join('\n');
+}
+
+function generateMultiRoutePostman(routes: RouteConfig[]): string {
+  const items = routes.map((route) => {
+    const hasBody = ['POST', 'PUT', 'PATCH'].includes(route.method);
+    return {
+      name: `${route.method} ${route.endpoint}`,
+      request: {
+        method: route.method,
+        header: [{ key: 'Content-Type', value: 'application/json' }],
+        url: { raw: `http://localhost:3001${route.endpoint}`, host: ['localhost'], port: '3001', path: route.endpoint.split('/').filter(Boolean) },
+        ...(hasBody
+          ? { body: { mode: 'raw', raw: route.requestBodySchema || '{}', options: { raw: { language: 'json' } } } }
+          : {}),
+      },
+      response: [{ name: `${route.statusCode} Response`, status: String(route.statusCode), body: route.responseJson }],
+    };
+  });
+  return JSON.stringify(
+    {
+      info: { name: 'Mock API Collection', schema: 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json' },
+      item: items,
+    },
+    null,
+    2
+  );
+}
+
+function generateMultiRouteOpenAPI(routes: RouteConfig[]): string {
+  const paths: Record<string, Record<string, unknown>> = {};
+  for (const route of routes) {
+    const method = route.method.toLowerCase();
+    if (!paths[route.endpoint]) paths[route.endpoint] = {};
+    const operation: Record<string, unknown> = {
+      summary: `${route.method} ${route.endpoint}`,
+      responses: {
+        [String(route.statusCode)]: {
+          description: 'Response',
+          content: {
+            'application/json': {
+              schema: { type: 'object' },
+              example: (() => { try { return JSON.parse(route.responseJson); } catch { return {}; } })(),
+            },
+          },
+        },
+      },
+    };
+    if (route.requestBodySchema && ['post', 'put', 'patch'].includes(method)) {
+      operation.requestBody = {
+        required: true,
+        content: {
+          'application/json': {
+            schema: { type: 'object' },
+            example: (() => { try { return JSON.parse(route.requestBodySchema!); } catch { return {}; } })(),
+          },
+        },
+      };
+    }
+    paths[route.endpoint][method] = operation;
+  }
+  return JSON.stringify({ openapi: '3.0.0', info: { title: 'Mock API', version: '1.0.0' }, paths }, null, 2);
+}
+
 export default function MockApiGenerator() {
-  const [config, setConfig] = useState<MockApiConfig>(getDefaultConfig());
+  const [routes, setRoutes] = useState<RouteConfig[]>([getDefaultConfig()]);
+  const [activeRouteIdx, setActiveRouteIdx] = useState(0);
   const [mockCode, setMockCode] = useState('');
   const [exportFormat, setExportFormat] = useState<'code' | 'postman' | 'openapi'>('code');
   const [copied, setCopied] = useState(false);
-  const [testResult, setTestResult] = useState<{
-    status: number;
-    latencyMs: number;
-    body: unknown;
-  } | null>(null);
+  const [testResult, setTestResult] = useState<{ status: number; latencyMs: number; body: unknown } | null>(null);
   const [testLoading, setTestLoading] = useState(false);
+  const [testProgress, setTestProgress] = useState(0);
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const resultsSectionRef = useRef<HTMLDivElement>(null);
 
-  const updateConfig = (updates: Partial<MockApiConfig>) => {
-    setConfig((c) => ({ ...c, ...updates }));
+  const config: RouteConfig = routes[activeRouteIdx] ?? getDefaultConfig();
+  const isBodyMethod = ['POST', 'PUT', 'PATCH'].includes(config.method);
+
+  const updateConfig = (updates: Partial<RouteConfig>) => {
+    setRoutes((prev) => prev.map((r, i) => (i === activeRouteIdx ? { ...r, ...updates } : r)));
   };
 
-  // ⌘+Enter / Ctrl+Enter to generate
+  const addRoute = () => {
+    if (routes.length >= 6) { toast.error('Maximum 6 routes allowed'); return; }
+    const newRoute: RouteConfig = { ...getDefaultConfig(), endpoint: `/api/route${routes.length + 1}` };
+    setRoutes((prev) => [...prev, newRoute]);
+    setActiveRouteIdx(routes.length);
+  };
+
+  const removeRoute = (idx: number) => {
+    if (routes.length === 1) { toast.error('At least one route is required'); return; }
+    setRoutes((prev) => prev.filter((_, i) => i !== idx));
+    setActiveRouteIdx((prev) => {
+      if (prev > idx) return prev - 1;
+      if (prev === idx) return Math.max(0, idx - 1);
+      return prev;
+    });
+  };
+
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
@@ -136,23 +278,28 @@ export default function MockApiGenerator() {
   }, []);
 
   const generateMockApi = () => {
-    if (config.responseMode === 'static') {
-      const validation = validateJson(config.responseJson);
-    if (!validation.valid) {
-        toast.error('Invalid JSON for static response');
-        return;
+    for (const route of routes) {
+      if (route.responseMode === 'static') {
+        const validation = validateJson(route.responseJson);
+        if (!validation.valid) {
+          toast.error(`Invalid JSON for ${route.method} ${route.endpoint}`);
+          return;
+        }
+      } else {
+        try { JSON.parse(route.responseJson); } catch {
+          toast.error(`Invalid JSON template for ${route.method} ${route.endpoint}`);
+          return;
+        }
       }
-    } else {
-      try {
-        JSON.parse(config.responseJson);
-      } catch {
-        toast.error('Invalid JSON template');
-      return;
+      if (route.requestBodySchema) {
+        try { JSON.parse(route.requestBodySchema); } catch {
+          toast.error(`Invalid request body schema for ${route.method} ${route.endpoint}`);
+          return;
+        }
       }
     }
-
     try {
-      const code = generateExpressCode(config);
+      const code = routes.length > 1 ? generateMultiRouteExpress(routes) : generateExpressCode(config);
       setMockCode(code);
       setExportFormat('code');
       toast.success('Mock API generated!');
@@ -184,13 +331,26 @@ export default function MockApiGenerator() {
   const runTest = async () => {
     setTestLoading(true);
     setTestResult(null);
+    setTestProgress(0);
+    const targetLatency = config.latencyMs ?? 0;
+    let intervalId: ReturnType<typeof setInterval> | null = null;
+    if (targetLatency > 50) {
+      const start = Date.now();
+      intervalId = setInterval(() => {
+        const elapsed = Date.now() - start;
+        const pct = Math.min(90, (elapsed / targetLatency) * 100);
+        setTestProgress(pct);
+      }, 40);
+    }
     try {
       const res = await simulateMockResponse(config, { page: 1, limit: config.itemCount ?? 10 });
       setTestResult({ status: res.status, latencyMs: res.latencyMs, body: res.body });
     } catch (e) {
       setTestResult({ status: 0, latencyMs: 0, body: { error: String(e) } });
     }
-    setTestLoading(false);
+    if (intervalId) clearInterval(intervalId);
+    setTestProgress(100);
+    setTimeout(() => { setTestLoading(false); setTestProgress(0); }, 400);
   };
 
   const addConditionalRule = () => {
@@ -213,13 +373,17 @@ export default function MockApiGenerator() {
   };
 
   const getExportContent = (): string => {
-    if (exportFormat === 'postman') return generatePostmanCollection(config);
-    if (exportFormat === 'openapi') return generateOpenAPISpec(config);
-    return mockCode;
+    if (exportFormat === 'postman') return routes.length > 1 ? generateMultiRoutePostman(routes) : generatePostmanCollection(config);
+    if (exportFormat === 'openapi') return routes.length > 1 ? generateMultiRouteOpenAPI(routes) : generateOpenAPISpec(config);
+    return routes.length > 1 ? generateMultiRouteExpress(routes) : mockCode;
   };
 
   const applyPreset = (preset: typeof PRESETS[number]) => {
-    setConfig((c) => ({ ...c, conditionalRules: [], ...preset.updates } as MockApiConfig));
+    setRoutes((prev) =>
+      prev.map((r, i) =>
+        i === activeRouteIdx ? ({ ...r, conditionalRules: [], requestBodySchema: '', ...preset.updates } as RouteConfig) : r
+      )
+    );
     setMockCode('');
     setTestResult(null);
     toast.success(`${preset.name} preset loaded`);
@@ -228,6 +392,11 @@ export default function MockApiGenerator() {
   const localUrl = `http://localhost:3001${config.endpoint}`;
   const curlCommand = buildCurl(config);
 
+  // Derive which latency profile option to show selected
+  const currentProfileMs = config.latencyMs ?? 0;
+  const matchedProfile = LATENCY_PROFILES.find((p) => p.ms === currentProfileMs);
+  const isCustomLatency = !matchedProfile || matchedProfile.ms === -1;
+
   return (
     <div className="space-y-6 tool-panel-contain">
       {/* Header */}
@@ -235,8 +404,8 @@ export default function MockApiGenerator() {
         <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-5 text-white">
           <h2 className="text-2xl font-bold flex items-center gap-2">
             <Server className="w-7 h-7" />
-          Mock API Generator
-        </h2>
+            Mock API Generator
+          </h2>
           <p className="text-indigo-100 text-sm mt-1">
             Create REST endpoints with dynamic responses, auth simulation, latency, and error scenarios. Export to Postman or OpenAPI.
           </p>
@@ -261,20 +430,78 @@ export default function MockApiGenerator() {
 
         {/* Core config */}
         <div className="p-6 space-y-6">
+
+          {/* ---- Routes Panel ---- */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                Routes <span className="text-gray-400 font-normal normal-case">({routes.length}/6)</span>
+              </h3>
+              <button
+                type="button"
+                onClick={addRoute}
+                disabled={routes.length >= 6}
+                className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-indigo-300 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                Add Route
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {routes.map((route, idx) => (
+                <div
+                  key={idx}
+                  className={`group flex items-center gap-1.5 rounded-lg border text-xs font-mono transition-colors ${
+                    idx === activeRouteIdx
+                      ? 'bg-indigo-100 border-indigo-300 text-indigo-800'
+                      : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300'
+                  }`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setActiveRouteIdx(idx)}
+                    className="flex items-center gap-1.5 px-2.5 py-1.5"
+                  >
+                    <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${METHOD_BADGE[route.method]}`}>
+                      {route.method}
+                    </span>
+                    <span className="max-w-[140px] truncate">{route.endpoint}</span>
+                  </button>
+                  {routes.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeRoute(idx)}
+                      className="pr-2 text-gray-400 hover:text-red-500 transition-colors"
+                      aria-label="Remove route"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+            {routes.length > 1 && (
+              <p className="text-xs text-indigo-600 mt-1.5">
+                Editing route {activeRouteIdx + 1} of {routes.length}. All routes are exported together.
+              </p>
+            )}
+          </div>
+
+          {/* Endpoint */}
           <div>
             <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">Endpoint</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="lg:col-span-2">
                 <label className="block text-xs font-medium text-gray-500 mb-1">Path</label>
-            <input
-              type="text"
+                <input
+                  type="text"
                   value={config.endpoint}
                   onChange={(e) => updateConfig({ endpoint: e.target.value || '/api/data' })}
                   placeholder="/api/users"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-mono text-sm"
-            />
-          </div>
-          <div>
+                />
+              </div>
+              <div>
                 <label className="block text-xs font-medium text-gray-500 mb-1">Method</label>
                 <select
                   value={config.method}
@@ -301,22 +528,39 @@ export default function MockApiGenerator() {
             </div>
           </div>
 
+          {/* Latency Profile + Auth */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Latency (ms)</label>
-              <input
-                type="number"
-                min={0}
-                max={10000}
-                value={config.latencyMs}
-                onChange={(e) => updateConfig({ latencyMs: Math.max(0, parseInt(e.target.value, 10) || 0) })}
+              <label className="block text-xs font-medium text-gray-500 mb-1">Latency profile</label>
+              <select
+                value={matchedProfile ? matchedProfile.label : 'Custom'}
+                onChange={(e) => {
+                  const found = LATENCY_PROFILES.find((p) => p.label === e.target.value);
+                  if (found && found.ms >= 0) updateConfig({ latencyMs: found.ms });
+                  // If Custom selected, don't change latencyMs — user will enter manually
+                }}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm"
-              />
-              <p className="text-xs text-gray-400 mt-0.5">0–10000 ms to simulate real API delay</p>
+              >
+                {LATENCY_PROFILES.map((p) => (
+                  <option key={p.label} value={p.label}>{p.label}</option>
+                ))}
+              </select>
+              {isCustomLatency && (
+                <input
+                  type="number"
+                  min={0}
+                  max={10000}
+                  value={currentProfileMs}
+                  onChange={(e) => updateConfig({ latencyMs: Math.max(0, parseInt(e.target.value, 10) || 0) })}
+                  placeholder="Enter ms (0–10000)"
+                  className="mt-1.5 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm"
+                />
+              )}
+              <p className="text-xs text-gray-400 mt-0.5">Shown as a progress bar in browser test</p>
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500 mb-1">Authentication</label>
-            <select
+              <select
                 value={config.authType}
                 onChange={(e) => updateConfig({ authType: e.target.value as AuthType })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm"
@@ -324,7 +568,7 @@ export default function MockApiGenerator() {
                 {AUTH_TYPES.map((a) => (
                   <option key={a.value} value={a.value}>{a.label}</option>
                 ))}
-            </select>
+              </select>
               {(config.authType === 'bearer' || config.authType === 'api_key') && (
                 <input
                   type="text"
@@ -352,7 +596,7 @@ export default function MockApiGenerator() {
                 <span className="text-sm">Static JSON</span>
               </label>
               <label className="inline-flex items-center gap-2 cursor-pointer">
-            <input
+                <input
                   type="radio"
                   name="responseMode"
                   checked={config.responseMode === 'template'}
@@ -410,6 +654,26 @@ export default function MockApiGenerator() {
             )}
           </div>
 
+          {/* Request Body Schema — POST/PUT/PATCH only */}
+          {isBodyMethod && (
+            <div className="border border-blue-200 rounded-lg bg-blue-50/40 p-4">
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider">Request Body Schema</h3>
+                <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${METHOD_BADGE[config.method]}`}>{config.method}</span>
+              </div>
+              <p className="text-xs text-gray-500 mb-2">
+                Define the expected request payload JSON. Keys are destructured with basic validation in the Express.js export, and appear as <code className="bg-blue-100 px-1 rounded">requestBody</code> in the OpenAPI spec.
+              </p>
+              <textarea
+                value={config.requestBodySchema ?? ''}
+                onChange={(e) => updateConfig({ requestBodySchema: e.target.value })}
+                placeholder={'{\n  "username": "string",\n  "password": "string"\n}'}
+                rows={5}
+                className="w-full p-3 border border-blue-200 rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 resize-y bg-white"
+              />
+            </div>
+          )}
+
           {/* Advanced */}
           <div className="border border-gray-200 rounded-lg overflow-hidden">
             <button
@@ -433,7 +697,7 @@ export default function MockApiGenerator() {
                       onChange={(e) => updateConfig({ rateLimitPerMinute: e.target.value ? parseInt(e.target.value, 10) : undefined })}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
                     />
-        </div>
+                  </div>
                   <div>
                     <label className="block text-xs font-medium text-gray-500 mb-1">Failure rate (%) – random 500/429</label>
                     <input
@@ -502,17 +766,17 @@ export default function MockApiGenerator() {
                 </label>
               </div>
             )}
-        </div>
+          </div>
 
-        <button
+          <button
             type="button"
-          onClick={generateMockApi}
+            onClick={generateMockApi}
             className="w-full py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors flex items-center justify-center gap-2"
-        >
+          >
             <Zap className="w-5 h-5" />
-          Generate Mock API
+            Generate Mock API{routes.length > 1 ? ` (${routes.length} routes)` : ''}
             <kbd className="hidden sm:inline-flex items-center rounded border border-white/30 bg-white/20 px-1 py-0.5 font-mono text-[10px]">⌘↵</kbd>
-        </button>
+          </button>
         </div>
       </div>
 
@@ -522,7 +786,7 @@ export default function MockApiGenerator() {
           <div className="px-6 py-4 border-b border-gray-200 bg-green-50">
             <h3 className="font-semibold text-gray-900 flex items-center gap-2">
               <Check className="w-5 h-5 text-green-600" />
-              Mock endpoint ready
+              Mock endpoint{routes.length > 1 ? 's' : ''} ready
             </h3>
             <p className="text-sm text-gray-600 mt-1 font-mono break-all">{localUrl}</p>
             <div className="flex flex-wrap gap-2 mt-3">
@@ -541,7 +805,7 @@ export default function MockApiGenerator() {
                 className="inline-flex items-center gap-1.5 px-3 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50"
               >
                 <Play className="w-4 h-4" />
-                {testLoading ? 'Testing…' : 'Test API'}
+                {testLoading ? `Testing… ${Math.round(testProgress)}%` : 'Test API'}
               </button>
               <select
                 value={exportFormat}
@@ -575,6 +839,22 @@ export default function MockApiGenerator() {
               </button>
             </div>
           </div>
+
+          {/* Latency progress bar during test */}
+          {testLoading && testProgress > 0 && (
+            <div className="px-6 py-3 border-b border-gray-100 bg-indigo-50">
+              <div className="flex items-center justify-between text-xs text-indigo-700 mb-1.5">
+                <span>Simulating {currentProfileMs} ms latency…</span>
+                <span>{Math.round(testProgress)}%</span>
+              </div>
+              <div className="h-2 bg-indigo-100 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-indigo-500 rounded-full transition-all duration-75 ease-linear"
+                  style={{ width: `${testProgress}%` }}
+                />
+              </div>
+            </div>
+          )}
 
           {testResult && (
             <div className="px-6 py-4 border-b border-gray-200 bg-slate-50">
@@ -610,7 +890,7 @@ export default function MockApiGenerator() {
           <div className="p-6">
             <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm font-mono whitespace-pre-wrap">
               <code>{getExportContent()}</code>
-          </pre>
+            </pre>
           </div>
         </div>
       )}
@@ -618,14 +898,14 @@ export default function MockApiGenerator() {
       {/* Blog */}
       <div className="mt-12 bg-white rounded-xl shadow-lg p-8 border border-gray-200">
         <h2 className="text-2xl font-bold text-gray-900 mb-4">Learn more</h2>
-          <Link
-            href="/blog/free-mock-api-generator-guide"
-            className="block p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 hover:border-blue-400 hover:shadow-md transition-all"
-          >
+        <Link
+          href="/blog/free-mock-api-generator-guide"
+          className="block p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 hover:border-blue-400 hover:shadow-md transition-all"
+        >
           <h3 className="font-semibold text-gray-900 mb-1">Free Mock API in Seconds</h3>
           <p className="text-sm text-gray-600 mb-2">Generate fake endpoints with delay, status codes, and pagination for frontend development.</p>
           <span className="text-blue-600 text-sm font-medium hover:underline">Read guide →</span>
-          </Link>
+        </Link>
       </div>
     </div>
   );

@@ -18,6 +18,46 @@ import toast from 'react-hot-toast';
 import { trackCopy, trackCtaClick } from '@/lib/analytics';
 import { processLog, getAiSafeCopy, type AnnotationMode } from '@/lib/logUnpackerEngine';
 
+type SeverityLevel = 'error' | 'warn' | 'info' | 'debug' | null;
+type DetectedFormat = 'NDJSON' | 'Syslog' | 'Apache/Nginx CLF' | 'Plain JSON' | 'Stringified JSON' | 'Unknown';
+
+interface LineResult {
+  lineNum: number;
+  input: string;
+  output: string | null;
+  error: string | null;
+  data: unknown;
+  severity: SeverityLevel;
+}
+
+function detectLogFormat(text: string): DetectedFormat {
+  const trimmed = text.trim();
+  if (!trimmed) return 'Unknown';
+  const firstLine = trimmed.split('\n')[0].trim();
+  const lines = trimmed.split('\n').filter(l => l.trim());
+  if (lines.length > 1) {
+    const allJson = lines.every(l => { try { JSON.parse(l.trim()); return true; } catch { return false; } });
+    if (allJson) return 'NDJSON';
+  }
+  if (/^\d{1,3}(\.\d{1,3}){3}\s+-\s+/.test(firstLine)) return 'Apache/Nginx CLF';
+  if (/^<\d+>/.test(firstLine)) return 'Syslog';
+  if (/^["'][\s]*\{/.test(firstLine) || firstLine.startsWith('"{')) return 'Stringified JSON';
+  if (firstLine.startsWith('{') || firstLine.startsWith('[')) return 'Plain JSON';
+  return 'Unknown';
+}
+
+function getSeverityLevel(data: unknown): SeverityLevel {
+  if (typeof data !== 'object' || data === null) return null;
+  const obj = data as Record<string, unknown>;
+  const level = String(obj.level ?? obj.severity ?? '').toUpperCase();
+  const status = typeof obj.status === 'number' ? obj.status : null;
+  if (['ERROR', 'FATAL', 'CRITICAL'].includes(level) || (status !== null && status >= 500)) return 'error';
+  if (['WARN', 'WARNING'].includes(level) || (status !== null && status >= 400 && status < 500)) return 'warn';
+  if (['INFO'].includes(level) || (status !== null && status >= 200 && status < 300)) return 'info';
+  if (['DEBUG', 'TRACE', 'VERBOSE'].includes(level)) return 'debug';
+  return null;
+}
+
 const PLACEHOLDER = `Paste log or stringified JSON here...
 
 Example:
@@ -57,6 +97,10 @@ export default function LogUnpacker() {
   const [maskJwtPii, setMaskJwtPii] = useState(false);
   const [annotationMode, setAnnotationMode] = useState<AnnotationMode>('inline');
   const [copiedWhich, setCopiedWhich] = useState<'output' | 'aisafe' | null>(null);
+  const [multiLineMode, setMultiLineMode] = useState(false);
+  const [multiLineResults, setMultiLineResults] = useState<LineResult[]>([]);
+  const [copiedLineIndex, setCopiedLineIndex] = useState<number | null>(null);
+  const [copiedAll, setCopiedAll] = useState(false);
 
   // ⌘+Enter / Ctrl+Enter to run
   useEffect(() => {
@@ -71,17 +115,41 @@ export default function LogUnpacker() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const detectedFormat = useMemo(() => detectLogFormat(input), [input]);
+
+  const singleLineSeverity = useMemo<SeverityLevel>(() => getSeverityLevel(lastData), [lastData]);
+
   const run = useCallback(() => {
     trackCtaClick('log_unpacker', 'unpack');
     setError(null);
     setOutput(null);
     setLastData(null);
     setCopiedWhich(null);
+    setMultiLineResults([]);
     if (!input.trim()) {
       setError('Enter or paste log content.');
       return;
     }
     setProcessing(true);
+
+    if (multiLineMode) {
+      const lines = input.split('\n').filter(l => l.trim());
+      const results: LineResult[] = lines.map((line, idx) => {
+        try {
+          const result = processLog(line.trim(), { scrubPaths: true, maskJwtPii, annotationMode });
+          if (!result.success) return { lineNum: idx + 1, input: line, output: null, error: result.error || 'Processing failed.', data: null, severity: null };
+          const sev = getSeverityLevel(result.data);
+          return { lineNum: idx + 1, input: line, output: JSON.stringify(result.data, null, 2), error: null, data: result.data, severity: sev };
+        } catch (e) {
+          return { lineNum: idx + 1, input: line, output: null, error: e instanceof Error ? e.message : 'Unexpected error.', data: null, severity: null };
+        }
+      });
+      setMultiLineResults(results);
+      setProcessing(false);
+      toast.success(`Processed ${results.length} line${results.length !== 1 ? 's' : ''}`);
+      return;
+    }
+
     try {
       const result = processLog(input.trim(), {
         scrubPaths: true,
@@ -101,7 +169,7 @@ export default function LogUnpacker() {
     } finally {
       setProcessing(false);
     }
-  }, [input, maskJwtPii, annotationMode]);
+  }, [input, maskJwtPii, annotationMode, multiLineMode]);
 
   const copyAiSafe = useCallback(() => {
     trackCopy('log_unpacker');
@@ -152,12 +220,31 @@ export default function LogUnpacker() {
     toast.success(`${label} sample loaded. Click Unpack to process.`);
   }, []);
 
+  const copyLineOutput = useCallback((idx: number, outputStr: string) => {
+    navigator.clipboard.writeText(outputStr).then(
+      () => { trackCopy('log_unpacker'); setCopiedLineIndex(idx); setTimeout(() => setCopiedLineIndex(null), 2000); },
+      () => toast.error('Copy failed.')
+    );
+  }, []);
+
+  const copyAllMultiLine = useCallback(() => {
+    const allText = multiLineResults
+      .filter(r => r.output)
+      .map(r => `// Line ${r.lineNum}\n${r.output}`)
+      .join('\n\n');
+    navigator.clipboard.writeText(allText).then(
+      () => { trackCopy('log_unpacker'); setCopiedAll(true); setTimeout(() => setCopiedAll(false), 2000); toast.success('All unpacked lines copied.'); },
+      () => toast.error('Copy failed.')
+    );
+  }, [multiLineResults]);
+
   const clearAll = useCallback(() => {
     setInput('');
     setOutput(null);
     setError(null);
     setLastData(null);
     setCopiedWhich(null);
+    setMultiLineResults([]);
     toast.success('Cleared.');
   }, []);
 
@@ -229,6 +316,21 @@ export default function LogUnpacker() {
             aria-label="Log or JSON input"
           />
 
+          {/* Detected format badge */}
+          {input.trim() && (
+            <div className="mt-3 flex items-center gap-2">
+              <span className="text-xs text-gray-500">Detected format:</span>
+              <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold border ${
+                detectedFormat === 'NDJSON' ? 'bg-violet-50 border-violet-200 text-violet-700' :
+                detectedFormat === 'Apache/Nginx CLF' ? 'bg-amber-50 border-amber-200 text-amber-700' :
+                detectedFormat === 'Syslog' ? 'bg-orange-50 border-orange-200 text-orange-700' :
+                detectedFormat === 'Plain JSON' ? 'bg-emerald-50 border-emerald-200 text-emerald-700' :
+                detectedFormat === 'Stringified JSON' ? 'bg-blue-50 border-blue-200 text-blue-700' :
+                'bg-gray-100 border-gray-200 text-gray-600'
+              }`}>{detectedFormat}</span>
+            </div>
+          )}
+
           {/* Options row */}
           <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-gray-100 pt-4">
             <label className="flex cursor-pointer items-center gap-2.5">
@@ -239,6 +341,16 @@ export default function LogUnpacker() {
                 className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-2 focus:ring-primary-500 focus:ring-offset-0"
               />
               <span className="text-sm text-gray-700">Mask PII in JWT (sub, name, email)</span>
+            </label>
+            <label className="flex cursor-pointer items-center gap-2.5">
+              <input
+                type="checkbox"
+                checked={multiLineMode}
+                onChange={(e) => setMultiLineMode(e.target.checked)}
+                className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-2 focus:ring-primary-500 focus:ring-offset-0"
+              />
+              <span className="text-sm text-gray-700">Multi-line mode</span>
+              <span className="text-xs text-gray-400">(process each line independently)</span>
             </label>
             <div className="flex items-center gap-2">
               <label htmlFor="log-unpacker-output-mode" className="text-sm text-gray-600">Output:</label>
@@ -284,10 +396,96 @@ export default function LogUnpacker() {
         </div>
       )}
 
+      {/* Severity legend */}
+      {(hasOutput || multiLineResults.length > 0) && (
+        <div className="flex flex-wrap items-center gap-2 text-xs">
+          <span className="text-gray-500 font-medium">Severity:</span>
+          {[
+            { label: 'ERROR/FATAL/5xx', cls: 'bg-red-100 text-red-700 border-red-200' },
+            { label: 'WARN/4xx', cls: 'bg-amber-100 text-amber-700 border-amber-200' },
+            { label: 'INFO/2xx', cls: 'bg-blue-100 text-blue-700 border-blue-200' },
+            { label: 'DEBUG', cls: 'bg-gray-100 text-gray-600 border-gray-200' },
+          ].map(({ label, cls }) => (
+            <span key={label} className={`inline-flex items-center rounded-full border px-2.5 py-0.5 font-medium ${cls}`}>{label}</span>
+          ))}
+        </div>
+      )}
+
+      {/* Multi-line results */}
+      {multiLineResults.length > 0 && (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-gray-800">{multiLineResults.length} line{multiLineResults.length !== 1 ? 's' : ''} processed</h2>
+            <button
+              type="button"
+              onClick={copyAllMultiLine}
+              className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition ${
+                copiedAll ? 'border-emerald-300 bg-emerald-50 text-emerald-800' : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              {copiedAll ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+              {copiedAll ? 'Copied' : 'Copy all unpacked'}
+            </button>
+          </div>
+          {multiLineResults.map((r) => (
+            <div key={r.lineNum} className={`overflow-hidden rounded-xl border shadow-sm ${
+              r.severity === 'error' ? 'border-red-200 bg-red-50/30' :
+              r.severity === 'warn' ? 'border-amber-200 bg-amber-50/30' :
+              r.severity === 'info' ? 'border-blue-200 bg-blue-50/30' :
+              r.severity === 'debug' ? 'border-gray-200 bg-gray-50/30' :
+              'border-gray-200 bg-white'
+            }`}>
+              <div className={`flex items-center justify-between px-4 py-2 border-b ${
+                r.severity === 'error' ? 'bg-red-50/80 border-red-100' :
+                r.severity === 'warn' ? 'bg-amber-50/80 border-amber-100' :
+                r.severity === 'info' ? 'bg-blue-50/80 border-blue-100' :
+                r.severity === 'debug' ? 'bg-gray-50 border-gray-100' :
+                'bg-slate-50 border-gray-100'
+              }`}>
+                <span className="text-sm font-semibold text-gray-800">Line {r.lineNum}</span>
+                {r.output && (
+                  <button
+                    type="button"
+                    onClick={() => copyLineOutput(r.lineNum, r.output!)}
+                    className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition ${
+                      copiedLineIndex === r.lineNum ? 'border-emerald-300 bg-emerald-50 text-emerald-800' : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    {copiedLineIndex === r.lineNum ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                    {copiedLineIndex === r.lineNum ? 'Copied' : 'Copy'}
+                  </button>
+                )}
+              </div>
+              <div className="p-3">
+                {r.error ? (
+                  <p className="text-xs text-red-700 font-medium">{r.error}</p>
+                ) : (
+                  <pre className="max-h-[240px] overflow-auto rounded-lg border border-gray-100 bg-white/80 p-3 font-mono text-[12px] leading-relaxed text-gray-800 whitespace-pre-wrap break-words">
+                    <code>{r.output}</code>
+                  </pre>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Output card */}
       {hasOutput && (
-        <div className="overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-lg shadow-gray-200/50">
-          <div className="border-b border-gray-100 bg-gradient-to-r from-emerald-50/80 to-teal-50/50 px-4 py-3 sm:px-5">
+        <div className={`overflow-hidden rounded-2xl border shadow-lg ${
+          singleLineSeverity === 'error' ? 'border-red-200 shadow-red-100/50' :
+          singleLineSeverity === 'warn' ? 'border-amber-200 shadow-amber-100/50' :
+          singleLineSeverity === 'info' ? 'border-blue-200 shadow-blue-100/50' :
+          singleLineSeverity === 'debug' ? 'border-gray-200 shadow-gray-200/50' :
+          'border-gray-200/80 shadow-gray-200/50'
+        } bg-white`}>
+          <div className={`border-b border-gray-100 px-4 py-3 sm:px-5 bg-gradient-to-r ${
+            singleLineSeverity === 'error' ? 'from-red-50/80 to-rose-50/50' :
+            singleLineSeverity === 'warn' ? 'from-amber-50/80 to-yellow-50/50' :
+            singleLineSeverity === 'info' ? 'from-blue-50/80 to-cyan-50/50' :
+            singleLineSeverity === 'debug' ? 'from-gray-50/80 to-slate-50/50' :
+            'from-emerald-50/80 to-teal-50/50'
+          }`}>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h2 className="text-sm font-semibold text-gray-900">Processed output</h2>

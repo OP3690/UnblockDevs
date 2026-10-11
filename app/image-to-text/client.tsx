@@ -6,8 +6,9 @@ import {
   Loader2, CheckCircle2, AlertCircle, Scan, ZoomIn, ZoomOut,
   FileText, Settings2, Eye, EyeOff, Languages, BarChart2,
   RefreshCw, Layers, AlignLeft, Table2, Image as ImageIcon,
-  Maximize2,
+  Maximize2, Layers2, ClipboardPaste, CheckSquare,
 } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -1744,6 +1745,35 @@ function BBoxOverlay({ result, imgDisplayW, imgDisplayH }: {
   );
 }
 
+// ── LCS word diff ─────────────────────────────────────────────────────────────
+
+type DiffToken = { word: string; kind: 'correct' | 'missed' | 'extra' };
+
+function wordDiff(ocr: string, ref: string): { tokens: DiffToken[]; accuracy: number } {
+  const ocrWords = ocr.toLowerCase().match(/\b\w+\b/g) ?? [];
+  const refWords = ref.toLowerCase().match(/\b\w+\b/g) ?? [];
+  const m = ocrWords.length, n = refWords.length;
+  // Build LCS table
+  const dp: number[][] = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+  for (let i = 1; i <= m; i++)
+    for (let j = 1; j <= n; j++)
+      dp[i][j] = ocrWords[i - 1] === refWords[j - 1] ? dp[i-1][j-1] + 1 : Math.max(dp[i-1][j], dp[i][j-1]);
+  // Backtrack
+  const lcsOcr = new Array(m).fill(false);
+  const lcsRef = new Array(n).fill(false);
+  let i = m, j = n;
+  while (i > 0 && j > 0) {
+    if (ocrWords[i-1] === refWords[j-1]) { lcsOcr[i-1] = true; lcsRef[j-1] = true; i--; j--; }
+    else if (dp[i-1][j] >= dp[i][j-1]) i--; else j--;
+  }
+  const tokens: DiffToken[] = [];
+  for (let k = 0; k < m; k++) tokens.push({ word: ocrWords[k], kind: lcsOcr[k] ? 'correct' : 'extra' });
+  for (let k = 0; k < n; k++) if (!lcsRef[k]) tokens.push({ word: refWords[k], kind: 'missed' });
+  const lcsCount = lcsOcr.filter(Boolean).length;
+  const accuracy = refWords.length > 0 ? Math.round((lcsCount / refWords.length) * 100) : 0;
+  return { tokens, accuracy };
+}
+
 // ── Result card ───────────────────────────────────────────────────────────────
 
 function ResultCard({
@@ -1770,6 +1800,10 @@ function ResultCard({
   const [activeTab, setActiveTab] = useState<'text' | 'structured' | 'confidence' | 'table'>(
     outputMode === 'table' && result.hasTable ? 'table' : 'structured'
   );
+  // Ground truth comparison
+  const [showGT, setShowGT] = useState(false);
+  const [groundTruth, setGroundTruth] = useState('');
+  const [diff, setDiff] = useState<{ tokens: DiffToken[]; accuracy: number } | null>(null);
 
   useEffect(() => {
     const updateSize = () => {
@@ -2078,6 +2112,58 @@ function ResultCard({
         </div>
       </div>
 
+      {/* ── Ground truth comparison ───────────────────────────────────────────── */}
+      <div className="border-t border-zinc-100">
+        <button
+          onClick={() => setShowGT(v => !v)}
+          className="flex w-full items-center justify-between px-5 py-3 text-sm font-semibold text-zinc-600 hover:text-zinc-800 hover:bg-zinc-50 transition-colors"
+        >
+          <span className="flex items-center gap-2">
+            <CheckSquare className="w-4 h-4 text-violet-500" />
+            Compare with ground truth
+          </span>
+          <ChevronDown className={`w-4 h-4 transition-transform ${showGT ? 'rotate-180' : ''}`} />
+        </button>
+        {showGT && (
+          <div className="px-5 pb-5 space-y-3">
+            <p className="text-xs text-zinc-400">Paste the correct reference text to measure word-level accuracy.</p>
+            <textarea
+              value={groundTruth}
+              onChange={e => { setGroundTruth(e.target.value); setDiff(null); }}
+              placeholder="Paste correct / reference text here…"
+              rows={4}
+              className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-sm text-zinc-800 font-mono resize-y focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-transparent placeholder-zinc-300"
+            />
+            <button
+              onClick={() => setDiff(wordDiff(result.text, groundTruth))}
+              disabled={!groundTruth.trim()}
+              className="px-5 py-2 rounded-xl text-sm font-semibold bg-violet-600 text-white hover:bg-violet-700 disabled:opacity-40 transition-colors"
+            >
+              Compare
+            </button>
+            {diff && (
+              <div className="space-y-3">
+                <div className="flex flex-wrap gap-2 text-xs font-semibold">
+                  <span className="rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200 px-2.5 py-1">Correct (green)</span>
+                  <span className="rounded-full bg-red-100 text-red-700 border border-red-200 px-2.5 py-1">Missed (red)</span>
+                  <span className="rounded-full bg-amber-100 text-amber-700 border border-amber-200 px-2.5 py-1">Extra (amber)</span>
+                  <span className="ml-auto text-sm font-bold text-violet-700">Word accuracy: {diff.accuracy}%</span>
+                </div>
+                <div className="p-3.5 rounded-xl border border-zinc-100 bg-zinc-50 text-sm leading-relaxed flex flex-wrap gap-x-1.5 gap-y-1">
+                  {diff.tokens.map((t, i) => (
+                    <span key={i} className={`rounded px-1 py-0.5 font-mono text-xs ${
+                      t.kind === 'correct' ? 'bg-emerald-100 text-emerald-800' :
+                      t.kind === 'missed'  ? 'bg-red-100 text-red-800 line-through' :
+                                             'bg-amber-100 text-amber-800'
+                    }`}>{t.word}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
       {/* ── Fullscreen image modal ─────────────────────────────────────────────── */}
       {showFullImg && (
         <div
@@ -2121,6 +2207,20 @@ function ProcessingCard({ fileName, status }: { fileName: string; status: string
   );
 }
 
+// ── Batch types ───────────────────────────────────────────────────────────────
+
+type BatchStatus = 'queued' | 'processing' | 'done' | 'error';
+interface BatchItem {
+  id: string;
+  file: File;
+  status: BatchStatus;
+  statusMsg: string;
+  result?: OcrResult;
+  error?: string;
+  previewUrl?: string;
+  viewOpen: boolean;
+}
+
 // ── Main Component ────────────────────────────────────────────────────────────
 
 const ACCEPT = '.jpg,.jpeg,.png,.webp,.bmp,.tiff,.tif,.gif';
@@ -2153,6 +2253,95 @@ export default function ImageToTextClient() {
     showBboxOverlay: false,
   });
 
+  // ── Batch tab state ──────────────────────────────────────────────────────────
+  const [mainTab, setMainTab] = useState<'single' | 'batch'>('single');
+  const [batchItems, setBatchItems] = useState<BatchItem[]>([]);
+  const [batchProcessing, setBatchProcessing] = useState(false);
+  const batchInputRef = useRef<HTMLInputElement>(null);
+
+  // ── Clipboard paste → OCR ─────────────────────────────────────────────────
+  // processFilesRef is populated after processFiles is declared (below) so the
+  // useEffect can safely reference processFiles without a "used before assigned" error.
+  const processFilesRef = useRef<((files: File[], opts?: Options) => Promise<void>) | null>(null);
+
+  const processBatch = useCallback(async () => {
+    const toProcess = batchItems.filter(i => i.status === 'queued');
+    if (!toProcess.length) return;
+    setBatchProcessing(true);
+    for (const item of toProcess) {
+      setBatchItems(prev => prev.map(i => i.id === item.id ? { ...i, status: 'processing', statusMsg: 'Starting…' } : i));
+      try {
+        const result = await runOCR(
+          item.file,
+          options,
+          (msg) => setBatchItems(prev => prev.map(i => i.id === item.id ? { ...i, statusMsg: msg } : i)),
+        );
+        setBatchItems(prev => prev.map(i => i.id === item.id ? { ...i, status: 'done', result, statusMsg: 'Done' } : i));
+      } catch (e) {
+        setBatchItems(prev => prev.map(i => i.id === item.id ? { ...i, status: 'error', error: String(e), statusMsg: 'Error' } : i));
+      }
+    }
+    setBatchProcessing(false);
+  }, [batchItems, options]);
+
+  const addBatchFiles = useCallback((files: File[]) => {
+    const valid = files.filter(f => ACCEPT_MIME.includes(f.type) || /\.(tiff?|bmp)$/i.test(f.name));
+    if (!valid.length) { toast.error('Please select image files.'); return; }
+    const remaining = 5 - batchItems.length;
+    if (remaining <= 0) { toast.error('Batch limit is 5 images.'); return; }
+    const toAdd = valid.slice(0, remaining);
+    if (toAdd.length < valid.length) toast('Only the first ' + remaining + ' image(s) added — batch limit is 5.', { icon: '⚠️' });
+    setBatchItems(prev => [
+      ...prev,
+      ...toAdd.map(f => ({
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+        file: f,
+        status: 'queued' as BatchStatus,
+        statusMsg: 'Queued',
+        previewUrl: URL.createObjectURL(f),
+        viewOpen: false,
+      })),
+    ]);
+  }, [batchItems]);
+
+  const downloadBatchJson = useCallback(() => {
+    const done = batchItems.filter(i => i.status === 'done' && i.result);
+    if (!done.length) { toast.error('No completed results yet.'); return; }
+    const payload = done.map(i => ({
+      fileName: i.result!.fileName,
+      confidence: i.result!.confidence,
+      wordCount: i.result!.wordCount,
+      text: i.result!.text,
+    }));
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `batch-ocr-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }, [batchItems]);
+
+  const downloadBatchZip = useCallback(async () => {
+    const done = batchItems.filter(i => i.status === 'done' && i.result);
+    if (!done.length) { toast.error('No completed results yet.'); return; }
+    try {
+      const JSZip = (await import('jszip')).default;
+      const zip = new JSZip();
+      for (const item of done) {
+        const name = item.result!.fileName.replace(/\.[^.]+$/, '') + '_ocr.txt';
+        zip.file(name, item.result!.text);
+      }
+      const blob = await zip.generateAsync({ type: 'blob' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `batch-ocr-${Date.now()}.zip`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    } catch (e) {
+      toast.error('Failed to create ZIP: ' + String(e));
+    }
+  }, [batchItems]);
+
   const processFiles = useCallback(async (files: File[], optsOverride?: Options) => {
     const optsToUse = optsOverride ?? options;
     const valid = files.filter(f => ACCEPT_MIME.includes(f.type) || /\.(tiff?|bmp)$/i.test(f.name));
@@ -2183,6 +2372,24 @@ export default function ImageToTextClient() {
       }
     }
   }, [options]);
+
+  // Assign ref after declaration so clipboard handler can call it
+  processFilesRef.current = processFiles;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      const items = Array.from(e.clipboardData?.items ?? []);
+      const imgItem = items.find(item => item.type.startsWith('image/'));
+      if (!imgItem) return;
+      const blob = imgItem.getAsFile();
+      if (!blob) return;
+      const file = new File([blob], `pasted-${Date.now()}.png`, { type: blob.type || 'image/png' });
+      toast.success('Pasted from clipboard — running OCR…', { duration: 2500 });
+      processFilesRef.current?.([file]);
+    };
+    window.addEventListener('paste', handlePaste);
+    return () => window.removeEventListener('paste', handlePaste);
+  }, []); // stable — ref always points to latest processFiles
 
   const rerunAll = useCallback(async () => {
     if (results.length === 0) return;
@@ -2245,6 +2452,121 @@ export default function ImageToTextClient() {
       </div>
 
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8 space-y-5">
+
+        {/* ── Main tab switcher ────────────────────────────────────────────────── */}
+        <div className="flex gap-0.5 p-1 bg-zinc-100 rounded-2xl w-fit">
+          {([
+            { id: 'single', label: 'Single / Multi Image', icon: ImageIcon },
+            { id: 'batch',  label: 'Batch Queue (up to 5)', icon: Layers2 },
+          ] as { id: 'single' | 'batch'; label: string; icon: any }[]).map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              onClick={() => setMainTab(id)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${mainTab === id ? 'bg-white text-violet-700 shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}
+            >
+              <Icon className="w-4 h-4" />
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* ── Batch queue tab ──────────────────────────────────────────────────── */}
+        {mainTab === 'batch' && (
+          <div className="space-y-4">
+            {/* Batch drop zone */}
+            <div
+              onClick={() => batchInputRef.current?.click()}
+              className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-zinc-300 bg-white hover:border-violet-400 hover:bg-violet-50/30 py-10 transition-all"
+            >
+              <input ref={batchInputRef} type="file" accept={ACCEPT} multiple className="hidden"
+                onChange={e => { if (e.target.files?.length) { addBatchFiles(Array.from(e.target.files)); e.target.value = ''; } }} />
+              <Layers2 className="w-8 h-8 text-zinc-300 mb-2" />
+              <p className="text-sm font-semibold text-zinc-600">Click to add images to batch</p>
+              <p className="text-xs text-zinc-400 mt-0.5">Up to 5 images · JPEG, PNG, WebP, BMP, TIFF, GIF</p>
+            </div>
+
+            {/* Batch list */}
+            {batchItems.length > 0 && (
+              <div className="rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden">
+                <div className="px-5 py-3 border-b border-zinc-100 flex items-center justify-between flex-wrap gap-2">
+                  <span className="text-sm font-semibold text-zinc-700">{batchItems.length} image{batchItems.length !== 1 ? 's' : ''} in batch</span>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={downloadBatchJson}
+                      disabled={!batchItems.some(i => i.status === 'done')}
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50 disabled:opacity-40 transition-colors"
+                    >
+                      <Download className="w-3.5 h-3.5" /> Download all JSON
+                    </button>
+                    <button
+                      onClick={downloadBatchZip}
+                      disabled={!batchItems.some(i => i.status === 'done')}
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50 disabled:opacity-40 transition-colors"
+                    >
+                      <Download className="w-3.5 h-3.5" /> Download ZIP (txt)
+                    </button>
+                    <button
+                      onClick={processBatch}
+                      disabled={batchProcessing || !batchItems.some(i => i.status === 'queued')}
+                      className="flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-lg bg-violet-600 text-white hover:bg-violet-700 disabled:opacity-40 transition-colors"
+                    >
+                      {batchProcessing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Scan className="w-3.5 h-3.5" />}
+                      {batchProcessing ? 'Processing…' : 'Run OCR on all'}
+                    </button>
+                  </div>
+                </div>
+                <div className="divide-y divide-zinc-100">
+                  {batchItems.map((item) => (
+                    <div key={item.id} className="px-5 py-3">
+                      <div className="flex items-center gap-3 flex-wrap">
+                        {item.previewUrl && (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={item.previewUrl} alt={item.file.name} className="w-10 h-10 object-cover rounded-lg border border-zinc-100 shrink-0" />
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-zinc-800 truncate">{item.file.name}</p>
+                          <p className="text-[11px] text-zinc-400">{(item.file.size / 1024).toFixed(1)} KB</p>
+                        </div>
+                        <span className={`rounded-full border px-2.5 py-0.5 text-[11px] font-semibold shrink-0 ${
+                          item.status === 'done' ? 'text-emerald-700 bg-emerald-50 border-emerald-200' :
+                          item.status === 'error' ? 'text-red-700 bg-red-50 border-red-200' :
+                          item.status === 'processing' ? 'text-violet-700 bg-violet-50 border-violet-200' :
+                          'text-zinc-500 bg-zinc-50 border-zinc-200'
+                        }`}>
+                          {item.status === 'processing' ? item.statusMsg : item.status === 'done' ? `Done · ${item.result?.confidence ?? 0}% conf` : item.status === 'error' ? 'Error' : 'Queued'}
+                        </span>
+                        {item.status === 'done' && (
+                          <button
+                            onClick={() => setBatchItems(prev => prev.map(i => i.id === item.id ? { ...i, viewOpen: !i.viewOpen } : i))}
+                            className="shrink-0 text-xs font-semibold text-violet-600 hover:text-violet-700 px-2.5 py-1 rounded-lg hover:bg-violet-50 transition-colors border border-violet-200"
+                          >
+                            {item.viewOpen ? 'Hide' : 'View'}
+                          </button>
+                        )}
+                        <button
+                          onClick={() => { if (item.previewUrl) URL.revokeObjectURL(item.previewUrl); setBatchItems(prev => prev.filter(i => i.id !== item.id)); }}
+                          className="shrink-0 p-1 text-zinc-300 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                      {item.viewOpen && item.result && (
+                        <pre className="mt-3 p-3 bg-zinc-50 border border-zinc-100 rounded-xl font-mono text-[12px] text-zinc-800 whitespace-pre-wrap leading-relaxed max-h-60 overflow-y-auto">
+                          {item.result.text || '(no text extracted)'}
+                        </pre>
+                      )}
+                      {item.status === 'error' && item.error && (
+                        <p className="mt-1 text-xs text-red-600 pl-1">{item.error}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {mainTab === 'single' && <>
 
         {/* Upload zone */}
         <div
@@ -2675,6 +2997,7 @@ export default function ImageToTextClient() {
             </ul>
           </div>
         )}
+        </> /* end mainTab === 'single' */}
       </div>
     </div>
   );

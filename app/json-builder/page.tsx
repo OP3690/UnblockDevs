@@ -3,6 +3,7 @@ import { ToolPageFooterBand } from '@/components/tools/ToolPageShell';
 import ToolSEOContent, {
   SEOSection, SEOProse, C, HowItWorks, UseCases, FAQ, RelatedTools, RelatedBlogPosts,
 } from '@/components/tools/ToolSEOContent';
+import JsonBuilderClient from './client';
 
 const canonicalUrl = 'https://unblockdevs.com/json-builder';
 
@@ -243,6 +244,15 @@ const breadcrumbSchema = {
 export default function JsonBuilderPage() {
   return (
     <>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+        <div className="mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">JSON Builder Online</h1>
+          <p className="text-gray-500 text-sm sm:text-base mt-1 max-w-2xl">
+            Build JSON objects visually — add keys, nested objects, and arrays without writing raw JSON. 100% browser-based.
+          </p>
+        </div>
+        <JsonBuilderClient />
+      </div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />

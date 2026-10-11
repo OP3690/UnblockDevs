@@ -15,9 +15,88 @@ interface DiffItem {
 }
 
 type StatusFilter = 'all' | 'changed' | 'added' | 'removed' | 'unchanged';
-type InputFormat = 'json' | 'env';
+type InputFormat = 'json' | 'env' | 'yaml';
+type EnvLabel = 'development' | 'staging' | 'production' | 'local' | 'custom';
 
-const SECRET_KEYS_DEFAULT = ['password', 'secret', 'key', 'token', 'api_key', 'apikey', 'auth', 'credential', 'private'];
+// Minimal inline YAML→JSON converter (same approach as SmartJsonDiff)
+function parseYamlConfig(text: string): Record<string, unknown> {
+  function parseVal(s: string): unknown {
+    const t = s.trim();
+    if (t === '' || t === 'null' || t === '~') return null;
+    if (t === 'true') return true;
+    if (t === 'false') return false;
+    if (/^-?\d+(\.\d+)?$/.test(t)) return Number(t);
+    if ((t[0] === '"' && t[t.length - 1] === '"') || (t[0] === "'" && t[t.length - 1] === "'")) return t.slice(1, -1);
+    return t;
+  }
+  function indOf(l: string) { let n = 0; while (n < l.length && l[n] === ' ') n++; return n; }
+  const lines = text.split('\n');
+  function parseBlock(idx: number, baseInd: number): [unknown, number] {
+    let i = idx;
+    while (i < lines.length && (!lines[i].trim() || lines[i].trim().startsWith('#'))) i++;
+    if (i >= lines.length) return [{}, i];
+    const fTr = lines[i].trim();
+    if (fTr.startsWith('- ') || fTr === '-') {
+      const arr: unknown[] = [];
+      while (i < lines.length) {
+        const l = lines[i];
+        if (!l.trim() || l.trim().startsWith('#')) { i++; continue; }
+        if (indOf(l) < baseInd) break;
+        const tr = l.trim();
+        if (!tr.startsWith('- ') && tr !== '-') break;
+        const ad = tr.slice(2).trim();
+        if (!ad) { const [v, n] = parseBlock(i + 1, indOf(l) + 2); arr.push(v); i = n; }
+        else { arr.push(parseVal(ad)); i++; }
+      }
+      return [arr, i];
+    } else {
+      const obj: Record<string, unknown> = {};
+      while (i < lines.length) {
+        const l = lines[i];
+        if (!l.trim() || l.trim().startsWith('#')) { i++; continue; }
+        const ind = indOf(l);
+        if (ind < baseInd) break;
+        const tr = l.trim();
+        if (tr.startsWith('- ')) break;
+        const ci = tr.indexOf(':');
+        if (ci < 0) { i++; continue; }
+        const key = tr.slice(0, ci).trim().replace(/^["']|["']$/g, '');
+        const rest = tr.slice(ci + 1).trim();
+        if (!rest) {
+          const ni = i + 1;
+          if (ni < lines.length && lines[ni].trim() && !lines[ni].trim().startsWith('#') && indOf(lines[ni]) > ind) {
+            const [v, n] = parseBlock(ni, indOf(lines[ni])); obj[key] = v; i = n;
+          } else { obj[key] = null; i++; }
+        } else { obj[key] = parseVal(rest); i++; }
+      }
+      return [obj, i];
+    }
+  }
+  const [result] = parseBlock(0, 0);
+  return result as Record<string, unknown>;
+}
+
+const ENV_LABEL_CONFIG: Record<EnvLabel, { label: string; badge: string }> = {
+  development: { label: 'Development', badge: 'bg-blue-100 text-blue-800 border border-blue-200' },
+  staging:     { label: 'Staging',     badge: 'bg-amber-100 text-amber-800 border border-amber-200' },
+  production:  { label: 'Production',  badge: 'bg-green-100 text-green-800 border border-green-200' },
+  local:       { label: 'Local',       badge: 'bg-purple-100 text-purple-800 border border-purple-200' },
+  custom:      { label: 'Custom',      badge: 'bg-gray-100 text-gray-700 border border-gray-200' },
+};
+
+const SECRET_KEYS_DEFAULT = ['password', 'secret', 'token', 'api_key', 'apikey', 'auth', 'credential', 'private'];
+
+// Regex patterns for secret detection — used in addition to substring matching
+const SECRET_REGEX_PATTERNS: Array<{ pattern: RegExp; label: string }> = [
+  { pattern: /pass(word)?/i,     label: 'password pattern' },
+  { pattern: /secret/i,          label: 'secret pattern' },
+  { pattern: /token/i,           label: 'token pattern' },
+  { pattern: /api[_-]?key/i,     label: 'api key pattern' },
+  { pattern: /auth/i,            label: 'auth pattern' },
+  { pattern: /private/i,         label: 'private pattern' },
+  { pattern: /credential/i,      label: 'credential pattern' },
+  { pattern: /cert(ificate)?/i,  label: 'certificate pattern' },
+];
 
 function parseEnv(text: string): Record<string, string> {
   const result: Record<string, string> = {};
@@ -76,17 +155,31 @@ export default function ConfigComparator() {
   const [maskSecrets, setMaskSecrets] = useState(true);
   const [secretKeys, setSecretKeys] = useState(SECRET_KEYS_DEFAULT.join(', '));
   const [format, setFormat] = useState<InputFormat>('json');
+  const [envLabel1, setEnvLabel1] = useState<EnvLabel>('development');
+  const [envLabel2, setEnvLabel2] = useState<EnvLabel>('staging');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [sortAlpha, setSortAlpha] = useState(false);
   const resultsSectionRef = useRef<HTMLDivElement>(null);
 
   const parsedSecretKeys = useMemo(() => secretKeys.split(',').map((s) => s.trim()).filter(Boolean), [secretKeys]);
 
-  const isSecretKey = useCallback((key: string) =>
-    parsedSecretKeys.some((s) => key.toLowerCase().includes(s.toLowerCase())), [parsedSecretKeys]);
+  const isSecretKey = useCallback((key: string) => {
+    // Check substring list
+    if (parsedSecretKeys.some((s) => key.toLowerCase().includes(s.toLowerCase()))) return true;
+    // Check regex patterns
+    return SECRET_REGEX_PATTERNS.some(({ pattern }) => pattern.test(key));
+  }, [parsedSecretKeys]);
+
+  const secretMatchLabel = useCallback((key: string): string => {
+    const sub = parsedSecretKeys.find((s) => key.toLowerCase().includes(s.toLowerCase()));
+    if (sub) return `Matched substring: "${sub}"`;
+    const reg = SECRET_REGEX_PATTERNS.find(({ pattern }) => pattern.test(key));
+    return reg ? `Pattern matched: ${reg.label}` : 'Secret';
+  }, [parsedSecretKeys]);
 
   const parseInput = useCallback((text: string, fmt: InputFormat) => {
     if (fmt === 'env') return parseEnv(text);
+    if (fmt === 'yaml') return parseYamlConfig(text);
     const v = validateJson(text);
     if (!v.valid) throw new Error('Invalid JSON');
     return v.data;
@@ -129,7 +222,8 @@ export default function ConfigComparator() {
       toast.success(`${results.length} keys compared`);
       setTimeout(() => resultsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
     } catch (e: any) {
-      toast.error(e.message || `Both configs must be valid ${format.toUpperCase()}`);
+      const fmtLabel = format === 'yaml' ? 'YAML' : format === 'env' ? '.env' : 'JSON';
+      toast.error(e.message || `Both configs must be valid ${fmtLabel}`);
     }
   }, [config1, config2, format, isSecretKey, parseInput]);
 
@@ -165,7 +259,7 @@ export default function ConfigComparator() {
       toast.success('JSON diff copied');
     } else {
       const lines = [
-        `# Config Diff: ${label1} vs ${label2}`,
+        `# Config Diff: ${label1} (${ENV_LABEL_CONFIG[envLabel1].label}) vs ${label2} (${ENV_LABEL_CONFIG[envLabel2].label})`,
         `Generated: ${new Date().toISOString()}`,
         '',
         `## Summary`,
@@ -229,10 +323,10 @@ export default function ConfigComparator() {
           <div className="flex flex-wrap items-center gap-2">
             {/* Format toggle */}
             <div className="flex rounded-lg border border-gray-200 overflow-hidden text-xs font-medium">
-              {(['json', 'env'] as InputFormat[]).map((f) => (
+              {(['json', 'env', 'yaml'] as InputFormat[]).map((f) => (
                 <button key={f} type="button" onClick={() => setFormat(f)}
                   className={`px-3 py-1.5 transition-colors ${format === f ? 'bg-primary-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}>
-                  {f === 'json' ? 'JSON' : '.env'}
+                  {f === 'json' ? 'JSON' : f === 'env' ? '.env' : 'YAML'}
                 </button>
               ))}
             </div>
@@ -255,27 +349,51 @@ export default function ConfigComparator() {
 
         {/* Labels row */}
         <div className="grid grid-cols-2 gap-4 mb-2">
-          <input type="text" value={label1} onChange={(e) => setLabel1(e.target.value)} placeholder="Config 1 label" className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg font-medium text-gray-700" />
-          <input type="text" value={label2} onChange={(e) => setLabel2(e.target.value)} placeholder="Config 2 label" className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg font-medium text-gray-700" />
+          <div className="flex flex-col gap-1.5">
+            <input type="text" value={label1} onChange={(e) => setLabel1(e.target.value)} placeholder="Config 1 label" className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg font-medium text-gray-700" />
+            <div className="flex items-center gap-2">
+              <select value={envLabel1} onChange={(e) => setEnvLabel1(e.target.value as EnvLabel)} className="flex-1 px-2 py-1 text-xs border border-gray-200 rounded-lg text-gray-700 bg-white">
+                {(Object.keys(ENV_LABEL_CONFIG) as EnvLabel[]).map((k) => <option key={k} value={k}>{ENV_LABEL_CONFIG[k].label}</option>)}
+              </select>
+              <span className={`shrink-0 px-2 py-0.5 rounded text-[11px] font-semibold ${ENV_LABEL_CONFIG[envLabel1].badge}`}>{ENV_LABEL_CONFIG[envLabel1].label}</span>
+            </div>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <input type="text" value={label2} onChange={(e) => setLabel2(e.target.value)} placeholder="Config 2 label" className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg font-medium text-gray-700" />
+            <div className="flex items-center gap-2">
+              <select value={envLabel2} onChange={(e) => setEnvLabel2(e.target.value as EnvLabel)} className="flex-1 px-2 py-1 text-xs border border-gray-200 rounded-lg text-gray-700 bg-white">
+                {(Object.keys(ENV_LABEL_CONFIG) as EnvLabel[]).map((k) => <option key={k} value={k}>{ENV_LABEL_CONFIG[k].label}</option>)}
+              </select>
+              <span className={`shrink-0 px-2 py-0.5 rounded text-[11px] font-semibold ${ENV_LABEL_CONFIG[envLabel2].badge}`}>{ENV_LABEL_CONFIG[envLabel2].label}</span>
+            </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1.5">{label1} {format === 'env' ? '(.env)' : '(JSON)'}</label>
+            <div className="flex items-center gap-2 mb-1.5">
+              <label className="text-xs font-semibold text-gray-600">{label1}</label>
+              <span className={`px-1.5 py-0.5 rounded text-[10px] font-semibold ${ENV_LABEL_CONFIG[envLabel1].badge}`}>{ENV_LABEL_CONFIG[envLabel1].label}</span>
+              <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200">{format === 'env' ? '.env' : format === 'yaml' ? 'YAML' : 'JSON'}</span>
+            </div>
             <textarea
               value={config1}
               onChange={(e) => setConfig1(e.target.value)}
-              placeholder={format === 'json' ? '{"api_url": "https://staging.api.com", "debug": true}' : 'API_URL=https://staging.api.com\nDEBUG=true'}
+              placeholder={format === 'json' ? '{"api_url": "https://staging.api.com", "debug": true}' : format === 'yaml' ? 'api_url: https://staging.api.com\ndebug: true' : 'API_URL=https://staging.api.com\nDEBUG=true'}
               className="w-full h-56 p-3 border border-gray-200 rounded-lg font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary-500 bg-gray-50/50"
               spellCheck={false}
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1.5">{label2} {format === 'env' ? '(.env)' : '(JSON)'}</label>
+            <div className="flex items-center gap-2 mb-1.5">
+              <label className="text-xs font-semibold text-gray-600">{label2}</label>
+              <span className={`px-1.5 py-0.5 rounded text-[10px] font-semibold ${ENV_LABEL_CONFIG[envLabel2].badge}`}>{ENV_LABEL_CONFIG[envLabel2].label}</span>
+              <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200">{format === 'env' ? '.env' : format === 'yaml' ? 'YAML' : 'JSON'}</span>
+            </div>
             <textarea
               value={config2}
               onChange={(e) => setConfig2(e.target.value)}
-              placeholder={format === 'json' ? '{"api_url": "https://api.com", "debug": false}' : 'API_URL=https://api.com\nDEBUG=false\nRATE_LIMIT=1000'}
+              placeholder={format === 'json' ? '{"api_url": "https://api.com", "debug": false}' : format === 'yaml' ? 'api_url: https://api.com\ndebug: false\nrate_limit: 1000' : 'API_URL=https://api.com\nDEBUG=false\nRATE_LIMIT=1000'}
               className="w-full h-56 p-3 border border-gray-200 rounded-lg font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary-500 bg-gray-50/50"
               spellCheck={false}
             />
@@ -357,7 +475,7 @@ export default function ConfigComparator() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <code className="font-mono text-sm font-semibold text-gray-800 truncate">{item.key}</code>
-                        {item.isSecret && <span className="shrink-0 text-[10px] bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-semibold">SECRET</span>}
+                        {item.isSecret && <span title={secretMatchLabel(item.key)} className="shrink-0 text-[10px] bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-semibold cursor-help">SECRET ⓘ</span>}
                       </div>
                       <div className="text-sm space-y-0.5">
                         {item.status === 'added' && (
