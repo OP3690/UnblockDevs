@@ -225,38 +225,84 @@ async function parseJsFiles(files: File[]): Promise<TWAnalysis> {
   return processFileMap(fileMap);
 }
 
-// ─── Parse from ZIP (streaming Unzip avoids ZIP64 central-dir allocation bugs) ─
+// ─── Parse from ZIP (manual ZIP64 parser — avoids fflate high-level API bugs) ──
 
 async function parseTWZip(file: File): Promise<TWAnalysis> {
-  const { Unzip, UnzipInflate } = await import('fflate');
   const RELEVANT = /\/(account|profile|personalization|tweets|like|follower|following)(-part\d+)?\.js$/;
+  const buf = await file.arrayBuffer();
+  const dv  = new DataView(buf);
+  const u8  = new Uint8Array(buf);
   const dec = new TextDecoder();
+
+  // Find EOCD signature (scan backwards from end)
+  let eocdOff = -1;
+  for (let i = dv.byteLength - 22; i >= Math.max(0, dv.byteLength - 65558); i--) {
+    if (dv.getUint32(i, true) === 0x06054b50) { eocdOff = i; break; }
+  }
+  if (eocdOff < 0) throw new Error('Not a valid ZIP file');
+
+  // Resolve central directory offset — handle ZIP64
+  let cdOff: number, cdSize: number;
+  const z64LocOff = eocdOff - 20;
+  if (z64LocOff >= 0 && dv.getUint32(z64LocOff, true) === 0x07064b50) {
+    const z64EocdOff = Number(dv.getBigUint64(z64LocOff + 8, true));
+    if (dv.getUint32(z64EocdOff, true) !== 0x06064b50) throw new Error('Invalid ZIP64 EOCD');
+    cdSize = Number(dv.getBigUint64(z64EocdOff + 40, true));
+    cdOff  = Number(dv.getBigUint64(z64EocdOff + 48, true));
+  } else {
+    cdOff  = dv.getUint32(eocdOff + 16, true);
+    cdSize = dv.getUint32(eocdOff + 12, true);
+  }
+
+  const { inflateSync } = await import('fflate');
   const fileMap = new Map<string, string>();
+  let pos = cdOff;
 
-  const zipData = new Uint8Array(await file.arrayBuffer());
+  while (pos < cdOff + cdSize) {
+    if (dv.getUint32(pos, true) !== 0x02014b50) break;
 
-  await new Promise<void>((resolve, reject) => {
-    const uz = new Unzip((stream) => {
-      if (!RELEVANT.test(stream.name)) { stream.terminate(); return; }
-      const chunks: Uint8Array[] = [];
-      stream.ondata = (err: Error | null, data: Uint8Array, final: boolean) => {
-        if (err) { reject(new Error(`Failed reading ${stream.name}: ${err.message}`)); return; }
-        if (data) chunks.push(data);
-        if (final) {
-          const name = stream.name.split('/').pop() ?? stream.name;
-          const total = chunks.reduce((n, c) => n + c.length, 0);
-          const merged = new Uint8Array(total);
-          let off = 0;
-          for (const c of chunks) { merged.set(c, off); off += c.length; }
-          fileMap.set(name, dec.decode(merged));
+    const method   = dv.getUint16(pos + 10, true);
+    let compSz     = dv.getUint32(pos + 20, true);
+    let uncompSz   = dv.getUint32(pos + 24, true);
+    const fnLen    = dv.getUint16(pos + 28, true);
+    const extraLen = dv.getUint16(pos + 30, true);
+    const cmtLen   = dv.getUint16(pos + 32, true);
+    let localOff   = dv.getUint32(pos + 42, true);
+    const name     = dec.decode(u8.subarray(pos + 46, pos + 46 + fnLen));
+
+    // Read ZIP64 extra field for any 0xFFFFFFFF sentinels
+    if (compSz === 0xFFFFFFFF || uncompSz === 0xFFFFFFFF || localOff === 0xFFFFFFFF) {
+      let xp = pos + 46 + fnLen, xe = xp + extraLen;
+      while (xp + 4 <= xe) {
+        const xId = dv.getUint16(xp, true);
+        const xSz = dv.getUint16(xp + 2, true);
+        if (xId === 0x0001) {
+          let xi = xp + 4;
+          if (uncompSz === 0xFFFFFFFF) { uncompSz = Number(dv.getBigUint64(xi, true)); xi += 8; }
+          if (compSz   === 0xFFFFFFFF) { compSz   = Number(dv.getBigUint64(xi, true)); xi += 8; }
+          if (localOff === 0xFFFFFFFF) { localOff = Number(dv.getBigUint64(xi, true)); }
+          break;
         }
-      };
-      stream.start();
-    });
-    uz.register(UnzipInflate);
-    try { uz.push(zipData, true); resolve(); }
-    catch (e) { reject(new Error(`ZIP parse failed: ${e instanceof Error ? e.message : String(e)}`)); }
-  });
+        xp += 4 + xSz;
+      }
+    }
+
+    pos += 46 + fnLen + extraLen + cmtLen;
+
+    if (!RELEVANT.test(name) || compSz === 0) continue;
+
+    // Locate compressed data via local file header
+    const lfhFnLen    = dv.getUint16(localOff + 26, true);
+    const lfhExtraLen = dv.getUint16(localOff + 28, true);
+    const dataOff     = localOff + 30 + lfhFnLen + lfhExtraLen;
+    const compressed  = u8.subarray(dataOff, dataOff + compSz);
+
+    const content = method === 0
+      ? compressed.slice()
+      : inflateSync(compressed);
+
+    fileMap.set(name.split('/').pop() ?? name, dec.decode(content));
+  }
 
   if (fileMap.size === 0) {
     throw new Error('No relevant .js files found in this ZIP. Make sure it is a valid Twitter/X data archive.');
