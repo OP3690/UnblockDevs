@@ -768,21 +768,21 @@ function AnimatedShowcase() {
           <button
             onClick={goPrev}
             aria-label="Previous scene"
-            className="flex h-5 w-5 items-center justify-center rounded text-zinc-500 hover:text-zinc-300 transition-colors"
+            className="flex h-5 w-5 items-center justify-center rounded bg-transparent text-zinc-500 hover:text-zinc-300 transition-colors"
           >
             <ChevronLeft className="h-3.5 w-3.5" />
           </button>
           <button
             onClick={() => setPaused(p => !p)}
             aria-label={paused ? 'Resume' : 'Pause'}
-            className="flex h-5 w-5 items-center justify-center rounded text-zinc-500 hover:text-zinc-300 transition-colors"
+            className="flex h-5 w-5 items-center justify-center rounded bg-transparent text-zinc-500 hover:text-zinc-300 transition-colors"
           >
             {paused ? <Play className="h-3 w-3" /> : <Pause className="h-3 w-3" />}
           </button>
           <button
             onClick={goNext}
             aria-label="Next scene"
-            className="flex h-5 w-5 items-center justify-center rounded text-zinc-500 hover:text-zinc-300 transition-colors"
+            className="flex h-5 w-5 items-center justify-center rounded bg-transparent text-zinc-500 hover:text-zinc-300 transition-colors"
           >
             <ChevronRight className="h-3.5 w-3.5" />
           </button>
