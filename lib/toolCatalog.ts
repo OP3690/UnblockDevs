@@ -67,14 +67,6 @@ export const TOOL_CATALOG: ToolMeta[] = [
     tags: ['json', 'diff', 'compare', 'format'],
   },
   {
-    toolName: 'json_builder',
-    href: '/json-builder',
-    label: 'JSON Builder',
-    emoji: '🏗️',
-    shortDesc: 'Build JSON visually',
-    tags: ['json', 'build', 'format'],
-  },
-  {
     toolName: 'json_to_typescript',
     href: '/json-to-typescript',
     label: 'JSON → TypeScript',

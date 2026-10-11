@@ -178,7 +178,6 @@ export default function SiteFooter() {
                   { href: '/har-to-curl', label: 'HAR to cURL' },
                   { href: '/html-viewer', label: 'HTML Viewer' },
                   { href: '/http-headers-analyzer', label: 'HTTP Headers Analyzer' },
-                  { href: '/json-builder', label: 'JSON Builder' },
                   { href: '/string-utilities', label: 'String Utilities' },
                   { href: '/sql-in-clause-generator', label: 'SQL IN Clause Generator' },
                   { href: '/ui-components', label: 'CSS UI Components' },
