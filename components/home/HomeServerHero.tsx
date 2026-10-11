@@ -42,12 +42,11 @@ export default function HomeServerHero() {
               id="home-hero-heading"
               className="text-[clamp(2.3rem,4.2vw,3.4rem)] font-extrabold leading-[1.08] tracking-[-0.035em] text-zinc-900"
             >
-              Stop Googling
+              60+ tools you keep Googling.
               <br />
-              the same tools.
-              <br />
+              All here.{' '}
               <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-sky-500 bg-clip-text text-transparent">
-                Paste. Fix. Ship.
+                Paste, Fix and Go.
               </span>
             </h1>
 
