@@ -443,7 +443,6 @@ export default function MarkdownPreviewClient() {
   // ── Load highlight.js from CDN ───────────────────────────────────────────
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((window as any).hljs) {
       setHljsLoaded(true);
       return;
@@ -463,7 +462,6 @@ export default function MarkdownPreviewClient() {
     if (!hljsLoaded || !renderedHtml) return;
     // requestAnimationFrame ensures React has committed the DOM update
     requestAnimationFrame(() => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as any).hljs?.highlightAll();
     });
   }, [hljsLoaded, renderedHtml]);
