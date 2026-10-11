@@ -44,6 +44,17 @@ export default function CorsTesterClient() {
   const [origin, setOrigin] = useState('');
   const [withCredentials, setWithCredentials] = useState(false);
   const [headers, setHeaders] = useState<{ key: string; value: string }[]>([{ key: 'Content-Type', value: 'application/json' }]);
+  // Compare mode
+  const [compareMode, setCompareMode] = useState(false);
+  const [urlA, setUrlA] = useState('');
+  const [urlB, setUrlB] = useState('');
+  const [compareLoading, setCompareLoading] = useState(false);
+  const [compareResults, setCompareResults] = useState<{
+    a: { success: boolean; analysis?: CorsAnalysis; error?: string };
+    b: { success: boolean; analysis?: CorsAnalysis; error?: string };
+  } | null>(null);
+  // WebSocket
+  const [isWebSocket, setIsWebSocket] = useState(false);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{
     success: boolean;
@@ -165,6 +176,46 @@ export default function CorsTesterClient() {
     toast.success('Report downloaded');
   };
 
+  const isWsUrl = url.trim().startsWith('ws://') || url.trim().startsWith('wss://');
+  const showWsPanel = isWsUrl || isWebSocket;
+
+  const runCompare = useCallback(async () => {
+    if (!urlA.trim() || !urlB.trim()) { toast.error('Enter both URLs to compare'); return; }
+    setCompareLoading(true);
+    setCompareResults(null);
+    const fetchOne = async (u: string) => {
+      try {
+        const res = await fetch(u.trim(), { method: 'GET', mode: 'cors', credentials: 'omit' });
+        const corsHeaders = parseCorsHeaders(res.headers);
+        const analysis = analyzeCors(corsHeaders, { withCredentials: false, origin: effectiveOrigin });
+        return { success: true as const, analysis };
+      } catch (err) {
+        return { success: false as const, error: err instanceof Error ? err.message : String(err) };
+      }
+    };
+    const [ra, rb] = await Promise.all([fetchOne(urlA), fetchOne(urlB)]);
+    setCompareResults({ a: ra, b: rb });
+    setCompareLoading(false);
+  }, [urlA, urlB, effectiveOrigin]);
+
+  function compareCorsHeaderSets(
+    a: CorsAnalysis['headers'] | undefined,
+    b: CorsAnalysis['headers'] | undefined
+  ) {
+    type K = keyof CorsAnalysis['headers'];
+    const keys: K[] = ['allowOrigin','allowMethods','allowHeaders','allowCredentials','maxAge','exposeHeaders'];
+    const labels: Record<string,string> = {
+      allowOrigin:'Access-Control-Allow-Origin', allowMethods:'Access-Control-Allow-Methods',
+      allowHeaders:'Access-Control-Allow-Headers', allowCredentials:'Access-Control-Allow-Credentials',
+      maxAge:'Access-Control-Max-Age', exposeHeaders:'Access-Control-Expose-Headers',
+    };
+    return keys.map(k=>{
+      const va = a?.[k] ?? null;
+      const vb = b?.[k] ?? null;
+      return { key:k, label:labels[k], va, vb, match:va===vb, onlyA:va!=null&&vb==null, onlyB:va==null&&vb!=null };
+    });
+  }
+
   const severityColor = (s: SecurityFinding['severity']) =>
     s === 'CRITICAL' ? 'bg-red-100 text-red-800 border-red-200' :
     s === 'HIGH' ? 'bg-orange-100 text-orange-800 border-orange-200' :
@@ -281,7 +332,7 @@ export default function CorsTesterClient() {
                     </div>
                   </div>
                 </div>
-                <div>
+                <div className="flex flex-wrap gap-4">
                   <label className="flex items-center gap-2 text-sm font-medium text-gray-700 cursor-pointer">
                     <input
                       type="checkbox"
@@ -290,6 +341,15 @@ export default function CorsTesterClient() {
                       className="rounded border-gray-300 text-primary-600"
                     />
                     Include credentials (cookies, Authorization)
+                  </label>
+                  <label className="flex items-center gap-2 text-sm font-medium text-gray-700 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={isWebSocket}
+                      onChange={(e) => setIsWebSocket(e.target.checked)}
+                      className="rounded border-gray-300 text-primary-600"
+                    />
+                    WebSocket URL
                   </label>
                 </div>
                 <div>
@@ -337,6 +397,13 @@ export default function CorsTesterClient() {
                 <Play className="w-4 h-4" />
                 {loading ? 'Sending…' : 'Run test'}
               </button>
+              <button
+                type="button"
+                onClick={() => setCompareMode(v => !v)}
+                className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 font-medium text-sm transition-all ${compareMode ? 'border-sky-300 bg-sky-50 text-sky-700' : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'}`}
+              >
+                Compare
+              </button>
               {result && (
                 <button
                   type="button"
@@ -351,6 +418,103 @@ export default function CorsTesterClient() {
                 Request is sent from this page&apos;s origin. Results show CORS headers and security analysis.
               </p>
             </div>
+
+            {/* Compare mode */}
+            {compareMode && (
+              <div className="p-4 rounded-2xl border border-sky-200/80 bg-sky-50/50 space-y-4">
+                <h3 className="text-sm font-bold text-sky-900">Compare two endpoints</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-600 mb-1">Endpoint A</label>
+                    <input type="url" value={urlA} onChange={e=>setUrlA(e.target.value)} placeholder="https://api.example.com/v1"
+                      className="w-full rounded-xl border border-gray-200 px-3 py-2 font-mono text-sm focus:ring-2 focus:ring-sky-400 placeholder:text-gray-400"/>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-600 mb-1">Endpoint B</label>
+                    <input type="url" value={urlB} onChange={e=>setUrlB(e.target.value)} placeholder="https://api.example.com/v2"
+                      className="w-full rounded-xl border border-gray-200 px-3 py-2 font-mono text-sm focus:ring-2 focus:ring-sky-400 placeholder:text-gray-400"/>
+                  </div>
+                </div>
+                <button type="button" onClick={runCompare} disabled={compareLoading}
+                  className="inline-flex items-center gap-2 rounded-xl bg-sky-600 text-white px-4 py-2 font-semibold text-sm hover:bg-sky-700 disabled:opacity-60 transition-all">
+                  <Play className="w-4 h-4"/>
+                  {compareLoading ? 'Comparing…' : 'Run comparison'}
+                </button>
+                {compareResults && (() => {
+                  const rows = compareCorsHeaderSets(compareResults.a.analysis?.headers, compareResults.b.analysis?.headers);
+                  const diffCount = rows.filter(r=>!r.match).length;
+                  const matchCount = rows.filter(r=>r.match&&(r.va!=null||r.vb!=null)).length;
+                  return (
+                    <div className="space-y-3">
+                      <p className="text-sm font-semibold text-gray-700">
+                        {diffCount === 0 ? '✓ All headers match' : `${diffCount} header${diffCount>1?'s':''} differ, ${matchCount} match`}
+                      </p>
+                      <div className="overflow-x-auto rounded-xl border border-gray-200">
+                        <table className="w-full text-xs">
+                          <thead className="bg-gray-50">
+                            <tr>
+                              <th className="text-left px-3 py-2 font-semibold text-gray-600">Header</th>
+                              <th className="text-left px-3 py-2 font-semibold text-gray-600">Endpoint A</th>
+                              <th className="text-left px-3 py-2 font-semibold text-gray-600">Endpoint B</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-gray-100">
+                            {rows.map(r=>{
+                              const bg = r.onlyA ? 'bg-green-50' : r.onlyB ? 'bg-red-50' : r.match ? '' : 'bg-yellow-50';
+                              if (r.va==null&&r.vb==null) return null;
+                              return (
+                                <tr key={r.key} className={bg}>
+                                  <td className="px-3 py-2 font-mono text-gray-700 break-all">{r.label}</td>
+                                  <td className={`px-3 py-2 font-mono break-all ${r.onlyA?'text-green-700':r.match?'text-gray-600':'text-amber-700'}`}>{r.va != null ? String(r.va) : <span className="text-red-400 italic">absent</span>}</td>
+                                  <td className={`px-3 py-2 font-mono break-all ${r.onlyB?'text-green-700':r.match?'text-gray-600':'text-amber-700'}`}>{r.vb != null ? String(r.vb) : <span className="text-red-400 italic">absent</span>}</td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            )}
+
+            {/* WebSocket CORS note panel */}
+            {showWsPanel && (
+              <div className="p-4 rounded-2xl border border-amber-200/80 bg-amber-50/50 space-y-3">
+                <h3 className="text-sm font-bold text-amber-900 flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4"/>
+                  WebSocket &amp; CORS — how it works
+                </h3>
+                <p className="text-sm text-gray-700">
+                  WebSocket connections <strong>bypass the browser CORS preflight</strong>. There is no OPTIONS request. Instead, the browser sends an <code className="bg-amber-100 px-1 rounded text-xs">Origin</code> header in the HTTP Upgrade handshake, and it is up to the server to accept or reject based on it. This means the standard <code className="bg-amber-100 px-1 rounded text-xs">Access-Control-Allow-Origin</code> headers do not apply — the live test above cannot test WebSocket CORS.
+                </p>
+                <p className="text-sm text-gray-700">Server-side check example (Node.js <code className="bg-amber-100 px-1 rounded text-xs">ws</code> library):</p>
+                <pre className="p-3 rounded-xl bg-white border border-amber-100 text-xs font-mono overflow-x-auto whitespace-pre">{`const { WebSocketServer } = require('ws');
+
+const ALLOWED_ORIGINS = ['https://yourdomain.com', 'https://www.yourdomain.com'];
+
+const wss = new WebSocketServer({
+  port: 8080,
+  verifyClient({ origin }, cb) {
+    if (ALLOWED_ORIGINS.includes(origin)) {
+      cb(true);
+    } else {
+      cb(false, 403, 'Forbidden');
+    }
+  },
+});
+
+wss.on('connection', (ws) => {
+  ws.send('Hello from server');
+});`}</pre>
+                <button type="button" onClick={()=>copyToClipboard(`const { WebSocketServer } = require('ws');\n\nconst ALLOWED_ORIGINS = ['https://yourdomain.com'];\n\nconst wss = new WebSocketServer({\n  port: 8080,\n  verifyClient({ origin }, cb) {\n    cb(ALLOWED_ORIGINS.includes(origin), 403, 'Forbidden');\n  },\n});`, 'ws-snippet')}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-amber-200 bg-white px-2.5 py-1.5 text-xs font-medium text-amber-700 hover:bg-amber-50">
+                  {copied === 'ws-snippet' ? <Check className="w-3.5 h-3.5 text-emerald-600"/> : <Copy className="w-3.5 h-3.5"/>}
+                  Copy snippet
+                </button>
+              </div>
+            )}
 
             {/* Request flow */}
             <div className="p-4 rounded-2xl border border-gray-100 bg-gray-50/50">

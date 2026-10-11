@@ -89,6 +89,31 @@ function nistChecks(pw: string, ent: number) {
   ];
 }
 
+const PASSPHRASE_WORDS = [
+  'acorn','amber','apple','azure','blaze','bloom','booth','brave','bridge','brisk',
+  'brush','candy','cedar','charm','clown','cloud','coast','coral','crisp','dance',
+  'delta','denim','depth','diary','dingo','drill','dusky','elbow','eagle','elite',
+  'ember','epoch','event','field','finch','fjord','flame','flank','flute','frost',
+  'fuzzy','globe','glyph','gnome','grace','grain','grind','gruff','happy','hatch',
+  'haven','hazel','honey','hover','husky','hydro','ideal','image','inlet','index',
+  'irony','ivory','jazzy','jewel','jolly','joker','joust','judge','karma','ketch',
+  'kiosk','knack','knife','krill','label','latch','lilac','links','lemon','lunar',
+  'magic','mango','maple','mercy','metro','month','mouse','nadir','nerve','night',
+  'noisy','noble','notch','nurse','ocean','olive','onset','optic','orbit','outer',
+  'ozone','patch','pearl','pizza','plant','plank','plume','proxy','prism','queen',
+  'quest','quick','quirk','radar','realm','reedy','ridge','river','robin','round',
+  'scent','shelf','solar','spine','squad','stark','stone','swirl','table','tempo',
+  'thorn','tiger','tower','track','trout','ultra','uncle','upper','usage','ulcer',
+  'valve','vapor','vault','vicar','vivid','water','waste','wheat','width','windy',
+  'witch','wrist','xerus','xenon','yacht','yodel','young','yummy','yield','zesty',
+  'zebra','zilch','zippy','adobe','alarm','ankle','abbot','boxer','cubic','dunce',
+  'eager','pleat','glint','ingot','knelt','lodge','nudge','onion','prune','quilt',
+  'relic','shard','thyme','umbra','verso','waltz','xylem','zonal','adorn','birch',
+  'cider','dwelt','envoy','forge','gusto','haste','igloo','cleft','smirk','brawn',
+];
+
+interface BatchResult { password: string; strength: StrengthLevel; crackTime: number; }
+
 function CharBar({ pct, color }: { pct: number; color: string }) {
   return (
     <div className="w-full bg-gray-200 rounded-full h-2">
@@ -98,13 +123,20 @@ function CharBar({ pct, color }: { pct: number; color: string }) {
 }
 
 export default function PasswordAuditClient() {
-  const [mode, setMode] = useState<'personal' | 'developer'>('personal');
+  const [mode, setMode] = useState<'personal' | 'developer' | 'batch'>('personal');
   const [password, setPassword] = useState('');
   const [reveal, setReveal] = useState(false);
   const [policy, setPolicy] = useState<PasswordPolicy>(DEFAULT_POLICY);
   const [codeLang, setCodeLang] = useState<'js' | 'python' | 'go' | 'java' | 'php'>('js');
   const [copiedCode, setCopiedCode] = useState(false);
   const [showNist, setShowNist] = useState(false);
+  // Passphrase generator
+  const [phraseSep, setPhraseSep] = useState<'-' | ' '>('-');
+  const [generatedPhrase, setGeneratedPhrase] = useState('');
+  // Batch mode
+  const [batchInput, setBatchInput] = useState('');
+  const [batchResults, setBatchResults] = useState<BatchResult[]>([]);
+  const [batchReveal, setBatchReveal] = useState<Record<number, boolean>>({});
 
   const ent = useMemo(() => auditEntropy(password), [password]);
   const crackTime = useMemo(() => auditCrackTime(password), [password]);
@@ -117,6 +149,29 @@ export default function PasswordAuditClient() {
 
   const regex = useMemo(() => policyToSimpleRegex(policy), [policy]);
   const code = useMemo(() => policyToCodeCorrect(policy, codeLang), [policy, codeLang]);
+
+  const generatePassphrase = () => {
+    const pool = [...PASSPHRASE_WORDS];
+    const words: string[] = [];
+    for (let i = 0; i < 4; i++) {
+      const idx = Math.floor(Math.random() * pool.length);
+      words.push(pool[idx]);
+      pool.splice(idx, 1);
+    }
+    const phrase = words.join(phraseSep);
+    setGeneratedPhrase(phrase);
+    setPassword(phrase);
+  };
+
+  const processBatch = () => {
+    const lines = batchInput.split('\n').map((l) => l.trim()).filter(Boolean).slice(0, 50);
+    setBatchResults(lines.map((pw) => ({
+      password: pw,
+      strength: auditStrength(pw),
+      crackTime: auditCrackTime(pw),
+    })));
+    setBatchReveal({});
+  };
 
   const copyCode = () => {
     trackCopy('password_audit');
@@ -160,13 +215,13 @@ export default function PasswordAuditClient() {
         <div className="space-y-5">
           {/* Mode selector */}
           <div className="flex items-center gap-1 p-1 bg-gray-100 rounded-lg w-fit">
-            {(['personal', 'developer'] as const).map((m) => (
+            {(['personal', 'developer', 'batch'] as const).map((m) => (
               <button key={m} type="button"
                 onClick={() => { trackCtaClick('password_audit', `mode_${m}`); setMode(m); }}
                 className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${mode === m ? 'bg-white text-gray-900 shadow' : 'text-gray-600 hover:text-gray-900'}`}
               >
-                {m === 'personal' ? <User className="w-4 h-4" /> : <Wrench className="w-4 h-4" />}
-                {m === 'personal' ? 'Personal' : 'Developer'}
+                {m === 'personal' ? <User className="w-4 h-4" /> : m === 'developer' ? <Wrench className="w-4 h-4" /> : <BarChart2 className="w-4 h-4" />}
+                {m === 'personal' ? 'Personal' : m === 'developer' ? 'Developer' : 'Batch'}
               </button>
             ))}
           </div>
@@ -209,6 +264,30 @@ export default function PasswordAuditClient() {
                     </div>
                   </div>
                 )}
+              </section>
+
+              {/* Passphrase generator */}
+              <section className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+                <h2 className="text-sm font-semibold text-gray-800 mb-3">Generate a passphrase</h2>
+                <div className="flex flex-wrap items-center gap-3 mb-3">
+                  <span className="text-xs text-gray-600 font-medium">Separator:</span>
+                  {(['-', ' '] as const).map((sep) => (
+                    <label key={sep} className="flex items-center gap-1.5 cursor-pointer text-sm">
+                      <input type="radio" name="phraseSep" checked={phraseSep === sep} onChange={() => setPhraseSep(sep)} className="text-primary-600" />
+                      <code className="font-mono text-xs bg-gray-100 px-1.5 py-0.5 rounded">{sep === '-' ? '—' : 'space'}</code>
+                    </label>
+                  ))}
+                  <button type="button" onClick={generatePassphrase}
+                    className="ml-auto px-4 py-2 rounded-lg bg-primary-600 text-white text-sm font-medium hover:bg-primary-700">
+                    Generate passphrase
+                  </button>
+                </div>
+                {generatedPhrase && (
+                  <div className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 font-mono text-sm text-gray-900 break-all">
+                    {generatedPhrase}
+                  </div>
+                )}
+                <p className="text-xs text-gray-400 mt-2">4 random words from a built-in 200-word list. Result is automatically loaded into the analyzer above.</p>
               </section>
 
               {password && (
@@ -435,6 +514,95 @@ export default function PasswordAuditClient() {
                   </div>
                 )}
               </section>
+            </div>
+          )}
+
+          {/* ── BATCH MODE ── */}
+          {mode === 'batch' && (
+            <div className="space-y-5">
+              <section className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+                <h2 className="text-base font-semibold text-gray-900 mb-1">Batch password test</h2>
+                <p className="text-sm text-gray-500 mb-3">Paste up to 50 passwords, one per line. All analysis runs in your browser.</p>
+                <textarea value={batchInput} onChange={(e) => setBatchInput(e.target.value)} rows={8}
+                  placeholder={'Password123\nsecret\ncorrect-horse-battery-staple\n...'}
+                  className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 font-mono text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-y"
+                  spellCheck={false} />
+                <button type="button" onClick={processBatch}
+                  className="mt-3 px-5 py-2.5 rounded-xl bg-primary-600 text-white font-medium hover:bg-primary-700 text-sm">
+                  Analyze all
+                </button>
+              </section>
+
+              {batchResults.length > 0 && (() => {
+                const scoreMap: Record<StrengthLevel, { score: 1|2|3|4; label: string; width: string }> = {
+                  'Very Weak': { score: 1, label: 'Weak', width: '25%' },
+                  'Weak':      { score: 1, label: 'Weak', width: '25%' },
+                  'Fair':      { score: 2, label: 'Fair', width: '50%' },
+                  'Strong':    { score: 3, label: 'Good', width: '75%' },
+                  'Very Strong': { score: 4, label: 'Strong', width: '100%' },
+                  'Extreme':   { score: 4, label: 'Strong', width: '100%' },
+                };
+                const counts = { 1: 0, 2: 0, 3: 0, 4: 0 } as Record<1|2|3|4, number>;
+                batchResults.forEach((r) => { counts[scoreMap[r.strength].score]++; });
+                return (
+                  <>
+                    <section className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+                      <h2 className="text-sm font-semibold text-gray-800 mb-3">Summary</h2>
+                      <div className="flex flex-wrap gap-3">
+                        {[
+                          { label: 'Weak', n: counts[1], color: 'text-red-600', bg: 'bg-red-50 border-red-200' },
+                          { label: 'Fair', n: counts[2], color: 'text-yellow-700', bg: 'bg-yellow-50 border-yellow-200' },
+                          { label: 'Good', n: counts[3], color: 'text-lime-700', bg: 'bg-lime-50 border-lime-200' },
+                          { label: 'Strong', n: counts[4], color: 'text-green-700', bg: 'bg-green-50 border-green-200' },
+                        ].map(({ label, n, color, bg }) => (
+                          <div key={label} className={`flex flex-col items-center rounded-lg border px-5 py-3 ${bg}`}>
+                            <span className={`text-2xl font-black ${color}`}>{n}</span>
+                            <span className="text-xs text-gray-500 mt-0.5">{label}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                    <section className="rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b border-gray-200 bg-gray-50">
+                            <th className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-wider text-gray-500">Password</th>
+                            <th className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-wider text-gray-500 w-32">Score</th>
+                            <th className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-wider text-gray-500">Crack time</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {batchResults.map((r, i) => {
+                            const sm = scoreMap[r.strength];
+                            const revealed = !!batchReveal[i];
+                            return (
+                              <tr key={i} className="border-b border-gray-100 hover:bg-gray-50 transition">
+                                <td className="px-4 py-3">
+                                  <button type="button" onClick={() => setBatchReveal((prev) => ({ ...prev, [i]: !prev[i] }))}
+                                    className="font-mono text-xs text-gray-700 hover:text-primary-600 flex items-center gap-1.5"
+                                    title={revealed ? 'Click to mask' : 'Click to reveal'}>
+                                    {revealed ? r.password : '•'.repeat(Math.min(r.password.length, 16))}
+                                    {revealed ? <EyeOff className="w-3 h-3 opacity-50" /> : <Eye className="w-3 h-3 opacity-50" />}
+                                  </button>
+                                </td>
+                                <td className="px-4 py-3">
+                                  <div className="flex items-center gap-2">
+                                    <div className="h-1.5 w-20 bg-gray-200 rounded-full overflow-hidden">
+                                      <div className={`h-full rounded-full ${STRENGTH_COLORS[r.strength]}`} style={{ width: sm.width }} />
+                                    </div>
+                                    <span className={`text-xs font-semibold ${STRENGTH_TEXT[r.strength]}`}>{sm.label}</span>
+                                  </div>
+                                </td>
+                                <td className="px-4 py-3 text-xs text-gray-500 font-mono">{formatCrackTime(r.crackTime)}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </section>
+                  </>
+                );
+              })()}
             </div>
           )}
 

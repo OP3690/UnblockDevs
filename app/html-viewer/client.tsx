@@ -6,6 +6,7 @@ import {
   Copy, Check, RefreshCw, Maximize2, Minimize2, Monitor, Smartphone, Tablet,
   Moon, Sun, Download, Play, Share2, Trash2, ZoomIn, ZoomOut, Terminal,
   ChevronDown, X, Code2, FileCode, Braces, RotateCcw, Layers, ShieldCheck, Eraser,
+  Package, Plus,
 } from 'lucide-react';
 import ToolPageShell from '@/components/tools/ToolPageShell';
 
@@ -19,8 +20,9 @@ type ConsoleEntry = { level: 'log' | 'warn' | 'error' | 'info'; msg: string; id:
 
 const CONSOLE_BRIDGE = `<script>(function(){var id=0;function s(l,a){try{window.parent.postMessage({__hv:1,l:l,m:Array.prototype.slice.call(a).map(function(x){return x===null?'null':x===undefined?'undefined':typeof x==='object'?JSON.stringify(x,null,2):String(x)}).join(' '),i:++id},'*')}catch(e){}}['log','info','warn','error'].forEach(function(m){var o=console[m];console[m]=function(){s(m,arguments);o&&o.apply(console,arguments)};});window.addEventListener('error',function(e){s('error',[e.message+' (line '+(e.lineno||'?')+')'])});window.addEventListener('unhandledrejection',function(e){s('error',['Uncaught promise: '+String(e.reason)])});})()</s`+'cript>';
 
-function buildDoc(html: string, css: string, js: string): string {
-  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">${CONSOLE_BRIDGE}<style>${css}</style></head><body>${html}<scr`+`ipt>${js}</scr`+`ipt></body></html>`;
+function buildDoc(html: string, css: string, js: string, cdnTags: string[] = []): string {
+  const cdnStr = cdnTags.join('');
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">${CONSOLE_BRIDGE}${cdnStr}<style>${css}</style></head><body>${html}<scr`+`ipt>${js}</scr`+`ipt></body></html>`;
 }
 
 // ── Templates ─────────────────────────────────────────────────────────────────
@@ -59,6 +61,41 @@ const TEMPLATES: Template[] = [
     js: `console.log('6 CSS animations running!');`,
   },
 ];
+
+// ── CDN Presets ───────────────────────────────────────────────────────────────
+
+const CDN_PRESETS = [
+  { label: 'Tailwind CSS',  tag: '<script src="https://cdn.tailwindcss.com"></script>' },
+  { label: 'Bootstrap',     tag: '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">' },
+  { label: 'Alpine.js',     tag: '<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>' },
+  { label: 'HTMX',          tag: '<script src="https://cdn.jsdelivr.net/npm/htmx.org@1.9.10/dist/htmx.min.js"></script>' },
+  { label: 'Chart.js',      tag: '<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>' },
+  { label: 'three.js',      tag: '<script src="https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.min.js"></script>' },
+  { label: 'anime.js',      tag: '<script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>' },
+];
+
+// ── Simple HTML prettifier ────────────────────────────────────────────────────
+
+function prettifyHtmlSimple(html: string): string {
+  const VOID = new Set(['area','base','br','col','embed','hr','img','input','link','meta','param','source','track','wbr']);
+  const ind = '  ';
+  let depth = 0;
+  const lines: string[] = [];
+  const tokens = html.replace(/>\s*</g, '>\n<').split('\n');
+  for (const token of tokens) {
+    const t = token.trim();
+    if (!t) continue;
+    const isClose   = /^<\//.test(t);
+    const isComment = /^<!--/.test(t);
+    const tagName   = (t.match(/^<\/?([a-zA-Z][a-zA-Z0-9]*)/) || [])[1]?.toLowerCase() ?? '';
+    const isVoid    = VOID.has(tagName);
+    const isSelf    = /\/>$/.test(t);
+    if (isClose) depth = Math.max(0, depth - 1);
+    lines.push(ind.repeat(depth) + t);
+    if (!isClose && !isVoid && !isSelf && !isComment && tagName) depth++;
+  }
+  return lines.join('\n');
+}
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -134,6 +171,9 @@ function HtmlViewerTool() {
   const [mounted, setMounted]       = useState(false);
   const [maskMsg, setMaskMsg]       = useState('');
   const [toast, setToast]           = useState<string>('');
+  const [cdnOpen, setCdnOpen]       = useState(false);
+  const [cdnUrl, setCdnUrl]         = useState('');
+  const [cdnImports, setCdnImports] = useState<string[]>([]);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dragRef = useRef(false);
 
@@ -145,9 +185,9 @@ function HtmlViewerTool() {
   useEffect(() => {
     if (!autoRun) return;
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => { setLogs([]); setDoc(buildDoc(html, css, js)); }, 650);
+    debounceRef.current = setTimeout(() => { setLogs([]); setDoc(buildDoc(html, css, js, cdnImports)); }, 650);
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
-  }, [html, css, js, autoRun]);
+  }, [html, css, js, cdnImports, autoRun]);
 
   // Console bridge
   useEffect(() => {
@@ -174,12 +214,12 @@ function HtmlViewerTool() {
     return () => window.removeEventListener('keydown', h);
   }, [fullscreen, html, css, js]);
 
-  const run = useCallback(() => { setLogs([]); setDoc(buildDoc(html, css, js)); }, [html, css, js]);
+  const run = useCallback(() => { setLogs([]); setDoc(buildDoc(html, css, js, cdnImports)); }, [html, css, js, cdnImports]);
 
   const loadTemplate = useCallback((t: Template) => {
     setHtml(t.html); setCss(t.css); setJs(t.js);
-    setLogs([]); setDoc(buildDoc(t.html, t.css, t.js));
-  }, []);
+    setLogs([]); setDoc(buildDoc(t.html, t.css, t.js, cdnImports));
+  }, [cdnImports]);
 
   const download = useCallback(() => {
     const out = `<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<style>\n${css}\n</style>\n</head>\n<body>\n${html}\n<script>\n${js}\n<\/script>\n</body>\n</html>`;
@@ -206,7 +246,7 @@ function HtmlViewerTool() {
 
   const clearAll = useCallback(() => {
     setHtml(''); setCss(''); setJs('');
-    setLogs([]); setDoc(buildDoc('', '', ''));
+    setLogs([]); setCdnImports([]); setDoc(buildDoc('', '', ''));
   }, []);
 
   const handleMaskPII = useCallback(() => {
@@ -216,8 +256,37 @@ function HtmlViewerTool() {
     const msg = total > 0 ? `${total} item${total !== 1 ? 's' : ''} masked` : 'No PII found';
     setMaskMsg(msg);
     setTimeout(() => setMaskMsg(''), 3000);
-    if (autoRun) { setLogs([]); setDoc(buildDoc(rh.result, rc.result, rj.result)); }
+    if (autoRun) { setLogs([]); setDoc(buildDoc(rh.result, rc.result, rj.result, cdnImports)); }
+  }, [html, css, js, cdnImports, autoRun]);
+
+  const toggleCdn = useCallback((tag: string) => {
+    setCdnImports(prev => {
+      const next = prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag];
+      if (autoRun) { setLogs([]); setDoc(buildDoc(html, css, js, next)); }
+      return next;
+    });
   }, [html, css, js, autoRun]);
+
+  const injectCustomCdn = useCallback(() => {
+    const url = cdnUrl.trim();
+    if (!url) return;
+    const tag = url.endsWith('.css')
+      ? `<link rel="stylesheet" href="${url}">`
+      : `<script src="${url}"></script>`;
+    setCdnImports(prev => {
+      if (prev.includes(tag)) return prev;
+      const next = [...prev, tag];
+      if (autoRun) { setLogs([]); setDoc(buildDoc(html, css, js, next)); }
+      return next;
+    });
+    setCdnUrl('');
+  }, [cdnUrl, html, css, js, autoRun]);
+
+  const handlePrettify = useCallback(() => {
+    const pretty = prettifyHtmlSimple(html);
+    setHtml(pretty);
+    if (autoRun) { setLogs([]); setDoc(buildDoc(pretty, css, js, cdnImports)); }
+  }, [html, css, js, cdnImports, autoRun]);
 
   // URL load
   useEffect(() => {
@@ -225,7 +294,7 @@ function HtmlViewerTool() {
       const h = location.hash;
       if (!h.startsWith('#c=')) return;
       const d = JSON.parse(decodeURIComponent(atob(h.slice(3))));
-      if (d.html !== undefined) { setHtml(d.html); setCss(d.css); setJs(d.js); setDoc(buildDoc(d.html, d.css, d.js)); }
+      if (d.html !== undefined) { setHtml(d.html); setCss(d.css); setJs(d.js); setDoc(buildDoc(d.html, d.css, d.js, [])); }
     } catch {}
   }, []);
 
@@ -327,6 +396,17 @@ function HtmlViewerTool() {
             {maskMsg || 'Mask PII'}
           </button>
 
+          {/* CDN toggle */}
+          <button onClick={() => setCdnOpen(v => !v)}
+            className={`flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-[10px] font-semibold transition ${
+              cdnOpen ? 'border-sky-400/40 bg-sky-500/10 text-sky-300' : 'border-white/10 bg-white/5 text-zinc-400 hover:bg-white/10'
+            }`}>
+            <Package className="h-3 w-3" /> CDN
+            {cdnImports.length > 0 && (
+              <span className="rounded-full bg-sky-500 text-white text-[8px] font-bold px-1.5 py-px">{cdnImports.length}</span>
+            )}
+          </button>
+
           {/* Clear All */}
           <button onClick={clearAll}
             className="flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-2.5 py-1.5 text-[10px] text-zinc-400 hover:text-red-400 hover:border-red-500/30 hover:bg-red-500/5 transition">
@@ -353,6 +433,55 @@ function HtmlViewerTool() {
         </div>
       </div>
 
+      {/* ══════════════ CDN PANEL ══════════════ */}
+      {cdnOpen && (
+        <div className="border-b border-white/5 bg-[#12121a] px-3 py-3 space-y-2.5">
+          <div className="flex flex-wrap gap-1.5">
+            {CDN_PRESETS.map(p => {
+              const active = cdnImports.includes(p.tag);
+              return (
+                <button key={p.label} onClick={() => toggleCdn(p.tag)}
+                  className={`flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-[10px] font-semibold transition ${
+                    active ? 'border-sky-400/40 bg-sky-500/15 text-sky-200' : 'border-white/10 bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white'
+                  }`}>
+                  {active ? '✓' : <Plus className="h-2.5 w-2.5" />} {p.label}
+                </button>
+              );
+            })}
+          </div>
+          <div className="flex gap-2">
+            <input value={cdnUrl} onChange={e => setCdnUrl(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && injectCustomCdn()}
+              placeholder="Custom CDN URL (https://…)"
+              className="flex-1 rounded-md bg-white/5 border border-white/10 px-3 py-1.5 text-[11px] text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-sky-400/40" />
+            <button onClick={injectCustomCdn}
+              className="rounded-md bg-sky-500/20 border border-sky-400/30 px-3 py-1.5 text-[10px] font-semibold text-sky-300 hover:bg-sky-500/30 transition">
+              Inject
+            </button>
+          </div>
+          {cdnImports.length > 0 && (
+            <div className="flex flex-wrap gap-1">
+              {cdnImports.map((tag, i) => {
+                const urlMatch = tag.match(/(?:src|href)=["']([^"']+)["']/);
+                const display = urlMatch ? urlMatch[1].replace(/^https?:\/\//, '').slice(0, 50) : tag.slice(0, 40);
+                return (
+                  <div key={i} className="flex items-center gap-1.5 rounded bg-white/5 border border-white/10 px-2 py-0.5 text-[9px] text-zinc-400">
+                    <span className="font-mono truncate max-w-[180px]">{display}</span>
+                    <button onClick={() => setCdnImports(prev => {
+                      const next = prev.filter((_, j) => j !== i);
+                      if (autoRun) { setLogs([]); setDoc(buildDoc(html, css, js, next)); }
+                      return next;
+                    })} className="hover:text-red-400 transition shrink-0">
+                      <X className="h-2.5 w-2.5" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* ══════════════ EDITOR + PREVIEW ══════════════ */}
       <div id="hv-split" className="flex flex-1 min-h-0" style={{ height: fullscreen ? 'calc(100vh - 84px)' : '620px' }}>
 
@@ -374,6 +503,12 @@ function HtmlViewerTool() {
             })}
             <div className="ml-auto flex items-center gap-2 pr-3">
               <span className="text-[9px] text-zinc-700 tabular-nums">{code.length.toLocaleString()} chars</span>
+              {tab === 'html' && (
+                <button onClick={handlePrettify} title="Prettify HTML"
+                  className="flex items-center gap-1 rounded border border-white/10 bg-white/5 px-1.5 py-0.5 text-[9px] font-semibold text-zinc-500 hover:text-indigo-300 hover:border-indigo-400/30 hover:bg-indigo-500/10 transition">
+                  <Code2 className="h-2.5 w-2.5" /> Format
+                </button>
+              )}
               <button onClick={() => setCode('')} title="Clear" className="text-zinc-700 hover:text-zinc-400 transition">
                 <RotateCcw className="h-3 w-3" />
               </button>

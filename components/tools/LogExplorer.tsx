@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import {
   AlertTriangle,
   Info,
@@ -140,6 +140,19 @@ const SAMPLE_LOGS_SAMPLES: { label: string; emoji: string; logs: string }[] = [
   { label: 'CloudWatch', emoji: '☁️', logs: SAMPLE_LOGS_CLOUDWATCH },
 ];
 
+const MOCK_LIVE_ENTRIES: { level: string; message: string; service?: string }[] = [
+  { level: 'INFO',  message: 'GET /api/v1/health → 200 OK in 12ms',         service: 'api-gateway' },
+  { level: 'INFO',  message: 'Cache hit — user session resolved',             service: 'auth-service' },
+  { level: 'WARN',  message: 'Connection pool utilization at 85%',            service: 'db-proxy' },
+  { level: 'ERROR', message: 'Downstream service timeout after 30s',          service: 'payment-service' },
+  { level: 'DEBUG', message: 'Heartbeat ack from leader node',                service: 'coordinator' },
+  { level: 'INFO',  message: 'Processed 142 queue messages in 1.2s',          service: 'worker' },
+  { level: 'WARN',  message: 'Memory usage at 78% — approaching limit',       service: 'api-gateway' },
+  { level: 'ERROR', message: 'Redis WRONGTYPE error on key session:lv_001',   service: 'cache-service' },
+  { level: 'INFO',  message: 'Scheduled task cleanup: 5,214 records pruned',  service: 'scheduler' },
+  { level: 'WARN',  message: 'Rate limit approaching for external API',        service: 'integration-svc' },
+];
+
 export default function LogExplorer() {
   const [logText, setLogText] = useState('');
   const [parsedLogs, setParsedLogs] = useState<LogEntry[]>([]);
@@ -158,6 +171,13 @@ export default function LogExplorer() {
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
   const [expandedRequestId, setExpandedRequestId] = useState<string | null>(null);
   const [stackCleanerInput, setStackCleanerInput] = useState('');
+  // ── Live tail ──
+  const [liveTailActive, setLiveTailActive]       = useState(false);
+  const [liveLogs, setLiveLogs]                   = useState<LogEntry[]>([]);
+  const liveTailRef                               = useRef<ReturnType<typeof setInterval> | null>(null);
+  const liveCycleRef                              = useRef(0);
+  // ── Time range filter ──
+  const [timeRangeFilter, setTimeRangeFilter]     = useState<{ from: string; to: string } | null>(null);
 
   const formatDetection = useMemo(() => (parsedLogs.length ? detectFormat(parsedLogs) : null), [parsedLogs]);
   const afterNoise = useMemo(
@@ -200,6 +220,41 @@ export default function LogExplorer() {
   const latencyStats = useMemo(() => getLatencyStats(filteredLogs), [filteredLogs]);
   const summary = useMemo(() => getLogSummary(filteredLogs), [filteredLogs]);
 
+  // ── Timeline density chart (per minute) ──
+  const timelineDensity = useMemo(() => {
+    const buckets = new Map<string, { error: number; warn: number; info: number; other: number; fullKey: string }>();
+    for (const log of filteredLogs) {
+      const ts = ((log.timestamp ?? (log as Record<string, unknown>)['@timestamp'] ?? '') as string);
+      if (!ts) continue;
+      try {
+        const d = new Date(ts.replace(' ', 'T'));
+        if (isNaN(d.getTime())) continue;
+        const key = `${String(d.getUTCHours()).padStart(2, '0')}:${String(d.getUTCMinutes()).padStart(2, '0')}`;
+        const fullKey = ts.slice(0, 16); // up to minute
+        const b = buckets.get(key) ?? { error: 0, warn: 0, info: 0, other: 0, fullKey };
+        const lv = getLevel(log);
+        if (lv.includes('ERROR')) b.error++;
+        else if (lv.includes('WARN')) b.warn++;
+        else if (lv.includes('INFO')) b.info++;
+        else b.other++;
+        buckets.set(key, b);
+      } catch { /* skip unparseable timestamps */ }
+    }
+    return Array.from(buckets.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([label, v]) => ({ label, ...v, total: v.error + v.warn + v.info + v.other }));
+  }, [filteredLogs]);
+
+  // ── Time-range filtered display logs ──
+  const displayLogs = useMemo(() => {
+    if (!timeRangeFilter) return sortedLogs;
+    return sortedLogs.filter((log) => {
+      const ts = ((log.timestamp ?? (log as Record<string, unknown>)['@timestamp'] ?? '') as string);
+      if (!ts) return true;
+      return ts >= timeRangeFilter.from && ts <= timeRangeFilter.to;
+    });
+  }, [sortedLogs, timeRangeFilter]);
+
   // ⌘+Enter / Ctrl+Enter to parse logs
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -222,6 +277,36 @@ export default function LogExplorer() {
     setParsedLogs(entries);
     toast.success(`Parsed ${entries.length} log entries`);
   };
+
+  // ── Live tail effect ──
+  useEffect(() => {
+    if (!liveTailActive) {
+      if (liveTailRef.current) { clearInterval(liveTailRef.current); liveTailRef.current = null; }
+      return;
+    }
+    const sources = parsedLogs.length > 0 ? parsedLogs : MOCK_LIVE_ENTRIES.map((e) => ({ ...e, raw: `${new Date().toISOString()} [${e.level}] ${e.service ?? 'app'}: ${e.message}` } as LogEntry));
+    liveTailRef.current = setInterval(() => {
+      const idx = liveCycleRef.current % sources.length;
+      liveCycleRef.current++;
+      const base = sources[idx];
+      const newEntry: LogEntry = { ...base, timestamp: new Date().toISOString() };
+      setLiveLogs((prev) => [...prev.slice(-200), newEntry]);
+    }, 1500);
+    return () => { if (liveTailRef.current) { clearInterval(liveTailRef.current); liveTailRef.current = null; } };
+  }, [liveTailActive, parsedLogs]);
+
+  // ── Export filtered logs ──
+  const exportFilteredLog = useCallback(() => {
+    const content = filteredLogs.map((e) => (e.raw as string) || JSON.stringify(e)).join('\n');
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'filtered-logs.log';
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success(`Exported ${filteredLogs.length} log lines`);
+  }, [filteredLogs]);
 
   const setLevelFilter = (level: string) => {
     setFilterLevel(level === filterLevel ? 'all' : level);
@@ -710,9 +795,117 @@ export default function LogExplorer() {
             )}
           </div>
 
+          {/* Live tail panel */}
+          <div className="bg-white rounded-xl shadow border border-gray-200 p-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                {liveTailActive && (
+                  <span className="inline-flex items-center justify-center w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse shrink-0" aria-hidden />
+                )}
+                Live tail
+                {liveTailActive && <span className="text-xs font-semibold text-green-700">Live</span>}
+              </h3>
+              <div className="flex items-center gap-2">
+                {liveTailActive ? (
+                  <button
+                    type="button"
+                    onClick={() => { setLiveTailActive(false); setLiveLogs([]); }}
+                    className="px-3 py-1.5 bg-red-100 hover:bg-red-200 text-red-800 rounded-lg text-xs font-semibold border border-red-200"
+                  >
+                    Stop
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => { setLiveTailActive(true); setLiveLogs([]); liveCycleRef.current = 0; }}
+                    className="px-3 py-1.5 bg-green-100 hover:bg-green-200 text-green-800 rounded-lg text-xs font-semibold border border-green-200"
+                  >
+                    Start live tail
+                  </button>
+                )}
+              </div>
+            </div>
+            {!liveTailActive && (
+              <p className="text-xs text-gray-500">Simulates a real-time log stream. Uses parsed log entries (if loaded) or mock lines. New entry appended every 1.5s.</p>
+            )}
+            {liveLogs.length > 0 && (
+              <div className="mt-2 max-h-[200px] overflow-y-auto rounded-lg border border-gray-200 bg-gray-950">
+                {liveLogs.slice(-30).reverse().map((log, i) => {
+                  const lv = getLevel(log);
+                  const color = lv.includes('ERROR') ? 'text-red-400' : lv.includes('WARN') ? 'text-amber-400' : lv.includes('INFO') ? 'text-blue-400' : 'text-gray-400';
+                  return (
+                    <div key={i} className="flex items-start gap-2 px-3 py-1 border-b border-gray-800 last:border-0">
+                      <span className="text-gray-600 text-[10px] font-mono shrink-0 mt-0.5">{((log.timestamp as string) ?? '').slice(11, 19)}</span>
+                      <span className={`text-[10px] font-bold font-mono shrink-0 ${color}`}>{lv.slice(0, 4)}</span>
+                      <span className="text-[11px] font-mono text-gray-300 break-words">{getMessage(log)}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Log timeline density chart */}
+          {timelineDensity.length > 1 && (
+            <div className="bg-white rounded-xl shadow border border-gray-200 p-4">
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                <h3 className="text-sm font-bold text-gray-900">Log density by minute</h3>
+                {timeRangeFilter && (
+                  <button type="button" onClick={() => setTimeRangeFilter(null)}
+                    className="text-xs px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded border border-slate-200 text-slate-600">
+                    Clear time filter
+                  </button>
+                )}
+              </div>
+              <p className="text-xs text-gray-500 mb-3">Click a bar to filter the log table to that minute.</p>
+              <div className="flex items-end gap-1 h-20 overflow-x-auto pb-1">
+                {(() => {
+                  const maxTotal = Math.max(...timelineDensity.map((b) => b.total), 1);
+                  return timelineDensity.map((b) => {
+                    const h = Math.max(4, Math.round((b.total / maxTotal) * 72));
+                    const isActive = timeRangeFilter?.from.includes(b.label.replace(':','')) || false;
+                    return (
+                      <button
+                        key={b.label}
+                        type="button"
+                        onClick={() => setTimeRangeFilter({ from: b.fullKey, to: b.fullKey + ':59' })}
+                        title={`${b.label} — ${b.total} logs (${b.error} err, ${b.warn} warn, ${b.info} info)`}
+                        className={`flex flex-col justify-end shrink-0 w-7 rounded-t transition-all hover:brightness-110 ${isActive ? 'ring-2 ring-primary-500' : ''}`}
+                        style={{ height: '72px' }}
+                      >
+                        <div style={{ height: `${h}px` }} className="w-full rounded-t flex flex-col justify-end overflow-hidden">
+                          {b.error > 0 && <div style={{ height: `${Math.round((b.error / b.total) * h)}px` }} className="bg-red-500 w-full" />}
+                          {b.warn > 0  && <div style={{ height: `${Math.round((b.warn  / b.total) * h)}px` }} className="bg-amber-400 w-full" />}
+                          {b.info > 0  && <div style={{ height: `${Math.round((b.info  / b.total) * h)}px` }} className="bg-blue-500 w-full" />}
+                          {b.other > 0 && <div style={{ height: `${Math.round((b.other / b.total) * h)}px` }} className="bg-gray-400 w-full" />}
+                        </div>
+                      </button>
+                    );
+                  });
+                })()}
+              </div>
+              <div className="flex flex-wrap gap-3 mt-2 text-[11px] text-gray-500">
+                <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-red-500" />Error</span>
+                <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-amber-400" />Warn</span>
+                <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-blue-500" />Info</span>
+                <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-gray-400" />Other</span>
+              </div>
+            </div>
+          )}
+
           {/* Log table */}
           <div className="log-explorer-table bg-white rounded-xl shadow border border-gray-200 p-4 overflow-x-auto">
-            <h3 className="log-explorer-table-title text-sm font-bold text-gray-900 mb-3">Logs ({sortedLogs.length})</h3>
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <h3 className="log-explorer-table-title text-sm font-bold text-gray-900">
+                Logs ({displayLogs.length}{timeRangeFilter ? ' — time filtered' : ''})
+              </h3>
+              {timeRangeFilter && (
+                <button type="button" onClick={() => setTimeRangeFilter(null)}
+                  className="text-xs px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded border border-slate-200 text-slate-600">
+                  Clear time filter
+                </button>
+              )}
+            </div>
             <div className="max-h-[400px] overflow-y-auto">
               <table className="w-full text-sm">
                 <thead className="log-explorer-thead bg-gray-50 sticky top-0">
@@ -732,7 +925,7 @@ export default function LogExplorer() {
                   </tr>
                 </thead>
                 <tbody className="log-explorer-tbody">
-                  {sortedLogs.slice(0, 200).map((log, idx) => {
+                  {displayLogs.slice(0, 200).map((log, idx) => {
                     const level = getLevel(log);
                     return (
                       <tr
@@ -753,7 +946,7 @@ export default function LogExplorer() {
                 </tbody>
               </table>
             </div>
-            {sortedLogs.length > 200 && <p className="text-xs text-gray-500 mt-2">Showing first 200. Export for full set.</p>}
+            {displayLogs.length > 200 && <p className="text-xs text-gray-500 mt-2">Showing first 200. Export for full set.</p>}
           </div>
 
           {/* Export & Sanitizer */}
@@ -773,6 +966,13 @@ export default function LogExplorer() {
                 className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium"
               >
                 <Download className="w-4 h-4" /> Export CSV
+              </button>
+              <button
+                type="button"
+                onClick={exportFilteredLog}
+                className="flex items-center gap-2 px-4 py-2 bg-emerald-100 hover:bg-emerald-200 text-emerald-900 rounded-lg text-sm font-medium"
+              >
+                <Download className="w-4 h-4" /> Export filtered (.log)
               </button>
               <button
                 type="button"

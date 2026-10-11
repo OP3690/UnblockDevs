@@ -629,6 +629,26 @@ JWT_SECRET=my_super_secret_jwt_signing_key_do_not_share`,
   },
 ];
 
+// ─── Line diff helper ─────────────────────────────────────────────────────────
+function computeLineDiff(a: string, b: string) {
+  const aLines = a.split('\n');
+  const bLines = b.split('\n');
+  const len = Math.max(aLines.length, bLines.length);
+  return Array.from({ length: len }, (_, i) => {
+    const al = aLines[i] ?? '';
+    const bl = bLines[i] ?? '';
+    if (al === bl) return { changed: false, aToks: [{ t: al, hl: false }], bToks: [{ t: bl, hl: false }] };
+    const aToks = al.split(/(\s+)/);
+    const bToks = bl.split(/(\s+)/);
+    const mx = Math.max(aToks.length, bToks.length);
+    return {
+      changed: true,
+      aToks: Array.from({ length: mx }, (__, t) => ({ t: aToks[t] ?? '', hl: (aToks[t] ?? '') !== (bToks[t] ?? '') })),
+      bToks: Array.from({ length: mx }, (__, t) => ({ t: bToks[t] ?? '', hl: (aToks[t] ?? '') !== (bToks[t] ?? '') })),
+    };
+  });
+}
+
 // ─── Severity badge ────────────────────────────────────────────────────────────
 const SEVERITY_STYLES: Record<string, string> = {
   critical: 'bg-red-100 text-red-800 ring-red-600/20',
@@ -667,8 +687,30 @@ export default function CodePromptShieldClient() {
   const [showMapping, setShowMapping]         = useState(false);
   const [diffView, setDiffView]               = useState<'original' | 'masked'>('masked');
   const [selectedTemplate, setSelectedTemplate] = useState('none');
+  // ── Round-trip diff ──
+  const [showRestoreDiff, setShowRestoreDiff] = useState(false);
+  // ── Batch file processing ──
+  const [batchFiles, setBatchFiles]           = useState<{ name: string; masked: string; source: string }[]>([]);
+  const [activeBatchTab, setActiveBatchTab]   = useState(0);
 
   const sensitiveWarning = detectSensitiveFile(sourceCode);
+
+  // ── Live coverage: computed from current source + enabled options ──
+  const liveCoverageItems = React.useMemo(() => {
+    if (!sourceCode.trim()) return [];
+    return quickScan(sourceCode);
+  }, [sourceCode]);
+  const coveragePct = React.useMemo(() => {
+    const total = liveCoverageItems.reduce((s, r) => s + r.count, 0);
+    if (!total) return null;
+    const covered = liveCoverageItems.reduce((s, r) => {
+      if (r.category === 'secret' && maskSecrets) return s + r.count;
+      if (r.category === 'pii' && maskPII) return s + r.count;
+      if ((r.category === 'schema' || r.category === 'identifier') && maskIdentifiers) return s + r.count;
+      return s;
+    }, 0);
+    return Math.round((covered / total) * 100);
+  }, [liveCoverageItems, maskSecrets, maskPII, maskIdentifiers]);
 
   // ⌘/Ctrl+Enter → mask
   useEffect(() => {
@@ -780,6 +822,38 @@ export default function CodePromptShieldClient() {
     e.target.value = '';
   };
 
+  const handleBatchFiles = useCallback((files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    const readers: Promise<{ name: string; source: string; masked: string }>[] = Array.from(files).map((file) =>
+      new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const src = reader.result as string;
+          const lang = (LANGUAGES.find((l) => file.name.endsWith('.' + l.id)) ?? LANGUAGES[0]).id as LangId;
+          const { masked } = maskCode(src, lang, { maskIdentifiers, maskSecrets, maskPII, stripComments: doStripComments, customPatterns });
+          resolve({ name: file.name, source: src, masked });
+        };
+        reader.readAsText(file);
+      })
+    );
+    Promise.all(readers).then((results) => {
+      setBatchFiles(results);
+      setActiveBatchTab(0);
+      toast.success(`${results.length} file${results.length !== 1 ? 's' : ''} masked`);
+    });
+  }, [maskIdentifiers, maskSecrets, maskPII, doStripComments, customPatterns]);
+
+  const copyAllBatchMasked = useCallback(async () => {
+    const text = batchFiles
+      .map((f) => `// === FILE: ${f.name} ===\n${f.masked}`)
+      .join('\n\n');
+    try {
+      await navigator.clipboard.writeText(text);
+      trackCopy('code_prompt_shield_batch');
+      toast.success('All files copied');
+    } catch { toast.error('Copy failed'); }
+  }, [batchFiles]);
+
   const mapCount = mapping ? Object.keys(mapping.map).length : 0;
   const lineCount = sourceCode.split('\n').length;
   const charCount = sourceCode.length;
@@ -872,6 +946,23 @@ export default function CodePromptShieldClient() {
               </label>
             </div>
           </div>
+
+          {/* Coverage progress bar */}
+          {coveragePct !== null && (
+            <div className="mb-4 flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <span className="text-xs font-semibold text-slate-600 shrink-0">Masking coverage</span>
+              <div className="flex-1 h-2.5 rounded-full bg-slate-200 overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all duration-300 ${coveragePct >= 80 ? 'bg-emerald-500' : coveragePct >= 50 ? 'bg-amber-500' : 'bg-red-500'}`}
+                  style={{ width: `${coveragePct}%` }}
+                />
+              </div>
+              <span className={`text-xs font-bold tabular-nums shrink-0 ${coveragePct >= 80 ? 'text-emerald-700' : coveragePct >= 50 ? 'text-amber-700' : 'text-red-700'}`}>
+                {coveragePct}%
+              </span>
+              <span className="text-[11px] text-slate-500 shrink-0">{liveCoverageItems.reduce((s,r)=>s+r.count,0)} sensitive items detected</span>
+            </div>
+          )}
 
           {/* Advanced options */}
           <div className="mb-4">
@@ -1227,19 +1318,28 @@ export default function CodePromptShieldClient() {
                   <CheckCircle2 className="w-4 h-4 text-emerald-600" aria-hidden />
                   <label className="block text-sm font-medium text-slate-700">Restored code</label>
                 </div>
-                <button
-                  type="button"
-                  onClick={async () => {
-                    try {
-                      await navigator.clipboard.writeText(restoredCode);
-                      trackCopy('code_prompt_shield');
-                      toast.success('Restored code copied');
-                    } catch { toast.error('Copy failed'); }
-                  }}
-                  className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
-                >
-                  <Copy className="w-3.5 h-3.5" aria-hidden /> Copy
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowRestoreDiff((v) => !v)}
+                    className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-violet-700 bg-violet-50 hover:bg-violet-100 border border-violet-200 rounded-lg transition-colors"
+                  >
+                    {showRestoreDiff ? 'Hide diff' : 'Diff original vs restored'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        await navigator.clipboard.writeText(restoredCode);
+                        trackCopy('code_prompt_shield');
+                        toast.success('Restored code copied');
+                      } catch { toast.error('Copy failed'); }
+                    }}
+                    className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
+                  >
+                    <Copy className="w-3.5 h-3.5" aria-hidden /> Copy
+                  </button>
+                </div>
               </div>
               <textarea
                 readOnly
@@ -1247,6 +1347,102 @@ export default function CodePromptShieldClient() {
                 className="w-full h-52 p-4 font-mono text-sm text-slate-800 bg-emerald-50/50 border border-emerald-200 rounded-xl resize-y"
                 aria-label="Restored code"
               />
+              {showRestoreDiff && (
+                <div className="mt-3 rounded-xl border border-violet-200 overflow-hidden bg-white shadow-sm">
+                  <div className="px-4 py-2 border-b border-violet-100 bg-violet-50/60 text-[11px] font-bold text-violet-800 uppercase tracking-wider">
+                    Diff — Original input vs Restored output (violet = lines differ, amber = changed tokens)
+                  </div>
+                  <div className="grid grid-cols-2 divide-x divide-violet-100 overflow-auto max-h-[360px]">
+                    <div className="p-3 min-w-0">
+                      <div className="text-[10px] font-bold text-slate-400 uppercase mb-1">Original input</div>
+                      <pre className="text-xs font-mono whitespace-pre-wrap break-all leading-relaxed">
+                        {computeLineDiff(sourceCode, restoredCode).map((line, i) => (
+                          <div key={i} className={line.changed ? 'bg-violet-50' : ''}>
+                            {line.aToks.map((s, j) => (
+                              <span key={j} className={s.hl ? 'bg-amber-200 rounded px-0.5' : ''}>{s.t}</span>
+                            ))}
+                            {'\n'}
+                          </div>
+                        ))}
+                      </pre>
+                    </div>
+                    <div className="p-3 min-w-0">
+                      <div className="text-[10px] font-bold text-slate-400 uppercase mb-1">Restored output</div>
+                      <pre className="text-xs font-mono whitespace-pre-wrap break-all leading-relaxed">
+                        {computeLineDiff(sourceCode, restoredCode).map((line, i) => (
+                          <div key={i} className={line.changed ? 'bg-violet-50' : ''}>
+                            {line.bToks.map((s, j) => (
+                              <span key={j} className={s.hl ? 'bg-amber-200 rounded px-0.5' : ''}>{s.t}</span>
+                            ))}
+                            {'\n'}
+                          </div>
+                        ))}
+                      </pre>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </section>
+
+        {/* ── Batch file processing ─────────────────────────────────────── */}
+        <section className="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 ring-1 ring-slate-900/5">
+          <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2 mb-1">
+            <Upload className="w-5 h-5 text-slate-500" aria-hidden />
+            Batch file masking
+          </h2>
+          <p className="text-sm text-slate-500 mb-4">
+            Drop multiple files or click to select. Each file is masked independently. Use &ldquo;Copy all masked&rdquo; to concatenate with file separators.
+          </p>
+          <label className="flex flex-col items-center justify-center gap-2 p-6 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 hover:bg-slate-100 cursor-pointer transition-colors">
+            <Upload className="w-8 h-8 text-slate-400" aria-hidden />
+            <span className="text-sm font-medium text-slate-600">Click or drop files here</span>
+            <span className="text-xs text-slate-400">.js .ts .py .sql .json .rb .go .sh and more</span>
+            <input
+              type="file"
+              multiple
+              accept=".js,.ts,.tsx,.jsx,.py,.java,.go,.sql,.json,.cs,.php,.rs,.rb,.swift,.kt,.sh,.yaml,.yml,.toml,.cpp,.c,.h,.xml,.html,.env"
+              className="sr-only"
+              onChange={(e) => handleBatchFiles(e.target.files)}
+            />
+          </label>
+          {batchFiles.length > 0 && (
+            <div className="mt-4">
+              <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+                <div className="flex flex-wrap gap-1">
+                  {batchFiles.map((f, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => setActiveBatchTab(i)}
+                      className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition-colors max-w-[140px] truncate ${
+                        activeBatchTab === i
+                          ? 'bg-primary-600 text-white border-primary-700 shadow-sm'
+                          : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200'
+                      }`}
+                      title={f.name}
+                    >
+                      {f.name}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={copyAllBatchMasked}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg border border-slate-200 transition-colors"
+                >
+                  <Copy className="w-3.5 h-3.5" aria-hidden /> Copy all masked
+                </button>
+              </div>
+              {batchFiles[activeBatchTab] && (
+                <textarea
+                  readOnly
+                  value={batchFiles[activeBatchTab].masked}
+                  className="w-full h-52 p-4 font-mono text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl resize-y"
+                  aria-label={`Masked output for ${batchFiles[activeBatchTab].name}`}
+                />
+              )}
             </div>
           )}
         </section>

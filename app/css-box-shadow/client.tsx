@@ -53,6 +53,9 @@ function toRgba(color: string, alpha: number) {
 function shadowToCss(s: Shadow): string {
   return `${s.inset?'inset ':''}${s.x}px ${s.y}px ${s.blur}px ${s.spread}px ${toRgba(s.color,s.alpha)}`;
 }
+function textShadowToCss(s: Shadow): string {
+  return `${s.x}px ${s.y}px ${s.blur}px ${toRgba(s.color,s.alpha)}`;
+}
 function shadowsToProperty(shadows: Shadow[]): string {
   const a = shadows.filter(s=>s.enabled);
   return a.length===0?'none':a.map(shadowToCss).join(',\n       ');
@@ -388,9 +391,173 @@ function CopyBtn({text,label='Copy',className=''}:{text:string;label?:string;cla
   );
 }
 
+// ── Text Shadow Panel ─────────────────────────────────────────────────────
+
+function TextShadowPanel() {
+  const [shadows, setShadows] = useState<Shadow[]>([makeShadow({x:2,y:2,blur:4,spread:0,alpha:40})]);
+  const [activeId, setActiveId] = useState<number>(shadows[0].id);
+  const [textContent, setTextContent] = useState('Hello World');
+  const [previewBg, setPreviewBg] = useState('#ffffff');
+  const [textColor, setTextColor] = useState('#18181b');
+  const [exportFormat, setExportFormat] = useState<'css'|'tailwind'>('css');
+
+  const active = shadows.find(s=>s.id===activeId) ?? shadows[0];
+
+  const update = useCallback((id:number, patch:Partial<Shadow>) => {
+    setShadows(prev=>prev.map(s=>s.id===id?{...s,...patch}:s));
+  },[]);
+
+  const updateActive = useCallback((patch:Partial<Shadow>) => {
+    if (!active) return;
+    update(active.id, patch);
+  },[active, update]);
+
+  const addShadow = () => {
+    const s = makeShadow({x:1,y:1,blur:2,spread:0,alpha:30});
+    setShadows(prev=>[...prev,s]);
+    setActiveId(s.id);
+  };
+
+  const removeShadow = (id:number) => {
+    setShadows(prev=>{
+      const next=prev.filter(s=>s.id!==id);
+      if (id===activeId && next.length>0) setActiveId(next[0].id);
+      return next;
+    });
+  };
+
+  const tsProp = useMemo(()=>{
+    const enabled=shadows.filter(s=>s.enabled);
+    if (enabled.length===0) return 'none';
+    return enabled.map(s=>textShadowToCss(s)).join(',\n       ');
+  },[shadows]);
+
+  const exportCode = useMemo(()=>{
+    const val = tsProp.replace(/\n\s+/g,' ');
+    if (exportFormat==='css') return `.element {\n  text-shadow: ${tsProp};\n}`;
+    return `// tailwind.config.js\nmodule.exports = {\n  plugins: [\n    function({ addUtilities }) {\n      addUtilities({\n        '.text-shadow-custom': {\n          textShadow: '${val}',\n        },\n      })\n    },\n  ],\n}`;
+  },[tsProp, exportFormat]);
+
+  return (
+    <div className="divide-y divide-zinc-100">
+      {/* Preview toolbar */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 bg-zinc-50 px-4 py-2.5 sm:px-5">
+        <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Canvas</span>
+        {PREVIEW_BG.map(bg=>(
+          <button key={bg.value} onClick={()=>setPreviewBg(bg.value)} title={bg.label}
+            className={`h-5 w-5 rounded-full border-2 transition ${previewBg===bg.value?'border-zinc-900 scale-110 shadow-sm':'border-zinc-200 hover:border-zinc-400'}`}
+            style={{background:bg.value}}/>
+        ))}
+        <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 ml-4">Text color</span>
+        <label className="relative cursor-pointer">
+          <div className="h-5 w-5 rounded-md border border-zinc-200 shadow-sm" style={{background:textColor}}/>
+          <input type="color" value={textColor} onChange={e=>setTextColor(e.target.value)} className="absolute inset-0 opacity-0 cursor-pointer"/>
+        </label>
+        <span className="font-mono text-[11px] text-zinc-500">{textColor.toUpperCase()}</span>
+      </div>
+
+      {/* Canvas */}
+      <div className="flex flex-col items-center justify-center p-10 sm:p-12 min-h-[180px] transition-colors duration-300" style={{background:previewBg}}>
+        <span
+          contentEditable
+          suppressContentEditableWarning
+          onBlur={e=>setTextContent(e.currentTarget.textContent||'Hello World')}
+          className="text-5xl font-black cursor-text outline-none select-text"
+          style={{fontFamily:'system-ui',color:textColor,textShadow:tsProp==='none'?'none':tsProp,letterSpacing:'-0.03em'}}
+        >
+          {textContent}
+        </span>
+        <p className="text-[10px] text-zinc-400 mt-3 opacity-60 pointer-events-none">(click text to edit)</p>
+      </div>
+
+      {/* Controls */}
+      <div className="grid lg:grid-cols-[1fr_380px] lg:divide-x lg:divide-zinc-100">
+        {/* Export panel */}
+        <div className="bg-zinc-950">
+          <div className="flex flex-wrap items-center gap-2 px-4 py-2.5 sm:px-5">
+            <div className="flex rounded-lg border border-zinc-700 bg-zinc-800 p-0.5">
+              {(['css','tailwind'] as const).map(f=>(
+                <button key={f} onClick={()=>setExportFormat(f)}
+                  className={`rounded-md px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-wide transition ${exportFormat===f?'bg-zinc-100 text-zinc-900 shadow-sm':'text-zinc-400 hover:text-zinc-200'}`}>
+                  {f==='tailwind'?'TW Plugin':'CSS'}
+                </button>
+              ))}
+            </div>
+            <CopyBtn text={exportCode} label="Copy" className="rounded-lg bg-zinc-700 px-2.5 py-1 text-[11px] text-zinc-300 hover:bg-zinc-600 ml-auto"/>
+          </div>
+          <pre className="overflow-x-auto px-5 pb-4 text-[12px] leading-[1.9] text-zinc-300 max-h-40">{exportCode}</pre>
+        </div>
+
+        {/* Layer controls */}
+        <div className="flex flex-col divide-y divide-zinc-100">
+          <div className="px-4 py-3 sm:px-5">
+            <div className="flex items-center justify-between mb-2.5">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Text Shadow Layers</span>
+                <span className="rounded-full bg-zinc-100 px-1.5 py-0.5 text-[10px] font-bold text-zinc-500">{shadows.length}</span>
+              </div>
+              <button onClick={addShadow} className="flex items-center gap-1 rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-[11.5px] font-semibold text-zinc-600 shadow-sm transition hover:border-zinc-300 active:scale-95">
+                <Plus className="h-3.5 w-3.5"/> Add
+              </button>
+            </div>
+            <div className="space-y-1.5">
+              {shadows.map(s=>(
+                <div key={s.id} onClick={()=>setActiveId(s.id)}
+                  className={`flex cursor-pointer items-center gap-2.5 rounded-xl border px-3 py-2 transition-all ${s.id===activeId?'border-zinc-900 bg-zinc-900 shadow-sm':'border-zinc-200 bg-white hover:border-zinc-300 hover:shadow-sm'}`}>
+                  <div className="h-7 w-7 shrink-0 rounded-lg border border-white/20 shadow-sm" style={{background:toRgba(s.color,s.alpha)}}/>
+                  <div className="flex-1 min-w-0">
+                    <p className={`font-mono text-[11px] truncate ${s.id===activeId?'text-zinc-200':'text-zinc-600'}`}>{s.x}px {s.y}px {s.blur}px</p>
+                    <p className={`text-[10px] ${s.id===activeId?'text-zinc-500':'text-zinc-400'}`}>{s.color.toUpperCase()} · {s.alpha}%</p>
+                  </div>
+                  <button onClick={e=>{e.stopPropagation();update(s.id,{enabled:!s.enabled});}} className={`rounded p-1 transition ${s.id===activeId?'text-zinc-500 hover:text-zinc-200':'text-zinc-300 hover:text-zinc-600'}`}>
+                    {s.enabled?<Eye className="h-3.5 w-3.5"/>:<EyeOff className="h-3.5 w-3.5"/>}
+                  </button>
+                  {shadows.length>1&&(
+                    <button onClick={e=>{e.stopPropagation();removeShadow(s.id);}} className={`rounded p-1 transition ${s.id===activeId?'text-zinc-500 hover:text-red-400':'text-zinc-300 hover:text-red-500'}`}>
+                      <Trash2 className="h-3.5 w-3.5"/>
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+          {active && (
+            <div className="px-4 py-4 sm:px-5 space-y-3.5">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Layer Controls</p>
+              <div className="space-y-3.5">
+                <Slider label="X Offset" value={active.x} min={-100} max={100} onChange={v=>updateActive({x:v})}/>
+                <Slider label="Y Offset" value={active.y} min={-100} max={100} onChange={v=>updateActive({y:v})}/>
+                <Slider label="Blur" value={active.blur} min={0} max={100} onChange={v=>updateActive({blur:v})}/>
+                <Slider label="Opacity" value={active.alpha} min={0} max={100} unit="%" onChange={v=>updateActive({alpha:v})}/>
+              </div>
+              <div className="flex items-center gap-2 rounded-xl border border-zinc-100 bg-zinc-50 px-3 py-3">
+                <span className="text-[11px] font-semibold text-zinc-500">Color</span>
+                <label className="relative flex cursor-pointer items-center gap-2 group">
+                  <div className="h-8 w-8 rounded-xl border-2 border-zinc-200 shadow-sm group-hover:border-zinc-400 transition" style={{background:active.color}}/>
+                  <input type="color" value={active.color} onChange={e=>updateActive({color:e.target.value})} className="absolute inset-0 cursor-pointer opacity-0"/>
+                  <span className="font-mono text-[11.5px] text-zinc-600">{active.color.toUpperCase()}</span>
+                </label>
+              </div>
+              <div className="rounded-xl border border-zinc-100 bg-zinc-50 p-3">
+                <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-zinc-400">This layer only</p>
+                <div className="flex items-center justify-center h-14 rounded-lg bg-white border border-zinc-100">
+                  <span className="text-2xl font-black" style={{fontFamily:'system-ui',color:'#18181b',textShadow:textShadowToCss(active)}}>Aa</span>
+                </div>
+                <p className="mt-1.5 text-center font-mono text-[9.5px] text-zinc-400 break-all leading-relaxed">{textShadowToCss(active)}</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Main Tool ──────────────────────────────────────────────────────────────
 
 function CssBoxShadowTool() {
+  const [toolMode, setToolMode] = useState<'box'|'text'>('box');
+  const [animatePreview, setAnimatePreview] = useState(false);
   const [shadows, setShadows] = useState<Shadow[]>([makeShadow({y:8,blur:24,spread:-4,alpha:14})]);
   const [hoverShadows, setHoverShadows] = useState<Shadow[]>([makeShadow({y:16,blur:40,spread:-8,alpha:22})]);
   const [activeId, setActiveId] = useState<number>(shadows[0].id);
@@ -514,19 +681,42 @@ function CssBoxShadowTool() {
   const hProp = useMemo(()=>shadowsToProperty(hoverShadows),[hoverShadows]);
   const exportCode = useMemo(()=>buildExport(shadows,hoverShadows,exportFormat,enableHover),[shadows,hoverShadows,exportFormat,enableHover]);
 
+  const pulsedProp = useMemo(()=>{
+    const a=shadows.filter(s=>s.enabled);
+    if (a.length===0) return 'none';
+    return a.map(s=>`${s.inset?'inset ':''}${Math.round(s.x*1.4)}px ${Math.round(s.y*1.4)}px ${Math.round(s.blur*2)}px ${s.spread}px ${toRgba(s.color,Math.min(100,Math.round(s.alpha*1.4)))}`).join(',\n       ');
+  },[shadows]);
+  const animKeyframesCSS = useMemo(()=>`@keyframes shadow-pulse {\n  0%, 100% { box-shadow: ${cssProp}; }\n  50%       { box-shadow: ${pulsedProp}; }\n}`,[cssProp,pulsedProp]);
+
   const displayShadow = (isHovering && enableHover) ? hProp : cssProp;
 
   const effectiveStyle: React.CSSProperties = {
     ...shape.style,
     boxShadow: displayShadow==='none'?'none':displayShadow,
-    transition: enableHover ? 'box-shadow 0.25s ease, transform 0.2s ease' : 'box-shadow 0.15s ease',
-    ...(isHovering&&enableHover?{transform:'translateY(-2px)'}:{}),
+    transition: animatePreview ? 'none' : (enableHover ? 'box-shadow 0.25s ease, transform 0.2s ease' : 'box-shadow 0.15s ease'),
+    ...(isHovering&&enableHover&&!animatePreview?{transform:'translateY(-2px)'}:{}),
     ...(useShapeOverride ? {background: shapeOverrideBg} : {}),
     ...(shape.isText ? {textShadow: displayShadow==='none'?'none':displayShadow, boxShadow:'none'} : {}),
+    ...(animatePreview ? {animation:'shadow-pulse 2s ease-in-out infinite'} : {}),
   };
 
   return (
     <div className="divide-y divide-zinc-100">
+
+      {animatePreview && <style>{animKeyframesCSS}</style>}
+
+      {/* ── Mode tabs ─────────────────────────────────────── */}
+      <div className="flex items-center bg-white px-4 sm:px-5">
+        {([['box','Box Shadow'],['text','Text Shadow']] as const).map(([m,l])=>(
+          <button key={m} onClick={()=>setToolMode(m)}
+            className={`px-4 py-2.5 text-[12.5px] font-semibold border-b-2 transition ${toolMode===m?'border-zinc-900 text-zinc-900':'border-transparent text-zinc-500 hover:text-zinc-700'}`}>
+            {l}
+          </button>
+        ))}
+      </div>
+
+      {toolMode==='text' && <TextShadowPanel />}
+      {toolMode==='box' && <>
 
       {/* ── Presets ──────────────────────────────────────────── */}
       <div className="bg-zinc-50 px-4 py-3 sm:px-5">
@@ -621,6 +811,13 @@ function CssBoxShadowTool() {
               </button>
               <span className="text-[12px] font-semibold text-zinc-600">Hover shadow</span>
             </label>
+            <label className="flex cursor-pointer items-center gap-2 select-none ml-2">
+              <button type="button" role="switch" aria-checked={animatePreview} onClick={()=>setAnimatePreview(v=>!v)}
+                className={`relative h-5 w-9 rounded-full transition-colors ${animatePreview?'bg-violet-600':'bg-zinc-300'}`}>
+                <div className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform duration-150 ${animatePreview?'translate-x-4':'translate-x-0.5'}`}/>
+              </button>
+              <span className={`text-[12px] font-semibold ${animatePreview?'text-violet-700':'text-zinc-600'}`}>Animate</span>
+            </label>
             {enableHover && (
               <>
                 <div className="flex rounded-lg border border-zinc-200 bg-white p-0.5">
@@ -654,6 +851,13 @@ function CssBoxShadowTool() {
               </div>
             </div>
             <pre className="overflow-x-auto px-5 pb-4 text-[12px] leading-[1.9] text-zinc-300 max-h-48">{exportCode}</pre>
+            {animatePreview && (
+              <div className="border-t border-zinc-800 px-5 pb-4">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-violet-400 pt-3 mb-2">@keyframes (animation export)</p>
+                <pre className="overflow-x-auto text-[12px] leading-[1.9] text-violet-300 max-h-32">{animKeyframesCSS}</pre>
+                <CopyBtn text={animKeyframesCSS} label="Copy @keyframes" className="rounded-lg bg-zinc-700 px-2.5 py-1 text-[11px] text-zinc-300 hover:bg-zinc-600 mt-1"/>
+              </div>
+            )}
           </div>
         </div>
 
@@ -821,6 +1025,8 @@ function CssBoxShadowTool() {
           )}
         </div>
       </div>
+
+      </>}
     </div>
   );
 }

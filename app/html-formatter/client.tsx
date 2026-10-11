@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useMemo, startTransition } from 'react';
-import { Copy, Check, Minimize2, Maximize2, RotateCcw, ArrowLeftRight } from 'lucide-react';
+import { Copy, Check, Minimize2, Maximize2, RotateCcw, ArrowLeftRight, Download, ChevronDown } from 'lucide-react';
 import ToolPageShell from '@/components/tools/ToolPageShell';
 
 // ── HTML Formatter Logic ─────────────────────────────────────────────────────
@@ -16,7 +16,26 @@ function getIndent(style: IndentStyle): string {
   return style === 'tab' ? '\t' : ' '.repeat(Number(style));
 }
 
-function beautifyHtml(html: string, indentStyle: IndentStyle): string {
+type ValidationIssue = { type: 'warn' | 'error'; msg: string };
+
+function tryFormatAttrsPerLine(tag: string, padStr: string, oneIndent: string): string | null {
+  const m = tag.match(/^<([a-zA-Z][a-zA-Z0-9:-]*)(\s[\s\S]*?)?(\/?>)$/);
+  if (!m) return null;
+  const [, tagName, rawAttrs, closing] = m;
+  if (!rawAttrs || !rawAttrs.trim()) return null;
+  const attrs: string[] = [];
+  const attrRe = /(?:^|\s+)([a-zA-Z_:][a-zA-Z0-9:._\-]*)(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]*))?/g;
+  let am: RegExpExecArray | null;
+  while ((am = attrRe.exec(rawAttrs)) !== null) {
+    const a = am[0].trim();
+    if (a) attrs.push(a);
+  }
+  if (attrs.length < 2) return null;
+  const attrPad = padStr + oneIndent;
+  return `${padStr}<${tagName}\n${attrs.map(a => `${attrPad}${a}`).join('\n')}\n${padStr}${closing}`;
+}
+
+function beautifyHtml(html: string, indentStyle: IndentStyle, attrPerLine = false): string {
   const indent = getIndent(indentStyle);
   const text = html.trim();
 
@@ -73,7 +92,8 @@ function beautifyHtml(html: string, indentStyle: IndentStyle): string {
           lines.push(pad() + tag);
         }
       } else {
-        lines.push(pad() + tag);
+        const fmtTag = attrPerLine ? tryFormatAttrsPerLine(tag, pad(), indent) : null;
+        lines.push(fmtTag ?? (pad() + tag));
       }
 
       if (!isClosing && !isSelfClosing) depth++;
@@ -123,6 +143,31 @@ function minifyHtml(html: string): string {
     .trim();
 }
 
+function validateHtml(html: string): ValidationIssue[] {
+  const issues: ValidationIssue[] = [];
+  const htmlTag = html.match(/<html(?:\s[^>]*)?\s*>/i);
+  if (htmlTag && !/\blang\s*=/i.test(htmlTag[0])) {
+    issues.push({ type: 'warn', msg: 'Missing lang attribute on <html> tag' });
+  }
+  const imgTags = html.match(/<img(?:\s[^>]*)?\/?>/gi) || [];
+  imgTags.forEach((imgTag, idx) => {
+    if (!/\balt\s*=/i.test(imgTag)) {
+      issues.push({ type: 'warn', msg: `<img> #${idx + 1} missing alt attribute` });
+    }
+  });
+  (['center', 'font', 'b', 'i'] as const).forEach(tag => {
+    if (new RegExp(`<${tag}(?:\\s|>)`, 'i').test(html)) {
+      issues.push({ type: 'warn', msg: `Deprecated tag <${tag}> found` });
+    }
+  });
+  ['div', 'section', 'article', 'header', 'footer', 'main', 'nav', 'ul', 'ol', 'table', 'form'].forEach(tag => {
+    const opens = (html.match(new RegExp(`<${tag}(?:\\s|>)`, 'gi')) || []).length;
+    const closes = (html.match(new RegExp(`<\\/${tag}>`, 'gi')) || []).length;
+    if (opens > closes) issues.push({ type: 'error', msg: `<${tag}> opened ${opens}× but closed only ${closes}×` });
+  });
+  return issues;
+}
+
 function countStats(html: string) {
   const chars = html.length;
   const lines = html.split('\n').length;
@@ -158,16 +203,20 @@ function HtmlFormatterTool() {
   const [indent, setIndent] = useState<IndentStyle>('2');
   const [error, setError] = useState<string | null>(null);
   const [swapped, setSwapped] = useState(false);
+  const [attrPerLine, setAttrPerLine]   = useState(false);
+  const [validation, setValidation]     = useState<ValidationIssue[]>([]);
+  const [validOpen, setValidOpen]       = useState(false);
 
   const inputStats = useMemo(() => countStats(input), [input]);
   const outputStats = useMemo(() => countStats(output), [output]);
 
-  const process = useCallback((html: string, m: typeof mode, ind: IndentStyle) => {
-    if (!html.trim()) { setOutput(''); setError(null); return; }
+  const process = useCallback((html: string, m: typeof mode, ind: IndentStyle, apl: boolean) => {
+    if (!html.trim()) { setOutput(''); setError(null); setValidation([]); return; }
     try {
-      const result = m === 'beautify' ? beautifyHtml(html, ind) : minifyHtml(html);
+      const result = m === 'beautify' ? beautifyHtml(html, ind, apl) : minifyHtml(html);
       setOutput(result);
       setError(null);
+      setValidation(validateHtml(html));
     } catch (e) {
       setError(String(e));
     }
@@ -175,40 +224,56 @@ function HtmlFormatterTool() {
 
   const handleInput = useCallback((val: string) => {
     setInput(val);
-    // Defer the heavy HTML parse/format so the textarea update paints first (INP fix)
     startTransition(() => {
-      process(val, mode, indent);
+      process(val, mode, indent, attrPerLine);
     });
-  }, [mode, indent, process]);
+  }, [mode, indent, attrPerLine, process]);
 
   const handleMode = useCallback((m: typeof mode) => {
     setMode(m);
-    process(input, m, indent);
-  }, [input, indent, process]);
+    process(input, m, indent, attrPerLine);
+  }, [input, indent, attrPerLine, process]);
 
   const handleIndent = useCallback((ind: IndentStyle) => {
     setIndent(ind);
-    process(input, mode, ind);
-  }, [input, mode, process]);
+    process(input, mode, ind, attrPerLine);
+  }, [input, mode, attrPerLine, process]);
 
   const loadSample = useCallback(() => {
     setInput(SAMPLE);
-    process(SAMPLE, mode, indent);
-  }, [mode, indent, process]);
+    process(SAMPLE, mode, indent, attrPerLine);
+  }, [mode, indent, attrPerLine, process]);
 
   const clear = useCallback(() => {
     setInput('');
     setOutput('');
     setError(null);
+    setValidation([]);
   }, []);
+
+  const downloadHtml = useCallback(() => {
+    if (!output) return;
+    const blob = new Blob([output], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = mode === 'beautify' ? 'formatted.html' : 'minified.html';
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [output, mode]);
+
+  const handleAttrPerLine = useCallback((val: boolean) => {
+    setAttrPerLine(val);
+    process(input, mode, indent, val);
+  }, [input, mode, indent, process]);
 
   const swapInOut = useCallback(() => {
     if (output) {
       setInput(output);
-      process(output, mode, indent);
+      process(output, mode, indent, attrPerLine);
       setSwapped(v => !v);
     }
-  }, [output, mode, indent, process]);
+  }, [output, mode, indent, attrPerLine, process]);
 
   const savings = input.length > 0 && output.length > 0
     ? Math.round((1 - output.length / input.length) * 100)
@@ -240,6 +305,18 @@ function HtmlFormatterTool() {
               </button>
             ))}
           </div>
+        )}
+
+        {/* One attr/line toggle (beautify only) */}
+        {mode === 'beautify' && (
+          <button onClick={() => handleAttrPerLine(!attrPerLine)}
+            className={`flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-[12px] font-semibold transition shadow-sm ${
+              attrPerLine
+                ? 'border-indigo-300 bg-indigo-50 text-indigo-700'
+                : 'border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50'
+            }`}>
+            One attr/line
+          </button>
         )}
 
         <div className="flex-1" />
@@ -285,7 +362,7 @@ function HtmlFormatterTool() {
                 {mode === 'beautify' ? 'Formatted HTML' : 'Minified HTML'}
               </span>
             </div>
-            <div className="flex items-center gap-3 text-[11px] text-zinc-400 tabular-nums">
+            <div className="flex items-center gap-2 text-[11px] text-zinc-400 tabular-nums flex-wrap">
               {output && !error && (
                 <>
                   {savings !== null && mode === 'minify' && savings > 0 && (
@@ -294,6 +371,19 @@ function HtmlFormatterTool() {
                   <span>{outputStats.lines} lines</span>
                   <span>{outputStats.chars} chars</span>
                 </>
+              )}
+              {validation.length > 0 && !error && (
+                <button onClick={() => setValidOpen(v => !v)}
+                  className={`flex items-center gap-0.5 rounded-full px-2 py-0.5 text-[10px] font-semibold border transition ${
+                    validation.some(v => v.type === 'error')
+                      ? 'border-red-200 bg-red-50 text-red-600 hover:bg-red-100'
+                      : 'border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100'
+                  }`}>
+                  {validation.some(v => v.type === 'error')
+                    ? `${validation.filter(v => v.type === 'error').length} error${validation.filter(v => v.type === 'error').length !== 1 ? 's' : ''}`
+                    : `${validation.length} warning${validation.length !== 1 ? 's' : ''}`}
+                  <ChevronDown className={`h-2.5 w-2.5 ml-0.5 transition-transform ${validOpen ? '' : '-rotate-90'}`} />
+                </button>
               )}
             </div>
           </div>
@@ -309,13 +399,29 @@ function HtmlFormatterTool() {
             </pre>
           )}
 
+          {/* Validation details */}
+          {validOpen && validation.length > 0 && !error && (
+            <div className="border-t border-zinc-100 bg-amber-50/60 px-4 py-3 space-y-1.5">
+              {validation.map((issue, i) => (
+                <div key={i} className={`flex items-start gap-2 text-[11px] ${issue.type === 'error' ? 'text-red-600' : 'text-amber-700'}`}>
+                  <span className="shrink-0 font-bold mt-px">{issue.type === 'error' ? '✖' : '⚠'}</span>
+                  <span>{issue.msg}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
           {/* Actions */}
           {output && !error && (
-            <div className="flex items-center gap-2 border-t border-zinc-100 px-4 py-2.5 bg-white">
+            <div className="flex items-center gap-2 border-t border-zinc-100 px-4 py-2.5 bg-white flex-wrap">
               <CopyBtn text={output} label={mode === 'beautify' ? 'Copy Formatted' : 'Copy Minified'} />
               <button onClick={swapInOut}
                 className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] font-semibold text-zinc-600 border border-zinc-200 hover:bg-zinc-50 transition">
                 <ArrowLeftRight className="h-3.5 w-3.5" /> Use as Input
+              </button>
+              <button onClick={downloadHtml}
+                className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] font-semibold text-zinc-600 border border-zinc-200 hover:bg-zinc-50 transition">
+                <Download className="h-3.5 w-3.5" /> Download .html
               </button>
             </div>
           )}

@@ -11,7 +11,7 @@ import ToolPageShell from '@/components/tools/ToolPageShell';
 // ── Types ────────────────────────────────────────────────────────────────────
 
 type HeaderStatus = 'secure' | 'warning' | 'missing' | 'info';
-type Tab = 'security' | 'overview' | 'cors' | 'config';
+type Tab = 'security' | 'overview' | 'cors' | 'config' | 'csp';
 type ConfigLang = 'express' | 'nginx' | 'apache' | 'nextjs';
 
 interface ParsedHeader { name: string; value: string; lname: string; }
@@ -505,6 +505,94 @@ function CorsAnalysis({ headers }: { headers: ParsedHeader[] }) {
   );
 }
 
+// ── CSP Breakdown ─────────────────────────────────────────────────────────────
+
+function CspBreakdown({ headers }: { headers: ParsedHeader[] }) {
+  const map = new Map(headers.map((h) => [h.lname, h.value]));
+  const cspValue = map.get('content-security-policy');
+  if (!cspValue) return null;
+
+  const directives = cspValue.split(';').map((d) => d.trim()).filter(Boolean).map((d) => {
+    const parts = d.trim().split(/\s+/);
+    return { name: parts[0].toLowerCase(), sources: parts.slice(1) };
+  });
+
+  const scriptDir = directives.find((d) => d.name === 'script-src');
+  const defaultDir = directives.find((d) => d.name === 'default-src');
+  const effectiveSrc = scriptDir?.sources ?? defaultDir?.sources ?? [];
+
+  const issues: { text: string; severity: 'high' | 'medium' }[] = [];
+  if (directives.some((d) => d.sources.includes("'unsafe-inline'"))) {
+    issues.push({ text: "'unsafe-inline' allows inline scripts — negates most XSS protection.", severity: 'high' });
+  }
+  if (directives.some((d) => d.sources.includes("'unsafe-eval'"))) {
+    issues.push({ text: "'unsafe-eval' allows eval() — dangerous code execution vector.", severity: 'high' });
+  }
+  if (effectiveSrc.includes('*')) {
+    issues.push({ text: "Wildcard (*) in script-src allows scripts from any origin.", severity: 'high' });
+  }
+  if (effectiveSrc.includes('data:')) {
+    issues.push({ text: "'data:' in script-src enables data URI script injection.", severity: 'medium' });
+  }
+
+  const score = issues.length === 0 ? 'Good' : issues.some((i) => i.severity === 'high') ? 'Dangerous' : 'Needs Improvement';
+  const scoreStyle = score === 'Good'
+    ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+    : score === 'Dangerous'
+    ? 'bg-red-50 border-red-200 text-red-800'
+    : 'bg-amber-50 border-amber-200 text-amber-800';
+
+  return (
+    <div className="space-y-4">
+      <div className={`rounded-xl border px-4 py-3 flex items-center gap-3 ${scoreStyle}`}>
+        <span className="text-sm font-bold">CSP Score: {score}</span>
+        {issues.length === 0 && <span className="text-sm">No dangerous directives detected.</span>}
+      </div>
+
+      {issues.length > 0 && (
+        <div className="space-y-2">
+          {issues.map((iss, i) => (
+            <div key={i} className={`flex gap-2.5 rounded-xl border px-4 py-3 ${iss.severity === 'high' ? 'border-red-200 bg-red-50' : 'border-amber-200 bg-amber-50'}`}>
+              <AlertTriangle className={`h-4 w-4 shrink-0 mt-0.5 ${iss.severity === 'high' ? 'text-red-500' : 'text-amber-500'}`} />
+              <p className={`text-sm ${iss.severity === 'high' ? 'text-red-800' : 'text-amber-800'}`}>{iss.text}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="space-y-3">
+        {directives.map((dir, i) => (
+          <div key={i} className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
+            <p className="font-mono text-[12px] font-semibold text-gray-700 mb-2">{dir.name}</p>
+            {dir.sources.length === 0
+              ? <span className="text-xs text-gray-400 italic">no sources (blocks all)</span>
+              : (
+                <div className="flex flex-wrap gap-1.5">
+                  {dir.sources.map((src, j) => {
+                    const isDangerous =
+                      src === "'unsafe-inline'" || src === "'unsafe-eval'" || src === '*' ||
+                      (src === 'data:' && (dir.name === 'script-src' || dir.name === 'default-src'));
+                    return (
+                      <span key={j} className={`rounded-full border px-2.5 py-0.5 font-mono text-[11px] font-medium ${
+                        isDangerous
+                          ? 'border-red-300 bg-red-100 text-red-700'
+                          : 'border-gray-200 bg-white text-gray-700'
+                      }`}>
+                        {src}
+                        {isDangerous && ' ⚠'}
+                      </span>
+                    );
+                  })}
+                </div>
+              )
+            }
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ── Main component ────────────────────────────────────────────────────────────
 
 export default function HttpHeadersAnalyzerClient() {
@@ -512,6 +600,10 @@ export default function HttpHeadersAnalyzerClient() {
   const [analyzed, setAnalyzed] = useState(EXAMPLES[1].headers);
   const [tab, setTab] = useState<Tab>('security');
   const [configLang, setConfigLang] = useState<ConfigLang>('express');
+  // Live URL fetch
+  const [fetchUrl, setFetchUrl] = useState('');
+  const [isFetching, setIsFetching] = useState(false);
+  const [fetchMsg, setFetchMsg] = useState('');
 
   const headers = useMemo(() => parseHeaders(analyzed), [analyzed]);
   const { assessments, totalScore, maxScore } = useMemo(() => assessHeaders(headers), [headers]);
@@ -526,15 +618,65 @@ export default function HttpHeadersAnalyzerClient() {
   const analyze = useCallback(() => setAnalyzed(raw), [raw]);
   const clear = useCallback(() => { setRaw(''); setAnalyzed(''); }, []);
 
+  const fetchHeaders = useCallback(async () => {
+    const url = fetchUrl.trim();
+    if (!url) return;
+    setIsFetching(true);
+    setFetchMsg('');
+    try {
+      const res = await fetch(url, { method: 'HEAD', mode: 'no-cors' });
+      if (res.type === 'opaque' || res.type === 'error') {
+        setFetchMsg('Use the CORS Tester for live requests, or paste headers manually below.');
+      } else {
+        const lines: string[] = [];
+        res.headers.forEach((value, name) => { lines.push(`${name}: ${value}`); });
+        if (lines.length > 0) {
+          const text = lines.join('\n');
+          setRaw(text);
+          setAnalyzed(text);
+          setFetchMsg('');
+        } else {
+          setFetchMsg('Use the CORS Tester for live requests, or paste headers manually below.');
+        }
+      }
+    } catch {
+      setFetchMsg('Use the CORS Tester for live requests, or paste headers manually below.');
+    } finally {
+      setIsFetching(false);
+    }
+  }, [fetchUrl]);
+
+  const hasCsp = headers.some((h) => h.lname === 'content-security-policy');
   const tabs: { id: Tab; label: string; icon: React.ReactNode; count?: number }[] = [
     { id: 'security', label: 'Security Analysis', icon: <Shield className="h-3.5 w-3.5" />, count: assessments.length },
     { id: 'overview', label: 'All Headers', icon: <BarChart3 className="h-3.5 w-3.5" />, count: headers.length },
     { id: 'cors', label: 'CORS', icon: <Globe className="h-3.5 w-3.5" /> },
     { id: 'config', label: 'Config Generator', icon: <Server className="h-3.5 w-3.5" /> },
+    ...(hasCsp ? [{ id: 'csp' as Tab, label: 'CSP Breakdown', icon: <Lock className="h-3.5 w-3.5" /> }] : []),
   ];
 
   const tool = (
     <div className="space-y-6">
+
+      {/* Live URL fetch */}
+      <div className="space-y-2.5">
+        <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Fetch headers from a URL</p>
+        <div className="flex gap-2 flex-wrap sm:flex-nowrap">
+          <input type="url" value={fetchUrl} onChange={(e) => setFetchUrl(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && fetchHeaders()}
+            placeholder="https://example.com"
+            className="flex-1 min-w-0 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-mono placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 shadow-sm transition" />
+          <button onClick={fetchHeaders} disabled={isFetching}
+            className="flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:opacity-60 shadow-sm whitespace-nowrap">
+            <Zap className="h-4 w-4" /> {isFetching ? 'Fetching…' : 'Fetch Headers'}
+          </button>
+        </div>
+        {fetchMsg && (
+          <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 flex items-center gap-2">
+            <Info className="h-4 w-4 shrink-0" /> {fetchMsg}
+          </p>
+        )}
+      </div>
 
       {/* Examples strip */}
       <div className="space-y-2">
@@ -676,6 +818,9 @@ export default function HttpHeadersAnalyzerClient() {
 
           {/* CORS tab */}
           {tab === 'cors' && <CorsAnalysis headers={headers} />}
+
+          {/* CSP Breakdown tab */}
+          {tab === 'csp' && hasCsp && <CspBreakdown headers={headers} />}
 
           {/* Config tab */}
           {tab === 'config' && (

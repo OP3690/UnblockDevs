@@ -122,6 +122,28 @@ const SAMPLE_JSON_SCHEMA = `{
   ]
 }`;
 
+/** Line-level diff with token-level highlights for the split diff view */
+function computeLineDiff(a: string, b: string) {
+  const aLines = a.split('\n');
+  const bLines = b.split('\n');
+  const len = Math.max(aLines.length, bLines.length);
+  return Array.from({ length: len }, (_, i) => {
+    const al = aLines[i] ?? '';
+    const bl = bLines[i] ?? '';
+    if (al === bl) {
+      return { changed: false, aToks: [{ t: al, hl: false }], bToks: [{ t: bl, hl: false }] };
+    }
+    const aTokRaw = al.split(/(\s+)/);
+    const bTokRaw = bl.split(/(\s+)/);
+    const mx = Math.max(aTokRaw.length, bTokRaw.length);
+    return {
+      changed: true,
+      aToks: Array.from({ length: mx }, (__, t) => ({ t: aTokRaw[t] ?? '', hl: (aTokRaw[t] ?? '') !== (bTokRaw[t] ?? '') })),
+      bToks: Array.from({ length: mx }, (__, t) => ({ t: bTokRaw[t] ?? '', hl: (aTokRaw[t] ?? '') !== (bTokRaw[t] ?? '') })),
+    };
+  });
+}
+
 export default function AiSchemaMaskerClient() {
   const [input, setInput] = useState<string>(DEFAULT_EXAMPLE);
   const [maskedOutput, setMaskedOutput] = useState<string>('');
@@ -165,6 +187,18 @@ export default function AiSchemaMaskerClient() {
   const progressIntervalRef = useRef<number | null>(null);
   const pendingRestoreRef = useRef<'mask' | 'prompt' | null>(null);
 
+  // ── Diff view ──
+  const [showDiff, setShowDiff] = useState<boolean>(false);
+  // ── Batch masking ──
+  const [activeMasterTab, setActiveMasterTab] = useState<'single' | 'batch'>('single');
+  const [batchInput, setBatchInput] = useState<string>('');
+  const [batchResults, setBatchResults] = useState<{ idx: number; original: string; masked: string }[]>([]);
+  const [batchProcessing, setBatchProcessing] = useState<boolean>(false);
+  const batchModeRef = useRef<boolean>(false);
+  const batchQueueRef = useRef<{ idx: number; sql: string }[]>([]);
+  const batchAccRef = useRef<{ idx: number; original: string; masked: string }[]>([]);
+  const batchOptsRef = useRef<{ maskStringValues: boolean; maskNumericValues: boolean }>({ maskStringValues: true, maskNumericValues: false });
+
   useEffect(() => {
     if (typeof window === 'undefined') return;
     if (workerRef.current) return;
@@ -183,6 +217,26 @@ export default function AiSchemaMaskerClient() {
         }
 
         if (message.type === 'MASK_RESULT') {
+          if (batchModeRef.current) {
+            const current = batchQueueRef.current.shift();
+            if (current) {
+              batchAccRef.current.push({ idx: current.idx, original: current.sql, masked: message.payload.masked });
+            }
+            if (batchQueueRef.current.length > 0 && workerRef.current) {
+              const next = batchQueueRef.current[0];
+              workerRef.current.postMessage({
+                type: 'MASK',
+                payload: { input: next.sql, mode: 'fast', maskStringValues: batchOptsRef.current.maskStringValues, maskNumericValues: batchOptsRef.current.maskNumericValues },
+              });
+            } else {
+              batchModeRef.current = false;
+              setBatchResults([...batchAccRef.current].sort((x, y) => x.idx - y.idx));
+              setBatchProcessing(false);
+              setProgress(100);
+              stopProgressInterval();
+            }
+            return;
+          }
           setMaskedOutput(message.payload.masked);
           setIdentifierCountMask(message.payload.identifierCount);
           setMappingFromMask(message.payload.mapping);
@@ -358,6 +412,34 @@ export default function AiSchemaMaskerClient() {
     } catch {
       // ignore
     }
+  };
+
+  const handleBatchMask = () => {
+    if (!batchInput.trim() || !workerRef.current) return;
+    const statements = batchInput.split(/\n?---\n?/).map((s) => s.trim()).filter(Boolean);
+    if (statements.length === 0) return;
+    setBatchResults([]);
+    setBatchProcessing(true);
+    batchModeRef.current = true;
+    batchQueueRef.current = statements.map((sql, idx) => ({ idx, sql }));
+    batchAccRef.current = [];
+    batchOptsRef.current = { maskStringValues, maskNumericValues };
+    setProgress(5);
+    startProgressInterval();
+    const first = batchQueueRef.current[0];
+    workerRef.current.postMessage({
+      type: 'MASK',
+      payload: { input: first.sql, mode: 'fast', maskStringValues, maskNumericValues },
+    });
+  };
+
+  const copyBatchSingle = async (text: string) => {
+    try { await navigator.clipboard.writeText(text); trackCopy('ai_schema_masker_batch'); } catch { /* ignore */ }
+  };
+
+  const copyBatchAll = async () => {
+    const text = batchResults.map((r, i) => `-- === Statement ${i + 1} ===\n${r.masked}`).join('\n\n');
+    try { await navigator.clipboard.writeText(text); trackCopy('ai_schema_masker_batch_all'); } catch { /* ignore */ }
   };
 
   const handleGeneratePrompt = () => {
@@ -602,8 +684,27 @@ export default function AiSchemaMaskerClient() {
             </div>
           </div>
 
+          {/* ── Tab switcher ─────────────────────────────────────── */}
+          <div className="flex border-b border-zinc-100 bg-zinc-50/40 px-5 gap-1 pt-1">
+            {(['single', 'batch'] as const).map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => setActiveMasterTab(tab)}
+                className={`px-4 py-2 text-[13px] font-semibold rounded-t-lg -mb-px transition-all border-b-2 ${
+                  activeMasterTab === tab
+                    ? 'bg-white text-emerald-800 border-emerald-500 shadow-sm'
+                    : 'border-transparent text-zinc-500 hover:text-zinc-700 hover:bg-white/60'
+                }`}
+              >
+                {tab === 'single' ? 'Single' : 'Batch'}
+              </button>
+            ))}
+          </div>
+
           <div className="p-4 sm:p-5 space-y-5">
 
+            {activeMasterTab === 'single' && <>
             {/* ── Masking options ──────────────────────────────────── */}
             <div className="flex flex-wrap items-center gap-3 px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-200">
               <span className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider">Mask options:</span>
@@ -788,8 +889,126 @@ export default function AiSchemaMaskerClient() {
 
             </div>{/* end desktop 3-col */}
 
-            {/* ── Restore section ──────────────────────────────────── */}
-            <div className="rounded-xl border border-zinc-200 overflow-hidden bg-white shadow-sm">
+            {/* ── Coverage badge + diff toggle ─────────────────────── */}
+            {maskedOutput && (
+              <div className="flex flex-wrap items-center gap-3 px-4 py-2.5 rounded-xl bg-amber-50 border border-amber-200 text-sm">
+                <span className="font-bold text-amber-800">Coverage:</span>
+                {maskCounts && (
+                  <>
+                    <span className="text-zinc-700">{maskCounts.tables + maskCounts.columns + maskCounts.aliases + maskCounts.schemas} identifiers masked</span>
+                    <span className="text-zinc-400" aria-hidden>·</span>
+                    <span className="text-zinc-700">{maskCounts.values + maskCounts.numerics} values masked</span>
+                    <span className="text-zinc-400" aria-hidden>·</span>
+                  </>
+                )}
+                <span className="font-semibold text-emerald-700">
+                  {Math.min(100, Math.round((identifierCountMask / Math.max(1, input.split(/\s+/).filter(Boolean).length)) * 100))}% of tokens protected
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setShowDiff((v) => !v)}
+                  className="ml-auto inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-amber-200 text-[11px] font-semibold text-amber-700 hover:bg-amber-100 transition-colors"
+                >
+                  {showDiff ? 'Hide diff' : 'Show diff'}
+                </button>
+              </div>
+            )}
+
+            {/* ── Split diff view ───────────────────────────────────── */}
+            {showDiff && maskedOutput && (
+              <div className="rounded-xl border border-amber-200 overflow-hidden bg-white shadow-sm">
+                <div className="px-4 py-2 border-b border-amber-100 bg-amber-50/60 text-[11px] font-bold text-amber-800 uppercase tracking-wider">
+                  Diff — Original vs Masked (amber = changed tokens)
+                </div>
+                <div className="grid grid-cols-2 divide-x divide-amber-100 overflow-auto max-h-[360px]">
+                  <div className="p-3 min-w-0">
+                    <div className="text-[10px] font-bold text-zinc-400 uppercase mb-1">Original</div>
+                    <pre className="text-xs font-mono whitespace-pre-wrap break-all leading-relaxed">
+                      {computeLineDiff(input, maskedOutput).map((line, i) => (
+                        <div key={i} className={line.changed ? 'bg-amber-50' : ''}>
+                          {line.aToks.map((s, j) => (
+                            <span key={j} className={s.hl ? 'bg-amber-200 rounded px-0.5' : ''}>{s.t}</span>
+                          ))}
+                          {'\n'}
+                        </div>
+                      ))}
+                    </pre>
+                  </div>
+                  <div className="p-3 min-w-0">
+                    <div className="text-[10px] font-bold text-zinc-400 uppercase mb-1">Masked</div>
+                    <pre className="text-xs font-mono whitespace-pre-wrap break-all leading-relaxed">
+                      {computeLineDiff(input, maskedOutput).map((line, i) => (
+                        <div key={i} className={line.changed ? 'bg-amber-50' : ''}>
+                          {line.bToks.map((s, j) => (
+                            <span key={j} className={s.hl ? 'bg-amber-300 rounded px-0.5' : ''}>{s.t}</span>
+                          ))}
+                          {'\n'}
+                        </div>
+                      ))}
+                    </pre>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            </>}{/* end activeMasterTab === 'single' */}
+
+            {/* ── Batch masking tab ─────────────────────────────────── */}
+            {activeMasterTab === 'batch' && (
+              <div className="space-y-4">
+                <div className="rounded-xl border border-zinc-200 bg-white shadow-sm overflow-hidden">
+                  <div className="flex items-center gap-2 px-4 py-3 border-b border-zinc-100 bg-zinc-50/60">
+                    <span className="text-sm font-semibold text-zinc-800 mr-auto">Multiple SQL statements</span>
+                    <span className="text-[11px] text-zinc-400">Separate with <code className="font-mono bg-zinc-100 px-1 rounded">---</code> (triple dash on its own line)</span>
+                  </div>
+                  <textarea
+                    value={batchInput}
+                    onChange={(e) => setBatchInput(e.target.value)}
+                    placeholder={"SELECT * FROM users WHERE id = 1;\n---\nSELECT * FROM orders WHERE user_id = 1;\n---\nSELECT * FROM products WHERE active = true;"}
+                    className="w-full min-h-[180px] resize-none border-0 focus:ring-2 focus:ring-emerald-500/20 focus:outline-none text-sm font-mono bg-zinc-50/60 px-4 py-3 placeholder:text-zinc-400"
+                    spellCheck={false}
+                  />
+                </div>
+                <div className="flex flex-wrap items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={handleBatchMask}
+                    disabled={!batchInput.trim() || batchProcessing}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-700 disabled:opacity-50 shadow-md shadow-emerald-100 transition-all"
+                  >
+                    <Shield className="w-4 h-4" />
+                    {batchProcessing ? 'Masking…' : 'Mask all statements'}
+                  </button>
+                  {batchResults.length > 0 && (
+                    <button type="button" onClick={copyBatchAll}
+                      className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-zinc-200 text-xs font-semibold text-zinc-700 bg-white hover:bg-zinc-50 transition-colors">
+                      <Clipboard className="w-3.5 h-3.5" />Copy all (numbered)
+                    </button>
+                  )}
+                </div>
+                {batchResults.length > 0 && (
+                  <div className="space-y-3">
+                    {batchResults.map((r, i) => (
+                      <div key={r.idx} className="rounded-xl border border-zinc-200 bg-white shadow-sm overflow-hidden">
+                        <div className="flex items-center gap-2 px-4 py-2.5 border-b border-zinc-100 bg-zinc-50/60">
+                          <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-600 text-white text-[10px] font-bold shrink-0">{i + 1}</span>
+                          <span className="text-[11px] text-zinc-500 truncate flex-1 font-mono">{r.original.slice(0, 60)}{r.original.length > 60 ? '…' : ''}</span>
+                          <button type="button" onClick={() => copyBatchSingle(r.masked)}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-zinc-200 text-[11px] font-medium text-zinc-600 bg-white hover:bg-zinc-50 transition-colors shrink-0">
+                            <Clipboard className="w-3 h-3" />Copy
+                          </button>
+                        </div>
+                        <textarea readOnly value={r.masked}
+                          className="w-full min-h-[80px] resize-none border-0 text-xs font-mono bg-zinc-50/60 px-4 py-3" />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ── Restore section (single tab only) ───────────────── */}
+            {activeMasterTab === 'single' && <div className="rounded-xl border border-zinc-200 overflow-hidden bg-white shadow-sm">
               <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-b border-zinc-100 bg-gradient-to-r from-emerald-50/60 to-white">
                 <div className="flex items-center gap-2.5">
                   <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 text-[11px] font-bold shrink-0">3</span>
@@ -886,7 +1105,7 @@ export default function AiSchemaMaskerClient() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div>}{/* end activeMasterTab === 'single' restore section */}
 
           </div>
         </section>

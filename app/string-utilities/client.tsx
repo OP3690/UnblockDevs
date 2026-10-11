@@ -5,7 +5,7 @@ import {
   Copy, Check, RotateCcw, ArrowUpDown, Hash, Link2,
   Mail, Phone, Shuffle, Binary, Code2, Braces, X,
   ChevronDown, Sparkles, FileText, Search, Wand2,
-  Download, Table2, SplitSquareHorizontal,
+  Download, Table2, SplitSquareHorizontal, GitCompare,
 } from 'lucide-react';
 import ToolPageShell from '@/components/tools/ToolPageShell';
 
@@ -152,6 +152,39 @@ const rot13    = (s: string) => s.replace(/[A-Za-z]/g, c => { const b = c <= 'Z'
 const htmlEnc  = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 const htmlDec  = (s: string) => s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#039;/g, "'");
 
+// ── Download helper ───────────────────────────────────────────────────────────
+
+function downloadTxt(content: string, filename = 'result.txt') {
+  const blob = new Blob([content], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── Character-level LCS diff ──────────────────────────────────────────────────
+
+function computeCharDiff(a: string, b: string): { type: 'same' | 'add' | 'remove'; ch: string }[] | null {
+  if (a.length + b.length > 1200) return null; // too long for char-level diff
+  const m = a.length, n = b.length;
+  const dp: number[][] = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+  for (let i = 1; i <= m; i++)
+    for (let j = 1; j <= n; j++)
+      dp[i][j] = a[i-1] === b[j-1] ? dp[i-1][j-1] + 1 : Math.max(dp[i-1][j], dp[i][j-1]);
+  const result: { type: 'same' | 'add' | 'remove'; ch: string }[] = [];
+  let i = m, j = n;
+  while (i > 0 || j > 0) {
+    if (i > 0 && j > 0 && a[i-1] === b[j-1]) {
+      result.unshift({ type: 'same', ch: a[i-1] }); i--; j--;
+    } else if (j > 0 && (i === 0 || dp[i][j-1] >= dp[i-1][j])) {
+      result.unshift({ type: 'add', ch: b[j-1] }); j--;
+    } else {
+      result.unshift({ type: 'remove', ch: a[i-1] }); i--;
+    }
+  }
+  return result;
+}
+
 // ── Copy button ───────────────────────────────────────────────────────────────
 
 function CopyBtn({ text, label, icon = false }: { text: string; label?: string; icon?: boolean }) {
@@ -208,18 +241,36 @@ export default function StringUtilitiesClient() {
 
   // Extract
   const [extractResults, setExtractResults] = useState<Record<string, string[]>>({});
+  const [extractMode, setExtractMode]        = useState<'patterns' | 'charFreq'>('patterns');
 
   // Transform
   const [findStr, setFindStr] = useState('');
   const [replaceStr, setReplaceStr] = useState('');
   const [useRegex, setUseRegex] = useState(false);
   const [transformOutput, setTransformOutput] = useState('');
+  const [compareMode, setCompareMode]         = useState(false);
+  const [compareInput2, setCompareInput2]     = useState('');
+  const [diffResult, setDiffResult]           = useState<{ type: 'same' | 'add' | 'remove'; ch: string }[] | null | 'toolong'>(null);
 
   // Encode
   const [encodeOutput, setEncodeOutput] = useState('');
   const [encodeLabel, setEncodeLabel] = useState('');
 
   const stats = useMemo(() => computeStats(input), [input]);
+
+  const charFreqData = useMemo(() => {
+    if (!input) return [];
+    const freq = new Map<string, number>();
+    for (const ch of input) freq.set(ch, (freq.get(ch) ?? 0) + 1);
+    return [...freq.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 20)
+      .map(([ch, count]) => ({
+        ch,
+        count,
+        label: ch === ' ' ? '(space)' : ch === '\n' ? '(newline)' : ch === '\t' ? '(tab)' : ch,
+      }));
+  }, [input]);
 
   // ── Bulk mode ────────────────────────────────────────────────────────────────
   const bulkTokens = useMemo(() => splitBySeparator(input, separator), [input, separator]);
@@ -600,11 +651,15 @@ export default function StringUtilitiesClient() {
 
           {lineOutput && (
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between flex-wrap gap-2">
                 <span className="text-xs font-semibold text-gray-600">{lineOutput.split('\n').length} lines in result</span>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   <button onClick={() => setInput(lineOutput)} className="text-xs text-emerald-700 hover:text-emerald-800 bg-white border border-emerald-200 hover:bg-emerald-50 transition font-semibold rounded-lg px-2.5 py-1">Use as Input ↑</button>
                   <CopyBtn text={lineOutput} />
+                  <button onClick={() => downloadTxt(lineOutput, 'lines-result.txt')}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-[12px] font-medium text-gray-600 transition hover:bg-gray-50 hover:border-gray-300 shadow-sm">
+                    <Download className="h-3.5 w-3.5" /> Download .txt
+                  </button>
                 </div>
               </div>
               <textarea readOnly value={lineOutput} rows={8}
@@ -617,51 +672,99 @@ export default function StringUtilitiesClient() {
       {/* ── Extract ──────────────────────────────────────────────────────────── */}
       {tab === 'extract' && (
         <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-gray-600">Extract patterns from your input text</p>
-            <button onClick={extractAll} className="flex items-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition">
-              <Search className="h-3.5 w-3.5" /> Extract All
-            </button>
+          {/* Mode toggle */}
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div className="flex rounded-xl bg-gray-100 p-0.5 gap-0.5">
+              <button onClick={() => setExtractMode('patterns')}
+                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${extractMode === 'patterns' ? 'bg-white text-gray-900 shadow-sm border border-gray-200' : 'text-gray-500 hover:text-gray-700'}`}>
+                Patterns
+              </button>
+              <button onClick={() => setExtractMode('charFreq')}
+                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${extractMode === 'charFreq' ? 'bg-white text-gray-900 shadow-sm border border-gray-200' : 'text-gray-500 hover:text-gray-700'}`}>
+                Char Frequency
+              </button>
+            </div>
+            {extractMode === 'patterns' && (
+              <button onClick={extractAll} className="flex items-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition">
+                <Search className="h-3.5 w-3.5" /> Extract All
+              </button>
+            )}
           </div>
-          <div className="space-y-2">
-            {EXTRACT_PATTERNS.map(p => {
-              const results = extractResults[p.label];
-              return (
-                <div key={p.label} className="rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm">
-                  <div className="flex items-center justify-between px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <span className="text-base">{p.emoji}</span>
-                      <span className="text-sm font-semibold text-gray-900">{p.label}</span>
-                      {results !== undefined && (
-                        <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${results.length > 0 ? 'text-emerald-700 bg-emerald-50 border-emerald-200' : 'text-gray-500 bg-gray-100 border-gray-200'}`}>
-                          {results.length} found
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex gap-2">
-                      {results && results.length > 0 && <CopyBtn text={results.join('\n')} label="Copy All" />}
-                      <button onClick={() => extractOne(p.label, p.regex)} className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 hover:border-emerald-300 hover:bg-emerald-50 font-medium transition">Extract</button>
-                    </div>
-                  </div>
-                  {results !== undefined && results.length > 0 && (
-                    <div className="border-t border-gray-100 bg-gray-50 px-4 py-3 flex flex-wrap gap-2">
-                      {results.map((r, i) => (
-                        <div key={i} className="flex items-center gap-1.5 bg-white rounded-lg border border-gray-200 p-2">
-                          <span className="font-mono text-sm text-gray-900">{r}</span>
-                          <CopyBtn text={r} icon />
+
+          {/* Character frequency panel */}
+          {extractMode === 'charFreq' && (
+            <div className="rounded-xl border border-gray-200 bg-white p-4 space-y-3 shadow-sm">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-semibold text-gray-700">Top {Math.min(20, charFreqData.length)} characters by frequency</p>
+                {charFreqData.length > 0 && (
+                  <button onClick={() => downloadTxt(charFreqData.map(d => `${d.label}\t${d.count}`).join('\n'), 'char-frequency.txt')}
+                    className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-[12px] font-medium text-gray-600 hover:bg-gray-50 shadow-sm transition">
+                    <Download className="h-3.5 w-3.5" /> Download .txt
+                  </button>
+                )}
+              </div>
+              {charFreqData.length === 0
+                ? <p className="text-sm text-gray-400 italic">Enter text above to see character frequency.</p>
+                : (
+                  <div className="space-y-1.5">
+                    {charFreqData.map(({ ch, count, label }, i) => {
+                      const pct = Math.round((count / charFreqData[0].count) * 100);
+                      return (
+                        <div key={i} className="flex items-center gap-2">
+                          <span className="w-16 shrink-0 font-mono text-xs text-gray-700 text-right">{label}</span>
+                          <div className="flex-1 bg-gray-100 rounded-full h-4 overflow-hidden">
+                            <div className="h-full rounded-full bg-emerald-500 transition-all" style={{ width: `${pct}%` }} />
+                          </div>
+                          <span className="w-10 shrink-0 text-xs text-gray-500 tabular-nums text-right">{count}</span>
                         </div>
-                      ))}
+                      );
+                    })}
+                  </div>
+                )
+              }
+            </div>
+          )}
+          {extractMode === 'patterns' && (
+            <div className="space-y-2">
+              {EXTRACT_PATTERNS.map(p => {
+                const results = extractResults[p.label];
+                return (
+                  <div key={p.label} className="rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm">
+                    <div className="flex items-center justify-between px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-base">{p.emoji}</span>
+                        <span className="text-sm font-semibold text-gray-900">{p.label}</span>
+                        {results !== undefined && (
+                          <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${results.length > 0 ? 'text-emerald-700 bg-emerald-50 border-emerald-200' : 'text-gray-500 bg-gray-100 border-gray-200'}`}>
+                            {results.length} found
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex gap-2">
+                        {results && results.length > 0 && <CopyBtn text={results.join('\n')} label="Copy All" />}
+                        <button onClick={() => extractOne(p.label, p.regex)} className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 hover:border-emerald-300 hover:bg-emerald-50 font-medium transition">Extract</button>
+                      </div>
                     </div>
-                  )}
-                  {results !== undefined && results.length === 0 && (
-                    <div className="border-t border-gray-100 bg-gray-50 px-4 py-2.5">
-                      <p className="text-xs text-gray-400 italic">No matches found.</p>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                    {results !== undefined && results.length > 0 && (
+                      <div className="border-t border-gray-100 bg-gray-50 px-4 py-3 flex flex-wrap gap-2">
+                        {results.map((r, i) => (
+                          <div key={i} className="flex items-center gap-1.5 bg-white rounded-lg border border-gray-200 p-2">
+                            <span className="font-mono text-sm text-gray-900">{r}</span>
+                            <CopyBtn text={r} icon />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {results !== undefined && results.length === 0 && (
+                      <div className="border-t border-gray-100 bg-gray-50 px-4 py-2.5">
+                        <p className="text-xs text-gray-400 italic">No matches found.</p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
 
@@ -696,6 +799,73 @@ export default function StringUtilitiesClient() {
             <button onClick={() => applyTransform('wrap')} className="rounded-lg bg-white border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition">Wrap</button>
           </div>
 
+          {/* Compare two strings */}
+          <div className="rounded-xl border border-gray-100 bg-gray-50 p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 flex items-center gap-1.5">
+                <GitCompare className="h-3.5 w-3.5" /> Compare Two Strings
+              </p>
+              <button onClick={() => { setCompareMode(v => !v); setDiffResult(null); }}
+                className={`rounded-lg border px-2.5 py-1 text-xs font-semibold transition ${
+                  compareMode ? 'border-indigo-300 bg-indigo-50 text-indigo-700' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                }`}>
+                {compareMode ? 'Hide' : 'Open'}
+              </button>
+            </div>
+            {compareMode && (
+              <div className="space-y-3">
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-gray-500 mb-1">String A (from input above)</label>
+                    <div className="rounded-lg border border-gray-200 bg-white px-3 py-2 font-mono text-xs text-gray-700 min-h-[60px] break-all whitespace-pre-wrap">
+                      {input || <span className="text-gray-300 italic">empty</span>}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-semibold text-gray-500 mb-1">String B</label>
+                    <textarea value={compareInput2} onChange={e => { setCompareInput2(e.target.value); setDiffResult(null); }}
+                      rows={3} spellCheck={false} placeholder="Type string B here…"
+                      className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 font-mono text-xs text-gray-700 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 resize-none" />
+                  </div>
+                </div>
+                <button onClick={() => {
+                  const r = computeCharDiff(input, compareInput2);
+                  setDiffResult(r === null ? 'toolong' : r);
+                }} className="rounded-xl bg-indigo-600 hover:bg-indigo-700 px-4 py-1.5 text-sm font-semibold text-white transition">
+                  Compare
+                </button>
+                {diffResult === 'toolong' && (
+                  <p className="text-xs text-amber-600">Strings too long for character-level diff (combined &gt; 1200 chars). Try shorter snippets.</p>
+                )}
+                {Array.isArray(diffResult) && (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs font-semibold text-gray-600">Character-level diff</p>
+                      <div className="flex gap-3 text-[10px]">
+                        <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-red-200 border border-red-300" /> removed</span>
+                        <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded bg-emerald-200 border border-emerald-300" /> added</span>
+                      </div>
+                    </div>
+                    <div className="rounded-xl border border-gray-200 bg-white p-3 font-mono text-sm leading-relaxed break-all">
+                      {diffResult.map((d, i) => (
+                        <span key={i} className={
+                          d.type === 'remove' ? 'bg-red-100 text-red-700 rounded' :
+                          d.type === 'add'    ? 'bg-emerald-100 text-emerald-700 rounded' :
+                          'text-gray-900'
+                        }>
+                          {d.ch === '\n' ? (d.type === 'same' ? <br key={i} /> : <span className="text-[9px] rounded px-0.5">[NL]</span>) : d.ch}
+                        </span>
+                      ))}
+                    </div>
+                    <p className="text-[10px] text-gray-400">
+                      {diffResult.filter(d => d.type === 'remove').length} removed · {diffResult.filter(d => d.type === 'add').length} added · {diffResult.filter(d => d.type === 'same').length} unchanged
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
           {/* Find & Replace */}
           <div className="rounded-xl border border-gray-100 bg-gray-50 p-4 space-y-3">
             <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Find &amp; Replace</p>
@@ -716,11 +886,15 @@ export default function StringUtilitiesClient() {
 
           {transformOutput && (
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between flex-wrap gap-2">
                 <span className="text-xs font-semibold text-gray-600">Result</span>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   <button onClick={() => setInput(transformOutput)} className="text-xs text-emerald-700 hover:text-emerald-800 bg-white border border-emerald-200 hover:bg-emerald-50 transition font-semibold rounded-lg px-2.5 py-1">Use as Input ↑</button>
                   <CopyBtn text={transformOutput} />
+                  <button onClick={() => downloadTxt(transformOutput, 'transform-result.txt')}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-[12px] font-medium text-gray-600 transition hover:bg-gray-50 hover:border-gray-300 shadow-sm">
+                    <Download className="h-3.5 w-3.5" /> Download .txt
+                  </button>
                 </div>
               </div>
               <textarea readOnly value={transformOutput} rows={6}
@@ -768,11 +942,15 @@ export default function StringUtilitiesClient() {
 
           {encodeOutput && (
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between flex-wrap gap-2">
                 <span className="text-sm font-semibold text-gray-700">{encodeLabel}</span>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   <button onClick={() => setInput(encodeOutput)} className="text-xs text-emerald-700 hover:text-emerald-800 bg-white border border-emerald-200 hover:bg-emerald-50 transition font-semibold rounded-lg px-2.5 py-1">Use as Input ↑</button>
                   <CopyBtn text={encodeOutput} />
+                  <button onClick={() => downloadTxt(encodeOutput, 'encode-result.txt')}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-[12px] font-medium text-gray-600 transition hover:bg-gray-50 hover:border-gray-300 shadow-sm">
+                    <Download className="h-3.5 w-3.5" /> Download .txt
+                  </button>
                 </div>
               </div>
               <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">

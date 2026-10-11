@@ -5,6 +5,7 @@ import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip,
   ResponsiveContainer, CartesianGrid, Cell, PieChart, Pie,
   RadarChart, Radar, PolarGrid, PolarAngleAxis,
+  ComposedChart, Line,
 } from 'recharts';
 import Link from 'next/link';
 import { ArrowLeft, Upload, Shield, Clock, TrendingUp, Calendar, Flame, Eye, Heart, Bookmark, MessageSquare, Search, Link2, LogIn, Users } from 'lucide-react';
@@ -42,6 +43,7 @@ export interface FullData {
   followingCount:  number;
   followersCount:  number;
   foundFiles: string[];
+  likedAuthors: string[];
 }
 
 // ─── Share types & helpers ────────────────────────────────────────────────────
@@ -107,7 +109,7 @@ export function analysisFromShare(s: ShareSummary): Analysis {
     dmSharedReelTs: empty(s.ndr), dmSharedStoryTs: empty(s.ndst), dmSharedPostTs: empty(s.ndp),
     dmThreads: s.topThreads,
     userName: s.u, advertiserCount: s.nag, followingCount: s.nfw, followersCount: s.nfr,
-    foundFiles: [],
+    foundFiles: [], likedAuthors: [],
   };
   return {
     data, totalSeconds: s.ts, viewingDays: s.vd, spanDays: s.sd,
@@ -115,6 +117,7 @@ export function analysisFromShare(s: ShareSummary): Analysis {
     byMonth: s.byMonth, byYear: s.byYear, byDow: s.byDow, byHour: s.byHour,
     engagement: s.engagement, activityPie: s.activityPie,
     topThreads: s.topThreads, bySharedMonth: s.bySharedMonth, dmBreakdown: s.dmBreakdown,
+    topCreators: [], trendProjection: [], peakDow: '', peakHourLabel: '',
   };
 }
 
@@ -223,7 +226,7 @@ async function parseZip(file: File): Promise<FullData> {
     dmSharedReelTs: [], dmSharedStoryTs: [], dmSharedPostTs: [],
     dmThreads: [], userName: '',
     advertiserCount: 0, followingCount: 0, followersCount: 0,
-    foundFiles: [],
+    foundFiles: [], likedAuthors: [],
   };
 
   // First pass: get user's own name from personal_information
@@ -254,6 +257,17 @@ async function parseZip(file: File): Promise<FullData> {
         if (entries.length > 0) {
           (result[FILE_MAP[base]] as TimedEntry[]).push(...entries);
           if (!result.foundFiles.includes(base)) result.foundFiles.push(base);
+        }
+        // Extract author names from liked_posts.json
+        if (base === 'liked_posts.json') {
+          try {
+            const obj = json as Record<string, unknown>;
+            const key = Object.keys(obj).find(k => k.includes('like') || k.includes('media'));
+            const list = (key ? obj[key] : json) as { title?: string }[];
+            if (Array.isArray(list)) {
+              for (const item of list) { if (item.title) result.likedAuthors.push(item.title); }
+            }
+          } catch { /* skip */ }
         }
       } catch { /* skip */ }
       continue;
@@ -355,7 +369,7 @@ async function parseJsonFile(file: File): Promise<FullData> {
     dmSharedReelTs: [], dmSharedStoryTs: [], dmSharedPostTs: [],
     dmThreads: [], userName: '',
     advertiserCount: 0, followingCount: 0, followersCount: 0,
-    foundFiles: [file.name],
+    foundFiles: [file.name], likedAuthors: [],
   };
   const field = FILE_MAP[base] ?? 'videos';
   (result[field] as TimedEntry[]).push(...extractTs(json));
@@ -384,6 +398,10 @@ export interface Analysis {
   topThreads: DmThread[];
   bySharedMonth: { label: string; reels: number; posts: number; stories: number }[];
   dmBreakdown: { name: string; value: number; color: string }[];
+  topCreators: { name: string; count: number }[];
+  trendProjection: { label: string; total: number; projected: boolean }[];
+  peakDow: string;
+  peakHourLabel: string;
 }
 
 function analyse(data: FullData): Analysis {
@@ -515,7 +533,53 @@ function analyse(data: FullData): Analysis {
     { name: 'Stories', value: data.dmSharedStoryTs.length, color: '#2563eb' },
   ].filter(d => d.value > 0);
 
-  return { data, totalSeconds, viewingDays, earliest, latest, spanDays, byMonth, byYear, byDow, byHour, engagement, activityPie, viewingLimited, topThreads, bySharedMonth, dmBreakdown };
+  // Top creators from liked posts authors
+  const authorMap: Record<string, number> = {};
+  for (const a of data.likedAuthors) authorMap[a] = (authorMap[a] ?? 0) + 1;
+  const topCreators = Object.entries(authorMap)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 10)
+    .map(([name, count]) => ({ name, count }));
+
+  // Linear regression trend projection (last 6 months → next 3 months)
+  function linearRegression(pts: {x: number; y: number}[]): {slope: number; intercept: number} {
+    const n = pts.length;
+    if (n < 2) return { slope: 0, intercept: pts[0]?.y ?? 0 };
+    const sumX  = pts.reduce((s, p) => s + p.x, 0);
+    const sumY  = pts.reduce((s, p) => s + p.y, 0);
+    const sumXY = pts.reduce((s, p) => s + p.x * p.y, 0);
+    const sumX2 = pts.reduce((s, p) => s + p.x * p.x, 0);
+    const denom = n * sumX2 - sumX * sumX;
+    if (denom === 0) return { slope: 0, intercept: sumY / n };
+    const slope = (n * sumXY - sumX * sumY) / denom;
+    const intercept = (sumY - slope * sumX) / n;
+    return { slope, intercept };
+  }
+
+  const last6 = byMonth.filter(m => m.total > 0).slice(-6);
+  const trendProjection: { label: string; total: number; projected: boolean }[] = [
+    ...last6.map(m => ({ label: m.label, total: m.total, projected: false })),
+  ];
+  if (last6.length >= 3) {
+    const pts = last6.map((m, i) => ({ x: i, y: m.total }));
+    const { slope, intercept } = linearRegression(pts);
+    // project 3 months
+    const lastDate = new Date();
+    for (let i = 1; i <= 3; i++) {
+      const projY = Math.max(0, Math.round(intercept + slope * (last6.length - 1 + i)));
+      const projDate = new Date(lastDate.getFullYear(), lastDate.getMonth() + i, 1);
+      const label = projDate.toLocaleDateString('en-IN', { month: 'short', year: '2-digit' });
+      trendProjection.push({ label: `${label}*`, total: projY, projected: true });
+    }
+  }
+
+  // Peak day and hour labels
+  const maxDowEntry = byDow.reduce((best, d) => d.count > best.count ? d : best, byDow[0]);
+  const peakDow = maxDowEntry?.day ?? '';
+  const peakHourIdx = byHour.reduce((best, h, i) => h.count > byHour[best].count ? i : best, 0);
+  const peakHourLabel = byHour[peakHourIdx]?.label ?? '';
+
+  return { data, totalSeconds, viewingDays, earliest, latest, spanDays, byMonth, byYear, byDow, byHour, engagement, activityPie, viewingLimited, topThreads, bySharedMonth, dmBreakdown, topCreators, trendProjection, peakDow, peakHourLabel };
 }
 
 // ─── Custom Tooltip ───────────────────────────────────────────────────────────
@@ -686,6 +750,7 @@ function ShareButton({ a }: { a: Analysis }) {
 }
 
 export function Results({ a, ownerName }: { a: Analysis; ownerName?: string }) {
+  const [insightCopied, setInsightCopied] = useState(false);
   const { data } = a;
   const hours   = a.totalSeconds / 3600;
   const days    = a.totalSeconds / 86400;
@@ -1170,6 +1235,100 @@ export function Results({ a, ownerName }: { a: Analysis; ownerName?: string }) {
           })()}
         </div>
       )}
+
+      {/* ── TOP CREATORS ── */}
+      {a.topCreators.length > 0 && (
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+          <h2 className="text-base font-bold text-gray-900 mb-1 flex items-center gap-2">
+            <Heart className="w-4 h-4 text-rose-500" /> You interact most with
+          </h2>
+          <p className="text-xs text-gray-400 mb-4">Accounts you liked most (from liked posts data)</p>
+          <div className="space-y-2.5">
+            {a.topCreators.map((c, i) => (
+              <div key={c.name} className="flex items-center gap-3">
+                <span className="text-xs font-bold text-gray-300 w-5 text-right flex-shrink-0">{i + 1}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-semibold text-gray-800 truncate pr-2">@{c.name}</span>
+                    <span className="text-xs tabular-nums text-gray-500 flex-shrink-0">{c.count} likes</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-pink-50 overflow-hidden">
+                    <div className="h-full rounded-full"
+                      style={{ width: `${(c.count / a.topCreators[0].count) * 100}%`, background: i === 0 ? '#e11d48' : '#fca5a5' }} />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-gray-400 mt-3">
+            Your #1 most-liked creator gets <strong style={{ color: '#e11d48' }}>{((a.topCreators[0].count / Math.max(a.data.likes.length, 1)) * 100).toFixed(1)}%</strong> of your likes.
+          </p>
+        </div>
+      )}
+
+      {/* ── TREND PROJECTION ── */}
+      {a.trendProjection.length > 3 && (
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+          <h2 className="text-base font-bold text-gray-900 mb-1 flex items-center gap-2">
+            <TrendingUp className="w-4 h-4 text-violet-500" /> Activity Trend Projection
+          </h2>
+          <p className="text-xs text-gray-400 mb-4">Last 6 months + 3-month linear projection (dashed)</p>
+          <ResponsiveContainer width="100%" height={180}>
+            <ComposedChart data={a.trendProjection} margin={{ top: 4, right: 4, left: -24, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+              <XAxis dataKey="label" tick={{ fontSize: 9, fill: '#94a3b8' }} tickLine={false} axisLine={false} />
+              <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} tickLine={false} axisLine={false} />
+              <Tooltip content={<ChartTip />} />
+              <Bar dataKey="total" name="Activity"
+                fill="#c026d3"
+                radius={[4, 4, 0, 0]}
+              >
+                {a.trendProjection.map((d, i) => (
+                  <Cell key={i} fill={d.projected ? '#f5d0fe' : '#c026d3'} />
+                ))}
+              </Bar>
+              <Line type="monotone" dataKey="total" name="Trend"
+                stroke="#7c3aed" strokeWidth={2} strokeDasharray="5 4" dot={false} />
+            </ComposedChart>
+          </ResponsiveContainer>
+          <p className="text-[10px] text-gray-400 mt-2">* Projected months shown in lighter color. Based on least-squares linear regression.</p>
+        </div>
+      )}
+
+      {/* ── EXPORT SUMMARY CARD ── */}
+      {(() => {
+        const peakHour = a.peakHourLabel;
+        const peakDay  = a.peakDow;
+        const dateStr  = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+        const text = [
+          `📊 My Instagram Stats (analyzed ${dateStr})`,
+          `• Total posts liked: ${fmtNum(a.data.likes.length)}`,
+          `• Reels watched: ${fmtNum(a.data.videos.length)}`,
+          `• Most active day: ${peakDay}`,
+          `• Peak hour: ${peakHour}`,
+          `• Analyzed with: unblockdevs.com/instagram-reels-analyzer`,
+        ].join('\n');
+        return (
+          <div className="rounded-2xl border border-gray-100 bg-gray-50 p-5">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-sm font-bold text-gray-900">Copy insight card</h2>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(text).catch(() => {}).then(() => {
+                    setInsightCopied(true); setTimeout(() => setInsightCopied(false), 2000);
+                  });
+                }}
+                className={`text-sm font-bold px-4 py-2 rounded-xl transition-all ${insightCopied ? 'bg-green-500 text-white' : 'bg-black text-white hover:bg-gray-800'}`}
+              >
+                {insightCopied ? 'Copied!' : 'Copy'}
+              </button>
+            </div>
+            <pre className="text-xs text-gray-600 leading-relaxed whitespace-pre-wrap font-sans bg-white rounded-xl p-4 border border-gray-200 select-all">
+              {text}
+            </pre>
+          </div>
+        );
+      })()}
 
       {/* ── MONTHLY TABLE ── */}
       <div className="rounded-2xl p-6"

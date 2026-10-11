@@ -60,6 +60,17 @@ export default function UrlEncoderClient() {
   const [history, setHistory] = useState<string[]>([]);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Builder tab state
+  const [mainView, setMainView] = useState<'transform' | 'builder'>('transform');
+  const [bProtocol, setBProtocol] = useState('https');
+  const [bHost, setBHost] = useState('');
+  const [bPort, setBPort] = useState('');
+  const [bPath, setBPath] = useState('/');
+  const [bParams, setBParams] = useState<{ key: string; value: string }[]>([{ key: '', value: '' }]);
+  const [builtUrl, setBuiltUrl] = useState('');
+  // Snippet language selector
+  const [snippetLang, setSnippetLang] = useState<'js' | 'python' | 'curl'>('js');
+
   // Live transform
   useEffect(() => {
     if (bulkMode) return;
@@ -189,6 +200,27 @@ export default function UrlEncoderClient() {
   const addParam = () => setEditedParams((prev) => [...prev, { key: '', value: '' }]);
   const removeParam = (index: number) => setEditedParams((prev) => prev.filter((_, i) => i !== index));
 
+  // Builder helpers
+  const buildUrlFromForm = () => {
+    if (!bHost.trim()) { toast.error('Host is required'); return; }
+    let url = `${bProtocol}://${bHost.trim()}`;
+    if (bPort.trim()) url += `:${bPort.trim()}`;
+    const path = bPath.trim();
+    if (path && path !== '/') url += path.startsWith('/') ? path : `/${path}`;
+    const validParams = bParams.filter((p) => p.key.trim());
+    if (validParams.length) {
+      const qs = validParams.map((p) => `${encodeURIComponent(p.key.trim())}=${encodeURIComponent(p.value)}`).join('&');
+      url += `?${qs}`;
+    }
+    setBuiltUrl(url);
+    trackCtaClick('url_encoder', 'build_url');
+  };
+  const addBParam = () => setBParams((prev) => [...prev, { key: '', value: '' }]);
+  const removeBParam = (i: number) => setBParams((prev) => prev.filter((_, idx) => idx !== i));
+  const updateBParam = (i: number, field: 'key' | 'value', val: string) => {
+    setBParams((prev) => prev.map((p, idx) => (idx === i ? { ...p, [field]: val } : p)));
+  };
+
   const rebuiltUrl = parsed
     ? buildUrlFromParsed({
         ...parsed,
@@ -198,6 +230,43 @@ export default function UrlEncoderClient() {
 
   const lengthInfo = output && (output.startsWith('http') || parsed?.valid) ? getUrlLengthInfo(output.startsWith('http') ? output : rebuiltUrl) : null;
   const base64Detect = mode !== 'encode' && input.trim() ? detectBase64(input.trim()) : null;
+
+  const PYTHON_SNIPPET = `import urllib.parse
+
+# Encode a value (query param value or path segment)
+urllib.parse.quote('hello world/test', safe='')  # → 'hello%20world%2Ftest'
+urllib.parse.quote_plus('hello world')           # → 'hello+world'
+
+# Build a query string
+params = {'q': 'hello world', 'page': 1}
+qs = urllib.parse.urlencode(params)              # → 'q=hello+world&page=1'
+
+# Decode
+urllib.parse.unquote('hello%20world')            # → 'hello world'
+urllib.parse.unquote_plus('hello+world')         # → 'hello world'
+
+# Parse & rebuild a full URL
+from urllib.parse import urlparse, urlunparse, urlencode
+parsed = urlparse('https://api.example.com/v2?q=test&page=1')
+new_url = urlunparse(parsed._replace(query=urlencode({'q': 'new', 'page': 2})))`;
+
+  const CURL_SNIPPET = `# cURL — URL encoding
+
+# GET with auto-encoded params (-G + --data-urlencode)
+curl -G 'https://api.example.com/search' \\
+  --data-urlencode 'q=hello world' \\
+  --data-urlencode 'filter=price:low to high'
+
+# POST with URL-encoded body
+curl -X POST 'https://api.example.com/form' \\
+  --data-urlencode 'message=hello world' \\
+  --data-urlencode 'user=john doe'
+
+# Manually pre-encoded GET request
+curl -v 'https://api.example.com/path?q=hello%20world&page=1'
+
+# HEAD request — show response headers only
+curl -I 'https://api.example.com/resource'`;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/20">
@@ -225,7 +294,15 @@ export default function UrlEncoderClient() {
           </div>
 
           <div className="px-6 md:px-8 pt-4">
-            <div className="flex flex-wrap gap-2 mb-4">
+            <div className="flex gap-1 p-1 bg-gray-100 rounded-lg w-fit mb-4">
+              {(['transform', 'builder'] as const).map((v) => (
+                <button key={v} type="button" onClick={() => setMainView(v)}
+                  className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${mainView === v ? 'bg-white text-gray-900 shadow' : 'text-gray-500 hover:text-gray-700'}`}>
+                  {v === 'transform' ? 'Transform' : 'Builder'}
+                </button>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-2 mb-4" style={{ display: mainView === 'transform' ? undefined : 'none' }}>
               {(['encode', 'decode', 'auto'] as const).map((m) => (
                 <button
                   key={m}
@@ -239,7 +316,7 @@ export default function UrlEncoderClient() {
                 </button>
               ))}
             </div>
-            <div className="flex flex-wrap items-center gap-4 mb-4">
+            <div className="flex flex-wrap items-center gap-4 mb-4" style={{ display: mainView === 'transform' ? undefined : 'none' }}>
               <span className="text-sm font-medium text-gray-600">Encoding:</span>
               {ENCODING_STANDARDS.map((s) => (
                 <label key={s.id} className="inline-flex items-center gap-2 cursor-pointer">
@@ -250,7 +327,67 @@ export default function UrlEncoderClient() {
             </div>
           </div>
 
-          <div className="px-6 md:px-8 py-6 space-y-6">
+          {mainView === 'builder' && (
+            <div className="px-6 md:px-8 py-6 space-y-5">
+              <div className="rounded-xl border border-gray-200 p-5 space-y-4">
+                <h3 className="text-sm font-semibold text-gray-900">Build a URL</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">Protocol</label>
+                    <select value={bProtocol} onChange={(e) => setBProtocol(e.target.value)} className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm">
+                      {['https', 'http', 'ftp'].map((p) => <option key={p} value={p}>{p}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">Host</label>
+                    <input type="text" value={bHost} onChange={(e) => setBHost(e.target.value)} placeholder="example.com" className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-mono" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">Port (optional)</label>
+                    <input type="text" value={bPort} onChange={(e) => setBPort(e.target.value)} placeholder="3000" className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-mono" />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Path</label>
+                  <input type="text" value={bPath} onChange={(e) => setBPath(e.target.value)} placeholder="/api/v1/resource" className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-mono" />
+                </div>
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-medium text-gray-600">Query parameters</span>
+                    <button type="button" onClick={addBParam} className="inline-flex items-center gap-1 rounded-lg border border-gray-200 bg-white px-2 py-1 text-xs font-medium text-gray-600 hover:bg-gray-50">
+                      <Plus className="w-3.5 h-3.5" /> Add row
+                    </button>
+                  </div>
+                  <div className="space-y-2">
+                    {bParams.map((p, i) => (
+                      <div key={i} className="flex gap-2 items-center">
+                        <input type="text" value={p.key} onChange={(e) => updateBParam(i, 'key', e.target.value)} placeholder="Key" className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm font-mono" />
+                        <input type="text" value={p.value} onChange={(e) => updateBParam(i, 'value', e.target.value)} placeholder="Value" className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm font-mono" />
+                        <button type="button" onClick={() => removeBParam(i)} className="p-2 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <button type="button" onClick={buildUrlFromForm} className="px-5 py-2.5 rounded-xl bg-primary-600 text-white font-medium hover:bg-primary-700 text-sm">
+                  Build URL
+                </button>
+                {builtUrl && (
+                  <div className="rounded-xl border border-gray-200 bg-gray-50/80 p-4">
+                    <div className="flex items-center justify-between gap-3 mb-2">
+                      <span className="text-xs font-semibold text-gray-700">Built URL</span>
+                      <button type="button" onClick={() => copyToClipboard(builtUrl, 'built')} className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50">
+                        {copiedId === 'built' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />} Copy
+                      </button>
+                    </div>
+                    <code className="font-mono text-sm text-gray-900 break-all">{builtUrl}</code>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+          <div className="px-6 md:px-8 py-6 space-y-6" style={{ display: mainView === 'transform' ? undefined : 'none' }}>
             <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
               <label className="text-sm font-semibold text-gray-800">Input</label>
               <div className="flex flex-wrap gap-2">
@@ -489,9 +626,25 @@ export default function UrlEncoderClient() {
                 {showSnippets ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
               </button>
               {showSnippets && (
-                <div className="border-t border-gray-200 p-4 bg-gray-900 text-gray-100 rounded-b-xl">
-                  <pre className="font-mono text-sm whitespace-pre-wrap overflow-x-auto"><code>{CODE_SNIPPETS.js}</code></pre>
-                  <p className="text-xs text-gray-400 mt-2">JavaScript · Use encodeURIComponent for query values.</p>
+                <div className="border-t border-gray-200 bg-gray-900 text-gray-100 rounded-b-xl">
+                  <div className="flex gap-1 p-2 border-b border-gray-700">
+                    {(['js', 'python', 'curl'] as const).map((lang) => (
+                      <button key={lang} type="button" onClick={() => setSnippetLang(lang)}
+                        className={`px-3 py-1 rounded text-xs font-mono font-semibold transition ${snippetLang === lang ? 'bg-primary-600 text-white' : 'text-gray-400 hover:text-gray-200'}`}>
+                        {lang === 'js' ? 'JavaScript' : lang === 'python' ? 'Python' : 'cURL'}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="p-4">
+                    <pre className="font-mono text-sm whitespace-pre-wrap overflow-x-auto">
+                      <code>{snippetLang === 'js' ? CODE_SNIPPETS.js : snippetLang === 'python' ? PYTHON_SNIPPET : CURL_SNIPPET}</code>
+                    </pre>
+                    <p className="text-xs text-gray-400 mt-2">
+                      {snippetLang === 'js' && 'JavaScript · Use encodeURIComponent for query values.'}
+                      {snippetLang === 'python' && 'Python · urllib.parse is in the standard library, no install needed.'}
+                      {snippetLang === 'curl' && 'cURL · --data-urlencode automatically percent-encodes values.'}
+                    </p>
+                  </div>
                 </div>
               )}
             </section>

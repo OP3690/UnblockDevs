@@ -50,6 +50,9 @@ interface ThreadsAnalysis {
   byMonth: MonthBar[];
   topLikedAccounts: { name: string; count: number }[];
   followingRatio: number;
+  heatmapData: { dateStr: string; count: number; dow: number; weekIdx: number }[];
+  mostActiveDay: string;
+  mostActiveHour: number;
 }
 
 // ─── ZIP parser ────────────────────────────────────────────────────────────────
@@ -199,7 +202,32 @@ function computeAnalysis(data: ThreadsData): ThreadsAnalysis {
 
   const followingRatio = data.followers.length > 0 ? data.following.length / data.followers.length : 0;
 
-  return { data, joinedDate, latestDate, spanDays, likesPerDay, peakMonthLabel, peakMonthLikes, byMonth, topLikedAccounts, followingRatio };
+  // Heatmap: daily like counts for last ~52 weeks
+  const dayCount: Record<string, number> = {};
+  for (const l of data.likes) {
+    const d = new Date(l.timestamp * 1000);
+    const ds = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    dayCount[ds] = (dayCount[ds] ?? 0) + 1;
+  }
+  const todayDate = new Date(); todayDate.setHours(0,0,0,0);
+  const startDate = new Date(todayDate); startDate.setDate(startDate.getDate() - 364);
+  const heatmapData: { dateStr: string; count: number; dow: number; weekIdx: number }[] = [];
+  for (let cur = new Date(startDate); cur <= todayDate; cur.setDate(cur.getDate() + 1)) {
+    const ds = `${cur.getFullYear()}-${String(cur.getMonth()+1).padStart(2,'0')}-${String(cur.getDate()).padStart(2,'0')}`;
+    const weekIdx = Math.floor((cur.getTime() - startDate.getTime()) / (7 * 86400000));
+    heatmapData.push({ dateStr: ds, count: dayCount[ds] ?? 0, dow: cur.getDay(), weekIdx });
+  }
+  let maxDayCount = 0, maxDayStr = '';
+  for (const [ds, cnt] of Object.entries(dayCount)) { if (cnt > maxDayCount) { maxDayCount = cnt; maxDayStr = ds; } }
+  const mostActiveDay = maxDayStr
+    ? new Date(maxDayStr + 'T12:00:00').toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'short', year:'numeric' })
+    : '';
+  const hourCount: Record<number, number> = {};
+  for (const l of data.likes) { const h = new Date(l.timestamp * 1000).getHours(); hourCount[h] = (hourCount[h] ?? 0) + 1; }
+  let mostActiveHour = 0, maxHC = 0;
+  for (const [h, c] of Object.entries(hourCount)) { if (c > maxHC) { maxHC = c; mostActiveHour = Number(h); } }
+
+  return { data, joinedDate, latestDate, spanDays, likesPerDay, peakMonthLabel, peakMonthLikes, byMonth, topLikedAccounts, followingRatio, heatmapData, mostActiveDay, mostActiveHour };
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────────
@@ -295,6 +323,123 @@ function UploadScreen({ onFile }: { onFile: (f: File) => void }) {
   );
 }
 
+// ─── Activity Heatmap ─────────────────────────────────────────────────────────
+
+function ActivityHeatmap({ heatmapData, mostActiveDay, mostActiveHour }: {
+  heatmapData: ThreadsAnalysis['heatmapData'];
+  mostActiveDay: string;
+  mostActiveHour: number;
+}) {
+  const maxCount = Math.max(...heatmapData.map(d => d.count), 1);
+  const weeks = Math.max(...heatmapData.map(d => d.weekIdx), 0) + 1;
+  const DOW_LABELS = ['S','M','T','W','T','F','S'];
+
+  function shade(count: number): string {
+    if (count === 0) return '#f3f4f6';
+    const r = count / maxCount;
+    if (r < 0.2) return '#d1d5db';
+    if (r < 0.4) return '#6b7280';
+    if (r < 0.6) return '#374151';
+    if (r < 0.8) return '#1f2937';
+    return '#111827';
+  }
+
+  const hourLabel = mostActiveHour === 0 ? '12am' : mostActiveHour < 12 ? `${mostActiveHour}am` : mostActiveHour === 12 ? '12pm' : `${mostActiveHour - 12}pm`;
+
+  // Build a 2D map for lookup: weekIdx-dow → count
+  const cellMap: Record<string, number> = {};
+  for (const d of heatmapData) cellMap[`${d.weekIdx}-${d.dow}`] = d.count;
+
+  return (
+    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+      <h3 className="text-sm font-black text-gray-900 mb-1">Like Activity Heatmap</h3>
+      <p className="text-xs text-gray-400 mb-4">Daily likes given — last 52 weeks</p>
+      <div className="flex gap-2 items-start" style={{ overflowX: 'auto' }}>
+        {/* Day labels */}
+        <div style={{ display: 'grid', gridTemplateRows: 'repeat(7, 10px)', gap: '2px', paddingTop: 0 }}>
+          {DOW_LABELS.map((l, i) => (
+            <span key={i} style={{ fontSize: 8, color: '#9ca3af', lineHeight: '10px', width: 8 }}>{l}</span>
+          ))}
+        </div>
+        {/* Grid */}
+        <div style={{ display: 'grid', gridTemplateRows: 'repeat(7, 10px)', gridTemplateColumns: `repeat(${weeks}, 10px)`, gap: '2px', flexShrink: 0 }}>
+          {Array.from({ length: weeks }, (_, wi) =>
+            Array.from({ length: 7 }, (_, dow) => {
+              const count = cellMap[`${wi}-${dow}`] ?? 0;
+              return (
+                <div
+                  key={`${wi}-${dow}`}
+                  title={count > 0 ? `${count} likes` : ''}
+                  style={{ gridRow: dow + 1, gridColumn: wi + 1, width: 10, height: 10, borderRadius: 2, background: shade(count) }}
+                />
+              );
+            })
+          )}
+        </div>
+      </div>
+      {(mostActiveDay || mostActiveHour !== undefined) && (
+        <div className="mt-3 flex flex-wrap gap-4 text-xs text-gray-500">
+          {mostActiveDay && <span>Most active day: <span className="font-bold text-gray-800">{mostActiveDay}</span></span>}
+          <span>Most active hour: <span className="font-bold text-gray-800">{hourLabel}</span></span>
+        </div>
+      )}
+      <div className="mt-3 flex items-center gap-1.5 text-xs text-gray-400">
+        <span>Less</span>
+        {['#f3f4f6','#d1d5db','#6b7280','#374151','#1f2937','#111827'].map(c => (
+          <span key={c} style={{ width: 10, height: 10, background: c, borderRadius: 2, display: 'inline-block' }} />
+        ))}
+        <span>More</span>
+      </div>
+    </div>
+  );
+}
+
+// ─── Share Insights Modal ─────────────────────────────────────────────────────
+
+function ShareInsightsModal({ analysis, onClose }: { analysis: ThreadsAnalysis; onClose: () => void }) {
+  const { data, topLikedAccounts } = analysis;
+  const [copied, setCopied] = useState(false);
+  const text = `I analyzed my Threads data: ${data.followers.length.toLocaleString()} followers, ${data.following.length.toLocaleString()} following, ${data.likes.length.toLocaleString()} likes given. Most liked: @${topLikedAccounts[0]?.name ?? 'N/A'}. Generated with unblockdevs.com`;
+  const shareUrl = `https://www.threads.net/intent/post?text=${encodeURIComponent(text)}`;
+
+  function copyText() {
+    navigator.clipboard.writeText(text).catch(() => {}).then(() => {
+      setCopied(true); setTimeout(() => setCopied(false), 2000);
+    });
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4" onClick={onClose}>
+      <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl" onClick={e => e.stopPropagation()}>
+        <h3 className="text-sm font-black text-gray-900 mb-1">Share your Threads insights</h3>
+        <p className="text-xs text-gray-400 mb-4">Pre-formatted text ready to share</p>
+        <div className="bg-gray-50 rounded-xl p-4 text-sm text-gray-700 mb-4 leading-relaxed border border-gray-200 select-all">
+          {text}
+        </div>
+        <div className="flex gap-2">
+          <button
+            onClick={copyText}
+            className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all ${copied ? 'bg-green-500 text-white' : 'bg-black text-white hover:bg-gray-800'}`}
+          >
+            {copied ? 'Copied!' : 'Copy text'}
+          </button>
+          <a
+            href={shareUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-gray-100 text-gray-700 text-center hover:bg-gray-200 transition-all"
+          >
+            Share on Threads
+          </a>
+          <button onClick={onClose} className="py-2.5 px-3 rounded-xl text-sm text-gray-400 hover:text-gray-600">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Analysis results ─────────────────────────────────────────────────────────
 
 const CHART_COLORS = ['#111827', '#374151', '#6b7280', '#9ca3af'];
@@ -325,7 +470,8 @@ function StatCard({ icon, label, value, sub, accent = false }: {
 }
 
 function ResultsScreen({ analysis }: { analysis: ThreadsAnalysis }) {
-  const { data, joinedDate, spanDays, likesPerDay, peakMonthLabel, peakMonthLikes, byMonth, topLikedAccounts, followingRatio } = analysis;
+  const [showShareModal, setShowShareModal] = useState(false);
+  const { data, joinedDate, spanDays, likesPerDay, peakMonthLabel, peakMonthLikes, byMonth, topLikedAccounts, followingRatio, heatmapData, mostActiveDay, mostActiveHour } = analysis;
 
   const joinedYear = joinedDate ? new Date(joinedDate * 1000).getFullYear() : null;
   const likesPerDayLabel = likesPerDay < 0.1 ? 'very low' : likesPerDay < 0.5 ? 'light' : likesPerDay < 2 ? 'moderate' : 'active';
@@ -441,6 +587,11 @@ function ResultsScreen({ analysis }: { analysis: ThreadsAnalysis }) {
           </div>
         )}
 
+        {/* Activity heatmap */}
+        {heatmapData.some(d => d.count > 0) && (
+          <ActivityHeatmap heatmapData={heatmapData} mostActiveDay={mostActiveDay} mostActiveHour={mostActiveHour} />
+        )}
+
         {/* Two-column: top accounts + social graph */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {/* Top liked accounts */}
@@ -449,21 +600,25 @@ function ResultsScreen({ analysis }: { analysis: ThreadsAnalysis }) {
               <h3 className="text-sm font-black text-gray-900 mb-1">Most Liked Accounts</h3>
               <p className="text-xs text-gray-400 mb-4">Accounts whose threads you liked most</p>
               <ul className="space-y-2.5">
-                {topLikedAccounts.slice(0, 8).map((acc, i) => (
-                  <li key={acc.name} className="flex items-center gap-3">
-                    <span className="text-[11px] font-bold text-gray-300 w-4 text-right">{i + 1}</span>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-semibold text-gray-800 truncate">@{acc.name}</div>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <div
-                        className="h-1.5 rounded-full bg-black"
-                        style={{ width: `${Math.max(8, Math.round((acc.count / topLikedAccounts[0].count) * 60))}px` }}
-                      />
-                      <span className="text-xs font-bold text-gray-400 w-5 text-right">{acc.count}</span>
-                    </div>
-                  </li>
-                ))}
+                {topLikedAccounts.slice(0, 8).map((acc, i) => {
+                  const engRate = data.likes.length > 0 ? (acc.count / data.likes.length) * 100 : 0;
+                  return (
+                    <li key={acc.name} className="flex items-center gap-3">
+                      <span className="text-[11px] font-bold text-gray-300 w-4 text-right">{i + 1}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-semibold text-gray-800 truncate">@{acc.name}</div>
+                        <div className="text-[10px] text-gray-400">~{engRate.toFixed(1)}% interaction rate</div>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div
+                          className="h-1.5 rounded-full bg-black"
+                          style={{ width: `${Math.max(8, Math.round((acc.count / topLikedAccounts[0].count) * 60))}px` }}
+                        />
+                        <span className="text-xs font-bold text-gray-400 w-5 text-right">{acc.count}</span>
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           )}
@@ -531,10 +686,21 @@ function ResultsScreen({ analysis }: { analysis: ThreadsAnalysis }) {
           </ul>
         </div>
 
+        {/* Share insights */}
+        <div className="flex justify-center">
+          <button
+            onClick={() => setShowShareModal(true)}
+            className="inline-flex items-center gap-2 rounded-2xl px-6 py-3 text-sm font-bold bg-black text-white hover:bg-gray-800 transition-all shadow-sm"
+          >
+            Share insights
+          </button>
+        </div>
+
         <p className="text-center text-xs text-gray-400 pb-4">
           All data processed 100% in your browser · Nothing uploaded or stored
         </p>
       </div>
+      {showShareModal && <ShareInsightsModal analysis={analysis} onClose={() => setShowShareModal(false)} />}
     </div>
   );
 }
