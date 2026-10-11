@@ -20,18 +20,25 @@ export const metadata: Metadata = {
   description:
     'Encode or decode URLs in RFC 3986, form-urlencoded, or encodeURIComponent. Parse query parameters, detect double encoding. Free, 100% browser-based.',
   keywords: [
-    'url encoder online',
-    'url decoder online',
-    'percent encoding tool',
-    'encodeURIComponent online',
-    'rfc 3986 url encoder',
-    'double encoded url fix',
-    'how to url encode a string online',
-    'query string parser online',
-    'url encode special characters',
-    'encode url javascript',
-    'url decode malformed',
-    'query parameter encoding',
+    // core
+    'url encoder', 'url decoder', 'url encode decode', 'percent encoding', 'url encoding tool',
+    'encode url online', 'decode url online', 'url percent encoder', 'query string encoder', 'url escape encoder',
+    // long-tail
+    'url encode online free', 'url decode online', 'encode url parameters', 'percent encode special characters', 'decode percent encoded url',
+    'url safe base64 encode', 'encode query string online', 'html url encoding', 'url encode spaces', 'url encode special characters',
+    // questions
+    'how to url encode a string', 'what is percent encoding', 'how to decode url encoding', 'difference between url encoding and base64', 'how to encode spaces in url',
+    'how to encode ampersand in url', 'url encoding javascript', 'urlencode php', 'urllib.parse urlencode python', 'what characters need url encoding',
+    // use cases
+    'api query parameter encoder', 'redirect url encoder', 'oauth url encoder', 'query string parser', 'http request encoder',
+    'curl url encoder', 'postman url encode', 'api endpoint url builder', 'webhook url encoder',
+    // competitors
+    'urlencoder.org alternative', 'urlencode.net alternative', 'meyerweb.com url decoder alternative',
+    // additional
+    'rfc 3986 encoding', 'application/x-www-form-urlencoded', 'encodeURIComponent javascript', 'decodeURIComponent', 'encodeURI vs encodeURIComponent',
+    'url components breakdown', 'href encoder', 'form data encoder',
+    'double encoding fix', 'percent encode url', 'url decode tool', 'encode url parameters online', 'url encode decode online free',
+    'rfc 3986 url encoder', 'encodeURIComponent online', 'double encoded url fix',
   ],
   openGraph: {
     title: 'Free URL Encoder Decoder — RFC 3986, encodeURIComponent & Query Strings | UnblockDevs',

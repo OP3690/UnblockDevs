@@ -10,31 +10,29 @@ const canonicalUrl = 'https://unblockdevs.com/jwt-decoder';
 export const metadata: Metadata = {
   title: 'JWT Decoder — Decode & Verify JWTs Online | UnblockDevs',
   description:
-    'Decode JWT tokens, view header and payload claims, verify HMAC signatures, check expiration, and run security analysis — 100% in your browser. Token never sent to any server. Free, no signup.',
+    'Decode JWT tokens — view claims, verify HMAC signatures, check expiry, run security audit. 100% in-browser, token never sent to any server. Free.',
   keywords: [
-    'jwt decoder online', 'decode jwt token', 'jwt token decoder', 'decode jwt online',
-    'jwt decoder free', 'jwt signature verification online', 'verify jwt signature',
-    'jwt hmac verifier', 'jwt security analyzer', 'jwt vulnerability checker',
-    'jwt none algorithm vulnerability', 'jwt expiry checker', 'check jwt expiration',
-    'what is jwt token', 'how does jwt work', 'is jwt.io safe to use',
-    'how to check if jwt token is expired', 'debug jwt authentication',
-    'aws cognito jwt decoder', 'auth0 jwt decoder', 'firebase jwt decoder',
-    'compare jwt', 'compare jwt token', 'jwt token compare',
-    // extended keyword cluster
-    'jwt decode free', 'jwt token viewer', 'jwt payload decoder', 'jwt header decoder',
-    'jwt online tool', 'jwt decode without secret', 'jwt verify signature online',
-    'jwt debugger', 'jwt inspector', 'jwt decode bearer token',
-    'jwt decode authorization header', 'jwt rs256 decode', 'jwt hs256 verify', 'jwt hs512',
-    'jwt token structure', 'jwt iss sub aud exp claims', 'jwt nbf claim', 'jwt iat claim',
-    'jwt decode react', 'jwt decode node js', 'jwt decode python', 'decode jwt python',
-    'jsonwebtoken decode', 'jwt-decode npm', 'jwt parse online', 'jwt validator free',
-    'jwt refresh token', 'jwt access token', 'jwt vs session', 'jwt security audit',
-    'jwt algorithm check', 'jwt none algorithm attack', 'jwt secret weak',
-    'jwt expired error fix', 'jwt invalid signature fix', 'jwt malformed error',
-    'jwt token expired fix', 'jwt token invalid', 'decode jwt without verification',
-    'jwt payload base64url', 'jwt decode cli', 'jwt bearer token format',
-    'jwt authorization header decode', 'jwt structure explained', 'jwt claims reference',
-    'jwt rfc 7519', 'jwt okta decoder',
+    // core
+    'jwt decoder', 'jwt decoder online', 'decode jwt token', 'jwt parser', 'jwt viewer',
+    'jwt verifier', 'json web token decoder', 'jwt token checker', 'decode jwt online free', 'jwt inspector',
+    // long-tail
+    'decode jwt token online', 'jwt payload decoder', 'jwt header decoder', 'verify jwt signature online', 'jwt expiry checker',
+    'jwt claims viewer', 'jwt token debugger', 'decode jwt without secret', 'jwt token parser online', 'inspect jwt token',
+    // questions
+    'how to decode a jwt token', 'what is inside a jwt token', 'how to verify jwt signature', 'how to check jwt expiration', 'jwt token structure explained',
+    'jwt header payload signature', 'what is iss claim in jwt', 'how to decode jwt in javascript', 'jwt base64 decode', 'jwt secret key verification',
+    // use cases
+    'api debugging jwt', 'oauth token inspector', 'auth0 jwt debugger', 'cognito token decoder', 'firebase jwt decoder',
+    'jwt token validation', 'api authentication debug', 'jwt claims debug', 'bearer token inspector', 'access token decoder', 'refresh token decoder',
+    // competitors
+    'jwt.io alternative', 'jwtinspector alternative', 'jwt debugger tool', 'token inspector online',
+    // additional
+    'jws decoder', 'jwe decoder', 'jwt algorithms hs256 rs256', 'jwt none algorithm', 'jwt typ claim',
+    'jwt nbf not before', 'jwt iat issued at', 'jwt sub claim', 'jwt aud claim', 'jwt decode python',
+    'jwt decode javascript', 'jwt verify nodejs', 'jwt signing algorithm checker',
+    // high-value retained
+    'jwt hmac verifier', 'jwt security analyzer', 'jwt none algorithm vulnerability', 'jwt malformed error',
+    'jwt rfc 7519', 'okta jwt decoder', 'jwt hs256 verify', 'jwt security audit',
   ],
   openGraph: {
     title: 'JWT Decoder — Decode, Verify, Check Expiry & Security Audit Online Free | UnblockDevs',

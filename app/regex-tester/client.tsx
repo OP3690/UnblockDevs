@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import {
   ArrowLeft,
@@ -14,6 +14,11 @@ import {
   Replace,
   Download,
   BarChart2,
+  Share2,
+  FlaskConical,
+  Plus,
+  Trash2,
+  AlertTriangle,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackCopy, trackCtaClick } from '@/lib/analytics';
@@ -46,6 +51,13 @@ interface MatchResult {
   index: number;
   match: string;
   groups: string[];
+}
+
+interface UnitTest {
+  id: string;
+  label: string;
+  testString: string;
+  expectMatch: boolean;
 }
 
 function escapeHtml(s: string): string {
@@ -133,6 +145,16 @@ function replaceAll(
   }
 }
 
+/** Simple heuristic check for catastrophic backtracking patterns. */
+function hasCatastrophicBacktracking(pat: string): boolean {
+  if (!pat.trim()) return false;
+  // Nested quantifiers: (X+)+, (X*)*, (X+)*, (.+)+, etc.
+  if (/\(.*[+*].*\)[+*{]/.test(pat)) return true;
+  // Overlapping alternatives with outer quantifier: (a|aa)+
+  if (/\([^)]*\|[^)]*\)[+*{]/.test(pat)) return true;
+  return false;
+}
+
 const DEFAULT_PATTERN = '\\b\\w+\\b';
 const DEFAULT_TEXT = 'The quick brown fox jumps over the lazy dog.';
 
@@ -143,6 +165,19 @@ export default function RegexTesterClient() {
   const [replacement, setReplacement] = useState('');
   const [replaceResult, setReplaceResult] = useState<string | null>(null);
   const [showSamples, setShowSamples] = useState(false);
+
+  // Feature 1: Unit test mode
+  const [showUnitTests, setShowUnitTests] = useState(false);
+  const [unitTests, setUnitTests] = useState<UnitTest[]>([
+    { id: '1', label: 'Should match a single word', testString: 'hello', expectMatch: true },
+    { id: '2', label: 'Should not match empty string', testString: '', expectMatch: false },
+    { id: '3', label: 'Should match sentence with spaces', testString: 'foo bar baz', expectMatch: true },
+  ]);
+  const testIdRef = useRef(4);
+
+  // Feature 2: URL sync — track whether URL init has completed before syncing back
+  const [urlReady, setUrlReady] = useState(false);
+  const urlSyncTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const flagsStr = useMemo(
     () => FLAGS.filter((f) => flags[f.id as keyof typeof flags]).map((f) => f.id).join(''),
@@ -159,7 +194,7 @@ export default function RegexTesterClient() {
     [text, matches]
   );
 
-  // Extract named capture group names from pattern
+  // Feature 3: Extract named capture group names from pattern
   const namedGroups = useMemo(() => {
     const names: string[] = [];
     const re = /\(\?<([a-zA-Z_][a-zA-Z0-9_]*)>/g;
@@ -167,6 +202,12 @@ export default function RegexTesterClient() {
     while ((m = re.exec(pattern)) !== null) names.push(m[1]);
     return names;
   }, [pattern]);
+
+  // Feature 4: Backtracking safety warning
+  const showBacktrackingWarning = useMemo(
+    () => hasCatastrophicBacktracking(pattern),
+    [pattern]
+  );
 
   // Match statistics
   const matchStats = useMemo(() => {
@@ -177,6 +218,70 @@ export default function RegexTesterClient() {
     const coverage = ((totalChars / text.length) * 100).toFixed(1);
     return { uniqueCount, avgLength, coverage };
   }, [matches, text]);
+
+  // Max groups across all matches (for Feature 3 table columns)
+  const maxGroups = useMemo(
+    () => Math.max(0, ...matches.map((m) => m.groups.length)),
+    [matches]
+  );
+
+  // Feature 1: Unit test results (auto-run on pattern/flags/unitTests change)
+  const unitTestResults = useMemo(() => {
+    if (!pattern.trim()) return unitTests.map(() => null as boolean | null);
+    return unitTests.map((ut) => {
+      try {
+        // Use pattern without 'g'/'y' flags for simple boolean match test
+        const testFlags = flagsStr.replace(/[gy]/g, '');
+        const re = new RegExp(pattern, testFlags);
+        const hasMatch = re.test(ut.testString);
+        return hasMatch === ut.expectMatch;
+      } catch {
+        return false;
+      }
+    });
+  }, [pattern, flagsStr, unitTests]);
+
+  const passingCount = unitTestResults.filter((r) => r === true).length;
+
+  // Feature 2: Read URL params on mount
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const urlPattern = params.get('pattern');
+    const urlFlagsParam = params.get('flags');
+    const urlTest = params.get('test');
+    if (urlPattern !== null) setPattern(urlPattern);
+    if (urlFlagsParam !== null) {
+      setFlags({
+        g: urlFlagsParam.includes('g'),
+        i: urlFlagsParam.includes('i'),
+        m: urlFlagsParam.includes('m'),
+        s: urlFlagsParam.includes('s'),
+        u: urlFlagsParam.includes('u'),
+        y: urlFlagsParam.includes('y'),
+      });
+    }
+    if (urlTest !== null) setText(urlTest);
+    setUrlReady(true);
+  }, []);
+
+  // Feature 2: Sync URL on pattern/flags/text change (debounced, only after URL init)
+  useEffect(() => {
+    if (!urlReady) return;
+    if (urlSyncTimerRef.current) clearTimeout(urlSyncTimerRef.current);
+    urlSyncTimerRef.current = setTimeout(() => {
+      if (typeof window === 'undefined') return;
+      const params = new URLSearchParams();
+      if (pattern) params.set('pattern', pattern);
+      if (flagsStr) params.set('flags', flagsStr);
+      if (text) params.set('test', text);
+      const qs = params.toString();
+      window.history.replaceState(null, '', qs ? `?${qs}` : window.location.pathname);
+    }, 300);
+    return () => {
+      if (urlSyncTimerRef.current) clearTimeout(urlSyncTimerRef.current);
+    };
+  }, [pattern, flagsStr, text, urlReady]);
 
   const handleReplace = () => {
     const { error: replaceError, result } = replaceAll(text, pattern, flagsStr, replacement);
@@ -198,6 +303,16 @@ export default function RegexTesterClient() {
     }
   };
 
+  // Feature 2: Copy shareable link
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      toast.success('Link copied to clipboard');
+    } catch {
+      toast.error('Copy failed');
+    }
+  };
+
   const copyMatches = async () => {
     const lines = matches.map((m) => `[${m.index}] ${m.match}${m.groups.length ? ' | Groups: ' + m.groups.join(', ') : ''}`);
     try {
@@ -211,7 +326,6 @@ export default function RegexTesterClient() {
 
   const exportMatches = (format: 'json' | 'csv') => {
     if (!matches.length) return;
-    const maxGroups = Math.max(...matches.map((m) => m.groups.length), 0);
     const groupHeaders = namedGroups.length
       ? namedGroups
       : Array.from({ length: maxGroups }, (_, i) => `Group${i + 1}`);
@@ -267,6 +381,22 @@ export default function RegexTesterClient() {
 
   const toggleFlag = (id: string) => {
     setFlags((prev) => ({ ...prev, [id]: !(prev as Record<string, boolean>)[id] }));
+  };
+
+  // Feature 1: Unit test helpers
+  const addUnitTest = () => {
+    const id = String(testIdRef.current++);
+    setUnitTests((prev) => [...prev, { id, label: '', testString: '', expectMatch: true }]);
+  };
+
+  const updateUnitTest = (id: string, field: keyof UnitTest, value: string | boolean) => {
+    setUnitTests((prev) =>
+      prev.map((ut) => (ut.id === id ? { ...ut, [field]: value } : ut))
+    );
+  };
+
+  const deleteUnitTest = (id: string) => {
+    setUnitTests((prev) => prev.filter((ut) => ut.id !== id));
   };
 
   return (
@@ -329,14 +459,26 @@ export default function RegexTesterClient() {
         <section className="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 ring-1 ring-slate-900/5">
           <div className="flex flex-wrap items-center justify-between gap-4 mb-3">
             <label className="text-sm font-semibold text-slate-800">Regular expression</label>
-            <button
-              type="button"
-              onClick={copyPattern}
-              className="cta-regex-copy inline-flex items-center gap-1.5 text-sm font-semibold text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100"
-            >
-              <Copy className="w-4 h-4" aria-hidden />
-              Copy
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={copyPattern}
+                className="cta-regex-copy inline-flex items-center gap-1.5 text-sm font-semibold text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100"
+              >
+                <Copy className="w-4 h-4" aria-hidden />
+                Copy
+              </button>
+              {/* Feature 2: Share / Copy link button */}
+              <button
+                type="button"
+                onClick={copyLink}
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100"
+                title="Copy a shareable link to this pattern"
+              >
+                <Share2 className="w-4 h-4" aria-hidden />
+                Share
+              </button>
+            </div>
           </div>
           <div className="flex flex-wrap gap-3 items-center">
             <span className="text-slate-400 font-mono text-lg">/</span>
@@ -369,6 +511,19 @@ export default function RegexTesterClient() {
           </div>
           {flagsStr && (
             <p className="mt-2 text-xs text-slate-500">Flags: <span className="font-mono">{flagsStr || '(none)'}</span></p>
+          )}
+
+          {/* Feature 4: Backtracking safety warning */}
+          {showBacktrackingWarning && (
+            <div className="mt-4 flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+              <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" aria-hidden />
+              <div>
+                <p className="font-medium text-amber-800">Potential catastrophic backtracking</p>
+                <p className="text-sm text-amber-700 mt-1">
+                  This pattern may cause catastrophic backtracking on long strings that don&apos;t match. Nested quantifiers like <code className="bg-amber-100 px-1 rounded font-mono">(a+)+</code> or overlapping alternatives like <code className="bg-amber-100 px-1 rounded font-mono">(a|aa)+</code> can freeze the browser. Test with short inputs first.
+                </p>
+              </div>
+            </div>
           )}
         </section>
 
@@ -458,7 +613,7 @@ export default function RegexTesterClient() {
                   />
                 </div>
 
-                {/* Matches table */}
+                {/* Matches table — Feature 3: per-group named columns */}
                 {matches.length > 0 && (
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
@@ -467,11 +622,23 @@ export default function RegexTesterClient() {
                           <th className="py-2 pr-4">#</th>
                           <th className="py-2 pr-4">Index</th>
                           <th className="py-2 pr-4">Match</th>
-                          <th className="py-2">
-                            {namedGroups.length > 0
-                              ? `Groups (${namedGroups.join(', ')})`
-                              : 'Groups'}
-                          </th>
+                          {maxGroups === 0 ? (
+                            <th className="py-2">Groups</th>
+                          ) : (
+                            Array.from({ length: maxGroups }, (_, i) => (
+                              <th key={i} className="py-2 pr-4 font-medium">
+                                {namedGroups[i] ? (
+                                  <span>
+                                    <span className="text-slate-400">${i + 1}</span>
+                                    {' '}
+                                    <span className="text-violet-600">({namedGroups[i]})</span>
+                                  </span>
+                                ) : (
+                                  `$${i + 1}`
+                                )}
+                              </th>
+                            ))
+                          )}
                         </tr>
                       </thead>
                       <tbody>
@@ -482,9 +649,19 @@ export default function RegexTesterClient() {
                             <td className="py-2 pr-4 font-mono">
                               <span className="bg-amber-100 px-1 rounded">{m.match || '(empty)'}</span>
                             </td>
-                            <td className="py-2 font-mono text-slate-600">
-                              {m.groups.length ? m.groups.join(', ') : '—'}
-                            </td>
+                            {maxGroups === 0 ? (
+                              <td className="py-2 font-mono text-slate-600">—</td>
+                            ) : (
+                              Array.from({ length: maxGroups }, (_, j) => (
+                                <td key={j} className="py-2 pr-4 font-mono text-slate-600">
+                                  {m.groups[j] !== undefined ? (
+                                    m.groups[j] || <span className="text-slate-400 italic text-xs">(empty)</span>
+                                  ) : (
+                                    <span className="text-slate-300">—</span>
+                                  )}
+                                </td>
+                              ))
+                            )}
                           </tr>
                         ))}
                       </tbody>
@@ -538,6 +715,139 @@ export default function RegexTesterClient() {
               <pre className="w-full p-4 font-mono text-sm bg-slate-50 border border-slate-200 rounded-xl overflow-x-auto whitespace-pre-wrap break-words">
                 {replaceResult}
               </pre>
+            </div>
+          )}
+        </section>
+
+        {/* Feature 1: Unit Test Mode */}
+        <section className="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden ring-1 ring-slate-900/5">
+          <button
+            type="button"
+            onClick={() => setShowUnitTests(!showUnitTests)}
+            className="w-full flex items-center justify-between px-5 py-3 text-left font-semibold text-slate-800 hover:bg-slate-50/80 transition-colors"
+          >
+            <span className="flex items-center gap-2">
+              <FlaskConical className="w-4 h-4 text-violet-500" aria-hidden />
+              Unit Tests
+              {unitTests.length > 0 && (
+                <span
+                  className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold ${
+                    passingCount === unitTests.length
+                      ? 'bg-emerald-100 text-emerald-700'
+                      : passingCount === 0
+                      ? 'bg-red-100 text-red-700'
+                      : 'bg-amber-100 text-amber-700'
+                  }`}
+                >
+                  {passingCount}/{unitTests.length} passing
+                </span>
+              )}
+            </span>
+            {showUnitTests ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
+
+          {showUnitTests && (
+            <div className="border-t border-slate-100 px-5 py-5 space-y-4">
+              <p className="text-xs text-slate-500">
+                Test cases run automatically against the current pattern. Toggle each row to set whether it should match or not.
+              </p>
+
+              {/* Test case rows */}
+              <div className="space-y-3">
+                {unitTests.map((ut, idx) => {
+                  const result = unitTestResults[idx];
+                  return (
+                    <div
+                      key={ut.id}
+                      className={`flex flex-wrap gap-3 items-start p-3 rounded-xl border transition-colors ${
+                        result === true
+                          ? 'border-emerald-200 bg-emerald-50/40'
+                          : result === false
+                          ? 'border-red-200 bg-red-50/40'
+                          : 'border-slate-200 bg-slate-50/30'
+                      }`}
+                    >
+                      {/* Pass/fail indicator */}
+                      <div className="flex items-center pt-6 w-6 shrink-0 text-base">
+                        {result === true ? (
+                          <span title="Pass">✅</span>
+                        ) : result === false ? (
+                          <span title="Fail">❌</span>
+                        ) : (
+                          <span className="text-slate-300">–</span>
+                        )}
+                      </div>
+
+                      {/* Label */}
+                      <div className="flex-1 min-w-[130px]">
+                        <label className="block text-xs font-medium text-slate-500 mb-1">Label</label>
+                        <input
+                          type="text"
+                          value={ut.label}
+                          onChange={(e) => updateUnitTest(ut.id, 'label', e.target.value)}
+                          placeholder="Test description..."
+                          className="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 bg-white"
+                        />
+                      </div>
+
+                      {/* Test string */}
+                      <div className="flex-1 min-w-[160px]">
+                        <label className="block text-xs font-medium text-slate-500 mb-1">Test string</label>
+                        <input
+                          type="text"
+                          value={ut.testString}
+                          onChange={(e) => updateUnitTest(ut.id, 'testString', e.target.value)}
+                          placeholder="String to test..."
+                          className="w-full px-3 py-1.5 font-mono text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 bg-white"
+                          spellCheck={false}
+                        />
+                      </div>
+
+                      {/* Should match toggle */}
+                      <div className="shrink-0">
+                        <label className="block text-xs font-medium text-slate-500 mb-1">Expected</label>
+                        <button
+                          type="button"
+                          onClick={() => updateUnitTest(ut.id, 'expectMatch', !ut.expectMatch)}
+                          className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition-colors ${
+                            ut.expectMatch
+                              ? 'bg-emerald-100 text-emerald-700 border-emerald-300 hover:bg-emerald-200'
+                              : 'bg-slate-100 text-slate-600 border-slate-300 hover:bg-slate-200'
+                          }`}
+                        >
+                          {ut.expectMatch ? 'should match' : 'no match'}
+                        </button>
+                      </div>
+
+                      {/* Delete */}
+                      <div className="shrink-0 flex items-end pb-0.5">
+                        <button
+                          type="button"
+                          onClick={() => deleteUnitTest(ut.id)}
+                          className="p-1.5 text-slate-400 hover:text-red-500 rounded-lg hover:bg-red-50 transition-colors"
+                          title="Remove test case"
+                        >
+                          <Trash2 className="w-4 h-4" aria-hidden />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {unitTests.length === 0 && (
+                <p className="text-sm text-slate-400 text-center py-4">No test cases yet. Add one below.</p>
+              )}
+
+              {/* Add test case button */}
+              <button
+                type="button"
+                onClick={addUnitTest}
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
+              >
+                <Plus className="w-4 h-4" aria-hidden />
+                Add test case
+              </button>
             </div>
           )}
         </section>

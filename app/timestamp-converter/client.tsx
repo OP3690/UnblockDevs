@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { Copy, Check, RefreshCw, Clock, ArrowDown } from 'lucide-react';
+import { Copy, Check, RefreshCw, Clock, ArrowDown, ChevronRight } from 'lucide-react';
 import ToolPageShell from '@/components/tools/ToolPageShell';
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -46,6 +46,55 @@ function isValidUnix(v: string): boolean {
   return !isNaN(n) && v.trim() !== '' && n > 0 && n < 9999999999999;
 }
 
+// ISO Week Number (ISO 8601: the week containing the first Thursday of the year)
+function getISOWeek(date: Date): number {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
+}
+
+// Quarter
+function getQuarter(date: Date): string {
+  return `Q${Math.floor(date.getMonth() / 3) + 1}`;
+}
+
+// Date arithmetic — months/years use calendar methods; others use ms math
+function addToDate(base: Date, amount: number, unit: string): Date {
+  const d = new Date(base.getTime());
+  switch (unit) {
+    case 'seconds': d.setTime(d.getTime() + amount * 1000); break;
+    case 'minutes': d.setTime(d.getTime() + amount * 60_000); break;
+    case 'hours':   d.setTime(d.getTime() + amount * 3_600_000); break;
+    case 'days':    d.setTime(d.getTime() + amount * 86_400_000); break;
+    case 'weeks':   d.setTime(d.getTime() + amount * 7 * 86_400_000); break;
+    case 'months':  d.setMonth(d.getMonth() + amount); break;
+    case 'years':   d.setFullYear(d.getFullYear() + amount); break;
+  }
+  return d;
+}
+
+// Human-readable breakdown of a duration in ms
+function humanDiff(absMs: number): string {
+  const totalDays = Math.floor(absMs / 86_400_000);
+  const years     = Math.floor(totalDays / 365.25);
+  const remDays   = totalDays - Math.floor(years * 365.25);
+  const months    = Math.floor(remDays / 30.44);
+  const days      = Math.floor(remDays - months * 30.44);
+  const parts: string[] = [];
+  if (years > 0)  parts.push(`${years} year${years !== 1 ? 's' : ''}`);
+  if (months > 0) parts.push(`${months} month${months !== 1 ? 's' : ''}`);
+  if (days > 0 || parts.length === 0) parts.push(`${days} day${days !== 1 ? 's' : ''}`);
+  return parts.join(', ');
+}
+
+// Convert a Date to <input type="datetime-local"> value (local time)
+function toDatetimeLocal(date: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
 // ── Copy btn ───────────────────────────────────────────────────────────────
 
 function CopyBtn({ text, className = '' }: { text: string; className?: string }) {
@@ -72,6 +121,41 @@ function OutputRow({ label, value, mono = true }: { label: string; value: string
   );
 }
 
+// ── Arithmetic result display ──────────────────────────────────────────────
+
+function ArithResultRow({ result }: { result: Date }) {
+  const unix  = Math.floor(result.getTime() / 1000);
+  const iso   = result.toISOString();
+  const human = result.toUTCString();
+  const rel   = relativeTime(unix);
+
+  return (
+    <div className="rounded-xl border border-emerald-100 bg-emerald-50/40 px-4 py-3 space-y-1.5">
+      <div className="flex items-center justify-between mb-0.5">
+        <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-600">Result</span>
+        <div className="flex items-center gap-1.5">
+          <span className="text-[10px] text-zinc-400">Copy Unix</span>
+          <CopyBtn
+            text={String(unix)}
+            className="text-emerald-400 hover:bg-emerald-100 hover:text-emerald-700 p-1 border border-emerald-200 rounded-lg"
+          />
+        </div>
+      </div>
+      {[
+        { label: 'Unix (s)',  value: String(unix), mono: true  },
+        { label: 'ISO 8601', value: iso,           mono: true  },
+        { label: 'Human',    value: human,         mono: false },
+        { label: 'Relative', value: rel,           mono: false },
+      ].map(r => (
+        <div key={r.label} className="flex items-start gap-3 text-[12px]">
+          <span className="w-16 shrink-0 text-[10px] font-semibold text-zinc-400 pt-0.5">{r.label}</span>
+          <span className={`${r.mono ? 'font-mono' : ''} text-zinc-700 break-all`}>{r.value}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // ── Live clock display ─────────────────────────────────────────────────────
 
 function LiveClock({ tz }: { tz: string }) {
@@ -90,6 +174,8 @@ function LiveClock({ tz }: { tz: string }) {
 
 // ── Main tool ──────────────────────────────────────────────────────────────
 
+const ARITH_UNITS = ['seconds', 'minutes', 'hours', 'days', 'weeks', 'months', 'years'] as const;
+
 function TimestampTool() {
   const [tz, setTz] = useState('UTC');
   const [unixInput, setUnixInput] = useState('');
@@ -97,13 +183,25 @@ function TimestampTool() {
   const [mode, setMode] = useState<'unix-to-date' | 'date-to-unix'>('unix-to-date');
   const [nowTick, setNowTick] = useState<Date>(new Date());
 
+  // Date Arithmetic state
+  const [showArithmetic, setShowArithmetic] = useState(false);
+  const [addAmt, setAddAmt]   = useState('1');
+  const [addUnit, setAddUnit] = useState('days');
+  const [subAmt, setSubAmt]   = useState('1');
+  const [subUnit, setSubUnit] = useState('days');
+
+  // Date Range state
+  const [showRange, setShowRange]   = useState(false);
+  const [rangeStart, setRangeStart] = useState('');
+  const [rangeEnd, setRangeEnd]     = useState('');
+
   useEffect(() => {
     const id = setInterval(() => setNowTick(new Date()), 1000);
     return () => clearInterval(id);
   }, []);
 
   const nowUnix = Math.floor(nowTick.getTime() / 1000);
-  const nowMs = nowTick.getTime();
+  const nowMs   = nowTick.getTime();
 
   // Parse the selected unix timestamp
   const selectedDate = useMemo((): Date | null => {
@@ -129,22 +227,24 @@ function TimestampTool() {
   const nowTime = formatInTz(nowTick, tz, { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
   const nowDate = formatInTz(nowTick, tz, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
 
-  // Build output rows for selected date
+  // Build output rows for selected date (includes ISO week + quarter)
   const outputRows = useMemo(() => {
     if (!selectedDate) return [];
     const unix = Math.floor(selectedDate.getTime() / 1000);
-    const ms = selectedDate.getTime();
-    const iso = selectedDate.toISOString();
+    const ms   = selectedDate.getTime();
+    const iso  = selectedDate.toISOString();
     return [
       { label: 'Unix (seconds)', value: String(unix) },
-      { label: 'Unix (ms)', value: String(ms) },
-      { label: 'ISO 8601', value: iso },
-      { label: 'UTC string', value: selectedDate.toUTCString() },
-      { label: `Date (${tz})`, value: formatInTz(selectedDate, tz, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) },
-      { label: `Time (${tz})`, value: formatInTz(selectedDate, tz, { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short', hour12: false }) },
-      { label: 'Relative', value: relativeTime(unix), mono: false },
-      { label: 'Day of week', value: formatInTz(selectedDate, tz, { weekday: 'long' }), mono: false },
-      { label: 'Day of year', value: String(Math.floor((selectedDate.getTime() - new Date(selectedDate.getFullYear(), 0, 0).getTime()) / 86400000)), },
+      { label: 'Unix (ms)',      value: String(ms) },
+      { label: 'ISO 8601',       value: iso },
+      { label: 'UTC string',     value: selectedDate.toUTCString() },
+      { label: `Date (${tz})`,   value: formatInTz(selectedDate, tz, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) },
+      { label: `Time (${tz})`,   value: formatInTz(selectedDate, tz, { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short', hour12: false }) },
+      { label: 'Relative',       value: relativeTime(unix), mono: false },
+      { label: 'Day of week',    value: formatInTz(selectedDate, tz, { weekday: 'long' }), mono: false },
+      { label: 'Day of year',    value: String(Math.floor((selectedDate.getTime() - new Date(selectedDate.getFullYear(), 0, 0).getTime()) / 86400000)) },
+      { label: 'ISO Week',       value: `Week ${getISOWeek(selectedDate)}`, mono: false },
+      { label: 'Quarter',        value: getQuarter(selectedDate), mono: false },
     ];
   }, [selectedDate, tz]);
 
@@ -157,6 +257,41 @@ function TimestampTool() {
       value: formatInTz(selectedDate, zone, { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }),
     }));
   }, [selectedDate]);
+
+  // Arithmetic base: use selected date if available, otherwise live "now"
+  const arithmeticBase = selectedDate ?? nowTick;
+
+  const addResult = useMemo(() => {
+    const amount = parseInt(addAmt);
+    if (!addAmt || isNaN(amount) || amount === 0) return null;
+    return addToDate(arithmeticBase, amount, addUnit);
+  }, [arithmeticBase, addAmt, addUnit]);
+
+  const subResult = useMemo(() => {
+    const amount = parseInt(subAmt);
+    if (!subAmt || isNaN(amount) || amount === 0) return null;
+    return addToDate(arithmeticBase, -amount, subUnit);
+  }, [arithmeticBase, subAmt, subUnit]);
+
+  // Range calculation
+  const rangeResult = useMemo(() => {
+    if (!rangeStart || !rangeEnd) return null;
+    const s = new Date(rangeStart);
+    const e = new Date(rangeEnd);
+    if (isNaN(s.getTime()) || isNaN(e.getTime())) return null;
+    const diffMs = e.getTime() - s.getTime();
+    const absMs  = Math.abs(diffMs);
+    return {
+      negative:     diffMs < 0,
+      totalSeconds: Math.floor(absMs / 1000),
+      totalMinutes: Math.floor(absMs / 60_000),
+      totalHours:   Math.floor(absMs / 3_600_000),
+      totalDays:    Math.floor(absMs / 86_400_000),
+      totalWeeks:   Math.floor(absMs / (7 * 86_400_000)),
+      totalMonths:  (absMs / (30.44 * 86_400_000)).toFixed(1),
+      human:        humanDiff(absMs),
+    };
+  }, [rangeStart, rangeEnd]);
 
   return (
     <div className="divide-y divide-zinc-100">
@@ -290,6 +425,177 @@ function TimestampTool() {
           </button>
         </div>
       )}
+
+      {/* ── Date Arithmetic ─────────────────────────────────── */}
+      <div>
+        <button
+          onClick={() => setShowArithmetic(v => !v)}
+          className="flex w-full items-center justify-between px-4 py-3 sm:px-6 text-left hover:bg-zinc-50 transition-colors"
+        >
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Date Arithmetic</span>
+            {!selectedDate && (
+              <span className="rounded-full border border-zinc-200 bg-zinc-100 px-2 py-0.5 text-[9.5px] font-medium text-zinc-400">
+                using now
+              </span>
+            )}
+          </div>
+          <ChevronRight className={`h-4 w-4 text-zinc-400 transition-transform ${showArithmetic ? 'rotate-90' : ''}`} />
+        </button>
+
+        {showArithmetic && (
+          <div className="px-4 pb-6 sm:px-6 space-y-5">
+            {/* Base date display */}
+            <div className="rounded-xl border border-zinc-100 bg-zinc-50 px-4 py-2.5">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-1">Base date</p>
+              <p className="font-mono text-[12px] text-zinc-700 break-all">{arithmeticBase.toUTCString()}</p>
+              <p className="font-mono text-[11px] text-zinc-400 mt-0.5">Unix: {Math.floor(arithmeticBase.getTime() / 1000)}</p>
+            </div>
+
+            {/* Add row */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="w-16 shrink-0 text-[11px] font-bold uppercase tracking-widest text-emerald-600">Add</span>
+                <input
+                  type="number"
+                  min={0}
+                  value={addAmt}
+                  onChange={e => setAddAmt(e.target.value)}
+                  className="w-20 rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-center font-mono text-[13px] text-zinc-800 outline-none focus:border-zinc-400 focus:bg-white"
+                />
+                <select
+                  value={addUnit}
+                  onChange={e => setAddUnit(e.target.value)}
+                  className="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-[12.5px] text-zinc-700 outline-none focus:border-zinc-400"
+                >
+                  {ARITH_UNITS.map(u => <option key={u} value={u}>{u}</option>)}
+                </select>
+                <span className="text-zinc-300">=</span>
+              </div>
+              {addResult && <ArithResultRow result={addResult} />}
+            </div>
+
+            {/* Subtract row */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="w-16 shrink-0 text-[11px] font-bold uppercase tracking-widest text-rose-500">Subtract</span>
+                <input
+                  type="number"
+                  min={0}
+                  value={subAmt}
+                  onChange={e => setSubAmt(e.target.value)}
+                  className="w-20 rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-center font-mono text-[13px] text-zinc-800 outline-none focus:border-zinc-400 focus:bg-white"
+                />
+                <select
+                  value={subUnit}
+                  onChange={e => setSubUnit(e.target.value)}
+                  className="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-[12.5px] text-zinc-700 outline-none focus:border-zinc-400"
+                >
+                  {ARITH_UNITS.map(u => <option key={u} value={u}>{u}</option>)}
+                </select>
+                <span className="text-zinc-300">=</span>
+              </div>
+              {subResult && <ArithResultRow result={subResult} />}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* ── Date Range Calculator ────────────────────────────── */}
+      <div>
+        <button
+          onClick={() => setShowRange(v => !v)}
+          className="flex w-full items-center justify-between px-4 py-3 sm:px-6 text-left hover:bg-zinc-50 transition-colors"
+        >
+          <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Date Range</span>
+          <ChevronRight className={`h-4 w-4 text-zinc-400 transition-transform ${showRange ? 'rotate-90' : ''}`} />
+        </button>
+
+        {showRange && (
+          <div className="px-4 pb-6 sm:px-6 space-y-4">
+            {/* Start */}
+            <div className="space-y-1.5">
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-zinc-400">Start date</label>
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                <input
+                  type="datetime-local"
+                  value={rangeStart}
+                  onChange={e => setRangeStart(e.target.value)}
+                  className="flex-1 rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-2.5 font-mono text-[13px] text-zinc-800 outline-none focus:border-zinc-400 focus:bg-white"
+                />
+                {selectedDate && (
+                  <button
+                    onClick={() => setRangeStart(toDatetimeLocal(selectedDate))}
+                    className="shrink-0 rounded-xl border border-zinc-200 bg-white px-3 py-2.5 text-[12px] font-semibold text-zinc-600 hover:bg-zinc-50 transition active:scale-95 whitespace-nowrap"
+                  >
+                    Use current timestamp
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* End */}
+            <div className="space-y-1.5">
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-zinc-400">End date</label>
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                <input
+                  type="datetime-local"
+                  value={rangeEnd}
+                  onChange={e => setRangeEnd(e.target.value)}
+                  className="flex-1 rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-2.5 font-mono text-[13px] text-zinc-800 outline-none focus:border-zinc-400 focus:bg-white"
+                />
+                <button
+                  onClick={() => {
+                    const tmp = rangeStart;
+                    setRangeStart(rangeEnd);
+                    setRangeEnd(tmp);
+                  }}
+                  className="shrink-0 rounded-xl border border-zinc-200 bg-white px-3 py-2.5 text-[12px] font-semibold text-zinc-600 hover:bg-zinc-50 transition active:scale-95"
+                >
+                  Swap
+                </button>
+              </div>
+            </div>
+
+            {/* Results */}
+            {rangeResult && (
+              <div className="rounded-xl border border-zinc-100 bg-white shadow-sm overflow-hidden">
+                {rangeResult.negative && (
+                  <div className="px-4 py-2 bg-amber-50 border-b border-amber-100">
+                    <p className="text-[11px] text-amber-700 font-semibold">Note: end date is before start date — showing absolute difference</p>
+                  </div>
+                )}
+                <div className="grid grid-cols-2 sm:grid-cols-3">
+                  {[
+                    { label: 'Total seconds', value: rangeResult.totalSeconds.toLocaleString() },
+                    { label: 'Total minutes', value: rangeResult.totalMinutes.toLocaleString() },
+                    { label: 'Total hours',   value: rangeResult.totalHours.toLocaleString() },
+                    { label: 'Total days',    value: rangeResult.totalDays.toLocaleString() },
+                    { label: 'Total weeks',   value: rangeResult.totalWeeks.toLocaleString() },
+                    { label: 'Approx months', value: rangeResult.totalMonths },
+                  ].map((item, i) => (
+                    <div
+                      key={item.label}
+                      className={`px-4 py-3 border-zinc-100 ${i > 0 ? 'border-l' : ''} ${i >= 3 ? 'border-t' : ''}`}
+                    >
+                      <p className="text-[10px] font-semibold text-zinc-400">{item.label}</p>
+                      <p className="font-mono text-[13px] font-bold text-zinc-800 mt-0.5">{item.value}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="border-t border-zinc-100 px-4 py-3 bg-zinc-50">
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 mb-0.5">Summary</p>
+                  <p className="text-[13px] font-semibold text-zinc-800">{rangeResult.human}</p>
+                </div>
+              </div>
+            )}
+
+            {!rangeResult && ((rangeStart && rangeEnd)) && (
+              <p className="text-[12px] text-red-500">Invalid date — please check start and end values</p>
+            )}
+          </div>
+        )}
+      </div>
 
     </div>
   );
