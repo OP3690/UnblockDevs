@@ -127,7 +127,7 @@ export default function SocialMediaFeaturePopup() {
               >
                 {/* Shimmer layer */}
                 <span className="pointer-events-none absolute inset-0 smf-shimmer" aria-hidden />
-                Reveal my screen time →
+                Reveal my Instagram activity →
               </Link>
               <button
                 type="button"
