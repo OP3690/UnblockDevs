@@ -7,7 +7,7 @@ import CronExpressionClient from './client';
 
 export const metadata: Metadata = {
   title: 'Cron Expression Builder & Explainer Online | UnblockDevs',
-  description: 'Build and explain cron expressions instantly. See next run times, get human-readable descriptions, and generate crontab syntax for any schedule. Free, browser-based.',
+  description: 'Build and explain cron expressions instantly. See next 10 run times, get human-readable descriptions, generate crontab syntax for any schedule. Free, browser-based.',
   keywords: [
     'cron expression',
     'cron job generator',
@@ -75,6 +75,23 @@ export const metadata: Metadata = {
     'cron job help',
     'cron expression free tool',
     'schedule task cron',
+    'how to write a cron expression',
+    'what does 0 * * * * mean in cron',
+    'cron expression for every day at 9am',
+    'cron every 5 minutes expression',
+    'cron expression for weekdays only',
+    'how to run cron job at specific time',
+    'what is crontab',
+    'how to validate cron expression',
+    'cron expression for monthly job',
+    'how to schedule task in linux',
+    'cron for ci cd pipeline',
+    'airflow schedule cron',
+    'cron expression cheat sheet',
+    'minute hour day month weekday',
+    'cron syntax reference',
+    'crontab.guru alternative',
+    'cronhub.io alternative',
   ],
   openGraph: {
     title: 'Cron Expression Builder & Explainer | UnblockDevs',
