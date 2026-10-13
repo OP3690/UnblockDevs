@@ -64,7 +64,7 @@ const TABS: { id: Cat; label: string; icon: LucideIcon; color: string; activeCol
   { id: 'api',    label: 'API & cURL', icon: Network,     color: 'text-sky-500',     activeColor: 'text-white', activeBg: 'bg-sky-500'     },
   { id: 'encode', label: 'Encoding',   icon: Binary,      color: 'text-amber-600',   activeColor: 'text-white', activeBg: 'bg-amber-500'   },
   { id: 'dev',    label: 'Dev Utils',  icon: Wrench,      color: 'text-rose-500',    activeColor: 'text-white', activeBg: 'bg-rose-500'    },
-  { id: 'spend',  label: 'Spend',      icon: Wallet,      color: 'text-teal-600',    activeColor: 'text-white', activeBg: 'bg-teal-600'    },
+  { id: 'spend',  label: 'My Data',    icon: Wallet,      color: 'text-teal-600',    activeColor: 'text-white', activeBg: 'bg-teal-600'    },
 ];
 
 type MiniDef = {
@@ -162,7 +162,8 @@ const ALL_TOOLS: MiniDef[] = [
   { label: 'SVG to Image',       desc: 'Export SVG as PNG or JPEG',           cats: ['all','dev'],           icon: Image,          variant: 'new', href: '/svg-to-image'                 },
   { label: 'Image to Text',      desc: 'OCR: extract text from images',       cats: ['all','dev'],           icon: FileSearch,     variant: 'new', href: '/image-to-text'                },
   { label: 'PDF to Excel',       desc: 'Extract tables from PDF files',       cats: ['all','dev'],           icon: FileSpreadsheet,variant: 'new', href: '/pdf-to-excel-word'            },
-  // Spend analyzers
+  // My Data analyzers
+  { label: 'Social Media Time', desc: 'See how many hours you waste online', cats: ['all','spend'],         icon: Activity,       variant: 'hot', href: '/social-media-time-analyzer'   },
   { label: 'Uber Analyzer',     desc: 'Rides, spend & km from your export',  cats: ['all','spend'],         icon: Wallet,         variant: 'new', href: '/uber-analyzer'                },
   { label: 'Amazon Analyzer',   desc: 'Orders, spend & top categories',      cats: ['all','spend'],         icon: Package,        variant: 'new', href: '/amazon-analyzer'              },
 ];
