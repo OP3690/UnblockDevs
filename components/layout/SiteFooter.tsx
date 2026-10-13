@@ -245,6 +245,8 @@ export default function SiteFooter() {
                   { href: '/curl-to-python', label: 'cURL to Python' },
                   { href: '/curl-to-python-requests', label: 'cURL to Python Requests' },
                   { href: '/curl-to-requests', label: 'cURL to Code' },
+                  { href: '/uber-analyzer', label: 'Uber Analyzer' },
+                  { href: '/amazon-analyzer', label: 'Amazon Analyzer' },
                 ].map((l) => (
                   <li key={l.href}>
                     <Link href={l.href} className="text-zinc-500 transition-colors hover:text-zinc-200">

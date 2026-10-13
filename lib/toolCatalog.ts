@@ -496,6 +496,22 @@ export const TOOL_CATALOG: ToolMeta[] = [
     shortDesc: 'Generate realistic test data',
     tags: ['ai', 'json', 'test', 'generate'],
   },
+  {
+    toolName: 'uber_analyzer',
+    href: '/uber-analyzer',
+    label: 'Uber Analyzer',
+    emoji: '🚗',
+    shortDesc: 'Analyze your Uber ride history',
+    tags: ['data', 'privacy', 'personal', 'travel', 'analyzer'],
+  },
+  {
+    toolName: 'amazon_analyzer',
+    href: '/amazon-analyzer',
+    label: 'Amazon Analyzer',
+    emoji: '📦',
+    shortDesc: 'Analyze your Amazon order history',
+    tags: ['data', 'privacy', 'personal', 'shopping', 'analyzer'],
+  },
 ];
 
 /** Build a fast lookup map by toolName */
