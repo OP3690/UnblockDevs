@@ -50,11 +50,12 @@ import {
   Sparkles,
   Package,
   CornerDownLeft,
+  Wallet,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 /* ─── Types ───────────────────────────────────────────────────────────── */
-type Cat = 'all' | 'ai' | 'json' | 'api' | 'encode' | 'dev';
+type Cat = 'all' | 'ai' | 'json' | 'api' | 'encode' | 'dev' | 'spend';
 
 const TABS: { id: Cat; label: string; icon: LucideIcon; color: string; activeColor: string; activeBg: string }[] = [
   { id: 'all',    label: 'All',        icon: Sparkles,    color: 'text-indigo-500',  activeColor: 'text-white', activeBg: 'bg-indigo-600' },
@@ -63,6 +64,7 @@ const TABS: { id: Cat; label: string; icon: LucideIcon; color: string; activeCol
   { id: 'api',    label: 'API & cURL', icon: Network,     color: 'text-sky-500',     activeColor: 'text-white', activeBg: 'bg-sky-500'     },
   { id: 'encode', label: 'Encoding',   icon: Binary,      color: 'text-amber-600',   activeColor: 'text-white', activeBg: 'bg-amber-500'   },
   { id: 'dev',    label: 'Dev Utils',  icon: Wrench,      color: 'text-rose-500',    activeColor: 'text-white', activeBg: 'bg-rose-500'    },
+  { id: 'spend',  label: 'Spend',      icon: Wallet,      color: 'text-teal-600',    activeColor: 'text-white', activeBg: 'bg-teal-600'    },
 ];
 
 type MiniDef = {
@@ -81,6 +83,7 @@ const CAT_ICON_COLOR: Record<Cat, { bg: string; text: string; ring: string; bar:
   ai:     { bg: 'bg-violet-50',  text: 'text-violet-700',  ring: 'ring-violet-200/60',  bar: 'bg-violet-500'  },
   encode: { bg: 'bg-amber-50',   text: 'text-amber-700',   ring: 'ring-amber-200/60',   bar: 'bg-amber-500'   },
   dev:    { bg: 'bg-rose-50',    text: 'text-rose-700',    ring: 'ring-rose-200/60',    bar: 'bg-rose-500'    },
+  spend:  { bg: 'bg-teal-50',   text: 'text-teal-700',    ring: 'ring-teal-200/60',    bar: 'bg-teal-500'    },
 };
 
 const VARIANT_BADGE: Record<string, { label: string; cls: string }> = {
@@ -90,7 +93,7 @@ const VARIANT_BADGE: Record<string, { label: string; cls: string }> = {
 };
 
 function getDominantCat(tool: MiniDef): Cat {
-  const priority: Cat[] = ['ai', 'json', 'api', 'encode', 'dev'];
+  const priority: Cat[] = ['ai', 'spend', 'json', 'api', 'encode', 'dev'];
   return priority.find((c) => tool.cats.includes(c)) ?? 'all';
 }
 
@@ -159,6 +162,9 @@ const ALL_TOOLS: MiniDef[] = [
   { label: 'SVG to Image',       desc: 'Export SVG as PNG or JPEG',           cats: ['all','dev'],           icon: Image,          variant: 'new', href: '/svg-to-image'                 },
   { label: 'Image to Text',      desc: 'OCR: extract text from images',       cats: ['all','dev'],           icon: FileSearch,     variant: 'new', href: '/image-to-text'                },
   { label: 'PDF to Excel',       desc: 'Extract tables from PDF files',       cats: ['all','dev'],           icon: FileSpreadsheet,variant: 'new', href: '/pdf-to-excel-word'            },
+  // Spend analyzers
+  { label: 'Uber Analyzer',     desc: 'Rides, spend & km from your export',  cats: ['all','spend'],         icon: Wallet,         variant: 'new', href: '/uber-analyzer'                },
+  { label: 'Amazon Analyzer',   desc: 'Orders, spend & top categories',      cats: ['all','spend'],         icon: Package,        variant: 'new', href: '/amazon-analyzer'              },
 ];
 
 /* ─── Typewriter placeholder examples ────────────────────────────────── */
