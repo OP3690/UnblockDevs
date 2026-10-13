@@ -107,13 +107,12 @@ function parseCSV(text: string): Record<string, string>[] {
 }
 
 function fmtCurrency(amount: number, currency: string): string {
+  const code = currency || 'USD';
+  const locale = code === 'INR' ? 'en-IN' : 'en-US';
   try {
-    if (currency === 'INR') {
-      return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount);
-    }
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: currency || 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount);
+    return new Intl.NumberFormat(locale, { style: 'currency', currency: code, minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount);
   } catch {
-    return `${currency} ${Math.round(amount).toLocaleString()}`;
+    return `${code} ${Math.round(amount).toLocaleString()}`;
   }
 }
 

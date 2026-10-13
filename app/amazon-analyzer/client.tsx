@@ -139,13 +139,12 @@ function parseDate(s: string): Date | null {
 }
 
 function fmtCurrency(amount: number, currency: string): string {
+  const code = currency || 'USD';
+  const locale = code === 'INR' ? 'en-IN' : 'en-US';
   try {
-    if (currency === 'INR') {
-      return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount);
-    }
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: currency || 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount);
+    return new Intl.NumberFormat(locale, { style: 'currency', currency: code, minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount);
   } catch {
-    return `${currency} ${Math.round(amount).toLocaleString()}`;
+    return `${code} ${Math.round(amount).toLocaleString()}`;
   }
 }
 
@@ -171,6 +170,7 @@ function parseAmazonCSV(text: string): AmazonAnalysis {
   const totalCol = keys.find(k => k.toLowerCase().includes('item total')) ?? 'Item Total';
   const dateCol = keys.find(k => k.toLowerCase().includes('order date')) ?? 'Order Date';
   const qtyCol = keys.find(k => k.toLowerCase() === 'quantity') ?? 'Quantity';
+  const currencyCol = keys.find(k => k.toLowerCase() === 'currency');
 
   const orderTotals: Record<string, number> = {};
   const yearSpend: Record<number, number> = {};
@@ -195,6 +195,10 @@ function parseAmazonCSV(text: string): AmazonAnalysis {
 
     const { amount, currency } = parseMoney(totalStr);
     if (!detectedCurrency && currency) detectedCurrency = currency;
+    if (!detectedCurrency && currencyCol) {
+      const c = (row[currencyCol] ?? '').trim().toUpperCase();
+      if (c) detectedCurrency = c;
+    }
 
     const date = parseDate(dateStr);
 
@@ -259,7 +263,7 @@ function parseAmazonCSV(text: string): AmazonAnalysis {
     totalOrders,
     totalItems,
     totalSpend,
-    currency: detectedCurrency || 'INR',
+    currency: detectedCurrency || 'USD',
     avgOrderValue,
     firstOrderYear: years[0] ?? new Date().getFullYear(),
     lastOrderYear: years[years.length - 1] ?? new Date().getFullYear(),
