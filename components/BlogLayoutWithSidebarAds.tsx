@@ -107,12 +107,12 @@ interface BlogLayoutWithSidebarAdsProps {
  */
 export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSidebarAdsProps) {
   return (
-    <div className="w-full py-6 sm:py-10">
+    <div className="w-full py-3 sm:py-4">
       <AutoBlogArticleSchema />
       <AutoBlogFAQSchema />
 
       {/* Nav bar: Back to Blog + All Tools on left, Share buttons on right */}
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 px-4 sm:px-6 lg:px-8 xl:px-0 xl:mx-auto xl:max-w-4xl">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3 px-4 sm:px-6 lg:px-8 xl:px-0 xl:mx-auto xl:max-w-4xl">
         <div className="flex items-center gap-2">
           <Link
             href="/blog"
@@ -136,7 +136,7 @@ export default function BlogLayoutWithSidebarAds({ children }: BlogLayoutWithSid
       <div
         role="region"
         aria-label="Advertisement"
-        className="mb-6 overflow-hidden rounded-xl px-4 sm:px-6 lg:px-8 xl:px-0 xl:mx-auto xl:max-w-4xl"
+        className="mb-3 overflow-hidden rounded-xl px-4 sm:px-6 lg:px-8 xl:px-0 xl:mx-auto xl:max-w-4xl"
       >
         <AdUnit slot={SLOT_INARTICLE_TOP} format="fluid" layout="in-article" className="rounded-xl overflow-hidden" />
       </div>

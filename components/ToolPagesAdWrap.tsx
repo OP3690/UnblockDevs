@@ -49,7 +49,7 @@ export default function ToolPagesAdWrap({ children }: { children: React.ReactNod
 
   return (
     <>
-      <div className="mx-auto flex w-full max-w-[1600px] flex-col px-3 py-2 sm:py-4 sm:px-5 lg:px-6 xl:flex-row xl:items-start xl:gap-6 xl:px-8">
+      <div className="mx-auto flex w-full max-w-[1600px] flex-col xl:flex-row xl:items-start xl:gap-6 xl:px-8">
         {/* Left sidebar — 200px at xl+ */}
         <aside
           role="region"
@@ -68,23 +68,23 @@ export default function ToolPagesAdWrap({ children }: { children: React.ReactNod
         {/* Main content */}
         <div className="relative z-[1] order-2 min-w-0 flex-1 overflow-x-hidden">
           {/* Above-tool horizontal banner — shows on all screen sizes */}
-          <div role="region" aria-label="Advertisement" className="mb-4">
+          <div role="region" aria-label="Advertisement" className="mb-3">
             <AdUnit
               slot={SLOT_ABOVE}
               format="auto"
-              minHeight={60}
+              minHeight={0}
               minWidth={0}
               className="w-full rounded-lg overflow-hidden"
             />
           </div>
 
           {/* ART2 — mobile-only pre-tool banner (sidebars absent on mobile, fills the gap) */}
-          <div role="region" aria-label="Advertisement" className="mb-4 xl:hidden">
+          <div role="region" aria-label="Advertisement" className="mb-3 xl:hidden">
             <AdUnit
               slot={SLOT_MOBILE_PRE}
               format="fluid"
               layout="in-article"
-              minHeight={90}
+              minHeight={0}
               minWidth={0}
               className="w-full rounded-lg overflow-hidden"
             />
@@ -148,3 +148,4 @@ export default function ToolPagesAdWrap({ children }: { children: React.ReactNod
     </>
   );
 }
+

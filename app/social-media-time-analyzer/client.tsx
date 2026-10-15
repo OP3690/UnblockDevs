@@ -1,12 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import InstagramAnalyzerClient, { decodeShare } from '../instagram-reels-analyzer/client';
 import type { ShareSummary } from '../instagram-reels-analyzer/client';
 import SharedView from './shared-view';
 import ThreadsAnalyzerClient from '../threads-analyzer/client';
+import FacebookAnalyzerClient from './facebook-client';
+import TwitterAnalyzerClient from './twitter-client';
 
 // ─── Platform logo SVG components ─────────────────────────────────────────────
 
@@ -115,30 +117,12 @@ const PLATFORMS = [
     tagline: 'Reels, Stories, DMs & more',
   },
   {
-    id: 'youtube',
-    label: 'YouTube',
-    color: '#FF0000',
-    gradient: 'from-red-600 to-red-400',
-    bg: 'bg-gradient-to-br from-red-50 to-orange-50',
-    available: false,
-    tagline: 'Watch time, playlists & searches',
-    features: [
-      'Total videos watched & estimated hours',
-      'Watch history heatmap by day/hour',
-      'Top channels you watched most',
-      'Search history word cloud',
-      'Liked & saved videos count',
-      'Comments written over time',
-    ],
-    exportPath: 'Google Takeout → YouTube',
-  },
-  {
     id: 'facebook',
     label: 'Facebook',
     color: '#1877F2',
     gradient: 'from-blue-600 to-blue-400',
     bg: 'bg-gradient-to-br from-blue-50 to-indigo-50',
-    available: false,
+    available: true,
     tagline: 'Posts, reactions & messages',
     features: [
       'Posts, reactions & comments history',
@@ -149,42 +133,6 @@ const PLATFORMS = [
       'Pages you followed & unfollowed',
     ],
     exportPath: 'Facebook → Settings → Your Facebook Information',
-  },
-  {
-    id: 'twitter',
-    label: 'Twitter / X',
-    color: '#000000',
-    gradient: 'from-gray-900 to-gray-600',
-    bg: 'bg-gradient-to-br from-gray-50 to-slate-100',
-    available: false,
-    tagline: 'Tweets, likes & browsing time',
-    features: [
-      'Total tweets posted over the years',
-      'Likes given — topics & patterns',
-      'DMs sent & received',
-      'Replies vs original tweets',
-      'Account age & activity streaks',
-      'Monthly engagement breakdown',
-    ],
-    exportPath: 'Settings → Your Account → Download an archive',
-  },
-  {
-    id: 'tiktok',
-    label: 'TikTok',
-    color: '#010101',
-    gradient: 'from-gray-900 via-pink-600 to-cyan-400',
-    bg: 'bg-gradient-to-br from-pink-50 to-cyan-50',
-    available: false,
-    tagline: 'Videos watched & time in app',
-    features: [
-      'Total videos watched & estimated hours',
-      'Days of life spent scrolling TikTok',
-      'Liked & shared videos count',
-      'Comments & DMs sent',
-      'Search history topics',
-      'Monthly watch trend over time',
-    ],
-    exportPath: 'Profile → Settings → Privacy → Personalization & Data',
   },
   {
     id: 'threads',
@@ -204,7 +152,58 @@ const PLATFORMS = [
     ],
     exportPath: 'Meta Accounts Center → Download your information → Threads',
   },
-] as const;
+  {
+    id: 'twitter',
+    label: 'Twitter / X',
+    color: '#000000',
+    gradient: 'from-gray-900 to-gray-600',
+    bg: 'bg-gradient-to-br from-gray-50 to-slate-100',
+    available: true,
+    tagline: 'Tweets, likes & browsing time',
+    features: [
+      'Total tweets posted over the years',
+      'Likes given — topics & patterns',
+      'DMs sent & received',
+      'Replies vs original tweets',
+      'Account age & activity streaks',
+      'Monthly engagement breakdown',
+    ],
+    exportPath: 'Settings → Your Account → Download an archive',
+  },
+  {
+    id: 'youtube',
+    label: 'YouTube',
+    color: '#FF0000',
+    gradient: 'from-red-600 to-red-400',
+    bg: 'bg-gradient-to-br from-red-50 to-orange-50',
+    available: false,
+    tagline: 'Watch time & top channels',
+    features: [
+      'Total videos watched & estimated hours',
+      'Top 10 channels you watched most',
+      'Monthly watch count chart (last 12 months)',
+    ],
+    exportPath: 'Google Takeout → YouTube',
+  },
+  {
+    id: 'tiktok',
+    label: 'TikTok',
+    color: '#010101',
+    gradient: 'from-gray-900 via-pink-600 to-cyan-400',
+    bg: 'bg-gradient-to-br from-pink-50 to-cyan-50',
+    available: false,
+    tagline: 'Videos watched & time in app',
+    features: [
+      'Total videos watched & estimated hours',
+      'Days of life spent scrolling TikTok',
+      'Liked & shared videos count',
+      'Comments & DMs sent',
+      'Search history topics',
+      'Monthly watch trend over time',
+    ],
+    exportPath: 'Profile → Settings → Privacy → Personalization & Data',
+  },
+];
 
 type PlatformId = (typeof PLATFORMS)[number]['id'];
 
@@ -253,6 +252,199 @@ function ComingSoon({ p }: { p: (typeof PLATFORMS)[number] }) {
           Everything is processed 100% in your browser. No uploads, no servers.
         </p>
       </div>
+    </div>
+  );
+}
+
+// ─── YouTube Analyzer ────────────────────────────────────────────────────────
+
+interface YTEntry { title: string; titleUrl?: string; time?: string; subtitles?: { name: string }[] }
+
+interface YTAnalysis {
+  totalVideos: number;
+  estimatedHours: number;
+  topChannels: { name: string; count: number }[];
+  byMonth: { label: string; count: number }[];
+}
+
+function parseYouTubeHistory(json: unknown): YTAnalysis {
+  if (!Array.isArray(json)) throw new Error('Expected an array of watch history entries. Make sure you uploaded watch-history.json from Google Takeout → YouTube.');
+  const entries = json as YTEntry[];
+  if (entries.length === 0) throw new Error('No watch history entries found in this file.');
+  // Top channels
+  const channelMap: Record<string, number> = {};
+  const monthMap: Record<string, number> = {};
+  for (const e of entries) {
+    const channel = e.subtitles?.[0]?.name ?? '';
+    if (channel) channelMap[channel] = (channelMap[channel] ?? 0) + 1;
+    if (e.time) {
+      try {
+        const d = new Date(e.time);
+        if (!isNaN(d.getTime())) {
+          const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+          monthMap[key] = (monthMap[key] ?? 0) + 1;
+        }
+      } catch { /* skip */ }
+    }
+  }
+  const topChannels = Object.entries(channelMap)
+    .sort(([,a],[,b]) => b - a).slice(0, 10)
+    .map(([name, count]) => ({ name, count }));
+  // Last 12 months
+  const allKeys = Object.keys(monthMap).sort().slice(-12);
+  const byMonth = allKeys.map(key => {
+    const [yr, mo] = key.split('-');
+    const d = new Date(Number(yr), Number(mo) - 1, 1);
+    return { label: d.toLocaleDateString('en-IN', { month: 'short', year: '2-digit' }), count: monthMap[key] };
+  });
+  return {
+    totalVideos: entries.length,
+    estimatedHours: Math.round(entries.length * 5 / 60),
+    topChannels,
+    byMonth,
+  };
+}
+
+function YouTubeAnalyzer() {
+  const [state, setState] = useState<'upload' | 'done' | 'error'>('upload');
+  const [analysis, setAnalysis] = useState<YTAnalysis | null>(null);
+  const [error, setError] = useState('');
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  function handleFile(file: File) {
+    file.text().then(text => {
+      try {
+        const json = JSON.parse(text);
+        const result = parseYouTubeHistory(json);
+        setAnalysis(result);
+        setState('done');
+      } catch (e) {
+        setError(e instanceof Error ? e.message : 'Failed to parse file.');
+        setState('error');
+      }
+    }).catch(() => { setError('Could not read file.'); setState('error'); });
+  }
+
+  if (state === 'done' && analysis) {
+    const maxChannel = analysis.topChannels[0]?.count ?? 1;
+    const maxMonth = Math.max(...analysis.byMonth.map(m => m.count), 1);
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-black text-gray-900">YouTube Watch History</h2>
+          <button onClick={() => { setState('upload'); setAnalysis(null); }} className="text-sm text-red-500 hover:text-red-600 font-medium">
+            Analyze another file
+          </button>
+        </div>
+        {/* Stats */}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+            <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">Videos watched</p>
+            <p className="text-3xl font-black text-red-600">{analysis.totalVideos.toLocaleString()}</p>
+          </div>
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+            <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">Estimated hours</p>
+            <p className="text-3xl font-black text-red-600">{analysis.estimatedHours.toLocaleString()}</p>
+            <p className="text-xs text-gray-400 mt-0.5">~5 min avg per video</p>
+          </div>
+        </div>
+        {/* Top Channels */}
+        {analysis.topChannels.length > 0 && (
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+            <h3 className="text-sm font-black text-gray-900 mb-4">Top 10 Channels</h3>
+            <div className="space-y-2.5">
+              {analysis.topChannels.map((c, i) => (
+                <div key={c.name} className="flex items-center gap-3">
+                  <span className="text-xs font-bold text-gray-300 w-5 text-right flex-shrink-0">{i + 1}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm font-medium text-gray-800 truncate pr-2">{c.name}</span>
+                      <span className="text-xs tabular-nums text-gray-500 flex-shrink-0">{c.count}</span>
+                    </div>
+                    <div className="h-2 rounded-full bg-red-50 overflow-hidden">
+                      <div className="h-full rounded-full" style={{ width: `${(c.count / maxChannel) * 100}%`, background: i === 0 ? '#ef4444' : '#fca5a5' }} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        {/* Monthly chart */}
+        {analysis.byMonth.length > 1 && (
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+            <h3 className="text-sm font-black text-gray-900 mb-1">Monthly Watch Count</h3>
+            <p className="text-xs text-gray-400 mb-4">Last 12 months</p>
+            <div className="space-y-2">
+              {analysis.byMonth.map(m => (
+                <div key={m.label} className="flex items-center gap-3">
+                  <span className="text-xs text-gray-400 w-12 flex-shrink-0">{m.label}</span>
+                  <div className="flex-1 h-5 bg-red-50 rounded-full overflow-hidden">
+                    <div className="h-full rounded-full flex items-center pl-2" style={{ width: `${Math.max(4, (m.count / maxMonth) * 100)}%`, background: '#ef4444' }}>
+                      <span className="text-[10px] text-white font-bold whitespace-nowrap">{m.count}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        <p className="text-center text-xs text-gray-400">All processing happens in your browser. Nothing is uploaded.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-xl mx-auto px-4 py-12 space-y-6">
+      <div className="text-center">
+        <YouTubeIcon size={64} />
+        <div className="inline-flex items-center gap-2 bg-red-50 border border-red-200 rounded-full px-3 py-1 text-xs font-bold text-red-600 uppercase tracking-wide mt-4 mb-2">
+          Beta
+        </div>
+        <h2 className="text-2xl font-black text-gray-900 mt-2">YouTube Watch History</h2>
+        <p className="text-sm text-gray-500 mt-1">Upload your <strong>watch-history.json</strong> from Google Takeout</p>
+      </div>
+      {/* How to export */}
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+        <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">How to export from Google Takeout</p>
+        <ol className="space-y-3">
+          {[
+            { n: 1, t: 'Open Google Takeout', b: 'Go to takeout.google.com and sign in.' },
+            { n: 2, t: 'Deselect All, then select YouTube', b: 'Click "Deselect all", scroll down and check only YouTube.' },
+            { n: 3, t: 'Choose watch-history only', b: 'Under YouTube, click "All YouTube data included" and select only "history".' },
+            { n: 4, t: 'Set format to JSON', b: 'Change the export format from HTML to JSON.' },
+            { n: 5, t: 'Download and extract', b: 'Download the ZIP and find watch-history.json inside the Takeout/YouTube/history/ folder.' },
+          ].map(s => (
+            <li key={s.n} className="flex gap-3">
+              <span className="flex-shrink-0 w-5 h-5 rounded-full bg-red-600 text-white text-[10px] font-bold flex items-center justify-center mt-0.5">{s.n}</span>
+              <div>
+                <div className="text-sm font-bold text-gray-800">{s.t}</div>
+                <div className="text-xs text-gray-500 mt-0.5">{s.b}</div>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+      {/* Upload zone */}
+      <div
+        className="border-2 border-dashed border-red-200 rounded-2xl p-8 text-center cursor-pointer hover:bg-red-50 transition-all"
+        onClick={() => fileRef.current?.click()}
+      >
+        <input ref={fileRef} type="file" accept=".json" className="hidden"
+          onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
+        <p className="text-sm font-bold text-gray-700 mb-1">Drop watch-history.json here</p>
+        <p className="text-xs text-gray-400">or click to browse · .json file only</p>
+      </div>
+      {state === 'error' && (
+        <div className="rounded-xl p-4 border border-red-200 bg-red-50 text-sm text-red-700">
+          <strong>Error:</strong> {error}
+          <p className="text-xs mt-1 text-red-600">
+            Make sure you selected the <strong>JSON format</strong> in Google Takeout, not HTML.{' '}
+            <a href="https://takeout.google.com" target="_blank" rel="noopener noreferrer" className="underline">Go to Takeout</a>
+          </p>
+        </div>
+      )}
+      <p className="text-center text-xs text-gray-400">100% private — processing happens in your browser</p>
     </div>
   );
 }
@@ -381,6 +573,10 @@ export default function SocialMediaTimeAnalyzerClient() {
         </div>
       ) : platform === 'threads' ? (
         <ThreadsAnalyzerClient hideNav />
+      ) : platform === 'facebook' ? (
+        <FacebookAnalyzerClient hideNav />
+      ) : platform === 'twitter' ? (
+        <TwitterAnalyzerClient hideNav />
       ) : (
         <ComingSoon p={current} />
       )}

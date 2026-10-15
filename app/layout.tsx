@@ -17,6 +17,7 @@ import VisitTracker from '@/components/VisitTracker'
 import AutoToolSchema from '@/components/AutoToolSchema'
 import AutoBlogArticleSchema from '@/components/AutoBlogArticleSchema'
 import ScrollToTop from '@/components/ScrollToTop'
+import SocialMediaFeaturePopup from '@/components/home/SocialMediaFeaturePopup'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap', preload: true })
 const firaCode = Fira_Code({ subsets: ['latin'], variable: '--font-fira-code', display: 'swap', preload: true })
@@ -333,6 +334,7 @@ export default function RootLayout({
           <GlobalAdSlot />
           <BuyMeACoffeeWidget />
           <ScrollToTop />
+          <SocialMediaFeaturePopup />
         </DevModeWrapper>
         <Toaster
           position="bottom-center"

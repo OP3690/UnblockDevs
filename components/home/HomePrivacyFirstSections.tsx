@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { trackCategoryFilter, trackHomeToolClick } from '@/lib/analytics';
 import {
   ArrowRight,
   Check,
@@ -73,13 +74,13 @@ type MiniDef = {
   icon:  LucideIcon;
 };
 
-const CAT_ICON_COLOR: Record<Cat, { bg: string; text: string; ring: string }> = {
-  all:    { bg: 'bg-zinc-100',   text: 'text-zinc-600',    ring: 'ring-zinc-200/60'    },
-  json:   { bg: 'bg-emerald-50', text: 'text-emerald-700', ring: 'ring-emerald-200/60' },
-  api:    { bg: 'bg-sky-50',     text: 'text-sky-700',     ring: 'ring-sky-200/60'     },
-  ai:     { bg: 'bg-violet-50',  text: 'text-violet-700',  ring: 'ring-violet-200/60'  },
-  encode: { bg: 'bg-amber-50',   text: 'text-amber-700',   ring: 'ring-amber-200/60'   },
-  dev:    { bg: 'bg-rose-50',    text: 'text-rose-700',    ring: 'ring-rose-200/60'    },
+const CAT_ICON_COLOR: Record<Cat, { bg: string; text: string; ring: string; bar: string }> = {
+  all:    { bg: 'bg-zinc-100',   text: 'text-zinc-600',    ring: 'ring-zinc-200/60',    bar: 'bg-zinc-400'    },
+  json:   { bg: 'bg-emerald-50', text: 'text-emerald-700', ring: 'ring-emerald-200/60', bar: 'bg-emerald-500' },
+  api:    { bg: 'bg-sky-50',     text: 'text-sky-700',     ring: 'ring-sky-200/60',     bar: 'bg-sky-500'     },
+  ai:     { bg: 'bg-violet-50',  text: 'text-violet-700',  ring: 'ring-violet-200/60',  bar: 'bg-violet-500'  },
+  encode: { bg: 'bg-amber-50',   text: 'text-amber-700',   ring: 'ring-amber-200/60',   bar: 'bg-amber-500'   },
+  dev:    { bg: 'bg-rose-50',    text: 'text-rose-700',    ring: 'ring-rose-200/60',    bar: 'bg-rose-500'    },
 };
 
 const VARIANT_BADGE: Record<string, { label: string; cls: string }> = {
@@ -571,7 +572,7 @@ export default function HomePrivacyFirstSections({
               <button
                 key={t.id}
                 type="button"
-                onClick={() => { setCat(t.id); setSearchQuery(''); }}
+                onClick={() => { setCat(t.id); setSearchQuery(''); trackCategoryFilter(t.id); }}
                 className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-[12px] font-semibold transition-all ${
                   isActive
                     ? `${t.activeBg} ${t.activeColor} border-transparent shadow-sm`
@@ -693,14 +694,18 @@ export default function HomePrivacyFirstSections({
                 <Link
                   key={t.href}
                   href={t.href}
-                  className="group flex items-start gap-3 rounded-xl border border-zinc-200/80 bg-white px-4 py-3.5 shadow-sm ring-1 ring-zinc-900/[0.03] transition-all duration-150 hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-md hover:shadow-zinc-900/[0.06] active:scale-[0.99]"
+                  onClick={() => trackHomeToolClick(t.label, dom)}
+                  className="group relative flex items-center gap-3.5 overflow-hidden rounded-xl border border-zinc-200/80 bg-white px-4 py-4 shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-md hover:shadow-zinc-900/[0.08] active:scale-[0.99]"
                 >
-                  <div className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ring-1 ${colors.bg} ${colors.text} ${colors.ring}`}>
+                  {/* Category-colored left accent bar */}
+                  <div className={`absolute inset-y-0 left-0 w-[3px] origin-center scale-y-0 rounded-r transition-transform duration-200 group-hover:scale-y-100 ${colors.bar}`} aria-hidden />
+
+                  <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ring-1 transition-all duration-150 group-hover:ring-2 ${colors.bg} ${colors.text} ${colors.ring}`}>
                     <Icon className="h-4 w-4" aria-hidden />
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <p className="truncate text-[13px] font-semibold text-zinc-800 group-hover:text-zinc-900 leading-tight">
+                      <p className="truncate text-[13px] font-semibold leading-tight text-zinc-800 group-hover:text-zinc-900">
                         {t.label}
                       </p>
                       {badge && (
@@ -709,9 +714,9 @@ export default function HomePrivacyFirstSections({
                         </span>
                       )}
                     </div>
-                    <p className="mt-0.5 text-[12px] leading-snug text-zinc-400 truncate">{t.desc}</p>
+                    <p className="mt-0.5 truncate text-[12px] leading-snug text-zinc-400">{t.desc}</p>
                   </div>
-                  <ChevronRight className="mt-1 h-3.5 w-3.5 shrink-0 text-zinc-300 transition-all group-hover:text-zinc-500 group-hover:translate-x-0.5" aria-hidden />
+                  <ChevronRight className="h-3.5 w-3.5 shrink-0 text-zinc-300 transition-all duration-150 group-hover:translate-x-0.5 group-hover:text-zinc-500" aria-hidden />
                 </Link>
               );
             })}

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Check, ChevronRight, Zap } from 'lucide-react';
+import { Check, ChevronRight, ChevronLeft, Pause, Play, Zap } from 'lucide-react';
 
 /* ─── reduced-motion ──────────────────────────────────────────── */
 function usePrefersReducedMotion(): boolean {
@@ -665,18 +665,18 @@ function AnimatedShowcase() {
   const [idx, setIdx]     = useState(0);
   const [phase, setPhase] = useState<Phase>('before');
   const [typed, setTyped] = useState(0);
-  const [reveal, setReveal] = useState<number>(0);   // lines revealed (after phase)
-  const [fade, setFade]   = useState(true);           // visibility
-  const [progKey, setProgKey] = useState(0);           // remount progress bar
+  const [reveal, setReveal] = useState<number>(0);
+  const [fade, setFade]   = useState(true);
+  const [progKey, setProgKey] = useState(0);
+  const [paused, setPaused] = useState(false);
 
   const scene      = SCENES[idx];
   const typingText = `// Analysing with ${scene.tool}…`;
 
-  /* advance to next scene */
-  const advance = useCallback(() => {
+  const jumpToScene = useCallback((newIdx: number) => {
     setFade(false);
     setTimeout(() => {
-      setIdx(i => (i + 1) % SCENES.length);
+      setIdx(newIdx);
       setPhase('before');
       setTyped(0);
       setReveal(0);
@@ -684,8 +684,24 @@ function AnimatedShowcase() {
     }, EXIT_MS);
   }, []);
 
-  /* phase timer */
+  /* advance to next scene */
+  const advance = useCallback(() => {
+    jumpToScene((idx + 1) % SCENES.length);
+  }, [idx, jumpToScene]);
+
+  const goPrev = useCallback(() => {
+    jumpToScene((idx - 1 + SCENES.length) % SCENES.length);
+    setPaused(true);
+  }, [idx, jumpToScene]);
+
+  const goNext = useCallback(() => {
+    jumpToScene((idx + 1) % SCENES.length);
+    setPaused(true);
+  }, [idx, jumpToScene]);
+
+  /* phase timer — stops when paused */
   useEffect(() => {
+    if (paused) return;
     if (phase === 'before') {
       const t = setTimeout(() => setPhase('typing'), BEFORE_MS);
       return () => clearTimeout(t);
@@ -702,7 +718,7 @@ function AnimatedShowcase() {
       const t = setTimeout(advance, AFTER_MS);
       return () => clearTimeout(t);
     }
-  }, [phase, advance]);
+  }, [phase, advance, paused]);
 
   /* typing effect */
   useEffect(() => {
@@ -747,10 +763,33 @@ function AnimatedShowcase() {
         <span className={`relative mx-auto font-mono text-[10.5px] transition-colors duration-300 ${scene.accent}`}>
           {scene.file}
         </span>
-        {/* Scene counter — far right */}
-        <span className="relative shrink-0 font-mono text-[10px] text-zinc-600 tabular-nums">
-          {String(idx + 1).padStart(2, '0')}&nbsp;/&nbsp;{SCENES.length}
-        </span>
+        {/* Prev / pause / next controls */}
+        <div className="relative flex shrink-0 items-center gap-1">
+          <button
+            onClick={goPrev}
+            aria-label="Previous scene"
+            className="flex h-5 w-5 items-center justify-center rounded bg-transparent text-zinc-500 hover:text-zinc-300 transition-colors"
+          >
+            <ChevronLeft className="h-3.5 w-3.5" />
+          </button>
+          <button
+            onClick={() => setPaused(p => !p)}
+            aria-label={paused ? 'Resume' : 'Pause'}
+            className="flex h-5 w-5 items-center justify-center rounded bg-transparent text-zinc-500 hover:text-zinc-300 transition-colors"
+          >
+            {paused ? <Play className="h-3 w-3" /> : <Pause className="h-3 w-3" />}
+          </button>
+          <button
+            onClick={goNext}
+            aria-label="Next scene"
+            className="flex h-5 w-5 items-center justify-center rounded bg-transparent text-zinc-500 hover:text-zinc-300 transition-colors"
+          >
+            <ChevronRight className="h-3.5 w-3.5" />
+          </button>
+          <span className="ml-1 font-mono text-[10px] text-zinc-600 tabular-nums">
+            {String(idx + 1).padStart(2, '0')}&nbsp;/&nbsp;{SCENES.length}
+          </span>
+        </div>
       </div>
 
 

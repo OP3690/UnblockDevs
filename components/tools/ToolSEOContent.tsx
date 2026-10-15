@@ -11,7 +11,7 @@ export type HowItWorksStep = { n: string; title: string; desc: string };
 
 // ── Sub-components ─────────────────────────────────────────
 
-/** Section heading with pill eyebrow label */
+/** Section heading with gradient-line eyebrow */
 export function SEOSection({
   eyebrow,
   heading,
@@ -26,13 +26,16 @@ export function SEOSection({
   return (
     <section className="scroll-mt-24" id={id} aria-labelledby={id ? `${id}-h` : undefined}>
       {eyebrow && (
-        <span className="mb-3 inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-emerald-700">
-          {eyebrow}
-        </span>
+        <div className="mb-3 flex items-center gap-2.5">
+          <div className="h-[3px] w-6 rounded-full bg-gradient-to-r from-emerald-500 to-teal-400" aria-hidden />
+          <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-emerald-700">
+            {eyebrow}
+          </span>
+        </div>
       )}
       <h2
         id={id ? `${id}-h` : undefined}
-        className="mb-5 text-[1.25rem] font-bold tracking-[-0.025em] text-zinc-900 sm:text-[1.45rem]"
+        className="mb-5 text-[1.3rem] font-extrabold tracking-[-0.03em] text-zinc-900 sm:text-[1.5rem]"
       >
         {heading}
       </h2>
@@ -61,27 +64,27 @@ export function C({ children }: { children: ReactNode }) {
 export function ProTip({ children }: { children: ReactNode }) {
   return (
     <div className="flex gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
-      <span className="mt-0.5 text-lg leading-none">💡</span>
+      <span className="shrink-0 text-[1.2rem] leading-none mt-0.5" aria-hidden>💡</span>
       <p className="text-[13.5px] leading-relaxed text-amber-900">{children}</p>
     </div>
   );
 }
 
-/** How It Works steps with gradient numbered circles */
+/** How It Works — numbered steps with gradient bubbles */
 export function HowItWorks({ steps }: { steps: HowItWorksStep[] }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {steps.map((s, i) => (
         <div
           key={s.n}
-          className="relative flex flex-col gap-3 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
+          className="relative flex flex-col gap-3 rounded-2xl border border-zinc-200 bg-gradient-to-b from-white to-zinc-50/60 p-5 shadow-sm transition-shadow hover:shadow-md"
         >
-          {/* connector line between cards (hidden on mobile) */}
+          {/* connector line between cards (desktop only) */}
           {i < steps.length - 1 && (
-            <div className="absolute -right-2 top-8 z-10 hidden h-px w-4 bg-gradient-to-r from-emerald-300 to-transparent lg:block" />
+            <div className="absolute -right-2 top-[2.1rem] z-10 hidden h-px w-4 bg-gradient-to-r from-emerald-300 to-transparent lg:block" />
           )}
-          {/* step number bubble */}
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 text-[13px] font-bold text-white shadow-sm">
+          {/* step number bubble — rounded square */}
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 text-[13px] font-bold text-white shadow-sm shadow-emerald-500/25">
             {String(i + 1).padStart(2, '0')}
           </div>
           <h3 className="text-[14px] font-semibold text-zinc-900">{s.title}</h3>
@@ -92,20 +95,25 @@ export function HowItWorks({ steps }: { steps: HowItWorksStep[] }) {
   );
 }
 
-/** Use-case cards grid with icon bubbles and hover state */
+/** Use-case cards grid — hover gradient overlay */
 export function UseCases({ cases }: { cases: UseCase[] }) {
   return (
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {cases.map((c) => (
         <div
           key={c.title}
-          className="group flex gap-4 rounded-2xl border border-zinc-200 bg-white p-5 transition-all hover:border-emerald-300 hover:shadow-md"
+          className="group relative overflow-hidden flex gap-4 rounded-2xl border border-zinc-200 bg-white p-5 transition-all hover:border-emerald-300 hover:shadow-md"
         >
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-zinc-100 bg-zinc-50 text-xl transition-all group-hover:border-emerald-200 group-hover:bg-emerald-50">
+          {/* hover tint overlay */}
+          <div
+            className="pointer-events-none absolute inset-0 bg-gradient-to-br from-emerald-50/0 to-teal-50/0 opacity-0 transition-opacity duration-200 group-hover:from-emerald-50/50 group-hover:to-teal-50/20 group-hover:opacity-100"
+            aria-hidden
+          />
+          <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-zinc-100 bg-zinc-50 text-[1.2rem] transition-all group-hover:border-emerald-200 group-hover:bg-emerald-50">
             {c.icon}
           </div>
-          <div>
-            <p className="text-[13.5px] font-semibold text-zinc-900 group-hover:text-emerald-800">
+          <div className="relative">
+            <p className="text-[13.5px] font-semibold text-zinc-900 transition-colors group-hover:text-emerald-800">
               {c.title}
             </p>
             <p className="mt-1 text-[12.5px] leading-relaxed text-zinc-500">{c.desc}</p>
@@ -116,28 +124,30 @@ export function UseCases({ cases }: { cases: UseCase[] }) {
   );
 }
 
-/** FAQ accordion — native details/summary, no JS required */
+/** FAQ accordion — native details/summary, no JS */
 export function FAQ({ items }: { items: FAQItem[] }) {
   return (
     <div className="space-y-2">
       {items.map((item, i) => (
         <details
           key={i}
-          className="group overflow-hidden rounded-xl border border-zinc-200 bg-white transition-all open:border-emerald-200 open:shadow-sm"
+          className="group overflow-hidden rounded-xl border border-zinc-200 bg-white transition-all open:border-emerald-300 open:shadow-sm"
         >
           <summary className="flex cursor-pointer select-none list-none items-center justify-between gap-4 px-5 py-4 marker:hidden">
             <div className="flex items-center gap-3">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-[11px] font-bold text-emerald-700">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 text-[10px] font-bold text-white shadow-sm shadow-emerald-500/20">
                 {i + 1}
               </span>
-              <span className="text-[14px] font-semibold text-zinc-900">{item.q}</span>
+              <span className="text-[14px] font-semibold text-zinc-900 transition-colors group-open:text-emerald-900">
+                {item.q}
+              </span>
             </div>
             <ChevronDown
-              className="h-4 w-4 shrink-0 text-zinc-400 transition-transform group-open:rotate-180"
+              className="h-4 w-4 shrink-0 text-zinc-400 transition-transform group-open:rotate-180 group-open:text-emerald-500"
               aria-hidden
             />
           </summary>
-          <div className="border-t border-zinc-100 px-5 pb-5 pt-4 text-[13.5px] leading-[1.75] text-zinc-600">
+          <div className="border-t border-zinc-100 bg-zinc-50/50 px-5 pb-5 pt-4 text-[13.5px] leading-[1.75] text-zinc-600">
             {item.a}
           </div>
         </details>
@@ -154,15 +164,17 @@ export function RelatedTools({ tools }: { tools: RelatedTool[] }) {
         <Link
           key={t.href}
           href={t.href}
-          className="group flex items-start gap-3 rounded-2xl border border-zinc-200 bg-white p-4 transition-all hover:border-emerald-300 hover:shadow-md"
+          className="group relative overflow-hidden flex items-start gap-3 rounded-2xl border border-zinc-200 bg-white p-4 transition-all hover:border-emerald-300 hover:shadow-md"
         >
+          {/* left accent bar */}
+          <div className="absolute inset-y-0 left-0 w-[3px] origin-center scale-y-0 rounded-r bg-emerald-500 transition-transform duration-200 group-hover:scale-y-100" aria-hidden />
           {t.icon && (
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-zinc-100 bg-zinc-50 text-lg transition-all group-hover:border-emerald-200 group-hover:bg-emerald-50">
               {t.icon}
             </div>
           )}
           <div className="min-w-0 flex-1">
-            <p className="text-[13px] font-semibold text-zinc-900 group-hover:text-emerald-800">
+            <p className="text-[13px] font-semibold text-zinc-900 transition-colors group-hover:text-emerald-800">
               {t.label}
             </p>
             <p className="mt-0.5 text-[12px] leading-snug text-zinc-500">{t.desc}</p>
@@ -177,7 +189,7 @@ export function RelatedTools({ tools }: { tools: RelatedTool[] }) {
   );
 }
 
-/** Feature check-list — compact bullet points with check icons */
+/** Feature check-list */
 export function FeatureList({ items }: { items: string[] }) {
   return (
     <ul className="grid gap-2 sm:grid-cols-2">
@@ -194,19 +206,29 @@ export function FeatureList({ items }: { items: string[] }) {
 /** Related blog post type */
 export type RelatedBlogPost = { href: string; label: string; desc?: string };
 
-/** Related blog posts — compact horizontal list with arrow links */
+/** Related blog posts — small cards with arrow animation */
 export function RelatedBlogPosts({ posts }: { posts: RelatedBlogPost[] }) {
   return (
-    <div className="flex flex-wrap gap-3">
+    <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
       {posts.map((p) => (
         <Link
           key={p.href}
           href={p.href}
-          className="group flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-2 text-[13px] font-medium text-zinc-700 shadow-sm transition-all hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-800 hover:shadow-md"
+          className="group flex items-start gap-3 rounded-xl border border-zinc-200 bg-white p-4 transition-all hover:border-emerald-300 hover:shadow-md"
         >
-          <span className="text-sm">📖</span>
-          {p.label}
-          <ArrowRight className="h-3 w-3 translate-x-0 text-zinc-400 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:text-emerald-500 group-hover:opacity-100" aria-hidden />
+          <span className="shrink-0 text-[1.1rem] leading-none mt-0.5" aria-hidden>📖</span>
+          <div className="min-w-0 flex-1">
+            <p className="text-[13px] font-semibold text-zinc-800 line-clamp-2 transition-colors group-hover:text-emerald-800">
+              {p.label}
+            </p>
+            {p.desc && (
+              <p className="mt-0.5 text-[12px] leading-snug text-zinc-500 line-clamp-2">{p.desc}</p>
+            )}
+          </div>
+          <ArrowRight
+            className="mt-0.5 h-3.5 w-3.5 shrink-0 translate-x-0 text-zinc-300 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:text-emerald-500 group-hover:opacity-100"
+            aria-hidden
+          />
         </Link>
       ))}
     </div>
@@ -230,8 +252,9 @@ export default function ToolSEOContent({
     <div
       className={`mx-auto w-full max-w-[min(100%,96rem)] px-4 pb-12 sm:px-6 lg:px-8 ${className}`}
     >
-      <div className="space-y-14">{children}</div>
-      <p className="mt-10 text-[11.5px] text-zinc-400">Last updated: May 2026</p>
+      <div className="divide-y divide-zinc-100 [&>*:not(:first-child)]:pt-12 [&>*:not(:last-child)]:pb-12">
+        {children}
+      </div>
     </div>
   );
 }
